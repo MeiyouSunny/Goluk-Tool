@@ -1,11 +1,13 @@
-cdc-golukmobile/src/api/jansson
-cdc-golukmobile/src/api/md5
-cdc-golukmobile/src/api/system
-cdc-golukmobile/src/api/universal
-cdc-golukmobile/src/api/zlib
-cdc-golukmobile/src/logic
-cdc-golukmobile/src/net-plugin
-cdc-golukmobile/src/resource
-cdc-golukmobile/src/jnibase
-cdc-golukmobile/src/android
+goluk/src/api/jansson
+goluk/src/api/md5
+goluk/src/api/system
+goluk/src/api/universal
+goluk/src/api/zlib
+goluk/src/api/lua
+goluk/src/api/lua-script
+goluk/src/logic
+goluk/src/net-plugin
+goluk/src/resource
+goluk/src/jnibase
+goluk/src/android
 
