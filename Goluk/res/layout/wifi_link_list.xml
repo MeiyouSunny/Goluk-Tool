@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 选择WIFI -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#F1F1F1">
+	
+	<RelativeLayout
+		android:id="@+id/title_layout"
+		android:layout_width="match_parent"
+		android:layout_height="42dp"
+		android:background="@color/bg">
+		
+		<ImageButton
+			android:id="@+id/back_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_centerVertical="true"
+			android:background="@drawable/btn_back_btn"
+			android:contentDescription="@string/imgdes" />
+		
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:textSize="18sp"
+			android:textColor="@color/white"
+			android:text="@string/wifi_link_7_text"/>
+	</RelativeLayout>
+	
+	<RelativeLayout
+		android:id="@+id/list_title_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/title_layout"
+		android:background="#F1F1F1">
+		
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="18dp"
+			android:layout_marginTop="26dp"
+			android:textSize="18sp"
+			android:textColor="#6C99B5"
+			android:text="@string/wifi_link_8_text"/>
+		
+		
+		<ImageButton
+			android:id="@+id/refresh_help_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="26dp"
+			android:layout_marginRight="36dp"
+			android:layout_alignParentRight="true"
+			android:background="@drawable/refresh_help"
+			android:contentDescription="@string/imgdes" />
+		
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			android:layout_marginLeft="8dp"
+			android:layout_marginRight="8dp"
+			android:layout_below="@id/refresh_help_btn"
+			android:background="@drawable/solid_help"
+			android:contentDescription="@string/imgdes"/>
+	</RelativeLayout>
+	
+	<ListView
+		android:id="@+id/wifi_list_listview"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/list_title_layout"
+		android:scrollbars="none" >
+	</ListView>
+	
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="130dp"
+		android:layout_marginLeft="82dp"
+		android:background="@drawable/empolder"
+		android:contentDescription="@string/imgdes"
+		android:visibility="gone"/>
+	
+	<include
+		android:id="@+id/loading_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		layout="@layout/loading"/>
+</RelativeLayout>
+
+
+
+
+
+

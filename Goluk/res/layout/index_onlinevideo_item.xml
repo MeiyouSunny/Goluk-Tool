@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="6dp"
+	android:layout_marginTop="17dp"
+	android:layout_marginRight="8dp"
+	android:layout_marginBottom="16dp"
+	android:background="@color/white" >
+
+	<ImageView
+		android:id="@+id/video_img"
+		android:layout_width="195dp"
+		android:layout_height="110dp"
+		android:background="@drawable/screenshot4"
+		android:contentDescription="@string/imgdes"/>
+	
+	<!-- 播放按钮 -->
+	<ImageButton
+		android:id="@+id/video_play_btn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="28dp"
+		android:background="@drawable/video_play_btn"
+		android:layout_centerHorizontal="true"
+		android:contentDescription="@string/imgdes"/>
+	
+	<!-- 描述 -->
+	<TextView 
+		android:id="@+id/video_desc"
+		android:layout_width="184dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="6dp"
+		android:layout_marginLeft="6dp"
+		android:layout_below="@id/video_img"
+		android:drawableLeft="@drawable/video_desc_dian"
+		android:singleLine="true"
+		android:textSize="12sp"
+		android:text="You Wanderers Club"/>
+	
+	
+	<!-- 点赞按钮 -->
+	<Button
+		android:id="@+id/like_btn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="6dp"
+		android:layout_below="@id/video_desc"
+		android:drawableLeft="@drawable/icon_like"
+		android:drawablePadding="3dp"
+		android:background="@color/white"
+		android:textColor="@color/font_like"
+		android:textSize="12sp"
+		android:text="3164" />
+	
+	<!-- 评论按钮 -->
+	<Button
+		android:id="@+id/comment_btn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="30dp"
+		android:layout_below="@id/video_desc"
+		android:layout_toRightOf="@id/like_btn"
+		android:drawableLeft="@drawable/icon_comment"
+		android:drawablePadding="3dp"
+		android:background="@color/white"
+		android:textColor="@color/font_comment"
+		android:textSize="12sp"
+		android:text="264" />
+	
+</RelativeLayout>

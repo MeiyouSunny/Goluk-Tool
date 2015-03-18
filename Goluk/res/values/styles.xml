@@ -1,0 +1,12 @@
+<resources>
+	<!-- 设置背景图Theme -->
+	<style name="Theme.AppStartLoad" parent="android:Theme">
+		<item name="android:windowBackground">@drawable/guide_1</item>
+		<item name="android:windowNoTitle">true</item>
+	</style>
+	<!-- 设置透明Theme -->
+	<style name="Theme.AppStartLoadTranslucent" parent="android:Theme">
+		<item name="android:windowIsTranslucent">true</item>
+		<item name="android:windowNoTitle">true</item>
+	</style>
+</resources>

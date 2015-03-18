@@ -1,0 +1,3 @@
+#########忽略除fromversion之外的目录
+*/
+!fromversion/

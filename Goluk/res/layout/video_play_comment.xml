@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 视频点评 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="62dp"
+	android:paddingBottom="10dp"
+	android:background="@color/bg">
+	
+	<!-- 描述文字 -->
+	<TextView
+		android:id="@+id/video_desc"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:layout_marginLeft="10dp"
+		android:text="Young Wanderers Club"
+		android:textColor="@color/white"
+		android:textSize="12sp"/>
+	
+	<!-- 评论按钮 -->
+	<TextView
+		android:id="@+id/comment_btn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignLeft="@id/video_desc"
+		android:gravity="center"
+		android:drawableLeft="@drawable/icon_comment"
+		android:drawablePadding="8dp"
+		android:textColor="@color/font_comment"
+		android:textSize="14sp"
+		android:text="264" />
+	
+	<!-- 转发按钮 -->
+	<Button
+		android:id="@+id/send_btn"
+		android:layout_width="69dp"
+		android:layout_height="23dp"
+		android:layout_marginRight="12dp"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/video_share_btn"
+		android:paddingLeft="15dp"
+		android:text="转发"
+		android:textSize="14sp"
+		android:textColor="#C9C9C9" />
+	
+	<!-- 点赞按钮 -->
+	<Button
+		android:id="@+id/like_btn"
+		android:layout_width="69dp"
+		android:layout_height="23dp"
+		android:layout_marginRight="16dp"
+		android:layout_toLeftOf="@id/send_btn"
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/btn_like_btn"
+		android:paddingLeft="15dp"
+		android:text="502"
+		android:textSize="14sp"
+		android:textColor="#C9C9C9" />
+</RelativeLayout>
+
+
+
+
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 在线视频轮播 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true">
+	
+	<!-- 视频滚动 -->
+	<android.support.v4.view.ViewPager
+		android:id="@+id/vPager"
+		android:layout_width="match_parent"
+		android:layout_height="204dp"
+		android:flipInterval="30"
+		android:background="#232323"
+		android:persistentDrawingCache="animation" />
+	
+	<!-- 视频圆点 -->
+	<LinearLayout
+		android:id="@+id/video_cursor_layout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBottom="@id/vPager"
+		android:layout_alignParentRight="true"
+		android:layout_marginBottom="9dp"
+		android:layout_marginRight="12dp"
+		android:orientation="horizontal" >
+	</LinearLayout>
+</RelativeLayout>

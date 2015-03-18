@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 视频编辑 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#ededed" >
+	
+	<!-- 视频编辑title -->
+	<RelativeLayout
+		android:id="@+id/title_layout"
+		android:layout_width="match_parent"
+		android:layout_height="42dp"
+		android:background="@color/bg">
+		
+		<Button
+			android:id="@+id/back_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:gravity="center|left"
+			android:drawableLeft="@drawable/icon_back_btn"
+			android:drawablePadding="8dp"
+			android:background="@color/bg"
+			android:textColor="@color/white"
+			android:textSize="16sp"
+			android:text="@string/back_text"/>
+		
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:textSize="18sp"
+			android:textColor="@color/white"
+			android:text="@string/edit_text"/>
+		
+		<Button
+			android:id="@+id/next_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="10dp"
+			android:gravity="center|right"
+			android:layout_alignParentRight="true"
+			android:drawableRight="@drawable/icon_next_btn"
+			android:drawablePadding="8dp"
+			android:background="@color/bg"
+			android:textColor="@color/white"
+			android:textSize="16sp"
+			android:text="@string/next_text"/>
+	</RelativeLayout>
+	
+	<!-- 视频播放 -->
+	<RelativeLayout
+		android:id="@+id/video_play_layout"
+		android:layout_width="match_parent"
+		android:layout_height="204dp"
+		android:layout_below="@id/title_layout">
+		<!-- 视频播放容器
+		<SurfaceView
+			android:id="@+id/video_surface"
+			android:layout_width="match_parent"
+			android:layout_height="204dp">
+		</SurfaceView>
+		 -->
+		<com.rd.car.editor.FilterPlaybackView
+			android:id="@+id/vvPlayVideo"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+		
+		<ProgressBar
+			android:id="@+id/video_progress_bar"
+			style="?android:attr/progressBarStyleHorizontal"
+			android:progressDrawable="@drawable/video_progress"
+			android:layout_width="match_parent"
+			android:layout_height="2dp"
+			android:layout_alignParentBottom="true" />
+	</RelativeLayout>
+	
+	<!-- 控制视频播放暂停 -->
+	<RelativeLayout
+		android:id="@+id/play_layout"
+		android:layout_width="match_parent"
+		android:layout_height="204dp"
+		android:layout_below="@id/title_layout">
+		<!-- 视频播放按钮 -->
+		<ImageView
+			android:id="@+id/play_image"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:contentDescription="@string/imgdes"
+			android:background="@drawable/video_play_btn"
+			android:visibility="gone"/>
+	</RelativeLayout>
+	
+	<!-- 视频loading -->
+	<RelativeLayout
+		android:id="@+id/video_loading_layout"
+		android:layout_width="match_parent"
+		android:layout_height="204dp"
+		android:layout_below="@id/title_layout"
+		android:visibility="gone">
+		<!-- 视频播放按钮 -->
+		<ImageView
+			android:id="@+id/loading_img"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:contentDescription="@string/imgdes"
+			android:background="@anim/loading"/>
+	</RelativeLayout>
+	
+	<!-- 方块条 -->
+	<ImageView
+		android:id="@+id/box_solid"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="4dp"
+		android:layout_below="@id/video_play_layout"
+		android:background="@drawable/adorn"
+		android:contentDescription="@string/imgdes"/>
+	
+	<!-- 滤镜/MV tab -->
+	<RelativeLayout
+		android:id="@+id/video_edit_tab_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="22dp"
+		android:layout_below="@id/box_solid">
+		
+		<!-- 滤镜 -->
+		<Button
+			android:id="@+id/filter_btn"
+			android:layout_width="208dp"
+			android:layout_height="34dp"
+			android:layout_marginLeft="10dp"
+			android:background="@drawable/filter"
+			android:textColor="@color/black"
+			android:textSize="18sp"
+			android:text="@string/filter_text"/>
+		
+		<!-- 音乐 -->
+		<ImageButton
+			android:id="@+id/music_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="10dp"
+			android:background="@drawable/music_no_btn"
+			android:contentDescription="@string/imgdes"/>
+	</RelativeLayout>
+	
+	<!-- 分割线条 -->
+	<ImageView
+		android:id="@+id/line_solid"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="18dp"
+		android:layout_below="@id/video_edit_tab_layout"
+		android:background="@drawable/filter_solid"
+		android:contentDescription="@string/imgdes"/>
+	
+	<!-- 滚动区间 -->
+	<ScrollView
+		android:id="@+id/mv_grid_scroll"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/line_solid"
+		android:scrollbars="none" >
+		<LinearLayout
+			android:id="@+id/mvlistlayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:orientation="vertical" >
+		</LinearLayout>
+	</ScrollView>
+</RelativeLayout>
+
+
+
+
+
+
+
+
+

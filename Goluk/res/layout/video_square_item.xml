@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 直播列表item -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="110dp"
+	android:background="@color/white">
+	
+	<!-- 视频截图图片 -->
+	<ImageView
+		android:id="@+id/video_img"
+		android:layout_width="154dp"
+		android:layout_height="88dp"
+		android:layout_centerVertical="true"
+		android:layout_marginLeft="11dp"
+		android:background="@drawable/video_morenpic"
+		android:contentDescription="@string/imgdes" />
+	
+	<ImageView
+		android:id="@+id/play_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/videoplay_btn"
+		android:layout_centerVertical="true"
+		android:layout_marginLeft="70dp"
+		android:visibility="visible"
+		android:contentDescription="@string/imgdes"/>
+	
+	<!--头像 -->
+	<TextView
+		android:id="@+id/username_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="7dp"
+		android:layout_marginTop="4dp"
+		android:layout_toRightOf="@id/video_img"
+		android:layout_alignTop="@id/video_img"
+		android:gravity="center"
+		android:drawableLeft="@drawable/editor_boy_one"
+		android:drawablePadding="7dp"
+		android:textColor="#333333"
+		android:textSize="15sp"
+		android:text="@string/username_text" />
+	
+	<!-- 点赞按钮 -->
+	<Button
+		android:id="@+id/like_btn"
+		android:layout_width="69dp"
+		android:layout_height="23dp"
+		android:layout_marginLeft="7dp"
+		android:layout_marginTop="10dp"
+		android:layout_toRightOf="@id/video_img"
+		android:layout_below="@id/username_text"
+		android:background="@drawable/btn_like_btn"
+		android:paddingLeft="15dp"
+		android:text="@string/like_num_text"
+		android:textSize="14sp"
+		android:textColor="#C9C9C9" />
+	
+	<!-- 速度 -->
+	<TextView
+		android:id="@+id/speed_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="7dp"
+		android:layout_marginTop="12dp"
+		android:layout_toRightOf="@id/video_img"
+		android:layout_below="@id/like_btn"
+		android:text="@string/speed_text"
+		android:textColor="#666666"
+		android:textSize="14sp"/>
+	
+	<ImageView
+		android:id="@+id/realtime_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:layout_marginRight="13dp"
+		android:layout_alignTop="@id/video_img"
+		android:layout_alignParentRight="true"
+		android:contentDescription="@string/imgdes"
+		android:background="@drawable/bubble_realtime"/>
+		
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/cut_off_rule"
+		android:contentDescription="@string/imgdes"/>
+</RelativeLayout>
+
+
+
+
+

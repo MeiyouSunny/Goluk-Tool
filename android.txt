@@ -1,0 +1,11 @@
+cdc-golukmobile/src/api/jansson
+cdc-golukmobile/src/api/md5
+cdc-golukmobile/src/api/system
+cdc-golukmobile/src/api/universal
+cdc-golukmobile/src/api/zlib
+cdc-golukmobile/src/logic
+cdc-golukmobile/src/net-plugin
+cdc-golukmobile/src/resource
+cdc-golukmobile/src/jnibase
+cdc-golukmobile/src/android
+

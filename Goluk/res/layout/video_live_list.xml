@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 视频广场 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/white">
+	
+	<!-- 视频广场title -->
+	<RelativeLayout
+		android:id="@+id/title_layout"
+		android:layout_width="match_parent"
+		android:layout_height="42dp"
+		android:background="@color/bg">
+		
+		<Button
+			android:id="@+id/back_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:gravity="center|left"
+			android:drawableLeft="@drawable/icon_back_btn"
+			android:drawablePadding="8dp"
+			android:background="@color/bg"
+			android:textColor="@color/white"
+			android:textSize="16sp"
+			android:text="@string/back_text"/>
+		
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:textSize="18sp"
+			android:textColor="@color/white"
+			android:text="@string/video_square_text"/>
+		
+		<Button
+			android:id="@+id/refresh_btn"
+			android:layout_width="45dp"
+			android:layout_height="wrap_content"
+			android:paddingRight="12dp"
+			android:layout_centerInParent="true"
+			android:layout_alignParentRight="true"
+			android:background="@color/bg"
+			android:drawableRight="@drawable/refresh"/>
+	</RelativeLayout>
+	
+	<cn.com.mobnote.view.PullToRefreshView
+		android:id="@+id/listview_pull_refresh_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/title_layout"
+		android:orientation="vertical" >
+		
+		<ListView
+			android:id="@+id/video_square_listview"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scrollbars="none" >
+		</ListView>
+	</cn.com.mobnote.view.PullToRefreshView>
+	
+	
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="130dp"
+		android:layout_marginLeft="82dp"
+		android:background="@drawable/empolder"
+		android:contentDescription="@string/imgdes"
+		android:visibility="gone"/>
+	
+	<include
+		android:id="@+id/loading_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		layout="@layout/loading"/>
+</RelativeLayout>
+
+
+
+
+
+

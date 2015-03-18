@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/login_layout"
+	android:layout_width="266dp"
+	android:layout_height="wrap_content"
+	android:paddingBottom="26dp"
+	android:background="@drawable/bg_frame">
+	
+	<TextView
+		android:id="@+id/login_title_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="26dp"
+		android:text="@string/login_title_text"
+		android:textSize="18sp"
+		android:textColor="#5b5b5b"
+		android:layout_centerHorizontal="true"/>
+	
+	<EditText
+		android:id="@+id/login_phone_text"
+		android:layout_width="match_parent"
+		android:layout_height="38dp"
+		android:layout_marginTop="23dp"
+		android:layout_below="@id/login_title_text"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:paddingLeft="10dp"
+		android:background="@drawable/input_field_frame"
+		android:gravity="center|left"
+		android:maxLength="11"
+		android:inputType="number"
+		android:hint="@string/login_phone_text"
+		android:textColor="#5b5b5b"/>
+		
+	<EditText
+		android:id="@+id/login_pwd_text"
+		android:layout_width="match_parent"
+		android:layout_height="38dp"
+		android:layout_marginTop="7dp"
+		android:layout_below="@id/login_phone_text"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:paddingLeft="10dp"
+		android:background="@drawable/input_field_frame"
+		android:gravity="center|left"
+		android:hint="@string/login_pwd_text"
+		android:inputType="textPassword"
+		android:textColor="#5b5b5b"/>
+	
+	<Button
+		android:id="@+id/login_btn"
+		android:layout_width="match_parent"
+		android:layout_height="52dp"
+		android:layout_marginTop="26dp"
+		android:layout_below="@id/login_pwd_text"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:background="@drawable/btn_log"
+		android:gravity="center"
+		android:text="@string/login_text"
+		android:textSize="18sp"
+		android:textColor="#f4f4f4"/>
+	
+</RelativeLayout>
+
+
+
+

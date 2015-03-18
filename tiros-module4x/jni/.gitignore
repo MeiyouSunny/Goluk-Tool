@@ -1,0 +1,6 @@
+#######忽略eclipse工程文件
+.cproject
+.project
+#######忽略c/c++编译文件
+*.o
+*.o.d

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 视频编辑 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/bg" >
+	
+	<!-- 视频编辑title -->
+	<RelativeLayout
+		android:id="@+id/title_layout"
+		android:layout_width="match_parent"
+		android:layout_height="42dp"
+		android:background="@color/bg">
+		<Button
+			android:id="@+id/back_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:drawableLeft="@drawable/icon_back_btn"
+			android:background="@color/bg"
+			android:textColor="@color/white"
+			android:textSize="16sp"
+			android:text="@string/back_text"/>
+		
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:textSize="18sp"
+			android:textColor="@color/white"
+			android:text="@string/edit_text"/>
+		
+		<Button
+			android:id="@+id/next_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="10dp"
+			android:layout_alignParentRight="true"
+			android:drawableRight="@drawable/icon_back_btn"
+			android:background="@color/bg"
+			android:textColor="@color/white"
+			android:textSize="16sp"
+			android:text="@string/next_text"/>
+	</RelativeLayout>
+	
+	<!-- 视频播放 -->
+	<RelativeLayout
+		android:id="@+id/video_play_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/title_layout"
+		android:background="@color/bg">
+		
+		<!-- 视频播放容器 -->
+		<SurfaceView
+			android:id="@+id/video_surface"
+			android:layout_width="match_parent"
+			android:layout_height="204dp">
+		</SurfaceView>
+		
+		<!-- 
+		<LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="fill_parent">
+			<Button android:text="播放"  android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+			<Button android:text="暂停" android:id="@+id/button2" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+			<Button android:text="停止" android:id="@+id/button3" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+		</LinearLayout>
+		 -->
+	</RelativeLayout>
+	
+	<!-- 控制视频播放暂停 -->
+	<RelativeLayout
+		android:id="@+id/play_layout"
+		android:layout_width="match_parent"
+		android:layout_height="204dp"
+		android:layout_below="@id/title_layout">
+		<!-- 视频播放按钮 -->
+		<ImageView
+			android:id="@+id/play_image"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:contentDescription="@string/imgdes"
+			android:background="@drawable/video_play_btn"
+			android:visibility="gone"/>
+	</RelativeLayout>
+	
+	<!-- 滤镜/MV tab -->
+	<RelativeLayout
+		android:id="@+id/video_edit_tab_layout"
+		android:layout_width="match_parent"
+		android:layout_height="58dp"
+		android:layout_marginTop="22dp"
+		android:layout_below="@id/video_play_layout">
+		
+		<!-- 滤镜 -->
+		<Button
+			android:id="@+id/filter_btn"
+			android:layout_width="100dp"
+			android:layout_height="wrap_content"
+			android:background="@drawable/btn_tag"
+			android:textColor="@color/white"
+			android:textSize="18sp"
+			android:text="@string/filter_text"/>
+		<!-- MV -->
+		<Button
+			android:layout_width="100dp"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/filter_btn"
+			android:background="@drawable/btn_tag_selected"
+			android:textColor="@color/white"
+			android:textSize="18sp"
+			android:text="@string/mv_text"/>
+		
+		<!-- 语音 -->
+		<ImageButton
+			android:id="@+id/sound_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="10dp"
+			android:layout_marginBottom="6dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentBottom="true"
+			android:background="@drawable/btn_sound_btn"
+			android:contentDescription="@string/imgdes"/>
+		
+		<!-- 语音 -->
+		<ImageButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="10dp"
+			android:layout_marginBottom="6dp"
+			android:layout_toLeftOf="@id/sound_btn"
+			android:layout_alignParentBottom="true"
+			android:background="@drawable/btn_music_btn"
+			android:contentDescription="@string/imgdes"/>
+		
+	</RelativeLayout>
+	
+	
+</RelativeLayout>
+
+
+
+
+
+
+
+
+

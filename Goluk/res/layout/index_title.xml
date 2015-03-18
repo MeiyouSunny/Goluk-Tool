@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 首页title -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="42dp"
+	android:background="@color/bg">
+	
+	<!-- 登录按钮 -->
+	<Button
+		android:id="@+id/login_status_btn"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:paddingLeft="4dp"
+		android:paddingRight="4dp"
+		android:drawableLeft="@drawable/log_in"
+		android:drawablePadding="4dp"
+		android:background="#00000000"
+		android:text="@string/login_out"
+		android:textColor="@color/white"
+		android:textSize="14sp" />
+	<!-- @drawable/btn_click -->
+	
+	<!-- 红点文字 -->
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="26dp"
+		android:layout_marginTop="5dp"
+		android:visibility="gone">
+		
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/inform_bg"
+			android:contentDescription="@string/imgdes"/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:textSize="10sp"
+			android:textColor="@color/white"
+			android:text="19"/>
+	</RelativeLayout>
+	
+	
+	<!-- 标题 -->
+	<TextView
+		android:id="@+id/textView1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:text="@string/index_title"
+		android:textSize="20sp"
+		android:textColor="@color/white" />
+	
+	<!-- 连接按钮 -->
+	<Button
+		android:id="@+id/wifi_link_text"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_alignParentRight="true"
+		android:gravity="center_vertical"
+		android:paddingRight="6dp"
+		android:drawableLeft="@drawable/no_link"
+		android:drawablePadding="4dp"
+		android:background="@null"
+		android:textColor="@color/white"
+		android:textSize="14sp"
+		android:text="@string/wifi_link_text" />
+	
+	<!-- 连接信息
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="3dp"
+		android:layout_marginLeft="25dp"
+		android:layout_alignLeft="@id/button2"
+		android:layout_alignParentBottom="true"
+		android:textSize="9sp"
+		android:visibility="gone"
+		android:textColor="@color/white"
+		android:text="@string/wifi_link_text"/>
+	 -->
+</RelativeLayout>

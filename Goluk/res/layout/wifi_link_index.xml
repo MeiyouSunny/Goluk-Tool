@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- wifi链接首页 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#F1F1F1">
+
+	<ImageView
+		android:id="@+id/imageView1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="64dp"
+		android:layout_marginTop="52dp"
+		android:src="@drawable/banner_one"
+		android:contentDescription="@string/imgdes"/>
+
+	<TextView
+		android:id="@+id/textView1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/imageView1"
+		android:layout_centerHorizontal="true"
+		android:textSize="28sp"
+		android:textColor="#595959"
+		android:text="@string/wifi_link_1_text" />
+
+	<TextView
+		android:id="@+id/textView2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:layout_marginLeft="50dp"
+		android:layout_marginRight="50dp"
+		android:layout_below="@id/textView1"
+		android:layout_centerHorizontal="true"
+		android:textSize="14sp"
+		android:textColor="#828282"
+		android:text="@string/wifi_link_2_text" />
+
+	<TextView
+		android:id="@+id/more_help_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="15dp"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:textColor="#6C99B5"
+		android:textSize="16sp"
+		android:text="@string/wifi_link_3_text" />
+	
+	<Button
+		android:id="@+id/keep_btn"
+		android:layout_width="match_parent"
+		android:layout_height="52dp"
+		android:layout_marginBottom="20dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:layout_above="@id/more_help_text"
+		android:background="@drawable/btn_log_in_btn"
+		android:textSize="18sp"
+		android:textColor="@color/white"
+		android:text="@string/keep_on_text" />
+	
+	<!-- 关闭按钮 -->
+	<ImageButton
+		android:id="@+id/close_btn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="12dp"
+		android:layout_marginRight="16dp"
+		android:background="@drawable/sel_close_btn"
+		android:contentDescription="@string/imgdes" />
+	
+</RelativeLayout>
+
+
+
+
+
+
