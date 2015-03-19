@@ -34,8 +34,8 @@ import cn.com.mobnote.util.console;
 @SuppressLint("SimpleDateFormat")
 public class MusicManage {
 	private Context mContext = null;
-	/** 音频存放文件路径 music/*/
-	private String mFilePath = "";
+	/** 音频存放文件路径 */
+	private String mFilePath = "music";
 	/** 音频文件对应名称 */
 	private String[] mMusicName = {"Ayo","Don’T Turn Off The Lights","Merry Christmas Mr Lawrence","斑马斑马","猫铃","平凡之路"};
 	
@@ -72,7 +72,7 @@ public class MusicManage {
 						String fileSuffix = fileName.substring(lastIndex);
 						if(fileSuffix.toLowerCase().equals(".mp3")){
 							//音频全路径
-							String path = mFilePath + fileName;
+							String path = mFilePath + "/" + fileName;
 							console.log("music---" + path);
 							//保存数据
 							MusicData data = new MusicData();

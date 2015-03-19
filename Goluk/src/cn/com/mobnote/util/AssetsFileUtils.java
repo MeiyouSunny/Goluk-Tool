@@ -40,21 +40,23 @@ public class AssetsFileUtils {
 	return m_assets;
     }
 
-	/**
-	 * 获取在安装应用配置路径下，创建temp目录
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public static String getCreateTempFileDir(Context context) {
-		if (TextUtils.isEmpty(m_temp)) {
-			File fileTemp = new File(CheckSDSize.ExistSDCard() ? 
-				context.getExternalFilesDir("").getPath() : context.getFilesDir().getPath(), "temp");
-			checkPath(fileTemp);
-			m_temp = fileTemp.getAbsolutePath();
-		}
-		return m_temp;
+    /**
+     * 获取在安装应用配置路径下，创建temp目录
+     * 
+     * @param context
+     * @return
+     */
+    public static String getCreateTempFileDir(Context context) {
+	if (TextUtils.isEmpty(m_temp)) {
+	    File fileTemp = new File(CheckSDSize.ExistSDCard() ? context
+		    .getExternalFilesDir("").getPath() : context.getFilesDir()
+		    .getPath(), "temp");
+	    checkPath(fileTemp);
+	    m_temp = fileTemp.getAbsolutePath();
 	}
+
+	return m_temp;
+    }
 
     /**
      * 获取在安装应用发配置路径下，创建record目录的一个临时文件
@@ -152,6 +154,10 @@ public class AssetsFileUtils {
 	    String strDstFile) {
 	OutputStream os = null;
 	try {
+	    File checkDstDir = new File(strDstFile).getParentFile();
+	    if (checkDstDir != null && !checkDstDir.exists()) {
+		checkDstDir.mkdirs();
+	    }
 	    os = new FileOutputStream(strDstFile);
 	    byte[] pBuffer = new byte[1024];
 	    int nReadLen;

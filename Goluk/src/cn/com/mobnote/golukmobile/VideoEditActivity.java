@@ -1,15 +1,12 @@
 package cn.com.mobnote.golukmobile;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.EditorParam;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.MixAudioInfo;
 import cn.com.mobnote.golukmobile.R;
@@ -20,7 +17,6 @@ import cn.com.mobnote.video.MVManage;
 import cn.com.mobnote.video.MVManage.MVEditData;
 import cn.com.mobnote.view.MyGridView;
 import cn.com.tiros.api.FileUtils;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,7 +27,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.TextUtils;
@@ -48,6 +43,7 @@ import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.MediaController.MediaPlayerControl;
 import android.widget.Toast;
+
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -264,9 +260,9 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			mVVPlayVideo.setVideoPath(mFilePath);
 			mVVPlayVideo.switchFilterId(0);
 			mVVPlayVideo.start();
-			//setMuteVideo(false);
 			
-			//mVideoEditHandler.sendEmptyMessageDelayed(2,5000);
+			//setMuteVideo(false);
+			//mVideoEditHandler.sendEmptyMessageDelayed(2,100);
 			//setMixAudioFilePath("1.mp3", true);
 			
 		} catch (FilterVideoEditorException e) {
@@ -587,14 +583,17 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * @param path
 	 */
 	private void addMusicToVideo(String path){
+		mVVPlayVideo.stop();
+		
+		setMuteVideo(false);
+		//选择音频试听,循环播放,视频重新播放
+		setMixAudioFilePath(path,true);
+		
 		//启动进度条线程
 		updateVideoProgress();
 		mVVPlayVideo.start();
 		//隐藏图片
 		mPlayStatusImage.setVisibility(View.GONE);
-		
-		//选择音频试听,循环播放,视频重新播放
-		setMixAudioFilePath(path,true);
 	}
 	
 	/**
