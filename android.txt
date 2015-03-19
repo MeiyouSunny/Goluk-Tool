@@ -4,10 +4,8 @@ goluk/src/api/system
 goluk/src/api/universal
 goluk/src/api/zlib
 goluk/src/api/lua
-goluk/src/api/lua-script
+goluk/src/lua-script
 goluk/src/logic
 goluk/src/net-plugin
-goluk/src/resource
 goluk/src/jnibase
 goluk/src/android
-
