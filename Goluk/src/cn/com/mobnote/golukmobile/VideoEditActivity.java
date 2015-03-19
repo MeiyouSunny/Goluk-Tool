@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.EditorParam;
 import com.rd.car.editor.FilterPlaybackView;
@@ -117,13 +116,13 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	/** 当前选择的配音文件路径 */
 	private String m_strRecorderingFilePath;
 	/** 控制视频是配乐操作 */
-	private boolean isSoundTrack;
+	//private boolean isSoundTrack;
 	/** 当前选择的配乐文件路径 */
-	private String m_strMusicFilePath;
+	//private String m_strMusicFilePath;
 	/** 配音录制时记录开始位置和结束位置 的范围 */
-	private int startTime, endTime;
+	//private int startTime, endTime;
 	/** 内置音乐路径列表 */
-	private List<String> assetsMusicPaths = new ArrayList<String>() ;
+	//private List<String> assetsMusicPaths = new ArrayList<String>() ;
 	/** 进度条线程 */
 	private Thread mProgressThread = null;
 	
@@ -329,7 +328,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	/**
 	 * 重置视频播放状态
 	 */
-	private boolean changeVideoPlayState(){
+	private void changeVideoPlayState(){
 		if(mVVPlayVideo.isPlaying()){
 			//显示播放图片
 			mPlayStatusImage.setVisibility(View.VISIBLE);
@@ -337,97 +336,92 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			mVVPlayVideo.pause();
 		}
 		//判断当前视频改变了滤镜效果,如果没有,可以直接上传分享
-		boolean b = mMVListAdapter.getResChange();
-		return b;
+		//boolean b = mMVListAdapter.getResChange();
+		//return b;
 	}
 	
 	 /**
 	 * 保存视频
 	 */
 	protected void onSaveVideo() {
-		boolean b = changeVideoPlayState();
-		if(!b){
-			//直接上传本地视频
-			videoUpload(mVideoSavePath);
-		}
-		else{
-			try {
-				// 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
-				EditorParam editorParam = new EditorParam();
-				//高清
+		changeVideoPlayState();
+		
+		try {
+			// 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
+			EditorParam editorParam = new EditorParam();
+			//高清
 //				editorParam.nVideoWidth = 854;
 //				editorParam.nVideoHeight = 480;
-				//标清
-				editorParam.nVideoWidth = 640;
-				editorParam.nVideoHeight = 360;
-				
-				editorParam.nVideoBitrate = 512 * 1024;
-				editorParam.nFps = 21;
-				
-				mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
-				mVVPlayVideo.saveVideo(mVideoSavePath, editorParam,
-					new FilterPlaybackView.FilterVideoEditorListener() {
-						ProgressDialog m_pdSave;
-						long m_lUseTimeChecker;
-						
-						@Override
-						public void onFilterVideoSaveStart() {
-							m_pdSave = ProgressDialog.show(VideoEditActivity.this, "", "开始保存编辑。。。");
-							m_pdSave.setCanceledOnTouchOutside(false);
-							m_pdSave.setCancelable(true);
-							m_pdSave.setOnCancelListener(new DialogInterface.OnCancelListener() {
-								@Override
-								public void onCancel(DialogInterface dialog) {
-									mVVPlayVideo.cancelSave();
-								}
-							});
-							m_lUseTimeChecker = SystemClock.uptimeMillis();
-						}
-	
-						@Override
-						public boolean onFilterVideoSaving(int nProgress,int nMax) {
-							m_pdSave.setMessage(String.format("保存编辑中%d%%...",nProgress));
-							// 返回false代表取消保存。。。
-							return true;
-						}
-	
-						@Override
-						public void onFilterVideoEnd(boolean bSuccess,boolean bCancel) {
-							m_pdSave.dismiss();
-							//String strInfo = "";
-							if (bCancel) {
-								//strInfo = "已取消视频保存！";
-							}
-							else if (bSuccess) {
-								//strInfo = "保存视频成功！";
-								//item.setVideoPath(AssetsFileUtils.getCreateTempFileDir(VideoEditActivity.this) + "/测试保存编辑和上传后.mp4");
-								//uploadVideo(item);
-								//保存成功,上传视频
-								videoUpload(mVideoSavePath);
-							}
-							
-							//Toast.makeText(VideoEditActivity.this, strInfo,Toast.LENGTH_SHORT).show();
-							if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
-								try {
-									mVVPlayVideo.reload();
-								}
-								catch (FilterVideoEditorException e) {
-									Toast.makeText(VideoEditActivity.this,"重加载视频失败，" + e.getMessage(),Toast.LENGTH_SHORT).show();
-								}
-							}
-							/**/
-							Toast.makeText(VideoEditActivity.this,"视频编辑保存使用时间：" + (SystemClock.uptimeMillis() - m_lUseTimeChecker) + "ms", Toast.LENGTH_SHORT).show();
-						}
+			//标清
+			editorParam.nVideoWidth = 640;
+			editorParam.nVideoHeight = 360;
 			
-						@Override
-						public void onFilterVideoSaveError(int nErrorType,int nErrorNo, String strErrorInfo) {
-							Toast.makeText(VideoEditActivity.this,"保存视频失败，" + strErrorInfo,Toast.LENGTH_SHORT).show();
+			editorParam.nVideoBitrate = 512 * 1024;
+			editorParam.nFps = 21;
+			
+			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
+			mVVPlayVideo.saveVideo(mVideoSavePath, editorParam,
+				new FilterPlaybackView.FilterVideoEditorListener() {
+					ProgressDialog m_pdSave;
+					long m_lUseTimeChecker;
+					
+					@Override
+					public void onFilterVideoSaveStart() {
+						m_pdSave = ProgressDialog.show(VideoEditActivity.this, "", "开始保存编辑。。。");
+						m_pdSave.setCanceledOnTouchOutside(false);
+						m_pdSave.setCancelable(true);
+						m_pdSave.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							@Override
+							public void onCancel(DialogInterface dialog) {
+								mVVPlayVideo.cancelSave();
+							}
+						});
+						m_lUseTimeChecker = SystemClock.uptimeMillis();
+					}
+
+					@Override
+					public boolean onFilterVideoSaving(int nProgress,int nMax) {
+						m_pdSave.setMessage(String.format("保存编辑中%d%%...",nProgress));
+						// 返回false代表取消保存。。。
+						return true;
+					}
+
+					@Override
+					public void onFilterVideoEnd(boolean bSuccess,boolean bCancel) {
+						m_pdSave.dismiss();
+						//String strInfo = "";
+						if (bCancel) {
+							//strInfo = "已取消视频保存！";
 						}
-					});
-			}
-			catch (FilterVideoEditorException e) {
-				Toast.makeText(this, "保存视频失败，" + e.getMessage(), Toast.LENGTH_SHORT).show();
-			}
+						else if (bSuccess) {
+							//strInfo = "保存视频成功！";
+							//item.setVideoPath(AssetsFileUtils.getCreateTempFileDir(VideoEditActivity.this) + "/测试保存编辑和上传后.mp4");
+							//uploadVideo(item);
+							//保存成功,上传视频
+							videoUpload(mVideoSavePath);
+						}
+						
+						//Toast.makeText(VideoEditActivity.this, strInfo,Toast.LENGTH_SHORT).show();
+						if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
+							try {
+								mVVPlayVideo.reload();
+							}
+							catch (FilterVideoEditorException e) {
+								Toast.makeText(VideoEditActivity.this,"重加载视频失败，" + e.getMessage(),Toast.LENGTH_SHORT).show();
+							}
+						}
+						/**/
+						Toast.makeText(VideoEditActivity.this,"视频编辑保存使用时间：" + (SystemClock.uptimeMillis() - m_lUseTimeChecker) + "ms", Toast.LENGTH_SHORT).show();
+					}
+		
+					@Override
+					public void onFilterVideoSaveError(int nErrorType,int nErrorNo, String strErrorInfo) {
+						Toast.makeText(VideoEditActivity.this,"保存视频失败，" + strErrorInfo,Toast.LENGTH_SHORT).show();
+					}
+				});
+		}
+		catch (FilterVideoEditorException e) {
+			Toast.makeText(this, "保存视频失败，" + e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -454,7 +448,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			}
 			else {
 				// 不存在，则直接播放
-				mVVPlayVideo.start();
+				//mVVPlayVideo.start();
 			}
 		}
 		catch (FilterVideoEditorException e) {
@@ -480,6 +474,8 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			console.toast("不支持该" + (isSoundTrack ? "音乐！" : "录音！"),mContext);
 			return;
 		}
+		
+		/*
 		setSoundTrack(isSoundTrack);
 		if (isSoundTrack) {
 			m_strMusicFilePath = mixAudioPath;
@@ -496,22 +492,23 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		console.log("选择播放" + (isSoundTrack ? "配乐：" : "配音：") + mixAudioPath);
 		console.log("music---444---" + mixAudioPath);
 		if (mVVPlayVideo.isPausing() || mVVPlayVideo.isPlaying()) {
-			//mVVPlayVideo.stop();
+			mVVPlayVideo.stop();
 		}
+		*/
 		console.log("music---555---" + mixAudioPath);
 		try {
-			// 清理所有音频列表后，重新添加不是配乐或配音情况下的配乐或配音文件
-			mVVPlayVideo.clearAllMixAudio();
 			if(!TextUtils.isEmpty(mixAudioPath)) {
 				// from to 设置为0代表配乐在视频全时间线循环
-				mVVPlayVideo.addMixAudio(mixAudioPath, 0, 0,1.0f);
+				mVVPlayVideo.addMixAudio(mixAudioPath,0,0,1.0f);
 			}
 			console.log("music---666---" + mixAudioPath);
+			/*
 			for (MixAudioInfo info : audioInfos) {
 				// 设置添加配音在一个指定时间段播放
 				mVVPlayVideo.addMixAudio(info.getRecordFiePath(),info.getRecordStart(), info.getRecordEnd(),info.getFactor());
 			}
-			//videoPlaystate();
+			videoPlaystate();
+			*/
 		}
 		catch (Exception e) {
 			console.toast("添加" + (isSoundTrack ? "音乐！" : "配音！") + "失败，" + e.getMessage(),mContext);
@@ -545,10 +542,10 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * 设置是否配乐
 	 * 
 	 * @param isSoundTrack
-	 */
 	public void setSoundTrack(boolean isSoundTrack) {
 		this.isSoundTrack = isSoundTrack;
 	}
+	 */
 	
 	/**
 	 * 添加资源到配置目录
@@ -556,19 +553,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * @param strAssetFile
 	 * @return 导出内置音乐文件信息后返回一个数据对象
 	 */
-	private String addAssets(String StrFileName, String strAssetFile) {
-		String path = AssetsFileUtils.getAssetFileNameForSdcard(this,strAssetFile);
-		File file = new File(path);
-		if (!file.exists()) {
-			AssetsFileUtils.CopyAssets(this.getResources().getAssets(),strAssetFile, file.getAbsolutePath());
-		}
-		return file.getAbsolutePath();
-//		return new String[] {
-//			TextUtils.isEmpty(StrFileName) ? file.getName() : StrFileName,
-//			file.getAbsolutePath()
-//		};
-	}
-	
 	private String addAssets(String strAssetFile) {
 		String path = AssetsFileUtils.getAssetFileNameForSdcard(this,strAssetFile);
 		File file = new File(path);
@@ -583,17 +567,30 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * @param path
 	 */
 	private void addMusicToVideo(String path){
-		mVVPlayVideo.stop();
-		
-		setMuteVideo(false);
-		//选择音频试听,循环播放,视频重新播放
-		setMixAudioFilePath(path,true);
-		
-		//启动进度条线程
-		updateVideoProgress();
-		mVVPlayVideo.start();
-		//隐藏图片
-		mPlayStatusImage.setVisibility(View.GONE);
+		//mVVPlayVideo.stop();
+		try{
+			if(!"".equals(path) && null != path){
+				//setMuteVideo(false);
+				mVVPlayVideo.clearAllMixAudio();
+				mVVPlayVideo.muteMainVideo(false);
+				//选择音频试听,循环播放,视频重新播放
+				setMixAudioFilePath(path,true);
+				
+				//启动进度条线程
+				updateVideoProgress();
+				mVVPlayVideo.start();
+				//隐藏图片
+				mPlayStatusImage.setVisibility(View.GONE);
+				
+				mMusicBtn.setBackgroundResource(R.drawable.music_btn);
+			}
+			else{
+				mMusicBtn.setBackgroundResource(R.drawable.music_no_btn);
+			}
+		}
+		catch(Exception e){
+			
+		}
 	}
 	
 	/**
@@ -642,8 +639,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 				//视频的总长度
 				int maxDuration = mVVPlayVideo.getDuration();
 				while (null != mProgressThread && null != mVVPlayVideo) {
-					// 如果有视频播放才更新进度条
-					//totalTime = updateTime(mVVPlayVideo.getDuration());
 					// 设置进度条的长度为视频的总长度
 					mVideoProgressBar.setMax(maxDuration);
 					//console.log("video---progress---max---" + mVVPlayVideo.getDuration());
@@ -653,9 +648,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 						int position = mVVPlayVideo.getCurrentPosition();
 						//console.log("video---progress---" + position);
 						mVideoProgressBar.setProgress(position);
-						//Message msg = new Message();
-						//msg.obj = updateTime(mVVPlayVideo.getCurrentPosition()) + "/" + totalTime;
-						//handler.sendMessage(msg);
 					}
 					try {
 						// 休眠50毫秒
@@ -690,7 +682,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			}
 			mVVPlayVideo.onPause();
 		}
-		//mMediaPlayer.stop();
 		//停止进度条线程
 		stopProgressThread();
 		super.onPause();
@@ -703,8 +694,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		}
 		mApp.setContext(this,"VideoEdit");
 		
-		//addMusicToVideo();
-		
 		super.onResume();
 	}
 	
@@ -712,18 +701,8 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	protected void onDestroy() {
 		mVVPlayVideo.cleanUp();
 		mVVPlayVideo = null;
-		//mMediaPlayer.reset();
-		//mMediaPlayer.release();
-		//mMediaPlayer = null;
 		
 		super.onDestroy();
-		/*
-		if(mMedioPlayer.isPlaying()){
-			mMedioPlayer.stop();
-		}
-		mMedioPlayer.release();
-		//Activity销毁时停止播放，释放资源。不做这个操作，即使退出还是能听到视频播放的声音
-		*/
 	}
 
 	@Override
@@ -733,7 +712,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		switch(id){
 			case R.id.back_btn:
 				//返回
-				VideoEditActivity.this.finish();
+				finish();
 			break;
 			case R.id.next_btn:
 				//下一步,跳转到视频分享页面
