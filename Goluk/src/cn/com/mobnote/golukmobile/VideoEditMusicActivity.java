@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.MusicListAdapter;
 import cn.com.mobnote.video.MusicManage;
 import cn.com.mobnote.video.MusicManage.MusicData;
@@ -188,6 +189,7 @@ public class VideoEditMusicActivity extends Activity implements OnClickListener 
 	 * @param path
 	 */
 	public void playSelectMusicSound(String path) {
+		console.log("music---playSelectMusicSound---" + path);
 		try {
 			if(!"".equals(path)){
 				// 重置mediaPlayer实例，reset之后处于空闲状态

@@ -130,8 +130,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	private List<String> assetsMusicPaths = new ArrayList<String>() ;
 	/** 进度条线程 */
 	private Thread mProgressThread = null;
-	/** 播放音频 */
-	public MediaPlayer mMediaPlayer = new MediaPlayer();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -186,13 +184,14 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 				int what = msg.what;
 				switch(what){
 					case 1:
-						//选择音频试听,循环播放,视频重新播放
-						//重新播放视频
-						resetPlayVideo();
-						
 						String path = (String) msg.obj;
 						console.log("select music---" + path);
-						playSelectMusicSound(path);
+						addMusicToVideo(path);
+					break;
+					case 2:
+						//mVVPlayVideo.stop();
+						setMuteVideo(false);
+						setMixAudioFilePath("1.mp3", true);
 					break;
 				}
 			}
@@ -215,13 +214,13 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		//mSurfaceHolder.setFixedSize(320, 220);
 		*/
 		
-		assetsMusicPaths.add("");
-		String assetsMusic = addAssets("想念", "music/xiangnian.mp3");
-		console.log("music---" + assetsMusic);
-		assetsMusicPaths.add(assetsMusic);
-		assetsMusic = addAssets("漂亮男孩", "music/piaoliangnanhai.mp3");
-		console.log("music---" + assetsMusic);
-		assetsMusicPaths.add(assetsMusic);
+//		assetsMusicPaths.add("");
+//		String assetsMusic = addAssets("想念", "1.mp3");
+//		console.log("music---" + assetsMusic);
+//		assetsMusicPaths.add(assetsMusic);
+//		assetsMusic = addAssets("漂亮男孩", "2.mp3");
+//		console.log("music---" + assetsMusic);
+//		assetsMusicPaths.add(assetsMusic);
 		
 		mVVPlayVideo = (FilterPlaybackView) this.findViewById(R.id.vvPlayVideo);
 		//内置滤镜最大id为Constants.FILTER_ID_WARM
@@ -232,7 +231,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		mVVPlayVideo.addFilter(nFilterId++, R.raw.lanseshike);
 		mVVPlayVideo.addFilter(nFilterId++, R.raw.youge);
 		
-		Log.e("","chxy___onCompletion1");
 		//播放器准备过程的回调接口
 		mVVPlayVideo.setPlaybackListener(new FilterPlaybackView.FilterPlaybackViewListener() {
 			@Override
@@ -266,10 +264,10 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			mVVPlayVideo.setVideoPath(mFilePath);
 			mVVPlayVideo.switchFilterId(0);
 			mVVPlayVideo.start();
+			//setMuteVideo(false);
 			
-			console.log("music---222---");
-//			setMuteVideo(false);
-//			setMixAudioFilePath(assetsMusicPaths.get(2), true);
+			mVideoEditHandler.sendEmptyMessageDelayed(2,5000);
+			//setMixAudioFilePath("1.mp3", true);
 			
 		} catch (FilterVideoEditorException e) {
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -305,34 +303,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		//设置grid item点击效果为透明
 		//gridLayout.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		return gridLayout;
-	}
-	
-	/**
-	 * 播放选择的音频声音
-	 */
-	private void playSelectMusicSound(String path) {
-		try {
-			mStrMusicFilePath = path;
-			if("".equals(mStrMusicFilePath)){
-				mMusicBtn.setBackgroundResource(R.drawable.music_no_btn);
-			}
-			else{
-				mMusicBtn.setBackgroundResource(R.drawable.music_btn);
-				
-				// 重置mediaPlayer实例，reset之后处于空闲状态
-				mMediaPlayer.reset();
-				// 设置需要播放的音乐文件的路径，只有设置了文件路径之后才能调用prepare
-				AssetFileDescriptor fileDescriptor = this.getAssets().openFd(path);
-				mMediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(),fileDescriptor.getLength());
-				// 准备播放，只有调用了prepare之后才能调用start
-				mMediaPlayer.prepare();
-				// 循环播放
-				mMediaPlayer.setLooping(true);
-				// 开始播放
-				mMediaPlayer.start();
-			}
-		} catch (Exception ex) {
-		}
 	}
 	
 	/**
@@ -505,9 +475,11 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * @param isSoundTrack
 	 *            是否配乐
 	 */
-	private void setMixAudioFilePath(String mixAudioPath, boolean isSoundTrack) {
+	private void setMixAudioFilePath(String path, boolean isSoundTrack) {
 		///mnt/sdcard/Android/data/com.rd.car.demo/files/assets/1.mp3
-		console.log("music---333---" + mixAudioPath);
+		console.log("music---setMixAudioFilePath---1---" + path);
+		String mixAudioPath = addAssets(path);
+		console.log("music---setMixAudioFilePath---2---" + mixAudioPath);
 		if (TextUtils.isEmpty(mixAudioPath)) {
 			console.toast("不支持该" + (isSoundTrack ? "音乐！" : "录音！"),mContext);
 			return;
@@ -528,22 +500,22 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		console.log("选择播放" + (isSoundTrack ? "配乐：" : "配音：") + mixAudioPath);
 		console.log("music---444---" + mixAudioPath);
 		if (mVVPlayVideo.isPausing() || mVVPlayVideo.isPlaying()) {
-			mVVPlayVideo.stop();
+			//mVVPlayVideo.stop();
 		}
 		console.log("music---555---" + mixAudioPath);
 		try {
 			// 清理所有音频列表后，重新添加不是配乐或配音情况下的配乐或配音文件
 			mVVPlayVideo.clearAllMixAudio();
-			if (!TextUtils.isEmpty(m_strMusicFilePath)) {
+			if(!TextUtils.isEmpty(mixAudioPath)) {
 				// from to 设置为0代表配乐在视频全时间线循环
-				mVVPlayVideo.addMixAudio(m_strMusicFilePath, 0, 0,1.0f);
+				mVVPlayVideo.addMixAudio(mixAudioPath, 0, 0,1.0f);
 			}
 			console.log("music---666---" + mixAudioPath);
 			for (MixAudioInfo info : audioInfos) {
 				// 设置添加配音在一个指定时间段播放
 				mVVPlayVideo.addMixAudio(info.getRecordFiePath(),info.getRecordStart(), info.getRecordEnd(),info.getFactor());
 			}
-			videoPlaystate();
+			//videoPlaystate();
 		}
 		catch (Exception e) {
 			console.toast("添加" + (isSoundTrack ? "音乐！" : "配音！") + "失败，" + e.getMessage(),mContext);
@@ -586,7 +558,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * 添加资源到配置目录
 	 * 
 	 * @param strAssetFile
-	 * @param StrFileName
 	 * @return 导出内置音乐文件信息后返回一个数据对象
 	 */
 	private String addAssets(String StrFileName, String strAssetFile) {
@@ -601,7 +572,31 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 //			file.getAbsolutePath()
 //		};
 	}
-
+	
+	private String addAssets(String strAssetFile) {
+		String path = AssetsFileUtils.getAssetFileNameForSdcard(this,strAssetFile);
+		File file = new File(path);
+		if (!file.exists()) {
+			AssetsFileUtils.CopyAssets(this.getResources().getAssets(),strAssetFile, file.getAbsolutePath());
+		}
+		return file.getAbsolutePath();
+	}
+	
+	/**
+	 * 添加音频到视频
+	 * @param path
+	 */
+	private void addMusicToVideo(String path){
+		//启动进度条线程
+		updateVideoProgress();
+		mVVPlayVideo.start();
+		//隐藏图片
+		mPlayStatusImage.setVisibility(View.GONE);
+		
+		//选择音频试听,循环播放,视频重新播放
+		setMixAudioFilePath(path,true);
+	}
+	
 	/**
 	 * 本地视频上传回调
 	 * @param vid,视频ID
@@ -624,17 +619,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		else{
 			Toast.makeText(VideoEditActivity.this,"视频上传失败", Toast.LENGTH_SHORT).show();
 		}
-	}
-	
-	/**
-	 * 重新播放视频
-	 */
-	private void resetPlayVideo(){
-		//启动进度条线程
-		updateVideoProgress();
-		mVVPlayVideo.start();
-		//隐藏图片
-		mPlayStatusImage.setVisibility(View.GONE);
 	}
 	
 	/**
@@ -663,12 +647,12 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 					//totalTime = updateTime(mVVPlayVideo.getDuration());
 					// 设置进度条的长度为视频的总长度
 					mVideoProgressBar.setMax(maxDuration);
-					console.log("video---progress---max---" + mVVPlayVideo.getDuration());
+					//console.log("video---progress---max---" + mVVPlayVideo.getDuration());
 					// 如果视频正在播放而且进度条没有被拖动
 					if (mVVPlayVideo.isPlaying()) {
 						// 设置进度条的当前进度为视频已经播放的长度
 						int position = mVVPlayVideo.getCurrentPosition();
-						console.log("video---progress---" + position);
+						//console.log("video---progress---" + position);
 						mVideoProgressBar.setProgress(position);
 						//Message msg = new Message();
 						//msg.obj = updateTime(mVVPlayVideo.getCurrentPosition()) + "/" + totalTime;
@@ -707,7 +691,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			}
 			mVVPlayVideo.onPause();
 		}
-		mMediaPlayer.stop();
+		//mMediaPlayer.stop();
 		//停止进度条线程
 		stopProgressThread();
 		super.onPause();
@@ -719,6 +703,9 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			mVVPlayVideo.onResume();
 		}
 		mApp.setContext(this,"VideoEdit");
+		
+		//addMusicToVideo();
+		
 		super.onResume();
 	}
 	
@@ -726,9 +713,9 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	protected void onDestroy() {
 		mVVPlayVideo.cleanUp();
 		mVVPlayVideo = null;
-		mMediaPlayer.reset();
-		mMediaPlayer.release();
-		mMediaPlayer = null;
+		//mMediaPlayer.reset();
+		//mMediaPlayer.release();
+		//mMediaPlayer = null;
 		
 		super.onDestroy();
 		/*

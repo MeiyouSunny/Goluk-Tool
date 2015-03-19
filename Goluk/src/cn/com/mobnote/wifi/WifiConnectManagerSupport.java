@@ -21,7 +21,6 @@ import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.os.Environment;
 import android.text.TextUtils;
 
-
 public class WifiConnectManagerSupport {
 
 	private WifiManager wifiManager = null;
@@ -63,11 +62,13 @@ public class WifiConnectManagerSupport {
 			out = new FileOutputStream(new File(tempPath));
 			out.write(writeBytes);
 			return true;
-		} finally {
+		}
+		finally {
 			if (out != null) {
 				try {
 					out.close();
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -92,7 +93,10 @@ public class WifiConnectManagerSupport {
 		ByteArrayOutputStream bos = null;
 		try {
 			file = new File(tempPath);
-
+			//如果文件不存在返回null
+			if (!file.exists()) {
+				return null;
+			}
 			bos = new ByteArrayOutputStream((int) file.length());
 
 			in = new BufferedInputStream(new FileInputStream(file));
@@ -110,11 +114,13 @@ public class WifiConnectManagerSupport {
 			}
 			return null;
 
-		} finally {
+		}
+		finally {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -122,7 +128,8 @@ public class WifiConnectManagerSupport {
 			if (bos != null) {
 				try {
 					bos.close();
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -168,7 +175,8 @@ public class WifiConnectManagerSupport {
 			if (!TextUtils.isEmpty(Password)) {
 				if (isHexWepKey(Password)) {
 					config.wepKeys[0] = Password;
-				} else {
+				}
+				else {
 					config.wepKeys[0] = "\"" + Password + "\"";
 				}
 			}
@@ -196,7 +204,6 @@ public class WifiConnectManagerSupport {
 		}
 		return config;
 	}
-
 
 	// 打开wifi功能
 	boolean openWifi() {
@@ -250,7 +257,7 @@ public class WifiConnectManagerSupport {
 		WifiInfo info = wifiManager.getConnectionInfo();
 		String conSSid = info.getSSID();
 		// 开始扫描网络
-		
+
 		List<ScanResult> scanResult = wifiManager.getScanResults();
 
 		if (scanResult != null) {
@@ -264,7 +271,7 @@ public class WifiConnectManagerSupport {
 					bean.setWifiSignal(WifiManager.calculateSignalLevel(
 							tempResult.level, 4));
 					if (conSSid != null && !"".equals(conSSid)) {
-						if (("\""+bean.getWifiName()+"\"").equals(conSSid)) {
+						if (("\"" + bean.getWifiName() + "\"").equals(conSSid)) {
 							bean.setConn(true);
 						}
 					}
@@ -280,22 +287,25 @@ public class WifiConnectManagerSupport {
 
 		return rs;
 	}
-	
+
 	/**
 	 * 判断是否在列表中
+	 * 
 	 * @param ssid
 	 * @param beans
 	 * @return
 	 */
-	public boolean inWifiGroup(String ssid ,WifiRsBean[] beans){
-		  if(beans==null){
-			  return false;
-		  }else{
-			  for(WifiRsBean temp:beans){
-				  if(temp.getWifiName().equals(ssid));
-				  return true;
-			  }
-		  }
+	public boolean inWifiGroup(String ssid, WifiRsBean[] beans) {
+		if (beans == null) {
+			return false;
+		}
+		else {
+			for (WifiRsBean temp : beans) {
+				if (temp.getWifiName().equals(ssid))
+					;
+				return true;
+			}
+		}
 		return false;
 	}
 }
