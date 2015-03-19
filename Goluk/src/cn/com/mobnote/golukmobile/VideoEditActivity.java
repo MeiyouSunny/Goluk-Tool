@@ -266,7 +266,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			mVVPlayVideo.start();
 			//setMuteVideo(false);
 			
-			mVideoEditHandler.sendEmptyMessageDelayed(2,5000);
+			//mVideoEditHandler.sendEmptyMessageDelayed(2,5000);
 			//setMixAudioFilePath("1.mp3", true);
 			
 		} catch (FilterVideoEditorException e) {
