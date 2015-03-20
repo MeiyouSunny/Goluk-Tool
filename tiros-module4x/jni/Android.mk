@@ -12,8 +12,8 @@ LOCAL_LDFLAGS := $(LOCAL_PATH)/../lib/logic/lib/liblogic.a \
                  $(LOCAL_PATH)/../lib/api/zlib/lib/libzlib.a \
                  $(LOCAL_PATH)/../../../jnibase/libgpsencryption.a \
                  $(LOCAL_PATH)/../lib/net-plugin/lib/libnet-plugin.a \
-                 $(LOCAL_PATH)/../lib/api/universal/lib/libuniversal_api.a\
-                 $(LOCAL_PATH)/../lib/api/system/lib/libsystem_api.a 
+                 $(LOCAL_PATH)/../lib/api/system/lib/libsystem_api.a \
+                 $(LOCAL_PATH)/../lib/api/universal/lib/libuniversal_api.a
 LOCAL_MODULE    := golukmobile
 
 LOCAL_CFLAGS =-D__LITTLE_ENDIAN -D_UNSUPPORT_STDARG -DTIROS_ANDROID_PLATFORM -mfloat-abi=softfp -mfpu=neon -march=armv7-a -mcpu=cortex-a9
