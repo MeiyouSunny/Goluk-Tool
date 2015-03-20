@@ -120,10 +120,23 @@
 					android:layout_width="match_parent"
 					android:layout_height="match_parent">
 					<ProgressBar
+						android:id="@+id/video_loading_pro"
 						style="?android:attr/progressBarStyleLarge"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_centerInParent="true" />
+					
+					<TextView
+						android:id="@+id/time_out_text"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="5dp"
+						android:layout_below="@id/video_loading_pro"
+						android:layout_centerHorizontal="true"
+						android:textColor="#F5F5F5"
+						android:textSize="14sp"
+						android:text="@string/video_live_5s_tip"
+						android:visibility="gone"/>
 				</RelativeLayout>
 				
 				<!-- 默认显示图片

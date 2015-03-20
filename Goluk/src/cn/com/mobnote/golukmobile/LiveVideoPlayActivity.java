@@ -21,7 +21,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +34,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 /**
  * <pre>
@@ -68,7 +72,8 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 	private RelativeLayout mVideoLoading = null;
 	/** 播放布局 */
 	private RelativeLayout mPlayLayout = null;
-	
+	/** 直播超时提示文字 */
+	private TextView mTimeOutText = null;
 	/** 地图layout */
 	//private RelativeLayout mMapLayout = null;
 	/** 百度地图 */
@@ -145,6 +150,7 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 		mVideoLiveScrollView = (ScrollView)findViewById(R.id.video_live_scroll);
 		mBackBtn = (Button)findViewById(R.id.back_btn);
 		mRefirshBtn = (Button) findViewById(R.id.refirsh_btn);
+		mTimeOutText = (TextView) findViewById(R.id.time_out_text);
 		mVideoLoading = (RelativeLayout) findViewById(R.id.video_loading);
 		mPlayLayout = (RelativeLayout)findViewById(R.id.play_layout);
 		
@@ -183,6 +189,10 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 						//测试获取视频详情
 						Object obj = new Object();
 						LiveVideoDataCallBack(1,obj);
+					break;
+					case 2:
+						//5秒超时显示,提示文字
+						mTimeOutText.setVisibility(View.VISIBLE);
 					break;
 				}
 			}
@@ -251,7 +261,6 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 			public boolean onPlayerError(RtmpPlayerView arg0, int arg1, int arg2,String arg3) {
 				//视频播放出错
 				console.log("live---onPlayerError" + arg2 + "," + arg3);
-				console.toast("视频直播出错," + arg3, mContext);
 				mVideoLoading.setVisibility(View.GONE);
 				mPlayLayout.setVisibility(View.VISIBLE);
 				return false;
@@ -299,6 +308,7 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 	private void getVideoLiveData(){
 		mPlayLayout.setVisibility(View.GONE);
 		mVideoLoading.setVisibility(View.VISIBLE);
+		mTimeOutText.setVisibility(View.GONE);
 		
 		String condi = "{\"uid\":\"" + mUid + "\",\"desAid\":\"" + mAid + "\"}";
 		console.log("PageType_GetVideoDetail---获取直播详情---" + condi);
@@ -306,8 +316,49 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 		if(!b){
 			console.log("PageType_GetVideoDetail---获取直播详情---失败" + b);
 		}
+		else{
+			//5秒未开始直播,显示提示文字
+			mLiveVideoHandler.sendEmptyMessageDelayed(2,5000);
+		}
 	}
 	
+	/**
+	 * 设置视频直播地址
+	 * @param data
+	 */
+	private void setVideoLiveUrl(JSONObject data){
+		try{
+			JSONObject json = data.getJSONObject("data");
+			//请求成功
+			//视频直播流地址
+			String vurl = json.getString("vurl");
+			if(!"".equals(vurl) && null != vurl){
+				//把视频直播流给到播放器
+				mFilePath = vurl;
+				//视频初始化
+				videoInit();
+			}
+			else{
+				//获取图片数据
+				String picUrl = json.getString("picurl");
+				if(!"".equals(picUrl) && null != picUrl){
+					//调用图片下载接口
+				}
+			}
+			//获取经纬度数据
+			String lon = json.getString("lon");
+			String lat = json.getString("lat");
+			String head = json.getString("head");
+			if(!"".equals(lon) && null != lon && !"".equals(lat) && null != lat){
+				//添加地图大头针
+				mBaiduMapManage.AddMapPoint(lon,lat,head);
+				mBaiduMapManage.SetMapCenter(Double.parseDouble(lon),Double.parseDouble(lat));
+			}
+		}
+		catch(Exception e){
+			
+		}
+	}
 	
 	/**
 	 * 视频直播数据返回
@@ -315,36 +366,29 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 	 */
 	public void LiveVideoDataCallBack(int success,Object obj){
 		//String str = "{\"code\":\"200\",\"state\":\"true\",\"vurl\":\"http://cdn3.lbs8.com/files/cdcvideo/test11.mp4\",\"cnt\":\"5\",\"lat\":\"39.93923\",\"lon\":\"116.357428\",\"picurl\":\"http://img.cool80.com/i/png/217/02.png\"}";
+		String str = (String)obj;
 		if(1 == success){
-			String str =  (String)obj;
 			console.log("视频直播数据返回--LiveVideoDataCallBack:" + str);
 			try {
 				JSONObject data = new JSONObject(str);
-				JSONObject json = data.getJSONObject("data");
-				//请求成功
-				//视频直播流地址
-				String vurl = json.getString("vurl");
-				if(!"".equals(vurl) && null != vurl){
-					//把视频直播流给到播放器
-					mFilePath = vurl;
-					//视频初始化
-					videoInit();
-				}
-				else{
-					//获取图片数据
-					String picUrl = json.getString("picurl");
-					if(!"".equals(picUrl) && null != picUrl){
-						//调用图片下载接口
-					}
-				}
-				//获取经纬度数据
-				String lon = json.getString("lon");
-				String lat = json.getString("lat");
-				String head = json.getString("head");
-				if(!"".equals(lon) && null != lon && !"".equals(lat) && null != lat){
-					//添加地图大头针
-					mBaiduMapManage.AddMapPoint(lon,lat,head);
-					mBaiduMapManage.SetMapCenter(Double.parseDouble(lon),Double.parseDouble(lat));
+				int code = data.getInt("code");
+				switch(code){
+					case 200:
+						//获取直播数据成功
+						setVideoLiveUrl(data);
+					break;
+					case 400:
+						//各种找不到数据
+					break;
+					case 405:
+						//直播方一定时间内没有上传经纬度信息
+					break;
+					case 420:
+						//直播方卡死,接受不到atk信息
+					break;
+					case 500:
+						//服务器异常
+					break;
 				}
 			}
 			catch(Exception e){
@@ -352,7 +396,20 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 			}
 		}
 		else{
-			console.log("请求直播详情服务错误");
+			//console.log("请求直播详情服务错误");
+			Builder dialog = new AlertDialog.Builder(mContext);
+			dialog.setTitle("提示");
+			dialog.setMessage("直播方数据异常，请重试.");
+			dialog.setNegativeButton("确认",new DialogInterface.OnClickListener(){
+				public void onClick(DialogInterface dialoginterface, int i){
+					//按钮事件,重试
+					//showAutoLoginTip();
+				}
+			});
+			dialog.show();
+			
+			mVideoLoading.setVisibility(View.GONE);
+			mPlayLayout.setVisibility(View.VISIBLE);
 		}
 	}
 

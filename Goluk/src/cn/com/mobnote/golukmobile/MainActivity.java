@@ -986,7 +986,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			if (location == null || mMapView == null){
 				return;
 			}
-			console.log("radius:" + location.getRadius() + "---lat:" + location.getLatitude() + "---lon:" + location.getLongitude());
+			//console.log("radius:" + location.getRadius() + "---lat:" + location.getLatitude() + "---lon:" + location.getLongitude());
 			// 此处设置开发者获取到的方向信息，顺时针0-360
 			MyLocationData locData = new MyLocationData.Builder()
 				.accuracy(location.getRadius()).direction(100)
