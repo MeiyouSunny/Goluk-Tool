@@ -10,8 +10,8 @@
 #include "../../lib/jnibase/jni_system.h"
 #include "../../lib/api/system/debug.h"
 
-void Net_Trans_NotifyCallBack (void* pvUser, Net_Trans_Event event ,int msg , unsigned long param1, unsigned long param2){
-	JNIEnv * g_env;
+void Net_Trans_NotifyCallBack (void* pvUser, int msg , unsigned long param1, unsigned long param2){
+	/*JNIEnv * g_env;
 	jvm->AttachCurrentThread(&g_env, 0);
 	jclass cls = g_env->FindClass("cn/com/mobonote/golukmobile/comm/NetTransNotifyAdapter");
 	jmethodID mId = g_env->GetStaticMethodID(cls, "netTransNotifyCallBack", "(IILjava/lang/Object;Ljava/lang/Object;)V");
@@ -71,7 +71,7 @@ void Net_Trans_NotifyCallBack (void* pvUser, Net_Trans_Event event ,int msg , un
 	if (0 != obj2) {
 		g_env->DeleteLocalRef(obj2);
 	}
-	
+	*/
 }
 
 /*
@@ -82,7 +82,7 @@ void Net_Trans_NotifyCallBack (void* pvUser, Net_Trans_Event event ,int msg , un
 JNIEXPORT void JNICALL Java_cn_com_mobonote_golukmobile_comm_GolukMobileJni_GoLuk_1RegistNetTransNotify
   (JNIEnv *env, jclass cls, jint plogic,jobject pvUser) {
 	  
-	LogicEngine *pL = (LogicEngine*)plogic;
-	pL->RegistNetTransNotify((Net_Trans_Notify)Net_Trans_NotifyCallBack,0); 
+	//LogicEngine *pL = (LogicEngine*)plogic;
+	//pL->RegistNetTransNotify((Net_Trans_Notify)Net_Trans_NotifyCallBack,0); 
 	  
 }

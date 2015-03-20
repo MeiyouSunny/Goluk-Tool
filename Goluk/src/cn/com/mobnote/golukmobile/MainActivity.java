@@ -265,7 +265,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						//检测是否已连接小车本热点
 						checkLinkWiFi();
 						//网络状态改变
-						mApp.VerifyWiFiConnect();
+//						mApp.VerifyWiFiConnect();
 					break;
 					
 					
@@ -891,7 +891,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		//回到页面重新检测wifi状态,只有未连接的情况下才重新检测
 		if(mWiFiStatus == 0){
-			mApp.VerifyWiFiConnect();
+//			mApp.VerifyWiFiConnect();
 		}
 		//回到页面启动定位
 		if(null != mLocClient){
@@ -1046,7 +1046,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 		unregisterReceiver(mWac);
 		//校验wifi连接状态
-		mApp.VerifyWiFiConnect();
+//		mApp.VerifyWiFiConnect();
 	}
 }
 
