@@ -366,8 +366,8 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 	 */
 	public void LiveVideoDataCallBack(int success,Object obj){
 		//String str = "{\"code\":\"200\",\"state\":\"true\",\"vurl\":\"http://cdn3.lbs8.com/files/cdcvideo/test11.mp4\",\"cnt\":\"5\",\"lat\":\"39.93923\",\"lon\":\"116.357428\",\"picurl\":\"http://img.cool80.com/i/png/217/02.png\"}";
-		String str = (String)obj;
 		if(1 == success){
+			String str = (String)obj;
 			console.log("视频直播数据返回--LiveVideoDataCallBack:" + str);
 			try {
 				JSONObject data = new JSONObject(str);
@@ -399,7 +399,15 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 			//console.log("请求直播详情服务错误");
 			Builder dialog = new AlertDialog.Builder(mContext);
 			dialog.setTitle("提示");
-			dialog.setMessage("直播方数据异常，请重试.");
+			dialog.setMessage("请求直播服务超时，请重试.");
+			try{
+				int type =(Integer) obj;
+				if(type == 0){
+					dialog.setMessage("直播方数据异常，请重试.");
+				}
+			}
+			catch(Exception e){
+			}
 			dialog.setNegativeButton("确认",new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface dialoginterface, int i){
 					//按钮事件,重试
@@ -415,6 +423,7 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onDestroy() {
+		console.log("liveplay---onDestroy");
 		if(null != mRPVPalyVideo){
 			mRPVPalyVideo.stopPlayback();
 			mRPVPalyVideo.cleanUp();
@@ -425,6 +434,7 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 	
 	@Override
 	protected void onPause() {
+		console.log("liveplay---onPause");
 		//mPlayLayout.setVisibility(View.VISIBLE);
 		super.onPause();
 	};
