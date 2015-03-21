@@ -18,12 +18,14 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
@@ -217,7 +219,17 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//连接小车本wifi
 		linkMobnoteWiFi();
 		
-		//mApp.VerifyWiFiConnect();
+		mApp.VerifyWiFiConnect();
+		
+		
+		Button ipc = (Button)findViewById(R.id.mIPCBtn);
+		ipc.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+				startActivity(i);
+			}
+		});
 	}
 	
 	/**
@@ -265,7 +277,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						//检测是否已连接小车本热点
 						checkLinkWiFi();
 						//网络状态改变
-//						mApp.VerifyWiFiConnect();
+						mApp.VerifyWiFiConnect();
 					break;
 					
 					
@@ -275,7 +287,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						//pointDataCallback(1,obj);
 						//请求在线视频轮播数据
 						console.log("PageType_GetPinData:");
-						//mApp.mGoluk.GoLuk_CommonGetPage(mApp.mGoluk.PageType_GetPinData,"");
+						mApp.mGoluk.GoLuk_CommonGetPage(mApp.mGoluk.PageType_GetPinData,"");
 					break;
 					case 98:
 						//测试,气泡图片下载完成
@@ -870,6 +882,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(null != mMapView){
 			mMapView.onDestroy();
 		}
+		
+		try {
+		// 应用退出时调用
+		CarRecorderManager.onExit(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Override
@@ -891,7 +911,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		//回到页面重新检测wifi状态,只有未连接的情况下才重新检测
 		if(mWiFiStatus == 0){
-//			mApp.VerifyWiFiConnect();
+			mApp.VerifyWiFiConnect();
 		}
 		//回到页面启动定位
 		if(null != mLocClient){
@@ -1046,7 +1066,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 		unregisterReceiver(mWac);
 		//校验wifi连接状态
-//		mApp.VerifyWiFiConnect();
+		mApp.VerifyWiFiConnect();
 	}
 }
 
