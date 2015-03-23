@@ -65,7 +65,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
@@ -94,15 +93,21 @@ import android.widget.ScrollView;
  */
 
 @SuppressLint("HandlerLeak")
-public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack{
+public class MainActivity2 extends Activity implements OnClickListener , WifiConnCallBack{
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
 	private LayoutInflater mLayoutInflater = null;
+	/** 首页滚动控件*/
+	private ScrollView mScrollView = null;
+	/** 首页布局 */
+	private LinearLayout mIndexLayout = null;
 	
 	/** 地图layout */
 	private RelativeLayout mMapLayout = null;
+	/** 地图全屏按钮 */
+	private Button mMapFullBtn = null;
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
 	/** 直播marker列表按钮 */
@@ -110,23 +115,17 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/** 百度地图 */
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
-	/** 定位相关 */
+	// 定位相关
 	private LocationClient mLocClient;
 	private MyLocationListenner myListener = new MyLocationListenner();
-	/** 是否首次定位 */
+	// 是否首次定位
 	private boolean isFirstLoc = true;
+	
+	/** 地图状态 */
+	private boolean mIsFull = false;
 	private BaiduMapManage mBaiduMapManage = null;
 	/** 控制离开页面不自动请求大头针数据 */
 	private boolean isCurrent = true;
-	/** 分享按钮 */
-	private ImageButton mShareBtn = null;
-	/** 分享按钮布局 */
-	private RelativeLayout share_layout = null;
-	
-	
-	
-	
-	
 	
 	/** 登录状态 */
 	private Button mLoginStatusBtn = null;
@@ -173,6 +172,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/** 下载完成播放音频 */
 	public MediaPlayer mMediaPlayer = new MediaPlayer();
 	
+	@SuppressWarnings("static-access")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -186,7 +186,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		//添加umeng错误统计
 		MobclickAgent.setCatchUncaughtExceptions(true);
+		
 		//添加腾讯崩溃统计
+		//上Bugly(bugly.qq.com)注册产品获取的AppId
 		String appId = "900001742";
 		//true代表App处于调试阶段，false代表App发布阶段
 		boolean isDebug = true;
@@ -194,9 +196,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		CrashReport.initCrashReport(this,appId ,isDebug);
 		
 		mContext = this;
+		
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(this,"Main");
+		//请求在线视频轮播数据
+		mApp.mGoluk.GoLuk_CommonGetPage(mApp.mGoluk.PageType_Main,"");
 		
 		//mApp.mGoluk.GoLuk_WifiStateChanged(true);
 		
@@ -205,12 +210,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//初始化地图
 		initMap();
 		//加载在线视频轮播
-		//initViewPager();
+		initViewPager();
 		//加载本地视屏列表
-		//initLocalVideoList();
+		initLocalVideoList();
 		
 		//连接小车本wifi
-		//linkMobnoteWiFi();
+		linkMobnoteWiFi();
 		
 		//mApp.VerifyWiFiConnect();
 	}
@@ -220,24 +225,27 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 */
 	private void init(){
 		mLayoutInflater = LayoutInflater.from(mContext);
+		mVideoSquareMoreBtn = (Button) findViewById(R.id.video_square_more_btn);
+		mLocalVideoListLayout = (LinearLayout) findViewById(R.id.localvideolistlayout);
 		mMapMarkeListBtn = (Button)findViewById(R.id.map_marke_list_btn);
-		//地图我的位置按钮
-		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
-		//分享按钮
-		mShareBtn = (ImageButton) findViewById(R.id.share_btn);
 		
-//		mLoginStatusBtn = (Button) findViewById(R.id.login_status_btn);
-//		mWiFiLinkStatus = (Button) findViewById(R.id.wifi_link_text);
-//		//本地视频更多按钮
-//		mLocalVideoMoreBtn = (Button)findViewById(R.id.local_video_more_btn);
-//		mDefaultTipLayout = (RelativeLayout) findViewById(R.id.defaulttiplayout);
-//		mScrollView = (ScrollView)findViewById(R.id.index_scroll);
-//		mIndexLayout = (LinearLayout)findViewById(R.id.index_layout);
+		mLoginStatusBtn = (Button) findViewById(R.id.login_status_btn);
+		mWiFiLinkStatus = (Button) findViewById(R.id.wifi_link_text);
+		
+		//本地视频更多按钮
+		mLocalVideoMoreBtn = (Button)findViewById(R.id.local_video_more_btn);
+		
+		mDefaultTipLayout = (RelativeLayout) findViewById(R.id.defaulttiplayout);
+		
+		mScrollView = (ScrollView)findViewById(R.id.index_scroll);
+		mIndexLayout = (LinearLayout)findViewById(R.id.index_layout);
 		
 		//注册事件
+		mVideoSquareMoreBtn.setOnClickListener(this);
 		mMapMarkeListBtn.setOnClickListener(this);
-		mMapLocationBtn.setOnClickListener(this);
-		mShareBtn.setOnClickListener(this);
+		mLocalVideoMoreBtn.setOnClickListener(this);
+		mLoginStatusBtn.setOnClickListener(this);
+		mWiFiLinkStatus.setOnClickListener(this);
 		
 		//更新UI handler
 		mMainHandler = new Handler(){
@@ -284,13 +292,43 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	}
 	
 	/**
+	 * 初始化在线视频ViewPager
+	 */
+	public void initViewPager() {
+		this.mOnLineVideoManage = new OnLineVideoManage(mContext);
+		this.mOnLineVideoManage.initOnLineVideo();
+	}
+	
+	/**
+	 * 初始化本地视频列表
+	 */
+	private void initLocalVideoList(){
+		//mLocalVideoListLayout.removeAllViews();
+		mLocalVideoGridView = createLocalVideoGridView();
+		mLocalVideoManage = new LocalVideoManage(mContext,"Main");
+		mLocalVideoData = mLocalVideoManage.getLocalVideoList(true,6);
+		if(mLocalVideoData.size() > 0){
+			mDefaultTipLayout.setVisibility(View.GONE);
+		}
+		else{
+			mDefaultTipLayout.setVisibility(View.VISIBLE);
+		}
+		mLocalVideoListAdapter = new LocalVideoListAdapter(mContext,mLocalVideoData,"Main");
+		mLocalVideoGridView.setAdapter(mLocalVideoListAdapter);
+		mLocalVideoListLayout.addView(mLocalVideoGridView);
+	}
+	
+	/**
 	 * 初始化地图
 	 */
 	private void initMap(){
 		mMapLayout = (RelativeLayout) findViewById(R.id.map_layout);
 		//获取地图控件引用
 		mMapView = (MapView) findViewById(R.id.bmapView);
-		
+		//地图全屏按钮
+		mMapFullBtn = (Button)findViewById(R.id.map_full_btn);
+		//地图我的位置按钮
+		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
 		//隐藏缩放按钮
 		mMapView.showZoomControls(false);
 		//缩放标尺
@@ -299,6 +337,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//获取map对象
 		mBaiduMap = mMapView.getMap();
 		mBaiduMapManage = new BaiduMapManage(this,mBaiduMap,"Main");
+		//注册全屏按钮事件
+		mMapFullBtn.setOnClickListener(this);
+		mMapLocationBtn.setOnClickListener(this);
+		
+		//为了解决地图拖动事件冲突问题
+		RelativeLayout mapBlankView = (RelativeLayout)findViewById(R.id.map_blankview);
 		
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);
@@ -319,23 +363,22 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mLocClient.start();
 		
 		//注册touch拦截事件
-		//为了解决地图拖动事件冲突问题
-//		RelativeLayout mapBlankView = (RelativeLayout)findViewById(R.id.map_blankview);
-//		mapBlankView.setOnTouchListener(new View.OnTouchListener() {
-//			@SuppressLint("ClickableViewAccessibility")
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				if(event.getAction() == MotionEvent.ACTION_UP){
-//					mScrollView.requestDisallowInterceptTouchEvent(false);
-//				}else{
-//					mScrollView.requestDisallowInterceptTouchEvent(true);
-//				}
-//				return false;
-//			}
-//		});
+		mapBlankView.setOnTouchListener(new View.OnTouchListener() {
+			@SuppressLint("ClickableViewAccessibility")
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(event.getAction() == MotionEvent.ACTION_UP){
+					mScrollView.requestDisallowInterceptTouchEvent(false);
+				}else{
+					mScrollView.requestDisallowInterceptTouchEvent(true);
+				}
+				return false;
+			}
+		});
 		
 		//地图加载完成事件
 		mBaiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
+			
 			@Override
 			public void onMapLoaded() {
 				//地图加载完成,请求大头针数据
@@ -345,6 +388,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		});
 		
 		mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
+			
 			@Override
 			public void onMapStatusChangeStart(MapStatus arg0) {
 				//console.log("onMapStatusChangeStart");
@@ -364,6 +408,56 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//console.log("onMapStatusChange");
 			}
 		});
+	}
+	
+	/**
+	 * 创建本地视频列表
+	 * @return
+	 */
+	private MyGridView createLocalVideoGridView() {
+		MyGridView gridLayout = new MyGridView(mContext,null);
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+		gridLayout.setLayoutParams(lp);
+		//gridLayout.setBackgroundColor(Color.rgb(19,19,19));
+		gridLayout.setBackgroundColor(Color.rgb(255,255,255));
+		gridLayout.setHorizontalSpacing(6);
+		gridLayout.setVerticalSpacing(15);
+		gridLayout.setNumColumns(2);
+		gridLayout.setPadding(6,16,6,16);
+		//设置grid item点击效果为透明
+		//gridLayout.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		return gridLayout;
+	}
+	
+	/**
+	 * 改变地图大小
+	 */
+	private void setMapSize(){
+		Rect frame = new Rect();
+		getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+		int statusBarHeight = frame.top;
+		console.log(statusBarHeight + "statusBarHeight");
+		DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+		int height = dm.heightPixels - statusBarHeight;
+		if(mIsFull){
+			//当前全屏,改成半屏
+			float density = dm.density;
+			height = (int) (345 * density);
+			mIsFull = false;
+			mIndexLayout.setVisibility(View.VISIBLE);
+			
+			mMapFullBtn.setBackgroundResource(R.drawable.icon_full_btn);
+		}
+		else{
+			mIsFull = true;
+			mIndexLayout.setVisibility(View.GONE);
+			
+			mMapFullBtn.setBackgroundResource(R.drawable.icon_amplify_btn);
+		}
+		
+		//设置元素margin
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,height);
+		mMapLayout.setLayoutParams(params);
 	}
 	
 	
@@ -438,6 +532,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	}
 	
 	/**
+	 * 显示输入法
+	private void showKeybord(){
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.showSoftInput(mLoginPhoneText,InputMethodManager.SHOW_FORCED);
+		
+		mLoginPhoneText.setFocusable(true);
+		mLoginPhoneText.setFocusableInTouchMode(true);
+		mLoginPhoneText.requestFocus();
+	}
+	*/
+	
+	/**
 	 * 登录
 	 */
 	private void login(){
@@ -453,7 +559,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						console.log("调用登录接口失败---b---" + b);
 					}
 					
-					Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
+					Intent login = new Intent(MainActivity2.this,UserCenterActivity.class);
 					startActivity(login);
 					mLoginDialog.hide();
 				}
@@ -533,7 +639,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public void onLineVideoCallBack(Object obj){
 		String videoJson = (String)obj;
 		//更新在线视频
-		//mOnLineVideoManage.onLineVideoDataCallback(videoJson);
+		mOnLineVideoManage.onLineVideoDataCallback(videoJson);
 	}
 	
 	/**
@@ -543,7 +649,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public void onLineVideoImageCallBack(Object obj){
 		//更新在线视频图片
 		String imgJson = (String)obj;
-		//mOnLineVideoManage.onLineVideoImgCallback(imgJson);
+		mOnLineVideoManage.onLineVideoImgCallback(imgJson);
 	}
 	
 	
@@ -554,11 +660,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public void videoFileCallBack(Object obj){
 		//接收到本地视频文件目录
 		String str = (String)obj;
-		//mLocalVideoManage.analyzeVideoFile(str);
+		mLocalVideoManage.analyzeVideoFile(str);
 		
 		//隐藏默认提示
 		if(null != mDefaultTipLayout){
-			//mDefaultTipLayout.setVisibility(View.GONE);
+			mDefaultTipLayout.setVisibility(View.GONE);
 		}
 	}
 	
@@ -568,48 +674,48 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 */
 	public void videoDataAnalyze(Object obj){
 		//本地视频上传中
-//		try {
-//			String str =  (String)obj;
-//			JSONObject json = new JSONObject(str);
-//			int filesz = json.getInt("filesize");
-//			int filerecvSize = json.getInt("filerecvsize");
-//			
-//			LoadingView view = (LoadingView)findViewById(R.id.video_upload_loading);
-//			console.log("wifi---视频同步进度---修改进度view---" + view + "---进度值---" + filerecvSize*100 / filesz);
-//			if (view != null)
-//			{
-//				view.setCurrentProgress(filerecvSize*100 / filesz);
-//			}
-//			
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			String str =  (String)obj;
+			JSONObject json = new JSONObject(str);
+			int filesz = json.getInt("filesize");
+			int filerecvSize = json.getInt("filerecvsize");
+			
+			LoadingView view = (LoadingView)findViewById(R.id.video_upload_loading);
+			console.log("wifi---视频同步进度---修改进度view---" + view + "---进度值---" + filerecvSize*100 / filesz);
+			if (view != null)
+			{
+				view.setCurrentProgress(filerecvSize*100 / filesz);
+			}
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * 视频同步完成
 	 */
 	public void videoAnalyzeComplete(){
-//		mLocalVideoManage.videoUploadCallBack();
-//		mLocalVideoListAdapter.notifyDataSetChanged();
-//		playDownLoadedSound();
+		mLocalVideoManage.videoUploadCallBack();
+		mLocalVideoListAdapter.notifyDataSetChanged();
+		playDownLoadedSound();
 	}
 	
 	/**
 	 * 更新视频view
 	 */
 	public void videoDataUpdate(){
-//		mLocalVideoListAdapter.notifyDataSetChanged();
+		mLocalVideoListAdapter.notifyDataSetChanged();
 	}
 	
 	/**
 	 * 链接中断更新页面
 	 */
 	public void socketLinkOff(){
-//		boolean b = mLocalVideoManage.removeVideoListByLinkOff();
-//		if(b){
-//			mLocalVideoListAdapter.notifyDataSetChanged();
-//		}
+		boolean b = mLocalVideoManage.removeVideoListByLinkOff();
+		if(b){
+			mLocalVideoListAdapter.notifyDataSetChanged();
+		}
 	}
 	
 	/**
@@ -642,7 +748,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			if(!b){
 				Message msg = new Message();
 				msg.what = 2;
-				MainActivity.mMainHandler.sendMessageDelayed(msg,mTiming);
+				MainActivity2.mMainHandler.sendMessageDelayed(msg,mTiming);
 			}
 		}
 	}
@@ -681,35 +787,35 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 * 链接中断更新页面
 	 */
 	public void WiFiLinkStatus(int status){
-//		Drawable img = null;
-//		Resources res = getResources();
-//		mWiFiStatus = 0;
-//		switch(status){
-//			case 1:
-//				//连接中
-//				mWiFiLinkStatus.setText("连接中...");
-//				img = res.getDrawable(R.drawable.no_link);
-//				
-//				mWiFiStatus = 1;
-//			break;
-//			case 2:
-//				//已连接
-//				mWiFiLinkStatus.setText("已连接");
-//				img = res.getDrawable(R.drawable.linked);
-//				
-//				mWiFiStatus = 2;
-//			break;
-//			case 3:
-//				//未连接
-//				mWiFiLinkStatus.setText("未连接");
-//				img = res.getDrawable(R.drawable.no_link);
-//				
-//				mWiFiStatus = 0;
-//			break;
-//		}
-//		//调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-//		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-//		mWiFiLinkStatus.setCompoundDrawables(img, null, null, null);
+		Drawable img = null;
+		Resources res = getResources();
+		mWiFiStatus = 0;
+		switch(status){
+			case 1:
+				//连接中
+				mWiFiLinkStatus.setText("连接中...");
+				img = res.getDrawable(R.drawable.no_link);
+				
+				mWiFiStatus = 1;
+			break;
+			case 2:
+				//已连接
+				mWiFiLinkStatus.setText("已连接");
+				img = res.getDrawable(R.drawable.linked);
+				
+				mWiFiStatus = 2;
+			break;
+			case 3:
+				//未连接
+				mWiFiLinkStatus.setText("未连接");
+				img = res.getDrawable(R.drawable.no_link);
+				
+				mWiFiStatus = 0;
+			break;
+		}
+		//调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
+		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+		mWiFiLinkStatus.setCompoundDrawables(img, null, null, null);
 	}
 	
 	/**
@@ -728,7 +834,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				switch(code){
 					case 200:
 						//登录成功跳转到个人中心页面
-						Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
+						Intent login = new Intent(MainActivity2.this,UserCenterActivity.class);
 						startActivity(login);
 						mLoginDialog.hide();
 					break;
@@ -752,7 +858,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(mWiFiStatus == 0){
 			//wifi未链接
 			//跳转到wifi连接首页
-			Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
+			Intent wifiIndex = new Intent(MainActivity2.this,WiFiLinkIndexActivity.class);
 			startActivity(wifiIndex);
 		}
 	}
@@ -769,7 +875,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	@Override
 	protected void onResume() {
 		mApp.setContext(this,"Main");
-		/*
+		super.onResume();
 		//在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		if(null != mMapView){
 			mMapView.onResume();
@@ -780,7 +886,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(!b){
 			Message msg = new Message();
 			msg.what = 2;
-			MainActivity.mMainHandler.sendMessageDelayed(msg,mTiming);
+			MainActivity2.mMainHandler.sendMessageDelayed(msg,mTiming);
 		}
 		
 		//回到页面重新检测wifi状态,只有未连接的情况下才重新检测
@@ -791,9 +897,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(null != mLocClient){
 			mLocClient.start();
 		}
-		*/
-		super.onResume();
-		
 	}
 	
 	@Override
@@ -831,6 +934,20 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
+			case R.id.video_square_more_btn:
+				//跳转到视频广场页面
+				Intent videoSquare= new Intent(MainActivity2.this,VideoSquareActivity.class);
+				startActivity(videoSquare);
+			break;
+			case R.id.local_video_more_btn:
+				//跳转到本地视频列表
+				Intent localVideoList = new Intent(MainActivity2.this,LocalVideoListActivity.class);
+				startActivity(localVideoList);
+			break;
+			case R.id.map_full_btn:
+				//地图全屏/半屏显示
+				setMapSize();
+			break;
 			case R.id.map_location_btn:
 				//回到我的位置
 				//移动地图中心点
@@ -840,25 +957,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.map_marke_list_btn:
 				//跳转到视频直播点列表
-				Intent liveList = new Intent(MainActivity.this,LiveVideoListActivity.class);
+				Intent liveList = new Intent(MainActivity2.this,LiveVideoListActivity.class);
 				startActivity(liveList);
-			break;
-			case R.id.share_btn:
-				//视频分享
-				
-			break;
-		
-			
-			
-			case R.id.video_square_more_btn:
-				//跳转到视频广场页面
-				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity.class);
-				startActivity(videoSquare);
-			break;
-			case R.id.local_video_more_btn:
-				//跳转到本地视频列表
-				Intent localVideoList = new Intent(MainActivity.this,LocalVideoListActivity.class);
-				startActivity(localVideoList);
 			break;
 			case R.id.login_status_btn:
 				//登录状态
@@ -916,37 +1016,37 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public void wifiCallBack(int state, String message, WifiRsBean[] arrays) {
 		// TODO Auto-generated method stub
 		console.log("首页wifi自动连接接口回调---state---" + state + "---message---" + message + "---arrays---" + arrays);
-//		switch (state) {
-//			case -1:
-//				//console.toast(message, mContext);
-//			break;
-//			case -3:
-//				//已连接
-//				if(null != arrays){
-//					if(arrays.length > 0){
-//						String wifiName = arrays[0].getWifiName();
-//						console.log("自动连接小车本wifi---wifiName---" + wifiName);
-//						//保存wifi校验名称
-//						WiFiConnection.SaveWiFiName(wifiName);
-//					}
-//				}
-//			break;
-//			case 1:
-//				if(null != arrays){
-//					if(arrays.length > 0){
-//						String wifiName = arrays[0].getWifiName();
-//						console.log("自动连接小车本wifi---wifiName---" + wifiName);
-//						//保存wifi校验名称
-//						WiFiConnection.SaveWiFiName(wifiName);
-//					}
-//				}
-//			break;
-//			case 11:
-//			break;
-//		}
-//		unregisterReceiver(mWac);
-//		//校验wifi连接状态
-//		mApp.VerifyWiFiConnect();
+		switch (state) {
+			case -1:
+				//console.toast(message, mContext);
+			break;
+			case -3:
+				//已连接
+				if(null != arrays){
+					if(arrays.length > 0){
+						String wifiName = arrays[0].getWifiName();
+						console.log("自动连接小车本wifi---wifiName---" + wifiName);
+						//保存wifi校验名称
+						WiFiConnection.SaveWiFiName(wifiName);
+					}
+				}
+			break;
+			case 1:
+				if(null != arrays){
+					if(arrays.length > 0){
+						String wifiName = arrays[0].getWifiName();
+						console.log("自动连接小车本wifi---wifiName---" + wifiName);
+						//保存wifi校验名称
+						WiFiConnection.SaveWiFiName(wifiName);
+					}
+				}
+			break;
+			case 11:
+			break;
+		}
+		unregisterReceiver(mWac);
+		//校验wifi连接状态
+		mApp.VerifyWiFiConnect();
 	}
 }
 

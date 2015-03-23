@@ -94,7 +94,8 @@
 		android:id="@+id/share_layout"
 		layout="@layout/index_share"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
+		android:layout_height="match_parent"
+		android:visibility="gone"/>
 </RelativeLayout>
 
 
