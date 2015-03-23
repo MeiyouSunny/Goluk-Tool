@@ -18,9 +18,13 @@
 	<string name="filter_text">滤镜</string>
 	<string name="mv_text">MV</string>
 	<string name="draft_text">草稿箱</string>
+	<string name="more_text">更多</string>
 	<string name="front_cover_text">设置封面</string>
 	<string name="share_btn_text">分享</string>
 	<string name="video_play_text">视频播放</string>
+	
+	<string name="share_live_text">分享网络直播</string>
+	
 	<string name="video_play_comment_text">写评论</string>
 	<string name="video_play_comment_send">发送</string>
 	<string name="video_share_desc_title">添加描述</string>
