@@ -6,12 +6,12 @@ import com.rd.car.RecorderStateException;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
-import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
-import cn.com.mobnote.golukmobile.carrecorder.AppFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
+import cn.com.mobnote.golukmobile.wifimanage.FileManage;
+import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.tachograph.comm.IPCManagerFn;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
@@ -19,7 +19,6 @@ import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import cn.com.mobonote.golukmobile.comm.INetTransNotifyFn;
 import cn.com.mobonote.golukmobile.comm.IPageNotifyFn;
 import cn.com.tiros.api.Const;
-import cn.com.tiros.api.FileUtils;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -39,11 +38,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	private WifiManager mWifiManage = null;
 	/** wifi链接 */
 	private WiFiConnection mWiFiConnection = null;
-	/** 资源拷贝相关 */
-	private String[] resource_from = null;
-	private String[] resource_copyto = null;
-	private int curCopyIndex = 0;
-	private int copyfilesumlength = 0;
 	
 	private static GolukApplication instance=null;
 	private IPCControlManager mIPCControlManager=null;
@@ -62,6 +56,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 		instance=this;
 		Const.setAppContext(this);
 		initRdCardSDK();
+		createWifi();
 		mIPCControlManager = new IPCControlManager();
 		mIPCControlManager.addIPCManagerListener("application", this);
 		
@@ -74,6 +69,35 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 //		mGoluk.GoLuk_RegistPageNotify(this);
 		//socket文件传输监听
 //		mGoluk.GoLuk_RegistNetTransNotify(this);
+	}
+	
+	public Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+//				case value:
+//					
+//					break;
+
+			default:
+				break;
+			}
+		};
+	};
+	
+	/**
+	 * 创建wifi热点
+	 * @author xuhw
+	 * @date 2015年3月23日
+	 */
+	private void createWifi(){
+//		FileManage mFileMange = new FileManage(this, null);
+		wifiAp = new WifiApAdmin(this, mHandler);
+		wifiAp.startWifiAp("ipc_show3", "123456789"); 
+	}
+	
+	WifiApAdmin wifiAp;
+	public void editWifi(String wifiName, String password){
+		wifiAp.startWifiAp(wifiName, password); 
 	}
 	
 	/**
@@ -147,22 +171,22 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	 */
 	public void VerifyWiFiConnect(){
 		//判断小车本wifi是否链接成功
-		mWifiManage = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-		mWiFiConnection = new WiFiConnection(mWifiManage,mContext);
-		boolean b = mWiFiConnection.WiFiLinkStatus();
-		if(b){
-			console.log("wifi---通知logic链接成功---" + b);
-			//通知logic链接成功
-//			mGoluk.GoLuk_WifiStateChanged(true);
-		}
-		else{
-			console.log("wifi---通知login断开链接--" + b);
-			//通知login断开链接
-//			mGoluk.GoLuk_WifiStateChanged(false);
-			if(null != mMainActivity){
-				mMainActivity.WiFiLinkStatus(3);
-			}
-		}
+//		mWifiManage = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+//		mWiFiConnection = new WiFiConnection(mWifiManage,mContext);
+//		boolean b = mWiFiConnection.WiFiLinkStatus();
+//		if(b){
+//			console.log("wifi---通知logic链接成功---" + b);
+//			//通知logic链接成功
+////			mGoluk.GoLuk_WifiStateChanged(true);
+//		}
+//		else{
+//			console.log("wifi---通知login断开链接--" + b);
+//			//通知login断开链接
+////			mGoluk.GoLuk_WifiStateChanged(false);
+//			if(null != mMainActivity){
+//				mMainActivity.WiFiLinkStatus(3);
+//			}
+//		}
 	}
 	
 	/**
@@ -353,50 +377,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 //			}
 //		}
 	}
-	
-	private Handler mHandler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-			case MSG_COPY_FINISH:// 资源拷贝完成
-				
-				break;
-			case MSG_COPYRESOURCE:
-				copyFiles();
-				break;
-			}
-		}
-	};
-	
-	/**
-	 * 开始拷贝资源
-	 * */
-	public void startCopyFile() {
-		resource_from = getResources().getStringArray(R.array.resource_from);
-		resource_copyto = getResources().getStringArray(R.array.resource_copyto);
-		copyfilesumlength = resource_from.length;
-		copyFiles();
-	}
-
-	/**
-	 * 拷贝资源
-	 */
-	public void copyFiles() {
-		AppFileUtils.copyAssetFile(this, resource_from[curCopyIndex],
-				FileUtils.libToJavaPath(resource_copyto[curCopyIndex]));
-		if (curCopyIndex >= (copyfilesumlength - 1)) {
-			resource_from = null;
-			resource_copyto = null;
-			mHandler.sendEmptyMessage(MSG_COPY_FINISH);
-		} else {
-			curCopyIndex++;
-			mHandler.sendEmptyMessage(MSG_COPYRESOURCE);
-		}
-	}
-	
-	/** 文件拷贝完成 */
-	public static final int MSG_COPY_FINISH = 0;
-	/** 拷贝资源 */
-	public static final int MSG_COPYRESOURCE = 1;
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
