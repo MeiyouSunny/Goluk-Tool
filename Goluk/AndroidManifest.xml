@@ -41,6 +41,8 @@
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity" android:screenOrientation="portrait"/>
 		
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait"/>
+		
 		<!-- ###################添加UmengAppkey###################### -->
 		<meta-data android:name="UMENG_APPKEY" android:value="546341d6fd98c59a41003371"/>
 		<meta-data android:value="mobnote" android:name="UMENG_CHANNEL"/>
@@ -50,6 +52,17 @@
 		<!-- 添加百度地图key -->
 		<!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
 		<meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="63che8lBbcckvH0IEgeBjrdA" />
+		
+		
+		<!-- 必须 录制主服务 -->
+        <service android:name="com.rd.car.CarRecorderService" />
+
+        <!-- 可选 响应各种消息 （可以动态注册此receiver) -->
+        <receiver android:name="cn.com.mobnote.golukmobile.carrecorder.RecordingReceiver" >
+            <intent-filter>
+                <action android:name="com.rd.car.RECORDER_MESSAGE" />
+            </intent-filter>
+        </receiver>
 	</application>
 	
 	<!-- baidu地图权限 -->

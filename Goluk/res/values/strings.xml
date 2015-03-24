@@ -97,4 +97,54 @@
 		<item>分类4</item>
 		<item>分类5</item>
 	</string-array> 
+	
+	<!-- 资源拷贝 -->
+	<string-array name="resource_from">
+
+        <!-- 版本相关 -->
+        <item>gitversion</item>
+        <item>version</item>
+        <!-- 配置相关 -->
+        <item>config/api/moduledatacfg</item>
+        <item>config/api/settingcfg</item>
+        <item>config/api/audiodata</item>
+        <item>config/framework/frameworkcfg</item>
+        <!-- 请求地址相关 -->
+        <item>res/api/api.rs</item>
+        <item>res/api/module.rs</item>
+        <!-- logic 相关资源 -->
+        <item>res/logic/android10/10_logic.rs</item>
+        <!-- 地图资源 -->
+        <item>res/map/trmap.rs</item>
+        <item>res/map/vmap.rs</item>
+        <item>res/map/buildmap.rs</item>
+        <item>res/map/vmap_night.rs</item>
+        <item>res/map/trmap_night.rs</item>
+        <item>res/map/buildmap_night.rs</item>
+    </string-array>
+    <string-array name="resource_copyto">
+        <item>fs0:/gitversion</item>
+        <item>fs0:/version</item>
+        <item>fs0:/config/api/moduledatacfg</item>
+        <item>fs0:/config/api/settingcfg</item>
+        <item>fs0:/config/api/audiodata</item>
+        <item>fs0:/config/framework/frameworkcfg</item>
+        <item>fs0:/res/api/api.rs</item>
+        <item>fs0:/res/api/module.rs</item>
+        <item>fs0:/res/logic/android10/10_logic.rs</item>
+        <item>fs0:/res/map/trmap.rs</item>
+        <item>fs0:/res/map/vmap.rs</item>
+        <item>fs0:/res/map/buildmap.rs</item>
+        <item>fs0:/res/map/vmap_night.rs</item>
+        <item>fs0:/res/map/trmap_night.rs</item>
+        <item>fs0:/res/map/buildmap_night.rs</item>
+    </string-array>
+    
+    <!-- 行车记录仪 		START-->
+    <string name="filemanager_title">文件浏览</string>
+    <string name="default_live_url">rtmp://211.103.234.234/live/test100</string>
+    <string name="default_rtsp_url">rtsp://admin:123456@192.168.43.234/sub</string>
+    
+    <!-- 行车记录仪  	END-->
+    
 </resources>

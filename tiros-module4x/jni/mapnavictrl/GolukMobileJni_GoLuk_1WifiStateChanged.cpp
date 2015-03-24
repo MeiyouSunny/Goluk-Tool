@@ -19,8 +19,8 @@
 JNIEXPORT void JNICALL Java_cn_com_mobonote_golukmobile_comm_GolukMobileJni_GoLuk_1WifiStateChanged
   (JNIEnv * env, jclass cls, jint plogic,jboolean isSucess) {
 	  
-	LogicEngine *pL = (LogicEngine*)plogic;
-	pL->WifiStateChanged(isSucess);
+	//LogicEngine *pL = (LogicEngine*)plogic;
+	//pL->WifiStateChanged(isSucess);
 	    
 }
 

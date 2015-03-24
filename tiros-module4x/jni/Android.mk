@@ -5,6 +5,8 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_LDFLAGS := $(LOCAL_PATH)/../lib/logic/lib/liblogic.a \
+                 $(LOCAL_PATH)/../lib/ipcmanger/lib/liblogictachograph.a \
+                 $(LOCAL_PATH)/../lib/api/lua/lib/liblua.a \
                  $(LOCAL_PATH)/../lib/api/md5/lib/libmd5.a \
                  $(LOCAL_PATH)/../lib/api/jansson/lib/libjansson.a \
                  $(LOCAL_PATH)/../lib/api/zlib/lib/libzlib.a \

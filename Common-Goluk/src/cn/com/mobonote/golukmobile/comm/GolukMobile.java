@@ -64,15 +64,15 @@ public class GolukMobile {
 
 	// 网络传输类对外接口
 	// wifi热点状态变更：true热点连接成功/false热点断开，默认断开
-	public void GoLuk_WifiStateChanged(boolean isSucess) {
-		GolukMobileJni.GoLuk_WifiStateChanged(pGoluk, isSucess);
-	}
+//	public void GoLuk_WifiStateChanged(boolean isSucess) {
+//		GolukMobileJni.GoLuk_WifiStateChanged(pGoluk, isSucess);
+//	}
 
 	// 注册网络传输回调接口
-	public void GoLuk_RegistNetTransNotify(INetTransNotifyFn notify) {
-		NetTransNotifyAdapter.setNetTransNotify(notify);
-		GolukMobileJni.GoLuk_RegistNetTransNotify(pGoluk, notify);
-	}
+//	public void GoLuk_RegistNetTransNotify(INetTransNotifyFn notify) {
+//		NetTransNotifyAdapter.setNetTransNotify(notify);
+//		GolukMobileJni.GoLuk_RegistNetTransNotify(pGoluk, notify);
+//	}
 
 	// 页面类访问接口
 	// 注册页面访问类回调接口

@@ -9,7 +9,7 @@ public class NetTransNotifyAdapter {
 
 	public static void netTransNotifyCallBack(int event, int msg, Object param1, Object param2) {
 		if (null != mFn) {
-			mFn.netTransNotifyCallBack(event, msg, param1, param2);
+//			mFn.netTransNotifyCallBack(event, msg, param1, param2);
 		}
 	}
 

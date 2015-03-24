@@ -5,6 +5,7 @@ goluk/src/api/universal
 goluk/src/api/zlib
 goluk/src/api/lua
 goluk/src/lua-script
+goluk/src/ipcmanger
 goluk/src/logic
 goluk/src/net-plugin
 goluk/src/jnibase
