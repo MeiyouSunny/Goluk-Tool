@@ -16,7 +16,8 @@
 			android:id="@+id/more_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="30dp"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="30dp"
 			android:layout_marginTop="10dp"
 			android:drawableTop="@drawable/icon_gengduo_btn"
 			android:background="#dedede"
@@ -28,8 +29,7 @@
 			android:id="@+id/wifi_status_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="30dp"
+			android:layout_marginLeft="30dp"
 			android:layout_marginTop="10dp"
 			android:drawableTop="@drawable/icon_xingche_btn"
 			android:background="#dedede"
@@ -53,26 +53,28 @@
 			android:layout_height="match_parent"
 			android:clickable="true" />
 		
-		<!-- 直播列表按钮 -->
-		<Button
-			android:id="@+id/map_marke_list_btn"
-			android:layout_width="44dp"
-			android:layout_height="34dp"
-			android:layout_marginTop="16dp"
-			android:layout_marginRight="14dp"
-			android:layout_alignParentRight="true"
-			android:background="@drawable/icon_layers_btn"/>
-		
 		<!-- 定位按钮 -->
 		<Button
 			android:id="@+id/map_location_btn"
 			android:layout_width="44dp"
 			android:layout_height="34dp"
-			android:layout_marginBottom="5dp"
+			android:layout_marginBottom="40dp"
 			android:layout_marginRight="14dp"
 			android:layout_alignParentRight="true"
 			android:layout_alignParentBottom="true"
 			android:background="@drawable/location_btn"/>
+		
+		<!-- 直播列表按钮 -->
+		<Button
+			android:id="@+id/map_marke_list_btn"
+			android:layout_width="44dp"
+			android:layout_height="34dp"
+			android:layout_above="@id/map_location_btn"
+			android:layout_marginBottom="24dp"
+			android:layout_marginRight="14dp"
+			android:layout_alignParentRight="true"
+			android:background="@drawable/icon_layers_btn"/>
+		
 		
 		<!-- 为了解决地图拖动事件冲突 -->
 		<RelativeLayout

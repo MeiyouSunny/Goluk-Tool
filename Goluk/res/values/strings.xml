@@ -25,6 +25,8 @@
 	
 	<string name="share_live_text">分享网络直播</string>
 	
+	<string name="share_myvideo_text">分享我的直播</string>
+	
 	<string name="video_play_comment_text">写评论</string>
 	<string name="video_play_comment_send">发送</string>
 	<string name="video_share_desc_title">添加描述</string>

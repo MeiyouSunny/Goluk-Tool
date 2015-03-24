@@ -121,9 +121,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/** 分享按钮 */
 	private ImageButton mShareBtn = null;
 	/** 分享按钮布局 */
-	private RelativeLayout share_layout = null;
-	
-	
+	private RelativeLayout mShareLayout = null;
+	/** 关闭分享布局 */
+	private ImageButton mCloseShareBtn = null;
+	/** 更多按钮 */
+	private Button mMoreBtn = null;
 	
 	
 	
@@ -225,6 +227,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
 		//分享按钮
 		mShareBtn = (ImageButton) findViewById(R.id.share_btn);
+		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
+		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
+		
+		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		
 //		mLoginStatusBtn = (Button) findViewById(R.id.login_status_btn);
 //		mWiFiLinkStatus = (Button) findViewById(R.id.wifi_link_text);
@@ -238,6 +244,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mMapMarkeListBtn.setOnClickListener(this);
 		mMapLocationBtn.setOnClickListener(this);
 		mShareBtn.setOnClickListener(this);
+		mCloseShareBtn.setOnClickListener(this);
+		mMoreBtn.setOnClickListener(this);
 		
 		//更新UI handler
 		mMainHandler = new Handler(){
@@ -769,7 +777,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	@Override
 	protected void onResume() {
 		mApp.setContext(this,"Main");
-		/*
+		
 		//在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		if(null != mMapView){
 			mMapView.onResume();
@@ -783,13 +791,15 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			MainActivity.mMainHandler.sendMessageDelayed(msg,mTiming);
 		}
 		
-		//回到页面重新检测wifi状态,只有未连接的情况下才重新检测
-		if(mWiFiStatus == 0){
-			mApp.VerifyWiFiConnect();
-		}
 		//回到页面启动定位
 		if(null != mLocClient){
 			mLocClient.start();
+		}
+		
+		/*
+		//回到页面重新检测wifi状态,只有未连接的情况下才重新检测
+		if(mWiFiStatus == 0){
+			mApp.VerifyWiFiConnect();
 		}
 		*/
 		super.onResume();
@@ -845,9 +855,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.share_btn:
 				//视频分享
-				
+				mShareLayout.setVisibility(View.VISIBLE);
 			break;
-		
+			case R.id.close_share_btn:
+				//关闭视频分享
+				mShareLayout.setVisibility(View.GONE);
+			break;
+			case R.id.more_btn:
+				//更多页面
+				Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
+				startActivity(more);
+			break;
+			
 			
 			
 			case R.id.video_square_more_btn:
