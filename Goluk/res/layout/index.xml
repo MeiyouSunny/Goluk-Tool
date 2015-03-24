@@ -10,7 +10,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
-		android:background="@drawable/tab_bg">
+		android:background="@drawable/index_tab_bg">
 		
 		<Button
 			android:id="@+id/more_btn"
@@ -18,11 +18,11 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
 			android:layout_marginRight="30dp"
-			android:layout_marginTop="10dp"
-			android:drawableTop="@drawable/icon_gengduo_btn"
-			android:background="#dedede"
+			android:layout_marginTop="1dp"
+			android:drawableTop="@drawable/index_icon_gengduo_btn"
+			android:background="#00000000"
 			android:textSize="12sp"
-			android:textColor="#373737"
+			android:textColor="#676767"
 			android:text="@string/more_text"/>
 		
 		<Button
@@ -30,11 +30,11 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="30dp"
-			android:layout_marginTop="10dp"
-			android:drawableTop="@drawable/icon_xingche_btn"
-			android:background="#dedede"
+			android:layout_marginTop="1dp"
+			android:drawableTop="@drawable/index_icon_xingche_btn"
+			android:background="#00000000"
 			android:textSize="12sp"
-			android:textColor="#373737"
+			android:textColor="#676767"
 			android:text="@string/wifi_link_text"/>
 	</RelativeLayout>
 	
@@ -89,7 +89,7 @@
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:layout_alignParentBottom="true"
-		android:background="@drawable/icon_videoplay"
+		android:background="@drawable/index_icon_videoplay_btn"
 		android:contentDescription="@string/imgdes"/>
 	
 	<include

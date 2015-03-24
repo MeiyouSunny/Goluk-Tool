@@ -64,6 +64,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -96,7 +97,7 @@ import android.widget.ScrollView;
  */
 
 @SuppressLint("HandlerLeak")
-public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack{
+public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack, OnTouchListener{
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -262,6 +263,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mCloseShareBtn.setOnClickListener(this);
 		mIpcWiFiBtn.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
+		mMoreBtn.setOnTouchListener(this);
 		
 		//更新UI handler
 		mMainHandler = new Handler(){
@@ -856,6 +858,25 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			android.os.Process.killProcess(PID);
 			android.os.Process.sendSignal(PID, 9);
 			finish();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		int action = event.getAction();
+		switch (v.getId()) {
+			case R.id.more_btn:
+				switch (action) {
+					case MotionEvent.ACTION_DOWN:
+						mMoreBtn.setTextColor(Color.rgb(0,197,177));
+					break;
+					case MotionEvent.ACTION_UP:
+						mMoreBtn.setTextColor(Color.rgb(103,103,103));
+					break;
+				}
+			break;
 		}
 		return false;
 	}
