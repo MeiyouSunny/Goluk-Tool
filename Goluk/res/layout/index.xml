@@ -1,152 +1,104 @@
 <!-- goluk首页 -->
-
-<!-- 滚动区间 -->
-<ScrollView
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/index_scroll"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:focusable="false"
-	android:scrollbars="none" >
+	android:layout_height="match_parent">
 	
-	<LinearLayout
+	<RelativeLayout
+		android:id="@+id/status_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical">
-		<Button 
-		    android:id="@+id/mIPCBtn"
-			android:layout_width="match_parent"
-			android:layout_height="60dp"
-		    />
-		<!-- 地图 -->
-		<RelativeLayout
-			android:id="@+id/map_layout"
-			android:layout_width="match_parent"
-			android:layout_height="345dp"
-			android:background="#ff0000">
-			
-			<!-- 百度地图 -->
-			<com.baidu.mapapi.map.MapView
-				android:id="@+id/bmapView"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:clickable="true" />
-			
-			<!-- 全屏按钮 -->
-			<Button
-				android:id="@+id/map_full_btn"
-				android:layout_width="44dp"
-				android:layout_height="34dp"
-				android:layout_marginBottom="5dp"
-				android:layout_marginRight="14dp"
-				android:layout_alignParentRight="true"
-				android:layout_alignParentBottom="true"
-				android:background="@drawable/icon_full_btn"/>
-			
-			<!-- 直播列表按钮 -->
-			<Button
-				android:id="@+id/map_marke_list_btn"
-				android:layout_width="44dp"
-				android:layout_height="34dp"
-				android:layout_marginTop="16dp"
-				android:layout_marginRight="14dp"
-				android:layout_alignParentRight="true"
-				android:background="@drawable/icon_layers_btn"/>
-			
-			<!-- 定位按钮 -->
-			<Button
-				android:id="@+id/map_location_btn"
-				android:layout_width="44dp"
-				android:layout_height="34dp"
-				android:layout_marginBottom="5dp"
-				android:layout_marginLeft="14dp"
-				android:layout_alignParentBottom="true"
-				android:background="@drawable/location_btn"/>
-			
-			<!-- 为了解决地图拖动事件冲突 -->
-			<RelativeLayout
-				android:id="@+id/map_blankview"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent" />
-		</RelativeLayout>
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/tab_bg">
 		
-		<LinearLayout
-			android:id="@+id/index_layout"
-			android:layout_width="match_parent"
+		<Button
+			android:id="@+id/more_btn"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:background="@color/bg">
-			
-			<!-- 首页title -->
-			<include
-				layout="@layout/index_title" />
-				
-			<!-- 黑色分割线 -->
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:background="@color/border_bg"/>
-			
-			<!-- 视频广场title -->
-			<include
-				layout="@layout/index_videosquare" />
-			
-			<HorizontalScrollView 
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent"
-				android:scrollbars="none">
-				
-				<LinearLayout
-					android:id="@+id/onlinevideo_layout"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:background="#EDEDED"
-					android:orientation="horizontal">
-					<!-- 在线视频 -->
-					<include
-						layout="@layout/index_onlinevideo_item" />
-					<!-- 在线视频 -->
-					<include
-						layout="@layout/index_onlinevideo_item" />
-				</LinearLayout>
-				
-			</HorizontalScrollView>
-				
-			<!-- 分享我的视频title -->
-			<include
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				layout="@layout/index_myvideo" />
-			
-			<LinearLayout
-				android:id="@+id/localvideolistlayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:orientation="vertical" >
-			</LinearLayout>
-			
-			<!-- 没有数据默认显示 -->
-			<RelativeLayout
-				android:id="@+id/defaulttiplayout"
-				android:layout_width="match_parent"
-				android:layout_height="320dp"
-				android:visibility="gone"
-				android:background="@color/white" >
-				<ImageView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="50dp"
-					android:layout_centerHorizontal="true"
-					android:background="@drawable/myvideo"
-					android:contentDescription="@string/imgdes"/>
-			</RelativeLayout>
-			
-			
-		</LinearLayout>
-	</LinearLayout>
-</ScrollView>
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="30dp"
+			android:layout_marginTop="10dp"
+			android:drawableTop="@drawable/icon_gengduo_btn"
+			android:background="#dedede"
+			android:textSize="12sp"
+			android:textColor="#373737"
+			android:text="@string/more_text"/>
+		
+		<Button
+			android:id="@+id/wifi_status_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="30dp"
+			android:layout_marginTop="10dp"
+			android:drawableTop="@drawable/icon_xingche_btn"
+			android:background="#dedede"
+			android:textSize="12sp"
+			android:textColor="#373737"
+			android:text="@string/wifi_link_text"/>
+	</RelativeLayout>
+	
+	<!-- 地图 -->
+	<RelativeLayout
+		android:id="@+id/map_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@id/status_layout"
+		android:background="#ff0000">
+		
+		<!-- 百度地图 -->
+		<com.baidu.mapapi.map.MapView
+			android:id="@+id/bmapView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:clickable="true" />
+		
+		<!-- 定位按钮 -->
+		<Button
+			android:id="@+id/map_location_btn"
+			android:layout_width="44dp"
+			android:layout_height="34dp"
+			android:layout_marginBottom="40dp"
+			android:layout_marginRight="14dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentBottom="true"
+			android:background="@drawable/location_btn"/>
+		
+		<!-- 直播列表按钮 -->
+		<Button
+			android:id="@+id/map_marke_list_btn"
+			android:layout_width="44dp"
+			android:layout_height="34dp"
+			android:layout_above="@id/map_location_btn"
+			android:layout_marginBottom="24dp"
+			android:layout_marginRight="14dp"
+			android:layout_alignParentRight="true"
+			android:background="@drawable/icon_layers_btn"/>
+		
+		
+		<!-- 为了解决地图拖动事件冲突 -->
+		<RelativeLayout
+			android:id="@+id/map_blankview"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	</RelativeLayout>
+	
+	<ImageButton
+		android:id="@+id/share_btn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/icon_videoplay"
+		android:contentDescription="@string/imgdes"/>
+	
+	<include
+		android:id="@+id/share_layout"
+		layout="@layout/index_share"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"/>
+</RelativeLayout>
 
 
 
