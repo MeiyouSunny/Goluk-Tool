@@ -10,6 +10,7 @@ import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
+import cn.com.mobnote.golukmobile.carrecorder.SettingUtils;
 import cn.com.mobnote.golukmobile.wifimanage.FileManage;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.tachograph.comm.IPCManagerFn;
@@ -19,8 +20,10 @@ import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import cn.com.mobonote.golukmobile.comm.INetTransNotifyFn;
 import cn.com.mobonote.golukmobile.comm.IPageNotifyFn;
 import cn.com.tiros.api.Const;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -91,12 +94,18 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	 */
 	private void createWifi(){
 //		FileManage mFileMange = new FileManage(this, null);
+		
+		String wifi_ssid= SettingUtils.getInstance().getString("wifi_ssid", "ipc_show3");		
+		String wifi_password = SettingUtils.getInstance().getString("wifi_password", "123456789");		
 		wifiAp = new WifiApAdmin(this, mHandler);
-		wifiAp.startWifiAp("ipc_show3", "123456789"); 
+		wifiAp.startWifiAp(wifi_ssid, wifi_password); 
 	}
 	
 	WifiApAdmin wifiAp;
 	public void editWifi(String wifiName, String password){
+		SettingUtils.getInstance().putString("wifi_ssid", wifiName); 
+		SettingUtils.getInstance().putString("wifi_password", password); 
+		
 		wifiAp.startWifiAp(wifiName, password); 
 	}
 	
