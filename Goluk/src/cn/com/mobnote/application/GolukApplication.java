@@ -4,6 +4,8 @@ import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.LocalVideoListActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.UserLoginActivity;
+import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.util.console;
@@ -15,6 +17,7 @@ import cn.com.tiros.api.Const;
 import android.app.Application;
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 public class GolukApplication extends Application implements IPageNotifyFn,INetTransNotifyFn{
 	/** JIN接口类 */
@@ -29,6 +32,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	private WifiManager mWifiManage = null;
 	/** wifi链接 */
 	private WiFiConnection mWiFiConnection = null;
+	
+	/**user登陆**/
+	private UserLoginActivity mUserLoginActivity = null;
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -187,13 +193,31 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 					((LiveVideoPlayActivity)mContext).LiveVideoDataCallBack(success,param2);
 				}
 			break;
+			//登陆
 			case 11:
+				
 				if(null != mMainActivity){
 					//地图大头针图片
 					console.log("pageNotifyCallBack---登录---" + String.valueOf(param2));
 					mMainActivity.loginCallBack(success,param2);
 				}
+				if(mPageSource == "UserLogin"){
+					//mUserLoginActivity = new UserLoginActivity();
+					((UserLoginActivity)mContext).loginCallBack(success, param2);
+				}
 			break;
+			//验证码PageType_GetVCode
+			case 15:
+				if(mPageSource == "UserRegist"){
+//					((UserRegistActivity)mContext)
+				}
+				break;
+			//注册PageType_Register
+			case 16:
+				
+				break;
+			
+			
 		}
 	}
 	

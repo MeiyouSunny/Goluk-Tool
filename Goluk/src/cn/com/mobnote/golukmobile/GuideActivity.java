@@ -69,7 +69,8 @@ public class GuideActivity extends Activity implements OnClickListener {
 		boolean isFirstIn = preferences.getBoolean("isfirst", true);
 		//判断程序第几次启动
 		if (!isFirstIn) {
-			Intent intent = new Intent(this, MainActivity.class);
+//			Intent intent = new Intent(this, MainActivity.class);
+			Intent intent = new Intent(this,UserStartActivity.class);
 			startActivity(intent);
 			this.finish();
 		} else {

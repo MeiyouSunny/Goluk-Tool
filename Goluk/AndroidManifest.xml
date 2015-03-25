@@ -14,6 +14,12 @@
 			</intent-filter>
 		</activity>
 		
+		<!-- 个人中心模块 -->
+		<activity android:name="cn.com.mobnote.golukmobile.UserStartActivity"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.UserLoginActivity"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.UserRegistActivity"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.UserRepwdActivity"></activity>
+		
 		<!-- 网络变化广播监听 -->
 		<receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver">
 			<intent-filter>
@@ -50,6 +56,7 @@
 		<!-- 添加百度地图key -->
 		<!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
 		<meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="63che8lBbcckvH0IEgeBjrdA" />
+		
 	</application>
 	
 	<!-- baidu地图权限 -->
