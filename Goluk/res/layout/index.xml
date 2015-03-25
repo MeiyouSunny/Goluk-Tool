@@ -99,6 +99,17 @@
 		android:background="@drawable/index_icon_videoplay_btn"
 		android:contentDescription="@string/imgdes"/>
 	
+	<TextView
+		android:id="@+id/driving_share_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="3dp"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true"
+		android:textSize="12sp"
+		android:textColor="#676767"
+		android:text="@string/driving_share_text" />
+	
 	<include
 		android:id="@+id/share_layout"
 		layout="@layout/index_share"

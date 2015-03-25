@@ -70,6 +70,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
@@ -123,6 +124,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private boolean isCurrent = true;
 	/** 分享按钮 */
 	private ImageButton mShareBtn = null;
+	/** 分享按钮文字 */
+	private TextView mDrivingShareText = null;
 	/** 分享按钮布局 */
 	private RelativeLayout mShareLayout = null;
 	/** 关闭分享布局 */
@@ -242,6 +245,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
 		//分享按钮
 		mShareBtn = (ImageButton) findViewById(R.id.share_btn);
+		mDrivingShareText = (TextView) findViewById(R.id.driving_share_text);
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
 		
@@ -262,6 +266,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mMapMarkeListBtn.setOnClickListener(this);
 		mMapLocationBtn.setOnClickListener(this);
 		mShareBtn.setOnClickListener(this);
+		mShareBtn.setOnTouchListener(this);
 		mCloseShareBtn.setOnClickListener(this);
 		mIpcWiFiBtn.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
@@ -878,6 +883,16 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					break;
 					case MotionEvent.ACTION_UP:
 						mMoreBtn.setTextColor(Color.rgb(103,103,103));
+					break;
+				}
+			break;
+			case R.id.share_btn:
+				switch (action) {
+					case MotionEvent.ACTION_DOWN:
+						mDrivingShareText.setTextColor(Color.rgb(0,197,177));
+					break;
+					case MotionEvent.ACTION_UP:
+						mDrivingShareText.setTextColor(Color.rgb(103,103,103));
 					break;
 				}
 			break;
