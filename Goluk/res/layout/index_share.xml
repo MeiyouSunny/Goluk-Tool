@@ -5,12 +5,13 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:clickable="true"
-	android:background="#90000000">
+	android:background="@drawable/share_bg_repeat">
 	
 	<RelativeLayout
 		android:id="@+id/close_layout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="5dp"
 		android:layout_alignParentBottom="true"
 		android:layout_centerHorizontal="true">
 		
@@ -18,7 +19,7 @@
 			android:id="@+id/close_share_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:background="@drawable/sel_close_click"
+			android:background="@drawable/share_icon_close_btn"
 			android:contentDescription="@string/imgdes"/>
 	</RelativeLayout>
 	
@@ -34,13 +35,31 @@
 			android:id="@+id/share_mylive_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:drawableTop="@drawable/portrait_bg"
+			android:drawableTop="@drawable/share_icon2_btn"
 			android:background="#00000000"
 			android:textSize="12sp"
-			android:textColor="#373737"
+			android:textColor="#63625e"
 			android:text="@string/share_live_text"/>
 	</RelativeLayout>
 	
+	<RelativeLayout
+		android:id="@+id/share_local_video_layout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="50dp"
+		android:layout_above="@id/share_mylive_layout"
+		android:layout_centerHorizontal="true">
+		
+		<Button
+			android:id="@+id/share_local_video_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:drawableTop="@drawable/share_icon1_btn"
+			android:background="#00000000"
+			android:textSize="12sp"
+			android:textColor="#63625e"
+			android:text="@string/share_local_video_text"/>
+	</RelativeLayout>
 </RelativeLayout>
 
 

@@ -131,7 +131,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private Button mIpcWiFiBtn = null;
 	/** 更多按钮 */
 	private Button mMoreBtn = null;
-	
+	/** 本地视频按钮 */
+	private Button mLocalVideoListBtn = null;
 	
 	
 	
@@ -166,8 +167,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private ArrayList<LocalVideoData> mLocalVideoData = null;
 	/** 本地视频列表 */
 	private MyGridView mLocalVideoGridView = null;
-	/** 本地视频更多按钮 */
-	private Button mLocalVideoMoreBtn = null;
+	
 	/** 本地视频无数据显示提示 */
 	private RelativeLayout mDefaultTipLayout = null;
 	private WifiAutoConnectManager mWac = null;
@@ -248,10 +248,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mIpcWiFiBtn = (Button) findViewById(R.id.wifi_status_btn);
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		
+		//本地视频更多按钮
+		mLocalVideoListBtn = (Button)findViewById(R.id.share_local_video_btn);
+		
 //		mLoginStatusBtn = (Button) findViewById(R.id.login_status_btn);
 //		mWiFiLinkStatus = (Button) findViewById(R.id.wifi_link_text);
-//		//本地视频更多按钮
-//		mLocalVideoMoreBtn = (Button)findViewById(R.id.local_video_more_btn);
+
 //		mDefaultTipLayout = (RelativeLayout) findViewById(R.id.defaulttiplayout);
 //		mScrollView = (ScrollView)findViewById(R.id.index_scroll);
 //		mIndexLayout = (LinearLayout)findViewById(R.id.index_layout);
@@ -264,6 +266,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mIpcWiFiBtn.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
+		mLocalVideoListBtn.setOnClickListener(this);
 		
 		//更新UI handler
 		mMainHandler = new Handler(){
@@ -862,6 +865,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		return false;
 	}
 	
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
@@ -916,6 +920,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
 				startActivity(more);
 			break;
+			case R.id.share_local_video_btn:
+				//跳转到本地视频列表
+				Intent localVideoList = new Intent(MainActivity.this,LocalVideoListActivity.class);
+				startActivity(localVideoList);
+				//关闭视频分享
+				mShareLayout.setVisibility(View.GONE);
+			break;
+			
 			
 			
 			
@@ -923,11 +935,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//跳转到视频广场页面
 				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity.class);
 				startActivity(videoSquare);
-			break;
-			case R.id.local_video_more_btn:
-				//跳转到本地视频列表
-				Intent localVideoList = new Intent(MainActivity.this,LocalVideoListActivity.class);
-				startActivity(localVideoList);
 			break;
 			case R.id.login_status_btn:
 				//登录状态
