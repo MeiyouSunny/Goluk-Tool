@@ -1,54 +1,20 @@
 package cn.com.mobnote.golukmobile;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.SinaShareContent;
-import com.umeng.socialize.media.SmsShareContent;
-import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.SmsHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.MVListAdapter;
-import cn.com.mobnote.video.MVManage;
-import cn.com.mobnote.video.MVManage.MVEditData;
-import cn.com.mobnote.view.MyGridView;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -77,7 +43,18 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 	private Context mContext = null;
 	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
-	private Button mBackBtn = null;
+	private ImageButton mBackBtn = null;
+	
+	/** 本地视频item */
+	private RelativeLayout mLocalVideoItem = null;
+	/** 视频广场item */
+	private RelativeLayout mVideoSquareItem = null;
+	/**草稿箱item */
+	private RelativeLayout mDraftItem = null;
+	/** 去商店item */
+	private RelativeLayout mShoppingItem = null;
+	/** Goluk学堂item */
+	private RelativeLayout mGolukSchoolItem = null;
 	/** 设置item */
 	private RelativeLayout mSetupItem = null;
 	
@@ -106,20 +83,22 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 	@SuppressLint("HandlerLeak")
 	private void init(){
 		//获取页面元素
-		mBackBtn = (Button)findViewById(R.id.back_btn);
+		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
+		
+		mLocalVideoItem = (RelativeLayout) findViewById(R.id.local_video_item);
+		mVideoSquareItem = (RelativeLayout) findViewById(R.id.video_square_item);
+		mDraftItem = (RelativeLayout) findViewById(R.id.draft_item);
+		mShoppingItem = (RelativeLayout) findViewById(R.id.shopping_item);
+		mGolukSchoolItem = (RelativeLayout) findViewById(R.id.goluk_item);
 		mSetupItem = (RelativeLayout) findViewById(R.id.setup_item);
-//		mNextBtn = (Button)findViewById(R.id.next_btn);
-//		mPlayLayout = (RelativeLayout)findViewById(R.id.play_layout);
-//		mPlayStatusImage = (ImageView)findViewById(R.id.play_image);
-//		mPlayBtn.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mMedioPlayer.start();
-//			}
-//		});
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
+		mLocalVideoItem.setOnClickListener(this);
+		mVideoSquareItem.setOnClickListener(this);
+		mDraftItem.setOnClickListener(this);
+		mShoppingItem.setOnClickListener(this);
+		mGolukSchoolItem.setOnClickListener(this);
 		mSetupItem.setOnClickListener(this);
 		
 		//更新UI handler
@@ -141,16 +120,34 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		int id = v.getId();
+		Intent intent = null;
 		switch(id){
 			case R.id.back_btn:
 				//返回
 				finish();
 			break;
+			case R.id.local_video_item:
+				intent = new Intent(IndexMoreActivity.this,LocalVideoListActivity.class);
+				startActivity(intent);
+			break;
+			case R.id.video_square_item:
+				intent = new Intent(IndexMoreActivity.this,VideoSquareActivity.class);
+				startActivity(intent);
+			break;
+			case R.id.draft_item:
+				console.toast("草稿箱", mContext);
+			break;
+			case R.id.shopping_item:
+				console.toast("去商店", mContext);
+			break;
+			case R.id.goluk_item:
+				console.toast("Goluk学堂", mContext);
+			break;
 			case R.id.setup_item:
 				//跳转到设置页面
 				console.log("onclick---setup--item");
-				Intent setup = new Intent(IndexMoreActivity.this,UserSetupActivity.class);
-				startActivity(setup);
+				intent = new Intent(IndexMoreActivity.this,UserSetupActivity.class);
+				startActivity(intent);
 			break;
 		}
 	}
