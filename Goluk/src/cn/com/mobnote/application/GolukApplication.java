@@ -130,7 +130,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	private void createWifi(){
 //		FileManage mFileMange = new FileManage(this, null);
 		
-		String wifi_ssid= SettingUtils.getInstance().getString("wifi_ssid", "ipc_dev3");
+		String wifi_ssid= SettingUtils.getInstance().getString("wifi_ssid", "ipc_dev5");
 		String wifi_password = SettingUtils.getInstance().getString("wifi_password", "123456789");
 		wifiAp = new WifiApAdmin(this, mHandler);
 		if(!wifiAp.isWifiApEnabled()){
