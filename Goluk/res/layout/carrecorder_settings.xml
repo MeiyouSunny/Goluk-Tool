@@ -10,7 +10,7 @@
         android:layout_height="42dp"
         android:background="@color/bg" >
 
-        <Button
+      <!--   <Button
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,7 +22,15 @@
             android:layout_centerVertical="true"
             android:text="@string/back_text"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp" /> -->
+        
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/carrecorder_tit_btn_back" />
 
         <TextView
             android:layout_centerVertical="true"
@@ -160,10 +168,11 @@
             <!-- 碰撞感应灵敏度 -->
 
             <RelativeLayout
+                android:id="@+id/pzgylmd_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
@@ -198,10 +207,11 @@
             <!-- 存储容量查询 -->
 
             <RelativeLayout
+                android:id="@+id/rlcx_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
@@ -226,10 +236,11 @@
             <!-- 水印设置 -->
 
             <RelativeLayout
+                android:id="@+id/sysz_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
@@ -253,6 +264,7 @@
             
               <!-- 状态提示灯 -->
             <RelativeLayout
+                android:id="@+id/ztts_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
@@ -279,10 +291,11 @@
 			
             <!-- 时间设置 -->
             <RelativeLayout
+                android:id="@+id/sjsz_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
@@ -306,10 +319,11 @@
             
             <!-- 格式化SDK卡 -->
             <RelativeLayout
+                android:id="@+id/gshsdk_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
@@ -333,10 +347,11 @@
             
             <!-- 恢复出厂设置-->
             <RelativeLayout
+                android:id="@+id/hfccsz_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
@@ -360,10 +375,11 @@
             
             <!-- 版本信息-->
             <RelativeLayout
+                android:id="@+id/bbxx_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
@@ -387,11 +403,12 @@
             
              <!-- 摄像头绑定/解绑-->
             <RelativeLayout
+                android:id="@+id/ipcbd_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
