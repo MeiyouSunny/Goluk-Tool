@@ -14,8 +14,8 @@
 
         <Button
             android:id="@+id/back_btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:background="@color/bg"
             android:drawableLeft="@drawable/carrecorder_back_btn"
@@ -137,7 +137,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="#999999"
+                android:background="#00c590"
                 android:contentDescription="@string/def" />
 
             <ImageView
@@ -147,7 +147,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="#999999"
+                android:background="#00c590"
                 android:contentDescription="@string/def" />
         </LinearLayout>
     </RelativeLayout>

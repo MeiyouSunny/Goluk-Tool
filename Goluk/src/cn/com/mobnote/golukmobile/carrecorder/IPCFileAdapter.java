@@ -86,6 +86,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate);
 		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 		
+		holder.image1.setBackgroundResource(R.drawable.carrecorder_xcjlybj);
 		Bitmap videoBitmap1 = mDataList.get(position).getVideoInfo1().videoBitmap;
 		if (null != videoBitmap1) {
 			BitmapDrawable bd = new BitmapDrawable(videoBitmap1);
@@ -103,6 +104,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate);
 			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
 		
+			holder.image2.setBackgroundResource(R.drawable.carrecorder_xcjlybj);
 			Bitmap videoBitmap2 = mDataList.get(position).getVideoInfo2().videoBitmap;
 			if (null != videoBitmap2) {
 				BitmapDrawable bd = new BitmapDrawable(videoBitmap2);

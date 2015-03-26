@@ -198,7 +198,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mWonderfulVideoList.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
 						
-						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
+//						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
 						System.out.println("TTTTT=====滑动到最后了222");
 					}
 				}
@@ -212,7 +212,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mWonderfulVideoList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				Toast.makeText(IPCFileManagerActivity.this, ""+arg2+"==精彩视频===x = "+screenX, 1000).show();
+//				Toast.makeText(IPCFileManagerActivity.this, ""+arg2+"==精彩视频===x = "+screenX, 1000).show();
 			}
 		});
 		
@@ -247,7 +247,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mEmergencyVideoList.getAdapter().getCount() == (emergencyFirstVisible + emergencyVisibleCount)){
 						
-						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
+//						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
 						System.out.println("TTTTT=====滑动到最后了222");
 					}
 				}
@@ -261,7 +261,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mEmergencyVideoList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				Toast.makeText(IPCFileManagerActivity.this, ""+arg2+"==紧急视频===x = "+screenX, 1000).show();
+//				Toast.makeText(IPCFileManagerActivity.this, ""+arg2+"==紧急视频===x = "+screenX, 1000).show();
 			}
 		});
 	}
@@ -295,7 +295,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mLoopVideoList.getAdapter().getCount() == (loopFirstVisible + loopVisibleCount)){
 						
-						Toast.makeText(IPCFileManagerActivity.this, "循环视频　滑动到最后了222", 1000).show();
+//						Toast.makeText(IPCFileManagerActivity.this, "循环视频　滑动到最后了222", 1000).show();
 						System.out.println("TTTTT=====滑动到最后了222");
 					}
 				}
@@ -309,7 +309,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mLoopVideoList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				Toast.makeText(IPCFileManagerActivity.this, ""+arg2+"==循环视频===x = "+screenX, 1000).show();
+//				Toast.makeText(IPCFileManagerActivity.this, ""+arg2+"==循环视频===x = "+screenX, 1000).show();
 			}
 		});
 	}
@@ -327,19 +327,22 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mWonderfulVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		mEmergencyVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		mLoopVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
+		mWonderfulVideoLine.setVisibility(View.INVISIBLE);
+		mEmergencyVideoLine.setVisibility(View.INVISIBLE);
+		mLoopVideoLine.setVisibility(View.INVISIBLE);
 		
 		switch (type) {
 			case TYPE_SHORTCUT:
+				mWonderfulVideoLine.setVisibility(View.VISIBLE);
 				mWonderfulVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
-				mWonderfulVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
 				break;
 			case TYPE_URGENT:
+				mEmergencyVideoLine.setVisibility(View.VISIBLE);
 				mEmergencyVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
-				mEmergencyVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
 				break;
 			case TYPE_CIRCULATE:
+				mLoopVideoLine.setVisibility(View.VISIBLE);
 				mLoopVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
-				mLoopVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
 				break;
 			default:
 				break;
