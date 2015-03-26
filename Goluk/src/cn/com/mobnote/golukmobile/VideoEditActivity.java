@@ -231,7 +231,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			@Override
 			public void onPrepared(MediaPlayerControl mpc) {
 				//视频播放已就绪
-				console.log("edit video 加载完成");
+				console.log("onPrepared---video---加载完成");
 				updateVideoProgress();
 				//删除背景图片
 				//mVVPlayVideo.setBackgroundDrawable(null);

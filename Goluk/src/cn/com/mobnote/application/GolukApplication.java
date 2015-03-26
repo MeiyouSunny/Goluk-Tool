@@ -79,7 +79,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 		mGoluk.GolukMobile_Create();
 		
 		//http请求监听
-//		mGoluk.GoLuk_RegistPageNotify(this);
+		mGoluk.GoLuk_RegistPageNotify(this);
 		//socket文件传输监听
 //		mGoluk.GoLuk_RegistNetTransNotify(this);
 	}
@@ -130,7 +130,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	private void createWifi(){
 //		FileManage mFileMange = new FileManage(this, null);
 		
-		String wifi_ssid= SettingUtils.getInstance().getString("wifi_ssid", "ipc_dev5");
+		String wifi_ssid= SettingUtils.getInstance().getString("wifi_ssid", "ipc_dev3");
 		String wifi_password = SettingUtils.getInstance().getString("wifi_password", "123456789");
 		wifiAp = new WifiApAdmin(this, mHandler);
 		if(!wifiAp.isWifiApEnabled()){
@@ -294,7 +294,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 				mIPCControlManager.downloadFile(fileName,fileName,mVideoSavePath);
 			}
 			catch(Exception e){
-				
+				console.log("解析视频下载JSON数据错误");
+				e.printStackTrace();
 			}
 		}
 	}
@@ -484,7 +485,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 		}
 		*/
 		
-		console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+		//console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		//IPC控制连接状态 event = 0
 		if(ENetTransEvent_IPC_VDCP_ConnectState == event){
 			//如果不是连接成功,都标识为失败
