@@ -137,7 +137,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年3月25日
 	 */
 	public void downloadFile(String filename, String tag, String savepath){
-		mIPCManagerClass.IPCManager_AddDownloadFile(filename, tag, FileUtils.javaToLibPath(savepath));
+		mIPCManagerClass.IPCManager_AddDownloadFile(filename, tag, savepath);
 	}
 
 	/**

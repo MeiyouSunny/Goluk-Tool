@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.tachograph.comm.IPCManagerFn;
+import cn.com.tiros.api.FileUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
@@ -568,7 +569,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		if (file.exists()) {
 			info.videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 		} else {
-			GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "" + mVideoFileInfo.id, filePath);
+			GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
 			System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
 		}
 		
