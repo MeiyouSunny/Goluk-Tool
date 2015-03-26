@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.app.Activity;
@@ -227,22 +228,14 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 							console.log("回调成功");
 						}
 					}else{
-						new AlertDialog.Builder(this)
-						.setTitle("Goluk温馨提示：")
-						.setMessage("密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写!")
-						.setPositiveButton("确定", null)
-						.create().show();
+						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
 					}
 				}else{
 //					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
 //					mEditTextPwd.setError("密码不能为空");
 				}
 			}else{
-				new AlertDialog.Builder(this)
-				.setTitle("Goluk温馨提示：")
-				.setMessage("手机号格式错误,请重新输入")
-				.setPositiveButton("确定", null)
-				.create().show();
+				UserUtils.showDialog(this, "手机号格式错误,请重新输入");
 			}
 		}else{
 			
@@ -270,11 +263,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
 				}else if(code == 500){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("服务端程序异常")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "服务端程序异常");
 				}else if(code == 405){
 					new AlertDialog.Builder(this)
 					.setTitle("Goluk温馨提示：")
@@ -290,14 +279,12 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						}
 					}).create().show();
 				}else if(code == 402){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("登录密码错误")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "登录密码错误");
 				}
 			}
-			catch(Exception ex){}
+			catch(Exception ex){
+				ex.printStackTrace();
+			}
 		}
 		else{
 			console.toast("登录失败", mContext);

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.user.CountDownButtonHelper;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.util.console;
 import cn.com.mobonote.golukmobile.comm.GolukMobile;
@@ -305,19 +306,11 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 //							Toast.makeText(UserRegistActivity.this, "OK", 0).show();
 						}
 					}else{
-						new AlertDialog.Builder(this)
-						.setTitle("Goluk温馨提示：")
-						.setMessage("密码格式输入错误，请重新输入")
-						.setPositiveButton("确定", null)
-						.create().show();
+						UserUtils.showDialog(this, "密码格式输入错误，请重新输入");
 					}
 				}
 			}else{
-				new AlertDialog.Builder(this)
-				.setTitle("Goluk温馨提示：")
-				.setMessage("手机号格式输入错误，请重新输入")
-				.setPositiveButton("确定", null)
-				.create().show();
+				UserUtils.showDialog(this, "手机号格式输入错误，请重新输入");
 			}
 		}
 		
@@ -355,33 +348,19 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					console.toast("发送中,请稍后……", mContext);
 //					console.toast("下发验证码成功", mContext);
 				}else if(code == 201){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示")
-					.setMessage("该手机号1小时内下发5次以上验证码")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");
 					
 				}else if(code == 500){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage(" 服务端程序异常")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "服务端程序异常");
 				}else if(code == 405){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("用户已注册")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "用户已注册");
 				}else if(code == 440){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("输入手机号异常")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "输入手机号异常");
 				}
 			}
-			catch(Exception ex){}
+			catch(Exception ex){
+				ex.printStackTrace();
+			}
 		}
 		else{
 			console.toast("验证码获取失败", mContext);
@@ -408,11 +387,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				mLoading.setVisibility(View.VISIBLE);
 			}
 		}else{
-			new AlertDialog.Builder(this)
-			.setTitle("Goluk温馨提示：")
-			.setMessage("请先获取验证码！")
-			.setPositiveButton("确定", null)
-			.create().show();
+			UserUtils.showDialog(this, "请先获取验证码");
 		}
 	}
 	
@@ -436,31 +411,17 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
 					startActivity(it);
 				}else if(code == 500){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("服务端程序异常")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "服务端程序异常");
 				}else if(code == 405){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("用户已注册")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "用户已注册");
 				}if(code == 406){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("输入验证码错误")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "输入验证码错误");
 				}else if(code == 407){
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("输入验证码超时")
-					.setPositiveButton("确定", null)
-					.create().show();
+					UserUtils.showDialog(this, "输入验证码超时");
 				}
-			}catch(Exception e){}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}else{
 			console.log("注册失败");
 		}
