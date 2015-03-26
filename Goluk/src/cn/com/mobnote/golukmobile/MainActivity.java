@@ -627,7 +627,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public void videoAnalyzeComplete(){
 //		mLocalVideoManage.videoUploadCallBack();
 //		mLocalVideoListAdapter.notifyDataSetChanged();
-//		playDownLoadedSound();
+		playDownLoadedSound();
 	}
 	
 	/**

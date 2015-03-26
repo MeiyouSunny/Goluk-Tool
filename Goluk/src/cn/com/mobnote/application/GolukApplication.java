@@ -2,6 +2,8 @@ package cn.com.mobnote.application;
 
 import java.io.File;
 
+import org.json.JSONObject;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -41,6 +43,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	private String mPageSource = "";
 	/** 主页activity */
 	private MainActivity mMainActivity = null;
+	/** 视频保存地址 fs1:指向->sd卡/tiros-com-cn-ext目录*/
+	private String mVideoSavePath = "fs1:/video/";
 	/** wifi管理类*/
 	private WifiManager mWifiManage = null;
 	/** wifi链接 */
@@ -273,6 +277,49 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	}
 	
 	/**
+	 * ipc视频截取查询成功回调函数
+	 * @param success
+	 * @param data
+	 * @author chenxy
+	 */
+	public void ipcVideoSingleQueryCallBack(int success,String data){
+		if(0 == success){
+			//查询成功,解析文件名去下载
+			//{"time": 1262275832, "id": 845., "period": 8, "resolution": 14, "type": 4, "size": 5865250., "location": "WND1_100101001032_0008.mp4", "withSnapshot": 1, "withGps": 0}
+			try{
+				JSONObject json = new JSONObject(data);
+				String fileName = json.getString("location");
+				console.log("调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---" + fileName);
+				//调用下载视频接口
+				mIPCControlManager.downloadFile(fileName,fileName,mVideoSavePath);
+			}
+			catch(Exception e){
+				
+			}
+		}
+	}
+	
+	/**
+	 * ipc视频下载回调函数
+	 * @param success
+	 * @param data
+	 * @author chenxy
+	 */
+	public void ipcVideoDownLoadCallBack(int success,String data){
+		if(1 == success){
+			//下载中
+		}
+		else if(0 == success){
+			//下载完成
+			if(null != mMainActivity){
+				//地图大头针图片
+				console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
+				mMainActivity.videoAnalyzeComplete();
+			}
+		}
+	}
+	
+	/**
 	 * 网络请求数据回调
 	 */
 	@Override
@@ -496,6 +543,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 					//msg = 1001 单文件查询
 					//拍摄8秒视频成功之后,接口会自动调用查询这个文件,收到这个回调之后可以根据文件名去下载视频
 					//event=1,msg=1001,param1=0,param2={"time": 1262275832, "id": 845., "period": 8, "resolution": 14, "type": 4, "size": 5865250., "location": "WND1_100101001032_0008.mp4", "withSnapshot": 1, "withGps": 0}
+					ipcVideoSingleQueryCallBack(param1,(String)param2);
 				break;
 				case IPC_VDCP_Msg_Erase:
 					//msg = 1002 删除文件
@@ -513,6 +561,24 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 				break;
 				case IPC_VDCP_Msg_DeviceStatus:
 					//msg = 1006 查询设备状态
+				break;
+			}
+		}
+		
+		//IPC下载连接状态 event = 2
+		if(ENetTransEvent_IPC_VDTP_ConnectState == event){
+			//msg = 1 | 连接中 or msg = 2 | 连接成功
+			//当前不需要处理这些状态
+		}
+		
+		//IPC下载结果应答,开始下载视频文件 event = 3
+		if(ENetTransEvent_IPC_VDTP_Resp == event){
+			switch(msg){
+				case IPC_VDTP_Msg_File:
+					//文件传输中消息 msg = 0
+					//param1 = 0,下载完成
+					//param1 = 1,下载中
+					ipcVideoDownLoadCallBack(param1,(String)param2);
 				break;
 			}
 		}
