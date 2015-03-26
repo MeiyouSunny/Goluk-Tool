@@ -197,7 +197,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//添加umeng错误统计
 		MobclickAgent.setCatchUncaughtExceptions(true);
 		//添加腾讯崩溃统计
-		String appId = "900001742";
+		String appId = "900002451";
 		//true代表App处于调试阶段，false代表App发布阶段
 		boolean isDebug = true;
 		//初始化SDK

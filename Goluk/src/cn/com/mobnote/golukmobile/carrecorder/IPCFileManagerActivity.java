@@ -3,17 +3,13 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.tachograph.comm.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
-
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,7 +24,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 @SuppressLint("ClickableViewAccessibility")
 public class IPCFileManagerActivity extends Activity implements OnClickListener, IPCManagerFn, OnTouchListener{
@@ -78,6 +74,18 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private int wonderfulTotalCount=0;
 	private int emergencyTotalCount=0;
 	private int loopTotalCount=0;
+	/** 数据分页个数 */
+	private int pageCount=40;
+	/** 编辑按钮 */
+	private Button mEditBtn=null;
+	/** 功能按钮布局 */
+	private LinearLayout mFunctionLayout=null;
+	private LinearLayout mDownloadBtn=null;
+	private LinearLayout mDeleteBtn=null;
+	/** 保存编辑状态 */
+	private boolean isEditState=false;
+	/** 保存选中文件列表数据 */
+	private List<String> selectedListData=null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -324,9 +332,6 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mWonderfulVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		mEmergencyVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		mLoopVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
-		mWonderfulVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
-		mEmergencyVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
-		mLoopVideoLine.setBackgroundColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		mWonderfulVideoLine.setVisibility(View.INVISIBLE);
 		mEmergencyVideoLine.setVisibility(View.INVISIBLE);
 		mLoopVideoLine.setVisibility(View.INVISIBLE);
@@ -358,7 +363,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private void getRecorderFileFromLocal(int type) {
 		mOprateType = type;
 		updateButtonState(type);
-		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, 20, 0);
+		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, 0);
 		GFileUtils.writeIPCLog("===========获取文件列表===1111===================isSucess=="+isSucess);
 	}
 	
@@ -379,6 +384,15 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mEmergencyVideoLine = (ImageView)findViewById(R.id.line_jjyx);
 		mLoopVideoLine = (ImageView)findViewById(R.id.line_xhyx);
 		
+		mEditBtn = (Button)findViewById(R.id.mEditBtn);
+		mFunctionLayout = (LinearLayout)findViewById(R.id.mFunctionLayout);
+		mDownloadBtn = (LinearLayout)findViewById(R.id.mDownloadBtn);
+		mDeleteBtn = (LinearLayout)findViewById(R.id.mDeleteBtn);
+		
+		 
+		
+		
+		
 		wonderfulVideoData = new ArrayList<DoubleVideoInfo>();
 		emergencyVideoData = new ArrayList<DoubleVideoInfo>();
 		loopVideoData = new ArrayList<DoubleVideoInfo>();
@@ -389,6 +403,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mWonderfulVideoData=new ArrayList<VideoInfo>();
 		mEmergencyVideoData=new ArrayList<VideoInfo>();
 		mLoopVideoData=new ArrayList<VideoInfo>();
+		selectedListData=new ArrayList<String>();
 	}
 	
 	/**
@@ -404,7 +419,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mWonderfulVideoList.setOnTouchListener(this);
 		mEmergencyVideoList.setOnTouchListener(this);
 		mLoopVideoList.setOnTouchListener(this);
-		
+		mEditBtn.setOnClickListener(this);
+		mDownloadBtn.setOnClickListener(this);
+		mDeleteBtn.setOnClickListener(this);
 	}
 
 	@Override
@@ -460,6 +477,25 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					}
 				}
 				break;
+			case R.id.mEditBtn:
+				isEditState=true;
+				selectedListData.clear();
+				mFunctionLayout.setVisibility(View.VISIBLE);
+				break;
+			case R.id.mDownloadBtn:
+				isEditState=false;
+				mFunctionLayout.setVisibility(View.GONE);
+				String path = "fs1:/video/";
+				for(String filename : selectedListData){
+					
+				}
+				break;
+			case R.id.mDeleteBtn:
+				isEditState=false;
+				mFunctionLayout.setVisibility(View.GONE);
+				
+				break;
+				
 	
 			default:
 				break;
