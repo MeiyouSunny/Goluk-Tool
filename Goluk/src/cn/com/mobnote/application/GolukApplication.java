@@ -126,11 +126,11 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 	private void createWifi(){
 //		FileManage mFileMange = new FileManage(this, null);
 		
-		String wifi_ssid= SettingUtils.getInstance().getString("wifi_ssid", "ipc_dev3");		
-		String wifi_password = SettingUtils.getInstance().getString("wifi_password", "123456789");		
+		String wifi_ssid= SettingUtils.getInstance().getString("wifi_ssid", "ipc_dev3");
+		String wifi_password = SettingUtils.getInstance().getString("wifi_password", "123456789");
 		wifiAp = new WifiApAdmin(this, mHandler);
 		if(!wifiAp.isWifiApEnabled()){
-			wifiAp.startWifiAp(wifi_ssid, wifi_password); 
+			wifiAp.startWifiAp(wifi_ssid, wifi_password);
 		}
 	}
 	
@@ -422,6 +422,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		/*
 		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
 			if (ConnectionStateMsg_Connected != msg) {
@@ -434,7 +435,87 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 			isIpcLoginSuccess = true;
 			System.out.println("IPC_TTTTTT=================Login Success===============");
 		}
+		*/
 		
+		console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+		//IPC控制连接状态 event = 0
+		if(ENetTransEvent_IPC_VDCP_ConnectState == event){
+			//如果不是连接成功,都标识为失败
+			switch(msg){
+				case ConnectionStateMsg_Idle:
+					//msg = 0 空闲
+					isIpcLoginSuccess = false;
+					if(null != mMainActivity){
+						mMainActivity.wiFiLinkStatus(3);
+					}
+				break;
+				case ConnectionStateMsg_Connecting:
+					//msg = 1 连接中
+					isIpcLoginSuccess = false;
+					if(null != mMainActivity){
+						mMainActivity.wiFiLinkStatus(3);
+					}
+				break;
+				case ConnectionStateMsg_Connected:
+					//msg = 2 连接成功
+					//只是,ipc信号连接了,初始化的东西还没完成,所以要等到ipc初始化成功,才能把isIpcLoginSuccess=true
+				break;
+				case ConnectionStateMsg_DisConnected:
+					//msg = 3 连接断开
+					isIpcLoginSuccess = false;
+					if(null != mMainActivity){
+						mMainActivity.wiFiLinkStatus(3);
+					}
+				break;
+			}
+		}
+		
+		// IPC控制命令应答 event = 1
+		if(ENetTransEvent_IPC_VDCP_CommandResp == event){
+			switch(msg){
+				case IPC_VDCP_Msg_Init:
+					//msg = 0 初始化消息
+					//param1 = 0 成功 | 失败
+					if(0 == param1){
+						//ipc控制初始化成功,可以看画面和拍摄8s视频
+						isIpcLoginSuccess = true;
+						console.log("IPC_TTTTTT=================Login Success===============");
+						//改变首页链接状态
+						if(null != mMainActivity){
+							mMainActivity.wiFiLinkStatus(2);
+						}
+					}
+					else{
+						isIpcLoginSuccess = false;
+					}
+				break;
+				case IPC_VDCP_Msg_Query:
+					//msg = 1000 多文件目录查询
+				break;
+				case IPC_VDCP_Msg_SingleQuery:
+					//msg = 1001 单文件查询
+					//拍摄8秒视频成功之后,接口会自动调用查询这个文件,收到这个回调之后可以根据文件名去下载视频
+					//event=1,msg=1001,param1=0,param2={"time": 1262275832, "id": 845., "period": 8, "resolution": 14, "type": 4, "size": 5865250., "location": "WND1_100101001032_0008.mp4", "withSnapshot": 1, "withGps": 0}
+				break;
+				case IPC_VDCP_Msg_Erase:
+					//msg = 1002 删除文件
+				break;
+				case IPC_VDCP_Msg_TriggerRecord:
+					//msg = 1003 请求紧急、精彩视频录制
+					//发送拍摄指令后,会立即收到视频文件名称的回调,暂时无用
+					//event=1,msg=1003,param1=0,param2={"type":4, "filename":"WND1_100101001032_0008.mp4"}
+				break;
+				case IPC_VDCP_Msg_SnapPic:
+					//msg = 1004 实时抓图
+				break;
+				case IPC_VDCP_Msg_RecPicUsage:
+					//msg = 1005 查询录制存储状态
+				break;
+				case IPC_VDCP_Msg_DeviceStatus:
+					//msg = 1006 查询设备状态
+				break;
+			}
+		}
 	}
 	
 }
