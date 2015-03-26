@@ -21,6 +21,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.utils.Log;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
@@ -486,11 +487,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					boolean b = mApp.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Login,condi);
 					if(!b){
 						console.log("调用登录接口失败---b---" + b);
+					}else{
+						Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
+						startActivity(login);
+						mLoginDialog.hide();
 					}
-					
-					Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
-					startActivity(login);
-					mLoginDialog.hide();
 				}
 				else{
 					console.toast("密码少于6位", mContext);
@@ -753,6 +754,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(1 == success){
 			try{
 				String data = (String)obj;
+				Log.i("eee", data);
 				JSONObject json = new JSONObject(data);
 				//JSONObject userJson = json.getJSONObject("data");
 				int code = Integer.valueOf(json.getString("code"));
@@ -764,10 +766,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						startActivity(login);
 						mLoginDialog.hide();
 					break;
-					default:
+					/*default:
 						//登录失败
 						console.toast("登录失败:"+ msg + code, mContext);
-					break;
+					break;*/
 				}
 			}
 			catch(Exception ex){}

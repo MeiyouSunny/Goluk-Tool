@@ -43,6 +43,21 @@ public class GolukMobile {
 	private int pGoluk;
 	
 	/**
+	 * 个人中心部分
+	 * 
+	 */
+	//获取验证码
+	public static int PageType_GetVCode = 15;
+	//注册
+	public static int PageType_Register = 16;
+	//修改用户密码
+	public static int PageType_ModifyPwd = 17;
+	//登陆——11
+	
+	//自动登陆
+	public static int PageType_AutoLogin = 12;
+	
+	/**
 	 * 创建指定宽高 缓存大小 的地图
 	 * 
 	 * @param screenWidth

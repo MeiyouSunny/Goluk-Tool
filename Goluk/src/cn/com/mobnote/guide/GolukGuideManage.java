@@ -23,6 +23,7 @@ import java.util.List;
 import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserStartActivity;
 
 
 
@@ -227,9 +228,9 @@ public class GolukGuideManage {
 	protected class StartGolukBtnClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v){
-			//启动首页
-			Intent main = new Intent(mContext,MainActivity.class);
-			mContext.startActivity(main);
+			//启动个人中心的起始页
+			Intent userStart = new Intent(mContext,UserStartActivity.class);
+			mContext.startActivity(userStart);
 			
 			SharedPreferences preferences = mContext.getSharedPreferences("golukmark",Context.MODE_PRIVATE);
 			Editor editor = preferences.edit();
