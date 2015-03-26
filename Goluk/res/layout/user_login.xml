@@ -38,8 +38,8 @@
                     android:id="@+id/user_login_phonenumber"
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
-                    android:hint="请输入手机帐号"
-                    android:phoneNumber="true"
+                    android:hint="请输入手机账号"
+                    android:numeric="integer"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
                     android:background="@null"
@@ -165,4 +165,28 @@
     	            />
     	    </LinearLayout>
     	</LinearLayout>
+    	<RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/loading_layout"     
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        >
+       	<include
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    layout="@layout/loading"
+       	    android:id="@+id/user_regist_include"
+       	   />
+
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登录中……"
+            android:layout_below="@id/user_regist_include"
+            android:layout_centerInParent="true"
+            android:textColor="#000"
+            />
+    </RelativeLayout>
 </RelativeLayout>

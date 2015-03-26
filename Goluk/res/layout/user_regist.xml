@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    >
 
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
     <!-- 注册title -->
 
     <include layout="@layout/user_title"/>
@@ -41,7 +46,6 @@
                     android:layout_height="38dp"
                     android:background="@null"
                     android:hint="请输入手机号码、暂时支持中国大陆"
-                    android:phoneNumber="true"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
                     android:numeric="integer"
@@ -94,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:id="@+id/user_regist_identify_btn"
-                android:background="@drawable/user_btn"
+                android:background="@drawable/icon_more"
                 android:text="@string/user_repwd_identify"
                 android:textSize="16sp" 
                 android:layout_weight="0.001"
@@ -110,7 +114,8 @@
                 android:textColor="#000" 
                 android:maxLength="6"
                 android:background="@color/white"
-                android:layout_weight="2"/>
+                android:layout_weight="2"
+                android:paddingLeft="20dp"/>
         </LinearLayout>
 
         <RelativeLayout
@@ -124,7 +129,7 @@
                 android:layout_width="328dp"
                 android:layout_height="38dp"
                 android:id="@+id/user_regist_btn"
-                android:background="@drawable/user_btn"
+                android:background="@drawable/icon_more"
                 android:text="@string/user_regist_btn" />
         </RelativeLayout>
         <LinearLayout 
@@ -150,5 +155,30 @@
                 />
         </LinearLayout>
     </LinearLayout>
-
+    
 </LinearLayout>
+	<RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/loading_layout"     
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        >
+       	<include
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    layout="@layout/loading"
+       	    android:id="@+id/user_regist_include"
+       	   />
+
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注册中……"
+            android:layout_below="@id/user_regist_include"
+            android:layout_centerInParent="true"
+            android:textColor="#000"
+            />
+    </RelativeLayout>
+</RelativeLayout>

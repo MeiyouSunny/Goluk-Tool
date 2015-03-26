@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -70,27 +71,27 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				
 		initView();
 		// 设置title
-		mTextViewTitle.setText("登陆");
+		mTextViewTitle.setText("登录");
 		
 	}
 	private boolean mDelAllNum = false;
 	public void initView() {
-		// 登陆title
+		// 登录title
 		mBackButton = (Button) findViewById(R.id.back_btn);
 		mTextViewTitle = (TextView) findViewById(R.id.user_title_text);
-		// 手机号和密码、登陆按钮
+		// 手机号和密码、登录按钮
 		mEditTextPhoneNumber = (EditText) findViewById(R.id.user_login_phonenumber);
 		mEditTextPwd = (EditText) findViewById(R.id.user_login_pwd);
 		mBtnLogin = (Button) findViewById(R.id.user_login_btn);
 		// 快速注册
 		mTextViewRegist = (TextView) findViewById(R.id.user_login_phoneRegist);
 		mTextViewForgetPwd = (TextView) findViewById(R.id.user_login_forgetpwd);
-		// 第三方登陆
+		// 第三方登录
 		mImageViewWeichat = (ImageView) findViewById(R.id.user_login_weichat);
 		mImageViewSina = (ImageView) findViewById(R.id.user_login_sina);
 		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
 		// loading组件
-		mLoading = (RelativeLayout) findViewById(R.id.loading);
+		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
 		
 		/**
 		 * 监听绑定
@@ -154,12 +155,12 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				}
 			}
 		});*/
-		//登陆按钮
+		//登录按钮
 		mBtnLogin.setOnClickListener(this);
 		// 快速注册
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
-		// 第三方登陆
+		// 第三方登录
 		mImageViewWeichat.setOnClickListener(this);
 		mImageViewSina.setOnClickListener(this);
 		mImageViewQQ.setOnClickListener(this);
@@ -219,11 +220,15 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
 						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Login,condi);
 						if(b){
+							//隐藏软件盘
+						    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+						    imm.hideSoftInputFromWindow(UserLoginActivity.this.getCurrentFocus().getWindowToken(), 0);
+							mLoading.setVisibility(View.VISIBLE);
 							console.log("回调成功");
 						}
 					}else{
 						new AlertDialog.Builder(this)
-						.setTitle("错误信息提示")
+						.setTitle("Goluk温馨提示：")
 						.setMessage("密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写!")
 						.setPositiveButton("确定", null)
 						.create().show();
@@ -234,8 +239,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				}
 			}else{
 				new AlertDialog.Builder(this)
-				.setTitle("错误信息提示")
-				.setMessage("手机号格式错误,请重新输入！")
+				.setTitle("Goluk温馨提示：")
+				.setMessage("手机号格式错误,请重新输入")
 				.setPositiveButton("确定", null)
 				.create().show();
 			}
@@ -250,21 +255,30 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 	 */
 	public void loginCallBack(int success,Object obj){
 		console.log("登录回调---loginCallBack---" + success + "---" + obj);
+		console.log("登录中……");
 		if(1 == success){
 			try{
 				String data = (String)obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				String msg = json.getString("msg");
+				
+				mLoading.setVisibility(View.GONE);
 				if(code == 200){
 					//登录成功跳转
+					console.toast("登录成功！", mContext);
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
-//					mLoginDialog.hide();
-				}else{
+				}else if(code == 500){
 					new AlertDialog.Builder(this)
-					.setTitle("错误提示")
-					.setMessage("此手机号还未被注册")
+					.setTitle("Goluk温馨提示：")
+					.setMessage("服务端程序异常")
+					.setPositiveButton("确定", null)
+					.create().show();
+				}else if(code == 405){
+					new AlertDialog.Builder(this)
+					.setTitle("Goluk温馨提示：")
+					.setMessage("用户未注册")
 					.setNegativeButton("取消", null)
 					.setPositiveButton("注册", new DialogInterface.OnClickListener() {
 						
@@ -274,9 +288,13 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 							Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
 							startActivity(it);
 						}
-					}).create().show();;
-//					console.toast("登陆失败"+msg+"-------"+code, mContext);
-					
+					}).create().show();
+				}else if(code == 402){
+					new AlertDialog.Builder(this)
+					.setTitle("Goluk温馨提示：")
+					.setMessage("登录密码错误")
+					.setPositiveButton("确定", null)
+					.create().show();
 				}
 			}
 			catch(Exception ex){}
@@ -285,6 +303,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 			console.toast("登录失败", mContext);
 		}
 	}
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub

@@ -98,7 +98,7 @@
 	</string-array> 
 	
 	<!-- 个人中心 -->
-	<string name="user_login_title_text">登陆</string>
+	<string name="user_login_title_text">登录</string>
 	<string name="user_login_phone">手机快速注册</string>
 	<string name="user_login_forgetpwd">找回密码</string>
 	<string name="user_repwd_title_text">重设密码</string>
@@ -107,5 +107,5 @@
 	<string name="user_regist_title">手机号注册</string>
 	<string name="user_regist_btn">注册</string>
 	<string name="user_regist_bottom_login">已注册过Goluk？点此</string>
-	<string name="user_regist_bottom_login_btn">登陆</string>
+	<string name="user_regist_bottom_login_btn">登录</string>
 </resources>

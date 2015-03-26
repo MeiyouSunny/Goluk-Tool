@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
     <!-- 重置密码title -->
 
     <include layout="@layout/user_title"/>
@@ -40,8 +44,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:background="@null"
-                    android:hint="1311435565"
-                    android:phoneNumber="true"
+                    android:hint="请输入手机账号"
+                    android:numeric="integer"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
                     android:maxLength="11"
@@ -111,7 +115,8 @@
                 android:textColor="#000" 
                 android:maxLength="6"
                 android:background="@color/white"
-                android:layout_weight="2"/>
+                android:layout_weight="2"
+                android:paddingLeft="20dp"/>
         </LinearLayout>
 
         <RelativeLayout
@@ -124,11 +129,36 @@
             <Button
                 android:layout_width="328dp"
                 android:layout_height="38dp"
-                android:background="@drawable/user_btn"
+                android:background="@drawable/icon_more"
                 android:text="@string/user_repwd_ok" 
                 android:id="@+id/user_repwd_ok_btn"
                 android:textColor="@color/white"/>
         </RelativeLayout>
     </LinearLayout>
-
 </LinearLayout>
+
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/loading_layout"     
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        >
+       	<include
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    layout="@layout/loading"
+       	    android:id="@+id/user_regist_include"
+       	   />
+
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="重置中……"
+            android:layout_below="@id/user_regist_include"
+            android:layout_centerInParent="true"
+            android:textColor="#000"
+            />
+    </RelativeLayout>
+</RelativeLayout>

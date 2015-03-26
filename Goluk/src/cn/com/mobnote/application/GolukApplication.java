@@ -6,6 +6,7 @@ import cn.com.mobnote.golukmobile.LocalVideoListActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
+import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.util.console;
@@ -202,21 +203,32 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 					mMainActivity.loginCallBack(success,param2);
 				}
 				if(mPageSource == "UserLogin"){
-					//mUserLoginActivity = new UserLoginActivity();
 					((UserLoginActivity)mContext).loginCallBack(success, param2);
 				}
 			break;
 			//验证码PageType_GetVCode
 			case 15:
+				//注册获取验证码
 				if(mPageSource == "UserRegist"){
-//					((UserRegistActivity)mContext)
+					((UserRegistActivity)mContext).identifyCallback(success, param2);
+				}
+				//重置密码获取验证码
+				if(mPageSource == "UserRepwd"){
+					((UserRepwdActivity)mContext).isRepwdCallBack(success,param2);
 				}
 				break;
 			//注册PageType_Register
 			case 16:
-				
+				if(mPageSource == "UserRegist"){
+					((UserRegistActivity)mContext).registCallback(success, param2);
+				}
 				break;
-			
+			//重置密码PageType_ModifyPwd
+			case 17:
+				if(mPageSource == "UserRepwd"){
+					((UserRepwdActivity)mContext).repwdCallBack(success,param2);
+				}
+				break;
 			
 		}
 	}
