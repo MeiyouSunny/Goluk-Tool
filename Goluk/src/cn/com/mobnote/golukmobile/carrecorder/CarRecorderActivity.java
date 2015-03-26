@@ -947,7 +947,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						public void run() {
 							switch (mShootTime) {
 							case 1:
-								m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
+								m8sBtn.setBackgroundResource(R.drawable.btn_8s_grey);
 								break;
 							case 2:
 								SoundUtils.getInstance().play(
