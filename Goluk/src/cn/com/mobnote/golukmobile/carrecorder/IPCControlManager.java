@@ -7,6 +7,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.tachograph.comm.IPCManagerAdapter;
 import cn.com.mobnote.tachograph.comm.IPCManagerClass;
 import cn.com.mobnote.tachograph.comm.IPCManagerFn;
+import cn.com.tiros.api.FileUtils;
 
 
  /**
@@ -65,7 +66,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年3月21日
 	 */
 	public void screenShot() {
-		if (GolukApplication.getInstance().getIsLogin()) {
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			GFileUtils.writeShootLog("========发起ipc图片截图========");
 			boolean isSuccess = mIPCManagerClass.IPCManager_VDCP_CommRequest(IPC_VDCPCmd_SnapPic, "");
 			if (!isSuccess) {
@@ -125,6 +126,18 @@ public class IPCControlManager implements IPCManagerFn{
 						+ queryParam);
 
 		return mIPCManagerClass.IPCManager_VDCP_CommRequest(IPC_VDCPCmd_Query, queryParam);
+	}
+	
+	/**
+	 * 下载文件
+	 * @param filename 文件名称
+	 * @param tag 唯一标识
+	 * @param savepath 文件保存路径
+	 * @author xuhw
+	 * @date 2015年3月25日
+	 */
+	public void downloadFile(String filename, String tag, String savepath){
+		mIPCManagerClass.IPCManager_AddDownloadFile(filename, tag, FileUtils.javaToLibPath(savepath));
 	}
 
 	/**

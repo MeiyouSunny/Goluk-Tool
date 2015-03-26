@@ -23,4 +23,11 @@
 	<!-- 分享按钮颜色 -->
 	<color name="share_btn_bg">#14AFDC</color>
 	<color name="share_btn_curr_bg">#009BDC</color>
+	
+	<color name="carrecorder_tab_sel_color">#00c590</color>
+	<color name="carrecorder_tab_nor_color">#999999</color>
+	
+	<color name="carrecorder_text_nor_color">#b8b8b8</color>
+	<color name="carrecorder_text_sel_color">#28c5b1</color>
+	
 </resources>

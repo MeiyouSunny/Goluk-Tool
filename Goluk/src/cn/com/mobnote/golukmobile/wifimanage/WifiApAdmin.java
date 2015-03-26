@@ -85,7 +85,7 @@ public class WifiApAdmin {
 			public void doTimerCheckWork() {
 				// TODO Auto-generated method stub
 
-				if (isWifiApEnabled(mWifiManager)) {
+				if (isWifiApEnabled()) {
 					// 11wp代表连接成功
 				
 					Message msg = new Message();
@@ -168,8 +168,8 @@ public class WifiApAdmin {
 		}
 	}
 
-	private static void closeWifiAp(WifiManager wifiManager) {
-		if (isWifiApEnabled(wifiManager)) {
+	private void closeWifiAp(WifiManager wifiManager) {
+		if (isWifiApEnabled()) {
 			try {
 				Method method = wifiManager.getClass().getMethod(
 						"getWifiApConfiguration");
@@ -199,11 +199,11 @@ public class WifiApAdmin {
 		}
 	}
 
-	private static boolean isWifiApEnabled(WifiManager wifiManager) {
+	public boolean isWifiApEnabled() {
 		try {
-			Method method = wifiManager.getClass().getMethod("isWifiApEnabled");
+			Method method = mWifiManager.getClass().getMethod("isWifiApEnabled");
 			method.setAccessible(true);
-			return (Boolean) method.invoke(wifiManager);
+			return (Boolean) method.invoke(mWifiManager);
 
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block

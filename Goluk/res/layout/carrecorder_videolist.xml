@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <!-- 标题栏 -->
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@color/bg" >
+
+        <Button
+            android:id="@+id/back_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:background="@color/bg"
+            android:drawableLeft="@drawable/carrecorder_back_btn"
+            android:drawablePadding="8dp"
+            android:gravity="center|left"
+            android:text="@string/back_text"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/carrecorder_filemagager_title"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="10dp"
+            android:background="@color/bg"
+            android:text="@string/videolist_edit"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+    
+    <!-- table 菜单栏 -->
+
+    <RelativeLayout
+        android:id="@+id/table"
+        android:layout_below="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#00000000" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/carrecorder_flle_tit_bg"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/video_jcsp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="#00000000"
+                android:text="@string/videolist_jcsp"
+                android:textColor="#00c590"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/carrecorder_flle_tit_line"
+                android:contentDescription="@string/def" />
+
+            <Button
+                android:id="@+id/video_jjyx"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="#00000000"
+                android:text="@string/videolist_jjyx"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/carrecorder_flle_tit_line"
+                android:contentDescription="@string/def" />
+
+            <Button
+                android:id="@+id/video_xhyx"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="#00000000"
+                android:text="@string/videolist_xhyx"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- table页面的绿线 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" >
+
+            <ImageView
+                android:id="@+id/line_jcsp"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="#00c590"
+                android:contentDescription="@string/def" />
+
+            <ImageView
+                android:id="@+id/line_jjyx"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="#999999"
+                android:contentDescription="@string/def" />
+
+            <ImageView
+                android:id="@+id/line_xhyx"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="#999999"
+                android:contentDescription="@string/def" />
+        </LinearLayout>
+    </RelativeLayout>
+    
+
+    <RelativeLayout 
+        android:layout_below="@+id/table"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/mWonderfulVideoList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:dividerHeight="0dp"
+        android:fastScrollEnabled="true"
+        android:divider="#00000000"
+        android:scrollbars="none"
+        android:cacheColorHint="#00000000"
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/test_list_item_layout" />
+        
+        <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/mEmergencyVideoList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:dividerHeight="0dp"
+        android:fastScrollEnabled="true"
+        android:divider="#00000000"
+        android:scrollbars="none"
+        android:visibility="gone"
+        android:cacheColorHint="#00000000"
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/test_list_item_layout" />
+        
+        <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/mLoopVideoList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:dividerHeight="0dp"
+        android:fastScrollEnabled="true"
+        android:divider="#00000000"
+        android:scrollbars="none"
+        android:visibility="gone"
+        android:cacheColorHint="#00000000"
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/test_list_item_layout" />
+        
+    </RelativeLayout>
+    <!-- 文件列表 -->
+    
+
+
+<LinearLayout
+    	android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/carrecorder_flle_edit_bg" >
+			
+            <ImageButton
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16sp"
+                android:background="@drawable/carrecorder_download_btn" 
+                android:contentDescription="@string/def"/>
+            
+            <Button
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下载"
+                android:textColor="#dedede"
+                android:background="#00000000"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+		<ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/carrecorder_flle_edit_line" 
+                android:contentDescription="@string/def"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/carrecorder_flle_edit_bg" >
+
+            <ImageButton
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16sp"
+                android:background="@drawable/carrecorder_delete_btn" 
+                android:contentDescription="@string/def"/>
+            
+            <Button
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="删除"
+                android:textColor="#dedede"
+                android:background="#00000000"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

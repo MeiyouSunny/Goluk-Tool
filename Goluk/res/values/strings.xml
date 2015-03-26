@@ -105,53 +105,38 @@
 		<item>分类4</item>
 		<item>分类5</item>
 	</string-array> 
-	
-	<!-- 资源拷贝 -->
-	<string-array name="resource_from">
-
-        <!-- 版本相关 -->
-        <item>gitversion</item>
-        <item>version</item>
-        <!-- 配置相关 -->
-        <item>config/api/moduledatacfg</item>
-        <item>config/api/settingcfg</item>
-        <item>config/api/audiodata</item>
-        <item>config/framework/frameworkcfg</item>
-        <!-- 请求地址相关 -->
-        <item>res/api/api.rs</item>
-        <item>res/api/module.rs</item>
-        <!-- logic 相关资源 -->
-        <item>res/logic/android10/10_logic.rs</item>
-        <!-- 地图资源 -->
-        <item>res/map/trmap.rs</item>
-        <item>res/map/vmap.rs</item>
-        <item>res/map/buildmap.rs</item>
-        <item>res/map/vmap_night.rs</item>
-        <item>res/map/trmap_night.rs</item>
-        <item>res/map/buildmap_night.rs</item>
-    </string-array>
-    <string-array name="resource_copyto">
-        <item>fs0:/gitversion</item>
-        <item>fs0:/version</item>
-        <item>fs0:/config/api/moduledatacfg</item>
-        <item>fs0:/config/api/settingcfg</item>
-        <item>fs0:/config/api/audiodata</item>
-        <item>fs0:/config/framework/frameworkcfg</item>
-        <item>fs0:/res/api/api.rs</item>
-        <item>fs0:/res/api/module.rs</item>
-        <item>fs0:/res/logic/android10/10_logic.rs</item>
-        <item>fs0:/res/map/trmap.rs</item>
-        <item>fs0:/res/map/vmap.rs</item>
-        <item>fs0:/res/map/buildmap.rs</item>
-        <item>fs0:/res/map/vmap_night.rs</item>
-        <item>fs0:/res/map/trmap_night.rs</item>
-        <item>fs0:/res/map/buildmap_night.rs</item>
-    </string-array>
     
     <!-- 行车记录仪 		START-->
     <string name="filemanager_title">文件浏览</string>
     <string name="default_live_url">rtmp://211.103.234.234/live/test100</string>
     <string name="default_rtsp_url">rtsp://admin:123456@192.168.43.234/sub</string>
+    
+    <string name="def">默认</string>
+    <string name="setting_title_text">设置</string>
+    <string name="carrecorder_filemagager_title">文件浏览</string>
+    <string name="spzl_title">视频质量</string>
+    <string name="spzl_text">小车本提供两种视频质量，高清为1080p，标准为720p。</string>
+    <string name="zdxhlx_title">自动循环录像</string>
+    <string name="zdxhlx_text">启动选项后，小车本将每间隔５分钟自动保存行车录制影像。当存储空间不足时，将自动覆盖早期循环录像文件。</string>
+    <string name="sylz_title">声音录制开关</string>
+    <string name="pzgy_title">碰撞感应灵敏度</string>
+    <string name="pzgy_text">设置此项后,车辆在中如遭受异常的碰撞,行车记录仪会自动保存20秒(前8秒+后12秒)紧急视频影像。当存储空间不足时,将自动覆盖早期循环录像文件。</string>
+    <string name="rlcx_title">存储容量查询</string>
+    <string name="sysz">水印设置</string>
+    <string name="ztts">状态提示灯</string>
+    <string name="sjsz">时间设置</string>
+    <string name="gsh">格式化SDK卡</string>
+    <string name="hfcc">恢复出厂设置</string>
+    <string name="bbxx">版本信息</string>
+    <string name="ipcbd">摄像头绑定/解绑</string>
+    <string name="car_recorder_title">行车记录仪</string>
+    <string name="ipcconnecting">摄像头连接中</string>
+    
+    <!-- 视频列表页 -->
+    <string name="videolist_edit">编辑</string>
+    <string name="videolist_jcsp">精彩视频</string>
+    <string name="videolist_jjyx">紧急影像</string>
+    <string name="videolist_xhyx">循环影像</string>
     
     <!-- 行车记录仪  	END-->
     
