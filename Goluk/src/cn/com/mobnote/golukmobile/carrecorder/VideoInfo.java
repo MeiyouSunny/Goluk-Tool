@@ -21,7 +21,7 @@ public class VideoInfo {
 	public String videoPath;
 	/** 视频时长 */
 	public String countTime = null;
-
+	/**分辨率  1:1080p 2:720p*/
 	public int videoHP = 0;
 	/** 释放标识 */
 	public boolean isRecycle=false;

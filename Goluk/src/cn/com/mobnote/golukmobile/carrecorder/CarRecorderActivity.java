@@ -109,12 +109,12 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	private TextView mTime = null;
 	/** 当前地址显示 */
 	private TextView mAddr = null;
-	/** 速度百位显示 */
-	private ImageView mSpeed1 = null;
-	/** 速度十位显示 */
-	private ImageView mSpeed2 = null;
-	/** 速度个位显示 */
-	private ImageView mSpeed3 = null;
+//	/** 速度百位显示 */
+//	private ImageView mSpeed1 = null;
+//	/** 速度十位显示 */
+//	private ImageView mSpeed2 = null;
+//	/** 速度个位显示 */
+//	private ImageView mSpeed3 = null;
 	/** 加载中布局 */
 	private LinearLayout mLoadingLayout = null;
 	/** 加载中动画显示控件 */
@@ -162,9 +162,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	/** IPC连接状态 */
 	private ImageView mIPCConnectState;
 	/** 修复按钮 */
-	private ImageButton mIpcRepair;
+//	private ImageButton mIpcRepair;
 	/** 视频录制状态显示 */
-	private ImageView mRecordState;
+//	private ImageView mRecordState;
 	/** 当前录制时间 */
 	private int showRecordTime = 0;
 	/** 开启视频录制计时器 */
@@ -178,12 +178,14 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	private RelativeLayout mVLayout = null;
 	private RelativeLayout mRtmpPlayerLayout = null;
 	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+	/** 连接状态 */
+	private TextView mConnectTip=null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.tachograph_main);
+		setContentView(R.layout.carrecorder_main);
 
 		mHandler = new Handler() {
 			public void handleMessage(final android.os.Message msg) {
@@ -208,7 +210,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					startLive(aid);
 					break;
 				case SPEED:
-					updateSpeed(msg.arg1);
+//					updateSpeed(msg.arg1);
 					break;
 				case ADDR:
 					String addr = (String) msg.obj;
@@ -299,12 +301,13 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mSettingBtn = (ImageButton) findViewById(R.id.mSettingBtn);
 		mTime = (TextView) findViewById(R.id.mTime);
 		mAddr = (TextView) findViewById(R.id.mAddr);
-		mSpeed1 = (ImageView) findViewById(R.id.mSpeed1);
-		mSpeed2 = (ImageView) findViewById(R.id.mSpeed2);
-		mSpeed3 = (ImageView) findViewById(R.id.mSpeed3);
+		mConnectTip = (TextView) findViewById(R.id.mConnectTip);
+//		mSpeed1 = (ImageView) findViewById(R.id.mSpeed1);
+//		mSpeed2 = (ImageView) findViewById(R.id.mSpeed2);
+//		mSpeed3 = (ImageView) findViewById(R.id.mSpeed3);
 		mIPCConnectState = (ImageView) findViewById(R.id.mIPCConnectState);
-		mIpcRepair = (ImageButton) findViewById(R.id.mIpcRepair);
-		mRecordState = (ImageView) findViewById(R.id.mRecordState);
+//		mIpcRepair = (ImageButton) findViewById(R.id.mIpcRepair);
+//		mRecordState = (ImageView) findViewById(R.id.mRecordState);
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
 		mLoading.setBackgroundResource(R.anim.video_loading);
@@ -318,7 +321,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mRtmpPlayerView.setConnectionTimeout(30000);
 		mRtmpPlayerView.setVisibility(View.VISIBLE);
 
-		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mRtmpPlayerLayout
+		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRtmpPlayerLayout
 				.getLayoutParams();
 		lp.width = screenWidth;
 		lp.height = (int) (screenWidth / 1.777);
@@ -330,11 +333,15 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			start();
 		}
 
-		if (GolukApplication.getInstance().getIsLogin()) {
+		mConnectTip.setText("摄像头未连接");
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			ipcIsOk = true;
-		} else {
-
-		}
+			updateVideoState();
+			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+//			mFileBtn.setBackgroundResource(R.drawable.btn_filemanager);
+			
+		} 
+		
 		showLoading();
 		hidePlayer();
 		
@@ -359,8 +366,12 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		m8sBtn.setOnClickListener(this);
 		mFileBtn.setOnClickListener(this);
 		mSettingBtn.setOnClickListener(this);
-		mIpcRepair.setOnClickListener(this);
-		mRecordState.setOnClickListener(this);
+		findViewById(R.id.mFileText).setOnClickListener(this);
+		findViewById(R.id.mSettingText).setOnClickListener(this);
+		findViewById(R.id.mFileLayout).setOnClickListener(this);
+		findViewById(R.id.mSettingLayout).setOnClickListener(this);
+//		mIpcRepair.setOnClickListener(this);
+//		mRecordState.setOnClickListener(this);
 		mRtmpPlayerView
 				.setPlayerListener(new RtmpPlayerView.RtmpPlayerViewLisener() {
 
@@ -465,32 +476,32 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mVLayout.setLayoutParams(lp);
 	}
 
-	/**
-	 * 更新速度显示信息
-	 * 
-	 * @param speed
-	 *            当前速度
-	 * @author xuhw
-	 * @date 2015年3月11日
-	 */
-	private void updateSpeed(int speed) {
-		int a1 = (speed + 1) / 100;
-		int a2 = ((speed + 1) / 10) % 10;
-		int a3 = (speed + 1) % 10;
-		if (a1 > 0) {
-			mSpeed1.setVisibility(View.VISIBLE);
-			showSpeedView(a1, mSpeed1);
-		} else {
-			mSpeed1.setVisibility(View.GONE);
-		}
-		if (a2 > 0) {
-			mSpeed2.setVisibility(View.VISIBLE);
-			showSpeedView(a2, mSpeed2);
-		} else {
-			mSpeed2.setVisibility(View.GONE);
-		}
-		showSpeedView(a3, mSpeed3);
-	}
+//	/**
+//	 * 更新速度显示信息
+//	 * 
+//	 * @param speed
+//	 *            当前速度
+//	 * @author xuhw
+//	 * @date 2015年3月11日
+//	 */
+//	private void updateSpeed(int speed) {
+//		int a1 = (speed + 1) / 100;
+//		int a2 = ((speed + 1) / 10) % 10;
+//		int a3 = (speed + 1) % 10;
+//		if (a1 > 0) {
+//			mSpeed1.setVisibility(View.VISIBLE);
+//			showSpeedView(a1, mSpeed1);
+//		} else {
+//			mSpeed1.setVisibility(View.GONE);
+//		}
+//		if (a2 > 0) {
+//			mSpeed2.setVisibility(View.VISIBLE);
+//			showSpeedView(a2, mSpeed2);
+//		} else {
+//			mSpeed2.setVisibility(View.GONE);
+//		}
+//		showSpeedView(a3, mSpeed3);
+//	}
 
 	/**
 	 * 更新视频录制时间
@@ -549,7 +560,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						@Override
 						public void onChanged() {
 
-							if (GolukApplication.getInstance().getIsLogin()) {
+							if (GolukApplication.getInstance().getIpcIsLogin()) {
 								if (!isRecording) {
 									sendEmergencyCommitId();
 								} else {
@@ -598,9 +609,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		case R.id.m8sBtn:
 			GFileUtils
 					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
-			if (GolukApplication.getInstance().getIsLogin()) {
+			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (!isRecording) {
-					m8sBtn.setBackgroundResource(R.drawable.btn_8s_sel);
+					m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
 					isRecording = true;
 					updateRecordState(false, 0);
 					mCurVideoType = VideoType.mounts;
@@ -623,27 +634,22 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			}
 			break;
 		case R.id.mFileBtn:
-			if (GolukApplication.getInstance().getIsLogin()) {
-				// Intent intent = new Intent(SetupActivity.this,
-				// RecorderFileManager.class);
-				// startActivity(intent);
+		case R.id.mFileText:
+		case R.id.mFileLayout:
+			if (GolukApplication.getInstance().getIpcIsLogin()) {
+				 Intent intent = new Intent(CarRecorderActivity.this, IPCFileManagerActivity.class);
+				 startActivity(intent);
 			} else {
 				// 未登录
 			}
 			break;
 		case R.id.mSettingBtn:
-			// Intent setting = new Intent(SetupActivity.this,
-			// SettingsActivity.class);
-			// startActivity(setting);
+		case R.id.mSettingText:
+		case R.id.mSettingLayout:
+			 Intent setting = new Intent(CarRecorderActivity.this,SettingsActivity.class);
+			 startActivity(setting);
 			break;
-		case R.id.mIpcRepair:
-			// Intent i = getBaseContext().getPackageManager()
-			// .getLaunchIntentForPackage(
-			// getBaseContext().getPackageName());
-			// i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			// startActivity(i);
-			finish();
-			break;
+
 		default:
 			break;
 		}
@@ -656,7 +662,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月5日
 	 */
 	private void sendEmergencyCommitId() {
-		m8sBtn.setBackgroundResource(R.drawable.btn_8s_sel);
+		m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
 		isRecording = true;
 		updateRecordState(true, 0);
 		mCurVideoType = VideoType.emergency;
@@ -941,68 +947,60 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						public void run() {
 							switch (mShootTime) {
 							case 1:
-								m8sBtn.setBackgroundResource(R.drawable.recorder_8s1);
+								m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
 								break;
 							case 2:
 								SoundUtils.getInstance().play(
 										SoundUtils.RECORD_SEC);
-								m8sBtn.setBackgroundResource(R.drawable.recorder_8s2);
 								break;
 							case 3:
-								m8sBtn.setBackgroundResource(R.drawable.recorder_7s1);
+								m8sBtn.setBackgroundResource(R.drawable.btn_7s);
 								break;
 							case 4:
 								SoundUtils.getInstance().play(
 										SoundUtils.RECORD_SEC);
-								m8sBtn.setBackgroundResource(R.drawable.recorder_7s2);
 								break;
 							case 5:
-								m8sBtn.setBackgroundResource(R.drawable.recorder_6s1);
+								m8sBtn.setBackgroundResource(R.drawable.btn_6s);
 								break;
 							case 6:
 								SoundUtils.getInstance().play(
 										SoundUtils.RECORD_SEC);
-								m8sBtn.setBackgroundResource(R.drawable.recorder_6s2);
 								break;
 							case 7:
-								m8sBtn.setBackgroundResource(R.drawable.recorder_5s1);
+								m8sBtn.setBackgroundResource(R.drawable.btn_5s);
 								break;
 							case 8:
 								SoundUtils.getInstance().play(
 										SoundUtils.RECORD_SEC);
-								m8sBtn.setBackgroundResource(R.drawable.recorder_5s2);
 								break;
 							case 9:
-								m8sBtn.setBackgroundResource(R.drawable.recorder_4s1);
+								m8sBtn.setBackgroundResource(R.drawable.btn_4s);
 								break;
 							case 10:
 								SoundUtils.getInstance().play(
 										SoundUtils.RECORD_SEC);
-								m8sBtn.setBackgroundResource(R.drawable.recorder_4s2);
 								break;
 							case 11:
-								m8sBtn.setBackgroundResource(R.drawable.recorder_3s1);
+								m8sBtn.setBackgroundResource(R.drawable.btn_3s);
 								break;
 							case 12:
 								SoundUtils.getInstance().play(
 										SoundUtils.RECORD_SEC);
-								m8sBtn.setBackgroundResource(R.drawable.recorder_3s2);
 								break;
 							case 13:
-								m8sBtn.setBackgroundResource(R.drawable.recorder_2s1);
+								m8sBtn.setBackgroundResource(R.drawable.btn_2s);
 								break;
 							case 14:
 								SoundUtils.getInstance().play(
 										SoundUtils.RECORD_SEC);
-								m8sBtn.setBackgroundResource(R.drawable.recorder_2s2);
 								break;
 							case 15:
-								m8sBtn.setBackgroundResource(R.drawable.recorder_1s1);
+								m8sBtn.setBackgroundResource(R.drawable.btn_1s);
 								break;
 							case 16:
 								SoundUtils.getInstance().play(
 										SoundUtils.RECORD_CAMERA);
-								m8sBtn.setBackgroundResource(R.drawable.recorder_1s2);
 								break;
 
 							default:
@@ -1035,7 +1033,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
 				CarRecorderActivity.QUERYFILETIME);
 		mShootTime = 0;
-		m8sBtn.setBackgroundResource(R.drawable.btn_8s_sel);
+		m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
 			m8sTimer.purge();
@@ -1054,7 +1052,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mHandler.removeMessages(QUERYFILEEXIT);
 		if (!TextUtils.isEmpty(mRecordVideFileName)) {
 			if (videoFileQueryTime <= 15) {
-				if (GolukApplication.getInstance().getIsLogin()) {
+				if (GolukApplication.getInstance().getIpcIsLogin()) {
 					boolean isSucess = GolukApplication.getInstance()
 							.getIPCControlManager()
 							.querySingleFile(mRecordVideFileName);
@@ -1189,7 +1187,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				m8sBtn.setBackgroundResource(R.drawable.btn_8s);
+				m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
 			}
 		});
 	}
@@ -1216,66 +1214,65 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月10日
 	 */
 	private void updateVideoState() {
-		mIpcRepair.setVisibility(View.VISIBLE);
 		if (rtmpIsOk == false && ipcIsOk == false) {
-			mIpcRepair.setVisibility(View.GONE);
-			mIPCConnectState.setBackgroundResource(R.drawable.ipc_ununited);
+			mConnectTip.setText("摄像头未连接");
+//			mIPCConnectState.setBackgroundResource(R.drawable.ipc_ununited);
 		} else if (rtmpIsOk == true && ipcIsOk == true) {
-			mIpcRepair.setVisibility(View.GONE);
-			mIPCConnectState.setBackgroundResource(R.drawable.ipc_normal);
+			mConnectTip.setText("摄像头已连接");
+//			mIPCConnectState.setBackgroundResource(R.drawable.ipc_normal);
 		} else {
-			// mIpcRepair.setVisibility(View.VISIBLE);
-			mIPCConnectState.setBackgroundResource(R.drawable.ipc_error);
+			mConnectTip.setText("摄像头连接中...");
+//			mIPCConnectState.setBackgroundResource(R.drawable.ipc_error);
 		}
 	}
 
 	private void updateRecordState(boolean emcrgency, int state) {
-		switch (state) {
-		case 0:
-			if (emcrgency) {
-				mRecordState.setBackgroundResource(R.drawable.emergency_record);
-			} else {
-				mRecordState.setBackgroundResource(R.drawable.video_8s_record);
-			}
-			break;
-		case 1:
-			if (emcrgency) {
-				mRecordState.setBackgroundResource(R.drawable.emergency_read);
-			} else {
-				mRecordState.setBackgroundResource(R.drawable.video_8s_read);
-			}
-			break;
-		case 2:
-			if (emcrgency) {
-				mRecordState
-						.setBackgroundResource(R.drawable.emergency_success);
-			} else {
-				mRecordState.setBackgroundResource(R.drawable.video_8s_success);
-			}
-			mRecordState.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					mRecordState.setBackgroundResource(0);
-				}
-			}, 1500);
-			break;
-		case 3:
-			if (emcrgency) {
-				mRecordState.setBackgroundResource(R.drawable.emergency_fail);
-			} else {
-				mRecordState.setBackgroundResource(R.drawable.video_8s_fail);
-			}
-			mRecordState.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					mRecordState.setBackgroundResource(0);
-				}
-			}, 1500);
-			break;
-
-		default:
-			break;
-		}
+//		switch (state) {
+//		case 0:
+//			if (emcrgency) {
+//				mRecordState.setBackgroundResource(R.drawable.emergency_record);
+//			} else {
+//				mRecordState.setBackgroundResource(R.drawable.video_8s_record);
+//			}
+//			break;
+//		case 1:
+//			if (emcrgency) {
+//				mRecordState.setBackgroundResource(R.drawable.emergency_read);
+//			} else {
+//				mRecordState.setBackgroundResource(R.drawable.video_8s_read);
+//			}
+//			break;
+//		case 2:
+//			if (emcrgency) {
+//				mRecordState
+//						.setBackgroundResource(R.drawable.emergency_success);
+//			} else {
+//				mRecordState.setBackgroundResource(R.drawable.video_8s_success);
+//			}
+//			mRecordState.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					mRecordState.setBackgroundResource(0);
+//				}
+//			}, 1500);
+//			break;
+//		case 3:
+//			if (emcrgency) {
+//				mRecordState.setBackgroundResource(R.drawable.emergency_fail);
+//			} else {
+//				mRecordState.setBackgroundResource(R.drawable.video_8s_fail);
+//			}
+//			mRecordState.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					mRecordState.setBackgroundResource(0);
+//				}
+//			}, 1500);
+//			break;
+//
+//		default:
+//			break;
+//		}
 
 	}
 
@@ -1286,8 +1283,8 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						m8sBtn.setBackgroundResource(R.drawable.btn_8s_sel);
-						mFileBtn.setBackgroundResource(R.drawable.btn_file_sel);
+						m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
+//						mFileBtn.setBackgroundResource(R.drawable.btn_file_sel);
 					}
 				});
 			}
@@ -1308,8 +1305,8 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					m8sBtn.setBackgroundResource(R.drawable.btn_8s);
-					mFileBtn.setBackgroundResource(R.drawable.btn_filemanager);
+					m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+//					mFileBtn.setBackgroundResource(R.drawable.btn_filemanager);
 				}
 			});
 		}

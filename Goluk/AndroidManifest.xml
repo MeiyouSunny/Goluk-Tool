@@ -41,7 +41,12 @@
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity" android:screenOrientation="portrait"/>
 		
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"/>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		
+		
+		
 		
 		<!-- ###################添加UmengAppkey###################### -->
 		<meta-data android:name="UMENG_APPKEY" android:value="546341d6fd98c59a41003371"/>

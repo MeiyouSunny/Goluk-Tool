@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">	    
+	<TextView 
+	    android:id="@+id/title"
+	    android:layout_width="match_parent"
+	    android:layout_height="32dp"
+	    android:background="#eeeeee"
+	    android:textSize="16sp"
+	    android:textColor="#999999"
+	    android:gravity="center|left"
+	    android:paddingLeft="8dp"
+	    android:text="5月12日"/>
+	
+</RelativeLayout>

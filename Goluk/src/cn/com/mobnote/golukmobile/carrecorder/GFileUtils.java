@@ -267,7 +267,7 @@ public class GFileUtils {
         String timename=format.format(new Date(time));  
 		
 		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
-	            + File.separator + "goluk";
+	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
         if(!dir.exists()){
@@ -289,7 +289,7 @@ public class GFileUtils {
         String timename=format.format(new Date(time));  
 		
 		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
-	            + File.separator + "goluk";
+	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
         if(!dir.exists()){
@@ -311,7 +311,7 @@ public class GFileUtils {
         String timename=format.format(new Date(time));  
 		
 		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
-	            + File.separator + "goluk";
+	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
         if(!dir.exists()){
@@ -333,7 +333,7 @@ public class GFileUtils {
         String timename=format.format(new Date(time));  
 		
 		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
-	            + File.separator + "goluk";
+	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
         if(!dir.exists()){
@@ -355,7 +355,7 @@ public class GFileUtils {
         String timename=format.format(new Date(time));  
 		
 		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
-	            + File.separator + "goluk";
+	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
         if(!dir.exists()){

@@ -114,7 +114,7 @@ public class IpcDataParser {
 		try {
 			JSONObject obj = new JSONObject(json);
 			int total = obj.getInt("total");
-
+			
 			JSONArray array = obj.getJSONArray("items");
 			int length = array.length();
 			for (int i = 0; i < length; i++) {
@@ -128,6 +128,25 @@ public class IpcDataParser {
 			return null;
 		}
 		return list;
+	}
+	
+	/**
+	 * 获取文件列表总个数
+	 * 
+	 * @param json
+	 * @return
+	 * @author jiayf
+	 * @date Mar 10, 2015
+	 */
+	public static int getFileListCount(String json) {
+		int total=0;
+		try {
+			JSONObject obj = new JSONObject(json);
+			total = obj.getInt("total");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return total;
 	}
 
 	public static VideoFileInfo parseSingleFileResult(String json) {
