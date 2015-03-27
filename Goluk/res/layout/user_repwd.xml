@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:background="@null"
-                    android:hint="请输入手机账号"
+                    android:hint="请输入手机号码，暂时只支持中国大陆"
                     android:numeric="integer"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
@@ -156,6 +156,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="重置中……"
+            android:layout_below="@id/user_regist_include"
+            android:layout_centerInParent="true"
+            android:textColor="#000"
+            />
+    </RelativeLayout>
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/loading_identify"     
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        >
+       	<include
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    layout="@layout/loading"
+       	    android:id="@+id/user_regist_include"
+       	   />
+
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="验证码获取中……"
             android:layout_below="@id/user_regist_include"
             android:layout_centerInParent="true"
             android:textColor="#000"

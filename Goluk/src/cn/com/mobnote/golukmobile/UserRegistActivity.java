@@ -13,7 +13,6 @@ import cn.com.mobnote.util.console;
 import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,9 +21,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.telephony.SmsMessage;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -33,7 +32,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * 注册 
@@ -69,8 +67,10 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	private IntentFilter smsFilter;
 	private Handler handler;
 	private String strBody;
-	//进度条
+	//注册进度条
 	private RelativeLayout mLoading = null;
+	//注册获取验证码显示进度条
+	private RelativeLayout mIdentifyLoading = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +103,10 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		mEditTextIdentify = (EditText) findViewById(R.id.user_regist_identify);
 		// 登陆
 		mTextViewLogin = (TextView) findViewById(R.id.user_regist_login);
-		//进度条
+		//注册按钮进度条
 		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
+		//获取验证码进度条
+		mIdentifyLoading = (RelativeLayout) findViewById(R.id.loading_identify);
 
 		/**
 		 * 监听绑定
@@ -254,8 +256,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				super.handleMessage(msg);
-				TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-				String localPhoneNumber = telManager.getLine1Number();
+//				TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+//				String localPhoneNumber = telManager.getLine1Number();
 //				if(localPhoneNumber.equals(mEditTextPhone.getText().toString())){
 					mEditTextIdentify.setText(strBody);
 				/*}else{
@@ -284,12 +286,11 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					
 					// 服务端发送短息的手机号。。+86开头？
 //					String from = sms.getOriginatingAddress();
-					String from = "10690148001667";
-					console.log(from);
+//					String from = "10690148001667";//goluk发送验证码的服务端号码
 				}
 			}
 		};
-		registerReceiver(smsReceiver, smsFilter);
+//		registerReceiver(smsReceiver, smsFilter);
 		
 		/**
 		 * 对验证码进行判断
@@ -301,17 +302,27 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						String isIdentify = "{\"PNumber\":\"" + phone  + "\",\"type\":\"1\"}";
 						console.log(isIdentify);
 						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
+						
+						UserUtils.hideSoftMethod(this);
+						mIdentifyLoading.setVisibility(View.VISIBLE);
+						registerReceiver(smsReceiver, smsFilter);
+						click = 1;
 						console.log(b+"");
-						if(b){
-//							Toast.makeText(UserRegistActivity.this, "OK", 0).show();
-						}
+						mBtnRegist.setEnabled(true);
 					}else{
 						UserUtils.showDialog(this, "密码格式输入错误，请重新输入");
+						mBtnRegist.setEnabled(false);
 					}
+				}else{
+					UserUtils.showDialog(this, "密码不能为空");
+					mBtnRegist.setEnabled(false);
 				}
 			}else{
 				UserUtils.showDialog(this, "手机号格式输入错误，请重新输入");
 			}
+		}else{
+			UserUtils.showDialog(this, "手机号不能为空");
+			mBtnRegist.setEnabled(false);
 		}
 		
 	}
@@ -329,7 +340,9 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				console.log(data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				String msg = json.getString("msg");
+//				String msg = json.getString("msg");
+				
+				mIdentifyLoading.setVisibility(View.GONE);
 				if(code == 200){
 					//验证码获取成功
 					/**
@@ -356,7 +369,11 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					UserUtils.showDialog(this, "用户已注册");
 				}else if(code == 440){
 					UserUtils.showDialog(this, "输入手机号异常");
+				}else{
+					console.log("注册没有错误code提示");
 				}
+				/*unregisterReceiver(smsReceiver);
+				click = 2;*/
 			}
 			catch(Exception ex){
 				ex.printStackTrace();
@@ -364,6 +381,9 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		}
 		else{
 			console.toast("验证码获取失败", mContext);
+			mBtnIdentify.setEnabled(true);
+			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
+			mBtnIdentify.setText("重新获取");
 		}
 	}
 	
@@ -402,7 +422,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				console.log(code+"");
-				String msg = json.getString("msg");
+//				String msg = json.getString("msg");
 				
 				mLoading.setVisibility(View.GONE);
 				if(code == 200){
@@ -418,6 +438,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					UserUtils.showDialog(this, "输入验证码错误");
 				}else if(code == 407){
 					UserUtils.showDialog(this, "输入验证码超时");
+				}else{
+					console.log("注册回调没有提示code");
 				}
 			}catch(Exception e){
 				e.printStackTrace();
@@ -429,10 +451,14 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	/**
 	 * 销毁广播
 	 */
+	private int click = 0;
 	@Override
-	protected void onDestroy() {
+	protected void onStop() {
 		// TODO Auto-generated method stub
-		super.onDestroy();
-		unregisterReceiver(smsReceiver);
+		super.onStop();
+		Log.i("bug", "==========regist");
+		if(click == 1){
+			unregisterReceiver(smsReceiver);
+		}
 	}
 }

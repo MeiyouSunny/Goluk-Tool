@@ -31,7 +31,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -58,15 +57,17 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 	//倒计时的帮助类
 	private CountDownButtonHelper mCountDownHelper;
 	//自动获取验证码
-	private BroadcastReceiver smsReceiver;
+	private BroadcastReceiver smsReceiver = null;
 	private IntentFilter smsFilter;
 	private Handler smsHandler;
 	private String smsCode;
 
 	private Context mContext = null;
 	private GolukApplication mApplication = null;
-	//进度条
+	//重置密码显示进度条
 	private RelativeLayout mLoading = null ;
+	//验证码获取显示进度条
+	private RelativeLayout mIdentifyLoading = null;
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		mBtnIdentity = (Button) findViewById(R.id.user_repwd_identify_btn);
 		mBtnOK = (Button) findViewById(R.id.user_repwd_ok_btn);
 		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
+		mIdentifyLoading = (RelativeLayout) findViewById(R.id.loading_identify);
 		
 		/**
 		 * 绑定监听
@@ -280,18 +282,17 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					Matcher m = p.matcher(message);   
 					smsCode = m.replaceAll("").trim();
 					smsHandler.sendEmptyMessage(1);
-					
 					// 服务端发送短息的手机号。。+86开头？
 //					String from = sms.getOriginatingAddress();
-					String from = "10690148001667";
-					console.log(from);
+//					String from = "10690148001667";
+//					console.log(from);
 				}
 			}
 		};
-		registerReceiver(smsReceiver, smsFilter);
+//		registerReceiver(smsReceiver, smsFilter);
 		
 		/**
-		 * 对验证码进行判断
+		 * 对手机号、密码进行判断
 		 */
 		if(!"".equals(phone)){
 			if(phone.startsWith("1") && phone.length() == 11){
@@ -300,10 +301,14 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						String isIdentify = "{\"PNumber\":\"" + phone  + "\",\"type\":\"2\"}";
 						console.log(isIdentify);
 						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
-						console.log(b+"");
 						if(b){
-//							Toast.makeText(UserRepwdActivity.this, "OK", 0).show();
+							UserUtils.hideSoftMethod(this);
+							mIdentifyLoading.setVisibility(View.VISIBLE);
+							console.log(b+"");
+							registerReceiver(smsReceiver, smsFilter);
+							flag = true;
 						}
+						
 					}else{
 						UserUtils.showDialog(this, "密码格式输入错误，请重新输入");
 					}
@@ -318,7 +323,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 	 */
 	public void isRepwdCallBack(int success,Object obj){
 		console.log("验证码获取回调---isRepwdCallBack---" + success + "---" + obj);
-		console.toast("发送中,请稍后", mContext);
 		
 		if(1 == success){
 			try{
@@ -327,6 +331,10 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				String msg = json.getString("msg");
+				
+				/*unregisterReceiver(smsReceiver);
+				flag = false;*/
+				mIdentifyLoading.setVisibility(View.GONE);
 				if(code == 200){
 					//验证码获取成功
 					console.toast("下发验证码成功", mContext);
@@ -343,6 +351,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						}
 					});
 					mCountDownHelper.start();
+					
 				}else if(code == 201){
 					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");
 				}else if(code == 500){
@@ -351,6 +360,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					UserUtils.showDialog(this, "用户未注册");
 				}else if(code == 440){
 					UserUtils.showDialog(this, "输入手机号异常");
+				}else{
+					console.log("获取验证码回调没有错误提示code");
 				}
 			}
 			catch(Exception ex){
@@ -376,8 +387,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 			console.log(b+"");
 			if(b){
 				//隐藏软件盘
-			    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			    imm.hideSoftInputFromWindow(UserRepwdActivity.this.getCurrentFocus().getWindowToken(), 0);
+			   UserUtils.hideSoftMethod(this);
 				mLoading.setVisibility(View.VISIBLE);
 			}
 		}else{
@@ -411,6 +421,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					UserUtils.showDialog(this, "输入验证码错误");
 				}else if(code == 407){
 					UserUtils.showDialog(this, "输入验证码超时");
+				}else{
+					console.log("重置密码回调没有错误提示code");
 				}
 			}catch(Exception e){
 				e.printStackTrace();
@@ -423,11 +435,22 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 	/**
 	 * 销毁广播
 	 */
-	@Override
+	/*@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		Log.i("bug", smsReceiver+"--------");
 		unregisterReceiver(smsReceiver);
+	}*/
+	private boolean flag = false;
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		console.log("=============repwd");
+		if(flag){
+			unregisterReceiver(smsReceiver);			
+		}
 	}
 	
 }

@@ -232,7 +232,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					}
 				}else{
 //					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
-//					mEditTextPwd.setError("密码不能为空");
 				}
 			}else{
 				UserUtils.showDialog(this, "手机号格式错误,请重新输入");
@@ -248,7 +247,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 	 */
 	public void loginCallBack(int success,Object obj){
 		console.log("登录回调---loginCallBack---" + success + "---" + obj);
-		console.log("登录中……");
 		if(1 == success){
 			try{
 				String data = (String)obj;
@@ -280,6 +278,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					}).create().show();
 				}else if(code == 402){
 					UserUtils.showDialog(this, "登录密码错误");
+				}else{
+					console.log("登录没有错误code提示");
 				}
 			}
 			catch(Exception ex){
