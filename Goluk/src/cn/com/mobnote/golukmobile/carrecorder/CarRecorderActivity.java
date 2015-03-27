@@ -364,10 +364,11 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 */
 	private void setListener() {
 		m8sBtn.setOnClickListener(this);
-		mFileBtn.setOnClickListener(this);
-		mSettingBtn.setOnClickListener(this);
-		findViewById(R.id.mFileText).setOnClickListener(this);
-		findViewById(R.id.mSettingText).setOnClickListener(this);
+//		mFileBtn.setOnClickListener(this);
+//		mSettingBtn.setOnClickListener(this);
+		findViewById(R.id.back_btn).setOnClickListener(this);
+//		findViewById(R.id.mFileText).setOnClickListener(this);
+//		findViewById(R.id.mSettingText).setOnClickListener(this);
 		findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingLayout).setOnClickListener(this);
 //		mIpcRepair.setOnClickListener(this);
@@ -597,7 +598,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年1月28日
 	 */
 	public void start() {
-		if (null != mRtmpPlayerView) {
+		if(null != mRtmpPlayerView){
 			mRtmpPlayerView.setVisibility(View.VISIBLE);
 			mRtmpPlayerView.setDataSource(getResources().getString(
 					R.string.default_rtsp_url));
@@ -608,6 +609,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
+		case R.id.back_btn:
+			finish();
+			break;
 		case R.id.m8sBtn:
 			GFileUtils
 					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");

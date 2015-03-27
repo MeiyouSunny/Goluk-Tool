@@ -8,6 +8,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
+
 import org.json.JSONObject;
 
 import com.rd.car.CarRecorderManager;

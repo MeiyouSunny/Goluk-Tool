@@ -1,6 +1,5 @@
 package cn.com.mobnote.module.page;
 
-import cn.com.tiros.utils.LogUtil;
 
 public class PageNotifyAdapter {
 
@@ -20,8 +19,8 @@ public class PageNotifyAdapter {
 		if (param2 instanceof String) {
 			data2 = (String) param2;
 		}
-		LogUtil.e("jyf", "jyf-----pageNotifyCallBack------22---type:" + type + " success:" + success + " data1:"
-				+ data1 + " data2:" + data2);
+//		LogUtil.e("jyf", "jyf-----pageNotifyCallBack------22---type:" + type + " success:" + success + " data1:"
+//				+ data1 + " data2:" + data2);
 		if (null != mFn) {
 			mFn.pageNotifyCallBack(type, success, param1, param2);
 		}

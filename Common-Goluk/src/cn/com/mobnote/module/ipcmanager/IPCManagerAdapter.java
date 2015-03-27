@@ -1,6 +1,5 @@
 package cn.com.mobnote.module.ipcmanager;
 
-import cn.com.tiros.utils.LogUtil;
 
 public class IPCManagerAdapter {
 
@@ -20,8 +19,8 @@ public class IPCManagerAdapter {
 	}
 
 	public static void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		LogUtil.e("jyf", "jyf-----IPCManage_CallBack--------------IPCManagerAdapter-11---event:" + event + "	param1:"
-				+ param1 + " msg:");
+//		LogUtil.e("jyf", "jyf-----IPCManage_CallBack--------------IPCManagerAdapter-11---event:" + event + "	param1:"
+//				+ param1 + " msg:");
 		if (null == fn) {
 			return;
 		}
@@ -29,7 +28,7 @@ public class IPCManagerAdapter {
 		if (param2 instanceof String) {
 			data = (String)param2;
 		}
-		LogUtil.e("jyf", "jyf-----IPCManage_CallBack--------------IPCManagerAdapter-22---event:" + event + " msg:" + data);
+//		LogUtil.e("jyf", "jyf-----IPCManage_CallBack--------------IPCManagerAdapter-22---event:" + event + " msg:" + data);
 		fn.IPCManage_CallBack(event, msg, param1, param2);
 	}
 

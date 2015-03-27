@@ -7,7 +7,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.tiros.utils.LogUtil;
 
 
  /**
@@ -44,12 +43,11 @@ public class IPCControlManager implements IPCManagerFn{
 		// 注册IPC回调
 		int result = mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
 
-		LogUtil.e(null, "jyf-----goluk:Goluk_Module_IPCManager result:" + result);
 		// 设置连接模式
 		String json = JsonUtil.getIPCConnModeJson(IPCMgrMode_IPCDirect);
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPC_CommCmd_SetMode, json);
-		LogUtil.e(null, "jyf-----goluk:IPC_CommCmd_SetMode isSucess:" + isSucess);
+
 		// WIFI连接状态
 		setIPCWifiState(true);
 	}
@@ -66,7 +64,7 @@ public class IPCControlManager implements IPCManagerFn{
 		String json = JsonUtil.getWifiChangeJson(state, ip);
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
 		
-		LogUtil.e(null, "jyf-----goluk:IPC_CommCmd_WifiChanged isSucess:" + isSucess);
+//		LogUtil.e(null, "jyf-----goluk:IPC_CommCmd_WifiChanged isSucess:" + isSucess);
 	}
 	
 	/**
@@ -153,6 +151,16 @@ public class IPCControlManager implements IPCManagerFn{
 		String json = JsonUtil.getDownFileJson(filename, tag, savepath);
 		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
 				json);
+	}
+	
+	/**
+	 * 删除文件
+	 * @param filename 文件名称
+	 * @author xuhw
+	 * @date 2015年3月25日
+	 */
+	public void deleteFile(String filename){
+		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Erase, filename);
 	}
 
 	/**

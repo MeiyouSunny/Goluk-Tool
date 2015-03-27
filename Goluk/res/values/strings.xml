@@ -120,12 +120,12 @@
     <string name="zdxhlx_text">启动选项后，小车本将每间隔５分钟自动保存行车录制影像。当存储空间不足时，将自动覆盖早期循环录像文件。</string>
     <string name="sylz_title">声音录制开关</string>
     <string name="pzgy_title">碰撞感应灵敏度</string>
-    <string name="pzgy_text">设置此项后,车辆在中如遭受异常的碰撞,行车记录仪会自动保存20秒(前8秒+后12秒)紧急视频影像。当存储空间不足时,将自动覆盖早期循环录像文件。</string>
+    <string name="pzgy_text">设置此项后,车辆在行驶中如遭受异常的碰撞,行车记录仪会自动保存20秒(前8秒+后12秒)紧急视频影像。当存储空间不足时,将自动覆盖早期循环录像文件。</string>
     <string name="rlcx_title">存储容量查询</string>
     <string name="sysz">水印设置</string>
     <string name="ztts">状态提示灯</string>
     <string name="sjsz">时间设置</string>
-    <string name="gsh">格式化SDK卡</string>
+    <string name="gsh">格式化SD卡</string>
     <string name="hfcc">恢复出厂设置</string>
     <string name="bbxx">版本信息</string>
     <string name="ipcbd">摄像头绑定/解绑</string>
