@@ -6,27 +6,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.LiveVideoListAdapter;
-import cn.com.mobnote.video.LiveVideoListManage;
-import cn.com.mobnote.video.LiveVideoListManage.LiveVideoListData;
-import cn.com.mobnote.view.PullToRefreshView;
-import cn.com.mobnote.view.PullToRefreshView.OnFooterRefreshListener;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.console;
+import cn.com.mobnote.video.LiveVideoListAdapter;
+import cn.com.mobnote.video.LiveVideoListManage;
+import cn.com.mobnote.video.LiveVideoListManage.LiveVideoListData;
+import cn.com.mobnote.view.PullToRefreshView;
+import cn.com.mobnote.view.PullToRefreshView.OnFooterRefreshListener;
 
 /**
  * <pre>
@@ -139,7 +139,7 @@ public class LiveVideoListActivity extends Activity implements OnClickListener ,
 	 * 请求直播列表数据
 	 */
 	private void getLiveVideoList(){
-		boolean b = mApp.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetPinData,"");
+		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPinData,"");
 		if(!b){
 			console.log("调用直播列表数据接口失败---b---" + b);
 		}

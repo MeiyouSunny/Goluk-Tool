@@ -34,7 +34,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.DeviceState;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.SensorDetector.AccelerometerListener;
-import cn.com.mobnote.tachograph.comm.IPCManagerFn;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 
 import com.rd.car.CarRecorderManager;
@@ -64,7 +64,7 @@ import com.rd.car.player.RtmpPlayerView;
  * @author xuhw
  */
 public class CarRecorderActivity extends Activity implements OnClickListener,
-		IPCManagerFn {
+	 IPCManagerFn {
 	public static Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;

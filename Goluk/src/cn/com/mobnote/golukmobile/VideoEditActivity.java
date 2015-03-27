@@ -2,24 +2,7 @@ package cn.com.mobnote.golukmobile;
 
 import java.io.File;
 import java.util.ArrayList;
-import com.rd.car.editor.Constants;
-import com.rd.car.editor.EditorParam;
-import com.rd.car.editor.FilterPlaybackView;
-import com.rd.car.editor.FilterVideoEditorException;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.entity.MixAudioInfo;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.util.AssetsFileUtils;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.MVListAdapter;
-import cn.com.mobnote.video.MVManage;
-import cn.com.mobnote.video.MVManage.MVEditData;
-import cn.com.mobnote.view.MyGridView;
-import cn.com.tiros.api.FileUtils;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.SystemClock;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -28,6 +11,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -37,11 +24,27 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.entity.MixAudioInfo;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.AssetsFileUtils;
+import cn.com.mobnote.util.console;
+import cn.com.mobnote.video.MVListAdapter;
+import cn.com.mobnote.video.MVManage;
+import cn.com.mobnote.video.MVManage.MVEditData;
+import cn.com.mobnote.view.MyGridView;
+import cn.com.tiros.api.FileUtils;
+
+import com.rd.car.editor.Constants;
+import com.rd.car.editor.EditorParam;
+import com.rd.car.editor.FilterPlaybackView;
+import com.rd.car.editor.FilterVideoEditorException;
 
 /**
  * <pre>
@@ -308,7 +311,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		//将本地视频地址,转成logic可读路径fs1://
 		String localPath = FileUtils.javaToLibPath(path);
 		uploadVideoTime = SystemClock.uptimeMillis();
-		boolean b = mApp.mGoluk.GoLuk_CommonGetPage(mApp.mGoluk.PageType_UploadVideo,localPath);
+		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_UploadVideo,localPath);
 		if(b){
 			//隐藏播放图片
 			mPlayStatusImage.setVisibility(View.GONE);
