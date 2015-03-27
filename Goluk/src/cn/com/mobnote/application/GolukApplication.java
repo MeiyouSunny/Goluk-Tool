@@ -73,7 +73,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 		Const.setAppContext(this);
 		initRdCardSDK();
 		initCachePath();
-		createWifi();
+		//createWifi();
 		mIPCControlManager = new IPCControlManager();
 		mIPCControlManager.addIPCManagerListener("application", this);
 		
