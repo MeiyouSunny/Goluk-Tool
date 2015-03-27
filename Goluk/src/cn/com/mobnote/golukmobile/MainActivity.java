@@ -5,6 +5,39 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
+import com.rd.car.CarRecorderManager;
+import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.utils.Log;
+
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.entity.LngLat;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.util.console;
+import cn.com.mobnote.video.LocalVideoListAdapter;
+import cn.com.mobnote.video.LocalVideoManage;
+import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
+import cn.com.mobnote.video.OnLineVideoManage;
+import cn.com.mobnote.view.LoadingView;
+import cn.com.mobnote.view.MyGridView;
+import cn.com.mobnote.wifi.WiFiConnection;
+import cn.com.mobnote.wifi.WifiAutoConnectManager;
+import cn.com.mobnote.wifi.WifiConnCallBack;
+import cn.com.mobnote.wifi.WifiRsBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,7 +45,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -189,7 +224,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//添加umeng错误统计
 		MobclickAgent.setCatchUncaughtExceptions(true);
 		//添加腾讯崩溃统计
-		String appId = "900001742";
+		String appId = "900002451";
 		//true代表App处于调试阶段，false代表App发布阶段
 		boolean isDebug = true;
 		//初始化SDK
@@ -261,6 +296,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mShareBtn.setOnTouchListener(this);
 		mCloseShareBtn.setOnClickListener(this);
 		mIpcWiFiBtn.setOnClickListener(this);
+		mIpcWiFiBtn.setOnTouchListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
 		mLocalVideoListBtn.setOnClickListener(this);
@@ -477,11 +513,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 					if(!b){
 						console.log("调用登录接口失败---b---" + b);
+					}else{
+						Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
+						startActivity(login);
+						mLoginDialog.hide();
 					}
-					
-					Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
-					startActivity(login);
-					mLoginDialog.hide();
 				}
 				else{
 					console.toast("密码少于6位", mContext);
@@ -618,7 +654,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public void videoAnalyzeComplete(){
 //		mLocalVideoManage.videoUploadCallBack();
 //		mLocalVideoListAdapter.notifyDataSetChanged();
-//		playDownLoadedSound();
+		playDownLoadedSound();
 	}
 	
 	/**
@@ -706,36 +742,33 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**
 	 * 链接中断更新页面
 	 */
-	public void WiFiLinkStatus(int status){
-//		Drawable img = null;
-//		Resources res = getResources();
-//		mWiFiStatus = 0;
-//		switch(status){
-//			case 1:
-//				//连接中
-//				mWiFiLinkStatus.setText("连接中...");
-//				img = res.getDrawable(R.drawable.no_link);
-//				
-//				mWiFiStatus = 1;
-//			break;
-//			case 2:
-//				//已连接
-//				mWiFiLinkStatus.setText("已连接");
-//				img = res.getDrawable(R.drawable.linked);
-//				
-//				mWiFiStatus = 2;
-//			break;
-//			case 3:
-//				//未连接
-//				mWiFiLinkStatus.setText("未连接");
-//				img = res.getDrawable(R.drawable.no_link);
-//				
-//				mWiFiStatus = 0;
-//			break;
-//		}
-//		//调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-//		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-//		mWiFiLinkStatus.setCompoundDrawables(img, null, null, null);
+	public void wiFiLinkStatus(int status){
+		Drawable img = null;
+		Resources res = getResources();
+		mWiFiStatus = 0;
+		switch(status){
+			case 1:
+				//连接中
+				mWiFiStatus = 1;
+			break;
+			case 2:
+				//已连接
+				mIpcWiFiBtn.setText("已连接");
+				mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
+				img = res.getDrawable(R.drawable.index_icon_xingche_connect);
+				mWiFiStatus = 2;
+			break;
+			case 3:
+				//未连接
+				mIpcWiFiBtn.setText("未连接");
+				mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
+				img = res.getDrawable(R.drawable.index_icon_xingche_btn);
+				mWiFiStatus = 0;
+			break;
+		}
+		//调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
+		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+		mIpcWiFiBtn.setCompoundDrawables(null, img, null, null);
 	}
 	
 	/**
@@ -747,6 +780,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(1 == success){
 			try{
 				String data = (String)obj;
+				Log.i("eee", data);
 				JSONObject json = new JSONObject(data);
 				//JSONObject userJson = json.getJSONObject("data");
 				int code = Integer.valueOf(json.getString("code"));
@@ -758,10 +792,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						startActivity(login);
 						mLoginDialog.hide();
 					break;
-					default:
+					/*default:
 						//登录失败
 						console.toast("登录失败:"+ msg + code, mContext);
-					break;
+					break;*/
 				}
 			}
 			catch(Exception ex){}
@@ -868,6 +902,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (v.getId()) {
+			case R.id.wifi_status_btn:
+				//如果已连接,不改变文字颜色
+				if(mWiFiStatus != 2){
+					switch (action) {
+						case MotionEvent.ACTION_DOWN:
+							mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
+						break;
+						case MotionEvent.ACTION_UP:
+							mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
+						break;
+					}
+				}
+			break;
 			case R.id.more_btn:
 				switch (action) {
 					case MotionEvent.ACTION_DOWN:

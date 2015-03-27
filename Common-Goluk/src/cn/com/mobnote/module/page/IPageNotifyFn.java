@@ -4,39 +4,6 @@ import cn.com.mobnote.logic.IGolukCommFn;
 
 public interface IPageNotifyFn extends IGolukCommFn {
 	/**
-	 * 网络传输事件声明
-	 * */
-
-	/** 服务器连接状态事件 */
-	public static int ENetTransEvent_ConnectionState = 0;
-	/** 数据传输状态事件 */
-	public static int ENetTransEvent_TransmissionState = 1;
-
-	/**
-	 * 服务器连接状态事件下消息ID
-	 * */
-
-	/** 空闲 */
-	public static int ConnectionStateMsg_Idle = 0;
-	/** 连接中 */
-	public static int ConnectionStateMsg_Connecting = 1;
-	/** 连接成功 */
-	public static int ConnectionStateMsg_Connected = 2;
-	/** 连接断开 */
-	public static int ConnectionStateMsg_DisConnected = 3;
-
-	/**
-	 * 文件数据传输事件下消息ID
-	 * */
-
-	/** 空闲 */
-	public static int TransmissionStateMsg_Idle = 0;
-	/** 校验文件列表消息 */
-	public static int TransmissionStateMsg_CheckList = 1;
-	/** 文件传输消息 */
-	public static int TransmissionStateMsg_File = 2;
-
-	/**
 	 * 页面访问类事件声明,主要用于处理各种页面数据的访问接口及其回调通知等
 	 * */
 

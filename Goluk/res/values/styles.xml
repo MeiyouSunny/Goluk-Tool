@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<!-- 设置背景图Theme -->
 	<style name="Theme.AppStartLoad" parent="android:Theme">
 		<item name="android:windowBackground">@drawable/guide_1</item>
@@ -9,4 +9,11 @@
 		<item name="android:windowIsTranslucent">true</item>
 		<item name="android:windowNoTitle">true</item>
 	</style>
+	
+	<!-- 手机快速注册/找回密码Text设置 -->
+	<style name="user_login">
+	    <item name="android:textSize">15sp</item>
+	    <item name="android:textColor">#A4A4A4</item>
+	</style>
+	
 </resources>
