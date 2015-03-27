@@ -597,10 +597,12 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年1月28日
 	 */
 	public void start() {
-		mRtmpPlayerView.setVisibility(View.VISIBLE);
-		mRtmpPlayerView.setDataSource(getResources().getString(
-				R.string.default_rtsp_url));
-		mRtmpPlayerView.start();
+		if (null != mRtmpPlayerView) {
+			mRtmpPlayerView.setVisibility(View.VISIBLE);
+			mRtmpPlayerView.setDataSource(getResources().getString(
+					R.string.default_rtsp_url));
+			mRtmpPlayerView.start();
+		}
 	}
 
 	@Override
