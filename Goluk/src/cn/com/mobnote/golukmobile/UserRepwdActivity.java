@@ -157,6 +157,37 @@ mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable arg0) {
 			}
 		});
+		mEditTextPwd.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				String password = mEditTextPwd.getText().toString();
+				String identify = mEditTextIdentify.getText().toString();
+
+				if (!"".equals(password) && !"".equals(identify)) {
+					mBtnOK.setBackgroundResource(R.drawable.icon_login);
+					mBtnOK.setFocusable(true);
+				} else {
+					mBtnOK.setBackgroundResource(R.drawable.icon_more);
+					mBtnOK.setFocusable(false);
+				}
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 		/*mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,

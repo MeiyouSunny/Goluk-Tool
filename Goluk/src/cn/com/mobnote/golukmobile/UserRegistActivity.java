@@ -29,7 +29,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -139,7 +138,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated method stub
 				String phone = mEditTextPhone.getText().toString();
 				if(!"".equals(phone)){
-					if(phone.length() == 11 && phone.startsWith("1")){
+					if(phone.length() == 11 && phone.startsWith("1")){ 
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 					}else{
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
@@ -180,6 +179,36 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			
 			@Override
 			public void afterTextChanged(Editable arg0) {
+			}
+		});
+		mEditTextPwd.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				String password = mEditTextPwd.getText().toString();
+				String identify = mEditTextIdentify.getText().toString();
+				
+				if(!"".equals(password) && !"".equals(identify)){
+					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+					mBtnRegist.setFocusable(true);
+				}else{
+					mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+					mBtnRegist.setFocusable(false);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		mBtnIdentify.setOnClickListener(this);
