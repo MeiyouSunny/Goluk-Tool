@@ -286,7 +286,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							// TODO Auto-generated method stub
-							Intent it = new Intent(UserLoginActivity.this,UserTestRegistActivity.class);
+							Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
 							it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
 							startActivity(it);
 						}
