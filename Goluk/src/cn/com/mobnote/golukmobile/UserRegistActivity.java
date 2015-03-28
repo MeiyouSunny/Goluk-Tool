@@ -223,7 +223,14 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			@Override
 			public void afterTextChanged(Editable arg0) {}
 		});
-		
+		/*String phone = mEditTextPhone.getText().toString();
+		if(!"".equals(phone)){
+			if(phone.length() == 11 && phone.startsWith("1")){
+				mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+			}else{
+				mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
+			}
+		}*/
 		mBtnIdentify.setOnClickListener(this);
 		// 登录
 		mTextViewLogin.setOnClickListener(this);
@@ -326,8 +333,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						console.log(b+"");
 						mBtnRegist.setEnabled(true);
 						//点击获取验证码，手机号、密码不可被更改
-						mEditTextPhone.setFocusable(false);
-						mEditTextPwd.setFocusable(false);
+						/*mEditTextPhone.setFocusable(false);
+						mEditTextPwd.setFocusable(false);*/
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
 						mBtnRegist.setEnabled(false);
@@ -340,10 +347,12 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				UserUtils.showDialog(this, "手机号格式输入错误，请重新输入");
 			}
 		}else{
-			UserUtils.showDialog(this, "手机号不能为空");
+			//手机号为空的时候获取验证码按钮为不可点击
+			mBtnIdentify.setFocusable(false);
+			/*UserUtils.showDialog(this, "手机号不能为空");
 			mBtnRegist.setEnabled(false);
 			mEditTextPhone.setFocusable(true);
-			mEditTextPwd.setFocusable(true);
+			mEditTextPwd.setFocusable(true);*/
 		}
 		
 	}
@@ -354,8 +363,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	public void identifyCallback(int success,Object obj){
 		console.log("验证码获取回调---identifyCallBack---" + success + "---" + obj);
 		//点击验证码按钮手机号、密码不可被修改
-		mEditTextPhone.setFocusable(false);
-		mEditTextPwd.setFocusable(false);
+		/*mEditTextPhone.setFocusable(true);
+		mEditTextPwd.setFocusable(true);*/
 		if(1 == success){
 			
 			try{
@@ -380,8 +389,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 							// TODO Auto-generated method stub
 							mBtnIdentify.setText("重新发送");
 							//倒计时结束后手机号、密码可以更改
-							mEditTextPhone.setFocusable(true);
-							mEditTextPwd.setFocusable(true);                    
+						/*	mEditTextPhone.setFocusable(true);
+							mEditTextPwd.setFocusable(true);    */                
 						}
 					});
 					mCountDownhelper.start();
@@ -420,7 +429,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				default:
 					break;
 				}
-				
 				/*unregisterReceiver(smsReceiver);
 				click = 2;*/
 			}
@@ -443,21 +451,39 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		String phone = mEditTextPhone.getText().toString();
 		String password = mEditTextPwd.getText().toString();
 		String identify = mEditTextIdentify.getText().toString();
-		if(!"".equals(identify)){
-			//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
-			String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
-			console.log(isRegist);
-			boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Register, isRegist);
-			console.log(b+"");
-			if(b){
-				//隐藏软件盘
-			    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			    imm.hideSoftInputFromWindow(UserRegistActivity.this.getCurrentFocus().getWindowToken(), 0);
-				mLoading.setVisibility(View.VISIBLE);
+		if(!"".equals(phone)){
+			if(phone.length() == 11 && phone.startsWith("1")){
+				if(!"".equals(password)){
+					if(password.length()>=6 && password.length()<=16){
+						mBtnRegist.setFocusable(true);
+						if(!"".equals(identify)){
+							if(identify.length() == 6){
+								//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
+								String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
+								console.log(isRegist);
+								boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Register, isRegist);
+								console.log(b+"");
+								if(b){
+									//隐藏软件盘
+								    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+								    imm.hideSoftInputFromWindow(UserRegistActivity.this.getCurrentFocus().getWindowToken(), 0);
+									mLoading.setVisibility(View.VISIBLE);
+								}
+							}else{
+								UserUtils.showDialog(this, "请输入正确的验证码");
+							}
+						}else{
+							UserUtils.showDialog(this, "请先获取验证码");
+						}
+					}else{
+						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
+					}
+				}else{
+					UserUtils.showDialog(this, "密码不能为空");
+				}
+			}else{
+				UserUtils.showDialog(this, "手机号格式输入错误，请重新输入");
 			}
-		}else{
-			mBtnRegist.setFocusable(false);
-//			UserUtils.showDialog(this, "请先获取验证码");
 		}
 	}
 	

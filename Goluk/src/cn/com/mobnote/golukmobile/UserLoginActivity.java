@@ -231,9 +231,9 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						    imm.hideSoftInputFromWindow(UserLoginActivity.this.getCurrentFocus().getWindowToken(), 0);
 							mLoading.setVisibility(View.VISIBLE);
 							console.log("回调成功");
-							//文本框不可被修改
+							/*//文本框不可被修改
 							mEditTextPhoneNumber.setFocusable(false);
-							mEditTextPwd.setFocusable(false);
+							mEditTextPwd.setFocusable(false);*/
 						}
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
@@ -245,8 +245,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				UserUtils.showDialog(this, "手机号格式错误,请重新输入");
 			}
 		}else{
-			mEditTextPhoneNumber.setFocusable(true);
-			mEditTextPwd.setFocusable(true);
+			/*mEditTextPhoneNumber.setFocusable(true);
+			mEditTextPwd.setFocusable(true);*/
 		}
 	}
 	
@@ -264,6 +264,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				String msg = json.getString("msg");
 				
 				mLoading.setVisibility(View.GONE);
+				/*mEditTextPhoneNumber.setFocusable(true);
+				mEditTextPwd.setFocusable(true);*/
 				switch (code) {
 				case 200:
 					//登录成功跳转
@@ -291,13 +293,14 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					}).create().show();
 					break;
 				case 402:
-					UserUtils.showDialog(this, "登录密码错误");
-					console.log("密码错误,请重试");
+					console.toast("密码错误,请重试", mContext);
 					break;
 
 				default:
 					break;
 				}
+				/*mEditTextPhoneNumber.setFocusable(true);
+				mEditTextPwd.setFocusable(true);*/
 			}
 			catch(Exception ex){
 				ex.printStackTrace();
