@@ -138,6 +138,15 @@
     <string name="videolist_jjyx">紧急影像</string>
     <string name="videolist_xhyx">循环影像</string>
     
+    <!-- 视频直播设置 -->
+    <string name="live_setting_timelength">直播时长</string>
+    <string name="live_cartalk">行车对讲</string>
+    <string name="voice_switch">视频声音开关</string>
+    <string name="description">点击添加描述</string>
+    <string name="voice_type">视频类型</string>
+    <string name="live_flow">预计本次直播消耗流量</string>
+    <string name="open_live_home">进入直播间</string>
+    
     <!-- 行车记录仪  	END-->
     
 </resources>
