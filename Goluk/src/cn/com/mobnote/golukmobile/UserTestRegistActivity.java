@@ -27,6 +27,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -45,7 +46,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UserRegistActivity extends Activity implements OnClickListener {
+public class UserTestRegistActivity extends Activity implements OnClickListener {
 
 	// 注册title
 	private Button mBackButton;
@@ -89,6 +90,25 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		initView();
 		// title
 		mTextViewTitle.setText("注册");
+		/*mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				if(arg1){
+					String number = mEditTextPhone.getText().toString();
+					if(!"".equals(number)){
+						if(number.length() == 11 && number.startsWith("1")){
+							mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
+						}else{
+							mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
+						}
+					}else{
+						
+					}
+				}
+			}
+		});*/
 		
 	}
 
@@ -131,6 +151,97 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		// 注册按钮
 		mBtnRegist.setOnClickListener(this);
 		//手机号、密码、验证码文本框改变监听
+		/*mEditTextPhone.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				String pwd = mEditTextPwd.getText().toString();
+				String identify = mEditTextIdentify.getText().toString();
+				if("".equals(arg0.toString())){
+					if("".equals(pwd)){
+						//显示普通按钮
+						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+						mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
+					}
+				}
+				else{
+					if(!"".equals(pwd)){
+						if(!"".equals(identify)){
+							//显示高亮注册按钮
+							mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+						}else{
+							//显示高亮注册按钮
+							mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+						}
+						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
+					}
+				}
+			}
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
+			@Override
+			public void afterTextChanged(Editable arg0) {}
+		});
+		mEditTextPwd.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				String phone = mEditTextPhone.getText().toString();
+				String identify = mEditTextIdentify.getText().toString();
+				if("".equals(arg0.toString())){
+					if("".equals(phone) || phone.length() !=11){
+						//显示普通按钮
+						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+						mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
+					}
+				}
+				else{
+					if(!"".equals(phone) && phone.length() == 11){
+						if(!"".equals(identify)){
+							//显示高亮注册按钮
+							mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+						}
+						else{
+							//显示高亮注册按钮
+							mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+						}
+						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
+					}
+				}
+			}
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
+			@Override
+			public void afterTextChanged(Editable arg0) {}
+		});
+		mEditTextIdentify.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				String phone = mEditTextPhone.getText().toString();
+				String pwd = mEditTextPwd.getText().toString();
+				if("".equals(arg0.toString())){
+					if("".equals(phone)){
+						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+					}
+				}
+				else{
+					if(!"".equals(phone)){
+						if(!"".equals(pwd)){
+							mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+						}else{
+							mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+						}
+					}
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) { }
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {}
+		});*/
 		
 		mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			
@@ -162,15 +273,12 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				// TODO Auto-generated method stub
-				String password = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
-				
-				if(!"".equals(password) && !"".equals(identify)){
+				if(!"".equals(identify)){
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
-					mBtnRegist.setFocusable(true);
 				}else{
+					//验证码为空
 					mBtnRegist.setBackgroundResource(R.drawable.icon_more);
-					mBtnRegist.setFocusable(false);
 				}
 			}
 			
@@ -207,7 +315,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			break;
 		// 登陆
 		case R.id.user_regist_login:
-			Intent itLogin = new Intent(UserRegistActivity.this,UserLoginActivity.class);
+			Intent itLogin = new Intent(UserTestRegistActivity.this,UserLoginActivity.class);
 			startActivity(itLogin);
 			break;
 		}
@@ -220,6 +328,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	public void getIdentify(){
 		String phone = mEditTextPhone.getText().toString();
 		String password= mEditTextPwd.getText().toString();
+		
 		
 		/**
 		 * 自动获取验证码
@@ -266,21 +375,43 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 //		registerReceiver(smsReceiver, smsFilter);
 		
 		/**
-		 * 对获取验证码进行判断
+		 * 对验证码进行判断
 		 */
-		if(UserUtils.isMobileNO(phone)){
-			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
-			console.log(isIdentify);
-			boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
-
-			UserUtils.hideSoftMethod(this);
-			mIdentifyLoading.setVisibility(View.VISIBLE);
-			registerReceiver(smsReceiver, smsFilter);
-			click = 1;
-			console.log(b + "");
-			mBtnRegist.setEnabled(true);
+		if(!"".equals(phone)){
+			if(phone.startsWith("1") && phone.length() == 11){
+				if(!"".equals(password)){
+					if(password.length()>=6 && password.length()<=16){
+						String isIdentify = "{\"PNumber\":\"" + phone  + "\",\"type\":\"1\"}";
+						console.log(isIdentify);
+						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
+						
+						UserUtils.hideSoftMethod(this);
+						mIdentifyLoading.setVisibility(View.VISIBLE);
+						registerReceiver(smsReceiver, smsFilter);
+						click = 1;
+						console.log(b+"");
+						mBtnRegist.setEnabled(true);
+						//点击获取验证码，手机号、密码不可被更改
+						/*mEditTextPhone.setFocusable(false);
+						mEditTextPwd.setFocusable(false);*/
+					}else{
+						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
+						mBtnRegist.setEnabled(false);
+					}
+				}else{
+					UserUtils.showDialog(this, "密码不能为空");
+					mBtnRegist.setEnabled(false);
+				}
+			}else{
+				UserUtils.showDialog(this, "手机号格式输入错误，请重新输入");
+			}
 		}else{
-			UserUtils.showDialog(this, "手机号格式不正确，请重新输入");
+			//手机号为空的时候获取验证码按钮为不可点击
+			mBtnIdentify.setFocusable(false);
+			/*UserUtils.showDialog(this, "手机号不能为空");
+			mBtnRegist.setEnabled(false);
+			mEditTextPhone.setFocusable(true);
+			mEditTextPwd.setFocusable(true);*/
 		}
 		
 	}
@@ -302,8 +433,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				int code = Integer.valueOf(json.getString("code"));
 //				String msg = json.getString("msg");
 				
-				/*unregisterReceiver(smsReceiver);
-				click = 2;*/
 				mIdentifyLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
@@ -325,6 +454,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					});
 					mCountDownhelper.start();
 					console.toast("发送中,请稍后……", mContext);
+//					console.toast("下发验证码成功", mContext);
 					break;
 				case 201:
 					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");
@@ -344,7 +474,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							// TODO Auto-generated method stub
-							Intent itRegist = new Intent(UserRegistActivity.this,UserLoginActivity.class);
+							Intent itRegist = new Intent(UserTestRegistActivity.this,UserLoginActivity.class);
 							itRegist.putExtra("intentRegist", mEditTextPhone.getText().toString());
 							startActivity(itRegist);
 						}
@@ -380,23 +510,39 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		String phone = mEditTextPhone.getText().toString();
 		String password = mEditTextPwd.getText().toString();
 		String identify = mEditTextIdentify.getText().toString();
-		if(!"".equals(password) && !"".equals(identify)){
-			mBtnRegist.setFocusable(true);
-			if(password.length()>=6 && password.length()<=16){
-				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
-				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
-				console.log(isRegist);
-				boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Register, isRegist);
-				console.log(b+"");
-				if(b){
-					//隐藏软件盘
-					UserUtils.hideSoftMethod(this);
-					mLoading.setVisibility(View.VISIBLE);
+		if(!"".equals(phone)){
+			if(phone.length() == 11 && phone.startsWith("1")){
+				if(!"".equals(password)){
+					if(password.length()>=6 && password.length()<=16){
+						mBtnRegist.setFocusable(true);
+						if(!"".equals(identify)){
+							if(identify.length() == 6){
+								//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
+								String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
+								console.log(isRegist);
+								boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Register, isRegist);
+								console.log(b+"");
+								if(b){
+									//隐藏软件盘
+								    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+								    imm.hideSoftInputFromWindow(UserTestRegistActivity.this.getCurrentFocus().getWindowToken(), 0);
+									mLoading.setVisibility(View.VISIBLE);
+								}
+							}else{
+								UserUtils.showDialog(this, "请输入正确的验证码");
+							}
+						}else{
+							UserUtils.showDialog(this, "请先获取验证码");
+						}
+					}else{
+						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
+					}
+				}else{
+					UserUtils.showDialog(this, "密码不能为空");
 				}
-		}
 			}else{
-			mBtnRegist.setFocusable(false);
-//			UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
+				UserUtils.showDialog(this, "手机号格式输入错误，请重新输入");
+			}
 		}
 	}
 	
@@ -418,7 +564,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				case 200:
 					//注册成功
 					console.toast("注册成功", mContext);
-					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
+					Intent it = new Intent(UserTestRegistActivity.this,MainActivity.class);
 					startActivity(it);
 					break;
 				case 500:
@@ -448,13 +594,13 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	 * 销毁广播
 	 */
 	private int click = 0;
-//	@Override
-	/*protected void onStop() {
+	@Override
+	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
 		Log.i("bug", "==========regist");
 		if(click == 1){
 			unregisterReceiver(smsReceiver);
 		}
-	}*/
+	}
 }

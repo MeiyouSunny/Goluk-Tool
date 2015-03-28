@@ -107,7 +107,57 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		/**
 		 * 手机号、密码、验证码文本框改变监听
 		 */
-		mEditTextPhone.addTextChangedListener(new TextWatcher() {
+mEditTextPhone.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				String phone = mEditTextPhone.getText().toString();
+				if(!"".equals(phone)){
+					if(phone.length() == 11 && phone.startsWith("1")){
+						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
+					}else{
+						mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
+					}
+				}else{
+					//手机号为空
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {			}
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+			}
+		});
+		mEditTextIdentify.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				String password = mEditTextPwd.getText().toString();
+				String identify = mEditTextIdentify.getText().toString();
+				
+				if(!"".equals(password) && !"".equals(identify)){
+					mBtnOK.setBackgroundResource(R.drawable.icon_login);
+					mBtnOK.setFocusable(true);
+				}else{
+					mBtnOK.setBackgroundResource(R.drawable.icon_more);
+					mBtnOK.setFocusable(false);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) { }
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+			}
+		});
+		/*mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
@@ -208,7 +258,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 			@Override
 			public void afterTextChanged(Editable arg0) {
 			}
-		});
+		});*/
 		
 	}
 	@Override
@@ -289,7 +339,24 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		/**
 		 * 对手机号、密码进行判断
 		 */
-		if(!"".equals(phone)){
+		/**
+		 * 对获取验证码进行判断
+		 */
+		if(UserUtils.isMobileNO(phone)){
+			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
+			console.log(isIdentify);
+			boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
+
+			UserUtils.hideSoftMethod(this);
+			mIdentifyLoading.setVisibility(View.VISIBLE);
+			registerReceiver(smsReceiver, smsFilter);
+			click = 1;
+			console.log(b + "");
+			mBtnOK.setEnabled(true);
+		}else{
+			UserUtils.showDialog(this, "手机号格式不正确，请重新输入");
+		}
+		/*if(!"".equals(phone)){
 			if(phone.startsWith("1") && phone.length() == 11){
 				if(!"".equals(password)){
 					if(password.length()>=6 && password.length()<=16){
@@ -317,7 +384,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		}else{
 			mEditTextPhone.setFocusable(true);
 			mEditTextPwd.setFocusable(true);
-		}
+		}*/
 	}
 	/**
 	 * 获取验证码回调
@@ -372,7 +439,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							// TODO Auto-generated method stub
-							Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
+							Intent intentRepwd = new Intent(UserRepwdActivity.this,UserTestRegistActivity.class);
 							intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
 							startActivity(intentRepwd);
 						}
@@ -474,7 +541,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		unregisterReceiver(smsReceiver);
 	}*/
 	private boolean flag = false;
-	@Override
+	private int click = 0;
+	
+	/*@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
@@ -484,5 +553,5 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		}
 		flag = false;
 	}
-	
+	*/
 }

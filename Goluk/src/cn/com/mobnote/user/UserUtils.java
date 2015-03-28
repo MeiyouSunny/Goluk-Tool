@@ -1,6 +1,8 @@
 package cn.com.mobnote.user;
 
-import cn.com.mobnote.golukmobile.UserRepwdActivity;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,5 +27,19 @@ public class UserUtils {
 		 InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 		  imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
 	}
+	/**
+	 * 常用手机号的判断
+	 */
+	public static boolean isMobileNO(String mobiles) {
+        boolean flag = false;
+        try {
+            Pattern p = Pattern.compile("^[1][3,4,5,8][0-9]{9}$"); // 验证手机号
+            Matcher m = p.matcher(mobiles);
+            flag = m.matches();
+        } catch (Exception e) {
+            flag = false;
+        }
+        return flag;
+    }
 	
 }
