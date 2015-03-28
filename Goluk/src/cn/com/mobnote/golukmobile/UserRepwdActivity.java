@@ -374,7 +374,7 @@ mEditTextPhone.addTextChangedListener(new TextWatcher() {
 		 * 对获取验证码进行判断
 		 */
 		if(UserUtils.isMobileNO(phone)){
-			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
+			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"2\"}";
 			console.log(isIdentify);
 			boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
 
