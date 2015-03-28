@@ -19,10 +19,10 @@
 		</activity>
 		
 		<!-- 个人中心模块 -->
-		<activity android:name="cn.com.mobnote.golukmobile.UserStartActivity"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.UserLoginActivity"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.UserRegistActivity"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.UserRepwdActivity"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.UserStartActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UserLoginActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UserRegistActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UserRepwdActivity" android:screenOrientation="portrait"/>
 		
 		<!-- 网络变化广播监听 -->
 		<receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver">

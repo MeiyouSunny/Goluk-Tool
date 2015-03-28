@@ -94,6 +94,12 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		// loading组件
 		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
 		
+		Intent itentGetRegist = getIntent();
+		if(null !=  itentGetRegist.getStringExtra("intentRegist")){
+			String phoneNumber = itentGetRegist.getStringExtra("intentRegist").toString();
+			mEditTextPhoneNumber.setText(phoneNumber);
+		}
+		
 		/**
 		 * 监听绑定
 		 */
@@ -190,7 +196,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		// 忘记密码
 		case R.id.user_login_forgetpwd:
 			Intent itForget = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
-//			itForget.putExtra("user_login_forget", phone);
 			startActivity(itForget);
 			break;
 		// 第三方——微信
@@ -226,6 +231,9 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						    imm.hideSoftInputFromWindow(UserLoginActivity.this.getCurrentFocus().getWindowToken(), 0);
 							mLoading.setVisibility(View.VISIBLE);
 							console.log("回调成功");
+							//文本框不可被修改
+							mEditTextPhoneNumber.setFocusable(false);
+							mEditTextPwd.setFocusable(false);
 						}
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
@@ -237,7 +245,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				UserUtils.showDialog(this, "手机号格式错误,请重新输入");
 			}
 		}else{
-			
+			mEditTextPhoneNumber.setFocusable(true);
+			mEditTextPwd.setFocusable(true);
 		}
 	}
 	
@@ -255,17 +264,20 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				String msg = json.getString("msg");
 				
 				mLoading.setVisibility(View.GONE);
-				if(code == 200){
+				switch (code) {
+				case 200:
 					//登录成功跳转
 					console.toast("登录成功！", mContext);
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
-				}else if(code == 500){
+					break;
+				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
-				}else if(code == 405){
+					break;
+				case 405:
 					new AlertDialog.Builder(this)
 					.setTitle("Goluk温馨提示：")
-					.setMessage("用户未注册")
+					.setMessage("此手机号码还没有被注册")
 					.setNegativeButton("取消", null)
 					.setPositiveButton("注册", new DialogInterface.OnClickListener() {
 						
@@ -273,13 +285,18 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						public void onClick(DialogInterface arg0, int arg1) {
 							// TODO Auto-generated method stub
 							Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
+							it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
 							startActivity(it);
 						}
 					}).create().show();
-				}else if(code == 402){
+					break;
+				case 402:
 					UserUtils.showDialog(this, "登录密码错误");
-				}else{
-					console.log("登录没有错误code提示");
+					console.log("密码错误,请重试");
+					break;
+
+				default:
+					break;
 				}
 			}
 			catch(Exception ex){

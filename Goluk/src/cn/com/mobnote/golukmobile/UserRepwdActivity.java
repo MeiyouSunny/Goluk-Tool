@@ -82,9 +82,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		mApplication.setContext(mContext, "UserRepwd");
 		
 		initView();
-		/*Intent intent = getIntent();
-		String intentPhone = intent.getExtras().getString("user_login_forget");
-		mEditTextPhone.setText(intentPhone);*/
 		//title
 		mTextViewTitle.setText("重设密码");
 		
@@ -243,8 +240,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 
 		String phone = mEditTextPhone.getText().toString();
 		String password= mEditTextPwd.getText().toString();
-		
-		
 		/**
 		 * 自动获取验证码
 		 */
@@ -307,15 +302,21 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 							console.log(b+"");
 							registerReceiver(smsReceiver, smsFilter);
 							flag = true;
+							//点击获取验证码手机号、密码不可被点击
+							mEditTextPhone.setFocusable(false);
+							mEditTextPwd.setFocusable(false);
 						}
 						
 					}else{
-						UserUtils.showDialog(this, "密码格式输入错误，请重新输入");
+						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母或常用符号，字母区分大小写");
 					}
 				}
 			}else{
 				UserUtils.showDialog(this, "手机号格式输入错误，请重新输入");
 			}
+		}else{
+			mEditTextPhone.setFocusable(true);
+			mEditTextPwd.setFocusable(true);
 		}
 	}
 	/**
@@ -335,7 +336,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				/*unregisterReceiver(smsReceiver);
 				flag = false;*/
 				mIdentifyLoading.setVisibility(View.GONE);
-				if(code == 200){
+				switch (code) {
+				case 200:
 					//验证码获取成功
 					console.toast("下发验证码成功", mContext);
 					/**
@@ -348,20 +350,40 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						public void finish() {
 							// TODO Auto-generated method stub
 							mBtnIdentity.setText("重新发送");
+							mEditTextPhone.setFocusable(true);
+							mEditTextPwd.setFocusable(true);
 						}
 					});
 					mCountDownHelper.start();
-					
-				}else if(code == 201){
+					break;
+				case 201:
 					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");
-				}else if(code == 500){
+					break;
+				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
-				}else if(code == 405){
-					UserUtils.showDialog(this, "用户未注册");
-				}else if(code == 440){
+					break;
+				case 405:
+					new AlertDialog.Builder(this)
+			        .setTitle("Goluk温馨提示：")
+			        .setMessage("此手机号还未被注册")
+					.setNegativeButton("取消", null)
+					.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							// TODO Auto-generated method stub
+							Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
+							intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
+							startActivity(intentRepwd);
+						}
+					}).create().show();
+					break;
+				case 440:
 					UserUtils.showDialog(this, "输入手机号异常");
-				}else{
-					console.log("获取验证码回调没有错误提示code");
+					break;
+				default:
+					
+					break;
 				}
 			}
 			catch(Exception ex){
@@ -391,7 +413,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				mLoading.setVisibility(View.VISIBLE);
 			}
 		}else{
-			UserUtils.showDialog(this, "请先获取验证码");
+//			UserUtils.showDialog(this, "请先获取验证码");
+			mBtnOK.setBackgroundResource(R.drawable.icon_more);
+//			mBtnOK.setFocusable(false);
 		}
 	}
 	/**
@@ -408,21 +432,28 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				String msg = json.getString("msg");
 				
 				mLoading.setVisibility(View.GONE);
-				if(code == 200){
+				switch (code) {
+				case 200:
 					//注册成功
 					console.toast("重置密码成功", mContext);
 					Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
 					startActivity(it);
-				}else if(code == 500){
+					break;
+				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
-				}else if(code == 405){
-					UserUtils.showDialog(this, "用户未注册");
-				}if(code == 406){
-					UserUtils.showDialog(this, "输入验证码错误");
-				}else if(code == 407){
+					break;
+				case 405:
+					UserUtils.showDialog(this, "此手机号还未被注册");
+					break;
+				case 406:
+					UserUtils.showDialog(this, "请输入正确的验证码");
+					break;
+				case 407:
 					UserUtils.showDialog(this, "输入验证码超时");
-				}else{
-					console.log("重置密码回调没有错误提示code");
+					break;
+
+				default:
+					break;
 				}
 			}catch(Exception e){
 				e.printStackTrace();
@@ -451,6 +482,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		if(flag){
 			unregisterReceiver(smsReceiver);			
 		}
+		flag = false;
 	}
 	
 }

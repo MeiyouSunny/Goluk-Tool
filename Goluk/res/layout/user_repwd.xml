@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:id="@+id/user_repwd_identify_btn"
-                android:background="@drawable/user_btn"
+                android:background="@drawable/icon_more"
                 android:text="@string/user_repwd_identify"
                 android:textSize="16sp" 
                 android:layout_weight="0.001"

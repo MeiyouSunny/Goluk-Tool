@@ -13,8 +13,10 @@ import cn.com.mobnote.util.console;
 import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -108,6 +110,20 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		//获取验证码进度条
 		mIdentifyLoading = (RelativeLayout) findViewById(R.id.loading_identify);
 
+		Intent itLoginPhone = getIntent();
+		if(null != itLoginPhone.getStringExtra("intentLogin")){
+			String number = itLoginPhone.getStringExtra("intentLogin").toString();
+			Log.i("user", number);
+			mEditTextPhone.setText(number);
+			
+		}
+		Intent itRepassword = getIntent(); 
+		if(null != itRepassword.getStringExtra("intentRepassword")){
+			String repwdNum = itRepassword.getStringExtra("intentRepassword").toString();
+			mEditTextPhone.setText(repwdNum);
+		}
+		
+		
 		/**
 		 * 监听绑定
 		 */
@@ -309,8 +325,11 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						click = 1;
 						console.log(b+"");
 						mBtnRegist.setEnabled(true);
+						//点击获取验证码，手机号、密码不可被更改
+						mEditTextPhone.setFocusable(false);
+						mEditTextPwd.setFocusable(false);
 					}else{
-						UserUtils.showDialog(this, "密码格式输入错误，请重新输入");
+						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
 						mBtnRegist.setEnabled(false);
 					}
 				}else{
@@ -323,6 +342,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		}else{
 			UserUtils.showDialog(this, "手机号不能为空");
 			mBtnRegist.setEnabled(false);
+			mEditTextPhone.setFocusable(true);
+			mEditTextPwd.setFocusable(true);
 		}
 		
 	}
@@ -332,7 +353,9 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	 */
 	public void identifyCallback(int success,Object obj){
 		console.log("验证码获取回调---identifyCallBack---" + success + "---" + obj);
-		
+		//点击验证码按钮手机号、密码不可被修改
+		mEditTextPhone.setFocusable(false);
+		mEditTextPwd.setFocusable(false);
 		if(1 == success){
 			
 			try{
@@ -343,7 +366,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 //				String msg = json.getString("msg");
 				
 				mIdentifyLoading.setVisibility(View.GONE);
-				if(code == 200){
+				switch (code) {
+				case 200:
 					//验证码获取成功
 					/**
 					 * 点击获取验证码的时候进行倒计时
@@ -355,23 +379,48 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						public void finish() {
 							// TODO Auto-generated method stub
 							mBtnIdentify.setText("重新发送");
+							//倒计时结束后手机号、密码可以更改
+							mEditTextPhone.setFocusable(true);
+							mEditTextPwd.setFocusable(true);                    
 						}
 					});
 					mCountDownhelper.start();
 					console.toast("发送中,请稍后……", mContext);
 //					console.toast("下发验证码成功", mContext);
-				}else if(code == 201){
+					break;
+				case 201:
 					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");
-					
-				}else if(code == 500){
+					break;
+
+				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
-				}else if(code == 405){
-					UserUtils.showDialog(this, "用户已注册");
-				}else if(code == 440){
+					break;
+
+				case 405:
+					new AlertDialog.Builder(this)
+					.setTitle("Goluk温馨提示：")
+					.setMessage("此手机号已经被注册啦!")
+					.setNegativeButton("取消", null)
+					.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							// TODO Auto-generated method stub
+							Intent itRegist = new Intent(UserRegistActivity.this,UserLoginActivity.class);
+							itRegist.putExtra("intentRegist", mEditTextPhone.getText().toString());
+							startActivity(itRegist);
+						}
+					}).create().show();
+					break;
+
+				case 440:
 					UserUtils.showDialog(this, "输入手机号异常");
-				}else{
-					console.log("注册没有错误code提示");
+					break;
+
+				default:
+					break;
 				}
+				
 				/*unregisterReceiver(smsReceiver);
 				click = 2;*/
 			}
@@ -407,7 +456,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				mLoading.setVisibility(View.VISIBLE);
 			}
 		}else{
-			UserUtils.showDialog(this, "请先获取验证码");
+			mBtnRegist.setFocusable(false);
+//			UserUtils.showDialog(this, "请先获取验证码");
 		}
 	}
 	
@@ -425,21 +475,28 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 //				String msg = json.getString("msg");
 				
 				mLoading.setVisibility(View.GONE);
-				if(code == 200){
+				switch (code) {
+				case 200:
 					//注册成功
 					console.toast("注册成功", mContext);
 					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
 					startActivity(it);
-				}else if(code == 500){
+					break;
+				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
-				}else if(code == 405){
+					break;
+				case 405:
 					UserUtils.showDialog(this, "用户已注册");
-				}if(code == 406){
-					UserUtils.showDialog(this, "输入验证码错误");
-				}else if(code == 407){
+					break;
+				case 406:
+					UserUtils.showDialog(this, "请输入正确的验证码");
+					break;
+				case 407:
 					UserUtils.showDialog(this, "输入验证码超时");
-				}else{
-					console.log("注册回调没有提示code");
+					break;
+
+				default:
+					break;
 				}
 			}catch(Exception e){
 				e.printStackTrace();
