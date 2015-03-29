@@ -2,32 +2,30 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources.Theme;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.console;
+import cn.com.mobonote.golukmobile.comm.GolukMobile;
 
 /**
  * 
@@ -38,7 +36,8 @@ import android.widget.Toast;
  * @author mobnote
  */
 public class UserLoginActivity extends Activity implements OnClickListener {
-
+	//判断是否能点击提交俺绣
+	private boolean isOnClick=false;
 	// 登陆title
 	private Button mBackButton;
 	private TextView mTextViewTitle;
@@ -64,16 +63,17 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
-		
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
 		mContext = this;
 		//获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserLogin");
-				
 		initView();
 		// 设置title
 		mTextViewTitle.setText("登录");
-		
 	}
 	private boolean mDelAllNum = false;
 	public void initView() {
@@ -105,63 +105,85 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		 */
 		// title返回按钮
 		mBackButton.setOnClickListener(this);
+		mEditTextPhoneNumber.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				String Phonenum=mEditTextPhoneNumber.getText().toString();
+				String psw=mEditTextPwd.getText().toString();
+				if(arg1){
+					
+				}else{
+					if(!Phonenum.equals("")&&Phonenum.length()==11){
+						if(UserUtils.isMobileNO(Phonenum)){
+							isOnClick=true;
+						}else{
+							isOnClick=false;
+							console.toast("手机号格式不好", mContext);
+						}
+				}else{
+					isOnClick=false;
+				}
+				if(isOnClick&&!psw.equals("")){
+					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
+					mBtnLogin.setEnabled(true);
+				}else{
+					mBtnLogin.setBackgroundResource(R.drawable.icon_more);
+					mBtnLogin.setEnabled(false);
+				}
+				}
+			}
+		});
 		//手机号、密码文本框
 		mEditTextPhoneNumber.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				String pwd = mEditTextPwd.getText().toString();
-//				mDelAllNum = false;
-				if("".equals(arg0.toString())){
-					if("".equals(pwd)){
-						//显示普通按钮
-						mBtnLogin.setBackgroundResource(R.drawable.icon_more);
-					}
+				String Phonenum=mEditTextPhoneNumber.getText().toString();
+				String psw=mEditTextPwd.getText().toString();
+				if(Phonenum.equals("")){
+					isOnClick=false;
 				}
-				else{
-					if(!"".equals(pwd)){
-						//显示高亮登录按钮
-						mBtnLogin.setBackgroundResource(R.drawable.icon_login);
-					}
+				if(isOnClick&&!psw.equals("")){
+					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
+					mBtnLogin.setEnabled(true);
+				}else{
+					mBtnLogin.setBackgroundResource(R.drawable.icon_more);
+					mBtnLogin.setEnabled(false);
 				}
 			}
 			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+			}
 			@Override
-			public void afterTextChanged(Editable arg0) {}
-		});
+			public void afterTextChanged(Editable arg0) {
+			}
+		} );
+		//密码监听
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				String phone = mEditTextPhoneNumber.getText().toString();
-				if("".equals(arg0.toString())){
-					if("".equals(phone)){
-						//显示普通按钮
-						mBtnLogin.setBackgroundResource(R.drawable.icon_more);
-					}
-				}
-				else{
-					if(!"".equals(phone)){
-						//显示高亮登录按钮
+				String psw=mEditTextPwd.getText().toString();
+				if(isOnClick){
+					if(!psw.equals("")){
 						mBtnLogin.setBackgroundResource(R.drawable.icon_login);
+						mBtnLogin.setEnabled(true);
+					}else{
+						mBtnLogin.setBackgroundResource(R.drawable.icon_more);
+						mBtnLogin.setEnabled(false);
 					}
 				}
 			}
 			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
-			@Override
-			public void afterTextChanged(Editable arg0) {}
-		});
-		/*mEditTextPhoneNumber.setOnFocusChangeListener(new OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View arg0, boolean arg1) {
-				// TODO Auto-generated method stub
-				console.log("focus---" + arg1);
-				if(!arg1){
-					mDelAllNum = true;
-				}
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				
 			}
-		});*/
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				
+			}
+		});
 		//登录按钮
 		mBtnLogin.setOnClickListener(this);
 		// 快速注册
@@ -204,11 +226,11 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 			break;
 		// 第三方——新浪
 		case R.id.user_login_sina:
-
+			
 			break;
 		// 第三方——QQ
 		case R.id.user_login_qq:
-
+			
 			break;
 		}
 	}
@@ -223,6 +245,13 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 			if(phone.startsWith("1") && phone.length() == 11){
 				if(!"".equals(pwd)){
 					if(pwd.length()>=6 && pwd.length()<=16){
+						//网络判断
+						if(!UserUtils.isNetDeviceAvailable(mContext)){
+							console.toast("当前无网络链接", mContext);
+						}else{
+							//初始化定时器
+						initTimer();
+						handler.postDelayed(runnable, 3000);//san 秒执行一次runnable.
 						String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
 						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Login,condi);
 						if(b){
@@ -231,9 +260,10 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						    imm.hideSoftInputFromWindow(UserLoginActivity.this.getCurrentFocus().getWindowToken(), 0);
 							mLoading.setVisibility(View.VISIBLE);
 							console.log("回调成功");
-							/*//文本框不可被修改
-							mEditTextPhoneNumber.setFocusable(false);
-							mEditTextPwd.setFocusable(false);*/
+							//文本框不可被修改
+							mEditTextPhoneNumber.setEnabled(false);
+							mEditTextPwd.setEnabled(false);
+						}
 						}
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
@@ -245,8 +275,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				UserUtils.showDialog(this, "手机号格式错误,请重新输入");
 			}
 		}else{
-			/*mEditTextPhoneNumber.setFocusable(true);
-			mEditTextPwd.setFocusable(true);*/
+			mEditTextPhoneNumber.setFocusable(true);
+			mEditTextPwd.setFocusable(true);
 		}
 	}
 	
@@ -257,15 +287,13 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 	public void loginCallBack(int success,Object obj){
 		console.log("登录回调---loginCallBack---" + success + "---" + obj);
 		if(1 == success){
+			handler.removeCallbacks(runnable);
 			try{
 				String data = (String)obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				String msg = json.getString("msg");
-				
 				mLoading.setVisibility(View.GONE);
-				/*mEditTextPhoneNumber.setFocusable(true);
-				mEditTextPwd.setFocusable(true);*/
 				switch (code) {
 				case 200:
 					//登录成功跳转
@@ -285,7 +313,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
 							Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
 							it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
 							startActivity(it);
@@ -295,12 +322,11 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				case 402:
 					console.toast("密码错误,请重试", mContext);
 					break;
-
 				default:
 					break;
 				}
-				/*mEditTextPhoneNumber.setFocusable(true);
-				mEditTextPwd.setFocusable(true);*/
+				mEditTextPhoneNumber.setFocusable(true);
+				mEditTextPwd.setFocusable(true);
 			}
 			catch(Exception ex){
 				ex.printStackTrace();
@@ -309,6 +335,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		else{
 			console.toast("登录失败", mContext);
 		}
+		mEditTextPhoneNumber.setEnabled(true);
+		mEditTextPwd.setEnabled(true);
 	}
 	
 	@Override
@@ -321,5 +349,14 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		}*/
 		return super.onKeyDown(keyCode, event);
 	}
-
+	final Handler handler=new Handler();
+	private Runnable runnable;
+	private void initTimer(){
+		runnable=new Runnable(){
+		@Override
+		public void run() {
+			console.toast("当前网络不好", mContext);
+			}
+		};
+	}
 }

@@ -33,6 +33,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
@@ -618,5 +619,37 @@ public class GolukApplication extends Application implements IPageNotifyFn,INetT
 			}
 		}
 	}
-	
+	private static SharedPreferences preferences;
+	private static Editor editor;
+	/**
+	 * 进行缓存用户的登陆状态
+	 * @param context
+	 * @param key
+	 * @param remeberLoginState
+	 */
+	public static void cacheRemeberLoginState(Context context, String key, boolean remeberLoginState,String name,String pass) {
+		if (preferences == null) {
+			preferences = context.getSharedPreferences("application", Context.MODE_PRIVATE);
+		}
+		editor = preferences.edit();
+		editor.putBoolean(key, remeberLoginState);
+		editor.putString("name", name);
+		editor.putString("pass", pass);
+		editor.commit();
+	}
+
+	/*
+	 * 获取判断是否为第一次进入APP的缓存值
+	 * 
+	 * @param context 对应上下文
+	 * 
+	 * @param key 对应缓存值得key
+	 */
+	public static boolean getIsFirstComeApp(Context context, String key) {
+		if (preferences == null) {
+			preferences = context.getSharedPreferences("application", Context.MODE_PRIVATE);
+		}
+		boolean isFirstComeApp = preferences.getBoolean(key, false); 
+		return isFirstComeApp;
+	}
 }

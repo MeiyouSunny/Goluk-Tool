@@ -31,6 +31,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -104,26 +105,36 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		mBtnIdentity.setOnClickListener(this);
 		mBtnOK.setOnClickListener(this);
 		
-		/**
-		 * 手机号、密码、验证码文本框改变监听
-		 */
-mEditTextPhone.addTextChangedListener(new TextWatcher() {
-			
+
+		mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				String phone = mEditTextPhone.getText().toString();
+				if(!arg1){
+					if(!phone.equals("")){
+						if(!UserUtils.isMobileNO(phone)){
+								console.toast("手机号格式不对", mContext);
+						}
+					}
+				}
+			}
+		});
+		mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
 				String phone = mEditTextPhone.getText().toString();
 				if(!"".equals(phone)){
-					if(phone.length() == 11 && phone.startsWith("1")){
+					if(phone.length() == 11 && phone.startsWith("1")){ 
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
+						mBtnOK.setEnabled(true);
 					}else{
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
+						mBtnOK.setEnabled(false);
 					}
 				}else{
 					//手机号为空
 				}
 			}
-			
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {			}
@@ -133,19 +144,16 @@ mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			}
 		});
 		mEditTextIdentify.addTextChangedListener(new TextWatcher() {
-			
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
 				String password = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
-				
 				if(!"".equals(password) && !"".equals(identify)){
 					mBtnOK.setBackgroundResource(R.drawable.icon_login);
-					mBtnOK.setFocusable(true);
+					mBtnOK.setEnabled(true);
 				}else{
 					mBtnOK.setBackgroundResource(R.drawable.icon_more);
-					mBtnOK.setFocusable(false);
+					mBtnOK.setEnabled(false);
 				}
 			}
 			
@@ -154,143 +162,31 @@ mEditTextPhone.addTextChangedListener(new TextWatcher() {
 					int arg3) { }
 			
 			@Override
-			public void afterTextChanged(Editable arg0) {
+			public void afterTextChanged(Editable arg0) {      
 			}
 		});
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
-
 			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				// TODO Auto-generated method stub
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				String password = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
-
-				if (!"".equals(password) && !"".equals(identify)) {
+				String mEditText = mEditTextPhone.getText().toString();
+				if(!"".equals(password) && !"".equals(identify)&&!mEditText.equals("")){
 					mBtnOK.setBackgroundResource(R.drawable.icon_login);
-					mBtnOK.setFocusable(true);
-				} else {
+					mBtnOK.setEnabled(true);
+				}else{
 					mBtnOK.setBackgroundResource(R.drawable.icon_more);
-					mBtnOK.setFocusable(false);
+					mBtnOK.setEnabled(false);
 				}
 			}
-
 			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-		/*mEditTextPhone.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				String pwd = mEditTextPwd.getText().toString();
-				String identify = mEditTextIdentify.getText().toString();
-				if ("".equals(arg0.toString())) {
-					if ("".equals(pwd)) {
-						// 显示普通按钮
-						mBtnOK.setBackgroundResource(R.drawable.icon_more);
-						mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
-					}
-				} else {
-					if (!"".equals(pwd)) {
-						if (!"".equals(identify)) {
-							// 显示高亮重置密码按钮
-							mBtnOK.setBackgroundResource(R.drawable.icon_login);
-						} else {
-							// 显示高亮重置密码按钮
-							mBtnOK.setBackgroundResource(R.drawable.icon_more);
-						}
-						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
-					}
-				}
 			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-			}
-
 			@Override
 			public void afterTextChanged(Editable arg0) {
 			}
 		});
-		mEditTextPwd.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				String phone = mEditTextPhone.getText().toString();
-				String identify = mEditTextIdentify.getText().toString();
-				if ("".equals(arg0.toString())) {
-					if ("".equals(phone) || phone.length() != 11) {
-						// 显示普通按钮
-						mBtnOK.setBackgroundResource(R.drawable.icon_more);
-						mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
-					}
-				} else {
-					if (!"".equals(phone) && phone.length() == 11) {
-						if (!"".equals(identify)) {
-							// 显示高亮重置密码按钮
-							mBtnOK.setBackgroundResource(R.drawable.icon_login);
-						} else {
-							// 显示高亮重置密码按钮
-							mBtnOK.setBackgroundResource(R.drawable.icon_more);
-						}
-						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
-					}
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-			}
-		});
-		mEditTextIdentify.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				// TODO Auto-generated method stub
-				String phone = mEditTextPhone.getText().toString();
-				String pwd = mEditTextPwd.getText().toString();
-				if ("".equals(arg0.toString())) {
-					if ("".equals(phone)) {
-						mBtnOK.setBackgroundResource(R.drawable.icon_more);
-					}
-				} else {
-					if (!"".equals(phone)) {
-						if (!"".equals(pwd)) {
-							mBtnOK.setBackgroundResource(R.drawable.icon_login);
-						} else {
-							mBtnOK.setBackgroundResource(R.drawable.icon_more);
-						}
-					}
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-			}
-		});*/
-		
 	}
 	@Override
 	public void onClick(View arg0) {
@@ -374,6 +270,9 @@ mEditTextPhone.addTextChangedListener(new TextWatcher() {
 		 * 对获取验证码进行判断
 		 */
 		if(UserUtils.isMobileNO(phone)){
+			mEditTextPhone.setEnabled(false);
+			mEditTextIdentify.setEnabled(false);
+			mEditTextPwd.setEnabled(false);
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"2\"}";
 			console.log(isIdentify);
 			boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
@@ -422,7 +321,9 @@ mEditTextPhone.addTextChangedListener(new TextWatcher() {
 	 */
 	public void isRepwdCallBack(int success,Object obj){
 		console.log("验证码获取回调---isRepwdCallBack---" + success + "---" + obj);
-		
+		mEditTextPhone.setEnabled(true);
+		mEditTextIdentify.setEnabled(true);
+		mEditTextPwd.setEnabled(true);
 		if(1 == success){
 			try{
 				String data = (String)obj;
@@ -509,6 +410,9 @@ mEditTextPhone.addTextChangedListener(new TextWatcher() {
 				//隐藏软件盘
 			   UserUtils.hideSoftMethod(this);
 				mLoading.setVisibility(View.VISIBLE);
+				mEditTextPhone.setEnabled(true);
+				mEditTextIdentify.setEnabled(true);
+				mEditTextPwd.setEnabled(true);
 			}
 		}else{
 //			UserUtils.showDialog(this, "请先获取验证码");
@@ -521,6 +425,9 @@ mEditTextPhone.addTextChangedListener(new TextWatcher() {
 	 */
 	public void repwdCallBack(int success,Object obj){
 		console.log("---重置密码回调-----"+success+"----"+obj);
+		mEditTextPhone.setEnabled(false);
+		mEditTextIdentify.setEnabled(false);
+		mEditTextPwd.setEnabled(false);
 		if(1 == success){
 			try{
 				String data = (String) obj;

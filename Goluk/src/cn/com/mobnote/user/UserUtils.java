@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
 
 public class UserUtils {
@@ -41,5 +43,13 @@ public class UserUtils {
         }
         return flag;
     }
-	
+	 public static boolean isNetDeviceAvailable(Context context){
+	        boolean bisConnFlag=false;
+	        ConnectivityManager conManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	        NetworkInfo network = conManager.getActiveNetworkInfo();
+	        if(network!=null){
+	            bisConnFlag=conManager.getActiveNetworkInfo().isAvailable();
+	        }
+	        return bisConnFlag;
+	    }
 }

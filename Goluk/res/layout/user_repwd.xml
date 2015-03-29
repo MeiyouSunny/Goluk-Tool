@@ -130,6 +130,7 @@
             <Button
                 android:layout_width="328dp"
                 android:layout_height="38dp"
+                android:enabled="false"
                 android:background="@drawable/icon_more"
                 android:text="@string/user_repwd_ok" 
                 android:id="@+id/user_repwd_ok_btn"

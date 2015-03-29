@@ -93,6 +93,7 @@
                 android:id="@+id/user_login_btn"
                 android:background="@drawable/icon_more"
                 android:gravity="center"
+                android:enabled="false"
                 android:text="@string/user_login_title_text"
                 android:textSize="15sp"
                 android:textColor="@color/white" />

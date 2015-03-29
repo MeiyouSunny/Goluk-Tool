@@ -392,8 +392,9 @@ public class UserTestRegistActivity extends Activity implements OnClickListener 
 						console.log(b+"");
 						mBtnRegist.setEnabled(true);
 						//点击获取验证码，手机号、密码不可被更改
-						/*mEditTextPhone.setFocusable(false);
-						mEditTextPwd.setFocusable(false);*/
+						mEditTextPhone.setEnabled(false);
+						mEditTextIdentify.setEnabled(false);
+						mEditTextPwd.setEnabled(false);
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
 						mBtnRegist.setEnabled(false);
@@ -407,7 +408,7 @@ public class UserTestRegistActivity extends Activity implements OnClickListener 
 			}
 		}else{
 			//手机号为空的时候获取验证码按钮为不可点击
-			mBtnIdentify.setFocusable(false);
+			mBtnIdentify.setEnabled(false);
 			/*UserUtils.showDialog(this, "手机号不能为空");
 			mBtnRegist.setEnabled(false);
 			mEditTextPhone.setFocusable(true);
@@ -424,6 +425,9 @@ public class UserTestRegistActivity extends Activity implements OnClickListener 
 		//点击验证码按钮手机号、密码不可被修改
 		/*mEditTextPhone.setFocusable(true);
 		mEditTextPwd.setFocusable(true);*/
+		mEditTextPhone.setEnabled(true);
+		mEditTextIdentify.setEnabled(true);
+		mEditTextPwd.setEnabled(true);
 		if(1 == success){
 			
 			try{
