@@ -120,6 +120,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		if(null != itRepassword.getStringExtra("intentRepassword")){
 			String repwdNum = itRepassword.getStringExtra("intentRepassword").toString();
 			mEditTextPhone.setText(repwdNum);
+			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 		}
 		
 		/**
@@ -342,6 +343,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				mIdentifyLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
+					console.toast("验证码已经发送，请查收短信", mContext);
 					//验证码获取成功
 					/**
 					 * 点击获取验证码的时候进行倒计时
@@ -358,7 +360,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						}
 					});
 					mCountDownhelper.start();
-					console.toast("发送中,请稍后……", mContext);
 					break;
 				case 201:
 					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");

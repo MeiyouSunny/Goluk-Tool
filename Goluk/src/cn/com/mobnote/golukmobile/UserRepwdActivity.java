@@ -340,7 +340,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
-		console.toast("发送中，请稍后", mContext);
+//		console.toast("发送中，请稍后", mContext);
 		if(1 == success){
 			try{
 				String data = (String)obj;
@@ -352,9 +352,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				/*unregisterReceiver(smsReceiver);
 				flag = false;*/
 				mIdentifyLoading.setVisibility(View.GONE);
-				console.toast("验证码已经发送，请查收短信", mContext);
 				switch (code) {
 				case 200:
+					console.toast("验证码已经发送，请查收短信", mContext);
 					//验证码获取成功
 					/**
 					 * 点击获取验证码的时候进行倒计时

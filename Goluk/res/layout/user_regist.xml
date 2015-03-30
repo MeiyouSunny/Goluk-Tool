@@ -95,13 +95,12 @@
 
             <!--  110dp -->
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="92dp"
                 android:layout_height="42dp"
                 android:id="@+id/user_regist_identify_btn"
                 android:background="@drawable/icon_more"
                 android:text="@string/user_repwd_identify"
                 android:textSize="16sp" 
-                android:layout_weight="0.001"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:textColor="@color/white"/>
@@ -114,7 +113,6 @@
                 android:textColor="#000" 
                 android:maxLength="6"
                 android:background="@color/white"
-                android:layout_weight="2"
                 android:paddingLeft="20dp"
                 android:textSize="14sp"/>
         </LinearLayout>
