@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.carrecorder;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
@@ -30,6 +31,7 @@ public class SettingUtils {
 	private SharedPreferences.Editor editor=null;
 	private SharedPreferences preferences=null;
 	private static SettingUtils instance=null;
+	
 	public static synchronized SettingUtils getInstance() { 
 		if (instance==null)
 			synchronized (SettingUtils.class) { 

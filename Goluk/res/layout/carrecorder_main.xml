@@ -94,8 +94,8 @@
 		
 		            <ImageView
 		                android:id="@+id/mLoading"
-		                android:layout_width="133.33dp"
-		                android:layout_height="146.66dp"
+		                android:layout_width="93.33dp"
+		                android:layout_height="102.66dp"
 		                android:layout_gravity="center"/>
 		
 		            <TextView
@@ -103,10 +103,10 @@
 		                android:layout_width="fill_parent"
 		                android:layout_height="wrap_content"
 		                android:gravity="center"
-		                android:paddingTop="37.33dp"
+		                android:paddingTop="20dp"
 		                android:text="图像加载中，请稍后..."
 		                android:textColor="#ffffff"
-		                android:textSize="24sp" /> 
+		                android:textSize="18sp" /> 
 		        </LinearLayout>
 		         
          </RelativeLayout>
@@ -163,6 +163,7 @@
 
         <TextView
             android:id="@+id/mTime"
+            android:text="00:00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="6dp"

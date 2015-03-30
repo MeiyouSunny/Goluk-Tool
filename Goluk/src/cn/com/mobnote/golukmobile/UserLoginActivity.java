@@ -2,32 +2,29 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.console;
 
 /**
  * 
@@ -219,7 +216,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				if(!"".equals(pwd)){
 					if(pwd.length()>=6 && pwd.length()<=16){
 						String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
-						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Login,condi);
+						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 						if(b){
 							//隐藏软件盘
 						    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);

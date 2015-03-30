@@ -34,7 +34,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.DeviceState;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.SensorDetector.AccelerometerListener;
-import cn.com.mobnote.tachograph.comm.IPCManagerFn;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 
 import com.rd.car.CarRecorderManager;
@@ -64,7 +64,7 @@ import com.rd.car.player.RtmpPlayerView;
  * @author xuhw
  */
 public class CarRecorderActivity extends Activity implements OnClickListener,
-		IPCManagerFn {
+	 IPCManagerFn {
 	public static Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -364,10 +364,11 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 */
 	private void setListener() {
 		m8sBtn.setOnClickListener(this);
-		mFileBtn.setOnClickListener(this);
-		mSettingBtn.setOnClickListener(this);
-		findViewById(R.id.mFileText).setOnClickListener(this);
-		findViewById(R.id.mSettingText).setOnClickListener(this);
+//		mFileBtn.setOnClickListener(this);
+//		mSettingBtn.setOnClickListener(this);
+		findViewById(R.id.back_btn).setOnClickListener(this);
+//		findViewById(R.id.mFileText).setOnClickListener(this);
+//		findViewById(R.id.mSettingText).setOnClickListener(this);
 		findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingLayout).setOnClickListener(this);
 //		mIpcRepair.setOnClickListener(this);
@@ -597,15 +598,20 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年1月28日
 	 */
 	public void start() {
-		mRtmpPlayerView.setVisibility(View.VISIBLE);
-		mRtmpPlayerView.setDataSource(getResources().getString(
-				R.string.default_rtsp_url));
-		mRtmpPlayerView.start();
+		if(null != mRtmpPlayerView){
+			mRtmpPlayerView.setVisibility(View.VISIBLE);
+			mRtmpPlayerView.setDataSource(getResources().getString(
+					R.string.default_rtsp_url));
+			mRtmpPlayerView.start();
+		}
 	}
 
 	@Override
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
+		case R.id.back_btn:
+			finish();
+			break;
 		case R.id.m8sBtn:
 			GFileUtils
 					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");

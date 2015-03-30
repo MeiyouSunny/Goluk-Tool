@@ -5,20 +5,6 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapView;
-import com.rd.car.player.RtmpPlayerView;
-
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.map.BaiduMapManage;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.VideCommentManage.VideoCommentData;
-import cn.com.mobnote.video.VideCommentListAdapter;
-import cn.com.mobnote.video.VideCommentManage;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,6 +12,9 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +24,18 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.console;
+import cn.com.mobnote.video.VideCommentListAdapter;
+import cn.com.mobnote.video.VideCommentManage;
+import cn.com.mobnote.video.VideCommentManage.VideoCommentData;
+
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapView;
+import com.rd.car.player.RtmpPlayerView;
 
 /**
  * <pre>
@@ -312,7 +313,7 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 		
 		String condi = "{\"uid\":\"" + mUid + "\",\"desAid\":\"" + mAid + "\"}";
 		console.log("PageType_GetVideoDetail---获取直播详情---" + condi);
-		boolean b = mApp.mGoluk.GoLuk_CommonGetPage(mApp.mGoluk.PageType_GetVideoDetail,condi);
+		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVideoDetail,condi);
 		if(!b){
 			console.log("PageType_GetVideoDetail---获取直播详情---失败" + b);
 		}

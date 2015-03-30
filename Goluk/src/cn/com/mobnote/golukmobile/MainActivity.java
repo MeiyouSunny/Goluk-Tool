@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.baidu.location.BDLocation;
@@ -39,7 +38,6 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.mobnote.wifi.WifiAutoConnectManager;
 import cn.com.mobnote.wifi.WifiConnCallBack;
 import cn.com.mobnote.wifi.WifiRsBean;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -49,7 +47,6 @@ import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiInfo;
@@ -59,7 +56,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -71,11 +67,41 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.entity.LngLat;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.console;
+import cn.com.mobnote.video.LocalVideoListAdapter;
+import cn.com.mobnote.video.LocalVideoManage;
+import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
+import cn.com.mobnote.video.OnLineVideoManage;
+import cn.com.mobnote.view.MyGridView;
+import cn.com.mobnote.wifi.WiFiConnection;
+import cn.com.mobnote.wifi.WifiAutoConnectManager;
+import cn.com.mobnote.wifi.WifiConnCallBack;
+import cn.com.mobnote.wifi.WifiRsBean;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
+import com.rd.car.CarRecorderManager;
+import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * <pre>
@@ -287,7 +313,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					break;
 					case 2:
 						//5分钟更新一次大头针数据
-						mApp.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetPinData,"");
+						mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPinData,"");
 					break;
 					case 3:
 						//检测是否已连接小车本热点
@@ -303,7 +329,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						//pointDataCallback(1,obj);
 						//请求在线视频轮播数据
 						console.log("PageType_GetPinData:");
-						mApp.mGoluk.GoLuk_CommonGetPage(mApp.mGoluk.PageType_GetPinData,"");
+						mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPinData,"");
 					break;
 					case 98:
 						//测试,气泡图片下载完成
@@ -376,7 +402,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			public void onMapLoaded() {
 				//地图加载完成,请求大头针数据
 				console.log("PageType_GetPinData:地图加载完成,请求大头针数据");
-				mApp.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetPinData,"");
+				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPinData, "");
 			}
 		});
 		
@@ -484,7 +510,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				if(pwd.length() > 5){
 					console.log("调用登录接口---login---" + phone + "---" + pwd);
 					String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
-					boolean b = mApp.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Login,condi);
+					boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 					if(!b){
 						console.log("调用登录接口失败---b---" + b);
 					}else{
@@ -693,7 +719,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		console.log("下载气泡图片downloadBubbleImg:" + url + ",aid" + aid);
 		String json = "{\"purl\":\"" + url + "\",\"aid\":\"" + aid + "\",\"type\":\"1\"}";
 		console.log("downloadBubbleImg---json" + json);
-		mApp.mGoluk.GoLuk_CommonGetPage(mApp.mGoluk.PageType_GetPictureByURL,json);
+		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPictureByURL, json);
 	}
 	
 	/**
