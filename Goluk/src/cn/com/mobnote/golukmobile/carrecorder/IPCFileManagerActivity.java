@@ -112,6 +112,16 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	}
 	
 	/**
+	 * 获取编辑文件列表数据
+	 * @return
+	 * @author xuhw
+	 * @date 2015年3月30日
+	 */
+	public List<String> getSelectedListData(){
+		return selectedListData;
+	}
+	
+	/**
 	 * 获取当前是否处于编辑状态
 	 * @return
 	 * @author xuhw

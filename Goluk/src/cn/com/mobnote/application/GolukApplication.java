@@ -420,6 +420,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		/*
 		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {

@@ -79,9 +79,13 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		}
 		
 		IPCFileManagerActivity a = (IPCFileManagerActivity)mContext;
+		List<String> selectedData = a.getSelectedListData();
 		if(!a.getIsEditState()){
 			holder.mTMLayout1.setVisibility(View.GONE);
 			holder.mTMLayout2.setVisibility(View.GONE);
+		}else{
+			
+			
 		}
 		
 		holder.mVideoLayout2.setVisibility(View.GONE);
@@ -89,6 +93,11 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		VideoInfo mVideoInfo2 = mDataList.get(position).getVideoInfo2();
 		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
 		holder.mTMLayout2.setTag("");
+		if(selectedData.contains(mVideoInfo1.videoPath)){
+			holder.mTMLayout1.setVisibility(View.VISIBLE);
+		}else{
+			holder.mTMLayout1.setVisibility(View.GONE);
+		}
 		if(1080 == mVideoInfo1.videoHP){
 			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
 		}else{
@@ -106,6 +115,11 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		}
 		
 		if(null != mVideoInfo2){
+			if(selectedData.contains(mVideoInfo2.videoPath)){
+				holder.mTMLayout2.setVisibility(View.VISIBLE);
+			}else{
+				holder.mTMLayout2.setVisibility(View.GONE);
+			}
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
 			if(1080 == mVideoInfo2.videoHP){
