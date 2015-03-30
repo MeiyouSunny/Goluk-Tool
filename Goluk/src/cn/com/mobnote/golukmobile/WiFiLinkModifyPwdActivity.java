@@ -31,38 +31,37 @@ import android.widget.TextView;
  * 11.后续人员开发保证代码格式一致
  * </pre>
  * 
- * @ 功能描述:wifi链接首页
+ * @ 功能描述:wifi连接修改热点密码
  * 
  * @author 陈宣宇
  * 
  */
 
-public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
+public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
-	/** 说明文字 */
+	/** 跳过 */
+	private Button mJumpBtn = null;
+	/** 描述title*/
 	private TextView mDescTitleText = null;
-	/** 继续按钮 */
-	private Button mKeepBtn = null;
-	/** 更多帮助 */
-	//private TextView mMoreHelpText = null;
+	/** 下一步按钮 */
+	private Button mNextBtn = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.wifi_link_index);
+		setContentView(R.layout.wifi_link_modify_pwd);
 		mContext = this;
 		
 		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
-		mApp.setContext(mContext,"WiFiLinkIndex");
+		mApp.setContext(mContext,"WiFiLinkModifyPwd");
 		
 		//页面初始化
 		init();
@@ -75,22 +74,22 @@ public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
 	private void init(){
 		//获取页面元素
 		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
-		mDescTitleText = (TextView)findViewById(R.id.textView1);
-		mKeepBtn = (Button)findViewById(R.id.keep_btn);
-		//mMoreHelpText = (TextView) findViewById(R.id.more_help_text);
+		mJumpBtn = (Button)findViewById(R.id.jump_btn);
+		mDescTitleText = (TextView) findViewById(R.id.textView1);
+		mNextBtn = (Button)findViewById(R.id.next_btn);
+		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
-		mKeepBtn.setOnClickListener(this);
-		//mMoreHelpText.setOnClickListener(this);
+		mJumpBtn.setOnClickListener(this);
+		mNextBtn.setOnClickListener(this);
 		
-		//修改title说明文字颜色
-		mDescTitleText.setText(Html.fromHtml("请让<font color=\"#28b6a4\">Goluk</font>与<font color=\"#28b6a4\">手机</font>连接"));
+		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#28b6a4\">Goluk</font> WiFi热点信息"));
 	}
 	
 	
 	@Override
 	protected void onResume(){
-		mApp.setContext(this,"WiFiLinkIndex");
+		mApp.setContext(this,"WiFiLinkModifyPwd");
 		super.onResume();
 	}
 	
@@ -103,19 +102,14 @@ public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
 				//返回
 				finish();
 			break;
-			case R.id.keep_btn:
-				//跳转到步骤1页面
-				//Intent step = new Intent(WiFiLinkIndexActivity.this,WiFiLinkStep1Activity.class);
-				//startActivity(step);
-				
-				//新版需求,直接跳转到wifi列表页面
-				Intent list = new Intent(WiFiLinkIndexActivity.this,WiFiLinkListActivity.class);
-				startActivity(list);
+			case R.id.jump_btn:
+				Intent jump = new Intent(WiFiLinkModifyPwdActivity.this,WiFiLinkCreateHotActivity.class);
+				startActivity(jump);
 			break;
-//			case R.id.more_help_text:
-//				Intent help = new Intent(WiFiLinkIndexActivity.this,WiFiLinkHelpActivity.class);
-//				startActivity(help);
-//			break;
+			case R.id.next_btn:
+				//Intent setup = new Intent(WiFiLinkModifyPwdActivity.this,WiFiLinkStep2Activity.class);
+				//startActivity(setup);
+			break;
 		}
 	}
 	

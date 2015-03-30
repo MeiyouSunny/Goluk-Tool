@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- wifi链接首页 -->
+<!-- wifi链接完成 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -21,53 +21,58 @@
 		
 	</RelativeLayout>
 	
-	<ImageView
-		android:id="@+id/imageView1"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="64dp"
-		android:layout_marginTop="72dp"
-		android:src="@drawable/connect_banner_1"
-		android:contentDescription="@string/imgdes"/>
-
 	<TextView
 		android:id="@+id/textView1"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/imageView1"
-		android:layout_centerHorizontal="true"
-		android:textSize="28sp"
+		android:layout_marginLeft="25dp"
+		android:layout_marginRight="25dp"
+		android:layout_below="@id/title_layout"
+		android:textSize="24sp"
 		android:textColor="#595959"
-		android:text="@string/wifi_link_1_text" />
+		android:text="@string/wifi_link_25_text" />
 
-	<TextView
-		android:id="@+id/textView2"
+	<RelativeLayout
+		android:id="@+id/linked_layout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="16dp"
-		android:layout_marginLeft="55dp"
-		android:layout_marginRight="55dp"
+		android:layout_marginTop="10dp"
+		android:layout_marginLeft="25dp"
+		android:layout_marginRight="25dp"
 		android:layout_below="@id/textView1"
-		android:layout_centerHorizontal="true"
-		android:textSize="14sp"
-		android:textColor="#828282"
-		android:text="@string/wifi_link_2_text" />
+		android:visibility="visible">
+		
+		<TextView
+			android:id="@+id/linked_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="#595959"
+			android:textSize="36sp"
+			android:text="@string/wifi_link_26_text" />
+		
+		<TextView
+			android:id="@+id/linked_desc"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/linked_title"
+			android:textSize="24sp"
+			android:textColor="#595959"
+			android:text="@string/wifi_link_27_text" />
+	</RelativeLayout>
 	
-	<!-- 
-	<TextView
-		android:id="@+id/more_help_text"
+	
+	<ImageView
+		android:id="@+id/imageView1"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="15dp"
-		android:layout_alignParentBottom="true"
+		android:layout_marginTop="30dp"
+		android:layout_below="@id/linked_layout"
 		android:layout_centerHorizontal="true"
-		android:textColor="#28b6a4"
-		android:textSize="16sp"
-		android:text="@string/wifi_link_3_text" />
-	 -->
+		android:src="@drawable/connect_banner_4"
+		android:contentDescription="@string/imgdes"/>
 	
 	<Button
-		android:id="@+id/keep_btn"
+		android:id="@+id/complete_btn"
 		android:layout_width="match_parent"
 		android:layout_height="52dp"
 		android:layout_marginBottom="34dp"
@@ -77,16 +82,8 @@
 		android:background="@drawable/connect_mianbtn"
 		android:textSize="20sp"
 		android:textColor="@color/white"
-		android:text="@string/keep_on_text" />
+		android:text="@string/wifi_link_28_text" />
 	
-	<!-- 返回按钮
-	<ImageButton
-		android:id="@+id/close_btn"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/connect_back_btn_btn"
-		android:contentDescription="@string/imgdes" />
-	 -->
 </RelativeLayout>
 
 

@@ -23,6 +23,9 @@
 	<string name="share_btn_text">分享</string>
 	<string name="video_play_text">视频播放</string>
 	<string name="driving_share_text">行车分享</string>
+	<string name="pwd_text">密码</string>
+	<string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
+	<string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
 	
 	<string name="share_live_text">分享网络直播</string>
 	<string name="share_local_video_text">分享精彩视频</string>
@@ -34,14 +37,14 @@
 	<string name="video_share_desc_title">添加描述</string>
 	<string name="video_share_topic_text">#话题#</string>
 	<string name="keep_on_text">继续</string>
-	<string name="wifi_link_1_text">请让小车本与Goluk连接</string>
+	<string name="wifi_link_1_text">请让Goluk与手机连接</string>
 	<string name="wifi_link_2_text">您第一次使用Goluk需要确认您的WiFi是否是开启状态,并设置WiFi连接.</string>
 	<string name="wifi_link_3_text">怎么设置小车本与Goluk连接?</string>
 	<string name="wifi_link_4_text">使用步骤</string>
 	<string name="wifi_link_5_text">打开小车本进入个人中心</string>
 	<string name="wifi_link_6_text">请确保热点是开启状态</string>
 	<string name="wifi_link_7_text">选择WIFI</string>
-	<string name="wifi_link_8_text">选取WIFI</string>
+	<string name="wifi_link_8_text">选取WiFi</string>
 	<string name="wifi_link_9_text">GP24702115</string>
 	<string name="wifi_link_10_text">疑难问题解决</string>
 	<string name="wifi_link_11_text">关闭然后重新打开手机的Wi-Fi</string>
@@ -50,7 +53,18 @@
 	<string name="wifi_link_14_text">请将手机尽可能的靠近小车本设备,并重新连接Wi-Fi</string>
 	<string name="wifi_link_15_text">请重新安装Goluk App</string>
 	<string name="wifi_link_16_text">更多帮助</string>
-	
+	<string name="wifi_link_17_text">1.确认WiFi指示灯闪烁,连接名称为Goluk xxx的WiFi</string>
+	<string name="wifi_link_18_text">2.</string>
+	<string name="wifi_link_19_text">跳过</string>
+	<string name="wifi_link_20_text">2.修改Goluk WiFi热点信息</string>
+	<string name="wifi_link_21_text">WiFi名称</string>
+	<string name="wifi_link_22_text">Goluk123456</string>
+	<string name="wifi_link_23_text">3.修改与Goluk相连手机的WiFi热点信息</string>
+	<string name="wifi_link_24_text">正常使用中,摄像头上电后将自动连接手机建立的WiFi热点.</string>
+	<string name="wifi_link_25_text">手机正在创建WiFi个人热点....</string>
+	<string name="wifi_link_26_text">恭喜你</string>
+	<string name="wifi_link_27_text">你的Goluk已成功连接到手机</string>
+	<string name="wifi_link_28_text">开始使用</string>
 	
 	<string name="video_live_title_text">详情</string>
 	<string name="video_live_username_text">用户名称</string>

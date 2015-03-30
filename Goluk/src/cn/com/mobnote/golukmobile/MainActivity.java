@@ -789,6 +789,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
 			startActivity(wifiIndex);
 		}
+		else{
+			//跳转到ipc页面
+			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+			startActivity(i);
+		}
 	}
 	
 	@Override
@@ -939,9 +944,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				mShareLayout.setVisibility(View.GONE);
 			break;
 			case R.id.wifi_status_btn:
-				//跳转到ipc页面
-				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-				startActivity(i);
+				//wifi链接状态
+				checkWiFiStatus();
 			break;
 			case R.id.more_btn:
 				//更多页面

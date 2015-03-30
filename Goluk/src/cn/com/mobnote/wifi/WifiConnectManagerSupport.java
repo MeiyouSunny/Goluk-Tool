@@ -268,6 +268,7 @@ public class WifiConnectManagerSupport {
 				if (result) {
 					bean = new WifiRsBean();
 					bean.setWifiName(tempResult.SSID);
+					//bean.setPwdStatus(tempResult.)
 					bean.setWifiSignal(WifiManager.calculateSignalLevel(
 							tempResult.level, 4));
 					if (conSSid != null && !"".equals(conSSid)) {

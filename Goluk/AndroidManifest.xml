@@ -50,6 +50,9 @@
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkStep1Activity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkStep2Activity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkModifyPwdActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity" android:screenOrientation="portrait"/>
 		
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"/>

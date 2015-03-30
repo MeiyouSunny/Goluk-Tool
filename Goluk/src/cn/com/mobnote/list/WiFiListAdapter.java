@@ -166,7 +166,16 @@ public class WiFiListAdapter extends BaseAdapter{
 			resIndex = index;
 			WiFiListData data = (WiFiListData)getItem(index);
 			if(!data.wifiStatus){
-				inputTitleDialog(data);
+				//判断wifi有没有密码,没有密码直接连接
+				boolean hasPwd = true;
+				if(hasPwd){
+					inputTitleDialog(data);
+				}
+				else{
+					//直接连接wifi
+					String wifiName = data.wifiName.toString();
+					((WiFiLinkListActivity)mContext).connectWiFi(wifiName);
+				}
 			}
 			else{
 				console.toast("已连接" + data.wifiName, mContext);
