@@ -28,7 +28,7 @@
 		                android:layout_height="wrap_content"
 		                android:gravity="center"
 		                android:paddingTop="37.33dp"
-		                android:text="视频加载中，请稍后..."
+		                android:text="视频加载中，请稍候..."
 		                android:textColor="#ffffff"
 		                android:textSize="24sp" /> 
 		        </LinearLayout>
