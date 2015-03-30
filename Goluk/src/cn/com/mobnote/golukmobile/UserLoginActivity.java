@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobonote.golukmobile.comm.GolukMobile;
@@ -63,6 +64,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
+		SysApplication.getInstance().addActivity(this);
 	}
 	@Override
 	protected void onResume() {
@@ -146,7 +148,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				if(Phonenum.equals("")){
 					isOnClick=false;
 				}
-				if(isOnClick&&!psw.equals("")){
+				if(!Phonenum.equals("")&&!psw.equals("")){
 					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
 					mBtnLogin.setEnabled(true);
 				}else{
@@ -250,7 +252,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					if(pwd.length()>=6 && pwd.length()<=16){
 						//网络判断
 						if(!UserUtils.isNetDeviceAvailable(mContext)){
-							console.toast("当前无网络链接", mContext);
+							console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 						}else{
 							//初始化定时器
 						initTimer();
@@ -300,6 +302,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				switch (code) {
 				case 200:
 					//登录成功跳转
+					SysApplication.getInstance().exit();//杀死前边所有的Activity
 					console.toast("登录成功！", mContext);
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
@@ -308,19 +311,24 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					UserUtils.showDialog(this, "服务端程序异常");
 					break;
 				case 405:
-					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
-					.setMessage("此手机号码还没有被注册")
-					.setNegativeButton("取消", null)
-					.setPositiveButton("注册", new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
-							it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
-							startActivity(it);
-						}
-					}).create().show();
+					String phone = mEditTextPhoneNumber.getText().toString();
+					if(UserUtils.isMobileNO(phone)){
+						new AlertDialog.Builder(this)
+						.setTitle("Goluk温馨提示：")
+						.setMessage("此手机号码还没有被注册")
+						.setNegativeButton("取消", null)
+						.setPositiveButton("注册", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
+								it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
+								startActivity(it);
+							}
+						}).create().show();
+					}else{
+						UserUtils.showDialog(this, "手机号格式错误,请重新输入");
+					}
 					break;
 				case 402:
 					console.toast("密码错误,请重试", mContext);
@@ -358,7 +366,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		runnable=new Runnable(){
 		@Override
 		public void run() {
-			console.toast("当前网络不好", mContext);
+			console.toast("当前网络不佳", mContext);
 			}
 		};
 	}

@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.user.UserUtils;
@@ -83,6 +84,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		mContext = this;
+		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserRegist");
@@ -140,6 +142,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						if(!UserUtils.isMobileNO(phone)){
 //								console.toast("手机号格式不对", mContext);
 //							mEditTextPhone.setError("手机号格式不正确");
+							mBtnIdentify.setEnabled(true);
 							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}
@@ -154,9 +157,10 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				if(!"".equals(phone)){
 					if(phone.length() == 11 && phone.startsWith("1")){ 
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
-//						mBtnIdentify.setBackgroundColor(R.color.user_identify_btn);
+						mBtnIdentify.setEnabled(true);
 					}else{
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
+						mBtnIdentify.setEnabled(false);
 					}
 				}else{
 					//手机号为空
@@ -314,7 +318,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			console.log(b + "");
 			mBtnRegist.setEnabled(true);
 		}else{
-			UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
+			mBtnIdentify.setEnabled(false);
+//			UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 		}
 		
 	}
@@ -330,7 +335,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		mEditTextPwd.setEnabled(true);
 		handler1.removeCallbacks(runnable);
 		if(1 == success){
-			
 			try{
 				String data = (String)obj;
 				console.log(data);
@@ -388,7 +392,9 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				case 440:
 					UserUtils.showDialog(this, "输入手机号异常");
 					break;
-
+				case 480:
+					UserUtils.showDialog(this, "验证码获取失败");
+					break;
 				default:
 					break;
 				}
@@ -417,7 +423,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			mBtnRegist.setFocusable(true);
 			if(password.length()>=6 && password.length()<=16){
 				if(!UserUtils.isNetDeviceAvailable(mContext)){
-					console.toast("当前无网络链接", mContext);
+					console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 				}else{
 					//初始化定时器
 				initTimer();
@@ -464,6 +470,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				switch (code) {
 				case 200:
 					//注册成功
+					SysApplication.getInstance().exit();//杀死之前的所有activity，实现一键退出
 					console.toast("注册成功", mContext);
 					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
 					startActivity(it);
@@ -484,6 +491,9 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					}else{
 						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 					}
+					break;
+				case 480:
+					UserUtils.showDialog(this, "验证码获取失败");
 					break;
 
 				default:

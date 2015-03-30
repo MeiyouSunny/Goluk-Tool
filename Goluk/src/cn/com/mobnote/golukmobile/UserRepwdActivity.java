@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R.id;
 import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.UserUtils;
@@ -78,6 +79,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.user_repwd);
 		
 		mContext = this;
+		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserRepwd");
@@ -140,11 +142,13 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				String phone = mEditTextPhone.getText().toString();
 				if(!"".equals(phone)){
-					if(phone.length() == 11 && phone.startsWith("1")){ 
+					if(phone.length() == 11 && phone.startsWith("1")){
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
 						mBtnOK.setEnabled(true);
+						mBtnIdentity.setEnabled(true);
 					}else{
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
+						mBtnIdentity.setEnabled(false);
 						mBtnOK.setEnabled(false);
 					}
 				}else{
@@ -381,23 +385,31 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					UserUtils.showDialog(this, "服务端程序异常");
 					break;
 				case 405:
-					new AlertDialog.Builder(this)
-			        .setTitle("Goluk温馨提示：")
-			        .setMessage("此手机号还未被注册")
-					.setNegativeButton("取消", null)
-					.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
-							Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
-							intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
-							startActivity(intentRepwd);
-						}
-					}).create().show();
+					String phone =  mEditTextPhone.getText().toString();
+					if(UserUtils.isMobileNO(phone)){
+						new AlertDialog.Builder(this)
+				        .setTitle("Goluk温馨提示：")
+				        .setMessage("此手机号还未被注册")
+						.setNegativeButton("取消", null)
+						.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// TODO Auto-generated method stub
+								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
+								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
+								startActivity(intentRepwd);
+							}
+						}).create().show();
+					}else{
+						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
+					}
 					break;
 				case 440:
 					UserUtils.showDialog(this, "输入手机号异常");
+					break;
+				case 480:
+					UserUtils.showDialog(this, "验证码获取失败");
 					break;
 				default:
 					
@@ -475,7 +487,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					break;
 				case 405:
 					String phone = mEditTextPhone.getText().toString();
-					if(UserUtils.isMobileNO(phone)){
+					if(UserUtils.isMobileNO(phone) && phone.startsWith("1")){
 						new AlertDialog.Builder(this)
 				        .setTitle("Goluk温馨提示：")
 				        .setMessage("此手机号还未被注册")
@@ -500,6 +512,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					break;
 				case 407:
 					UserUtils.showDialog(this, "输入验证码超时");
+					break;
+				case 480:
+					UserUtils.showDialog(this, "验证码获取失败");
 					break;
 
 				default:

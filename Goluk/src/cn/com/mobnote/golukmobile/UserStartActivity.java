@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
+import cn.com.mobnote.application.SysApplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class UserStartActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_start);
 
+		SysApplication.getInstance().addActivity(this);
 		initView();
 	}
 
@@ -51,6 +53,7 @@ public class UserStartActivity extends Activity implements OnClickListener {
 
 		case R.id.user_start_look:
 			//随便看看
+			SysApplication.getInstance().exit();//跳转之前杀死前边的所有Activiy。从而实现一键退出
 			Intent it2 = new Intent(UserStartActivity.this,MainActivity.class);
 			startActivity(it2);
 			break;
