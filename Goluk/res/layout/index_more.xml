@@ -105,10 +105,10 @@
 			android:id="@+id/local_video_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="14dp"
+			android:layout_marginLeft="21dp"
 			android:layout_toRightOf="@id/local_img"
 			android:text="@string/local_video_text"
-			android:textSize="16sp"
+			android:textSize="14sp"
 			android:textColor="#333333"
 			android:layout_centerVertical="true"/>
 		

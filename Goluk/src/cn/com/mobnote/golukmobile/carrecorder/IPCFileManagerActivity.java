@@ -7,13 +7,6 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.tachograph.comm.IPCManagerFn;
-import cn.com.tiros.api.FileUtils;
-
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -24,8 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -33,6 +26,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.api.FileUtils;
+
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint("ClickableViewAccessibility")
 public class IPCFileManagerActivity extends Activity implements OnClickListener, IPCManagerFn, OnTouchListener{

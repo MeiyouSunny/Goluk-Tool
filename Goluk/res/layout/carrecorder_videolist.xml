@@ -217,7 +217,7 @@
             android:layout_weight="1"
             android:background="@drawable/carrecorder_flle_edit_bg" >
 			
-            <ImageButton
+            <ImageView
                 android:duplicateParentState="true"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
@@ -226,7 +226,7 @@
                 android:background="@drawable/carrecorder_download_btn" 
                 android:contentDescription="@string/def"/>
             
-            <Button
+            <TextView
                 android:duplicateParentState="true"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
@@ -250,7 +250,7 @@
             android:layout_weight="1"
             android:background="@drawable/carrecorder_flle_edit_bg" >
 
-            <ImageButton
+            <ImageView
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -259,7 +259,7 @@
                 android:background="@drawable/carrecorder_delete_btn" 
                 android:contentDescription="@string/def"/>
             
-            <Button
+            <TextView
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
