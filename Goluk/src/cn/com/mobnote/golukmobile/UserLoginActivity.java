@@ -120,12 +120,12 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						}else{
 							isOnClick=false;
 //							console.toast("手机号格式不好", mContext);
-							UserUtils.showDialog(UserLoginActivity.this, "手机号格式不正确");
+							UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
 						}
 				}else{
 					isOnClick=false;
 //					mEditTextPhoneNumber.setError("手机号格式不正确");
-					UserUtils.showDialog(UserLoginActivity.this, "手机号格式不正确");
+					UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
 				}
 				if(isOnClick&&!psw.equals("")){
 					mBtnLogin.setBackgroundResource(R.drawable.icon_login);

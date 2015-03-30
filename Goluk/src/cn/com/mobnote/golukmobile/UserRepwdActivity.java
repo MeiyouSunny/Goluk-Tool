@@ -113,9 +113,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				if(!arg1){
 					if(!phone.equals("")){
 						if(!UserUtils.isMobileNO(phone)){
-//								console.toast("手机号格式不正确", mContext);
 //							mEditTextPhone.setError("手机号格式不正确");
-							UserUtils.showDialog(UserRepwdActivity.this, "手机号格式不正确");
+							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}
 				}
@@ -129,8 +128,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				if(!arg1){
 					if(!password.equals("")){
 						if(password.length()<6 || password.length()>16){
-							mEditTextPwd.setError("手机号格式不正确");
-							UserUtils.showDialog(UserRepwdActivity.this, "手机号格式不正确");
+//							mEditTextPwd.setError("手机号格式不正确");
+							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}
 				}
@@ -301,7 +300,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 			console.log(b + "");
 			mBtnOK.setEnabled(true);
 		}else{
-			UserUtils.showDialog(this, "手机号格式不正确，请重新输入");
+			UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 		}
 		/*if(!"".equals(phone)){
 			if(phone.startsWith("1") && phone.length() == 11){
@@ -341,6 +340,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
+		console.toast("发送中，请稍后", mContext);
 		if(1 == success){
 			try{
 				String data = (String)obj;
@@ -352,10 +352,10 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				/*unregisterReceiver(smsReceiver);
 				flag = false;*/
 				mIdentifyLoading.setVisibility(View.GONE);
+				console.toast("验证码已经发送，请查收短信", mContext);
 				switch (code) {
 				case 200:
 					//验证码获取成功
-					console.toast("下发验证码成功", mContext);
 					/**
 					 * 点击获取验证码的时候进行倒计时
 					 */
@@ -491,7 +491,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 							}
 						}).create().show();
 					}else{
-						UserUtils.showDialog(this, "手机号格式不正确，请重新输入");
+						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 					}
 					
 					break;

@@ -139,7 +139,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						if(!UserUtils.isMobileNO(phone)){
 //								console.toast("手机号格式不对", mContext);
 //							mEditTextPhone.setError("手机号格式不正确");
-							UserUtils.showDialog(UserRegistActivity.this, "手机号格式不正确");
+							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}
 				}
@@ -313,7 +313,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			console.log(b + "");
 			mBtnRegist.setEnabled(true);
 		}else{
-			UserUtils.showDialog(this, "手机号格式不正确，请重新输入");
+			UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 		}
 		
 	}
@@ -481,7 +481,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					if(UserUtils.isMobileNO(phone)){
 						UserUtils.showDialog(this, "输入验证码超时");
 					}else{
-						UserUtils.showDialog(this, "手机号格式不正确，请重新输入");
+						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 					}
 					break;
 
