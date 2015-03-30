@@ -131,7 +131,8 @@
                 android:layout_height="38dp"
                 android:id="@+id/user_regist_btn"
                 android:background="@drawable/icon_more"
-                android:text="@string/user_regist_btn" />
+                android:text="@string/user_regist_btn" 
+                android:textColor="#fff"/>
         </RelativeLayout>
         <LinearLayout 
             android:layout_width="match_parent"

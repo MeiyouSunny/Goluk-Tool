@@ -90,6 +90,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		// title
 		mTextViewTitle.setText("注册");
 	}
+	@SuppressLint("ResourceAsColor")
 	public void initView() {
 		// title
 		mBackButton = (Button) findViewById(R.id.back_btn);
@@ -136,12 +137,15 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				if(!arg1){
 					if(!phone.equals("")){
 						if(!UserUtils.isMobileNO(phone)){
-								console.toast("手机号格式不对", mContext);
+//								console.toast("手机号格式不对", mContext);
+//							mEditTextPhone.setError("手机号格式不正确");
+							UserUtils.showDialog(UserRegistActivity.this, "手机号格式不正确");
 						}
 					}
 				}
 			}
 		});
+		
 		mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
@@ -149,6 +153,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				if(!"".equals(phone)){
 					if(phone.length() == 11 && phone.startsWith("1")){ 
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
+//						mBtnIdentify.setBackgroundColor(R.color.user_identify_btn);
 					}else{
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
 					}
@@ -341,13 +346,15 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					/**
 					 * 点击获取验证码的时候进行倒计时
 					 */
+					mEditTextPhone.setEnabled(false);
 					mCountDownhelper = new CountDownButtonHelper(mBtnIdentify, 60, 1);
 					mCountDownhelper.setOnFinishListener(new OnFinishListener() {
 						@Override
 						public void finish() {
 							// TODO Auto-generated method stub
-							mBtnIdentify.setText("重新发送");
+							mBtnIdentify.setText("再次发送");
 							//倒计时结束后手机号、密码可以更改
+							mEditTextPhone.setEnabled(true);
 						}
 					});
 					mCountDownhelper.start();
@@ -413,7 +420,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				}else{
 					//初始化定时器
 				initTimer();
-				handler1.postDelayed(runnable, 3000);//san 秒执行一次runnable.
+				handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.
 				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 				console.log(isRegist);
@@ -470,7 +477,12 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					UserUtils.showDialog(this, "请输入正确的验证码");
 					break;
 				case 407:
-					UserUtils.showDialog(this, "输入验证码超时");
+					String phone = mEditTextPhone.getText().toString();
+					if(UserUtils.isMobileNO(phone)){
+						UserUtils.showDialog(this, "输入验证码超时");
+					}else{
+						UserUtils.showDialog(this, "手机号格式不正确，请重新输入");
+					}
 					break;
 
 				default:
@@ -493,7 +505,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		runnable=new Runnable(){
 		@Override
 		public void run() {
-			console.toast("当前网络不好", mContext);
+			console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 			}
 		};
 	}

@@ -105,7 +105,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		mBtnIdentity.setOnClickListener(this);
 		mBtnOK.setOnClickListener(this);
 		
-
+		//手机号输入后，离开立即判断
 		mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View arg0, boolean arg1) {
@@ -113,7 +113,24 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				if(!arg1){
 					if(!phone.equals("")){
 						if(!UserUtils.isMobileNO(phone)){
-								console.toast("手机号格式不对", mContext);
+//								console.toast("手机号格式不正确", mContext);
+//							mEditTextPhone.setError("手机号格式不正确");
+							UserUtils.showDialog(UserRepwdActivity.this, "手机号格式不正确");
+						}
+					}
+				}
+			}
+		});
+		//密码输入后，离开立即判断
+		mEditTextPwd.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				String password = mEditTextPwd.getText().toString();
+				if(!arg1){
+					if(!password.equals("")){
+						if(password.length()<6 || password.length()>16){
+							mEditTextPwd.setError("手机号格式不正确");
+							UserUtils.showDialog(UserRepwdActivity.this, "手机号格式不正确");
 						}
 					}
 				}
@@ -342,13 +359,15 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					/**
 					 * 点击获取验证码的时候进行倒计时
 					 */
+					mEditTextPhone.setEnabled(false);
 					mCountDownHelper = new CountDownButtonHelper(mBtnIdentity, 60, 1);
 					mCountDownHelper.setOnFinishListener(new OnFinishListener() {
 						
 						@Override
 						public void finish() {
 							// TODO Auto-generated method stub
-							mBtnIdentity.setText("重新发送");
+							mBtnIdentity.setText("再次发送");
+							mEditTextPhone.setEnabled(true);
 							mEditTextPhone.setFocusable(true);
 							mEditTextPwd.setFocusable(true);
 						}
@@ -371,7 +390,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							// TODO Auto-generated method stub
-							Intent intentRepwd = new Intent(UserRepwdActivity.this,UserTestRegistActivity.class);
+							Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
 							intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
 							startActivity(intentRepwd);
 						}
@@ -410,14 +429,13 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				//隐藏软件盘
 			   UserUtils.hideSoftMethod(this);
 				mLoading.setVisibility(View.VISIBLE);
-				mEditTextPhone.setEnabled(true);
-				mEditTextIdentify.setEnabled(true);
-				mEditTextPwd.setEnabled(true);
+				mEditTextPhone.setEnabled(false);
+				mEditTextIdentify.setEnabled(false);
+				mEditTextPwd.setEnabled(false);
 			}
 		}else{
 //			UserUtils.showDialog(this, "请先获取验证码");
 			mBtnOK.setBackgroundResource(R.drawable.icon_more);
-//			mBtnOK.setFocusable(false);
 		}
 	}
 	/**
@@ -437,18 +455,45 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				String msg = json.getString("msg");
 				
 				mLoading.setVisibility(View.GONE);
+				mEditTextPhone.setEnabled(true);
+				mEditTextPwd.setEnabled(true);
+				mEditTextIdentify.setEnabled(true);
 				switch (code) {
 				case 200:
 					//注册成功
-					console.toast("重置密码成功", mContext);
-					Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
-					startActivity(it);
+					String password = mEditTextPwd.getText().toString();
+					if(password.length()>=6 && password.length()<=16){
+						console.toast("重置密码成功", mContext);
+						Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
+						startActivity(it);
+					}else{
+						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
+					}
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
 					break;
 				case 405:
-					UserUtils.showDialog(this, "此手机号还未被注册");
+					String phone = mEditTextPhone.getText().toString();
+					if(UserUtils.isMobileNO(phone)){
+						new AlertDialog.Builder(this)
+				        .setTitle("Goluk温馨提示：")
+				        .setMessage("此手机号还未被注册")
+						.setNegativeButton("取消", null)
+						.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// TODO Auto-generated method stub
+								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
+								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
+								startActivity(intentRepwd);
+							}
+						}).create().show();
+					}else{
+						UserUtils.showDialog(this, "手机号格式不正确，请重新输入");
+					}
+					
 					break;
 				case 406:
 					UserUtils.showDialog(this, "请输入正确的验证码");
@@ -471,16 +516,16 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 	/**
 	 * 销毁广播
 	 */
-	/*@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		Log.i("bug", smsReceiver+"--------");
-		unregisterReceiver(smsReceiver);
-	}*/
 	private boolean flag = false;
 	private int click = 0;
 	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(click == 1&&smsReceiver.isInitialStickyBroadcast()){
+			unregisterReceiver(smsReceiver);
+		}
+	}
 	/*@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
