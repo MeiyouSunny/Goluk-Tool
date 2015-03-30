@@ -652,7 +652,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		case R.id.mSettingBtn:
 		case R.id.mSettingText:
 		case R.id.mSettingLayout:
-			 Intent setting = new Intent(CarRecorderActivity.this,LiveShareSettingActivity.class);
+			 Intent setting = new Intent(CarRecorderActivity.this,SettingsActivity.class);
 			 startActivity(setting);
 			break;
 
