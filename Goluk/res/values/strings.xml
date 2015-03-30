@@ -63,7 +63,7 @@
 	<string name="wifi_link_text">未连接</string>
 	<string name="square_title_text">视频广场</string>
 	<string name="watch_live_text">轻触继续观看</string>
-	<string name="video_live_5s_tip">稍后片刻,即将进入直播</string>
+	<string name="video_live_5s_tip">稍候片刻,即将进入直播</string>
 	
 	<string name="video_music_title_text">选择音乐</string>
 	<string name="video_music_complete_text">完成</string>
