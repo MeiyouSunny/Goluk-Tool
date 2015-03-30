@@ -96,6 +96,8 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private List<String> selectedListData=null;
 	/** 获取当前屏幕宽度 */
 	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+	/** 获取文件列表中标识 */
+	private boolean isGetFileListDataing=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -515,10 +517,14 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月25日
 	 */
 	private void getRecorderFileFromLocal(int type) {
+		isGetFileListDataing=true;
 		mOprateType = type;
 		updateButtonState(type);
 		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, 0);
 		GFileUtils.writeIPCLog("===========获取文件列表===1111===================isSucess=="+isSucess);
+		if(!isSucess){
+			isGetFileListDataing=false;
+		}
 	}
 	
 	/**
@@ -591,52 +597,61 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				finish();
 				break;
 			case R.id.video_jcsp:
-				if(!isEditState){
-					if(TYPE_SHORTCUT != mCurrentType){
-						mOprateType = TYPE_SHORTCUT;
-						if(null == mWonderfulVideoAdapter){
-							getRecorderFileFromLocal(TYPE_SHORTCUT);
-						}else{
-							mCurrentType = mOprateType;
-							updateButtonState(mCurrentType);
-							mWonderfulVideoList.setVisibility(View.VISIBLE);
-							mEmergencyVideoList.setVisibility(View.GONE);
-							mLoopVideoList.setVisibility(View.GONE);
+				if(!isGetFileListDataing){
+					if(!isEditState){
+						if(TYPE_SHORTCUT != mCurrentType){
+							mOprateType = TYPE_SHORTCUT;
+							if(null == mWonderfulVideoAdapter){
+								getRecorderFileFromLocal(TYPE_SHORTCUT);
+							}else{
+								mCurrentType = mOprateType;
+								updateButtonState(mCurrentType);
+								mWonderfulVideoList.setVisibility(View.VISIBLE);
+								mEmergencyVideoList.setVisibility(View.GONE);
+								mLoopVideoList.setVisibility(View.GONE);
+							}
 						}
 					}
 				}
+				
 				break;
 			case R.id.video_jjyx:
-				if(!isEditState){
-					if(TYPE_URGENT != mCurrentType){
-						mOprateType = TYPE_URGENT;
-						if(null == mEmergencyVideoAdapter){
-							getRecorderFileFromLocal(TYPE_URGENT);
-						}else{
-							mCurrentType = mOprateType;
-							updateButtonState(mCurrentType);
-							mWonderfulVideoList.setVisibility(View.GONE);
-							mEmergencyVideoList.setVisibility(View.VISIBLE);
-							mLoopVideoList.setVisibility(View.GONE);
-						}
-					}			
+				if(!isGetFileListDataing){
+					if(!isEditState){
+						if(TYPE_URGENT != mCurrentType){
+							mOprateType = TYPE_URGENT;
+							if(null == mEmergencyVideoAdapter){
+								getRecorderFileFromLocal(TYPE_URGENT);
+							}else{
+								mCurrentType = mOprateType;
+								updateButtonState(mCurrentType);
+								mWonderfulVideoList.setVisibility(View.GONE);
+								mEmergencyVideoList.setVisibility(View.VISIBLE);
+								mLoopVideoList.setVisibility(View.GONE);
+							}
+						}			
+					}
 				}
+				
 				break;
 			case R.id.video_xhyx:
-				if(!isEditState){
-					if(TYPE_CIRCULATE != mCurrentType){
-						mOprateType = TYPE_CIRCULATE;
-						if(null == mLoopVideoAdapter){
-							getRecorderFileFromLocal(TYPE_CIRCULATE);
-						}else{
-							mCurrentType = mOprateType;
-							updateButtonState(mCurrentType);
-							mWonderfulVideoList.setVisibility(View.GONE);
-							mEmergencyVideoList.setVisibility(View.GONE);
-							mLoopVideoList.setVisibility(View.VISIBLE);
+				if(!isGetFileListDataing){
+					if(!isEditState){
+						if(TYPE_CIRCULATE != mCurrentType){
+							mOprateType = TYPE_CIRCULATE;
+							if(null == mLoopVideoAdapter){
+								getRecorderFileFromLocal(TYPE_CIRCULATE);
+							}else{
+								mCurrentType = mOprateType;
+								updateButtonState(mCurrentType);
+								mWonderfulVideoList.setVisibility(View.GONE);
+								mEmergencyVideoList.setVisibility(View.GONE);
+								mLoopVideoList.setVisibility(View.VISIBLE);
+							}
 						}
 					}
 				}
+				
 				break;
 			case R.id.mEditBtn:
 				if(!isEditState){
@@ -884,6 +899,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
 			if (IPC_VDCP_Msg_Query == msg) {
+				isGetFileListDataing=false;
 				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
