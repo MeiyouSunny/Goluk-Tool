@@ -114,7 +114,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			String number = itLoginPhone.getStringExtra("intentLogin").toString();
 			Log.i("user", number);
 			mEditTextPhone.setText(number);
-			
+			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 		}
 		Intent itRepassword = getIntent(); 
 		if(null != itRepassword.getStringExtra("intentRepassword")){
