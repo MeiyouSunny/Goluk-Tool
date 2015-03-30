@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
 import cn.com.mobnote.util.console;
+import cn.com.mobnote.wifi.WiFiConnection;
+import cn.com.mobnote.wifi.WifiAutoConnectManager;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -56,7 +60,7 @@ public class WiFiListAdapter extends BaseAdapter{
 	}
 	
 	/**
-	 * 
+	 * 修改wifi连接状态
 	 * @return
 	 */
 	public void changeWiFiStatus(){
@@ -69,6 +73,7 @@ public class WiFiListAdapter extends BaseAdapter{
 		}
 		this.notifyDataSetChanged();
 	}
+	
 	
 	@Override
 	public int getCount() {

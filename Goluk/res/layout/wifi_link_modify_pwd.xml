@@ -70,14 +70,14 @@
 			android:layout_toRightOf="@id/wifi_name_title"
 			android:background="#b1b1b1"/>
 		
-		<EditText
+		<TextView
 			android:id="@+id/wifi_name_text"
 			android:layout_width="match_parent"
 			android:layout_height="42dp"
 			android:layout_marginLeft="14dp"
+			android:gravity="center_vertical"
 			android:layout_toRightOf="@id/name_solid"
 			android:background="#00000000"
-			android:inputType="text"
 			android:text="@string/wifi_link_22_text"
 			android:textColor="#595959"
 			android:textSize="16sp"/>

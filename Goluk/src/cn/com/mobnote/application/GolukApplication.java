@@ -22,6 +22,7 @@ import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -64,7 +65,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private WiFiConnection mWiFiConnection = null;
 	
 	private static GolukApplication instance=null;
-	private IPCControlManager mIPCControlManager=null;
+	public IPCControlManager mIPCControlManager=null;
 	/** 登录IPC是否登录成功 */
 	private boolean isIpcLoginSuccess = false;
 	/** 行车记录仪缓冲路径 */
@@ -482,6 +483,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						if(null != mMainActivity){
 							mMainActivity.wiFiLinkStatus(2);
 						}
+						
+						//如果在wifi连接页面,通知连接成功
+						if(mPageSource == "WiFiLinkList"){
+							((WiFiLinkListActivity)mContext).ipcLinkedCallBack();
+						}
 					}
 					else{
 						isIpcLoginSuccess = false;
@@ -529,6 +535,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					//文件传输中消息 msg = 0
 					//param1 = 0,下载完成
 					//param1 = 1,下载中
+					//param2 = json, 区分mp4提示下载完成声音
 					ipcVideoDownLoadCallBack(param1,(String)param2);
 				break;
 			}

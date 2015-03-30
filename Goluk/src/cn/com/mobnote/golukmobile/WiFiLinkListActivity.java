@@ -14,6 +14,7 @@ import cn.com.mobnote.wifi.WifiAutoConnectManager;
 import cn.com.mobnote.wifi.WifiConnCallBack;
 import cn.com.mobnote.wifi.WifiRsBean;
 import cn.com.mobnote.wifi.WifiConnectManagerSupport.WifiCipherType;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -76,6 +77,8 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	/** wifi列表适配器 */
 	public WiFiListAdapter mWiFiListAdapter = null;
 	public ArrayList<WiFiListData> mWiFiListData = null;
+	/** 当前是否已连接ipc wifi */
+	private boolean mHasLinked = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -182,6 +185,40 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		console.log("开始连接选定wifi---connectWiFi---" + wifiName + "---");
 	}
 	
+	/**
+	 * 判断已连接的wifi是否是小车本热点
+	 */
+	public void checkLinkWiFi(){
+		WifiManager mWifiManage = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+		WiFiConnection connection = new WiFiConnection(mWifiManage,mContext);
+		WifiInfo info = connection.getWiFiInfo();
+		WifiAutoConnectManager wac = new WifiAutoConnectManager(mWifiManage,this);
+		boolean b = wac.getEffectiveWifi(info);
+		console.log("判断已连接的wifi是否是小车本热点---b---" + b);
+		mHasLinked = b;
+	}
+	
+	/**
+	 * 通知logic连接ipc
+	 */
+	public void sendLogicLinkIpc(){
+		if(mHasLinked){
+			//调用ipc接口
+			console.log("通知logic连接ipc---sendLogicLinkIpc---1");
+			//wifi环境连接状态1：成功|0失败,{“state”:1,“domain”:”192.168.62.1”}
+			String condi = "{\"state\":1,\"domain\":\"192.168.62.1\"}";
+			boolean b =mApp.mIPCControlManager.setIPCWifiState(true,condi);
+			console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+		}
+	}
+	
+	/**
+	 * ipc连接成功回调
+	 */
+	public void ipcLinkedCallBack(){
+		console.log("ipc连接成功回调---ipcLinkedCallBack---");
+	}
+	
 	@Override
 	protected void onResume(){
 		mApp.setContext(this,"WiFiLinkList");
@@ -217,9 +254,13 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 				console.toast(message, mContext);
 			break;
 			case 1:
+				//检测是否连接ipc-wifi
+				checkLinkWiFi();
 				// wifi连接成功
 				mWiFiListAdapter.changeWiFiStatus();
 				
+				//通知logic连接ipc
+				sendLogicLinkIpc();
 				//回到首页
 				//SysApplication.getInstance().exit();
 			break;
