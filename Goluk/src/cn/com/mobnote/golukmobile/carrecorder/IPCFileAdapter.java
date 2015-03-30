@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+	private Context mContext=null;
 	private LayoutInflater inflater;
 	private List<DoubleVideoInfo> mDataList;
 	private List<String> mGroupNameList;
@@ -27,6 +28,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 	private float density;
 	
 	public IPCFileAdapter(Context c){
+		mContext=c;
 		inflater = LayoutInflater.from(c);
 		mDataList=new ArrayList<DoubleVideoInfo>();
 		mGroupNameList = new ArrayList<String>();
@@ -35,6 +37,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 	}
 	
 	public void setData(List<String> groupname, List<DoubleVideoInfo> data){
+		mDataList.clear();
 		mDataList.addAll(data);
 		mGroupNameList.addAll(groupname);
 		count = mDataList.size();
@@ -47,6 +50,8 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 			convertView = inflater.inflate(R.layout.carrecorder_videolist_item, parent, false);
 			holder.mVideoLayout1 = (RelativeLayout)convertView.findViewById(R.id.mVideoLayout1);
 			holder.mVideoLayout2 = (RelativeLayout)convertView.findViewById(R.id.mVideoLayout2);
+			holder.mTMLayout1 = (RelativeLayout)convertView.findViewById(R.id.mTMLayout1);
+			holder.mTMLayout2 = (RelativeLayout)convertView.findViewById(R.id.mTMLayout2);
 			holder.image1 = (ImageView)convertView.findViewById(R.id.video_first_needle1);
 			holder.image2 = (ImageView)convertView.findViewById(R.id.video_first_needle2);
 			holder.mVideoCountTime1 = (TextView)convertView.findViewById(R.id.video_countTime1);
@@ -73,10 +78,17 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
+		IPCFileManagerActivity a = (IPCFileManagerActivity)mContext;
+		if(!a.getIsEditState()){
+			holder.mTMLayout1.setVisibility(View.GONE);
+			holder.mTMLayout2.setVisibility(View.GONE);
+		}
+		
 		holder.mVideoLayout2.setVisibility(View.GONE);
 		VideoInfo mVideoInfo1 = mDataList.get(position).getVideoInfo1();
 		VideoInfo mVideoInfo2 = mDataList.get(position).getVideoInfo2();
-		
+		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
+		holder.mTMLayout2.setTag("");
 		if(1080 == mVideoInfo1.videoHP){
 			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
 		}else{
@@ -94,6 +106,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		}
 		
 		if(null != mVideoInfo2){
+			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
 			if(1080 == mVideoInfo2.videoHP){
 				holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_1080);
@@ -146,6 +159,8 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 	class ViewHolder {
 		RelativeLayout mVideoLayout1;
 		RelativeLayout mVideoLayout2;
+		RelativeLayout mTMLayout1;
+		RelativeLayout mTMLayout2;
 		ImageView image1;
 		ImageView image2;
 		TextView mVideoCountTime1;

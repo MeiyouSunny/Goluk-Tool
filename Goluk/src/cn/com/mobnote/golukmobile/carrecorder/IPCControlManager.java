@@ -139,6 +139,16 @@ public class IPCControlManager implements IPCManagerFn{
 	public void downloadFile(String filename, String tag, String savepath){
 		mIPCManagerClass.IPCManager_AddDownloadFile(filename, tag, savepath);
 	}
+	
+	/**
+	 * 删除文件
+	 * @param filename 文件名称
+	 * @author xuhw
+	 * @date 2015年3月25日
+	 */
+	public void deleteFile(String filename){
+		mIPCManagerClass.IPCManager_VDCP_CommRequest(IPC_VDCPCmd_Erase, filename);
+	}
 
 	/**
 	 * 添加IPC管理监听
