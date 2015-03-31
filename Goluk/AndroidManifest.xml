@@ -56,7 +56,7 @@
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		
 		
 		
