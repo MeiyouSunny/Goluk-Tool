@@ -30,11 +30,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
 /**
  * 注册 
  * 
@@ -309,8 +310,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			mEditTextPwd.setEnabled(false);
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
 			console.log(isIdentify);
-			boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
-
+			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
+			
 			UserUtils.hideSoftMethod(this);
 			mIdentifyLoading.setVisibility(View.VISIBLE);
 			registerReceiver(smsReceiver, smsFilter);
@@ -431,7 +432,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 				console.log(isRegist);
-				boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Register, isRegist);
+				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
+				
 				console.log(b+"");
 				if(b){
 					//隐藏软件盘

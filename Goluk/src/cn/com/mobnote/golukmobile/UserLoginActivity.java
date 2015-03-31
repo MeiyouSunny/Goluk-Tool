@@ -24,9 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
 
 /**
  * 

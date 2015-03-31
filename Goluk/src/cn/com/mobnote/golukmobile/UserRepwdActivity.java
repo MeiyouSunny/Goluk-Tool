@@ -12,7 +12,6 @@ import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.util.console;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,6 +30,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -300,8 +300,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 			mEditTextPwd.setEnabled(false);
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"2\"}";
 			console.log(isIdentify);
-			boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
-
+			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
+			
 			UserUtils.hideSoftMethod(this);
 			mIdentifyLoading.setVisibility(View.VISIBLE);
 			registerReceiver(smsReceiver, smsFilter);
