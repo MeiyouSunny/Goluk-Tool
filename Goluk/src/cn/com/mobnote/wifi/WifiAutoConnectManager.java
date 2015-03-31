@@ -26,7 +26,7 @@ public class WifiAutoConnectManager extends BroadcastReceiver {
 	// private static final String DEF_PASS = "cellstar2001hanzhengdujing"; //
 	// 默认密码
 	private static final String FILENAME = "wifi.config"; // 默认文件名
-	private static final String DEF_STITILE = "tcay";// wifi默认前缀
+	private static final String DEF_STITILE = "TC";// wifi默认前缀
 	// private static final String DEF_SSID = "angmafan"; // SSid
 
 	private static final int TIMEER = 2000; // 定时器间隔时间

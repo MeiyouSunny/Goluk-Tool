@@ -121,7 +121,7 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 		//连接ipc热点wifi---调用ipc接口
 		console.log("通知logic连接ipc---setIpcLinkPhone---1");
 		//写死ipc ip地址
-		String ip = "192.168.43.100";
+		String ip = "192.168.43.234";
 		boolean b =mApp.mIPCControlManager.setIPCWifiState(true,ip);
 		console.log("通知logic连接ipc---setIpcLinkPhone---2---b---" + b);
 		
@@ -150,7 +150,7 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 					way = "192.168.43.1";
 					//String[] network = way.split(".");
 					//String ip = network[0] + "." + network[1] + "." + network[2] + ".100";
-					String ip = "192.168.43.100";
+					String ip = "192.168.43.234";
 					//连接ipc热点wifi---调用ipc接口
 					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---1");
 					String json = "{\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";

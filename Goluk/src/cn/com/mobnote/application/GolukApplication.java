@@ -24,6 +24,7 @@ import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -39,6 +40,7 @@ import cn.com.tiros.api.Const;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
@@ -501,6 +503,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						//如果在wifi连接页面,通知连接成功
 						if(mPageSource == "WiFiLinkList"){
 							((WiFiLinkListActivity)mContext).ipcLinkedCallBack();
+						}
+						
+						//如果在wifi连接页面,通知连接成功
+						if(mPageSource == "WiFiLinkCreateHot"){
+							//((WiFiLinkListActivity)mContext).ipcLinkedCallBack();
+							Intent i = new Intent(mContext, CarRecorderActivity.class);
+							startActivity(i);
 						}
 					}
 					else{
