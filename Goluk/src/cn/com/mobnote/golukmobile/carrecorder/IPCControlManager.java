@@ -68,6 +68,16 @@ public class IPCControlManager implements IPCManagerFn{
 	}
 	
 	/**
+	 * 通知ipc连接手机热点
+	 * @param json
+	 * @return
+	 */
+	public boolean setIpcLinkPhoneHot(String json){
+		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetWifiCfg, json);
+		return isSucess;
+	}
+	
+	/**
 	 * 视频截图
 	 * @author xuhw
 	 * @date 2015年3月21日

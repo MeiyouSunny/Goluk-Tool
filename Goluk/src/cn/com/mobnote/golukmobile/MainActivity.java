@@ -317,9 +317,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					break;
 					case 3:
 						//检测是否已连接小车本热点
-						checkLinkWiFi();
+						boolean b = checkLinkWiFi();
 						//网络状态改变
-						mApp.VerifyWiFiConnect();
+						mApp.VerifyWiFiConnect(b);
 					break;
 					
 					
@@ -575,17 +575,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**
 	 * 判断已连接的wifi是否是小车本热点
 	 */
-	private void checkLinkWiFi(){
+	private boolean checkLinkWiFi(){
 		WifiManager mWifiManage = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		WiFiConnection connection = new WiFiConnection(mWifiManage,mContext);
 		WifiInfo info = connection.getWiFiInfo();
 		WifiAutoConnectManager wac = new WifiAutoConnectManager(mWifiManage,this);
 		boolean b = wac.getEffectiveWifi(info);
-		if(b){
-			String wifiName = info.getSSID();
-			//保存wifi校验名称
-			WiFiConnection.SaveWiFiName(wifiName);
-		}
+		return b;
+//		if(b){
+//			String wifiName = info.getSSID();
+//			//保存wifi校验名称
+//			WiFiConnection.SaveWiFiName(wifiName);
+//		}
 	}
 	
 	/**

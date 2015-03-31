@@ -2,6 +2,7 @@ package cn.com.mobnote.wifi;
 
 import java.util.regex.Pattern;
 
+import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WifiConnectManagerSupport.WifiCipherType;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -45,10 +46,10 @@ public class WifiAutoConnectManager extends BroadcastReceiver {
 		public void run() {
 			// handler自带方法实现定时器
 			try {
-				Log.d(TAG, "time----------------2");
+				console.log( "time----------------2------count---" + count);
 
 				// 如果12秒没有返回 返回连接错误
-				if (count == 5) {
+				if (count == 100) {
 					count = 0;
 					handlerTime.removeCallbacks(timeRunnable);
 					sendError();
@@ -336,8 +337,9 @@ public class WifiAutoConnectManager extends BroadcastReceiver {
 				Thread.sleep(500);
 				// 如果循环十次附近没有wifi 返回错误
 
-				Log.d(TAG, "wificount---------wificount222222" + count);
-				if (count == 10) {
+				//Log.d(TAG, "wificount---------wificount222222" + count);
+				console.log("wificount---------wificount222222" + count);
+				if (count == 100) {
 
 					return false;
 				}

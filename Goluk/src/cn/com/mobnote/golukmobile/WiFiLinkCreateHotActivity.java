@@ -3,7 +3,10 @@ package cn.com.mobnote.golukmobile;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
+import cn.com.mobnote.util.console;
 import android.os.Bundle;
+import android.os.Handler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +16,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -46,8 +51,33 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 	private ImageButton mBackBtn = null;
 	/** 描述title*/
 	private TextView mDescTitleText = null;
+	/** wifi名字 */
+	private EditText mWiFiName = null;
+	/** wifi密码 */
+	private EditText mWiFiPwd = null;
 	/** 下一步按钮 */
 	private Button mNextBtn = null;
+	/** loading */
+	private RelativeLayout mLoading = null;
+	
+	private WifiApAdmin mWifiApAdmin = null;
+	
+	@SuppressLint("HandlerLeak")
+	public Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch(msg.what){
+				case 10:
+					//创建热点失败
+				break;
+				case 11:
+					//创建热点成功
+					console.log("创建热点成功---startWifiAp---2");
+					//通知ipc连接手机
+					setIpcLinkPhone();
+				break;
+			}
+		};
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,8 +101,11 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 	@SuppressLint("HandlerLeak")
 	private void init(){
 		//获取页面元素
+		mLoading = (RelativeLayout)findViewById(R.id.loading_layout);
 		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
 		mDescTitleText = (TextView) findViewById(R.id.textView1);
+		mWiFiName = (EditText) findViewById(R.id.wifi_name_text);
+		mWiFiPwd = (EditText) findViewById(R.id.wifi_pwd_text);
 		mNextBtn = (Button)findViewById(R.id.next_btn);
 		
 		//注册事件
@@ -82,6 +115,75 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 		mDescTitleText.setText(Html.fromHtml("3.修改与<font color=\"#28b6a4\">Goluk 相连手机</font>的 WiFi 热点信息"));
 	}
 	
+	private void setIpcLinkPhone(){
+		//连接ipc热点wifi---调用ipc接口
+		console.log("通知logic连接ipc---setIpcLinkPhone---1");
+		//写死ipc ip地址
+		String ip = "192.168.1.100";
+		boolean b =mApp.mIPCControlManager.setIPCWifiState(true,ip);
+		console.log("通知logic连接ipc---setIpcLinkPhone---2---b---" + b);
+	}
+	
+	/**
+	 * 设置ipc连接手机热点
+	 */
+	private void setIpcLinkPhoneHot(){
+		//获取wifi名字
+		String wifiName = mWiFiName.getText().toString().trim();
+		if(null != wifiName && !"".equals(wifiName)){
+			//获取pwd
+			String pwd = mWiFiPwd.getText().toString().trim();
+			if(null != pwd && !"".equals(pwd)){
+				if(pwd.length() > 7){
+					//显示loading 
+					mLoading.setVisibility(View.VISIBLE);
+					
+					mWifiApAdmin = new WifiApAdmin(this,mHandler);
+					String way = mWifiApAdmin.getIPAddress();
+					way = "192.168.1.1";
+					//String[] network = way.split(".");
+					//String ip = network[0] + "." + network[1] + "." + network[2] + ".100";
+					String ip = "192.168.1.100";
+					//连接ipc热点wifi---调用ipc接口
+					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---1");
+					String json = "{\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
+					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
+					boolean b =mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
+					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
+
+				}
+				else{
+					console.toast("WiFi热点密码长度必须大于等于8位", mContext);
+				}
+			}
+			else{
+				console.toast("WiFi热点密码不能为空", mContext);
+			}
+		}
+		else{
+			console.toast("WiFi热点名称不能为空", mContext);
+		}
+//		Intent complete = new Intent(WiFiLinkCreateHotActivity.this,WiFiLinkCompleteActivity.class);
+//		startActivity(complete);
+	}
+	
+	/**
+	 * 创建手机热点
+	 */
+	public void createPhoneHot(){
+		//隐藏loading
+		mLoading.setVisibility(View.GONE);
+		
+		String wifiName = mWiFiName.getText().toString().trim();
+		String pwd = mWiFiPwd.getText().toString().trim();
+		//连接ipc热点wifi---调用ipc接口
+		//调用韩峥接口创建手机热点
+		console.log("创建手机热点---startWifiAp---1");
+		mWifiApAdmin = new WifiApAdmin(this,mHandler);
+		if(!mWifiApAdmin.isWifiApEnabled()){
+			mWifiApAdmin.startWifiAp(wifiName, pwd);
+		}
+	}
 	
 	@Override
 	protected void onResume(){
@@ -99,8 +201,8 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 				finish();
 			break;
 			case R.id.next_btn:
-				Intent complete = new Intent(WiFiLinkCreateHotActivity.this,WiFiLinkCompleteActivity.class);
-				startActivity(complete);
+				//设置ipc连接手机热点信息
+				setIpcLinkPhoneHot();
 			break;
 		}
 	}

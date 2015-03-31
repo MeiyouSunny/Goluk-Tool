@@ -147,6 +147,12 @@
 		android:textColor="@color/white"
 		android:text="@string/next_text" />
 	
+	<include
+		android:id="@+id/loading_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		layout="@layout/loading"/>
 </RelativeLayout>
 
 

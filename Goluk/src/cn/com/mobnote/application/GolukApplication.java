@@ -22,6 +22,7 @@ import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
@@ -220,6 +221,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * 验证wifi链接状态
 	 */
 	public void VerifyWiFiConnect(){
+		
 		//判断小车本wifi是否链接成功
 //		mWifiManage = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
 //		mWiFiConnection = new WiFiConnection(mWifiManage,mContext);
@@ -239,6 +241,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //		}
 	}
 	
+	/**
+	 * 验证wifi链接状态
+	 */
+	public void VerifyWiFiConnect(boolean b){
+		if(b){
+			//如果在wifi连接页面,通知连接成功
+			if(mPageSource == "WiFiLinkList"){
+				console.log("ipc热点连接成功---VerifyWiFiConnect---1");
+				//((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
+			}
+		}
+	}
 	/**
 	 * 首页,在线视频基础数据,图片下载数据回调
 	 * @param status,0/1,基础数据/图片下载
@@ -436,7 +450,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		*/
 		
-		//console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+		console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		//IPC控制连接状态 event = 0
 		if(ENetTransEvent_IPC_VDCP_ConnectState == event){
 			//如果不是连接成功,都标识为失败
@@ -518,6 +532,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				break;
 				case IPC_VDCP_Msg_DeviceStatus:
 					//msg = 1006 查询设备状态
+				break;
+				case IPC_VDCPCmd_SetWifiCfg:
+					//msg = 1012 设置IPC系统WIFI配置
+					//param1 = 0 成功 | 失败
+					if(0 == param1){
+						//如果在wifi连接页面,通知连接成功
+						if(mPageSource == "WiFiLinkCreateHot"){
+							((WiFiLinkCreateHotActivity)mContext).createPhoneHot();
+						}
+					}
 				break;
 			}
 		}

@@ -78,7 +78,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	public WiFiListAdapter mWiFiListAdapter = null;
 	public ArrayList<WiFiListData> mWiFiListData = null;
 	/** 当前是否已连接ipc wifi */
-	private boolean mHasLinked = false;
+	private boolean mHasLinked = true;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -157,7 +157,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	 */
 	public void connectWiFi(String wifiName,String pwd){
 		mLoading.setVisibility(View.VISIBLE);
-		//保存wifi校验名称
+		//保存wifi校验名称 chenxy
 		WiFiConnection.SaveWiFiName(wifiName);
 		
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
@@ -188,35 +188,45 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	/**
 	 * 判断已连接的wifi是否是小车本热点
 	 */
-	public void checkLinkWiFi(){
+	public boolean checkLinkWiFi(){
 		WifiManager mWifiManage = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		WiFiConnection connection = new WiFiConnection(mWifiManage,mContext);
 		WifiInfo info = connection.getWiFiInfo();
 		WifiAutoConnectManager wac = new WifiAutoConnectManager(mWifiManage,this);
 		boolean b = wac.getEffectiveWifi(info);
-		console.log("判断已连接的wifi是否是小车本热点---b---" + b);
-		mHasLinked = b;
+		console.log("判断已连接的wifi是否是小车本热点---b---" + b + "---wifi---" + info.getSSID());
+		return b;
 	}
 	
 	/**
 	 * 通知logic连接ipc
 	 */
 	public void sendLogicLinkIpc(){
-		if(mHasLinked){
-			//调用ipc接口
+		//检测是否连接ipc-wifi
+		boolean hasLink = checkLinkWiFi();
+		if(hasLink){
+			//连接ipc热点wifi---调用ipc接口
 			console.log("通知logic连接ipc---sendLogicLinkIpc---1");
-			//wifi环境连接状态1：成功|0失败,{“state”:1,“domain”:”192.168.62.1”}
-			String condi = "{\"state\":1,\"domain\":\"192.168.62.1\"}";
-			boolean b =mApp.mIPCControlManager.setIPCWifiState(true,condi);
+			//写死ipc ip地址
+			String ip = "192.168.62.1";
+			boolean b =mApp.mIPCControlManager.setIPCWifiState(true,ip);
 			console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 		}
+		
+		// wifi连接成功
+		mWiFiListAdapter.changeWiFiStatus();
 	}
+	
+	
 	
 	/**
 	 * ipc连接成功回调
 	 */
 	public void ipcLinkedCallBack(){
-		console.log("ipc连接成功回调---ipcLinkedCallBack---");
+		console.log("ipc连接成功回调---ipcLinkedCallBack---1");
+		mLoading.setVisibility(View.GONE);
+		//标识已连接ipc热点,可以点击下一步
+		mHasLinked = true;
 	}
 	
 	@Override
@@ -239,9 +249,15 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 				getWiFiList();
 			break;
 			case R.id.next_btn:
-				//跳转到修改热点密码页面
-				Intent modifyPwd = new Intent(WiFiLinkListActivity.this,WiFiLinkModifyPwdActivity.class);
-				startActivity(modifyPwd);
+				//已连接ipc热点,可以跳转到修改密码页面
+				if(mHasLinked){
+					//跳转到修改热点密码页面
+					Intent modifyPwd = new Intent(WiFiLinkListActivity.this,WiFiLinkModifyPwdActivity.class);
+					startActivity(modifyPwd);
+				}
+				else{
+					//灰色按钮不能点击
+				}
 			break;
 		}
 	}
@@ -252,15 +268,15 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		switch (state) {
 			case -1:
 				console.toast(message, mContext);
+				mLoading.setVisibility(View.GONE);
 			break;
 			case 1:
-				//检测是否连接ipc-wifi
-				checkLinkWiFi();
-				// wifi连接成功
-				mWiFiListAdapter.changeWiFiStatus();
-				
 				//通知logic连接ipc
 				sendLogicLinkIpc();
+				
+				
+				// wifi连接成功
+				//mWiFiListAdapter.changeWiFiStatus();
 				//回到首页
 				//SysApplication.getInstance().exit();
 			break;
@@ -274,10 +290,10 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 				else{
 					console.toast("没有搜索到小车点热点WiFi", mContext);
 				}
+				mLoading.setVisibility(View.GONE);
 			break;
 		}
 		unregisterReceiver(mWac);
-		mLoading.setVisibility(View.GONE);
 	}
 	
 }

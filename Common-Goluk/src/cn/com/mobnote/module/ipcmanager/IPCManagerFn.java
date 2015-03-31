@@ -77,7 +77,7 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_RecPicUsage = 1005;
 	/** 查询设备状态 */
 	public static final int IPC_VDCP_Msg_DeviceStatus = 1006;
-
+	
 	/**
 	 * 
 	 * 文件数据传输事件下消息ID (用于手机与平板之间发送消息回调)
@@ -125,6 +125,18 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_RecPicUsage = 1005;
 	/** 查询设备状态 */
 	public static final int IPC_VDCPCmd_DeviceStatus = 1006;
-
+	/** 获取IPC系统标识 */
+	public static final int IPC_VDCPCmd_GetIdentity = 1007;
+	/** IPC重启 */
+	public static final int IPC_VDCPCmd_Reboot = 1008;
+	/** IPC恢复出厂设置 */
+	public static final int IPC_VDCPCmd_Restore = 1009;
+	/** IPC格式化SD卡 */
+	public static final int IPC_VDCPCmd_FormatDisk = 1010;
+	/** 设置IPC系统时间 */
+	public static final int IPC_VDCPCmd_SetTime = 1011;
+	/** 设置IPC系统WIFI配置 */
+	public static final int IPC_VDCPCmd_SetWifiCfg = 1012;
+	
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }
