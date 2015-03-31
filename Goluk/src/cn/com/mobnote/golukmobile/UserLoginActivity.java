@@ -37,7 +37,7 @@ import cn.com.mobonote.golukmobile.comm.GolukMobile;
  * @author mobnote
  */
 public class UserLoginActivity extends Activity implements OnClickListener {
-	//判断是否能点击提交俺绣
+	//判断是否能点击提交按钮
 	private boolean isOnClick=false;
 	// 登陆title
 	private Button mBackButton;
@@ -121,7 +121,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 							isOnClick=true;
 						}else{
 							isOnClick=false;
-//							console.toast("手机号格式不好", mContext);
 							UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
 						}
 				}else{
@@ -139,6 +138,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				}
 			}
 		});
+		//
+		
 		//手机号、密码文本框
 		mEditTextPhoneNumber.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -168,6 +169,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				String number = mEditTextPhoneNumber.getText().toString();
 				String psw=mEditTextPwd.getText().toString();
 				if(isOnClick){
 					if(!psw.equals("")){
