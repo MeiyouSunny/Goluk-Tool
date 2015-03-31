@@ -320,7 +320,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if(null != mMainActivity){
 				//地图大头针图片
 				console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
-				mMainActivity.videoAnalyzeComplete();
+//				mMainActivity.videoAnalyzeComplete();
 			}
 		}
 	}
