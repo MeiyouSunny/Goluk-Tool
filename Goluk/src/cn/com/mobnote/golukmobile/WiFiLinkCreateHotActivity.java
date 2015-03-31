@@ -5,6 +5,8 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.util.console;
+import cn.com.mobnote.wifi.WifiConnCallBack;
+import cn.com.mobnote.wifi.WifiRsBean;
 import android.os.Bundle;
 import android.os.Handler;
 import android.annotation.SuppressLint;
@@ -42,7 +44,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkCreateHotActivity extends Activity implements OnClickListener {
+public class WiFiLinkCreateHotActivity extends Activity implements OnClickListener ,WifiConnCallBack{
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -119,9 +121,14 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 		//连接ipc热点wifi---调用ipc接口
 		console.log("通知logic连接ipc---setIpcLinkPhone---1");
 		//写死ipc ip地址
-		String ip = "192.168.1.100";
+		String ip = "192.168.43.100";
 		boolean b =mApp.mIPCControlManager.setIPCWifiState(true,ip);
 		console.log("通知logic连接ipc---setIpcLinkPhone---2---b---" + b);
+		
+
+		
+		String way = mWifiApAdmin.getIPAddress();
+		console.log("创建热点成功---startWifiAp---way---" + way);
 	}
 	
 	/**
@@ -140,10 +147,10 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 					
 					mWifiApAdmin = new WifiApAdmin(this,mHandler);
 					String way = mWifiApAdmin.getIPAddress();
-					way = "192.168.1.1";
+					way = "192.168.43.1";
 					//String[] network = way.split(".");
 					//String ip = network[0] + "." + network[1] + "." + network[2] + ".100";
-					String ip = "192.168.1.100";
+					String ip = "192.168.43.100";
 					//连接ipc热点wifi---调用ipc接口
 					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---1");
 					String json = "{\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
@@ -181,6 +188,9 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 		console.log("创建手机热点---startWifiAp---1");
 		mWifiApAdmin = new WifiApAdmin(this,mHandler);
 		if(!mWifiApAdmin.isWifiApEnabled()){
+			//创建之前先断开ipc连接
+			mApp.mIPCControlManager.setIPCWifiState(false,null);
+			//创建热点
 			mWifiApAdmin.startWifiAp(wifiName, pwd);
 		}
 	}
@@ -205,6 +215,12 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 				setIpcLinkPhoneHot();
 			break;
 		}
+	}
+
+	@Override
+	public void wifiCallBack(int state, String message, WifiRsBean[] arrays) {
+		// TODO Auto-generated method stub
+		console.log("ipc连接手机回调---" + state + "---" + message);
 	}
 	
 }
