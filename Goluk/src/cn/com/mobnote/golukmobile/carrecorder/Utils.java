@@ -13,11 +13,14 @@ public class Utils {
 	 * @date 2015年3月25日
 	 */
 	public static String getSizeShow(long fileSize) {
-		float sizeM = fileSize / 1024 / 1024;
+		System.out.print("文件大小 : "+fileSize);
+		float sizeM = (float)fileSize / 1024 / 1024;
 		DecimalFormat df = new DecimalFormat("#.0");
 		String sizeResult = df.format(sizeM) + "MB";
 		return sizeResult;
 	}
+	
+	
 	
 	/**
 	 * 时间转换成字符串
