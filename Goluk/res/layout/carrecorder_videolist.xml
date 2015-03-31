@@ -12,20 +12,17 @@
         android:layout_height="42dp"
         android:background="@color/bg" >
 
-        <Button
+        <ImageButton
             android:id="@+id/back_btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:background="@color/bg"
-            android:drawableLeft="@drawable/carrecorder_back_btn"
-            android:drawablePadding="8dp"
-            android:gravity="center|left"
-            android:text="@string/back_text"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/carrecorder_tit_btn_back" 
+            android:contentDescription="@string/def"/>
 
         <TextView
+            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -34,12 +31,13 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/edit"
+            android:id="@+id/mEditBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
-            android:layout_marginRight="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
             android:background="@color/bg"
             android:text="@string/videolist_edit"
             android:textColor="@color/white"
@@ -137,7 +135,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="#999999"
+                android:background="#00c590"
                 android:contentDescription="@string/def" />
 
             <ImageView
@@ -147,7 +145,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="#999999"
+                android:background="#00c590"
                 android:contentDescription="@string/def" />
         </LinearLayout>
     </RelativeLayout>
@@ -205,19 +203,22 @@
 
 <LinearLayout
     	android:visibility="gone"
+    	android:id="@+id/mFunctionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
 
         <LinearLayout
+            android:id="@+id/mDownloadBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1"
             android:background="@drawable/carrecorder_flle_edit_bg" >
 			
-            <ImageButton
+            <ImageView
+                android:duplicateParentState="true"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -225,7 +226,8 @@
                 android:background="@drawable/carrecorder_download_btn" 
                 android:contentDescription="@string/def"/>
             
-            <Button
+            <TextView
+                android:duplicateParentState="true"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -241,25 +243,28 @@
                 android:background="@drawable/carrecorder_flle_edit_line" 
                 android:contentDescription="@string/def"/>
         <LinearLayout
+            android:id="@+id/mDeleteBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1"
             android:background="@drawable/carrecorder_flle_edit_bg" >
 
-            <ImageButton
+            <ImageView
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16sp"
+                android:duplicateParentState="true"
                 android:background="@drawable/carrecorder_delete_btn" 
                 android:contentDescription="@string/def"/>
             
-            <Button
+            <TextView
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="删除"
+                android:duplicateParentState="true"
                 android:textColor="#dedede"
                 android:background="#00000000"
                 android:textSize="16sp" />

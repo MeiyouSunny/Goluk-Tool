@@ -1,12 +1,16 @@
 package cn.com.mobnote.video;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Message;
-import java.util.ArrayList;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.LoadImageManager;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
@@ -101,7 +105,7 @@ public class LiveVideoListManage {
 				//下载截图
 				String json = "{\"purl\":\"" + url + "\",\"aid\":\"" + aid + "\",\"type\":\"1\"}";
 				console.log("下载直播列表item图片---addLiveVideoItem---json" + json);
-				((LiveVideoListActivity)mContext).mApp.mGoluk.GoLuk_CommonGetPage(((LiveVideoListActivity)mContext).mApp.mGoluk.PageType_GetPictureByURL,json);
+				((LiveVideoListActivity)mContext).mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPictureByURL,json);
 			}
 		}
 		catch(Exception ex){

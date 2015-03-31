@@ -6,11 +6,12 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.util.console;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -383,7 +384,7 @@ public class UserTestRegistActivity extends Activity implements OnClickListener 
 					if(password.length()>=6 && password.length()<=16){
 						String isIdentify = "{\"PNumber\":\"" + phone  + "\",\"type\":\"1\"}";
 						console.log(isIdentify);
-						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
+						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
 						
 						UserUtils.hideSoftMethod(this);
 						mIdentifyLoading.setVisibility(View.VISIBLE);
@@ -524,7 +525,7 @@ public class UserTestRegistActivity extends Activity implements OnClickListener 
 								//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 								String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 								console.log(isRegist);
-								boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Register, isRegist);
+								boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
 								console.log(b+"");
 								if(b){
 									//隐藏软件盘

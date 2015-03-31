@@ -1,0 +1,264 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ededed"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <!-- 描述 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/carrecorder_setup_option_bg"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp" >
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/def"
+                android:gravity="center_vertical"
+                android:inputType="text"
+                android:text="@string/description" />
+        </RelativeLayout>
+
+        <!-- 视频类型 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/carrecorder_setup_option_bg"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp" >
+
+            <ImageView
+                android:id="@+id/voice_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/carrecorder_live_setup_icon_classify"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/voice_type"
+                android:text="@string/voice_type"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/zdxhlx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/carrecorder_setup_option_arrow" />
+        </RelativeLayout>
+
+        <!-- 直播时长 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/carrecorder_setup_option_bg"
+            android:gravity="center_vertical"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/carrecorder_live_setup_icon_time"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:contentDescription="@string/def"
+                android:text="@string/live_setting_timelength"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp" >
+
+                <SeekBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="124dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/carrecorder_live_setup_time_bg"
+                    android:max="150"
+                    android:progress="60"
+                    android:progressDrawable="@drawable/carrecorder_jdt"
+                    android:thumb="@drawable/carrecorder_thumb" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/carrecorder_live_setup_bg_time"
+                android:contentDescription="@string/def"
+                android:gravity="center"
+                android:text="01:30:00"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- 行车对讲 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/carrecorder_setup_option_bg"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp" >
+
+            <ImageView
+                android:id="@+id/voice_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/carrecorder_live_setup_icon_sound"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/voice_icon"
+                android:text="@string/live_cartalk"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/car_talk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/carrecorder_setup_option_on" />
+        </RelativeLayout>
+
+        <!-- 视频声音开关 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/carrecorder_setup_option_bg"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp" >
+
+            <ImageView
+                android:id="@+id/voice_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/carrecorder_live_setup_icon_videosound"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/voice_switch"
+                android:text="@string/voice_switch"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/voice_switch_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/carrecorder_setup_option_on" />
+        </RelativeLayout>
+
+        <!-- 预计直播流量 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/carrecorder_setup_option_bg"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp" >
+
+            <ImageView
+                android:id="@+id/live_flow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/carrecorder_live_setup_icon_volume"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/live_flow"
+                android:text="@string/live_flow"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/live_flowl_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="15.20 MB"
+                android:textColor="#dc1430"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <!-- 进入直播间 -->
+
+        <RelativeLayout
+            android:id="@+id/sysz_line"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:background="#28b6a4"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="@string/open_live_home"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

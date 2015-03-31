@@ -12,11 +12,9 @@ import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.util.console;
-import cn.com.mobonote.golukmobile.comm.GolukMobile;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,13 +29,20 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.CountDownButtonHelper;
+import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.console;
 
 /**
  * 重置密码
@@ -299,8 +304,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 			mEditTextPwd.setEnabled(false);
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"2\"}";
 			console.log(isIdentify);
-			boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
-
+			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
+			
 			UserUtils.hideSoftMethod(this);
 			mIdentifyLoading.setVisibility(View.VISIBLE);
 			registerReceiver(smsReceiver, smsFilter);
@@ -319,8 +324,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					if(password.length()>=6 && password.length()<=16){
 						String isIdentify = "{\"PNumber\":\"" + phone  + "\",\"type\":\"2\"}";
 						console.log(isIdentify);
-						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
 						Log.i("aaa", "=======");
+						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVCode, isIdentify);
+						console.log(b+"");
 						if(b){
 							identifyClick = true;
 							UserUtils.hideSoftMethod(this);
@@ -459,7 +465,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 				console.log(isRegist);
-				boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_Register, isRegist);
+				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyPwd, isRegist);
 				console.log(b+"");
 				if(b){
 					//隐藏软件盘

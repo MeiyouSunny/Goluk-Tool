@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.tachograph.comm.IPCManagerAdapter;
-import cn.com.mobnote.tachograph.comm.IPCManagerClass;
-import cn.com.mobnote.tachograph.comm.IPCManagerFn;
-import cn.com.tiros.api.FileUtils;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.JsonUtil;
 
 
  /**
@@ -32,17 +31,24 @@ import cn.com.tiros.api.FileUtils;
   * @author xuhw
   */
 public class IPCControlManager implements IPCManagerFn{
-	/** IPC管理 */
-	private IPCManagerClass mIPCManagerClass=null;
+	
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
-	public IPCControlManager(){
+	/** Application实例,用于调用JNI的对象 */
+	private GolukApplication mApplication = null;
+	
+	public IPCControlManager(GolukApplication application) {
+		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
-		mIPCManagerClass = new IPCManagerClass();
-		mIPCManagerClass.IPCManager_Create();
-		mIPCManagerClass.IPCManager_RegisterNetTransNotify(this);
-		mIPCManagerClass.IPCManager_SetMode(IPCMgrMode_IPCDirect);
-		IPCManagerAdapter.setIPcManageListener(this);
+		// 注册IPC回调
+		int result = mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
+
+		// 设置连接模式
+		String json = JsonUtil.getIPCConnModeJson(IPCMgrMode_IPCDirect);
+		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_CommCmd_SetMode, json);
+
+		// WIFI连接状态
 		setIPCWifiState(true);
 	}
 	
@@ -53,11 +59,12 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年3月21日
 	 */
 	public void setIPCWifiState(boolean isConnect){
-		if(isConnect){
-			mIPCManagerClass.IPCManager_WifiStateChanged(1);
-		}else{
-			mIPCManagerClass.IPCManager_WifiStateChanged(0);
-		}
+		int state = isConnect ? 1 : 0;
+		String ip = null;
+		String json = JsonUtil.getWifiChangeJson(state, ip);
+		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
+		
+//		LogUtil.e(null, "jyf-----goluk:IPC_CommCmd_WifiChanged isSucess:" + isSucess);
 	}
 	
 	/**
@@ -68,7 +75,9 @@ public class IPCControlManager implements IPCManagerFn{
 	public void screenShot() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			GFileUtils.writeShootLog("========发起ipc图片截图========");
-			boolean isSuccess = mIPCManagerClass.IPCManager_VDCP_CommRequest(IPC_VDCPCmd_SnapPic, "");
+
+			boolean isSuccess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+					IPCManagerFn.IPC_VDCPCmd_SnapPic, "");
 			if (!isSuccess) {
 				GFileUtils.writeShootLog("========ipc截图命令 　发送失败========");
 			}
@@ -83,9 +92,10 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean startWonderfulVideo(){
+	public boolean startWonderfulVideo() {
 		String queryParam = IpcDataParser.getTriggerRecordJson(TYPE_SHORTCUT, 4, 8);
-		return mIPCManagerClass.IPCManager_VDCP_CommRequest(IPC_VDCPCmd_TriggerRecord, queryParam);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCPCmd_TriggerRecord, queryParam);
 	}
 	
 	/**
@@ -94,9 +104,10 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean startEmergencyVideo(){
+	public boolean startEmergencyVideo() {
 		String queryParam = IpcDataParser.getTriggerRecordJson(TYPE_URGENT, 8, 8);
-		return mIPCManagerClass.IPCManager_VDCP_CommRequest(IPC_VDCPCmd_TriggerRecord, queryParam);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCPCmd_TriggerRecord, queryParam);
 	}
 	
 	/**
@@ -106,8 +117,9 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean querySingleFile(String filename){
-		return mIPCManagerClass.IPCManager_VDCP_CommRequest(IPC_VDCPCmd_SingleQuery, filename);
+	public boolean querySingleFile(String filename) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SingleQuery,
+				filename);
 	}
 
 	/**
@@ -119,13 +131,12 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean queryFileListInfo(int filetype, int limitCount, int timestart){
+	public boolean queryFileListInfo(int filetype, int limitCount, int timestart) {
 		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, 2147483647);
-		GFileUtils
-				.writeIPCLog("===========获取文件列表===1111=====================queryParam="
-						+ queryParam);
+		GFileUtils.writeIPCLog("===========获取文件列表===1111=====================queryParam=" + queryParam);
 
-		return mIPCManagerClass.IPCManager_VDCP_CommRequest(IPC_VDCPCmd_Query, queryParam);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
+				queryParam);
 	}
 	
 	/**
@@ -136,8 +147,20 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月25日
 	 */
-	public void downloadFile(String filename, String tag, String savepath){
-		mIPCManagerClass.IPCManager_AddDownloadFile(filename, tag, savepath);
+	public void downloadFile(String filename, String tag, String savepath) {
+		String json = JsonUtil.getDownFileJson(filename, tag, savepath);
+		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
+				json);
+	}
+	
+	/**
+	 * 删除文件
+	 * @param filename 文件名称
+	 * @author xuhw
+	 * @date 2015年3月25日
+	 */
+	public void deleteFile(String filename){
+		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Erase, filename);
 	}
 
 	/**
@@ -164,16 +187,16 @@ public class IPCControlManager implements IPCManagerFn{
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		
-		Iterator iter = mIpcManagerListener.keySet().iterator();  
-		while (iter.hasNext()) {  
-		    Object key = iter.next();  
-		    if(null != key){
-		    	IPCManagerFn fn = mIpcManagerListener.get(key);  
-		    	if(null != fn){
-			    	fn.IPCManage_CallBack(event, msg, param1, param2);
-			    }
-		    }
-		}  
+		Iterator<String> iter = mIpcManagerListener.keySet().iterator();
+		while (iter.hasNext()) {
+			Object key = iter.next();
+			if (null != key) {
+				IPCManagerFn fn = mIpcManagerListener.get(key);
+				if (null != fn) {
+					fn.IPCManage_CallBack(event, msg, param1, param2);
+				}
+			}
+		}
 		
 	}
 	
