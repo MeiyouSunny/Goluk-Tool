@@ -786,9 +786,8 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				.removeIPCManagerListener("main");
 
 		if (null != mRtmpPlayerView) {
-			mRtmpPlayerView.stopPlayback();
+			mRtmpPlayerView.removeCallbacks(retryRunnable);
 			mRtmpPlayerView.cleanUp();
-			mRtmpPlayerView = null;
 		}
 
 		// closeApp();

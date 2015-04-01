@@ -17,17 +17,20 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
  /**
   * 1.编辑器必须显示空白处
@@ -72,13 +75,23 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	private boolean mIsVideoSizeKnown = false;
 	private boolean mIsVideoReadyToBePlayed = false;
 	
+	private TextView mCurTime=null;
+	private TextView mTotalTime=null;
+	private ImageButton mPlayBtn=null;
+	private ImageButton mPlayBigBtn=null;
+	private SeekBar mSeekBar=null;
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		System.out.println("TTT======11111111111111111111=");
 		if (!LibsChecker.checkVitamioLibs(this))
 			return;
+		System.out.println("TTT======22222222222222222222222=");
 		setContentView(R.layout.carrecorder_videoplayer);
-		
+		System.out.println("TTT======３３３３３３３３３３３３３３３３３３=");
 		String from = getIntent().getStringExtra("from");
 		filename = getIntent().getStringExtra("filename");
 		if(!TextUtils.isEmpty(from)){
@@ -95,9 +108,9 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 				}
 			}
 		}
-		
+		System.out.println("TTT===４４４４４４４４４４４４４４４４===playUrl="+playUrl);
 		initView();
-		
+		setListener();
 		
 		//http://192.168.43.234:5080/rec/wonderful/WND1_100101153739_0012.mp4
 	}
@@ -121,7 +134,106 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		TextView title = (TextView)findViewById(R.id.title);
 		title.setText(filename);
 		
+		mCurTime = (TextView) findViewById(R.id.mCurTime);
+		mTotalTime = (TextView) findViewById(R.id.mTotalTime);
+		mPlayBtn = (ImageButton) findViewById(R.id.mPlayBtn);
+		mPlayBigBtn = (ImageButton) findViewById(R.id.mPlayBigBtn);
+		mSeekBar = (SeekBar) findViewById(R.id.mSeekBar);
+		  
+
 		showLoading();
+	}
+	
+	/**
+	 * 设置监听
+	 * @author xuhw
+	 * @date 2015年4月1日
+	 */
+	private void setListener(){
+		mPlayBtn.setOnClickListener(this);
+		mPlayBigBtn.setOnClickListener(this);
+		mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			@Override
+			public void onStopTrackingTouch(SeekBar arg0) {
+				int progress = mSeekBar.getProgress();
+				mMediaPlayer.seekTo(progress);
+			}
+				
+			@Override
+			public void onStartTrackingTouch(SeekBar arg0) {
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+			}
+		});
+	}
+	
+	private final int GETPROGRESS=1;
+	Handler mHandler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+				case GETPROGRESS:
+					mHandler.removeMessages(GETPROGRESS);
+					if(mMediaPlayer.isPlaying()){
+						long curPosition = mMediaPlayer.getCurrentPosition();
+						long duration = mMediaPlayer.getDuration();
+						
+						System.out.println("TTT========duration=="+duration+"=====curPosition="+curPosition);
+						mCurTime.setText(long2TimeStr(curPosition));
+						mTotalTime.setText(long2TimeStr(duration));
+						mSeekBar.setMax((int)duration);
+						mSeekBar.setProgress((int)curPosition);
+						mPlayBigBtn.setVisibility(View.GONE);
+						mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
+					}else{
+//						mPlayBigBtn.setVisibility(View.VISIBLE);
+						mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+					}
+					
+					mHandler.sendEmptyMessageDelayed(GETPROGRESS, 500);
+					break;
+	
+				default:
+					break;
+			}
+		};
+	};
+	
+	/**
+	 * 毫秒格式化时间字符串
+	 * @param milliseconds 毫秒
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月1日
+	 */
+	private String long2TimeStr(long milliseconds){
+		String time="";
+		
+		int seconds = (int)(milliseconds/1000);
+		if(seconds > 60){
+			int min = seconds/60;
+			int sec = seconds%60;
+			if(min > 9){
+				time = min+":";
+			}else{
+				time = "0"+min+":";
+			}
+			
+			if(sec > 9){
+				time += sec;
+			}else{
+				time += "0"+sec;
+			}
+		}else{
+			if(seconds > 9){
+				time = "00:"+seconds;
+			}else{
+				time = "00:0"+seconds;
+			}
+		}
+		
+		return time;
 	}
 	
 	/**
@@ -167,6 +279,26 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			case R.id.title:
 				exit();
 				break;
+			case R.id.mPlayBtn:
+				if(mMediaPlayer.isPlaying()){
+					mMediaPlayer.pause();
+					mPlayBigBtn.setVisibility(View.VISIBLE);
+					mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
+					
+				}else{
+					mMediaPlayer.start();
+					mPlayBigBtn.setVisibility(View.GONE);
+					mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+				}
+				break;
+			case R.id.mPlayBigBtn:
+				if(mMediaPlayer.isPlaying()){
+					mMediaPlayer.pause();
+				}else{
+					mMediaPlayer.start();
+					mPlayBigBtn.setVisibility(View.GONE);
+				}
+				break;
 	
 			default:
 				break;
@@ -188,6 +320,10 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
 		playVideo();
+		if(!isGet){
+			isGet=true;
+			mHandler.sendEmptyMessage(GETPROGRESS);
+		}
 	}
 
 	@Override
@@ -201,12 +337,13 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	 * @date 2015年3月31日
 	 */
 	private void playVideo(){
+		System.out.println("TTT=============playVideo=");
 		try {
 			mMediaPlayer = new MediaPlayer(this);
 			mMediaPlayer.setBufferSize(1024);
+			mMediaPlayer.setLooping(true);
 			mMediaPlayer.setDataSource(playUrl);
 			mMediaPlayer.setDisplay(mSurfaceHolder);
-			mMediaPlayer.prepareAsync();
 			mMediaPlayer.setOnInfoListener(this);
 			mMediaPlayer.setOnBufferingUpdateListener(this);
 			mMediaPlayer.setOnCompletionListener(this);
@@ -214,6 +351,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			mMediaPlayer.setOnVideoSizeChangedListener(this);
 			mMediaPlayer.setOnErrorListener(this);
 			setVolumeControlStream(AudioManager.STREAM_MUSIC);
+			mMediaPlayer.prepareAsync();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {
@@ -227,16 +365,23 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
-		
+		long duration = mMediaPlayer.getDuration();
+		System.out.println("TTT========onCompletion=====duration="+duration);
+		mCurTime.setText(long2TimeStr(duration));
+		mTotalTime.setText(long2TimeStr(duration));
+		mSeekBar.setMax((int)duration);
+		mSeekBar.setProgress((int)duration);
 	}
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+		System.out.println("TTT=============onError=");
 		hideLoading();
 		Toast.makeText(VideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
 		return false;
 	}
 
+	boolean isGet=false;
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
 		switch (arg1) {
@@ -255,6 +400,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public void onPrepared(MediaPlayer arg0) {
+		System.out.println("TTT=============onPrepared=");
 		mIsVideoReadyToBePlayed = true;
 		if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
 			startVideoPlayback();
