@@ -23,9 +23,9 @@ local gsPublic = "nvd";
 --开发服务器http地址
 local gsDevURL = "svr.xiaocheben.com";
 --测试服务器http地址
-local gsTestURL = "svr.xiaocheben.com";
+local gsTestURL = "server.xiaocheben.com";
 --正式服务器http地址
-local gsPublicURL = "svr.xiaocheben.com";
+local gsPublicURL = "server.xiaocheben.com";
 
 
 --开发服务器UDP地址
@@ -44,11 +44,11 @@ local gsPublicAirTalkeeURL = "sns.lbs8.com";
 
 
 --开发服务器Tcp地址
-local gsTcpDevURL = "testx.lbs8.com";
+local gsTcpDevURL = "svr.xiaocheben.com";
 --测试服务器Tcp地址
-local gsTcpTestURL = "testx.lbs8.com";
+local gsTcpTestURL = "server.xiaocheben.com";
 --正式服务器Tcp地址
-local gsTcpPublicURL = "nvd2.lbs8.com";
+local gsTcpPublicURL = "server.xiaocheben.com";
 
 --开发服务器Tcp端口
 local gsTcpDevPort = "40172";

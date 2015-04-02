@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.DeviceState;
@@ -227,7 +228,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		initView();
 		setListener();
 		// 开启视频录制计时器
-		mHandler.sendEmptyMessageDelayed(STARTVIDEORECORD, 1000);
+//		mHandler.sendEmptyMessageDelayed(STARTVIDEORECORD, 1000);
 
 		// 获取是否是后台启动
 		Intent receiveIntent = getIntent();
@@ -333,6 +334,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			start();
 		}
 
+		m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
 		mConnectTip.setText("摄像头未连接");
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			ipcIsOk = true;
@@ -784,9 +786,8 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				.removeIPCManagerListener("main");
 
 		if (null != mRtmpPlayerView) {
-			mRtmpPlayerView.stopPlayback();
+			mRtmpPlayerView.removeCallbacks(retryRunnable);
 			mRtmpPlayerView.cleanUp();
-			mRtmpPlayerView = null;
 		}
 
 		// closeApp();
@@ -1039,7 +1040,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
 				CarRecorderActivity.QUERYFILETIME);
 		mShootTime = 0;
-		m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+		m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
 			m8sTimer.purge();

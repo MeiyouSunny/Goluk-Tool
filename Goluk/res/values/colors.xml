@@ -44,5 +44,6 @@
 	<color name="user_regist_bottom_login">#737373</color>
 	<color name="user_regist_bottom_login_btn">#333333</color>
 	<color name="user_hint_text_color">#CECECE</color>
+	<color name="user_identify_btn">#00C5A7</color>
 	
 </resources>

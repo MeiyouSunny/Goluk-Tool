@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:background="@null"
-                    android:hint="请输入手机号码、暂时支持中国大陆"
+                    android:hint="请输入手机号码，暂时只支持中国大陆"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
                     android:numeric="integer"
@@ -95,13 +95,12 @@
 
             <!--  110dp -->
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="92dp"
                 android:layout_height="42dp"
                 android:id="@+id/user_regist_identify_btn"
                 android:background="@drawable/icon_more"
                 android:text="@string/user_repwd_identify"
                 android:textSize="16sp" 
-                android:layout_weight="0.001"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:textColor="@color/white"/>
@@ -114,8 +113,8 @@
                 android:textColor="#000" 
                 android:maxLength="6"
                 android:background="@color/white"
-                android:layout_weight="2"
-                android:paddingLeft="20dp"/>
+                android:paddingLeft="20dp"
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <RelativeLayout
@@ -130,7 +129,8 @@
                 android:layout_height="38dp"
                 android:id="@+id/user_regist_btn"
                 android:background="@drawable/icon_more"
-                android:text="@string/user_regist_btn" />
+                android:text="@string/user_regist_btn" 
+                android:textColor="#fff"/>
         </RelativeLayout>
         <LinearLayout 
             android:layout_width="match_parent"
@@ -176,6 +176,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="注册中……"
+            android:layout_below="@id/user_regist_include"
+            android:layout_centerInParent="true"
+            android:textColor="#000"
+            />
+    </RelativeLayout>
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/loading_identify"     
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        >
+       	<include
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    layout="@layout/loading"
+       	    android:id="@+id/user_regist_include"
+       	   />
+
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="验证码获取中……"
             android:layout_below="@id/user_regist_include"
             android:layout_centerInParent="true"
             android:textColor="#000"

@@ -59,7 +59,26 @@
             android:layout_gravity="bottom"
             android:background="@drawable/carrecorder_flle_tit_bg"
             android:orientation="horizontal" >
-
+            
+            <Button
+                android:id="@+id/video_xhyx"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="#00000000"
+                android:text="@string/videolist_xhyx"
+                android:textColor="#00c590"
+                android:textSize="16sp" />
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/carrecorder_flle_tit_line"
+                android:contentDescription="@string/def" />
+            
             <Button
                 android:id="@+id/video_jcsp"
                 android:layout_width="wrap_content"
@@ -69,16 +88,16 @@
                 android:gravity="center"
                 android:background="#00000000"
                 android:text="@string/videolist_jcsp"
-                android:textColor="#00c590"
+                android:textColor="#999999"
                 android:textSize="16sp" />
-
+            
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/carrecorder_flle_tit_line"
                 android:contentDescription="@string/def" />
-
+            
             <Button
                 android:id="@+id/video_jjyx"
                 android:layout_width="wrap_content"
@@ -90,25 +109,7 @@
                 android:text="@string/videolist_jjyx"
                 android:textColor="#999999"
                 android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/carrecorder_flle_tit_line"
-                android:contentDescription="@string/def" />
-
-            <Button
-                android:id="@+id/video_xhyx"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:background="#00000000"
-                android:text="@string/videolist_xhyx"
-                android:textColor="#999999"
-                android:textSize="16sp" />
+             
         </LinearLayout>
 
         <!-- table页面的绿线 -->
@@ -117,6 +118,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true" >
+            
+            <ImageView
+                android:id="@+id/line_xhyx"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="#00c590"
+                android:contentDescription="@string/def" />
 
             <ImageView
                 android:id="@+id/line_jcsp"
@@ -138,15 +149,6 @@
                 android:background="#00c590"
                 android:contentDescription="@string/def" />
 
-            <ImageView
-                android:id="@+id/line_xhyx"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="#00c590"
-                android:contentDescription="@string/def" />
         </LinearLayout>
     </RelativeLayout>
     
@@ -156,6 +158,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
         <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/mLoopVideoList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:dividerHeight="0dp"
+        android:fastScrollEnabled="false"
+        android:divider="#00000000"
+        android:scrollbars="none"
+        android:visibility="gone"
+        android:listSelector="#00000000"
+        android:cacheColorHint="#00000000"
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/test_list_item_layout" />
+        
+        <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
         android:id="@+id/mWonderfulVideoList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -164,6 +181,7 @@
         android:fastScrollEnabled="false"
         android:divider="#00000000"
         android:scrollbars="none"
+        android:listSelector="#00000000"
         android:cacheColorHint="#00000000"
         android:scrollbarStyle="outsideOverlay"
         tools:listitem="@layout/test_list_item_layout" />
@@ -178,20 +196,7 @@
         android:divider="#00000000"
         android:scrollbars="none"
         android:visibility="gone"
-        android:cacheColorHint="#00000000"
-        android:scrollbarStyle="outsideOverlay"
-        tools:listitem="@layout/test_list_item_layout" />
-        
-        <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/mLoopVideoList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:dividerHeight="0dp"
-        android:fastScrollEnabled="false"
-        android:divider="#00000000"
-        android:scrollbars="none"
-        android:visibility="gone"
+        android:listSelector="#00000000"
         android:cacheColorHint="#00000000"
         android:scrollbarStyle="outsideOverlay"
         tools:listitem="@layout/test_list_item_layout" />
