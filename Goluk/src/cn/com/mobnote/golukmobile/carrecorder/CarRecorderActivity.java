@@ -696,7 +696,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月8日
 	 */
 	private void showLoading() {
-		mLoadingText.setText("图像加载中，请稍候...");
+		mLoadingText.setText("无码的视频也是高潮迭起");
 		mLoadingLayout.setVisibility(View.VISIBLE);
 		mLoading.setVisibility(View.VISIBLE);
 		mLoading.postDelayed(new Runnable() {

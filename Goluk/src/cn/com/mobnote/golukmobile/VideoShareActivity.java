@@ -302,16 +302,16 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		//微信
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
 		
-		weixinContent.setShareContent("goluk分享内容");
-		weixinContent.setTitle("duang duang duang  好牛逼!");
+		weixinContent.setShareContent("Goluk分享内容");
+		weixinContent.setTitle(text);
 		weixinContent.setTargetUrl(videourl);
 		weixinContent.setShareMedia(video);
 		mController.setShareMedia(weixinContent);
 		
 		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent();
-		circleMedia.setShareContent("goluk分享内容");
-		circleMedia.setTitle("duang duang duang  好牛逼!");
+		circleMedia.setShareContent("Goluk分享内容");
+		circleMedia.setTitle(text);
 		circleMedia.setTargetUrl(videourl);
 		circleMedia.setShareMedia(video);
 		mController.setShareMedia(circleMedia);
@@ -326,8 +326,8 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		
 		//新浪微博分享
 		SinaShareContent sinaContent = new SinaShareContent();
-		sinaContent.setShareContent("goluk分享内容");
-		sinaContent.setTitle("duang duang duang  好牛逼!");
+		sinaContent.setShareContent("Goluk分享内容");
+		sinaContent.setTitle(text);
 		sinaContent.setTargetUrl(videourl);
 		sinaContent.setShareMedia(video);
 		mController.setShareMedia(sinaContent);
@@ -335,8 +335,8 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		
 		//qq分享
 		QQShareContent  qqContent = new QQShareContent();
-		qqContent.setShareContent("goluk分享内容");
-		qqContent.setTitle("duang duang duang  好牛逼!");
+		qqContent.setShareContent("Goluk分享内容");
+		qqContent.setTitle(text);
 		qqContent.setTargetUrl(videourl);
 		qqContent.setShareMedia(video);
 		mController.setShareMedia(qqContent);
