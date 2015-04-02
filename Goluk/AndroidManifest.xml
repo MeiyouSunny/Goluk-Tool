@@ -91,7 +91,6 @@
 		<meta-data android:value="mobnote" android:name="UMENG_CHANNEL"/>
 		
 		<activity android:configChanges="orientation|keyboard" android:launchMode="singleTask" android:name="com.umeng.socialize.view.ShareActivity" android:noHistory="true" android:theme="@style/Theme.UMDialog" android:windowSoftInputMode="stateVisible|adjustResize"/>
-		<activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="true" android:name=".wxapi.WXEntryActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 		<!-- 添加百度地图key -->
 		<!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
 		<meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="63che8lBbcckvH0IEgeBjrdA" />
