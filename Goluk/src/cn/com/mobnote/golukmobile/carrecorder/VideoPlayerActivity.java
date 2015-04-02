@@ -7,6 +7,7 @@ import io.vov.vitamio.MediaPlayer.OnCompletionListener;
 import io.vov.vitamio.MediaPlayer.OnErrorListener;
 import io.vov.vitamio.MediaPlayer.OnInfoListener;
 import io.vov.vitamio.MediaPlayer.OnPreparedListener;
+import io.vov.vitamio.MediaPlayer.OnSeekCompleteListener;
 import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ import android.widget.Toast;
   *
   * @author xuhw
   */
-public class VideoPlayerActivity extends Activity implements OnCompletionListener, OnBufferingUpdateListener
+public class VideoPlayerActivity extends Activity implements OnCompletionListener, OnBufferingUpdateListener, OnSeekCompleteListener
 ,OnErrorListener, OnInfoListener, OnPreparedListener, OnClickListener, SurfaceHolder.Callback, OnVideoSizeChangedListener{
 	/** 视频播放器 */
 	private MediaPlayer mMediaPlayer=null;
@@ -156,7 +157,12 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			@Override
 			public void onStopTrackingTouch(SeekBar arg0) {
 				int progress = mSeekBar.getProgress();
+				System.out.println("TTT===========aaaaaa==========");
 				mMediaPlayer.seekTo(progress);
+				if(!mMediaPlayer.isPlaying()){
+					mMediaPlayer.start();
+					System.out.println("TTT===========bbbbbb==========");
+				}
 			}
 				
 			@Override
@@ -350,6 +356,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			mMediaPlayer.setOnPreparedListener(this);
 			mMediaPlayer.setOnVideoSizeChangedListener(this);
 			mMediaPlayer.setOnErrorListener(this);
+			mMediaPlayer.setOnSeekCompleteListener(this);
 			setVolumeControlStream(AudioManager.STREAM_MUSIC);
 			mMediaPlayer.prepareAsync();
 		} catch (IllegalArgumentException e) {
@@ -371,6 +378,15 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		mTotalTime.setText(long2TimeStr(duration));
 		mSeekBar.setMax((int)duration);
 		mSeekBar.setProgress((int)duration);
+	}
+
+	@Override
+	public void onSeekComplete(MediaPlayer mp) {
+		
+//		if(!mMediaPlayer.isPlaying()){
+//			mMediaPlayer.start();
+//			System.out.println("TTT===========bbbbbb==========");
+//		}
 	}
 
 	@Override
