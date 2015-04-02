@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.baidu.location.BDLocation;
@@ -653,10 +654,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**
 	 * 视频同步完成
 	 */
-	public void videoAnalyzeComplete(){
+	public void videoAnalyzeComplete(String str){
 //		mLocalVideoManage.videoUploadCallBack();
 //		mLocalVideoListAdapter.notifyDataSetChanged();
-		playDownLoadedSound();
+		try {
+			JSONObject json = new JSONObject(str);
+			String tag = json.getString("tag");
+			if(tag.equals("videodownload")){
+				//只有视频下载才提示音频
+				playDownLoadedSound();
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
