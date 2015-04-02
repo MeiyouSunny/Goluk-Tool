@@ -3,15 +3,11 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.R.color;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -29,12 +25,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
-
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint("ClickableViewAccessibility")
@@ -48,7 +42,6 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private List<VideoInfo> mWonderfulVideoData=null;
 	private List<VideoInfo> mEmergencyVideoData=null;
 	private List<VideoInfo> mLoopVideoData=null;
-
 	
 	private List<DoubleVideoInfo> wonderfulVideoData=null;
 	private List<DoubleVideoInfo> emergencyVideoData=null;
@@ -69,8 +62,8 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	/** 返回按钮 */
 	private ImageButton mBackBtn=null;
 	/** 当前在那个界面，包括循环影像(1) 紧急录像(2) 一键抢拍(4) 三个界面 */
-	private int mOprateType = 0;
-	private int mCurrentType = 0;
+	private int mOprateType = IPCManagerFn.TYPE_CIRCULATE;
+	private int mCurrentType = IPCManagerFn.TYPE_CIRCULATE;
 	/** 精彩视频切换按钮 */
 	private Button mWonderfulVideoBtn=null;
 	/** 紧急视频切换按钮 */
@@ -116,7 +109,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		initView();
 		setListener();
 		
-		getRecorderFileFromLocal(TYPE_SHORTCUT);
+		getRecorderFileFromLocal(IPCManagerFn.TYPE_CIRCULATE);
 	}
 	
 	/**
@@ -149,11 +142,11 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		for (VideoFileInfo info : fileList) {
 			String name = Utils.getTimeStr(info.time * 1000).substring(0, 10);
 			if(name.length() >= 10){
-				if(TYPE_SHORTCUT == mCurrentType){
+				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 					if(!wonderfulGroupName.contains(name.substring(0, 10))){
 						wonderfulGroupName.add(name.substring(0, 10));
 					}
-				}else if(TYPE_URGENT == mCurrentType){
+				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
 					if(!emergencyGroupName.contains(name.substring(0, 10))){
 						emergencyGroupName.add(name.substring(0, 10));
 					}
@@ -166,9 +159,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		}
 		
 		for (VideoFileInfo info : fileList) {
-			if(TYPE_SHORTCUT == mCurrentType){
+			if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 				mWonderfulVideoData.add(getVideoInfo(info));
-			}else if(TYPE_URGENT == mCurrentType){
+			}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
 				mEmergencyVideoData.add(getVideoInfo(info));
 			}else{
 				mLoopVideoData.add(getVideoInfo(info));
@@ -221,6 +214,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月25日
 	 */
 	private void initWonderfulLayout(ArrayList<VideoFileInfo> fileList){
+		updateButtonState(IPCManagerFn.TYPE_SHORTCUT);
 		mWonderfulVideoList.setVisibility(View.VISIBLE);
 		mEmergencyVideoList.setVisibility(View.GONE);
 		mLoopVideoList.setVisibility(View.GONE);
@@ -272,25 +266,25 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					if(isEditState){
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							
-							
 							if(!TextUtils.isEmpty(tag1)){
-								selectedListData.remove(tag1);
-								mTMLayout1.setVisibility(View.GONE);
-								if(selectedListData.size()==0){//说明没有任何item被选中
-									updateDelandEditBg(false);
-								}
-							}else{
-								selectedListData.add(tag1);
-								mTMLayout1.setVisibility(View.VISIBLE);
-								if(selectedListData.size()>0){
-									updateDelandEditBg(true);
+								if(selectedListData.contains(tag1)){
+									selectedListData.remove(tag1);
+									mTMLayout1.setVisibility(View.GONE);
+									if(selectedListData.size()==0){//说明没有任何item被选中
+										updateDelandEditBg(false);
+									}
+								}else{
+									selectedListData.add(tag1);
+									mTMLayout1.setVisibility(View.VISIBLE);
+									if(selectedListData.size()>0){
+										updateDelandEditBg(true);
+									}
 								}
 							}
 							
 							
+							
 						}else{
-							
-							
 							if(!TextUtils.isEmpty(tag2)){
 								if(selectedListData.contains(tag2)){
 									selectedListData.remove(tag2);
@@ -381,6 +375,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月25日
 	 */
 	private void initEmergencyLayout(ArrayList<VideoFileInfo> fileList){
+		updateButtonState(IPCManagerFn.TYPE_URGENT);
 		mWonderfulVideoList.setVisibility(View.GONE);
 		mEmergencyVideoList.setVisibility(View.VISIBLE);
 		mLoopVideoList.setVisibility(View.GONE);
@@ -504,6 +499,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月25日
 	 */
 	private void initLoopLayout(ArrayList<VideoFileInfo> fileList){
+		updateButtonState(IPCManagerFn.TYPE_CIRCULATE);
 		mWonderfulVideoList.setVisibility(View.GONE);
 		mEmergencyVideoList.setVisibility(View.GONE);
 		mLoopVideoList.setVisibility(View.VISIBLE);
@@ -624,15 +620,15 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mLoopVideoLine.setVisibility(View.INVISIBLE);
 		
 		switch (type) {
-			case TYPE_SHORTCUT:
+			case IPCManagerFn.TYPE_SHORTCUT:
 				mWonderfulVideoLine.setVisibility(View.VISIBLE);
 				mWonderfulVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
 				break;
-			case TYPE_URGENT:
+			case IPCManagerFn.TYPE_URGENT:
 				mEmergencyVideoLine.setVisibility(View.VISIBLE);
 				mEmergencyVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
 				break;
-			case TYPE_CIRCULATE:
+			case IPCManagerFn.TYPE_CIRCULATE:
 				mLoopVideoLine.setVisibility(View.VISIBLE);
 				mLoopVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_sel_color));
 				break;
@@ -730,10 +726,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			case R.id.video_jcsp:
 				if(!isGetFileListDataing){
 					if(!isEditState){
-						if(TYPE_SHORTCUT != mCurrentType){
-							mOprateType = TYPE_SHORTCUT;
+						if(IPCManagerFn.TYPE_SHORTCUT != mCurrentType){
+							mOprateType = IPCManagerFn.TYPE_SHORTCUT;
 							if(null == mWonderfulVideoAdapter){
-								getRecorderFileFromLocal(TYPE_SHORTCUT);
+								getRecorderFileFromLocal(IPCManagerFn.TYPE_SHORTCUT);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -749,10 +745,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			case R.id.video_jjyx:
 				if(!isGetFileListDataing){
 					if(!isEditState){
-						if(TYPE_URGENT != mCurrentType){
-							mOprateType = TYPE_URGENT;
+						if(IPCManagerFn.TYPE_URGENT != mCurrentType){
+							mOprateType = IPCManagerFn.TYPE_URGENT;
 							if(null == mEmergencyVideoAdapter){
-								getRecorderFileFromLocal(TYPE_URGENT);
+								getRecorderFileFromLocal(IPCManagerFn.TYPE_URGENT);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -768,10 +764,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			case R.id.video_xhyx:
 				if(!isGetFileListDataing){
 					if(!isEditState){
-						if(TYPE_CIRCULATE != mCurrentType){
-							mOprateType = TYPE_CIRCULATE;
+						if(IPCManagerFn.TYPE_CIRCULATE != mCurrentType){
+							mOprateType = IPCManagerFn.TYPE_CIRCULATE;
 							if(null == mLoopVideoAdapter){
-								getRecorderFileFromLocal(TYPE_CIRCULATE);
+								getRecorderFileFromLocal(IPCManagerFn.TYPE_CIRCULATE);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -798,9 +794,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					mFunctionLayout.setVisibility(View.GONE);
 				}
 				
-				if(TYPE_SHORTCUT == mCurrentType){
+				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 					mWonderfulVideoAdapter.notifyDataSetChanged();
-				}else if(TYPE_URGENT == mCurrentType){
+				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
 					mEmergencyVideoAdapter.notifyDataSetChanged();
 				}else{
 					mLoopVideoAdapter.notifyDataSetChanged();
@@ -812,12 +808,21 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				mFunctionLayout.setVisibility(View.GONE);
 				for(String filename : selectedListData){
 					System.out.println("TTT======1111=filename="+filename);
-					GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "", "fs1:/video/");
+					String videoSavePath="";
+					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
+						videoSavePath="fs1:/video/wonderful/";
+					}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
+						videoSavePath="fs1:/video/urgent/";
+					}else{
+						videoSavePath="fs1:/video/loop/";
+					}
+					GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "download", videoSavePath);
 				}
 				
-				if(TYPE_SHORTCUT == mCurrentType){
+				selectedListData.clear();
+				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 					mWonderfulVideoAdapter.notifyDataSetChanged();
-				}else if(TYPE_URGENT == mCurrentType){
+				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
 					mEmergencyVideoAdapter.notifyDataSetChanged();
 				}else{
 					mLoopVideoAdapter.notifyDataSetChanged();
@@ -831,14 +836,14 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					GolukApplication.getInstance().getIPCControlManager().deleteFile(filename);
 					
 					
-					if(TYPE_SHORTCUT == mCurrentType){
+					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 						for(VideoInfo info : mWonderfulVideoData){
 							if(info.videoPath.equals(filename)){
 								mWonderfulVideoData.remove(info);
 								break;
 							}
 						}
-					}else if(TYPE_URGENT == mCurrentType){
+					}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
 						for(VideoInfo info : mEmergencyVideoData){
 							if(info.videoPath.equals(filename)){
 								mEmergencyVideoData.remove(info);
@@ -856,7 +861,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					
 				}
 				
-				if(TYPE_SHORTCUT == mCurrentType){
+				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 					wonderfulGroupName.clear();
 					for (VideoInfo info : mWonderfulVideoData) {
 						String name = info.videoCreateDate.substring(0, 10);
@@ -870,7 +875,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					wonderfulVideoData = videoInfo2Double(mWonderfulVideoData);
 					mWonderfulVideoAdapter.setData(wonderfulGroupName, wonderfulVideoData);
 					mWonderfulVideoAdapter.notifyDataSetChanged();
-				}else if(TYPE_URGENT == mCurrentType){
+				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
 					emergencyGroupName.clear();
 					for (VideoInfo info : mEmergencyVideoData) {
 						String name = info.videoCreateDate.substring(0, 10);
@@ -1039,11 +1044,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					if (null != fileList) {
 						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
 						mCurrentType = mOprateType;
-						updateButtonState(mCurrentType);
-						if(TYPE_SHORTCUT == mOprateType){//精彩视频
+						if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){//精彩视频
 							wonderfulTotalCount = total;
 							initWonderfulLayout(fileList);
-						}else if(TYPE_URGENT == mOprateType){//紧急视频
+						}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){//紧急视频
 							emergencyTotalCount = total;
 							initEmergencyLayout(fileList);
 						}else{//循环视频
@@ -1085,7 +1089,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							if(filename.contains(".jpg")){
 							String tag = json.optString("tag");
 		System.out.println("TTT=====22222====filename="+filename+"===tag="+tag);
-							if(TYPE_SHORTCUT == mCurrentType){//精彩视频
+							if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){//精彩视频
 								if (null != mWonderfulVideoAdapter) {
 									for(int i=0; i<wonderfulVideoData.size(); i++){
 										DoubleVideoInfo info =  wonderfulVideoData.get(i);
@@ -1115,7 +1119,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 									
 									mWonderfulVideoAdapter.notifyDataSetChanged();
 								}
-							}else if(TYPE_URGENT == mCurrentType){//紧急视频
+							}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){//紧急视频
 								if (null != mEmergencyVideoAdapter) {
 									for(int i=0; i<emergencyVideoData.size(); i++){
 										DoubleVideoInfo info =  emergencyVideoData.get(i);
