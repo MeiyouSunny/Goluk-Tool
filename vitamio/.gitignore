@@ -1,0 +1,14 @@
+######忽略bin目录
+bin/
+######忽略gen目录
+gen/
+######忽略.settings目录
+.settings/
+######忽略project.properties文件
+#project.properties
+######忽略default.properties文件
+#default.properties
+######忽略.classpath文件
+.classpath
+######忽略.project文件
+.project

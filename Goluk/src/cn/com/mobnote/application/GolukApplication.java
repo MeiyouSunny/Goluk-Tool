@@ -320,7 +320,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if(null != mMainActivity){
 				//地图大头针图片
 				console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
-				mMainActivity.videoAnalyzeComplete();
+//				mMainActivity.videoAnalyzeComplete();
 			}
 		}
 	}
@@ -422,7 +422,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+//		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		/*
 		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
