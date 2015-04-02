@@ -1,77 +1,193 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="cn.com.mobnote.golukmobile">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cn.com.mobnote.golukmobile"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
-	<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19"/>
-	
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-	<!-- 自动获取验证码 -->
-	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
-	<uses-permission android:name="android.permission.RECEIVE_SMS" />
-	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
 
-	<application android:name="cn.com.mobnote.application.GolukApplication" android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name">
-		<activity android:theme="@style/Theme.AppStartLoad" android:label="@string/app_name" android:name="cn.com.mobnote.golukmobile.GuideActivity" android:screenOrientation="portrait">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
-		</activity>
-		
-		<!-- 个人中心模块 -->
-		<activity android:name="cn.com.mobnote.golukmobile.UserStartActivity"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.UserLoginActivity"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.UserRegistActivity"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.UserRepwdActivity"></activity>
-		
-		<!-- 网络变化广播监听 -->
-		<receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver">
-			<intent-filter>
-				<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</receiver>
-		
-		<service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"></service>
-		
-		<activity android:name="cn.com.mobnote.golukmobile.LocalVideoListActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.VideoEditActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.VideoShareActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.OnLineVideoPlayActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.MainActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.IndexMoreActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.VideoSquareActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserCenterActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserSetupActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoListActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkIndexActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkStep1Activity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkStep2Activity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity" android:screenOrientation="portrait"/>
-		
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"/>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		
-		
-		
-		<!-- ###################添加UmengAppkey###################### -->
-		<meta-data android:name="UMENG_APPKEY" android:value="546341d6fd98c59a41003371"/>
-		<meta-data android:value="mobnote" android:name="UMENG_CHANNEL"/>
-		
-		<activity android:configChanges="orientation|keyboard" android:launchMode="singleTask" android:name="com.umeng.socialize.view.ShareActivity" android:noHistory="true" android:theme="@style/Theme.UMDialog" android:windowSoftInputMode="stateVisible|adjustResize"/>
-		<activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="true" android:name=".wxapi.WXEntryActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-		<!-- 添加百度地图key -->
-		<!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
-		<meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="63che8lBbcckvH0IEgeBjrdA" />
-		
-		
-		<!-- 必须 录制主服务 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- 自动获取验证码 -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name="cn.com.mobnote.application.GolukApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:name="cn.com.mobnote.golukmobile.GuideActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppStartLoad" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 个人中心模块 -->
+        <activity android:name="cn.com.mobnote.golukmobile.UserStartActivity" >
+        </activity>
+        <activity android:name="cn.com.mobnote.golukmobile.UserLoginActivity" >
+        </activity>
+        <activity android:name="cn.com.mobnote.golukmobile.UserRegistActivity" >
+        </activity>
+        <activity android:name="cn.com.mobnote.golukmobile.UserRepwdActivity" >
+        </activity>
+
+        <!-- 网络变化广播监听 -->
+        <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
+
+        <activity
+            android:name="cn.com.mobnote.golukmobile.LocalVideoListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoShareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.OnLineVideoPlayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.IndexMoreActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoSquareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserCenterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserSetupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.LiveVideoListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkIndexActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkStep1Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkStep2Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+
+        <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID -->
+                <data android:scheme="1104418156" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        
+        <activity
+            android:name="cn.com.mobnote.golukmobile.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- ###################添加UmengAppkey###################### -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="546341d6fd98c59a41003371" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="mobnote" />
+
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- 添加百度地图key -->
+        <!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="63che8lBbcckvH0IEgeBjrdA" />
+
+        <!-- 必须 录制主服务 -->
         <service android:name="com.rd.car.CarRecorderService" />
 
         <!-- 可选 响应各种消息 （可以动态注册此receiver) -->
@@ -80,40 +196,39 @@
                 <action android:name="com.rd.car.RECORDER_MESSAGE" />
             </intent-filter>
         </receiver>
-	</application>
-	
-	<!-- baidu地图权限 -->
-	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-	<uses-permission android:name="android.permission.USE_CREDENTIALS" />
-	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-	<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
-	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> 
-	<!-- wifi权限 -->
-	<uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES"/>
-	<uses-permission android:name="android.permission.WAKE_LOCK"/>
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-	<uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/>
-	<!-- umeng分享添加权限 -->
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-	
-	<!-- 视频播放必要权限开始 -->
-	<!-- 必要权限开始 -->
+    </application>
+
+    <!-- baidu地图权限 -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- wifi权限 -->
+    <uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <!-- umeng分享添加权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- 视频播放必要权限开始 -->
+    <!-- 必要权限开始 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -137,10 +252,8 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- 视频播放必要权限结束 -->
-    
-    
-	
-	<uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
     <uses-permission android:name="android.permission.BIND_APPWIDGET" />
@@ -192,8 +305,5 @@
 
     <!-- 解决三星手机因为权限问题死机问题 -->
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
-	
-    
-    
-    
+
 </manifest>
