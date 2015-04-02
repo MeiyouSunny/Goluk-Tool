@@ -296,7 +296,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				String fileName = json.getString("location");
 				console.log("调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---" + fileName);
 				//调用下载视频接口
-				mIPCControlManager.downloadFile(fileName,fileName,mVideoSavePath);
+				mIPCControlManager.downloadFile(fileName,"videodownload",mVideoSavePath);
 			}
 			catch(Exception e){
 				console.log("解析视频下载JSON数据错误");
@@ -318,9 +318,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		else if(0 == success){
 			//下载完成
 			if(null != mMainActivity){
+				//{"filename":"WND1_150402183837_0012.mp4", "tag":"videodownload"}
 				//地图大头针图片
 				console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
-//				mMainActivity.videoAnalyzeComplete();
+				mMainActivity.videoAnalyzeComplete(data);
 			}
 		}
 	}
@@ -422,7 +423,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+//		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		/*
 		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {

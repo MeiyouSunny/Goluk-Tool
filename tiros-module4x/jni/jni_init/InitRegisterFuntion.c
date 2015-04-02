@@ -9,6 +9,7 @@
 #include "cn_com_tiros_api_Gps.h"
 #include "cn_com_tiros_api_LLocation.h"
 #include "cn_com_tiros_api_SensorDetector.h"
+#include "cn_com_tiros_baidu_BaiduLocation.h"
 
 static JNINativeMethod gps_gMethods[] = {
 		{
@@ -33,6 +34,28 @@ static JNINativeMethod sensor_gMethods[] = {
 				(void *) Java_cn_com_tiros_api_SensorDetector_SensorChanged
 		}
 };
+
+static JNINativeMethod baiduLocation_gMethods[] = {
+		{
+				"sys_baiduLocationChange",
+				"(IDDDDD)V",
+				(void *) Java_cn_com_tiros_baidu_BaiduLocation_sys_1baiduLocationChange
+		}
+};
+
+static jint register_cn_com_tiros_baidu_BaiduLocation(JNIEnv *env) {
+	jclass cls = (*env)->FindClass(env, "cn/com/tiros/baidu/BaiduLocation");
+	jint result = (*env)->RegisterNatives(env, cls, baiduLocation_gMethods, 1);
+	(*env)->DeleteLocalRef(env, cls);
+	return result;
+}
+
+static jint unregister_cn_com_tiros_baidu_BaiduLocation(JNIEnv * env) {
+	jclass cls = (*env)->FindClass(env, "cn/com/tiros/baidu/BaiduLocation");
+	jint result = (*env)->UnregisterNatives(env, cls);
+	(*env)->DeleteLocalRef(env, cls);
+	return result;
+}
 
 static jint register_cn_com_tiros_api_Gps(JNIEnv *env) {
 	jclass cls = (*env)->FindClass(env, "cn/com/tiros/api/Gps");
@@ -87,13 +110,17 @@ jint JNI_Sub_Register(JNIEnv * g_env) {
 	if (register_cn_com_tiros_api_sensor(g_env) < 0) {
 		return -1;
 	}
+	if (register_cn_com_tiros_api_Gps(g_env) < 0) {
+		return -1;
+	}
 	return 0;
 }
 
 void JNI_Sub_UnRegister(JNIEnv * g_env) {
 	unregister_cn_com_tiros_api_Gps(g_env);
 	unregister_cn_com_tiros_api_llocation(g_env);
-        unregister_cn_com_tiros_api_sensor(g_env);
+	unregister_cn_com_tiros_api_sensor(g_env);
+	unregister_cn_com_tiros_baidu_BaiduLocation(g_env);
 }
 
 void InitRegisterFuntion(RegisterFuntionInfo registerFuntion){
