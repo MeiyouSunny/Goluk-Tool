@@ -82,4 +82,33 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static String getStartLiveJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("active", "1");
+			obj.put("talk", "1");
+			obj.put("tag", "android");
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static String getStartLookLiveJson(String uid, String aid) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("uid", uid);
+			obj.put("aid", aid);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
 }

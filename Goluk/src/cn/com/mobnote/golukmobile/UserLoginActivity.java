@@ -257,6 +257,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				if(code == 200){
 					//登录成功跳转
 					console.toast("登录成功！", mContext);
+					mApplication.isUserLoginSucess = true;
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
 				}else if(code == 500){

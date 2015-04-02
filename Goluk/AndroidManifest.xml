@@ -57,8 +57,9 @@
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		
-		
+		<activity
+		    android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
+		    android:screenOrientation="portrait" />
 		
 		<!-- ###################添加UmengAppkey###################### -->
 		<meta-data android:name="UMENG_APPKEY" android:value="546341d6fd98c59a41003371"/>

@@ -5,39 +5,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
-import com.rd.car.CarRecorderManager;
-import com.tencent.bugly.crashreport.CrashReport;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.utils.Log;
-
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.entity.LngLat;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.map.BaiduMapManage;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.LocalVideoListAdapter;
-import cn.com.mobnote.video.LocalVideoManage;
-import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
-import cn.com.mobnote.video.OnLineVideoManage;
-import cn.com.mobnote.view.LoadingView;
-import cn.com.mobnote.view.MyGridView;
-import cn.com.mobnote.wifi.WiFiConnection;
-import cn.com.mobnote.wifi.WifiAutoConnectManager;
-import cn.com.mobnote.wifi.WifiConnCallBack;
-import cn.com.mobnote.wifi.WifiRsBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -73,9 +40,12 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoManage;
@@ -102,6 +72,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.utils.Log;
 
 /**
  * <pre>
@@ -163,6 +134,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private Button mMoreBtn = null;
 	/** 本地视频按钮 */
 	private Button mLocalVideoListBtn = null;
+	/** 分享网络直播 */
+	private Button mShareLiveBtn = null;
 	
 	
 	
@@ -281,6 +254,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		//本地视频更多按钮
 		mLocalVideoListBtn = (Button)findViewById(R.id.share_local_video_btn);
+		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
+		mShareLiveBtn.setOnClickListener(this);
 		
 //		mLoginStatusBtn = (Button) findViewById(R.id.login_status_btn);
 //		mWiFiLinkStatus = (Button) findViewById(R.id.wifi_link_text);
@@ -941,7 +916,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
 			case R.id.map_location_btn:
@@ -981,7 +955,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
-			
+			case R.id.share_mylive_btn:
+				toShareLive();
+			break;
 			
 			
 			
@@ -1005,6 +981,94 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
+	
+	
+	/**
+	 * 发起主动直播
+	 * 
+	 * @author jiayf
+	 * @date Apr 2, 2015
+	 */
+	private void toShareLive() {
+		if (!mApp.isUserLoginSucess) {
+			// TODO 未登录成功
+			return;
+		}
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson());
+		if (!isSucess) {
+			startLiveFailed();
+		} else {
+			// TODO 弹对话框
+		}
+	}
+	
+	// 查看他人的直播
+	private void startLiveLook() {
+		String uid = "aaa";
+		String aid = "bbb";
+
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_PlayStart, JsonUtil.getStartLookLiveJson(uid, aid));
+		if (!isSucess) {
+			startLiveLookFailed();
+		} else {
+			// TODO 弹对话框
+		}
+	}
+
+	private void startLiveFailed() {
+		// TODO 开启直接失败
+	}
+
+	private void startLiveLookFailed() {
+		// TODO 开启直接失败
+	}
+	
+	
+	public void callBack_LiveLookStart(boolean isLive, int success, Object param1,Object param2) {
+		if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
+			if (isLive) {
+				startLiveFailed();
+			} else {
+				startLiveLookFailed();
+			}
+			return;
+		}
+		final String data = (String) param2;
+		int code = 0;
+		String gruopId = null;
+		String playUrl = null; // 直播地址
+		try {
+			JSONObject obj = new JSONObject(data);
+			code = Integer.valueOf(obj.getString("code"));
+			gruopId = obj.getString("groupid");
+			if (obj.isNull("vurl")) {
+				playUrl = obj.getString("vurl");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (200 != code || null == gruopId) {
+			if (isLive) {
+				startLiveFailed();
+			} else {
+				startLiveLookFailed();
+			}
+			return;
+		}
+		// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
+		intent.putExtra(LiveActivity.KEY_GROUPID, gruopId);
+		if (null != playUrl) {
+			intent.putExtra(LiveActivity.KEY_PLAY_URL, playUrl);
+		}
+		
+		startActivity(intent);
+	}
+
 	/**
 	 * 定位SDK监听函数
 	 */

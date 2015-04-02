@@ -3,5 +3,8 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- 直播界面文字大小 -->
+    <dimen name="live_text_size">25sp</dimen>
+    <dimen name="live_text_time1_size">14sp</dimen>
 
 </resources>

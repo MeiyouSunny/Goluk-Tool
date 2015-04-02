@@ -2,18 +2,14 @@ package cn.com.mobnote.application;
 
 import java.io.File;
 
+import org.json.JSONObject;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-
-import org.json.JSONObject;
-
-import com.rd.car.CarRecorderManager;
-import com.rd.car.RecorderStateException;
-
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -26,28 +22,21 @@ import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.SettingUtils;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.wifi.WifiManager;
-import android.os.Environment;
-import android.os.Handler;
-import android.util.Log;
 
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
-public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn{
+public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn{
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
 	/** 保存上下文 */
@@ -67,8 +56,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private IPCControlManager mIPCControlManager=null;
 	/** 登录IPC是否登录成功 */
 	private boolean isIpcLoginSuccess = false;
+	/**　用户是否登录小车本服务器成功 */
+	public boolean isUserLoginSucess = false;
 	/** 行车记录仪缓冲路径 */
 	private String carrecorderCachePath="";
+	/** 爱滔客回调 */
+	private ITalkFn mTalkListener = null;
 	
 	private WifiApAdmin wifiAp;
 	
@@ -92,6 +85,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mIPCControlManager.addIPCManagerListener("application", this);
 		// 注册回调
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_HttpPage, this);
+		// 注册爱滔客回调协议
+		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Talk, this);
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -213,6 +208,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	public Context getContext(){
 		return this.mContext;
+	}
+	
+	public void setTalkListener(ITalkFn fn) {
+		this.mTalkListener = fn;
 	}
 	
 	/**
@@ -376,7 +375,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case 9:
 				if(mPageSource == "LiveVideo"){
 					console.log("pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
-					((LiveVideoPlayActivity)mContext).LiveVideoDataCallBack(success,param2);
+					if (mContext instanceof LiveVideoPlayActivity) {
+						((LiveVideoPlayActivity)mContext).LiveVideoDataCallBack(success,param2);
+					} else if (mContext instanceof LiveActivity) {
+						((LiveActivity)mContext).LiveVideoDataCallBack(success,param2);
+					}					
 				}
 			break;
 			//登陆
@@ -412,6 +415,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case 17:
 				if(mPageSource == "UserRepwd"){
 					((UserRepwdActivity)mContext).repwdCallBack(success,param2);
+				}
+				break;
+			case PageType_LiveStart:
+				// 获取直播信息成功
+				if (null != mContext && mContext instanceof MainActivity) {
+					((MainActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+				}
+				break;
+			case PageType_PlayStart:
+				// 看别人直播
+				if (null != mContext && mContext instanceof MainActivity) {
+					((MainActivity) mContext).callBack_LiveLookStart(false,success, param1, param2);
 				}
 				break;
 			
@@ -534,6 +549,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void TalkNotifyCallBack(int type, String data) {
+		if(null == mTalkListener) {
+			return;
+		}
+		mTalkListener.TalkNotifyCallBack(type, data);
 	}
 	
 }
