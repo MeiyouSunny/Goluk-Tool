@@ -11,8 +11,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="6dp"
         android:layout_marginTop="16dp"
-        android:text="分享"
-        android:textSize="14sp" />
+        android:textColor="#333333"
+        android:text="分享到..."
+        android:textSize="18sp" />
 
     <View
         android:id="@+id/divider_line"
@@ -108,7 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_pengyouquan" />
+                    android:background="@drawable/live_share_messge" />
             </RelativeLayout>
 
             <RelativeLayout
