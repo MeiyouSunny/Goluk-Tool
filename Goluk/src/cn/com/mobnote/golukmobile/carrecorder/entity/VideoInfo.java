@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.carrecorder;
+package cn.com.mobnote.golukmobile.carrecorder.entity;
 
 import android.graphics.Bitmap;
 

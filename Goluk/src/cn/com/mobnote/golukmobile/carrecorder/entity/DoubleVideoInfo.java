@@ -1,4 +1,5 @@
-package cn.com.mobnote.golukmobile.carrecorder;
+package cn.com.mobnote.golukmobile.carrecorder.entity;
+
 
 public class DoubleVideoInfo {
 	private VideoInfo videoInfo1;

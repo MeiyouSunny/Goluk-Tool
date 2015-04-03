@@ -4,7 +4,7 @@
   @Date: 2013-07-18
   @Author: Beijing MoZhi ShiJi Information Technology Co., Ltd.
 */
-package cn.com.mobnote.golukmobile.carrecorder;
+package cn.com.mobnote.golukmobile.carrecorder.util;
 
 import java.io.File;
 

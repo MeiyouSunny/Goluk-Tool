@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.carrecorder;
+package cn.com.mobnote.golukmobile.carrecorder.entity;
 
  /**
   * 1.编辑器必须显示空白处

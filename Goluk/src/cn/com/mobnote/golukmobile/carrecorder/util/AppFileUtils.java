@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.carrecorder;
+package cn.com.mobnote.golukmobile.carrecorder.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -32,9 +32,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.DeviceState;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
-import cn.com.mobnote.golukmobile.carrecorder.SensorDetector.AccelerometerListener;
+import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SensorDetector;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SensorDetector.AccelerometerListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 
@@ -615,31 +619,38 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			finish();
 			break;
 		case R.id.m8sBtn:
-			GFileUtils
-					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
-			if (GolukApplication.getInstance().getIpcIsLogin()) {
-				if (!isRecording) {
-					m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
-					isRecording = true;
-					updateRecordState(false, 0);
-					mCurVideoType = VideoType.mounts;
-
-					GFileUtils
-							.writeIPCLog("=============================发起精彩视频命令================queryParam=");
-					boolean isSucess = GolukApplication.getInstance()
-							.getIPCControlManager().startWonderfulVideo();
-
-					if (!isSucess) {
-						videoTriggerFail();
-						GFileUtils
-								.writeIPCLog("=============================发起精彩视频命令============fail===============");
-					}
-				}
-			} else {
-				// 未登录
-				GFileUtils
-						.writeIPCLog("=============================发起精彩视频命令===========未登录=============");
-			}
+			long lon = 104348922;
+			long lat = 107744474;
+			int speed = 0;
+			int direction = 0;
+			boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
+			System.out.println("TTT=========updateGPS============a="+a);
+			
+//			GFileUtils
+//					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
+//			if (GolukApplication.getInstance().getIpcIsLogin()) {
+//				if (!isRecording) {
+//					m8sBtn.setBackgroundResource(R.drawable.btn_8s_press);
+//					isRecording = true;
+//					updateRecordState(false, 0);
+//					mCurVideoType = VideoType.mounts;
+//
+//					GFileUtils
+//							.writeIPCLog("=============================发起精彩视频命令================queryParam=");
+//					boolean isSucess = GolukApplication.getInstance()
+//							.getIPCControlManager().startWonderfulVideo();
+//
+//					if (!isSucess) {
+//						videoTriggerFail();
+//						GFileUtils
+//								.writeIPCLog("=============================发起精彩视频命令============fail===============");
+//					}
+//				}
+//			} else {
+//				// 未登录
+//				GFileUtils
+//						.writeIPCLog("=============================发起精彩视频命令===========未登录=============");
+//			}
 			break;
 		case R.id.mFileBtn:
 		case R.id.mFileText:
@@ -1540,7 +1551,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			System.out.println("TTT===============IPC_VDCP_Msg_FormatDisk========param1="
 					+ param1 + "=====param2=" + param2);
 			break;
-
+		case IPC_CommCmd_SetGpsInfo:
+			
+			break;
 			
 		default:
 			break;

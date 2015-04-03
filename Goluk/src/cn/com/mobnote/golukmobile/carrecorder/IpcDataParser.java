@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import android.text.TextUtils;
 
 public class IpcDataParser {
@@ -13,22 +16,6 @@ public class IpcDataParser {
 		public int type;
 		/** 文件名字 */
 		public String fileName;
-	}
-
-	/** 设备状态 */
-	public static class DeviceState {
-		/** SD卡总容量，单位为Byte。仅当SDActive为YES时，此字段有意义 */
-		public int totalSizeOnSD;
-		/** 当前镜头状态。 1 –正常 2 –异常 */
-		public int cameraStatus;
-		/** SD卡剩余容量，单位为Byte。仅当SDActive为YES时，此字段有意义。*/
-		public int leftSizeOnSD;
-		/** 当前登录用户数 */
-		public int onlineUsers;
-		/** SD卡在位YES(1) | SD卡不存在NO(0) */
-		public int SDPresent;
-		/** SD卡剩余容量太小，不能继续录制(1) | SD卡容量正常(0) */
-		public int isSpaceTooSmall;
 	}
 	
 	/**
@@ -190,9 +177,9 @@ public class IpcDataParser {
 			DeviceState deviceState = new DeviceState();
 
 			JSONObject obj = new JSONObject(json);
-			int totalSizeOnSD = obj.getInt("totalSizeOnSD");
+			double totalSizeOnSD = obj.getDouble("totalSizeOnSD");
 			int cameraStatus = obj.getInt("cameraStatus");
-			int leftSizeOnSD = obj.getInt("leftSizeOnSD");
+			double leftSizeOnSD = obj.getDouble("leftSizeOnSD");
 			int onlineUsers = obj.getInt("onlineUsers");
 			int SDPresent = obj.getInt("SDPresent");
 			int isSpaceTooSmall = obj.getInt("isSpaceTooSmall");

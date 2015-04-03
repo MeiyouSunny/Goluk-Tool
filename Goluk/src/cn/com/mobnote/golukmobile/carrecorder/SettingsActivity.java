@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.carrecorder;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;

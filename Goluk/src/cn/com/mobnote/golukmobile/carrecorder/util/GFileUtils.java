@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.carrecorder;
+package cn.com.mobnote.golukmobile.carrecorder.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
