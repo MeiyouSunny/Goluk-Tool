@@ -460,8 +460,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 				}else{
 					//初始化定时器
-				initTimer();
-				handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.
+				
 				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 				console.log(isRegist);
@@ -474,6 +473,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					mEditTextPhone.setEnabled(false);
 					mEditTextIdentify.setEnabled(false);
 					mEditTextPwd.setEnabled(false);
+				}else{
+					initTimer();
+					handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.
 				}
 		}
 			}else{
@@ -586,7 +588,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		runnable=new Runnable(){
 		@Override
 		public void run() {
-			console.toast("当前网络状态不佳，请检查网络后重试", mContext);
+			console.toast("网络链接超时", mContext);
 			mLoading.setVisibility(View.GONE);
 			}
 		};

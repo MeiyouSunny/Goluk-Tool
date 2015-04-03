@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -52,4 +54,16 @@ public class UserUtils {
 	        }
 	        return bisConnFlag;
 	    }
+	 /**
+	  * 删除SharedPreferences中的信息
+	  * 点击退出的话，删除本地的密码
+	  */
+	 private void clear(Context context) {//清除内容
+		 SharedPreferences mSharedpreferences = context.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+	      /** 开始清除SharedPreferences中保存的内容 **/
+	      Editor editor = mSharedpreferences.edit();
+	      editor.remove("password");
+	      editor.commit();
+	   }
+	 
 }

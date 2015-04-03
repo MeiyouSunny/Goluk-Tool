@@ -335,7 +335,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		//null{'vid':'test11','path':'fs1:/Cache/test11.png'}
 		//null{'vid':'test12','path':'fs1:/Cache/test12.png'}
 		//null{'vid':'test13','path':'fs1:/Cache/test13.png'}
-		
 		switch(type){
 			case 0:
 				if(success == 1){
@@ -393,6 +392,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					((UserLoginActivity)mContext).loginCallBack(success, param2);
 				}
 			break;
+			//自动登录
+			case 12:
+				if(mPageSource == "Main"){
+					((MainActivity)mContext).autoLoginCallback(success, param2);
+				}
+				break;
 			//验证码PageType_GetVCode
 			case 15:
 				//注册获取验证码

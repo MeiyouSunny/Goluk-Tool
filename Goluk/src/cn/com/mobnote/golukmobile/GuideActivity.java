@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
+import com.tencent.bugly.elfparser.Main;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.guide.GolukGuideManage;
 import android.annotation.SuppressLint;
@@ -8,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -69,9 +72,20 @@ public class GuideActivity extends Activity implements OnClickListener {
 		boolean isFirstIn = preferences.getBoolean("isfirst", true);
 		//判断程序第几次启动
 		if (!isFirstIn) {
-//			Intent intent = new Intent(this, MainActivity.class);
-			Intent intent = new Intent(this,UserStartActivity.class);
-			startActivity(intent);
+			//读取SharedPreference中用户的信息
+			SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+			//判断是否是第一次登录
+			if(!isFirstLogin){
+				//不是第一次登录,跳转到地图首页进行自动登录
+				Intent it = new Intent(this,MainActivity.class);
+				startActivity(it);
+			}else{
+				//是第一次登录
+				// Intent intent = new Intent(this, MainActivity.class);
+				Intent intent = new Intent(this, UserStartActivity.class);
+				startActivity(intent);
+			}
 			this.finish();
 		} else {
 //			Intent intent = new Intent(SplashActivity.this, GuideActivity.class);

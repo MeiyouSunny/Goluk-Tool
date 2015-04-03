@@ -1,6 +1,8 @@
 package cn.com.mobnote.golukmobile;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,12 +29,12 @@ import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoManage;
 import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
 import cn.com.mobnote.video.OnLineVideoManage;
-import cn.com.mobnote.view.LoadingView;
 import cn.com.mobnote.view.MyGridView;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.mobnote.wifi.WifiAutoConnectManager;
@@ -41,9 +43,12 @@ import cn.com.mobnote.wifi.WifiRsBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -101,6 +106,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.bugly.proguard.V;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -260,6 +266,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //				startActivity(i);
 //			}
 //		});
+		
+		//自动登录
+		initAutoLogin();
+		
 	}
 	
 	/**
@@ -281,6 +291,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		//本地视频更多按钮
 		mLocalVideoListBtn = (Button)findViewById(R.id.share_local_video_btn);
+		
+		//自动登录时，loading显示
 		
 //		mLoginStatusBtn = (Button) findViewById(R.id.login_status_btn);
 //		mWiFiLinkStatus = (Button) findViewById(R.id.wifi_link_text);
@@ -320,6 +332,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						checkLinkWiFi();
 						//网络状态改变
 						mApp.VerifyWiFiConnect();
+						initAutoLogin();
 					break;
 					
 					
@@ -801,7 +814,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			catch(Exception ex){}
 		}
 		else{
-			console.toast("登录失败", mContext);
+//			console.toast("登录失败", mContext);
 		}
 	}
 	
@@ -1077,7 +1090,128 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //		unregisterReceiver(mWac);
 //		//校验wifi连接状态
 //		mApp.VerifyWiFiConnect();
+	}	
+	
+	/**
+	 * 不是第一次登录的话，调用自动登录
+	 * 当用户使用到需要『登录在线』条件下登录权限的功能时
+	 * ——判断用户是否在自动登录，若是，则客户端使用系统 loading 提示：正在为您登录，请稍后…
+	 */
+	public void initAutoLogin(){
+		//网络判断
+		if(!UserUtils.isNetDeviceAvailable(mContext)){
+			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
+		}else{
+			//判断是否已经登录了
+			SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+			if(isFirstLogin){
+				//已经登录了
+			}else{//没有登录
+				//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
+				initTimer();
+				handler.postDelayed(runnable,50000);
+				
+//				timer();
+				
+				//{tag:”android/ios/pad/pc”}
+				String autoLogin = "{\"tag\":\"android\"}";
+				boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_AutoLogin, autoLogin);
+				if(b){
+//					console.toast("自动登录成功", mContext);
+				}else{
+					//登录失败，不做任何提示
+					console.toast("登录失败", mContext);
+				}
+			}
+		}
 	}
+	
+	/**
+	 * 自动登录回调
+	 * 
+	 */
+	public void autoLoginCallback(int success,Object obj){
+		console.log("---------------自动登录回调---------------");
+		if(1 == success){
+			handler.removeCallbacks(runnable);
+			try{
+				String data = (String)obj;
+				JSONObject json = new JSONObject(data);
+				int code = Integer.valueOf(json.getString("code"));
+				String msg = json.getString("msg");
+				console.log(data);
+				switch (code) {
+				case 200:
+					console.toast("自动登录成功", mContext);
+					break;
+				//服务器内部错误或者账号未注册，再次启动程序——提示框：自动登录失败，弹出提示框，提示内容：账号异常，请重新登录；
+				case 500:
+					//服务端异常
+					UserUtils.showDialog(mContext, "账号异常，请重新登录");
+					break;
+					
+				case 405:
+					//用户为注册
+					UserUtils.showDialog(mContext, "账号异常，请重新登录");
+					break;
+					
+				case 402:
+					//登录密码错误
+					UserUtils.showDialog(mContext, "密码错误，请重新登录");
+					break;
+
+				default:
+					break;
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}else{
+//			console.log("自动登录失败");
+			//超时处理
+			Builder dialog = new AlertDialog.Builder(mContext);
+				dialog.setTitle("提示");
+				dialog.setMessage("网络连接超时，请重试?");
+				dialog.setPositiveButton("取消",null);
+				dialog.setNegativeButton("重试",new DialogInterface.OnClickListener(){
+					public void onClick(DialogInterface dialoginterface, int i){
+						//按钮事件,重试
+						initAutoLogin();	
+					}
+				});
+				dialog.create().show();
+		}
+}
+	//网络链接超时
+	final private Handler handler = new Handler();
+	private Runnable runnable;
+	private void initTimer(){
+		runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+//				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
+				android.util.Log.i("xxx", "5分钟后自动登录重试");
+				initAutoLogin();
+			}
+		};
+	}
+	
+	//
+	public void timer(){
+		Timer mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				initAutoLogin();
+			}
+		}, 50000);
+	}
+	
 }
 
 

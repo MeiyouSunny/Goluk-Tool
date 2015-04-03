@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -58,6 +60,9 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 	private Context mContext = null;
 	private String phone;
 	private String pwd;
+	//将用户的手机号和密码保存到本地
+	private SharedPreferences mSharedPreferences;
+	private Editor mEditor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -271,7 +276,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 							//文本框不可被修改
 							mEditTextPhoneNumber.setEnabled(false);
 							mEditTextPwd.setEnabled(false);
-						}
+							}
 						}
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
@@ -304,6 +309,13 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				mLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
+					//登录成功后，存储用户的登录信息
+					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+					mEditor = mSharedPreferences.edit();
+					mEditor.putBoolean("FirstLogin", false);
+					//提交修改
+					mEditor.commit();
+					
 					//登录成功跳转
 					SysApplication.getInstance().exit();//杀死前边所有的Activity
 					console.toast("登录成功！", mContext);
