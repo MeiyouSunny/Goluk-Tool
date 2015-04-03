@@ -7,6 +7,7 @@
 -- @修改内容:修改GetUrlFromResource接口,增加UDP的URL 修改人:宣东言 修改日期:2012-04-09 18:30:28
 -- @修改内容:增加替换单引号,双引号,左右斜杠接口, 修改人:宣东言 修改日期:2012-10-29 16:43:28
 --]]
+
 require"lua/file"
 require"lua/json"
 require"lua/tapi"
@@ -38,7 +39,8 @@ local gsPublicUDPURL = "udp.xiaocheben.com:6001";
 --开发服务器airtalkee地址
 local gsDevAirTalkeeURL = "192.168.1.228";
 --测试服务器airtalkee地址
-local gsTestAirTalkeeURL = "119.2.12.35";
+local gsTestAirTalkeeURL = "211.103.234.238";
+--local gsTestAirTalkeeURL = "snsx.lbs8.com";
 --正式服务器airtalkee地址
 local gsPublicAirTalkeeURL = "sns.lbs8.com";
 
@@ -153,7 +155,7 @@ local function setVersion()
 		return;
 	end
 	--打开并读取数据
-	local sVersion = "undefineversion";
+	local sVersion = nil;
 	local file = filelib.fopen(gsVersionFileName, 1);
 	if (file ~= nil) then	
 		local nFileDataLength = filelib.fgetsize(gsVersionFileName);
@@ -504,5 +506,4 @@ createmodule(interFace,"getAirTalkeeUrl",function ()
 end)
 
 tiros.framework = readOnly(interFace);
-tiros.framework.SetCommonlyInfoIntoModuledata();
 

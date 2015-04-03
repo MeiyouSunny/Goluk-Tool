@@ -41,10 +41,10 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
@@ -1000,16 +1000,17 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			startLiveFailed();
 		} else {
 			// TODO 弹对话框
+			Toast.makeText(this, "发起直播", Toast.LENGTH_LONG).show();
 		}
 	}
 	
 	// 查看他人的直播
-	private void startLiveLook() {
-		String uid = "aaa";
-		String aid = "bbb";
-
+	public void startLiveLook(UserInfo userInfo) {
+		if (null == userInfo) {
+			return;
+		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_PlayStart, JsonUtil.getStartLookLiveJson(uid, aid));
+				IPageNotifyFn.PageType_PlayStart, JsonUtil.getStartLookLiveJson(userInfo.uid, userInfo.aid));
 		if (!isSucess) {
 			startLiveLookFailed();
 		} else {
@@ -1039,17 +1040,29 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		int code = 0;
 		String gruopId = null;
 		String playUrl = null; // 直播地址
+		String grouptype = "";
+		int membercount = 0;
+		String title = "";
+		String groupnumber = "";
+		int tag = 0;
+		String joniGroup = null;
 		try {
 			JSONObject obj = new JSONObject(data);
 			code = Integer.valueOf(obj.getString("code"));
 			gruopId = obj.getString("groupid");
-			if (obj.isNull("vurl")) {
+			if (!obj.isNull("vurl")) {
 				playUrl = obj.getString("vurl");
 			}
+			grouptype = obj.getString("grouptype");
+			membercount = obj.getInt("membercount");
+			title = obj.getString("title");
+			groupnumber = obj.getString("groupnumber");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+//		if (200 != code || null == gruopId || "".equals(gruopId)) {
 		if (200 != code || null == gruopId) {
 			if (isLive) {
 				startLiveFailed();
@@ -1058,6 +1071,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			}
 			return;
 		}
+		joniGroup = JsonUtil.getJoinGroup(grouptype, membercount, title, gruopId,groupnumber);
+		
+		UserInfo currentUserInfo = null;
+		if(!isLive) {
+			currentUserInfo = mBaiduMapManage.getCurrentUserInfo();
+		}
+		
+		
 		// 开启直播
 		Intent intent = new Intent(this, LiveActivity.class);
 		intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
@@ -1065,6 +1086,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if (null != playUrl) {
 			intent.putExtra(LiveActivity.KEY_PLAY_URL, playUrl);
 		}
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, joniGroup);
 		
 		startActivity(intent);
 	}

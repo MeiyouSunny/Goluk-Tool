@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.SoundUtils;
 import cn.com.mobnote.logic.GolukModule;
@@ -52,6 +51,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	public static final String KEY_GROUPID = "groupID";
 	/** 播放与直播地址 */
 	public static final String KEY_PLAY_URL = "key_play_url";
+	public static final String KEY_JOIN_GROUP = "key_join_group";
 
 	/** application */
 	private GolukApplication mApp = null;
@@ -92,6 +92,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/** 要加入的爱滔客群组 */
 	private String mGroupId = null;
 	private String mPlayUrl = null;
+	private String mJoinGroupJson = null;
 
 	/** 直播开启标志 */
 	private boolean isStartLive = false;
@@ -133,7 +134,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// 地图初始化
 		initMap();
 		// 请求视频直播数据
-		getVideoLiveData();
+		// getVideoLiveData();
 
 		videoInit();
 
@@ -150,6 +151,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		isShareLive = intent.getBooleanExtra(KEY_IS_LIVE, true);
 		mGroupId = intent.getStringExtra(KEY_GROUPID);
 		mPlayUrl = intent.getStringExtra(KEY_PLAY_URL);
+		mJoinGroupJson = intent.getStringExtra(KEY_JOIN_GROUP);
 	}
 
 	/**
@@ -248,9 +250,19 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mRPVPalyVideo.setPlayerListener(this);
 		// 设置视频源
 		mRPVPalyVideo.setConnectionTimeout(30000);
-		mFilePath = "rtsp://admin:123456@192.168.43.234/sub";
+		if (isShareLive) {
+			mFilePath = "rtsp://admin:123456@192.168.43.234/sub";
+		} else {
+			mFilePath = "其它人的地址";
+		}
+
 		mRPVPalyVideo.setDataSource(mFilePath);
 		mRPVPalyVideo.start();
+
+		if (isShareLive) {
+			// 开启直播
+			this.startLive("share110");
+		}
 	}
 
 	/**
@@ -260,8 +272,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @date Apr 2, 2015
 	 */
 	private void joinAitalkGroup() {
-		final int cmd = isShareLive ? ITalkFn.Talk_CommCmd_JoinPersonGroup : ITalkFn.Talk_CommCmd_JoinGroupWithInfo;
-		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd, mGroupId);
+		LogUtil.e(null, "jyf-------live------aitalk:join: " + mJoinGroupJson);
+		final int cmd = isShareLive ? ITalkFn.Talk_CommCmd_JoinGroupWithInfo : ITalkFn.Talk_CommCmd_JoinGroupWithInfo;
+		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd, mJoinGroupJson);
 	}
 
 	private void cancelTimer() {
@@ -280,9 +293,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @date 2015年3月8日
 	 */
 	private void startLive(String aid) {
-		GFileUtils.writeLiveLog("===========行车记录仪=============startLive========111111==================aid=" + aid);
 		liveVid = aid;
-
 		curRecordTime = 0;
 		cancelTimer();
 		mRecordTimer = new Timer();
@@ -314,36 +325,22 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		mRecordTimer.schedule(task, 1000, 1000);
 
-		GFileUtils.writeLiveLog("===========行车记录仪=============startLive========22222====================");
-		// GolukApplication.getInstance().notifyVideoID(liveVid);
-		GFileUtils.writeLiveLog("===========行车记录仪=============startLive========555555====================");
-
-		if (!isStartLive) {
-			if (!CarRecorderManager.isRTSPLiving()) {
-				System.out.println("KKKKKK 111111111111111111111");
-				try {
-					SharedPreferences sp = getSharedPreferences("CarRecorderPreferaces", Context.MODE_PRIVATE);
-					sp.edit().putString("url_live", "rtmp://211.103.234.234/live/" + liveVid).apply();
-					sp.edit().commit();
-
-					CarRecorderManager.updateLiveConfiguration(new PreferencesReader(this).getConfig());
-
-					CarRecorderManager.setLiveMute(true);
-					CarRecorderManager.startRTSPLive();
-					GFileUtils
-							.writeLiveLog("===========行车记录仪=============startLive========666666========发起直播成功============");
-					isStartLive = true;
-					System.out.println("KKKKKK 开启直播");
-				} catch (RecorderStateException e) {
-					System.out.println("KKKKKK 直播异常 : " + e.toString());
-					// LuaUtil.RecordVideoError(mApplication.mLuaState, 101);
-					e.printStackTrace();
-					// Toast.makeText(TalkActivity.this, "开启直播失败"+e.toString(),
-					// Toast.LENGTH_SHORT).show();
-				}
+		if (isStartLive) {
+			return;
+		}
+		if (!CarRecorderManager.isRTSPLiving()) {
+			try {
+				SharedPreferences sp = getSharedPreferences("CarRecorderPreferaces", Context.MODE_PRIVATE);
+				sp.edit().putString("url_live", "rtmp://211.103.234.234/live/" + liveVid).apply();
+				sp.edit().commit();
+				CarRecorderManager.updateLiveConfiguration(new PreferencesReader(this).getConfig());
+				CarRecorderManager.setLiveMute(true);
+				CarRecorderManager.startRTSPLive();
+				isStartLive = true;
+			} catch (RecorderStateException e) {
+				e.printStackTrace();
 			}
 		}
-
 	}
 
 	/**
@@ -705,11 +702,15 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	@Override
 	public void TalkNotifyCallBack(int type, String data) {
+		LogUtil.e(null, "jyf-------live------TalkNotifyCallBack type: " + type + "  data:" + data);
 		switch (type) {
 		case Talk_Event_ChanleIn:
+			// 进入频道相关
 			intoChannelEvent(type, data);
 			break;
 		case Talk_Event_ChanleInterAction:
+			// 频道内交互事件
+			channelInteractionEvent(type, data);
 			break;
 		default:
 			break;

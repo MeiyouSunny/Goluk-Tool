@@ -16,11 +16,15 @@
 </pre>
 
 --]]
-
+print("air lua base 1")
 require "lua/systemapi/sys_namespace"
+print("air lua base 2")
 require "lua/systemapi/sys_handle"
+print("air lua base 3")
 require "lua/json"
+print("air lua base 4")
 require "lua/base/base_file"
+print("air lua base 5")
 
 local interface = {};
 --资源文件地址路径
@@ -36,9 +40,18 @@ local resPath = "res/api/api.rs";
 //key_search:请求服务对应的性能统计key,张亚磊提供//
 --]]
 --获取web服务配置文档
+--[[
 local webServerConfig = nil;
-
-
+local webConfigStr = tiros.base.file.ReadFile("fs6:/" .. tiros.web.FilePath .. "source/http");
+if webConfigStr ~= nil and #webConfigStr > 0 then
+	--格式化字符串,删除注释内容
+	local webSubStr = string.gsub(webConfigStr, "//.*//", "");
+	if #webSubStr > 0 then
+		webServerConfig = tiros.json.decode(webSubStr);
+	end
+end
+--]]
+print("air lua base 6")
 --获取logic服务配置文档
 local logicServerConfig = nil;
 local logicConfigStr = tiros.base.file.ReadFile("fs6:/lua/config/logichttpconfig");
@@ -57,10 +70,13 @@ local logicSendUrl = {};
 --统计模块标识
 local moduleType = {web = "cdc_client",logic = "cdc_client"};
 
+local urlTable = {[2302] = "http://svr.xiaocheben.com/cdcServer/getGroupInfo.htm",[2303] = "http://svr.xiaocheben.com/cdcServer/exitGroup.htm"};
+
+
 --服务返回数据
 local serverData = {};
 
-
+print("air lua base 7")
 local function send(id,callback,url,opt,stype)
 	local data = nil;
 	local method = opt.method;
@@ -76,7 +92,6 @@ local function send(id,callback,url,opt,stype)
 			end
 			if #condi > 0 then
 				url = url .. "?" .. tiros.commfunc.EnCodeUrl(string.sub(condi,0,string.len(condi)-1));
-				print("jiangdezheng get url " .. url);
 			end
 		end
 	else
@@ -104,8 +119,6 @@ local function send(id,callback,url,opt,stype)
 		end
 	end
 	
-	print("jiangdezheng get urldddddd " .. url);
-
 	--获取服务模块
 	local mtype = moduleType[opt.form];
 
@@ -214,12 +227,12 @@ createmodule(interface,"HttpSend",function(id,callback,server,opt,devurl)
 			--print("!!!!!!!!!!!!!!logicServerConfig no found!!!!");
 		end
 		url = logicSendUrl[server];
-
 	end
 
 	if serverType ~= nil then
 		if url == nil then
-			url = tiros.framework.getUrlFromResource(resPath,serverMark);
+			--url = tiros.framework.getUrlFromResource(resPath,serverMark);
+			url = urlTable[serverMark];
 			--保存已请求的服务地址
 			if opt.form == "web" then
 				webSendUrl[server] = url;
@@ -240,13 +253,12 @@ createmodule(interface,"HttpSend",function(id,callback,server,opt,devurl)
 		end
 	end
 	if url == "" then
-		print("jiangdezheng !!!!!!!!!!!!!!no url request!!!!!!!!!!!!!!");
+		--print("!!!!!!!!!!!!!!no url request!!!!!!!!!!!!!!");
 		return;
 	end
-		print("jiangdezheng url " .. url)
 	send(id,callback,url,opt,serverType);
 end);
-
+print("air lua base 8")
 --中断http请求
 createmodule(interface,"HttpAbort",function(id)
 	if id ~= nil then
@@ -255,6 +267,6 @@ createmodule(interface,"HttpAbort",function(id)
 		serverData[id] = nil;
 	end 
 end);
-
+print("air lua base 9")
 
 tiros.base.http = readOnly(interface);
