@@ -26,7 +26,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"
-			android:text="@string/carrecorder_filemagager_title"
+			android:text="@string/my_video_text"
 			android:textColor="@color/white"
 			android:textSize="18sp" />
 
@@ -124,7 +124,8 @@
 				android:layout_marginRight="20dp"
 				android:layout_weight="1"
 				android:background="#00c590"
-				android:contentDescription="@string/def" />
+				android:contentDescription="@string/def"
+				android:visibility="visible" />
 
 			<ImageView
 				android:id="@+id/line_jcsp"
@@ -134,7 +135,8 @@
 				android:layout_marginRight="20dp"
 				android:layout_weight="1"
 				android:background="#00c590"
-				android:contentDescription="@string/def" />
+				android:contentDescription="@string/def"
+				android:visibility="invisible" />
 
 			<ImageView
 				android:id="@+id/line_jjyx"
@@ -144,7 +146,8 @@
 				android:layout_marginRight="10dp"
 				android:layout_weight="1"
 				android:background="#00c590"
-				android:contentDescription="@string/def" />
+				android:contentDescription="@string/def"
+				android:visibility="invisible" />
 		</LinearLayout>
 	</RelativeLayout>
 
@@ -163,11 +166,11 @@
 			android:fastScrollEnabled="false"
 			android:divider="#00000000"
 			android:scrollbars="none"
-			android:visibility="gone"
 			android:listSelector="#00000000"
 			android:cacheColorHint="#00000000"
 			android:scrollbarStyle="outsideOverlay"
-			tools:listitem="@layout/test_list_item_layout" />
+			tools:listitem="@layout/test_list_item_layout"
+			android:visibility="visible" />
 		
 		<com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
 			android:id="@+id/mWonderfulVideoList"
@@ -181,7 +184,8 @@
 			android:listSelector="#00000000"
 			android:cacheColorHint="#00000000"
 			android:scrollbarStyle="outsideOverlay"
-			tools:listitem="@layout/test_list_item_layout" />
+			tools:listitem="@layout/test_list_item_layout"
+			android:visibility="gone" />
 		
 		<com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
 			android:id="@+id/mEmergencyVideoList"
@@ -192,89 +196,50 @@
 			android:fastScrollEnabled="false"
 			android:divider="#00000000"
 			android:scrollbars="none"
-			android:visibility="gone"
 			android:listSelector="#00000000"
 			android:cacheColorHint="#00000000"
 			android:scrollbarStyle="outsideOverlay"
-			tools:listitem="@layout/test_list_item_layout" />
+			tools:listitem="@layout/test_list_item_layout"
+			android:visibility="gone" />
 		
 	</RelativeLayout>
 	
 	
-	<!-- 文件列表 -->
-	<LinearLayout
-		android:visibility="gone"
+	
+	
+	<!-- 删除文件列表 -->
+	<RelativeLayout
 		android:id="@+id/mFunctionLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
-		android:orientation="horizontal" >
-
-		<LinearLayout
-			android:id="@+id/mDownloadBtn"
+		android:background="@drawable/carrecorder_flle_edit_bg"
+		android:visibility="gone" >
+		
+		<TextView
+			android:id="@+id/video_delete_txt"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:layout_weight="1"
-			android:background="@drawable/carrecorder_flle_edit_bg" >
-			
-			<ImageView
-				android:id="@+id/video_download_img"
-				android:duplicateParentState="true"
-				android:layout_gravity="center"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginRight="16sp"
-				android:background="@drawable/carrecorder_download_btn" 
-				android:contentDescription="@string/def"/>
-			
-			<TextView
-				android:id="@+id/video_download_txt"
-				android:duplicateParentState="true"
-				android:layout_gravity="center"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="下载"
-				android:textColor="#b2b2b2"
-				android:background="#00000000"
-				android:textSize="16sp" />
-		</LinearLayout>
+			android:text="@string/delete_text"
+			android:duplicateParentState="true"
+			android:layout_centerInParent="true"
+			android:textColor="#b2b2b2"
+			android:background="#00000000"
+			android:textSize="16sp" />
 		
 		<ImageView
+			android:id="@+id/video_delete_img"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:background="@drawable/carrecorder_flle_edit_line" 
+			android:layout_toLeftOf="@id/video_delete_txt"
+			android:layout_centerVertical="true"
+			android:layout_marginRight="16sp"
+			android:duplicateParentState="true"
+			android:background="@drawable/carrecorder_delete_btn"
 			android:contentDescription="@string/def"/>
-			<LinearLayout
-				android:id="@+id/mDeleteBtn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:layout_weight="1"
-				android:background="@drawable/carrecorder_flle_edit_bg" >
-	
-			<ImageView
-				android:id="@+id/video_delete_img"
-				android:layout_gravity="center"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginRight="16sp"
-				android:duplicateParentState="true"
-				android:background="@drawable/carrecorder_delete_btn" 
-				android:contentDescription="@string/def"/>
 			
-			<TextView
-				android:id="@+id/video_delete_txt"
-				android:layout_gravity="center"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="删除"
-				android:duplicateParentState="true"
-				android:textColor="#b2b2b2"
-				android:background="#00000000"
-				android:textSize="16sp" />
-			</LinearLayout>
-		</LinearLayout>
+		</RelativeLayout>
+		
 </RelativeLayout>
 
 

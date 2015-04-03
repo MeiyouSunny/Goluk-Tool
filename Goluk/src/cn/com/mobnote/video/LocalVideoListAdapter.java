@@ -91,7 +91,7 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = inflater.inflate(R.layout.carrecorder_videolist_item, parent, false);
+			convertView = inflater.inflate(R.layout.local_video_list_item, parent, false);
 			holder.mVideoLayout1 = (RelativeLayout)convertView.findViewById(R.id.mVideoLayout1);
 			holder.mVideoLayout2 = (RelativeLayout)convertView.findViewById(R.id.mVideoLayout2);
 			holder.mTMLayout1 = (RelativeLayout)convertView.findViewById(R.id.mTMLayout1);

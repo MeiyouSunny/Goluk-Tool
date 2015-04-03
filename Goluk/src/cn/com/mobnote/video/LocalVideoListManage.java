@@ -3,8 +3,6 @@ package cn.com.mobnote.video;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.Message;
@@ -38,7 +36,6 @@ import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.Utils;
 import cn.com.mobnote.util.console;
-import cn.com.tiros.api.FileUtils;
 
 /**
  * <pre>
@@ -96,15 +93,14 @@ public class LocalVideoListManage {
 	
 	
 	/** 本地视频列表页面数据 */
-	public ArrayList<DoubleVideoData> mLocalVideoListData = new ArrayList<DoubleVideoData>();
+	public ArrayList<LocalVideoData> mLocalVideoListData = new ArrayList<LocalVideoData>();
+	public ArrayList<DoubleVideoData> mDoubleLocalVideoListData = new ArrayList<DoubleVideoData>();
 	/** 本地视频列表tab数据 */
 	public ArrayList<String> mTabGroupName = new ArrayList<String>();
 	
 	public LocalVideoListManage(Context context){
 		mContext = context;
 	}
-	
-	
 	
 	/**
 	 * 获取本地视频列表
@@ -118,6 +114,52 @@ public class LocalVideoListManage {
 		thread.start();
 	}
 	
+	/**
+	 * 单个视频数据对象转双个
+	 * @param datalist
+	 * @return
+	 * @author chenxy
+	 */
+	public void videoInfo2Double(List<LocalVideoData> datalist){
+		mDoubleLocalVideoListData.clear();
+		int i = 0;
+		while(i < datalist.size()){
+			String groupname1 = "";
+			String groupname2 = "";
+			LocalVideoData _videoInfo1 = null;
+			LocalVideoData _videoInfo2 = null;
+			_videoInfo1 = datalist.get(i);
+			groupname1 = _videoInfo1.videoCreateDate.substring(0, 10);
+			
+			if((i+1) < datalist.size()){
+				_videoInfo2 = datalist.get(i+1);
+				groupname2 = _videoInfo2.videoCreateDate.substring(0, 10);
+			}
+			
+			if(groupname1.equals(groupname2)){
+				i += 2;
+			}else{
+				i++;
+				_videoInfo2=null;
+			}
+			
+			DoubleVideoData dub = new DoubleVideoData(_videoInfo1, _videoInfo2);
+			mDoubleLocalVideoListData.add(dub);
+		}
+	}
+	
+	public void setGroupTabData(List<LocalVideoData> mLoopVideoData){
+		mTabGroupName.clear();
+		//更新group tab数据
+		for (LocalVideoData info : mLoopVideoData) {
+			String time = info.videoCreateDate;
+			//保存分组数据
+			String tabTime = time.substring(0,10);
+			if(!mTabGroupName.contains(tabTime)){
+				mTabGroupName.add(tabTime);
+			}
+		}
+	}
 	
 	/**
 	 * 截取视频第一针
@@ -148,7 +190,7 @@ public class LocalVideoListManage {
 	 */
 	private void readLocalVideoFile(int videoType){
 		//清除缓存数据
-		//mLocalVideoListData.clear();
+		mLocalVideoListData.clear();
 		//mLoadFileList.clear();
 		
 		String[] filePaths = {"loop/","wonderful/","urgent/"};
@@ -164,13 +206,14 @@ public class LocalVideoListManage {
 			//int addCount = 0;
 			//拿到已经点击过的视频文件名字
 			Map<String,String> videoNames = this.getVideoLog();
-			ArrayList<LocalVideoData> videoList = new ArrayList<LocalVideoData>();
+			
 			
 			for(File f : files){
 				if(f.exists()){
 					if(f.isDirectory()){
 						//是文件夹递归查找,自己保存的目录,只读这个目录的文件,走下面
-					}else{
+					}
+					else{
 						String fileName = f.getName();
 						//得到后缀
 						int lastIndex = fileName.lastIndexOf(".");
@@ -183,30 +226,31 @@ public class LocalVideoListManage {
 								//mLoadFileList.put(fileName,"1");
 								
 								//获取文件大小
-								FileInputStream fis;
-								String size = "";
-								try {
-									fis = new FileInputStream(f);
-									int fileLen = fis.available();
-									size = String.format("%.1f", fileLen / 1024.f / 1024.f) + "M";
-								}
-								catch(Exception e){
-								}
+								String size = getFileSize(f);
 								
 								//判断视频类别,WND1_,URG1_文件已这种格式开头为 8s/紧急
 								String[] names = fileName.split("_");
 								console.log("fileName---" + fileName);
 								String vt = names[0];
 								
+								//视频时长,秒
+								int period = 8;
+								if(names.length > 2){
+									String p = names[2];
+									period = Integer.valueOf(p.substring(0,p.lastIndexOf(".")));
+								}
+								
 								//获取文件最后修改时间
 								//URG1_150128133420_0016.mp4,
-								long date = countFileDate(fileName);
-								String time = this.getTime(date);
+								//long date = countFileDate(fileName);
+								//String time = this.getTime(date);
+								String time = countFileDateToString(fileName);
 								
+								String tabTime = time.substring(0,10);
 								//保存分组数据
-								mTabGroupName.add(String.valueOf(date));
-								
-								
+								if(!mTabGroupName.contains(tabTime)){
+									mTabGroupName.add(tabTime);
+								}
 								
 								//保存数据
 								LocalVideoData data = new LocalVideoData();
@@ -215,11 +259,11 @@ public class LocalVideoListManage {
 								data.id = path;
 								data.videoSize = size;
 								//视频时长,没有数据
-								data.countTime = Utils.minutesTimeToString(8);
+								data.countTime = Utils.minutesTimeToString(period);
 								//视频质量,没有数据
 								data.videoHP = 1080;
 								//时间显示需求
-								data.videoCreateDate =time;
+								data.videoCreateDate = time;
 								data.videoPath = path;
 								
 								//判断缓存有没有下载图片
@@ -229,9 +273,11 @@ public class LocalVideoListManage {
 								File imgFile = new File(imgPath + File.separator + imgName);
 								if (imgFile.exists()) {
 									data.videoBitmap = ImageManager.getBitmapFromCache(imgPath + File.separator + fileName, 194, 109);
-								} else {
+								}
+								else {
+									//以后下载视频的时候会同时下载图片,没有图片就显示默认
 									//截取视频第一针,需要另开线程处理,先这么做吧
-									data.videoBitmap = getVideoFirstImage(path);
+									//data.videoBitmap = getVideoFirstImage(path);
 								}
 								data.videoCreateDate = time;
 
@@ -247,56 +293,74 @@ public class LocalVideoListManage {
 									data.isNew = true;
 								}
 								data.videoType = vt;
-								videoList.add(data);
+								mLocalVideoListData.add(data);
 							}
 						}
 					}
 				}
 			}
 			
-			videoInfo2Double(videoList);
-			//发消息给主线程
-			Message msg = new Message();
-			msg.what = videoType;
-			if(null != LocalVideoListActivity.mVideoListHandler){
-				LocalVideoListActivity.mVideoListHandler.sendMessage(msg);
+			if(mLocalVideoListData.size() > 0){
+				videoInfo2Double(mLocalVideoListData);
+				//发消息给主线程
+				Message msg = new Message();
+				msg.what = videoType;
+				if(null != LocalVideoListActivity.mVideoListHandler){
+					LocalVideoListActivity.mVideoListHandler.sendMessage(msg);
+				}
 			}
 		}
 	}
 	
 	/**
-	 * 单个视频数据对象转双个
-	 * @param datalist
+	 * 获取文件大小
+	 * @param f
 	 * @return
-	 * @author chenxy
 	 */
-	private void videoInfo2Double(List<LocalVideoData> datalist){
-		//List<DoubleVideoData> doublelist = new ArrayList<DoubleVideoData>();
-		mLocalVideoListData.clear();
-		int i = 0;
-		while(i < datalist.size()){
-			String groupname1 = "";
-			String groupname2 = "";
-			LocalVideoData _videoInfo1 = null;
-			LocalVideoData _videoInfo2 = null;
-			_videoInfo1 = datalist.get(i);
-			groupname1 = _videoInfo1.videoCreateDate.substring(0, 10);
-			
-			if((i+1) < datalist.size()){
-				_videoInfo2 = datalist.get(i+1);
-				groupname2 = _videoInfo2.videoCreateDate.substring(0, 10);
-			}
-			
-			if(groupname1.equals(groupname2)){
-				i += 2;
-			}else{
-				i++;
-				_videoInfo2=null;
-			}
-			
-			DoubleVideoData dub = new DoubleVideoData(_videoInfo1, _videoInfo2);
-			mLocalVideoListData.add(dub);
+	@SuppressWarnings("resource")
+	private String getFileSize(File f){
+		//获取文件大小
+		FileInputStream fis = null;
+		String size = "";
+		try {
+			fis = new FileInputStream(f);
+			int fileLen = fis.available();
+			size = String.format("%.1f", fileLen / 1024.f / 1024.f) + "M";
 		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return size;
+	}
+	
+	/**
+	 * 根据文件名计算日期
+	 * @param name
+	 * @return
+	 */
+	private String countFileDateToString(String name){
+		//判断视频类别,WND1_,URG1_文件已这种格式开头为 8s/紧急
+		String[] names = name.split("_");
+		//获取文件最后修改时间
+		//URG1_150128133420_0016.mp4,
+		String date = "";
+		String dateString = "";
+		if(names.length > 1){
+			try{
+				date = names[1];
+				String year = "20" + date.substring(0,2);
+				String mouth = date.substring(2,4);
+				String day = date.substring(4,6);
+				String hour = date.substring(6,8);
+				String minute = date.substring(8,10);
+				//String second = date.substring(10, 12);
+				dateString = year + "-" + mouth + "-" + day + " " + hour + ":" + minute;
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return dateString;
 	}
 	
 	/**
@@ -304,7 +368,7 @@ public class LocalVideoListManage {
 	 * @param files
 	 * @return
 	 */
-	public File[] sortFile(File[] files){
+	private File[] sortFile(File[] files){
 		if(files != null && files.length > 0){
 			File file = null;
 			for(int i = 0; i < files.length; i++) {
@@ -324,7 +388,12 @@ public class LocalVideoListManage {
 		return files;
 	}
 	
-	public long countFileDate(String name){
+	/**
+	 * 根据文件名计算日期
+	 * @param name
+	 * @return
+	 */
+	private long countFileDate(String name){
 		long time = new Date().getTime();
 		//判断视频类别,WND1_,URG1_文件已这种格式开头为 8s/紧急
 		String[] names = name.split("_");
@@ -358,7 +427,7 @@ public class LocalVideoListManage {
 	 * @param time
 	 * @return
 	 */
-	public String getTime(long time){
+	private String getTime(long time){
 		long now = System.currentTimeMillis();
 		//long changetime = time.getTime();
 		long changetime = time;
@@ -413,7 +482,7 @@ public class LocalVideoListManage {
 	 * 点击视频播放的时候向日志文件中添加点击的文件名字
 	 * @param str
 	 */
-	public void addVideoLog(String str){
+	private void addVideoLog(String str){
 		FileOutputStream outputStream = null;
 		try{
 			File file = new File(newImagePath);
@@ -438,9 +507,6 @@ public class LocalVideoListManage {
 			}
 		}
 	}
-	
-	
-	
 	
 	
 	
