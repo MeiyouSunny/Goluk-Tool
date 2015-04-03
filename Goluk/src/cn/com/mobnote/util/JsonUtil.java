@@ -107,5 +107,25 @@ public class JsonUtil {
 		
 		return null;
 	}
+	
+	/**
+	 * 组织设置IPC系统时间json串
+	 * @param time 时间
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public static String getTimeJson(long time){
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("time", time);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 
 }

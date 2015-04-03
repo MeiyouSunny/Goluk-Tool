@@ -1520,7 +1520,28 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 
 			}
 			break;
+		case IPC_VDCP_Msg_GetIdentity:
+			System.out.println("TTT===============IPC_VDCP_Msg_GetIdentity========param1="
+					+ param1 + "=====param2=" + param2);
+			break;
+		case IPC_VDCP_Msg_SetTime:
+			System.out.println("TTT===============IPC_VDCP_Msg_SetTime========param1="
+					+ param1 + "=====param2=" + param2);
+			break;
+		case IPC_VDCP_Msg_Reboot:
+			System.out.println("TTT===============IPC_VDCP_Msg_Reboot========param1="
+					+ param1 + "=====param2=" + param2);
+			break;
+		case IPC_VDCP_Msg_Restore:
+			System.out.println("TTT===============IPC_VDCP_Msg_Restore========param1="
+					+ param1 + "=====param2=" + param2);
+			break;
+		case IPC_VDCP_Msg_FormatDisk:
+			System.out.println("TTT===============IPC_VDCP_Msg_FormatDisk========param1="
+					+ param1 + "=====param2=" + param2);
+			break;
 
+			
 		default:
 			break;
 		}

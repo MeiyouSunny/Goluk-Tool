@@ -41,7 +41,6 @@
             android:background="@color/bg"
             android:text="@string/videolist_edit"
             android:textColor="@color/white"
-            android:visibility="gone"
             android:textSize="16sp" />
     </RelativeLayout>
     
