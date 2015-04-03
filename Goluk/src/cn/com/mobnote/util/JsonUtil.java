@@ -81,5 +81,31 @@ public class JsonUtil {
 
 		return null;
 	}
+	
+	/**
+	 * 组织更新经纬度信息json串
+	 * @param lon　经度
+	 * @param lat	纬度
+	 * @param speed 速度
+	 * @param direction 方向
+	 * @return json
+	 * @author xuhw
+	 * @date 2015年3月31日
+	 */
+	public static String getGPSJson(long lon, long lat, int speed, int direction){
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("lon", lon);
+			obj.put("lat", lat);
+			obj.put("speed", speed);
+			obj.put("direction", direction);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 
 }

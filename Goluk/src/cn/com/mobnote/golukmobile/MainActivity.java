@@ -28,6 +28,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
@@ -312,6 +313,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
 		mLocalVideoListBtn.setOnClickListener(this);
+		findViewById(R.id.share_mylive_btn).setOnClickListener(this);
 		
 		//更新UI handler
 		mMainHandler = new Handler(){
@@ -1015,6 +1017,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//登录
 				login();
 			break;
+			case R.id.share_mylive_btn:
+				Intent liveset = new Intent(MainActivity.this, LiveShareSettingActivity.class);
+				startActivity(liveset);
+				break;
 		}
 	}
 	
