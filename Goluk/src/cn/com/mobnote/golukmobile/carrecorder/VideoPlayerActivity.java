@@ -180,23 +180,25 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 				case GETPROGRESS:
-					mHandler.removeMessages(GETPROGRESS);
-					if(mMediaPlayer.isPlaying()){
-						long curPosition = mMediaPlayer.getCurrentPosition();
-						long duration = mMediaPlayer.getDuration();
-						
-						System.out.println("TTT========duration=="+duration+"=====curPosition="+curPosition);
-						mCurTime.setText(long2TimeStr(curPosition));
-						mTotalTime.setText(long2TimeStr(duration));
-						mSeekBar.setMax((int)duration);
-						mSeekBar.setProgress((int)curPosition);
-						mPlayBigBtn.setVisibility(View.GONE);
-						mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
-					}else{
-//						mPlayBigBtn.setVisibility(View.VISIBLE);
-						mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+					if(null != mMediaPlayer){
+						if(mMediaPlayer.isPlaying()){
+							long curPosition = mMediaPlayer.getCurrentPosition();
+							long duration = mMediaPlayer.getDuration();
+							
+							System.out.println("TTT========duration=="+duration+"=====curPosition="+curPosition);
+							mCurTime.setText(long2TimeStr(curPosition));
+							mTotalTime.setText(long2TimeStr(duration));
+							mSeekBar.setMax((int)duration);
+							mSeekBar.setProgress((int)curPosition);
+							mPlayBigBtn.setVisibility(View.GONE);
+							mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
+						}else{
+//							mPlayBigBtn.setVisibility(View.VISIBLE);
+							mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+						}
 					}
 					
+					mHandler.removeMessages(GETPROGRESS);
 					mHandler.sendEmptyMessageDelayed(GETPROGRESS, 500);
 					break;
 	
@@ -394,6 +396,8 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		System.out.println("TTT=============onError=");
 		hideLoading();
 		Toast.makeText(VideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
+		mCurTime.setText("00:00");
+		mTotalTime.setText("00:00");
 		return false;
 	}
 
