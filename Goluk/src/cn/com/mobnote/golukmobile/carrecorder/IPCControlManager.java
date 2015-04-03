@@ -176,6 +176,81 @@ public class IPCControlManager implements IPCManagerFn{
 		String json = JsonUtil.getGPSJson(lon, lat, speed, direction);
 		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetGpsInfo, json);
 	}
+	
+	/**
+	 * 查询设备状态
+	 * @author xuhw
+	 * @date 2015年4月2日
+	 */
+	public void queryDeviceStatus(){
+		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_DeviceStatus, "");
+	}
+	
+	/**
+	 * 查询录制存储状态
+	 * @author xuhw
+	 * @date 2015年4月2日
+	 */
+	public void queryRecordStorageStatus(){
+		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_RecPicUsage, "");
+	}
+	
+	/**
+	 * 获取IPC系统标识
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public boolean getIPCIdentity(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetIdentity, "");
+	}
+	
+	/**
+	 * IPC重启
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public boolean rebootIPC(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Reboot, "");
+	}
+	
+	/**
+	 * IPC恢复出厂设置
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public boolean restoreIPC(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Restore, "");
+	}
+	
+	/**
+	 * IPC格式化SD卡
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public boolean formatDisk(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_FormatDisk, "");
+	}
+	
+	/**
+	 * 设置IPC系统时间
+	 * @param time 距离1970年1月1日0时0分0秒所经过的秒数
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public boolean setIPCSystemTime(long time){
+		String json = JsonUtil.getTimeJson(time);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetTime, json);
+	}
+	
+	/**
+	 * 设置IPC系统WIFI配置
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public boolean setIPCWifiCfg(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetWifiCfg, "");
+	}
+	
 
 	/**
 	 * 添加IPC管理监听
