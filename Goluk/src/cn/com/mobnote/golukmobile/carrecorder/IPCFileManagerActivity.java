@@ -808,14 +808,14 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				mFunctionLayout.setVisibility(View.GONE);
 				for(String filename : selectedListData){
 					System.out.println("TTT======1111=filename="+filename);
-					String videoSavePath="";
-					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
-						videoSavePath="fs1:/video/wonderful/";
-					}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
-						videoSavePath="fs1:/video/urgent/";
-					}else{
-						videoSavePath="fs1:/video/loop/";
-					}
+					String videoSavePath="fs1:/video/";
+//					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
+//						videoSavePath="fs1:/video/wonderful/";
+//					}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
+//						videoSavePath="fs1:/video/urgent/";
+//					}else{
+//						videoSavePath="fs1:/video/loop/";
+//					}
 					GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "download", videoSavePath);
 				}
 				
@@ -834,6 +834,16 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				mFunctionLayout.setVisibility(View.GONE);
 				for(String filename : selectedListData){
 					GolukApplication.getInstance().getIPCControlManager().deleteFile(filename);
+					
+					
+					if(filename.length() > 10){
+						String fileName = filename.substring(0, filename.length() - 4) + ".jpg";
+						String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+						File file = new File(filePath + File.separator + fileName);
+						if (file.exists()) {
+							file.delete();
+						}
+					}
 					
 					
 					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
@@ -1016,6 +1026,8 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
 		 info.videoPath=mVideoFileInfo.location;
 
+		 
+		
 		String fileName = mVideoFileInfo.location;
 		fileName = fileName.substring(0, fileName.length() - 4) + ".jpg";
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
@@ -1024,8 +1036,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		if (file.exists()) {
 			info.videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 		} else {
-			GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
-			System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
+			 if(1 == mVideoFileInfo.withSnapshot){
+				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
+				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
+			 }
 		}
 		
 		return info;
