@@ -140,8 +140,6 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	private RelativeLayout mFunctionLayout = null;
 	private ImageView mDeleteImage = null;
 	private TextView mDeleteText = null;
-	private LinearLayout mDownloadBtn = null;
-	private LinearLayout mDeleteBtn = null;
 	/** 保存编辑状态 */
 	private boolean mIsEditState = false;
 	/** 保存选中文件列表数据 */
@@ -287,8 +285,6 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 		mFunctionLayout = (RelativeLayout)findViewById(R.id.mFunctionLayout);
 		mDeleteImage = (ImageView)findViewById(R.id.video_delete_img);
 		mDeleteText = (TextView) findViewById(R.id.video_delete_txt);
-//		mDownloadBtn = (LinearLayout)findViewById(R.id.mDownloadBtn);
-//		mDeleteBtn = (LinearLayout)findViewById(R.id.mDeleteBtn);
 		
 		
 		//视频基础数据,用来实现删除功能
@@ -710,11 +706,22 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	 * 删除选择的视频item
 	 */
 	private void deleteSelectItemData(){
+		//保存要删除的文件路径
+		ArrayList<String> filesPath = new ArrayList<String>();
+		//保存要删除的视频截图路径
+		ArrayList<String> videoImagesPath = new ArrayList<String>();
+		
 		for(String filename : selectedListData){
 			if(1 == mCurrentType){
 				for(LocalVideoData info : mLoopVideoData){
 					if(info.videoPath.equals(filename)){
 						mLoopVideoData.remove(info);
+						//保存要删除的文件路径
+						filesPath.add(info.videoPath);
+						String imagePath = info.videoImagePath;
+						if(!imagePath.equals("") && imagePath != null){
+							videoImagesPath.add(imagePath);
+						}
 						break;
 					}
 				}
@@ -723,6 +730,12 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 				for(LocalVideoData info : mWonderfulVideoData){
 					if(info.videoPath.equals(filename)){
 						mWonderfulVideoData.remove(info);
+						//保存要删除的文件路径
+						filesPath.add(info.videoPath);
+						String imagePath = info.videoImagePath;
+						if(!imagePath.equals("") && imagePath != null){
+							videoImagesPath.add(imagePath);
+						}
 						break;
 					}
 				}
@@ -731,6 +744,12 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 				for(LocalVideoData info : mEmergencyVideoData){
 					if(info.videoPath.equals(filename)){
 						mEmergencyVideoData.remove(info);
+						//保存要删除的文件路径
+						filesPath.add(info.videoPath);
+						String imagePath = info.videoImagePath;
+						if(!imagePath.equals("") && imagePath != null){
+							videoImagesPath.add(imagePath);
+						}
 						break;
 					}
 				}
@@ -744,6 +763,9 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mLocalLoopVideoListManage.videoInfo2Double(mLoopVideoData);
 			mLoopVideoAdapter.setData(mLoopGroupName,mDoubleLoopVideoData);
 			mLoopVideoAdapter.notifyDataSetChanged();
+			
+			//删除选择的文件路径
+			mLocalLoopVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
 		}else if(2 == mCurrentType){
 			//重组group tab数据
 			mLocalWonderfulVideoListManage.setGroupTabData(mWonderfulVideoData);
@@ -751,6 +773,9 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mLocalWonderfulVideoListManage.videoInfo2Double(mWonderfulVideoData);
 			mWonderfulVideoAdapter.setData(mWonderfulGroupName,mDoubleWonderfulVideoData);
 			mWonderfulVideoAdapter.notifyDataSetChanged();
+			
+			//删除选择的文件路径
+			mLocalWonderfulVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
 		}else{
 			//重组group tab数据
 			mLocalEmergencyVideoListManage.setGroupTabData(mEmergencyVideoData);
@@ -758,10 +783,16 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mLocalEmergencyVideoListManage.videoInfo2Double(mEmergencyVideoData);
 			mEmergencyVideoAdapter.setData(mEmergencyGroupName,mDoubleEmergencyVideoData);
 			mEmergencyVideoAdapter.notifyDataSetChanged();
+			
+			//删除选择的文件路径
+			mLocalEmergencyVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
 		}
 	}
 	
-	
+	/**
+	 * 释放bitmap
+	 * @param list
+	 */
 	private void destroyVideoBitMap(List<DoubleVideoData> list){
 		for(int i = 0; i < list.size(); i++){
 			DoubleVideoData info = list.get(i);
@@ -781,7 +812,6 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 					}
 				}
 			}
-			
 		}
 	}
 	
@@ -862,6 +892,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 				mIsEditState = false;
 				mEditBtn.setText("编辑");
 				mFunctionLayout.setVisibility(View.GONE);
+				//删除选择视频数据
 				deleteSelectItemData();
 			break;
 			default:
@@ -887,7 +918,6 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 		if(null != mDoubleEmergencyVideoData){
 			destroyVideoBitMap(mDoubleEmergencyVideoData);
 		}
-		
 	}
 
 

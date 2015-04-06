@@ -148,6 +148,10 @@ public class LocalVideoListManage {
 		}
 	}
 	
+	/**
+	 * 设置视频tab数据
+	 * @param mLoopVideoData
+	 */
 	public void setGroupTabData(List<LocalVideoData> mLoopVideoData){
 		mTabGroupName.clear();
 		//更新group tab数据
@@ -157,6 +161,46 @@ public class LocalVideoListManage {
 			String tabTime = time.substring(0,10);
 			if(!mTabGroupName.contains(tabTime)){
 				mTabGroupName.add(tabTime);
+			}
+		}
+	}
+	
+	/**
+	 * 删除本地视频文件
+	 * @param filesPath 视频本件路径
+	 * @param imageFilesPath 视频本件截图路径
+	 */
+	public void deleteLocalVideoData(ArrayList<String> filesPath,ArrayList<String> imageFilesPath){
+		for(String path : filesPath){
+			File file = new File(path);
+			//判断目录或文件是否存在
+			if(file.exists()) {
+				//判断是否为文件
+				if(file.isFile()){
+					file.delete();
+				}
+				else{
+					//不是文件,不处理
+				}
+			}
+			else{
+				//不存在返回 不处理
+			}
+		}
+		for(String imgPath : imageFilesPath){
+			File imgFile = new File(imgPath);
+			//判断目录或文件是否存在
+			if(imgFile.exists()) {
+				//判断是否为文件
+				if(imgFile.isFile()){
+					imgFile.delete();
+				}
+				else{
+					//不是文件,不处理
+				}
+			}
+			else{
+				//不存在返回 不处理
 			}
 		}
 	}
@@ -269,10 +313,13 @@ public class LocalVideoListManage {
 								//判断缓存有没有下载图片
 								String imgName = fileName.substring(0, fileName.length() - 4) + ".jpg";
 								String imgPath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+								//创建目录
 								GFileUtils.makedir(imgPath);
-								File imgFile = new File(imgPath + File.separator + imgName);
+								String videoImagePath = imgPath + File.separator + imgName;
+								File imgFile = new File(videoImagePath);
 								if (imgFile.exists()) {
-									data.videoBitmap = ImageManager.getBitmapFromCache(imgPath + File.separator + fileName, 194, 109);
+									data.videoImagePath = videoImagePath;
+									data.videoBitmap = ImageManager.getBitmapFromCache(videoImagePath,194, 109);
 								}
 								else {
 									//以后下载视频的时候会同时下载图片,没有图片就显示默认
@@ -1052,6 +1099,8 @@ public class LocalVideoListManage {
 		public int videoImg;
 		/** 视频截图 */
 		public Bitmap videoBitmap;
+		/** 视频截图路径 */
+		public String videoImagePath = null;
 		/** 文件创建时间 */
 		public String videoCreateDate = null;
 		/** 文件大小 */
