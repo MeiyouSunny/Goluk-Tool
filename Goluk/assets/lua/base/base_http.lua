@@ -70,7 +70,7 @@ local logicSendUrl = {};
 --统计模块标识
 local moduleType = {web = "cdc_client",logic = "cdc_client"};
 
-local urlTable = {[2302] = "http://svr.xiaocheben.com/cdcServer/getGroupInfo.htm",[2303] = "http://svr.xiaocheben.com/cdcServer/exitGroup.htm"};
+local urlTable = {[2302] = "http://192.168.3.90:8086/cdcServer/getGroupInfo.htm",[2303] = "http://192.168.3.90:8086/cdcServer/exitGroup.htm"};
 
 
 --服务返回数据

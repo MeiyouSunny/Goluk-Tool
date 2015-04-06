@@ -1,7 +1,12 @@
 package cn.com.mobnote.golukmobile.live;
 
-public class UserInfo {
-	/** 用户登录 uid*/
+import java.io.Serializable;
+
+public class UserInfo implements Serializable {
+
+	private static final long serialVersionUID = -8534844170998963067L;
+
+	/** 用户登录 uid */
 	public String uid;
 	/** 用户爱滔客aid */
 	public String aid;
@@ -20,7 +25,7 @@ public class UserInfo {
 	public String active;
 	/** 平台类型 pad/android/ios */
 	public String tag;
-	/** 　爱滔客群组ID,如无群组则为空 */
+	/** 爱滔客群组ID,如无群组则为空 */
 	public String groupId;
 	/** 观看人数 */
 	public String persons;

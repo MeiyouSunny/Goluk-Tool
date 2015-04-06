@@ -174,15 +174,15 @@ public class JsonUtil {
 		return null;
 	}
 
-	public LiveDataInfo parseLiveDataJson(String data) {
+	public static LiveDataInfo parseLiveDataJson(String data) {
 		try {
 			int code = 0;
 			String groupId = null;
 			String playUrl = null; // 直播地址
-			String grouptype = "";
+			String grouptype = null;
 			int membercount = 0;
-			String title = "";
-			String groupnumber = "";
+			String title = null;
+			String groupnumber = null;
 			int tag = 0;
 			String joniGroup = null;
 

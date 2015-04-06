@@ -888,9 +888,13 @@ local function TalkerMgr_joinGroup( groupcfg )
 		sendDataLast["groupid"] = groupcfg.groupid;
 		sendDataLast["type"] = groupcfg.grouptype;
 		sendDataLast["groupnumber"] = groupcfg.groupnumber;
-		sendDataLast["aid"] = gTalkerMgrObj.config.aid;
+		sendDataLast["aid"] = "213923402";
+		sendDataLast["uid"] = "MB1ABZ";
+		sendDataLast["mobileid"] = "e90a39c3-e375-4b09-8d96-d32a4eb2c6f9";
 		sendDataLast["selflon"] = 419028675;
 		sendDataLast["selflat"] = 143805905;
+		sendDataLast["speed"] = 0;
+		sendDataLast["orien"] = 0;
 		opt.data = sendDataLast;
 		
 		--tiros.base.http.HttpSend("TalkerMgr_GetGroupid", TalkerMgr_getSpecialGroupInfoHttpEvent,"getGroupid", opt, "http://192.168.3.90:8086/cdcServer/getGroupInfo.htm");

@@ -143,6 +143,8 @@
     
     <string name="live_title">网络直播</string>
     <string name="live_pause">暂停</string>
+    <string name="live_exit">结束直播</string>
+    <string name="str_live_qiang">一键抢拍</string>
 
     <!-- 行车记录仪  	END -->
 

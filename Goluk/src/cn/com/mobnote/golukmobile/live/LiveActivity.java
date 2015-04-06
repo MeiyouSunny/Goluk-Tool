@@ -9,13 +9,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,10 +29,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
+import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
 import cn.com.mobnote.golukmobile.carrecorder.SoundUtils;
+import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -41,10 +48,12 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
+import com.rd.car.ResultConstants;
 import com.rd.car.player.RtmpPlayerView;
 
 public class LiveActivity extends Activity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
-		View.OnTouchListener, ITalkFn {
+		View.OnTouchListener, ITalkFn,IPopwindowFn {
+
 	/** 是否是直播 */
 	public static final String KEY_IS_LIVE = "isLive";
 	/** 要加入的群组ID */
@@ -52,6 +61,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/** 播放与直播地址 */
 	public static final String KEY_PLAY_URL = "key_play_url";
 	public static final String KEY_JOIN_GROUP = "key_join_group";
+	public static final String KEY_USERINFO = "key_userinfo";
+	public static final String KEY_LIVE_DATA = "key_livedata";
 
 	/** application */
 	private GolukApplication mApp = null;
@@ -61,16 +72,23 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private Button mLiveBackBtn = null;
 	/** 刷新按钮 */
 	private Button mRefirshBtn = null;
+	/** 暂停按钮 */
+	private Button mPauseBtn = null;
 	/** title */
 	private TextView mTitleTv = null;
 	/** 当前地址 */
 	private TextView mAddressTv = null;
 	/** 当前正在说话的 */
 	private TextView mTalkingTv = null;
+	/** 点赞 显示 */
+	private TextView mZancountTv = null;
+	/** 观看人数 */
+	private TextView mLookCountTv = null;
+	private ImageView mLiveOk = null;;
 	/** 视频loading */
 	private RelativeLayout mVideoLoading = null;
 	/** 播放布局 */
-	// private RelativeLayout mPlayLayout = null;
+	private RelativeLayout mPlayLayout = null;
 	/** 直播超时提示文字 */
 	private TextView mTimeOutText = null;
 	/** 百度地图 */
@@ -89,11 +107,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	public static Handler mLiveVideoHandler = null;
 	/** 是否直播 还是　看别人直播 true/false 直播/看别人直播 */
 	private boolean isShareLive = true;
-	/** 要加入的爱滔客群组 */
-	private String mGroupId = null;
-	private String mPlayUrl = null;
-	private String mJoinGroupJson = null;
-
 	/** 直播开启标志 */
 	private boolean isStartLive = false;
 	/** 直播视频id */
@@ -115,32 +128,51 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private ImageView mQiangpaiImg = null;
 	private ImageView mExitBtn = null;
 
+	private String mJoinGroupJson = null;
+	private UserInfo currentUserInfo = null;
+	private LiveDataInfo mDataInfo = null;
+
+	private boolean isStart = false;
+
+	private LayoutInflater mLayoutFlater = null;
+
+	private LiveSettingPopWindow mliveSettingWindow = null;
+	private RelativeLayout mRootLayout = null;
+	boolean isShowPop = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		getWindow().setContentView(R.layout.live);
+		mLayoutFlater = LayoutInflater.from(this);
+		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.live, null);
+		getWindow().setContentView(mRootLayout);
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "LiveVideo");
-
 		// 获取数据
 		getIntentData();
 		// 界面初始化
 		initView();
-		//
+		// 根据不同的状态显示不同的界面
 		switchView();
+		// 显示数据
+		setViewInitData();
 		// 地图初始化
 		initMap();
-		// 请求视频直播数据
-		// getVideoLiveData();
-
-		videoInit();
+		// 开始预览或开始直播
+		startVideoAndLive();
 
 		drawPersonsHead();
 		// 加入爱滔客群组
 		joinAitalkGroup();
+
+		mliveSettingWindow = new LiveSettingPopWindow(this, mRootLayout);
+		mliveSettingWindow.setCallBackNotify(this);
+
+		mLiveVideoHandler.sendEmptyMessageDelayed(100, 3000);
+
 	}
 
 	private void getIntentData() {
@@ -149,9 +181,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mAid = intent.getStringExtra("cn.com.mobnote.map.aid");
 		mUid = intent.getStringExtra("cn.com.mobnote.map.uid");
 		isShareLive = intent.getBooleanExtra(KEY_IS_LIVE, true);
-		mGroupId = intent.getStringExtra(KEY_GROUPID);
-		mPlayUrl = intent.getStringExtra(KEY_PLAY_URL);
+
 		mJoinGroupJson = intent.getStringExtra(KEY_JOIN_GROUP);
+
+		currentUserInfo = (UserInfo) intent.getSerializableExtra(KEY_USERINFO);
+		mDataInfo = (LiveDataInfo) intent.getSerializableExtra(KEY_LIVE_DATA);
+	}
+
+	private void setViewInitData() {
+		if (null != currentUserInfo) {
+			mZancountTv.setText(currentUserInfo.zanCount);
+			mLookCountTv.setText(currentUserInfo.persons);
+		}
 	}
 
 	/**
@@ -165,8 +206,15 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		mTimeOutText = (TextView) findViewById(R.id.live_time_out_text);
 		mVideoLoading = (RelativeLayout) findViewById(R.id.live_video_loading);
-		// mPlayLayout = (RelativeLayout)
-		// findViewById(R.id.live_video_play_layout);
+		mPlayLayout = (RelativeLayout) findViewById(R.id.live_play_layout);
+
+		mZancountTv = (TextView) findViewById(R.id.live_okcount);
+		mLookCountTv = (TextView) findViewById(R.id.live_lookcount);
+		mLiveOk = (ImageView) findViewById(R.id.live_ok);
+		mLiveOk.setOnClickListener(this);
+
+		mPauseBtn = (Button) findViewById(R.id.live_pause);
+		mPauseBtn.setOnClickListener(this);
 
 		mBottomLayout = (RelativeLayout) findViewById(R.id.live_bottomlayout);
 		mLiveLookTalk = (ImageButton) findViewById(R.id.livelook_ppt);
@@ -190,7 +238,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// 注册事件
 		mLiveBackBtn.setOnClickListener(this);
 		mRefirshBtn.setOnClickListener(this);
-		// mPlayLayout.setOnClickListener(this);
+		mPlayLayout.setOnClickListener(this);
 
 		// 更新UI handler
 		mLiveVideoHandler = new Handler() {
@@ -207,15 +255,75 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					// 5秒超时显示,提示文字
 					mTimeOutText.setVisibility(View.VISIBLE);
 					break;
+				case 100:
+					mliveSettingWindow.show();
+					break;
 				}
 			}
 		};
 	}
 
+	/**
+	 * 响应视频Manager消息
+	 */
+	private BroadcastReceiver managerReceiver = new RecorderMsgReceiverBase() {
+		@Override
+		public void onManagerBind(Context context, int nResult, String strResultInfo) {
+			if (nResult >= ResultConstants.SUCCESS) {
+
+			}
+		}
+
+		public void onLiveRecordBegin(Context context, int nResult, String strResultInfo) {
+			String message;
+			if (nResult >= ResultConstants.SUCCESS) {
+				message = "onLiveRecordBegin　视频录制上传成功" + strResultInfo;
+				LogUtil.e("", "jyf------TTTTT------------managerReceiver----1111:" + message);
+			} else {
+				message = "onLiveRecordBegin　视频录制上传失败 = " + strResultInfo;
+
+				LogUtil.e("", "jyf------TTTTT------------managerReceiver----2222:" + message);
+				// isStartLive = false;
+			}
+			GFileUtils.writeLiveLog(message);
+		};
+
+		@Override
+		public void onLiveRecordFailed(Context context, int nResult, String strResultInfo) {
+			// isStartLive = false;
+			// if (nResult != ResultConstants.ERROR_LIVE_UPLOAD_FAILED) {
+			// LuaUtil.RecordVideoError(mApplication.mLuaState, 100);
+			// System.out.println("KKKKKK 直播失败 : " + nResult + strResultInfo);
+			// }
+
+			LogUtil.e("", "jyf------TTTTT------------managerReceiver----3333:" + nResult);
+
+		}
+
+	};
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		try {
+			if (!isStart) {
+				isStart = true;
+				CarRecorderManager.onStartRTSP(this);
+			}
+		} catch (RecorderStateException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
+		registerReceiver(managerReceiver, new IntentFilter(CarRecorderManager.ACTION_RECORDER_MESSAGE));
 		mApp.setTalkListener(this);
+		if (!isShowPop) {
+
+			isShowPop = true;
+		}
 	}
 
 	private void switchView() {
@@ -245,15 +353,17 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/**
 	 * 视频播放初始化
 	 */
-	private void videoInit() {
+	private void startVideoAndLive() {
 		// 视频事件回调注册
 		mRPVPalyVideo.setPlayerListener(this);
 		// 设置视频源
+		mRPVPalyVideo.setBufferTime(1000);
 		mRPVPalyVideo.setConnectionTimeout(30000);
 		if (isShareLive) {
 			mFilePath = "rtsp://admin:123456@192.168.43.234/sub";
 		} else {
-			mFilePath = "其它人的地址";
+			// 查看别人的地址
+			mFilePath = mDataInfo.playUrl;
 		}
 
 		mRPVPalyVideo.setDataSource(mFilePath);
@@ -261,7 +371,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		if (isShareLive) {
 			// 开启直播
-			this.startLive("share110");
+			this.startLive("test111");
 		}
 	}
 
@@ -328,8 +438,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (isStartLive) {
 			return;
 		}
+		LogUtil.e("", "jyf------TTTTT------------start----1111");
 		if (!CarRecorderManager.isRTSPLiving()) {
 			try {
+				LogUtil.e("", "jyf------TTTTT------------start----2222");
 				SharedPreferences sp = getSharedPreferences("CarRecorderPreferaces", Context.MODE_PRIVATE);
 				sp.edit().putString("url_live", "rtmp://211.103.234.234/live/" + liveVid).apply();
 				sp.edit().commit();
@@ -337,8 +449,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				CarRecorderManager.setLiveMute(true);
 				CarRecorderManager.startRTSPLive();
 				isStartLive = true;
+				LogUtil.e("", "jyf------TTTTT------------start----3333");
 			} catch (RecorderStateException e) {
 				e.printStackTrace();
+				LogUtil.e("", "jyf------TTTTT------------start----444444");
 			}
 		}
 	}
@@ -348,7 +462,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 */
 	@SuppressWarnings("static-access")
 	private void getVideoLiveData() {
-		// mPlayLayout.setVisibility(View.GONE);
 		mVideoLoading.setVisibility(View.VISIBLE);
 		mTimeOutText.setVisibility(View.GONE);
 
@@ -503,16 +616,45 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// 刷新,请求视频直播数据
 			getVideoLiveData();
 			break;
-		case R.id.play_layout:
-			// 请求视频直播数据
-			getVideoLiveData();
+		case R.id.live_play_layout:
+			// 继续观看
+			mPlayLayout.setVisibility(View.GONE);
+			mPauseBtn.setVisibility(View.VISIBLE);
+			break;
+		case R.id.live_ok:
+			Toast.makeText(this, "点赞", Toast.LENGTH_LONG).show();
+			break;
+		case R.id.live_pause:
+			Toast.makeText(this, "暂停", Toast.LENGTH_LONG).show();
+			mPlayLayout.setVisibility(View.VISIBLE);
+			mPauseBtn.setVisibility(View.GONE);
+			break;
+		default:
 			break;
 		}
 	}
 
+	/**
+	 * 重连runnable
+	 */
+	private Runnable retryRunnable = new Runnable() {
+		@Override
+		public void run() {
+
+			if (null != mRPVPalyVideo) {
+				// mRPVPalyVideo.setVisibility(View.VISIBLE);
+				mRPVPalyVideo.setDataSource(getResources().getString(R.string.default_rtsp_url));
+				mRPVPalyVideo.start();
+			}
+
+			// mRPVPalyVideo.start();
+		}
+	};
+
 	@Override
 	public void onPlayerPrepared(RtmpPlayerView arg0) {
 		console.log("live---onPlayerPrepared");
+		mRPVPalyVideo.setHideSurfaceWhilePlaying(true);
 	}
 
 	@Override
@@ -525,10 +667,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	@Override
-	public void onPlayerCompletion(RtmpPlayerView arg0) {
+	public void onPlayerCompletion(RtmpPlayerView rpv) {
 		// 视频播放完成
 		console.log("live---onPlayerCompletion");
 		// mPlayLayout.setVisibility(View.VISIBLE);
+		rpv.removeCallbacks(retryRunnable);
+
+		rpv.postDelayed(retryRunnable, 5000);
+
 	}
 
 	@Override
@@ -847,6 +993,16 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
 		// mHandler.removeMessages(MSG_SPEECH_COUNT_DOWN);
 		// }
+	}
+
+	@Override
+	public void callBackPopWindow(int event, Object data) {
+		if (LiveSettingPopWindow.EVENT_ENTER == event) {
+			if (null != mliveSettingWindow) {
+				mliveSettingWindow.close();
+			}
+		}
+		
 	}
 
 }

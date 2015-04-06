@@ -184,10 +184,12 @@
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/llive_pause_btn"
+            android:drawableLeft="@drawable/livelook_btn_pause"
+            android:drawablePadding="8dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:text="@string/live_pause"
-            android:textSize="@dimen/live_text_size" />
+            android:textSize="@dimen/live_pause_size" />
     </RelativeLayout>
 
     <!-- 视频信息布局,包括(XX说话中, 时间长，看直播的人数，点赞的人数) -->
@@ -205,7 +207,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="7dp"
-            android:text="200"
+            android:text="0"
             android:textSize="@dimen/live_text_time1_size" />
 
         <ImageView
@@ -233,7 +235,7 @@
             android:layout_alignTop="@id/live_okcount"
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@id/live_line2"
-            android:text="200"
+            android:text="0"
             android:textSize="@dimen/live_text_time1_size" />
 
         <ImageView
@@ -275,6 +277,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
+            android:contentDescription="@string/imgdes"
             android:src="@drawable/live_icon_address" />
 
         <TextView
@@ -300,6 +303,7 @@
             android:layout_alignLeft="@id/live_address_sign"
             android:layout_below="@id/live_address_sign"
             android:layout_marginTop="10dp"
+            android:contentDescription="@string/imgdes"
             android:src="@drawable/live_icon_ptt_yellow" />
 
         <TextView
@@ -337,15 +341,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/live_btn_8s" >
-            </ImageView>
+                android:background="@drawable/live_btn_8s"
+                android:contentDescription="@string/imgdes" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
-                android:text="一键抢拍"
+                android:text="@string/str_live_qiang"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -364,6 +368,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
+                android:contentDescription="@string/imgdes"
                 android:src="@drawable/live_btn_off" />
 
             <TextView
@@ -371,7 +376,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
-                android:text="结束直播"
+                android:text="@string/live_exit"
                 android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
@@ -406,6 +411,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/live_btn_ptt_normal"
+        android:contentDescription="@string/imgdes"
         android:visibility="gone" >
     </ImageButton>
 
@@ -419,6 +425,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:background="@drawable/livelook_btn_ptt_normal"
+        android:contentDescription="@string/imgdes"
         android:visibility="gone" >
     </ImageButton>
 
