@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="42dp"  >
+    
+    <RelativeLayout
+        android:id="@+id/close"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/carrecorder_setup_option_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:id="@+id/closeText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="关闭"
+            android:textColor="#29c5b1"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/cRight"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/setup_icon_hook"
+            android:contentDescription="@string/def" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/low"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/carrecorder_setup_option_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:id="@+id/lowText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="低"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/dRight"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/setup_icon_hook"
+            android:contentDescription="@string/def" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/middle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/carrecorder_setup_option_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:id="@+id/middleText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="中"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/zRight"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/setup_icon_hook"
+            android:contentDescription="@string/def" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/high"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/carrecorder_setup_option_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:id="@+id/highText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="高"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/gRight"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/setup_icon_hook"
+            android:contentDescription="@string/def" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,12 +1,34 @@
-package cn.com.mobnote.golukmobile.carrecorder;
+package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+ /**
+  * 1.编辑器必须显示空白处
+  *
+  * 2.所有代码必须使用TAB键缩进
+  *
+  * 3.类首字母大写,函数、变量使用驼峰式命名,常量所有字母大写
+  *
+  * 4.注释必须在行首写.(枚举除外)
+  *
+  * 5.函数使用块注释,代码逻辑使用行注释
+  *
+  * 6.文件头部必须写功能说明
+  *
+  * 7.所有代码文件头部必须包含规则说明
+  *
+  * IPC设置界面
+  *
+  * 2015年4月6日
+  *
+  * @author xuhw
+  */
 public class SettingsActivity extends Activity implements OnClickListener{
 
 	@Override
@@ -18,9 +40,13 @@ public class SettingsActivity extends Activity implements OnClickListener{
 		
 	}
 	
+	/**
+	 * 初始化控件
+	 * @author xuhw
+	 * @date 2015年4月6日
+	 */
 	private void initView(){
 		boolean zdxhlx = SettingUtils.getInstance().getBoolean("zdxhlx", true);//自动循环录像初始化
-		boolean hd = SettingUtils.getInstance().getBoolean("hd", true);//高清初始化
 		boolean sylz = SettingUtils.getInstance().getBoolean("sylz", true);//声音录制初始化
 		boolean ztts = SettingUtils.getInstance().getBoolean("ztts", true);//状态提示灯初始化
 		
@@ -28,15 +54,6 @@ public class SettingsActivity extends Activity implements OnClickListener{
 			findViewById(R.id.zdxhlx).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
 		}else{
 			findViewById(R.id.zdxhlx).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
-		}
-		
-		
-		if(hd){
-			findViewById(R.id.mHighDefinition).setBackgroundResource(R.drawable.carrecorder_setup_option_high_press);
-			findViewById(R.id.mStandardDefinition).setBackgroundResource(R.drawable.carrecorder_setup_option_low);
-		}else{
-			findViewById(R.id.mHighDefinition).setBackgroundResource(R.drawable.carrecorder_setup_option_high);
-			findViewById(R.id.mStandardDefinition).setBackgroundResource(R.drawable.carrecorder_setup_option_low_press);
 		}
 		
 		if(sylz){
@@ -52,10 +69,14 @@ public class SettingsActivity extends Activity implements OnClickListener{
 		}
 	}
 	
+	/**
+	 * 设置监听
+	 * @author xuhw
+	 * @date 2015年4月6日
+	 */
 	private void setListener(){
 		findViewById(R.id.back_btn).setOnClickListener(this);//返回按钮
-		findViewById(R.id.mHighDefinition).setOnClickListener(this);//高清按钮
-		findViewById(R.id.mStandardDefinition).setOnClickListener(this);//标清按钮
+		findViewById(R.id.mVideoDefinition).setOnClickListener(this);//视频质量
 		findViewById(R.id.zdxhlx).setOnClickListener(this);//自动循环录像按钮
 		findViewById(R.id.sylz).setOnClickListener(this);//声音录制
 		findViewById(R.id.ztts).setOnClickListener(this);//状态提示灯
@@ -76,15 +97,9 @@ public class SettingsActivity extends Activity implements OnClickListener{
 			case R.id.back_btn:
 				finish();
 				break;
-			case R.id.mHighDefinition://高清
-				findViewById(R.id.mHighDefinition).setBackgroundResource(R.drawable.carrecorder_setup_option_high_press);
-				findViewById(R.id.mStandardDefinition).setBackgroundResource(R.drawable.carrecorder_setup_option_low);
-				SettingUtils.getInstance().putBoolean("hd", true);//高清
-				break;
-			case R.id.mStandardDefinition://标清
-				findViewById(R.id.mHighDefinition).setBackgroundResource(R.drawable.carrecorder_setup_option_high);
-				findViewById(R.id.mStandardDefinition).setBackgroundResource(R.drawable.carrecorder_setup_option_low_press);
-				SettingUtils.getInstance().putBoolean("hd", false);//标清
+			case R.id.mVideoDefinition://视频质量
+				Intent mVideoDefinition = new Intent(SettingsActivity.this, VideoQualityActivity.class);
+				startActivity(mVideoDefinition);
 				break;
 			case R.id.zdxhlx://自动循环录像
 				boolean zdxhlx=SettingUtils.getInstance().getBoolean("zdxhlx");
@@ -99,18 +114,32 @@ public class SettingsActivity extends Activity implements OnClickListener{
 				this.setButtonsBk(ztts, R.id.ztts, "ztts");
 				break;
 			case R.id.pzgylmd_line://碰撞感应灵敏度
+				Intent pzgylmd_line = new Intent(SettingsActivity.this, ImpactSensitivityActivity.class);
+				startActivity(pzgylmd_line);
 				break;
 			case R.id.rlcx_line://容量查询
+				Intent rlcx_line = new Intent(SettingsActivity.this, StorageCpacityQueryActivity.class);
+				startActivity(rlcx_line);
 				break;
 			case R.id.sysz_line://水印设置
+				Intent sysz_line = new Intent(SettingsActivity.this, WatermarkSettingActivity.class);
+				startActivity(sysz_line);
 				break;
 			case R.id.sjsz_line://时间设置
+				Intent sjsz_line = new Intent(SettingsActivity.this, TimeSettingActivity.class);
+				startActivity(sjsz_line);
 				break;
 			case R.id.gshsdk_line://格式化SDK卡
+				Intent gshsdk_line = new Intent(SettingsActivity.this, FormatSDCardActivity.class);
+				startActivity(gshsdk_line);
 				break;
 			case R.id.hfccsz_line://恢复出厂设置
+				Intent hfccsz_line = new Intent(SettingsActivity.this, RestoreFactorySettingsActivity.class);
+				startActivity(hfccsz_line);
 				break;
 			case R.id.bbxx_line://版本信息
+				Intent bbxx = new Intent(SettingsActivity.this, VersionActivity.class);
+				startActivity(bbxx);
 				break;
 			case R.id.ipcbd_line://摄像头绑定
 				break;

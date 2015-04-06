@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.carrecorder;
+package cn.com.mobnote.golukmobile.carrecorder.view;
 
 
 import cn.com.mobnote.application.GolukApplication;

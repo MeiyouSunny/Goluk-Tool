@@ -46,4 +46,8 @@
 	<color name="user_hint_text_color">#CECECE</color>
 	<color name="user_identify_btn">#00C5A7</color>
 	
+	<color name="dialog_bg">#00000000</color>
+	<color name="setting_text_color_nor">#333333</color>
+	<color name="setting_text_color_sel">#29c5b1</color>
+	
 </resources>
