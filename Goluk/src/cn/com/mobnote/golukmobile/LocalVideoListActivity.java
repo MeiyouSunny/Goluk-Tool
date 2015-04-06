@@ -356,13 +356,13 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	 * 初始化视频列表管理类
 	 */
 	private void initListManage(){
-		mLocalLoopVideoListManage = new LocalVideoListManage(mContext);
+		mLocalLoopVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
 		mLocalLoopVideoListManage.getLocalVideoList(0);
 		
-		mLocalWonderfulVideoListManage = new LocalVideoListManage(mContext);
+		mLocalWonderfulVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
 		mLocalWonderfulVideoListManage.getLocalVideoList(1);
 		
-		mLocalEmergencyVideoListManage = new LocalVideoListManage(mContext);
+		mLocalEmergencyVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
 		mLocalEmergencyVideoListManage.getLocalVideoList(2);
 	}
 	
@@ -441,7 +441,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 		mLoopVideoData = mLocalLoopVideoListManage.mLocalVideoListData;
 		
 		if(null == mLoopVideoAdapter){
-			mLoopVideoAdapter = new LocalVideoListAdapter(this);
+			mLoopVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList");
 		}
 		mLoopVideoAdapter.setData(mLoopGroupName,mDoubleLoopVideoData);
 		//给类标底部添加一条透明区域,解决编辑看不到最后
@@ -523,7 +523,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 		mWonderfulVideoData = mLocalWonderfulVideoListManage.mLocalVideoListData;
 		
 		if(null == mWonderfulVideoAdapter){
-			mWonderfulVideoAdapter = new LocalVideoListAdapter(this);
+			mWonderfulVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList");
 		}
 		mWonderfulVideoAdapter.setData(mWonderfulGroupName, mDoubleWonderfulVideoData);
 		//给类标底部添加一条透明区域,解决编辑看不到最后
@@ -605,7 +605,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 		mEmergencyVideoData = mLocalEmergencyVideoListManage.mLocalVideoListData;
 		
 		if(null == mEmergencyVideoAdapter){
-			mEmergencyVideoAdapter = new LocalVideoListAdapter(this);
+			mEmergencyVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList");
 		}
 		mEmergencyVideoAdapter.setData(mEmergencyGroupName, mDoubleEmergencyVideoData);
 		
@@ -898,6 +898,12 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			default:
 			break;
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		mApp.setContext(this,"LocalVideoList");
+		super.onResume();
 	}
 	
 	@Override

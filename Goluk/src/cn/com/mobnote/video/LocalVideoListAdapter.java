@@ -6,6 +6,7 @@ import java.util.List;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.LocalVideoListActivity;
+import cn.com.mobnote.golukmobile.LocalVideoShareListActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
@@ -63,16 +65,18 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 //		mDataList = data;
 //		mLayoutInflater = LayoutInflater.from(context);
 //	}
-	private Context mContext=null;
+	private Context mContext = null;
+	private String mPageSource = "";
 	private LayoutInflater inflater;
 	private List<DoubleVideoData> mDataList;
 	private List<String> mGroupNameList;
-	private int count=0;
-	private int screenWidth=0;
+	private int count = 0;
+	private int screenWidth = 0;
 	private float density;
 	
-	public LocalVideoListAdapter(Context c){
-		mContext=c;
+	public LocalVideoListAdapter(Context c,String source){
+		mContext = c;
+		mPageSource = source;
 		inflater = LayoutInflater.from(c);
 		mDataList=new ArrayList<DoubleVideoData>();
 		mGroupNameList = new ArrayList<String>();
@@ -122,15 +126,20 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		LocalVideoListActivity a = (LocalVideoListActivity)mContext;
-		List<String> selectedData = a.getSelectedListData();
-		if(!a.getIsEditState()){
-			holder.mTMLayout1.setVisibility(View.GONE);
-			holder.mTMLayout2.setVisibility(View.GONE);
-		}else{
-			
-			
+		List<String> selectedData = null;
+		if(mPageSource.equals("LocalVideoList")){
+			LocalVideoListActivity a = (LocalVideoListActivity)mContext;
+			selectedData = a.getSelectedListData();
+			if(a.getIsEditState()){
+				holder.mTMLayout1.setVisibility(View.GONE);
+				holder.mTMLayout2.setVisibility(View.GONE);
+			}
 		}
+		else{
+			LocalVideoShareListActivity a = (LocalVideoShareListActivity)mContext;
+			selectedData = a.getSelectedListData();
+		}
+		
 		
 		holder.mVideoLayout2.setVisibility(View.GONE);
 		LocalVideoData mVideoInfo1 = mDataList.get(position).getVideoInfo1();

@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.LocalVideoListActivity;
+import cn.com.mobnote.golukmobile.LocalVideoShareListActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.ImageManager;
@@ -60,19 +61,28 @@ import cn.com.mobnote.util.console;
 
 @SuppressLint({ "DefaultLocale", "SimpleDateFormat" })
 public class LocalVideoListManage {
-	
 	private Context mContext = null;
+	/** 来源标示 */
+	private String mPageSource = "";
 	/** 视频存放外卡文件路径 */
 	private static final String APP_FOLDER = android.os.Environment.getExternalStorageDirectory().getPath();
 	private String newImagePath = APP_FOLDER + "/" + "tiros-com-cn-ext/videoLog/videostatus";
 	private String mFilePath = APP_FOLDER + "/" + "tiros-com-cn-ext/video/";
+	/** 本地视频列表页面数据 */
+	public ArrayList<LocalVideoData> mLocalVideoListData = new ArrayList<LocalVideoData>();
+	public ArrayList<DoubleVideoData> mDoubleLocalVideoListData = new ArrayList<DoubleVideoData>();
+	/** 本地视频列表tab数据 */
+	public ArrayList<String> mTabGroupName = new ArrayList<String>();
+	
+	
+	
+	
+	
 	
 	
 	/** 本地视频数据 */
 	private ArrayList<LocalVideoData> mLocalVideoList = new ArrayList<LocalVideoData>();
 	
-	/** 来源标示,用来获取视频第一针发送消息 */
-	private String mPageSource = "";
 	/** 获取固定本地视频个数 */
 	private int mListCount = 6;
 	/** 本地视频传输文件列表 */
@@ -92,14 +102,11 @@ public class LocalVideoListManage {
 	
 	
 	
-	/** 本地视频列表页面数据 */
-	public ArrayList<LocalVideoData> mLocalVideoListData = new ArrayList<LocalVideoData>();
-	public ArrayList<DoubleVideoData> mDoubleLocalVideoListData = new ArrayList<DoubleVideoData>();
-	/** 本地视频列表tab数据 */
-	public ArrayList<String> mTabGroupName = new ArrayList<String>();
+
 	
-	public LocalVideoListManage(Context context){
+	public LocalVideoListManage(Context context,String source){
 		mContext = context;
+		mPageSource = source;
 	}
 	
 	/**
@@ -352,8 +359,11 @@ public class LocalVideoListManage {
 				//发消息给主线程
 				Message msg = new Message();
 				msg.what = videoType;
-				if(null != LocalVideoListActivity.mVideoListHandler){
+				if(mPageSource.equals("LocalVideoList")){
 					LocalVideoListActivity.mVideoListHandler.sendMessage(msg);
+				}
+				else if(mPageSource.equals("LocalVideoShareList")){
+					LocalVideoShareListActivity.mVideoShareListHandler.sendMessage(msg);
 				}
 			}
 		}
@@ -1100,7 +1110,7 @@ public class LocalVideoListManage {
 		/** 视频截图 */
 		public Bitmap videoBitmap;
 		/** 视频截图路径 */
-		public String videoImagePath = null;
+		public String videoImagePath = "";
 		/** 文件创建时间 */
 		public String videoCreateDate = null;
 		/** 文件大小 */
