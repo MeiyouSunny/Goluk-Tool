@@ -18,8 +18,9 @@ import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
-import cn.com.mobnote.golukmobile.UserRegistActivity;
+import cn.com.mobnote.golukmobile.UserTestRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
+import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity;
@@ -42,6 +43,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
@@ -311,7 +313,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				String fileName = json.getString("location");
 				console.log("调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---" + fileName);
 				//调用下载视频接口
-				mIPCControlManager.downloadFile(fileName,fileName,mVideoSavePath);
+				mIPCControlManager.downloadFile(fileName,"videodownload",mVideoSavePath);
 			}
 			catch(Exception e){
 				console.log("解析视频下载JSON数据错误");
@@ -333,9 +335,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		else if(0 == success){
 			//下载完成
 			if(null != mMainActivity){
+				//{"filename":"WND1_150402183837_0012.mp4", "tag":"videodownload"}
 				//地图大头针图片
 				console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
-				mMainActivity.videoAnalyzeComplete();
+				mMainActivity.videoAnalyzeComplete(data);
 			}
 		}
 	}
@@ -437,6 +440,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+//		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		/*
 		System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
@@ -574,5 +578,37 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 		}
 	}
-	
+	private static SharedPreferences preferences;
+	private static Editor editor;
+	/**
+	 * 进行缓存用户的登陆状态
+	 * @param context
+	 * @param key
+	 * @param remeberLoginState
+	 */
+	public static void cacheRemeberLoginState(Context context, String key, boolean remeberLoginState,String name,String pass) {
+		if (preferences == null) {
+			preferences = context.getSharedPreferences("application", Context.MODE_PRIVATE);
+		}
+		editor = preferences.edit();
+		editor.putBoolean(key, remeberLoginState);
+		editor.putString("name", name);
+		editor.putString("pass", pass);
+		editor.commit();
+	}
+
+	/*
+	 * 获取判断是否为第一次进入APP的缓存值
+	 * 
+	 * @param context 对应上下文
+	 * 
+	 * @param key 对应缓存值得key
+	 */
+	public static boolean getIsFirstComeApp(Context context, String key) {
+		if (preferences == null) {
+			preferences = context.getSharedPreferences("application", Context.MODE_PRIVATE);
+		}
+		boolean isFirstComeApp = preferences.getBoolean(key, false); 
+		return isFirstComeApp;
+	}
 }

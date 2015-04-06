@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.baidu.location.BDLocation;
@@ -26,6 +27,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
@@ -300,6 +302,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
 		mLocalVideoListBtn.setOnClickListener(this);
+		findViewById(R.id.share_mylive_btn).setOnClickListener(this);
 		
 		//更新UI handler
 		mMainHandler = new Handler(){
@@ -652,10 +655,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**
 	 * 视频同步完成
 	 */
-	public void videoAnalyzeComplete(){
+	public void videoAnalyzeComplete(String str){
 //		mLocalVideoManage.videoUploadCallBack();
 //		mLocalVideoListAdapter.notifyDataSetChanged();
-		playDownLoadedSound();
+		try {
+			JSONObject json = new JSONObject(str);
+			String tag = json.getString("tag");
+			if(tag.equals("videodownload")){
+				//只有视频下载才提示音频
+				playDownLoadedSound();
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -1007,6 +1019,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//登录
 				login();
 			break;
+			case R.id.share_mylive_btn:
+				Intent liveset = new Intent(MainActivity.this, LiveShareSettingActivity.class);
+				startActivity(liveset);
+				break;
 		}
 	}
 	

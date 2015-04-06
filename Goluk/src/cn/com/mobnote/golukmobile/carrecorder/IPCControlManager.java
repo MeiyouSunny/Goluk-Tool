@@ -172,6 +172,20 @@ public class IPCControlManager implements IPCManagerFn{
 	public void deleteFile(String filename){
 		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Erase, filename);
 	}
+	
+	/**
+	 * 更新经纬度信息
+	 * @param lon 经度
+	 * @param lat 纬度
+	 * @param speed 速度
+	 * @param direction 方向
+	 * @author xuhw
+	 * @date 2015年3月31日
+	 */
+	public void updateGPS(long lon, long lat, int speed, int direction){
+		String json = JsonUtil.getGPSJson(lon, lat, speed, direction);
+		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetGpsInfo, json);
+	}
 
 	/**
 	 * 添加IPC管理监听

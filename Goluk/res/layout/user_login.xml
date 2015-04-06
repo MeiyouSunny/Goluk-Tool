@@ -38,7 +38,7 @@
                     android:id="@+id/user_login_phonenumber"
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
-                    android:hint="请输入手机账号"
+                    android:hint="请输入手机号码，暂时只支持中国大陆"
                     android:numeric="integer"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
@@ -93,6 +93,7 @@
                 android:id="@+id/user_login_btn"
                 android:background="@drawable/icon_more"
                 android:gravity="center"
+                android:enabled="false"
                 android:text="@string/user_login_title_text"
                 android:textSize="15sp"
                 android:textColor="@color/white" />

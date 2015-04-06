@@ -173,7 +173,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		mBackBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
 		mPlayLayout.setOnClickListener(this);
-		mMusicBtn.setOnClickListener(this);
+		//mMusicBtn.setOnClickListener(this);
 		
 		//更新UI handler
 		mVideoEditHandler = new Handler(){
