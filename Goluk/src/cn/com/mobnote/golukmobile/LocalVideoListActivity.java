@@ -877,13 +877,19 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 				}
 				
 				if(1 == mCurrentType){
-					mLoopVideoAdapter.notifyDataSetChanged();
+					if(null != mLoopVideoAdapter){
+						mLoopVideoAdapter.notifyDataSetChanged();
+					}
 				}
 				else if(2 == mCurrentType){
-					mWonderfulVideoAdapter.notifyDataSetChanged();
+					if(null != mWonderfulVideoAdapter){
+						mWonderfulVideoAdapter.notifyDataSetChanged();
+					}
 				}
 				else{
-					mEmergencyVideoAdapter.notifyDataSetChanged();
+					if(null != mEmergencyVideoAdapter){
+						mEmergencyVideoAdapter.notifyDataSetChanged();
+					}
 				}
 			break;
 			
@@ -892,8 +898,13 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 				mIsEditState = false;
 				mEditBtn.setText("编辑");
 				mFunctionLayout.setVisibility(View.GONE);
-				//删除选择视频数据
-				deleteSelectItemData();
+				
+				if(null != selectedListData){
+					if(selectedListData.size() > 0){
+						//删除选择视频数据
+						deleteSelectItemData();
+					}
+				}
 			break;
 			default:
 			break;
