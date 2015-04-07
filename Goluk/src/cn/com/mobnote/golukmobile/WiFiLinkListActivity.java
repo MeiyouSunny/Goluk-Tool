@@ -113,7 +113,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		mLoading = (RelativeLayout)findViewById(R.id.loading_layout);
 		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
 		mIpcSignalImage = (ImageView)findViewById(R.id.imageView2);
-		//mIpcSignalAnim = (AnimationDrawable)mIpcSignalImage.getBackground();
+		mIpcSignalAnim = (AnimationDrawable)mIpcSignalImage.getBackground();
 		
 		mDescTitleText = (TextView)findViewById(R.id.textView1);
 		mRefreshHelpBtn = (ImageButton)findViewById(R.id.refresh_help_btn);
@@ -132,7 +132,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		mNextBtn.setOnClickListener(this);
 		
 		//启动loading动画
-		//mIpcSignalAnim.start();
+		mIpcSignalAnim.start();
 		//修改title说明文字颜色
 		mDescTitleText.setText(Html.fromHtml("1.确认<font color=\"#28b6a4\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#28b6a4\"> Goluk xxx </font>的WiFi"));
 	}
