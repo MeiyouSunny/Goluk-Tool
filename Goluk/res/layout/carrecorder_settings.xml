@@ -9,21 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="@color/bg" >
-
-      <!--   <Button
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@color/bg"
-            android:drawableLeft="@drawable/carrecorder_back_btn"
-            android:drawablePadding="8dp"
-            android:gravity="center|left"
-            android:layout_centerVertical="true"
-            android:text="@string/back_text"
-            android:textColor="@color/white"
-            android:textSize="16sp" /> -->
-        
+  
         <ImageButton
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
@@ -54,10 +40,11 @@
             <!-- 视频质量栏目 -->
 
             <RelativeLayout
+                android:id="@+id/mVideoDefinition"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="@drawable/carrecorder_line_press"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp" >
 
@@ -69,26 +56,13 @@
                     android:textColor="#333333"
                     android:textSize="18sp" />
 
-                <LinearLayout
+                <ImageButton
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:gravity="center_vertical" >
-
-                    <ImageButton
-                        android:id="@+id/mHighDefinition"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/carrecorder_setup_option_high_press"
-                        android:contentDescription="@string/def" />
-
-                    <ImageButton
-                        android:id="@+id/mStandardDefinition"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/carrecorder_setup_option_low"
-                        android:contentDescription="@string/def" />
-                </LinearLayout>
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/carrecorder_setup_option_arrow"
+                    android:contentDescription="@string/def" />
             </RelativeLayout>
 
             <TextView

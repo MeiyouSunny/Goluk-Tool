@@ -11,8 +11,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="6dp"
         android:layout_marginTop="16dp"
-        android:text="分享"
-        android:textSize="14sp" />
+        android:textColor="#333333"
+        android:text="分享到..."
+        android:textSize="18sp" />
 
     <View
         android:id="@+id/divider_line"
@@ -21,78 +22,171 @@
         android:layout_below="@id/share_text"
         android:background="@drawable/share_custom_divider" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
+    <HorizontalScrollView
+        android:id="@+id/shares"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/divider_line"
-        android:orientation="horizontal"
-        android:layout_marginTop="12dp"
-        android:layoutAnimation="@anim/layout_animation" >
+        android:scrollbars="none">
 
-        <RelativeLayout
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_marginTop="12dp"
+            android:layoutAnimation="@anim/layout_animation"
+            android:orientation="horizontal" >
 
-            <ImageButton
-                android:id="@+id/wechat"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/umeng_socialize_wechat" />
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp" >
 
-        <RelativeLayout
-            android:layout_width="0dp"
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_btn_bg" />
+
+                <ImageButton
+                    android:id="@+id/wechat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_weixin" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="26dp" >
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_btn_bg" />
+
+                <ImageButton
+                    android:id="@+id/wechat_circle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_pengyouquan" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="26dp" >
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_btn_bg" />
+
+                <ImageButton
+                    android:id="@+id/qq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_qq" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="26dp" >
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_btn_bg" />
+
+                <ImageButton
+                    android:id="@+id/sms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_messge" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="26dp" >
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_btn_bg" />
+
+                <ImageButton
+                    android:id="@+id/sina"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/live_share_weibo" />
+            </RelativeLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/share_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/shares"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="34dp"
+        android:background="@drawable/live_share_mianbtn"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_gravity="center"
+            android:background="@drawable/live_share_icon_share" />
 
-            <ImageButton
-                android:id="@+id/wechat_circle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/umeng_socialize_wxcircle"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <ImageButton
-                android:id="@+id/qq"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/umeng_socialize_qq_on"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <ImageButton
-                android:id="@+id/sms"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/umeng_socialize_sms_on"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-        
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <ImageButton
-                android:id="@+id/sina"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/umeng_socialize_sina_on"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:background="#00000000"
+            android:text="分享到视频广场"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/share_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/share_btn"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/live_share_mianbtn_ash"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:background="#00000000"
+            android:text="取消" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_below="@+id/share_cancel"
+        android:background="#00000000" />
 
 </RelativeLayout>
