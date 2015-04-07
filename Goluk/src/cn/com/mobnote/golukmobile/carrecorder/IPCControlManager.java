@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -245,6 +246,30 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean setIPCWifiCfg(){
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetWifiCfg, "");
+	}
+	
+	/**
+	 * 获取IPC系统音视频编码配置
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public boolean getVideoEncodeCfg(int type){
+		String json = JsonUtil.getVideoCfgJson(type);
+		System.out.println("YYY================json="+json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetVideoEncodeCfg, json);
+	}
+	
+	/**
+	 * 设置IPC系统音视频编码配置
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public boolean setVideoEncodeCfg(VideoQualityActivity.SensitivityType type){
+		String json = JsonUtil.getVideoConfig(type);
+		System.out.println("YYY================json="+json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
 	}
 	
 

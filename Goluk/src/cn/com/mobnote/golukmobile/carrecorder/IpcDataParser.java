@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import android.text.TextUtils;
 
@@ -171,6 +173,13 @@ public class IpcDataParser {
 
 	}
 
+	/**
+	 * 解析IPC设备存储状态json
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
 	public static DeviceState parseDeviceState(String json) {
 		try {
 
@@ -193,6 +202,84 @@ public class IpcDataParser {
 
 			return deviceState;
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * 解析录制存储状态json
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static RecordStorgeState parseRecordStorageStatus(String json) {
+		try {
+			RecordStorgeState mRecordStorgeState = new RecordStorgeState();
+			JSONObject obj = new JSONObject(json);
+			int SDCardActive = obj.getInt("SDCardActive");
+			int isSpaceTooSmall = obj.getInt("isSpaceTooSmall");
+			double totalSdSize = obj.getDouble("totalSdSize");
+			double userFilesSize = obj.getDouble("userFilesSize");
+			double leftSize = obj.getDouble("leftSize");
+			double normalRecQuota = obj.getDouble("normalRecQuota");
+			double normalRecSize = obj.getDouble("normalRecSize");
+			double urgentRecQuota = obj.getDouble("urgentRecQuota");
+			double urgentRecSize = obj.getDouble("urgentRecSize");
+			double wonderfulRecQuota = obj.getDouble("wonderfulRecQuota");
+			double wonderfulRecSize = obj.getDouble("wonderfulRecSize");
+			double picQuota = obj.getDouble("picQuota");
+			double picSize = obj.getDouble("picSize");
+			
+			mRecordStorgeState.SDCardActive=SDCardActive;
+			mRecordStorgeState.isSpaceTooSmall=isSpaceTooSmall;
+			mRecordStorgeState.totalSdSize=totalSdSize;
+			mRecordStorgeState.userFilesSize=userFilesSize;
+			mRecordStorgeState.leftSize=leftSize;
+			mRecordStorgeState.normalRecQuota=normalRecQuota;
+			mRecordStorgeState.normalRecSize=normalRecSize;
+			mRecordStorgeState.urgentRecQuota=urgentRecQuota;
+			mRecordStorgeState.urgentRecSize=urgentRecSize;
+			mRecordStorgeState.wonderfulRecQuota=wonderfulRecQuota;
+			mRecordStorgeState.wonderfulRecSize=wonderfulRecSize;
+			mRecordStorgeState.picQuota=picQuota;
+			mRecordStorgeState.picSize=picSize;
+			
+			return mRecordStorgeState;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * 解析视频配置信息json
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static VideoConfigState parseVideoConfigState(String json) {
+		try {
+			VideoConfigState mVideoConfigState = new VideoConfigState();
+			JSONObject obj = new JSONObject(json);
+			int bitstreams = obj.getInt("bitstreams");
+			String resolution = obj.getString("resolution");
+			int frameRate = obj.getInt("frameRate");
+			int bitrate = obj.getInt("bitrate");
+			int AudioEnabled = obj.getInt("audioEnabled");
+			
+			mVideoConfigState.bitstreams=bitstreams;
+			mVideoConfigState.resolution=resolution;
+			mVideoConfigState.frameRate=frameRate;
+			mVideoConfigState.bitrate=bitrate;
+			mVideoConfigState.AudioEnabled=AudioEnabled;
+			
+			return mVideoConfigState;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

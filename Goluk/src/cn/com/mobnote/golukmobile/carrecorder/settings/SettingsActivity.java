@@ -1,7 +1,9 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -29,7 +31,7 @@ import android.view.View.OnClickListener;
   *
   * @author xuhw
   */
-public class SettingsActivity extends Activity implements OnClickListener{
+public class SettingsActivity extends Activity implements OnClickListener, IPCManagerFn{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class SettingsActivity extends Activity implements OnClickListener{
 		initView();
 		setListener();
 		
+		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("settings", this);
 	}
 	
 	/**
@@ -165,6 +168,25 @@ public class SettingsActivity extends Activity implements OnClickListener{
 		}else{
 			findViewById(id).setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 			SettingUtils.getInstance().putBoolean(btn, true);
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+	}
+
+	@Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+			if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){//获取IPC系统音视频编码配置
+				
+				
+			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){//设置IPC系统音视频编码配置
+				
+				
+			}
 		}
 	}
 

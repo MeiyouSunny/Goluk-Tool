@@ -1,6 +1,9 @@
 package cn.com.mobnote.util;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 
 public class JsonUtil {
 
@@ -119,6 +122,70 @@ public class JsonUtil {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("time", time);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 组织IPC的音视频设置，主码流与子码流同时设置
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static String getVideoConfig(VideoQualityActivity.SensitivityType type){
+		try {
+			JSONArray array = new JSONArray();
+			for(int i=0; i<1; i++){
+				JSONObject obj = new JSONObject();
+				if(0 == i){
+					obj.put("bitstreams", i);
+					obj.put("frameRate", 30);
+					obj.put("AudioEnabled", 1);
+					
+					if(VideoQualityActivity.SensitivityType._1080h == type){
+						obj.put("resolution", "1080p");
+						obj.put("bitrate", 8192);
+					}else if(VideoQualityActivity.SensitivityType._1080l == type){
+						obj.put("resolution", "1080p");
+						obj.put("bitrate", 5120);
+					}else if(VideoQualityActivity.SensitivityType._720h == type){
+						obj.put("resolution", "720p");
+						obj.put("bitrate", 6144);
+					}else{
+						obj.put("resolution", "720p");
+						obj.put("bitrate", 4096);
+					}
+				}else{
+					
+					
+				}
+				array.put(obj);
+			}
+			
+			return array.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 获取视频配置
+	 * @param type　0:主码流，1:子码流
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static String getVideoCfgJson(int type){
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("bitstreams", type);
 
 			return obj.toString();
 		} catch (Exception e) {

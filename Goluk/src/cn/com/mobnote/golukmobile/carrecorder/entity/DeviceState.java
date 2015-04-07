@@ -22,11 +22,11 @@ package cn.com.mobnote.golukmobile.carrecorder.entity;
   * @author xuhw
   */
 public class DeviceState {
-	/** SD卡总容量，单位为Byte。仅当SDActive为YES时，此字段有意义 */
+	/** SD卡总容量，单位为MB。仅当SDActive为YES时，此字段有意义 */
 	public double totalSizeOnSD;
 	/** 当前镜头状态。 1 –正常 2 –异常 */
 	public int cameraStatus;
-	/** SD卡剩余容量，单位为Byte。仅当SDActive为YES时，此字段有意义。*/
+	/** SD卡剩余容量，单位为MB。仅当SDActive为YES时，此字段有意义。*/
 	public double leftSizeOnSD;
 	/** 当前登录用户数 */
 	public int onlineUsers;

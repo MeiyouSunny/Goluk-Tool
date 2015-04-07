@@ -20,10 +20,11 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="1080p全高清"
-            android:textColor="#29c5b1"
+            android:textColor="#333333"
             android:textSize="18sp" />
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/cRight"
             android:layout_width="20dp"
             android:layout_height="14dp"
