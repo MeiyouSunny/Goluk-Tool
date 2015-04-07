@@ -143,16 +143,19 @@ public class JsonUtil {
 
 			String lon = rootObj.getString("lon");
 			String lat = rootObj.getString("lat");
-			String speed = rootObj.getString("speed");
+			String speed = String.valueOf(rootObj.getInt("speed"));
 
 			String open = rootObj.getString("open");
 			String active = rootObj.getString("active");
 			String tag = rootObj.getString("tag");
-			String groupid = rootObj.getString("gid");
-			String person = rootObj.getString("persons");
-			String zan = rootObj.getString("zan");
+
+			String groupid = getJsonStringValue(rootObj, "gid", "");
+
+			String person = String.valueOf(rootObj.getInt("persons"));
+			String zan = getJsonStringValue(rootObj ,"zan", "0");
 
 			UserInfo userInfo = new UserInfo();
+			userInfo.uid = uid;
 			userInfo.aid = aid;
 			userInfo.nickName = nikeName;
 			userInfo.picurl = picUrl;
@@ -174,6 +177,30 @@ public class JsonUtil {
 		return null;
 	}
 
+	private static String getJsonStringValue(JSONObject json_Channel, String key, String defaultValue) {
+		try {
+			if (json_Channel.isNull(key)) {
+				return defaultValue;
+			}
+			return json_Channel.getString(key);
+		} catch (Exception e) {
+
+		}
+		return defaultValue;
+	}
+
+	private static int getJsonIntValue(JSONObject json_Channel, String key) {
+		try {
+			if (json_Channel.isNull(key)) {
+				return 0;
+			}
+			return json_Channel.getInt(key);
+		} catch (Exception e) {
+
+		}
+		return 0;
+	}
+
 	public static LiveDataInfo parseLiveDataJson(String data) {
 		try {
 			int code = 0;
@@ -185,13 +212,16 @@ public class JsonUtil {
 			String groupnumber = null;
 			int tag = 0;
 			String joniGroup = null;
+			int active = 1;
 
 			JSONObject obj = new JSONObject(data);
 			code = Integer.valueOf(obj.getString("code"));
+			active = Integer.valueOf(obj.getString("active"));
 			groupId = obj.getString("groupid");
 			if (!obj.isNull("vurl")) {
 				playUrl = obj.getString("vurl");
 			}
+
 			grouptype = obj.getString("grouptype");
 			membercount = obj.getInt("membercount");
 			title = obj.getString("title");
@@ -199,6 +229,7 @@ public class JsonUtil {
 
 			LiveDataInfo info = new LiveDataInfo();
 			info.code = code;
+			info.active = active;
 			info.groupId = groupId;
 			info.groupnumber = groupnumber;
 			info.groupType = grouptype;

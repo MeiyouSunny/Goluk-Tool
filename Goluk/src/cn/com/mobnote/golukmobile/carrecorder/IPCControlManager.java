@@ -60,7 +60,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public void setIPCWifiState(boolean isConnect){
 		int state = isConnect ? 1 : 0;
-		String ip = null;
+		String ip = "192.168.43.234";
 		String json = JsonUtil.getWifiChangeJson(state, ip);
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
 		

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.golukmobile.R;
@@ -26,6 +27,10 @@ public class LiveSettingPopWindow implements OnClickListener {
 	private RelativeLayout mEnter = null;
 	/** 回调对象 */
 	private IPopwindowFn mListener = null;
+
+	private Button mCanTalkBtn = null;
+
+	private boolean mIsCanTalk = true;
 
 	public void setCallBackNotify(IPopwindowFn fn) {
 		this.mListener = fn;
@@ -51,6 +56,13 @@ public class LiveSettingPopWindow implements OnClickListener {
 		mEnter = (RelativeLayout) mRootLayout.findViewById(R.id.sysz_line);
 		mEnter.setOnClickListener(this);
 
+		mCanTalkBtn = (Button) mRootLayout.findViewById(R.id.car_talk);
+		mCanTalkBtn.setOnClickListener(this);
+		if (mIsCanTalk) {
+			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+		} else {
+			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+		}
 	}
 
 	public void show() {
@@ -68,8 +80,18 @@ public class LiveSettingPopWindow implements OnClickListener {
 
 	private LiveSettingBean getCurrentSetting() {
 		LiveSettingBean bean = new LiveSettingBean();
-
+		bean.isCanTalk = mIsCanTalk;
 		return bean;
+	}
+
+	private void switchTalkState() {
+		if (mIsCanTalk) {
+			mIsCanTalk = false;
+			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+		} else {
+			mIsCanTalk = true;
+			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+		}
 	}
 
 	@Override
@@ -78,6 +100,9 @@ public class LiveSettingPopWindow implements OnClickListener {
 		switch (id) {
 		case R.id.sysz_line:
 			mListener.callBackPopWindow(EVENT_ENTER, getCurrentSetting());
+			break;
+		case R.id.car_talk:
+			switchTalkState();
 			break;
 		}
 

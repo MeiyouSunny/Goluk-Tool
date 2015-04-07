@@ -32,6 +32,7 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
+import cn.com.tiros.utils.LogUtil;
 
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
@@ -373,6 +374,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 			break;
 			case 9:
+				LogUtil.e(null, "jyf----20150406----application----999999999999---- : ");
 				if(mPageSource == "LiveVideo"){
 					console.log("pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
 					if (mContext instanceof LiveVideoPlayActivity) {
@@ -419,9 +421,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				break;
 			case PageType_LiveStart:
 				// 获取直播信息成功
-				if (null != mContext && mContext instanceof MainActivity) {
-					((MainActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+				if (null != mContext) {
+					if (mContext instanceof MainActivity) {
+						((MainActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+					} else if (mContext instanceof LiveActivity) {
+						((LiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+					}	
 				}
+				
 				break;
 			case PageType_PlayStart:
 				// 看别人直播

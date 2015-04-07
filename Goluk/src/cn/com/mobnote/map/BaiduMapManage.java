@@ -27,6 +27,7 @@ import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
@@ -272,7 +273,9 @@ public class BaiduMapManage {
 		mBubbleView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				LogUtil.e(null,"jyf-----click------1111");
 				if(mPageSource == "Main"){
+					LogUtil.e(null,"jyf-----click------2222");
 					lookOtherLive();
 				}
 			}
@@ -295,10 +298,15 @@ public class BaiduMapManage {
 //		bubble.putExtra("cn.com.mobnote.map.uid", "1");
 //		bubble.putExtra("cn.com.mobnote.map.imageurl", mBubbleImageUrl);
 //		mContext.startActivity(bubble);
+		
+		LogUtil.e(null,"jyf-----click------3333");
 
 		// 通知主界面要观看别人的视频
 		if (mContext instanceof MainActivity) {
+			LogUtil.e(null,"jyf-----click------4444");
 			((MainActivity) mContext).startLiveLook(mCurrentUserInfo);
+			
+			LogUtil.e(null,"jyf-----click------55555");
 		}
 	}
 	
@@ -381,6 +389,8 @@ public class BaiduMapManage {
 				String lon = data.getString("lon");
 				String lat = data.getString("lat");
 				String open = data.getString("open");
+				
+				LogUtil.e(null,"jyf-----click------AAAAA:" + data);
 				
 				// 解析获取用户信息
 				mCurrentUserInfo = JsonUtil.parseSingleUserInfoJson(data);

@@ -58,6 +58,7 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.mobnote.wifi.WifiAutoConnectManager;
 import cn.com.mobnote.wifi.WifiConnCallBack;
 import cn.com.mobnote.wifi.WifiRsBean;
+import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -997,31 +998,70 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		} else {
 			if (!mApp.isUserLoginSucess) {
 				// TODO 未登录成功
+				Toast.makeText(this, "请先登录", Toast.LENGTH_LONG).show();
 				return;
 			}
-			boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson());
-			if (!isSucess) {
-				startLiveFailed();
-			} else {
-				// TODO 弹对话框
-				Toast.makeText(this, "发起直播", Toast.LENGTH_LONG).show();
-			}
+			
+			
+			
+			// 开启直播
+			Intent intent = new Intent(this, LiveActivity.class);
+			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+			intent.putExtra(LiveActivity.KEY_GROUPID, "");
+			
+			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+
+			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+			
+//			intent.putExtra(LiveActivity.KEY_LIVE_DATA, dataInfo);
+//			intent.putExtra(LiveActivity.KEY_USERINFO, currentUserInfo);
+
+			startActivity(intent);
+			
+			
+			// 跳转直播界面
+//			
+//			boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//					IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson());
+//			if (!isSucess) {
+//				startLiveFailed();
+//			} else {
+//				// TODO 弹对话框
+//				Toast.makeText(this, "发起直播", Toast.LENGTH_LONG).show();
+//			}
 		}
 	}
 	
 	// 查看他人的直播
 	public void startLiveLook(UserInfo userInfo) {
+		LogUtil.e(null,"jyf-----click------666666");
 		if (null == userInfo) {
 			return;
 		}
-		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetVideoDetail, JsonUtil.getStartLookLiveJson(userInfo.uid, userInfo.aid));
-		if (!isSucess) {
-			startLiveLookFailed();
-		} else {
-			// TODO 弹对话框
-		}
+		
+		// 跳转看他人界面
+		
+		// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+		intent.putExtra(LiveActivity.KEY_GROUPID, "");
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
+
+		startActivity(intent);
+		
+		LogUtil.e(null,"jyf-----click------677777777");
+		
+		LogUtil.e(null, "jyf----20150406----MainActivity----startLiveLook");
+		
+//		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//				IPageNotifyFn.PageType_GetVideoDetail, JsonUtil.getStartLookLiveJson(userInfo.uid, userInfo.aid));
+//		if (!isSucess) {
+//			startLiveLookFailed();
+//		} else {
+//			// TODO 弹对话框
+//		}
 	}
 
 	private void startLiveFailed() {
