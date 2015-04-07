@@ -33,9 +33,9 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.LocalVideoListActivity;
 import cn.com.mobnote.golukmobile.LocalVideoShareListActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
-import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.ImageManager;
-import cn.com.mobnote.golukmobile.carrecorder.Utils;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.util.console;
 
 /**
