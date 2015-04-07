@@ -992,9 +992,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(more);
 			break;
 			case R.id.share_local_video_btn:
-				//跳转到本地视频列表
-				Intent localVideoList = new Intent(MainActivity.this,LocalVideoListActivity.class);
-				startActivity(localVideoList);
+				//跳转到本地视频分享列表
+				Intent localVideoShareList = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
+				startActivity(localVideoShareList);
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;

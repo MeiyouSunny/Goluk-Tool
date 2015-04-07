@@ -254,23 +254,30 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 		//视频事件回调注册
 		mRPVPalyVideo.setPlayerListener(new RtmpPlayerView.RtmpPlayerViewLisener() {
 			@Override
-			public void onPlayerPrepared(RtmpPlayerView arg0) {
+			public void onPlayerPrepared(final RtmpPlayerView rpv) {
 				console.log("live---onPlayerPrepared");
+				rpv.setHideSurfaceWhilePlaying(true);
 			}
 			
 			@Override
-			public boolean onPlayerError(RtmpPlayerView arg0, int arg1, int arg2,String arg3) {
+			public boolean onPlayerError(RtmpPlayerView rpv, int arg1, int arg2,String arg3) {
 				//视频播放出错
 				console.log("live---onPlayerError" + arg2 + "," + arg3);
+				console.toast("播放器出现错误...", mContext);
+				rpv.removeCallbacks(retryRunnable);
+				// FIXME:5秒后重连
+				rpv.postDelayed(retryRunnable, 5000);
 				mVideoLoading.setVisibility(View.GONE);
 				mPlayLayout.setVisibility(View.VISIBLE);
 				return false;
 			}
 			
 			@Override
-			public void onPlayerCompletion(RtmpPlayerView arg0) {
+			public void onPlayerCompletion(RtmpPlayerView rpv) {
 				//视频播放完成
 				console.log("live---onPlayerCompletion");
+				rpv.removeCallbacks(retryRunnable);
+				rpv.postDelayed(retryRunnable, 5000);
 				mPlayLayout.setVisibility(View.VISIBLE);
 			}
 			
@@ -295,6 +302,8 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 				//console.log("onGetCurrentPosition");
 			}
 		});
+		// 设置缓冲时间，缓冲时间越长，则超时时间也需对应加长
+		mRPVPalyVideo.setBufferTime(1000);
 		//设置视频源
 		mRPVPalyVideo.setConnectionTimeout(30000);
 		//mRPVPalyVideo.setDataSource("rtmp://124.238.236.92/live/test10");
@@ -305,7 +314,6 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 	/**
 	 * 获取视频直播数据
 	 */
-	@SuppressWarnings("static-access")
 	private void getVideoLiveData(){
 		mPlayLayout.setVisibility(View.GONE);
 		mVideoLoading.setVisibility(View.VISIBLE);
@@ -361,6 +369,16 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 		}
 	}
 	
+	/**
+	 * 重连runnable
+	*/
+	private Runnable retryRunnable = new Runnable() {
+		@Override
+		public void run() {
+			// start();
+		}
+	};
+
 	/**
 	 * 视频直播数据返回
 	 * @param obj
@@ -426,7 +444,7 @@ public class LiveVideoPlayActivity extends Activity implements OnClickListener {
 	protected void onDestroy() {
 		console.log("liveplay---onDestroy");
 		if(null != mRPVPalyVideo){
-			mRPVPalyVideo.stopPlayback();
+			mRPVPalyVideo.removeCallbacks(retryRunnable);
 			mRPVPalyVideo.cleanUp();
 			mRPVPalyVideo = null;
 		}

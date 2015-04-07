@@ -77,6 +77,18 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_RecPicUsage = 1005;
 	/** 查询设备状态 */
 	public static final int IPC_VDCP_Msg_DeviceStatus = 1006;
+	/** 获取IPC系统标识 */
+	public static final int IPC_VDCP_Msg_GetIdentity = 1007;
+	/** IPC重启 */
+	public static final int IPC_VDCP_Msg_Reboot = 1008;
+	/** IPC恢复出厂设置 */
+	public static final int IPC_VDCP_Msg_Restore = 1009;
+	/** IPC格式化SD卡 */
+	public static final int IPC_VDCP_Msg_FormatDisk = 10010;
+	/** 设置IPC系统时间 */
+	public static final int IPC_VDCP_Msg_SetTime = 10011;
+	/** 设置IPC系统WIFI配置 */
+	public static final int IPC_VDCP_Msg_SetWifiCfg = 10012;
 	
 	/**
 	 * 
@@ -132,11 +144,11 @@ public interface IPCManagerFn extends IGolukCommFn {
 	/** IPC恢复出厂设置 */
 	public static final int IPC_VDCPCmd_Restore = 1009;
 	/** IPC格式化SD卡 */
-	public static final int IPC_VDCPCmd_FormatDisk = 1010;
+	public static final int IPC_VDCPCmd_FormatDisk = 10010;
 	/** 设置IPC系统时间 */
-	public static final int IPC_VDCPCmd_SetTime = 1011;
+	public static final int IPC_VDCPCmd_SetTime = 10011;
 	/** 设置IPC系统WIFI配置 */
-	public static final int IPC_VDCPCmd_SetWifiCfg = 1012;
-	
+	public static final int IPC_VDCPCmd_SetWifiCfg = 10012;
+
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }
