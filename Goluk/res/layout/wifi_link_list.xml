@@ -38,7 +38,17 @@
 		android:layout_below="@id/textView1"
 		android:layout_centerHorizontal="true"
 		android:layout_marginTop="38dp"
-		android:src="@drawable/connect_banner_2"
+		android:src="@drawable/connect_gif_ipc_bluelight"
+		android:contentDescription="@string/imgdes"/>
+	
+	<ImageView
+		android:id="@+id/imageView2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textView1"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="38dp"
+		android:background="@anim/ipc_signal"
 		android:contentDescription="@string/imgdes"/>
 	
 	<RelativeLayout
@@ -87,7 +97,7 @@
 		android:layout_marginLeft="20dp"
 		android:layout_marginRight="20dp"
 		android:layout_alignParentBottom="true"
-		android:background="@drawable/connect_mianbtn"
+		android:background="@drawable/connect_mianbtn_ash"
 		android:textSize="20sp"
 		android:textColor="@color/white"
 		android:text="@string/next_text" />

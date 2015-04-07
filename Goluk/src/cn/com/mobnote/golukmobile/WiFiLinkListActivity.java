@@ -22,12 +22,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,6 +67,9 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	private ImageButton mBackBtn = null;
 	/** 说明文字 */
 	private TextView mDescTitleText = null;
+	/** IPC信号动画 */
+	private ImageView mIpcSignalImage = null;
+	private AnimationDrawable mIpcSignalAnim = null;
 	/** 刷新按钮 */
 	private ImageButton mRefreshHelpBtn = null;
 	/** 下一步按钮 */
@@ -78,7 +83,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	public WiFiListAdapter mWiFiListAdapter = null;
 	public ArrayList<WiFiListData> mWiFiListData = null;
 	/** 当前是否已连接ipc wifi */
-	private boolean mHasLinked = true;
+	private boolean mHasLinked = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +112,9 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		//获取页面元素
 		mLoading = (RelativeLayout)findViewById(R.id.loading_layout);
 		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
+		mIpcSignalImage = (ImageView)findViewById(R.id.imageView2);
+		//mIpcSignalAnim = (AnimationDrawable)mIpcSignalImage.getBackground();
+		
 		mDescTitleText = (TextView)findViewById(R.id.textView1);
 		mRefreshHelpBtn = (ImageButton)findViewById(R.id.refresh_help_btn);
 		mNextBtn = (Button) findViewById(R.id.next_btn);
@@ -123,6 +131,8 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		mRefreshHelpBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
 		
+		//启动loading动画
+		//mIpcSignalAnim.start();
 		//修改title说明文字颜色
 		mDescTitleText.setText(Html.fromHtml("1.确认<font color=\"#28b6a4\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#28b6a4\"> Goluk xxx </font>的WiFi"));
 	}
@@ -257,6 +267,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 				}
 				else{
 					//灰色按钮不能点击
+					console.toast("请先连接IPC-WIFI", mContext);
 				}
 			break;
 		}
