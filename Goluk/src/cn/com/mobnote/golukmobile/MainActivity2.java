@@ -313,7 +313,7 @@ public class MainActivity2 extends Activity implements OnClickListener , WifiCon
 		else{
 			mDefaultTipLayout.setVisibility(View.VISIBLE);
 		}
-		mLocalVideoListAdapter = new LocalVideoListAdapter(mContext,mLocalVideoData,"Main");
+		//mLocalVideoListAdapter = new LocalVideoListAdapter(mContext,mLocalVideoData,"Main");
 		mLocalVideoGridView.setAdapter(mLocalVideoListAdapter);
 		mLocalVideoListLayout.addView(mLocalVideoGridView);
 	}
