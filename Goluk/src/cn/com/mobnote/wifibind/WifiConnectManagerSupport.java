@@ -94,7 +94,7 @@ public class WifiConnectManagerSupport {
 	    }
 	   
 	    bRet =wifiManager.reconnect();
-	    
+	 
 	    Log.e(TAG, "wificonn----------------"+bRet+"-------------");
 	    //wifi 连接失败
 	    if(!bRet){
@@ -152,7 +152,9 @@ public class WifiConnectManagerSupport {
 		
 		return config;
 	}
-
+	public boolean disConnWifi(){
+		return wifiManager.disconnect();
+	}
 	// 打开wifi功能
 	boolean openWifi() {
 		// 打开 wifi 功能
