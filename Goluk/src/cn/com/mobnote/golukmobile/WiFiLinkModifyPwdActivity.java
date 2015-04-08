@@ -55,6 +55,8 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 	private AnimationDrawable mIpcWiFiAnim = null;
 	/** 下一步按钮 */
 	private Button mNextBtn = null;
+	/** 连接wifi名称 */
+	private String mLinkWiFiName = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +69,9 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(mContext,"WiFiLinkModifyPwd");
-		
+		//获取视频路径
+		Intent intent = getIntent();
+		mLinkWiFiName = intent.getStringExtra("cn.com.mobnote.golukmobile.wifiname");
 		//页面初始化
 		init();
 	}

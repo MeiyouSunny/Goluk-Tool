@@ -84,6 +84,8 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	public ArrayList<WiFiListData> mWiFiListData = null;
 	/** 当前是否已连接ipc wifi */
 	private boolean mHasLinked = true;
+	/** 连接wifi名称 */
+	private String mLinkWiFiName = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -169,6 +171,8 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		mLoading.setVisibility(View.VISIBLE);
 		//保存wifi校验名称 chenxy
 		WiFiConnection.SaveWiFiName(wifiName);
+		//保存wifi名称
+		mLinkWiFiName = wifiName;
 		
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiAutoConnectManager(wm,this);
@@ -263,6 +267,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 				if(mHasLinked){
 					//跳转到修改热点密码页面
 					Intent modifyPwd = new Intent(WiFiLinkListActivity.this,WiFiLinkModifyPwdActivity.class);
+					modifyPwd.putExtra("cn.com.mobnote.golukmobile.wifiname", mLinkWiFiName);
 					startActivity(modifyPwd);
 				}
 				else{

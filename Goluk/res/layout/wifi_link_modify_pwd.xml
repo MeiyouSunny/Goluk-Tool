@@ -59,7 +59,7 @@
 			android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
 			android:gravity="center"
-			android:text="@string/wifi_link_21_text"
+			android:text="@string/wifi_link_29_text"
 			android:textSize="18sp"
 			android:textColor="#adadad"/>
 		
@@ -141,6 +141,15 @@
 		android:layout_centerHorizontal="true"
 		android:layout_marginTop="40dp"
 		android:background="@anim/goluk_wifi"
+		android:contentDescription="@string/imgdes"/>
+	
+	<ImageView
+		android:id="@+id/imageView3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/imageView1"
+		android:layout_centerHorizontal="true"
+		android:background="@drawable/connect_gif_ipcwifi"
 		android:contentDescription="@string/imgdes"/>
 	
 	<Button
