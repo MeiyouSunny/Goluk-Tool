@@ -211,6 +211,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(this,"Main");
 		
+		mApp.initLogic();
+		
 		//mApp.mGoluk.GoLuk_WifiStateChanged(true);
 		
 		//页面初始化,获取页面控件
@@ -996,11 +998,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if (isTestData) {
 			test();
 		} else {
-			if (!mApp.isUserLoginSucess) {
-				// TODO 未登录成功
-				Toast.makeText(this, "请先登录", Toast.LENGTH_LONG).show();
-				return;
-			}
+//			if (!mApp.isUserLoginSucess) {
+//				// TODO 未登录成功
+//				Toast.makeText(this, "请先登录", Toast.LENGTH_LONG).show();
+//				return;
+//			}
 			
 			
 			

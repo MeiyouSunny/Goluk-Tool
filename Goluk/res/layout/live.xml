@@ -257,7 +257,7 @@
             android:src="@drawable/live_icon_line" />
 
         <TextView
-            android:id="@+id/live_currenttime"
+            android:id="@+id/live_talktime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

@@ -80,6 +80,19 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		initCachePath();
 //		createWifi();
 		//实例化JIN接口,请求网络数据
+		
+	}
+	
+	public Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+
+		};
+	};
+	
+	public void initLogic() {
+		if (null != mGoluk) {
+			return;
+		}
 		mGoluk = new GolukLogic();
 
 		mIPCControlManager = new IPCControlManager(this);
@@ -89,12 +102,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		// 注册爱滔客回调协议
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Talk, this);
 	}
-	
-	public Handler mHandler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-
-		};
-	};
 	
 	/**
 	 * 创建行车记录仪缓冲路径

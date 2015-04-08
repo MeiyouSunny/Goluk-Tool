@@ -135,19 +135,19 @@ end
 		return false;
 	end
 	local t = {};
-	t.mobileid = tiros.moduledata.moduledata_get("framework", "mobileid");
-	t.uid = tiros.moduledata.moduledata_get("framework", "uid");
+	t.mobileid = "8313632b-9352-4855-8a3c-77e185427dcb";
+	t.uid = "MB1ADV";
 	t.aid = aid;
 	t.v = 2;		--固定表示当前最新版本号
-	t.Version = tiros.moduledata.moduledata_get("framework", "version");
-	t.x = gAirTalkeeMgr.lastGpsInfo.elon;
-	t.y = gAirTalkeeMgr.lastGpsInfo.elat;
+	t.Version = "4.2.0.2534";
+	t.x = 419160707;
+	t.y = 143789673;
 	--原生gps信息
-	t.rx = gAirTalkeeMgr.lastGpsInfo.rawLon;
-	t.ry = gAirTalkeeMgr.lastGpsInfo.rawLat;
-	t.radius = gAirTalkeeMgr.lastGpsInfo.radius;
-	t.sd = gAirTalkeeMgr.lastGpsInfo.speed;
-	t.d = gAirTalkeeMgr.lastGpsInfo.course;	--gps方向
+	t.rx = 116.44579;
+	t.ry = 39.92859;
+	t.radius = 0;
+	t.sd = 100;
+	t.d = 10;	--gps方向
 	t.customflag = MMID_RESPONSE_POSITION;		--添加见面三自定义位置上报标识10010
 	
 	--用户信息，昵称与性别

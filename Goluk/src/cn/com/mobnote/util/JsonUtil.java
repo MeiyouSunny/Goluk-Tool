@@ -152,7 +152,7 @@ public class JsonUtil {
 			String groupid = getJsonStringValue(rootObj, "gid", "");
 
 			String person = String.valueOf(rootObj.getInt("persons"));
-			String zan = getJsonStringValue(rootObj ,"zan", "0");
+			String zan = getJsonStringValue(rootObj, "zan", "0");
 
 			UserInfo userInfo = new UserInfo();
 			userInfo.uid = uid;
@@ -177,6 +177,38 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static boolean getJsonBooleanValue(String jsonData, String key, boolean defaultValue) {
+		try {
+			return getJsonBooleanValue(new JSONObject(jsonData), key, defaultValue);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return defaultValue;
+	}
+
+	public static boolean getJsonBooleanValue(JSONObject json_Channel, String key, boolean defaultValue) {
+		try {
+			if (json_Channel.has(key)) {
+				if (json_Channel.isNull(key)) {
+					return defaultValue;
+				}
+				return json_Channel.getBoolean(key);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return defaultValue;
+	}
+
+	public static String getJsonStringValue(String jsonData, String key, String defaultValue) {
+		try {
+			return getJsonStringValue(new JSONObject(jsonData), key, defaultValue);
+		} catch (Exception e) {
+
+		}
+		return defaultValue;
+	}
+
 	private static String getJsonStringValue(JSONObject json_Channel, String key, String defaultValue) {
 		try {
 			if (json_Channel.isNull(key)) {
@@ -188,17 +220,62 @@ public class JsonUtil {
 		}
 		return defaultValue;
 	}
+	
+	public static int getJsonIntValue(String message, String key, int defaultValue) {
+		try {
+			JSONObject obj = new JSONObject(message);
+			return getJsonIntValue(obj, key, defaultValue);
+		} catch (Exception e) {
+			
+		}
+		
+		return defaultValue;
+	}
 
-	private static int getJsonIntValue(JSONObject json_Channel, String key) {
+	private static int getJsonIntValue(JSONObject json_Channel, String key, int defaultValue) {
 		try {
 			if (json_Channel.isNull(key)) {
-				return 0;
+				return defaultValue;
 			}
 			return json_Channel.getInt(key);
 		} catch (Exception e) {
 
 		}
-		return 0;
+		return defaultValue;
+	}
+
+	public static LiveDataInfo parseLiveDataJson2(String data) {
+		try {
+			int code = 0;
+			String groupId = null;
+			String grouptype = null;
+			int membercount = 0;
+			String title = null;
+			String groupnumber = null;
+
+			JSONObject obj = new JSONObject(data);
+			code = Integer.valueOf(obj.getString("code"));
+
+			groupId = obj.getString("groupid");
+			groupnumber = obj.getString("groupnumber");
+			grouptype = obj.getString("grouptype");
+			membercount = obj.getInt("membercount");
+			title = obj.getString("title");
+
+			LiveDataInfo info = new LiveDataInfo();
+			info.code = code;
+			info.groupId = groupId;
+			info.groupnumber = groupnumber;
+			info.groupType = grouptype;
+			info.membercount = membercount;
+			info.title = title;
+			return info;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	public static LiveDataInfo parseLiveDataJson(String data) {

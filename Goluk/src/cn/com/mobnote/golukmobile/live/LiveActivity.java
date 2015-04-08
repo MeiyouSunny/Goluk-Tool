@@ -79,8 +79,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private TextView mTitleTv = null;
 	/** 当前地址 */
 	private TextView mAddressTv = null;
-	/** 当前正在说话的 */
-	private TextView mTalkingTv = null;
+
 	/** 点赞 显示 */
 	private TextView mZancountTv = null;
 	/** 观看人数 */
@@ -146,6 +145,15 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/** 当前拍摄时间 */
 	private int mShootTime = 0;
 
+	/** 说话状态标识 */
+	private ImageView mTalkingSign = null;
+	/** 当前正在说话的 */
+	private TextView mTalkingTv = null;
+	/** 说话中计时显示 */
+	private TextView mTalkingTimeTv = null;
+
+	private boolean isTest = true;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -179,11 +187,22 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mliveSettingWindow.setCallBackNotify(this);
 
 		if (isShareLive) {
-			mLiveVideoHandler.sendEmptyMessageDelayed(100, 3000);
+			mLiveVideoHandler.sendEmptyMessageDelayed(100, 1000);
 		} else {
 			startLiveLook(currentUserInfo);
 		}
 
+		refreshPPTTTT();
+
+	}
+
+	private void refreshPPTTTT() {
+		if (isTest) {
+			refreshPPtState(true);
+		} else {
+			// 在没有进入群组时，按钮不可按
+			refreshPPtState(false);
+		}
 	}
 
 	private void getIntentData() {
@@ -219,10 +238,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	// 查看他人的直播
 	public void startLiveLook(UserInfo userInfo) {
-		LogUtil.e(null, "jyf----20150406----LiveActivity----startLiveLook----111 uid: " + userInfo.uid + " aid:" + userInfo.aid);
-		
+		LogUtil.e(null, "jyf----20150406----LiveActivity----startLiveLook----111 uid: " + userInfo.uid + " aid:"
+				+ userInfo.aid);
+
 		String condi = "{\"uid\":\"" + userInfo.uid + "\",\"desAid\":\"" + userInfo.aid + "\"}";
-		
+
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_GetVideoDetail, condi);
 		if (!isSucess) {
@@ -276,6 +296,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		mAddressTv = (TextView) findViewById(R.id.live_address);
 		mTalkingTv = (TextView) findViewById(R.id.live_talking);
+		mTalkingSign = (ImageView) findViewById(R.id.live_talking_sign);
+		mTalkingTimeTv = (TextView) findViewById(R.id.live_talktime);
 
 		mQiangpaiImg = (ImageView) findViewById(R.id.qiangpai_img);
 
@@ -378,7 +400,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// 直播
 			mBottomLayout.setVisibility(View.VISIBLE);
 			mLiveLookTalk.setVisibility(View.GONE);
-			mLiveTalk.setVisibility(View.GONE);
+			mLiveTalk.setVisibility(View.VISIBLE);
 		} else {
 			// 看别人直播
 			mBottomLayout.setVisibility(View.GONE);
@@ -433,14 +455,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mRPVPalyVideo.start();
 		} else {
 			// 查看别人的地址
-		
-			//mFilePath = mDataInfo.playUrl;
+
+			// mFilePath = mDataInfo.playUrl;
 		}
 
-//		if (isShareLive) {
-//			// 开启直播
-//			this.startLive("test111");
-//		}
+		// if (isShareLive) {
+		// // 开启直播
+		// this.startLive("test111");
+		// }
 	}
 
 	/**
@@ -451,13 +473,15 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 */
 	private void joinAitalkGroup() {
 		LogUtil.e(null, "jyf-------live------aitalk:join: " + mJoinGroupJson);
-		if(null != mJoinGroupJson && !"".equals(mJoinGroupJson)) {
-			LogUtil.e(null, "jyf----20150406----LiveActivity----joinAitalkGroup----111 : " + mJoinGroupJson); 
-			
-			final int cmd = isShareLive ? ITalkFn.Talk_CommCmd_JoinGroupWithInfo : ITalkFn.Talk_CommCmd_JoinGroupWithInfo;
-			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd, mJoinGroupJson);
+		if (null != mJoinGroupJson && !"".equals(mJoinGroupJson)) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----joinAitalkGroup----111 : " + mJoinGroupJson);
+
+			final int cmd = isShareLive ? ITalkFn.Talk_CommCmd_JoinGroupWithInfo
+					: ITalkFn.Talk_CommCmd_JoinGroupWithInfo;
+			// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
+			// cmd, mJoinGroupJson);
 		}
-		
+
 	}
 
 	private void cancelTimer() {
@@ -596,6 +620,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	private void liveFailedStart(boolean isLive) {
+		LogUtil.e(null, "jyf----20150406----LiveActivity----liveFailedStart---- 直播回调失败: ");
 		if (isLive) {
 			startLiveFailed();
 		} else {
@@ -610,7 +635,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 		final String data = (String) param2;
 		// 解析回调数据
-		LiveDataInfo dataInfo = JsonUtil.parseLiveDataJson(data);
+		LiveDataInfo dataInfo = JsonUtil.parseLiveDataJson2(data);
 		if (null == dataInfo) {
 			liveFailedStart(isLive);
 			return;
@@ -637,7 +662,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 */
 	public void LiveVideoDataCallBack(int success, Object obj) {
 		console.log("视频直播数据返回--LiveVideoDataCallBack: success: " + success);
-		
+
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----111 : " + success);
 		if (isShareLive) {
 			return;
@@ -926,6 +951,69 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		finish();
 	}
 
+	/** 开启超时记录定时器 */
+	private static final int MSG_SPEECH_OUT_TIME = 1;
+	/** 对讲倒计时定时器 */
+	private static final int MSG_SPEECH_COUNT_DOWN = 2;
+	/** 记录对讲超时时间(30s) */
+	private int mSpeechOutTime = 0;
+	/** 记录对讲超时计时(3s) */
+	private int mSpeechCountDownTime = 0;
+	/** 表示用户是否正处于上次超时的3秒内，如果上次说话超时，则3秒内不能说话 */
+	private boolean mTimeOutEnable = false;
+	/** 对讲按钮按下状态 */
+	private boolean mTalkTouchDown = false;
+
+	private boolean mIsMe = false;
+
+	Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case MSG_SPEECH_OUT_TIME:
+				mSpeechOutTime++;
+				if (mSpeechOutTime >= 30) {
+					talkrelease();
+					if (mIsMe) {
+						mTimeOutEnable = true;
+						mSpeechCountDownTime = 3;
+						mHandler.sendEmptyMessage(MSG_SPEECH_COUNT_DOWN);
+					} else {
+						mSpeechOutTime = 0;
+					}
+				} else {
+					String str = "";
+					if (mSpeechOutTime < 10) {
+						str = "00:0" + mSpeechOutTime;
+					} else {
+						str = "00:" + mSpeechOutTime;
+					}
+					refreshTimerTv(str);
+					mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
+					mHandler.sendEmptyMessageDelayed(MSG_SPEECH_OUT_TIME, 1000);
+				}
+				break;
+			case MSG_SPEECH_COUNT_DOWN:
+				if (mSpeechCountDownTime < 0) {
+					mTalkTouchDown = false;
+					mTimeOutEnable = false;
+					mHandler.removeMessages(MSG_SPEECH_COUNT_DOWN);
+					// 目前为可按状态
+					refreshPPtState(true);
+				} else {
+					speekingUIRefresh(4, "", false);
+					final String showTimeStr = "00:0" + mSpeechCountDownTime;
+					refreshTimerTv(showTimeStr);
+					mSpeechCountDownTime--;
+					mHandler.removeMessages(MSG_SPEECH_COUNT_DOWN);
+					mHandler.sendEmptyMessageDelayed(MSG_SPEECH_COUNT_DOWN, 1000);
+				}
+				break;
+			default:
+				break;
+			}
+		};
+	};
+
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		final int id = v.getId();
@@ -941,10 +1029,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			} else if (id == R.id.live_exit) {
 				LogUtil.e(null, "mobile-----onTouch-----:  exit down");
 				mExitBtn.setBackgroundResource(R.drawable.live_btn_off_press);
-			} else if (id == R.id.livelook_ppt) {
-				mLiveLookTalk.setBackgroundResource(R.drawable.livelook_btn_ptt_press);
-			} else if (id == R.id.live_ppt) {
-				mLiveTalk.setBackgroundResource(R.drawable.live_btn_ptt_press);
+			} else if (id == R.id.livelook_ppt || id == R.id.live_ppt) {
+				pptTouchDown();
 			}
 			break;
 		case MotionEvent.ACTION_UP:
@@ -954,16 +1040,60 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			} else if (id == R.id.live_exit) {
 				LogUtil.e(null, "mobile-----onTouch-----:  exit up");
 				exit();
-			} else if (id == R.id.livelook_ppt) {
-				mLiveLookTalk.setBackgroundResource(R.drawable.livelook_btn_ptt_normal);
-			} else if (id == R.id.live_ppt) {
-				mLiveTalk.setBackgroundResource(R.drawable.live_btn_ptt_normal);
+			} else if (id == R.id.livelook_ppt || id == R.id.live_ppt) {
+				pptTouchUp();
 			}
 			break;
 		default:
 			break;
 		}
 		return false;
+	}
+
+	private void pptTouchDown() {
+		if (mTimeOutEnable) {
+			// 用户上次说话超时，此时不能按下按钮
+			return;
+		}
+		if (isShareLive) {
+			mLiveTalk.setBackgroundResource(R.drawable.live_btn_ptt_press);
+		} else {
+			mLiveLookTalk.setBackgroundResource(R.drawable.livelook_btn_ptt_press);
+		}
+
+		speekingUIRefresh(0, "", false);
+
+		LogUtil.e(null, "jyf-------live------pptTouchDown type: ----1111");
+
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
+				ITalkFn.Talk_CommCmd_TalkRequest, "");
+
+		LogUtil.e(null, "jyf-------live------pptTouchDown type: ----2222: " + isSucess);
+
+	}
+
+	private void pptTouchUp() {
+		if (mTimeOutEnable) {
+			// 用户上次说话超时，此时不处理任何事件
+			return;
+		}
+		speekingUIRefresh(2, "", false);
+
+		if (isShareLive) {
+			mLiveTalk.setBackgroundResource(R.drawable.live_btn_ptt_normal);
+		} else {
+			mLiveLookTalk.setBackgroundResource(R.drawable.livelook_btn_ptt_normal);
+		}
+
+		talkrelease();
+	}
+
+	private void talkrelease() {
+		LogUtil.e(null, "jyf-------live------talkrelease: ----1111");
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
+				ITalkFn.Talk_CommCmd_TalkRelease, "");
+
+		LogUtil.e(null, "jyf-------live------talkrelease: ----2222: " + isSucess);
 	}
 
 	/**
@@ -992,17 +1122,88 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
+	// 更新定时内容
+	private void refreshTimerTv(String content) {
+		if (null != mTalkingTimeTv) {
+			mTalkingTimeTv.setVisibility(View.VISIBLE);
+			mTalkingTimeTv.setText(content);
+		}
+	}
+
+	/** 开始说话 */
+	private final int MSG_SPEAKING_START_SPEAK = 1;
+	/** 其它人说话结束 */
+	private final int MSG_SPEAKING_OTHER_END = 3;
+	/** 说话超时 */
+	private final int MSG_SPEEKING_TIMEOUT = 4;
+
+	/** 用户是否成功加入爱滔客频道 */
+	private boolean mIsJoinGroupSucess = false;
+	/** 用户加入的爱滔客群组信息 */
+	private String mCurrentGroupInfo = null;
+	/** 网络连接是否可用 */
+	private boolean mLinkEnable = true;
+	/** 别人说话时可以　不能说话　 */
+	private boolean isCanSpeak = true;
+
+	// 刷新说话中的状态, name表示说话的名字 isMe　表示是否是自己说话
+	private void speekingUIRefresh(int event, String name, boolean isMe) {
+		switch (event) {
+		case 0:
+			// 用户按下申请
+			mTalkingSign.setVisibility(View.VISIBLE);
+			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_yellow);
+			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setText("准备中...");
+			break;
+		case MSG_SPEAKING_START_SPEAK:
+			// 自己说话　或　其它人说话中
+			mTalkingSign.setVisibility(View.VISIBLE);
+			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_green);
+			mTalkingTv.setVisibility(View.VISIBLE);
+			if (isMe) {
+				mTalkingTv.setText("说话中...");
+			} else {
+				mTalkingTv.setText(name + "说话中...");
+			}
+			break;
+		case 2:
+			// 自己说话结束
+			mTalkingSign.setVisibility(View.GONE);
+			mTalkingTv.setVisibility(View.GONE);
+			mTalkingTimeTv.setVisibility(View.GONE);
+			break;
+		case MSG_SPEAKING_OTHER_END:
+			// 别人说话结束
+			mTalkingSign.setVisibility(View.GONE);
+			mTalkingTv.setVisibility(View.GONE);
+			mTalkingTimeTv.setVisibility(View.GONE);
+			break;
+		case MSG_SPEEKING_TIMEOUT:
+			// 超时说话
+			mTalkingSign.setVisibility(View.VISIBLE);
+			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_red);
+			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setText("超时禁用中，请稍后...");
+			break;
+		}
+
+	}
+
 	@Override
 	public void TalkNotifyCallBack(int type, String data) {
 		LogUtil.e(null, "jyf-------live------TalkNotifyCallBack type: " + type + "  data:" + data);
+		int state = -1;
 		switch (type) {
 		case Talk_Event_ChanleIn:
 			// 进入频道相关
-			intoChannelEvent(type, data);
+			state = JsonUtil.getJsonIntValue(data, "state", -1);
+			intoChannelEvent(state, data);
 			break;
 		case Talk_Event_ChanleInterAction:
 			// 频道内交互事件
-			channelInteractionEvent(type, data);
+			state = JsonUtil.getJsonIntValue(data, "state", -1);
+			channelInteractionEvent(state, data);
 			break;
 		default:
 			break;
@@ -1020,16 +1221,23 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private void intoChannelEvent(int event, String message) {
 		switch (event) {
 		case 0:// 正在获取频道信息
+			LogUtil.e(null, "jyf-------live------TalkintoChannelEvent type: 正在获取频道信息");
 			break;
 		case 1:// 获取频道信息成功
+			mCurrentGroupInfo = message;
 			break;
 		case 2:// 获取频道信息失败
 			break;
 		case 3:// 正在进入爱淘客频道
 			break;
 		case 4:// 进入爱淘客频道成功
+			mIsJoinGroupSucess = true;
+			// 按钮可以按下
+			refreshPPtState(true);
 			break;
 		case 5:// 自动重新进入爱淘客频道成功
+			mLinkEnable = false;
+			// 改为说话可用,更新UI
 			break;
 		case 6:// 进入爱淘客频道失败
 			break;
@@ -1047,98 +1255,63 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @date 2014/04/08
 	 */
 	private void channelInteractionEvent(int event, String message) {
-		// switch (event) {
-		// case 0:// 有人开始说话
-		// Log.e("", "SSSSSSSSSSSSSSS   有人开始说话!");
-		// callBack_startSpeak(message);
-		// break;
-		// case 1:// 有人结束说话
-		// // callBack_endSpeak(message);
-		//
-		// Utils.writeShootLog("================有人结束说话==================="+message);
-		// mLeftViewListManger.setData(ViewListManager.KEY_LEFT_MAIN,
-		// IViewDealFn.EVENT_WALKIE_CLOSE, message);
-		// break;
-		// case 2:// 本人说话请求被拒绝
-		// case 3:// 本人说话请求正在排队
-		// // 如果当前是手动模式，通知遥控器说话失败
-		// if (RECORD_MODE_MANUAL == mCurrentRecordMode) {
-		// this.sendSpeakState(STATE_FAILED);
-		// isSpeaking = false;
-		// setRecordMode(RECORD_MODE_AUTO);
-		// }
-		//
-		// Log.e("", "SSSSSSSSSSSSSSS   本人说话请求正在排队！");
-		// mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
-		// DialogManager.getInstance().hideLoadingDialog();
-		// mTalkManage.refreshUImicroBusy();
-		//
-		// Utils.writeShootLog("================说话请求被拒绝==================="+message);
-		// mLeftViewListManger.setData(ViewListManager.KEY_LEFT_MAIN,
-		// IViewDealFn.EVENT_WALKIE_BUSY, null);
-		// break;
-		// case 4:// 本人说话请求状态错误
-		// if (RECORD_MODE_MANUAL == mCurrentRecordMode) {
-		// this.sendSpeakState(STATE_FAILED);
-		// isSpeaking = false;
-		// setRecordMode(RECORD_MODE_AUTO);
-		// }
-		// DialogManager.getInstance().hideLoadingDialog();
-		// mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
-		// mTalkManage.refreshUImicroBusy();
-		// Log.e("", "SSSSSSSSSSSSSSS   本人说话请求状态错误！");
-		//
-		// Utils.writeShootLog("================说话请求状态错误==================="+message);
-		// mLeftViewListManger.setData(ViewListManager.KEY_LEFT_MAIN,
-		// IViewDealFn.EVENT_WALKIE_BUSY, null);
-		// break;
-		// }
+		switch (event) {
+		case 0:
+			// 有人开始说话
+			callBack_startSpeak(message);
+			break;
+		case 1:
+			// 有人结束说话
+			callBack_endSpeak(message);
+			break;
+		case 2:// 本人说话请求被拒绝
+		case 3:// 本人说话请求正在排队
+				// 本人说话请求被拒绝
+			break;
+		case 4:// 本人说话请求状态错误
+				// 说话请求状态错误
+
+			break;
+		}
 	}
 
 	// 有人开始说话
 	private void callBack_startSpeak(String message) {
-		// TalkManage.isCanRefreshVolumeUI = true;
-		// boolean isMe = false;
-		// try {
-		// JSONObject json = new JSONObject(message);
-		// isMe = json.getBoolean("isme");
-		// } catch (JSONException e) {
-		// e.printStackTrace();
-		// }
-		// // 他人说话时不做处理，只有当前用户说话时才进行30秒计时。
-		// if (isMe) {
-		// mTalkManage.hideMapSpeechLoading();
-		// mTalkManage.refreshUICanSpeakDown();
-		// // TODO
-		// // 此时说话按钮应该是按下状态
-		// mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
-		// mHandler.removeMessages(MSG_SPEECH_COUNT_DOWN);
-		// // mHandler.sendEmptyMessageDelayed(MSG_SPEECH_OUT_TIME,
-		// // SPEAKTIMEOUT);
-		// }
+		mIsMe = JsonUtil.getJsonBooleanValue(message, "isme", false);
+		final String speakName = JsonUtil.getJsonStringValue(message, "name", "");
+		mSpeechOutTime = 0;
+		speekingUIRefresh(MSG_SPEAKING_START_SPEAK, speakName, mIsMe);
+
+		refreshTimerTv("00:00");
+		// 不管是其它人　还是　自己，开始说话，就倒计时30秒
+		mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
+		mHandler.sendEmptyMessageDelayed(MSG_SPEECH_OUT_TIME, 1000);
+
 	}
 
 	// 有人结束说话
 	private void callBack_endSpeak(String message) {
-		// String aidEnd = null;
-		// boolean isMeEnd = false;
-		// try {
-		// JSONObject json = new JSONObject(message);
-		// aidEnd = json.optString("aid");
-		// isMeEnd = json.optBoolean("isme");
-		//
-		// JSONObject json2 = new JSONObject();
-		// json2.put("volume", 0);
-		// Log.e("", "voice------value: end  ");
-		// mTalkManage.refreshVolueUI(json2.toString());
-		// TalkManage.isCanRefreshVolumeUI = false;
-		// } catch (JSONException e) {
-		// e.printStackTrace();
-		// }
-		// if (mSpeechEnable) {
-		// mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
-		// mHandler.removeMessages(MSG_SPEECH_COUNT_DOWN);
-		// }
+		String aidEnd = JsonUtil.getJsonStringValue(message, "aid", null);
+		boolean isMeEnd = JsonUtil.getJsonBooleanValue(message, "isme", false);
+
+		mIsMe = false;
+		if (isMeEnd) {
+			mSpeechOutTime = 0;
+			refreshTimerTv("00:00");
+			speekingUIRefresh(MSG_SPEAKING_OTHER_END, "", true);
+		} else {
+			speekingUIRefresh(MSG_SPEAKING_OTHER_END, "", false);
+		}
+
+		mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
+	}
+
+	private void hideMapSpeechLoading() {
+
+	}
+
+	private void refreshUICanSpeakDown() {
+
 	}
 
 	@Override
@@ -1152,14 +1325,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				LiveSettingBean settingData = (LiveSettingBean) data;
 				// 通过用户的设置，判断用户是否支持对讲
 				switchShareTalkView(settingData.isCanTalk);
+
+				refreshPPTTTT();
 				// 请求直播
 				startLiveForServer();
 
 				this.startLive("test222");
 			}
-
 		}
-
 	}
 
 }

@@ -315,6 +315,9 @@ end
 
 --获取aid成功后登录爱滔客
 local function TalkerMgr_LoginByAid(dataObj)
+	if gTalkerMgrObj.status >= EStatus_GetAidOk then
+		return;
+	end
 	DebugLog("usercenter LoginByAid 1" .. tiros.json.encode(dataObj))
 	--{result:”succeeded”,data:{data:{head:”xxx”,nickname:”xxx”,sex:”1”,uid:”xxxx”,aid:”xxxx”},info:{...}}}
 	--保存用户及爱淘客服务器配置信息
@@ -330,6 +333,8 @@ local function TalkerMgr_LoginByAid(dataObj)
 	gUserSex  = dataObj.data.data.sex;
 	gUserHead = dataObj.data.data.head;
 	gUserID = dataObj.data.data.uid;
+	
+	DebugLog("usercenter LoginByAid 22222222");
 
 	gUserKey = dataObj.data.info.key;
 	tiros.settingconfig.set_configinfo("userkey",gUserKey);
@@ -337,12 +342,17 @@ local function TalkerMgr_LoginByAid(dataObj)
 	gTalkerMgrObj.status = EStatus_GetAidOk;
 	--通知上层状态，获取Aid及服务器配置参数成功
 	SendMsgToLogic(ETalkerEvent_Login, KModule_Headlist, GenJson_State(ELoginEvent_GetAidOk));
+	DebugLog("usercenter LoginByAid 333333");
 	--登录爱淘客服务器
 	tiros.airtalkeemgr.configserver(dataObj.data.info.cfg_sp, dataObj.data.info.cfg_sp_port, dataObj.data.info.cfg_sp_lport, dataObj.data.info.cfg_mdsr, dataObj.data.info.cfg_mdsr_port);
+	
 	tiros.airtalkeemgr.login(gTalkerMgrObj.config.aid, gTalkerMgrObj.config.password);
 	gTalkerMgrObj.status = EStatus_Login;
+	DebugLog("usercenter LoginByAid 4444444");
 	--通知上层状态，正在登录爱淘客服务器
 	SendMsgToLogic(ETalkerEvent_Login, KModule_Headlist, GenJson_State(ELoginEvent_LoginAid));
+	
+	DebugLog("usercenter LoginByAid 55555555");
 
 	tiros.moduledata.moduledata_set("framework", "uid", dataObj.data.info.mid);
 	return;	
@@ -369,6 +379,8 @@ local function TalkerMgr_GetAid_ErrorReport_TimerExpried(sType)
     SendMsgToLogic(ETalkerEvent_Login, KModule_Headlist, GenJson_State(ELoginEvent_GetAidOverTime));    
 end
 
+local isfirstUser = false;
+
 --从后台服务获取AID及其爱淘客服务器配置参数
 local function TalkerMgr_getAidFromUserCenter()
 	DebugLog("usercenter getAidFromUserCenter 1")
@@ -379,11 +391,35 @@ local function TalkerMgr_getAidFromUserCenter()
 		--通知上层状态，去用户中心获取aid
 		SendMsgToLogic(ETalkerEvent_GroupEnter, KModule_Headlist, GenJson_State(ELoginEvent_GettingAid));
 		DebugLog("usercenter getAidFromUserCenter 3")
-                local userInfo = tiros.moduledata.moduledata_get("logic", "logic_userInfo");
-
-		--userInfo = '{"result":"3","data":{"code":"200","state":"true","msg":"登陆成功","data":{"head":"2","nickname":"小苹果","sex":"2","uid":"MB1BJM","aid":"213922915"},"info":{"mid":"40e48ca4-a3d7-4efb-bc19-0733d1c2d12f","aid":"213922915","cfg_sp":"211.103.234.238","cfg_sp_port":"6660","cfg_mdsr":"211.103.234.238","cfg_mdsr_port":"3012","cfg_sp_lport":"6601","key":"MB1BJM","city":1,"success":true}}}'
+        local userInfo = tiros.moduledata.moduledata_get("logic", "logic_userInfo");
 		
-
+		--[[
+		userInfo = '{"result":"3","data":{"code":"200","state":"true","msg":"登陆成功", \
+		"data":{"head":"7","nickname":"MB1ACP","sex":"0","uid":"447d2dd6-51f8-4a17-88a7-6bdb7cd855a3","aid":"11000000015"}, \
+		"info":{"aid":"11000000015","cfg_sp":"211.103.234.234","cfg_sp_port":"6660","cfg_mdsr":"211.103.234.234","cfg_mdsr_port":"3012","cfg_sp_lport":"6601","key":"MB1ACP","city":1,"success":true,"mid":"447d2dd6-51f8-4a17-88a7-6bdb7cd855a3"}}}'
+		]]--
+		
+		if isfirstUser == true then
+			userInfo = '{"result":"3","data":{"data":{"head": "7", "nickname": "MB1ABL", "aid": "213923293", "uid": "MB1ABL", "sex": "0"},\
+			"info":{"cfg_mdsr_port": "3012", "aid": "213923293", "cfg_sp": "211.103.234.238", "city": 1, "cfg_sp_lport": "6601", \
+			"cfg_sp_port": "6660", "mid": "e90a39c3-e375-4b09-8d96-d32a4eb2c6f9", "cfg_mdsr": "211.103.234.238", "key": "MB1ABL", "success": true}}}'
+		else 
+			userInfo = '{"result":"3","data":{"data":{"head": "7", "nickname": "MB1ADV", "aid": "213923411", "uid": "MB1ADV", "sex": "0"},\
+			"info":{"cfg_mdsr_port": "3012", "aid": "213923411", "cfg_sp": "211.103.234.238", "city": 1, "cfg_sp_lport": "6601", \
+			"cfg_sp_port": "6660", "mid": "8313632b-9352-4855-8a3c-77e185427dcb", "cfg_mdsr": "211.103.234.238", "key": "MB1ADV", "success": true}}}'
+		end
+		
+		
+		
+		
+		
+		-- other user
+		--[[
+		userInfo = '{"result":"3","data":{"data":{"head": "7", "nickname": "MB1ADR", "aid": "213923364", "uid": "MB1ADR", "sex": "0"},\
+		"info":{"aid" : "213923364", "mid":"bd63b49e-f9ac-4e73-b720-6bb69757102d","cfg_sp" : "211.103.234.238", "cfg_sp_port" : "6660", "cfg_mdsr" : "211.103.234.238", \
+		"cfg_mdsr_port" : "3012", "cfg_sp_lport" : "6601", "key" : "MB1ADR", "city" : 1, "success" : true}}}'
+		]]--
+		
 		if nil ~= userInfo then
 			DebugLog("usercenter getAidFromUserCenter 4:" .. userInfo)
 			--{result:"succeeded",data:{data:{head:"xxx",nickname:"xxx",sex:"1",uid:"xxxx",aid:"xxxx"},info:{...}}}
@@ -897,6 +933,8 @@ local function TalkerMgr_joinGroup( groupcfg )
 		sendDataLast["orien"] = 0;
 		opt.data = sendDataLast;
 		
+		DebugLog("grouplist getGroupidByType begin-------request 4444 groupid: " .. tostring(groupcfg.groupid));
+		
 		--tiros.base.http.HttpSend("TalkerMgr_GetGroupid", TalkerMgr_getSpecialGroupInfoHttpEvent,"getGroupid", opt, "http://192.168.3.90:8086/cdcServer/getGroupInfo.htm");
 		--tiros.base.http.HttpSend("TalkerMgr_GetGroupid", TalkerMgr_getSpecialGroupInfoHttpEvent,"getGroupid", opt, "http://server.xiaocheben.com/cdcServer/getGroupInfo.htm");
 		tiros.base.http.HttpSend("TalkerMgr_GetGroupid", TalkerMgr_getSpecialGroupInfoHttpEvent,"getGroupid", opt, nil );
@@ -933,8 +971,10 @@ end
 返回：无
 ]]
 local function TalkerMgr_talkRelease()
+	DebugLog("TalkerMgr_talkRelease  = ---------release----1111");
 	if gTalkerMgrObj.status == EStatus_JoinGroupOk then
 		--加入群组成功，则允许说话请求
+		DebugLog("TalkerMgr_talkRelease  = ---------release----2222");
 		tiros.airtalkeemgr.TalkRequest(0);
 	end
 end
@@ -1037,9 +1077,12 @@ end
 	 false：请求状态错误
 ]]
 local function TalkerMgr_talkRequest()
+	DebugLog("jyf-------live------pptTouchDown lua: --TalkerMgr_talkRequest--1111 : " .. tostring(gTalkerMgrObj.status));
 	if gTalkerMgrObj.status == EStatus_JoinGroupOk then
 		--加入群组成功，则允许说话请求
+		DebugLog("jyf-------live------pptTouchDown lua: --TalkerMgr_talkRequest--22222 : ");
 		if gTalkerMgrObj.atknetError == false then
+		DebugLog("jyf-------live------pptTouchDown lua: --TalkerMgr_talkRequest--333333 : ");
 			tiros.airtalkeemgr.TalkRequest(1);
 			return true;
 		end

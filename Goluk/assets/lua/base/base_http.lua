@@ -70,7 +70,9 @@ local logicSendUrl = {};
 --统计模块标识
 local moduleType = {web = "cdc_client",logic = "cdc_client"};
 
-local urlTable = {[2302] = "http://192.168.3.90:8086/cdcServer/getGroupInfo.htm",[2303] = "http://192.168.3.90:8086/cdcServer/exitGroup.htm"};
+--local urlTable = {[2302] = "http://192.168.3.197:9080/navidog4MeetTrans/addtalkgroup.htm",[2303] = "http://192.168.3.197:9080/cdcServer/exitGroup.htm"};
+
+local urlTable = {[2302] = "http://server.xiaocheben.com/cdcServer/getGroupInfo.htm",[2303] = "http://server.xiaocheben.com/cdcServer/exitGroup.htm"};
 
 
 --服务返回数据
@@ -93,6 +95,8 @@ local function send(id,callback,url,opt,stype)
 			if #condi > 0 then
 				url = url .. "?" .. tiros.commfunc.EnCodeUrl(string.sub(condi,0,string.len(condi)-1));
 			end
+			
+			print("grouplist getGroupidByType begin-------request url : " .. tostring(url));
 		end
 	else
 		--POST请求
