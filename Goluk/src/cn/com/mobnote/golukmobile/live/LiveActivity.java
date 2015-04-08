@@ -154,6 +154,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	private boolean isTest = true;
 
+	private RelativeLayout mSpeakingLayout = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -296,6 +298,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		mAddressTv = (TextView) findViewById(R.id.live_address);
 		mTalkingTv = (TextView) findViewById(R.id.live_talking);
+		mSpeakingLayout = (RelativeLayout) findViewById(R.id.live_speaklayout);
 		mTalkingSign = (ImageView) findViewById(R.id.live_talking_sign);
 		mTalkingTimeTv = (TextView) findViewById(R.id.live_talktime);
 
@@ -1151,6 +1154,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		switch (event) {
 		case 0:
 			// 用户按下申请
+			mSpeakingLayout.setVisibility(View.VISIBLE);
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_yellow);
 			mTalkingTv.setVisibility(View.VISIBLE);
@@ -1158,6 +1162,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			break;
 		case MSG_SPEAKING_START_SPEAK:
 			// 自己说话　或　其它人说话中
+			mSpeakingLayout.setVisibility(View.VISIBLE);
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_green);
 			mTalkingTv.setVisibility(View.VISIBLE);
@@ -1169,18 +1174,21 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			break;
 		case 2:
 			// 自己说话结束
+			mSpeakingLayout.setVisibility(View.GONE);
 			mTalkingSign.setVisibility(View.GONE);
 			mTalkingTv.setVisibility(View.GONE);
 			mTalkingTimeTv.setVisibility(View.GONE);
 			break;
 		case MSG_SPEAKING_OTHER_END:
 			// 别人说话结束
+			mSpeakingLayout.setVisibility(View.GONE);
 			mTalkingSign.setVisibility(View.GONE);
 			mTalkingTv.setVisibility(View.GONE);
 			mTalkingTimeTv.setVisibility(View.GONE);
 			break;
 		case MSG_SPEEKING_TIMEOUT:
 			// 超时说话
+			mSpeakingLayout.setVisibility(View.VISIBLE);
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_red);
 			mTalkingTv.setVisibility(View.VISIBLE);
@@ -1278,7 +1286,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	// 有人开始说话
 	private void callBack_startSpeak(String message) {
 		mIsMe = JsonUtil.getJsonBooleanValue(message, "isme", false);
-		final String speakName = JsonUtil.getJsonStringValue(message, "name", "");
+		String speakName = JsonUtil.getJsonStringValue(message, "name", "");
+		final String aid = JsonUtil.getJsonStringValue(message, "aid", "");
+		if ("".equals(speakName)) {
+			speakName = aid;
+		}
 		mSpeechOutTime = 0;
 		speekingUIRefresh(MSG_SPEAKING_START_SPEAK, speakName, mIsMe);
 
