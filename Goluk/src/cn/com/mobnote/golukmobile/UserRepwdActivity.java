@@ -27,6 +27,7 @@ import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -75,6 +76,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 	private RelativeLayout mLoading = null ;
 	//验证码获取显示进度条
 	private RelativeLayout mIdentifyLoading = null;
+	//判断获取验证码按钮是否已经被点击
+	private boolean identifyClick = false;
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -309,7 +312,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 			console.log(b + "");
 			mBtnOK.setEnabled(true);
 		}else{
-			UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
+			mBtnIdentity.setEnabled(false);
+//			UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 		}
 		/*if(!"".equals(phone)){
 			if(phone.startsWith("1") && phone.length() == 11){
@@ -339,6 +343,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					}
 				}
 			}else{
+//				mBtnIdentity.setEnabled(true);
 				UserUtils.showDialog(this, "手机号格式输入错误，请重新输入");
 			}
 		}else{
@@ -354,6 +359,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
+		handler1.removeCallbacks(runnable);
+		mIdentifyLoading.setVisibility(View.GONE);
 //		console.toast("发送中，请稍后", mContext);
 		if(1 == success){
 			try{
@@ -518,13 +525,28 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					
 					break;
 				case 406:
-					UserUtils.showDialog(this, "请输入正确的验证码");
+//					UserUtils.showDialog(this, "请输入正确的验证码");
+					if(identifyClick){
+						UserUtils.showDialog(this, "请输入正确的验证码");
+					}else{
+						console.toast("请先获取验证码", mContext);
+					}
 					break;
 				case 407:
-					UserUtils.showDialog(this, "输入验证码超时");
+					if(identifyClick){
+						UserUtils.showDialog(this, "输入验证码超时");
+					}else{
+						console.toast("请先获取验证码", mContext);
+					}
 					break;
 				case 480:
-					UserUtils.showDialog(this, "验证码获取失败");
+					if(identifyClick){
+						UserUtils.showDialog(this, "验证码获取失败");
+						Log.i("bbb", "480");
+//						mLoading.setVisibility(View.GONE);
+					}else{
+						console.toast("请先获取验证码", mContext);
+					}
 					break;
 
 				default:
@@ -543,7 +565,17 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 	 */
 	private boolean flag = false;
 	private int click = 0;
-	
+	final Handler handler1=new Handler();
+	private Runnable runnable;
+	private void initTimer(){
+		runnable=new Runnable(){
+		@Override
+		public void run() {
+			console.toast("网络链接超时", mContext);
+			mLoading.setVisibility(View.GONE);
+			}
+		};
+	}
 	@Override
 	protected void onPause() {
 		super.onPause();
