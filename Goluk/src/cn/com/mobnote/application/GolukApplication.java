@@ -295,8 +295,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				JSONObject json = new JSONObject(data);
 				String fileName = json.getString("location");
 				console.log("调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---" + fileName);
+				int type = json.getInt("type");
+				String savePath = "";
+				if(type == 2){
+					//紧急视频
+					savePath = mVideoSavePath + "urgent/";
+				}
+				else{
+					//精彩视频
+					savePath = mVideoSavePath + "wonderful/";
+				}
 				//调用下载视频接口
-				mIPCControlManager.downloadFile(fileName,"videodownload",mVideoSavePath);
+				mIPCControlManager.downloadFile(fileName,"videodownload",savePath);
 			}
 			catch(Exception e){
 				console.log("解析视频下载JSON数据错误");

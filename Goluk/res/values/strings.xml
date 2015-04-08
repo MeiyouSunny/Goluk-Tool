@@ -8,10 +8,12 @@
     <string name="index_title">Goluk</string>
     <string name="video_square">视频广场</string>
     <string name="my_video_share">分享我的视频</string>
+    <string name="my_video_text">我的视频</string>
     <string name="video_more">更多</string>
     <string name="login_out">未登录</string>
     <string name="title_activity_local_video_list">LocalVideoListActivity</string>
 	<string name="back_text">返回</string>
+	<string name="delete_text">删除</string>
 	<string name="edit_text">编辑</string>
 	<string name="share_text">分享</string>
 	<string name="next_text">下一步</string>

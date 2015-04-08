@@ -37,7 +37,7 @@ public class MusicManage {
 	/** 音频存放文件路径 */
 	private String mFilePath = "music";
 	/** 音频文件对应名称 */
-	private String[] mMusicName = {"Ayo","Don’T Turn Off The Lights","Merry Christmas Mr Lawrence","斑马斑马","猫铃","平凡之路"};
+	private String[] mMusicName = {"1","2","3","4","5","6","7","8","9"};
 	
 	public MusicManage(Context context){
 		mContext = context;
