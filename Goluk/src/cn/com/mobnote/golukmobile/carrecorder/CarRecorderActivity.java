@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -187,7 +188,8 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	private boolean downloadFinish=false;
 	/** 控制显示精彩视频下载中提示 */
 	private int downloadNumber=0;
-	
+	/** 精彩视频下载文件个数 */
+	private int downloadFileNumber=0;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -260,29 +262,46 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		downloadNumber++;
 		mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
 		mShareBtn.setVisibility(View.VISIBLE);
-			
-		if(!downloadFinish){
-			if(1 == downloadNumber){
-				mShareBtn.setBackgroundResource(R.drawable.screen_loading_1);
-			}else if(2 == downloadNumber){
-				mShareBtn.setBackgroundResource(R.drawable.screen_loading_2);
-			}else{
-				downloadNumber=0;
-				mShareBtn.setBackgroundResource(R.drawable.screen_loading_3);
-			}
-			
-			mHandler.sendEmptyMessageDelayed(DOWNLOADWONDERFULVIDEO, 700);
+		
+		if(1 == downloadNumber){
+			mShareBtn.setBackgroundResource(R.drawable.screen_loading_1);
+		}else if(2 == downloadNumber){
+			mShareBtn.setBackgroundResource(R.drawable.screen_loading_2);
 		}else{
 			downloadNumber=0;
-			mShareBtn.setBackgroundResource(R.drawable.screen_share);
-			mShareBtn.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					downloadFinish=false;
-					mShareBtn.setVisibility(View.GONE);
-				}
-			}, 6000);
+			mShareBtn.setBackgroundResource(R.drawable.screen_loading_3);
 		}
+		
+		mHandler.sendEmptyMessageDelayed(DOWNLOADWONDERFULVIDEO, 600);
+			
+//		if(!downloadFinish){
+//			if(1 == downloadNumber){
+//				mShareBtn.setBackgroundResource(R.drawable.screen_loading_1);
+//			}else if(2 == downloadNumber){
+//				mShareBtn.setBackgroundResource(R.drawable.screen_loading_2);
+//			}else{
+//				downloadNumber=0;
+//				mShareBtn.setBackgroundResource(R.drawable.screen_loading_3);
+//			}
+//			
+//			mHandler.sendEmptyMessageDelayed(DOWNLOADWONDERFULVIDEO, 600);
+//		}else{
+//			downloadNumber=0;
+//			mShareBtn.setVisibility(View.VISIBLE);
+//			mShareBtn.setBackgroundResource(R.drawable.screen_share);
+//			mShareBtn.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					System.out.println("YYY========Finish=======333======="+downloadFileNumber);
+//					if(downloadFileNumber <= 0 ){
+//						downloadFileNumber=0;
+//						downloadFinish=false;
+//						mShareBtn.setVisibility(View.GONE);
+//					}
+//					
+//				}
+//			}, 6000);
+//		}
 	}
 
 	/**
@@ -727,7 +746,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 */
 	private void dialog(){
 		CustomDialog d = new CustomDialog(this);
-		d.setMessage("请检查摄像头是否正常连接");
+		d.setMessage("请检查摄像头是否正常连接", Gravity.CENTER);
 		d.setLeftButton("确定", null);
 		d.show();
 	}
@@ -1345,8 +1364,14 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						ipcIsOk = false;
+						updateVideoState();
+						mShareBtn.setVisibility(View.GONE);
 						m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
 //						mFileBtn.setBackgroundResource(R.drawable.btn_file_sel);
+						
+						downloadFileNumber=0;
+						mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
 					}
 				});
 			}
@@ -1510,11 +1535,13 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						
 							
 							
-							
+							downloadFileNumber++;
 							String path = Environment.getExternalStorageDirectory() + File.separator+ "tiros-com-cn-ext"+ File.separator+"video"+File.separator+"wonderful";
 							wonderfulVideoName = path + File.separator + mRecordVideFileName;
 
-							mHandler.sendEmptyMessage(DOWNLOADWONDERFULVIDEO);
+							System.out.println("YYY========Finish=======1111======="+downloadFileNumber);
+							if(downloadFileNumber <= 1)
+								mHandler.sendEmptyMessage(DOWNLOADWONDERFULVIDEO);
 						} else if (TYPE_URGENT == fileInfo.type) {// 紧急
 							updateRecordState(true, 2);
 							mIntent.putExtra("filetype", "emergency");
@@ -1637,8 +1664,31 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						String filename = json.optString("filename");
 						String tag = json.optString("tag");
 System.out.println("YYY==111===wonderfulVideoName="+wonderfulVideoName);
-						if(wonderfulVideoName.contains(filename)){
+						if(tag.equals("videodownload")){
 							downloadFinish=true;
+							downloadFileNumber--;
+							
+							downloadNumber=0;
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
+									mShareBtn.setVisibility(View.VISIBLE);
+									mShareBtn.setBackgroundResource(R.drawable.screen_share);
+									if(downloadFileNumber <= 0 ){
+										mShareBtn.postDelayed(new Runnable() {
+											@Override
+											public void run() {
+												downloadFileNumber=0;
+												downloadFinish=false;
+												mShareBtn.setVisibility(View.GONE);
+											}
+										}, 6000);
+									}
+									
+								}
+							});
+							
 						}
 					}
 				} catch (JSONException e) {
