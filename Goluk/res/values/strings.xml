@@ -161,4 +161,16 @@
 	<string name="user_regist_btn">注册</string>
 	<string name="user_regist_bottom_login">已注册过Goluk？点此</string>
 	<string name="user_regist_bottom_login_btn">登录</string>
+	
+	<string name="user_personal_title_right">保存</string>
+	<string name="user_personal_edit_head">头像</string>
+	<string name="user_personal_edit_name">昵称</string>
+	<string name="user_personal_edit_sex">性别</string>
+	<string name="user_personal_edit_sign">个性签名</string>
+	<string name="user_personal_edit_weibo">新浪微博</string>
+	<string name="user_personal_info_title">编辑</string>
+	<string name="user_personal_sign_title">确认</string>
+	<string name="user_personal_home_title">我的主页</string>
+	<string name="user_personal_home_share">分享</string>
+	
 </resources>

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
     
-			<RelativeLayout
+		<RelativeLayout
 	            android:id="@+id/title_layout"
 	            android:layout_width="match_parent"
 	            android:layout_height="42dp"
@@ -36,11 +36,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:background="@color/bg"
                 android:drawablePadding="8dp"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                android:drawableLeft="@drawable/individual_center_preservation_icon"
+                android:text="@string/user_personal_title_right"
+                android:background="@null"
                 />
             
         </RelativeLayout>

@@ -151,6 +151,20 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				}
 			}
 		});
+		//密码判断
+		mEditTextIdentify.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				String identify = mEditTextIdentify.getText().toString();
+				if(!"".equals(identify)){
+					if(identify.length()<6){
+						UserUtils.showDialog(mContext, "密码不正确，请重新输入");
+					}
+				}
+			}
+		});
 		
 		mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -340,6 +354,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
 		handler1.removeCallbacks(runnable);
+		mIdentifyLoading.setVisibility(View.GONE);
 		if(1 == success){
 			try{
 				String data = (String)obj;
@@ -350,7 +365,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				
 				/*unregisterReceiver(smsReceiver);
 				click = 2;*/
-				mIdentifyLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
 					console.toast("验证码已经发送，请查收短信", mContext);
