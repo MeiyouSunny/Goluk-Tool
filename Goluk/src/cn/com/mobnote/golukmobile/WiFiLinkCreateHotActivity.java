@@ -160,13 +160,9 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 					//保存wifi账户密码
 					WiFiInfo.GolukSSID = wifiName;
 					WiFiInfo.GolukPWD = pwd;
-					
-					mWifiApAdmin = new WifiApAdmin(this,mHandler);
-					String way = mWifiApAdmin.getIPAddress();
-					way = "192.168.43.1";
-					//String[] network = way.split(".");
-					//String ip = network[0] + "." + network[1] + "." + network[2] + ".100";
+					//写死ip,网关
 					String ip = "192.168.43.234";
+					String way = "192.168.1.1";
 					//连接ipc热点wifi---调用ipc接口
 					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---1");
 					String json = "{\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
@@ -185,19 +181,17 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 		else{
 			console.toast("WiFi热点名称不能为空", mContext);
 		}
-		Intent complete = new Intent(WiFiLinkCreateHotActivity.this,WiFiLinkCompleteActivity.class);
-		startActivity(complete);
 	}
 	
 	/**
 	 * 设置热点信息成功回调
 	 */
 	public void setIpcLinkWiFiCallBack(){
+		console.log("设置热点信息成功回调---setIpcLinkWiFiCallBack");
 		//设置热点信息成功,跳转到成功页面创建热点
 		Intent complete = new Intent(WiFiLinkCreateHotActivity.this,WiFiLinkCompleteActivity.class);
 		startActivity(complete);
 	}
-	
 	
 	
 	@Override

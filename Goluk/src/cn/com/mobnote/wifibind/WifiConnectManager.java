@@ -243,14 +243,14 @@ public class WifiConnectManager implements WifiConnectInterface{
 				int openTime = openWifi(outTime);
 				// 超时错误
 				if (openTime == 0) {
-					msg.what = -1;
+					msg.what = -11;
 
 					handler.sendMessage(msg);
 					return;
 				}
 				// 如果wifi打开了
 				if (wifiScan(matching, openTime) == 0) {
-					msg.what = -1;
+					msg.what = -11;
 					handler.sendMessage(msg);
 					return;
 				}
