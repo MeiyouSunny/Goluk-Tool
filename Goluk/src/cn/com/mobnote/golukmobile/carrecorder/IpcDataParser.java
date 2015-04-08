@@ -266,20 +266,25 @@ public class IpcDataParser {
 	public static VideoConfigState parseVideoConfigState(String json) {
 		try {
 			VideoConfigState mVideoConfigState = new VideoConfigState();
-			JSONObject obj = new JSONObject(json);
-			int bitstreams = obj.getInt("bitstreams");
-			String resolution = obj.getString("resolution");
-			int frameRate = obj.getInt("frameRate");
-			int bitrate = obj.getInt("bitrate");
-			int AudioEnabled = obj.getInt("audioEnabled");
-			
-			mVideoConfigState.bitstreams=bitstreams;
-			mVideoConfigState.resolution=resolution;
-			mVideoConfigState.frameRate=frameRate;
-			mVideoConfigState.bitrate=bitrate;
-			mVideoConfigState.AudioEnabled=AudioEnabled;
-			
-			return mVideoConfigState;
+			JSONArray array = new JSONArray(json);
+			if(null != array){
+				if(array.length() > 0){
+					JSONObject obj = array.getJSONObject(0);
+					int bitstreams = obj.getInt("bitstreams");
+					String resolution = obj.getString("resolution");
+					int frameRate = obj.getInt("frameRate");
+					int bitrate = obj.getInt("bitrate");
+					int AudioEnabled = obj.getInt("audioEnabled");
+					
+					mVideoConfigState.bitstreams=bitstreams;
+					mVideoConfigState.resolution=resolution;
+					mVideoConfigState.frameRate=frameRate;
+					mVideoConfigState.bitrate=bitrate;
+					mVideoConfigState.AudioEnabled=AudioEnabled;
+					
+					return mVideoConfigState;
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

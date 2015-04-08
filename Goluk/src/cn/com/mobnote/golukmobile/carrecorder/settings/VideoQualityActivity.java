@@ -61,7 +61,7 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 		
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("videoquality", this);
 		boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
-		System.out.println("YYY=====================flag="+flag);
+		System.out.println("YYY============getVideoEncodeCfg=========flag="+flag);
 		if(!flag){
 			//获取失败默认显示1080P
 			updateSensitivity(SensitivityType._1080h);
@@ -169,21 +169,26 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 				if(param1 == RESULE_SUCESS){
 					System.out.println("YYY================1111==================param2="+param2);
 					VideoConfigState mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
-					System.out.println("YYY================22222==============resolution====="+mVideoConfigState.resolution);
-					if("1080P".equals(mVideoConfigState.resolution)){
-						//bitrate数据返回的不对
-						if(8192 == mVideoConfigState.bitrate){
-							updateSensitivity(SensitivityType._1080h);
+					if(null != mVideoConfigState){
+						System.out.println("YYY================22222==============resolution====="+mVideoConfigState.resolution);
+						if("1080P".equals(mVideoConfigState.resolution)){
+							//bitrate数据返回的不对
+							if(8192 == mVideoConfigState.bitrate){
+								updateSensitivity(SensitivityType._1080h);
+							}else{
+								updateSensitivity(SensitivityType._1080l);
+							}
 						}else{
-							updateSensitivity(SensitivityType._1080l);
+							if(6144 == mVideoConfigState.bitrate){
+								updateSensitivity(SensitivityType._720h);
+							}else{
+								updateSensitivity(SensitivityType._720l);
+							}
 						}
 					}else{
-						if(6144 == mVideoConfigState.bitrate){
-							updateSensitivity(SensitivityType._720h);
-						}else{
-							updateSensitivity(SensitivityType._720l);
-						}
+						System.out.println("YYY================33333==============");
 					}
+					
 				}else{
 					//获取失败默认显示1080P
 					updateSensitivity(SensitivityType._1080h);

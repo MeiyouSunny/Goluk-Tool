@@ -1378,7 +1378,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				}
 			} else {
 				// 下载失败
-
+				
 			}
 			break;
 
