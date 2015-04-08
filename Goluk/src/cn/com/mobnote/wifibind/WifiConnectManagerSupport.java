@@ -1,6 +1,11 @@
 package cn.com.mobnote.wifibind;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
+
+ 
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -21,11 +28,17 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
+import android.os.Environment;
 
 import android.text.TextUtils;
 import android.util.Log;
 
 public class WifiConnectManagerSupport {
+ 
+	private static final String FILEPATH = Environment
+			.getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
+
+	private static final int BUF_SIZE = 1024;
 	private static final String TAG = "testhan";
 	private WifiManager wifiManager = null;
 
@@ -195,7 +208,7 @@ public class WifiConnectManagerSupport {
 		// 开始扫描网络
 
 		List<ScanResult> scanResult = wifiManager.getScanResults();
-
+		Log.e(TAG, "sanrs-----------------"+(scanResult==null)+"------------");
 		if (scanResult != null) {
 			for (ScanResult tempResult : scanResult) {
 
@@ -203,13 +216,13 @@ public class WifiConnectManagerSupport {
 						.matcher(tempResult.SSID).find();
 				if (result) {
 					bean = new WifiRsBean();
-					bean.setSsid(tempResult.SSID); // ssid
+					bean.setIpc_ssid(tempResult.SSID); // ssid
 					bean.setWifiSignal(WifiManager.calculateSignalLevel(
 							tempResult.level, 4)); // 信号等级
-					bean.setMacaddress(tempResult.BSSID); // 设置mac地址
+					bean.setIpc_bssid(tempResult.BSSID); // 设置mac地址
 					bean.setPassnull(ispassnullType(tempResult.capabilities)); // 是否是无密码类型
 					if (conSSid != null && !"".equals(conSSid)) {
-						if (("\"" + bean.getSsid() + "\"").equals(conSSid)) {
+						if (("\"" + bean.getIpc_ssid() + "\"").equals(conSSid)) {
 							bean.setIsconn(true);
 						}
 					}
@@ -233,28 +246,28 @@ public class WifiConnectManagerSupport {
 		WifiInfo info = wifiManager.getConnectionInfo();
 
 		WifiRsBean bean = new WifiRsBean();
-		bean.setBssid(info.getBSSID());
-		bean.setMacaddress(info.getMacAddress());
+		bean.setPh_bssid(info.getBSSID());
+		bean.setPh_mac(info.getMacAddress());
 		bean.setWifiSignal(getWifiLevel(info.getRssi()));
-		bean.setIpaddress(int2ip(info.getIpAddress()));
+		bean.setPh_ip(int2ip(info.getIpAddress()));
 
 		return bean;
 	}
 
 	/**
-	 * 判断是否在列表中
+	 * 判断ipc是否在列表中
 	 * 
 	 * @param ssid
 	 * @param beans
 	 * @return
 	 */
-	public boolean inWifiGroup(String ssid, String macadress, WifiRsBean[] beans) {
+	public boolean inWifiGroup(String ssid, WifiRsBean[] beans) {
 		if (beans == null) {
 			return false;
 		} else {
 			for (WifiRsBean temp : beans) {
-				if (temp.getSsid().equals(ssid)
-						&& macadress.equals(temp.getSsid()))
+				if (temp.getIpc_ssid().equals(ssid)
+						  )
 					;
 				return true;
 			}
@@ -475,4 +488,105 @@ public class WifiConnectManagerSupport {
 		}
 		return false;
 	}
+	
+	/**
+	 * 写文件
+	 * 
+	 * @param fileName
+	 * @param ssid
+	 * @param passWord
+	 * @return
+	 */
+	boolean writePassFile(String fileName, String value)
+			throws Exception {
+		String tempPath = FILEPATH + fileName;
+
+		File dir = new File(FILEPATH);
+		// 先檢查該目錄是否存在
+		if (!dir.exists()) {
+			// 若不存在則建立它
+			dir.mkdir();
+		}
+		byte[] srcByte = (value).getBytes();
+		byte[] writeBytes = ThreeDES.encryptMode(srcByte);
+
+		FileOutputStream out = null;
+
+		try {
+			out = new FileOutputStream(new File(tempPath));
+			out.write(writeBytes);
+			return true;
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+	}
+
+	/**
+	 * 从文件中读取
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	public String readPassFile(String fileName) throws Exception {
+		 
+		String tempPath = FILEPATH + fileName;
+		File file = null;
+		byte[] types = null;
+		BufferedInputStream in = null;
+		ByteArrayOutputStream bos = null;
+		try {
+
+			file = new File(tempPath);
+			if (!file.exists()) {
+				return null;
+			}
+
+			bos = new ByteArrayOutputStream((int) file.length());
+
+			in = new BufferedInputStream(new FileInputStream(file));
+
+			byte[] buffer = new byte[BUF_SIZE];
+			int len = 0;
+			while (-1 != (len = in.read(buffer, 0, BUF_SIZE))) {
+				bos.write(buffer, 0, len);
+			}
+			types = bos.toByteArray();
+			byte[] rs = ThreeDES.decryptMode(types);
+			if (rs != null) {
+				String ssid_pass = new String(rs);
+				return ssid_pass;
+			}
+			return null;
+
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			file = null;
+		}
+	}
+
+	
 }

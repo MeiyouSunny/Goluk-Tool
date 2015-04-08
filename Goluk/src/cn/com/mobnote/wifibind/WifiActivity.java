@@ -1,5 +1,12 @@
 //package cn.com.mobnote.wifibind;
-// 
+//
+//import cn.com.mobnote.talk.wifimanage.R;
+//import cn.com.mobnote.wifisupport.WifiConnectManager;
+//import cn.com.mobnote.wifisupport.WifiConnectManagerSupport.WifiCipherType;
+//import cn.com.mobnote.wifisupport.WifiEnum.WifTypePassEnum;
+//import cn.com.mobnote.wifisupport.WifiRsBean;
+//
+//import cn.com.mobnote.wifisupport.WifiEnum.WifTypeEnum;
 //
 //import android.app.Activity;
 //
@@ -18,7 +25,7 @@
 //	private static final String TAG = "testhan";
 //
 //	private Button mBtn1, mBtn2, mBtn3, mBtn4, mBtn5, mBtn6, mBtn7;
-//	private TextView view1;
+//	private TextView textView1;
 //	private WifiConnectManager connectManage = null;
 //
 //	@Override
@@ -33,10 +40,10 @@
 //		mBtn4 = (Button) findViewById(R.id.main_button4);
 //		mBtn5 = (Button) findViewById(R.id.main_button5);
 //		mBtn7 = (Button) findViewById(R.id.main_button7);
-//
+//		textView1= (TextView) findViewById(R.id.bindtextView1);
 //		mBtn1.setOnClickListener(new Button.OnClickListener() {
 //
-//// 通过SSID   ----------扫描  wifi列表  -----------------------------
+//			// 通过SSID ----------扫描 wifi列表 -----------------------------
 //			@Override
 //			public void onClick(View v) {
 //
@@ -44,8 +51,7 @@
 //						.getSystemService(Context.WIFI_SERVICE);
 //				connectManage = new WifiConnectManager(wm, WifiActivity.this);
 //
-//		 
-//				connectManage.scanWifiList("Test123", 4000);
+//				connectManage.scanWifiList("tiros");
 //
 //			}
 //		});
@@ -61,13 +67,13 @@
 //				String password = "";
 //				String mac = "74:51:ba:6e:3e:57";
 //				// String mac="";
-//				connectManage.connectWifi(ssid, password,mac,
-//						WifiCipherType.WIFICIPHER_NOPASS, 5000);
-//				 
+//				connectManage.connectWifi(ssid, password,
+//						WifiCipherType.WIFICIPHER_NOPASS);
+//
 //			}
 //
 //		});
-//		// 创建热点
+//		// 自动连接
 //		mBtn3.setOnClickListener(new Button.OnClickListener() {
 //
 //			@Override
@@ -75,30 +81,45 @@
 //				WifiManager wm = (WifiManager) WifiActivity.this
 //						.getSystemService(Context.WIFI_SERVICE);
 //				connectManage = new WifiConnectManager(wm, WifiActivity.this);
-//				// registerReceiver(connectManage, new
-//				// IntentFilter(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION));
-//				String ssid = "mwifi";
-//				String password = "123456789";
-//				// String mac="";
-//				connectManage.createWifiAP(ssid, password, 0);
+//		 
+//				connectManage.autoWifiManage();
 //
 //			}
 //
 //		});
-// 
-//
-//		mBtn4.setOnClickListener(new Button.OnClickListener() {
+////		// 当前是否连接Ipc
+////		mBtn4.setOnClickListener(new Button.OnClickListener() {
+////
+////			@Override
+////			public void onClick(View v) {
+////				WifiManager wm = (WifiManager) WifiActivity.this
+////						.getSystemService(Context.WIFI_SERVICE);
+////				connectManage = new WifiConnectManager(wm, WifiActivity.this);
+////
+////				connectManage.getClientList();
+////			}
+////
+////		});
+//		//保存wifi信息
+//		mBtn5.setOnClickListener(new Button.OnClickListener() {
 //
 //			@Override
 //			public void onClick(View v) {
 //				WifiManager wm = (WifiManager) WifiActivity.this
 //						.getSystemService(Context.WIFI_SERVICE);
 //				connectManage = new WifiConnectManager(wm, WifiActivity.this);
-//	 
-//				connectManage.getClientList();
+//				WifiRsBean beans = new WifiRsBean();
+//				beans.setIpc_ip("A");
+//				beans.setIpc_mac("B");
+//				beans.setIpc_ssid("C");
+//				beans.setPh_ip("D");
+//				beans.setPh_mac("E");
+//				beans.setPh_ssid("F");
+//				connectManage.saveConfiguration(beans);
 //			}
 //
 //		});
+//
 //
 //	}
 //
@@ -127,44 +148,51 @@
 //	 * java.lang.String, java.lang.String[])
 //	 */
 //	@Override
-//	public void wifiCallBack(int state, String message, Object arrays) {
-//		WifiRsBean[] beans=null;
-//		WifiRsBean bean=null;
-//		switch (state) {
+//	public void wifiCallBack(int type, int state, int process, String message,
+//			Object arrays) {
+//		WifiRsBean[] beans = null;
+//		WifiRsBean bean = null;
+//		switch (type) {
 //		case 1:
+//			textView1.setText("Wifilist: \n\n");
 //			Log.e(TAG, "get wifilist ------------- ok--------------");
 //			beans = (WifiRsBean[]) arrays;
 //			if (beans != null) {
 //				for (WifiRsBean temp : beans) {
-//					
-//					temp.getSsid();
+//					textView1.append("####################\n");
+//					textView1.append("ssid: " + temp.getIpc_ssid() + ";");
+//					textView1.append("singnal: " + temp.getWifiSignal() + ";");
+//					textView1.append("mac: " + temp.getIpc_mac() + ";");
+//					textView1.append("passnull: " + temp.isPassnull() + ";");
+//					textView1.append("isconn: " + temp.isIsconn() + ";");
+//					temp.getIpc_ip();
 //					temp.getWifiSignal();
-//					temp.getMacaddress();
+//					temp.getIpc_mac();
 //					temp.isPassnull();
 //					temp.isIsconn();
-//					Log.e(TAG, temp.getSsid() +"--------------"+"isconn-----"+temp.isIsconn());
+//					Log.e(TAG, temp.getPh_ssid() + "--------------"
+//							+ "isconn-----" + temp.isIsconn());
 //				}
-//			}else{
+//			} else {
+//				textView1.append("nulllllllllllll\n");
 //				Log.e(TAG, "get wifilist ------------- empty--------------");
 //			}
 //			break;
-//		case -1:
+//		case 2:
 //			Log.e(TAG, "wifi scan erro  -1-------------timeout--------------");
 //			break;
-//		case 11:
-//
-//			  bean = (WifiRsBean) arrays;
-//			bean.getSsid();
+//		case 3:
+//			bean = (WifiRsBean) arrays;
+//			bean.getIpc_ssid();
 //			// unregisterReceiver(connectManage);
 //			Log.e(TAG, "create wifi ------------- ok--------------");
 //			break;
 //
-//		case 12:
-//
-//			  beans = (WifiRsBean[]) arrays;
+//		case 4:
+//			beans = (WifiRsBean[]) arrays;
 //			if (beans != null) {
 //				for (WifiRsBean temp : beans) {
-//					Log.e(TAG, temp.getSsid());
+//					Log.e(TAG, temp.getIpc_ssid());
 //				}
 //			}
 //			break;
