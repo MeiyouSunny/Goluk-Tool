@@ -3,6 +3,7 @@ package cn.com.mobnote.util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 
 public class JsonUtil {
@@ -148,16 +149,16 @@ public class JsonUtil {
 					obj.put("AudioEnabled", 1);
 					
 					if(VideoQualityActivity.SensitivityType._1080h == type){
-						obj.put("resolution", "1080p");
+						obj.put("resolution", "1080P");
 						obj.put("bitrate", 8192);
 					}else if(VideoQualityActivity.SensitivityType._1080l == type){
-						obj.put("resolution", "1080p");
+						obj.put("resolution", "1080P");
 						obj.put("bitrate", 5120);
 					}else if(VideoQualityActivity.SensitivityType._720h == type){
-						obj.put("resolution", "720p");
+						obj.put("resolution", "720P");
 						obj.put("bitrate", 6144);
 					}else{
-						obj.put("resolution", "720p");
+						obj.put("resolution", "720P");
 						obj.put("bitrate", 4096);
 					}
 				}else{
@@ -166,6 +167,32 @@ public class JsonUtil {
 				}
 				array.put(obj);
 			}
+			
+			return array.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 组织IPC的音视频设置，主码流与子码流同时设置
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static String getVideoConfig(VideoConfigState mVideoConfigState){
+		try {
+			JSONArray array = new JSONArray();
+			JSONObject obj = new JSONObject();
+			obj.put("bitstreams", mVideoConfigState.bitstreams);
+			obj.put("frameRate", mVideoConfigState.frameRate);
+			obj.put("AudioEnabled", mVideoConfigState.AudioEnabled);
+			obj.put("resolution", mVideoConfigState.resolution);
+			obj.put("bitrate", mVideoConfigState.bitrate);
+		 
+			array.put(obj);
 			
 			return array.toString();
 		} catch (Exception e) {
@@ -194,5 +221,5 @@ public class JsonUtil {
 		
 		return null;
 	}
-
+	 
 }

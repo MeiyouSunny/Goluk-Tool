@@ -93,7 +93,19 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_GetVedioEncodeCfg = 1013;
 	/** 设置IPC系统音视频编码配置 */
 	public static final int IPC_VDCP_Msg_SetVedioEncodeCfg = 1014;
+	/** 设置IPC行车影像开始录制 */
+	public static final int IPC_VDCP_Msg_StartRecord = 1015;
+	/** 设置IPC行车影像停止录制 */
+	public static final int IPC_VDCP_Msg_StopRecord = 1016;
+	/** 获取IPC行车影像录制状态 */
+	public static final int IPC_VDCP_Msg_GetRecordState = 1017;
+	/** 获取IPC水印显示状态 */
+	public static final int IPC_VDCP_Msg_GetImprintShow = 1018;
+	/** 设置IPC水印显示状态 */
+	public static final int IPC_VDCP_Msg_SetImprintShow = 1019;
 
+	
+	
 	/**
 	 * 
 	 * 文件数据传输事件下消息ID (用于手机与平板之间发送消息回调)
@@ -157,6 +169,16 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetVideoEncodeCfg = 1013;
 	/** 设置IPC系统音视频编码配置 */
 	public static final int IPC_VDCPCmd_SetVideoEncodeCfg = 1014;
-
+	/** 设置IPC行车影像开始录制 */
+	public static final int IPC_VDCPCmd_StartRecord = 1015;
+	/** 设置IPC行车影像停止录制 */
+	public static final int IPC_VDCPCmd_StopRecord = 1016;
+	/** 获取IPC行车影像录制状态 */
+	public static final int IPC_VDCPCmd_GetRecordState = 1017;
+	/** 获取IPC水印显示状态 */
+	public static final int IPC_VDCPCmd_GetImprintShow = 1018;
+	/** 设置IPC水印显示状态 */
+	public static final int IPC_VDCPCmd_SetImprintShow = 1019;
+	
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }

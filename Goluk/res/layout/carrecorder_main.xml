@@ -173,6 +173,7 @@
     </LinearLayout>
     
     <LinearLayout
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -207,7 +208,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/m8sBtn"
+			android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_ipc_8s" />
@@ -239,6 +240,24 @@
                 android:text="记录仪设置" />
         </LinearLayout>
     </LinearLayout>
+    
+    <ImageButton
+            android:id="@+id/m8sBtn"
+            android:layout_marginBottom="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" 
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/btn_ipc_8s" />
+    
+    <Button 
+		android:id="@+id/mShareBtn"
+		android:visibility="gone"
+		android:layout_above="@+id/m8sBtn"
+   		android:layout_width="113.33dp"
+  	  	android:layout_height="48dp"
+  	  	android:layout_marginBottom="15dp"
+  	  	android:layout_centerHorizontal="true" />
      
     <Button 
 		android:id="@+id/wifi"

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.logic.GolukModule;
@@ -90,7 +91,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年3月21日
 	 */
 	public boolean startWonderfulVideo() {
-		String queryParam = IpcDataParser.getTriggerRecordJson(TYPE_SHORTCUT, 4, 8);
+		String queryParam = IpcDataParser.getTriggerRecordJson(TYPE_SHORTCUT, 6, 6);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPC_VDCPCmd_TriggerRecord, queryParam);
 	}
@@ -256,7 +257,6 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean getVideoEncodeCfg(int type){
 		String json = JsonUtil.getVideoCfgJson(type);
-		System.out.println("YYY================json="+json);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetVideoEncodeCfg, json);
 	}
 	
@@ -268,11 +268,77 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean setVideoEncodeCfg(VideoQualityActivity.SensitivityType type){
 		String json = JsonUtil.getVideoConfig(type);
-		System.out.println("YYY================json="+json);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
 	}
 	
-
+	/**
+	 * 设置音频开关
+	 * @param mVideoConfigState
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public boolean setAudioCfg(VideoConfigState mVideoConfigState){
+		String json = JsonUtil.getVideoConfig(mVideoConfigState);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
+	}
+	
+	/**
+	 * 设置IPC行车影像开始录制
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public boolean startRecord(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_StartRecord, "");
+	}
+	
+	/**
+	 * 设置IPC行车影像停止录制
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public boolean stopRecord(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_StopRecord, "");
+	}
+	
+	/**
+	 * 获取IPC行车影像录制状态
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public boolean getRecordState(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetRecordState, "");
+	}
+	
+	/**
+	 * 获取IPC水印显示状态
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public boolean getWatermarkShowState(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetImprintShow, "");
+	}
+	
+	/**
+	 * 设置IPC水印显示状态
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public boolean setWatermarkShowState(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetImprintShow, "");
+	}
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 添加IPC管理监听
 	 * @param from 来自哪里的

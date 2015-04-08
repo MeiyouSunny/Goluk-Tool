@@ -286,5 +286,32 @@ public class IpcDataParser {
 
 		return null;
 	}
+	
+	/**
+	 * 获取自动循环录制状态
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public static boolean getAutoRecordState(String json){
+		try {
+			boolean state=false;
+			JSONObject obj = new JSONObject(json);
+			if(null != obj){
+				int status = obj.optInt("status");
+				if(1 == status){
+					state=true;
+				}else{
+					state=false;
+				}
+			}
+			return state;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 
 }

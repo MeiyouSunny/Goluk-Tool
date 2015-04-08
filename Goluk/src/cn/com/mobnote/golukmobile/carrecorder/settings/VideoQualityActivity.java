@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
@@ -128,6 +127,9 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			mHighText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
 		}
 		
+		
+		boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(curType);
+		System.out.println("YYY==========curType=========flag="+flag);
 	}
 	
 	@Override
@@ -189,9 +191,9 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			//设置IPC系统音视频编码配置
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){
 				if(param1 == RESULE_SUCESS){
-					Toast.makeText(VideoQualityActivity.this, "视频设置成功", Toast.LENGTH_SHORT).show();
+					System.out.println("YYY==========IPC_VDCP_Msg_SetVedioEncodeCfg=====22222222222222222==RESULE_SUCESS===");
 				}else{
-					
+					System.out.println("YYY==========IPC_VDCP_Msg_SetVedioEncodeCfg=====3333===fail==");
 				}
 			}
 		}
