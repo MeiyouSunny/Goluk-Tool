@@ -57,7 +57,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * 启动软件后自动管理wifi
 	 */
 	public void autoWifiManage() {
-		autoWifiManage(12000);
+		autoWifiManage(4000);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param password
 	 */
 	public void createWifiAP(String ssid, String password) {
-		createWifiAP(ssid, password, 12000);
+		createWifiAP(ssid, password, 14000);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 *            关键字
 	 */
 	public void scanWifiList(String matching) {
-		scanWifiList(matching, 12000);
+		scanWifiList(matching, 14000);
 	}
 
 	/**
@@ -86,11 +86,11 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param beans
 	 */
 	public void saveConfiguration(WifiRsBean beans) {
-		saveConfiguration(beans, 3000);
+		saveConfiguration(beans, 14000);
 	}
 
 	public void isConnectIPC() {
-		isConnectIPC(12000);
+		isConnectIPC(14000);
 	}
 
 	// -------------------------------以上为封装后的对外接口----------------------------------------//
@@ -115,12 +115,17 @@ public class WifiConnectManager implements WifiConnectInterface {
 			}
 			// 创建热点成功
 			case 31: {
-				callback.wifiCallBack(3, 0, 0, "获取wifiap列表成功", msg.obj);
+				callback.wifiCallBack(3, 0, 0, "创建wifi热点成功", msg.obj);
 				break;
 			}
 			// 获取加入热点信息
 			case 32: {
-				callback.wifiCallBack(4, 0, 0, "wifi匹配成功", msg.obj);
+				callback.wifiCallBack(3, 0, 1, "创建wifi热点列表成功", msg.obj);
+				break;
+			}
+			// 保存wifi配置成功
+			case 41: {
+				callback.wifiCallBack(4, 0, 0, " 保存wifi配置成功", msg.obj);
 				break;
 			}
 
@@ -147,6 +152,21 @@ public class WifiConnectManager implements WifiConnectInterface {
 				callback.wifiCallBack(2, -1, msg.what, "连接wifi失败", null);
 				break;
 			}
+		 
+			case -31: {
+				callback.wifiCallBack(3, 0, 0, "创建wifi热点失败", msg.obj);
+				break;
+			}
+	 
+			case -32: {
+				callback.wifiCallBack(3, 0, 1, "创建wifi热点列表失败", msg.obj);
+				break;
+			}
+			case -41: {
+				callback.wifiCallBack(4, -1, 0, "保存wifi配置失败", msg.obj);
+				break;
+			}
+
 			}
 		}
 	};
@@ -408,6 +428,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 		return outTime - tempTime;
 	}
 
+	
+ 
 	/**
 	 * 扫描wifi android 4.x以上matching
 	 * 
@@ -451,9 +473,10 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param outTime
 	 */
 	private void createWifiAP(final String ssid, final String password,
-			int outTime) {
+			final int outTime) {
 
 		Runnable runnable = new Runnable() {
+			Message msg = new Message();
 			public void run() {
 				try {
 					wifiSupport.closeWifiAp(wifiManager);
@@ -462,17 +485,30 @@ public class WifiConnectManager implements WifiConnectInterface {
 					// TODO Auto-generated catch block 这里需要异常处理
 					e.printStackTrace();
 				}
-
+				int tempTime=0;
 				// 如果wifi打开了
 				while (!wifiManager.isWifiEnabled()) {
-
+					try {
+						int temp_2 = 100;
+						Thread.sleep(temp_2);
+						tempTime += temp_2;
+						//如果超时了 直接返回
+						if (tempTime > outTime) {
+							wifiSupport.closeWifi();
+							msg.what = -31;
+							msg.obj = null;
+						 return;
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-				Message msg = new Message();
+			
 				msg.what = 31;
 				msg.obj = wifiSupport.getConnResult();
 				handler.sendMessage(msg);
 				// 获取wifi连接列表
-				getClientList();
+				getClientList(40000);
 
 			};
 
@@ -485,17 +521,33 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * 获取加入wifiAP的用户列表
 	 * 
 	 */
-	private void getClientList() {
+	private void getClientList(final int outTime) {
 
 		Runnable runnable = new Runnable() {
+			Message msg = new Message();
 			public void run() {
+				int tempTime=0;
 				// 获取wifi 扫描列表
 				while (wifiSupport.getJoinApList(false, 300) == null) {
-
+					int temp_2 = 100;
+					try {
+						Thread.sleep(temp_2);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					tempTime += temp_2;
+					//如果超时了 直接返回
+					if (tempTime > outTime) {
+						wifiSupport.closeWifi();
+						msg.what = -32;
+						msg.obj = null;
+					 return;
+					}
 				}
 
 				Message msg = new Message();
-				msg.what = 22;
+				msg.what = 32;
 				msg.obj = wifiSupport.getJoinApList(false, 300);
 				handler.sendMessage(msg);
 
@@ -515,6 +567,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 	public void saveConfiguration(final WifiRsBean beans, int outTime) {
 		Runnable runnable = new Runnable() {
 			public void run() {
+				Message msg = new Message();
+				
 				JSONObject config = new JSONObject();
 				try {
 					config.put("ipc_ssid", beans.getIpc_bssid());
@@ -525,9 +579,14 @@ public class WifiConnectManager implements WifiConnectInterface {
 					config.put("ph_mac", beans.getPh_mac());
 					config.toString();
 					try {
-						wifiSupport.writePassFile("", config.toString());
+						wifiSupport.writePassFile("abc", config.toString());
+						msg.what = 41;
+						msg.obj = null;
+						handler.sendMessage(msg);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						msg.what = -41;
+						msg.obj = null;
+						handler.sendMessage(msg);
 						e.printStackTrace();
 					}
 				} catch (JSONException e) {
