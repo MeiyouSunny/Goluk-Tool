@@ -6,7 +6,7 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import cn.com.mobnote.util.console;
-import cn.com.mobnote.wifi.WifiRsBean;
+import cn.com.mobnote.wifibind.WifiRsBean;
 
 
 /**
@@ -53,12 +53,15 @@ public class WiFiListManage {
 	public void analyzeWiFiData(WifiRsBean[] arrays){
 		mWiFiListData.clear();
 		for (WifiRsBean wifi : arrays) {
-			String wifiName = wifi.getWifiName();
-			boolean wifiStatus = wifi.isConn();
-			console.log("获取小车本wifi---getwifiList---" + wifiName + "---" + wifiStatus);
+			String wifiName = wifi.getIpc_ssid();
+			boolean wifiStatus = wifi.isIsconn();
 			WiFiListData data = new WiFiListData();
 			data.wifiName = wifiName;
 			data.wifiStatus = wifiStatus;
+			data.hasPwd = wifi.isPassnull();
+			data.mac = wifi.getIpc_bssid();
+
+			console.log("获取小车本wifi---getwifiList---" + wifiName + "---" + wifiStatus + "---mac---" + data.mac);
 			mWiFiListData.add(data);
 		}
 	}
@@ -70,6 +73,10 @@ public class WiFiListManage {
 		public boolean wifiStatus = false;
 		//wifi信号
 		public int signal = 9;
+		//是否有密码
+		public boolean hasPwd = true;
+		//mac地址
+		public String mac = "";
 	}
 }
 

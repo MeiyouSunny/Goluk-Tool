@@ -9,19 +9,16 @@ import cn.com.mobnote.list.WiFiListAdapter;
 import cn.com.mobnote.list.WiFiListManage;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
 import cn.com.mobnote.util.console;
-import cn.com.mobnote.wifi.WiFiConnection;
-import cn.com.mobnote.wifi.WifiAutoConnectManager;
-import cn.com.mobnote.wifi.WifiConnCallBack;
-import cn.com.mobnote.wifi.WifiRsBean;
-import cn.com.mobnote.wifi.WifiConnectManagerSupport.WifiCipherType;
-import android.net.wifi.WifiInfo;
+import cn.com.mobnote.wifibind.WifiConnCallBack;
+import cn.com.mobnote.wifibind.WifiConnectManager;
+import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
+import cn.com.mobnote.wifibind.WifiRsBean;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.Html;
 import android.view.View;
@@ -55,7 +52,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkListActivity extends Activity implements OnClickListener, WifiConnCallBack {
+public class WiFiLinkListActivity extends Activity implements OnClickListener,WifiConnCallBack {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -78,7 +75,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	private ListView mWiFiList = null;
 	/** wifi列表manage */
 	private WiFiListManage mWiFiListManage = null;
-	private WifiAutoConnectManager mWac = null;
+	private WifiConnectManager mWac = null;
 	/** wifi列表适配器 */
 	public WiFiListAdapter mWiFiListAdapter = null;
 	public ArrayList<WiFiListData> mWiFiListData = null;
@@ -138,17 +135,6 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		//修改title说明文字颜色
 		mDescTitleText.setText(Html.fromHtml("1.确认<font color=\"#28b6a4\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#28b6a4\"> Goluk xxx </font>的WiFi"));
 	}
-	
-	/**
-	 * 创建wifi回调广播
-	 * @param wac
-	 */
-	private void createReceiver(WifiAutoConnectManager wac){
-		String  action = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(action);
-		registerReceiver(wac, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-	}
 
 	/**
 	 * 获取wifi列表
@@ -156,10 +142,9 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	private void getWiFiList(){
 		mLoading.setVisibility(View.VISIBLE);
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-		mWac = new WifiAutoConnectManager(wm,this);
-		createReceiver(mWac);
+		mWac = new WifiConnectManager(wm,this);
 		// 获取文件列表
-		mWac.getWifiList();
+		mWac.scanWifiList("tcay");
 	}
 	
 	/**
@@ -170,15 +155,14 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	public void connectWiFi(String wifiName,String pwd){
 		mLoading.setVisibility(View.VISIBLE);
 		//保存wifi校验名称 chenxy
-		WiFiConnection.SaveWiFiName(wifiName);
+		//WiFiConnection.SaveWiFiName(wifiName);
 		//保存wifi名称
 		mLinkWiFiName = wifiName;
 		
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-		mWac = new WifiAutoConnectManager(wm,this);
-		createReceiver(mWac);
+		mWac = new WifiConnectManager(wm,this);
 		//连接wifi
-		mWac.connect(wifiName,pwd,WifiCipherType.WIFICIPHER_WPA);
+		mWac.connectWifi(wifiName,pwd,WifiCipherType.WIFICIPHER_WPA);
 		console.log("开始连接选定wifi---connectWiFi---" + wifiName + "---" + pwd);
 	}
 	
@@ -188,50 +172,27 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	 */
 	public void connectWiFi(String wifiName){
 		mLoading.setVisibility(View.VISIBLE);
-		//保存wifi校验名称
-		WiFiConnection.SaveWiFiName(wifiName);
+		//保存wifi校验名称 chenxy
+		//WiFiConnection.SaveWiFiName(wifiName);
+		//保存wifi名称
+		mLinkWiFiName = wifiName;
 		
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-		mWac = new WifiAutoConnectManager(wm,this);
-		createReceiver(mWac);
+		mWac = new WifiConnectManager(wm,this);
 		//连接wifi
-		mWac.connect(wifiName,"123456789",WifiCipherType.WIFICIPHER_NOPASS);
-		console.log("开始连接选定wifi---connectWiFi---" + wifiName + "---");
-	}
-	
-	/**
-	 * 判断已连接的wifi是否是小车本热点
-	 */
-	public boolean checkLinkWiFi(){
-		WifiManager mWifiManage = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-		WiFiConnection connection = new WiFiConnection(mWifiManage,mContext);
-		WifiInfo info = connection.getWiFiInfo();
-		WifiAutoConnectManager wac = new WifiAutoConnectManager(mWifiManage,this);
-		boolean b = wac.getEffectiveWifi(info);
-		console.log("判断已连接的wifi是否是小车本热点---b---" + b + "---wifi---" + info.getSSID());
-		return b;
+		mWac.connectWifi(wifiName,"",WifiCipherType.WIFICIPHER_NOPASS);
+		console.log("开始连接选定wifi---connectWiFi---" + wifiName + "---pwd---空");
 	}
 	
 	/**
 	 * 通知logic连接ipc
 	 */
 	public void sendLogicLinkIpc(){
-		//检测是否连接ipc-wifi
-		boolean hasLink = checkLinkWiFi();
-		if(hasLink){
-			//连接ipc热点wifi---调用ipc接口
-			console.log("通知logic连接ipc---sendLogicLinkIpc---1");
-			//写死ipc ip地址
-			String ip = "192.168.62.1";
-			boolean b = mApp.mIPCControlManager.setIPCWifiState(true,ip);
-			console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
-		}
-		
-		// wifi连接成功
-		mWiFiListAdapter.changeWiFiStatus();
+		//连接ipc热点wifi---调用ipc接口
+		console.log("通知logic连接ipc---sendLogicLinkIpc---1");
+		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,null);
+		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
-	
-	
 	
 	/**
 	 * ipc连接成功回调
@@ -277,39 +238,47 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 			break;
 		}
 	}
-
+	
 	@Override
-	public void wifiCallBack(int state, String message, WifiRsBean[] arrays) {
-		console.log("wifi链接接口回调---state---" + state + "---message---" + message + "---arrays---" + arrays);
-		switch (state) {
-			case -1:
-				console.toast(message, mContext);
-				mLoading.setVisibility(View.GONE);
-			break;
+	public void wifiCallBack(int type, int state, int process, String message,Object arrays) {
+		console.log("wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---" + message + "---arrays---" + arrays);
+		// TODO Auto-generated method stub
+		WifiRsBean[] beans = null;
+		switch(type){
 			case 1:
-				//通知logic连接ipc
-				sendLogicLinkIpc();
-				
-				
-				// wifi连接成功
-				//mWiFiListAdapter.changeWiFiStatus();
-				//回到首页
-				//SysApplication.getInstance().exit();
-			break;
-			
-			case 11:
-				// 获取连接列表
-				if(null != arrays){
-					mWiFiListManage.analyzeWiFiData(arrays);
-					mWiFiListAdapter.notifyDataSetChanged();
+				if(state >= 0){
+					//获取wifi列表
+					beans = (WifiRsBean[]) arrays;
+					if (beans != null) {
+						mWiFiListManage.analyzeWiFiData(beans);
+						mWiFiListAdapter.notifyDataSetChanged();
+					}
+					else {
+						console.toast(message, mContext);
+					}
 				}
 				else{
-					console.toast("没有搜索到小车点热点WiFi", mContext);
+					console.toast(message, mContext);
 				}
+				mLoading.setVisibility(View.GONE);
+			break;
+			case 2:
+				if(state >= 0){
+					//连接成功
+					mWiFiListAdapter.changeWiFiStatus();
+					mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn);
+					//通知ipc连接成功
+					sendLogicLinkIpc();
+				}
+				else{
+					mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn_ash);
+					console.toast(message, mContext);
+				}
+			break;
+			default:
 				mLoading.setVisibility(View.GONE);
 			break;
 		}
-		unregisterReceiver(mWac);
 	}
 	
 }
