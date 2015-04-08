@@ -1,12 +1,66 @@
 package cn.com.mobnote.wifibind;
 
 public class WifiRsBean {
-	boolean passnull =false;  //是否无密码类型  true 是  false 不是；
-	public boolean isPassnull() {
-		return passnull;
+	 String ipc_bssid="";    //IPC的bssid
+	 String ipc_ssid="";   // IPC的ssid
+	 String ipc_mac="";   // IPC的mac地址
+	 String ipc_ip="";   // IPC的IP地址
+	 String ph_ssid="";   // 手机的ssid
+	 String ph_mac="";   // 手机的mac地址
+	 public String getPh_bssid() {
+		return ph_bssid;
 	}
-	public void setPassnull(boolean passnull) {
-		this.passnull = passnull;
+	public void setPh_bssid(String ph_bssid) {
+		this.ph_bssid = ph_bssid;
+	}
+	String ph_ip="";   // 手机的IP地址
+	 String ph_bssid="";    // 手机的bssid
+	boolean isconn=false;
+	boolean passnull =false;  //是否无密码类型  true 是  false 不是；
+	Integer wifiSignal=0;   //信号等级  4 3 2 1
+ 
+ 
+	public String getIpc_bssid() {
+		return ipc_bssid;
+	}
+	public void setIpc_bssid(String ipc_bssid) {
+		this.ipc_bssid = ipc_bssid;
+	}
+	public String getIpc_ssid() {
+		return ipc_ssid;
+	}
+	public void setIpc_ssid(String ipc_ssid) {
+		this.ipc_ssid = ipc_ssid;
+	}
+	public String getIpc_mac() {
+		return ipc_mac;
+	}
+	public void setIpc_mac(String ipc_mac) {
+		this.ipc_mac = ipc_mac;
+	}
+	public String getIpc_ip() {
+		return ipc_ip;
+	}
+	public void setIpc_ip(String ipc_ip) {
+		this.ipc_ip = ipc_ip;
+	}
+	public String getPh_ssid() {
+		return ph_ssid;
+	}
+	public void setPh_ssid(String ph_ssid) {
+		this.ph_ssid = ph_ssid;
+	}
+	public String getPh_mac() {
+		return ph_mac;
+	}
+	public void setPh_mac(String ph_mac) {
+		this.ph_mac = ph_mac;
+	}
+	public String getPh_ip() {
+		return ph_ip;
+	}
+	public void setPh_ip(String ph_ip) {
+		this.ph_ip = ph_ip;
 	}
 	public boolean isIsconn() {
 		return isconn;
@@ -14,46 +68,22 @@ public class WifiRsBean {
 	public void setIsconn(boolean isconn) {
 		this.isconn = isconn;
 	}
-	boolean isconn=false;
-    String ssid="";   // ssid
-    Integer wifiSignal=0;   //信号等级  4 3 2 1
-    String bssid=null;    //暂时无用
-    public String getSsid() {
-		return ssid;
+	public boolean isPassnull() {
+		return passnull;
 	}
-	public void setSsid(String ssid) {
-		this.ssid = ssid;
+	public void setPassnull(boolean passnull) {
+		this.passnull = passnull;
 	}
-	String ipaddress=null;    //ip地址
-    String macaddress=null;  //  mac地址
 	public Integer getWifiSignal() {
 		return wifiSignal;
 	}
 	public void setWifiSignal(Integer wifiSignal) {
 		this.wifiSignal = wifiSignal;
 	}
-	public String getBssid() {
-		return bssid;
-	}
-	public void setBssid(String bssid) {
-		this.bssid = bssid;
-	}
-	public String getIpaddress() {
-		return ipaddress;
-	}
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-	public String getMacaddress() {
-		return macaddress;
-	}
-	public void setMacaddress(String macaddress) {
-		this.macaddress = macaddress;
-	}
 	public WifiRsBean(String ipAddr, String hWAddr, boolean isReachable) {
 		super();
-		this.ipaddress = ipAddr;
-		this.macaddress = hWAddr;
+		this.ipc_ip = ipAddr;
+		this.ipc_mac = hWAddr;
 		 
 		this.isconn = isReachable;
 	}
