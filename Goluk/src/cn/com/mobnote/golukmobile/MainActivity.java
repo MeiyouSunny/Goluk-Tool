@@ -320,9 +320,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					break;
 					case 3:
 						//检测是否已连接小车本热点
-						boolean b = checkLinkWiFi();
+						//boolean b = checkLinkWiFi();
 						//网络状态改变
-						mApp.VerifyWiFiConnect(b);
+						mApp.VerifyWiFiConnect(true);
 					break;
 					
 					

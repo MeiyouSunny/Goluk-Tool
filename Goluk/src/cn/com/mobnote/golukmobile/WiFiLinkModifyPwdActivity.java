@@ -8,12 +8,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -48,6 +50,9 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 	private Button mJumpBtn = null;
 	/** 描述title*/
 	private TextView mDescTitleText = null;
+	/** IPCWIFI动画 */
+	private ImageView mIpcWiFiImage = null;
+	private AnimationDrawable mIpcWiFiAnim = null;
 	/** 下一步按钮 */
 	private Button mNextBtn = null;
 	
@@ -76,6 +81,8 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
 		mJumpBtn = (Button)findViewById(R.id.jump_btn);
 		mDescTitleText = (TextView) findViewById(R.id.textView1);
+		mIpcWiFiImage = (ImageView)findViewById(R.id.imageView2);
+		mIpcWiFiAnim = (AnimationDrawable)mIpcWiFiImage.getBackground();
 		mNextBtn = (Button)findViewById(R.id.next_btn);
 		
 		//注册事件
@@ -83,6 +90,8 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 		mJumpBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
 		
+		//启动动画
+		mIpcWiFiAnim.start();
 		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#28b6a4\">Goluk</font> WiFi热点信息"));
 	}
 	

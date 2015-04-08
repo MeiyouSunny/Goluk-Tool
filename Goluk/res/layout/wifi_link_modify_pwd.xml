@@ -130,7 +130,17 @@
 		android:layout_below="@id/wifi_pwd_layout"
 		android:layout_centerHorizontal="true"
 		android:layout_marginTop="40dp"
-		android:src="@drawable/connect_banner_2"
+		android:src="@drawable/connect_gif_ipc_bluelight"
+		android:contentDescription="@string/imgdes"/>
+	
+	<ImageView
+		android:id="@+id/imageView2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/wifi_pwd_layout"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="40dp"
+		android:background="@anim/goluk_wifi"
 		android:contentDescription="@string/imgdes"/>
 	
 	<Button

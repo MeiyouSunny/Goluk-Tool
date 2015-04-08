@@ -83,7 +83,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 	public WiFiListAdapter mWiFiListAdapter = null;
 	public ArrayList<WiFiListData> mWiFiListData = null;
 	/** 当前是否已连接ipc wifi */
-	private boolean mHasLinked = false;
+	private boolean mHasLinked = true;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +131,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 		mRefreshHelpBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
 		
-		//启动loading动画
+		//启动动画
 		mIpcSignalAnim.start();
 		//修改title说明文字颜色
 		mDescTitleText.setText(Html.fromHtml("1.确认<font color=\"#28b6a4\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#28b6a4\"> Goluk xxx </font>的WiFi"));
@@ -219,7 +219,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener, W
 			console.log("通知logic连接ipc---sendLogicLinkIpc---1");
 			//写死ipc ip地址
 			String ip = "192.168.62.1";
-			boolean b =mApp.mIPCControlManager.setIPCWifiState(true,ip);
+			boolean b = mApp.mIPCControlManager.setIPCWifiState(true,ip);
 			console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 		}
 		

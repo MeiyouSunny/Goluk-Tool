@@ -252,7 +252,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if(b){
 			//如果在wifi连接页面,通知连接成功
 			if(mPageSource == "WiFiLinkList"){
-				console.log("ipc热点连接成功---VerifyWiFiConnect---1");
+				//console.log("ipc热点连接成功---VerifyWiFiConnect---1");
 				//((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
 			}
 		}

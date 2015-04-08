@@ -12,7 +12,7 @@ import android.os.Handler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +20,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,6 +58,9 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 	private EditText mWiFiName = null;
 	/** wifi密码 */
 	private EditText mWiFiPwd = null;
+	/** 创建热点动画 */
+	private ImageView mPhoneWiFiImage = null;
+	private AnimationDrawable mPhoneWiFiAnim = null;
 	/** 下一步按钮 */
 	private Button mNextBtn = null;
 	/** loading */
@@ -108,12 +112,16 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 		mDescTitleText = (TextView) findViewById(R.id.textView1);
 		mWiFiName = (EditText) findViewById(R.id.wifi_name_text);
 		mWiFiPwd = (EditText) findViewById(R.id.wifi_pwd_text);
+		mPhoneWiFiImage = (ImageView)findViewById(R.id.imageView2);
+		mPhoneWiFiAnim = (AnimationDrawable)mPhoneWiFiImage.getBackground();
 		mNextBtn = (Button)findViewById(R.id.next_btn);
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
 		
+		//启动动画
+		mPhoneWiFiAnim.start();
 		mDescTitleText.setText(Html.fromHtml("3.修改与<font color=\"#28b6a4\">Goluk 相连手机</font>的 WiFi 热点信息"));
 	}
 	
