@@ -562,7 +562,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					if(0 == param1){
 						//如果在wifi连接页面,通知连接成功
 						if(mPageSource == "WiFiLinkCreateHot"){
-							((WiFiLinkCreateHotActivity)mContext).createPhoneHot();
+							//((WiFiLinkCreateHotActivity)mContext).createPhoneHot();
 						}
 					}
 				break;
