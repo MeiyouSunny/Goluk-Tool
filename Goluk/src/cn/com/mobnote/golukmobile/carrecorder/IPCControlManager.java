@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
@@ -64,7 +66,6 @@ public class IPCControlManager implements IPCManagerFn{
 		String json = JsonUtil.getWifiChangeJson(state, ip);
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
 		return isSucess;
-//		LogUtil.e(null, "jyf-----goluk:IPC_CommCmd_WifiChanged isSucess:" + isSucess);
 	}
 	
 	/**
@@ -82,18 +83,15 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public void screenShot() {
+	public boolean screenShot() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
-			GFileUtils.writeShootLog("========发起ipc图片截图========");
-
-			boolean isSuccess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+			return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 					IPCManagerFn.IPC_VDCPCmd_SnapPic, "");
-			if (!isSuccess) {
-				GFileUtils.writeShootLog("========ipc截图命令 　发送失败========");
-			}
 		} else {
 			GFileUtils.writeShootLog("========ipc截图命令失败　未登录========");
 		}
+		
+		return false;
 	}
 	
 	/**
@@ -157,9 +155,9 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月25日
 	 */
-	public void downloadFile(String filename, String tag, String savepath) {
+	public boolean downloadFile(String filename, String tag, String savepath) {
 		String json = JsonUtil.getDownFileJson(filename, tag, savepath);
-		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
 				json);
 	}
 	
@@ -169,8 +167,8 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月25日
 	 */
-	public void deleteFile(String filename){
-		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Erase, filename);
+	public boolean deleteFile(String filename){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Erase, filename);
 	}
 	
 	/**
@@ -182,9 +180,9 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月31日
 	 */
-	public void updateGPS(long lon, long lat, int speed, int direction){
+	public boolean updateGPS(long lon, long lat, int speed, int direction){
 		String json = JsonUtil.getGPSJson(lon, lat, speed, direction);
-		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetGpsInfo, json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetGpsInfo, json);
 	}
 	
 	/**
@@ -192,8 +190,8 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年4月2日
 	 */
-	public void queryDeviceStatus(){
-		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_DeviceStatus, "");
+	public boolean queryDeviceStatus(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_DeviceStatus, "");
 	}
 	
 	/**
@@ -201,8 +199,8 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年4月2日
 	 */
-	public void queryRecordStorageStatus(){
-		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_RecPicUsage, "");
+	public boolean queryRecordStorageStatus(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_RecPicUsage, "");
 	}
 	
 	/**
@@ -259,6 +257,30 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean setIPCWifiCfg(){
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetWifiCfg, "");
+	}
+	
+	/**
+	 * 获取IPC系统音视频编码配置
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public boolean getVideoEncodeCfg(int type){
+		String json = JsonUtil.getVideoCfgJson(type);
+		System.out.println("YYY================json="+json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetVideoEncodeCfg, json);
+	}
+	
+	/**
+	 * 设置IPC系统音视频编码配置
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public boolean setVideoEncodeCfg(VideoQualityActivity.SensitivityType type){
+		String json = JsonUtil.getVideoConfig(type);
+		System.out.println("YYY================json="+json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
 	}
 	
 

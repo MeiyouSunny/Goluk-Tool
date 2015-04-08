@@ -58,9 +58,19 @@
 		
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"/>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VersionActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.RestoreFactorySettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.ImpactSensitivityActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.StorageCpacityQueryActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.WatermarkSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.TimeSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		
 		
 		
 		  <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->

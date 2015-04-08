@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="42dp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/carrecorder_line_press"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="SD卡总容量"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mTotalSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:textColor="#999999"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/carrecorder_line_press"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="已用空间"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mUsedSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:textColor="#999999"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/carrecorder_line_press"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="循环视频可用"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mCycleSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:textColor="#999999"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/carrecorder_line_press"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="精彩视频可用"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mWonderfulSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:textColor="#999999"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/carrecorder_line_press"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="紧急视频可用"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mEmergencySize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:textColor="#999999"
+            android:textSize="18sp" />
+    </RelativeLayout>
+    
+    <TextView
+        	android:paddingLeft="15dp"
+        	android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="每种类型的视频都有独立的空间大小分配。当剩余空间不足时会自动	循环覆盖掉早期的视频影像。"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/carrecorder_line_press"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="其它可用"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mOtherSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:textColor="#999999"
+            android:textSize="18sp" />
+    </RelativeLayout>
+    
+    <TextView
+        	android:paddingLeft="15dp"
+        	android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="其它是指Goluk正常运行中所产生的临时文件。"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+
+</LinearLayout>

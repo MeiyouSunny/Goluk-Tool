@@ -26,10 +26,10 @@ import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
-import cn.com.mobnote.golukmobile.carrecorder.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
@@ -312,6 +312,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				JSONObject json = new JSONObject(data);
 				String fileName = json.getString("location");
 				console.log("调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---" + fileName);
+				int type = json.getInt("type");
+				if(type == 2){
+					//紧急视频
+					mVideoSavePath = mVideoSavePath + "urgent/";
+				}
+				else{
+					//精彩视频
+					mVideoSavePath = mVideoSavePath + "wonderful/";
+				}
 				//调用下载视频接口
 				mIPCControlManager.downloadFile(fileName,"videodownload",mVideoSavePath);
 			}

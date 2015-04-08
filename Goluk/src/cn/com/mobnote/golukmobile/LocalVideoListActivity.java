@@ -12,15 +12,11 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.DoubleVideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
-import cn.com.mobnote.golukmobile.carrecorder.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.Utils;
-import cn.com.mobnote.golukmobile.carrecorder.VideoFileInfo;
-import cn.com.mobnote.golukmobile.carrecorder.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
