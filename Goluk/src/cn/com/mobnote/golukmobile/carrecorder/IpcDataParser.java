@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import android.text.TextUtils;
 
 public class IpcDataParser {
@@ -13,22 +18,6 @@ public class IpcDataParser {
 		public int type;
 		/** 文件名字 */
 		public String fileName;
-	}
-
-	/** 设备状态 */
-	public static class DeviceState {
-		/** SD卡总容量，单位为Byte。仅当SDActive为YES时，此字段有意义 */
-		public int totalSizeOnSD;
-		/** 当前镜头状态。 1 –正常 2 –异常 */
-		public int cameraStatus;
-		/** SD卡剩余容量，单位为Byte。仅当SDActive为YES时，此字段有意义。*/
-		public int leftSizeOnSD;
-		/** 当前登录用户数 */
-		public int onlineUsers;
-		/** SD卡在位YES(1) | SD卡不存在NO(0) */
-		public int SDPresent;
-		/** SD卡剩余容量太小，不能继续录制(1) | SD卡容量正常(0) */
-		public int isSpaceTooSmall;
 	}
 	
 	/**
@@ -184,15 +173,22 @@ public class IpcDataParser {
 
 	}
 
+	/**
+	 * 解析IPC设备存储状态json
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
 	public static DeviceState parseDeviceState(String json) {
 		try {
 
 			DeviceState deviceState = new DeviceState();
 
 			JSONObject obj = new JSONObject(json);
-			int totalSizeOnSD = obj.getInt("totalSizeOnSD");
+			double totalSizeOnSD = obj.getDouble("totalSizeOnSD");
 			int cameraStatus = obj.getInt("cameraStatus");
-			int leftSizeOnSD = obj.getInt("leftSizeOnSD");
+			double leftSizeOnSD = obj.getDouble("leftSizeOnSD");
 			int onlineUsers = obj.getInt("onlineUsers");
 			int SDPresent = obj.getInt("SDPresent");
 			int isSpaceTooSmall = obj.getInt("isSpaceTooSmall");
@@ -206,6 +202,84 @@ public class IpcDataParser {
 
 			return deviceState;
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * 解析录制存储状态json
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static RecordStorgeState parseRecordStorageStatus(String json) {
+		try {
+			RecordStorgeState mRecordStorgeState = new RecordStorgeState();
+			JSONObject obj = new JSONObject(json);
+			int SDCardActive = obj.getInt("SDCardActive");
+			int isSpaceTooSmall = obj.getInt("isSpaceTooSmall");
+			double totalSdSize = obj.getDouble("totalSdSize");
+			double userFilesSize = obj.getDouble("userFilesSize");
+			double leftSize = obj.getDouble("leftSize");
+			double normalRecQuota = obj.getDouble("normalRecQuota");
+			double normalRecSize = obj.getDouble("normalRecSize");
+			double urgentRecQuota = obj.getDouble("urgentRecQuota");
+			double urgentRecSize = obj.getDouble("urgentRecSize");
+			double wonderfulRecQuota = obj.getDouble("wonderfulRecQuota");
+			double wonderfulRecSize = obj.getDouble("wonderfulRecSize");
+			double picQuota = obj.getDouble("picQuota");
+			double picSize = obj.getDouble("picSize");
+			
+			mRecordStorgeState.SDCardActive=SDCardActive;
+			mRecordStorgeState.isSpaceTooSmall=isSpaceTooSmall;
+			mRecordStorgeState.totalSdSize=totalSdSize;
+			mRecordStorgeState.userFilesSize=userFilesSize;
+			mRecordStorgeState.leftSize=leftSize;
+			mRecordStorgeState.normalRecQuota=normalRecQuota;
+			mRecordStorgeState.normalRecSize=normalRecSize;
+			mRecordStorgeState.urgentRecQuota=urgentRecQuota;
+			mRecordStorgeState.urgentRecSize=urgentRecSize;
+			mRecordStorgeState.wonderfulRecQuota=wonderfulRecQuota;
+			mRecordStorgeState.wonderfulRecSize=wonderfulRecSize;
+			mRecordStorgeState.picQuota=picQuota;
+			mRecordStorgeState.picSize=picSize;
+			
+			return mRecordStorgeState;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * 解析视频配置信息json
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static VideoConfigState parseVideoConfigState(String json) {
+		try {
+			VideoConfigState mVideoConfigState = new VideoConfigState();
+			JSONObject obj = new JSONObject(json);
+			int bitstreams = obj.getInt("bitstreams");
+			String resolution = obj.getString("resolution");
+			int frameRate = obj.getInt("frameRate");
+			int bitrate = obj.getInt("bitrate");
+			int AudioEnabled = obj.getInt("audioEnabled");
+			
+			mVideoConfigState.bitstreams=bitstreams;
+			mVideoConfigState.resolution=resolution;
+			mVideoConfigState.frameRate=frameRate;
+			mVideoConfigState.bitrate=bitrate;
+			mVideoConfigState.AudioEnabled=AudioEnabled;
+			
+			return mVideoConfigState;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

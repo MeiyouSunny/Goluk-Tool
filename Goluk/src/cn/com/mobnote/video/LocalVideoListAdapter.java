@@ -26,7 +26,7 @@ import cn.com.mobnote.golukmobile.LocalVideoShareListActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
-import cn.com.mobnote.golukmobile.carrecorder.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.video.LocalVideoListManage.DoubleVideoData;
 import cn.com.mobnote.video.LocalVideoListManage.LocalVideoData;
 import cn.com.mobnote.view.LoadingView;

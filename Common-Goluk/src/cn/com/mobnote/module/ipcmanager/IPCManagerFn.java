@@ -84,12 +84,15 @@ public interface IPCManagerFn extends IGolukCommFn {
 	/** IPC恢复出厂设置 */
 	public static final int IPC_VDCP_Msg_Restore = 1009;
 	/** IPC格式化SD卡 */
-	public static final int IPC_VDCP_Msg_FormatDisk = 10010;
+	public static final int IPC_VDCP_Msg_FormatDisk = 1010;
 	/** 设置IPC系统时间 */
-	public static final int IPC_VDCP_Msg_SetTime = 10011;
+	public static final int IPC_VDCP_Msg_SetTime = 1011;
 	/** 设置IPC系统WIFI配置 */
-	public static final int IPC_VDCP_Msg_SetWifiCfg = 10012;
-	
+	public static final int IPC_VDCP_Msg_SetWifiCfg = 1012;
+	/** 获取IPC系统音视频编码配置 */
+	public static final int IPC_VDCP_Msg_GetVedioEncodeCfg = 1013;
+	/** 设置IPC系统音视频编码配置 */
+	public static final int IPC_VDCP_Msg_SetVedioEncodeCfg = 1014;
 
 	/**
 	 * 
@@ -145,11 +148,15 @@ public interface IPCManagerFn extends IGolukCommFn {
 	/** IPC恢复出厂设置 */
 	public static final int IPC_VDCPCmd_Restore = 1009;
 	/** IPC格式化SD卡 */
-	public static final int IPC_VDCPCmd_FormatDisk = 10010;
+	public static final int IPC_VDCPCmd_FormatDisk = 1010;
 	/** 设置IPC系统时间 */
-	public static final int IPC_VDCPCmd_SetTime = 10011;
+	public static final int IPC_VDCPCmd_SetTime = 1011;
 	/** 设置IPC系统WIFI配置 */
-	public static final int IPC_VDCPCmd_SetWifiCfg = 10012;
+	public static final int IPC_VDCPCmd_SetWifiCfg = 1012;
+	/** 获取IPC系统音视频编码配置 */
+	public static final int IPC_VDCPCmd_GetVideoEncodeCfg = 1013;
+	/** 设置IPC系统音视频编码配置 */
+	public static final int IPC_VDCPCmd_SetVideoEncodeCfg = 1014;
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }
