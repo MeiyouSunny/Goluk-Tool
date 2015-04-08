@@ -79,7 +79,7 @@
 		android:layout_marginLeft="20dp"
 		android:layout_marginRight="20dp"
 		android:layout_alignParentBottom="true"
-		android:background="@drawable/connect_mianbtn"
+		android:background="@drawable/connect_mianbtn_ash"
 		android:textSize="20sp"
 		android:textColor="@color/white"
 		android:text="@string/wifi_link_28_text" />

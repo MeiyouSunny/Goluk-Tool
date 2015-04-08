@@ -2,7 +2,9 @@ package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,6 +53,10 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 	private Button mJumpBtn = null;
 	/** 描述title*/
 	private TextView mDescTitleText = null;
+	/** wifi名称 */
+	private TextView mWiFiNameText = null;
+	/** wifi密码 */
+	private EditText mWiFiPwdText = null;
 	/** IPCWIFI动画 */
 	private ImageView mIpcWiFiImage = null;
 	private AnimationDrawable mIpcWiFiAnim = null;
@@ -85,6 +92,8 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
 		mJumpBtn = (Button)findViewById(R.id.jump_btn);
 		mDescTitleText = (TextView) findViewById(R.id.textView1);
+		mWiFiNameText = (TextView) findViewById(R.id.wifi_name_text);
+		mWiFiPwdText = (EditText) findViewById(R.id.wifi_pwd_text);
 		mIpcWiFiImage = (ImageView)findViewById(R.id.imageView2);
 		mIpcWiFiAnim = (AnimationDrawable)mIpcWiFiImage.getBackground();
 		mNextBtn = (Button)findViewById(R.id.next_btn);
@@ -97,8 +106,25 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 		//启动动画
 		mIpcWiFiAnim.start();
 		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#28b6a4\">Goluk</font> WiFi热点信息"));
+		mWiFiNameText.setText(mLinkWiFiName);
 	}
 	
+	/**
+	 * 更新ipc-wifi密码
+	 */
+	private void updateIpcWiFiPwd(){
+		String pwd = mWiFiPwdText.getText().toString().trim();
+		if(pwd.length() > 7){
+			//保存ipc-wifi数据
+			WiFiInfo.AP_SSID = mLinkWiFiName;
+			WiFiInfo.AP_PWD = pwd;
+			Intent hot = new Intent(WiFiLinkModifyPwdActivity.this,WiFiLinkCreateHotActivity.class);
+			startActivity(hot);
+		}
+		else{
+			console.toast("密码至少需要8位", mContext);
+		}
+	}
 	
 	@Override
 	protected void onResume(){
@@ -120,6 +146,7 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 				startActivity(jump);
 			break;
 			case R.id.next_btn:
+				updateIpcWiFiPwd();
 				//Intent setup = new Intent(WiFiLinkModifyPwdActivity.this,WiFiLinkStep2Activity.class);
 				//startActivity(setup);
 			break;

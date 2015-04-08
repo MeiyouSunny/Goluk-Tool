@@ -60,7 +60,7 @@
 	<string name="wifi_link_19_text">跳过</string>
 	<string name="wifi_link_20_text">2.修改Goluk WiFi热点信息</string>
 	<string name="wifi_link_21_text">WiFi名称</string>
-	<string name="wifi_link_22_text">chxy123456</string>
+	<string name="wifi_link_22_text">goluk123456</string>
 	<string name="wifi_link_23_text">3.修改与Goluk相连手机的WiFi热点信息</string>
 	<string name="wifi_link_24_text">正常使用中,在手机客户端内将自动连接Goluk建立的WiFi热点.</string>
 	<string name="wifi_link_25_text">手机正在创建WiFi个人热点....</string>

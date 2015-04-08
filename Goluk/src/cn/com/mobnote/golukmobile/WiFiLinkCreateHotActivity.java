@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.util.console;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.Html;
 import android.view.View;
@@ -39,7 +41,9 @@ import android.widget.TextView;
  * 11.后续人员开发保证代码格式一致
  * </pre>
  * 
- * @ 功能描述:wifi连接修改热点密码
+ * @ 功能描述:wifi连接修改热点密码,
+ * 第一步,把热点的信息通知给ipc,等待回调
+ * 第二步,跳转到完成页面去创建热点
  * 
  * @author 陈宣宇
  * 
@@ -153,6 +157,10 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 					//显示loading 
 					mLoading.setVisibility(View.VISIBLE);
 					
+					//保存wifi账户密码
+					WiFiInfo.GolukSSID = wifiName;
+					WiFiInfo.GolukPWD = pwd;
+					
 					mWifiApAdmin = new WifiApAdmin(this,mHandler);
 					String way = mWifiApAdmin.getIPAddress();
 					way = "192.168.43.1";
@@ -165,7 +173,6 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
 					boolean b =mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
-
 				}
 				else{
 					console.toast("WiFi热点密码长度必须大于等于8位", mContext);
@@ -178,30 +185,20 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 		else{
 			console.toast("WiFi热点名称不能为空", mContext);
 		}
-//		Intent complete = new Intent(WiFiLinkCreateHotActivity.this,WiFiLinkCompleteActivity.class);
-//		startActivity(complete);
+		Intent complete = new Intent(WiFiLinkCreateHotActivity.this,WiFiLinkCompleteActivity.class);
+		startActivity(complete);
 	}
 	
 	/**
-	 * 创建手机热点
+	 * 设置热点信息成功回调
 	 */
-	public void createPhoneHot(){
-		//隐藏loading
-		mLoading.setVisibility(View.GONE);
-		
-		String wifiName = mWiFiName.getText().toString().trim();
-		String pwd = mWiFiPwd.getText().toString().trim();
-		//连接ipc热点wifi---调用ipc接口
-		//调用韩峥接口创建手机热点
-		console.log("创建手机热点---startWifiAp---1");
-		mWifiApAdmin = new WifiApAdmin(this,mHandler);
-		if(!mWifiApAdmin.isWifiApEnabled()){
-			//创建之前先断开ipc连接
-			mApp.mIPCControlManager.setIPCWifiState(false,null);
-			//创建热点
-			mWifiApAdmin.startWifiAp(wifiName, pwd);
-		}
+	public void setIpcLinkWiFiCallBack(){
+		//设置热点信息成功,跳转到成功页面创建热点
+		Intent complete = new Intent(WiFiLinkCreateHotActivity.this,WiFiLinkCompleteActivity.class);
+		startActivity(complete);
 	}
+	
+	
 	
 	@Override
 	protected void onResume(){

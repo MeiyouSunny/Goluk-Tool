@@ -3,6 +3,8 @@ package cn.com.mobnote.golukmobile;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
+import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -30,7 +32,11 @@ import android.widget.TextView;
  * 11.后续人员开发保证代码格式一致
  * </pre>
  * 
- * @ 功能描述:wifi连接修改热点密码
+ * @ 功能描述:wifi连接完成
+ * 第一步,通知logic断开ipc连接
+ * 第二步,创建wifi热点,等待创建成功回调
+ * 第三步,等待ipc连接热点回调
+ * 第四步,通知logic-ipc已连接上设备
  * 
  * @author 陈宣宇
  * 
@@ -43,10 +49,12 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	private Context mContext = null;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
-	/** 描述title*/
-	private TextView mDescTitleText = null;
+	/** 创建热点描述title*/
+	private TextView mCreateHotText = null;
 	/** 完成按钮 */
 	private Button mCompleteBtn = null;
+	/** 开始使用状态 */
+	private boolean mIsComplete = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,10 +66,13 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
-		mApp.setContext(mContext,"WiFiLinkModifyPwd");
+		mApp.setContext(mContext,"WiFiLinkComplete");
 		
 		//页面初始化
 		init();
+		
+		//创建热点
+		createPhoneHot();
 	}
 	
 	/**
@@ -71,20 +82,40 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	private void init(){
 		//获取页面元素
 		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
-		mDescTitleText = (TextView) findViewById(R.id.textView1);
+		mCreateHotText = (TextView) findViewById(R.id.textView1);
 		mCompleteBtn = (Button)findViewById(R.id.complete_btn);
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
 		mCompleteBtn.setOnClickListener(this);
 		
-		mDescTitleText.setText(Html.fromHtml("3.修改与<font color=\"#28b6a4\">Goluk 相连手机</font>的 WiFi 热点信息"));
+		mCreateHotText.setText(Html.fromHtml("手机正在<font color=\"#28b6a4\">创建WiFi</font>个人热点...."));
 	}
 	
+	/**
+	 * 创建手机热点
+	 */
+	public void createPhoneHot(){
+		//隐藏loading
+		//mLoading.setVisibility(View.GONE);
+		
+//		String wifiName = mWiFiName.getText().toString().trim();
+//		String pwd = mWiFiPwd.getText().toString().trim();
+//		//连接ipc热点wifi---调用ipc接口
+//		//调用韩峥接口创建手机热点
+//		console.log("创建手机热点---startWifiAp---1");
+//		mWifiApAdmin = new WifiApAdmin(this,mHandler);
+//		if(!mWifiApAdmin.isWifiApEnabled()){
+//			//创建之前先断开ipc连接
+//			mApp.mIPCControlManager.setIPCWifiState(false,null);
+//			//创建热点
+//			mWifiApAdmin.startWifiAp(wifiName, pwd);
+//		}
+	}
 	
 	@Override
 	protected void onResume(){
-		mApp.setContext(this,"WiFiLinkModifyPwd");
+		mApp.setContext(this,"WiFiLinkComplete");
 		super.onResume();
 	}
 	
@@ -98,6 +129,12 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 				finish();
 			break;
 			case R.id.complete_btn:
+				if(mIsComplete){
+					
+				}
+				else{
+					console.toast("IPC连接中....", mContext);
+				}
 //				Intent setup = new Intent(WiFiLinkCompleteActivity.this,WiFiLinkStep2Activity.class);
 //				startActivity(setup);
 			break;
