@@ -2,10 +2,12 @@ package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.util.console;
 import android.os.Bundle;
+import android.os.Handler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -55,6 +57,24 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	private Button mCompleteBtn = null;
 	/** 开始使用状态 */
 	private boolean mIsComplete = false;
+	private WifiApAdmin mWifiApAdmin = null;
+	
+	@SuppressLint("HandlerLeak")
+	public Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch(msg.what){
+				case 10:
+					//创建热点失败
+				break;
+				case 11:
+					//创建热点成功
+					console.log("创建热点成功---startWifiAp---2");
+					//通知ipc连接手机
+				//	setIpcLinkPhone();
+				break;
+			}
+		};
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,18 +119,18 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		//隐藏loading
 		//mLoading.setVisibility(View.GONE);
 		
-//		String wifiName = mWiFiName.getText().toString().trim();
-//		String pwd = mWiFiPwd.getText().toString().trim();
-//		//连接ipc热点wifi---调用ipc接口
-//		//调用韩峥接口创建手机热点
-//		console.log("创建手机热点---startWifiAp---1");
-//		mWifiApAdmin = new WifiApAdmin(this,mHandler);
-//		if(!mWifiApAdmin.isWifiApEnabled()){
-//			//创建之前先断开ipc连接
-//			mApp.mIPCControlManager.setIPCWifiState(false,null);
-//			//创建热点
-//			mWifiApAdmin.startWifiAp(wifiName, pwd);
-//		}
+		String wifiName = WiFiInfo.GolukSSID;
+		String pwd = WiFiInfo.GolukPWD;
+		//连接ipc热点wifi---调用ipc接口
+		//调用韩峥接口创建手机热点
+		console.log("创建手机热点---startWifiAp---1");
+		mWifiApAdmin = new WifiApAdmin(this,mHandler);
+		if(!mWifiApAdmin.isWifiApEnabled()){
+			//创建之前先断开ipc连接
+			mApp.mIPCControlManager.setIPCWifiState(false,null);
+			//创建热点
+			mWifiApAdmin.startWifiAp(wifiName, pwd);
+		}
 	}
 	
 	@Override
