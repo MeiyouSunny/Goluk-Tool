@@ -110,7 +110,7 @@
 	   	       android:layout_width="wrap_content"
 	   	       android:layout_height="wrap_content"
 	   	       android:id="@+id/user_personal_name_text"
-	   	       android:text="UserName"
+	   	       android:text="User name"
 	   	       android:layout_marginRight="10dp"
 	   	       android:textColor="@color/user_personal_black"
 	   	       />
