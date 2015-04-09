@@ -376,10 +376,11 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	public void onCompletion(MediaPlayer arg0) {
 		long duration = mMediaPlayer.getDuration();
 		System.out.println("TTT========onCompletion=====duration="+duration);
-		mCurTime.setText(long2TimeStr(duration));
+		
+		mCurTime.setText(long2TimeStr(0));
 		mTotalTime.setText(long2TimeStr(duration));
 		mSeekBar.setMax((int)duration);
-		mSeekBar.setProgress((int)duration);
+		mSeekBar.setProgress(0);
 	}
 
 	@Override

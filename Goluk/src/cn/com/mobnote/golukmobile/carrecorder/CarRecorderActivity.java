@@ -91,6 +91,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	public static final int DOWNLOADWONDERFULVIDEO = 119;
 	/** 更新视频分辨率显示状态 */
 	public static final int UPDATEVIDEORESOLUTIONS = 120;
+	
 
 	public enum VideoType {
 		mounts, emergency, idle
@@ -217,7 +218,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					break;
 				case ADDR:
 					String addr = (String) msg.obj;
-					mAddr.setText(addr);
+					if(!TextUtils.isEmpty(addr)){
+						mAddr.setText(addr);
+					}
 					break;
 				case STARTVIDEORECORD:
 					updateVideoRecordTime();
@@ -349,6 +352,11 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 
 		showLoading();
 		hidePlayer();
+		
+		String addr = GolukApplication.getInstance().mCurAddr;
+		if(!TextUtils.isEmpty(addr)){
+			mAddr.setText(addr);
+		}
 
 		Button wifi = (Button) findViewById(R.id.wifi);
 		wifi.setOnClickListener(new View.OnClickListener() {
