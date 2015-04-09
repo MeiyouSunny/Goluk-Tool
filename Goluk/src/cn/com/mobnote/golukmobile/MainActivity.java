@@ -1052,6 +1052,15 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			//保存经纬度
 			LngLat.lng = location.getLongitude();
 			LngLat.lat = location.getLatitude();
+			if(GolukApplication.getInstance().getIpcIsLogin()){
+				long lon = (long)(location.getLongitude()*3600000);
+				long lat = (long)(location.getLatitude()*3600000);
+				int speed = (int)location.getSpeed();
+				int direction = (int)location.getDirection();
+				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
+				System.out.println("YYY=========updateGPS=====a="+a);
+			}
+			
 		}
 
 		public void onReceivePoi(BDLocation poiLocation) {

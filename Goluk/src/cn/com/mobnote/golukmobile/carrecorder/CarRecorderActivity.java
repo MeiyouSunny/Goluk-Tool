@@ -32,8 +32,10 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity;
+import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity.SensitivityType;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SensorDetector;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -87,6 +89,8 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	public static final int MOUNTS = 114;
 	/** 精彩视频下载检查计时 */
 	public static final int DOWNLOADWONDERFULVIDEO = 119;
+	/** 更新视频分辨率显示状态 */
+	public static final int UPDATEVIDEORESOLUTIONS = 120;
 
 	public enum VideoType {
 		mounts, emergency, idle
@@ -109,9 +113,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	/** 一键抢拍按钮 */
 	private ImageButton m8sBtn = null;
 	/** 文件管理按钮 */
-	private ImageButton mFileBtn = null;
+	private ImageView mFileBtn = null;
 	/** 设置按钮 */
-	private ImageButton mSettingBtn = null;
+	private ImageView mSettingBtn = null;
 	/** 录制时间显示 */
 	private TextView mTime = null;
 	/** 当前地址显示 */
@@ -175,6 +179,10 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	private int downloadNumber = 0;
 	/** 精彩视频下载文件个数 */
 	private int downloadFileNumber = 0;
+	/** 音视频信息 */
+	private VideoConfigState mVideoConfigState=null;
+	/** 视频分辨率显示 */
+	private ImageView mVideoResolutions=null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -217,6 +225,13 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				case DOWNLOADWONDERFULVIDEO:
 					wonderfulVideoDownloadShow();
 					break;
+				case UPDATEVIDEORESOLUTIONS:
+					if(1080 == msg.arg1){
+						mVideoResolutions.setBackgroundResource(R.drawable.icon_hd1080);
+					}else{
+						mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
+					}
+					break;
 
 				}
 			};
@@ -236,6 +251,21 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager()
 				.addIPCManagerListener("main", this);
+		getVideoResolutionsInfo();
+	}
+	
+	/**
+	 * 获取视频分辨率信息
+	 * @author xuhw
+	 * @date 2015年4月9日
+	 */
+	private void getVideoResolutionsInfo(){
+		if(null == mVideoConfigState){
+			if(GolukApplication.getInstance().getIpcIsLogin()){
+				boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
+				System.out.println("YYY============getVideoEncodeCfg=========flag="+flag);
+			}
+		}
 	}
 
 	/**
@@ -271,13 +301,14 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月9日
 	 */
 	private void initView() {
+		mVideoResolutions = (ImageView)findViewById(R.id.mVideoResolutions);
 		mShareBtn = (Button) findViewById(R.id.mShareBtn);
 		mShareBtn.setVisibility(View.GONE);
 		mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
 		mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
 		m8sBtn = (ImageButton) findViewById(R.id.m8sBtn);
-		mFileBtn = (ImageButton) findViewById(R.id.mFileBtn);
-		mSettingBtn = (ImageButton) findViewById(R.id.mSettingBtn);
+		mFileBtn = (ImageView) findViewById(R.id.mFileBtn);
+		mSettingBtn = (ImageView) findViewById(R.id.mSettingBtn);
 		mTime = (TextView) findViewById(R.id.mTime);
 		mAddr = (TextView) findViewById(R.id.mAddr);
 		mConnectTip = (TextView) findViewById(R.id.mConnectTip);
@@ -313,7 +344,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			updateVideoState();
 			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
 			// mFileBtn.setBackgroundResource(R.drawable.btn_filemanager);
-
+			
 		}
 
 		showLoading();
@@ -1058,6 +1089,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				&& IPC_VDCP_Msg_Init == msg && 0 == param1) {
 			ipcIsOk = true;
 			updateVideoState();
+			getVideoResolutionsInfo();
 			if (!ipcFirstLogin) {
 				ipcFirstLogin = true;
 				if (!isConnecting) {
@@ -1251,6 +1283,35 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				mHandler.sendEmptyMessageDelayed(QUERYFILEEXIT, 1000);
 			}
 			break;
+		//获取IPC系统音视频编码配置
+		case IPC_VDCP_Msg_GetVedioEncodeCfg:
+			if(param1 == RESULE_SUCESS){
+				mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
+				if(null != mVideoConfigState){
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if("1080P".equals(mVideoConfigState.resolution)){
+								mVideoResolutions.setBackgroundResource(R.drawable.icon_hd1080);
+							}else{
+								mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
+							}
+						}
+					});
+				}else{
+					//获取失败
+				}
+			}
+			break;
+		//设置IPC系统音视频编码配置
+		case IPC_VDCP_Msg_SetVedioEncodeCfg:
+			if(param1 == RESULE_SUCESS){
+				
+			}
+			break;
+			
+			
+			
 		// 删除文件
 		case IPC_VDCPCmd_Erase:
 			if (RESULE_SUCESS == param1) {

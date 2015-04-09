@@ -53,6 +53,7 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/mVideoResolutions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -178,17 +179,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical|center"
-        android:paddingBottom="14dp" >
+         >
 
         <LinearLayout
             android:id="@+id/mFileLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingBottom="14dp"
+            android:paddingTop="14dp"
             android:gravity="center|center_horizontal"
             android:orientation="vertical" >
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/mFileBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -218,10 +221,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingBottom="14dp"
+            android:paddingTop="14dp"
             android:gravity="center|center_horizontal"
             android:orientation="vertical" >
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/mSettingBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

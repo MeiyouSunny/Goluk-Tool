@@ -333,9 +333,25 @@ public class IPCControlManager implements IPCManagerFn{
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetImprintShow, "");
 	}
 	
+	/**
+	 * 获取IPC GSensor控制紧急录像策略
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月9日
+	 */
+	public boolean getGSensorControlCfg(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetGSensorControlCfg, "");
+	}
 	
-	
-	
+	/**
+	 * 设置IPC GSensor控制紧急录像策略
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月9日
+	 */
+	public boolean setGSensorControlCfg(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetGSensorControlCfg, "");
+	}
 	
 	
 	

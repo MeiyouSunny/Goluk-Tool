@@ -54,7 +54,7 @@ public class StorageCpacityQueryActivity extends BaseActivity implements IPCMana
 		
 		initView();
 		boolean flag = GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
-		System.out.println("YYY===========flag="+flag);
+		System.out.println("YYY======queryRecordStorageStatus=====flag="+flag);
 		if(!flag){
 			
 		}
@@ -93,29 +93,30 @@ public class StorageCpacityQueryActivity extends BaseActivity implements IPCMana
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
 			if(msg == IPC_VDCP_Msg_RecPicUsage){
-				System.out.println("YYY===========11111111=============param2=="+param2);
+				System.out.println("YYY===========11111111========param1="+param1+"====param2=="+param2);
 				if(param1 == RESULE_SUCESS){
 					RecordStorgeState mRecordStorgeState = IpcDataParser.parseRecordStorageStatus((String)param2);
+					if(null != mRecordStorgeState){
+						double totalsize = mRecordStorgeState.totalSdSize/1024;
+						double usedsize = mRecordStorgeState.totalSdSize - mRecordStorgeState.leftSize;
+						double cyclesize = mRecordStorgeState.normalRecQuota - mRecordStorgeState.normalRecSize;
+						double wonderfulsize = mRecordStorgeState.wonderfulRecQuota - mRecordStorgeState.wonderfulRecSize;
+						double emergencysize = mRecordStorgeState.urgentRecQuota - mRecordStorgeState.urgentRecSize;
+						double picsize = mRecordStorgeState.picQuota - mRecordStorgeState.picSize;
+						
+						java.text.DecimalFormat   df=new   java.text.DecimalFormat("#.##");  
+						String totalsizestr = df.format(totalsize);
+						
+						mTotalSize.setText(totalsizestr + "GB");
+						mUsedSize.setText(usedsize + "MB");
+						mCycleSize.setText(cyclesize + "MB");
+						mWonderfulSize.setText(wonderfulsize + "MB");
+						mEmergencySize.setText(emergencysize + "MB");
+						mOtherSize.setText(picsize + "MB");
+						
+						System.out.println("YYY===========２２２２２=========normalRecQuota="+mRecordStorgeState.normalRecQuota+"=====normalRecSize="+mRecordStorgeState.normalRecSize);
+					}
 					
-					double totalsize = mRecordStorgeState.totalSdSize/1024;
-					double usedsize = mRecordStorgeState.totalSdSize - mRecordStorgeState.leftSize;
-					double cyclesize = mRecordStorgeState.normalRecQuota - mRecordStorgeState.normalRecSize;
-					double wonderfulsize = mRecordStorgeState.wonderfulRecQuota - mRecordStorgeState.wonderfulRecSize;
-					double emergencysize = mRecordStorgeState.urgentRecQuota - mRecordStorgeState.urgentRecSize;
-					double picsize = mRecordStorgeState.picQuota - mRecordStorgeState.picSize;
-					
-					java.text.DecimalFormat   df=new   java.text.DecimalFormat("#.##");  
-					String totalsizestr = df.format(totalsize);
-					
-					mTotalSize.setText(totalsizestr + "GB");
-					mUsedSize.setText(usedsize + "MB");
-					mCycleSize.setText(cyclesize + "MB");
-					mWonderfulSize.setText(wonderfulsize + "MB");
-					mEmergencySize.setText(emergencysize + "MB");
-					mOtherSize.setText(picsize + "MB");
-					
-					
-					System.out.println("YYY===========２２２２２=========normalRecQuota="+mRecordStorgeState.normalRecQuota+"=====normalRecSize="+mRecordStorgeState.normalRecSize);
 				}else{
 					System.out.println("YYY===========３３３３３===============");
 				}

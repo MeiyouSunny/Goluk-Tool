@@ -1,6 +1,8 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -8,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
@@ -34,6 +37,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
   *
   * @author xuhw
   */
+@SuppressLint("InflateParams")
 public class VideoQualityActivity extends BaseActivity implements OnClickListener, IPCManagerFn{
 	/** 视频类型文字显示 */
 	private TextView mCloseText=null;
@@ -196,6 +200,16 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			//设置IPC系统音视频编码配置
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){
 				if(param1 == RESULE_SUCESS){
+					if(null != CarRecorderActivity.mHandler){
+						Message mm = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.UPDATEVIDEORESOLUTIONS);
+						if(SensitivityType._1080h == curType || SensitivityType._1080l == curType){
+							mm.arg1=1080;
+						}else{
+							mm.arg1=720;
+						}
+						CarRecorderActivity.mHandler.sendMessage(mm);
+					}
+					
 					System.out.println("YYY==========IPC_VDCP_Msg_SetVedioEncodeCfg=====22222222222222222==RESULE_SUCESS===");
 				}else{
 					System.out.println("YYY==========IPC_VDCP_Msg_SetVedioEncodeCfg=====3333===fail==");

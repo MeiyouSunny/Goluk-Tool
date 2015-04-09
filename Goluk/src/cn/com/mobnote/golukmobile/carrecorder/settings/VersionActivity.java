@@ -72,8 +72,8 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								mDeviceId.setText(mVersionState.name);
-								mVersion.setText(""+mVersionState.code);
+								mDeviceId.setText(""+mVersionState.code);
+								mVersion.setText(mVersionState.name);
 							}
 						});
 					}
