@@ -648,6 +648,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			liveFailedStart(isLive);
 			return;
 		}
+		
+		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, 6, "");
+		Toast.makeText(this, "开始上报位置", Toast.LENGTH_LONG).show();
+		
 		mJoinGroupJson = JsonUtil.getJoinGroup(dataInfo.groupType, dataInfo.membercount, dataInfo.title,
 				dataInfo.groupId, dataInfo.groupnumber);
 
@@ -664,7 +668,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @param obj
 	 */
 	public void LiveVideoDataCallBack(int success, Object obj) {
-		console.log("视频直播数据返回--LiveVideoDataCallBack: success: " + success);
+		console.log("视频直播数据返回--LiveVideoDataCallBack: success: " + success );
 
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----111 : " + success);
 		if (isShareLive) {
@@ -693,6 +697,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// 主动直播
 			mRPVPalyVideo.setDataSource(liveData.playUrl);
 			mRPVPalyVideo.start();
+			
+			
+			
 			// 开始直播
 			String groupId = liveData.groupId;
 			if (null == groupId || "".equals(groupId) || 0 >= groupId.length()) {
