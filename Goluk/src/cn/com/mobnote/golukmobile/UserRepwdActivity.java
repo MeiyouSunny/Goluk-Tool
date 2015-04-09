@@ -139,7 +139,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					if(!password.equals("")){
 						if(password.length()<6 || password.length()>16){
 //							mEditTextPwd.setError("手机号格式不正确");
-							UserUtils.showDialog(UserRepwdActivity.this, "密码格式输入不正确,请输入 6-16 位数字、字母或常用符号，字母区分大小写");
+							UserUtils.showDialog(UserRepwdActivity.this, "密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
 						}
 					}
 				}
@@ -340,7 +340,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						}
 						
 					}else{
-						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母或常用符号，字母区分大小写");
+						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
 					}
 				}
 			}else{

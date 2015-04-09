@@ -38,10 +38,13 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="40dp"
 		        android:id="@+id/user_personal_name_edit"
+		        android:background="@color/white"
 		        android:layout_toLeftOf="@id/user_personal_name_image"
 		        android:layout_centerVertical="true"
-		        android:hint="编辑昵称"
+		        android:textColor="@color/user_personal_black"
+		        android:paddingLeft="20dp"
 		        />
+
 	    </RelativeLayout>
 	    
 	    <View

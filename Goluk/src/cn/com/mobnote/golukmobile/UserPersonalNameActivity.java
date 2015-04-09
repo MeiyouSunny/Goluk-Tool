@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
+import cn.com.mobnote.util.console;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +19,8 @@ import android.widget.TextView;
 public class UserPersonalNameActivity extends Activity implements OnClickListener{
 
 	//title
-	Button btnBack,btnOk;
-	TextView mTextTitle;
+	Button btnBack;
+	TextView mTextTitle,mTextOk;
 	//body
 	EditText mEditName;
 	ImageView mImageNameRight;
@@ -34,12 +35,13 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 		initView();
 		//title
 		mTextTitle.setText("编辑昵称");
+		mTextOk.setText("确认");
 		
 	}
 	//初始化控件
 	public void initView(){
 		btnBack = (Button) findViewById(R.id.back_btn);
-		btnOk = (Button) findViewById(R.id.user_title_right);
+		mTextOk = (TextView) findViewById(R.id.user_title_right);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditName = (EditText) findViewById(R.id.user_personal_name_edit);
 		mImageNameRight = (ImageView) findViewById(R.id.user_personal_name_image);
@@ -47,7 +49,7 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 		 * 监听
 		 */
 		btnBack.setOnClickListener(this);
-		btnOk.setOnClickListener(this);
+		mTextOk.setOnClickListener(this);
 		mImageNameRight.setOnClickListener(this);
 	}
 	@Override
@@ -60,7 +62,7 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 			break;
 		//que认
 		case R.id.user_title_right:
-
+			console.toast("确认", this);
 			break;
 		//
 		case R.id.user_personal_name_image:

@@ -17,8 +17,8 @@ import android.widget.TextView;
 public class UserPersonalSignActivity extends Activity implements OnClickListener{
 
 	//title
-	Button btnBack,btnOk;
-	TextView mTextTitle;
+	Button btnBack;
+	TextView mTextTitle,mTextOk;
 	//body
 	EditText mEditBody;
 	
@@ -32,19 +32,20 @@ public class UserPersonalSignActivity extends Activity implements OnClickListene
 		initView();
 		//title
 		mTextTitle.setText("编辑签名");
+		mTextOk.setText("确认");
 		
 	}
 	//初始化控件
 	public void initView(){
 		btnBack = (Button) findViewById(R.id.back_btn);
-		btnOk = (Button) findViewById(R.id.user_title_right);
+		mTextOk = (TextView) findViewById(R.id.user_title_right);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditBody = (EditText) findViewById(R.id.user_personal_edit_sign_body);
 		/**
 		 * 监听
 		 */
 		btnBack.setOnClickListener(this);
-		btnOk.setOnClickListener(this);
+		mTextOk.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View arg0) {

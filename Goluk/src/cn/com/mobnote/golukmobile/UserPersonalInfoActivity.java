@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +19,7 @@ import android.widget.TextView;
 public class UserPersonalInfoActivity extends Activity implements OnClickListener{
 
 	//title
-	Button backBtn,rightBtn;
+	Button backBtn;
 	TextView centerTitle;
 	//姓名、id、头像、分享按钮
 	ImageView mImageHead,mImageShare;
@@ -27,6 +28,8 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 	LinearLayout mLinearSignAll;
 	TextView mTextSignDetail,mTextSex,mTextSinaName;
 	ImageView mImageSinaHead;
+	
+	LinearLayout mLayoutInfoTitle;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +47,9 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 	public void intiView(){
 		//title——返回按钮、中间标题、右边提示部分
 		backBtn = (Button) findViewById(R.id.back_btn);
-		rightBtn = (Button) findViewById(R.id.user_title_text);
-		centerTitle = (TextView) findViewById(R.id.user_title_right);
+//		rightBtn = (Button) findViewById(R.id.user_title_text);
+		mLayoutInfoTitle = (LinearLayout) findViewById(R.id.user_personal_info_title_layout);
+		centerTitle = (TextView) findViewById(R.id.user_title_text);
 		//body
 		mImageHead = (ImageView) findViewById(R.id.user_personal_info_image);
 		mImageShare = (ImageView) findViewById(R.id.user_personal_info_share);
@@ -62,7 +66,7 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 		 * 点击事件
 		 */
 		backBtn.setOnClickListener(this);
-		
+		mLayoutInfoTitle.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View arg0) {
@@ -73,8 +77,9 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 			finish();
 			break;
 		//title部分右边编辑按钮
-		case R.id.user_title_right:
-				
+		case R.id.user_personal_info_title_layout:
+				Intent it = new Intent(UserPersonalInfoActivity.this,UserPersonalEditActivity.class);
+				startActivity(it);
 				break;
 
 		default:

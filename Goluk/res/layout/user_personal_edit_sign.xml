@@ -24,6 +24,7 @@
 	    android:background="@color/white"
 	   android:hint="介绍一下自己吧！"
 	   android:textColor="@color/user_personal_black"
+	   android:paddingLeft="20dp"
 	    />
 	
 	<View

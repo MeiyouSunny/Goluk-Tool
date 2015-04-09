@@ -31,7 +31,35 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
-            <Button
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_personal_edit_title_layout"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                >
+                <ImageView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_personal_edit_title_image"
+                    android:src="@drawable/btn_user_edit_title"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    />
+
+                <TextView
+                    android:id="@+id/user_personal_edit_title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/user_personal_title_right"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+            <!-- <Button
                 android:id="@+id/user_title_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +71,7 @@
                 android:drawableLeft="@drawable/individual_center_preservation_icon"
                 android:text="@string/user_personal_title_right"
                 android:background="@null"
-                />
+                /> -->
             
         </RelativeLayout>
 </LinearLayout>

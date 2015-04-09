@@ -8,15 +8,17 @@
 	<!-- title -->
 	<include layout="@layout/user_title"/>
 	<!-- 个人信息 -->
-	<LinearLayout 
+	<RelativeLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical"
+	    android:id="@+id/user_personal_homepage_detail_layout"
 	    >
 	    <RelativeLayout 
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="10dp"
+	        android:id="@+id/user_personal_homepage_re"
 	        >
 	        <ImageView 
 	            android:layout_width="wrap_content"
@@ -51,13 +53,16 @@
 	        android:orientation="horizontal"
 	        android:layout_gravity="center_horizontal"
 	        android:layout_marginTop="16dp"
-	        android:layout_marginBottom="18dp"
+	        android:paddingBottom="18dp"
+	        android:layout_below="@id/user_personal_homepage_re"
+	        android:layout_centerHorizontal="true"
 	        >
 	        <TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:id="@+id/user_personal_homepage_name"
 	            android:text="BG1TTR"
+	            android:textColor="@color/user_personal_homepage_text"
 	            />
 	        <TextView 
 	            android:layout_width="wrap_content"
@@ -71,14 +76,16 @@
 	            android:layout_height="wrap_content"
 	            android:id="@+id/user_personal_homepage_share"
 	            android:text="56"
+	            android:textColor="@color/user_personal_homepage_text"
 	            />
 	        <TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="分享"
+	            android:textColor="@color/user_personal_homepage_text"
 	            />
 	    </LinearLayout>
-	</LinearLayout>
+	</RelativeLayout>
 	<!-- 我的视频 -->
 	<ListView 
 	    android:layout_width="match_parent"
