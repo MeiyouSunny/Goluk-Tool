@@ -187,10 +187,10 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	/**
 	 * 通知logic连接ipc
 	 */
-	public void sendLogicLinkIpc(){
+	private void sendLogicLinkIpc(){
 		//连接ipc热点wifi---调用ipc接口
 		console.log("通知logic连接ipc---sendLogicLinkIpc---1");
-		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,null);
+		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,"192.168.62.1");
 		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
 	
@@ -202,6 +202,9 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		mLoading.setVisibility(View.GONE);
 		//标识已连接ipc热点,可以点击下一步
 		mHasLinked = true;
+		
+		mWiFiListAdapter.changeWiFiStatus();
+		mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn);
 	}
 	
 	@Override
@@ -265,13 +268,12 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 			case 2:
 				if(state >= 0){
 					//连接成功
-					mWiFiListAdapter.changeWiFiStatus();
-					mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn);
 					//通知ipc连接成功
 					sendLogicLinkIpc();
 				}
 				else{
 					mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn_ash);
+					mHasLinked = false;
 					console.toast(message, mContext);
 				}
 			break;
