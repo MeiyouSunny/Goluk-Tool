@@ -4,13 +4,11 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
-import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
+import cn.com.mobnote.wifibind.WifiRsBean;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +16,9 @@ import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.Html;
 import android.view.View;
@@ -75,7 +76,6 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	private Button mCompleteBtn = null;
 	/** 开始使用状态 */
 	private boolean mIsComplete = false;
-	private WifiApAdmin mWifiApAdmin = null;
 	
 	public static Handler mPageHandler = null;
 	
@@ -107,6 +107,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
 		mCreateHotText = (TextView) findViewById(R.id.textView1);
 		mLinkedLayout = (RelativeLayout) findViewById(R.id.linked_layout);
+		mLinkedDesc = (TextView) findViewById(R.id.linked_desc);
 		mLinkImage = (ImageView) findViewById(R.id.imageView2);
 		mLinkAnim = (AnimationDrawable)mLinkImage.getBackground();
 		
@@ -125,10 +126,10 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 				switch(what){
 					case 1:
 						//测试热点创建成功
-						hotWiFiCreateSuccess();
+						//hotWiFiCreateSuccess();
 					break;
 					case 2:
-						sendLogicLinkIpc("");
+						//sendLogicLinkIpc("");
 					break;
 				}
 			}
@@ -154,9 +155,8 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		mWac = new WifiConnectManager(wm,this);
 		mWac.createWifiAP(wifiName,pwd);
 		
-		
 		//测试代码
-		mPageHandler.sendEmptyMessageDelayed(1, 5000);
+		//mPageHandler.sendEmptyMessageDelayed(1, 5000);
 	}
 	
 	/**
@@ -173,7 +173,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		mLinkImage.setBackgroundResource(R.drawable.connect_gif_line);
 		
 		//测试代码
-		mPageHandler.sendEmptyMessageDelayed(2, 5000);
+		//mPageHandler.sendEmptyMessageDelayed(2, 5000);
 	}
 	
 	/**
@@ -182,6 +182,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	private void sendLogicLinkIpc(String ip){
 		//连接ipc热点wifi---调用ipc接口
 		console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
+		mApp.mIpcIp = ip;
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,ip);
 		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
@@ -195,6 +196,16 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		mLinkedDesc.setText(Html.fromHtml("你的Goluk已<font color=\"#28b6a4\">成功连接</font>到手机"));
 		mCompleteBtn.setBackgroundResource(R.drawable.connect_mianbtn);
 		mIsComplete = true;
+		
+		//保存连接数据
+		WifiRsBean beans = new WifiRsBean();
+		beans.setIpc_ip("A");
+		beans.setIpc_mac("B");
+		beans.setIpc_ssid(WiFiInfo.AP_SSID);
+		beans.setPh_ip("D");
+		beans.setPh_mac("E");
+		beans.setPh_ssid(WiFiInfo.GolukSSID);
+		mWac.saveConfiguration(beans);
 	}
 	
 	@Override
@@ -214,13 +225,23 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 			break;
 			case R.id.complete_btn:
 				if(mIsComplete){
+					//关闭wifi绑定全部页面
+					SysApplication.getInstance().exit();
 					
+					//绑定完成,保存标识
+					SharedPreferences preferences = mContext.getSharedPreferences("ipc_wifi_bind",Context.MODE_PRIVATE);
+					Editor editor = preferences.edit();
+					editor.putBoolean("isbind",true);
+					// 提交修改
+					editor.commit();
+					
+					//跳转到ipc预览页面
+					Intent i = new Intent(mContext, CarRecorderActivity.class);
+					startActivity(i);
 				}
 				else{
 					console.toast("IPC连接中....", mContext);
 				}
-//				Intent setup = new Intent(WiFiLinkCompleteActivity.this,WiFiLinkStep2Activity.class);
-//				startActivity(setup);
 			break;
 		}
 	}
@@ -239,6 +260,13 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 						break;
 						case 1:
 							//ipc成功连接上热点
+							WifiRsBean[] bean = (WifiRsBean[])arrays;
+							if(null != bean){
+								console.log("IPC连接上WIFI热点回调---length---" + bean.length);
+								if(bean.length > 0){
+									sendLogicLinkIpc(bean[0].getIpc_ip());
+								}
+							}
 						break;
 						default:
 							console.toast(message, mContext);

@@ -42,7 +42,6 @@ public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
 	/** 说明文字 */
@@ -104,18 +103,10 @@ public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
 				finish();
 			break;
 			case R.id.keep_btn:
-				//跳转到步骤1页面
-				//Intent step = new Intent(WiFiLinkIndexActivity.this,WiFiLinkStep1Activity.class);
-				//startActivity(step);
-				
 				//新版需求,直接跳转到wifi列表页面
 				Intent list = new Intent(WiFiLinkIndexActivity.this,WiFiLinkListActivity.class);
 				startActivity(list);
 			break;
-//			case R.id.more_help_text:
-//				Intent help = new Intent(WiFiLinkIndexActivity.this,WiFiLinkHelpActivity.class);
-//				startActivity(help);
-//			break;
 		}
 	}
 	

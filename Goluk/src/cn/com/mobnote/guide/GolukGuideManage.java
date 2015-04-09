@@ -16,12 +16,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import cn.com.mobnote.golukmobile.GuideActivity;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserStartActivity;
 

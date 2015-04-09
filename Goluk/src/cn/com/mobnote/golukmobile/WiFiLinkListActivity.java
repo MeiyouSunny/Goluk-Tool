@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.list.WiFiListAdapter;
 import cn.com.mobnote.list.WiFiListManage;
@@ -80,9 +81,9 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	public WiFiListAdapter mWiFiListAdapter = null;
 	public ArrayList<WiFiListData> mWiFiListData = null;
 	/** 当前是否已连接ipc wifi */
-	private boolean mHasLinked = true;
+	private boolean mHasLinked = false;
 	/** 连接wifi名称 */
-	private String mLinkWiFiName = null;
+	public String mLinkWiFiName = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -133,7 +134,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		//启动动画
 		mIpcSignalAnim.start();
 		//修改title说明文字颜色
-		mDescTitleText.setText(Html.fromHtml("1.确认<font color=\"#28b6a4\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#28b6a4\"> Goluk xxx </font>的WiFi"));
+		mDescTitleText.setText(Html.fromHtml("1.确认<font color=\"#28b6a4\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#28b6a4\"> Goluk xxxxx </font>的WiFi"));
 	}
 
 	/**
@@ -144,7 +145,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
 		// 获取文件列表
-		mWac.scanWifiList("tcay");
+		mWac.scanWifiList("tcay_ap_ipc");
 	}
 	
 	/**
@@ -158,6 +159,9 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		//WiFiConnection.SaveWiFiName(wifiName);
 		//保存wifi名称
 		mLinkWiFiName = wifiName;
+		//保存ipc-wifi数据
+		WiFiInfo.AP_SSID = mLinkWiFiName;
+		WiFiInfo.AP_PWD = pwd;
 		
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
@@ -176,6 +180,9 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		//WiFiConnection.SaveWiFiName(wifiName);
 		//保存wifi名称
 		mLinkWiFiName = wifiName;
+		//保存ipc-wifi数据
+		WiFiInfo.AP_SSID = mLinkWiFiName;
+		WiFiInfo.AP_PWD = "";
 		
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
@@ -187,7 +194,8 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	/**
 	 * 通知logic连接ipc
 	 */
-	private void sendLogicLinkIpc(){
+	public void sendLogicLinkIpc(){
+		mLoading.setVisibility(View.VISIBLE);
 		//连接ipc热点wifi---调用ipc接口
 		console.log("通知logic连接ipc---sendLogicLinkIpc---1");
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,"192.168.62.1");
@@ -211,6 +219,14 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	protected void onResume(){
 		mApp.setContext(this,"WiFiLinkList");
 		super.onResume();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		console.log("系统返回键-------停止连接------1");
+		console.log("通知logic停止连接ipc---onDestroy---1");
+		mApp.mIPCControlManager.setIPCWifiState(false,null);
 	}
 	
 	@Override
@@ -246,6 +262,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	public void wifiCallBack(int type, int state, int process, String message,Object arrays) {
 		console.log("wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---" + message + "---arrays---" + arrays);
 		// TODO Auto-generated method stub
+		mLoading.setVisibility(View.GONE);
 		WifiRsBean[] beans = null;
 		switch(type){
 			case 1:
@@ -263,7 +280,6 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 				else{
 					console.toast(message, mContext);
 				}
-				mLoading.setVisibility(View.GONE);
 			break;
 			case 2:
 				if(state >= 0){
@@ -278,9 +294,15 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 				}
 			break;
 			default:
-				mLoading.setVisibility(View.GONE);
+				console.toast(message, mContext);
 			break;
 		}
 	}
 	
 }
+
+
+
+
+
+

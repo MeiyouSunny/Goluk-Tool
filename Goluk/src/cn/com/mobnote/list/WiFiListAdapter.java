@@ -6,8 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +18,6 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
 import cn.com.mobnote.util.console;
-import cn.com.mobnote.wifi.WiFiConnection;
-import cn.com.mobnote.wifi.WifiAutoConnectManager;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -49,7 +45,7 @@ public class WiFiListAdapter extends BaseAdapter{
 	private ArrayList<WiFiListData> mDataList = null;
 	private LayoutInflater mLayoutInflater = null;
 	/** 记录上一次点击的id */
-	private int resIndex = 0;
+	private int resIndex = -1;
 	/** 当前已链接的wifi */
 	private int linkIndex = -1;
 	
@@ -64,16 +60,25 @@ public class WiFiListAdapter extends BaseAdapter{
 	 * @return
 	 */
 	public void changeWiFiStatus(){
-		WiFiListData data = (WiFiListData)getItem(resIndex);
-		data.wifiStatus = true;
-		if(linkIndex > -1){
-			WiFiListData data2 = (WiFiListData)getItem(linkIndex);
-			data2.wifiStatus = false;
-			linkIndex = resIndex;
+		if(resIndex > -1){
+			WiFiListData data = (WiFiListData)getItem(resIndex);
+			data.wifiStatus = true;
+			if(linkIndex > -1){
+				WiFiListData data2 = (WiFiListData)getItem(linkIndex);
+				data2.wifiStatus = false;
+				linkIndex = resIndex;
+			}
+			this.notifyDataSetChanged();
 		}
-		this.notifyDataSetChanged();
 	}
 	
+	/**
+	 * 获取是否已连接ipc热点
+	 * @return
+	 */
+	public int getLinkIndex(){
+		return linkIndex;
+	}
 	
 	@Override
 	public int getCount() {
@@ -107,11 +112,18 @@ public class WiFiListAdapter extends BaseAdapter{
 		
 		if(data.wifiStatus){
 			linkIndex = position;
-			holder.wifiStatus.setBackgroundResource(R.drawable.wifi_linked);
+			holder.wifiStatus.setBackgroundResource(R.drawable.connect_wifi_icon);
+			holder.pwdStatus.setBackgroundResource(R.drawable.connect_lock_icon);
+			
+			//如果已连接IPC热点,通知logic连接ipc
+			((WiFiLinkListActivity)mContext).mLinkWiFiName = data.wifiName;
+			((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
 		}else{
-			holder.wifiStatus.setBackgroundResource(R.drawable.wifi_no_link);
+			holder.wifiStatus.setBackgroundResource(R.drawable.connect_wifi_icon_ash);
+			holder.pwdStatus.setBackgroundResource(R.drawable.connect_lock_icon_ash);
 		}
 		if(!data.hasPwd){
+			//有密码返回false
 			holder.pwdStatus.setVisibility(View.VISIBLE);
 		}
 		else{
@@ -180,8 +192,8 @@ public class WiFiListAdapter extends BaseAdapter{
 			WiFiListData data = (WiFiListData)getItem(index);
 			if(!data.wifiStatus){
 				//判断wifi有没有密码,没有密码直接连接
-				boolean hasPwd = true;
-				if(hasPwd){
+				boolean hasPwd = data.hasPwd;
+				if(!hasPwd){
 					inputTitleDialog(data);
 				}
 				else{
@@ -191,7 +203,8 @@ public class WiFiListAdapter extends BaseAdapter{
 				}
 			}
 			else{
-				console.toast("已连接" + data.wifiName, mContext);
+				console.toast("正在连接" + data.wifiName + "....", mContext);
+				//((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
 			}
 //			((VideoEditMusicActivity)mContext).mMusicListAdapter.notifyDataSetChanged();
 //			((VideoEditMusicActivity)mContext).changeNoMusicStatus(false,data.filePath);

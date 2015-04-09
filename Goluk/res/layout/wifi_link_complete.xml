@@ -60,13 +60,26 @@
 			android:text="@string/wifi_link_27_text" />
 	</RelativeLayout>
 	
+	<Button
+		android:id="@+id/complete_btn"
+		android:layout_width="match_parent"
+		android:layout_height="52dp"
+		android:layout_marginBottom="34dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/connect_mianbtn_ash"
+		android:textSize="20sp"
+		android:textColor="@color/white"
+		android:text="@string/wifi_link_28_text" />
+	
 	<LinearLayout
 		android:id="@+id/image_layout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/linked_layout"
+		android:layout_above="@id/complete_btn"
 		android:layout_centerHorizontal="true"
-		android:layout_marginTop="30dp"
+		android:layout_marginBottom="120dp"
 		android:orientation="horizontal">
 		<ImageView
 			android:id="@+id/imageView1"
@@ -89,18 +102,7 @@
 			android:contentDescription="@string/imgdes"/>
 	</LinearLayout>
 	
-	<Button
-		android:id="@+id/complete_btn"
-		android:layout_width="match_parent"
-		android:layout_height="52dp"
-		android:layout_marginBottom="34dp"
-		android:layout_marginLeft="20dp"
-		android:layout_marginRight="20dp"
-		android:layout_alignParentBottom="true"
-		android:background="@drawable/connect_mianbtn_ash"
-		android:textSize="20sp"
-		android:textColor="@color/white"
-		android:text="@string/wifi_link_28_text" />
+	
 	
 </RelativeLayout>
 

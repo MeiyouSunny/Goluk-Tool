@@ -23,6 +23,7 @@ import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
@@ -56,6 +57,8 @@ import com.rd.car.RecorderStateException;
 public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn{
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
+	/** ip地址 */
+	public String mIpcIp = null;
 	/** 保存上下文 */
 	private Context mContext = null;
 	/** 来源标示,用来强转activity */
@@ -520,10 +523,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						}
 						
 						//如果在wifi连接页面,通知连接成功
-						if(mPageSource == "WiFiLinkCreateHot"){
-							//((WiFiLinkListActivity)mContext).ipcLinkedCallBack();
-							Intent i = new Intent(mContext, CarRecorderActivity.class);
-							startActivity(i);
+						if(mPageSource == "WiFiLinkComplete"){
+							((WiFiLinkCompleteActivity)mContext).ipcLinkWiFiCallBack();
 						}
 					}
 					else{

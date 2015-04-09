@@ -46,6 +46,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -824,9 +825,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public void checkWiFiStatus(){
 		if(mWiFiStatus == 0){
 			//wifi未链接
-			//跳转到wifi连接首页
-			Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
-			startActivity(wifiIndex);
+			//判断是否已绑定ipc
+			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",MODE_PRIVATE);
+			//取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+			boolean isbind = preferences.getBoolean("isbind",false);
+			isbind = false;
+			if(!isbind){
+				//跳转到wifi连接首页
+				Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
+				startActivity(wifiIndex);
+			}
+			else{
+				console.toast("IPC已绑定等待连接...",mContext);
+			}
 		}
 		else{
 			//跳转到ipc页面
@@ -849,7 +860,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	@Override
@@ -998,6 +1008,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
+			
+			
 			
 			
 			
