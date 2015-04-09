@@ -248,6 +248,7 @@ public class WifiConnectManagerSupport {
 		WifiInfo info = wifiManager.getConnectionInfo();
 
 		WifiRsBean bean = new WifiRsBean();
+		bean.setPh_ssid(info.getSSID());
 		bean.setPh_bssid(info.getBSSID());
 		bean.setPh_mac(info.getMacAddress());
 		bean.setWifiSignal(getWifiLevel(info.getRssi()));
