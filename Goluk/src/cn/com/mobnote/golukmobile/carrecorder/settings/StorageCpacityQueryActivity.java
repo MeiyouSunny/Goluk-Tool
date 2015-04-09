@@ -53,10 +53,12 @@ public class StorageCpacityQueryActivity extends BaseActivity implements IPCMana
 		setTitle("容量查询");
 		
 		initView();
-		boolean flag = GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
-		System.out.println("YYY======queryRecordStorageStatus=====flag="+flag);
-		if(!flag){
-			
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			boolean flag = GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
+			System.out.println("YYY======queryRecordStorageStatus=====flag="+flag);
+			if(!flag){
+				
+			}
 		}
 	}
 	

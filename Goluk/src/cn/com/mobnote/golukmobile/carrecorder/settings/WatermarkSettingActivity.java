@@ -45,8 +45,10 @@ public class WatermarkSettingActivity extends BaseActivity implements OnClickLis
 		
 		initView();
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("watermark", this);
-		boolean a = GolukApplication.getInstance().getIPCControlManager().getWatermarkShowState();
-		System.out.println("YYY=================getWatermarkShowState============a="+a);
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			boolean a = GolukApplication.getInstance().getIPCControlManager().getWatermarkShowState();
+			System.out.println("YYY=================getWatermarkShowState============a="+a);
+		}
 	}
 	
 	private void initView(){

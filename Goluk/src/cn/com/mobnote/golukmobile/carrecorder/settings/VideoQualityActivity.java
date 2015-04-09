@@ -64,11 +64,13 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 		setListener();
 		
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("videoquality", this);
-		boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
-		System.out.println("YYY============getVideoEncodeCfg=========flag="+flag);
-		if(!flag){
-			//获取失败默认显示1080P
-			updateSensitivity(SensitivityType._1080h);
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
+			System.out.println("YYY============getVideoEncodeCfg=========flag="+flag);
+			if(!flag){
+				//获取失败默认显示1080P
+				updateSensitivity(SensitivityType._1080h);
+			}
 		}
 	}
 	
@@ -131,9 +133,10 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			mHighText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
 		}
 		
-		
-		boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(curType);
-		System.out.println("YYY==========curType=========flag="+flag);
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(curType);
+			System.out.println("YYY==========curType=========flag="+flag);
+		}
 	}
 	
 	@Override

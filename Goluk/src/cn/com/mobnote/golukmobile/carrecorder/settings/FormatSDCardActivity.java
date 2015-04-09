@@ -51,7 +51,9 @@ public class FormatSDCardActivity extends BaseActivity implements OnClickListene
 		super.onClick(v);
 		switch (v.getId()) {
 			case R.id.mFormat:
-				
+				if(GolukApplication.getInstance().getIpcIsLogin()){
+					
+				}
 				
 				if(null == mCustomFormatDialog){
 					mCustomFormatDialog = new CustomFormatDialog(this);
