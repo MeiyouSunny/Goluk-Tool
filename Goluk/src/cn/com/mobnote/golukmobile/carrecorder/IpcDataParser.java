@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.iflytek.speech.Version;
+
 import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VersionState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import android.text.TextUtils;
@@ -266,20 +269,25 @@ public class IpcDataParser {
 	public static VideoConfigState parseVideoConfigState(String json) {
 		try {
 			VideoConfigState mVideoConfigState = new VideoConfigState();
-			JSONObject obj = new JSONObject(json);
-			int bitstreams = obj.getInt("bitstreams");
-			String resolution = obj.getString("resolution");
-			int frameRate = obj.getInt("frameRate");
-			int bitrate = obj.getInt("bitrate");
-			int AudioEnabled = obj.getInt("audioEnabled");
-			
-			mVideoConfigState.bitstreams=bitstreams;
-			mVideoConfigState.resolution=resolution;
-			mVideoConfigState.frameRate=frameRate;
-			mVideoConfigState.bitrate=bitrate;
-			mVideoConfigState.AudioEnabled=AudioEnabled;
-			
-			return mVideoConfigState;
+			JSONArray array = new JSONArray(json);
+			if(null != array){
+				if(array.length() > 0){
+					JSONObject obj = array.getJSONObject(0);
+					int bitstreams = obj.getInt("bitstreams");
+					String resolution = obj.getString("resolution");
+					int frameRate = obj.getInt("frameRate");
+					int bitrate = obj.getInt("bitrate");
+					int AudioEnabled = obj.getInt("audioEnabled");
+					
+					mVideoConfigState.bitstreams=bitstreams;
+					mVideoConfigState.resolution=resolution;
+					mVideoConfigState.frameRate=frameRate;
+					mVideoConfigState.bitrate=bitrate;
+					mVideoConfigState.AudioEnabled=AudioEnabled;
+					
+					return mVideoConfigState;
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -312,6 +320,38 @@ public class IpcDataParser {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * 解析版本信息json
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月9日
+	 */
+	public static VersionState parseVersionState(String json){
+		try {
+			VersionState mVersionState = new VersionState();
+			JSONObject obj = new JSONObject(json);
+			if(null != obj){
+				int code = obj.optInt("code");
+				String name = obj.optString("name"); 
+				String contact = obj.optString("contact"); 
+				String location = obj.optString("location"); 
+				String memo = obj.optString("memo"); 
+				
+				mVersionState.code = code;
+				mVersionState.name = name;
+				mVersionState.contact = contact;
+				mVersionState.location = location;
+				mVersionState.memo = memo;
+			}
+			return mVersionState;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }

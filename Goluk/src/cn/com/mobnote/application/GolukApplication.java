@@ -491,6 +491,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					if(0 == param1){
 						//ipc控制初始化成功,可以看画面和拍摄8s视频
 						isIpcLoginSuccess = true;
+						if(SettingUtils.getInstance().getBoolean("systemtime", true)){//自动同步系统时间
+							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
+							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
+						}
 						console.log("IPC_TTTTTT=================Login Success===============");
 						//改变首页链接状态
 						if(null != mMainActivity){

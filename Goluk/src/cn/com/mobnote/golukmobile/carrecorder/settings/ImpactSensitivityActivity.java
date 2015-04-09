@@ -1,13 +1,16 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
  /**
   * 1.编辑器必须显示空白处
@@ -30,7 +33,8 @@ import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
   *
   * @author xuhw
   */
-public class ImpactSensitivityActivity extends BaseActivity implements OnClickListener{
+@SuppressLint("InflateParams")
+public class ImpactSensitivityActivity extends BaseActivity implements OnClickListener, IPCManagerFn{
 	private TextView mCloseText=null;
 	private TextView mLowText=null;
 	private TextView mMiddleText=null;
@@ -52,6 +56,7 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 		
 		initView();
 		updateSensitivity(SensitivityType.close);
+		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("sensitivity", this);
 	}
 	
 	/**
@@ -128,6 +133,24 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 	
 			default:
 				break;
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("sensitivity");
+	}
+
+	@Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
+			if(msg == IPC_VDCP_Msg_GetGSensorControlCfg){
+				System.out.println("YYY====IPC_VDCP_Msg_GetGSensorControlCfg====msg="+msg+"===param1="+param1+"==param2="+param2);
+				if(param1 == RESULE_SUCESS){
+					
+				}
+			}
 		}
 	}
 	

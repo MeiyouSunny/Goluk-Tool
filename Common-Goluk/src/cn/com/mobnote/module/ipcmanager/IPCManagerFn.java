@@ -103,7 +103,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_GetImprintShow = 1018;
 	/** 设置IPC水印显示状态 */
 	public static final int IPC_VDCP_Msg_SetImprintShow = 1019;
-
+	/** 获取IPC GSensor控制紧急录像策略 */
+	public static final int IPC_VDCP_Msg_GetGSensorControlCfg = 1020;
+	/** 设置IPC GSensor控制紧急录像策略 */
+	public static final int IPC_VDCP_Msg_SetGSensorControlCfg = 1021;
 	
 	
 	/**
@@ -179,6 +182,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetImprintShow = 1018;
 	/** 设置IPC水印显示状态 */
 	public static final int IPC_VDCPCmd_SetImprintShow = 1019;
+	/** 获取IPC GSensor控制紧急录像策略 */
+	public static final int IPC_VDCPCmd_GetGSensorControlCfg = 1020;
+	/** 设置IPC GSensor控制紧急录像策略 */
+	public static final int IPC_VDCPCmd_SetGSensorControlCfg = 1021;
 	
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }

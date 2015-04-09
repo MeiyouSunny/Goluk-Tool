@@ -108,7 +108,6 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 		findViewById(R.id.gshsdk_line).setOnClickListener(this);//格式化SDK卡
 		findViewById(R.id.hfccsz_line).setOnClickListener(this);//恢复出厂设置
 		findViewById(R.id.bbxx_line).setOnClickListener(this);//版本信息
-		findViewById(R.id.ipcbd_line).setOnClickListener(this);//摄像头绑定
 	}
 	
 	/**
@@ -195,8 +194,6 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					Intent bbxx = new Intent(SettingsActivity.this, VersionActivity.class);
 					startActivity(bbxx);
 					break;
-				case R.id.ipcbd_line://摄像头绑定
-					break;
 			default:
 				break;
 			}
@@ -264,6 +261,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 				if(RESULE_SUCESS == param1){
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
 					if(null != mVideoConfigState){
+						System.out.print("YYY=========IPC_VDCP_Msg_GetVedioEncodeCfg=======111111111===========");
 						if(1 == mVideoConfigState.AudioEnabled){
 							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 						}else{
