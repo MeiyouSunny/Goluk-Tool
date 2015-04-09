@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.util.console;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,6 +64,10 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 		//que认
 		case R.id.user_title_right:
 			console.toast("确认", this);
+			String name = mEditName.getText().toString();
+			Intent it = new Intent(UserPersonalNameActivity.this,UserPersonalEditActivity.class);
+			it.putExtra("itName", name);
+			startActivity(it);
 			break;
 		//
 		case R.id.user_personal_name_image:
@@ -73,4 +78,5 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 			break;
 		}
 	}
+
 }

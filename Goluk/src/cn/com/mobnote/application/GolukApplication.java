@@ -18,6 +18,8 @@ import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
+import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
+import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.UserTestRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
@@ -419,6 +421,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case 17:
 				if(mPageSource == "UserRepwd"){
 					((UserRepwdActivity)mContext).repwdCallBack(success,param2);
+				}
+				break;
+				
+			case 18:
+				if(mPageSource == "UserPersonalEdit"){
+					Log.i("aaa", "======"+param2);
+					((UserPersonalEditActivity)mContext).saveInfoCallBack(success, param2);
 				}
 				break;
 			

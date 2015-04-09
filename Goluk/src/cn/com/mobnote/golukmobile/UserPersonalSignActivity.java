@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,7 +58,10 @@ public class UserPersonalSignActivity extends Activity implements OnClickListene
 			break;
 		//que认
 		case R.id.user_title_right:
-
+			String body = mEditBody.getText().toString();
+			Intent it = new Intent(UserPersonalSignActivity.this,UserPersonalEditActivity.class);
+			it.putExtra("itBody", body);
+			startActivity(it);
 			break;
 
 		default:

@@ -222,7 +222,6 @@
 	        android:layout_margin="10dp"
 	        android:layout_toRightOf="@id/user_personal_edit_sign_text"
 	        android:maxLength="50"
-	        android:lines="3"
 	        android:textSize="11sp"
 	        android:textColor="@color/user_personal_black"
 	        />

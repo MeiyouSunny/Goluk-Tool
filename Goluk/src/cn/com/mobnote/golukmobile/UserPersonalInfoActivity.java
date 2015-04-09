@@ -63,6 +63,23 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 		mImageSinaHead = (ImageView) findViewById(R.id.user_personal_info_weibo_image);
 		
 		/**
+		 * 修改用户信息成功后，获得用户信息
+		 */
+		Intent intentSave = getIntent();
+		if(null != intentSave.getStringExtra("saveName")){
+			String name = intentSave.getStringExtra("saveName").toString();
+			mTextName.setText(name);
+		}
+		if(null != intentSave.getStringExtra("saveHead")){
+			String head = intentSave.getStringExtra("saveHead").toString();
+			//设置头像
+		}
+		if(null != intentSave.getStringExtra("saveSex")){
+			String sex = intentSave.getStringExtra("saveSex").toString();
+			mTextSex.setText(sex);
+		}
+		
+		/**
 		 * 点击事件
 		 */
 		backBtn.setOnClickListener(this);
