@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.iflytek.speech.Version;
+
 import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VersionState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import android.text.TextUtils;
@@ -317,6 +320,38 @@ public class IpcDataParser {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * 解析版本信息json
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月9日
+	 */
+	public static VersionState parseVersionState(String json){
+		try {
+			VersionState mVersionState = new VersionState();
+			JSONObject obj = new JSONObject(json);
+			if(null != obj){
+				int code = obj.optInt("code");
+				String name = obj.optString("name"); 
+				String contact = obj.optString("contact"); 
+				String location = obj.optString("location"); 
+				String memo = obj.optString("memo"); 
+				
+				mVersionState.code = code;
+				mVersionState.name = name;
+				mVersionState.contact = contact;
+				mVersionState.location = location;
+				mVersionState.memo = memo;
+			}
+			return mVersionState;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }
