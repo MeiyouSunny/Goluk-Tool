@@ -487,7 +487,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 				}
 				int tempTime=0;
 				// 如果wifi打开了
-				while (!wifiManager.isWifiEnabled()) {
+				while (wifiSupport.getConnResult()==null) {
 					try {
 						int temp_2 = 100;
 						Thread.sleep(temp_2);
