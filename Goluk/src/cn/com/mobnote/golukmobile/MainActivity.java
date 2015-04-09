@@ -1052,6 +1052,27 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			//保存经纬度
 			LngLat.lng = location.getLongitude();
 			LngLat.lat = location.getLatitude();
+			
+			//保存地址信息
+			GolukApplication.getInstance().mCurAddr = location.getAddrStr();
+			
+			//更新IPC经纬度
+			if(GolukApplication.getInstance().getIpcIsLogin()){
+				long lon = (long)(location.getLongitude()*3600000);
+				long lat = (long)(location.getLatitude()*3600000);
+				int speed = (int)location.getSpeed();
+				int direction = (int)location.getDirection();
+				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
+				System.out.println("YYY=========updateGPS=====a="+a);
+			}
+			
+			//更新行车记录仪地址
+			if(null != CarRecorderActivity.mHandler){
+				Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
+				msg.obj = location.getAddrStr();
+				CarRecorderActivity.mHandler.sendMessage(msg);
+			}
+			
 		}
 
 		public void onReceivePoi(BDLocation poiLocation) {

@@ -73,6 +73,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private String carrecorderCachePath="";
 	
 	private WifiApAdmin wifiAp;
+	/** 当前地址 */
+	public String mCurAddr=null;
 	
 	static {
 		System.loadLibrary("golukmobile");

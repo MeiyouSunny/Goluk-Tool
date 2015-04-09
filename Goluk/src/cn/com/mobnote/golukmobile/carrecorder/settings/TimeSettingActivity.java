@@ -4,7 +4,7 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog;
@@ -44,6 +44,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
   *
   * @author xuhw
   */
+@SuppressLint("InflateParams")
 public class TimeSettingActivity extends BaseActivity implements OnClickListener{
 	/** 显示年月日 */
 	private TextView mDateText=null;
@@ -130,7 +131,8 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 			case R.id.mDateLayout:
 				if(!systemtime){
 					DatePickerDialog datePicker=new DatePickerDialog(TimeSettingActivity.this, new OnDateSetListener() {
-						public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+						public void onDateSet(DatePicker view, int _year, int monthOfYear, int dayOfMonth) {
+							year = _year;
 							month = monthOfYear + 1;
 							day = dayOfMonth;
 							mDateText.setText(year + "-" + month + "-" + day);
@@ -163,30 +165,33 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		long time = 0;
-		if(systemtime){
-			time = System.currentTimeMillis()/1000;
-		}else{
-			SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-			 Date date;
-			try {
-				 Time t=new Time();
-				 t.setToNow();
-				 int sec = t.second;
-				String timestr = year + "-"+ month + "-" + day + " " + hour + ":" + minute + ":"+sec;
-				date = sdf.parse(timestr);
-				time = date.getTime()/1000;
-			} catch (ParseException e) {
-				System.out.println("YYY====str to time fail======22222222222222==");  
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			long time = 0;
+			if(systemtime){
+				time = System.currentTimeMillis()/1000;
+			}else{
+				SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+				 Date date;
+				try {
+					 Time t=new Time();
+					 t.setToNow();
+					 int sec = t.second;
+					String timestr = year + "-"+ month + "-" + day + " " + hour + ":" + minute + ":"+sec;
+					date = sdf.parse(timestr);
+					time = date.getTime()/1000;
+				} catch (ParseException e) {
+					System.out.println("YYY====str to time fail======22222222222222==");  
+				}
+			}
+			
+			
+			System.out.println("YYY=============time=="+time);
+			if(0 != time){
+				boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
+				System.out.println("YYY============setIPCSystemTime===============a="+a);
 			}
 		}
 		
-		
-		System.out.println("YYY=============time=="+time);
-		if(0 != time){
-			boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
-			System.out.println("YYY============setIPCSystemTime===============a="+a);
-		}
 	}
 	
 }

@@ -238,6 +238,7 @@
             
               <!-- 状态提示灯 -->
             <RelativeLayout
+                android:visibility="gone"
                 android:id="@+id/ztts_line"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
