@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
+ 
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 
@@ -14,6 +14,7 @@ import android.content.Context;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.NetworkInfo.State;
 import android.net.wifi.WifiManager;
 
 import android.os.Handler;
@@ -31,17 +32,26 @@ public class WifiConnectManager implements WifiConnectInterface {
 	private WifiConnectManagerSupport wifiSupport = null;
 	private Context context = null;
 	WifiConnectManagerSupport support = null;
-
+	ConnectivityManager connectivity=null;
 	// 构造函数
-	public WifiConnectManager(WifiManager wifiManager, WifiConnCallBack callback) {
+	public WifiConnectManager(WifiManager wifiManager, Object callback) {
 		this.wifiManager = wifiManager;
 		this.wifiSupport = new WifiConnectManagerSupport(wifiManager);
-		this.callback = callback;
+		this.callback = (WifiConnCallBack)callback;
 		this.context = (Context) callback;
 		// 初始化wifi工具类
 		support = new WifiConnectManagerSupport(wifiManager);
 	}
-
+//	// 构造函数
+//	public WifiConnectManager(WifiManager wifiManager, WifiConnCallBack callback,ConnectivityManager _connectivity) {
+//		this.wifiManager = wifiManager;
+//		this.wifiSupport = new WifiConnectManagerSupport(wifiManager);
+//		this.callback = callback;
+//		this.context =context;
+//		this.connectivity=_connectivity;
+//		// 初始化wifi工具类
+//		support = new WifiConnectManagerSupport(wifiManager);
+//	}
 	/**
 	 * 通过用户名，密码连接ipc
 	 * 
@@ -50,7 +60,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param type
 	 */
 	public void connectWifi(String ssid, String password, WifiCipherType type) {
-		connectWifi(ssid, password, "", type, 12000);
+		connectWifi(ssid, password, "", type, 40000);
 	}
 
 	/**
@@ -67,7 +77,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param password
 	 */
 	public void createWifiAP(String ssid, String password) {
-		createWifiAP(ssid, password, 140000);
+		createWifiAP(ssid, password, 4000);
 	}
 
 	/**
@@ -77,7 +87,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 *            关键字
 	 */
 	public void scanWifiList(String matching) {
-		scanWifiList(matching, 14000);
+		scanWifiList(matching, 8000);
 	}
 
 	/**
@@ -86,11 +96,11 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param beans
 	 */
 	public void saveConfiguration(WifiRsBean beans) {
-		saveConfiguration(beans, 14000);
+		saveConfiguration(beans, 3000);
 	}
 
 	public void isConnectIPC() {
-		isConnectIPC(14000);
+		isConnectIPC(4000);
 	}
 
 	// -------------------------------以上为封装后的对外接口----------------------------------------//
@@ -115,12 +125,12 @@ public class WifiConnectManager implements WifiConnectInterface {
 			}
 			// 创建热点成功
 			case 31: {
-				callback.wifiCallBack(3, 0, 0, "创建wifi热点成功", msg.obj);
+				callback.wifiCallBack(3, 0, 0, "获取wifiap列表成功", msg.obj);
 				break;
 			}
 			// 获取加入热点信息
 			case 32: {
-				callback.wifiCallBack(3, 0, 1, "创建wifi热点列表成功", msg.obj);
+				callback.wifiCallBack(3, 0, 1, "wifi匹配成功", msg.obj);
 				break;
 			}
 			// 保存wifi配置成功
@@ -152,16 +162,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 				callback.wifiCallBack(2, -1, msg.what, "连接wifi失败", null);
 				break;
 			}
-		 
-			case -31: {
-				callback.wifiCallBack(3, 0, 0, "创建wifi热点失败", msg.obj);
-				break;
-			}
-	 
-			case -32: {
-				callback.wifiCallBack(3, 0, 1, "创建wifi热点列表失败", msg.obj);
-				break;
-			}
+			 
 			case -41: {
 				callback.wifiCallBack(4, -1, 0, "保存wifi配置失败", msg.obj);
 				break;
@@ -291,16 +292,22 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 */
 	private int getConnState(String ssid,int outTime) {
 		int tempTime = 0;
-		while (wifiManager.getConnectionInfo() == null ||("\""+ssid+"\"").equals(wifiManager.getConnectionInfo().getSSID())) {
+		ConnectivityManager connectivity = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE); 
+		connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+		State state=null;
+		while (state!=State.CONNECTED ) {
 			
 			Log.e(TAG, "crssssssssss----------------"+wifiManager.getConnectionInfo().getSSID()+"");
 			try {
-				int temp_2 = 100;
+				int temp_2 = 200;
 				Thread.sleep(temp_2);
 				tempTime += temp_2;
 				if (tempTime > outTime) {
 					return 0;
 				}
+				connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
