@@ -148,6 +148,8 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 				finish();
 			break;
 			case R.id.jump_btn:
+				//跳过,就相当于不保存密码
+				WiFiInfo.AP_PWD = "";
 				Intent jump = new Intent(WiFiLinkModifyPwdActivity.this,WiFiLinkCreateHotActivity.class);
 				startActivity(jump);
 			break;
