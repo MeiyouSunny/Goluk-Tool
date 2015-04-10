@@ -71,8 +71,9 @@ local logicSendUrl = {};
 local moduleType = {web = "cdc_client",logic = "cdc_client"};
 
 --local urlTable = {[2302] = "http://192.168.3.197:9080/navidog4MeetTrans/addtalkgroup.htm",[2303] = "http://192.168.3.197:9080/cdcServer/exitGroup.htm"};
+local urlTable = {[2302] = "http://svr.xiaocheben.com/navidog4MeetTrans/addtalkgroup.htm",[2303] = "http://svr.xiaocheben.com/cdcServer/exitGroup.htm"};
 
-local urlTable = {[2302] = "http://server.xiaocheben.com/cdcServer/getGroupInfo.htm",[2303] = "http://server.xiaocheben.com/cdcServer/exitGroup.htm"};
+--local urlTable = {[2302] = "http://server.xiaocheben.com/cdcServer/getGroupInfo.htm",[2303] = "http://server.xiaocheben.com/cdcServer/exitGroup.htm"};
 
 
 --服务返回数据

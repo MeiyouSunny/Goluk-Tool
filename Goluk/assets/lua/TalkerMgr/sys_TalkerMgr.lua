@@ -398,7 +398,7 @@ local function TalkerMgr_getAidFromUserCenter()
 		"data":{"head":"7","nickname":"MB1ACP","sex":"0","uid":"447d2dd6-51f8-4a17-88a7-6bdb7cd855a3","aid":"11000000015"}, \
 		"info":{"aid":"11000000015","cfg_sp":"211.103.234.234","cfg_sp_port":"6660","cfg_mdsr":"211.103.234.234","cfg_mdsr_port":"3012","cfg_sp_lport":"6601","key":"MB1ACP","city":1,"success":true,"mid":"447d2dd6-51f8-4a17-88a7-6bdb7cd855a3"}}}'
 		]]--
-		
+		--[[
 		if isfirstUser == true then
 			userInfo = '{"result":"3","data":{"data":{"head": "7", "nickname": "MB1ABL", "aid": "213923293", "uid": "MB1ABL", "sex": "0"},\
 			"info":{"cfg_mdsr_port": "3012", "aid": "213923293", "cfg_sp": "211.103.234.238", "city": 1, "cfg_sp_lport": "6601", \
@@ -408,10 +408,19 @@ local function TalkerMgr_getAidFromUserCenter()
 			"info":{"cfg_mdsr_port": "3012", "aid": "213923411", "cfg_sp": "211.103.234.238", "city": 1, "cfg_sp_lport": "6601", \
 			"cfg_sp_port": "6660", "mid": "8313632b-9352-4855-8a3c-77e185427dcb", "cfg_mdsr": "211.103.234.238", "key": "MB1ADV", "success": true}}}'
 		end
-		
-		
-		
-		
+		]]
+
+		--[[
+		if isfirstUser == true then
+			userInfo = '{"result":"3","data":{"data":{"head": "7", "nickname": "MB1ABL", "aid": "213923293", "uid": "MB1ABL", "sex": "0"},\
+			"info":{"cfg_mdsr_port": "3012", "aid": "213923293", "cfg_sp": "211.103.234.238", "city": 1, "cfg_sp_lport": "6601", \
+			"cfg_sp_port": "6660", "mid": "e90a39c3-e375-4b09-8d96-d32a4eb2c6f9", "cfg_mdsr": "211.103.234.238", "key": "MB1ABL", "success": true}}}'
+		else 
+			userInfo = '{"result":"3","data":{"data":{"head": "7", "nickname": "MB1ADV", "aid": "213923411", "uid": "MB1ADV", "sex": "0"},\
+			"info":{"cfg_mdsr_port": "3012", "aid": "213923411", "cfg_sp": "211.103.234.238", "city": 1, "cfg_sp_lport": "6601", \
+			"cfg_sp_port": "6660", "mid": "ffa0f74d-cf91-4277-9516-78710686d8df", "cfg_mdsr": "211.103.234.238", "key": "MB1ADV", "success": true}}}'
+		end
+		]]
 		
 		-- other user
 		--[[
@@ -916,7 +925,7 @@ local function TalkerMgr_joinGroup( groupcfg )
 		opt.header["aid"] = gTalkerMgrObj.config.aid;
 		opt.method = "GET";
 		
-		
+		--[[
 		local sendDataLast = {};
 		sendDataLast["name"] = gUserName;
 		sendDataLast["sex"] = gUserSex;
@@ -932,7 +941,7 @@ local function TalkerMgr_joinGroup( groupcfg )
 		sendDataLast["speed"] = 0;
 		sendDataLast["orien"] = 0;
 		opt.data = sendDataLast;
-		
+		]]
 		DebugLog("grouplist getGroupidByType begin-------request 4444 groupid: " .. tostring(groupcfg.groupid));
 		
 		--tiros.base.http.HttpSend("TalkerMgr_GetGroupid", TalkerMgr_getSpecialGroupInfoHttpEvent,"getGroupid", opt, "http://192.168.3.90:8086/cdcServer/getGroupInfo.htm");

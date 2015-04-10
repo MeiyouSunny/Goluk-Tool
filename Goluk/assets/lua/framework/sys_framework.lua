@@ -39,7 +39,7 @@ local gsPublicUDPURL = "udp.xiaocheben.com:6001";
 --开发服务器airtalkee地址
 local gsDevAirTalkeeURL = "192.168.1.228";
 --测试服务器airtalkee地址
-local gsTestAirTalkeeURL = "211.103.234.238";
+local gsTestAirTalkeeURL = "211.103.234.234";
 --local gsTestAirTalkeeURL = "snsx.lbs8.com";
 --正式服务器airtalkee地址
 local gsPublicAirTalkeeURL = "sns.lbs8.com";
