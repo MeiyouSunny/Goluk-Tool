@@ -306,7 +306,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 				if (tempTime > outTime) {
 					return 0;
 				}
-				connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+				state=connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
