@@ -102,10 +102,20 @@ public class WifiConnectManager implements WifiConnectInterface {
 		saveConfiguration(beans, 30000);
 	}
 
-	public void isConnectIPC() {
-		isConnectIPC(30000);
-	}
 
+
+   /**关闭wifi 
+ * @return
+ */
+public boolean  closeWifi(){
+		wifiSupport.closeWifi();
+		return true;
+   }
+	
+
+public void isConnectIPC() {
+	isConnectIPC(30000);
+}
 	// -------------------------------以上为封装后的对外接口----------------------------------------//
 	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler() {
