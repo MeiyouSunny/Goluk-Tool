@@ -170,7 +170,6 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 		startActivity(complete);
 	}
 	
-	
 	@Override
 	protected void onResume(){
 		mApp.setContext(this,"WiFiLinkCreateHot");

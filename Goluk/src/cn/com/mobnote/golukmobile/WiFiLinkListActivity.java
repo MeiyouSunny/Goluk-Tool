@@ -144,8 +144,8 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		mLoading.setVisibility(View.VISIBLE);
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
-		// 获取文件列表
-		mWac.scanWifiList("tcay_ap_ipc");
+		// 获取文件列表tcay_ap_ipc
+		mWac.scanWifiList("");
 	}
 	
 	/**
@@ -197,11 +197,20 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	 * 通知logic连接ipc
 	 */
 	public void sendLogicLinkIpc(){
-		mLoading.setVisibility(View.VISIBLE);
-		//连接ipc热点wifi---调用ipc接口
-		console.log("通知logic连接ipc---sendLogicLinkIpc---1");
-		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,"192.168.62.1");
-		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+		//先获取ipc是否已连接
+		boolean isLogin = mApp.getIpcIsLogin();
+		console.log("ipc连接状态---WiFiLinkListActivity---b---" + isLogin);
+		if(!isLogin){
+			mLoading.setVisibility(View.VISIBLE);
+			//连接ipc热点wifi---调用ipc接口
+			console.log("通知logic连接ipc---sendLogicLinkIpc---1");
+			boolean b = mApp.mIPCControlManager.setIPCWifiState(true,"192.168.62.1");
+			console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+		}
+		else{
+			//ipc已连接
+			ipcLinkedCallBack();
+		}
 	}
 	
 	/**
@@ -227,8 +236,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	protected void onDestroy() {
 		super.onDestroy();
 		console.log("系统返回键-------停止连接------1");
-		console.log("通知logic停止连接ipc---onDestroy---1");
-		mApp.mIPCControlManager.setIPCWifiState(false,null);
+		//mApp.mIPCControlManager.setIPCWifiState(false,null);
 	}
 	
 	@Override

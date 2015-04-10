@@ -202,7 +202,7 @@ public class WiFiListAdapter extends BaseAdapter{
 				}
 			}
 			else{
-				console.toast("正在连接" + data.wifiName + "....", mContext);
+				console.toast("已连接" + data.wifiName + "....", mContext);
 				//((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
 			}
 //			((VideoEditMusicActivity)mContext).mMusicListAdapter.notifyDataSetChanged();

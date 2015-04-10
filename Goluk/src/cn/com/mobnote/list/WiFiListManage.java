@@ -67,8 +67,8 @@ public class WiFiListManage {
 			
 			if(wifiStatus){
 				//如果已连接IPC热点,通知logic连接ipc
-				((WiFiLinkListActivity)mContext).mLinkWiFiName = wifiName;
-				((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
+//				((WiFiLinkListActivity)mContext).mLinkWiFiName = wifiName;
+//				((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
 			}
 		}
 	}

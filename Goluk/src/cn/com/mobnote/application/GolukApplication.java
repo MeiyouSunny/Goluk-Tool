@@ -26,6 +26,7 @@ import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkModifyPwdActivity;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -204,6 +205,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public boolean getIpcIsLogin() {
 		return isIpcLoginSuccess;
+	}
+	
+	/**
+	 * 设置IPC退出登录
+	 */
+	public void setIpcLoginOut(){
+		isIpcLoginSuccess = false;
+		if(null != mMainActivity){
+			mMainActivity.wiFiLinkStatus(3);
+		}
 	}
 	
 	/**

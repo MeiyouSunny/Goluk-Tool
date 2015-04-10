@@ -64,6 +64,8 @@ public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
 		mApp.setContext(mContext,"WiFiLinkIndex");
 		//断开连接
 		mApp.mIPCControlManager.setIPCWifiState(false,null);
+		//改变Application-IPC退出登录
+		mApp.setIpcLoginOut();
 		//页面初始化
 		init();
 	}

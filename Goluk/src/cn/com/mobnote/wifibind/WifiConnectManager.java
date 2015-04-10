@@ -77,7 +77,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param password
 	 */
 	public void createWifiAP(String ssid, String password) {
-		createWifiAP(ssid, password, 4000);
+		createWifiAP(ssid, password, 20000);
 	}
 
 	/**

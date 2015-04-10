@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -150,6 +151,8 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		
 		//创建热点之前先断开ipc连接
 		mApp.mIPCControlManager.setIPCWifiState(false,null);
+		//改变Application-IPC退出登录
+		mApp.setIpcLoginOut();
 		
 		//调用韩峥接口创建手机热点
 		console.log("创建手机热点---startWifiAp---1");
@@ -192,6 +195,34 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	}
 	
 	/**
+	 * 退出页面设置
+	 */
+	private void backSetup(){
+		if(mIsComplete){
+			//如果连接上了 保存标识
+			saveBindMark();
+		}
+		else{
+			//没连接,关闭热点
+			
+			//返回关闭全部页面
+			SysApplication.getInstance().exit();
+		}
+	}
+	
+	/**
+	 * 保存wifi绑定标识
+	 */
+	private void saveBindMark(){
+		//绑定完成,保存标识
+		SharedPreferences preferences = mContext.getSharedPreferences("ipc_wifi_bind",Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putBoolean("isbind",true);
+		// 提交修改
+		editor.commit();
+	}
+	
+	/**
 	 * ipc连接成功回调
 	 */
 	public void ipcLinkWiFiCallBack(){
@@ -207,12 +238,27 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		beans.setPh_ssid(WiFiInfo.GolukSSID);
 		beans.setPh_pwd(WiFiInfo.GolukPWD);
 		mWac.saveConfiguration(beans);
+		
+		//保存绑定标识
+		saveBindMark();
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode,KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			console.log("按下系统返回键---WiFiLinkCompleteActivity---1");
+			//返回关闭全部页面
+			backSetup();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	};
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mApp.mIPCControlManager.setIPCWifiState(false,null);
+		console.log("通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
+		//mApp.mIPCControlManager.setIPCWifiState(false,null);
 	}
 	
 	@Override
@@ -227,20 +273,13 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		int id = v.getId();
 		switch(id){
 			case R.id.back_btn:
-				//返回
-				finish();
+				backSetup();
 			break;
 			case R.id.complete_btn:
 				if(mIsComplete){
+					saveBindMark();
 					//关闭wifi绑定全部页面
 					SysApplication.getInstance().exit();
-					
-					//绑定完成,保存标识
-					SharedPreferences preferences = mContext.getSharedPreferences("ipc_wifi_bind",Context.MODE_PRIVATE);
-					Editor editor = preferences.edit();
-					editor.putBoolean("isbind",true);
-					// 提交修改
-					editor.commit();
 					
 					//跳转到ipc预览页面
 					Intent i = new Intent(mContext, CarRecorderActivity.class);
