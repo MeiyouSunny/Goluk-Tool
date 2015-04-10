@@ -159,13 +159,15 @@ public class WifiConnectManagerSupport {
 	boolean openWifi(boolean restart) {
 		// 打开 wifi 功能
 		boolean bRet = true;
-		if (!wifiManager.isWifiEnabled()) {
-			bRet = wifiManager.setWifiEnabled(true);
-		}
+		
 //		如果强制重启
 		if(restart){
 			bRet = wifiManager.setWifiEnabled(false);
 			bRet = wifiManager.setWifiEnabled(true);
+		}else{
+			if(wifiManager.getWifiState()!=3){
+			 bRet = wifiManager.setWifiEnabled(true);
+			}
 		}
 		return bRet;
 	}

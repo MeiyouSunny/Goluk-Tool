@@ -6,7 +6,6 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 
