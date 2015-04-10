@@ -85,12 +85,14 @@ public class JsonUtil {
 		return null;
 	}
 
-	public static String getStartLiveJson() {
+	// vid 为视频id
+	public static String getStartLiveJson(String vid) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("active", "1");
 			obj.put("talk", "1");
 			obj.put("tag", "android");
+			obj.put("vid", vid);
 
 			return obj.toString();
 		} catch (Exception e) {
@@ -98,6 +100,18 @@ public class JsonUtil {
 		}
 
 		return null;
+	}
+
+	public static String getStopLiveJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("tag", "android");
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
 	}
 
 	public static String getStartLookLiveJson(String uid, String aid) {
@@ -220,15 +234,15 @@ public class JsonUtil {
 		}
 		return defaultValue;
 	}
-	
+
 	public static int getJsonIntValue(String message, String key, int defaultValue) {
 		try {
 			JSONObject obj = new JSONObject(message);
 			return getJsonIntValue(obj, key, defaultValue);
 		} catch (Exception e) {
-			
+
 		}
-		
+
 		return defaultValue;
 	}
 
@@ -276,6 +290,19 @@ public class JsonUtil {
 		}
 
 		return null;
+	}
+
+	public static String getLiveOKJson(String zid) {
+		try {
+			JSONObject json = new JSONObject();
+			json.put("zid", zid);
+			json.put("tag", 0);
+			return json.toString();
+		} catch (Exception e) {
+
+		}
+
+		return "";
 	}
 
 	public static LiveDataInfo parseLiveDataJson(String data) {

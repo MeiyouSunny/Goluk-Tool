@@ -443,6 +443,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					((MainActivity) mContext).callBack_LiveLookStart(false,success, param1, param2);
 				}
 				break;
+			case PageType_LiveLike:
+				// 直播点赞
+				if (null != mContext && mContext instanceof LiveActivity) {
+					((LiveActivity) mContext ).callBack_clickOK(success, param1, param2);
+				}
+				break;
 			
 		}
 	}

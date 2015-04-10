@@ -19,6 +19,10 @@ public interface ITalkFn extends IGolukCommFn {
 	public static final int Talk_CommCmd_TalkRelease = 4;
 	/** 网络恢复 */
 	public static final int Talk_CommCmd_RecoveryNetwork = 5;
+	/** 开始上报自己的位置(用于开启直播功能中使用)*/
+	public static final int Talk_Command_StartUploadPosition = 6;
+	/** 停止上报位置 (退出直播时功能使用) */
+	public static final int Talk_Command_StopUploadPosition = 7;
 
 	/**
 	 * 爱滔客回调事件

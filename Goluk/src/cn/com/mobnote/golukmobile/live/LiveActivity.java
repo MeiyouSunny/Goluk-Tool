@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -156,6 +157,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	private RelativeLayout mSpeakingLayout = null;
 
+	private static final String DEFAULT_PLAY_ID = "jyf_play_id100";
+
+	private boolean isSucessBind = false;
+
+	private boolean isKaiGeSucess = false;
+
+	/** 是否已经点过“赞” */
+	boolean isAlreadClickOK = false;
+
+	/** 自己预览地址 */
+	private static final String VIEW_PLAY = "rtsp://admin:123456@192.168.43.234/sub";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -179,7 +192,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// 地图初始化
 		initMap();
 		// 开始预览或开始直播
-		startVideoAndLive();
+		startVideoAndLive("");
 
 		drawPersonsHead();
 		// 加入爱滔客群组
@@ -229,12 +242,12 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	// 开启自己的直播,请求服务器 (在用户点击完设置后开始请求)
 	private void startLiveForServer() {
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson());
+				IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson(DEFAULT_PLAY_ID));
 		if (!isSucess) {
 			startLiveFailed();
 		} else {
 			// TODO 弹对话框
-			Toast.makeText(this, "发起直播", Toast.LENGTH_LONG).show();
+			showToast("请求凯哥的服务器");
 		}
 	}
 
@@ -252,7 +265,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			startLiveLookFailed();
 		} else {
 			// TODO 弹对话框
-			Toast.makeText(this, "查看他人直播", Toast.LENGTH_LONG).show();
+			showToast("查看他人直播：" + userInfo.uid);
 		}
 	}
 
@@ -330,6 +343,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				case 100:
 					mliveSettingWindow.show();
 					break;
+				case 101:
+					// 直播视频上传成功，现在请求服务器
+					// 请求直播
+					startLiveForServer();
+					break;
 				}
 			}
 		};
@@ -342,23 +360,23 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		@Override
 		public void onManagerBind(Context context, int nResult, String strResultInfo) {
 			if (nResult >= ResultConstants.SUCCESS) {
-
 			}
 		}
 
 		public void onLiveRecordBegin(Context context, int nResult, String strResultInfo) {
 			String message;
 			if (nResult >= ResultConstants.SUCCESS) {
+
 				message = "onLiveRecordBegin　视频录制上传成功" + strResultInfo;
+				showToast("视频上传成功");
+				mLiveVideoHandler.sendEmptyMessage(101);
 				LogUtil.e("", "jyf------TTTTT------------managerReceiver----1111:" + message);
 			} else {
 				message = "onLiveRecordBegin　视频录制上传失败 = " + strResultInfo;
-
 				LogUtil.e("", "jyf------TTTTT------------managerReceiver----2222:" + message);
-				// isStartLive = false;
 			}
 			GFileUtils.writeLiveLog(message);
-		};
+		}
 
 		@Override
 		public void onLiveRecordFailed(Context context, int nResult, String strResultInfo) {
@@ -373,6 +391,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 
 	};
+
+	private void showToast(String msg) {
+		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+	}
 
 	@Override
 	protected void onStart() {
@@ -390,10 +412,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	@Override
 	protected void onResume() {
 		super.onResume();
+		isSucessBind = true;
 		registerReceiver(managerReceiver, new IntentFilter(CarRecorderManager.ACTION_RECORDER_MESSAGE));
 		mApp.setTalkListener(this);
 		if (!isShowPop) {
-
 			isShowPop = true;
 		}
 	}
@@ -444,31 +466,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	/**
-	 * 视频播放初始化
-	 */
-	private void startVideoAndLive() {
-		// 视频事件回调注册
-		mRPVPalyVideo.setPlayerListener(this);
-		// 设置视频源
-		mRPVPalyVideo.setBufferTime(1000);
-		mRPVPalyVideo.setConnectionTimeout(30000);
-		if (isShareLive) {
-			mFilePath = "rtsp://admin:123456@192.168.43.234/sub";
-			mRPVPalyVideo.setDataSource(mFilePath);
-			mRPVPalyVideo.start();
-		} else {
-			// 查看别人的地址
-
-			// mFilePath = mDataInfo.playUrl;
-		}
-
-		// if (isShareLive) {
-		// // 开启直播
-		// this.startLive("test111");
-		// }
-	}
-
-	/**
 	 * 加入爱滔客群组
 	 * 
 	 * @author jiayf
@@ -481,8 +478,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 			final int cmd = isShareLive ? ITalkFn.Talk_CommCmd_JoinGroupWithInfo
 					: ITalkFn.Talk_CommCmd_JoinGroupWithInfo;
-			// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
-			// cmd, mJoinGroupJson);
+			
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd, mJoinGroupJson);
 		}
 
 	}
@@ -492,6 +489,29 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mRecordTimer.cancel();
 			mRecordTimer.purge();
 			mRecordTimer = null;
+		}
+	}
+
+	/**
+	 * 视频播放初始化
+	 */
+	private void startVideoAndLive(String url) {
+		// 视频事件回调注册
+		mRPVPalyVideo.setPlayerListener(this);
+		// 设置视频源
+		mRPVPalyVideo.setBufferTime(1000);
+		mRPVPalyVideo.setConnectionTimeout(30000);
+		if (isShareLive) {
+			mFilePath = "rtsp://admin:123456@192.168.43.234/sub";
+			mRPVPalyVideo.setDataSource(mFilePath);
+			mRPVPalyVideo.start();
+		} else {
+			// 查看别人的地址
+			// showToast("查看他人直播地址：" + url);
+			// mFilePath = url;
+			// mRPVPalyVideo.setDataSource(mFilePath);
+			// mRPVPalyVideo.start();
+
 		}
 	}
 
@@ -515,17 +535,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-
-							if (CarRecorderManager.isRTSPLiving()) {
-								try {
-									isStartLive = false;
-									CarRecorderManager.stopRTSPLive();
-								} catch (RecorderStateException e) {
-									e.printStackTrace();
-								}
-
-							}
-
+							stopRTSPUpload();
 						}
 					});
 					cancelTimer();
@@ -539,6 +549,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			return;
 		}
 		LogUtil.e("", "jyf------TTTTT------------start----1111");
+
 		if (!CarRecorderManager.isRTSPLiving()) {
 			try {
 				LogUtil.e("", "jyf------TTTTT------------start----2222");
@@ -549,11 +560,28 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				CarRecorderManager.setLiveMute(true);
 				CarRecorderManager.startRTSPLive();
 				isStartLive = true;
+
+				showToast("开始上传视频");
+
 				LogUtil.e("", "jyf------TTTTT------------start----3333");
 			} catch (RecorderStateException e) {
 				e.printStackTrace();
-				LogUtil.e("", "jyf------TTTTT------------start----444444");
+				LogUtil.e("", "jyf------TTTTT------------start----RTSP开始播放报异常....");
 			}
+		} else {
+			LogUtil.e("", "jyf------TTTTT------------start----RTSP正在播放，不可以开始....");
+		}
+	}
+
+	private void stopRTSPUpload() {
+		if (CarRecorderManager.isRTSPLiving()) {
+			try {
+				isStartLive = false;
+				CarRecorderManager.stopRTSPLive();
+			} catch (RecorderStateException e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 
@@ -631,6 +659,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
+	// 自己开启直播，返回接口
 	public void callBack_LiveLookStart(boolean isLive, int success, Object param1, Object param2) {
 		if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
 			liveFailedStart(isLive);
@@ -648,10 +677,12 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			liveFailedStart(isLive);
 			return;
 		}
-		
-		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, 6, "");
+
+		isKaiGeSucess = true;
+
+		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StartUploadPosition, "");
 		Toast.makeText(this, "开始上报位置", Toast.LENGTH_LONG).show();
-		
+
 		mJoinGroupJson = JsonUtil.getJoinGroup(dataInfo.groupType, dataInfo.membercount, dataInfo.title,
 				dataInfo.groupId, dataInfo.groupnumber);
 
@@ -662,26 +693,37 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	}
 
+	LiveDataInfo liveData = null;
+
 	/**
 	 * 视频直播数据返回
 	 * 
 	 * @param obj
 	 */
 	public void LiveVideoDataCallBack(int success, Object obj) {
-		console.log("视频直播数据返回--LiveVideoDataCallBack: success: " + success );
+		console.log("视频直播数据返回--LiveVideoDataCallBack: success: " + success);
 
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----111 : " + success);
 		if (isShareLive) {
 			return;
 		}
-		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----2222 : ");
+		if (null != obj && obj instanceof String) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----2222 : " + (String) obj);
+		}
+
 		if (1 != success) {
 			liveCallBackError();
 			return;
 		}
-		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----3333 : ");
+		if (null != obj && obj instanceof String) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----2222 : " + (String) obj);
+		} else {
+			liveCallBackError();
+			return;
+		}
+
 		// 数据成功
-		LiveDataInfo liveData = JsonUtil.parseLiveDataJson((String) obj);
+		liveData = JsonUtil.parseLiveDataJson((String) obj);
 		if (null == liveData) {
 			liveCallBackError();
 			return;
@@ -692,14 +734,25 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			return;
 		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
+
+		// liveData.active = 1;
+
 		if (1 == liveData.active) {
 			LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : ");
 			// 主动直播
+
+			// String testPlay = "rtmp://211.103.234.234/live/" +
+			// DEFAULT_PLAY_ID;
+			// liveData.playUrl = testPlay;
+
+			showToast("看别人地址：" + liveData.playUrl);
+			mRPVPalyVideo.setPlayerListener(this);
+			// 设置视频源
+			mRPVPalyVideo.setBufferTime(1000);
+			mRPVPalyVideo.setConnectionTimeout(30000);
 			mRPVPalyVideo.setDataSource(liveData.playUrl);
 			mRPVPalyVideo.start();
-			
-			
-			
+
 			// 开始直播
 			String groupId = liveData.groupId;
 			if (null == groupId || "".equals(groupId) || 0 >= groupId.length()) {
@@ -810,18 +863,50 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// 继续观看
 			mPlayLayout.setVisibility(View.GONE);
 			mPauseBtn.setVisibility(View.VISIBLE);
+			startLive(DEFAULT_PLAY_ID);
+			// 如果是开启直播，则停止上报自己的位置
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
+					"");
+
 			break;
 		case R.id.live_ok:
 			Toast.makeText(this, "点赞", Toast.LENGTH_LONG).show();
+			click_OK();
 			break;
 		case R.id.live_pause:
 			Toast.makeText(this, "暂停", Toast.LENGTH_LONG).show();
 			mPlayLayout.setVisibility(View.VISIBLE);
 			mPauseBtn.setVisibility(View.GONE);
+
+			stopRTSPUpload();
+			cancelTimer();
+			// 如果是开启直播，则停止上报自己的位置
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
+					"");
+
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void click_OK() {
+
+		if (isAlreadClickOK) {
+			return;
+		}
+		final String uid = isShareLive ? "c2ee35c5-4051-41ef-8ca2-09fe921d5efb" : currentUserInfo.uid;
+		final String okJson = JsonUtil.getLiveOKJson(uid);
+		LogUtil.e(null, "jyf----20150406----LiveActivity----click_OK----okJson : " + okJson);
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_LiveLike, okJson);
+
+		LogUtil.e(null, "jyf----20150406----LiveActivity----click_OK----isSucess : " + isSucess);
+	}
+
+	// 点赞接口回调
+	public void callBack_clickOK(int success, Object param1, Object param2) {
+
 	}
 
 	/**
@@ -830,27 +915,31 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private Runnable retryRunnable = new Runnable() {
 		@Override
 		public void run() {
-
 			if (null != mRPVPalyVideo) {
 				// mRPVPalyVideo.setVisibility(View.VISIBLE);
-				mRPVPalyVideo.setDataSource(getResources().getString(R.string.default_rtsp_url));
-				mRPVPalyVideo.start();
+				if (isShareLive) {
+					mRPVPalyVideo.setDataSource(VIEW_PLAY);
+					mRPVPalyVideo.start();
+				} else {
+					if (null != liveData) {
+						mRPVPalyVideo.setDataSource(liveData.playUrl);
+						mRPVPalyVideo.start();
+					}
+				}
 			}
-
-			// mRPVPalyVideo.start();
 		}
 	};
 
 	@Override
 	public void onPlayerPrepared(RtmpPlayerView arg0) {
-		console.log("live---onPlayerPrepared");
+		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerPrepared : ");
 		mRPVPalyVideo.setHideSurfaceWhilePlaying(true);
 	}
 
 	@Override
 	public boolean onPlayerError(RtmpPlayerView arg0, int arg1, int arg2, String arg3) {
 		// 视频播放出错
-		console.log("live---onPlayerError" + arg2 + "," + arg3);
+		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerError : " + arg2 + "  " + arg3);
 		mVideoLoading.setVisibility(View.GONE);
 		// mPlayLayout.setVisibility(View.VISIBLE);
 		return false;
@@ -859,23 +948,21 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	@Override
 	public void onPlayerCompletion(RtmpPlayerView rpv) {
 		// 视频播放完成
-		console.log("live---onPlayerCompletion");
+		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerCompletion : ");
 		// mPlayLayout.setVisibility(View.VISIBLE);
 		rpv.removeCallbacks(retryRunnable);
-
 		rpv.postDelayed(retryRunnable, 5000);
-
 	}
 
 	@Override
 	public void onPlayerBegin(RtmpPlayerView arg0) {
-		console.log("live---onPlayerBegin");
+		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerBegin : ");
 		mVideoLoading.setVisibility(View.GONE);
 	}
 
 	@Override
 	public void onPlayBuffering(RtmpPlayerView arg0, boolean start) {
-		console.log("live---onPlayBuffering---" + "arg1---" + start);
+		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayBuffering : ");
 		if (start) {
 			// 缓冲开始
 		} else {
@@ -885,7 +972,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	@Override
 	public void onGetCurrentPosition(RtmpPlayerView arg0, int arg1) {
-		// console.log("onGetCurrentPosition");
+		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onGetCurrentPosition : ");
 	}
 
 	/**
@@ -954,11 +1041,44 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @date Apr 2, 2015
 	 */
 	private void exit() {
-		final int cmd = isShareLive ? IPageNotifyFn.PageType_LiveStop : IPageNotifyFn.PageType_PlayStop;
-		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, cmd, "");
+
+		if (isShareLive) {
+			// 如果是开启直播，则停止上报自己的位置
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
+					"");
+			if (isKaiGeSucess) {
+				// 如果没有开启直播，则不需要调用服务器的退出直播
+				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop,
+						JsonUtil.getStopLiveJson());
+			}
+
+			try {
+				CarRecorderManager.stopRTSPLive();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} else {
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_QuitGroup, "");
+		}
+		if (null != mRPVPalyVideo) {
+			mRPVPalyVideo.cleanUp();
+			mRPVPalyVideo = null;
+		}
+		if (isSucessBind) {
+			unregisterReceiver(managerReceiver);
+		}
 		// 停止计时器
 		stopTrimVideo();
 		finish();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (KeyEvent.KEYCODE_BACK == keyCode) {
+			this.exit();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	/** 开启超时记录定时器 */
@@ -1146,6 +1266,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private final int MSG_SPEAKING_OTHER_END = 3;
 	/** 说话超时 */
 	private final int MSG_SPEEKING_TIMEOUT = 4;
+	private final int MSG_SPEEKING_BUSY = 5;
 
 	/** 用户是否成功加入爱滔客频道 */
 	private boolean mIsJoinGroupSucess = false;
@@ -1200,6 +1321,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_red);
 			mTalkingTv.setVisibility(View.VISIBLE);
 			mTalkingTv.setText("超时禁用中，请稍后...");
+			break;
+		case MSG_SPEEKING_BUSY:
+			mSpeakingLayout.setVisibility(View.VISIBLE);
+			mTalkingSign.setVisibility(View.VISIBLE);
+			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_red);
+			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setText("占线中，请稍候再试...");
 			break;
 		}
 
@@ -1282,10 +1410,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		case 2:// 本人说话请求被拒绝
 		case 3:// 本人说话请求正在排队
 				// 本人说话请求被拒绝
+			// 战线中
+			speekingUIRefresh(MSG_SPEEKING_BUSY, "", false);
 			break;
 		case 4:// 本人说话请求状态错误
 				// 说话请求状态错误
-
+			// 占线中
+			speekingUIRefresh(MSG_SPEEKING_BUSY, "", false);
 			break;
 		}
 	}
@@ -1347,9 +1478,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 				refreshPPTTTT();
 				// 请求直播
-				startLiveForServer();
-
-				this.startLive("test222");
+				// startLiveForServer();
+				// 开始视频上传
+				startLive(DEFAULT_PLAY_ID);
 			}
 		}
 	}

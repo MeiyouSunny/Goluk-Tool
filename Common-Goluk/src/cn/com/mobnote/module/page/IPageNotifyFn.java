@@ -54,6 +54,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static int PageType_PlayStop = 21;
 	/** 直播分享 */
 	public static int PageType_LiveShare = 22;
+	/** 直播点赞 */
+	public static int PageType_LiveLike = 23;
 
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2);
 
