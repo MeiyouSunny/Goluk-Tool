@@ -22,6 +22,7 @@ package cn.com.mobnote.entity;
 public class WiFiInfo {
 	public static String AP_SSID;
 	public static String AP_PWD;
+	public static String AP_MAC;
 	public static String GolukSSID;
 	public static String GolukPWD;
 }

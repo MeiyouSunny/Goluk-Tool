@@ -107,6 +107,12 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 		mIpcWiFiAnim.start();
 		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#28b6a4\">Goluk</font> WiFi热点信息"));
 		mWiFiNameText.setText(mLinkWiFiName);
+		
+		//赋值密码
+		String pwd = WiFiInfo.AP_PWD;
+		if(null != pwd && !"".equals(pwd)){
+			mWiFiPwdText.setText(pwd);
+		}
 	}
 	
 	/**

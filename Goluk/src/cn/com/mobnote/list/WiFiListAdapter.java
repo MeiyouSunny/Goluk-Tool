@@ -114,10 +114,6 @@ public class WiFiListAdapter extends BaseAdapter{
 			linkIndex = position;
 			holder.wifiStatus.setBackgroundResource(R.drawable.connect_wifi_icon);
 			holder.pwdStatus.setBackgroundResource(R.drawable.connect_lock_icon);
-			
-			//如果已连接IPC热点,通知logic连接ipc
-			((WiFiLinkListActivity)mContext).mLinkWiFiName = data.wifiName;
-			((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
 		}else{
 			holder.wifiStatus.setBackgroundResource(R.drawable.connect_wifi_icon_ash);
 			holder.pwdStatus.setBackgroundResource(R.drawable.connect_lock_icon_ash);
@@ -147,6 +143,7 @@ public class WiFiListAdapter extends BaseAdapter{
 	class onclick implements OnClickListener{
 		private int index;
 		private String wifiName;
+		private String mac;
 		public onclick(int index){
 			this.index = index;
 		}
@@ -161,6 +158,7 @@ public class WiFiListAdapter extends BaseAdapter{
 			inputServer.setFocusable(true);
 			
 			wifiName = data.wifiName.toString();
+			mac = data.mac.toString();
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setTitle(wifiName).setView(inputServer).setNegativeButton("取消", null);
@@ -169,7 +167,7 @@ public class WiFiListAdapter extends BaseAdapter{
 					String pwd = inputServer.getText().toString();
 					if(!"".equals(pwd)){
 						console.log("wifi---pwd---" + pwd);
-						((WiFiLinkListActivity)mContext).connectWiFi(wifiName,pwd);
+						((WiFiLinkListActivity)mContext).connectWiFi(wifiName,mac,pwd);
 					}
 					else{
 						console.toast("请输入WiFi密码", mContext);
@@ -199,7 +197,8 @@ public class WiFiListAdapter extends BaseAdapter{
 				else{
 					//直接连接wifi
 					String wifiName = data.wifiName.toString();
-					((WiFiLinkListActivity)mContext).connectWiFi(wifiName);
+					String mac = data.mac.toString();
+					((WiFiLinkListActivity)mContext).connectWiFi(wifiName,mac);
 				}
 			}
 			else{

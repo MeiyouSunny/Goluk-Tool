@@ -7,6 +7,7 @@ public class WifiRsBean {
 	 String ipc_ip="";   // IPC的IP地址
 	 String ph_ssid="";   // 手机的ssid
 	 String ph_mac="";   // 手机的mac地址
+	 String ph_pwd="";   // 手机的热点密码
 	 public String getPh_bssid() {
 		return ph_bssid;
 	}
@@ -61,6 +62,12 @@ public class WifiRsBean {
 	}
 	public void setPh_ip(String ph_ip) {
 		this.ph_ip = ph_ip;
+	}
+	public String getPh_pwd() {
+		return ph_pwd;
+	}
+	public void setPh_pwd(String ph_pwd) {
+		this.ph_pwd = ph_pwd;
 	}
 	public boolean isIsconn() {
 		return isconn;

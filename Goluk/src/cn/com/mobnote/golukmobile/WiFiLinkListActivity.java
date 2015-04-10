@@ -153,7 +153,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	 * @param wifiName
 	 * @param pwd
 	 */
-	public void connectWiFi(String wifiName,String pwd){
+	public void connectWiFi(String wifiName,String mac,String pwd){
 		mLoading.setVisibility(View.VISIBLE);
 		//保存wifi校验名称 chenxy
 		//WiFiConnection.SaveWiFiName(wifiName);
@@ -162,6 +162,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		//保存ipc-wifi数据
 		WiFiInfo.AP_SSID = mLinkWiFiName;
 		WiFiInfo.AP_PWD = pwd;
+		WiFiInfo.AP_MAC = mac;
 		
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
@@ -174,7 +175,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	 * 连接指定wifi
 	 * @param wifiName
 	 */
-	public void connectWiFi(String wifiName){
+	public void connectWiFi(String wifiName,String mac){
 		mLoading.setVisibility(View.VISIBLE);
 		//保存wifi校验名称 chenxy
 		//WiFiConnection.SaveWiFiName(wifiName);
@@ -183,6 +184,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		//保存ipc-wifi数据
 		WiFiInfo.AP_SSID = mLinkWiFiName;
 		WiFiInfo.AP_PWD = "";
+		WiFiInfo.AP_MAC = mac;
 		
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
