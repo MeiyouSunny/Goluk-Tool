@@ -17,6 +17,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -28,6 +29,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.MediaController.MediaPlayerControl;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.MixAudioInfo;
@@ -79,7 +81,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
 	private Button mBackBtn = null;
 	/** 下一步按钮 */
@@ -95,6 +96,9 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	private RelativeLayout mVideoLoadingLayout = null;
 	/** loading图片 */
 	private ImageView mLoadingImage = null;
+	/** loading文本 */
+	private TextView mLoadingText = null;
+	
 	/** 音乐按钮 */
 	private ImageButton mMusicBtn = null;
 	/** 进度条 */
@@ -165,8 +169,10 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		mPlayStatusImage = (ImageView)findViewById(R.id.play_image);
 		mVideoLoadingLayout = (RelativeLayout)findViewById(R.id.video_loading_layout);
 		mLoadingImage = (ImageView)findViewById(R.id.loading_img);
-		mVideoProgressBar = (ProgressBar) findViewById(R.id.video_progress_bar);
+		mLoadingText = (TextView)findViewById(R.id.loading_text);
 		mLoadingAnimation = (AnimationDrawable)mLoadingImage.getBackground();
+		
+		mVideoProgressBar = (ProgressBar) findViewById(R.id.video_progress_bar);
 		mMusicBtn = (ImageButton) findViewById(R.id.music_btn);
 		
 		//注册事件
@@ -200,26 +206,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * 视频播放初始化
 	 */
 	private void videoInit(){
-		/*
-		mSurfaceView = (SurfaceView)findViewById(R.id.video_surface);
-		//SurfaceHolder是SurfaceView的控制接口
-		mSurfaceHolder = mSurfaceView.getHolder();
-		//因为这个类实现了SurfaceHolder.Callback接口，所以回调参数直接this
-		mSurfaceHolder.addCallback(this);
-		//Surface类型
-		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		//显示的分辨率,不设置为视频默认
-		//mSurfaceHolder.setFixedSize(320, 220);
-		*/
-		
-//		assetsMusicPaths.add("");
-//		String assetsMusic = addAssets("想念", "1.mp3");
-//		console.log("music---" + assetsMusic);
-//		assetsMusicPaths.add(assetsMusic);
-//		assetsMusic = addAssets("漂亮男孩", "2.mp3");
-//		console.log("music---" + assetsMusic);
-//		assetsMusicPaths.add(assetsMusic);
-		
 		mVVPlayVideo = (FilterPlaybackView) this.findViewById(R.id.vvPlayVideo);
 		//内置滤镜最大id为Constants.FILTER_ID_WARM
 		int nFilterId = Constants.FILTER_ID_WARM + 1;
@@ -306,7 +292,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	/**
 	 * 上传本地视频
 	 */
-	@SuppressWarnings("static-access")
 	private void videoUpload(String path){
 		//将本地视频地址,转成logic可读路径fs1://
 		String localPath = FileUtils.javaToLibPath(path);
@@ -316,7 +301,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			//隐藏播放图片
 			mPlayStatusImage.setVisibility(View.GONE);
 			//显示loading布局
-			mVideoLoadingLayout.setVisibility(View.VISIBLE);
+			//mVideoLoadingLayout.setVisibility(View.VISIBLE);
 			//启动loading动画
 			mLoadingAnimation.start();
 			
@@ -347,8 +332,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * 保存视频
 	 */
 	protected void onSaveVideo() {
-		changeVideoPlayState();
-		
 		try {
 			// 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
 			EditorParam editorParam = new EditorParam();
@@ -365,33 +348,38 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
 			mVVPlayVideo.saveVideo(mVideoSavePath, editorParam,
 				new FilterPlaybackView.FilterVideoEditorListener() {
-					ProgressDialog m_pdSave;
+					//ProgressDialog m_pdSave;
 					long m_lUseTimeChecker;
 					
 					@Override
 					public void onFilterVideoSaveStart() {
-						m_pdSave = ProgressDialog.show(VideoEditActivity.this, "", "开始保存编辑。。。");
-						m_pdSave.setCanceledOnTouchOutside(false);
-						m_pdSave.setCancelable(true);
-						m_pdSave.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							@Override
-							public void onCancel(DialogInterface dialog) {
-								mVVPlayVideo.cancelSave();
-							}
-						});
+//						m_pdSave = ProgressDialog.show(VideoEditActivity.this, "", "开始保存编辑。。。");
+//						m_pdSave.setCanceledOnTouchOutside(false);
+//						m_pdSave.setCancelable(true);
+//						m_pdSave.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//							@Override
+//							public void onCancel(DialogInterface dialog) {
+//								mVVPlayVideo.cancelSave();
+//							}
+//						});
+						//显示视频导出loading
+						mVideoLoadingLayout.setVisibility(View.VISIBLE);
 						m_lUseTimeChecker = SystemClock.uptimeMillis();
 					}
 
 					@Override
 					public boolean onFilterVideoSaving(int nProgress,int nMax) {
-						m_pdSave.setMessage(String.format("保存编辑中%d%%...",nProgress));
+						//m_pdSave.setMessage(String.format("保存编辑中%d%%...",nProgress));
+						mLoadingText.setText("视频生成中" + nProgress + "%");
 						// 返回false代表取消保存。。。
 						return true;
 					}
 
 					@Override
 					public void onFilterVideoEnd(boolean bSuccess,boolean bCancel) {
-						m_pdSave.dismiss();
+						//隐藏视频导出loading
+						mVideoLoadingLayout.setVisibility(View.GONE);
+						//m_pdSave.dismiss();
 						//String strInfo = "";
 						if (bCancel) {
 							//strInfo = "已取消视频保存！";
@@ -401,7 +389,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 							//item.setVideoPath(AssetsFileUtils.getCreateTempFileDir(VideoEditActivity.this) + "/测试保存编辑和上传后.mp4");
 							//uploadVideo(item);
 							//保存成功,上传视频
-							videoUpload(mVideoSavePath);
+							//videoUpload(mVideoSavePath);
 						}
 						
 						//Toast.makeText(VideoEditActivity.this, strInfo,Toast.LENGTH_SHORT).show();
@@ -607,7 +595,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		//显示播放图片
 		mPlayStatusImage.setVisibility(View.VISIBLE);
 		//隐藏loading布局
-		mVideoLoadingLayout.setVisibility(View.GONE);
+		//mVideoLoadingLayout.setVisibility(View.GONE);
 		if(1 == success){
 			Toast.makeText(VideoEditActivity.this,"视频上传使用时间：" + (SystemClock.uptimeMillis() - uploadVideoTime) + "ms", Toast.LENGTH_SHORT).show();
 			//跳转视频分享页面
@@ -674,6 +662,25 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	}
 	 */
 	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			//判断是否正在上传
+			int t = mVideoLoadingLayout.getVisibility();
+			if(t == 0){
+				//正在上传
+				mVideoLoadingLayout.setVisibility(View.GONE);
+				mVVPlayVideo.cancelSave();
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	@Override
 	protected void onPause() {
 		if (mVVPlayVideo != null) {
@@ -719,10 +726,11 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			break;
 			case R.id.next_btn:
 				//下一步,跳转到视频分享页面
-				Log.e("","chxy send video share");
+				console.log("chxy send video share");
 				//停止进度条线程
 				stopProgressThread();
-				
+				//暂停播放器
+				changeVideoPlayState();
 				//保存编辑视频到本地
 				onSaveVideo();
 			break;

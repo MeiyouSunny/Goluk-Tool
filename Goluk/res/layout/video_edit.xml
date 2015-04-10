@@ -54,13 +54,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="204dp"
 		android:layout_below="@id/title_layout">
-		<!-- 视频播放容器
-		<SurfaceView
-			android:id="@+id/video_surface"
-			android:layout_width="match_parent"
-			android:layout_height="204dp">
-		</SurfaceView>
-		 -->
+		
 		<com.rd.car.editor.FilterPlaybackView
 			android:id="@+id/vvPlayVideo"
 			android:layout_width="match_parent"
@@ -80,7 +74,8 @@
 		android:id="@+id/play_layout"
 		android:layout_width="match_parent"
 		android:layout_height="204dp"
-		android:layout_below="@id/title_layout">
+		android:layout_below="@id/title_layout"
+		android:background="#00000000">
 		<!-- 视频播放按钮 -->
 		<ImageView
 			android:id="@+id/play_image"
@@ -90,23 +85,6 @@
 			android:contentDescription="@string/imgdes"
 			android:background="@drawable/video_play_btn"
 			android:visibility="gone"/>
-	</RelativeLayout>
-	
-	<!-- 视频loading -->
-	<RelativeLayout
-		android:id="@+id/video_loading_layout"
-		android:layout_width="match_parent"
-		android:layout_height="204dp"
-		android:layout_below="@id/title_layout"
-		android:visibility="gone">
-		<!-- 视频播放按钮 -->
-		<ImageView
-			android:id="@+id/loading_img"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:contentDescription="@string/imgdes"
-			android:background="@anim/loading"/>
 	</RelativeLayout>
 	
 	<!-- 方块条 -->
@@ -174,6 +152,46 @@
 			android:orientation="vertical" >
 		</LinearLayout>
 	</ScrollView>
+	
+	<!-- 视频loading -->
+	<RelativeLayout
+		android:id="@+id/video_loading_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clickable="true"
+		android:visibility="gone">
+		
+		<RelativeLayout
+			android:id="@+id/loading_bg"
+			android:layout_width="146dp"
+			android:layout_height="146dp"
+			android:layout_centerInParent="true"
+			android:background="@drawable/edit_loading_bg">
+			
+			<TextView
+				android:id="@+id/loading_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_alignParentBottom="true"
+				android:layout_marginBottom="18dp"
+				android:text="@string/video_export_text"
+				android:textSize="14sp"
+				android:textColor="#ffffff"/>
+			
+			<ImageView
+				android:id="@+id/loading_img"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_marginBottom="5dp"
+				android:layout_above="@id/loading_text"
+				android:contentDescription="@string/imgdes"
+				android:background="@anim/loading" />
+			
+		</RelativeLayout>
+	</RelativeLayout>
+	
 </RelativeLayout>
 
 
