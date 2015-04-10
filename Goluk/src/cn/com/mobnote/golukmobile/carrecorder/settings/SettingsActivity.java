@@ -65,19 +65,6 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	private void initView(){
 		mAutoRecordBtn = (Button)findViewById(R.id.zdxhlx);
 		mAudioBtn = (Button)findViewById(R.id.sylz);
-		if(GolukApplication.getInstance().getIpcIsLogin()){
-			boolean record = GolukApplication.getInstance().getIPCControlManager().getRecordState();
-			System.out.println("YYY=========getRecordState========="+record);
-			if(!record){//循环录制状态获取失败
-				mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-			}
-			
-			boolean audio = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
-			System.out.println("YYY=========getVideoEncodeCfg========="+audio);
-			if(!audio){//声音录制状态获取失败
-				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-			}
-		}
 
 //		boolean ztts = SettingUtils.getInstance().getBoolean("ztts", true);//状态提示灯初始化
 //		if(ztts){
@@ -217,6 +204,27 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 		}else{
 			findViewById(id).setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 			SettingUtils.getInstance().putBoolean(btn, true);
+		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
+		if(null != mVideoConfigState){
+			if(1 == mVideoConfigState.AudioEnabled){
+				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+			}else{
+				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			}
+		}else{
+			mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+		}
+		
+		if(!GolukApplication.getInstance().getAutoRecordState()){
+			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+		}else{
+			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 		}
 	}
 	

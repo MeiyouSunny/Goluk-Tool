@@ -149,7 +149,11 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 						public void onTimeSet(TimePicker view, int hourOfDay, int _minute) {
 							hour = hourOfDay;
 							minute = _minute;
-							mTimeText.setText(hourOfDay+":"+minute);
+							if(minute < 10){
+								mTimeText.setText(hourOfDay+":0"+minute);
+							}else{
+								mTimeText.setText(hourOfDay+":"+minute);
+							}
 						}
 					}, hour, minute, true);
 					time.show();

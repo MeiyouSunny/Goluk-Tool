@@ -17,6 +17,7 @@ import com.rd.car.RecorderStateException;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.UserTestRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
@@ -24,7 +25,10 @@ import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
+import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity.SensitivityType;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
@@ -71,6 +75,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean isIpcLoginSuccess = false;
 	/** 行车记录仪缓冲路径 */
 	private String carrecorderCachePath="";
+	/** 音视频配置信息 */
+	private VideoConfigState mVideoConfigState=null;
+	/** 自动循环录制状态标识 */
+	private boolean autoRecordFlag=false;
+	
 	
 	private WifiApAdmin wifiAp;
 	/** 当前地址 */
@@ -127,6 +136,46 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public String getCarrecorderCachePath(){
 		return this.carrecorderCachePath;
+	}
+	
+	/**
+	 * 设置音视频配置信息
+	 * @param videocfg
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public void setVideoConfigState(VideoConfigState videocfg){
+		this.mVideoConfigState=videocfg;
+	}
+	
+	/**
+	 * 获取音视频配置信息
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public VideoConfigState getVideoConfigState(){
+		return this.mVideoConfigState;
+	}
+	
+	/**
+	 * 设置自动循环录制开关
+	 * @param auto
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public void setAutoRecordState(boolean auto){
+		this.autoRecordFlag=auto;
+	}
+	
+	/**
+	 * 获取自动循环录制状态
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public boolean getAutoRecordState(){
+		return this.autoRecordFlag;
 	}
 	
 	/**
@@ -493,7 +542,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					if(0 == param1){
 						//ipc控制初始化成功,可以看画面和拍摄8s视频
 						isIpcLoginSuccess = true;
-						if(SettingUtils.getInstance().getBoolean("systemtime", true)){//自动同步系统时间
+						//获取音视频配置信息
+						getVideoEncodeCfg();
+						//发起获取自动循环录制状态
+						updateAutoRecordState();
+						//自动同步系统时间
+						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
 							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
 							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
 						}
@@ -533,6 +587,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case IPC_VDCP_Msg_DeviceStatus:
 					//msg = 1006 查询设备状态
 				break;
+				case IPC_VDCP_Msg_GetVedioEncodeCfg:
+					if(param1 == RESULE_SUCESS){
+						VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String)param2);
+						if(null != videocfg){
+							mVideoConfigState = videocfg;
+							System.out.println("YYY================application===1111111111===");
+						}
+					}
+				break;
+				case IPC_VDCP_Msg_SetVedioEncodeCfg:
+					if(param1 == RESULE_SUCESS){
+						getVideoEncodeCfg();
+					}
+					break;
+				case IPC_VDCP_Msg_GetRecordState:
+					if(param1 == RESULE_SUCESS){
+						autoRecordFlag = IpcDataParser.getAutoRecordState((String)param2);
+					}
+					break;
+				case IPC_VDCP_Msg_StartRecord:
+					autoRecordFlag = true;
+					break;
+				case IPC_VDCP_Msg_StopRecord:
+					autoRecordFlag = false;
+					break;
+					
 			}
 		}
 		
@@ -587,4 +667,39 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		boolean isFirstComeApp = preferences.getBoolean(key, false); 
 		return isFirstComeApp;
 	}
+	
+	/**
+	 * 获取音视频配置信息
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	private void getVideoEncodeCfg(){
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
+					System.out.println("YYY============getVideoEncodeCfg=========flag="+flag);
+				}
+			}).start();
+		}
+	}
+	
+	/**
+	 * 发起获取自动循环录制状态
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	private void updateAutoRecordState(){
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					boolean record = GolukApplication.getInstance().getIPCControlManager().getRecordState();
+					System.out.println("YYY=========getRecordState========="+record);
+				}
+			}).start();
+		}
+	}
+	
 }

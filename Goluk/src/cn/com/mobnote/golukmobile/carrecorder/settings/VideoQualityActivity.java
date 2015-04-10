@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
@@ -53,6 +51,8 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 	public  static enum SensitivityType{_1080h, _1080l, _720h, _720l};
 	/** 保存选中视频类型 */
 	private SensitivityType curType=SensitivityType._1080h;
+	/** 音视频配置信息 */
+	private VideoConfigState mVideoConfigState=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +62,8 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 		
 		initView();
 		setListener();
-		
+			
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("videoquality", this);
-		if(GolukApplication.getInstance().getIpcIsLogin()){
-			boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
-			System.out.println("YYY============getVideoEncodeCfg=========flag="+flag);
-			if(!flag){
-				//获取失败默认显示1080P
-				updateSensitivity(SensitivityType._1080h);
-			}
-		}
 	}
 	
 	/**
@@ -133,10 +125,8 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			mHighText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
 		}
 		
-		if(GolukApplication.getInstance().getIpcIsLogin()){
-			boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(curType);
-			System.out.println("YYY==========curType=========flag="+flag);
-		}
+		
+		
 	}
 	
 	@Override
@@ -162,9 +152,48 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
+		if(null != mVideoConfigState){
+			if("1080P".equals(mVideoConfigState.resolution)){
+				if(8192 == mVideoConfigState.bitrate){
+					updateSensitivity(SensitivityType._1080h);
+				}else{
+					updateSensitivity(SensitivityType._1080l);
+				}
+			}else{
+				if(6144 == mVideoConfigState.bitrate){
+					updateSensitivity(SensitivityType._720h);
+				}else{
+					updateSensitivity(SensitivityType._720l);
+				}
+			}
+		}
+	}
+	
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if(GolukApplication.getInstance().getIpcIsLogin()){
+					if(SensitivityType._1080h == curType){
+						mVideoConfigState.bitrate=8192;
+					}else if(SensitivityType._1080l == curType){
+						mVideoConfigState.bitrate=5120;
+					}else if(SensitivityType._720h == curType){
+						mVideoConfigState.bitrate=6144;
+					}else{
+						mVideoConfigState.bitrate=4096;
+					}
+					boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);
+					System.out.println("YYY==========curType=========flag="+flag);
+				}
+			}
+		}).start();
+
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("videoquality");
 	}
 
@@ -203,20 +232,9 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			//设置IPC系统音视频编码配置
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){
 				if(param1 == RESULE_SUCESS){
-					if(null != CarRecorderActivity.mHandler){
-						Message mm = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.UPDATEVIDEORESOLUTIONS);
-						if(SensitivityType._1080h == curType || SensitivityType._1080l == curType){
-							mm.arg1=1080;
-						}else{
-							mm.arg1=720;
-						}
-						CarRecorderActivity.mHandler.sendMessage(mm);
-					}
-					
-					System.out.println("YYY==========IPC_VDCP_Msg_SetVedioEncodeCfg=====22222222222222222==RESULE_SUCESS===");
-				}else{
-					System.out.println("YYY==========IPC_VDCP_Msg_SetVedioEncodeCfg=====3333===fail==");
+					GolukApplication.getInstance().setVideoConfigState(mVideoConfigState);
 				}
+				System.out.println("YYY================IPC_VDCP_Msg_SetVedioEncodeCfg=============param1="+param1);
 			}
 		}
 	}

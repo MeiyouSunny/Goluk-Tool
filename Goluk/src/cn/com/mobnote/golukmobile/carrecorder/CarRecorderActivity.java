@@ -35,7 +35,6 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity;
-import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity.SensitivityType;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SensorDetector;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -89,9 +88,6 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	public static final int MOUNTS = 114;
 	/** 精彩视频下载检查计时 */
 	public static final int DOWNLOADWONDERFULVIDEO = 119;
-	/** 更新视频分辨率显示状态 */
-	public static final int UPDATEVIDEORESOLUTIONS = 120;
-	
 
 	public enum VideoType {
 		mounts, emergency, idle
@@ -145,10 +141,6 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	public static final int EMERGENCYQUERY = 115;
 	/** 紧急视频排队查询记录时间（10s超时） */
 	private int emergencyQueryTimeout = 0;
-	/** 开启直播上传 */
-	public static final int STARTLIVE = 116;
-	/** 更新速度 */
-	public static final int SPEED = 117;
 	/** 更新位置信息 */
 	public static final int ADDR = 118;
 	/** 图像预览是否成功 */
@@ -209,13 +201,6 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				case EMERGENCYQUERY:
 					emergencyQuery();
 					break;
-				case STARTLIVE:
-					String aid = (String) msg.obj;
-
-					break;
-				case SPEED:
-					// updateSpeed(msg.arg1);
-					break;
 				case ADDR:
 					String addr = (String) msg.obj;
 					if(!TextUtils.isEmpty(addr)){
@@ -227,13 +212,6 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					break;
 				case DOWNLOADWONDERFULVIDEO:
 					wonderfulVideoDownloadShow();
-					break;
-				case UPDATEVIDEORESOLUTIONS:
-					if(1080 == msg.arg1){
-						mVideoResolutions.setBackgroundResource(R.drawable.icon_hd1080);
-					}else{
-						mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
-					}
 					break;
 
 				}
@@ -254,21 +232,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager()
 				.addIPCManagerListener("main", this);
-		getVideoResolutionsInfo();
-	}
-	
-	/**
-	 * 获取视频分辨率信息
-	 * @author xuhw
-	 * @date 2015年4月9日
-	 */
-	private void getVideoResolutionsInfo(){
-		if(null == mVideoConfigState){
-			if(GolukApplication.getInstance().getIpcIsLogin()){
-				boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
-				System.out.println("YYY============getVideoEncodeCfg=========flag="+flag);
-			}
-		}
+		
 	}
 
 	/**
@@ -365,6 +329,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				new CustomWifiDialog(CarRecorderActivity.this).show();
 			}
 		});
+		
 	}
 
 	/**
@@ -775,6 +740,14 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			}
 		}
 		
+		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
+		if(null != mVideoConfigState){
+			if("1080P".equals(mVideoConfigState.resolution)){
+				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd1080);
+			}else{
+				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
+			}
+		}
 	};
 
 	@Override
@@ -1097,7 +1070,6 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				&& IPC_VDCP_Msg_Init == msg && 0 == param1) {
 			ipcIsOk = true;
 			updateVideoState();
-			getVideoResolutionsInfo();
 			if (!ipcFirstLogin) {
 				ipcFirstLogin = true;
 				if (!isConnecting) {
@@ -1294,12 +1266,12 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		//获取IPC系统音视频编码配置
 		case IPC_VDCP_Msg_GetVedioEncodeCfg:
 			if(param1 == RESULE_SUCESS){
-				mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
-				if(null != mVideoConfigState){
+				final VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String)param2);
+				if(null != videocfg){
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							if("1080P".equals(mVideoConfigState.resolution)){
+							if("1080P".equals(videocfg.resolution)){
 								mVideoResolutions.setBackgroundResource(R.drawable.icon_hd1080);
 							}else{
 								mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);

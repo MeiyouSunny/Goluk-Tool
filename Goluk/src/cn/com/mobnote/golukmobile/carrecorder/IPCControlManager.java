@@ -272,6 +272,18 @@ public class IPCControlManager implements IPCManagerFn{
 	}
 	
 	/**
+	 * 设置IPC系统音视频编码配置
+	 * @param mVideoConfigState
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public boolean setVideoEncodeCfg(VideoConfigState mVideoConfigState){
+		String json = JsonUtil.getVideoConfig(mVideoConfigState);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
+	}
+	
+	/**
 	 * 设置音频开关
 	 * @param mVideoConfigState
 	 * @return

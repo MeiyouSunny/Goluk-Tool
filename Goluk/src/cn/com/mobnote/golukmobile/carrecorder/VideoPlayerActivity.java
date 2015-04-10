@@ -158,10 +158,12 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			public void onStopTrackingTouch(SeekBar arg0) {
 				int progress = mSeekBar.getProgress();
 				System.out.println("TTT===========aaaaaa==========");
-				mMediaPlayer.seekTo(progress);
-				if(!mMediaPlayer.isPlaying()){
-					mMediaPlayer.start();
-					System.out.println("TTT===========bbbbbb==========");
+				if(null != mMediaPlayer){
+					mMediaPlayer.seekTo(progress);
+					if(!mMediaPlayer.isPlaying()){
+						mMediaPlayer.start();
+						System.out.println("TTT===========bbbbbb==========");
+					}
 				}
 			}
 				
@@ -288,24 +290,33 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 				exit();
 				break;
 			case R.id.mPlayBtn:
-				if(mMediaPlayer.isPlaying()){
-					mMediaPlayer.pause();
-					mPlayBigBtn.setVisibility(View.VISIBLE);
-					mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
-					
+				if(null != mMediaPlayer){
+					if(mMediaPlayer.isPlaying()){
+						mMediaPlayer.pause();
+						mPlayBigBtn.setVisibility(View.VISIBLE);
+						mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
+						
+					}else{
+						mMediaPlayer.start();
+						mPlayBigBtn.setVisibility(View.GONE);
+						mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+					}
 				}else{
-					mMediaPlayer.start();
-					mPlayBigBtn.setVisibility(View.GONE);
-					mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+					playVideo();
 				}
 				break;
 			case R.id.mPlayBigBtn:
-				if(mMediaPlayer.isPlaying()){
-					mMediaPlayer.pause();
+				if(null != mMediaPlayer){
+					if(mMediaPlayer.isPlaying()){
+						mMediaPlayer.pause();
+					}else{
+						mMediaPlayer.start();
+						mPlayBigBtn.setVisibility(View.GONE);
+					}
 				}else{
-					mMediaPlayer.start();
-					mPlayBigBtn.setVisibility(View.GONE);
+					playVideo();
 				}
+				
 				break;
 	
 			default:
@@ -327,7 +338,14 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
-		playVideo();
+		mSurfaceHolder=arg0;
+		if(null == mMediaPlayer){
+			playVideo();
+		}else{
+			mMediaPlayer.setDisplay(arg0);
+			mMediaPlayer.start();
+		}
+		
 		if(!isGet){
 			isGet=true;
 			mHandler.sendEmptyMessage(GETPROGRESS);
@@ -336,7 +354,9 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
+		if(null != mMediaPlayer){
+			mMediaPlayer.pause();
+		}
 	}
 	
 	/**
@@ -349,7 +369,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		try {
 			mMediaPlayer = new MediaPlayer(this);
 			mMediaPlayer.setBufferSize(1024);
-			mMediaPlayer.setLooping(true);
+//			mMediaPlayer.setLooping(true);
 			mMediaPlayer.setDataSource(playUrl);
 			mMediaPlayer.setDisplay(mSurfaceHolder);
 			mMediaPlayer.setOnInfoListener(this);
@@ -381,6 +401,13 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		mTotalTime.setText(long2TimeStr(duration));
 		mSeekBar.setMax((int)duration);
 		mSeekBar.setProgress(0);
+		
+		if(null != mMediaPlayer){
+			mMediaPlayer.seekTo(0);
+			mMediaPlayer.pause();
+//			mMediaPlayer.release();
+//			mMediaPlayer = null;
+		}
 	}
 
 	@Override

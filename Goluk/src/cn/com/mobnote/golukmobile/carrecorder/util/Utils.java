@@ -15,7 +15,7 @@ public class Utils {
 	public static String getSizeShow(long fileSize) {
 		System.out.print("文件大小 : "+fileSize);
 		float sizeM = (float)fileSize / 1024 / 1024;
-		DecimalFormat df = new DecimalFormat("#.0");
+		DecimalFormat df = new DecimalFormat("#.##");
 		String sizeResult = df.format(sizeM) + "MB";
 		return sizeResult;
 	}
