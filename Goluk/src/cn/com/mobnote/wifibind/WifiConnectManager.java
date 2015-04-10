@@ -711,7 +711,7 @@ public void isConnectIPC() {
 						if (bb != null) {// 是启动了热点
 							if (bb.getIpc_ssid().equals(ipc_mac)) {
 								msg.what = 52;
-								msg.obj = null;
+								msg.obj = bb;
 								handler.sendMessage(msg);
 							} else {
 								wifiSupport.closeWifi();
