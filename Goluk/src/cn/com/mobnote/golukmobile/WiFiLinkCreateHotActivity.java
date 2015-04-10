@@ -129,7 +129,14 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 					String way = "192.168.1.1";
 					//连接ipc热点wifi---调用ipc接口
 					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---1");
-					String json = "{\"AP_SSID\":\"" + WiFiInfo.AP_SSID + "\",\"AP_PWD\":\"" + WiFiInfo.AP_PWD + "\",\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
+					String appwd = WiFiInfo.AP_PWD;
+					String json = "";
+					if(null != appwd && !"".equals(appwd)){
+						json = "{\"AP_SSID\":\"" + WiFiInfo.AP_SSID + "\",\"AP_PWD\":\"" + WiFiInfo.AP_PWD + "\",\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
+					}
+					else{
+						json = "{\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
+					}
 					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
 					boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 					if(!b){

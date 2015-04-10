@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
+import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiRsBean;
 
@@ -63,6 +64,12 @@ public class WiFiListManage {
 
 			console.log("获取小车本wifi---getwifiList---" + wifiName + "---" + wifiStatus + "---mac---" + data.mac + "---pwd---" + data.hasPwd);
 			mWiFiListData.add(data);
+			
+			if(wifiStatus){
+				//如果已连接IPC热点,通知logic连接ipc
+				((WiFiLinkListActivity)mContext).mLinkWiFiName = wifiName;
+				((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
+			}
 		}
 	}
 	

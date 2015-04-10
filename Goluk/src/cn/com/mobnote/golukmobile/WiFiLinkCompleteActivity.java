@@ -76,6 +76,8 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	private Button mCompleteBtn = null;
 	/** 开始使用状态 */
 	private boolean mIsComplete = false;
+	/** ipc连接mac地址 */
+	private String mIpcMac = "";
 	
 	public static Handler mPageHandler = null;
 	
@@ -179,10 +181,12 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	/**
 	 * 通知logic连接ipc
 	 */
-	private void sendLogicLinkIpc(String ip){
+	private void sendLogicLinkIpc(String ip,String ipcmac){
 		//连接ipc热点wifi---调用ipc接口
 		console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
 		mApp.mIpcIp = ip;
+		mIpcMac = ipcmac;
+		
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,ip);
 		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
@@ -199,13 +203,16 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		
 		//保存连接数据
 		WifiRsBean beans = new WifiRsBean();
-		beans.setIpc_ip("A");
-		beans.setIpc_mac("B");
-		beans.setIpc_ssid(WiFiInfo.AP_SSID);
-		beans.setPh_ip("D");
-		beans.setPh_mac("E");
+		beans.setIpc_mac(mIpcMac);
 		beans.setPh_ssid(WiFiInfo.GolukSSID);
+		beans.setPh_pwd(WiFiInfo.GolukPWD);
 		mWac.saveConfiguration(beans);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mApp.mIPCControlManager.setIPCWifiState(false,null);
 	}
 	
 	@Override
@@ -264,7 +271,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 							if(null != bean){
 								console.log("IPC连接上WIFI热点回调---length---" + bean.length);
 								if(bean.length > 0){
-									sendLogicLinkIpc(bean[0].getIpc_ip());
+									sendLogicLinkIpc(bean[0].getIpc_ip(),bean[0].getIpc_mac());
 								}
 							}
 						break;

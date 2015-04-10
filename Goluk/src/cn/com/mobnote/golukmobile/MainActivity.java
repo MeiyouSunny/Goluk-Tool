@@ -829,7 +829,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",MODE_PRIVATE);
 			//取得相应的值,如果没有该值,说明还未写入,用false作为默认值
 			boolean isbind = preferences.getBoolean("isbind",false);
-			isbind = false;
+			//isbind = false;
 			if(!isbind){
 				//跳转到wifi连接首页
 				Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
