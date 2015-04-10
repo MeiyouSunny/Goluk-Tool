@@ -156,7 +156,11 @@ public void isConnectIPC() {
 				break;
 			}
 			case 52: {
-				callback.wifiCallBack(5, 0, 1, "自动连接--已经连接", msg.obj);
+				callback.wifiCallBack(5, 0, 1, "自动连接--有客户端加入", msg.obj);
+				break;
+			}
+			case 53: {
+				callback.wifiCallBack(5, 0, 2, "自动连接--已经连接", msg.obj);
 				break;
 			}
 
