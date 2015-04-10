@@ -16,8 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
- 
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,7 +32,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class WifiConnectManagerSupport {
- 
+
 	private static final String FILEPATH = Environment
 			.getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
 
@@ -55,7 +53,7 @@ public class WifiConnectManagerSupport {
 	WifiConfiguration isExsits(String SSID) {
 		List<WifiConfiguration> existingConfigs = wifiManager
 				.getConfiguredNetworks();
-		if(existingConfigs==null){
+		if (existingConfigs == null) {
 			return null;
 		}
 		for (WifiConfiguration existingConfig : existingConfigs) {
@@ -65,43 +63,43 @@ public class WifiConnectManagerSupport {
 		}
 		return null;
 	}
-	
-	public boolean joinWifiInfo(String SSID, String Password, WifiCipherType Type){
-		 WifiConfiguration wifiConfig = this.setWifiInfo(SSID, Password, Type);  
-	     if(wifiConfig == null)  
-	    {  
-	           return false;  
-	    }  
-	      
-	    WifiConfiguration tempConfig = this.isExsits(SSID);  
-	      
-	    if(tempConfig != null)  
-	    {  
-	        wifiManager.removeNetwork(tempConfig.networkId);  
-	    }  
-	      
-	  int netID = wifiManager.addNetwork(wifiConfig); 
-	  // 为负数时是连接失败
-	    if(netID<0){
-	    	return false;
-	    }
-	  
-	    boolean bRet = wifiManager.enableNetwork(netID, true);  
-	    Log.e(TAG, "networkconn--------------------"+bRet+"--------");
-	    //网络状态连接失败
-	    if(!bRet){
-	    	return false;
-	    }
-	   
-	    bRet =wifiManager.reconnect();
-	 
-	    Log.e(TAG, "wificonn----------------"+bRet+"-------------");
-	    //wifi 连接失败
-	    if(!bRet){
-	    	return false;
-	    }
-	    return bRet;  
-	 }  
+
+	public boolean joinWifiInfo(String SSID, String Password,
+			WifiCipherType Type) {
+		WifiConfiguration wifiConfig = this.setWifiInfo(SSID, Password, Type);
+		if (wifiConfig == null) {
+			return false;
+		}
+
+		WifiConfiguration tempConfig = this.isExsits(SSID);
+
+		if (tempConfig != null) {
+			wifiManager.removeNetwork(tempConfig.networkId);
+		}
+
+		int netID = wifiManager.addNetwork(wifiConfig);
+		// 为负数时是连接失败
+		if (netID < 0) {
+			return false;
+		}
+
+		boolean bRet = wifiManager.enableNetwork(netID, true);
+		Log.e(TAG, "networkconn--------------------" + bRet + "--------");
+		// 网络状态连接失败
+		if (!bRet) {
+			return false;
+		}
+
+		bRet = wifiManager.reconnect();
+
+		Log.e(TAG, "wificonn----------------" + bRet + "-------------");
+		// wifi 连接失败
+		if (!bRet) {
+			return false;
+		}
+		return bRet;
+	}
+
 	WifiConfiguration setWifiInfo(String SSID, String Password,
 			WifiCipherType Type) {
 		WifiConfiguration config = new WifiConfiguration();
@@ -113,10 +111,10 @@ public class WifiConnectManagerSupport {
 		config.SSID = "\"" + SSID + "\"";
 		// nopass
 		if (Type == WifiCipherType.WIFICIPHER_NOPASS) {
-		 	 config.wepKeys[0] = "\"\"";
-		 	//config.
+			config.wepKeys[0] = "\"\"";
+			// config.
 			config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-		  config.wepTxKeyIndex = 0;
+			config.wepTxKeyIndex = 0;
 		}
 		// wep
 		if (Type == WifiCipherType.WIFICIPHER_WEP) {
@@ -149,17 +147,24 @@ public class WifiConnectManagerSupport {
 					.set(WifiConfiguration.PairwiseCipher.CCMP);
 			config.status = WifiConfiguration.Status.ENABLED;
 		}
-		
+
 		return config;
 	}
-	public boolean disConnWifi(){
+
+	public boolean disConnWifi() {
 		return wifiManager.disconnect();
 	}
+
 	// 打开wifi功能
-	boolean openWifi() {
+	boolean openWifi(boolean restart) {
 		// 打开 wifi 功能
 		boolean bRet = true;
 		if (!wifiManager.isWifiEnabled()) {
+			bRet = wifiManager.setWifiEnabled(true);
+		}
+//		如果强制重启
+		if(restart){
+			bRet = wifiManager.setWifiEnabled(false);
 			bRet = wifiManager.setWifiEnabled(true);
 		}
 		return bRet;
@@ -210,7 +215,8 @@ public class WifiConnectManagerSupport {
 		// 开始扫描网络
 
 		List<ScanResult> scanResult = wifiManager.getScanResults();
-		Log.e(TAG, "sanrs-----------------"+(scanResult==null)+"------------");
+		Log.e(TAG, "sanrs-----------------" + (scanResult == null)
+				+ "------------");
 		if (scanResult != null) {
 			for (ScanResult tempResult : scanResult) {
 
@@ -265,17 +271,19 @@ public class WifiConnectManagerSupport {
 	 * @return
 	 */
 	public boolean inWifiGroup(String ssid, WifiRsBean[] beans) {
+		boolean flag = false;
 		if (beans == null) {
-			return false;
+			flag = false;
 		} else {
 			for (WifiRsBean temp : beans) {
-				if (temp.getIpc_ssid().equals(ssid)
-						  )
-					;
-				return true;
+				if (temp.getIpc_ssid().equals(ssid)) {
+					flag = true;
+					break;
+				}
+
 			}
 		}
-		return false;
+		return flag;
 	}
 
 	/**
@@ -491,7 +499,7 @@ public class WifiConnectManagerSupport {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 写文件
 	 * 
@@ -500,8 +508,7 @@ public class WifiConnectManagerSupport {
 	 * @param passWord
 	 * @return
 	 */
-	boolean writePassFile(String fileName, String value)
-			throws Exception {
+	boolean writePassFile(String fileName, String value) throws Exception {
 		String tempPath = FILEPATH + fileName;
 
 		File dir = new File(FILEPATH);
@@ -540,7 +547,7 @@ public class WifiConnectManagerSupport {
 	 * @return
 	 */
 	public String readPassFile(String fileName) throws Exception {
-		 
+
 		String tempPath = FILEPATH + fileName;
 		File file = null;
 		byte[] types = null;
@@ -591,5 +598,4 @@ public class WifiConnectManagerSupport {
 		}
 	}
 
-	
 }

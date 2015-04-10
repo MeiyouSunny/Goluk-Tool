@@ -3,17 +3,17 @@
 //import cn.com.mobnote.talk.wifimanage.R;
 //import cn.com.mobnote.wifisupport.WifiConnectManager;
 //import cn.com.mobnote.wifisupport.WifiConnectManagerSupport.WifiCipherType;
-//import cn.com.mobnote.wifisupport.WifiEnum.WifTypePassEnum;
+//
 //import cn.com.mobnote.wifisupport.WifiRsBean;
 //
-//import cn.com.mobnote.wifisupport.WifiEnum.WifTypeEnum;
 //
 //import android.app.Activity;
 //
 //import android.content.Context;
 //import android.content.Intent;
-//import android.content.IntentFilter;
 //
+//
+//import android.net.ConnectivityManager;
 //import android.net.wifi.WifiManager;
 //import android.os.Bundle;
 //import android.util.Log;
@@ -60,15 +60,16 @@
 //
 //			@Override
 //			public void onClick(View v) {
+//			
 //				WifiManager wm = (WifiManager) WifiActivity.this
 //						.getSystemService(Context.WIFI_SERVICE);
 //				connectManage = new WifiConnectManager(wm, WifiActivity.this);
-//				String ssid = "Test123";
-//				String password = "";
-//				String mac = "74:51:ba:6e:3e:57";
+//				String ssid = "tiros0322";
+//				String password = "tiros.com.cn";
+//			 
 //				// String mac="";
 //				connectManage.connectWifi(ssid, password,
-//						WifiCipherType.WIFICIPHER_NOPASS);
+//						WifiCipherType.WIFICIPHER_WPA);
 //
 //			}
 //
@@ -82,24 +83,26 @@
 //						.getSystemService(Context.WIFI_SERVICE);
 //				connectManage = new WifiConnectManager(wm, WifiActivity.this);
 //		 
+//				connectManage.createWifiAP("tiros0322", "tiros.com.cn");
+//
+//			}
+//
+//		});
+//		// 自动连接
+//		mBtn4.setOnClickListener(new Button.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				WifiManager wm = (WifiManager) WifiActivity.this
+//						.getSystemService(Context.WIFI_SERVICE);
+//				connectManage = new WifiConnectManager(wm, WifiActivity.this);
+//		 
 //				connectManage.autoWifiManage();
 //
 //			}
 //
 //		});
-////		// 当前是否连接Ipc
-////		mBtn4.setOnClickListener(new Button.OnClickListener() {
-////
-////			@Override
-////			public void onClick(View v) {
-////				WifiManager wm = (WifiManager) WifiActivity.this
-////						.getSystemService(Context.WIFI_SERVICE);
-////				connectManage = new WifiConnectManager(wm, WifiActivity.this);
-////
-////				connectManage.getClientList();
-////			}
-////
-////		});
+// 
 //		//保存wifi信息
 //		mBtn5.setOnClickListener(new Button.OnClickListener() {
 //
@@ -109,12 +112,10 @@
 //						.getSystemService(Context.WIFI_SERVICE);
 //				connectManage = new WifiConnectManager(wm, WifiActivity.this);
 //				WifiRsBean beans = new WifiRsBean();
-//				beans.setIpc_ip("A");
-//				beans.setIpc_mac("B");
-//				beans.setIpc_ssid("C");
-//				beans.setPh_ip("D");
-//				beans.setPh_mac("E");
-//				beans.setPh_ssid("F");
+//				beans.setIpc_ssid("tiros0322");
+//				beans.setIpc_mac("33:d1:77:09:57:56");
+//				beans.setPh_pass("123456");
+//				beans.setPh_ssid("myap");
 //				connectManage.saveConfiguration(beans);
 //			}
 //
@@ -179,22 +180,27 @@
 //			}
 //			break;
 //		case 2:
-//			Log.e(TAG, "wifi scan erro  -1-------------timeout--------------");
+//			Log.e(TAG, "wificretate -------------"+message+"--------------");
 //			break;
 //		case 3:
 //			bean = (WifiRsBean) arrays;
 //			bean.getIpc_ssid();
 //			// unregisterReceiver(connectManage);
-//			Log.e(TAG, "create wifi ------------- ok--------------");
+//			Log.e(TAG, "create ap ------------- "+message+"--------------");
+//			Log.e(TAG, "autoconn------------- "+message+"--------------");
+//			textView1.setText("createap: \n\n");
+//			textView1.append(message);
 //			break;
 //
 //		case 4:
-//			beans = (WifiRsBean[]) arrays;
-//			if (beans != null) {
-//				for (WifiRsBean temp : beans) {
-//					Log.e(TAG, temp.getIpc_ssid());
-//				}
-//			}
+//			Log.e(TAG, "saveConfiguration ------------- "+message+"--------------");
+//			textView1.setText("saveConfiguration: \n\n");
+//			textView1.append(message);
+//			break;
+//		case 5:
+//			Log.e(TAG, "autoconn------------- "+message+"--------------");
+//			textView1.setText("autoconn: \n\n");
+//			textView1.append(message);
 //			break;
 //		default:
 //			break;
