@@ -385,7 +385,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					break;
 				case 102:
 					// 更新时间
-					updateCountDown((String) msg.obj);
+//					updateCountDown((String) msg.obj);
 					break;
 				}
 			}

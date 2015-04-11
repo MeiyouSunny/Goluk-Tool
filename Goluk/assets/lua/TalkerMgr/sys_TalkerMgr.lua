@@ -602,8 +602,7 @@ local function TalkerMgr_getSpecialGroupInfoHttpEvent(id,state,data)
 			gTalkerMgrObj.group.leastlon = dataObj.data.leastlon;
 			gTalkerMgrObj.group.leastlat = dataObj.data.leastlat;
 			--进入群组时如果该群组number已经在数据库的收藏表中存在， 则更新所有number记录中的title字段
-			tiros.grouplist.AgainModifyTitle(gTalkerMgrObj.group.groupnumber,gTalkerMgrObj.group.title);
-
+			--tiros.grouplist.AgainModifyTitle(gTalkerMgrObj.group.groupnumber,gTalkerMgrObj.group.title);
 			--更新状态为获取群组ID成功
 			gTalkerMgrObj.status = EStatus_GetGroupidOk;
 			DebugLog("getGroupidHttpEvent success!!! SessionCall: " .. gTalkerMgrObj.group.curGroupid);
@@ -623,7 +622,7 @@ local function TalkerMgr_getSpecialGroupInfoHttpEvent(id,state,data)
 		end
 	else
 		DebugLog("getGroupidHttpEvent Error!!! 2");
-			TalkerMgr_realJoinGroupByCfg(gTalkerMgrObj.group);
+		--TalkerMgr_realJoinGroupByCfg(gTalkerMgrObj.group);
 	end
 	--通知上层状态，获取群组信息失败
 	SendMsgToLogic(ETalkerEvent_GroupEnter, KModule_Headlist, GenJson_State(EGroupEnterEvent_GetGidErr));
