@@ -267,6 +267,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						handler.postDelayed(runnable, 3000);//san 秒执行一次runnable.
 						String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
 						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
+//						boolean b = mApplication.userManager.loginStatus(phone, pwd);
 						if(b){
 							//隐藏软件盘
 						    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);

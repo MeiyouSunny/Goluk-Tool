@@ -42,7 +42,7 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 修改密码 */
 	public static int PageType_ModifyPwd = 17;
 	
-	public static int PageType_ModifyUserInfo =18;
+	public static int PageType_ModifyUserInfo =24;
 
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2);
 

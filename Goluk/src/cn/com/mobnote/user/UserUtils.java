@@ -3,6 +3,7 @@ package cn.com.mobnote.user;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.com.mobnote.golukmobile.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,6 +12,8 @@ import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class UserUtils {
 
@@ -65,5 +68,54 @@ public class UserUtils {
 	      editor.remove("password");
 	      editor.commit();
 	   }
+	 
+	 /**
+	  * 个人中心模块头像的变化
+	  */
+	 public static void userHeadChange(ImageView headImage,String headString,TextView textSex){
+		if(headString.equals("1")){
+			headImage.setImageResource(R.drawable.individual_center_head_boy_one);
+			textSex.setText("男");
+		}else if(headString.equals("2")){
+			headImage.setImageResource(R.drawable.individual_center_head_boy_two);
+			textSex.setText("男");
+		}else if(headString.equals("3")){
+			headImage.setImageResource(R.drawable.individual_center_head_boy_three);
+			textSex.setText("男");
+		}else if(headString.equals("4")){
+			headImage.setImageResource(R.drawable.individual_center_head_girl_one);
+			textSex.setText("女");
+		}else if(headString.equals("5")){
+			headImage.setImageResource(R.drawable.individual_center_head_girl_two);
+			textSex.setText("女");
+		}else if(headString.equals("6")){
+			headImage.setImageResource(R.drawable.individual_center_head_girl_three);
+			textSex.setText("女");
+		}else if(headString.equals("7")){
+			headImage.setImageResource(R.drawable.individual_center_head_moren);
+			textSex.setText("男");
+		}
+	 }
+	 
+	 /**
+	  * UserPersonalHeadActivity默认选中的head
+	  */
+	 public static void focusHead(String headString,ImageView headImage){
+		 if(headString.equals("1")){
+				headImage.setImageResource(R.drawable.individual_center_head_boy_one);
+			}else if(headString.equals("2")){
+				headImage.setImageResource(R.drawable.individual_center_head_boy_two);
+			}else if(headString.equals("3")){
+				headImage.setImageResource(R.drawable.individual_center_head_boy_three);
+			}else if(headString.equals("4")){
+				headImage.setImageResource(R.drawable.individual_center_head_girl_one);
+			}else if(headString.equals("5")){
+				headImage.setImageResource(R.drawable.individual_center_head_girl_two);
+			}else if(headString.equals("6")){
+				headImage.setImageResource(R.drawable.individual_center_head_girl_three);
+			}else if(headString.equals("7")){
+				headImage.setImageResource(R.drawable.individual_center_head_moren);
+			}
+	 }
 	 
 }

@@ -18,6 +18,7 @@ import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
+import cn.com.mobnote.golukmobile.UserManager;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.UserTestRegistActivity;
@@ -76,6 +77,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	private WifiApAdmin wifiAp;
 	
+	/**登陆管理类**/
+	public UserManager userManager;
+	
 	static {
 		System.loadLibrary("golukmobile");
 	}
@@ -96,6 +100,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mIPCControlManager.addIPCManagerListener("application", this);
 		// 注册回调
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_HttpPage, this);
+		
+		userManager = new UserManager();
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -424,7 +430,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 				
-			case 18:
+			case IPageNotifyFn.PageType_ModifyUserInfo:
 				if(mPageSource == "UserPersonalEdit"){
 					Log.i("aaa", "======"+param2);
 					((UserPersonalEditActivity)mContext).saveInfoCallBack(success, param2);

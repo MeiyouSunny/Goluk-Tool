@@ -31,7 +31,7 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
-            <LinearLayout 
+            <!-- <LinearLayout 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/user_personal_info_title_layout"
@@ -57,20 +57,20 @@
                       android:layout_gravity="center_vertical"
                        android:textColor="@color/white"
                     />
-            </LinearLayout>
-           <!--  <Button
+            </LinearLayout> -->
+           <Button
                 android:id="@+id/user_title_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:drawablePadding="8dp"
                 android:layout_alignParentRight="true"
+                android:drawablePadding="-8dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:drawableLeft="@drawable/btn_user_info_title"
                 android:text="@string/user_personal_info_title"
                 android:background="@null"
-                /> -->
+                />
             
         </RelativeLayout>
 </LinearLayout>

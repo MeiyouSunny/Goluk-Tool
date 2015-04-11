@@ -50,4 +50,6 @@
 	<color name="user_personal_gray">#AFAFAF</color>
 	<color name="user_personal_homepage_text">#484848</color>
 	
+	<color name="user_personal_edit_head_text">#292929</color>
+	<color name="user_personal_edit_head_title_bg">#E7E7E7</color>
 </resources>

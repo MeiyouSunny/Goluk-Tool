@@ -18,10 +18,11 @@ import android.widget.TextView;
 public class UserPersonalSignActivity extends Activity implements OnClickListener{
 
 	//title
-	Button btnBack;
-	TextView mTextTitle,mTextOk;
+	private Button btnBack;
+	private TextView mTextTitle,mTextOk;
 	//body
-	EditText mEditBody;
+	private EditText mEditBody;
+	private String signText;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,18 @@ public class UserPersonalSignActivity extends Activity implements OnClickListene
 		mTextOk = (TextView) findViewById(R.id.user_title_right);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditBody = (EditText) findViewById(R.id.user_personal_edit_sign_body);
+		
+		/**
+		 * 获取从编辑界面传来的信息
+		 * 
+		 */
+		Intent it = this.getIntent();
+		if(null!= it.getStringExtra("intentSignText")){
+			Bundle bundle = it.getExtras();
+			signText = bundle.getString("intentSignText");
+		}
+		mEditBody.setText(signText);
+		
 		/**
 		 * 监听
 		 */
@@ -60,8 +73,13 @@ public class UserPersonalSignActivity extends Activity implements OnClickListene
 		case R.id.user_title_right:
 			String body = mEditBody.getText().toString();
 			Intent it = new Intent(UserPersonalSignActivity.this,UserPersonalEditActivity.class);
-			it.putExtra("itBody", body);
-			startActivity(it);
+			Bundle bundle = new Bundle();
+			bundle.putString("itSign", body);
+			it.putExtras(bundle);
+			this.setResult(2, it);
+			this.finish();
+//			it.putExtra("itBody", body);
+//			startActivity(it);
 			break;
 
 		default:

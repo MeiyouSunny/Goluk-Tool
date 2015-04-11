@@ -25,6 +25,7 @@
 	   android:hint="介绍一下自己吧！"
 	   android:textColor="@color/user_personal_black"
 	   android:paddingLeft="20dp"
+	   android:maxLength="50"
 	    />
 	
 	<View

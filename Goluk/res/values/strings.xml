@@ -171,6 +171,10 @@
 	<string name="user_personal_info_title">编辑</string>
 	<string name="user_personal_sign_title">确认</string>
 	<string name="user_personal_home_title">我的主页</string>
+	<string name="user_personal_edit_head_title">编辑头像</string>
+	<string name="user_personal_edit_head_boy">头像男</string>
+	<string name="user_personal_edit_head_girl">头像女</string>
+	<string name="user_personal_edit_head_default">默认头像</string>
 	<string name="user_personal_home_share">分享</string>
 	
 </resources>

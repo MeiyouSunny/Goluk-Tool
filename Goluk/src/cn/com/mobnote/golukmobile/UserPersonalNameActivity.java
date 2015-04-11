@@ -25,6 +25,7 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 	//body
 	EditText mEditName;
 	ImageView mImageNameRight;
+	private String nameText;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,17 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditName = (EditText) findViewById(R.id.user_personal_name_edit);
 		mImageNameRight = (ImageView) findViewById(R.id.user_personal_name_image);
+		
+		/**
+		 * 获取从编辑界面传来的姓名
+		 */
+		Intent it = getIntent();
+		if(null!=it.getStringExtra("intentNameText")){
+			Bundle bundle = it.getExtras();
+			nameText = bundle.getString("intentNameText");
+		}
+		mEditName.setText(nameText);
+		
 		/**
 		 * 监听
 		 */
@@ -63,15 +75,18 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 			break;
 		//que认
 		case R.id.user_title_right:
-			console.toast("确认", this);
 			String name = mEditName.getText().toString();
 			Intent it = new Intent(UserPersonalNameActivity.this,UserPersonalEditActivity.class);
-			it.putExtra("itName", name);
-			startActivity(it);
+			Bundle bundle = new Bundle();
+			bundle.putString("itName", name);
+			it.putExtras(bundle);
+			this.setResult(1, it);
+			this.finish();
 			break;
 		//
 		case R.id.user_personal_name_image:
-
+			//点击晴空
+			mEditName.setText("");
 			break;
 
 		default:
