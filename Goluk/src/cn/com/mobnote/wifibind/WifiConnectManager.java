@@ -89,8 +89,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param matching
 	 *            关键字
 	 */
-	public void scanWifiList(String matching) {
-		scanWifiList(matching, 30000);
+	public void scanWifiList(String matching,boolean reset) {
+		scanWifiList(matching,reset, 30000);
 	}
 
 	/**
@@ -156,7 +156,11 @@ public class WifiConnectManager implements WifiConnectInterface {
 				break;
 			}
 			case 52: {
-				callback.wifiCallBack(5, 0, 1, "自动连接--已经连接", msg.obj);
+				callback.wifiCallBack(5, 0, 1, "自动连接--客户端已经连接", msg.obj);
+				break;
+			}
+			case 53: {
+				callback.wifiCallBack(5, 0, 1, "自动连接--当前已经连接", msg.obj);
 				break;
 			}
 
@@ -225,7 +229,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 				boolean doClose = false;
 				WifiRsBean[] beans = null;
 				// 1：打开wifi
-				int openTime = openWifi(true, outTime);
+				int openTime = openWifi(false, outTime);
 				// 代表当前网络已经开启
 				if (openTime != outTime) {
 					doClose = true;
@@ -358,14 +362,14 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param outTime
 	 *            超时时间
 	 */
-	private Thread scanWifiList(final String matching, final int outTime) {
+	private Thread scanWifiList(final String matching,final boolean reset, final int outTime) {
 
 		Runnable runnable = new Runnable() {
 			Message msg = new Message();
 
 			public void run() {
 				// 1：打开wifi
-				int openTime = openWifi(true, outTime);
+				int openTime = openWifi(reset, outTime);
 				// 超时错误
 				if (openTime == 0) {
 					msg.what = -11;
@@ -392,8 +396,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 */
 	private int openWifi(boolean restart, int outTime) {
 		int tempTime = 0;
-
-		wifiSupport.closeWifi();
+ 
 		// 开启wifi 等待结果
 		boolean flag = wifiSupport.openWifi(restart);
 		// 如果没有开启wifi功能 等待1.5秒后检查wifi 的链接状态
@@ -604,8 +607,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 					for (WifiRsBean temp : beans) {
 						Log.e(TAG, "list ipc_ssid----------------"+ipc_ssid+"-------------");
 						Log.e(TAG, "list ipc_mac----------------"+ipc_mac+"-------------");
-						if(temp.getIpc_ssid().equals(ipc_ssid)&&
-						temp.getIpc_mac().substring(2).equals(ipc_mac.substring(2))){
+						if( 
+						temp.getIpc_mac().substring(2).toLowerCase().equals(ipc_mac.substring(2).toLowerCase())){
 							list.add(temp);
 						}
 					}
@@ -722,14 +725,14 @@ public class WifiConnectManager implements WifiConnectInterface {
 					if ((mWifi == null || !mWifi.isConnected())
 							&& (mMobile == null || !mMobile.isConnected())) {
 						WifiRsBean bb = wifiSupport.getConnResult();
-						if (bb != null) {// 是启动了热点
+						if (bb != null) {
+							// 当前已经有IPC热点
 							if (bb.getIpc_ssid().equals(ipc_ssid)) {
-								msg.what = 52;
+								msg.what = 53;
 								msg.obj = bb;
 								handler.sendMessage(msg);
-								openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime,msg);
+								openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime);
 								if (openTime == 0) {
-									handler.sendMessage(msg);
 									return;
 								}
 								//返回列表
@@ -744,10 +747,9 @@ public class WifiConnectManager implements WifiConnectInterface {
 						}
 						Log.e(TAG,
 								"autoconnn----------------networkINfo nulllll------------");
-						openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime,msg);
+						openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime);
 						if (openTime == 0) {
-						 
-							handler.sendMessage(msg);
+						  
 							return;
 						}
 						// 创建热点
@@ -758,13 +760,12 @@ public class WifiConnectManager implements WifiConnectInterface {
 					if (mWifi != null && mWifi.isConnected()) {
 						Log.e(TAG,
 								"autoconnn----------------networkINfo TYPE_WIFI------------");
-						openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime,msg);
+						openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime);
 						if (openTime == 0) {
-							 
-							handler.sendMessage(msg);
+							  
 							return;
 						}
-		 
+ 
 						wifiSupport.closeWifi();
 						// 创建热点
 						createWifiAP("5", ph_ssid, ph_pass,ipc_ssid,ipc_mac,openTime);
@@ -774,7 +775,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 					{ // 不是wifi 和热点 关了直接连
 						Log.e(TAG,
 								"autoconnn----------------networkINfo nostate------------");
-						openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime,msg);
+						openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime);
 						if (openTime == 0) {
 							// 扫描超时
 							msg.what = -52;
@@ -805,14 +806,16 @@ public class WifiConnectManager implements WifiConnectInterface {
 
 	}
 
-	private int vaviAutoWifi(String ssid, String mac, int outTime ,Message msg) {
+	private int vaviAutoWifi(String ssid, String mac, int outTime  ) {
+		Message msg = new Message();
 		WifiRsBean[] beans = null;
 		int openTime = 0;
 		// 么有开启网络
-		openTime = this.openWifi(true, outTime);
+		openTime = this.openWifi(false, outTime);
 		if (openTime == 0) { // 超时了
 			msg.what = -51;
 			msg.obj = null;
+			handler.sendMessage(msg);
 			return 0;
 		}
 		// wifi 打开后进行连接 检查用时
@@ -825,12 +828,14 @@ public class WifiConnectManager implements WifiConnectInterface {
 		if (openTime == 0) {
 			msg.what = -51;
 			msg.obj = null;
+			handler.sendMessage(msg);
 			return 0;
 		}
 		// 如果周围没有连接不再继续进行--------------------------------------
 		if (beans == null) {
 			msg.what = -52;
 			msg.obj = null;
+			handler.sendMessage(msg);
 			return 0;
 		}
 		//

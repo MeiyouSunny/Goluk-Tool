@@ -33,7 +33,7 @@ public interface WifiConnectInterface {
 	 * @param matching
 	 *            关键字
 	 */
-	public void scanWifiList(String matching) ;
+	public void scanWifiList(String matching,boolean reset) ;
 	
 	/**保存配置信息
 	 * @param beans
