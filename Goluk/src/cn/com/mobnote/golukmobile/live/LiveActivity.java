@@ -346,7 +346,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				case 101:
 					// 直播视频上传成功，现在请求服务器
 					// 请求直播
-					startLiveForServer();
+					//startLiveForServer();
 					break;
 				}
 			}
@@ -1478,7 +1478,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 				refreshPPTTTT();
 				// 请求直播
-				// startLiveForServer();
+				startLiveForServer();
 				// 开始视频上传
 				startLive(DEFAULT_PLAY_ID);
 			}
