@@ -31,10 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
-import cn.com.mobnote.golukmobile.carrecorder.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
@@ -276,6 +276,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private void startLiveForServer() {
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson(mCurrentVideoId));
+		
 		if (!isSucess) {
 			startLiveFailed();
 		} else {
@@ -304,6 +305,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	private void startLiveFailed() {
 		// TODO 开启直接失败
+		showToast("开启直接失败");
 	}
 
 	private void startLiveLookFailed() {

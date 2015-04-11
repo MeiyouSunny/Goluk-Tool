@@ -1,9 +1,12 @@
 package cn.com.mobnote.util;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
+import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 
 public class JsonUtil {
 
@@ -85,6 +88,57 @@ public class JsonUtil {
 		return null;
 	}
 
+	/**
+	 * 组织更新经纬度信息json串
+	 * 
+	 * @param lon
+	 *            　经度
+	 * @param lat
+	 *            纬度
+	 * @param speed
+	 *            速度
+	 * @param direction
+	 *            方向
+	 * @return json
+	 * @author xuhw
+	 * @date 2015年3月31日
+	 */
+	public static String getGPSJson(long lon, long lat, int speed, int direction) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("lon", lon);
+			obj.put("lat", lat);
+			obj.put("speed", speed);
+			obj.put("direction", direction);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 组织设置IPC系统时间json串
+	 * 
+	 * @param time
+	 *            时间
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public static String getTimeJson(long time) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("time", time);
+
+			return obj.toString();
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
 	// vid 为视频id
 	public static String getStartLiveJson(String vid) {
 		try {
@@ -93,12 +147,10 @@ public class JsonUtil {
 			obj.put("talk", "1");
 			obj.put("tag", "android");
 			obj.put("vid", vid);
-
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 
@@ -349,4 +401,96 @@ public class JsonUtil {
 		return null;
 	}
 
+	/**
+	 * 组织IPC的音视频设置，主码流与子码流同时设置
+	 * 
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static String getVideoConfig(VideoQualityActivity.SensitivityType type) {
+		try {
+			JSONArray array = new JSONArray();
+			for (int i = 0; i < 1; i++) {
+				JSONObject obj = new JSONObject();
+				if (0 == i) {
+					obj.put("bitstreams", i);
+					obj.put("frameRate", 30);
+					obj.put("AudioEnabled", 1);
+
+					if (VideoQualityActivity.SensitivityType._1080h == type) {
+						obj.put("resolution", "1080P");
+						obj.put("bitrate", 8192);
+					} else if (VideoQualityActivity.SensitivityType._1080l == type) {
+						obj.put("resolution", "1080P");
+						obj.put("bitrate", 5120);
+					} else if (VideoQualityActivity.SensitivityType._720h == type) {
+						obj.put("resolution", "720P");
+						obj.put("bitrate", 6144);
+					} else {
+						obj.put("resolution", "720P");
+						obj.put("bitrate", 4096);
+					}
+				} else {
+
+				}
+				array.put(obj);
+			}
+
+			return array.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 组织IPC的音视频设置，主码流与子码流同时设置
+	 * 
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static String getVideoConfig(VideoConfigState mVideoConfigState) {
+		try {
+			JSONArray array = new JSONArray();
+			JSONObject obj = new JSONObject();
+			obj.put("bitstreams", mVideoConfigState.bitstreams);
+			obj.put("frameRate", mVideoConfigState.frameRate);
+			obj.put("AudioEnabled", mVideoConfigState.AudioEnabled);
+			obj.put("resolution", mVideoConfigState.resolution);
+			obj.put("bitrate", mVideoConfigState.bitrate);
+
+			array.put(obj);
+
+			return array.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 获取视频配置
+	 * 
+	 * @param type
+	 *            　0:主码流，1:子码流
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月7日
+	 */
+	public static String getVideoCfgJson(int type) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("bitstreams", type);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

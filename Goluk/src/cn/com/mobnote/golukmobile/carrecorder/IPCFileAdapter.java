@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 

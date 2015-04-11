@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
-            android:background="@drawable/carrecorder_tit_btn_back" />
+            android:background="@drawable/live_btn_back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -53,6 +53,7 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/mVideoResolutions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -104,7 +105,7 @@
 		                android:layout_height="wrap_content"
 		                android:gravity="center"
 		                android:paddingTop="20dp"
-		                android:text="图像加载中，请稍后..."
+		                android:text="无码的视频也是高潮迭起"
 		                android:textColor="#ffffff"
 		                android:textSize="18sp" /> 
 		        </LinearLayout>
@@ -146,6 +147,7 @@
         android:textSize="12sp"  />
     
     <LinearLayout
+    	android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -172,21 +174,24 @@
     </LinearLayout>
     
     <LinearLayout
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical|center"
-        android:paddingBottom="14dp" >
+         >
 
         <LinearLayout
             android:id="@+id/mFileLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingBottom="14dp"
+            android:paddingTop="14dp"
             android:gravity="center|center_horizontal"
             android:orientation="vertical" >
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/mFileBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -206,7 +211,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/m8sBtn"
+			android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_ipc_8s" />
@@ -216,10 +221,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingBottom="14dp"
+            android:paddingTop="14dp"
             android:gravity="center|center_horizontal"
             android:orientation="vertical" >
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/mSettingBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -238,6 +245,24 @@
                 android:text="记录仪设置" />
         </LinearLayout>
     </LinearLayout>
+    
+    <ImageButton
+            android:id="@+id/m8sBtn"
+            android:layout_marginBottom="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" 
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/btn_ipc_8s" />
+    
+    <Button 
+		android:id="@+id/mShareBtn"
+		android:visibility="gone"
+		android:layout_above="@+id/m8sBtn"
+   		android:layout_width="113.33dp"
+  	  	android:layout_height="48dp"
+  	  	android:layout_marginBottom="15dp"
+  	  	android:layout_centerHorizontal="true" />
      
     <Button 
 		android:id="@+id/wifi"

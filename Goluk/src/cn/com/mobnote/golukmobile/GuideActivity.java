@@ -123,5 +123,5 @@ public class GuideActivity extends Activity implements OnClickListener {
 		}
 		return false;
 	}
-
+	
 }

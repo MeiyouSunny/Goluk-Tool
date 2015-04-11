@@ -3,8 +3,42 @@ package cn.com.mobnote.golukmobile;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
+import com.rd.car.CarRecorderManager;
+import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.utils.Log;
 
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.entity.LngLat;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity;
+import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.util.console;
+import cn.com.mobnote.video.LocalVideoListAdapter;
+import cn.com.mobnote.video.LocalVideoManage;
+import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
+import cn.com.mobnote.video.OnLineVideoManage;
+import cn.com.mobnote.view.LoadingView;
+import cn.com.mobnote.view.MyGridView;
+import cn.com.mobnote.wifi.WiFiConnection;
+import cn.com.mobnote.wifi.WifiAutoConnectManager;
+import cn.com.mobnote.wifi.WifiConnCallBack;
+import cn.com.mobnote.wifi.WifiRsBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -280,6 +314,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
 		mLocalVideoListBtn.setOnClickListener(this);
+		findViewById(R.id.share_mylive_btn).setOnClickListener(this);
 		
 		//更新UI handler
 		mMainHandler = new Handler(){
@@ -351,6 +386,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		// 设置定位模式,没有设置定位模式接口setLocationMode
 		// 打开gps
 		option.setOpenGps(true);
+		option.setIsNeedAddress(true);
 		// 设置坐标类型
 		// 返回国测局经纬度坐标系 coor=gcj02
 		// 返回百度墨卡托坐标系 coor=bd09
@@ -631,10 +667,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**
 	 * 视频同步完成
 	 */
-	public void videoAnalyzeComplete(){
+	public void videoAnalyzeComplete(String str){
 //		mLocalVideoManage.videoUploadCallBack();
 //		mLocalVideoListAdapter.notifyDataSetChanged();
-		playDownLoadedSound();
+		try {
+			JSONObject json = new JSONObject(str);
+			String tag = json.getString("tag");
+			if(tag.equals("videodownload")){
+				//只有视频下载才提示音频
+				playDownLoadedSound();
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -954,18 +999,15 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(more);
 			break;
 			case R.id.share_local_video_btn:
-				//跳转到本地视频列表
-				Intent localVideoList = new Intent(MainActivity.this,LocalVideoListActivity.class);
-				startActivity(localVideoList);
+				//跳转到本地视频分享列表
+				Intent localVideoShareList = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
+				startActivity(localVideoShareList);
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
 			case R.id.share_mylive_btn:
 				toShareLive();
 			break;
-			
-			
-			
 			case R.id.video_square_more_btn:
 				//跳转到视频广场页面
 				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity.class);
@@ -1175,6 +1217,27 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			//保存经纬度
 			LngLat.lng = location.getLongitude();
 			LngLat.lat = location.getLatitude();
+			
+			//保存地址信息
+			GolukApplication.getInstance().mCurAddr = location.getAddrStr();
+			System.out.println("YYY=========mCurAddr="+location.getAddrStr()+"==lon="+LngLat.lng+"==lat="+LngLat.lat);
+			//更新IPC经纬度
+			if(GolukApplication.getInstance().getIpcIsLogin()){
+				long lon = (long)(location.getLongitude()*3600000);
+				long lat = (long)(location.getLatitude()*3600000);
+				int speed = (int)location.getSpeed();
+				int direction = (int)location.getDirection();
+				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
+				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
+			}
+			
+			//更新行车记录仪地址
+			if(null != CarRecorderActivity.mHandler){
+				Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
+				msg.obj = location.getAddrStr();
+				CarRecorderActivity.mHandler.sendMessage(msg);
+			}
+			
 		}
 
 		public void onReceivePoi(BDLocation poiLocation) {
