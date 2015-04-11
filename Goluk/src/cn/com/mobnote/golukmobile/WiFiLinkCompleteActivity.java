@@ -148,6 +148,8 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		
 		String wifiName = WiFiInfo.GolukSSID;
 		String pwd = WiFiInfo.GolukPWD;
+		String ipcssid = WiFiInfo.AP_SSID;
+		String ipcmac = WiFiInfo.AP_MAC;
 		
 		//创建热点之前先断开ipc连接
 		mApp.mIPCControlManager.setIPCWifiState(false,null);
@@ -155,10 +157,10 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		mApp.setIpcLoginOut();
 		
 		//调用韩峥接口创建手机热点
-		console.log("创建手机热点---startWifiAp---1");
+		console.log("创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
-		mWac.createWifiAP(wifiName,pwd);
+		mWac.createWifiAP(wifiName,pwd,ipcssid,ipcmac);
 		
 		//测试代码
 		//mPageHandler.sendEmptyMessageDelayed(1, 5000);
@@ -204,7 +206,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		}
 		else{
 			//没连接,关闭热点
-			mWac.closeWifi();
+			mWac.closeWifiAP();
 			
 			//返回关闭全部页面
 			SysApplication.getInstance().exit();
