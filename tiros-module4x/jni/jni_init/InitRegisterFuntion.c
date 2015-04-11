@@ -146,6 +146,9 @@ jint JNI_Sub_Register(JNIEnv * g_env) {
 	if (register_cn_com_tiros_api_Gps(g_env) < 0) {
 		return -1;
 	}
+	if (register_cn_com_tiros_baidu_BaiduLocation(g_env) < 0) {
+		return -1;
+	}
 	return 0;
 }
 
