@@ -79,6 +79,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 	private boolean mIsComplete = false;
 	/** ipc连接mac地址 */
 	private String mIpcMac = "";
+	private String mWiFiIp = "";
 	
 	public static Handler mPageHandler = null;
 	
@@ -191,6 +192,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
 		mApp.mIpcIp = ip;
 		mIpcMac = ipcmac;
+		mWiFiIp = ip;
 		
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,ip);
 		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
@@ -241,6 +243,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		beans.setIpc_ssid(WiFiInfo.AP_SSID);
 		beans.setPh_ssid(WiFiInfo.GolukSSID);
 		beans.setPh_pass(WiFiInfo.GolukPWD);
+		beans.setPh_ip(mWiFiIp);
 		mWac.saveConfiguration(beans);
 		
 		//保存绑定标识
