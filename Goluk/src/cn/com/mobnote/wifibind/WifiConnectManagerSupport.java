@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -16,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import cn.com.tiros.api.Const;
+//import cn.com.tiros.api.Const;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -35,9 +37,9 @@ import android.util.Log;
 
 public class WifiConnectManagerSupport {
 
-//	private static final String FILEPATH = Environment
-//			.getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
-	private static final String FILEPATH=Const.getAppContext().getCacheDir().getPath() +"/wificonfig/";
+	private static final String FILEPATH = Environment
+			.getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
+//	private static final String FILEPATH=Const.getAppContext().getCacheDir().getPath() +"/wificonfig/";
 
 	private static final int BUF_SIZE = 1024;
 	private static final String TAG = "testhan";
@@ -258,7 +260,6 @@ public class WifiConnectManagerSupport {
 	 */
 	public WifiRsBean getConnResult() {
 		WifiInfo info = wifiManager.getConnectionInfo();
-
 		WifiRsBean bean = new WifiRsBean();
 		bean.setPh_ssid(info.getSSID());
 		bean.setPh_bssid(info.getBSSID());
@@ -421,11 +422,16 @@ public class WifiConnectManagerSupport {
 			int reachableTimeout) {
 		BufferedReader br = null;
 		final ArrayList<WifiRsBean> result = new ArrayList<WifiRsBean>();
-
+//		InputStreamReader ir =null;
+//		  LineNumberReader input =null;
 		try {
+//			Process pp = Runtime.getRuntime().exec("cat /proc/net/arp");
 			br = new BufferedReader(new FileReader("/proc/net/arp"));
+//			  ir = new InputStreamReader(pp.getInputStream());
+//              input = new LineNumberReader(ir);
+           
 			String line;
-			while ((line = br.readLine()) != null) {
+			while ((line =  br.readLine()) != null) {
 				String[] splitted = line.split(" +");
 
 				if ((splitted != null) && (splitted.length >= 4)) {

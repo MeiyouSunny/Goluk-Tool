@@ -1,12 +1,14 @@
 package cn.com.mobnote.wifibind;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
  
-import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 
 import android.annotation.SuppressLint;
@@ -70,7 +72,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * 启动软件后自动管理wifi
 	 */
 	public void autoWifiManage() {
-		autoWifiManage(30000);
+		autoWifiManage(300000);
 	}
 
 	/**
@@ -79,8 +81,9 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param ssid
 	 * @param password
 	 */
-	public void createWifiAP(String ph_ssid, String ph_password,String ipc_ssid, String ipc_mac) {
-		createWifiAP("3", ph_ssid, ph_password, ipc_ssid, ipc_mac, 30000);
+	public void createWifiAP(String ph_ssid, String ph_password,
+			String ipc_ssid, String ipc_mac) {
+		createWifiAP("3", ph_ssid, ph_password, ipc_ssid, ipc_mac, "", 30000);
 	}
 
 	/**
@@ -89,8 +92,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param matching
 	 *            关键字
 	 */
-	public void scanWifiList(String matching,boolean reset) {
-		scanWifiList(matching,reset, 30000);
+	public void scanWifiList(String matching, boolean reset) {
+		scanWifiList(matching, reset, 30000);
 	}
 
 	/**
@@ -101,9 +104,10 @@ public class WifiConnectManager implements WifiConnectInterface {
 	public void saveConfiguration(WifiRsBean beans) {
 		saveConfiguration(beans, 30000);
 	}
-	
+
 	/**
 	 * 关闭wifi 及AP
+	 * 
 	 * @return
 	 */
 	public boolean closeWifiAP() {
@@ -223,7 +227,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 			Message msg = new Message();
 
 			public void run() {
-			 
+
 				wifiSupport.closeWifiAp(wifiManager);
 				// 如果当前网络未开启 连接失败后 需要再关闭网络
 				boolean doClose = false;
@@ -308,9 +312,9 @@ public class WifiConnectManager implements WifiConnectInterface {
 					return;
 				} else { // 连接失败
 					wifiSupport.disConnWifi();
-					 
-						wifiSupport.closeWifi();
-					  
+
+					wifiSupport.closeWifi();
+
 					msg.what = -24;
 					msg.obj = null;
 					handler.sendMessage(msg);
@@ -332,8 +336,9 @@ public class WifiConnectManager implements WifiConnectInterface {
 		int tempTime = 0;
 		ConnectivityManager connectivity = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		State state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-		 
+		State state = connectivity
+				.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+
 		while (state != State.CONNECTED) {
 
 			Log.e(TAG, "crssssssssss----------------" + state + "");
@@ -362,7 +367,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param outTime
 	 *            超时时间
 	 */
-	private Thread scanWifiList(final String matching,final boolean reset, final int outTime) {
+	private Thread scanWifiList(final String matching, final boolean reset,
+			final int outTime) {
 
 		Runnable runnable = new Runnable() {
 			Message msg = new Message();
@@ -377,6 +383,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 					handler.sendMessage(msg);
 					return;
 				}
+
 				// 如果wifi打开了
 				if (wifiScan(matching, openTime) == 0) {
 					msg.what = -11;
@@ -396,7 +403,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 */
 	private int openWifi(boolean restart, int outTime) {
 		int tempTime = 0;
- 
+
 		// 开启wifi 等待结果
 		boolean flag = wifiSupport.openWifi(restart);
 		// 如果没有开启wifi功能 等待1.5秒后检查wifi 的链接状态
@@ -462,7 +469,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 			}
 		}
 		try {
-			Thread.sleep(300);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -489,8 +496,17 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 */
 	private int wifiScan(String matching, int outTime) {
 		Log.e(TAG, "san----------------start-------------");
-		// 扫描了表不为null
 		int tempTime = 0;
+		// 先提至500毫秒再进行查询
+		try {
+			Thread.sleep(500);
+			tempTime = 500;
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// 扫描了表不为null
+
 		while (wifiManager.getScanResults() == null
 				|| wifiManager.getScanResults().size() == 0) {
 			try {
@@ -524,20 +540,24 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * @param outTime
 	 */
 	private void createWifiAP(final String type, final String ssid,
-			final String password,final String ipc_ssid,final String ipc_mac, final int outTime) {
+			final String password, final String ipc_ssid, final String ipc_mac,
+			final String ipc_ip, final int outTime) {
 
 		Runnable runnable = new Runnable() {
 			Message msg = new Message();
 
 			public void run() {
+				int tempTime = 0;
 				try {
+					tempTime = openWifi(false, outTime);
 					wifiSupport.closeWifi();
+					wifiSupport.closeWifiAp(null);
 					wifiSupport.createWifiHot(ssid, password);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block 这里需要异常处理
 					e.printStackTrace();
 				}
-				int tempTime = 0;
+
 				// 如果wifi打开了
 				while (wifiSupport.getConnResult() == null) {
 					try {
@@ -560,7 +580,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 				msg.obj = wifiSupport.getConnResult();
 				handler.sendMessage(msg);
 				// 获取wifi连接列表
-				getClientList(ipc_ssid,ipc_mac,type, 40000);
+				getClientList(ipc_ssid, ipc_mac, ipc_ip, type, 40000);
 
 			};
 
@@ -573,7 +593,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 * 获取加入wifiAP的用户列表
 	 * 
 	 */
-	private void getClientList(final String ipc_ssid,final String ipc_mac,final String type, final int outTime) {
+	private void getClientList(final String ipc_ssid, final String ipc_mac,
+			final String ipc_ip, final String type, final int outTime) {
 
 		Runnable runnable = new Runnable() {
 			Message msg = new Message();
@@ -581,45 +602,70 @@ public class WifiConnectManager implements WifiConnectInterface {
 			public void run() {
 				int tempTime = 0;
 				// 获取wifi 扫描列表
-				while (wifiSupport.getJoinApList(false, 300) == null) {
-					int temp_2 = 100;
+				WifiRsBean[] beans = null;
+				while (true) {
+					int temp_2 = 400;
 					try {
-						Thread.sleep(temp_2);
-					} catch (InterruptedException e) {
+						
+						beans = wifiSupport.getJoinApList(false, 300);
+						if (beans != null) {
+							for (WifiRsBean temp : beans) {
+								Log.e(TAG, "list ipc_ssid----------------"
+										+ ipc_ssid + "-------------");
+								Log.e(TAG, "list ipc_mac----------------"
+										+ ipc_mac + "-------------");
+								if (temp.getIpc_mac()
+										.substring(2)
+										.toLowerCase()
+										.equals(ipc_mac.substring(2)
+												.toLowerCase())) {
+									beans = new WifiRsBean[1];
+
+									msg.what = Integer.parseInt(type + "2");
+									msg.obj = temp;
+									handler.sendMessage(msg);
+									return;
+								}
+							}
+						}
+						// 如果ip ping通了 返回可连接状态
+						if (!"".equals(ipc_ip)) {
+							Log.e(TAG, "list ipc_ip----------------" + ipc_ip
+									+ "-------------");
+							boolean isReachable;
+
+							isReachable = InetAddress.getByName(ipc_ip)
+									.isReachable(300);
+							Thread.sleep(temp_2);
+
+							tempTime += temp_2;
+							// 如果 ping通了 跳出循环
+							if (isReachable) {
+								Log.e(TAG, "ipc getpin     -------ipc_ip"
+										+ ipc_ip + "--------ipc_mac" + ipc_mac
+										+ "-----------------");
+								beans = new WifiRsBean[1];
+								beans[0] = new WifiRsBean();
+								beans[0].setIpc_ip(ipc_ip);
+								beans[0].setIpc_mac(ipc_mac);
+								msg.what = Integer.parseInt(type + "2");
+								msg.obj = beans;
+								handler.sendMessage(msg);
+								return;
+							}
+						}
+						// 如果超时了 直接返回
+						if (tempTime > outTime) {
+							wifiSupport.closeWifi();
+							msg.what = Integer.parseInt("-" + type + "2");
+							msg.obj = null;
+							return;
+						}
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					tempTime += temp_2;
-					// 如果超时了 直接返回
-					if (tempTime > outTime) {
-						wifiSupport.closeWifi();
-						msg.what = Integer.parseInt("-" + type + "2");
-						msg.obj = null;
-						return;
-					}
 				}
-
-				Message msg = new Message();
-				
-				WifiRsBean[] beans = wifiSupport.getJoinApList(false, 300);
-				List<WifiRsBean> list=new ArrayList<WifiRsBean>();
-				if (beans != null &&beans.length>0) {
-					for (WifiRsBean temp : beans) {
-						Log.e(TAG, "list ipc_ssid----------------"+ipc_ssid+"-------------");
-						Log.e(TAG, "list ipc_mac----------------"+ipc_mac+"-------------");
-						if( 
-						temp.getIpc_mac().substring(2).toLowerCase().equals(ipc_mac.substring(2).toLowerCase())){
-							list.add(temp);
-						}
-					}
-				}
-				if(list.size()>0){
-					msg.what = Integer.parseInt(type + "2");
-					msg.obj = (WifiRsBean[])list.toArray(new WifiRsBean[0]);
-					handler.sendMessage(msg);
-				}
-			
-
 			};
 
 		};
@@ -645,7 +691,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 					config.put("ipc_mac", beans.getIpc_mac());
 					config.put("ph_ssid", beans.getPh_ssid());
 					config.put("ph_pass", beans.getPh_pass());
-
+					config.put("ipc_ip", beans.getIpc_ip());
 					config.toString();
 					try {
 						wifiSupport
@@ -701,7 +747,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 					if ("".equals(config.getString("ipc_ssid"))
 							|| "".equals(config.getString("ipc_mac"))
 							|| "".equals(config.getString("ph_ssid"))
-							|| "".equals(config.getString("ph_pass"))) {
+							|| "".equals(config.getString("ph_pass"))
+							|| "".equals(config.getString("ipc_ip"))) {
 						msg.what = -51;
 						msg.obj = null;
 						handler.sendMessage(msg);
@@ -710,6 +757,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 
 					String ipc_ssid = config.getString("ipc_ssid");
 					String ipc_mac = config.getString("ipc_mac");
+					String ipc_ip = config.getString("ipc_ip");
 					String ph_ssid = config.getString("ph_ssid");
 					String ph_pass = config.getString("ph_pass");
 					// wifiSupport.
@@ -727,21 +775,24 @@ public class WifiConnectManager implements WifiConnectInterface {
 						WifiRsBean bb = wifiSupport.getConnResult();
 						if (bb != null) {
 							// 当前已经有IPC热点
-							if (bb.getIpc_ssid().equals(ipc_ssid)) {
+							if (bb.getPh_ssid().equals(ph_ssid)) {
 								msg.what = 53;
 								msg.obj = bb;
 								handler.sendMessage(msg);
-								openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime);
+								openTime = vaviAutoWifi(ipc_ssid, ipc_mac,
+										outTime);
 								if (openTime == 0) {
 									return;
 								}
-								//返回列表
-								getClientList( ipc_ssid,  ipc_mac,"5", outTime);
+								// 返回列表
+								getClientList(ipc_ssid, ipc_mac, ipc_ip, "5",
+										outTime);
 								return;
 							} else {
 								wifiSupport.closeWifi();
 								// 创建热点
-								createWifiAP("5", ph_ssid, ph_pass,ipc_ssid,ipc_mac,openTime);
+								createWifiAP("5", ph_ssid, ph_pass, ipc_ssid,
+										ipc_mac, ipc_ip, openTime);
 								return;
 							}
 						}
@@ -749,11 +800,12 @@ public class WifiConnectManager implements WifiConnectInterface {
 								"autoconnn----------------networkINfo nulllll------------");
 						openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime);
 						if (openTime == 0) {
-						  
+
 							return;
 						}
 						// 创建热点
-						createWifiAP("5", ph_ssid, ph_pass,ipc_ssid,ipc_mac,openTime);
+						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_mac,
+								ipc_ip, openTime);
 						return;
 					} else
 
@@ -762,13 +814,14 @@ public class WifiConnectManager implements WifiConnectInterface {
 								"autoconnn----------------networkINfo TYPE_WIFI------------");
 						openTime = vaviAutoWifi(ipc_ssid, ipc_mac, outTime);
 						if (openTime == 0) {
-							  
+
 							return;
 						}
- 
+
 						wifiSupport.closeWifi();
 						// 创建热点
-						createWifiAP("5", ph_ssid, ph_pass,ipc_ssid,ipc_mac,openTime);
+						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_mac,
+								ipc_ip, openTime);
 						return;
 					} else
 
@@ -783,11 +836,12 @@ public class WifiConnectManager implements WifiConnectInterface {
 							handler.sendMessage(msg);
 							return;
 						}
-						//不管开着什么 都关掉
+						// 不管开着什么 都关掉
 						wifiSupport.closeWifi();
 						wifiSupport.closeWifiAp(wifiManager);
 						// 创建热点
-						createWifiAP("5", ph_ssid, ph_pass,ipc_ssid,ipc_mac,openTime);
+						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_mac,
+								ipc_ip, openTime);
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -806,12 +860,12 @@ public class WifiConnectManager implements WifiConnectInterface {
 
 	}
 
-	private int vaviAutoWifi(String ssid, String mac, int outTime  ) {
+	private int vaviAutoWifi(String ssid, String mac, int outTime) {
 		Message msg = new Message();
 		WifiRsBean[] beans = null;
 		int openTime = 0;
 		// 么有开启网络
-		openTime = this.openWifi(false, outTime);
+		openTime = this.openWifi(true, outTime);
 		if (openTime == 0) { // 超时了
 			msg.what = -51;
 			msg.obj = null;
@@ -820,6 +874,15 @@ public class WifiConnectManager implements WifiConnectInterface {
 		}
 		// wifi 打开后进行连接 检查用时
 		List<WifiRsBean> list = new ArrayList<WifiRsBean>();
+
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		openTime += 500;
+
 		openTime = getwifiList(list, ssid, openTime);
 		if (list.size() > 0) {
 			beans = (WifiRsBean[]) list.toArray(new WifiRsBean[0]);
