@@ -80,7 +80,7 @@ public class LiveSettingPopWindow implements OnClickListener {
 
 	private LiveSettingBean getCurrentSetting() {
 		LiveSettingBean bean = new LiveSettingBean();
-		bean.duration = 600;
+		bean.duration = 6000;
 		bean.isCanTalk = mIsCanTalk;
 		return bean;
 	}

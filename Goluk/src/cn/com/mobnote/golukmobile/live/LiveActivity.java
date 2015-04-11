@@ -161,7 +161,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/** 说话中计时显示 */
 	private TextView mTalkingTimeTv = null;
 
-	private boolean isTest = true;
+	private boolean isTest = false;
 
 	private RelativeLayout mSpeakingLayout = null;
 
@@ -385,7 +385,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					break;
 				case 102:
 					// 更新时间
-//					updateCountDown((String) msg.obj);
+					// updateCountDown((String) msg.obj);
 					break;
 				}
 			}
@@ -487,7 +487,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	// 主动直播，需要根据协议来区分对方是否支持对讲，被动直播不支持对讲
 	private void switchLookShareTalkView(boolean isActiveLive, boolean isSupportTalk) {
 		if (isActiveLive && isSupportTalk) {
-			mLiveLookTalk.setVisibility(View.INVISIBLE);
+			mLiveLookTalk.setVisibility(View.VISIBLE);
 		} else {
 			// 　被动直播
 			mLiveLookTalk.setVisibility(View.GONE);
@@ -575,7 +575,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 */
 	private void startLive(String aid) {
 		liveVid = aid;
-		
+
 		// curRecordTime = 0;
 		// cancelTimer();
 		// mRecordTimer = new Timer();
@@ -838,10 +838,16 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				// 不支持加入群组
 				switchLookShareTalkView(true, false);
 			} else {
-				LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----8888 : ");
+
 				// 调用爱滔客加入群组
 				mJoinGroupJson = JsonUtil.getJoinGroup(liveData.groupType, liveData.membercount, liveData.title,
 						liveData.groupId, liveData.groupnumber);
+
+				LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----8888 : 开始加入群组 :"
+						+ mJoinGroupJson);
+
+				// 支持加入群组，显示对讲按钮
+				switchLookShareTalkView(true, true);
 
 				joinAitalkGroup();
 			}
@@ -1310,8 +1316,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// 用户上次说话超时，此时不处理任何事件
 			return;
 		}
-		speekingUIRefresh(2, "", false);
 
+		if (null != mSpeakName && !"".equals(mSpeakName)) {
+			// 当前有人说话
+			speekingUIRefresh(MSG_SPEAKING_START_SPEAK, mSpeakName, false);
+		} else {
+			speekingUIRefresh(2, "", false);
+		}
 		if (isShareLive) {
 			mLiveTalk.setBackgroundResource(R.drawable.live_btn_ptt_normal);
 		} else {
@@ -1478,6 +1489,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			break;
 		case 4:// 进入爱淘客频道成功
 			mIsJoinGroupSucess = true;
+			showToast("加入群组成功");
 			// 按钮可以按下
 			refreshPPtState(true);
 			break;
@@ -1524,16 +1536,20 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
+	/** 当前正在说话的人 */
+	private String mSpeakName = "";
+
 	// 有人开始说话
 	private void callBack_startSpeak(String message) {
 		mIsMe = JsonUtil.getJsonBooleanValue(message, "isme", false);
-		String speakName = JsonUtil.getJsonStringValue(message, "name", "");
+		mSpeakName = JsonUtil.getJsonStringValue(message, "name", "");
 		final String aid = JsonUtil.getJsonStringValue(message, "aid", "");
-		if ("".equals(speakName)) {
-			speakName = aid;
+
+		if (mIsMe) {
+			mSpeakName = "";
 		}
 		mSpeechOutTime = 0;
-		speekingUIRefresh(MSG_SPEAKING_START_SPEAK, speakName, mIsMe);
+		speekingUIRefresh(MSG_SPEAKING_START_SPEAK, mSpeakName, mIsMe);
 
 		refreshTimerTv("00:00");
 		// 不管是其它人　还是　自己，开始说话，就倒计时30秒
