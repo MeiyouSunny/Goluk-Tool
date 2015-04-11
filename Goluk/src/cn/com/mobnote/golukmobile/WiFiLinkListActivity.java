@@ -101,7 +101,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		init();
 		
 		//获取wifi列表
-		getWiFiList();
+		getWiFiList(false);
 	}
 	
 	/**
@@ -140,12 +140,12 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	/**
 	 * 获取wifi列表
 	 */
-	private void getWiFiList(){
+	private void getWiFiList(boolean b){
 		mLoading.setVisibility(View.VISIBLE);
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
 		// 获取文件列表tcay_ap_ipc
-		mWac.scanWifiList("");
+		mWac.scanWifiList("",b);
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 			break;
 			case R.id.refresh_help_btn:
 				//获取wifi列表
-				getWiFiList();
+				getWiFiList(true);
 			break;
 			case R.id.next_btn:
 				//已连接ipc热点,可以跳转到修改密码页面
