@@ -2,46 +2,30 @@ package cn.com.mobnote.golukmobile;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
-import cn.com.mobnote.video.MVListAdapter;
-import cn.com.mobnote.video.MVManage;
-import cn.com.mobnote.video.MVManage.MVEditData;
-import cn.com.mobnote.view.MyGridView;
+import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
-
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.media.QQShareContent;
@@ -79,7 +63,7 @@ import com.umeng.socialize.weixin.media.WeiXinShareContent;
  */
 
 @SuppressLint("HandlerLeak")
-public class VideoShareActivity extends Activity  implements SurfaceHolder.Callback, OnClickListener {
+public class VideoShareActivity extends Activity  implements OnClickListener {
 	private static final String DESCRIPTOR = "com.umeng.share";
 	private final UMSocialService mController = UMServiceFactory.getUMSocialService(DESCRIPTOR);
 	/** application */
@@ -90,19 +74,7 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 	/** 返回按钮 */
 	private Button mBackBtn = null;
 	/** 下一步按钮 */
-	private Button mNextBtn = null;
-	/** 视频路径 */
-	private String mFilePath = "";
-	/** 视频播放器 */
-	private MediaPlayer mMedioPlayer = null;
-	private SurfaceView mSurfaceView = null;
-	private SurfaceHolder mSurfaceHolder = null;
-	/** 播放按钮 */
-	private RelativeLayout mPlayLayout = null;
-	/** 播放状态图片 */
-	private ImageView mPlayStatusImage = null;
-	/** mv列表layout */
-	private LinearLayout mMVListLayout = null;
+	//private Button mNextBtn = null;
 	
 	/** 分享layout */
 	private RelativeLayout mShareLayout = null;
@@ -148,7 +120,7 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		mContext = this;
 		//获取视频Id
 		Intent intent = getIntent();
-		mVideoPath = intent.getStringExtra("cn.com.mobnote.golukmobile.videoaoth");
+		mVideoPath = intent.getStringExtra("cn.com.mobnote.golukmobile.videopath");
 		
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
@@ -193,19 +165,17 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 	 */
 	private void uploadShareVideo(){
 		//将本地视频地址,转成logic可读路径fs1://
-		if(!"".equals(mVideoPath)){
+		if(!"".equals(mVideoPath) && null != mVideoPath){
 			String localPath = FileUtils.javaToLibPath(mVideoPath);
 			uploadVideoTime = SystemClock.uptimeMillis();
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_UploadVideo,localPath);
-			if(b){
-				//启动loading动画
-				//mLoadingAnimation.start();
-				
-				//重置滤镜标识
-				//mMVListAdapter.setResChange(false);
+			if(!b){
+				Toast.makeText(mContext,"调用视频上传接口失败",Toast.LENGTH_SHORT).show();
 			}
 			else{
-				Toast.makeText(mContext,"调用视频上传接口失败",Toast.LENGTH_SHORT).show();
+				//显示全局上传进度条
+				//重置滤镜标识
+				//mMVListAdapter.setResChange(false);
 			}
 		}
 	}
@@ -321,6 +291,29 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 	}
 	
 	/**
+	 * 本地视频上传回调
+	 * @param vid,视频ID
+	 */
+	public void videoUploadCallBack(int success,String vid){
+		//视频上传成功,回调,跳转到视频分享页面
+		//隐藏loading
+		//mLoadingAnimation.stop();
+		//显示播放图片
+		//mPlayStatusImage.setVisibility(View.VISIBLE);
+		//隐藏loading布局
+		//mVideoLoadingLayout.setVisibility(View.GONE);
+		if(1 == success){
+			console.toast("视频上传使用时间：" + (SystemClock.uptimeMillis() - uploadVideoTime) + "ms",mContext);
+			//保存视频上传ID
+			mVideoVid = vid;
+			console.log("视频上传返回id---videoUploadCallBack---vid---" + vid);
+		}
+		else{
+			console.toast("视频上传失败",mContext);
+		}
+	}
+	
+	/**
 	 * 本地视频分享回调
 	 * @param json,分享数据
 	 */
@@ -354,50 +347,6 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		}
 	}
 	
-	/**
-	 * 在surface的大小发生改变时触发
-	 */
-	@Override
-	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		Log.e("","chxy_____surfaceChanged" + arg1);
-	}
-	
-	/**
-	 * 在创建时触发，一般在这里调用画图的线程
-	 */
-	@Override
-	public void surfaceCreated(SurfaceHolder arg0) {
-		//必须在surface创建后才能初始化MediaPlayer,否则不会显示图像
-		mMedioPlayer = new MediaPlayer();
-		mMedioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		//设置显示视频显示在SurfaceView上
-		mMedioPlayer.setDisplay(mSurfaceHolder);
-		//注册播放完成事件
-		mMedioPlayer.setOnCompletionListener(new OnCompletionListener(){
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-				//显示图片
-				mPlayStatusImage.setVisibility(View.VISIBLE);
-			}
-		});
-		try{
-			mMedioPlayer.setDataSource(mFilePath);
-			mMedioPlayer.prepare();
-			//创建完成立即播放
-			mMedioPlayer.start();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * 销毁时触发，一般在这里将画图的线程停止、释放
-	 */
-	@Override
-	public void surfaceDestroyed(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
-	}
 
 	@Override
 	protected void onDestroy() {
@@ -456,19 +405,6 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 			case R.id.next_btn:
 				//下一步
 				
-			break;
-			case R.id.play_layout:
-				//暂停/播放
-				if(mMedioPlayer.isPlaying()){
-					mMedioPlayer.pause();
-					//显示图片
-					mPlayStatusImage.setVisibility(View.VISIBLE);
-				}
-				else{
-					mMedioPlayer.start();
-					//隐藏图片
-					mPlayStatusImage.setVisibility(View.GONE);
-				}
 			break;
 		}
 	}

@@ -288,30 +288,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	}
 	
 	/**
-	 * 上传本地视频
-	 */
-	private void videoUpload(String path){
-		//将本地视频地址,转成logic可读路径fs1://
-		String localPath = FileUtils.javaToLibPath(path);
-		uploadVideoTime = SystemClock.uptimeMillis();
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_UploadVideo,localPath);
-		if(b){
-			//隐藏播放图片
-			mPlayStatusImage.setVisibility(View.GONE);
-			//显示loading布局
-			//mVideoLoadingLayout.setVisibility(View.VISIBLE);
-			//启动loading动画
-			mLoadingAnimation.start();
-			
-			//重置滤镜标识
-			mMVListAdapter.setResChange(false);
-		}
-		else{
-			Toast.makeText(mContext,"调用视频上传接口失败",Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	/**
 	 * 重置视频播放状态
 	 */
 	private void changeVideoPlayState(){
@@ -522,30 +498,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * 本地视频上传回调
-	 * @param vid,视频ID
-	 */
-	public void videoUploadCallBack(int success,String vid){
-		//视频上传成功,回调,跳转到视频分享页面
-		//隐藏loading
-		mLoadingAnimation.stop();
-		//显示播放图片
-		mPlayStatusImage.setVisibility(View.VISIBLE);
-		//隐藏loading布局
-		//mVideoLoadingLayout.setVisibility(View.GONE);
-		if(1 == success){
-			Toast.makeText(VideoEditActivity.this,"视频上传使用时间：" + (SystemClock.uptimeMillis() - uploadVideoTime) + "ms", Toast.LENGTH_SHORT).show();
-			//跳转视频分享页面
-			Intent videoShare = new Intent(mContext,VideoShareActivity.class);
-			videoShare.putExtra("cn.com.mobnote.golukmobile.videovid",vid);
-			startActivity(videoShare);
-		}
-		else{
-			Toast.makeText(VideoEditActivity.this,"视频上传失败", Toast.LENGTH_SHORT).show();
 		}
 	}
 	

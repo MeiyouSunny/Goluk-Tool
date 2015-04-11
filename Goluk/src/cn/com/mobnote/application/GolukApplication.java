@@ -267,8 +267,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @param vid,视频ID
 	 */
 	public void localVideoUpLoadCallBack(int success,String vid){
-		if(mPageSource == "VideoEdit"){
-			((VideoEditActivity)mContext).videoUploadCallBack(success,vid);
+		if(mPageSource == "VideoShare"){
+			((VideoShareActivity)mContext).videoUploadCallBack(success,vid);
 		}
 	}
 	
@@ -357,7 +357,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 			break;
 			case 1:
-				//本地视频编辑页面,点击下一步上传本地视频回调
+				//本地视频编辑页面,点击下一步,在上传页面上传本地视频回调
 				localVideoUpLoadCallBack(success,String.valueOf(param2));
 			break;
 			case 2:
