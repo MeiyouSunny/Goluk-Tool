@@ -180,12 +180,16 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			public void run() {
 				if(GolukApplication.getInstance().getIpcIsLogin()){
 					if(SensitivityType._1080h == curType){
+						mVideoConfigState.resolution="1080P";
 						mVideoConfigState.bitrate=8192;
 					}else if(SensitivityType._1080l == curType){
+						mVideoConfigState.resolution="1080P";
 						mVideoConfigState.bitrate=5120;
 					}else if(SensitivityType._720h == curType){
+						mVideoConfigState.resolution="720P";
 						mVideoConfigState.bitrate=6144;
 					}else{
+						mVideoConfigState.resolution="720P";
 						mVideoConfigState.bitrate=4096;
 					}
 					boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);

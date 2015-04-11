@@ -592,13 +592,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String)param2);
 						if(null != videocfg){
 							mVideoConfigState = videocfg;
-							System.out.println("YYY================application===1111111111===");
 						}
 					}
 				break;
 				case IPC_VDCP_Msg_SetVedioEncodeCfg:
 					if(param1 == RESULE_SUCESS){
 						getVideoEncodeCfg();
+						updateAutoRecordState();
 					}
 					break;
 				case IPC_VDCP_Msg_GetRecordState:

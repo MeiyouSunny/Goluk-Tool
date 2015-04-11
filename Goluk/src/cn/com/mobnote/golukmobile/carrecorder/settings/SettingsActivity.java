@@ -263,11 +263,11 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){//获取IPC系统音视频编码配置
-				System.out.print("YYY=========IPC_VDCP_Msg_GetVedioEncodeCfg======param1="+param1+"=======param2="+param2);
+				System.out.print("YYY=========get audio======param1="+param1+"=======param2="+param2);
 				if(RESULE_SUCESS == param1){
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
 					if(null != mVideoConfigState){
-						System.out.print("YYY=========IPC_VDCP_Msg_GetVedioEncodeCfg=======111111111===========");
+						System.out.print("YYY==========get audio========111111111===========");
 						if(1 == mVideoConfigState.AudioEnabled){
 							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 						}else{
@@ -277,29 +277,10 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 						mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 					}
 				}else{
+					System.out.print("YYY==========get audio========2222====fail=======");
 					mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){//设置IPC系统音视频编码配置
-				System.out.print("YYY=========IPC_VDCP_Msg_SetVedioEncodeCfg======param1="+param1+"=======param2="+param2);
-				if(RESULE_SUCESS == param1){
-					if(null != mVideoConfigState){
-						if(1 == mVideoConfigState.AudioEnabled){
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-						}else{
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-						}
-					}
-				}else{
-					if(null != mVideoConfigState){
-						if(1 == mVideoConfigState.AudioEnabled){
-							mVideoConfigState.AudioEnabled=0;
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-						}else{
-							mVideoConfigState.AudioEnabled=1;
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-						}
-					}
-				}
 			}
 		}
 	}

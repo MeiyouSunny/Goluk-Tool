@@ -791,25 +791,27 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				
 				break;
 			case R.id.mEditBtn:
-				if(!isEditState){
-					mEditBtn.setText("取消");
-					isEditState=true;
-					selectedListData.clear();
-					mFunctionLayout.setVisibility(View.VISIBLE);
-				}else{
-					mEditBtn.setText("编辑");
-					isEditState=false;
-					selectedListData.clear();
-					updateDelandEditBg(false);//把下载和删除按钮的北京颜色还原回去
-					mFunctionLayout.setVisibility(View.GONE);
-				}
-				
-				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
-					mWonderfulVideoAdapter.notifyDataSetChanged();
-				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
-					mEmergencyVideoAdapter.notifyDataSetChanged();
-				}else{
-					mLoopVideoAdapter.notifyDataSetChanged();
+				if(!isGetFileListDataing){
+					if(!isEditState){
+						mEditBtn.setText("取消");
+						isEditState=true;
+						selectedListData.clear();
+						mFunctionLayout.setVisibility(View.VISIBLE);
+					}else{
+						mEditBtn.setText("编辑");
+						isEditState=false;
+						selectedListData.clear();
+						updateDelandEditBg(false);//把下载和删除按钮的北京颜色还原回去
+						mFunctionLayout.setVisibility(View.GONE);
+					}
+					
+					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
+						mWonderfulVideoAdapter.notifyDataSetChanged();
+					}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
+						mEmergencyVideoAdapter.notifyDataSetChanged();
+					}else{
+						mLoopVideoAdapter.notifyDataSetChanged();
+					}
 				}
 				break;
 			case R.id.mDownloadBtn:

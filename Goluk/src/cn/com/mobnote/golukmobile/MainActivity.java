@@ -374,6 +374,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		// 设置定位模式,没有设置定位模式接口setLocationMode
 		// 打开gps
 		option.setOpenGps(true);
+		option.setIsNeedAddress(true);
 		// 设置坐标类型
 		// 返回国测局经纬度坐标系 coor=gcj02
 		// 返回百度墨卡托坐标系 coor=bd09
@@ -1055,7 +1056,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			
 			//保存地址信息
 			GolukApplication.getInstance().mCurAddr = location.getAddrStr();
-			
+			System.out.println("YYY=========mCurAddr="+location.getAddrStr()+"==lon="+LngLat.lng+"==lat="+LngLat.lat);
 			//更新IPC经纬度
 			if(GolukApplication.getInstance().getIpcIsLogin()){
 				long lon = (long)(location.getLongitude()*3600000);
@@ -1063,7 +1064,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				int speed = (int)location.getSpeed();
 				int direction = (int)location.getDirection();
 				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
-				System.out.println("YYY=========updateGPS=====a="+a);
+				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
 			}
 			
 			//更新行车记录仪地址
