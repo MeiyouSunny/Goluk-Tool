@@ -2,12 +2,9 @@ package cn.com.mobnote.golukmobile;
 
 import java.io.File;
 import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -16,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.entity.MixAudioInfo;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.AssetsFileUtils;
@@ -42,7 +37,6 @@ import cn.com.mobnote.video.MVManage;
 import cn.com.mobnote.video.MVManage.MVEditData;
 import cn.com.mobnote.view.MyGridView;
 import cn.com.tiros.api.FileUtils;
-
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.EditorParam;
 import com.rd.car.editor.FilterPlaybackView;
@@ -117,11 +111,15 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	
 	/** 当前选择的配乐文件路径 */
 	private String mStrMusicFilePath = "";
+	/** 进度条线程 */
+	private Thread mProgressThread = null;
+	
+	
 	
 	/** 当前重叠配音路径列表 */
-	private ArrayList<MixAudioInfo> audioInfos = new ArrayList<MixAudioInfo>();
+	//private ArrayList<MixAudioInfo> audioInfos = new ArrayList<MixAudioInfo>();
 	/** 当前选择的配音文件路径 */
-	private String m_strRecorderingFilePath;
+	//private String m_strRecorderingFilePath;
 	/** 控制视频是配乐操作 */
 	//private boolean isSoundTrack;
 	/** 当前选择的配乐文件路径 */
@@ -130,8 +128,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	//private int startTime, endTime;
 	/** 内置音乐路径列表 */
 	//private List<String> assetsMusicPaths = new ArrayList<String>() ;
-	/** 进度条线程 */
-	private Thread mProgressThread = null;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -188,19 +185,49 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 				int what = msg.what;
 				switch(what){
 					case 1:
+						//选择音频回调
 						String path = (String) msg.obj;
+						//保存数据
+						mStrMusicFilePath = path;
 						console.log("select music---" + path);
 						addMusicToVideo(path);
-					break;
-					case 2:
-						//mVVPlayVideo.stop();
-						setMuteVideo(false);
-						setMixAudioFilePath("1.mp3", true);
 					break;
 				}
 			}
 		};
 	}
+	
+	/**
+	 * 初始化滤镜布局
+	 */
+	private void initVideoEditList(){
+		MyGridView gridView = createMVGridView();
+		MVManage mvManage = new MVManage(mContext);
+		ArrayList<MVEditData> list = mvManage.getLocalVideoList();
+		mMVListAdapter = new MVListAdapter(mContext,list);
+		gridView.setAdapter(mMVListAdapter);
+		mMVListLayout.addView(gridView);
+	}
+	
+	/**
+	 * 创建本地滤镜列表布局
+	 * @return
+	 */
+	private MyGridView createMVGridView() {
+		MyGridView gridLayout = new MyGridView(mContext,null);
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+		gridLayout.setLayoutParams(lp);
+		gridLayout.setBackgroundColor(Color.rgb(237,237,237));
+		//gridLayout.setBackgroundColor(Color.rgb(204,102,153));
+		gridLayout.setNumColumns(4);
+		gridLayout.setPadding(16,30,16,30);
+		gridLayout.setVerticalSpacing(30);
+		gridLayout.setHorizontalSpacing(16);
+		//设置grid item点击效果为透明
+		//gridLayout.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		return gridLayout;
+	}
+	
 	
 	/**
 	 * 视频播放初始化
@@ -253,40 +280,11 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			//mVideoEditHandler.sendEmptyMessageDelayed(2,100);
 			//setMixAudioFilePath("1.mp3", true);
 			
-		} catch (FilterVideoEditorException e) {
+		}
+		catch (FilterVideoEditorException e) {
+			e.printStackTrace();
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
-	}
-	
-	/**
-	 * 初始化滤镜布局
-	 */
-	private void initVideoEditList(){
-		MyGridView gridView = createMVGridView();
-		MVManage mvManage = new MVManage(mContext);
-		ArrayList<MVEditData> list = mvManage.getLocalVideoList();
-		mMVListAdapter = new MVListAdapter(mContext,list);
-		gridView.setAdapter(mMVListAdapter);
-		mMVListLayout.addView(gridView);
-	}
-	
-	/**
-	 * 创建本地滤镜列表布局
-	 * @return
-	 */
-	private MyGridView createMVGridView() {
-		MyGridView gridLayout = new MyGridView(mContext,null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
-		gridLayout.setLayoutParams(lp);
-		gridLayout.setBackgroundColor(Color.rgb(237,237,237));
-		//gridLayout.setBackgroundColor(Color.rgb(204,102,153));
-		gridLayout.setNumColumns(4);
-		gridLayout.setPadding(16,30,16,30);
-		gridLayout.setVerticalSpacing(30);
-		gridLayout.setHorizontalSpacing(16);
-		//设置grid item点击效果为透明
-		//gridLayout.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		return gridLayout;
 	}
 	
 	/**
@@ -323,15 +321,12 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			//如果正在播放视频，则暂停播放
 			mVVPlayVideo.pause();
 		}
-		//判断当前视频改变了滤镜效果,如果没有,可以直接上传分享
-		//boolean b = mMVListAdapter.getResChange();
-		//return b;
 	}
 	
 	 /**
 	 * 保存视频
 	 */
-	protected void onSaveVideo() {
+	private void onSaveVideo() {
 		try {
 			// 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
 			EditorParam editorParam = new EditorParam();
@@ -364,6 +359,9 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 //						});
 						//显示视频导出loading
 						mVideoLoadingLayout.setVisibility(View.VISIBLE);
+						//启动loading动画
+						mLoadingAnimation.start();
+						
 						m_lUseTimeChecker = SystemClock.uptimeMillis();
 					}
 
@@ -379,6 +377,9 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 					public void onFilterVideoEnd(boolean bSuccess,boolean bCancel) {
 						//隐藏视频导出loading
 						mVideoLoadingLayout.setVisibility(View.GONE);
+						//停止loading动画
+						mLoadingAnimation.stop();
+						
 						//m_pdSave.dismiss();
 						//String strInfo = "";
 						if (bCancel) {
@@ -390,6 +391,11 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 							//uploadVideo(item);
 							//保存成功,上传视频
 							//videoUpload(mVideoSavePath);
+							
+							//视频保存成功,跳转到分享页面
+							Intent videoShare = new Intent(mContext,VideoShareActivity.class);
+							videoShare.putExtra("cn.com.mobnote.golukmobile.videopath",mVideoSavePath);
+							startActivity(videoShare);
 						}
 						
 						//Toast.makeText(VideoEditActivity.this, strInfo,Toast.LENGTH_SHORT).show();
@@ -413,38 +419,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		}
 		catch (FilterVideoEditorException e) {
 			Toast.makeText(this, "保存视频失败，" + e.getMessage(), Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	
-	/**
-	 * 选择视频配乐静音
-	 */
-	private void setMuteVideo(boolean isMuteVideo) {
-		if (mVVPlayVideo.isPlaying() || mVVPlayVideo.isPausing()) {
-			mVVPlayVideo.stop();
-		}
-		try {
-			mVVPlayVideo.clearAllMixAudio();
-			//设置是否静音
-			mVVPlayVideo.muteMainVideo(isMuteVideo);
-			if(isMuteVideo){
-				// 如果是静音情况就需要重置当前配乐路径为空
-				mStrMusicFilePath = null;
-			}
-			
-			// 判断配音列表是否存在配音资源，如果存在就要将配音文件重新添加进去在播放
-			if (audioInfos.size() > 0) {
-				setMixAudioFilePath(m_strRecorderingFilePath, false);
-			}
-			else {
-				// 不存在，则直接播放
-				//mVVPlayVideo.start();
-			}
-		}
-		catch (FilterVideoEditorException e) {
-			console.toast("设置静音失败！", mContext);
-			console.log("FilterVideoEditor muteMainVideo exception:" + e.getMessage());
 		}
 	}
 	
@@ -507,38 +481,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	}
 	
 	/**
-	 * 重置视频播放状态
-	 */
-	private void videoPlaystate() {
-		//m_ibVideoPlayOrPause.setVisibility(View.VISIBLE);
-		if (mVVPlayVideo.isPlaying()) {
-			// 如果正在播放视频，则暂停播放
-			mVVPlayVideo.pause();
-		}
-		else {
-			// 如果有视频播放但被暂停，则继续播放
-			mVVPlayVideo.start();
-//			m_ibVideoPlayOrPause.postDelayed(new Runnable() {
-//				@Override
-//				public void run() {
-//					m_ibVideoPlayOrPause.setVisibility(View.GONE);
-//				}
-//			}, 2000);
-		}
-		// 根据视频的播放状态改变按钮的背景图片
-		//m_ibVideoPlayOrPause.setBackgroundResource(m_vvPlayVideo.isPlaying() ? R.drawable.video_pause_bg : R.drawable.video_player_bg);
-	}
-	
-	/**
-	 * 设置是否配乐
-	 * 
-	 * @param isSoundTrack
-	public void setSoundTrack(boolean isSoundTrack) {
-		this.isSoundTrack = isSoundTrack;
-	}
-	 */
-	
-	/**
 	 * 添加资源到配置目录
 	 * 
 	 * @param strAssetFile
@@ -558,7 +500,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	 * @param path
 	 */
 	private void addMusicToVideo(String path){
-		//mVVPlayVideo.stop();
 		try{
 			if(!"".equals(path) && null != path){
 				//setMuteVideo(false);
@@ -580,7 +521,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 			}
 		}
 		catch(Exception e){
-			
+			e.printStackTrace();
 		}
 	}
 	
@@ -632,12 +573,10 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 				while (null != mProgressThread && null != mVVPlayVideo) {
 					// 设置进度条的长度为视频的总长度
 					mVideoProgressBar.setMax(maxDuration);
-					//console.log("video---progress---max---" + mVVPlayVideo.getDuration());
 					// 如果视频正在播放而且进度条没有被拖动
 					if (mVVPlayVideo.isPlaying()) {
 						// 设置进度条的当前进度为视频已经播放的长度
 						int position = mVVPlayVideo.getCurrentPosition();
-						//console.log("video---progress---" + position);
 						mVideoProgressBar.setProgress(position);
 					}
 					try {
@@ -652,15 +591,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		};
 		mProgressThread.start();
 	}
-	
-	/**
-	 * 获取视频当前播放时间格式化后的字符串
-	public String updateTime(int t) {
-		int s = t / 1000 % 60;
-		int m = t / 1000 / 60;
-		return (m > 9 ? m : "0" + m) + ":" + (s > 9 ? s : "0" + s);
-	}
-	 */
 	
 	
 	@Override
@@ -685,7 +615,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	protected void onPause() {
 		if (mVVPlayVideo != null) {
 			if (mVVPlayVideo.isPlaying()) {
-				console.log("video---edit---pause");
 				mVVPlayVideo.stop();
 				//显示图片
 				mPlayStatusImage.setVisibility(View.VISIBLE);
@@ -711,7 +640,6 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	protected void onDestroy() {
 		mVVPlayVideo.cleanUp();
 		mVVPlayVideo = null;
-		
 		super.onDestroy();
 	}
 
@@ -725,8 +653,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 				finish();
 			break;
 			case R.id.next_btn:
-				//下一步,跳转到视频分享页面
-				console.log("chxy send video share");
+				//下一步,导出视频编码
 				//停止进度条线程
 				stopProgressThread();
 				//暂停播放器

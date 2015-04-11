@@ -1,8 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
-
 import java.io.UnsupportedEncodingException;
-
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -20,8 +18,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.support.v4.app.Fragment;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
@@ -39,14 +36,12 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
-import cn.com.mobnote.umeng.widget.CustomShareUtil;
 import cn.com.mobnote.video.MVListAdapter;
 import cn.com.mobnote.video.MVManage;
 import cn.com.mobnote.video.MVManage.MVEditData;
 import cn.com.mobnote.view.MyGridView;
-import cn.com.tiros.voiceservice.PlayVoiceRemote;
+import cn.com.tiros.api.FileUtils;
 
-import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.media.QQShareContent;
@@ -61,6 +56,7 @@ import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
+
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -115,25 +111,11 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 	private ProgressDialog mPdsave = null;
 	/** 视频ID */
 	private String mVideoVid = "";
+	/** 视频路径 */
+	private String mVideoPath = "";
+	/** 上传视频时间记录 */
+	private long uploadVideoTime = 0;
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.video_share);
-		mContext = this;
-		//获取视频Id
-		Intent intent = getIntent();
-		mVideoVid = intent.getStringExtra("cn.com.mobnote.golukmobile.videovid");
-		
-		//获得GolukApplication对象
-		mApp = (GolukApplication)getApplication();
-		mApp.setContext(this,"VideoShare");
-		
-		// 配置需要分享的相关平台
-		configPlatforms();
-		init();
-	}
 	
 	public Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -157,15 +139,40 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		};
 	};
 	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.video_share);
+		
+		mContext = this;
+		//获取视频Id
+		Intent intent = getIntent();
+		mVideoPath = intent.getStringExtra("cn.com.mobnote.golukmobile.videoaoth");
+		
+		//获得GolukApplication对象
+		mApp = (GolukApplication)getApplication();
+		mApp.setContext(this,"VideoShare");
+		
+		//配置需要分享的相关平台
+		configPlatforms();
+		
+		//初始化
+		init();
+		
+		//上传已倒出的本地视频
+		uploadShareVideo();
+	}
 	
-	@Override 
+	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    /**使用SSO授权必须添加如下代码 */
-	    UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode) ;
-	    if(ssoHandler != null){
-	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-	    }
+		super.onActivityResult(requestCode, resultCode, data);
+		/**使用SSO授权必须添加如下代码 */
+		UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
+		if(ssoHandler != null){
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
 	
 	/**
@@ -182,51 +189,26 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 	}
 	
 	/**
-	 * 初始化本地视频列表
+	 * 上传要分享的视频
 	 */
-	private void initVideoEditList(){
-		MyGridView gridView = createMVGridView();
-		MVManage mvManage = new MVManage(mContext);
-		ArrayList<MVEditData> list = mvManage.getLocalVideoList();
-		MVListAdapter adapter = new MVListAdapter(mContext,list);
-		gridView.setAdapter(adapter);
-		mMVListLayout.addView(gridView);
+	private void uploadShareVideo(){
+		//将本地视频地址,转成logic可读路径fs1://
+		if(!"".equals(mVideoPath)){
+			String localPath = FileUtils.javaToLibPath(mVideoPath);
+			uploadVideoTime = SystemClock.uptimeMillis();
+			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_UploadVideo,localPath);
+			if(b){
+				//启动loading动画
+				//mLoadingAnimation.start();
+				
+				//重置滤镜标识
+				//mMVListAdapter.setResChange(false);
+			}
+			else{
+				Toast.makeText(mContext,"调用视频上传接口失败",Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
-	
-	/**
-	 * 创建本地视频列表
-	 * @return
-	 */
-	private MyGridView createMVGridView() {
-		MyGridView gridLayout = new MyGridView(mContext,null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
-		gridLayout.setLayoutParams(lp);
-		gridLayout.setBackgroundColor(Color.rgb(19,19,19));
-		//gridLayout.setBackgroundColor(Color.rgb(204,102,153));
-		gridLayout.setNumColumns(4);
-		gridLayout.setPadding(16,30,16,30);
-		gridLayout.setVerticalSpacing(30);
-		gridLayout.setHorizontalSpacing(16);
-		//设置grid item点击效果为透明
-		//gridLayout.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		return gridLayout;
-	}
-	
-	/**
-	 * 视频播放初始化
-	 */
-	@SuppressWarnings("deprecation")
-	private void videoInit(){
-		mSurfaceView = (SurfaceView)findViewById(R.id.video_surface);
-		//SurfaceHolder是SurfaceView的控制接口
-		mSurfaceHolder = mSurfaceView.getHolder();
-		//因为这个类实现了SurfaceHolder.Callback接口，所以回调参数直接this
-		mSurfaceHolder.addCallback(this);
-		//Surface类型
-		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		//mSurfaceHolder.setFixedSize(320, 220);//显示的分辨率,不设置为视频默认
-	}
-	
 	
 	/**
 	 * 配置分享平台参数</br>
@@ -241,6 +223,7 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		//添加腾讯QQ
 		addQQQZonePlatform();
 	}
+	
 	/**
 	 * @功能描述 : 添加微信平台分享
 	 * @return
@@ -260,21 +243,20 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		wxCircleHandler.addToSocialSDK();
 	}
 	
-	 /**
-     * @功能描述 : 添加QQ平台支持 QQ分享的内容， 包含四种类型， 即单纯的文字、图片、音乐、视频. 参数说明 : title, summary,
-     *       image url中必须至少设置一个, targetUrl必须设置,网页地址必须以"http://"开头 . title :
-     *       要分享标题 summary : 要分享的文字概述 image url : 图片地址 [以上三个参数至少填写一个] targetUrl
-     *       : 用户点击该分享时跳转到的目标地址 [必填] ( 若不填写则默认设置为友盟主页 )
-     * @return
-     */
-    private void addQQQZonePlatform() {
-        String appId = "1104418156";
-        String appKey = "G7OfQ0qbqe5OJlUP";
-        // 添加QQ支持, 并且设置QQ分享内容的target url
-        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler((Activity) mContext,appId, appKey);
-       
-        qqSsoHandler.addToSocialSDK();
-    }
+	/**
+	 * @功能描述 : 添加QQ平台支持 QQ分享的内容， 包含四种类型， 即单纯的文字、图片、音乐、视频. 参数说明 : title, summary,
+	 *       image url中必须至少设置一个, targetUrl必须设置,网页地址必须以"http://"开头 . title :
+	 *       要分享标题 summary : 要分享的文字概述 image url : 图片地址 [以上三个参数至少填写一个] targetUrl
+	 *       : 用户点击该分享时跳转到的目标地址 [必填] ( 若不填写则默认设置为友盟主页 )
+	 * @return
+	*/
+	private void addQQQZonePlatform() {
+		String appId = "1104418156";
+		String appKey = "G7OfQ0qbqe5OJlUP";
+		// 添加QQ支持, 并且设置QQ分享内容的target url
+		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler((Activity) mContext,appId, appKey);
+		qqSsoHandler.addToSocialSDK();
+	}
 	
 	/**
 	 * 添加短信平台</br>
@@ -294,10 +276,8 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		UMVideo video = new UMVideo(videourl);
 		video.setThumb(umimage);
 		
-
 		// 配置新浪SSO
 		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-		
 		
 		//微信
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
@@ -321,8 +301,6 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 		sms.setShareContent(text+"。"+videourl);
 		//sms.setShareImage(umimage);
 		mController.setShareMedia(sms);
-		
-		
 		
 		//新浪微博分享
 		SinaShareContent sinaContent = new SinaShareContent();
@@ -364,8 +342,8 @@ public class VideoShareActivity extends Activity  implements SurfaceHolder.Callb
 					setShareContent(videourl,imageurl,text);
 					
 					CustomShareBoard shareBoard = new CustomShareBoard(this);
-			        shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-			        
+					shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+				
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
