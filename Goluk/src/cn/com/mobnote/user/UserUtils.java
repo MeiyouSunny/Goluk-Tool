@@ -117,5 +117,5 @@ public class UserUtils {
 				headImage.setImageResource(R.drawable.individual_center_head_moren);
 			}
 	 }
-	 
+	
 }

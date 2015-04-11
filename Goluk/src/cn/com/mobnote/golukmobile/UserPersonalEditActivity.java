@@ -62,8 +62,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	private String index;
 	private String editHead;
 	//从UserPersonalInfoActivity中传来的头像编号
+	private String infoHead;
 	//获取文本框中的数据
-	private String infoName,infoDesc,infoSex,infoHead;
+	private String infoName,infoSex,infoDesc;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +204,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	 */
 	public void saveInfo(){
 		name = mTextName.getText().toString();
-		head = infoHead;
+		head = editHead;
 		sex = mTextSex.getText().toString();
 		desc = mTextSign.getText().toString();
 		try{
@@ -234,25 +235,27 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				String msg = json.getString("msg");
 				//解析修改后数据
 				JSONObject json2 = json.getJSONObject("data");
+				
+				Log.i("xxx", json2.toString());
 				String sex = json2.getString("sex");
 				String desc = json2.getString("desc");
 				String name = json2.getString("nickname");
-				Log.i("fff", json2.toString());
-				
+				String head = json2.getString("head");
 				Intent itSave = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
 				
 				switch (code) {
 				//如果修改用户信息返回信息成功的话，携带参数跳转页面
 				case 200:
-					if(infoSex.equals(sex) || infoDesc.equals(desc) || infoName.equals(name)){
-						this.finish();
-					}else{
+//					if(infoDesc.equals(desc) &&  infoName.equals(name) && editHead.equals(head)){
+//						this.finish();
+//						console.toast("没有修改", mContext);
+//					}else{
 						console.toast("数据修成功", mContext);
 						itSave.putExtra("saveName", name);
-						itSave.putExtra("saveHead", editHead);
+						itSave.putExtra("saveHead", head);
 						itSave.putExtra("saveSex", sex);
 						startActivity(itSave);
-					}
+//					}
 					break;
 
 				default:
