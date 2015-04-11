@@ -17,13 +17,15 @@ public interface WifiConnectInterface {
 	 */
 	public void autoWifiManage() ;
 
+	 
 	/**
 	 * 通过用户名密码创建wifi热点
-	 * 
-	 * @param ssid
-	 * @param password
+	 * @param ph_ssid
+	 * @param ph_password
+	 * @param ipc_ssid
+	 * @param ipc_mac
 	 */
-	public void createWifiAP(String ssid, String password) ;
+	public void createWifiAP(String ph_ssid, String ph_password,String ipc_ssid, String ipc_mac) ;
 
 	/**
 	 * 通过关键字查询列表信息

@@ -1,4 +1,4 @@
-//package cn.com.mobnote.wifibind;
+//package cn.com.mobnote;
 //
 //import cn.com.mobnote.talk.wifimanage.R;
 //import cn.com.mobnote.wifisupport.WifiConnectManager;
@@ -83,7 +83,7 @@
 //						.getSystemService(Context.WIFI_SERVICE);
 //				connectManage = new WifiConnectManager(wm, WifiActivity.this);
 //		 
-//				connectManage.createWifiAP("tiros0322", "tiros.com.cn");
+//				connectManage.createWifiAP("myap", "123456789","tiros0322","33:d1:77:09:57:56");
 //
 //			}
 //
@@ -180,7 +180,9 @@
 //			}
 //			break;
 //		case 2:
-//			Log.e(TAG, "wificretate -------------"+message+"--------------");
+//			Log.e(TAG, "connectWifi ------------- "+message+"--------------");
+//			textView1.setText("connectWifi: \n\n");
+//			textView1.append(message);
 //			break;
 //		case 3:
 //			bean = (WifiRsBean) arrays;

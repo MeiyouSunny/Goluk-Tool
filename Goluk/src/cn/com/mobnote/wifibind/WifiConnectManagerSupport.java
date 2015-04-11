@@ -159,15 +159,13 @@ public class WifiConnectManagerSupport {
 	boolean openWifi(boolean restart) {
 		// 打开 wifi 功能
 		boolean bRet = true;
-		
+		if (!wifiManager.isWifiEnabled()) {
+			bRet = wifiManager.setWifiEnabled(true);
+		}
 //		如果强制重启
 		if(restart){
 			bRet = wifiManager.setWifiEnabled(false);
 			bRet = wifiManager.setWifiEnabled(true);
-		}else{
-			if(wifiManager.getWifiState()!=3){
-			 bRet = wifiManager.setWifiEnabled(true);
-			}
 		}
 		return bRet;
 	}
@@ -384,37 +382,10 @@ public class WifiConnectManagerSupport {
 	}
 
 	public void closeWifiAp(WifiManager wifiManager) {
-		if (isWifiApEnabled(wifiManager)) {
-			try {
-				Method method = wifiManager.getClass().getMethod(
-						"getWifiApConfiguration");
-				method.setAccessible(true);
-
-				WifiConfiguration config = (WifiConfiguration) method
-						.invoke(wifiManager);
-
-				Method method2 = wifiManager.getClass().getMethod(
-						"setWifiApEnabled", WifiConfiguration.class,
-						boolean.class);
-				method2.invoke(wifiManager, config, false);
-
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if (wifiManager.isWifiEnabled()) {
-			wifiManager.setWifiEnabled(false);
-		}
+ 
+		
+			setWifiApEnabled(null, false);
+	
 	}
 
 	public boolean isWifiApEnabled(WifiManager wifiManager) {
@@ -599,5 +570,17 @@ public class WifiConnectManagerSupport {
 			file = null;
 		}
 	}
-
+	  public boolean setWifiApEnabled(WifiConfiguration wifiConfig, boolean enabled) {
+		    try {
+		      if (enabled) { // disable WiFi in any case
+		    	  wifiManager.setWifiEnabled(false);
+		      }
+		 
+		      Method method = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
+		      return (Boolean) method.invoke(wifiManager, wifiConfig, enabled);
+		    } catch (Exception e) {
+		      Log.e(this.getClass().toString(), "", e);
+		      return false;
+		    }
+		  }
 }
