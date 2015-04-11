@@ -204,6 +204,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		}
 		else{
 			//没连接,关闭热点
+			mWac.closeWifi();
 			
 			//返回关闭全部页面
 			SysApplication.getInstance().exit();
@@ -235,8 +236,9 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		//保存连接数据
 		WifiRsBean beans = new WifiRsBean();
 		beans.setIpc_mac(mIpcMac);
+		beans.setIpc_ssid(WiFiInfo.AP_SSID);
 		beans.setPh_ssid(WiFiInfo.GolukSSID);
-		beans.setPh_pwd(WiFiInfo.GolukPWD);
+		beans.setPh_pass(WiFiInfo.GolukPWD);
 		mWac.saveConfiguration(beans);
 		
 		//保存绑定标识
