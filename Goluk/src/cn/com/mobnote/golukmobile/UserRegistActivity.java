@@ -330,6 +330,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
 			console.log(isIdentify);
 			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
+
 			identifyClick = true;
 			UserUtils.hideSoftMethod(this);
 			mIdentifyLoading.setVisibility(View.VISIBLE);

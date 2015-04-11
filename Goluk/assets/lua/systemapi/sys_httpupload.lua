@@ -203,7 +203,7 @@ local interface = {}
 --@描述:上传文件
 --@return 无
 --]]
-createmodule(interface,"HttpUpLoad",function (htype, fnNotify, sUrl, sFileName, sAactionLocation)
+createmodule(interface,"HttpUpLoad",function (htype, fnNotify, sUrl, sFileName, sAactionLocation,header)
 	if(htype == nil or fnNotify == nil or sUrl == nil or sFileName == nil or sAactionLocation == nil) then
 		luaprint("HttpUpLoad---Error");
 		return;
@@ -229,6 +229,12 @@ createmodule(interface,"HttpUpLoad",function (htype, fnNotify, sUrl, sFileName, 
 	--设置uid头信息
 	local sUid = tiros.moduledata.moduledata_get("framework", "uid");
 	sys_httpUpLoadAddHeader(htable, "uid", sUid);
+	--增加http头
+	if nil ~= header and "table" == type(header) then
+		for k,v in pairs(header) do
+			sys_httpUpLoadAddHeader(htable, k, v);
+		end
+	end
 	--判断是否繁忙
 	local bIsBusy = sys_httpUpLoadIsBusy(htable);
 	if(bIsBusy == false) then

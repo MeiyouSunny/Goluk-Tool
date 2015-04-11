@@ -7,6 +7,7 @@ import io.vov.vitamio.MediaPlayer.OnCompletionListener;
 import io.vov.vitamio.MediaPlayer.OnErrorListener;
 import io.vov.vitamio.MediaPlayer.OnInfoListener;
 import io.vov.vitamio.MediaPlayer.OnPreparedListener;
+import io.vov.vitamio.MediaPlayer.OnSeekCompleteListener;
 import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ import android.widget.Toast;
   *
   * @author xuhw
   */
-public class VideoPlayerActivity extends Activity implements OnCompletionListener, OnBufferingUpdateListener
+public class VideoPlayerActivity extends Activity implements OnCompletionListener, OnBufferingUpdateListener, OnSeekCompleteListener
 ,OnErrorListener, OnInfoListener, OnPreparedListener, OnClickListener, SurfaceHolder.Callback, OnVideoSizeChangedListener{
 	/** 视频播放器 */
 	private MediaPlayer mMediaPlayer=null;
@@ -156,7 +157,14 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			@Override
 			public void onStopTrackingTouch(SeekBar arg0) {
 				int progress = mSeekBar.getProgress();
-				mMediaPlayer.seekTo(progress);
+				System.out.println("TTT===========aaaaaa==========");
+				if(null != mMediaPlayer){
+					mMediaPlayer.seekTo(progress);
+					if(!mMediaPlayer.isPlaying()){
+						mMediaPlayer.start();
+						System.out.println("TTT===========bbbbbb==========");
+					}
+				}
 			}
 				
 			@Override
@@ -174,23 +182,25 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 				case GETPROGRESS:
-					mHandler.removeMessages(GETPROGRESS);
-					if(mMediaPlayer.isPlaying()){
-						long curPosition = mMediaPlayer.getCurrentPosition();
-						long duration = mMediaPlayer.getDuration();
-						
-						System.out.println("TTT========duration=="+duration+"=====curPosition="+curPosition);
-						mCurTime.setText(long2TimeStr(curPosition));
-						mTotalTime.setText(long2TimeStr(duration));
-						mSeekBar.setMax((int)duration);
-						mSeekBar.setProgress((int)curPosition);
-						mPlayBigBtn.setVisibility(View.GONE);
-						mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
-					}else{
-//						mPlayBigBtn.setVisibility(View.VISIBLE);
-						mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+					if(null != mMediaPlayer){
+						if(mMediaPlayer.isPlaying()){
+							long curPosition = mMediaPlayer.getCurrentPosition();
+							long duration = mMediaPlayer.getDuration();
+							
+							System.out.println("TTT========duration=="+duration+"=====curPosition="+curPosition);
+							mCurTime.setText(long2TimeStr(curPosition));
+							mTotalTime.setText(long2TimeStr(duration));
+							mSeekBar.setMax((int)duration);
+							mSeekBar.setProgress((int)curPosition);
+							mPlayBigBtn.setVisibility(View.GONE);
+							mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
+						}else{
+//							mPlayBigBtn.setVisibility(View.VISIBLE);
+							mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+						}
 					}
 					
+					mHandler.removeMessages(GETPROGRESS);
 					mHandler.sendEmptyMessageDelayed(GETPROGRESS, 500);
 					break;
 	
@@ -280,24 +290,33 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 				exit();
 				break;
 			case R.id.mPlayBtn:
-				if(mMediaPlayer.isPlaying()){
-					mMediaPlayer.pause();
-					mPlayBigBtn.setVisibility(View.VISIBLE);
-					mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
-					
+				if(null != mMediaPlayer){
+					if(mMediaPlayer.isPlaying()){
+						mMediaPlayer.pause();
+						mPlayBigBtn.setVisibility(View.VISIBLE);
+						mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
+						
+					}else{
+						mMediaPlayer.start();
+						mPlayBigBtn.setVisibility(View.GONE);
+						mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+					}
 				}else{
-					mMediaPlayer.start();
-					mPlayBigBtn.setVisibility(View.GONE);
-					mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+					playVideo();
 				}
 				break;
 			case R.id.mPlayBigBtn:
-				if(mMediaPlayer.isPlaying()){
-					mMediaPlayer.pause();
+				if(null != mMediaPlayer){
+					if(mMediaPlayer.isPlaying()){
+						mMediaPlayer.pause();
+					}else{
+						mMediaPlayer.start();
+						mPlayBigBtn.setVisibility(View.GONE);
+					}
 				}else{
-					mMediaPlayer.start();
-					mPlayBigBtn.setVisibility(View.GONE);
+					playVideo();
 				}
+				
 				break;
 	
 			default:
@@ -319,7 +338,14 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
-		playVideo();
+		mSurfaceHolder=arg0;
+		if(null == mMediaPlayer){
+			playVideo();
+		}else{
+			mMediaPlayer.setDisplay(arg0);
+			mMediaPlayer.start();
+		}
+		
 		if(!isGet){
 			isGet=true;
 			mHandler.sendEmptyMessage(GETPROGRESS);
@@ -328,7 +354,9 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
+		if(null != mMediaPlayer){
+			mMediaPlayer.pause();
+		}
 	}
 	
 	/**
@@ -341,7 +369,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		try {
 			mMediaPlayer = new MediaPlayer(this);
 			mMediaPlayer.setBufferSize(1024);
-			mMediaPlayer.setLooping(true);
+//			mMediaPlayer.setLooping(true);
 			mMediaPlayer.setDataSource(playUrl);
 			mMediaPlayer.setDisplay(mSurfaceHolder);
 			mMediaPlayer.setOnInfoListener(this);
@@ -350,6 +378,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			mMediaPlayer.setOnPreparedListener(this);
 			mMediaPlayer.setOnVideoSizeChangedListener(this);
 			mMediaPlayer.setOnErrorListener(this);
+			mMediaPlayer.setOnSeekCompleteListener(this);
 			setVolumeControlStream(AudioManager.STREAM_MUSIC);
 			mMediaPlayer.prepareAsync();
 		} catch (IllegalArgumentException e) {
@@ -367,10 +396,27 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	public void onCompletion(MediaPlayer arg0) {
 		long duration = mMediaPlayer.getDuration();
 		System.out.println("TTT========onCompletion=====duration="+duration);
-		mCurTime.setText(long2TimeStr(duration));
+		
+		mCurTime.setText(long2TimeStr(0));
 		mTotalTime.setText(long2TimeStr(duration));
 		mSeekBar.setMax((int)duration);
-		mSeekBar.setProgress((int)duration);
+		mSeekBar.setProgress(0);
+		
+		if(null != mMediaPlayer){
+			mMediaPlayer.seekTo(0);
+			mMediaPlayer.pause();
+//			mMediaPlayer.release();
+//			mMediaPlayer = null;
+		}
+	}
+
+	@Override
+	public void onSeekComplete(MediaPlayer mp) {
+		
+//		if(!mMediaPlayer.isPlaying()){
+//			mMediaPlayer.start();
+//			System.out.println("TTT===========bbbbbb==========");
+//		}
 	}
 
 	@Override
@@ -378,6 +424,8 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		System.out.println("TTT=============onError=");
 		hideLoading();
 		Toast.makeText(VideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
+		mCurTime.setText("00:00");
+		mTotalTime.setText("00:00");
 		return false;
 	}
 

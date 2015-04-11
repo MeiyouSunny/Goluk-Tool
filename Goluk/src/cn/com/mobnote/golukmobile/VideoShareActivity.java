@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile;
 
 
 import java.io.UnsupportedEncodingException;
+
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -20,7 +21,9 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -35,18 +38,26 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import cn.com.mobnote.umeng.widget.CustomShareUtil;
 import cn.com.mobnote.video.MVListAdapter;
 import cn.com.mobnote.video.MVManage;
 import cn.com.mobnote.video.MVManage.MVEditData;
 import cn.com.mobnote.view.MyGridView;
+import cn.com.tiros.voiceservice.PlayVoiceRemote;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.media.SinaShareContent;
 import com.umeng.socialize.media.SmsShareContent;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMVideo;
 import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.SmsHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
@@ -72,7 +83,7 @@ import com.umeng.socialize.weixin.media.WeiXinShareContent;
  */
 
 @SuppressLint("HandlerLeak")
-public class VideoShareActivity extends Activity implements SurfaceHolder.Callback, OnClickListener {
+public class VideoShareActivity extends Activity  implements SurfaceHolder.Callback, OnClickListener {
 	private static final String DESCRIPTOR = "com.umeng.share";
 	private final UMSocialService mController = UMServiceFactory.getUMSocialService(DESCRIPTOR);
 	/** application */
@@ -104,9 +115,6 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 	private ProgressDialog mPdsave = null;
 	/** 视频ID */
 	private String mVideoVid = "";
-	/** 视频分享页面handler用来接收消息,更新UI*/
-	public static Handler mVideoShareHandler = null;
-	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -114,12 +122,6 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.video_share);
 		mContext = this;
-		//获取视频路径
-		//Intent intent = getIntent();
-		//mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
-		
-		//mMVListLayout = (LinearLayout) findViewById(R.id.mvlistlayout);
-		
 		//获取视频Id
 		Intent intent = getIntent();
 		mVideoVid = intent.getStringExtra("cn.com.mobnote.golukmobile.videovid");
@@ -130,27 +132,40 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 		
 		// 配置需要分享的相关平台
 		configPlatforms();
-		
-		//视频初始化
-		//videoInit();
-		//页面初始化
 		init();
-		//
-		//initVideoEditList();
-		/*
-		pause=(Button)findViewById(R.id.button2);
-		pause.setOnClickListener(new OnClickListener(){
-		@Override
-		public void onClick(View v) {
-			player.pause();
-		}});
-		stop=(Button)findViewById(R.id.button3);
-		stop.setOnClickListener(new OnClickListener(){
-		@Override
-		public void onClick(View v) {
-			player.stop();
-		}});
-		*/
+	}
+	
+	public Handler mHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 1://延迟让server返回的文字内容显示
+				JSONObject json = new JSONObject();
+				try {
+					json.put("code", 200);
+					json.put("videourl", "http://cdn2.xiaocheben.com/files/cdcvideo/test1111.mp4");
+					json.put("imageurl", "http://cdn2.xiaocheben.com/files/cdcpic/test1111.png");
+					json.put("text", "骚年赶紧戳进来吧");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				videoShareCallBack(1, json.toString());
+			default:
+				break;
+			}
+		};
+	};
+	
+	
+	@Override 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    /**使用SSO授权必须添加如下代码 */
+	    UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode) ;
+	    if(ssoHandler != null){
+	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	    }
 	}
 	
 	/**
@@ -161,28 +176,9 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 		mBackBtn = (Button)findViewById(R.id.back_btn);
 		
 		mShareLayout = (RelativeLayout)findViewById(R.id.share_layout);
-
-//		mNextBtn = (Button)findViewById(R.id.next_btn);
-//		mPlayLayout = (RelativeLayout)findViewById(R.id.play_layout);
-//		mPlayStatusImage = (ImageView)findViewById(R.id.play_image);
-//		mPlayBtn.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mMedioPlayer.start();
-//			}
-//		});
 		//注册事件
 		mBackBtn.setOnClickListener(this);
 		mShareLayout.setOnClickListener(this);
-//		mNextBtn.setOnClickListener(this);
-//		mPlayLayout.setOnClickListener(this);
-		
-		//更新UI handler
-		mVideoShareHandler = new Handler(){
-			@Override
-			public void handleMessage(Message msg) {
-			}
-		};
 	}
 	
 	/**
@@ -242,6 +238,8 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 		addWXPlatform();
 		//添加短信
 		addSMS();
+		//添加腾讯QQ
+		addQQQZonePlatform();
 	}
 	/**
 	 * @功能描述 : 添加微信平台分享
@@ -262,6 +260,22 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 		wxCircleHandler.addToSocialSDK();
 	}
 	
+	 /**
+     * @功能描述 : 添加QQ平台支持 QQ分享的内容， 包含四种类型， 即单纯的文字、图片、音乐、视频. 参数说明 : title, summary,
+     *       image url中必须至少设置一个, targetUrl必须设置,网页地址必须以"http://"开头 . title :
+     *       要分享标题 summary : 要分享的文字概述 image url : 图片地址 [以上三个参数至少填写一个] targetUrl
+     *       : 用户点击该分享时跳转到的目标地址 [必填] ( 若不填写则默认设置为友盟主页 )
+     * @return
+     */
+    private void addQQQZonePlatform() {
+        String appId = "1104418156";
+        String appKey = "G7OfQ0qbqe5OJlUP";
+        // 添加QQ支持, 并且设置QQ分享内容的target url
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler((Activity) mContext,appId, appKey);
+       
+        qqSsoHandler.addToSocialSDK();
+    }
+	
 	/**
 	 * 添加短信平台</br>
 	 */
@@ -274,39 +288,58 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 	/**
 	 * 根据不同的平台设置不同的分享内容</br>
 	 */
-	private void setShareContent(String vurl) {
-
-		// 配置SSO
-		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-		//mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
+	private void setShareContent(String videourl,String imageurl,String text) {
 		
-		//UMImage urlImage = new UMImage(mContext,"http://www.umeng.com/images/pic/social/integrated_3.png");
-		WeiXinShareContent weixinContent = new WeiXinShareContent();
-		weixinContent.setShareContent(vurl);
-		//weixinContent.setTitle("友盟社会化分享组件-微信");
-		//weixinContent.setTargetUrl("http://www.umeng.com");
-		//weixinContent.setShareMedia(urlImage);
-		mController.setShareMedia(weixinContent);
+		UMImage umimage = new UMImage(mContext,imageurl);
+		UMVideo video = new UMVideo(videourl);
+		video.setThumb(umimage);
+		
 
+		// 配置新浪SSO
+		mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		
+		
+		//微信
+		WeiXinShareContent weixinContent = new WeiXinShareContent();
+		
+		weixinContent.setShareContent("Goluk分享内容");
+		weixinContent.setTitle(text);
+		weixinContent.setTargetUrl(videourl);
+		weixinContent.setShareMedia(video);
+		mController.setShareMedia(weixinContent);
+		
 		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent();
-		circleMedia.setShareContent(vurl);
-		//circleMedia.setTitle("友盟社会化分享组件-朋友圈");
-		//circleMedia.setShareImage(urlImage);
-		// circleMedia.setShareMedia(uMusic);
-		// circleMedia.setShareMedia(video);
-		//circleMedia.setTargetUrl("http://www.umeng.com");
+		circleMedia.setShareContent("Goluk分享内容");
+		circleMedia.setTitle(text);
+		circleMedia.setTargetUrl(videourl);
+		circleMedia.setShareMedia(video);
 		mController.setShareMedia(circleMedia);
 
 		// 设置短信分享内容
 		SmsShareContent sms = new SmsShareContent();
-		sms.setShareContent(vurl);
-		//sms.setShareImage(urlImage);
+		sms.setShareContent(text+"。"+videourl);
+		//sms.setShareImage(umimage);
 		mController.setShareMedia(sms);
-
+		
+		
+		
+		//新浪微博分享
 		SinaShareContent sinaContent = new SinaShareContent();
-		sinaContent.setShareContent(vurl);
+		sinaContent.setShareContent("Goluk分享内容");
+		sinaContent.setTitle(text);
+		sinaContent.setTargetUrl(videourl);
+		sinaContent.setShareMedia(video);
 		mController.setShareMedia(sinaContent);
+		
+		
+		//qq分享
+		QQShareContent  qqContent = new QQShareContent();
+		qqContent.setShareContent("Goluk分享内容");
+		qqContent.setTitle(text);
+		qqContent.setTargetUrl(videourl);
+		qqContent.setShareMedia(video);
+		mController.setShareMedia(qqContent);
 	}
 	
 	/**
@@ -319,15 +352,20 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 			JSONObject obj;
 			try {
 				obj = new JSONObject(json);
+				System.out.println("分享地址回调:"+json.toString());
 				int code = Integer.valueOf(obj.getString("code"));
 				if(200 == code){
 					//请求成功
-					String vurl = obj.getString("vurl");
-					//设置分享内容
-					setShareContent(vurl);
+					String videourl = obj.getString("vurl");
+					String imageurl = obj.getString("imageurl");
+					String text = obj.getString("text");
 					
-					mController.getConfig().setPlatforms(SHARE_MEDIA.WEIXIN,SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.SINA,SHARE_MEDIA.SMS);
-					mController.openShare(this, false);
+					//设置分享内容
+					setShareContent(videourl,imageurl,text);
+					
+					CustomShareBoard shareBoard = new CustomShareBoard(this);
+			        shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+			        
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -407,6 +445,8 @@ public class VideoShareActivity extends Activity implements SurfaceHolder.Callba
 			break;
 			
 			case R.id.share_layout:
+				//mHandler.sendEmptyMessageDelayed(1, 500);//5毫秒后去调用自己的回调函数
+				
 				//分享
 				JSONObject obj = new JSONObject();
 //				obj.put("vid",mVideoVid);

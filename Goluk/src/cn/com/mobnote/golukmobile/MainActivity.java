@@ -5,8 +5,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -79,9 +79,14 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.live.LiveDataInfo;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoManage;
@@ -92,6 +97,7 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.mobnote.wifi.WifiAutoConnectManager;
 import cn.com.mobnote.wifi.WifiConnCallBack;
 import cn.com.mobnote.wifi.WifiRsBean;
+import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -109,6 +115,7 @@ import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.bugly.proguard.V;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.utils.Log;
 
 /**
  * <pre>
@@ -170,6 +177,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private Button mMoreBtn = null;
 	/** 本地视频按钮 */
 	private Button mLocalVideoListBtn = null;
+	/** 分享网络直播 */
+	private Button mShareLiveBtn = null;
 	
 	
 	
@@ -242,6 +251,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(this,"Main");
 		
+		mApp.initLogic();
+		
 		//mApp.mGoluk.GoLuk_WifiStateChanged(true);
 		
 		//页面初始化,获取页面控件
@@ -292,6 +303,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		//本地视频更多按钮
 		mLocalVideoListBtn = (Button)findViewById(R.id.share_local_video_btn);
+		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
+		mShareLiveBtn.setOnClickListener(this);
 		
 		//自动登录时，loading显示
 		
@@ -386,6 +399,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		// 设置定位模式,没有设置定位模式接口setLocationMode
 		// 打开gps
 		option.setOpenGps(true);
+		option.setIsNeedAddress(true);
 		// 设置坐标类型
 		// 返回国测局经纬度坐标系 coor=gcj02
 		// 返回百度墨卡托坐标系 coor=bd09
@@ -666,10 +680,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**
 	 * 视频同步完成
 	 */
-	public void videoAnalyzeComplete(){
+	public void videoAnalyzeComplete(String str){
 //		mLocalVideoManage.videoUploadCallBack();
 //		mLocalVideoListAdapter.notifyDataSetChanged();
-		playDownLoadedSound();
+		try {
+			JSONObject json = new JSONObject(str);
+			String tag = json.getString("tag");
+			if(tag.equals("videodownload")){
+				//只有视频下载才提示音频
+				playDownLoadedSound();
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -956,7 +979,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
 			case R.id.map_location_btn:
@@ -990,16 +1012,15 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(more);
 			break;
 			case R.id.share_local_video_btn:
-				//跳转到本地视频列表
-				Intent localVideoList = new Intent(MainActivity.this,LocalVideoListActivity.class);
-				startActivity(localVideoList);
+				//跳转到本地视频分享列表
+				Intent localVideoShareList = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
+				startActivity(localVideoShareList);
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
-			
-			
-			
-			
+			case R.id.share_mylive_btn:
+				toShareLive();
+			break;
 			case R.id.video_square_more_btn:
 				//跳转到视频广场页面
 				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity.class);
@@ -1017,13 +1038,167 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//登录
 				login();
 			break;
-			case R.id.share_mylive_btn:
-				Intent liveset = new Intent(MainActivity.this, LiveShareSettingActivity.class);
-				startActivity(liveset);
-				break;
 		}
 	}
 	
+	private boolean isTestData = false;
+	
+	/**
+	 * 发起主动直播
+	 * 
+	 * @author jiayf
+	 * @date Apr 2, 2015
+	 */
+	private void toShareLive() {
+		if (isTestData) {
+			test();
+		} else {
+//			if (!mApp.isUserLoginSucess) {
+//				// TODO 未登录成功
+//				Toast.makeText(this, "请先登录", Toast.LENGTH_LONG).show();
+//				return;
+//			}
+			
+			
+			
+			// 开启直播
+			Intent intent = new Intent(this, LiveActivity.class);
+			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+			intent.putExtra(LiveActivity.KEY_GROUPID, "");
+			
+			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+
+			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+			
+//			intent.putExtra(LiveActivity.KEY_LIVE_DATA, dataInfo);
+//			intent.putExtra(LiveActivity.KEY_USERINFO, currentUserInfo);
+
+			startActivity(intent);
+			
+			
+			// 跳转直播界面
+//			
+//			boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//					IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson());
+//			if (!isSucess) {
+//				startLiveFailed();
+//			} else {
+//				// TODO 弹对话框
+//				Toast.makeText(this, "发起直播", Toast.LENGTH_LONG).show();
+//			}
+		}
+	}
+	
+	// 查看他人的直播
+	public void startLiveLook(UserInfo userInfo) {
+		LogUtil.e(null,"jyf-----click------666666");
+		if (null == userInfo) {
+			return;
+		}
+		
+		// 跳转看他人界面
+		
+		// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+		intent.putExtra(LiveActivity.KEY_GROUPID, "");
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
+
+		startActivity(intent);
+		
+		LogUtil.e(null,"jyf-----click------677777777");
+		
+		LogUtil.e(null, "jyf----20150406----MainActivity----startLiveLook");
+		
+//		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//				IPageNotifyFn.PageType_GetVideoDetail, JsonUtil.getStartLookLiveJson(userInfo.uid, userInfo.aid));
+//		if (!isSucess) {
+//			startLiveLookFailed();
+//		} else {
+//			// TODO 弹对话框
+//		}
+	}
+
+	private void startLiveFailed() {
+		// TODO 开启直接失败
+	}
+
+	private void startLiveLookFailed() {
+		// TODO 开启直接失败
+	}
+	
+	private void test() {
+		
+		final int cmd =  ITalkFn.Talk_CommCmd_JoinGroupWithInfo ;
+		String mJoinGroupJson = "{\"title\":\"创建组\",\"grouptype\":\"0\",\"groupid\":\"C8770\",\"groupnumber\":\"0\",\"tag\":0,\"membercount\":1}";
+		
+//		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd, mJoinGroupJson);
+		
+		
+		
+		// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+		intent.putExtra(LiveActivity.KEY_GROUPID, 111);
+				
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "---");
+				
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, mJoinGroupJson);
+				
+		startActivity(intent);
+	}
+	
+	
+	public void callBack_LiveLookStart(boolean isLive, int success, Object param1,Object param2) {
+		if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
+			liveFailedStart(isLive);
+			return;
+		}
+		final String data = (String) param2;
+		// 解析回调数据
+		LiveDataInfo dataInfo = JsonUtil.parseLiveDataJson(data);
+		if (null == dataInfo) {
+			liveFailedStart(isLive);
+			return;
+		}
+
+		if (200 != dataInfo.code || null == dataInfo.groupId || "".equals(dataInfo.groupId)) {
+			liveFailedStart(isLive);
+			return;
+		}
+		final String joniGroup = JsonUtil.getJoinGroup(dataInfo.groupType, dataInfo.membercount, dataInfo.title,
+				dataInfo.groupId, dataInfo.groupnumber);
+
+		UserInfo currentUserInfo = null;
+		if (!isLive) {
+			currentUserInfo = mBaiduMapManage.getCurrentUserInfo();
+		}
+
+		// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
+		intent.putExtra(LiveActivity.KEY_GROUPID, dataInfo.groupId);
+		if (null != dataInfo.playUrl) {
+			intent.putExtra(LiveActivity.KEY_PLAY_URL, dataInfo.playUrl);
+		}
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, joniGroup);
+		
+		intent.putExtra(LiveActivity.KEY_LIVE_DATA, dataInfo);
+		intent.putExtra(LiveActivity.KEY_USERINFO, currentUserInfo);
+
+		startActivity(intent);
+	}
+	
+	private void liveFailedStart(boolean isLive) {
+		if (isLive) {
+			startLiveFailed();
+		} else {
+			startLiveLookFailed();
+		}
+	}
+
 	/**
 	 * 定位SDK监听函数
 	 */
@@ -1055,6 +1230,27 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			//保存经纬度
 			LngLat.lng = location.getLongitude();
 			LngLat.lat = location.getLatitude();
+			
+			//保存地址信息
+			GolukApplication.getInstance().mCurAddr = location.getAddrStr();
+			System.out.println("YYY=========mCurAddr="+location.getAddrStr()+"==lon="+LngLat.lng+"==lat="+LngLat.lat);
+			//更新IPC经纬度
+			if(GolukApplication.getInstance().getIpcIsLogin()){
+				long lon = (long)(location.getLongitude()*3600000);
+				long lat = (long)(location.getLatitude()*3600000);
+				int speed = (int)location.getSpeed();
+				int direction = (int)location.getDirection();
+				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
+				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
+			}
+			
+			//更新行车记录仪地址
+			if(null != CarRecorderActivity.mHandler){
+				Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
+				msg.obj = location.getAddrStr();
+				CarRecorderActivity.mHandler.sendMessage(msg);
+			}
+			
 		}
 
 		public void onReceivePoi(BDLocation poiLocation) {

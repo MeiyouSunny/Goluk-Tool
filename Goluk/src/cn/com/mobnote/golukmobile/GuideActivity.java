@@ -1,7 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
-import com.tencent.bugly.elfparser.Main;
 
+import com.tencent.bugly.elfparser.Main;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.guide.GolukGuideManage;
 import android.annotation.SuppressLint;
@@ -15,6 +15,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.guide.GolukGuideManage;
 
 /**
  * <pre>
@@ -58,6 +60,8 @@ public class GuideActivity extends Activity implements OnClickListener {
 		init();
 		//加载引导页
 		initViewPager();
+		
+		((GolukApplication)this.getApplication()).initLogic();
 	}
 	
 	/**

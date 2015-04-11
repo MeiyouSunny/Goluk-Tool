@@ -3,8 +3,10 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -27,8 +29,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
+
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint("ClickableViewAccessibility")
@@ -781,25 +791,27 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				
 				break;
 			case R.id.mEditBtn:
-				if(!isEditState){
-					mEditBtn.setText("取消");
-					isEditState=true;
-					selectedListData.clear();
-					mFunctionLayout.setVisibility(View.VISIBLE);
-				}else{
-					mEditBtn.setText("编辑");
-					isEditState=false;
-					selectedListData.clear();
-					updateDelandEditBg(false);//把下载和删除按钮的北京颜色还原回去
-					mFunctionLayout.setVisibility(View.GONE);
-				}
-				
-				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
-					mWonderfulVideoAdapter.notifyDataSetChanged();
-				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
-					mEmergencyVideoAdapter.notifyDataSetChanged();
-				}else{
-					mLoopVideoAdapter.notifyDataSetChanged();
+				if(!isGetFileListDataing){
+					if(!isEditState){
+						mEditBtn.setText("取消");
+						isEditState=true;
+						selectedListData.clear();
+						mFunctionLayout.setVisibility(View.VISIBLE);
+					}else{
+						mEditBtn.setText("编辑");
+						isEditState=false;
+						selectedListData.clear();
+						updateDelandEditBg(false);//把下载和删除按钮的北京颜色还原回去
+						mFunctionLayout.setVisibility(View.GONE);
+					}
+					
+					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
+						mWonderfulVideoAdapter.notifyDataSetChanged();
+					}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
+						mEmergencyVideoAdapter.notifyDataSetChanged();
+					}else{
+						mLoopVideoAdapter.notifyDataSetChanged();
+					}
 				}
 				break;
 			case R.id.mDownloadBtn:
@@ -808,7 +820,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				mFunctionLayout.setVisibility(View.GONE);
 				for(String filename : selectedListData){
 					System.out.println("TTT======1111=filename="+filename);
-					String videoSavePath="";
+					String videoSavePath="fs1:/video/";
 					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 						videoSavePath="fs1:/video/wonderful/";
 					}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
@@ -816,7 +828,25 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					}else{
 						videoSavePath="fs1:/video/loop/";
 					}
-					GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "download", videoSavePath);
+					
+					if(filename.length() > 10){
+						String fileName = filename.substring(0, filename.length() - 4) + ".jpg";
+						String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+						File file = new File(filePath + File.separator + fileName);
+						if (!file.exists()) {
+							GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "download", FileUtils.javaToLibPath(filePath));
+						}
+					}
+					
+					String mp4 = FileUtils.libToJavaPath(videoSavePath+filename);
+					File file = new File(mp4);
+					if(!file.exists()){
+						System.out.println("TTT======@@@@@@=========111111=============");
+						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "download", videoSavePath);
+					}else{
+						System.out.println("TTT=======@@@@@@@@@@========222222=============");
+					}
+					
 				}
 				
 				selectedListData.clear();
@@ -834,6 +864,16 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				mFunctionLayout.setVisibility(View.GONE);
 				for(String filename : selectedListData){
 					GolukApplication.getInstance().getIPCControlManager().deleteFile(filename);
+					
+					
+					if(filename.length() > 10){
+						String fileName = filename.substring(0, filename.length() - 4) + ".jpg";
+						String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+						File file = new File(filePath + File.separator + fileName);
+						if (file.exists()) {
+							file.delete();
+						}
+					}
 					
 					
 					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
@@ -1016,6 +1056,8 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
 		 info.videoPath=mVideoFileInfo.location;
 
+		 
+		
 		String fileName = mVideoFileInfo.location;
 		fileName = fileName.substring(0, fileName.length() - 4) + ".jpg";
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
@@ -1024,8 +1066,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		if (file.exists()) {
 			info.videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 		} else {
-			GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
-			System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
+			 if(1 == mVideoFileInfo.withSnapshot){
+				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
+				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
+			 }
 		}
 		
 		return info;
@@ -1086,16 +1130,16 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						if (null != json) {
 							String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 							String filename = json.optString("filename");
-							if(filename.contains(".jpg")){
 							String tag = json.optString("tag");
-		System.out.println("TTT=====22222====filename="+filename+"===tag="+tag);
+System.out.println("TTT=======1111111==================tag="+tag);
+							if(tag.contains("IPC_IMAGE")){
 							if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){//精彩视频
 								if (null != mWonderfulVideoAdapter) {
 									for(int i=0; i<wonderfulVideoData.size(); i++){
 										DoubleVideoInfo info =  wonderfulVideoData.get(i);
-										String id1 = info.getVideoInfo1().id + "";
+										String id1 = "IPC_IMAGE"+info.getVideoInfo1().id;
+										System.out.println("TTT=======222222==================id1="+id1);
 										if (tag.equals(id1)) {
-											System.out.println("TTT===wonderful=3333=====filename="+filename+"===tag="+tag);
 											wonderfulVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
 													.getBitmapFromCache(filePath
 															+ File.separator
@@ -1103,7 +1147,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 										}
 										
 										if(null != info.getVideoInfo2()){
-											String id2 = info.getVideoInfo2().id + "";
+											String id2 = "IPC_IMAGE"+info.getVideoInfo2().id;
 											if(!TextUtils.isEmpty(id2)){
 												if(tag.equals(id2)){
 													System.out.println("TTT===wonderful=4444=====filename="+filename+"===tag="+tag);
@@ -1123,7 +1167,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 								if (null != mEmergencyVideoAdapter) {
 									for(int i=0; i<emergencyVideoData.size(); i++){
 										DoubleVideoInfo info =  emergencyVideoData.get(i);
-										String id1 = info.getVideoInfo1().id + "";
+										String id1 = "IPC_IMAGE"+info.getVideoInfo1().id;
 										if (tag.equals(id1)) {
 											System.out.println("TTT==emergency==3333=====filename="+filename+"===tag="+tag);
 											emergencyVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
@@ -1133,7 +1177,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 										}
 										
 										if(null != info.getVideoInfo2()){
-											String id2 = info.getVideoInfo2().id + "";
+											String id2 = "IPC_IMAGE"+info.getVideoInfo2().id;
 											if(!TextUtils.isEmpty(id2)){
 												if(tag.equals(id2)){
 													System.out.println("TTT==emergency==4444=====filename="+filename+"===tag="+tag);
@@ -1153,7 +1197,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 								if (null != mLoopVideoAdapter) {
 									for(int i=0; i<loopVideoData.size(); i++){
 										DoubleVideoInfo info =  loopVideoData.get(i);
-										String id1 = info.getVideoInfo1().id + "";
+										String id1 = "IPC_IMAGE"+info.getVideoInfo1().id;
 										if (tag.equals(id1)) {
 											System.out.println("TTT==loop==3333=====filename="+filename+"===tag="+tag);
 											loopVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
@@ -1163,7 +1207,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 										}
 										
 										if(null != info.getVideoInfo2()){
-											String id2 = info.getVideoInfo2().id + "";
+											String id2 = "IPC_IMAGE"+info.getVideoInfo2().id;
 											if(!TextUtils.isEmpty(id2)){
 												if(tag.equals(id2)){
 													System.out.println("TTT===loop=4444=====filename="+filename+"===tag="+tag);
@@ -1181,7 +1225,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 								}
 							}
 							}else{
-								System.out.println("TTT======2222=filename="+filename);
+								System.out.println("TTT======no filelist  file======filename="+filename);
 							}
 							
 						}

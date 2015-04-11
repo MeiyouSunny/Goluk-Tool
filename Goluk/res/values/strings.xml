@@ -8,109 +8,108 @@
     <string name="index_title">Goluk</string>
     <string name="video_square">视频广场</string>
     <string name="my_video_share">分享我的视频</string>
+    <string name="my_video_text">我的视频</string>
     <string name="video_more">更多</string>
     <string name="login_out">未登录</string>
     <string name="title_activity_local_video_list">LocalVideoListActivity</string>
-	<string name="back_text">返回</string>
-	<string name="edit_text">编辑</string>
-	<string name="share_text">分享</string>
-	<string name="next_text">下一步</string>
-	<string name="filter_text">滤镜</string>
-	<string name="mv_text">MV</string>
-	<string name="draft_text">草稿箱</string>
-	<string name="more_text">更多</string>
-	<string name="front_cover_text">设置封面</string>
-	<string name="share_btn_text">分享</string>
-	<string name="video_play_text">视频播放</string>
-	<string name="driving_share_text">行车分享</string>
+
+    <string name="back_text">返回</string>
+    <string name="edit_text">编辑</string>
+    <string name="share_text">分享</string>
+    <string name="next_text">下一步</string>
+    <string name="filter_text">滤镜</string>
+    <string name="mv_text">MV</string>
+    <string name="draft_text">草稿箱</string>
+    <string name="more_text">更多</string>
+    <string name="front_cover_text">设置封面</string>
+    <string name="share_btn_text">分享</string>
+    <string name="video_play_text">视频播放</string>
+    <string name="driving_share_text">行车分享</string>
+    <string name="share_live_text">分享网络直播</string>
+    <string name="share_local_video_text">分享精彩视频</string>
+    <string name="share_myvideo_text">分享我的直播</string>
+    <string name="goluk_school_text">Goluk学堂</string>
+    <string name="video_play_comment_text">写评论</string>
+    <string name="video_play_comment_send">发送</string>
+    <string name="video_share_desc_title">添加描述</string>
+    <string name="video_share_topic_text">#话题#</string>
+    <string name="keep_on_text">继续</string>
+    <string name="wifi_link_1_text">请让小车本与Goluk连接</string>
+    <string name="wifi_link_2_text">您第一次使用Goluk需要确认您的WiFi是否是开启状态,并设置WiFi连接.</string>
+    <string name="wifi_link_3_text">怎么设置小车本与Goluk连接?</string>
+    <string name="wifi_link_4_text">使用步骤</string>
+    <string name="wifi_link_5_text">打开小车本进入个人中心</string>
+    <string name="wifi_link_6_text">请确保热点是开启状态</string>
+    <string name="wifi_link_7_text">选择WIFI</string>
+    <string name="wifi_link_8_text">选取WIFI</string>
+    <string name="wifi_link_9_text">GP24702115</string>
+    <string name="wifi_link_10_text">疑难问题解决</string>
+    <string name="wifi_link_11_text">关闭然后重新打开手机的Wi-Fi</string>
+    <string name="wifi_link_12_text">关闭然后重新打开小车本设备</string>
+    <string name="wifi_link_13_text">并尝试重新连接</string>
+    <string name="wifi_link_14_text">请将手机尽可能的靠近小车本设备,并重新连接Wi-Fi</string>
+    <string name="wifi_link_15_text">请重新安装Goluk App</string>
+    <string name="wifi_link_16_text">更多帮助</string>
+    <string name="video_live_title_text">详情</string>
+    <string name="video_live_username_text">用户名称</string>
+    <string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>
+    <string name="local_video_list_title_text">视频列表</string>
+    <string name="video_square_text">直播列表</string>
+    <string name="local_video_title_text">选择视频</string>
+    <string name="wifi_name_text">WiFi Name</string>
+    <string name="wifi_link_text">未连接</string>
+    <string name="square_title_text">视频广场</string>
+    <string name="watch_live_text">轻触继续观看</string>
+    <string name="video_live_5s_tip">稍候片刻,即将进入直播</string>
+    <string name="video_music_title_text">选择音乐</string>
+    <string name="video_music_complete_text">完成</string>
+    <string name="video_no_music_text">无音乐</string>
+    <string name="video_system_music_title_text">自带音乐</string>
+    <string name="login_title_text">登录Goluk</string>
+    <string name="login_phone_text">输入您的手机号码登录</string>
+    <string name="login_pwd_text">输入您的密码</string>
+    <string name="login_text">登录</string>
+    <string name="draft_box_text">草稿箱</string>
+    <string name="synchronous_text">自动同步</string>
+    <string name="synchronous_desc_text">与小车本连接后自动</string>
+    <string name="update_text">检查更新</string>
+    <string name="remove_cache_text">清除缓存</string>
+    <string name="loginout_text">退出</string>
+    <string name="pull_to_refresh_pull_label">下拉刷新</string>
+    <string name="pull_to_refresh_release_label">松开后刷新</string>
+    <string name="pull_to_refresh_refreshing_label">刷新\u2026</string>
+    <string name="pull_to_refresh_footer_release_label">松开后加载</string>
+    <string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
+    <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
+    <string name="bubble_username">龙王三太子</string>
+    <string name="bubble_speed">50公里/小时</string>
+    <string name="username_text">BG1TTR</string>
+    <string name="like_num_text">56</string>
+    <string name="speed_text">50公里/小时</string>
+    <string name="local_video_text">本地视频</string>
+    <string name="setup_text">设置</string>
+    <string name="shopping_text">去商店</string>
+    <string name="cache_size_text">3.15M</string>
+
+    <string-array name="video_share_class">
+        <item>分类1</item>
+        <item>分类2</item>
+        <item>分类3</item>
+        <item>分类4</item>
+        <item>分类5</item>
+    </string-array>
+
+    <!-- 行车记录仪 		START -->
+
+	<string name="delete_text">删除</string>
 	
-	<string name="share_live_text">分享网络直播</string>
-	<string name="share_local_video_text">分享精彩视频</string>
-	<string name="share_myvideo_text">分享我的直播</string>
-	<string name="goluk_school_text">Goluk学堂</string>
-	
-	<string name="video_play_comment_text">写评论</string>
-	<string name="video_play_comment_send">发送</string>
-	<string name="video_share_desc_title">添加描述</string>
-	<string name="video_share_topic_text">#话题#</string>
-	<string name="keep_on_text">继续</string>
-	<string name="wifi_link_1_text">请让小车本与Goluk连接</string>
-	<string name="wifi_link_2_text">您第一次使用Goluk需要确认您的WiFi是否是开启状态,并设置WiFi连接.</string>
-	<string name="wifi_link_3_text">怎么设置小车本与Goluk连接?</string>
-	<string name="wifi_link_4_text">使用步骤</string>
-	<string name="wifi_link_5_text">打开小车本进入个人中心</string>
-	<string name="wifi_link_6_text">请确保热点是开启状态</string>
-	<string name="wifi_link_7_text">选择WIFI</string>
-	<string name="wifi_link_8_text">选取WIFI</string>
-	<string name="wifi_link_9_text">GP24702115</string>
-	<string name="wifi_link_10_text">疑难问题解决</string>
-	<string name="wifi_link_11_text">关闭然后重新打开手机的Wi-Fi</string>
-	<string name="wifi_link_12_text">关闭然后重新打开小车本设备</string>
-	<string name="wifi_link_13_text">并尝试重新连接</string>
-	<string name="wifi_link_14_text">请将手机尽可能的靠近小车本设备,并重新连接Wi-Fi</string>
-	<string name="wifi_link_15_text">请重新安装Goluk App</string>
-	<string name="wifi_link_16_text">更多帮助</string>
-	
-	
-	<string name="video_live_title_text">详情</string>
-	<string name="video_live_username_text">用户名称</string>
-	<string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>
-	
-	<string name="local_video_list_title_text">视频列表</string>
-	<string name="video_square_text">直播列表</string>
-	<string name="local_video_title_text">选择视频</string>
-	<string name="wifi_name_text">WiFi Name</string>
-	<string name="wifi_link_text">未连接</string>
-	<string name="square_title_text">视频广场</string>
-	<string name="watch_live_text">轻触继续观看</string>
-	<string name="video_live_5s_tip">稍候片刻,即将进入直播</string>
-	
-	<string name="video_music_title_text">选择音乐</string>
-	<string name="video_music_complete_text">完成</string>
-	<string name="video_no_music_text">无音乐</string>
-	<string name="video_system_music_title_text">自带音乐</string>
-	
-	<string name="login_title_text">登录Goluk</string>
-	<string name="login_phone_text">输入您的手机号码登录</string>
-	<string name="login_pwd_text">输入您的密码</string>
-	<string name="login_text">登录</string>
-	<string name="draft_box_text">草稿箱</string>
-	<string name="synchronous_text">自动同步</string>
-	<string name="synchronous_desc_text">与小车本连接后自动</string>
-	<string name="update_text">检查更新</string>
-	<string name="remove_cache_text">清除缓存</string>
-	<string name="loginout_text">退出</string>
-	
-	<string name="pull_to_refresh_pull_label">下拉刷新</string>
-	<string name="pull_to_refresh_release_label">松开后刷新</string>
-	<string name="pull_to_refresh_refreshing_label">刷新\u2026</string>
-	<string name="pull_to_refresh_footer_release_label">松开后加载</string>
-	<string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
-	<string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
-	
-	<string name="bubble_username">龙王三太子</string>
-	<string name="bubble_speed">50公里/小时</string>
-	<string name="username_text">BG1TTR</string>
-	<string name="like_num_text">56</string>
-	<string name="speed_text">50公里/小时</string>
-	<string name="local_video_text">本地视频</string>
-	<string name="setup_text">设置</string>
-	<string name="shopping_text">去商店</string>
-	<string name="cache_size_text">3.15M</string>
-	
-	<string-array name="video_share_class">
-		<item>分类1</item>
-		<item>分类2</item>
-		<item>分类3</item>
-		<item>分类4</item>
-		<item>分类5</item>
-	</string-array> 
-    
     <!-- 行车记录仪 		START-->
+
     <string name="filemanager_title">文件浏览</string>
+    <!-- 其它人看 -->
     <string name="default_live_url">rtmp://211.103.234.234/live/test100</string>
+    <!-- 自己看 -->
     <string name="default_rtsp_url">rtsp://admin:123456@192.168.43.234/sub</string>
-    
     <string name="def">默认</string>
     <string name="setting_title_text">设置</string>
     <string name="carrecorder_filemagager_title">文件浏览</string>
@@ -131,13 +130,13 @@
     <string name="ipcbd">摄像头绑定/解绑</string>
     <string name="car_recorder_title">行车记录仪</string>
     <string name="ipcconnecting">摄像头连接中</string>
-    
+
     <!-- 视频列表页 -->
     <string name="videolist_edit">编辑</string>
     <string name="videolist_jcsp">精彩视频</string>
     <string name="videolist_jjyx">紧急影像</string>
     <string name="videolist_xhyx">循环影像</string>
-    
+
     <!-- 视频直播设置 -->
     <string name="live_setting_timelength">直播时长</string>
     <string name="live_cartalk">行车对讲</string>
@@ -147,9 +146,8 @@
     <string name="live_flow">预计本次直播消耗流量</string>
     <string name="open_live_home">进入直播间</string>
     
-    <!-- 行车记录仪  	END-->
+    <!-- 直播界面 -->
     
-	
 	<!-- 个人中心 -->
 	<string name="user_login_title_text">登录</string>
 	<string name="user_login_phone">手机快速注册</string>
@@ -177,4 +175,10 @@
 	<string name="user_personal_edit_head_default">默认头像</string>
 	<string name="user_personal_home_share">分享</string>
 	
+    <string name="live_title">网络直播</string>
+    <string name="live_pause">暂停</string>
+    <string name="live_exit">结束直播</string>
+    <string name="str_live_qiang">一键抢拍</string>
+
+    <!-- 行车记录仪  	END -->
 </resources>

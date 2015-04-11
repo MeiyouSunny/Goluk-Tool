@@ -2,18 +2,16 @@ package cn.com.mobnote.application;
 
 import java.io.File;
 
+import org.json.JSONObject;
+
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-
-import org.json.JSONObject;
-
-import com.rd.car.CarRecorderManager;
-import com.rd.car.RecorderStateException;
-
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -24,35 +22,31 @@ import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.UserTestRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
+import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
-import cn.com.mobnote.golukmobile.carrecorder.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
-import cn.com.mobnote.golukmobile.carrecorder.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.wifi.WifiManager;
-import android.os.Environment;
-import android.os.Handler;
-import android.util.Log;
+import cn.com.tiros.utils.LogUtil;
 
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
-public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn{
+public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn{
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
 	/** 保存上下文 */
@@ -72,10 +66,21 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private IPCControlManager mIPCControlManager=null;
 	/** 登录IPC是否登录成功 */
 	private boolean isIpcLoginSuccess = false;
+	/**　用户是否登录小车本服务器成功 */
+	public boolean isUserLoginSucess = false;
 	/** 行车记录仪缓冲路径 */
 	private String carrecorderCachePath="";
+	/** 爱滔客回调 */
+	private ITalkFn mTalkListener = null;
+	/** 音视频配置信息 */
+	private VideoConfigState mVideoConfigState=null;
+	/** 自动循环录制状态标识 */
+	private boolean autoRecordFlag=false;
+	
 	
 	private WifiApAdmin wifiAp;
+	/** 当前地址 */
+	public String mCurAddr=null;
 	
 	/**登陆管理类**/
 	public UserManager userManager;
@@ -94,14 +99,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		initCachePath();
 //		createWifi();
 		//实例化JIN接口,请求网络数据
-		mGoluk = new GolukLogic();
-
-		mIPCControlManager = new IPCControlManager(this);
-		mIPCControlManager.addIPCManagerListener("application", this);
-		// 注册回调
-		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_HttpPage, this);
-		
-		userManager = new UserManager();
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -109,6 +106,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 		};
 	};
+	
+	public void initLogic() {
+		if (null != mGoluk) {
+			return;
+		}
+		mGoluk = new GolukLogic();
+
+		mIPCControlManager = new IPCControlManager(this);
+		mIPCControlManager.addIPCManagerListener("application", this);
+		// 注册回调
+		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_HttpPage, this);
+		// 注册爱滔客回调协议
+		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Talk, this);
+	}
 	
 	/**
 	 * 创建行车记录仪缓冲路径
@@ -133,6 +144,46 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public String getCarrecorderCachePath(){
 		return this.carrecorderCachePath;
+	}
+	
+	/**
+	 * 设置音视频配置信息
+	 * @param videocfg
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public void setVideoConfigState(VideoConfigState videocfg){
+		this.mVideoConfigState=videocfg;
+	}
+	
+	/**
+	 * 获取音视频配置信息
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public VideoConfigState getVideoConfigState(){
+		return this.mVideoConfigState;
+	}
+	
+	/**
+	 * 设置自动循环录制开关
+	 * @param auto
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public void setAutoRecordState(boolean auto){
+		this.autoRecordFlag=auto;
+	}
+	
+	/**
+	 * 获取自动循环录制状态
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public boolean getAutoRecordState(){
+		return this.autoRecordFlag;
 	}
 	
 	/**
@@ -175,7 +226,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			// CarRecorderManager.registerOSDBuilder(RecordOSDBuilder.class);
 			// 是否强制使用旧录制方式
 			// 不调用以下方法，或设置为false时，将在android4.3+ 启用新录制
-			CarRecorderManager.enableComptibleMode(true);
+//			CarRecorderManager.enableComptibleMode(true);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		} catch (RecorderStateException e) {
@@ -223,6 +274,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	public Context getContext(){
 		return this.mContext;
+	}
+	
+	public void setTalkListener(ITalkFn fn) {
+		this.mTalkListener = fn;
 	}
 	
 	/**
@@ -303,8 +358,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				JSONObject json = new JSONObject(data);
 				String fileName = json.getString("location");
 				console.log("调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---" + fileName);
+				int type = json.getInt("type");
+				String savePath = "";
+				if(type == 2){
+					//紧急视频
+					savePath = mVideoSavePath + "urgent/";
+				}
+				else{
+					//精彩视频
+					savePath = mVideoSavePath + "wonderful/";
+				}
 				//调用下载视频接口
-				mIPCControlManager.downloadFile(fileName,fileName,mVideoSavePath);
+				mIPCControlManager.downloadFile(fileName,"videodownload",savePath);
 			}
 			catch(Exception e){
 				console.log("解析视频下载JSON数据错误");
@@ -326,9 +391,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		else if(0 == success){
 			//下载完成
 			if(null != mMainActivity){
+				//{"filename":"WND1_150402183837_0012.mp4", "tag":"videodownload"}
 				//地图大头针图片
 				console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
-//				mMainActivity.videoAnalyzeComplete();
+				mMainActivity.videoAnalyzeComplete(data);
 			}
 		}
 	}
@@ -383,9 +449,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 			break;
 			case 9:
+				LogUtil.e(null, "jyf----20150406----application----999999999999---- : ");
 				if(mPageSource == "LiveVideo"){
 					console.log("pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
-					((LiveVideoPlayActivity)mContext).LiveVideoDataCallBack(success,param2);
+					if (mContext instanceof LiveVideoPlayActivity) {
+						((LiveVideoPlayActivity)mContext).LiveVideoDataCallBack(success,param2);
+					} else if (mContext instanceof LiveActivity) {
+						((LiveActivity)mContext).LiveVideoDataCallBack(success,param2);
+					}					
 				}
 			break;
 			//登陆
@@ -428,12 +499,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if(mPageSource == "UserRepwd"){
 					((UserRepwdActivity)mContext).repwdCallBack(success,param2);
 				}
-				break;
-				
+				break;	
 			case IPageNotifyFn.PageType_ModifyUserInfo:
 				if(mPageSource == "UserPersonalEdit"){
-					Log.i("aaa", "======"+param2);
 					((UserPersonalEditActivity)mContext).saveInfoCallBack(success, param2);
+				}
+			case PageType_LiveStart:
+				// 获取直播信息成功
+				if (null != mContext) {
+					if (mContext instanceof MainActivity) {
+						((MainActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+					} else if (mContext instanceof LiveActivity) {
+						((LiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+					}	
+				}
+				
+				break;
+			case PageType_PlayStart:
+				// 看别人直播
+				if (null != mContext && mContext instanceof MainActivity) {
+					((MainActivity) mContext).callBack_LiveLookStart(false,success, param1, param2);
+				}
+				break;
+			case PageType_LiveLike:
+				// 直播点赞
+				if (null != mContext && mContext instanceof LiveActivity) {
+					((LiveActivity) mContext ).callBack_clickOK(success, param1, param2);
 				}
 				break;
 			
@@ -500,7 +591,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					if(0 == param1){
 						//ipc控制初始化成功,可以看画面和拍摄8s视频
 						isIpcLoginSuccess = true;
+						//获取音视频配置信息
+						getVideoEncodeCfg();
+						//发起获取自动循环录制状态
+						updateAutoRecordState();
+						//自动同步系统时间
+						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
+							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
+							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
+						}
 						console.log("IPC_TTTTTT=================Login Success===============");
+						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
 						//改变首页链接状态
 						if(null != mMainActivity){
 							mMainActivity.wiFiLinkStatus(2);
@@ -536,6 +637,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case IPC_VDCP_Msg_DeviceStatus:
 					//msg = 1006 查询设备状态
 				break;
+				case IPC_VDCP_Msg_GetVedioEncodeCfg:
+					if(param1 == RESULE_SUCESS){
+						VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String)param2);
+						if(null != videocfg){
+							mVideoConfigState = videocfg;
+						}
+					}
+				break;
+				case IPC_VDCP_Msg_SetVedioEncodeCfg:
+					if(param1 == RESULE_SUCESS){
+						getVideoEncodeCfg();
+						updateAutoRecordState();
+					}
+					break;
+				case IPC_VDCP_Msg_GetRecordState:
+					if(param1 == RESULE_SUCESS){
+						autoRecordFlag = IpcDataParser.getAutoRecordState((String)param2);
+					}
+					break;
+				case IPC_VDCP_Msg_StartRecord:
+					autoRecordFlag = true;
+					break;
+				case IPC_VDCP_Msg_StopRecord:
+					autoRecordFlag = false;
+					break;
+					
 			}
 		}
 		
@@ -556,6 +683,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void TalkNotifyCallBack(int type, String data) {
+		if(null == mTalkListener) {
+			return;
+		}
+		mTalkListener.TalkNotifyCallBack(type, data);
 	}
 	private static SharedPreferences preferences;
 	private static Editor editor;
@@ -590,4 +725,39 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		boolean isFirstComeApp = preferences.getBoolean(key, false); 
 		return isFirstComeApp;
 	}
+	
+	/**
+	 * 获取音视频配置信息
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	private void getVideoEncodeCfg(){
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
+					System.out.println("YYY============getVideoEncodeCfg=========flag="+flag);
+				}
+			}).start();
+		}
+	}
+	
+	/**
+	 * 发起获取自动循环录制状态
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	private void updateAutoRecordState(){
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					boolean record = GolukApplication.getInstance().getIPCControlManager().getRecordState();
+					System.out.println("YYY=========getRecordState========="+record);
+				}
+			}).start();
+		}
+	}
+	
 }

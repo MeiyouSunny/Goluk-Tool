@@ -320,6 +320,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					//登录成功跳转
 					SysApplication.getInstance().exit();//杀死前边所有的Activity
 					console.toast("登录成功！", mContext);
+					mApplication.isUserLoginSucess = true;
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
 					break;

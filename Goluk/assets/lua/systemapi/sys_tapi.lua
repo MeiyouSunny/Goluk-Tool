@@ -1,15 +1,14 @@
 --tapi接口封装
 --目前主要对外tapigetbscount及tapigetbsbyindex,tapigetconnwifiinfo,tapigetmobileid接口
-print("sys_tapi----lua--------------1");
+
 require"lua/systemapi/sys_namespace"
 require"lua/systemapi/sys_handle"
-print("sys_tapi----lua--------------2");
+
 
 --tapilist：全局变量，用于存放正在使用的所有tapi句柄的
 local _gTapi
 local TAPI_ERR_SUCCESS = 1
 
-print("sys_tapi----lua--------------3");
 --创建tapi句柄函数接口
 ----输出：实际创建的tapi句柄
 local function tapiget()
@@ -18,7 +17,7 @@ local function tapiget()
 	end	
 	return _gTapi;	
 end
-print("sys_tapi----lua--------------4");
+
 --销毁tapi句柄函数接口：Ttype为string型参数，用于唯一标识该tapi句柄
 --输出：无
 local function tapidestroy()
@@ -96,7 +95,7 @@ local function getdeviceinfo()
 end
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-print("sys_tapi----lua--------------5");
+
 --接口table
 local interface = {}
 
@@ -184,7 +183,7 @@ createmodule(interface,"tapigetdeviceinfo", function()
 	end
 	return manufacturername,devicemodel, osversion
 end)
-print("sys_tapi----lua--------------6");
+
 tiros.tapi  =  readOnly(interface)
-print("sys_tapi----lua--------------7");
+
 

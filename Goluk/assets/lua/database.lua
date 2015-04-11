@@ -1,0 +1,11 @@
+print("---------------------database-1--------------")
+require"lua/database/sys_database"
+print("---------------------database2---------------")
+--[[
+print("---111-----")
+tiros.database.database_open()
+tiros.database.database_close()
+tiros.database.database_execSQL()
+tiros.database.database_Query()
+print("---2222-----")
+--]]
