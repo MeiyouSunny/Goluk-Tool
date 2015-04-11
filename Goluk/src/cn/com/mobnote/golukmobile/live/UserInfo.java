@@ -31,4 +31,6 @@ public class UserInfo implements Serializable {
 	public String persons;
 	/** 赞的个数 */
 	public String zanCount;
+	/** 直播开启时间 */
+	public int liveDuration;
 }

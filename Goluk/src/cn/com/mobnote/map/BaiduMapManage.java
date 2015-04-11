@@ -394,6 +394,7 @@ public class BaiduMapManage {
 				
 				// 解析获取用户信息
 				mCurrentUserInfo = JsonUtil.parseSingleUserInfoJson(data);
+				mCurrentUserInfo.liveDuration = 60;
 				
 				//改变地图中心点,让气泡框显示到屏幕中间
 				DisplayMetrics dm = mContext.getResources().getDisplayMetrics();

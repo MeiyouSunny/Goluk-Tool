@@ -10,6 +10,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
+import android.widget.Toast;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -168,7 +169,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			// CarRecorderManager.registerOSDBuilder(RecordOSDBuilder.class);
 			// 是否强制使用旧录制方式
 			// 不调用以下方法，或设置为false时，将在android4.3+ 启用新录制
-			CarRecorderManager.enableComptibleMode(true);
+//			CarRecorderManager.enableComptibleMode(true);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		} catch (RecorderStateException e) {
@@ -514,6 +515,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						//ipc控制初始化成功,可以看画面和拍摄8s视频
 						isIpcLoginSuccess = true;
 						console.log("IPC_TTTTTT=================Login Success===============");
+						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
 						//改变首页链接状态
 						if(null != mMainActivity){
 							mMainActivity.wiFiLinkStatus(2);

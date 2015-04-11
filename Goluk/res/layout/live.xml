@@ -94,12 +94,12 @@
                 android:src="@drawable/live_icon_time" />
 
             <TextView
-                android:id="@+id/live_time1"
+                android:id="@+id/live_countdown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="4dp"
-                android:text="50:02"
+                android:text="00:00"
                 android:textColor="@color/live_color_time1"
                 android:textSize="@dimen/live_text_time1_size" />
         </LinearLayout>
