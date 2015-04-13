@@ -25,6 +25,7 @@
 	<string name="share_btn_text">分享</string>
 	<string name="video_play_text">视频播放</string>
 	<string name="driving_share_text">行车分享</string>
+	<string name="share_video_upload_text">视频正在传输</string>
 	
 	<string name="share_live_text">分享网络直播</string>
 	<string name="share_local_video_text">分享精彩视频</string>
