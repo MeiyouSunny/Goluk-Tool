@@ -242,6 +242,16 @@ public class IPCControlManager implements IPCManagerFn{
 	}
 	
 	/**
+	 * 获取IPC系统时间
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月13日
+	 */
+	public boolean getIPCSystemTime(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetTime, "");
+	}
+	
+	/**
 	 * 设置IPC系统WIFI配置
 	 * @author xuhw
 	 * @date 2015年4月3日

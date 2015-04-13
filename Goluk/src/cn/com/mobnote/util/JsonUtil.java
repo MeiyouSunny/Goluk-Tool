@@ -188,7 +188,7 @@ public class JsonUtil {
 			JSONObject obj = new JSONObject();
 			obj.put("bitstreams", mVideoConfigState.bitstreams);
 			obj.put("frameRate", mVideoConfigState.frameRate);
-			obj.put("AudioEnabled", mVideoConfigState.AudioEnabled);
+			obj.put("audioEnabled", mVideoConfigState.AudioEnabled);
 			obj.put("resolution", mVideoConfigState.resolution);
 			obj.put("bitrate", mVideoConfigState.bitrate);
 		 
