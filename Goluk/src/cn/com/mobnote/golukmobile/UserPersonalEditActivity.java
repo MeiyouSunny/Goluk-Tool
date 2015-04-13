@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import com.baidu.location.ac;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
@@ -122,6 +123,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}
 		if(null !=intentInfo.getStringExtra("intentInfoHead")){
 			infoHead = intentInfo.getStringExtra("intentInfoHead").toString();
+			Log.i("edit", infoHead+"=====infoHead====");
 			UserUtils.userHeadChange(mImageHead, infoHead,mTextSex);
 		}
 				
@@ -217,7 +219,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		String isSave = "{\"NickName\":\"" + nameOk + "\",\"UserHead\":\""+ head +  "\",\"UserSex\":\""+sex+"\",\"Desc\":\""+descOk+"\"}";
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
 		if(b){
-			
+			Log.i("edit", "====UserPersonalEditActivity()====="+b);
 		}else{
 			
 		}
@@ -236,34 +238,48 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				//解析修改后数据
 				JSONObject json2 = json.getJSONObject("data");
 				
-				Log.i("xxx", json2.toString());
+				Log.i("edit", json2+"");
 				String sex = json2.getString("sex");
 				String desc = json2.getString("desc");
 				String name = json2.getString("nickname");
 				String head = json2.getString("head");
+				Log.i("edit", head+"======head+++saveInfoCallBack()=====");
 				Intent itSave = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
 				
-				switch (code) {
-				//如果修改用户信息返回信息成功的话，携带参数跳转页面
-				case 200:
-//					if(infoDesc.equals(desc) &&  infoName.equals(name) && editHead.equals(head)){
-//						this.finish();
-//						console.toast("没有修改", mContext);
-//					}else{
-						console.toast("数据修成功", mContext);
+				Log.i("edit", infoHead+"infoHead====VS====head"+head);
+				Log.i("edit", infoDesc+"infoDesc====VS====desc"+desc);
+				Log.i("edit", infoName+"infoName====VS====name"+name);
+				/*if(infoDesc.equals(desc) &&  infoName.equals(name) && infoHead.equals(head)){
+					this.finish();
+					console.toast("没有修改数据", mContext);
+				}else{*/
+					switch (code) {
+					// 如果修改用户信息返回信息成功的话，携带参数跳转页面
+					case 200:
+						console.toast("数据修改成功", mContext);
 						itSave.putExtra("saveName", name);
 						itSave.putExtra("saveHead", head);
 						itSave.putExtra("saveSex", sex);
 						startActivity(itSave);
-//					}
-					break;
+						break;
+					case 405:
+						console.toast("该用户未注册", mContext);
+						break;
 
-				default:
-					break;
-				}
+					case 500:
+						console.toast("服务器异常", mContext);
+						break;
+
+					default:
+						break;
+					}
+			//}
 			}catch(Exception e){
 				e.printStackTrace();
 			}
+		}else if(success == 0){
+			console.toast("没有修改数据", mContext);
+			this.finish();
 		}else{
 			//success不等于1
 			console.toast("数据修改失败,请重试", mContext);
@@ -318,7 +334,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		case 3:
 			Bundle bundle3 = data.getExtras();
 			editHead = bundle3.getString("intentSevenHead");
-			infoHead = editHead;
+//			infoHead = editHead;
 			UserUtils.userHeadChange(mImageHead, editHead, mTextSex);
 			break;
 

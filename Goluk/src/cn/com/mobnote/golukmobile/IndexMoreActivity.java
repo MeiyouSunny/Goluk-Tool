@@ -1,7 +1,11 @@
 package cn.com.mobnote.golukmobile;
 
+import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,12 +14,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -65,6 +71,10 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 	/**个人中心点击进入我的主页*/
 	RelativeLayout mLayoutHome;
 	
+	/**个人中心的头像、性别、昵称*/
+	ImageView mImageHead,mImageSex;
+	TextView mTextName;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -78,6 +88,9 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 		
 		//页面初始化
 		init();
+		
+		//
+		initData();
 	}
 	
 	/**
@@ -96,6 +109,10 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 		mSetupItem = (RelativeLayout) findViewById(R.id.setup_item);
 		//进入我的主页
 		mLayoutHome = (RelativeLayout) findViewById(R.id.head_layout);
+		//头像、性别、昵称
+		mImageHead = (ImageView) findViewById(R.id.photo_img);
+		mImageSex = (ImageView) findViewById(R.id.user_sex_image);
+		mTextName = (TextView) findViewById(R.id.user_name_text);
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
@@ -161,6 +178,30 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 				intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
 				startActivity(intent);
 				break;
+		}
+	}
+	
+	/**
+	 * 个人资料信息
+	 */
+	public void initData(){
+		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		try{
+			JSONObject json = new JSONObject(info);
+			String head = json.getString("head");
+			String name = json.getString("nickname");
+			String sex = json.getString("sex");
+	
+			mTextName.setText(name);
+			UserUtils.focusHead(head, mImageHead);
+			if(sex.equals("1")){
+				mImageSex.setImageResource(R.drawable.more_man);
+			}else if(sex.equals("2")){
+				mImageSex.setImageResource(R.drawable.more_girl);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	

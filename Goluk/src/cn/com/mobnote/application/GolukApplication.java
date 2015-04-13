@@ -12,6 +12,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -461,7 +462,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 			//登陆
 			case 11:
-				
 				if(null != mMainActivity){
 					//地图大头针图片
 					console.log("pageNotifyCallBack---登录---" + String.valueOf(param2));

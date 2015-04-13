@@ -106,14 +106,11 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 		}
 	}
 	
-	
-	
 	/**
 	 * 个人资料信息
 	 */
 	public void initData(){
 		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
-		Log.i("nnn", info);
 		try{
 			JSONObject json = new JSONObject(info);
 			head = json.getString("head");

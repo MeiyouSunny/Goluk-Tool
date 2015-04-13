@@ -926,9 +926,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if (keyCode == KeyEvent.KEYCODE_BACK )
 		{
 			//退出对话框
-			int PID = android.os.Process.myPid();
-			android.os.Process.killProcess(PID);
-			android.os.Process.sendSignal(PID, 9);
+//			int PID = android.os.Process.myPid();
+//			android.os.Process.killProcess(PID);
+//			android.os.Process.sendSignal(PID, 9);
 			finish();
 		}
 		return false;
@@ -1309,12 +1309,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 			if(isFirstLogin){
 				//已经登录了
+				android.util.Log.i("bug", "=======已经登录过======");
+				return;
 			}else{//没有登录
 				//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
 				initTimer();
 				handler.postDelayed(runnable,50000);
-				
-//				timer();
 				
 				//{tag:”android/ios/pad/pc”}
 				String autoLogin = "{\"tag\":\"android\"}";
@@ -1345,7 +1345,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				console.log(data);
 				switch (code) {
 				case 200:
-					console.toast("自动登录成功", mContext);
+//					console.toast("自动登录成功", mContext);
 					break;
 				//服务器内部错误或者账号未注册，再次启动程序——提示框：自动登录失败，弹出提示框，提示内容：账号异常，请重新登录；
 				case 500:
