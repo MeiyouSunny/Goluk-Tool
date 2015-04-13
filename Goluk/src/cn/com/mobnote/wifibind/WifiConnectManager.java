@@ -1,13 +1,14 @@
 package cn.com.mobnote.wifibind;
 
-import java.io.IOException;
+
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
  
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 
@@ -620,9 +621,9 @@ public class WifiConnectManager implements WifiConnectInterface {
 										.equals(ipc_mac.substring(2)
 												.toLowerCase())) {
 									beans = new WifiRsBean[1];
-
+									beans[0]=temp;
 									msg.what = Integer.parseInt(type + "2");
-									msg.obj = temp;
+									msg.obj = beans;
 									handler.sendMessage(msg);
 									return;
 								}

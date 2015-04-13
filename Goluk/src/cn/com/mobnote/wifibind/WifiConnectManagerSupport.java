@@ -8,8 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
+ 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -18,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-//import cn.com.tiros.api.Const;
+import cn.com.tiros.api.Const;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -37,9 +36,9 @@ import android.util.Log;
 
 public class WifiConnectManagerSupport {
 
-	private static final String FILEPATH = Environment
-			.getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
-//	private static final String FILEPATH=Const.getAppContext().getCacheDir().getPath() +"/wificonfig/";
+//	private static final String FILEPATH = Environment
+//			.getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
+	private static final String FILEPATH=Const.getAppContext().getCacheDir().getPath() +"/wificonfig/";
 
 	private static final int BUF_SIZE = 1024;
 	private static final String TAG = "testhan";
