@@ -4,7 +4,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="25dp"
 	android:clickable="false"
-	android:background="#000000">
+	android:background="#d0000000">
 	
 	<View
 		android:id="@+id/progress_bg"

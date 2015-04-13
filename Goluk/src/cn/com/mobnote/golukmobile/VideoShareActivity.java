@@ -2,8 +2,10 @@ package cn.com.mobnote.golukmobile;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -26,6 +28,11 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
+
+import com.bokecc.sdk.mobile.exception.DreamwinException;
+import com.bokecc.sdk.mobile.upload.UploadListener;
+import com.bokecc.sdk.mobile.upload.Uploader;
+import com.bokecc.sdk.mobile.upload.VideoInfo;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.media.QQShareContent;
@@ -65,6 +72,15 @@ import com.umeng.socialize.weixin.media.WeiXinShareContent;
 @SuppressLint("HandlerLeak")
 public class VideoShareActivity extends Activity  implements OnClickListener {
 	private static final String DESCRIPTOR = "com.umeng.share";
+	// 配置API KEY
+	public final static String API_KEY = "O8g0bf8kqiWroHuJaRmihZfEmj7VWImF";
+	// 配置帐户ID
+	public final static String USERID = "77D36B9636FF19CF";
+	// 配置下载文件路径
+	public final static String DOWNLOAD_DIR = "CCDownload";
+	// 配置视频回调地址
+	public final static String NOTIFY_URL = "http://server.xiaocheben.com/cdcRegister/uMengCallBack.htm";
+		
 	private final UMSocialService mController = UMServiceFactory.getUMSocialService(DESCRIPTOR);
 	/** application */
 	private GolukApplication mApp = null;
@@ -88,6 +104,70 @@ public class VideoShareActivity extends Activity  implements OnClickListener {
 	/** 上传视频时间记录 */
 	private long uploadVideoTime = 0;
 	
+	/** cc视频上传对象 */
+	private VideoInfo mVideoinfo = null;
+	private Uploader mUploader = null;
+	
+	
+	
+	/** cc视频上传回调事件 */
+	private UploadListener uploadListenner = new UploadListener() {
+		@Override
+		public void handleStatus(VideoInfo v, int status) {
+			//处理上传回调的视频信息及上传状态
+			mVideoinfo = v;
+			
+//			Intent intent = new Intent(ConfigUtil.ACTION_UPLOAD);
+//			intent.putExtra("uploadId", uploadId);
+//			intent.putExtra("status", status);
+//			updateUploadInfoByStatus(status);
+			
+			switch (status) {
+			case Uploader.PAUSE:
+				//暂停上传
+				console.log("upload service---handleStatus---暂停上传---pause...");
+				break;
+			case Uploader.UPLOAD:
+				//开始上传
+				console.log("upload service---handleStatus---开始上传---UPLOAD...");
+				break;
+			case Uploader.FINISH:
+				// 下载完毕后变换通知形式
+//				notification.flags = Notification.FLAG_AUTO_CANCEL;
+//				notification.contentView = null;
+//				notification.setLatestEventInfo(context, "上传完成", "文件已上传至云端", null);
+//				// 停掉服务自身
+//				stopSelf();
+//				
+//				resetUploadService();
+//				// 通知更新
+//				notificationManager.notify(NOTIFY_ID, notification);
+//				// 通知上传队列更新
+//				sendBroadcast(intent);
+				//上传完成
+				console.log("upload service---handleStatus---上传完成---FINISH----");
+				break;
+			}
+		}
+
+		@Override
+		public void handleProcess(long range, long size, String videoId) {
+			//上传进度回调
+			console.log("upload service---handleProcess___range=" + range + ", size=" + size + ", videoId = " + videoId);
+		}
+
+		@Override
+		public void handleException(DreamwinException exception, int status) {
+			//处理上传过程中出现的异常
+			console.log("upload service---handleException----上传失败，" + exception.getMessage());
+		}
+
+		@Override
+		public void handleCancel(String videoId) {
+			//处理取消上传的后续操作
+			console.log("upload service---handleCancel----取消上传---------videoId = " + videoId);
+		}
+	};
 	
 	public Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -162,7 +242,6 @@ public class VideoShareActivity extends Activity  implements OnClickListener {
 	
 	/**
 	 * 上传要分享的视频
-	 */
 	private void uploadShareVideo(){
 		//将本地视频地址,转成logic可读路径fs1://
 		if(!"".equals(mVideoPath) && null != mVideoPath){
@@ -177,6 +256,30 @@ public class VideoShareActivity extends Activity  implements OnClickListener {
 				//重置滤镜标识
 				//mMVListAdapter.setResChange(false);
 			}
+		}
+	}
+	 */
+	
+	/**
+	 * 调用CC接口上传视频
+	 */
+	private void uploadShareVideo(){
+		if(!"".equals(mVideoPath) && null != mVideoPath){
+			VideoInfo videoinfo = new VideoInfo();
+			videoinfo.setTitle("标题");
+			videoinfo.setTags("标签");
+			videoinfo.setDescription("简介");
+			videoinfo.setFilePath(mVideoPath);
+			console.log("upload service---上传视频路径---mVideoPath---" +mVideoPath);
+			videoinfo.setUserId(USERID);
+			videoinfo.setNotifyUrl(NOTIFY_URL);
+			if (mUploader != null){
+				mUploader = null;
+			}
+			mUploader = new Uploader(videoinfo,API_KEY);
+			mUploader.setUploadListener(uploadListenner);
+			mUploader.start();
+			//显示上传进度条
 		}
 	}
 	

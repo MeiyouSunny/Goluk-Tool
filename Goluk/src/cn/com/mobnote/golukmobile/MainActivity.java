@@ -978,9 +978,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.wifi_status_btn:
 				//跳转到ipc页面
-//				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-//				startActivity(i);
-				mApp.createVideoUploadWindow();
+				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+				startActivity(i);
+//				mApp.createVideoUploadWindow();
 			break;
 			case R.id.more_btn:
 				//更多页面

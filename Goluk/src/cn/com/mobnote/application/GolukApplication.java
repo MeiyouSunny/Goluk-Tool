@@ -56,8 +56,12 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -272,9 +276,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		//获取的是CompatModeWrapper对象
 		mWindowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
 		
-		mWMParams.type = LayoutParams. TYPE_SYSTEM_ERROR;
+		mWMParams.type = LayoutParams.TYPE_SYSTEM_ERROR;
+		//mWMParams.type = LayoutParams.TYPE_PRIORITY_PHONE;
 		mWMParams.format = PixelFormat.RGBA_8888;
-		mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+		//mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+		mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_TOUCH_MODAL |LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
 		mWMParams.gravity = Gravity.LEFT | Gravity.TOP;
 		mWMParams.x = 0;
 		mWMParams.y = 0;
@@ -286,6 +292,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		LayoutInflater inflater = LayoutInflater.from(mContext);
 		mVideoUploadLayout = (RelativeLayout) inflater.inflate(R.layout.video_share_upload_window, null);
 		mWindowManager.addView(mVideoUploadLayout,mWMParams);
+		ImageView view = (ImageView)mVideoUploadLayout.findViewById(R.id.video_loading_img);
+		Animation rotateAnimation = AnimationUtils.loadAnimation(this.getContext(), R.anim.upload_loading);
+		LinearInterpolator lin = new LinearInterpolator();
+		rotateAnimation.setInterpolator(lin);
+		view.startAnimation(rotateAnimation);
 		//setContentView(R.layout.main);
 		//mFloatView = (Button)mFloatLayout.findViewById(R.id.float_id);
 	}
