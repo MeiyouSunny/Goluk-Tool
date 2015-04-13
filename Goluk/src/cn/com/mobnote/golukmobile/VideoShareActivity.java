@@ -130,6 +130,7 @@ public class VideoShareActivity extends Activity  implements OnClickListener {
 			case Uploader.UPLOAD:
 				//开始上传
 				console.log("upload service---handleStatus---开始上传---UPLOAD...");
+				//mApp.createVideoUploadWindow();
 				break;
 			case Uploader.FINISH:
 				// 下载完毕后变换通知形式

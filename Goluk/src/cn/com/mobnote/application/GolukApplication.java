@@ -1,19 +1,16 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
-
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-
 import org.json.JSONObject;
-
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
-
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -64,7 +61,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -265,14 +261,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //		}
 	}
 	
+	@SuppressLint("InflateParams")
 	public void createVideoUploadWindow(){
 		//获取LayoutParams对象
 		mWMParams = new WindowManager.LayoutParams();
-		
-		//获取的是LocalWindowManager对象
-		//mWindowManager = getWindow().getWindowManager();
-		
-		//mWindowManager = getWindow().getWindowManager();
 		//获取的是CompatModeWrapper对象
 		mWindowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
 		
@@ -285,8 +277,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mWMParams.x = 0;
 		mWMParams.y = 0;
 		mWMParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-		View v = ((Activity) mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);///获得根视图
-		int top2 = v.getTop();///状态栏标题栏的总高度,所以标题栏的高度为top2-top
+		///获得根视图
+		View v = ((Activity) mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+		///状态栏标题栏的总高度,所以标题栏的高度为top2-top
+		int top2 = v.getTop();
 		mWMParams.height = top2;
 		
 		LayoutInflater inflater = LayoutInflater.from(mContext);
