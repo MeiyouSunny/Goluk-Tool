@@ -1405,7 +1405,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						String tag = json.optString("tag");
 						System.out.println("YYY==111===wonderfulVideoName="
 								+ wonderfulVideoName);
-						if (tag.equals("videodownload")) {
+						if (tag.equals("videodownload") && filename.contains("WND")) {
 							wonderfulVideoName=filename;
 							downloadFinish = true;
 							downloadFileNumber--;
