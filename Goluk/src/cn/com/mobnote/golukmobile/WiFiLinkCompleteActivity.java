@@ -243,7 +243,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		beans.setIpc_ssid(WiFiInfo.AP_SSID);
 		beans.setPh_ssid(WiFiInfo.GolukSSID);
 		beans.setPh_pass(WiFiInfo.GolukPWD);
-		beans.setPh_ip(mWiFiIp);
+		beans.setIpc_ip(mWiFiIp);
 		mWac.saveConfiguration(beans);
 		
 		//保存绑定标识
@@ -313,12 +313,17 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 						break;
 						case 1:
 							//ipc成功连接上热点
-							WifiRsBean[] bean = (WifiRsBean[])arrays;
-							if(null != bean){
-								console.log("IPC连接上WIFI热点回调---length---" + bean.length);
-								if(bean.length > 0){
-									sendLogicLinkIpc(bean[0].getIpc_ip(),bean[0].getIpc_mac());
+							try{
+								WifiRsBean[] bean = (WifiRsBean[])arrays;
+								if(null != bean){
+									console.log("IPC连接上WIFI热点回调---length---" + bean.length);
+									if(bean.length > 0){
+										sendLogicLinkIpc(bean[0].getIpc_ip(),bean[0].getIpc_mac());
+									}
 								}
+							}
+							catch(Exception e){
+								console.toast("IPC连接热点返回信息不是数组", mContext);
 							}
 						break;
 						default:
