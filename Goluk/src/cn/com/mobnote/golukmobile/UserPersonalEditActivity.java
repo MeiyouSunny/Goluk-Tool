@@ -4,10 +4,7 @@ import java.net.URLEncoder;
 
 import org.json.JSONObject;
 
-import com.baidu.location.ac;
-
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
@@ -26,7 +23,6 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 /**

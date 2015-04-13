@@ -108,7 +108,7 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 		if(null != intentSave.getStringExtra("saveHead")){
 			head = intentSave.getStringExtra("saveHead").toString();
 			Log.i("nnn", "&&&&&&----"+head);
-			//设置头像=========================================
+			//设置头像==================================
 			UserUtils.userHeadChange(mImageHead, head, mTextSex);
 		}
 		if(null != intentSave.getStringExtra("saveSex")){
@@ -117,7 +117,6 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 		}
 		
 		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
-		Log.i("nnn", info);
 		try{
 			JSONObject json = new JSONObject(info);
 			String desc = json.getString("desc");
