@@ -58,5 +58,7 @@
 	
 	  <!-- 直接界面 -->
     <color name="live_color_time1">#b8b8b8</color>
+    <!-- 说话中字体的颜色 -->
+    <color name="live_speaking">#00e8f0</color>
 
 </resources>

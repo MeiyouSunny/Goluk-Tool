@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -161,8 +162,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/** 说话中计时显示 */
 	private TextView mTalkingTimeTv = null;
 
-	private boolean isTest = false;
-
 	private RelativeLayout mSpeakingLayout = null;
 
 	// private static final String DEFAULT_PLAY_ID = "jyf_play_id100";
@@ -224,26 +223,19 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mliveSettingWindow.setCallBackNotify(this);
 
 		if (isShareLive) {
-			mLiveVideoHandler.sendEmptyMessageDelayed(100, 1000);
+			// 显示设置窗口
+			mLiveVideoHandler.sendEmptyMessageDelayed(100, 800);
 		} else {
 			startLiveLook(currentUserInfo);
 		}
 
-		refreshPPTTTT();
+		// 在没有进入群组时，按钮不可按
+		refreshPPtState(false);
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
 		mLiveManager = new TimerManager(10);
 		mLiveManager.setListener(this);
-	}
-
-	private void refreshPPTTTT() {
-		if (isTest) {
-			refreshPPtState(true);
-		} else {
-			// 在没有进入群组时，按钮不可按
-			refreshPPtState(false);
-		}
 	}
 
 	private void getIntentData() {
@@ -276,7 +268,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private void startLiveForServer() {
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson(mCurrentVideoId));
-		
+
 		if (!isSucess) {
 			startLiveFailed();
 		} else {
@@ -461,12 +453,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
+	// 初次进入
 	private void switchView() {
 		if (isShareLive) {
 			// 直播
 			mBottomLayout.setVisibility(View.VISIBLE);
 			mLiveLookTalk.setVisibility(View.GONE);
-			mLiveTalk.setVisibility(View.VISIBLE);
+			mLiveTalk.setVisibility(View.GONE);
 		} else {
 			// 看别人直播
 			mBottomLayout.setVisibility(View.GONE);
@@ -629,14 +622,35 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	}
 
+	/**
+	 * 秒转换为 时：分：秒
+	 * 
+	 * @param second
+	 * @return
+	 * @author jiayf
+	 * @date Apr 13, 2015
+	 */
 	private String secondToString(final int second) {
 		String timeStr = "";
 		if (second >= 60) {
-			int min = second / 60;
-			int sec = second % 60;
+			int hour = second / 3600; // 时
+			int restMinS = second - hour * 3600;
+			int min = restMinS / 60; // 分
+			int sec = restMinS % 60; // 秒
 
+			String hourStr = "";
 			String minStr = "";
 			String secStr = "";
+
+			if (hour > 0) {
+				if (hour < 10) {
+					hourStr = "0" + hour + ":";
+				} else {
+					hourStr = "" + hour + ":";
+				}
+
+			}
+
 			if (min >= 10) {
 				minStr = min + ":";
 			} else {
@@ -648,7 +662,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				secStr = "0" + sec;
 			}
 
-			timeStr = minStr + secStr;
+			timeStr = hourStr + minStr + secStr;
+
 		} else {
 			if (second >= 10) {
 				timeStr = "00:" + second;
@@ -837,10 +852,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			String groupId = liveData.groupId;
 			if (null == groupId || "".equals(groupId) || 0 >= groupId.length()) {
 				LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----7777 : ");
+				showToast("对方不支持加入群组");
 				// 不支持加入群组
 				switchLookShareTalkView(true, false);
 			} else {
-
+				showToast("加入对方的群组");
 				// 调用爱滔客加入群组
 				mJoinGroupJson = JsonUtil.getJoinGroup(liveData.groupType, liveData.membercount, liveData.title,
 						liveData.groupId, liveData.groupnumber);
@@ -1147,6 +1163,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (isAlreadExit) {
 			return;
 		}
+		mJoinGroupJson = null;
 		isAlreadExit = true;
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
@@ -1271,6 +1288,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				LogUtil.e(null, "mobile-----onTouch-----:  exit down");
 				mExitBtn.setBackgroundResource(R.drawable.live_btn_off_press);
 			} else if (id == R.id.livelook_ppt || id == R.id.live_ppt) {
+				if (mIsJoinGroupSucess) {
+
+				} else {
+
+				}
 				pptTouchDown();
 			}
 			break;
@@ -1386,12 +1408,16 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	/** 用户是否成功加入爱滔客频道 */
 	private boolean mIsJoinGroupSucess = false;
+	/** 爱滔客登录是否成功 */
+	private boolean mIsAirtalkLoginSucess = false;
 	/** 用户加入的爱滔客群组信息 */
 	private String mCurrentGroupInfo = null;
 	/** 网络连接是否可用 */
 	private boolean mLinkEnable = true;
 	/** 别人说话时可以　不能说话　 */
 	private boolean isCanSpeak = true;
+	/** 当前正在说话的人 */
+	private String mSpeakName = "";
 
 	// 刷新说话中的状态, name表示说话的名字 isMe　表示是否是自己说话
 	private void speekingUIRefresh(int event, String name, boolean isMe) {
@@ -1402,6 +1428,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_yellow);
 			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setTextColor(getResources().getColor(R.color.live_speaking));
 			mTalkingTv.setText("准备中...");
 			break;
 		case MSG_SPEAKING_START_SPEAK:
@@ -1410,6 +1437,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_green);
 			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setTextColor(getResources().getColor(R.color.live_speaking));
 			if (isMe) {
 				mTalkingTv.setText("说话中...");
 			} else {
@@ -1436,13 +1464,16 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_red);
 			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setTextColor(Color.RED);
 			mTalkingTv.setText("超时禁用中，请稍后...");
+			refreshPPtState(false);
 			break;
 		case MSG_SPEEKING_BUSY:
 			mSpeakingLayout.setVisibility(View.VISIBLE);
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_red);
 			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setTextColor(Color.RED);
 			mTalkingTv.setText("占线中，请稍候再试...");
 			break;
 		}
@@ -1454,6 +1485,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		LogUtil.e(null, "jyf-------live------TalkNotifyCallBack type: " + type + "  data:" + data);
 		int state = -1;
 		switch (type) {
+		case EVENT_AID:
+			state = JsonUtil.getJsonIntValue(data, "state", -1);
+			loginAndHeartEvent(state);
+			break;
 		case Talk_Event_ChanleIn:
 			// 进入频道相关
 			state = JsonUtil.getJsonIntValue(data, "state", -1);
@@ -1465,6 +1500,48 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			channelInteractionEvent(state, data);
 			break;
 		default:
+			break;
+		}
+	}
+
+	/**
+	 * 登录及心跳相关事件
+	 * 
+	 * @param event
+	 * @author qianwei
+	 * @date 2014/04/08
+	 */
+	private void loginAndHeartEvent(int event) {
+		switch (event) {
+		case -1:
+			// 网络掉线
+			refreshPPtState(false);
+			break;
+		case 0:
+			// 正在获取aid及其配置参数 UI--弹出提示框
+			break;
+		case 1:
+			/** 获取aid及其配置参数成功 */
+			break;
+		case 2:
+			/** 获取aid及其配置参数失败 */
+			break;
+		case 3:
+			// 正在登录爱淘客
+			break;
+		case 4:
+			// 登录爱淘客成功
+			mIsAirtalkLoginSucess = true;
+			break;
+		case 6:// 登录爱淘客失败
+			break;
+		case 7:// 用户重复登录爱淘客
+			break;
+		case 9:
+			// aid登录中
+			break;
+		case 10:
+			// aid超时
 			break;
 		}
 	}
@@ -1490,16 +1567,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		case 3:// 正在进入爱淘客频道
 			break;
 		case 4:// 进入爱淘客频道成功
-			mIsJoinGroupSucess = true;
-			showToast("加入群组成功");
-			// 按钮可以按下
-			refreshPPtState(true);
+			callBack_JoinGroupSucess();
 			break;
 		case 5:// 自动重新进入爱淘客频道成功
 			mLinkEnable = false;
 			// 改为说话可用,更新UI
 			break;
 		case 6:// 进入爱淘客频道失败
+			mIsJoinGroupSucess = false;
 			break;
 		case 7:// 频道退出
 			break;
@@ -1538,8 +1613,37 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
-	/** 当前正在说话的人 */
-	private String mSpeakName = "";
+	/**
+	 * 加入群组成功后的处理
+	 * 
+	 * @author jiayf
+	 * @date Apr 13, 2015
+	 */
+	private void callBack_JoinGroupSucess() {
+		mIsJoinGroupSucess = true;
+		showToast("加入群组成功");
+		// 加入群组成功后的对讲按钮的变化
+		if (this.isShareLive) {
+			if (null != mSettingData && mSettingData.isCanTalk) {
+				// 可以支持对讲
+				// 对讲按钮可以显示
+				mBottomLayout.setVisibility(View.VISIBLE);
+				mLiveTalk.setVisibility(View.VISIBLE);
+				mLiveLookTalk.setVisibility(View.GONE);
+			} else {
+				mBottomLayout.setVisibility(View.VISIBLE);
+				mLiveTalk.setVisibility(View.GONE);
+				mLiveLookTalk.setVisibility(View.GONE);
+			}
+		} else {
+			mBottomLayout.setVisibility(View.GONE);
+			mLiveTalk.setVisibility(View.GONE);
+			mLiveLookTalk.setVisibility(View.VISIBLE);
+		}
+
+		// 按钮可以按下
+		refreshPPtState(true);
+	}
 
 	// 有人开始说话
 	private void callBack_startSpeak(String message) {
@@ -1564,7 +1668,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private void callBack_endSpeak(String message) {
 		String aidEnd = JsonUtil.getJsonStringValue(message, "aid", null);
 		boolean isMeEnd = JsonUtil.getJsonBooleanValue(message, "isme", false);
-
+		mSpeakName = "";
 		mIsMe = false;
 		if (isMeEnd) {
 			mSpeechOutTime = 0;
@@ -1577,14 +1681,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
 	}
 
-	private void hideMapSpeechLoading() {
+	/** 用户设置数据 */
+	LiveSettingBean mSettingData = null;
 
-	}
-
-	private void refreshUICanSpeakDown() {
-
-	}
-
+	// POPWindow回调操作
 	@Override
 	public void callBackPopWindow(int event, Object data) {
 		if (LiveSettingPopWindow.EVENT_ENTER == event) {
@@ -1592,22 +1692,32 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				mliveSettingWindow.close();
 			}
 			if (null != data) {
-				LiveSettingBean settingData = (LiveSettingBean) data;
+				mSettingData = (LiveSettingBean) data;
 				// 通过用户的设置，判断用户是否支持对讲
-				switchShareTalkView(settingData.isCanTalk);
-				mLiveCountSecond = settingData.duration;
-				refreshPPTTTT();
+				switchShareTalkView(mSettingData.isCanTalk);
+				mLiveCountSecond = mSettingData.duration;
+				// 在没有进入群组时，按钮不可按
+				refreshPPtState(false);
 				// 开始视频上传
 				startLive(mCurrentVideoId);
 				updateCountDown(secondToString(mLiveCountSecond));
 				// 开始计时
 				mLiveManager.startTimer(mLiveCountSecond, true);
+
+				//
+				test1();
+
 			} else {
 				showToast("用户设置出错");
 			}
 		}
 	}
 
+	private void test1() {
+		// startLiveForServer();
+	}
+
+	// 对话框操作回调
 	@Override
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		switch (dialogType) {
@@ -1621,6 +1731,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	}
 
+	// timer回调操作
 	@Override
 	public void CallBack_timer(int function, int result, int current) {
 		if (isShareLive) {

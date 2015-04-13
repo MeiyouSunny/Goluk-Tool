@@ -348,6 +348,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						//网络状态改变
 						mApp.VerifyWiFiConnect();
 						initAutoLogin();
+						notifyLogicNetWorkState((Boolean) msg.obj);
 					break;
 					
 					
@@ -371,6 +372,23 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//Message msg = new Message();
 		//msg.what = 99;
 		//MainActivity.mMainHandler.sendMessageDelayed(msg,5000);
+	}
+	
+	
+	/**
+	 * 通知Logic，网络恢复
+	 * 
+	 * @param isConnected true/false 网络恢复/不可用
+	 * @author jiayf
+	 * @date Apr 13, 2015
+	 */
+	private void notifyLogicNetWorkState(boolean isConnected) {
+		if (null == mApp.mGoluk) {
+			return;
+		}
+		if (isConnected) {
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_RecoveryNetwork, "");
+		}
 	}
 	
 	/**

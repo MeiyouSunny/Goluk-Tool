@@ -189,7 +189,8 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:text="@string/live_pause"
-            android:textSize="@dimen/live_pause_size" />
+            android:textSize="@dimen/live_pause_size"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <!-- 视频信息布局,包括(XX说话中, 时间长，看直播的人数，点赞的人数) -->

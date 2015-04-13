@@ -41,12 +41,14 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 		msg.what = 3;
 		if(!isNetworkAvailable(context)){
 			console.log("wifi---网络广播....网络不可用...." + action);
+			msg.obj = false;
 			if(null != MainActivity.mMainHandler){
 				MainActivity.mMainHandler.sendMessage(msg);
 			}
 		}
 		else{
 			console.log("wifi---网络广播....网络可用...." + action);
+			msg.obj = true;
 			if(null != MainActivity.mMainHandler){
 				MainActivity.mMainHandler.sendMessage(msg);
 			}
