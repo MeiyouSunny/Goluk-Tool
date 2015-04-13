@@ -87,26 +87,28 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_FormatDisk = 1010;
 	/** 设置IPC系统时间 */
 	public static final int IPC_VDCP_Msg_SetTime = 1011;
+	/** 获取IPC系统时间 */
+	public static final int IPC_VDCP_Msg_GetTime = 1012;
 	/** 设置IPC系统WIFI配置 */
-	public static final int IPC_VDCP_Msg_SetWifiCfg = 1012;
+	public static final int IPC_VDCP_Msg_SetWifiCfg = 1013;
 	/** 获取IPC系统音视频编码配置 */
-	public static final int IPC_VDCP_Msg_GetVedioEncodeCfg = 1013;
+	public static final int IPC_VDCP_Msg_GetVedioEncodeCfg = 1014;
 	/** 设置IPC系统音视频编码配置 */
-	public static final int IPC_VDCP_Msg_SetVedioEncodeCfg = 1014;
+	public static final int IPC_VDCP_Msg_SetVedioEncodeCfg = 1015;
 	/** 设置IPC行车影像开始录制 */
-	public static final int IPC_VDCP_Msg_StartRecord = 1015;
+	public static final int IPC_VDCP_Msg_StartRecord = 1016;
 	/** 设置IPC行车影像停止录制 */
-	public static final int IPC_VDCP_Msg_StopRecord = 1016;
+	public static final int IPC_VDCP_Msg_StopRecord = 1017;
 	/** 获取IPC行车影像录制状态 */
-	public static final int IPC_VDCP_Msg_GetRecordState = 1017;
+	public static final int IPC_VDCP_Msg_GetRecordState = 1018;
 	/** 获取IPC水印显示状态 */
-	public static final int IPC_VDCP_Msg_GetImprintShow = 1018;
+	public static final int IPC_VDCP_Msg_GetImprintShow = 1019;
 	/** 设置IPC水印显示状态 */
-	public static final int IPC_VDCP_Msg_SetImprintShow = 1019;
+	public static final int IPC_VDCP_Msg_SetImprintShow = 1020;
 	/** 获取IPC GSensor控制紧急录像策略 */
-	public static final int IPC_VDCP_Msg_GetGSensorControlCfg = 1020;
+	public static final int IPC_VDCP_Msg_GetGSensorControlCfg = 1021;
 	/** 设置IPC GSensor控制紧急录像策略 */
-	public static final int IPC_VDCP_Msg_SetGSensorControlCfg = 1021;
+	public static final int IPC_VDCP_Msg_SetGSensorControlCfg = 1022;
 	
 	
 	/**
@@ -166,26 +168,28 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_FormatDisk = 1010;
 	/** 设置IPC系统时间 */
 	public static final int IPC_VDCPCmd_SetTime = 1011;
+	/** 获取IPC系统时间 */
+	public static final int IPC_VDCPCmd_GetTime = 1012;
 	/** 设置IPC系统WIFI配置 */
-	public static final int IPC_VDCPCmd_SetWifiCfg = 1012;
+	public static final int IPC_VDCPCmd_SetWifiCfg = 1013;
 	/** 获取IPC系统音视频编码配置 */
-	public static final int IPC_VDCPCmd_GetVideoEncodeCfg = 1013;
+	public static final int IPC_VDCPCmd_GetVideoEncodeCfg = 1014;
 	/** 设置IPC系统音视频编码配置 */
-	public static final int IPC_VDCPCmd_SetVideoEncodeCfg = 1014;
+	public static final int IPC_VDCPCmd_SetVideoEncodeCfg = 1015;
 	/** 设置IPC行车影像开始录制 */
-	public static final int IPC_VDCPCmd_StartRecord = 1015;
+	public static final int IPC_VDCPCmd_StartRecord = 1016;
 	/** 设置IPC行车影像停止录制 */
-	public static final int IPC_VDCPCmd_StopRecord = 1016;
+	public static final int IPC_VDCPCmd_StopRecord = 1017;
 	/** 获取IPC行车影像录制状态 */
-	public static final int IPC_VDCPCmd_GetRecordState = 1017;
+	public static final int IPC_VDCPCmd_GetRecordState = 1018;
 	/** 获取IPC水印显示状态 */
-	public static final int IPC_VDCPCmd_GetImprintShow = 1018;
+	public static final int IPC_VDCPCmd_GetImprintShow = 1019;
 	/** 设置IPC水印显示状态 */
-	public static final int IPC_VDCPCmd_SetImprintShow = 1019;
+	public static final int IPC_VDCPCmd_SetImprintShow = 1020;
 	/** 获取IPC GSensor控制紧急录像策略 */
-	public static final int IPC_VDCPCmd_GetGSensorControlCfg = 1020;
+	public static final int IPC_VDCPCmd_GetGSensorControlCfg = 1021;
 	/** 设置IPC GSensor控制紧急录像策略 */
-	public static final int IPC_VDCPCmd_SetGSensorControlCfg = 1021;
+	public static final int IPC_VDCPCmd_SetGSensorControlCfg = 1022;
 	
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }

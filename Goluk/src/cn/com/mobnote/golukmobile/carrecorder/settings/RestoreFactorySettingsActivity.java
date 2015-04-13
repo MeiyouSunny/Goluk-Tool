@@ -55,11 +55,17 @@ public class RestoreFactorySettingsActivity extends BaseActivity implements OnCl
 					mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
 						@Override
 						public void onClickListener() {
-							if(GolukApplication.getInstance().getIpcIsLogin()){
-								
-							}
-//							boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
-//							System.out.println("YYY=================restoreIPC============a="+a);
+							
+							new Thread(new Runnable() {
+								@Override
+								public void run() {
+									if(GolukApplication.getInstance().getIpcIsLogin()){
+										boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
+										System.out.println("YYY=================restoreIPC============a="+a);
+									}
+								}
+							}).start();
+							
 						}
 					});
 					mCustomDialog.setRightButton("取消", null);

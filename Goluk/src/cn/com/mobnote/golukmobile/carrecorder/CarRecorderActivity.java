@@ -1401,12 +1401,12 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
 						String filename = json.optString("filename");
-						wonderfulVideoName=filename;
 						LogUtils.d("YYY====IPC_VDTP_Msg_File===="+filename);
 						String tag = json.optString("tag");
 						System.out.println("YYY==111===wonderfulVideoName="
 								+ wonderfulVideoName);
-						if (tag.equals("videodownload")) {
+						if (tag.equals("videodownload") && filename.contains("WND")) {
+							wonderfulVideoName=filename;
 							downloadFinish = true;
 							downloadFileNumber--;
 							

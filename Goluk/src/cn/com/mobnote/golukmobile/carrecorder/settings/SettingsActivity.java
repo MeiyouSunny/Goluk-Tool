@@ -281,6 +281,9 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){//设置IPC系统音视频编码配置
+				if(RESULE_SUCESS == param1){
+					System.out.print("YYY==========set audio========111111===success======");
+				}
 			}
 		}
 	}
