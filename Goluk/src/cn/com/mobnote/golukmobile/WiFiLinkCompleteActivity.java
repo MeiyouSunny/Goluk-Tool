@@ -243,7 +243,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		beans.setIpc_ssid(WiFiInfo.AP_SSID);
 		beans.setPh_ssid(WiFiInfo.GolukSSID);
 		beans.setPh_pass(WiFiInfo.GolukPWD);
-		beans.setPh_ip(mWiFiIp);
+		beans.setIpc_ip(mWiFiIp);
 		mWac.saveConfiguration(beans);
 		
 		//保存绑定标识
