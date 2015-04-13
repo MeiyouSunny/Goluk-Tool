@@ -1,14 +1,13 @@
 package cn.com.mobnote.wifibind;
 
-
+import java.io.IOException;
 import java.net.InetAddress;
-
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
  
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 
@@ -607,25 +606,20 @@ public class WifiConnectManager implements WifiConnectInterface {
 				while (true) {
 					int temp_2 = 400;
 					try {
-						
+
 						beans = wifiSupport.getJoinApList(false, 300);
 						if (beans != null) {
 							for (WifiRsBean temp : beans) {
-								Log.e(TAG, "list ipc_ssid----------------"
-										+ ipc_ssid + "-------------");
-								Log.e(TAG, "list ipc_mac----------------"
-										+ ipc_mac + "-------------");
+
 								if (temp.getIpc_mac()
 										.substring(2)
 										.toLowerCase()
 										.equals(ipc_mac.substring(2)
 												.toLowerCase())) {
 									beans = new WifiRsBean[1];
-									beans[0]=temp;
-									msg.what = Integer.parseInt(type + "2");
-									msg.obj = beans;
-									handler.sendMessage(msg);
-									return;
+									beans[0] = temp;
+
+									break;
 								}
 							}
 						}
@@ -649,23 +643,29 @@ public class WifiConnectManager implements WifiConnectInterface {
 								beans[0] = new WifiRsBean();
 								beans[0].setIpc_ip(ipc_ip);
 								beans[0].setIpc_mac(ipc_mac);
-								msg.what = Integer.parseInt(type + "2");
-								msg.obj = beans;
-								handler.sendMessage(msg);
-								return;
+
+								break;
 							}
 						}
 						// 如果超时了 直接返回
 						if (tempTime > outTime) {
-							wifiSupport.closeWifi();
-							msg.what = Integer.parseInt("-" + type + "2");
-							msg.obj = null;
-							return;
+
+							break;
 						}
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				}
+				if(beans!=null){
+					msg.what = Integer.parseInt(type + "2");
+					msg.obj = beans;
+					handler.sendMessage(msg);
+				}else{
+					wifiSupport.closeWifi();
+					msg.what = Integer.parseInt("-" + type + "2");
+					msg.obj = null;
+					return;
 				}
 			};
 
