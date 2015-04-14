@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.content.Context;
@@ -15,19 +16,24 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private RTPullListView mRTPullListView=null;
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter=null;
 	private List<VideoSquareInfo> mDataList=null;
+	private CustomProgressDialog mCustomProgressDialog=null;
 
 	public VideoSquareListView(Context context){
 		mContext=context;
 		mRTPullListView = new RTPullListView(mContext);
 		mDataList = new ArrayList<VideoSquareInfo>();
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("hotlist", this);
 		httpPost(true);
 	}
 	
 	private void httpPost(boolean flag){
 		if(flag){
-			
+			if(null == mCustomProgressDialog){
+				mCustomProgressDialog = new CustomProgressDialog(mContext);
+				mCustomProgressDialog.setCancelable(false);
+				mCustomProgressDialog.show();
+			}
 		}
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("hotlist", this);
 		boolean a = GolukApplication.getInstance().getVideoSquareManager().getHotList();
 		System.out.println("YYYY==22222==getHotList======a="+a);
 	}
@@ -38,13 +44,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mContext);
 		}
 		
-		
-		List<VideoSquareInfo> data = new ArrayList<VideoSquareInfo>();
-		for(int i=0;i<100;i++){
-			VideoSquareInfo info = new VideoSquareInfo();
-			data.add(info);
-		}
-		mVideoSquareListViewAdapter.setData(data);
+		mVideoSquareListViewAdapter.setData(mDataList);
 		mRTPullListView.setAdapter(mVideoSquareListViewAdapter);
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
@@ -75,16 +75,15 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
 		if(event == SquareCmd_Req_HotList){
+			if(null != mCustomProgressDialog){
+				if(mCustomProgressDialog.isShowing()){
+					mCustomProgressDialog.dismiss();
+				}
+			}
+			
 			if(RESULE_SUCESS == msg){
-				System.out.println("YYY=====getHotList==33333=======msg="+msg+"===param2="+param2);
 				mDataList = DataParserUtils.parserVideoSquareListData((String)param2);
 				initLayout();
-				
-				
-				for(int i=0;i<mDataList.size();i++){
-					System.out.println("YYY=====getHotList==4444====describe="+mDataList.get(i).mVideoEntity.describe+"===nickname="+mDataList.get(i).mUserEntity.nickname);
-				}
-				
 			}
 		}
 	}

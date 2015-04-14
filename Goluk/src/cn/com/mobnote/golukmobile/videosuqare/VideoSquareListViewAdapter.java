@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 @SuppressLint("InflateParams")
 public class VideoSquareListViewAdapter extends BaseAdapter{
@@ -25,7 +26,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter{
 	public void setData(List<VideoSquareInfo> data){
 		mVideoSquareListData.addAll(data);
 		count = mVideoSquareListData.size();
-		
 	}
 
 	@Override
@@ -45,9 +45,16 @@ public class VideoSquareListViewAdapter extends BaseAdapter{
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
+		VideoSquareInfo mVideoSquareInfo = mVideoSquareListData.get(arg0);
 		if(convertView == null){
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.video_square_list_item, null); 
 		}
+		
+		TextView username = (TextView)convertView.findViewById(R.id.username);
+		
+		username.setText(mVideoSquareInfo.mUserEntity.nickname);
+		
+		
 		
 		return convertView;
 	}

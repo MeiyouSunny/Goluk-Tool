@@ -85,9 +85,10 @@ public class VideoCategoryView implements VideoSuqareManagerFn{
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
+//		System.out.println("YYY====*********广场**********==event="+event+"===msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_SquareList){
 			if(RESULE_SUCESS == msg){
-				System.out.println("YYY====getSquareList===33333=======msg="+msg+"===param2="+param2);
+//				System.out.println("YYY====getSquareList===33333=======msg="+msg+"===param2="+param2);
 				
 				
 				

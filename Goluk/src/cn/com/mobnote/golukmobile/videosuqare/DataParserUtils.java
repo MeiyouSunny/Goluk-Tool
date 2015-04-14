@@ -55,9 +55,9 @@ public class DataParserUtils {
 										UserEntity mUserEntity = new UserEntity();
 										JSONObject user = videoinfo.getJSONObject("user");
 										if(null != user){
-											mUserEntity.uid = video.optString("uid");
-											mUserEntity.nickname = video.optString("nickname");
-											mUserEntity.headportrait = video.optString("headportrait");
+											mUserEntity.uid = user.optString("uid");
+											mUserEntity.nickname = user.optString("nickname");
+											mUserEntity.headportrait = user.optString("headportrait");
 										}
 										
 										VideoSquareInfo mVideoSquareInfo = new VideoSquareInfo();

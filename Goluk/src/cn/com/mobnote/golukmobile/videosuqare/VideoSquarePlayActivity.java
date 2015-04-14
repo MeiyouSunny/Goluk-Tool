@@ -35,6 +35,9 @@ public class VideoSquarePlayActivity extends Activity implements OnClickListener
 		List<VideoSquareInfo> data = new ArrayList<VideoSquareInfo>();
 		for(int i=0;i<100;i++){
 			VideoSquareInfo info = new VideoSquareInfo();
+			UserEntity user = new UserEntity();
+			user.nickname = "三十三岁";
+			info.mUserEntity = user;
 			data.add(info);
 		}
 		mVideoSquareListViewAdapter.setData(data);

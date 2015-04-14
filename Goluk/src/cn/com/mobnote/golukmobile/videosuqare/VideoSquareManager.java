@@ -98,13 +98,14 @@ public class VideoSquareManager implements VideoSuqareManagerFn{
 	
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-		
+//		System.out.println("YYY====getSquareList===33333=======msg="+msg+"===param2="+param2);
 		Iterator<String> iter = mVideoSquareManagerListener.keySet().iterator();
 		while (iter.hasNext()) {
 			Object key = iter.next();
 			if (null != key) {
 				VideoSuqareManagerFn fn = mVideoSquareManagerListener.get(key);
 				if (null != fn) {
+//					System.out.println("YYY====ddddddddddddddddd======");
 					fn.VideoSuqare_CallBack(event, msg, param1, param2);
 				}
 			}
