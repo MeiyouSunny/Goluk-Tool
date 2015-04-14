@@ -82,6 +82,7 @@ import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -1023,7 +1024,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.video_square_more_btn:
 				//跳转到视频广场页面
-				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity22.class);
+				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity.class);
 				startActivity(videoSquare);
 			break;
 			case R.id.login_status_btn:
