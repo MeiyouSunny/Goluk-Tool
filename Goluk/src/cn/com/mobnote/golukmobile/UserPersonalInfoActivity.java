@@ -57,6 +57,13 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_personal_info);
 		
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
 		mContext = this;
 		//获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
@@ -67,7 +74,6 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 		mTextCenter.setText("个人资料");
 		
 		initData();
-		
 	}
 	
 	public void intiView(){
@@ -124,6 +130,7 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 			case R.id.back_btn:
 				finish();
 				break;
+			//编辑
 			case R.id.user_title_right:
 				Intent itEdit = new Intent(UserPersonalInfoActivity.this,UserPersonalEditActivity.class);
 				itEdit.putExtra("infoHead", head);
@@ -132,6 +139,7 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 				itEdit.putExtra("infoSign", sign);
 				Log.i("info", head+name+sex+sign);
 				startActivity(itEdit);
+				this.finish();
 				break;
 			default:
 				break;
@@ -148,7 +156,7 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 			Log.i("info", "====json===="+json);
 			head = json.getString("head");
 			name = json.getString("nickname");
-			String id = json.getString("aid");
+			String id = json.getString("key");
 			sex = json.getString("sex");
 			sign = json.getString("desc");
 	

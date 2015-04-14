@@ -54,6 +54,13 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_personal_homepage);
 		
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
 		mContext = this;
 		//获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
@@ -110,6 +117,7 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 	 * 个人资料信息
 	 */
 	public void initData(){
+		Log.i("home", mApplication.mGoluk+"===");
 		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
 		try{
 			JSONObject json = new JSONObject(info);

@@ -175,6 +175,9 @@
 	<string name="user_personal_edit_head_default">默认头像</string>
 	<string name="user_personal_home_share">分享</string>
 	
+	<string name="user_personal_home_nologin">立即登录看看我的主页</string>
+	<string name="user_personal_home_nologin_name">未登录</string>
+	
     <string name="live_title">网络直播</string>
     <string name="live_pause">暂停</string>
     <string name="live_exit">结束直播</string>

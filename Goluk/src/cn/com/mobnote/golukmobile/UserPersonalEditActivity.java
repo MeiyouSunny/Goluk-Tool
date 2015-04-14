@@ -81,6 +81,12 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		mTextTitle.setText("编辑资料");
 				
 		initData();
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 		
 	}
 	//初始化控件
@@ -220,9 +226,11 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 					if(intentSign.equals(json2Sign) && intentName.equals(json2Name) && intentHead.equals(json2Head)){
 						console.toast("没有修改信息", mContext);
 						startActivity(it);
+						this.finish();
 					}else{
 						console.toast("数据修改成功", mContext);
 						startActivity(it);
+						this.finish();
 					}
 					break;
 				case 405:

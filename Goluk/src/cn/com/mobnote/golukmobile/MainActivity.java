@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -543,8 +544,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					if(!b){
 						console.log("调用登录接口失败---b---" + b);
 					}else{
-						Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
-						startActivity(login);
+//						Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
+//						startActivity(login);
 						mLoginDialog.hide();
 					}
 				}
@@ -826,8 +827,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				switch(code){
 					case 200:
 						//登录成功跳转到个人中心页面
-						Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
-						startActivity(login);
+//						Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
+//						startActivity(login);
 						mLoginDialog.hide();
 					break;
 					/*default:
@@ -1007,9 +1008,20 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(i);
 			break;
 			case R.id.more_btn:
-				//更多页面
-				Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
-				startActivity(more);
+				//读取SharedPreference中用户的信息
+				SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+				boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+				//判断是否是第一次登录
+				if(!isFirstLogin){//登录过
+					//更多页面
+					Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
+					startActivity(more);
+				}else{
+					//未登录
+					Intent moreNoLogin = new Intent(MainActivity.this,IndexMoreNoLoginActivity.class);
+					startActivity(moreNoLogin);
+				}
+//				this.finish();
 			break;
 			case R.id.share_local_video_btn:
 				//跳转到本地视频分享列表
@@ -1036,7 +1048,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.login_btn:
 				//登录
-				login();
+//				login();
 			break;
 		}
 	}

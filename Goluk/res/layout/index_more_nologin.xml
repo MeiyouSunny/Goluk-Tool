@@ -16,13 +16,13 @@
 	        android:id="@+id/back_btn_layout"
 	        >
 	        <ImageButton
-				android:id="@+id/back_btn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="10dp"
-				android:layout_centerVertical="true"
-				android:background="@drawable/more_arrow_button_btn"
-				android:contentDescription="@string/imgdes"/>
+			android:id="@+id/back_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_centerVertical="true"
+			android:background="@drawable/more_arrow_button_btn"
+			android:contentDescription="@string/imgdes"/>
 	    </RelativeLayout>
 		
 		<TextView
@@ -43,19 +43,19 @@
 		android:background="#dedede"/>
 	
 	<RelativeLayout
-		android:id="@+id/head_layout"
+		android:id="@+id/head_layout_nologin"
 		android:layout_width="match_parent"
 		android:layout_height="150dp"
 		android:layout_below="@id/title_solid_view"
 		android:background="#eeeeee">
 		
 		<ImageView
-			android:id="@+id/photo_img"
+			android:id="@+id/photo_img_nologin"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
 			android:layout_marginLeft="48dp"
-			android:background="@drawable/more_head_boy_one"
+			android:background="@drawable/more_head_no_log_in"
 			android:contentDescription="@string/imgdes"
 			android:visibility="visible"/>
 		
@@ -78,26 +78,48 @@
 			android:background="@drawable/more_next_button"
 			android:contentDescription="@string/imgdes"/>
 		
-		<ImageView 
-		    android:id="@+id/user_sex_image"
+		<LinearLayout 
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_marginLeft="17dp"
-		    android:layout_centerVertical="true"
+		    android:orientation="vertical"
 		    android:layout_toRightOf="@id/photo_default_img"
-		    android:src="@drawable/more_man"
-		    />
+		    android:layout_centerVertical="true"
+		    >
+		    <RelativeLayout 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        >
+		         <ImageView 
+				    android:id="@+id/user_sex_image_nologin"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginLeft="15dp"
+				    android:layout_centerVertical="true"
+				    android:src="@drawable/more_no_log_in_icon"
+				    />
 		
 		<TextView
-			android:id="@+id/user_name_text"
+			android:id="@+id/user_name_text_nologin"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="8dp"
 			android:layout_centerVertical="true"
-			android:layout_toRightOf="@id/user_sex_image"
-			android:text="@string/username_text"
+			android:layout_toRightOf="@id/user_sex_image_nologin"
+			android:text="@string/user_personal_home_nologin_name"
 			android:textColor="#333333"
 			android:textSize="16sp"/>
+		</RelativeLayout>
+		   <TextView 
+		       android:layout_width="wrap_content"
+		       android:layout_height="wrap_content"
+		       android:text="@string/user_personal_home_nologin"
+		       android:layout_marginLeft="15dp"
+		       android:layout_marginTop="12dp"
+		       android:textSize="12sp"
+		       android:textColor="@color/user_home_nologin"
+		       />
+		</LinearLayout>
+		
 	</RelativeLayout>
 	
 	<RelativeLayout
@@ -105,7 +127,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="52dp"
 		android:layout_marginTop="26dp"
-		android:layout_below="@id/head_layout"
+		android:layout_below="@id/head_layout_nologin"
 		android:background="#eeeeee">
 		
 		<ImageView

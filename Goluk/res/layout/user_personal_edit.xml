@@ -218,7 +218,6 @@
 		        android:id="@+id/user_personal_sign_text"
 		        android:layout_margin="10dp"
 		        android:layout_toRightOf="@id/user_personal_edit_sign_text"
-		        android:textSize="11sp"
 		        android:textColor="@color/user_personal_black"
 		        android:layout_centerVertical="true"
 		        />
