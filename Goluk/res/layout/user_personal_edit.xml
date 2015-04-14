@@ -125,7 +125,7 @@
 	</LinearLayout>
 	
 	<!-- 性别 -->
-	<LinearLayout 
+	<!-- <LinearLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="60dp"
 	    android:background="@color/white"
@@ -173,7 +173,7 @@
 	   	        />
 	   	</LinearLayout>
 	</RelativeLayout>
-	</LinearLayout>
+	</LinearLayout> -->
 	
 	<!-- 个性签名 -->
 	<LinearLayout 

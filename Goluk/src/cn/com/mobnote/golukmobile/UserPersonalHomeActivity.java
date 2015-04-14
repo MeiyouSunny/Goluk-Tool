@@ -124,6 +124,8 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 				mImageSex.setImageResource(R.drawable.more_man);
 			}else if(sex.equals("2")){
 				mImageSex.setImageResource(R.drawable.more_girl);
+			}else if(sex.equals("0")){
+				mImageSex.setVisibility(View.GONE);
 			}
 			
 		}catch(Exception e){

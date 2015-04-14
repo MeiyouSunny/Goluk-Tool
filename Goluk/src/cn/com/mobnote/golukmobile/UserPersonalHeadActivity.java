@@ -39,6 +39,7 @@ public class UserPersonalHeadActivity extends Activity implements OnClickListene
 			initView();
 			mTextTitle.setText("编辑头像");
 		}
+		
 		public void initView(){
 			//title
 			btnBack = (Button) findViewById(R.id.back_btn);
@@ -62,7 +63,7 @@ public class UserPersonalHeadActivity extends Activity implements OnClickListene
 			mImageHint7 = (ImageView) findViewById(R.id.user_personal_hint_image7);
 			
 			/**
-			 * 从编辑界面传来的head编号
+			 * 从编辑界面(UserPersonalEditActivity)传来的head编号
 			 */
 			Intent it = getIntent();
 			if(null!= it.getStringExtra("intentHeadText")){
@@ -192,7 +193,6 @@ public class UserPersonalHeadActivity extends Activity implements OnClickListene
 		case R.id.user_title_right:
 			Intent itHead = new Intent(UserPersonalHeadActivity.this,UserPersonalEditActivity.class);
 			Bundle bundle = new Bundle();
-			Log.i("head", "====imageIndex===="+imageIndex+"+++======");
 			bundle.putString("intentSevenHead", imageIndex);
 			itHead.putExtras(bundle);
 			this.setResult(3, itHead);

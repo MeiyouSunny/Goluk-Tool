@@ -198,6 +198,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 				mImageSex.setImageResource(R.drawable.more_man);
 			}else if(sex.equals("2")){
 				mImageSex.setImageResource(R.drawable.more_girl);
+			}else if(sex.equals("0")){
+				mImageSex.setVisibility(View.GONE);
 			}
 			
 		}catch(Exception e){
