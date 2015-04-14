@@ -368,7 +368,11 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		System.out.println("TTT=============playVideo=");
 		try {
 			mMediaPlayer = new MediaPlayer(this);
-			mMediaPlayer.setBufferSize(1024);
+			 if(getIntent().getStringExtra("from").equals("ipc")){
+				 mMediaPlayer.setBufferSize(100*1024);
+			 }else{
+				 mMediaPlayer.setBufferSize(0);
+			 }
 //			mMediaPlayer.setLooping(true);
 			mMediaPlayer.setDataSource(playUrl);
 			mMediaPlayer.setDisplay(mSurfaceHolder);

@@ -107,13 +107,11 @@ public class WifiApAdmin {
 			@Override
 			public void doTimeOutWork() {
 				// 11wp代表连接成功
-				/**
 				Message msg = new Message();
-                 msg.what = 10;        
-                 msg.obj ="wifi热点创建失败";
-                 //发送消息
-                 handler.sendMessage(msg);
-                 **/
+				msg.what = 10;
+				msg.obj ="wifi热点创建失败";
+				//发送消息
+				handler.sendMessage(msg);
 				this.exit();
 			}
 		};

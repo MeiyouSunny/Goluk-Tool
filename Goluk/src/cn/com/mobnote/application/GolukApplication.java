@@ -23,6 +23,11 @@ import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkModifyPwdActivity;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -47,6 +52,8 @@ import com.rd.car.RecorderStateException;
 public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn{
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
+	/** ip地址 */
+	public String mIpcIp = null;
 	/** 保存上下文 */
 	private Context mContext = null;
 	/** 来源标示,用来强转activity */
@@ -61,7 +68,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private WiFiConnection mWiFiConnection = null;
 	
 	private static GolukApplication instance=null;
-	private IPCControlManager mIPCControlManager=null;
+	public IPCControlManager mIPCControlManager=null;
 	/** 登录IPC是否登录成功 */
 	private boolean isIpcLoginSuccess = false;
 	/**　用户是否登录小车本服务器成功 */
@@ -257,6 +264,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 	
 	/**
+	 * 设置IPC退出登录
+	 */
+	public void setIpcLoginOut(){
+		isIpcLoginSuccess = false;
+		if(null != mMainActivity){
+			mMainActivity.wiFiLinkStatus(3);
+		}
+	}
+	
+	/**
 	 * 保存上下文
 	 * @param context
 	 */
@@ -282,6 +299,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * 验证wifi链接状态
 	 */
 	public void VerifyWiFiConnect(){
+		
 		//判断小车本wifi是否链接成功
 //		mWifiManage = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
 //		mWiFiConnection = new WiFiConnection(mWifiManage,mContext);
@@ -301,6 +319,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //		}
 	}
 	
+	/**
+	 * 验证wifi链接状态
+	 */
+	public void VerifyWiFiConnect(boolean b){
+		if(b){
+			//如果在wifi连接页面,通知连接成功
+			if(mPageSource == "WiFiLinkList"){
+				//console.log("ipc热点连接成功---VerifyWiFiConnect---1");
+				//((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
+			}
+		}
+	}
 	/**
 	 * 首页,在线视频基础数据,图片下载数据回调
 	 * @param status,0/1,基础数据/图片下载
@@ -546,7 +576,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		*/
 		
-		//console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+		console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		//IPC控制连接状态 event = 0
 		if(ENetTransEvent_IPC_VDCP_ConnectState == event){
 			//如果不是连接成功,都标识为失败
@@ -603,6 +633,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						if(null != mMainActivity){
 							mMainActivity.wiFiLinkStatus(2);
 						}
+						
+						//如果在wifi连接页面,通知连接成功
+						if(mPageSource == "WiFiLinkList"){
+							((WiFiLinkListActivity)mContext).ipcLinkedCallBack();
+						}
+						
+						//如果在wifi连接页面,通知连接成功
+						if(mPageSource == "WiFiLinkComplete"){
+							((WiFiLinkCompleteActivity)mContext).ipcLinkWiFiCallBack();
+						}
 					}
 					else{
 						isIpcLoginSuccess = false;
@@ -634,6 +674,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case IPC_VDCP_Msg_DeviceStatus:
 					//msg = 1006 查询设备状态
 				break;
+				case IPC_VDCPCmd_SetWifiCfg:
+					//msg = 1012 设置IPC系统WIFI配置
+					//param1 = 0 成功 | 失败
+					if(0 == param1){
+						//如果在wifi连接页面,通知设置成功
+						if(mPageSource == "WiFiLinkCreateHot"){
+							((WiFiLinkCreateHotActivity)mContext).setIpcLinkWiFiCallBack();
+						}
+					}
+				break;
 				case IPC_VDCP_Msg_GetVedioEncodeCfg:
 					if(param1 == RESULE_SUCESS){
 						VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String)param2);
@@ -659,7 +709,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case IPC_VDCP_Msg_StopRecord:
 					autoRecordFlag = false;
 					break;
-					
 			}
 		}
 		
@@ -676,6 +725,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					//文件传输中消息 msg = 0
 					//param1 = 0,下载完成
 					//param1 = 1,下载中
+					//param2 = json, 区分mp4提示下载完成声音
 					ipcVideoDownLoadCallBack(param1,(String)param2);
 				break;
 			}
