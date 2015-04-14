@@ -6,8 +6,8 @@
 //  Copyright (c) 2015年
 //
 
-#ifndef __MODULE_IPCMANAGER_DEF_H__
-#define __MODULE_IPCMANAGER_DEF_H__
+#ifndef __MODULE_VIDEOSQUAREMANAGER_DEF_H__
+#define __MODULE_VIDEOSQUAREMANAGER_DEF_H__
 
 #include "../../../lib/api/system/debug.h"
 #include "../../../lib/jnibase/jni_system.h"
@@ -15,7 +15,6 @@
 #include <android/log.h>
 
 
-void CallBack_videosquare(void* pvUser, Net_Trans_Event event ,int msg , unsigned long param1, unsigned long param2);
+void CallBack_videosquare(void* pvUser, int event, int msg, unsigned long param1, unsigned long param2);
 
-
-#endif /*__MODULE_IPCMANAGER_DEF_H__*/
+#endif /*__MODULE_VIDEOSQUAREMANAGER_DEF_H__*/

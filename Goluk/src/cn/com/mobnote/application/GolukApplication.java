@@ -32,6 +32,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
@@ -64,6 +65,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	private static GolukApplication instance=null;
 	private IPCControlManager mIPCControlManager=null;
+	private VideoSquareManager mVideoSquareManager=null;
 	/** 登录IPC是否登录成功 */
 	private boolean isIpcLoginSuccess = false;
 	/**　用户是否登录小车本服务器成功 */
@@ -115,6 +117,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
+		
+		mVideoSquareManager = new VideoSquareManager(this);
 		// 注册回调
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_HttpPage, this);
 		// 注册爱滔客回调协议
@@ -242,6 +246,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public IPCControlManager getIPCControlManager(){
 		return mIPCControlManager;
+	}
+	
+	/**
+	 * 获取视频广场管理类
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月14日
+	 */
+	public VideoSquareManager getVideoSquareManager(){
+		return mVideoSquareManager;
 	}
 	
 	public static GolukApplication getInstance(){

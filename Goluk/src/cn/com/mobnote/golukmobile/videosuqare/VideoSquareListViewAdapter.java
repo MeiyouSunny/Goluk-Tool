@@ -51,5 +51,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter{
 		
 		return convertView;
 	}
+	
+	public void onDestroy(){
+		
+	}
 
 }

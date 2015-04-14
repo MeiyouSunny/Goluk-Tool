@@ -15,15 +15,17 @@ package cn.com.mobnote.golukmobile.videosuqare;
   *
   * 7.所有代码文件头部必须包含规则说明
   *
-  * 视频广场数据信息
+  * 视频广场用户属性信息
   *
   * 2015年4月14日
   *
   * @author xuhw
   */
-public class VideoSquareInfo {
-	/** 视频广场视频属性信息 */
-	public VideoEntity mVideoEntity=null;
-	/** 视频广场用户属性信息 */
-	public UserEntity mUserEntity=null;
+public class UserEntity {
+	/** 用户唯一id */
+	public String uid;
+	/** 用户昵称 */
+	public String nickname;
+	/** 用户头像 */
+	public String headportrait;
 }

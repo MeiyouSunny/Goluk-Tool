@@ -7,7 +7,7 @@
  
 #include "Module_videosquare.h"
 
-void CallBack_videosquare(void* pvUser, Net_Trans_Event event ,int msg , unsigned long param1, unsigned long param2){
+void CallBack_videosquare(void* pvUser, int event, int msg, unsigned long param1, unsigned long param2){
 	JNIEnv * g_env;
 	jvm->AttachCurrentThread(&g_env,0);
 	
@@ -22,7 +22,7 @@ void CallBack_videosquare(void* pvUser, Net_Trans_Event event ,int msg , unsigne
 		data = (g_env)->NewStringUTF((char *)param2);
 	}
 	
-	dbgprintf("xuhw------videosquare-----JNI------CallBack_ipcManager----22222");
+	dbgprintf("xuhw------videosquare-----JNI------CallBack_ipcManager----22222==%s",(char *)param2);
 	
 	g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,(jint)param1,data);
 	

@@ -1,9 +1,7 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
-
 import cn.com.mobnote.golukmobile.R;
 import android.app.Activity;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -99,6 +97,14 @@ public class VideoSquareActivity extends Activity implements OnClickListener{
 	
 			default:
 				break;
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(null != mVideoSquareAdapter){
+			mVideoSquareAdapter.onDestroy();
 		}
 	}
 	

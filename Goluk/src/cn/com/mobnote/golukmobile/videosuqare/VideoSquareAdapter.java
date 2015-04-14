@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 public class VideoSquareAdapter extends PagerAdapter{
 	private Context mContext=null;
+	private VideoSquareListView mVideoSquareListView=null;
+	private VideoCategoryView mVideoCategoryView=null;
 	
 	public VideoSquareAdapter(Context c) {
 		this.mContext=c;
@@ -15,13 +17,13 @@ public class VideoSquareAdapter extends PagerAdapter{
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		if(0 == position){
-			VideoSquareListView list = new VideoSquareListView(mContext);
-			container.addView(list.getView());
-			return list.getView();
+			mVideoSquareListView = new VideoSquareListView(mContext);
+			container.addView(mVideoSquareListView.getView());
+			return mVideoSquareListView.getView();
 		}else{
-			VideoCategoryView category = new VideoCategoryView(mContext);
-			container.addView(category.getView());
-			return category.getView();
+			mVideoCategoryView = new VideoCategoryView(mContext);
+			container.addView(mVideoCategoryView.getView());
+			return mVideoCategoryView.getView();
 		}
 	}
 	
@@ -33,6 +35,15 @@ public class VideoSquareAdapter extends PagerAdapter{
 	@Override
 	public boolean isViewFromObject(View arg0, Object arg1) {
 		return arg0 == arg1;
+	}
+	
+	public void onDestroy(){
+		if(null != mVideoSquareListView){
+			mVideoSquareListView.onDestroy();
+		}
+		if(null != mVideoCategoryView){
+			mVideoCategoryView.onDestroy();
+		}
 	}
 
 }
