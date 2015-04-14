@@ -8,9 +8,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
- 
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import cn.com.tiros.api.Const;
+
+ 
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -29,7 +32,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
-import android.os.Environment;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -350,7 +352,7 @@ public class WifiConnectManagerSupport {
 	}
 
 	/**
-	 * 创建wifi热点
+	 * 创建wifi ap
 	 * 
 	 * @param ssid
 	 * @param password
@@ -594,4 +596,59 @@ public class WifiConnectManagerSupport {
 		      return false;
 		    }
 		  }
+	  
+	  
+ 
+	 
+		// 获得当前WIFI热点信息
+		public WifiRsBean getNetworkSSID(Context mContext) {
+			WifiConfiguration ation=getWifiApConfiguration();
+			WifiRsBean bean=new WifiRsBean();
+			bean.setPh_ssid(ation.SSID);
+			return bean;
+		}
+		 
+		   public WifiConfiguration getWifiApConfiguration() {
+		     try {
+		       Method method = wifiManager.getClass().getMethod("getWifiApConfiguration");
+		       return (WifiConfiguration) method.invoke(wifiManager);
+		     } catch (Exception e) {
+		       Log.e(this.getClass().toString(), "", e);
+		       return null;
+		     }
+		   }
+		   
+		   /**
+		    * Return whether Wi-Fi AP is enabled or disabled.
+		    * @return {@code true} if Wi-Fi AP is enabled
+		    * @see #getWifiApState()
+		    *
+		    * @hide Dont open yet
+		    */
+		   public boolean isWifiApEnabled() {
+		     return getWifiApState();
+		   }
+		   
+		   /**
+		    * Gets the Wi-Fi enabled state.
+		    * @return {@link WIFI_AP_STATE}
+		    * @see #isWifiApEnabled()
+		    */
+		   public boolean getWifiApState() {
+		     try {
+		       Method method = wifiManager.getClass().getMethod("getWifiApState");
+		  
+		       int tmp = ((Integer)method.invoke(wifiManager));
+		  
+		       // Fix for Android 4
+		       if (tmp >= 10) {
+		         tmp = tmp - 10;
+		       }
+		  
+		       return true;
+		     } catch (Exception e) {
+		       Log.e(this.getClass().toString(), "", e);
+		       return false;
+		     }
+		   }
 }
