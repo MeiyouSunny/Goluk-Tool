@@ -224,7 +224,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				switch (code) {
 				case 200:
 					if(intentSign.equals(json2Sign) && intentName.equals(json2Name) && intentHead.equals(json2Head)){
-						console.toast("没有修改信息", mContext);
+//						console.toast("没有修改信息", mContext);
 						startActivity(it);
 						this.finish();
 					}else{
