@@ -20,6 +20,9 @@ public class VideoSquareActivity extends Activity implements OnClickListener{
 	
 	private Button mVideoList = null;
 	private Button mTypeList = null;
+	/** 返回按钮 */
+	private Button mBackBtn = null;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +42,14 @@ public class VideoSquareActivity extends Activity implements OnClickListener{
 		square = (ImageView) findViewById(R.id.line_square);
 		mVideoList = (Button) findViewById(R.id.mVideoList);
 		mTypeList = (Button) findViewById(R.id.mTypeList);
+		//获取页面元素
+		mBackBtn = (Button)findViewById(R.id.back_btn);
 	}
 	
 	private void setListener(){
-		findViewById(R.id.mVideoList).setOnClickListener(this);
-		findViewById(R.id.mTypeList).setOnClickListener(this);
-		
+		mVideoList.setOnClickListener(this);
+		mTypeList.setOnClickListener(this);
+		mBackBtn.setOnClickListener(this);
 	}
 	
 	private OnPageChangeListener opcl = new OnPageChangeListener() {
@@ -96,7 +101,10 @@ public class VideoSquareActivity extends Activity implements OnClickListener{
 				mViewPager.setCurrentItem(1);
 				this.updateState(1);
 				break;
-	
+			case R.id.back_btn:
+				//返回
+				this.finish();
+				break;
 			default:
 				break;
 		}
