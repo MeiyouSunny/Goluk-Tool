@@ -6,12 +6,16 @@ require"lua/systemapi/sys_handle"
 require"lua/tapi"
 require"lua/moduledata"
 require"lua/location"
+require"lua/settingconfig"
 
 local _gHeaders = nil
 local _gValues = nil
 local _gCount = 0
 local _gLocationLon = 0
 local _gLocationLat = 0
+local _gLocationSpeed = 0
+local _gLocationCourse = 0
+local _gLocationAltitude = 0
 local _gLocationRadius = 0
 local _gUid = 0
 local _gGender = 0
@@ -30,11 +34,22 @@ local function GetMyLocation()
 			radius = 0;
 		end
 	else
+		if nlon == 0 or nlat == 0 then
+			nlon = "419031106"
+			nlat = "143670827"
+			speed = "0";
+			course = "0";
+			altitude = "0";
+			radius = "0";
+		end
 		nlon = tostring(math.ceil(nlon))
 		nlat = tostring(math.ceil(nlat))
+		speed = tostring(speed)
+		course = tostring(course)
+		altitude = tostring(altitude)
 		radius = tostring(radius)
 	end
-	return nlon,nlat,radius
+	return nlon,nlat,speed,course,altitude,radius
 end
 
 local function httpinit()
@@ -70,7 +85,7 @@ local function httpinit()
 			_gCount = _gCount + 1
 			_gUid = _gCount
 		--end
-		local nlon,nlat,radius = GetMyLocation()
+		local nlon,nlat,speed,course,altitude,radius = GetMyLocation()
 		if nlon ~= nil then
 			_gHeaders[_gCount + 1] = "selflon"
 			_gValues[_gCount + 1] = nlon
@@ -82,6 +97,24 @@ local function httpinit()
 			_gValues[_gCount + 1] = nlat
 			_gCount = _gCount + 1
 			_gLocationLat = _gCount
+		end
+		if speed ~= nil then
+			_gHeaders[_gCount + 1] = "speed"
+			_gValues[_gCount + 1] = speed
+			_gCount = _gCount + 1
+			_gLocationSpeed = _gCount
+		end
+		if course ~= nil then
+			_gHeaders[_gCount + 1] = "course"
+			_gValues[_gCount + 1] = course
+			_gCount = _gCount + 1
+			_gLocationCourse = _gCount
+		end
+		if altitude ~= nil then
+			_gHeaders[_gCount + 1] = "altitude"
+			_gValues[_gCount + 1] = altitude
+			_gCount = _gCount + 1
+			_gLocationAltitude = _gCount
 		end
 		if radius ~= nil then
 			_gHeaders[_gCount + 1] = "radius"
@@ -111,7 +144,7 @@ local function httpinit()
 		end
 		_gHeaders[_gUid] = "uid"
 		_gValues[_gUid] = uid
-		local nlon,nlat,radius = GetMyLocation()
+		local nlon,nlat,speed,course,altitude,radius = GetMyLocation()
 		if nlon ~= nil then
 			_gHeaders[_gLocationLon] = "selflon"
 			_gValues[_gLocationLon] = nlon
@@ -119,6 +152,18 @@ local function httpinit()
 		if nlat ~= nil then
 			_gHeaders[_gLocationLat] = "selflat"
 			_gValues[_gLocationLat] = nlat
+		end
+		if speed ~= nil then
+			_gHeaders[_gLocationSpeed] = "speed"
+			_gValues[_gLocationSpeed] = speed
+		end
+		if course ~= nil then
+			_gHeaders[_gLocationCourse] = "course"
+			_gValues[_gLocationCourse] = course
+		end
+		if altitude ~= nil then
+			_gHeaders[_gLocationAltitude] = "altitude"
+			_gValues[_gLocationAltitude] = altitude
 		end
 		if radius ~= nil then
 			_gHeaders[_gLocationRadius] = "radius"

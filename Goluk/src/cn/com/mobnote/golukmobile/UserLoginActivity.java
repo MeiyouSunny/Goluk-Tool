@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -38,7 +40,7 @@ import cn.com.mobnote.util.console;
  * @author mobnote
  */
 public class UserLoginActivity extends Activity implements OnClickListener {
-	//判断是否能点击提交俺绣
+	//判断是否能点击提交按钮
 	private boolean isOnClick=false;
 	// 登陆title
 	private Button mBackButton;
@@ -58,6 +60,9 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 	private Context mContext = null;
 	private String phone;
 	private String pwd;
+	//将用户的手机号和密码保存到本地
+	private SharedPreferences mSharedPreferences;
+	private Editor mEditor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +127,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 							isOnClick=true;
 						}else{
 							isOnClick=false;
-//							console.toast("手机号格式不好", mContext);
 							UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
 						}
 				}else{
@@ -140,6 +144,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				}
 			}
 		});
+		//
+		
 		//手机号、密码文本框
 		mEditTextPhoneNumber.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -169,6 +175,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				String number = mEditTextPhoneNumber.getText().toString();
 				String psw=mEditTextPwd.getText().toString();
 				if(isOnClick){
 					if(!psw.equals("")){
@@ -260,6 +267,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						handler.postDelayed(runnable, 3000);//san 秒执行一次runnable.
 						String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
 						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
+//						boolean b = mApplication.userManager.loginStatus(phone, pwd);
 						if(b){
 							//隐藏软件盘
 						    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -269,7 +277,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 							//文本框不可被修改
 							mEditTextPhoneNumber.setEnabled(false);
 							mEditTextPwd.setEnabled(false);
-						}
+							}
 						}
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
@@ -302,9 +310,17 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				mLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
+					//登录成功后，存储用户的登录信息
+					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+					mEditor = mSharedPreferences.edit();
+					mEditor.putBoolean("FirstLogin", false);
+					//提交修改
+					mEditor.commit();
+					
 					//登录成功跳转
 					SysApplication.getInstance().exit();//杀死前边所有的Activity
 					console.toast("登录成功！", mContext);
+					mApplication.isUserLoginSucess = true;
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
 					break;

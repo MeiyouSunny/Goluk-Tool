@@ -188,6 +188,7 @@
             android:layout_below="@id/user_regist_include"
             android:layout_centerInParent="true"
             android:textColor="#000"
+            android:layout_marginTop="30dp"
             />
     </RelativeLayout>
 </RelativeLayout>

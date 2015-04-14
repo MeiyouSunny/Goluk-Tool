@@ -43,7 +43,7 @@ public class console {
 	}
 	
 	public static void toast(String msg,Context mContext){
-		Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 	}
 	
 	@SuppressLint("SimpleDateFormat")

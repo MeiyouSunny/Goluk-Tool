@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 /**
  * <pre>
@@ -61,6 +62,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 	/** 个人中心页面handler用来接收消息,更新UI*/
 	public static Handler mUserCenterHandler = null;
 	
+	/**个人中心点击进入我的主页*/
+	RelativeLayout mLayoutHome;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 		mShoppingItem = (RelativeLayout) findViewById(R.id.shopping_item);
 		mGolukSchoolItem = (RelativeLayout) findViewById(R.id.goluk_item);
 		mSetupItem = (RelativeLayout) findViewById(R.id.setup_item);
+		//进入我的主页
+		mLayoutHome = (RelativeLayout) findViewById(R.id.head_layout);
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
@@ -100,6 +105,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 		mShoppingItem.setOnClickListener(this);
 		mGolukSchoolItem.setOnClickListener(this);
 		mSetupItem.setOnClickListener(this);
+		
+		mLayoutHome.setOnClickListener(this);
 		
 		//更新UI handler
 		mUserCenterHandler = new Handler(){
@@ -149,6 +156,11 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 				intent = new Intent(IndexMoreActivity.this,UserSetupActivity.class);
 				startActivity(intent);
 			break;
+			//点击跳转到我的主页
+			case R.id.head_layout:
+				intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+				startActivity(intent);
+				break;
 		}
 	}
 	

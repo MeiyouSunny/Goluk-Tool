@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/user_login_bg">
+    
+	<!-- 编辑签名title -->
+	<include layout="@layout/user_title"/>
+	
+	<!-- 主体部分 -->
+	
+	<View
+	        android:id="@+id/user_personal_solid_1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="1dp"
+	        android:background="@drawable/solid" 
+	        android:layout_marginTop="30dp"/>
+	
+	<EditText 
+	    android:layout_width="match_parent"
+	    android:layout_height="118dp"
+	    android:id="@+id/user_personal_edit_sign_body"
+	    android:background="@color/white"
+	   android:hint="介绍一下自己吧！"
+	   android:textColor="@color/user_personal_black"
+	   android:paddingLeft="20dp"
+	   android:maxLength="50"
+	    />
+	
+	<View
+	        android:id="@+id/user_personal_solid_2"
+	        android:layout_width="wrap_content"
+	        android:layout_height="1dp"
+	        android:background="@drawable/solid" />
+</LinearLayout>

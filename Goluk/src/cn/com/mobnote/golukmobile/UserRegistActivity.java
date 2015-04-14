@@ -74,6 +74,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	private RelativeLayout mLoading = null;
 	//注册获取验证码显示进度条
 	private RelativeLayout mIdentifyLoading = null;
+	//判断获取验证码按钮是否被点击过
+	private boolean identifyClick = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,9 +145,22 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						if(!UserUtils.isMobileNO(phone)){
 //								console.toast("手机号格式不对", mContext);
 //							mEditTextPhone.setError("手机号格式不正确");
-							mBtnIdentify.setEnabled(true);
 							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
 						}
+					}
+				}
+			}
+		});
+		//密码判断
+		mEditTextIdentify.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				String identify = mEditTextIdentify.getText().toString();
+				if(!"".equals(identify)){
+					if(identify.length()<6){
+						UserUtils.showDialog(mContext, "密码不正确，请重新输入");
 					}
 				}
 			}
@@ -159,6 +174,10 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					if(phone.length() == 11 && phone.startsWith("1")){ 
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 						mBtnIdentify.setEnabled(true);
+						if(!UserUtils.isMobileNO(phone)){
+							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
+						}
+						
 					}else{
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
 						mBtnIdentify.setEnabled(false);
@@ -180,8 +199,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				String password = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
-				String mEditText = mEditTextPhone.getText().toString();
-				if(!"".equals(password) && !"".equals(identify)&&!mEditText.equals("")){
+				String phone = mEditTextPhone.getText().toString();
+				if(!"".equals(password) && !"".equals(identify)&&!phone.equals("")){
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 					mBtnRegist.setEnabled(true);
 				}else{
@@ -311,7 +330,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
 			console.log(isIdentify);
 			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
-			
+
+			identifyClick = true;
 			UserUtils.hideSoftMethod(this);
 			mIdentifyLoading.setVisibility(View.VISIBLE);
 			registerReceiver(smsReceiver, smsFilter);
@@ -335,6 +355,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
 		handler1.removeCallbacks(runnable);
+		mIdentifyLoading.setVisibility(View.GONE);
 		if(1 == success){
 			try{
 				String data = (String)obj;
@@ -345,7 +366,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				
 				/*unregisterReceiver(smsReceiver);
 				click = 2;*/
-				mIdentifyLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
 					console.toast("验证码已经发送，请查收短信", mContext);
@@ -484,18 +504,32 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					UserUtils.showDialog(this, "用户已注册");
 					break;
 				case 406:
-					UserUtils.showDialog(this, "请输入正确的验证码");
+//					UserUtils.showDialog(this, "请输入正确的验证码");
+					if(identifyClick){
+						UserUtils.showDialog(this, "请输入正确的验证码");
+					}else{
+						console.toast("请先获取验证码", mContext);
+					}
 					break;
 				case 407:
 					String phone = mEditTextPhone.getText().toString();
 					if(UserUtils.isMobileNO(phone)){
-						UserUtils.showDialog(this, "输入验证码超时");
+						if(identifyClick){
+							UserUtils.showDialog(this, "输入验证码超时");
+						}else{
+							console.toast("请先获取验证码", mContext);
+						}
 					}else{
 						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 					}
 					break;
 				case 480:
-					UserUtils.showDialog(this, "验证码获取失败");
+//					UserUtils.showDialog(this, "验证码获取失败");
+					if(identifyClick){
+						UserUtils.showDialog(this, "验证码获取失败");
+					}else{
+						console.toast("请先获取验证码", mContext);
+					}
 					break;
 
 				default:
@@ -519,6 +553,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		@Override
 		public void run() {
 			console.toast("当前网络状态不佳，请检查网络后重试", mContext);
+			mLoading.setVisibility(View.GONE);
 			}
 		};
 	}

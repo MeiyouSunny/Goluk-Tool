@@ -1,11 +1,12 @@
 package cn.com.mobnote.golukmobile;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -29,17 +30,19 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity;
 import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoManage;
 import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
 import cn.com.mobnote.video.OnLineVideoManage;
-import cn.com.mobnote.view.LoadingView;
 import cn.com.mobnote.view.MyGridView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -72,9 +75,14 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.live.LiveDataInfo;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoManage;
@@ -84,6 +92,9 @@ import cn.com.mobnote.view.MyGridView;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
+import cn.com.mobnote.wifi.WiFiConnection;
+import cn.com.mobnote.wifi.WifiAutoConnectManager;
+import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -99,7 +110,9 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.bugly.proguard.V;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.utils.Log;
 
 /**
  * <pre>
@@ -161,6 +174,8 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 	private Button mMoreBtn = null;
 	/** 本地视频按钮 */
 	private Button mLocalVideoListBtn = null;
+	/** 分享网络直播 */
+	private Button mShareLiveBtn = null;
 	
 	
 	
@@ -233,6 +248,8 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(this,"Main");
 		
+		mApp.initLogic();
+		
 		//mApp.mGoluk.GoLuk_WifiStateChanged(true);
 		
 		//页面初始化,获取页面控件
@@ -258,6 +275,10 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 //				startActivity(i);
 //			}
 //		});
+		
+		//自动登录
+		initAutoLogin();
+		
 	}
 	
 	/**
@@ -279,6 +300,10 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 		
 		//本地视频更多按钮
 		mLocalVideoListBtn = (Button)findViewById(R.id.share_local_video_btn);
+		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
+		mShareLiveBtn.setOnClickListener(this);
+		
+		//自动登录时，loading显示
 		
 //		mLoginStatusBtn = (Button) findViewById(R.id.login_status_btn);
 //		mWiFiLinkStatus = (Button) findViewById(R.id.wifi_link_text);
@@ -318,7 +343,8 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 						//检测是否已连接小车本热点
 						//boolean b = checkLinkWiFi();
 						//网络状态改变
-						mApp.VerifyWiFiConnect(true);
+						mApp.VerifyWiFiConnect();
+						initAutoLogin();
 					break;
 					
 					
@@ -370,6 +396,7 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 		// 设置定位模式,没有设置定位模式接口setLocationMode
 		// 打开gps
 		option.setOpenGps(true);
+		option.setIsNeedAddress(true);
 		// 设置坐标类型
 		// 返回国测局经纬度坐标系 coor=gcj02
 		// 返回百度墨卡托坐标系 coor=bd09
@@ -791,7 +818,7 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 			catch(Exception ex){}
 		}
 		else{
-			console.toast("登录失败", mContext);
+//			console.toast("登录失败", mContext);
 		}
 	}
 	
@@ -945,7 +972,6 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
 			case R.id.map_location_btn:
@@ -984,12 +1010,10 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
-			
-			
-			
-			
-			
-			
+
+			case R.id.share_mylive_btn:
+				toShareLive();
+			break;
 			case R.id.video_square_more_btn:
 				//跳转到视频广场页面
 				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity.class);
@@ -1007,13 +1031,167 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 				//登录
 				login();
 			break;
-			case R.id.share_mylive_btn:
-				Intent liveset = new Intent(MainActivity.this, LiveShareSettingActivity.class);
-				startActivity(liveset);
-				break;
 		}
 	}
 	
+	private boolean isTestData = false;
+	
+	/**
+	 * 发起主动直播
+	 * 
+	 * @author jiayf
+	 * @date Apr 2, 2015
+	 */
+	private void toShareLive() {
+		if (isTestData) {
+			test();
+		} else {
+//			if (!mApp.isUserLoginSucess) {
+//				// TODO 未登录成功
+//				Toast.makeText(this, "请先登录", Toast.LENGTH_LONG).show();
+//				return;
+//			}
+			
+			
+			
+			// 开启直播
+			Intent intent = new Intent(this, LiveActivity.class);
+			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+			intent.putExtra(LiveActivity.KEY_GROUPID, "");
+			
+			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+
+			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+			
+//			intent.putExtra(LiveActivity.KEY_LIVE_DATA, dataInfo);
+//			intent.putExtra(LiveActivity.KEY_USERINFO, currentUserInfo);
+
+			startActivity(intent);
+			
+			
+			// 跳转直播界面
+//			
+//			boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//					IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson());
+//			if (!isSucess) {
+//				startLiveFailed();
+//			} else {
+//				// TODO 弹对话框
+//				Toast.makeText(this, "发起直播", Toast.LENGTH_LONG).show();
+//			}
+		}
+	}
+	
+	// 查看他人的直播
+	public void startLiveLook(UserInfo userInfo) {
+		LogUtil.e(null,"jyf-----click------666666");
+		if (null == userInfo) {
+			return;
+		}
+		
+		// 跳转看他人界面
+		
+		// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+		intent.putExtra(LiveActivity.KEY_GROUPID, "");
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
+
+		startActivity(intent);
+		
+		LogUtil.e(null,"jyf-----click------677777777");
+		
+		LogUtil.e(null, "jyf----20150406----MainActivity----startLiveLook");
+		
+//		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//				IPageNotifyFn.PageType_GetVideoDetail, JsonUtil.getStartLookLiveJson(userInfo.uid, userInfo.aid));
+//		if (!isSucess) {
+//			startLiveLookFailed();
+//		} else {
+//			// TODO 弹对话框
+//		}
+	}
+
+	private void startLiveFailed() {
+		// TODO 开启直接失败
+	}
+
+	private void startLiveLookFailed() {
+		// TODO 开启直接失败
+	}
+	
+	private void test() {
+		
+		final int cmd =  ITalkFn.Talk_CommCmd_JoinGroupWithInfo ;
+		String mJoinGroupJson = "{\"title\":\"创建组\",\"grouptype\":\"0\",\"groupid\":\"C8770\",\"groupnumber\":\"0\",\"tag\":0,\"membercount\":1}";
+		
+//		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd, mJoinGroupJson);
+		
+		
+		
+		// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+		intent.putExtra(LiveActivity.KEY_GROUPID, 111);
+				
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "---");
+				
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, mJoinGroupJson);
+				
+		startActivity(intent);
+	}
+	
+	
+	public void callBack_LiveLookStart(boolean isLive, int success, Object param1,Object param2) {
+		if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
+			liveFailedStart(isLive);
+			return;
+		}
+		final String data = (String) param2;
+		// 解析回调数据
+		LiveDataInfo dataInfo = JsonUtil.parseLiveDataJson(data);
+		if (null == dataInfo) {
+			liveFailedStart(isLive);
+			return;
+		}
+
+		if (200 != dataInfo.code || null == dataInfo.groupId || "".equals(dataInfo.groupId)) {
+			liveFailedStart(isLive);
+			return;
+		}
+		final String joniGroup = JsonUtil.getJoinGroup(dataInfo.groupType, dataInfo.membercount, dataInfo.title,
+				dataInfo.groupId, dataInfo.groupnumber);
+
+		UserInfo currentUserInfo = null;
+		if (!isLive) {
+			currentUserInfo = mBaiduMapManage.getCurrentUserInfo();
+		}
+
+		// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
+		intent.putExtra(LiveActivity.KEY_GROUPID, dataInfo.groupId);
+		if (null != dataInfo.playUrl) {
+			intent.putExtra(LiveActivity.KEY_PLAY_URL, dataInfo.playUrl);
+		}
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, joniGroup);
+		
+		intent.putExtra(LiveActivity.KEY_LIVE_DATA, dataInfo);
+		intent.putExtra(LiveActivity.KEY_USERINFO, currentUserInfo);
+
+		startActivity(intent);
+	}
+	
+	private void liveFailedStart(boolean isLive) {
+		if (isLive) {
+			startLiveFailed();
+		} else {
+			startLiveLookFailed();
+		}
+	}
+
 	/**
 	 * 定位SDK监听函数
 	 */
@@ -1045,6 +1223,27 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 			//保存经纬度
 			LngLat.lng = location.getLongitude();
 			LngLat.lat = location.getLatitude();
+			
+			//保存地址信息
+			GolukApplication.getInstance().mCurAddr = location.getAddrStr();
+			System.out.println("YYY=========mCurAddr="+location.getAddrStr()+"==lon="+LngLat.lng+"==lat="+LngLat.lat);
+			//更新IPC经纬度
+			if(GolukApplication.getInstance().getIpcIsLogin()){
+				long lon = (long)(location.getLongitude()*3600000);
+				long lat = (long)(location.getLatitude()*3600000);
+				int speed = (int)location.getSpeed();
+				int direction = (int)location.getDirection();
+				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
+				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
+			}
+			
+			//更新行车记录仪地址
+			if(null != CarRecorderActivity.mHandler){
+				Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
+				msg.obj = location.getAddrStr();
+				CarRecorderActivity.mHandler.sendMessage(msg);
+			}
+			
 		}
 
 		public void onReceivePoi(BDLocation poiLocation) {
@@ -1123,6 +1322,127 @@ public class MainActivity extends Activity implements OnClickListener,WifiConnCa
 			break;
 		}
 	}
+	
+	/**
+	 * 不是第一次登录的话，调用自动登录
+	 * 当用户使用到需要『登录在线』条件下登录权限的功能时
+	 * ——判断用户是否在自动登录，若是，则客户端使用系统 loading 提示：正在为您登录，请稍后…
+	 */
+	public void initAutoLogin(){
+		//网络判断
+		if(!UserUtils.isNetDeviceAvailable(mContext)){
+			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
+		}else{
+			//判断是否已经登录了
+			SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+			if(isFirstLogin){
+				//已经登录了
+			}else{//没有登录
+				//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
+				initTimer();
+				handler.postDelayed(runnable,50000);
+				
+//				timer();
+				
+				//{tag:”android/ios/pad/pc”}
+				String autoLogin = "{\"tag\":\"android\"}";
+				boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_AutoLogin, autoLogin);
+				if(b){
+//					console.toast("自动登录成功", mContext);
+				}else{
+					//登录失败，不做任何提示
+					console.toast("登录失败", mContext);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 自动登录回调
+	 * 
+	 */
+	public void autoLoginCallback(int success,Object obj){
+		console.log("---------------自动登录回调---------------");
+		if(1 == success){
+			handler.removeCallbacks(runnable);
+			try{
+				String data = (String)obj;
+				JSONObject json = new JSONObject(data);
+				int code = Integer.valueOf(json.getString("code"));
+				String msg = json.getString("msg");
+				console.log(data);
+				switch (code) {
+				case 200:
+					console.toast("自动登录成功", mContext);
+					break;
+				//服务器内部错误或者账号未注册，再次启动程序——提示框：自动登录失败，弹出提示框，提示内容：账号异常，请重新登录；
+				case 500:
+					//服务端异常
+					UserUtils.showDialog(mContext, "账号异常，请重新登录");
+					break;
+					
+				case 405:
+					//用户为注册
+					UserUtils.showDialog(mContext, "账号异常，请重新登录");
+					break;
+					
+				case 402:
+					//登录密码错误
+					UserUtils.showDialog(mContext, "密码错误，请重新登录");
+					break;
+
+				default:
+					break;
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}else{
+//			console.log("自动登录失败");
+			//超时处理
+			Builder dialog = new AlertDialog.Builder(mContext);
+				dialog.setTitle("提示");
+				dialog.setMessage("网络连接超时，请重试?");
+				dialog.setPositiveButton("取消",null);
+				dialog.setNegativeButton("重试",new DialogInterface.OnClickListener(){
+					public void onClick(DialogInterface dialoginterface, int i){
+						//按钮事件,重试
+						initAutoLogin();	
+					}
+				});
+				dialog.create().show();
+		}
+}
+	//网络链接超时
+	final private Handler handler = new Handler();
+	private Runnable runnable;
+	private void initTimer(){
+		runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+//				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
+				android.util.Log.i("xxx", "5分钟后自动登录重试");
+				initAutoLogin();
+			}
+		};
+	}
+	
+	//
+	public void timer(){
+		Timer mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				initAutoLogin();
+			}
+		}, 50000);
+	}
+	
 }
 
 

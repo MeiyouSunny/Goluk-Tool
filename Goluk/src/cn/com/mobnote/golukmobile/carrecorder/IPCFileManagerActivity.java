@@ -34,6 +34,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -791,25 +792,33 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				
 				break;
 			case R.id.mEditBtn:
-				if(!isEditState){
-					mEditBtn.setText("取消");
-					isEditState=true;
-					selectedListData.clear();
-					mFunctionLayout.setVisibility(View.VISIBLE);
-				}else{
-					mEditBtn.setText("编辑");
-					isEditState=false;
-					selectedListData.clear();
-					updateDelandEditBg(false);//把下载和删除按钮的北京颜色还原回去
-					mFunctionLayout.setVisibility(View.GONE);
-				}
-				
-				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
-					mWonderfulVideoAdapter.notifyDataSetChanged();
-				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
-					mEmergencyVideoAdapter.notifyDataSetChanged();
-				}else{
-					mLoopVideoAdapter.notifyDataSetChanged();
+				if(!isGetFileListDataing){
+					if(!isEditState){
+						mEditBtn.setText("取消");
+						isEditState=true;
+						selectedListData.clear();
+						mFunctionLayout.setVisibility(View.VISIBLE);
+					}else{
+						mEditBtn.setText("编辑");
+						isEditState=false;
+						selectedListData.clear();
+						updateDelandEditBg(false);//把下载和删除按钮的北京颜色还原回去
+						mFunctionLayout.setVisibility(View.GONE);
+					}
+					
+					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
+						if(null != mWonderfulVideoAdapter){
+							mWonderfulVideoAdapter.notifyDataSetChanged();
+						}
+					}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
+						if(null != mEmergencyVideoAdapter){
+							mEmergencyVideoAdapter.notifyDataSetChanged();
+						}
+					}else{
+						if(null != mLoopVideoAdapter){
+							mLoopVideoAdapter.notifyDataSetChanged();
+						}
+					}
 				}
 				break;
 			case R.id.mDownloadBtn:
@@ -849,11 +858,17 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				
 				selectedListData.clear();
 				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
-					mWonderfulVideoAdapter.notifyDataSetChanged();
+					if(null != mWonderfulVideoAdapter){
+						mWonderfulVideoAdapter.notifyDataSetChanged();
+					}
 				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
-					mEmergencyVideoAdapter.notifyDataSetChanged();
+					if(null != mEmergencyVideoAdapter){
+						mEmergencyVideoAdapter.notifyDataSetChanged();
+					}
 				}else{
-					mLoopVideoAdapter.notifyDataSetChanged();
+					if(null != mLoopVideoAdapter){
+						mLoopVideoAdapter.notifyDataSetChanged();
+					}
 				}
 				break;
 			case R.id.mDeleteBtn:
@@ -911,8 +926,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					}
 
 					wonderfulVideoData = videoInfo2Double(mWonderfulVideoData);
-					mWonderfulVideoAdapter.setData(wonderfulGroupName, wonderfulVideoData);
-					mWonderfulVideoAdapter.notifyDataSetChanged();
+					if(null != mWonderfulVideoAdapter){
+						mWonderfulVideoAdapter.setData(wonderfulGroupName, wonderfulVideoData);
+						mWonderfulVideoAdapter.notifyDataSetChanged();
+					}
 				}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
 					emergencyGroupName.clear();
 					for (VideoInfo info : mEmergencyVideoData) {
@@ -925,8 +942,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					}
 
 					emergencyVideoData = videoInfo2Double(mEmergencyVideoData);
-					mEmergencyVideoAdapter.setData(emergencyGroupName, emergencyVideoData);
-					mEmergencyVideoAdapter.notifyDataSetChanged();
+					if(null != mEmergencyVideoAdapter){
+						mEmergencyVideoAdapter.setData(emergencyGroupName, emergencyVideoData);
+						mEmergencyVideoAdapter.notifyDataSetChanged();
+					}
 				}else{
 					loopGroupName.clear();
 					for (VideoInfo info : mLoopVideoData) {
@@ -939,8 +958,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					}
 
 					loopVideoData = videoInfo2Double(mLoopVideoData);
-					mLoopVideoAdapter.setData(loopGroupName, loopVideoData);
-					mLoopVideoAdapter.notifyDataSetChanged();
+					if(null != mLoopVideoAdapter){
+						mLoopVideoAdapter.setData(loopGroupName, loopVideoData);
+						mLoopVideoAdapter.notifyDataSetChanged();
+					}
 				}
 				
 				break;
@@ -1079,6 +1100,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		case ENetTransEvent_IPC_VDCP_CommandResp:
 			if (IPC_VDCP_Msg_Query == msg) {
 				isGetFileListDataing=false;
+				LogUtils.d("YYY===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);

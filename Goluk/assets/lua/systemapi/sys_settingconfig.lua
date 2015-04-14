@@ -113,7 +113,7 @@ local function config_set_configinfo(key,value)
 		return;
 	end
 	setting_config_open();
-	setting_config_setinfo(tostring(key),tonumber(value));
+	setting_config_setinfo(tostring(key),value);
 	setting_config_close();
 end
 
@@ -132,7 +132,7 @@ local function config_get_configinfo(key)
 		return 0;
 	end
 	print("yaoyt config_get_configinfo value:" .. result)
-	return tonumber(result);
+	return result;
 end
 
 --获取整个配置文件的json串

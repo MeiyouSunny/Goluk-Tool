@@ -20,6 +20,8 @@ import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.MVListAdapter;
 import cn.com.mobnote.video.MVManage;
@@ -84,6 +86,8 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	/** 个人中心页面handler用来接收消息,更新UI*/
 	public static Handler mUserCenterHandler = null;
 	
+	/**退出按钮**/
+	Button btnLoginout;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +121,9 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 //				mMedioPlayer.start();
 //			}
 //		});
+		//退出按钮
+		btnLoginout = (Button) findViewById(R.id.loginout_btn);
+		btnLoginout.setOnClickListener(this);
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
@@ -150,7 +157,18 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 				//跳转到设置页面
 				console.log("onclick---setup--item");
 			break;
+		//退出按钮
+			case R.id.loginout_btn:
+				
+				break;
 		}
 	}
-	
+	/**
+	 * 退出
+	 */
+	public void getLoginout(){
+		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
+		console.log(b+"");
+		
+	}
 }

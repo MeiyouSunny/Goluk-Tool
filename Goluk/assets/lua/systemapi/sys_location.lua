@@ -7,7 +7,7 @@ require"lua/http"
 require"lua/timer"
 require"lua/config"
 require"lua/moduledata"
---require"lua/positionreport"
+require"lua/positionreport"
 
 local gt = {}
 
@@ -18,16 +18,14 @@ local frameworkEngine = getmodule("framework")
 local tmrobj = getmodule("timer")
 local moduleobj = getmodule("moduledata")
 local PSTreportobj = getmodule("PSTreport")
+--保存最近一次定位信息
+local lastGPSInfo = {};
 
 local GPSFUNTYPE = 1;
 local CELLIDFUNTYPE = 2;
 local PLATGPSFUNTYPE = 3;
-
---日志封装接口
-local function DebugLog( ... )
-	print("wjun" .. ...);
-end
-
+local LOCGIC_LOCATION_MODULE = 2; 
+local LOCGIC_GET_LAST_GPS = 1;
 -------------------------------------------------
 -----------------cellid start---------------------------
 ---------------------------------------------------
@@ -46,7 +44,7 @@ local lastreuqiredata = {}
 
 --检测缓存表 
 local function checktable()
-DebugLog("---wc---checktable")
+luaprint("---wc---checktable")
 	local cellTable =getHandle(gt.cellidlist,"cellidhandle")
 	local cachecount = table.maxn(cellTable.cachelist)	
 	if cachecount >= 50 then
@@ -56,7 +54,7 @@ end
 
 --保存已请求过的基站wifi经纬度
 local function cellid_saveRspinfototable(lon,lat,speed,course)
-DebugLog("---wc---saveRspinfototable")
+luaprint("---wc---saveRspinfototable")
 	local cellTable = getHandle(gt.cellidlist,"cellidhandle")	
 	if cellTable ~= nil then
 		local temp = {}
@@ -88,7 +86,7 @@ DebugLog("---wc---saveRspinfototable")
 		checktable()
 		
 		table.insert(cellTable.cachelist, temp)	
-DebugLog("---wc---saveRspinfototable-end")
+luaprint("---wc---saveRspinfototable-end")
 	end
 end
 
@@ -96,14 +94,14 @@ end
 --判断是否已存在该基站wifi位置
 --返回值 1，wifi有，2，基站有，3lon,4lat,5speed,6course
 local function isexistintable()
-DebugLog("---wc---isexistintable-1")
+luaprint("---wc---isexistintable-1")
 	local cellTable = getHandle(gt.cellidlist,"cellidhandle")
 	if cellTable.cachelist == nil then
 		return
 	end
 	local bWifi = false
 	local bCell = false
-DebugLog("---wc---isexistintable-2",cellTable.cachelist)
+luaprint("---wc---isexistintable-2",cellTable.cachelist)
 
 	for k,v in pairs(cellTable.cachelist) do	
 		if v.cell ~= nil and lastreuqiredata.cell ~= nil then
@@ -118,7 +116,7 @@ DebugLog("---wc---isexistintable-2",cellTable.cachelist)
 			end
 		end
 		if bWifi or bCell then
-			DebugLog("---wc---isexistintable-end",bWifi, bCell, v.lon, v.lat, v.speed, v.course)
+			luaprint("---wc---isexistintable-end",bWifi, bCell, v.lon, v.lat, v.speed, v.course)
 			return bWifi, bCell, v.lon, v.lat, v.speed, v.course
 		end
 	end	
@@ -126,27 +124,27 @@ DebugLog("---wc---isexistintable-2",cellTable.cachelist)
 end
 
 local function cellid_timerstart()
-	DebugLog("cellid_timerstart1")
+	luaprint("cellid_timerstart1")
 	if tmrobj.timerisbusy("cellidhandle") then
-DebugLog("cellid_timerstart2")
+luaprint("cellid_timerstart2")
 		tmrobj.timerabort("cellidhandle")
 	end
-DebugLog("cellid_timerstart3")
+luaprint("cellid_timerstart3")
 	tmrobj.timerstartforlua("cellidhandle",10000,gt.cellid_timerCB)
-DebugLog("cellid_timerstart-ok")
+luaprint("cellid_timerstart-ok")
 end
 
 
 --发送位置信息
 local function cellid_sendposition(lon,lat,speed,course)	
-DebugLog("---wc---sendposition-1",lon,lat,speed,course)	
+luaprint("---wc---sendposition-1",lon,lat,speed,course)	
 	local cellTable =getHandle(gt.cellidlist,"cellidhandle")
-DebugLog("---wc---sendposition-2",cellTable,cellTable.notify)
+luaprint("---wc---sendposition-2",cellTable,cellTable.notify)
 	if cellTable.notify ~= nil then 
-		DebugLog("---wc---sendposition-3")	
+		luaprint("---wc---sendposition-3")	
 		cellTable.notify(lon,lat,speed,course)	
 	end
-DebugLog("---wc---sendposition-4")
+luaprint("---wc---sendposition-4")
 	local bWifi, bCell = isexistintable()
 	--如果缓存没有则存储
 	if not bCell and lastreuqiredata.cell and lastreuqiredata.cell.lac and lastreuqiredata.cell.cid then
@@ -156,7 +154,7 @@ DebugLog("---wc---sendposition-4")
 	end
 	
 
-DebugLog("---wc---sendposition-end")	
+luaprint("---wc---sendposition-end")	
 end
 
 --[[
@@ -178,13 +176,14 @@ end
 }
 ]]
 local function cellid_encode(version,celllist, wifilist)
-	DebugLog("cellid_encode -start")
-	local jansonT = {};
-	jansonT.accordver = 4;
-	jansonT.appver = version;
-	jansonT.ef = 0;
-	jansonT.localstyle = 1;
-	jansonT.respond = 1;	
+	luaprint("cellid_encode -start")
+	local jansonT = {
+	accordver = 4,
+	appver = version,
+	ef = 0,
+	localstyle = 1,
+	respond = 1	
+	}
 	if celllist ~= nil then
 		jansonT.cellids = celllist
 	end
@@ -192,7 +191,6 @@ local function cellid_encode(version,celllist, wifilist)
 		jansonT.wifis = wifilist
 	end
 	local result = tiros.json.encode(jansonT)
-	DebugLog("cellid_encode -end post data = " .. result);
 	return result
 end
 --[[
@@ -213,7 +211,7 @@ end
 }
 --]]
 local function cellid_decode(jsonstr)	
-	DebugLog("cellid_decode-start")
+	luaprint("cellid_decode-start")
 	local jsonT = tiros.json.decode(jsonstr)
 	
 	if jsonT == nil  or type(jsonT) ~= "table" then
@@ -221,7 +219,7 @@ local function cellid_decode(jsonstr)
 	end 
 
 	local accordver = jsonT.accordver;
-	DebugLog("cellid_decode-accordver",accordver)
+	luaprint("cellid_decode-accordver",accordver)
 	if accordver == 1 then		
 		local datatype = jsonT.datatype;		
 		if datatype == 1 then --返回定位结果
@@ -229,16 +227,16 @@ local function cellid_decode(jsonstr)
 		    	local lat = jsonT.lat;
 		    	local altitude = jsonT.altitude;
 		    	local raidus = jsonT.raidus;
-			DebugLog("cellid_decode",lon,lat,altitude,raidus)
+			luaprint("cellid_decode",lon,lat,altitude,raidus)
 			return lon,lat,altitude,raidus		
 		end
 	end    	
-	DebugLog("cellid_decode-end")
+	luaprint("cellid_decode-end")
 	return nil
 end
 --解析下行数据
 local function cellid_decodeRsp(json)		
-	DebugLog("cellid_decodeRsp -start")
+	luaprint("cellid_decodeRsp -start")
 	local lon,lat,speed,course = cellid_decode(json)	
 	return lon,lat,speed,course
 end
@@ -246,7 +244,7 @@ end
 
 --获取基站信息
 local function getbaselocationinfo()
-DebugLog("---wc---getbaselocationinfo-1")
+luaprint("---wc---getbaselocationinfo-1")
 	local count = tapiEngine.tapigetbscount()
 	local celllist ={}	
 	local cell={}
@@ -270,7 +268,7 @@ DebugLog("---wc---getbaselocationinfo-1")
 	local tempip
 	wifi.ssid, wifi.mac,tempip, wifi.ss = tapiEngine.tapigetconnwifiinfo()
 	wifi.su = 0
-	DebugLog("wifi info = ",wifi.ssid, wifi.mac,tempip, wifi.ss)
+	luaprint("wifi.mac",wifi.mac)
 	if wifi.mac == nil  or string.len(wifi.mac) < 2  then
 		wifi = nil 
 		wifilist = nil
@@ -279,7 +277,7 @@ DebugLog("---wc---getbaselocationinfo-1")
 	end
 	--wifi与cell均为空值返回
 	if wifilist == nil and celllist == nil then
-		DebugLog("---wc---getbaselocationinfo-3")
+		luaprint("---wc---getbaselocationinfo-3")
 		return
 	end	
 	 
@@ -290,9 +288,9 @@ DebugLog("---wc---getbaselocationinfo-1")
 		end
 	end	
 
-	DebugLog("---wc---getbaselocationinfo-4")
-	local sotfver = tiros.moduledata.moduledata_get("framework", "version");
-	DebugLog("---wc---getbaselocationinfo-5",sotfver)
+	luaprint("---wc---getbaselocationinfo-4")	
+	local sotfver = moduleobj.moduledata_get('framework', 'version')
+	luaprint("---wc---getbaselocationinfo-5",sotfver)
 	return cell, wifi, cellid_encode(sotfver , celllist, wifilist)
 end
 
@@ -302,7 +300,7 @@ local function cellid_require()
 	if cellTable == nil then 
 		return 
 	end
-DebugLog("---wc---cellid_require-1")
+luaprint("---wc---cellid_require-1")
 	local cell, wifi, data = getbaselocationinfo()
 	if cell == nil and wifi == nil then
 		return
@@ -310,7 +308,7 @@ DebugLog("---wc---cellid_require-1")
 	if  data == nil then
 		return 
 	end
-	DebugLog("---wc---cellid_require-2",cell,wifi,data)
+	luaprint("---wc---cellid_require-2",cell,wifi,data)
 
 	--如果是C网直接发送
 	if cell ~= nil and cell.lon >0 and cell.lat > 0 then
@@ -319,7 +317,7 @@ DebugLog("---wc---cellid_require-1")
 		lastreuqiredata.wifi = wifi
 		lastreuqiredata.isRecv = true
 		--发送位置
-		DebugLog("---wc---cellid_require-2")
+		luaprint("---wc---cellid_require-2")
 		cellid_sendposition(cell.lon,cell.lat,0,100)
 		return
 	end
@@ -341,14 +339,14 @@ DebugLog("---wc---cellid_require-1")
 			bWifi = true
 		end
 	end
-DebugLog("---wc---cellid_require-3", bCell , bWifi)
+luaprint("---wc---cellid_require-3", bCell , bWifi)
 	--相同时能取到经纬度则发送，否则返回
 	if bCell or bWifi then
 		if lastreuqiredata.lat ~= nil and lastreuqiredata.lon ~= nil then
 			cellid_sendposition(lastreuqiredata.lon, lastreuqiredata.lat, lastreuqiredata.speed, lastreuqiredata.course)
 		else
 			if lastreuqiredata.isRecv == false then
-				DebugLog("---wc---cellid_require-3-isRecv")
+				luaprint("---wc---cellid_require-3-isRecv")
 				return 
 			end
 		end		
@@ -363,12 +361,12 @@ DebugLog("---wc---cellid_require-3", bCell , bWifi)
 	--2，缓存中有该cell
 	--3，缓存中有该wifi
 	local bwifiexist, bcellexist,lon, lat, speed, course = isexistintable()	
-DebugLog("---wc---cellid_require-44",bwifiexist, bcellexist,lon, lat, speed, course)
+luaprint("---wc---cellid_require-44",bwifiexist, bcellexist,lon, lat, speed, course)
 	--有的话取缓存经纬度发送
 	if bwifiexist or bcellexist then
 		lastreuqiredata.isRecv = true
 		cellid_sendposition(lon, lat, speed, course)
-DebugLog("---wc---cellid_require-5")
+luaprint("---wc---cellid_require-5")
 		return 
 	end 
 
@@ -376,67 +374,68 @@ DebugLog("---wc---cellid_require-5")
 	------------------------------		
 	local postdata = "nps="..data
 	rsp_data = false
-DebugLog("---wc---cellid_require-ok", cellTable.url, postdata)
+luaprint("---wc---cellid_require-ok", cellTable.url, postdata)
         httpEngine.httpsendforlua("cdc_client","lcation","cellidhandle",cellTable.url,gt.cellid_httpEvent,postdata,"Content-Type:application/x-www-form-urlencoded")
 end
 
 local function cellid_start(notify,url, collectnotify)
 	local cellTable =getHandle(gt.cellidweaklist,"cellidhandle");
-	DebugLog("cellid_create-start",url)
+	luaprint("cellid_create-start",url)
 	if cellTable == nil then
-		DebugLog("cellid_create-ok")
+		luaprint("cellid_create-ok")
 		cellTable = {};	
 		cellTable.notify = notify		
 		cellTable.cachelist = {}			   	
 	end	
-DebugLog("-------- cellid_start",collectnotify)
+luaprint("-------- cellid_start",collectnotify)
 	cellTable.collectnotify = collectnotify
 	cellTable.url = url
 	registerHandle(gt.cellidlist,gt.cellidweaklist,"cellidhandle",cellTable);
 
 	cellid_require();
 	cellid_timerstart()
-	DebugLog("cellid_create-end")
+	luaprint("cellid_create-end")
 end
 
 
+
 local function cellid_cancel()
-	DebugLog("cellid_cancel-start")	
+	luaprint("cellid_cancel-start")	
 	local cellTable =getHandle(gt.cellidlist,"cellidhandle")
 	if cellTable ~= nil then
 		if tmrobj.timerisbusy("cellidhandle") then
 			tmrobj.timerabort("cellidhandle")
 		end
 	   	httpEngine.httpabort("cellidhandle")
-		DebugLog("cellid_cancel-ok")
+		luaprint("cellid_cancel-ok")
 	end
-	DebugLog("cellid_cancel-end")
+	luaprint("cellid_cancel-end")
 end
 
 local function cellid_destroy()		
-	DebugLog("cellid_destroy-start")
+	luaprint("cellid_destroy-start")
 	local cellTable =getHandle(gt.cellidlist,"cellidhandle")
 	if cellTable ~= nil then
-		DebugLog("cellid_destroy-not nil")
+		luaprint("cellid_destroy-not nil")
 	   	releaseHandle(gt.cellidlist,"cellidhandle")
 		if tmrobj.timerisbusy("cellidhandle") then
 			tmrobj.timerabort("cellidhandle")
 		end
 		httpEngine.httpabort("cellidhandle")
-		DebugLog("cellid_destroy-ok")
+		luaprint("cellid_destroy-ok")
 	end
-	DebugLog("cellid_destroy-end")
+	luaprint("cellid_destroy-end")
 end
 
 --timer回调
 createmodule(gt,"cellid_timerCB",function(handletype)
-DebugLog("cellid_timerCB")
+luaprint("cellid_timerCB")
 	cellid_require()
 	cellid_timerstart()
 end)
 
 createmodule(gt,"cellid_httpEvent",function(htype,event,param1, param2)	
-DebugLog("cellid_httpEvent--wccccc",htype,event,param1, param2)	
+luaprint("cellid_httpEvent--wccccc",htype,event,param1, param2)	
 
 local e = "event"..event
 	if e=="event1" then 
@@ -464,6 +463,7 @@ end)
 -------------------------------------------------
 -----------------cellid end---------------------------
 ---------------------------------------------------
+
 
 -------------------------------------------------
 -----------------gps start---------------------------
@@ -507,24 +507,24 @@ local function gpsstart(stype,ntype,cbkname,nuser)
 		ltable[4] = cbkname;
 		ltable[5] = nuser;		
 	end
-DebugLog("gpsstart")
+luaprint("gpsstart")
 	if  gt._gpsHandle == nil  then
-DebugLog("gpsstart-wccccc--1")
+luaprint("gpsstart-wccccc--1")
 		gt._gpsHandle = gpslib.start("sys_GpsEvnet","SYS_GPS");
-DebugLog("gpsstart---2")
+luaprint("gpsstart---2")
 	end
 	return true
 end
 
 --lua层gps事件回调处理函数：
 DeclareGlobal("sys_GpsEvnet",function (stype,lon,lat,speed,course)
-DebugLog("sys_GpsEvnet--wccccc",lon,lat)
+luaprint("sys_GpsEvnet--wccccc",lon,lat)
 --	if gps_lon == lon and 	gps_lat == lat and gps_speed == speed and gps_course == course then 
---		DebugLog("sys_GpsEvnet--wccccc",lon,lat)
+--		luaprint("sys_GpsEvnet--wccccc",lon,lat)
 --		return 	
 --	end
 	if 0 == lon and 0 == lat and 0 == speed and 0 == course then 
-		DebugLog("sys_GpsEvnet",lon,lat)
+		luaprint("sys_GpsEvnet",lon,lat)
 		return 	
 	end
 	gps_lon = lon 
@@ -559,7 +559,7 @@ local function gpsstop(stype)
 			bEmpty = false
 	end
 	if  bEmpty == true then
-		DebugLog("gpsstop-gpslib.stop")
+		luaprint("gpsstop-gpslib.stop")
 --[[
 		if gt._gpsHandle then
 			gpslib.stop(gt._gpsHandle)
@@ -586,7 +586,7 @@ local function gpsabort()
 			--for k,v in pairs(gt._gpslist) do
 			--	releaseHandle(gt._gpslist,k)
 			--end
-			DebugLog("gpsabort-gpslib.stop")
+			luaprint("gpsabort-gpslib.stop")
 	if gt._gpsHandle ~= nil then
 			gpslib.stop(gt._gpsHandle)
 			gt._gpsHandle = nil
@@ -611,6 +611,7 @@ end
 ------------------------------------------
 --platgps接口封装
 --
+
 
 --platgpslist：全局变量，用于存放正在使用的所有platgps句柄
 createmodule(gt,"platgpslist",{})
@@ -672,7 +673,7 @@ end
 --ntype:integer型参数，用于标识该回调函数类型（lua：0，js：1，c：2）
 --输出：成功返回true，失败返回false
 local function platgpsstart(ptype, cbkname,ntype,nuser)
-DebugLog("platgpsstart----0")
+luaprint("platgpsstart----0")
 	if ptype == nil then 
 		return false;
 	end
@@ -680,11 +681,11 @@ DebugLog("platgpsstart----0")
 	if ptable == nil then	
 	   	return false;
 	end
-DebugLog("platgpsstart--wccccc--1")
+luaprint("platgpsstart--wccccc--1")
 	--lua code notify
 	platgpsnotify(ptable,cbkname,ptype,ntype,nuser);
 	platgpslib.start(ptable[0]);
-DebugLog("platgpsstart----end")
+luaprint("platgpsstart----end")
 	return true
 end
 
@@ -693,7 +694,7 @@ end
 --ptype：string型参数，用于唯一标识该platgps句柄
 --输出：无
 local function platgpsstop(ptype)
-DebugLog("platgpsstop")
+luaprint("platgpsstop")
 	local ptable =getHandle(gt.platgpslist,ptype)
 	if ptable ~= nil then
 	   	platgpslib.stop(ptable[0]);
@@ -704,7 +705,7 @@ end
 --该函数并没有立即销毁platgps句柄，而是等到下一个回收cd之后才会彻底销毁
 --输出：无
 local function platgpsdestroy(ptype)
-DebugLog("platgpsdestroy")
+luaprint("platgpsdestroy")
 	platgpsstop(ptype)
 	releaseHandle(gt.platgpslist,ptype)		
 end
@@ -713,7 +714,7 @@ end
 --ptype:string型参数，js端用于标识该platgps句柄的唯一标识符
 --输出：无
 local function platgpsabort(ptype)
-DebugLog("platgpsabort")
+luaprint("platgpsabort")
 	--platgpsdestroy(ptype)
 	platgpsstop(ptype)
 end
@@ -739,20 +740,20 @@ end
 
 --lua层platgps事件回调处理函数：
 DeclareGlobal("sys_PlatgpsEvnet",function (ptype,lon,lat,accuracy)
-DebugLog("sys_PlatgpsEvnet---wccccc",lon,lat)
+luaprint("sys_PlatgpsEvnet---wccccc",lon,lat)
 	if 0 == lon and 0 == lat  then 
-		DebugLog("sys_PlatgpsEvnet",lon,lat)
+		luaprint("sys_PlatgpsEvnet",lon,lat)
 		return 	
 	end
 	if platgps_lon == lon and platgps_lat == lat  then 
-		DebugLog("sys_PlatgpsEvnet---wccccc",lon,lat)
+		luaprint("sys_PlatgpsEvnet---wccccc",lon,lat)
 		return 	
 	end
 	platgps_lon = lon 
  	platgps_lat = lat 	
-DebugLog("sys_PlatgpsEvnet----1",ptype,lon,lat,accuracy)
+luaprint("sys_PlatgpsEvnet----1",ptype,lon,lat,accuracy)
 	local ptable =getHandle(gt.platgpslist,ptype)
-DebugLog("sys_PlatgpsEvnet----2",ptable)
+luaprint("sys_PlatgpsEvnet----2",ptable)
 	--platgpsdestroy(ptype);
 	if ptable ~= nil then
 		if ptable[1] == 0 then
@@ -780,6 +781,7 @@ end)
 ----------------------platgps end------------------------
 -------------------------------------------------------
 
+
 --------------------------------------------------------------
 -----------------------location start------------------------
 ------------------------------------------------------------------
@@ -804,31 +806,30 @@ setmetatable(gt.locationweaklist,{__mode ="v" })
 local lastpos = {}
 local RES_STR_PST_URL = 1201 --资源文件中编号
 local RES_FILE_PATH = "fs0:/res/api/api.rs" --资源文件地址路径--获取URL:服务器地址及端口号 目前使用测试服务器及端口
-local cellidurl = frameworkEngine.getUrlFromResource(RES_FILE_PATH, RES_STR_PST_URL)
+--local cellidurl = frameworkEngine.getUrlFromResource(RES_FILE_PATH, RES_STR_PST_URL)
+local cellidurl = ""
 local lklocationtime = 1000*60
 
-DebugLog("cellidurl= "..cellidurl)
+luaprint("cellidurl= "..cellidurl)
 
 
 
 local function lkgpsstop()
-DebugLog("lkgpsstop-start")
+luaprint("lkgpsstop-start")
 	local bExist = gpsisbusy()
 	if bExist then
-		DebugLog("lkgpsstop-ok")
+		luaprint("lkgpsstop-ok")
 		gpsstop("lkhandle")
 	end
-DebugLog("lkgpsstop-end")
+luaprint("lkgpsstop-end")
 end
 
 local function savelastpos(lon,lat,speed,course,altitude,raidus)
---[[	
 	if lastpos.lon == nil and lastpos.lat == nil then
 		--第一次定位成功请求城市信息		
 		--PSTreportobj.positionreportforlua("locate",lon,lat)
 		tiros.PSTreport.positionreportforlua("locate",lon-lon%1,lat-lat%1)
 	end
-]]--
 	lastpos.lon=lon
 	lastpos.lat=lat
 	lastpos.speed=speed
@@ -837,24 +838,25 @@ local function savelastpos(lon,lat,speed,course,altitude,raidus)
 	lastpos.raidus=raidus	
 end
 
-local function lksendmessage(stype,lon,lat,speed,course,altitude,raidus,func,user,funtype)	
+local function lksendmessage(stype,lon,lat,speed,course,altitude,raidus,func,user,funtype)
+			print("logic gps lksendmessage in")	
     	local elon ;
     	local elat ;
     	elon,elat = encryptiongpslib.encryptiongps(lon, lat);
 	elon = math.ceil(elon)
 	elat = math.ceil(elat)
-DebugLog("lksendmessage----wccccc",lon,lat,speed,course,altitude,raidus)
-DebugLog("lksendmessage---elon-wccccc",elon,elat,speed,course,altitude,raidus)
+print("logic gps lksendmessage----wccccc",lon,lat,speed,course,altitude,raidus)
+print("logic gps lksendmessage---elon-wccccc",elon,elat,speed,course,altitude,raidus)
 	if func ==nil and user ==nil then		
 	elseif user then
 		--call c func
-        DebugLog("lksendmessage----kongxiangyu")
+        print("logic gps lksendmessage----kongxiangyu")
 		commlib.locationnotify(func,user,elon,elat,speed,course,altitude,raidus,funtype);
 	elseif type(func) == "string" then
 		--JS			
 	else
 		--lua
-		func(stype,elon,elat,speed,course,altitude,raidus,funtype)
+		func(stype,elon,elat,speed,course,altitude,raidus,funtype,lon,lat)
 	end	
 	
 	moduleobj.moduledata_set("logic","lon",elon)
@@ -867,49 +869,49 @@ end
 
 --timer相关 start
 local function lktimerstart(htype)
-DebugLog("lktimerstart",htype)	
+luaprint("lktimerstart",htype)	
 	if tmrobj.timerisbusy(htype) then		
 		tmrobj.timerabort(htype)
 	end
-DebugLog("lktimerstart -1 ")
+luaprint("lktimerstart -1 ")
 	tmrobj.timerstartforlua(htype,lklocationtime,gt.lktimerCB)
-DebugLog("lktimerstart -ok ")
+luaprint("lktimerstart -ok ")
 end
 
 
 --定位接口控制函数-start
 local function lkplatgpsstart()
-DebugLog("lkplatgpsstart-start---1")
+luaprint("lkplatgpsstart-start---1")
 	local bExist = platgpsisbusy("lkplathandle")
-DebugLog("lkplatgpsstart-start---111")
+luaprint("lkplatgpsstart-start---111")
 	if not bExist then	
-		DebugLog("lkplatgpsstart-start---2")	
+		luaprint("lkplatgpsstart-start---2")	
 		platgpsstartforlua("lkplathandle",gt.lkplatgpsCB)
-		DebugLog("lkplatgpsstart-3")
+		luaprint("lkplatgpsstart-3")
 	end
-DebugLog("lkplatgpsstart-end")
+luaprint("lkplatgpsstart-end")
 end
 
 local function lkplatgpsstop()
-DebugLog("lkplatgpsstop-start")
+luaprint("lkplatgpsstop-start")
 	local bExist = platgpsisbusy("lkplathandle")
 	if bExist then
-		DebugLog("lkplatgpsstop-ok")
+		luaprint("lkplatgpsstop-ok")
 		platgpsabort("lkplathandle")		
 	end
-DebugLog("lkplatgpsstop-end")
+luaprint("lkplatgpsstop-end")
 end
 
 local function lkgpsstart()
-DebugLog("lkgpsstart-start")
+luaprint("lkgpsstart-start")
 	local bExist = gpsisbusy()
-DebugLog("lkgpsstart-start---1")
+luaprint("lkgpsstart-start---1")
 	if not bExist then
-DebugLog("lkgpsstart-start---2")
+luaprint("lkgpsstart-start---2")
 		gpsstartforlua("lkhandle",gt.lkgpsCB)
-		DebugLog("lkgpsstart-ok")
+		luaprint("lkgpsstart-ok")
 	end
-DebugLog("lkgpsstart-end")
+luaprint("lkgpsstart-end")
 end
 
 local function lkcellstart()	
@@ -922,16 +924,17 @@ end
 
 local function lkcellstop()
 	cellid_cancel()
-DebugLog("lkcellstop")
+luaprint("lkcellstop")
 end
 --定位接口控制函数-end
+
 
 --timer相关 end
 
 
 -----更改定位模式
 local function lkchangemode(mode)
-DebugLog("lkchangemode -start ",mode)
+luaprint("lkchangemode -start ",mode)
 	local lkTable =getHandle(gt.locationlist,"lkhandle")
 	if lkTable ~= nil then
 		lkTable.mode = mode	
@@ -939,139 +942,140 @@ DebugLog("lkchangemode -start ",mode)
 		if mode == 1 then	
 			tmrobj.timerabort("lkgps")
 			tmrobj.timerabort("lkplatgps")
-			DebugLog("lkchangemode -1-1")
+			luaprint("lkchangemode -1-1")
 			lkgpsstart()
-			DebugLog("lkchangemode -1-2")
+			luaprint("lkchangemode -1-2")
 			lkcellstop()
-			DebugLog("lkchangemode -1-3")
+			luaprint("lkchangemode -1-3")
 			lkplatgpsstop()
-			DebugLog("lkchangemode -1-4")
+			luaprint("lkchangemode -1-4")
 		elseif mode == 2 then
-			DebugLog("lkchangemode -2-1")
+			luaprint("lkchangemode -2-1")
 			lkcellstart()
-			DebugLog("lkchangemode -2-2")
+			luaprint("lkchangemode -2-2")
 			--lkgpsstop()
-			DebugLog("lkchangemode -2-3")
+			luaprint("lkchangemode -2-3")
 			--lkplatgpsstart()
-			DebugLog("lkchangemode -2-4")
+			luaprint("lkchangemode -2-4")
 		elseif mode == 3 then
-			DebugLog("lkchangemode -3-1")
+			luaprint("lkchangemode -3-1")
 			lkgpsstart()
-			DebugLog("lkchangemode -3-2")
+			luaprint("lkchangemode -3-2")
 			lkplatgpsstart()
-			DebugLog("lkchangemode -3-3")			
+			luaprint("lkchangemode -3-3")			
 			lkcellstart()
-			DebugLog("lkchangemode -3-4")
+			luaprint("lkchangemode -3-4")
 		end		
 	end			
-DebugLog("lkchangemode -end")
+luaprint("lkchangemode -end")
 end
 local function lkcreate()
-DebugLog("lkcreate -start")
+luaprint("lkcreate -start")
 	local lkTable =getHandle(gt.locationweaklist,"lkhandle");
 	if lkTable == nil then
 		lkTable = {};			
-DebugLog("lkcreate -registerHandle")
+luaprint("lkcreate -registerHandle")
 	end	
 	registerHandle(gt.locationlist,gt.locationweaklist,"lkhandle",lkTable);
-DebugLog("lkcreate -end")
+luaprint("lkcreate -end")
 end
 
 --timer回调
 createmodule(gt,"lktimerCB",function(handletype)
 
-DebugLog("lktimerCB-start")
+luaprint("lktimerCB-start")
 	if handletype == "lkgps" then 
-		DebugLog("lktimerCB-start,,lkgps")
+		luaprint("lktimerCB-start,,lkgps")
 		lkcellstart()	
 		lkplatgpsstart()
 	elseif handletype == "lkplatgps" then 
-		DebugLog("lktimerCB-start,,lkplatgps")
+		luaprint("lktimerCB-start,,lkplatgps")
 		lkcellstart()	
 	end	
 end)
+
 --GPS回调
 createmodule(gt,"lkgpsCB",function(stype,lon,lat,speed,course)
-	tiros.file.Writefile("fs1:/location/gpslua.txt","gps lon:" .. tostring(lon) .. ",lat:" .. tostring(lat) .. ",speed:" .. tostring(speed) .. ",course:" .. tostring(course) ..  " end\n",false);
-
-	DebugLog("==1==wccccc==lkgpsCB",lon,lat,speed,course,0,0)	
-	savelastpos(lon,lat,speed,course)
+	luaprint("==1==wccccc==lkgpsCB",lon,lat,speed,course,0,0)	
+	--savelastpos(lon,lat,speed,course)
 	local handletype = "lkhandle"	
 	----------------------
 	local lkTable =getHandle(gt.locationlist,handletype)
-	DebugLog("==2====lkgpsCB")	
+	luaprint("==2====lkgpsCB")	
 	if lkTable == nil then
 		return
 	end
 	if lkTable ~= nil and lkTable.gpsnotify ~= nil then
-		lkTable.gpsnotify(lon,lat,speed,course); --基站采集
+		--lkTable.gpsnotify(lon,lat,speed,course); --基站采集
 	end
 
-	DebugLog("==4====lkgpsCB",lkTable.mode)
+	luaprint("==4====lkgpsCB",lkTable.mode)
 	if lkTable.mode == 3 then
-		DebugLog("===5=======lkgpsCB end")
-		lkcellstop()
-		lkplatgpsstop()		
-		lktimerstart("lkgps")
+		luaprint("===5=======lkgpsCB end")
+		--lkcellstop()
+		--lkplatgpsstop()		
+		--lktimerstart("lkgps")
 	end
 
 	if type(lkTable.monitor) == "table" then
 		for k,v in pairs(lkTable.monitor) do
-		DebugLog("===77=======lkgpsCB end",lkTable.monitor[k].func,lkTable.monitor[k].user)
+		luaprint("===77=======lkgpsCB end",lkTable.monitor[k].func,lkTable.monitor[k].user)
 			lksendmessage(stype,lon,lat,speed,course,0,0,lkTable.monitor[k].func,lkTable.monitor[k].user,GPSFUNTYPE)	
 		end
 	end
-	DebugLog("==6====lkgpsCB")
+	luaprint("==6====lkgpsCB")
 end)
 --platgps cb func
 createmodule(gt,"lkplatgpsCB",function(ptype,lon,lat,accuracy)
-tiros.file.Writefile("fs1:/location/gpslua.txt","lkplatgpsCB lon:" .. tostring(lon) .. ",lat:" .. tostring(lat) .. ",accuracy:" .. tostring(accuracy) ..  " end\n",false);
-	DebugLog("====2===wccccc==lkplatgpsCB",lon,lat,accuracy)
-	savelastpos(lon,lat,0,0,0,accuracy)
+print("logic gps lkplatgpsCB in ")
+	print("logic gps lkplatgpsCB",lon,lat,accuracy)
+	--savelastpos(lon,lat,0,0,0,accuracy)
 	local handletype = "lkhandle"
 	----------------------
 	local lkTable =getHandle(gt.locationlist,handletype)
 	if lkTable == nil then
 		return
 	end
+	print("logic gps lkplatgpsCB 22")
 	if lkTable.mode == 2 or lkTable.mode == 3 then
-		lkcellstop()				
-		lktimerstart("lkplatgps")
+		--lkcellstop()				
+		--lktimerstart("lkplatgps")
 	end
 	
+	print("logic gps lkplatgpsCB 33")
 	if type(lkTable.monitor) == "table" then
 		for k,v in pairs(lkTable.monitor) do
+			print("logic gps lkplatgpsCB 44")
 			lksendmessage(nil,lon,lat,0,0,0,accuracy,lkTable.monitor[k].func,lkTable.monitor[k].user,PLATGPSFUNTYPE)	
 		end
 	end	
 	---------------
-	DebugLog("=====22======lkplatgpsCB end")
+	luaprint("=====22======lkplatgpsCB end")
 	
 end)
 
 --cell callback
 createmodule(gt,"lkcellidCB",function(lon,lat,altitude,raidus)
-tiros.file.Writefile("fs1:/location/gpslua.txt","lkcellidCB lon:" .. tostring(lon) .. ",lat:" .. tostring(lat) .. ",altitude:" .. tostring(altitude) .. ",raidus:" .. tostring(raidus) ..  " end\n",false);
-	DebugLog("=====1==wccccc====lkcellidCB",lon,lat,altitude,raidus)
-	savelastpos(lon*3.6,lat*3.6,0,0,altitude,raidus)
+	luaprint("=====1==wccccc====lkcellidCB",lon,lat,altitude,raidus)
+	--savelastpos(lon*3.6,lat*3.6,0,0,altitude,raidus)
 	local handletype = "lkhandle"
 	local lkTable =getHandle(gt.locationlist,handletype)	
-	DebugLog("=====12======lkcell")	
+	luaprint("=====12======lkcell")	
 	if lkTable == nil then
-		DebugLog("=====2======lkcell")
+		luaprint("=====2======lkcell")
 		return
 	end
-	DebugLog("=====22======lkcell",lkTable.monitor)
+	luaprint("=====22======lkcell",lkTable.monitor)
  
 	
 	if type(lkTable.monitor) == "table" then
-		DebugLog("=====3======lkcell")
+		luaprint("=====3======lkcell")
 		for k,v in pairs(lkTable.monitor) do
-			DebugLog("=====4======lkcell")
-			lksendmessage(nil,lon*3.6,lat*3.6,0,0,altitude,raidus,lkTable.monitor[k].func,lkTable.monitor[k].user,CELLIDFUNTYPE)	
+			luaprint("=====4======lkcell")
+			lksendmessage(nil,lon,lat,0,0,altitude,raidus,lkTable.monitor[k].func,lkTable.monitor[k].user,CELLIDFUNTYPE)	
 		end
 	end
-	DebugLog("=====44======lkcell")		
+	luaprint("=====44======lkcell")		
 end)
 
 
@@ -1080,12 +1084,12 @@ end)
 local function lkaddmonitor(cbfunc,user)
 	local lkTable =getHandle(gt.locationlist,"lkhandle")
 	local T = {func= cbfunc,user=user}
-DebugLog("lkaddmonitor",lkTable,cbfunc,user)
+luaprint("lkaddmonitor",lkTable,cbfunc,user)
 	if lkTable == nil then 
 		return false	
 	end
 	if lkTable.monitor == nil then
-		DebugLog("lkaddmonitor1")
+		luaprint("lkaddmonitor1")
 		lkTable.monitor={}
 	end
 	for k,v in pairs(lkTable.monitor) do
@@ -1096,7 +1100,7 @@ DebugLog("lkaddmonitor",lkTable,cbfunc,user)
 		end
 	end
 	table.insert(lkTable.monitor,T)	
-DebugLog("monitorcount=",table.maxn(lkTable.monitor))		
+luaprint("monitorcount=",table.maxn(lkTable.monitor))		
 end
 
 --存储经纬度函数接口
@@ -1126,7 +1130,7 @@ end
 
 -----删除回调
 createmodule(gt,"lkdelmonitor",function(cbfunc,user)
-DebugLog("lkdelmonitor-start",cbfunc,user)
+luaprint("lkdelmonitor-start",cbfunc,user)
 	local lkTable =getHandle(gt.locationlist,"lkhandle")
 	if lkTable ~= nil and lkTable.monitor ~= nil then	
 		for k,v in pairs(lkTable.monitor) do
@@ -1134,96 +1138,137 @@ DebugLog("lkdelmonitor-start",cbfunc,user)
 			if T and type(T)== "table" then								
 				if T.func == cbfunc and T.user == user then			
 					table.remove(lkTable.monitor, k)
-					DebugLog("lkdelmonitor-end")
+					luaprint("lkdelmonitor-end")
 					break;
 				end
 			end
 		end
 	end	
 end)
+
 --开始定位函数接口
 --输出：无
 createmodule(gt,"lkstart",function(mode,cbfunc,user)
-DebugLog("lkstart-----1",mode,cbfunc,user)	
+luaprint("lkstart-----1",mode,cbfunc,user)	
 	lkcreate()
-DebugLog("lkstart-----2")
-	lkchangemode(mode)
-DebugLog("lkstart-----3")
+luaprint("lkstart-----2")
+	--lkchangemode(mode)
+luaprint("lkstart-----3")
 	if cbfunc ~= nil then
-		DebugLog("lkstart-----4")
+		luaprint("lkstart-----4")
 		lkaddmonitor(cbfunc,user)
-		DebugLog("lkstart-----5")		
+		luaprint("lkstart-----5")		
 	end
-DebugLog("lkstart-----end")
+luaprint("lkstart-----end")
 end)
 
 
 --对外声明定位释放函数接口
 --输出：无
 createmodule(gt,"lkstop",function()
---DebugLog("lkstop-start")
+--[[
+--luaprint("lkstop-start")
 	local lkTable =getHandle(gt.locationlist,"lkhandle")
 	if lkTable ~= nil then
-		DebugLog("lkstop-1")
-		lklastlocation_set(lastpos)
-		DebugLog("lkstop-2")
+		luaprint("lkstop-1")
+		--lklastlocation_set(lastpos)
+		luaprint("lkstop-2")
 	   	--lkgpsstop()
-        gpsabort()
-		lkcellstop()
-		lkplatgpsstop()
-		tmrobj.timerabort("lkgps")
-		tmrobj.timerabort("lkplatgps")	
-		cellid_destroy()
+        --gpsabort()
+		--lkcellstop()
+		--lkplatgpsstop()
+		--tmrobj.timerabort("lkgps")
+		--tmrobj.timerabort("lkplatgps")	
+		--cellid_destroy()
 	end
-DebugLog("lkstop-start",gt.locationlist)
+luaprint("lkstop-start",gt.locationlist)
 	releaseHandle(gt.locationlist,"lkhandle")	
+]]
 end)
 
 createmodule(gt,"lkgetlastposition_mem", function()
-	if lastpos ~= nil and type(lastpos) == "table" then
-		if lastpos.lon~= nil and lastpos.lat~= nil then	
-		DebugLog("lkgetlastposition_mem")
-		--showlist(lastpos)
-		local elon ;
-	    	local elat ;
-	    	elon,elat = encryptiongpslib.encryptiongps(lastpos.lon, lastpos.lat);
-		elon = math.ceil(elon)
-		elat = math.ceil(elat)
-		return elon,
-			elat,
-			lastpos.speed,
-			lastpos.course,
-			lastpos.altitude,
-			lastpos.raidus	
+	print("yaoyt---lkgetlastposition_mem in 00");
+
+	--如果最近一次定位信息还没有数据，就从定位服务去取
+	if nil == lastGPSInfo.lon or 0 == lastGPSInfo.lon then
+	    	local nFunction = tiros.moduledata.moduledata_get("framework", "pLogicFunction");
+	    	local nUser = tiros.moduledata.moduledata_get("framework", "pLogicUser");   
+
+		print("yaoyt---lkgetlastposition_mem in");
+
+		if nFunction ~= nil then
+			print("yaoyt---lkgetlastposition_mem 00");
+			commlib.universalnotifyFun(nFunction,"LuaToLogicMsg", nUser,3, 1,nil);
+					print("yaoyt---lkgetlastposition_mem 01");
 		end
+				print("yaoyt---lkgetlastposition_mem in 111");
+
+		local GPSInfo = tiros.moduledata.moduledata_get("logic", "logic_lastGPS");
+				print("yaoyt---lkgetlastposition_mem  22");
+		if nil == GPSInfo or "" == GPSInfo then
+				print("yaoyt---lkgetlastposition_mem  33");
+			return 0,0,0,0,0,0;
+		end
+
+		print("yaoyt---lkgetlastposition_mem 444")
+		local t = {};
+		local t = tiros.json.decode(GPSInfo)
+		print("yaoyt---lkgetlastposition_mem 55" .. t.lon)
+		return t.lon,t.lat,t.speed,t.course,t.altitude,t.radius,t.rawLon,t.rawLat;
+	else
+		--有最近一次定位信息
+		print("yaoyt---lkgetlastposition_mem 666 lon:" .. lastGPSInfo.lon .. ",lat:" .. lastGPSInfo.lat)
+		return lastGPSInfo.lon,lastGPSInfo.lat,lastGPSInfo.speed,lastGPSInfo.course,lastGPSInfo.altitude,lastGPSInfo.radius,lastGPSInfo.rawLon,lastGPSInfo.rawLat;
 	end
-	return nil,nil,nil,nil,nil,nil
+	
 end)
 
 --
 --对外声明获取经纬度函数接口
 --输出：integer型，lon,lat
 createmodule(gt,"lkgetlastposition_file",function()
-	configEngine.ProfileStart("logic","logiccfg")
-	local lon = configEngine.getValue("logiccfg","lon")
-	local lat = configEngine.getValue("logiccfg","lat")
-	local speed = configEngine.getValue("logiccfg","speed")
-	local course = configEngine.getValue("logiccfg","course")
-	local altitude = configEngine.getValue("logiccfg","altitude")
-	local raidus = configEngine.getValue("logiccfg","raidus")
-	configEngine.ProfileStop("logiccfg")
-DebugLog("lkgetlastposition_file",lon,lat,speed,course,altitude,raidus)
-	return lon,lat,speed,course,altitude,raidus
+	return gt.lkgetlastposition_mem();
 end)
 
 createmodule(gt,"lkcellsave_notify",function(gpsnotify,cdmanotify)
 	local lkTable =getHandle(gt.locationlist,"lkhandle")
-DebugLog("---lkcellsave_notify",gpsnotify,cdmanotify)
+luaprint("---lkcellsave_notify",gpsnotify,cdmanotify)
 	if lkTable ~= nil then
 			lkTable.gpsnotify= gpsnotify;
 			lkTable.cdmanotify= cdmanotify;
-DebugLog("---lkcellsave_notify",lkTable.gpsnotify,lkTable.cdmanotify)
+luaprint("---lkcellsave_notify",lkTable.gpsnotify,lkTable.cdmanotify)
 	end	
+end)
+
+--处理定位模块发送来定位信息
+createmodule(gt,"lklocationCallback",function(rawLon, rawLat, lon, lat, speed, course, altitude, raidus, locationType)
+	print("logic gps lklocationCallback in")
+	print("logic gps lklocationCallback " .. lon .. "," .. lat .. "," .. speed .. "," .. course .. "," .. altitude .. "," .. raidus .. "," .. locationType)
+
+	--保存最近一次定位信息
+	lastGPSInfo.lon = lon;
+	lastGPSInfo.lat = lat;
+	lastGPSInfo.speed = speed;
+	lastGPSInfo.course = course;
+	lastGPSInfo.altitude = altitude;
+	lastGPSInfo.raidus = raidus;
+	lastGPSInfo.funtype = locationType;
+	lastGPSInfo.rawLon = rawLon;
+	lastGPSInfo.rawLat = rawLat;
+
+	if GPSFUNTYPE == locationType then
+		print("logic gps lklocationCallback type 1");
+		gt.lkgpsCB(nil,rawLon,rawLat,speed,course);
+		print("logic gps lklocationCallback type end 1");
+	elseif CELLIDFUNTYPE == locationType then
+		print("logic gps lklocationCallback type 2");
+		gt.lkcellidCB(rawLon,rawLat,altitude,raidus);
+		
+	elseif PLATGPSFUNTYPE == locationType then
+		print("logic gps lklocationCallback type 3");
+		gt.lkplatgpsCB(nil,rawLon,rawLat,raidus);
+	end
+
 end)
 
 tiros.location  = readOnly(gt)

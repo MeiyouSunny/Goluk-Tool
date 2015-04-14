@@ -2,13 +2,18 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 
  /**
   * 1.编辑器必须显示空白处
@@ -32,6 +37,15 @@ import android.view.View.OnClickListener;
   * @author xuhw
   */
 public class SettingsActivity extends Activity implements OnClickListener, IPCManagerFn{
+	/**  录制状态  */
+	private boolean recordState=false;
+	/** 自动循环录像开关按钮 */
+	private Button mAutoRecordBtn=null;
+	/** 声音录制开关按钮 */
+	private Button mAudioBtn=null;
+	
+	/**  音视频配置信息  */
+	private VideoConfigState mVideoConfigState=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,27 +63,15 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	 * @date 2015年4月6日
 	 */
 	private void initView(){
-		boolean zdxhlx = SettingUtils.getInstance().getBoolean("zdxhlx", true);//自动循环录像初始化
-		boolean sylz = SettingUtils.getInstance().getBoolean("sylz", true);//声音录制初始化
-		boolean ztts = SettingUtils.getInstance().getBoolean("ztts", true);//状态提示灯初始化
-		
-		if(zdxhlx){
-			findViewById(R.id.zdxhlx).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
-		}else{
-			findViewById(R.id.zdxhlx).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
-		}
-		
-		if(sylz){
-			findViewById(R.id.sylz).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
-		}else{
-			findViewById(R.id.sylz).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
-		}
-		
-		if(ztts){
-			findViewById(R.id.ztts).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
-		}else{
-			findViewById(R.id.ztts).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
-		}
+		mAutoRecordBtn = (Button)findViewById(R.id.zdxhlx);
+		mAudioBtn = (Button)findViewById(R.id.sylz);
+
+//		boolean ztts = SettingUtils.getInstance().getBoolean("ztts", true);//状态提示灯初始化
+//		if(ztts){
+//			findViewById(R.id.ztts).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
+//		}else{
+//			findViewById(R.id.ztts).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
+//		}
 	}
 	
 	/**
@@ -91,63 +93,97 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 		findViewById(R.id.gshsdk_line).setOnClickListener(this);//格式化SDK卡
 		findViewById(R.id.hfccsz_line).setOnClickListener(this);//恢复出厂设置
 		findViewById(R.id.bbxx_line).setOnClickListener(this);//版本信息
-		findViewById(R.id.ipcbd_line).setOnClickListener(this);//摄像头绑定
+	}
+	
+	/**
+	 * 摄像头未连接提示框
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	private void dialog(){
+		CustomDialog d = new CustomDialog(this);
+		d.setCancelable(false);
+		d.setMessage("请检查摄像头是否正常连接");
+		d.setLeftButton("确定", new OnLeftClickListener() {
+			@Override
+			public void onClickListener() {
+				finish();
+			}
+		});
+		d.show();
 	}
 
 	@Override
 	public void onClick(View arg0) {
-		switch (arg0.getId()) {
-			case R.id.back_btn:
-				finish();
+		if(R.id.back_btn == arg0.getId()){
+			finish();
+			return;
+		}
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			switch (arg0.getId()) {
+				case R.id.mVideoDefinition://视频质量
+					Intent mVideoDefinition = new Intent(SettingsActivity.this, VideoQualityActivity.class);
+					startActivity(mVideoDefinition);
+					break;
+				case R.id.zdxhlx://自动循环录像
+					if(recordState){
+						boolean a = GolukApplication.getInstance().getIPCControlManager().stopRecord();
+						System.out.println("YYY===========stopRecord=============a="+a);
+					}else{
+						boolean b = GolukApplication.getInstance().getIPCControlManager().startRecord();
+						System.out.println("YYY===========startRecord=============b="+b);
+					}
+					break;
+				case R.id.sylz://声音录制
+					if(null != mVideoConfigState){
+						if(1 == mVideoConfigState.AudioEnabled){
+							mVideoConfigState.AudioEnabled=0;
+							boolean a = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
+							System.out.println("YYY===========setAudioCfg=======close=======a="+a);
+						}else{
+							mVideoConfigState.AudioEnabled=1;
+							boolean a = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
+							System.out.println("YYY===========setAudioCfg=======open=======a="+a);
+						}
+					}
+					break;
+				case R.id.ztts://状态提示灯
+					boolean ztts = SettingUtils.getInstance().getBoolean("ztts");
+					this.setButtonsBk(ztts, R.id.ztts, "ztts");
+					break;
+				case R.id.pzgylmd_line://碰撞感应灵敏度
+					Intent pzgylmd_line = new Intent(SettingsActivity.this, ImpactSensitivityActivity.class);
+					startActivity(pzgylmd_line);
+					break;
+				case R.id.rlcx_line://容量查询
+					Intent rlcx_line = new Intent(SettingsActivity.this, StorageCpacityQueryActivity.class);
+					startActivity(rlcx_line);
+					break;
+				case R.id.sysz_line://水印设置
+					Intent sysz_line = new Intent(SettingsActivity.this, WatermarkSettingActivity.class);
+					startActivity(sysz_line);
+					break;
+				case R.id.sjsz_line://时间设置
+					Intent sjsz_line = new Intent(SettingsActivity.this, TimeSettingActivity.class);
+					startActivity(sjsz_line);
+					break;
+				case R.id.gshsdk_line://格式化SDK卡
+					Intent gshsdk_line = new Intent(SettingsActivity.this, FormatSDCardActivity.class);
+					startActivity(gshsdk_line);
+					break;
+				case R.id.hfccsz_line://恢复出厂设置
+					Intent hfccsz_line = new Intent(SettingsActivity.this, RestoreFactorySettingsActivity.class);
+					startActivity(hfccsz_line);
+					break;
+				case R.id.bbxx_line://版本信息
+					Intent bbxx = new Intent(SettingsActivity.this, VersionActivity.class);
+					startActivity(bbxx);
+					break;
+			default:
 				break;
-			case R.id.mVideoDefinition://视频质量
-				Intent mVideoDefinition = new Intent(SettingsActivity.this, VideoQualityActivity.class);
-				startActivity(mVideoDefinition);
-				break;
-			case R.id.zdxhlx://自动循环录像
-				boolean zdxhlx=SettingUtils.getInstance().getBoolean("zdxhlx");
-				this.setButtonsBk(zdxhlx, R.id.zdxhlx, "zdxhlx");
-				break;
-			case R.id.sylz://声音录制
-				boolean sylz=SettingUtils.getInstance().getBoolean("sylz");
-				this.setButtonsBk(sylz, R.id.sylz, "sylz");
-				break;
-			case R.id.ztts://状态提示灯
-				boolean ztts = SettingUtils.getInstance().getBoolean("ztts");
-				this.setButtonsBk(ztts, R.id.ztts, "ztts");
-				break;
-			case R.id.pzgylmd_line://碰撞感应灵敏度
-				Intent pzgylmd_line = new Intent(SettingsActivity.this, ImpactSensitivityActivity.class);
-				startActivity(pzgylmd_line);
-				break;
-			case R.id.rlcx_line://容量查询
-				Intent rlcx_line = new Intent(SettingsActivity.this, StorageCpacityQueryActivity.class);
-				startActivity(rlcx_line);
-				break;
-			case R.id.sysz_line://水印设置
-				Intent sysz_line = new Intent(SettingsActivity.this, WatermarkSettingActivity.class);
-				startActivity(sysz_line);
-				break;
-			case R.id.sjsz_line://时间设置
-				Intent sjsz_line = new Intent(SettingsActivity.this, TimeSettingActivity.class);
-				startActivity(sjsz_line);
-				break;
-			case R.id.gshsdk_line://格式化SDK卡
-				Intent gshsdk_line = new Intent(SettingsActivity.this, FormatSDCardActivity.class);
-				startActivity(gshsdk_line);
-				break;
-			case R.id.hfccsz_line://恢复出厂设置
-				Intent hfccsz_line = new Intent(SettingsActivity.this, RestoreFactorySettingsActivity.class);
-				startActivity(hfccsz_line);
-				break;
-			case R.id.bbxx_line://版本信息
-				Intent bbxx = new Intent(SettingsActivity.this, VersionActivity.class);
-				startActivity(bbxx);
-				break;
-			case R.id.ipcbd_line://摄像头绑定
-				break;
-		default:
-			break;
+			}
+		}else{
+			dialog();
 		}
 	}
 	
@@ -172,6 +208,27 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
+		if(null != mVideoConfigState){
+			if(1 == mVideoConfigState.AudioEnabled){
+				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+			}else{
+				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			}
+		}else{
+			mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+		}
+		
+		if(!GolukApplication.getInstance().getAutoRecordState()){
+			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+		}else{
+			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+		}
+	}
+	
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
@@ -180,12 +237,53 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
-			if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){//获取IPC系统音视频编码配置
-				
-				
+			if(msg == IPC_VDCP_Msg_GetRecordState){//获取IPC行车影像录制状态
+				System.out.print("YYY=========get=======param1="+param1+"=======param2="+param2);
+				if(RESULE_SUCESS == param1){
+					recordState = IpcDataParser.getAutoRecordState((String)param2);
+					if(!recordState){
+						mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+					}else{
+						mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+					}
+				}else{
+					//录制状态获取失败
+					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+				}
+			}else if(msg == IPC_VDCP_Msg_StartRecord){//设置IPC行车影像开始录制
+				System.out.print("YYY=========StartRecord=======param1="+param1+"=======param2="+param2);
+				if(RESULE_SUCESS == param1){
+					recordState=true;
+					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+				}
+			}else if(msg == IPC_VDCP_Msg_StopRecord){//设置IPC行车影像开始录制
+				System.out.print("YYY=========StopRecord======param1="+param1+"=======param2="+param2);
+				if(RESULE_SUCESS == param1){
+					recordState=false;
+					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+				}
+			}else if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){//获取IPC系统音视频编码配置
+				System.out.print("YYY=========get audio======param1="+param1+"=======param2="+param2);
+				if(RESULE_SUCESS == param1){
+					mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
+					if(null != mVideoConfigState){
+						System.out.print("YYY==========get audio========111111111===========");
+						if(1 == mVideoConfigState.AudioEnabled){
+							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+						}else{
+							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+						}
+					}else{
+						mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+					}
+				}else{
+					System.out.print("YYY==========get audio========2222====fail=======");
+					mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+				}
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){//设置IPC系统音视频编码配置
-				
-				
+				if(RESULE_SUCESS == param1){
+					System.out.print("YYY==========set audio========111111===success======");
+				}
 			}
 		}
 	}

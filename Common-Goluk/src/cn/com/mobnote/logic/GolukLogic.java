@@ -4,6 +4,8 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.page.PageNotifyAdapter;
+import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.module.talk.TalkNotifyAdapter;
 
 public class GolukLogic {
 
@@ -49,10 +51,13 @@ public class GolukLogic {
 	 * @date Mar 27, 2015
 	 */
 	private void registerAdapter(int mId, IGolukCommFn fn) {
-//		LogUtil.e("", "jyf-------goluk----registerAdapter: " + mId);
+		// LogUtil.e("", "jyf-------goluk----registerAdapter: " + mId);
 		switch (mId) {
 		case GolukModule.Goluk_Module_HttpPage:
 			PageNotifyAdapter.setNotify((IPageNotifyFn) fn);
+			break;
+		case GolukModule.Goluk_Module_Talk:
+			TalkNotifyAdapter.setNotify((ITalkFn) fn);
 			break;
 		case GolukModule.Goluk_Module_IPCManager:
 			IPCManagerAdapter.setIPcManageListener((IPCManagerFn) fn);

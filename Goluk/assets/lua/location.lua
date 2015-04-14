@@ -1,7 +1,5 @@
 --定位
-print("location----lua---1");
 require"lua/systemapi/sys_location"
-print("location----lua---2");
 --[[
 1.回调函数声明
 C回调
