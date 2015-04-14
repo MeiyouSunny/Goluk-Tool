@@ -41,6 +41,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -936,7 +937,7 @@ public class MainActivity2 extends Activity implements OnClickListener , WifiCon
 		switch(id){
 			case R.id.video_square_more_btn:
 				//跳转到视频广场页面
-				Intent videoSquare= new Intent(MainActivity2.this,VideoSquareActivity22.class);
+				Intent videoSquare= new Intent(MainActivity2.this,VideoSquareActivity.class);
 				startActivity(videoSquare);
 			break;
 			case R.id.local_video_more_btn:
