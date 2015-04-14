@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.os.Handler;

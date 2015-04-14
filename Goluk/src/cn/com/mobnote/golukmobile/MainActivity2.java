@@ -936,7 +936,7 @@ public class MainActivity2 extends Activity implements OnClickListener , WifiCon
 		switch(id){
 			case R.id.video_square_more_btn:
 				//跳转到视频广场页面
-				Intent videoSquare= new Intent(MainActivity2.this,VideoSquareActivity.class);
+				Intent videoSquare= new Intent(MainActivity2.this,VideoSquareActivity22.class);
 				startActivity(videoSquare);
 			break;
 			case R.id.local_video_more_btn:

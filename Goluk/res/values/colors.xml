@@ -58,5 +58,8 @@
 	
 	  <!-- 直接界面 -->
     <color name="live_color_time1">#b8b8b8</color>
+    
+    <color name="textcolor_select">#00c5b4</color>
+    <color name="textcolor_qx">#999999</color>
 
 </resources>

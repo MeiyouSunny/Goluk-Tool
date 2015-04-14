@@ -1023,7 +1023,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.video_square_more_btn:
 				//跳转到视频广场页面
-				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity.class);
+				Intent videoSquare= new Intent(MainActivity.this,VideoSquareActivity22.class);
 				startActivity(videoSquare);
 			break;
 			case R.id.login_status_btn:
