@@ -179,6 +179,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private boolean isAlreadExit = false;
 
 	private String mCurrentVideoId = null;
+	/** 登录布局 */
+	private RelativeLayout mLoginLayout = null;
+	private Button mLoginBtn = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -213,6 +216,12 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			}
 
 			mTitleTv.setText(currentUserInfo.nickName + " 的直播");
+			if (!mApp.isUserLoginSucess){
+				// 未登录成功
+				mLoginLayout.setVisibility(View.VISIBLE);
+			} else {
+				mLoginLayout.setVisibility(View.GONE);
+			}
 		}
 
 		drawPersonsHead();
@@ -345,6 +354,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mTalkingTimeTv = (TextView) findViewById(R.id.live_talktime);
 
 		mQiangpaiImg = (ImageView) findViewById(R.id.qiangpai_img);
+		
+		mLoginLayout = (RelativeLayout) findViewById(R.id.loginlayout);
+		mLoginBtn = (Button) findViewById(R.id.live_login);
+		mLoginBtn.setOnClickListener(this);
 
 		mRPVPalyVideo = (RtmpPlayerView) findViewById(R.id.live_vRtmpPlayVideo);
 		// 先显示气泡上的默认图片
@@ -598,6 +611,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		LogUtil.e("", "jyf------TTTTT------------开始上传直播----2222");
 		if (CarRecorderManager.isRTSPLiving()) {
 			LogUtil.e("", "jyf------TTTTT------------RTSP正在播放，不可以开始");
+			showToast("RTSP正在直播，不可以开始");
 			return;
 		}
 		try {
@@ -617,6 +631,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		} catch (RecorderStateException e) {
 			e.printStackTrace();
+			showToast("上传视频报异常");
 			LogUtil.e("", "jyf------TTTTT------------开始上传直播----666666666---报异常");
 		}
 
@@ -996,11 +1011,17 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// 如果是开启直播，则停止上报自己的位置
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
 					"");
-
+			break;
+		case R.id.live_login:
+			click_login();
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private void click_login() {
+		showToast("去登录界面");
 	}
 
 	private void click_OK() {

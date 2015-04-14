@@ -10,21 +10,16 @@
     <RelativeLayout
         android:id="@+id/live_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="wrap_content"
         android:background="@color/bg" >
 
         <Button
             android:id="@+id/live_back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@color/bg"
-            android:drawableLeft="@drawable/icon_back_btn"
-            android:drawablePadding="8dp"
-            android:gravity="center|left"
-            android:text="@string/back_text"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/live_btn_back" />
 
         <TextView
             android:id="@+id/live_title"
@@ -37,12 +32,11 @@
 
         <Button
             android:id="@+id/live_refirsh_btn"
-            android:layout_width="45dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
-            android:background="@color/bg"
-            android:drawableRight="@drawable/refresh"
+            android:background="@drawable/live_btn_more"
             android:paddingRight="12dp" />
     </RelativeLayout>
 
@@ -55,54 +49,77 @@
         android:layout_below="@id/live_title_layout"
         android:background="@color/border_bg" />
 
-    <!-- 滚动区间 -->
-
-
     <!-- 视频详情title -->
 
     <RelativeLayout
         android:id="@+id/live_video_desc_title"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="38dp"
         android:layout_below="@id/live_title_solid"
-        android:background="@color/black" >
+        android:background="@color/live_user_bg" >
 
-        <LinearLayout
+        <!-- 用户头像 -->
+
+        <ImageView
+            android:id="@+id/live_userhead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal" >
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="6dp"
+            android:src="@drawable/live_icon_portrait" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/live_icon_portrait" />
+        <!-- 直播标识 -->
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
-                android:src="@drawable/live_icon_live" />
+        <ImageView
+            android:id="@+id/live_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/live_icon_live" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
-                android:src="@drawable/live_icon_time" />
+        <!-- 用户名称 -->
 
-            <TextView
-                android:id="@+id/live_countdown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="4dp"
-                android:text="00:00"
-                android:textColor="@color/live_color_time1"
-                android:textSize="@dimen/live_text_time1_size" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/live_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@id/live_sign"
+            android:layout_toRightOf="@id/live_userhead"
+            android:singleLine="true"
+            android:textColor="@color/live_nickname_color"
+            android:textSize="@dimen/live_nickname_size" />
+
+        <!-- 地址标识 -->
+
+        <ImageView
+            android:id="@+id/live_address_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/live_nickname"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/live_icon_address" />
+
+        <!-- 地址 -->
+
+        <TextView
+            android:id="@+id/live_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/live_sign"
+            android:layout_toRightOf="@id/live_address_sign"
+            android:singleLine="true"
+            android:text="北京市朝阳区朝外大街"
+            android:textColor="@color/live_address_color"
+            android:textSize="@dimen/live_address_size" />
     </RelativeLayout>
 
     <!-- 视频播放 -->
@@ -144,6 +161,36 @@
                 android:textSize="14sp"
                 android:visibility="gone" />
         </RelativeLayout>
+
+        <!-- 倒计时 -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/live_icon_time" />
+
+            <TextView
+                android:id="@+id/live_countdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:text="00:00"
+                android:textColor="@color/live_color_time1"
+                android:textSize="@dimen/live_text_time1_size" />
+        </LinearLayout>
 
         <!-- 控制视频播放暂停 -->
 
@@ -199,89 +246,119 @@
         android:id="@+id/live_play_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/live_video_play_layout" >
+        android:layout_below="@id/live_video_play_layout"
+        android:background="@color/live_user_bg"
+        android:paddingBottom="10dp" >
+
+        <!-- 视频描述 -->
 
         <TextView
-            android:id="@+id/live_okcount"
+            android:id="@+id/live_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:text="视频描述视频描述视频描述视频描述视频描述视频描述"
+            android:textColor="#8e8e8e"
+            android:textSize="12sp" />
+
+        <!-- 多少人看 -->
+
+        <LinearLayout
+            android:id="@+id/live_lookcountlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/live_desc"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/live_icon_eye"
+                android:contentDescription="@string/imgdes" />
+
+            <TextView
+                android:id="@+id/live_lookcount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="4788"
+                android:textColor="#8e8e8e"
+                android:textSize="@dimen/live_text_time1_size" >
+            </TextView>
+        </LinearLayout>
+
+        <!-- 分享 -->
+
+        <LinearLayout
+            android:id="@+id/live_sharelayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/live_lookcountlayout"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="7dp"
-            android:text="0"
-            android:textSize="@dimen/live_text_time1_size" />
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/live_icon_share"
+                android:contentDescription="@string/imgdes" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="4788"
+                android:textColor="#8e8e8e"
+                android:textSize="@dimen/live_text_time1_size" >
+            </TextView>
+        </LinearLayout>
 
         <ImageView
-            android:id="@+id/live_ok"
+            android:id="@+id/live_tilt_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@id/live_okcount"
-            android:background="@drawable/live_icon_heart" />
+            android:layout_alignTop="@id/live_lookcountlayout"
+            android:layout_marginRight="18dp"
+            android:layout_toLeftOf="@id/live_sharelayout"
+            android:src="@drawable/live_icon_tilt_line" >
+        </ImageView>
 
-        <ImageView
-            android:id="@+id/live_line2"
+        <!-- 点赞 -->
+
+        <LinearLayout
+            android:id="@+id/live_oklayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/live_okcount"
-            android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@id/live_ok"
-            android:src="@drawable/live_icon_line" />
+            android:layout_alignTop="@id/live_lookcountlayout"
+            android:layout_marginRight="18dp"
+            android:layout_toLeftOf="@id/live_tilt_line"
+            android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/live_lookcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/live_okcount"
-            android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@id/live_line2"
-            android:text="0"
-            android:textSize="@dimen/live_text_time1_size" />
+            <ImageView
+                android:id="@+id/live_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/live_icon_like"
+                android:contentDescription="@string/imgdes" />
 
-        <ImageView
-            android:id="@+id/live_look"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/live_ok"
-            android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@id/live_lookcount"
-            android:background="@drawable/live_icon_people" />
-
-        <ImageView
-            android:id="@+id/live_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/live_okcount"
-            android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@id/live_look"
-            android:src="@drawable/live_icon_line" />
-
-        <!-- 地址 -->
-
-        <ImageView
-            android:id="@+id/live_address_sign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/imgdes"
-            android:src="@drawable/live_icon_address" />
-
-        <TextView
-            android:id="@+id/live_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="6dp"
-            android:layout_toLeftOf="@id/live_line"
-            android:layout_toRightOf="@id/live_address_sign"
-            android:singleLine="true"
-            android:text="北京市朝阳区朝外大街"
-            android:textSize="@dimen/live_text_time1_size" />
+            <TextView
+                android:id="@+id/live_okcount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="4788"
+                android:textColor="#8e8e8e"
+                android:textSize="@dimen/live_text_time1_size" >
+            </TextView>
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -413,6 +490,40 @@
             android:singleLine="true"
             android:text="00:09"
             android:textSize="@dimen/live_text_time1_size" />
+    </RelativeLayout>
+
+    <!-- 提示登录布局 -->
+
+    <RelativeLayout
+        android:id="@+id/loginlayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/live_loginlayout_color"
+        android:visibility="visible" >
+
+        <Button
+            android:id="@+id/live_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/live_login_btn"
+            android:paddingLeft="28dp"
+            android:paddingRight="28dp"
+            android:text="@string/live_login"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/live_login"
+            android:text="@string/live_login_prompt"
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <!-- 直播界面说话按钮 -->
