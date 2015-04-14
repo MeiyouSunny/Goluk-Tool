@@ -56,6 +56,7 @@
                 android:orientation="horizontal" >
 
                 <ImageButton
+                    android:id="@+id/category_btn_one"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="2dp"
@@ -63,6 +64,7 @@
                     android:background="@drawable/livestreaming_square_one" />
 
                 <ImageButton
+                    android:id="@+id/category_btn_two"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
@@ -81,6 +83,7 @@
                 android:orientation="horizontal" >
 
                 <ImageButton
+                    android:id="@+id/category_btn_three"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="2dp"
@@ -88,6 +91,7 @@
                     android:background="@drawable/livestreaming_square_three" />
 
                 <ImageButton
+                    android:id="@+id/category_btn_four"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
@@ -106,6 +110,7 @@
                 android:orientation="horizontal" >
 
                 <ImageButton
+                    android:id="@+id/category_btn_five"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="2dp"
@@ -113,6 +118,7 @@
                     android:background="@drawable/livestreaming_square_five" />
 
                 <ImageButton
+                    android:id="@+id/category_btn_six"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
@@ -131,6 +137,7 @@
                 android:orientation="horizontal" >
 
                 <ImageButton
+                    android:id="@+id/category_btn_seven"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="2dp"
@@ -138,6 +145,7 @@
                     android:background="@drawable/livestreaming_square_seven" />
 
                 <ImageButton
+                    android:id="@+id/category_btn_eight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
@@ -156,6 +164,7 @@
                 android:orientation="horizontal" >
 
                 <ImageButton
+                    android:id="@+id/category_btn_nine"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="2dp"
@@ -163,6 +172,7 @@
                     android:background="@drawable/livestreaming_square_nine" />
 
                 <ImageButton
+                    android:id="@+id/category_btn_ten"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
