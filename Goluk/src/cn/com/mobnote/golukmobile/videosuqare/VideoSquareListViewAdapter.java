@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 @SuppressLint("InflateParams")
@@ -51,9 +58,37 @@ public class VideoSquareListViewAdapter extends BaseAdapter{
 		}
 		
 		TextView username = (TextView)convertView.findViewById(R.id.username);
-		
 		username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		
+		SurfaceView mSurfaceView = (SurfaceView)convertView.findViewById(R.id.mSurfaceView);
+		SurfaceHolder mSurfaceHolder = mSurfaceView.getHolder();
+		
+		
+		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+		int height = (int)((float)width/1.77f);
+		
+		RelativeLayout mPlayerLayout = (RelativeLayout)convertView.findViewById(R.id.mPlayerLayout);
+		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(width, height);
+		mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
+		
+		
+		mSurfaceHolder.addCallback(new Callback() {
+			@Override
+			public void surfaceDestroyed(SurfaceHolder arg0) {
+				LogUtils.d("SSS============surfaceDestroyed==========");
+			}
+			
+			@Override
+			public void surfaceCreated(SurfaceHolder arg0) {
+				LogUtils.d("SSS============surfaceCreated==========");
+			}
+			
+			@Override
+			public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+				
+			}
+		});
+	
 		
 		
 		return convertView;
