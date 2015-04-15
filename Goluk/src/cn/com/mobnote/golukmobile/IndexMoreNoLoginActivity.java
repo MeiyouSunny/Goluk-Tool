@@ -183,6 +183,7 @@ public class IndexMoreNoLoginActivity extends Activity implements OnClickListene
 						// TODO Auto-generated method stub
 						Intent it = new Intent(IndexMoreNoLoginActivity.this,UserLoginActivity.class);
 						startActivity(it);
+						finish();
 					}
 				}).create().show();
 				break;

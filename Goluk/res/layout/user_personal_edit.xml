@@ -220,6 +220,8 @@
 		        android:layout_toRightOf="@id/user_personal_edit_sign_text"
 		        android:textColor="@color/user_personal_black"
 		        android:layout_centerVertical="true"
+		        android:maxLines="2"
+		        android:ellipsize="marquee"
 		        />
 	</RelativeLayout>
 	<View

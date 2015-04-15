@@ -97,7 +97,8 @@
 			android:layout_toRightOf="@id/user_sex_image"
 			android:text="@string/username_text"
 			android:textColor="#333333"
-			android:textSize="16sp"/>
+			android:textSize="16sp"
+			android:layout_toLeftOf="@id/right_btn"/>
 	</RelativeLayout>
 	
 	<RelativeLayout

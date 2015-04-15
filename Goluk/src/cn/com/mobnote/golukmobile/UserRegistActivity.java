@@ -264,8 +264,9 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			break;
 		// 登陆
 		case R.id.user_regist_login:
-			Intent itLogin = new Intent(UserRegistActivity.this,UserLoginActivity.class);
-			startActivity(itLogin);
+//			Intent itLogin = new Intent(UserRegistActivity.this,UserLoginActivity.class);
+//			startActivity(itLogin);
+			finish();
 			break;
 		}
 	}
@@ -406,6 +407,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 							Intent itRegist = new Intent(UserRegistActivity.this,UserLoginActivity.class);
 							itRegist.putExtra("intentRegist", mEditTextPhone.getText().toString());
 							startActivity(itRegist);
+							finish();
 						}
 					}).create().show();
 					break;
@@ -496,6 +498,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					console.toast("注册成功", mContext);
 					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
 					startActivity(it);
+					finish();
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");

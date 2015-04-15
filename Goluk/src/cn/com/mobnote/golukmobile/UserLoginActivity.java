@@ -326,6 +326,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					mApplication.isUserLoginSucess = true;
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
+					finish();
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
