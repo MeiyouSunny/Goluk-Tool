@@ -96,6 +96,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
+//		System.out.println("SSS=============msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
 			closeProgressDialog();
 			if(RESULE_SUCESS == msg){

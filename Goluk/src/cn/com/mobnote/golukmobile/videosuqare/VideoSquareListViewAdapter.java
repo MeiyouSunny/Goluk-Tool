@@ -1,16 +1,16 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +25,15 @@ import android.widget.TextView;
 public class VideoSquareListViewAdapter extends BaseAdapter {
 	private Context mContext = null;
 	private List<VideoSquareInfo> mVideoSquareListData = null;
+	private HashMap<String, DWMediaPlayer> mDWMediaPlayerList = null;
 	private int count = 0;
+	private final String USERID = "77D36B9636FF19CF";
+	private final String API_KEY = "O8g0bf8kqiWroHuJaRmihZfEmj7VWImF";
 
 	public VideoSquareListViewAdapter(Context context) {
 		mContext = context;
 		mVideoSquareListData = new ArrayList<VideoSquareInfo>();
+		mDWMediaPlayerList = new HashMap<String, DWMediaPlayer>();
 	}
 
 	public void setData(List<VideoSquareInfo> data) {
@@ -74,6 +78,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 					.findViewById(R.id.mPlayerLayout);
 			holder.mSurfaceView = (SurfaceView) convertView
 					.findViewById(R.id.mSurfaceView);
+			holder.mPreLoading = (ImageView) convertView
+					.findViewById(R.id.mPreLoading);
 
 			convertView.setTag(holder);
 		} else {
@@ -85,6 +91,38 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
 
+		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(
+				mDWMediaPlayerList, mVideoSquareInfo));
+
+		String videoid = mVideoSquareInfo.mVideoEntity.videoid;
+		holder.mPreLoading.setVisibility(View.VISIBLE);
+		if ("2".equals(mVideoSquareInfo.mVideoEntity.type)) {
+			if (!TextUtils.isEmpty(videoid)) {
+				if (!mDWMediaPlayerList.containsKey(videoid)) {
+					DWMediaPlayer mDWMediaPlayer = new DWMediaPlayer();
+					mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY,
+							mContext);
+					mDWMediaPlayer.setOnErrorListener(new VideoOnErrorListener(
+							mVideoSquareInfo));
+					mDWMediaPlayer
+							.setOnPreparedListener(new VideoOnPreparedListener(
+									mDWMediaPlayerList, mVideoSquareInfo));
+					mDWMediaPlayer
+							.setOnBufferingUpdateListener(new VideoOnBufferingUpdateListener(
+									holder.mPreLoading, mVideoSquareInfo));
+					mDWMediaPlayerList.put(videoid, mDWMediaPlayer);
+				} else {
+					DWMediaPlayer mDWMediaPlayer = mDWMediaPlayerList
+							.get(videoid);
+					if (null != mDWMediaPlayer) {
+						if (!mDWMediaPlayer.isPlaying()) {
+							holder.mPreLoading.setVisibility(View.GONE);
+						}
+					}
+				}
+			}
+		}
+
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);
 
@@ -92,24 +130,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
 				width, height);
 		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
-
-		mSurfaceHolder.addCallback(new Callback() {
-			@Override
-			public void surfaceDestroyed(SurfaceHolder arg0) {
-				LogUtils.d("SSS============surfaceDestroyed==========");
-			}
-
-			@Override
-			public void surfaceCreated(SurfaceHolder arg0) {
-				LogUtils.d("SSS============surfaceCreated==========");
-			}
-
-			@Override
-			public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2,
-					int arg3) {
-
-			}
-		});
+		mSurfaceHolder.addCallback(new SurfaceViewCallback(mDWMediaPlayerList,
+				mVideoSquareInfo));
 
 		return convertView;
 	}
@@ -130,6 +152,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		TextView videotitle;
 		RelativeLayout mPlayerLayout;
 		SurfaceView mSurfaceView;
+		ImageView mPreLoading;
 	}
 
 }
