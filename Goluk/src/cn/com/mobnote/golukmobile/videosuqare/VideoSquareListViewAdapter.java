@@ -10,20 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 @SuppressLint("InflateParams")
-public class VideoSquareListViewAdapter extends BaseAdapter{
-	private Context mContext=null;
-	private List<VideoSquareInfo> mVideoSquareListData=null;
-	private int count=0;
-		
-	public VideoSquareListViewAdapter(Context context){
-		mContext=context;
-		mVideoSquareListData= new ArrayList<VideoSquareInfo>();
+public class VideoSquareListViewAdapter extends BaseAdapter {
+	private Context mContext = null;
+	private List<VideoSquareInfo> mVideoSquareListData = null;
+	private int count = 0;
+
+	public VideoSquareListViewAdapter(Context context) {
+		mContext = context;
+		mVideoSquareListData = new ArrayList<VideoSquareInfo>();
 	}
-	
-	public void setData(List<VideoSquareInfo> data){
+
+	public void setData(List<VideoSquareInfo> data) {
 		mVideoSquareListData.addAll(data);
 		count = mVideoSquareListData.size();
 	}
@@ -46,21 +48,44 @@ public class VideoSquareListViewAdapter extends BaseAdapter{
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		VideoSquareInfo mVideoSquareInfo = mVideoSquareListData.get(arg0);
-		if(convertView == null){
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.video_square_list_item, null); 
-		}
+
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = LayoutInflater.from(mContext).inflate(
+					R.layout.video_square_list_item, null);
+			holder = new ViewHolder();
+			holder.username = (TextView) convertView.findViewById(R.id.looknumber_text);
+			holder.looknumber = (TextView) convertView.findViewById(R.id.username);
+			holder.userhead = (ImageView) convertView.findViewById(R.id.user_head);
+			holder.likenumber = (Button) convertView.findViewById(R.id.like_btn);
+			holder.videotitle = (TextView) convertView.findViewById(R.id.video_title);
+			convertView.setTag(holder);
+        }else{
+            holder = (ViewHolder)convertView.getTag();
+        }
 		
-		TextView username = (TextView)convertView.findViewById(R.id.username);
-		
-		username.setText(mVideoSquareInfo.mUserEntity.nickname);
-		
-		
-		
+		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
+		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
+		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
+		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
 		return convertView;
 	}
-	
-	public void onDestroy(){
-		
+
+	public int getUserHead(String head) {
+
+		return 0;
+	}
+
+	public void onDestroy() {
+
+	}
+
+	public static class ViewHolder {
+		TextView username;
+		TextView looknumber;
+		ImageView userhead;
+		Button likenumber;
+		TextView videotitle;
 	}
 
 }

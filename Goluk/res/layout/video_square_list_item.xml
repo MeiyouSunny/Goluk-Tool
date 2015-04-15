@@ -70,6 +70,7 @@
         android:layout_height="28dp" >
 
         <TextView
+            android:id="@+id/video_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -91,6 +92,7 @@
             android:background="@drawable/livestreaming_watch_eople_number_icon" />
 
         <TextView
+            android:id="@+id/looknumber_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
