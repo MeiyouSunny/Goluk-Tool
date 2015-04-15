@@ -26,6 +26,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		httpPost(true);
 	}
 	
+	/**
+	 * 获取网络数据
+	 * @param flag 是否显示加载中对话框
+	 * @author xuhw
+	 * @date 2015年4月15日
+	 */
 	private void httpPost(boolean flag){
 		if(flag){
 			if(null == mCustomProgressDialog){
@@ -34,8 +40,11 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mCustomProgressDialog.show();
 			}
 		}
-		boolean a = GolukApplication.getInstance().getVideoSquareManager().getHotList();
-		System.out.println("YYYY==22222==getHotList======a="+a);
+		boolean result = GolukApplication.getInstance().getVideoSquareManager().getHotList();
+		if(!result){
+			closeProgressDialog();
+		}
+		System.out.println("YYYY==22222==getHotList======result="+result);
 	}
 	
 	private void initLayout(){
@@ -61,6 +70,19 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		});
 	}
 	
+	/**
+	 * 关闭加载中对话框
+	 * @author xuhw
+	 * @date 2015年4月15日
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomProgressDialog){
+			if(mCustomProgressDialog.isShowing()){
+				mCustomProgressDialog.dismiss();
+			}
+		}
+	}
+	
 	public View getView(){
 		return mRTPullListView;
 	}
@@ -75,12 +97,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
 		if(event == SquareCmd_Req_HotList){
-			if(null != mCustomProgressDialog){
-				if(mCustomProgressDialog.isShowing()){
-					mCustomProgressDialog.dismiss();
-				}
-			}
-			
+			closeProgressDialog();
 			if(RESULE_SUCESS == msg){
 				mDataList = DataParserUtils.parserVideoSquareListData((String)param2);
 				initLayout();
