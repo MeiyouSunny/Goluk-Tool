@@ -45,7 +45,7 @@ public class WiFiListAdapter extends BaseAdapter{
 	private ArrayList<WiFiListData> mDataList = null;
 	private LayoutInflater mLayoutInflater = null;
 	/** 记录上一次点击的id */
-	private int resIndex = -1;
+	private int resIndex = 0;
 	/** 当前已链接的wifi */
 	private int linkIndex = -1;
 	
@@ -56,28 +56,18 @@ public class WiFiListAdapter extends BaseAdapter{
 	}
 	
 	/**
-	 * 修改wifi连接状态
+	 * 
 	 * @return
 	 */
 	public void changeWiFiStatus(){
-		if(resIndex > -1){
-			WiFiListData data = (WiFiListData)getItem(resIndex);
-			data.wifiStatus = true;
-			if(linkIndex > -1){
-				WiFiListData data2 = (WiFiListData)getItem(linkIndex);
-				data2.wifiStatus = false;
-				linkIndex = resIndex;
-			}
-			this.notifyDataSetChanged();
+		WiFiListData data = (WiFiListData)getItem(resIndex);
+		data.wifiStatus = true;
+		if(linkIndex > -1){
+			WiFiListData data2 = (WiFiListData)getItem(linkIndex);
+			data2.wifiStatus = false;
+			linkIndex = resIndex;
 		}
-	}
-	
-	/**
-	 * 获取是否已连接ipc热点
-	 * @return
-	 */
-	public int getLinkIndex(){
-		return linkIndex;
+		this.notifyDataSetChanged();
 	}
 	
 	@Override
@@ -103,7 +93,6 @@ public class WiFiListAdapter extends BaseAdapter{
 			convertView = mLayoutInflater.inflate(R.layout.wifi_link_list_item, null);
 			holder.wifiName = (TextView) convertView.findViewById(R.id.wifi_name);
 			holder.wifiStatus = (ImageView) convertView.findViewById(R.id.wifi_status);
-			holder.pwdStatus = (ImageView) convertView.findViewById(R.id.wifi_pwd_status);
 			convertView.setTag(holder);
 		}else {
 			holder = (ViewHolder) convertView.getTag();
@@ -112,18 +101,9 @@ public class WiFiListAdapter extends BaseAdapter{
 		
 		if(data.wifiStatus){
 			linkIndex = position;
-			holder.wifiStatus.setBackgroundResource(R.drawable.connect_wifi_icon);
-			holder.pwdStatus.setBackgroundResource(R.drawable.connect_lock_icon);
+			holder.wifiStatus.setBackgroundResource(R.drawable.wifi_linked);
 		}else{
-			holder.wifiStatus.setBackgroundResource(R.drawable.connect_wifi_icon_ash);
-			holder.pwdStatus.setBackgroundResource(R.drawable.connect_lock_icon_ash);
-		}
-		if(!data.hasPwd){
-			//有密码返回false
-			holder.pwdStatus.setVisibility(View.VISIBLE);
-		}
-		else{
-			holder.pwdStatus.setVisibility(View.GONE);
+			holder.wifiStatus.setBackgroundResource(R.drawable.wifi_no_link);
 		}
 		holder.wifiName.setText(data.wifiName);
 		
@@ -136,14 +116,12 @@ public class WiFiListAdapter extends BaseAdapter{
 	class ViewHolder {
 		TextView wifiName = null;
 		ImageView wifiStatus = null;
-		ImageView pwdStatus = null;
 	}
 	
 	
 	class onclick implements OnClickListener{
 		private int index;
 		private String wifiName;
-		private String mac;
 		public onclick(int index){
 			this.index = index;
 		}
@@ -158,7 +136,6 @@ public class WiFiListAdapter extends BaseAdapter{
 			inputServer.setFocusable(true);
 			
 			wifiName = data.wifiName.toString();
-			mac = data.mac.toString();
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setTitle(wifiName).setView(inputServer).setNegativeButton("取消", null);
@@ -167,10 +144,10 @@ public class WiFiListAdapter extends BaseAdapter{
 					String pwd = inputServer.getText().toString();
 					if(!"".equals(pwd)){
 						console.log("wifi---pwd---" + pwd);
-						((WiFiLinkListActivity)mContext).connectWiFi(wifiName,mac,pwd);
+						((WiFiLinkListActivity)mContext).connectWiFi(wifiName,pwd);
 					}
 					else{
-						console.toast("请输入WiFi密码", mContext);
+						console.toast("请求输入WiFi密码", mContext);
 					}
 				}
 			});
@@ -189,21 +166,10 @@ public class WiFiListAdapter extends BaseAdapter{
 			resIndex = index;
 			WiFiListData data = (WiFiListData)getItem(index);
 			if(!data.wifiStatus){
-				//判断wifi有没有密码,没有密码直接连接
-				boolean hasPwd = data.hasPwd;
-				if(!hasPwd){
-					inputTitleDialog(data);
-				}
-				else{
-					//直接连接wifi
-					String wifiName = data.wifiName.toString();
-					String mac = data.mac.toString();
-					((WiFiLinkListActivity)mContext).connectWiFi(wifiName,mac);
-				}
+				inputTitleDialog(data);
 			}
 			else{
-				console.toast("已连接" + data.wifiName + "....", mContext);
-				//((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
+				console.toast("已连接" + data.wifiName, mContext);
 			}
 //			((VideoEditMusicActivity)mContext).mMusicListAdapter.notifyDataSetChanged();
 //			((VideoEditMusicActivity)mContext).changeNoMusicStatus(false,data.filePath);

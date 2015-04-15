@@ -3,8 +3,7 @@ package cn.com.mobnote.wifi;
 public class WifiRsBean {
 	String wifiName=null;
 	boolean isConn=false;
-	Integer wifiSignal=0;
-	String ipAddress = null;
+    Integer wifiSignal=0;
 	public String getWifiName() {
 		return wifiName;
 	}
@@ -23,10 +22,5 @@ public class WifiRsBean {
 	public void setWifiSignal(Integer wifiSignal) {
 		this.wifiSignal = wifiSignal;
 	}
-	public String getIpAddress() {
-		return ipAddress;
-	}
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
-	}
+
 }

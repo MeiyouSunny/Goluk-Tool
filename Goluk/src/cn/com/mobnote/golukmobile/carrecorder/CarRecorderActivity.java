@@ -43,7 +43,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SensorDetector.AccelerometerL
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomWifiDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
 
@@ -549,10 +548,8 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	public void start() {
 		if (null != mRtmpPlayerView) {
 			mRtmpPlayerView.setVisibility(View.VISIBLE);
-			//rtsp://admin:123456@192.168.43.234/sub
-			String ip = "rtsp://admin:123456@" + GolukApplication.getInstance().mIpcIp + "/sub";
-			console.log("IPC预览IP地址---ip---" + ip);
-			mRtmpPlayerView.setDataSource(ip);
+			mRtmpPlayerView.setDataSource(getResources().getString(
+					R.string.default_rtsp_url));
 			mRtmpPlayerView.start();
 		}
 	}
