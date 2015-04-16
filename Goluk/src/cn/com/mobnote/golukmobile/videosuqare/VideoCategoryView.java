@@ -83,38 +83,39 @@ public class VideoCategoryView{
 			// TODO Auto-generated method stub
 			switch (view.getId()) {
 				case R.id.live_categroy:
-					startActivity();
+					startActivity("0");
 					break;
 				case R.id.category_btn_one:
-					startActivity();
-					break;
-				case R.id.category_btn_three:
-					startActivity();
-					break;
-				case R.id.category_btn_four:
-					startActivity();
-					break;
-				case R.id.category_btn_five:
-					startActivity();
-					break;
-				case R.id.category_btn_six:
-					startActivity();
-					break;
-				case R.id.category_btn_seven:
-					startActivity();
-					break;
-				case R.id.category_btn_eight:
-					startActivity();
-					break;
-				case R.id.category_btn_nine:
-					startActivity();
-					break;
-				case R.id.category_btn_ten:
-					startActivity();
+					startActivity("1");
 					break;
 				case R.id.category_btn_two:
-					startActivity();
+					startActivity("2");
 					break;
+				case R.id.category_btn_three:
+					startActivity("3");
+					break;
+				case R.id.category_btn_four:
+					startActivity("4");
+					break;
+				case R.id.category_btn_five:
+					startActivity("5");
+					break;
+				case R.id.category_btn_six:
+					startActivity("6");
+					break;
+				case R.id.category_btn_seven:
+					startActivity("7");
+					break;
+				case R.id.category_btn_eight:
+					startActivity("8");
+					break;
+				case R.id.category_btn_nine:
+					startActivity("9");
+					break;
+				case R.id.category_btn_ten:
+					startActivity("10");
+					break;
+				
 				case R.id.back_btn:
 					VideoSquarePlayActivity vpa = (VideoSquarePlayActivity) mContext;
 					vpa.finish();
@@ -126,9 +127,10 @@ public class VideoCategoryView{
 		}
 	}
 
-	public void startActivity() {
+	public void startActivity(String type) {
 		VideoSquareActivity play = (VideoSquareActivity)mContext;
 		Intent intent = new Intent(); 
+		intent.putExtra("category", type);
         intent.setClass(play,VideoSquarePlayActivity.class);
         play.startActivity(intent);
 	}

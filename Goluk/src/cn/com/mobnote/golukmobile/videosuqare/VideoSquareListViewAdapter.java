@@ -1,6 +1,9 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,10 +62,12 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	}
 
 	public void setData(List<VideoSquareInfo> data) {
+		mVideoSquareListData.clear();
 		mVideoSquareListData.addAll(data);
 		count = mVideoSquareListData.size();
+		this.notifyDataSetChanged();
 	}
-
+	
 	@Override
 	public int getCount() {
 		return count;
@@ -87,19 +92,24 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 					R.layout.video_square_list_item, null);
 			holder = new ViewHolder();
 			holder.username = (TextView) convertView
-					.findViewById(R.id.looknumber_text);
-			holder.looknumber = (TextView) convertView
 					.findViewById(R.id.username);
+			holder.looknumber = (TextView) convertView
+					.findViewById(R.id.looknumber_text);
 			holder.userhead = (ImageView) convertView
 					.findViewById(R.id.user_head);
 			holder.likenumber = (Button) convertView
 					.findViewById(R.id.like_btn);
 			holder.videotitle = (TextView) convertView
 					.findViewById(R.id.video_title);
+			holder.sharetime = (TextView) convertView.findViewById(R.id.time);
 			holder.mPlayerLayout = (RelativeLayout) convertView
 					.findViewById(R.id.mPlayerLayout);
 			holder.mSurfaceView = (SurfaceView) convertView
 					.findViewById(R.id.mSurfaceView);
+			holder.reporticon = (ImageView) convertView
+					.findViewById(R.id.report_icon);
+			holder.liveicon = (ImageView) convertView
+					.findViewById(R.id.live_icon);
 			holder.mPreLoading = (ImageView) convertView
 					.findViewById(R.id.mPreLoading);
 
@@ -107,11 +117,20 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+		
+		if("1".equals(mVideoSquareInfo.mVideoEntity.type)){//直播
+			holder.reporticon.setVisibility(View.GONE);
+			holder.liveicon.setVisibility(View.VISIBLE);
+		}else{//点播
+			holder.reporticon.setVisibility(View.VISIBLE);
+			holder.liveicon.setVisibility(View.GONE);
+		}
 
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
+		holder.sharetime.setText(this.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
 
 		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(
 				mDWMediaPlayerList, mVideoSquareInfo));
@@ -207,14 +226,28 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
+	public String formatTime(String date) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		ParsePosition pos = new ParsePosition(0);
+		Date strtodate = formatter.parse(date, pos);
+		
+		formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
+		return formatter.format(strtodate);
+		
+	}
+
 	public static class ViewHolder {
 		TextView username;
 		TextView looknumber;
 		ImageView userhead;
 		Button likenumber;
 		TextView videotitle;
+		TextView sharetime;
 		RelativeLayout mPlayerLayout;
 		SurfaceView mSurfaceView;
+		ImageView liveicon;
+		ImageView reporticon;
 		ImageView mPreLoading;
 	}
 

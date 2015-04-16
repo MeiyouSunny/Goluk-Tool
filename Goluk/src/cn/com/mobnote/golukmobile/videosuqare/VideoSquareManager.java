@@ -34,7 +34,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn{
 			JSONObject obj = new JSONObject();
 			obj.put("channel", "1");
 			obj.put("type", "0");
-			obj.put("attribute", "0");
+			obj.put("attribute", "1");
 			obj.put("operation", "0");
 			obj.put("timestamp", "");
 			
