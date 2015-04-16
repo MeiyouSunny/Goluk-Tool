@@ -10,6 +10,8 @@ public class LiveDialogManager {
 	private static LiveDialogManager mManagerInstance = null;
 	/** 授权load对话框 */
 	private AlertDialog mLoginDialog = null;
+	private AlertDialog mLiveExitDialog = null;
+
 	/** 对话框回调方法 */
 	private ILiveDialogManagerFn dialogManagerFn = null;
 
@@ -22,6 +24,8 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_AUTHENTICATION = 0;
 	/** 结束直播提示框 */
 	public static final int DIALOG_TYPE_EXIT_LIVE = 1;
+	/** 登录对话框 */
+	public static final int DIALOG_TYPE_LOGIN = 2;
 
 	/**
 	 * 获取当前类的一个实例
@@ -93,7 +97,33 @@ public class LiveDialogManager {
 		dialogManagerFn.dialogManagerCallBack(dialogType, function, data);
 	}
 
-	private AlertDialog mLiveExitDialog = null;
+	// 显示登录对话框
+	public void showLoginDialog(Context context, String message) {
+		if (null != mLoginDialog) {
+			return;
+		}
+		mLoginDialog = new AlertDialog.Builder(context).create();
+
+		mLoginDialog.setTitle("提示");
+		mLoginDialog.setMessage(message);
+
+		mLoginDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialoginterface, int i) {
+				sendMessageCallBack(DIALOG_TYPE_LOGIN, FUNCTION_DIALOG_OK, null);
+				dimissLoginExitDialog();
+			}
+		});
+		mLoginDialog.show();
+
+	}
+
+	// 销毁登录对话框
+	public void dimissLoginExitDialog() {
+		if (null != mLoginDialog) {
+			mLoginDialog.dismiss();
+			mLoginDialog = null;
+		}
+	}
 
 	public void showLiveExitDialog(Context context, String message) {
 		if (null != mLiveExitDialog) {

@@ -82,6 +82,7 @@
     <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
     <string name="bubble_username">龙王三太子</string>
     <string name="bubble_speed">50公里/小时</string>
+    <string name="bubble_count">2000</string>
     <string name="username_text">BG1TTR</string>
     <string name="like_num_text">56</string>
     <string name="speed_text">50公里/小时</string>

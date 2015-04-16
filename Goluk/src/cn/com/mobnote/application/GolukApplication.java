@@ -1,6 +1,9 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.json.JSONObject;
 
@@ -18,9 +21,6 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.UserManager;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
-import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
-import cn.com.mobnote.golukmobile.UserTestRegistActivity;
-import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
@@ -36,6 +36,7 @@ import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.util.console;
@@ -46,7 +47,7 @@ import cn.com.tiros.utils.LogUtil;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
-public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn{
+public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn , ILocationFn{
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
 	/** 保存上下文 */
@@ -85,6 +86,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	/**登陆管理类**/
 	public UserManager userManager;
 	
+	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String,ILocationFn>();
+	
 	static {
 		System.loadLibrary("golukmobile");
 	}
@@ -119,6 +122,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_HttpPage, this);
 		// 注册爱滔客回调协议
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Talk, this);
+		// 注册定位回调
+		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Location, this);
 	}
 	
 	/**
@@ -434,6 +439,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if(mPageSource == "LiveVideoList"){
 					console.log("pageNotifyCallBack---直播列表数据---" + String.valueOf(param2));
 					((LiveVideoListActivity)mContext).LiveListDataCallback(success,param2);
+				}
+				
+				// 为了更新直播界面的别人的位置信息
+				if (null != mContext && mContext instanceof LiveActivity) {
+					((LiveActivity) mContext).pointDataCallback(success, param2);
 				}
 			break;
 			case 8:
@@ -757,6 +767,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					System.out.println("YYY=========getRecordState========="+record);
 				}
 			}).start();
+		}
+	}
+	
+	public void addLocationListener(String key, ILocationFn fn) {
+		if (!mLocationHashMap.containsValue(key)){
+			return;
+		}
+		mLocationHashMap.put(key, fn);
+	}
+	
+	public void removeLocationListener(String key) {
+		mLocationHashMap.remove(key);
+	}
+
+	@Override
+	public void LocationCallBack(String locationJson) {
+		// TODO 定位回调
+		LogUtil.e("" , "jyf-------Application   LocationCallBack: " + locationJson) ;
+		if (null == mLocationHashMap) {
+			return;
+		}
+		
+		Iterator <Entry<String, ILocationFn>> it = mLocationHashMap.entrySet().iterator();
+		while(it.hasNext()) {
+			Entry<String, ILocationFn> entry = it.next();
+			entry.getValue().LocationCallBack(locationJson);
 		}
 	}
 	

@@ -1,14 +1,107 @@
 package cn.com.mobnote.util;
 
+import java.net.URLEncoder;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import cn.com.mobnote.golukmobile.live.LiveDataInfo;
-import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
+import cn.com.mobnote.golukmobile.live.LiveDataInfo;
+import cn.com.mobnote.golukmobile.live.LiveSettingBean;
+import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.module.location.BaiduPosition;
 
 public class JsonUtil {
+
+	public static boolean getJsonBooleanValue(String jsonData, String key, boolean defaultValue) {
+		try {
+			return getJsonBooleanValue(new JSONObject(jsonData), key, defaultValue);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return defaultValue;
+	}
+
+	public static boolean getJsonBooleanValue(JSONObject json_Channel, String key, boolean defaultValue) {
+		try {
+			if (!json_Channel.has(key)) {
+				return defaultValue;
+			}
+			if (json_Channel.isNull(key)) {
+				return defaultValue;
+			}
+			return json_Channel.getBoolean(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return defaultValue;
+	}
+
+	public static String getJsonStringValue(String jsonData, String key, String defaultValue) {
+		try {
+			return getJsonStringValue(new JSONObject(jsonData), key, defaultValue);
+		} catch (Exception e) {
+
+		}
+		return defaultValue;
+	}
+
+	private static String getJsonStringValue(JSONObject json_Channel, String key, String defaultValue) {
+		try {
+			if (!json_Channel.has(key)) {
+				return defaultValue;
+			}
+			if (json_Channel.isNull(key)) {
+				return defaultValue;
+			}
+			return json_Channel.getString(key);
+		} catch (Exception e) {
+
+		}
+		return defaultValue;
+	}
+
+	private static double getJsonDoubleValue(JSONObject json_Channel, String key, double defaultValue) {
+		try {
+			if (!json_Channel.has(key)) {
+				return defaultValue;
+			}
+			if (json_Channel.isNull(key)) {
+				return defaultValue;
+			}
+			return json_Channel.getDouble(key);
+		} catch (Exception e) {
+
+		}
+		return defaultValue;
+	}
+
+	public static int getJsonIntValue(String message, String key, int defaultValue) {
+		try {
+			JSONObject obj = new JSONObject(message);
+			return getJsonIntValue(obj, key, defaultValue);
+		} catch (Exception e) {
+
+		}
+
+		return defaultValue;
+	}
+
+	private static int getJsonIntValue(JSONObject json_Channel, String key, int defaultValue) {
+		try {
+			if (!json_Channel.has(key)) {
+				return defaultValue;
+			}
+			if (json_Channel.isNull(key)) {
+				return defaultValue;
+			}
+			return json_Channel.getInt(key);
+		} catch (Exception e) {
+
+		}
+		return defaultValue;
+	}
 
 	/**
 	 * 组织IPC连接方式的json串
@@ -140,13 +233,23 @@ public class JsonUtil {
 	}
 
 	// vid 为视频id
-	public static String getStartLiveJson(String vid) {
+	public static String getStartLiveJson(String vid, LiveSettingBean beanData) {
 		try {
+			String desc = "";
+
+			if (null != beanData.desc) {
+				desc = URLEncoder.encode(beanData.desc);
+			}
+
 			JSONObject obj = new JSONObject();
 			obj.put("active", "1");
 			obj.put("talk", "1");
 			obj.put("tag", "android");
 			obj.put("vid", vid);
+			obj.put("desc", desc);
+			obj.put("restime", "" + beanData.duration);
+			obj.put("flux", beanData.netCountStr);
+			obj.put("vtype", "" + beanData.vtype);
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -199,41 +302,50 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static String UserInfoToString(UserInfo userInfo) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("uid", userInfo.uid);
+			obj.put("aid", userInfo.aid);
+			obj.put("nickname", userInfo.nickName);
+			obj.put("active", "" + userInfo.active);
+			obj.put("tag", userInfo.tag);
+			obj.put("persons", "" + userInfo.persons);
+			obj.put("lon", userInfo.lon);
+			obj.put("lat", userInfo.lat);
+			obj.put("open", "1");
+			obj.put("speed", userInfo.speed);
+			obj.put("desc", "");
+			obj.put("talk", "1");
+			obj.put("zan", userInfo.zanCount);
+			obj.put("sex", userInfo.sex);
+			obj.put("head", "7");
+
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+
+		return null;
+	}
+
 	public static UserInfo parseSingleUserInfoJson(JSONObject rootObj) {
 		try {
-			String uid = rootObj.getString("uid");
-			String aid = rootObj.getString("aid");
-			String nikeName = rootObj.getString("nickname");
-			String picUrl = rootObj.getString("picurl");
-			String sex = rootObj.getString("sex");
-
-			String lon = rootObj.getString("lon");
-			String lat = rootObj.getString("lat");
-			String speed = String.valueOf(rootObj.getInt("speed"));
-
-			String open = rootObj.getString("open");
-			String active = rootObj.getString("active");
-			String tag = rootObj.getString("tag");
-
-			String groupid = getJsonStringValue(rootObj, "gid", "");
-
-			String person = String.valueOf(rootObj.getInt("persons"));
-			String zan = getJsonStringValue(rootObj, "zan", "0");
-
 			UserInfo userInfo = new UserInfo();
-			userInfo.uid = uid;
-			userInfo.aid = aid;
-			userInfo.nickName = nikeName;
-			userInfo.picurl = picUrl;
-			userInfo.sex = sex;
-			userInfo.lon = lon;
-			userInfo.lat = lat;
-			userInfo.speed = speed;
-			userInfo.active = active;
-			userInfo.tag = tag;
-			userInfo.groupId = groupid;
-			userInfo.persons = person;
-			userInfo.zanCount = zan;
+			userInfo.uid = getJsonStringValue(rootObj, "uid", "");
+			userInfo.aid = getJsonStringValue(rootObj, "aid", "");
+			userInfo.nickName = getJsonStringValue(rootObj, "nickname", "");
+			userInfo.picurl = getJsonStringValue(rootObj, "picurl", "");
+			userInfo.sex = getJsonStringValue(rootObj, "sex", "");
+			userInfo.lon = getJsonStringValue(rootObj, "lon", "");
+			userInfo.lat = getJsonStringValue(rootObj, "lat", "");
+			userInfo.speed = String.valueOf(getJsonIntValue(rootObj, "speed", 0));
+			userInfo.active = getJsonStringValue(rootObj, "active", "");
+
+			userInfo.tag = getJsonStringValue(rootObj, "tag", "");
+			userInfo.groupId = getJsonStringValue(rootObj, "gid", "");
+			userInfo.persons = String.valueOf(getJsonIntValue(rootObj, "persons", 0));
+			userInfo.zanCount = getJsonStringValue(rootObj, "zan", "0");
 
 			return userInfo;
 		} catch (Exception e) {
@@ -241,73 +353,6 @@ public class JsonUtil {
 		}
 
 		return null;
-	}
-
-	public static boolean getJsonBooleanValue(String jsonData, String key, boolean defaultValue) {
-		try {
-			return getJsonBooleanValue(new JSONObject(jsonData), key, defaultValue);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return defaultValue;
-	}
-
-	public static boolean getJsonBooleanValue(JSONObject json_Channel, String key, boolean defaultValue) {
-		try {
-			if (json_Channel.has(key)) {
-				if (json_Channel.isNull(key)) {
-					return defaultValue;
-				}
-				return json_Channel.getBoolean(key);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return defaultValue;
-	}
-
-	public static String getJsonStringValue(String jsonData, String key, String defaultValue) {
-		try {
-			return getJsonStringValue(new JSONObject(jsonData), key, defaultValue);
-		} catch (Exception e) {
-
-		}
-		return defaultValue;
-	}
-
-	private static String getJsonStringValue(JSONObject json_Channel, String key, String defaultValue) {
-		try {
-			if (json_Channel.isNull(key)) {
-				return defaultValue;
-			}
-			return json_Channel.getString(key);
-		} catch (Exception e) {
-
-		}
-		return defaultValue;
-	}
-
-	public static int getJsonIntValue(String message, String key, int defaultValue) {
-		try {
-			JSONObject obj = new JSONObject(message);
-			return getJsonIntValue(obj, key, defaultValue);
-		} catch (Exception e) {
-
-		}
-
-		return defaultValue;
-	}
-
-	private static int getJsonIntValue(JSONObject json_Channel, String key, int defaultValue) {
-		try {
-			if (json_Channel.isNull(key)) {
-				return defaultValue;
-			}
-			return json_Channel.getInt(key);
-		} catch (Exception e) {
-
-		}
-		return defaultValue;
 	}
 
 	public static LiveDataInfo parseLiveDataJson2(String data) {
@@ -465,6 +510,36 @@ public class JsonUtil {
 			array.put(obj);
 
 			return array.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static BaiduPosition parseLocatoinJson(String jsonData) {
+		if (null == jsonData || "".equals(jsonData) || 0 >= jsonData.length()) {
+			return null;
+		}
+
+		try {
+			BaiduPosition positon = new BaiduPosition();
+			JSONObject rootObj = new JSONObject(jsonData);
+			positon.elon = getJsonDoubleValue(rootObj, "elon", 0.0);
+			positon.elat = getJsonDoubleValue(rootObj, "elat", 0.0);
+			positon.rawLon = getJsonDoubleValue(rootObj, "rawLon", 0.0);
+			positon.rawLat = getJsonDoubleValue(rootObj, "rawLat", 0.0);
+
+			positon.speed = getJsonDoubleValue(rootObj, "speed", 0.0);
+			positon.course = getJsonDoubleValue(rootObj, "course", 0.0);
+			positon.altitude = getJsonDoubleValue(rootObj, "altitude", 0.0);
+			positon.radius = getJsonDoubleValue(rootObj, "radius", 0.0);
+			positon.accuracy = getJsonDoubleValue(rootObj, "accuracy", 0.0);
+			// positon.locationType =
+			// Integer.parseInt(getJsonStringValue(rootObj, "locationType",
+			// "0"));
+
+			return positon;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
