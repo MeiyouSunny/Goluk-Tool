@@ -45,5 +45,17 @@ public class VideoSquareAdapter extends PagerAdapter{
 			mVideoCategoryView.onDestroy();
 		}
 	}
+	
+	public void onBackPressed(){
+		if(null != mVideoSquareListView){
+			mVideoSquareListView.onBackPressed();
+		}
+	}
+	
+	public void onStop(){
+		if(null != mVideoSquareListView){
+			mVideoSquareListView.onStop();
+		}
+	}
 
 }

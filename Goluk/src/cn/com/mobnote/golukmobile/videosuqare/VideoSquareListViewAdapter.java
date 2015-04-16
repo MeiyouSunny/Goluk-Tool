@@ -2,12 +2,20 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -29,11 +37,25 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	private int count = 0;
 	private final String USERID = "77D36B9636FF19CF";
 	private final String API_KEY = "O8g0bf8kqiWroHuJaRmihZfEmj7VWImF";
+	private DisplayImageOptions options;
+	private ImageLoader imageLoader = ImageLoader.getInstance();
 
 	public VideoSquareListViewAdapter(Context context) {
 		mContext = context;
 		mVideoSquareListData = new ArrayList<VideoSquareInfo>();
 		mDWMediaPlayerList = new HashMap<String, DWMediaPlayer>();
+		
+		options = new DisplayImageOptions.Builder()
+//		.showImageOnLoading(R.drawable.ic_stub)
+//		.showImageForEmptyUri(R.drawable.ic_empty)
+//		.showImageOnFail(R.drawable.ic_error)
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+		.cacheInMemory(true)
+		.cacheOnDisc(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+//		.displayer(new RoundedBitmapDisplayer(20))
+		.build();
 	}
 
 	public void setData(List<VideoSquareInfo> data) {
@@ -132,6 +154,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
 		mSurfaceHolder.addCallback(new SurfaceViewCallback(mDWMediaPlayerList,
 				mVideoSquareInfo));
+		
+		imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait, holder.userhead, options, null);
+		imageLoader.displayImage(mVideoSquareInfo.mVideoEntity.picture, holder.mPreLoading, options, null);
 
 		return convertView;
 	}
@@ -139,9 +164,47 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	public int getUserHead(String head) {
 		return 0;
 	}
+	
+	public void onBackPressed(){
+		if(null != imageLoader){
+			imageLoader.stop();
+		}
+	}
+	
+	public void onStop(){
+		if(null != mDWMediaPlayerList){
+			Iterator<String> iter = mDWMediaPlayerList.keySet().iterator();
+			while (iter.hasNext()) {
+				Object key = iter.next();
+				if (null != key) {
+					DWMediaPlayer player = mDWMediaPlayerList.get(key);
+					if (null != player) {
+						if(player.isPlaying()){
+							player.pause();
+						}
+					}
+				}
+			}
+		}
+	}
 
 	public void onDestroy() {
-
+		if(null != imageLoader){
+			imageLoader.clearMemoryCache();  
+//	        imageLoader.clearDiscCache();
+		}
+		if(null != mDWMediaPlayerList){
+			Iterator<String> iter = mDWMediaPlayerList.keySet().iterator();
+			while (iter.hasNext()) {
+				Object key = iter.next();
+				if (null != key) {
+					DWMediaPlayer player = mDWMediaPlayerList.get(key);
+					if (null != player) {
+						player.release();
+					}
+				}
+			}
+		}
 	}
 
 	public static class ViewHolder {

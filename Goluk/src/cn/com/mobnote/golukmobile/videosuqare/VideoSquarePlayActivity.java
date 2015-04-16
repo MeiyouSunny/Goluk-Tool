@@ -116,8 +116,27 @@ public class VideoSquarePlayActivity extends Activity implements OnClickListener
 	}
 	
 	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		if(null != mVideoSquareListViewAdapter){
+			mVideoSquareListViewAdapter.onBackPressed();
+		}
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if(null != mVideoSquareListViewAdapter){
+			mVideoSquareListViewAdapter.onStop();
+		}
+	}
+	
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(null != mVideoSquareListViewAdapter){
+			mVideoSquareListViewAdapter.onDestroy();
+		}
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("videocategory");
 	}
 	

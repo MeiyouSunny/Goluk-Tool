@@ -87,6 +87,18 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		return mRTPullListView;
 	}
 	
+	public void onBackPressed(){
+		if(null != mVideoSquareListViewAdapter){
+			mVideoSquareListViewAdapter.onBackPressed();
+		}
+	}
+	
+	public void onStop() {
+		if(null != mVideoSquareListViewAdapter){
+			mVideoSquareListViewAdapter.onStop();
+		}
+	}
+	
 	public void onDestroy(){
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("hotlist");
 		if(null != mVideoSquareListViewAdapter){

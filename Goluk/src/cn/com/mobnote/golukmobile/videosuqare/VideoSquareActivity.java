@@ -8,9 +8,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 public class VideoSquareActivity extends Activity implements OnClickListener {
 	private VideoSquareAdapter mVideoSquareAdapter = null;
@@ -112,6 +110,22 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 			break;
 		default:
 			break;
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		if(null != mVideoSquareAdapter){
+			mVideoSquareAdapter.onBackPressed();
+		}
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if(null != mVideoSquareAdapter){
+			mVideoSquareAdapter.onStop();
 		}
 	}
 	
