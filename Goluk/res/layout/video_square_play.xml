@@ -37,6 +37,8 @@
     <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
         android:layout_below="@+id/title_layout" 
         android:id="@+id/mRTPullListView"
+        android:dividerHeight="2dp"
+        android:divider="#ededed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >

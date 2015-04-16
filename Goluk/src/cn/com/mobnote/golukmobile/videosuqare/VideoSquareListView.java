@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
 
 public class VideoSquareListView implements VideoSuqareManagerFn{
 	private Context mContext=null;
@@ -17,10 +24,23 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter=null;
 	private List<VideoSquareInfo> mDataList=null;
 	private CustomProgressDialog mCustomProgressDialog=null;
-
+	private Float jj= SoundUtils.getInstance().getDisplayMetrics().density;
+	
+	/** 保存列表一个显示项索引 */
+	private int wonderfulFirstVisible;
+	
+	/** 保存列表显示item个数 */
+	private int wonderfulVisibleCount;
+	/** 是否还有分页*/
+	private boolean isHaveData = true;
+	
+	
 	public VideoSquareListView(Context context){
 		mContext=context;
 		mRTPullListView = new RTPullListView(mContext);
+		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
+		mRTPullListView.setDividerHeight((int)(2*jj));
+		//getResources().getColor(R.color.textcolor_select)
 		mDataList = new ArrayList<VideoSquareInfo>();
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("hotlist", this);
 		httpPost(true);
@@ -68,6 +88,35 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				}, 1500);
 			}
 		});
+		
+		
+		mRTPullListView.setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
+					if(mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
+						if(isHaveData){
+							Toast.makeText(mContext, "上拉刷新", Toast.LENGTH_SHORT).show();
+							httpPost(false);
+						}
+						
+					}
+				}
+			}
+			@Override
+			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
+				wonderfulFirstVisible=firstVisibleItem;
+				wonderfulVisibleCount=visibleItemCount;
+			}
+		});
+		
+		RelativeLayout loading = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.video_square_below_loading, null); 
+		mRTPullListView.addFooterView(loading);
+		
+	}
+	
+	public void flush(){
+		mVideoSquareListViewAdapter.setData(mDataList);
 	}
 	
 	/**
@@ -99,8 +148,21 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		if(event == SquareCmd_Req_HotList){
 			closeProgressDialog();
 			if(RESULE_SUCESS == msg){
-				mDataList = DataParserUtils.parserVideoSquareListData((String)param2);
-				initLayout();
+				List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param2);
+				if(list.size()>=2){
+					isHaveData = true;
+				}else{
+					isHaveData = false;
+				}
+				
+				if(mDataList.size()<=0){
+					mDataList = list;
+					initLayout();
+				}else{
+					mDataList.addAll(list);
+					flush();
+				}
+				
 			}
 		}
 	}

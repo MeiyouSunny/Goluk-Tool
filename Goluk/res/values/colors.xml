@@ -61,5 +61,6 @@
     
     <color name="textcolor_select">#00c5b4</color>
     <color name="textcolor_qx">#999999</color>
+    <color name="video_square_list_frame">#ededed</color>
 
 </resources>
