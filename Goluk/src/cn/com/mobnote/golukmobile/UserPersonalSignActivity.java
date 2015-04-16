@@ -78,8 +78,6 @@ public class UserPersonalSignActivity extends Activity implements OnClickListene
 			it.putExtras(bundle);
 			this.setResult(2, it);
 			this.finish();
-//			it.putExtra("itBody", body);
-//			startActivity(it);
 			break;
 
 		default:

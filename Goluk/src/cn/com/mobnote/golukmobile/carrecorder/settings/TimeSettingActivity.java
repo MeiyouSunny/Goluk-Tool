@@ -3,7 +3,9 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -20,8 +22,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
  /**
   * 1.编辑器必须显示空白处
@@ -45,7 +50,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
   * @author xuhw
   */
 @SuppressLint("InflateParams")
-public class TimeSettingActivity extends BaseActivity implements OnClickListener{
+public class TimeSettingActivity extends BaseActivity implements OnClickListener, IPCManagerFn{
 	/** 显示年月日 */
 	private TextView mDateText=null;
 	/** 显示当前时间 */
@@ -62,14 +67,19 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 	private int hour;
 	/** 分 */
 	private int minute;
+	/** 秒 */
+	private int seconds;
 	/** 保存自动同步时间开关状态 */
 	private boolean systemtime;
+	/** 获取IPC系统时间标识 */
+	private boolean getTimeing=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_time_setting, null)); 
 		setTitle("时间设置");
+		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("timesetting", this);
 		
 		initView();
 		getSystemTime();
@@ -88,16 +98,24 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年4月6日
 	 */
 	private void getSystemTime(){
-	    Time t=new Time();
-	    t.setToNow();
-	    year = t.year;  
-	    month = t.month + 1;  
-	    day = t.monthDay;  
-	    hour = t.hour;
-	    minute = t.minute;  
-	    
-	    mDateText.setText(year + "-" + month + "-" + day);
-	    mTimeText.setText(hour+":"+minute);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
+				LogUtils.d("YYY========getIPCSystemTime=======a="+a);
+			}
+		}).start();
+		
+//	    Time t=new Time();
+//	    t.setToNow();
+//	    year = t.year;  
+//	    month = t.month + 1;  
+//	    day = t.monthDay;  
+//	    hour = t.hour;
+//	    minute = t.minute;  
+//	    
+//	    mDateText.setText(year + "-" + month + "-" + day);
+//	    mTimeText.setText(hour+":"+minute);
 	}
 	
 	/**
@@ -125,11 +143,22 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 				}else{
 					systemtime=true;
 					mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+					
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							if(GolukApplication.getInstance().getIpcIsLogin()){
+								long time  = System.currentTimeMillis()/1000;
+								boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
+								System.out.println("YYY============setIPCSystemTime===============a="+a);
+							}
+						}
+					}).start();
 				}
 				SettingUtils.getInstance().putBoolean("systemtime", systemtime);
 				break;
 			case R.id.mDateLayout:
-				if(!systemtime){
+				if(!systemtime && getTimeing){
 					DatePickerDialog datePicker=new DatePickerDialog(TimeSettingActivity.this, new OnDateSetListener() {
 						public void onDateSet(DatePicker view, int _year, int monthOfYear, int dayOfMonth) {
 							year = _year;
@@ -143,7 +172,7 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 				
 				break;
 			case R.id.mTimeLayout:
-				if(!systemtime){
+				if(!systemtime && getTimeing){
 					TimePickerDialog time=new TimePickerDialog(TimeSettingActivity.this, new OnTimeSetListener() {
 						@Override
 						public void onTimeSet(TimePicker view, int hourOfDay, int _minute) {
@@ -169,6 +198,8 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("timesetting");
+		
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			long time = 0;
 			if(systemtime){
@@ -191,11 +222,63 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 			
 			System.out.println("YYY=============time=="+time);
 			if(0 != time){
-				boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
-				System.out.println("YYY============setIPCSystemTime===============a="+a);
+			
+				final long times = time;
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						if(GolukApplication.getInstance().getIpcIsLogin()){
+							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(times);
+							System.out.println("YYY============setIPCSystemTime===============a="+a);
+						}
+					}
+				}).start();
+				
 			}
 		}
 		
+	}
+
+	@Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+			//获取IPC系统时间
+			if(msg == IPC_VDCP_Msg_GetTime){
+				if(param1 == RESULE_SUCESS){
+					LogUtils.d("YYY=====IPC_VDCP_Msg_GetTime=====param2="+param2);
+					getTimeing=true;
+					long time = IpcDataParser.parseIPCTime((String)param2)*1000;
+					Calendar calendar = Calendar.getInstance();  
+					calendar.setTimeInMillis(time);
+					
+				    year = calendar.get(Calendar.YEAR);  
+				    month = calendar.get(Calendar.MONTH) + 1;
+				    day = calendar.get(Calendar.DAY_OF_MONTH);
+				    hour = calendar.get(Calendar.HOUR_OF_DAY);
+				    minute = calendar.get(Calendar.MINUTE);
+				    seconds = calendar.get(Calendar.SECOND);
+				    
+				    mDateText.setText(year + "-" + month + "-" + day);
+				    mTimeText.setText(hour+":"+minute);
+				    if(minute < 10){
+				    	mTimeText.setText(hour+":0"+minute);
+					}else{
+						mTimeText.setText(hour+":"+minute);
+					}
+				}
+			}else if(msg == IPC_VDCP_Msg_SetTime){
+				LogUtils.d("YYY========IPC_VDCP_Msg_SetTime=======param1="+param1+"==param2="+param2);
+				if(param1 == RESULE_SUCESS){
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
+							LogUtils.d("YYY========getIPCSystemTime=======a="+a);
+						}
+					}).start();
+				}
+			}
+		}
 	}
 	
 }

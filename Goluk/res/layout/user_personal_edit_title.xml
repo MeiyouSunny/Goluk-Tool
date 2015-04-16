@@ -35,8 +35,6 @@
                 android:id="@+id/user_title_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:drawablePadding="-8dp"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/white"
                 android:textSize="16sp"

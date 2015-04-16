@@ -54,7 +54,6 @@ public class UserStartActivity extends Activity implements OnClickListener {
 
 		case R.id.user_start_look:
 			//随便看看
-//			SysApplication.getInstance().exit();//跳转之前杀死前边的所有Activiy。从而实现一键退出
 			Intent it2 = new Intent(UserStartActivity.this,MainActivity.class);
 			startActivity(it2);
 			break;

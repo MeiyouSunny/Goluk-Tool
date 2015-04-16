@@ -50,6 +50,8 @@
     <color name="setting_text_color_nor">#333333</color>
     <color name="setting_text_color_sel">#29c5b1</color>
 
+    <!-- user部分颜色 -->
+    <color name="user_home_nologin">#999999</color>
     <!-- 直接界面 -->
     <color name="live_color_time1">#b8b8b8</color>
     <!-- 说话中字体的颜色 -->

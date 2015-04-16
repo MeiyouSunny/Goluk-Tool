@@ -171,6 +171,8 @@
     <string name="user_personal_edit_head_girl">头像女</string>
     <string name="user_personal_edit_head_default">默认头像</string>
     <string name="user_personal_home_share">分享</string>
+    <string name="user_personal_home_nologin">立即登录看看我的主页</string>
+    <string name="user_personal_home_nologin_name">未登录</string>
 
     <!-- 直播界面 -->
     <string name="live_title">网络直播</string>

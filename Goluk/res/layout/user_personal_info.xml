@@ -33,7 +33,6 @@
 		   	        android:layout_width="wrap_content"
 		   	        android:layout_height="wrap_content"
 		   	        android:id="@+id/user_personal_info_image"
-		   	        android:src="@drawable/individual_center_head_boy_one"
 		   	        android:background="@drawable/individual_center_headbg_frame"
 		   	        android:layout_alignParentLeft="true"
 		   	        android:layout_centerVertical="true"
@@ -73,14 +72,14 @@
 		                />
 		            </LinearLayout>
 		        </LinearLayout>
-		        <ImageView 
+		        <!-- <ImageView 
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
 		            android:id="@+id/user_personal_info_share"
 		            android:src="@drawable/individual_center_share_icon"
 		            android:layout_alignParentRight="true"
 		            android:layout_centerVertical="true"
-		            />
+		            /> -->
 		    </RelativeLayout>
 		    <View
 		        android:id="@+id/user_personal_solid_2"
@@ -163,7 +162,7 @@
 		</LinearLayout>
 		
 		<!-- 新浪微博 -->
-		<LinearLayout 
+		<!-- <LinearLayout 
 		    android:layout_width="match_parent"
 		    android:layout_height="50dp"
 		    android:orientation="vertical"
@@ -218,5 +217,5 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="1dp"
 		        android:background="@drawable/solid" />
-		</LinearLayout>
+		</LinearLayout> -->
 </LinearLayout>

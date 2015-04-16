@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.iflytek.speech.Version;
@@ -352,6 +353,27 @@ public class IpcDataParser {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * 获取IPC系统时间
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月13日
+	 */
+	public static long parseIPCTime(String json){
+		long time = 0;
+		try {
+			JSONObject obj = new JSONObject(json);
+			if(null != obj){
+				time = obj.optLong("IPCTime");
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return time;
 	}
 
 }
