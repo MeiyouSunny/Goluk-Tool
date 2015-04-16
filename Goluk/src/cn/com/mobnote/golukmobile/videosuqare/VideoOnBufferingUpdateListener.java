@@ -19,6 +19,7 @@ public class VideoOnBufferingUpdateListener implements OnBufferingUpdateListener
 	public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
 		LogUtils.d("SSS============onBufferingUpdate=========arg1="+arg1);
 		if(arg1 >= 100){
+			LogUtils.d("SSS============onBufferingUpdate=========View.GONE=");
 			mPreLoading.setVisibility(View.GONE);
 		}else{
 			

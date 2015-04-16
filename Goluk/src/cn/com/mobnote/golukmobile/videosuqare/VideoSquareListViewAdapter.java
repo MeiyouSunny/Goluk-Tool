@@ -15,7 +15,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -156,7 +155,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 					DWMediaPlayer mDWMediaPlayer = mDWMediaPlayerList
 							.get(videoid);
 					if (null != mDWMediaPlayer) {
-						if (!mDWMediaPlayer.isPlaying()) {
+						if (mDWMediaPlayer.isPlaying()) {
 							holder.mPreLoading.setVisibility(View.GONE);
 						}
 					}
