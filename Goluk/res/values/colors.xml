@@ -29,6 +29,7 @@
 	
 	<color name="carrecorder_line_bg">#ff0000</color>
 	<color name="share_btn_curr_bg">#009BDC</color>
+	<color name="share_btn_disenable_bg">#D1D1D1</color>
 	
 	<color name="carrecorder_tab_sel_color">#00c590</color>
 	<color name="carrecorder_tab_nor_color">#999999</color>

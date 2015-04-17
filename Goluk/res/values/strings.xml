@@ -103,11 +103,16 @@
 	<string name="cache_size_text">3.15M</string>
 	
 	<string-array name="video_share_class">
-		<item>分类1</item>
-		<item>分类2</item>
-		<item>分类3</item>
-		<item>分类4</item>
-		<item>分类5</item>
+		<item>碰瓷达人</item>
+		<item>奇葩演技</item>
+		<item>路上风景</item>
+		<item>随手拍</item>
+		<item>事故大爆炸</item>
+		<item>教辅预警</item>
+		<item>惊现十分</item>
+		<item>疯狂超车</item>
+		<item>感人瞬间</item>
+		<item>传递正能量</item>
 	</string-array> 
     
     <!-- 行车记录仪 		START-->

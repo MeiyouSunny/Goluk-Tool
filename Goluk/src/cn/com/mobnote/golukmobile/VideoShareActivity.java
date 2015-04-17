@@ -8,19 +8,27 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.provider.MediaStore.Video.Thumbnails;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
@@ -91,6 +99,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	private Button mBackBtn = null;
 	/** 分享layout */
 	private RelativeLayout mShareLayout = null;
+	private ImageView mShortImg = null;
 
 	/** 系统loading */
 	private ProgressDialog mPdsave = null;
@@ -107,13 +116,84 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	/** 上传视频是否完成 */
 	private boolean mIsUploadSucess = false;
 
+	/** 上传视频更新进度 */
+	private final int MSG_H_UPLOAD_PROGRESS = 2;
+	/** 上传成功 */
+	private final int MSG_H_UPLOAD_SUCESS = 3;
+	/** 上传视频失败 */
+	private final int MSG_H_UPLOAD_ERROR = 4;
+	/** 取消上传 */
+	private final int MSG_H_UPLOAD_CANCEL = 5;
+
+	private final int MSG_H_START_UPLOAD = 6;
+	
+	private final int MSG_H_COUNT = 7;
+	
+	/** 统计 */
+	private int finishShowCount = 0;
+
+	public Handler mmmHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 1:// 延迟让server返回的文字内容显示
+				JSONObject json = new JSONObject();
+				try {
+					json.put("code", 200);
+					json.put("videourl", "http://cdn2.xiaocheben.com/files/cdcvideo/test1111.mp4");
+					json.put("imageurl", "http://cdn2.xiaocheben.com/files/cdcpic/test1111.png");
+					json.put("text", "骚年赶紧戳进来吧");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+				videoShareCallBack(1, json.toString());
+			case MSG_H_UPLOAD_PROGRESS:
+				// 更新进度条
+				int percent = ((Integer) msg.obj).intValue();
+				mApp.refreshPercent(percent);
+
+				console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
+
+//				showToast("上传进度:" + percent);
+				break;
+			case MSG_H_UPLOAD_SUCESS:
+				showToast("上传完成");
+				mApp.topWindowSucess("上传完成");
+				mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
+				shareCanEnable();
+				break;
+			case MSG_H_UPLOAD_ERROR:
+				// 上传失败
+				uploadFailed();
+				break;
+			case MSG_H_UPLOAD_CANCEL:
+
+				break;
+			case MSG_H_START_UPLOAD:
+				mApp.createVideoUploadWindow();
+				break;
+			case MSG_H_COUNT:
+				finishShowCount++;
+				
+				if (finishShowCount >= 3) {
+					mApp.dimissGlobalWindow();
+					mmmHandler.removeMessages(MSG_H_COUNT);
+				} else {
+					mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
+				}
+				break;
+			default:
+				break;
+			}
+		};
+	};
+
 	/** cc视频上传回调事件 */
 	private UploadListener uploadListenner = new UploadListener() {
 		@Override
 		public void handleStatus(VideoInfo v, int status) {
 			// 处理上传回调的视频信息及上传状态
 			mVideoinfo = v;
-
 			switch (status) {
 			case Uploader.PAUSE:
 				// 暂停上传
@@ -123,32 +203,14 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 				// 开始上传
 				console.log("upload service--VideoShareActivity-handleStatus---开始上传---UPLOAD...");
 				// mApp.createVideoUploadWindow();
+				mmmHandler.sendEmptyMessage(MSG_H_START_UPLOAD);
 				break;
 			case Uploader.FINISH:
-				// 下载完毕后变换通知形式
-				// notification.flags = Notification.FLAG_AUTO_CANCEL;
-				// notification.contentView = null;
-				// notification.setLatestEventInfo(context, "上传完成", "文件已上传至云端",
-				// null);
-				// // 停掉服务自身
-				// stopSelf();
-				//
-				// resetUploadService();
-				// // 通知更新
-				// notificationManager.notify(NOTIFY_ID, notification);
-				// // 通知上传队列更新
-				// sendBroadcast(intent);
 				// 上传完成
 				mIsUploadSucess = true;
 				console.log("upload service--VideoShareActivity-handleStatus---上传完成---FINISH----");
-				
-			
-
 				// 通知上传成功
-				mmmHandler.sendEmptyMessage(3);
-
-//				showToast("CC上传成功");
-
+				mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_SUCESS);
 				break;
 			}
 		}
@@ -158,13 +220,13 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			// 保存上传视频ID
 			mVideoVid = videoId;
 
-			int percent = (int) (range / size * 100);
+			final int percent = (int) (range * 100 / size);
 
 			Message msg = new Message();
-			msg.what = 2;
+			msg.what = MSG_H_UPLOAD_PROGRESS;
 			msg.obj = percent;
-			
-			mmmHandler.handleMessage(msg);
+
+			mmmHandler.sendMessage(msg);
 
 			// 上传进度回调
 			console.log("upload service--VideoShareActivity-handleProcess___range=" + range + ", size=" + size
@@ -175,6 +237,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		public void handleException(DreamwinException exception, int status) {
 			// 处理上传过程中出现的异常
 			console.log("upload service--VideoShareActivity-handleException----上传失败，" + exception.getMessage());
+			mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
 		}
 
 		@Override
@@ -183,39 +246,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			console.log("upload service--VideoShareActivity-handleCancel----取消上传---------videoId = " + videoId);
 		}
 	};
-
-	public Handler mmmHandler = null;
-	
-	
-//	= new Handler() {
-//		public void handleMessage(android.os.Message msg) {
-//			switch (msg.what) {
-//			case 1:// 延迟让server返回的文字内容显示
-//				JSONObject json = new JSONObject();
-//				try {
-//					json.put("code", 200);
-//					json.put("videourl", "http://cdn2.xiaocheben.com/files/cdcvideo/test1111.mp4");
-//					json.put("imageurl", "http://cdn2.xiaocheben.com/files/cdcpic/test1111.png");
-//					json.put("text", "骚年赶紧戳进来吧");
-//				} catch (JSONException e) {
-//					e.printStackTrace();
-//				}
-//
-//				videoShareCallBack(1, json.toString());
-//			case 2:
-//				// 更新进度条
-//				int percent = ((Integer)msg.obj).intValue();
-//				mApp.refreshPercent(percent);
-////				showToast("上传进度:" + percent);
-//				break;
-//			case 3:
-//				showToast("上传完成");
-//				break;
-//			default:
-//				break;
-//			}
-//		};
-//	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -234,52 +264,71 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 		// 配置需要分享的相关平台
 		configPlatforms();
+		// 获取第一帧缩略图
+		createThumb();
 
 		// 初始化
 		init();
-		
-		initHandler();
 
 		// 上传已倒出的本地视频
 		uploadShareVideo();
-		
-		
 
 		mApp.createVideoUploadWindow();
+
 	}
-	
-	private void initHandler() {
-		
-		mmmHandler = new Handler() {
-			public void handleMessage(android.os.Message msg) {
-				switch (msg.what) {
-				case 1:// 延迟让server返回的文字内容显示
-					JSONObject json = new JSONObject();
-					try {
-						json.put("code", 200);
-						json.put("videourl", "http://cdn2.xiaocheben.com/files/cdcvideo/test1111.mp4");
-						json.put("imageurl", "http://cdn2.xiaocheben.com/files/cdcpic/test1111.png");
-						json.put("text", "骚年赶紧戳进来吧");
-					} catch (JSONException e) {
-						e.printStackTrace();
+
+	private void createThumb() {
+		long startTime = System.currentTimeMillis();
+		mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
+		if (mShortBitmap != null) {
+			int width = mShortBitmap.getWidth();
+			int height = mShortBitmap.getHeight();
+
+			Log.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
+		} else {
+			Log.e("", "VideoShareActivity createThumb: NULL:");
+		}
+
+		long dur = System.currentTimeMillis() - startTime;
+
+		Log.e("", "VideoShareActivity createThumb: time:" + dur);
+	}
+
+	private AlertDialog mErrorDialog = null;
+
+	private void dimissErrorDialog() {
+		if (null != mErrorDialog) {
+			mErrorDialog.dismiss();
+			mErrorDialog = null;
+		}
+	}
+
+	// CC上传失败，提示用户重试或退出
+	private void uploadFailed() {
+		dimissErrorDialog();
+
+		mErrorDialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("上传失败")
+				.setPositiveButton("重试", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						uploadShareVideo();
+						dimissErrorDialog();
+						showToast("重新开始上传");
+
 					}
 
-					videoShareCallBack(1, json.toString());
-				case 2:
-					// 更新进度条
-					int percent = ((Integer)msg.obj).intValue();
-					mApp.refreshPercent(percent);
-//					showToast("上传进度:" + percent);
-					break;
-				case 3:
-					showToast("上传完成");
-					break;
-				default:
-					break;
-				}
-			};
-		};
-		
+				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dimissErrorDialog();
+						exit();
+
+					}
+
+				}).create();
+		mErrorDialog.show();
 	}
 
 	private void showToast(String msg) {
@@ -296,12 +345,20 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private Bitmap mShortBitmap = null;
+
 	/**
 	 * 页面初始化
 	 */
 	private void init() {
 		// 获取页面元素
 		mBackBtn = (Button) findViewById(R.id.back_btn);
+
+		mShortImg = (ImageView) findViewById(R.id.share_img);
+		if (null != mShortBitmap) {
+			Drawable drawable = new BitmapDrawable(mShortBitmap);
+			mShortImg.setBackgroundDrawable(drawable);
+		}
 
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		// 注册事件
@@ -328,10 +385,12 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			VideoInfo videoinfo = new VideoInfo();
 			videoinfo.setTitle("标题");
 			videoinfo.setTags("标签");
+			// TODO 登录成功后的UID
 			videoinfo.setDescription("简介");
 			videoinfo.setFilePath(mVideoPath);
 			console.log("upload service---上传视频路径--VideoShareActivity-mVideoPath---" + mVideoPath);
 			videoinfo.setUserId(USERID);
+			// TODO 登录成功后的回调接口url
 			videoinfo.setNotifyUrl(NOTIFY_URL);
 			if (mUploader != null) {
 				mUploader = null;
@@ -473,6 +532,13 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---vid---" + vid);
 		} else {
 			console.toast("视频上传失败", mContext);
+		}
+	}
+
+	private void shareCanEnable() {
+		if (null != mShareLayout) {
+			mShareLayout.setClickable(true);
+			mShareLayout.setBackgroundResource(R.drawable.video_ym_share_btn);
 		}
 	}
 

@@ -249,8 +249,26 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //		}
 	}
 	
+	private boolean isShowGlobalwindow = false;
+	
+	public void dimissGlobalWindow() {
+		if (isShowGlobalwindow) {
+			mWindowManager.removeView(mVideoUploadLayout);
+			isShowGlobalwindow = false;
+		}
+	}
+	
 	@SuppressLint("InflateParams")
 	public void createVideoUploadWindow(){
+		console.log("upload service--VideoShareActivity-handleCancel----顶层窗口显示---111 ");
+		if (isShowGlobalwindow) {
+			dimissGlobalWindow();
+		}
+		
+		console.log("upload service--VideoShareActivity-handleCancel----顶层窗口显示 ");
+		
+		isShowGlobalwindow = true;
+		
 		//获取LayoutParams对象
 		mWMParams = new WindowManager.LayoutParams();
 		//获取的是CompatModeWrapper对象
@@ -285,13 +303,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 	
 	public void refreshPercent(int percent) {
+		console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent: " + percent);
 		if (null == mVideoUploadLayout) {
 			return;
-			}
+		 }
+		console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent222: ");
 		TextView tvtv = (TextView)mVideoUploadLayout.findViewById(R.id.video_upload_percent);
 		if (null != tvtv) {
+			console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent3333: ");
 			tvtv.setText("" + percent +"%");
 		}
+	}
+	
+	public void topWindowSucess(String message){
+		if (null == mVideoUploadLayout) {
+			return;
+		}
+		TextView tvtv = (TextView)mVideoUploadLayout.findViewById(R.id.video_upload_percent);
+		tvtv.setVisibility(View.GONE);
+		ImageView img = (ImageView) mVideoUploadLayout.findViewById(R.id.video_loading_img);
+		img.getAnimation().cancel();
+		img.setVisibility(View.GONE);
+		TextView msgTv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_text);
+		msgTv.setVisibility(View.VISIBLE);
+		msgTv.setText(message);
+		
+		
 	}
 	
 	/**

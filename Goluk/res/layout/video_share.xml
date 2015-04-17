@@ -121,8 +121,8 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/video_ym_share_btn"
-        android:clickable="true" >
+        android:background="@color/share_btn_disenable_bg"
+        android:clickable="false" >
 
         <TextView
             android:layout_width="wrap_content"
