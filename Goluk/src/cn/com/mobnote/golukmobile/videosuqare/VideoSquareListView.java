@@ -10,7 +10,8 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -33,6 +34,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private int wonderfulVisibleCount;
 	/** 是否还有分页*/
 	private boolean isHaveData = true;
+	public  static Handler mHandler=null;
 	
 	
 	public VideoSquareListView(Context context){
@@ -44,6 +46,20 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		mDataList = new ArrayList<VideoSquareInfo>();
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("hotlist", this);
 		httpPost(true);
+		mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case 1:
+					refeshData((VideoSquareInfo)msg.obj);
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
 	}
 	
 	/**
@@ -157,7 +173,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-//		System.out.println("SSS=============msg="+msg+"===param2="+param2);
+		System.out.println("SSS=============msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
 			closeProgressDialog();
 			if(RESULE_SUCESS == msg){
@@ -175,7 +191,15 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 					mDataList.addAll(list);
 					flush();
 				}
-				
+			}
+		}
+	}
+	
+	public void refeshData(VideoSquareInfo videoinfo){
+		for(int i = 0;i<mDataList.size();i++){
+			VideoSquareInfo vsi =  mDataList.get(i);
+			if(vsi.mVideoEntity.videoid.equals(videoinfo.mVideoEntity.videoid)){
+				mDataList.get(i).mVideoEntity = videoinfo.mVideoEntity;
 			}
 		}
 	}
