@@ -136,7 +136,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 				.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
 
 		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(
-				mDWMediaPlayerList, mVideoSquareInfo));
+				holder, mDWMediaPlayerList, mVideoSquareInfo));
 
 		String videoid = mVideoSquareInfo.mVideoEntity.videoid;
 		if ("2".equals(mVideoSquareInfo.mVideoEntity.type)) {
