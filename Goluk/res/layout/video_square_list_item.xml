@@ -75,6 +75,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/video_sq_play" />
+   		     
+        <cn.com.mobnote.golukmobile.videosuqare.RingView 
+            android:id="@+id/mRingView"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+  			     	
     </RelativeLayout>
 
     <LinearLayout

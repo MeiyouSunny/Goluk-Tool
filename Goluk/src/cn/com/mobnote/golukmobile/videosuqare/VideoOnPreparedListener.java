@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.HashMap;
 
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListViewAdapter.ViewHolder;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 
@@ -23,7 +24,9 @@ public class VideoOnPreparedListener implements OnPreparedListener{
 		DWMediaPlayer player = mDWMediaPlayerList.get(mVideoSquareInfo.mVideoEntity.videoid);
 		if(null !=player){
 			LogUtils.d("SSS==============player.start=========videoid="+mVideoSquareInfo.mVideoEntity.videoid);
-//			player.start();
+			player.start();
+//			player.seekTo(1);
+//			player.pause();
 		}
 	}
 }

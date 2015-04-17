@@ -83,7 +83,7 @@ public class VideoCategoryView{
 			// TODO Auto-generated method stub
 			switch (view.getId()) {
 				case R.id.live_categroy:
-					startActivity("0");
+//					startActivity("0");
 					break;
 				case R.id.category_btn_one:
 					startActivity("1");

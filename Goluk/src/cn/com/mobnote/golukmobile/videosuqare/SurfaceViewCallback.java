@@ -28,8 +28,8 @@ public class SurfaceViewCallback implements Callback{
 			if(null !=player){
 				player.setDisplay(arg0);
 				player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-				player.prepareAsync();
-				LogUtils.d("SSS============player.prepareAsync=========videoid="+mVideoSquareInfo.mVideoEntity.videoid);
+//				player.prepareAsync();
+//				LogUtils.d("SSS============player.prepareAsync=========videoid="+mVideoSquareInfo.mVideoEntity.videoid);
 			}
 		}
 
