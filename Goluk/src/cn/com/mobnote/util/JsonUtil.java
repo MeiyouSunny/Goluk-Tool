@@ -235,11 +235,16 @@ public class JsonUtil {
 	// vid 为视频id
 	public static String getStartLiveJson(String vid, LiveSettingBean beanData) {
 		try {
+
 			String desc = "";
 
-			if (null != beanData.desc) {
+			if (null != beanData && null != beanData.desc) {
 				desc = URLEncoder.encode(beanData.desc);
 			}
+
+			String duration = null != beanData ? "" + beanData.duration : "3600";
+			String netCountStr = null != beanData ? "" + beanData.netCountStr : "";
+			String vtypStr = null != beanData ? "" + beanData.vtype : "";
 
 			JSONObject obj = new JSONObject();
 			obj.put("active", "1");
@@ -247,9 +252,9 @@ public class JsonUtil {
 			obj.put("tag", "android");
 			obj.put("vid", vid);
 			obj.put("desc", desc);
-			obj.put("restime", "" + beanData.duration);
-			obj.put("flux", beanData.netCountStr);
-			obj.put("vtype", "" + beanData.vtype);
+			obj.put("restime", duration);
+			obj.put("flux", netCountStr);
+			obj.put("vtype", "" + vtypStr);
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
