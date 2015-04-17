@@ -1,25 +1,39 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
+
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-import org.json.JSONObject;
-import com.rd.car.CarRecorderManager;
-import com.rd.car.RecorderStateException;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
-import cn.com.mobnote.golukmobile.UserTestRegistActivity;
-import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
-import cn.com.mobnote.golukmobile.VideoEditActivity;
+import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -33,34 +47,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.PixelFormat;
-import android.net.wifi.WifiManager;
-import android.os.Environment;
-import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.WindowManager.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -94,6 +81,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public WindowManager mWindowManager = null;
 	public WindowManager.LayoutParams mWMParams = null;
 	public RelativeLayout mVideoUploadLayout = null;
+	private TextView tv = null;
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -266,7 +254,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		//获取LayoutParams对象
 		mWMParams = new WindowManager.LayoutParams();
 		//获取的是CompatModeWrapper对象
-		mWindowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+		mWindowManager = (WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
 		
 		mWMParams.type = LayoutParams.TYPE_SYSTEM_ERROR;
 		//mWMParams.type = LayoutParams.TYPE_PRIORITY_PHONE;
@@ -285,6 +273,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		
 		LayoutInflater inflater = LayoutInflater.from(mContext);
 		mVideoUploadLayout = (RelativeLayout) inflater.inflate(R.layout.video_share_upload_window, null);
+		tv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_percent);
 		mWindowManager.addView(mVideoUploadLayout,mWMParams);
 		ImageView view = (ImageView)mVideoUploadLayout.findViewById(R.id.video_loading_img);
 		Animation rotateAnimation = AnimationUtils.loadAnimation(this.getContext(), R.anim.upload_loading);
@@ -293,6 +282,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		view.startAnimation(rotateAnimation);
 		//setContentView(R.layout.main);
 		//mFloatView = (Button)mFloatLayout.findViewById(R.id.float_id);
+	}
+	
+	public void refreshPercent(int percent) {
+		if (null == mVideoUploadLayout) {
+			return;
+			}
+		TextView tvtv = (TextView)mVideoUploadLayout.findViewById(R.id.video_upload_percent);
+		if (null != tvtv) {
+			tvtv.setText("" + percent +"%");
+		}
 	}
 	
 	/**

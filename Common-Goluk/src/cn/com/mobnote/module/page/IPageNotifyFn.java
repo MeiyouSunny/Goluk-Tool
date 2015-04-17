@@ -42,6 +42,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 修改密码 */
 	public static int PageType_ModifyPwd = 17;
 
+	/** 视频分享后通知logic */
+	public static final int PageType_ShareNotify = 26;
+
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2);
 
 }

@@ -12,9 +12,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
-import android.widget.Toast;
-
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.VideoShareActivity;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
@@ -30,6 +29,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
     private UMSocialService mController = UMServiceFactory.getUMSocialService(Constants.DESCRIPTOR);
     private Activity mActivity;
+    /** 保存当前的分享方式 */
+    private String mCurrentShareType = null;
 
     public CustomShareBoard(Activity activity) {
         super(activity);
@@ -58,18 +59,23 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.wechat:
+            	mCurrentShareType = "1";
                 performShare(SHARE_MEDIA.WEIXIN);
                 break;
             case R.id.wechat_circle:
+            	mCurrentShareType = "2";
                 performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
                 break;
             case R.id.qq:
+            	mCurrentShareType = "3";
                 performShare(SHARE_MEDIA.QQ);
                 break;
             case R.id.sms:
+            	mCurrentShareType = "4";
                 performShare(SHARE_MEDIA.SMS);
                 break;
             case R.id.sina:
+            	mCurrentShareType = "5";
             	 performShare(SHARE_MEDIA.SINA);
                  break;
             default:
@@ -89,10 +95,21 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
             public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
                 String showText = platform.toString();
                 if (eCode == StatusCode.ST_CODE_SUCCESSED) {
+                	
+                	if (mActivity instanceof VideoShareActivity) {
+                		((VideoShareActivity)mActivity).shareSucessDeal(true, mCurrentShareType);
+                	}
+                	
                     showText += "平台分享成功";
                 } else {
                     showText += "平台分享失败";
+                    if (mActivity instanceof VideoShareActivity) {
+                		((VideoShareActivity)mActivity).shareSucessDeal(false, null);
+                	}
                 }
+                
+                mCurrentShareType = null;
+                
                 //Toast.makeText(mActivity, showText, Toast.LENGTH_SHORT).show();
                 dismiss();
             }

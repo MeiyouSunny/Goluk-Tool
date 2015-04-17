@@ -32,6 +32,15 @@
 		android:background="@drawable/tips_go"
 		android:contentDescription="@string/imgdes"/>
 	
+		<TextView
+		android:id="@+id/video_upload_percent"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/video_upload_text"
+		android:textColor="#ffffff"
+		android:textSize="9sp"
+		android:text="@string/share_video_upload_text" />
+	
 </RelativeLayout>
 
 
