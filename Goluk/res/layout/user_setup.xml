@@ -229,7 +229,6 @@
 		android:layout_marginRight="20dp"
 		android:background="@drawable/btn_log_btn"
 		android:gravity="center"
-		android:text="@string/loginout_text"
 		android:textSize="18sp"
 		android:textColor="#f0fefc"/>
 </RelativeLayout>

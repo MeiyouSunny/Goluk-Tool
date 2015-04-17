@@ -177,6 +177,7 @@
 	
 	<string name="user_personal_home_nologin">立即登录看看我的主页</string>
 	<string name="user_personal_home_nologin_name">未登录</string>
+	<string name="user_personal_autoloading_progress">正在为您登录，请稍候……</string>
 	
     <string name="live_title">网络直播</string>
     <string name="live_pause">暂停</string>

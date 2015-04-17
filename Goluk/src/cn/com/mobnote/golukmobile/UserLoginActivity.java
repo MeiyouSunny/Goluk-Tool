@@ -105,6 +105,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
 		// loading组件
 		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
+//		mLoading = (RelativeLayout) findViewById(R.id.index_loading_layout);
 		
 		Intent itentGetRegist = getIntent();
 		if(null !=  itentGetRegist.getStringExtra("intentRegist")){
@@ -211,6 +212,10 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		mImageViewSina.setOnClickListener(this);
 		mImageViewQQ.setOnClickListener(this);
 
+		//--------------------一个标记，判断登录中，登录成功，登录失败的状态---------------------------
+		/*mPreferencesLoginStatus = getSharedPreferences("loginstatus", Context.MODE_PRIVATE);
+		mEditorLoginStatus = mPreferencesLoginStatus.edit();*/
+		
 	}
 
 	@Override
@@ -303,10 +308,14 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 	 */
 	public void loginCallBack(int success,Object obj){
 		console.log("登录回调---loginCallBack---" + success + "---" + obj);
+		//--------------------------------------登录中的状态  0------------------------------------------------
+//		mApplication.loginStatus = 0;
+//		Log.i("autologin", "=====回调111====loginStatus==="+mApplication.loginStatus);
 		if(1 == success){
 			handler.removeCallbacks(runnable);
 			try{
 				String data = (String)obj;
+				Log.i("test", data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				String msg = json.getString("msg");
@@ -317,12 +326,16 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 					mEditor = mSharedPreferences.edit();
 					mEditor.putBoolean("FirstLogin", false);
+					
 					//提交修改
 					mEditor.commit();
-					
+					//---------------------------------登录成功的状态  1------------------------------
+//					mApplication.loginStatus = 1;
+//					Log.i("autologin", "=====回调222====loginStatus==="+mApplication.loginStatus);
 					//登录成功跳转
 					SysApplication.getInstance().exit();//杀死前边所有的Activity
-					console.toast("登录成功！", mContext);
+					console.toast("登录成功", mContext);
+					mApplication.loginStatus=1;//登录成功
 					mApplication.isUserLoginSucess = true;
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
@@ -366,9 +379,15 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		}
 		else{
 			console.toast("登录失败", mContext);
+			//--------------------------------登录失败的状态  2--------------------------------
+			mApplication.loginStatus = 2;
+			mLoading.setVisibility(View.GONE);
 		}
 		mEditTextPhoneNumber.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
+		
+		//--------------------------------提交-------------------------------------
+//		mEditorLoginStatus.commit();
 	}
 	
 	@Override

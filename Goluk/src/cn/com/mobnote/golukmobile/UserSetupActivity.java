@@ -1,56 +1,28 @@
 package cn.com.mobnote.golukmobile;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.SinaShareContent;
-import com.umeng.socialize.media.SmsShareContent;
-import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.SmsHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
-
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.MVListAdapter;
-import cn.com.mobnote.video.MVManage;
-import cn.com.mobnote.video.MVManage.MVEditData;
-import cn.com.mobnote.view.MyGridView;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.console;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -87,7 +59,13 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	public static Handler mUserCenterHandler = null;
 	
 	/**退出按钮**/
-	Button btnLoginout;
+	private Button btnLoginout;
+	/**用户信息**/
+	private String head = null;
+	private String id = null;
+	private String name = null;
+	private String sex = null;
+	private String sign = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -121,8 +99,34 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 //				mMedioPlayer.start();
 //			}
 //		});
+		
 		//退出按钮
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
+		
+		//没有登录过的状态
+		SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+		boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+		
+		if(!isFirstLogin ){//登录过
+			Log.i("out", "xxxxxxx"+mApp.loginoutStatus);
+			if(mApp.loginStatus == 1){//上次登录成功
+				btnLoginout.setText("退出");
+				if(mApp.loginoutStatus == true){
+					btnLoginout.setText("登录");
+				}else{
+					btnLoginout.setText("退出");
+				}
+				/*if(mApp.autoLoginStatus == 0 || mApp.autoLoginStatus == 2 ){
+					btnLoginout.setText("登录");
+				}else{
+					btnLoginout.setText("退出");
+				}*/
+			}else{
+				btnLoginout.setText("登录");
+			}
+		}else{
+			btnLoginout.setText("登录");
+		}
 		btnLoginout.setOnClickListener(this);
 		
 		//注册事件
@@ -151,7 +155,13 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		switch(id){
 			case R.id.back_btn:
 				//返回
-				finish();
+				if(mApp.loginoutStatus){
+					Intent it = new Intent(UserSetupActivity.this,IndexMoreNoLoginActivity.class);
+					startActivity(it);
+					this.finish();
+				}else{
+					finish();					
+				}
 			break;
 			case R.id.setup_item:
 				//跳转到设置页面
@@ -159,7 +169,22 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 			break;
 		//退出按钮
 			case R.id.loginout_btn:
-				
+				if(btnLoginout.getText().toString().equals("登录")){
+					initIntent(UserLoginActivity.class);
+				}else if(btnLoginout.getText().toString().equals("退出")){
+					new AlertDialog.Builder(mContext)
+					.setMessage("是否确认退出？")
+					.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							// TODO Auto-generated method stub
+							getLoginout();
+						}
+					})
+					.setNegativeButton("取消", null)
+					.create().show();
+				}
 				break;
 		}
 	}
@@ -169,6 +194,51 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	public void getLoginout(){
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
 		console.log(b+"");
+		if(b){
+			//注销成功
+			mApp.isUserLoginSucess = false;
+			mApp.loginoutStatus = true;//注销成功
+			console.toast("退出登录成功", mContext);
+			btnLoginout.setText("登录");
+			Log.i("loginout", "=====setup===="+mApp.isUserLoginSucess);
+		}else{
+			//注销失败
+			mApp.loginoutStatus = false;
+		}
+	}
+	
+	/**
+	 * 退出登录的回调
+	 */
+	public void getLogintoutCallback(int success,Object obj){
+		console.log("-----------------退出登录回调--------------------");
 		
+	}
+	/**
+	 * 同步获取用户信息
+	 */
+	public void initData(){
+		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		try{
+			JSONObject json = new JSONObject(info);
+			
+			Log.i("info", "====json===="+json);
+			head = json.getString("head");
+			name = json.getString("nickname");
+			id = json.getString("key");
+			sex = json.getString("sex");
+			sign = json.getString("desc");
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 没有登录过、登录失败、正在登录需要登录
+	 */
+	public void initIntent(Class intentClass){
+		Intent it = new Intent(UserSetupActivity.this, intentClass);
+		startActivity(it);
 	}
 }

@@ -371,6 +371,30 @@
 			android:contentDescription="@string/imgdes"/>
 		
 	</RelativeLayout>
+	
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    android:background="@drawable/share_bg_repeat"
+	    android:id="@+id/index_loading_layout"
+	    android:visibility="gone"
+	    >
+		<ProgressBar 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/user_auto_progress"
+		    android:layout_centerInParent="true"
+		    />
+		<TextView 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/user_auto_progress"
+		    android:text="@string/user_personal_autoloading_progress"
+		    android:layout_centerInParent="true"
+		    android:layout_marginTop="20dp"
+		    />
+</RelativeLayout>
 </RelativeLayout>
 
 

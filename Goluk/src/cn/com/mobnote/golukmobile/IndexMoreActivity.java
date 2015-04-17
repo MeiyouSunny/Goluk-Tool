@@ -77,6 +77,9 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 	private ImageView mImageHead,mImageSex;
 	private TextView mTextName;
 	
+	/**自动登录中的loading提示框**/
+	private RelativeLayout mLayoutLoading = null;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -121,6 +124,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 		mImageHead = (ImageView) findViewById(R.id.photo_img);
 		mImageSex = (ImageView) findViewById(R.id.user_sex_image);
 		mTextName = (TextView) findViewById(R.id.user_name_text);
+		//自动登录中的提示loading
+		mLayoutLoading = (RelativeLayout) findViewById(R.id.index_loading_layout);
 		
 		//注册事件
 //		mBackBtn.setOnClickListener(this);
@@ -174,9 +179,17 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 			break;
 			//点击跳转到我的主页
 			case R.id.head_layout:
-				intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
-				startActivity(intent);
-//				this.finish();
+				/*if(mApp.autoLoginStatus == 0){//自动登录中
+					mLayoutLoading.setVisibility(View.VISIBLE);
+				}else if(mApp.autoLoginStatus == 1 || mApp.loginStatus == 1){//自动登录成功
+					mLayoutLoading.setVisibility(View.GONE);*/
+					intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+					startActivity(intent);
+//					this.finish();
+				/*}else if(mApp.autoLoginStatus == 2){
+					//登录失败
+					mLayoutLoading.setVisibility(View.GONE);
+				}*/
 				break;
 				
 		}

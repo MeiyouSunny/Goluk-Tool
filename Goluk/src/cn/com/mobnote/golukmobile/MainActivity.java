@@ -227,6 +227,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/** 下载完成播放音频 */
 	public MediaPlayer mMediaPlayer = new MediaPlayer();
 	
+	/**记录登录状态**/
+	public SharedPreferences mPreferencesＡuto ;
+	public boolean isFirstLogin;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -280,9 +284,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //			}
 //		});
 		
-		//自动登录
-		initAutoLogin();
-		
+		//不是第一次登录，并且上次登录成功过，进行自动登录
+		mPreferencesＡuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
+		isFirstLogin = mPreferencesＡuto.getBoolean("FirstLogin", true);
+		if(!isFirstLogin && !mApp.isUserLoginSucess){
+			initAutoLogin();
+		}else{
+			//自动登录失败
+		}
 	}
 	
 	/**
@@ -1009,8 +1018,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.more_btn:
 				//读取SharedPreference中用户的信息
-				SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
-				boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+				/*SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+				boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);*/
 				//判断是否是第一次登录
 				if(!isFirstLogin){//登录过
 					//更多页面
@@ -1317,11 +1326,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
 		}else{
 			//判断是否已经登录了
-			SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
-			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+			/*SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);*/
 			if(isFirstLogin){
 				//已经登录了
-				android.util.Log.i("bug", "=======已经登录过======");
 				return;
 			}else{//没有登录
 				//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
@@ -1334,8 +1342,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				if(b){
 //					console.toast("自动登录成功", mContext);
 				}else{
-					//登录失败，不做任何提示
-					console.toast("登录失败", mContext);
+					
 				}
 			}
 		}
@@ -1345,8 +1352,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 * 自动登录回调
 	 * 
 	 */
-	public void autoLoginCallback(int success,Object obj){
+	public void initAutoLoginCallback(int success,Object obj){
 		console.log("---------------自动登录回调---------------");
+		mApp.autoLoginStatus = 0;//自动登录中
+		Log.i("ooo", "自动登录中……"+mApp.autoLoginStatus);
 		if(1 == success){
 			handler.removeCallbacks(runnable);
 			try{
@@ -1357,7 +1366,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				console.log(data);
 				switch (code) {
 				case 200:
-//					console.toast("自动登录成功", mContext);
+					console.toast("自动登录成功", mContext);
+					mApp.autoLoginStatus = 1;//自动登录成功
+					Log.i("ooo", "自动登录成功……"+mApp.autoLoginStatus);
 					break;
 				//服务器内部错误或者账号未注册，再次启动程序——提示框：自动登录失败，弹出提示框，提示内容：账号异常，请重新登录；
 				case 500:
@@ -1382,7 +1393,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				e.printStackTrace();
 			}
 		}else{
-//			console.log("自动登录失败");
+			mApp.autoLoginStatus = 2;//自动登录失败
+			Log.i("ooo", "自动登录失败……"+mApp.autoLoginStatus);
 			//超时处理
 			Builder dialog = new AlertDialog.Builder(mContext);
 				dialog.setTitle("提示");
@@ -1411,19 +1423,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				initAutoLogin();
 			}
 		};
-	}
-	
-	//
-	public void timer(){
-		Timer mTimer = new Timer();
-		mTimer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				initAutoLogin();
-			}
-		}, 50000);
 	}
 	
 }

@@ -168,7 +168,7 @@
     	            />
     	    </LinearLayout>
     	</LinearLayout>
-    	<RelativeLayout 
+    <RelativeLayout 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -193,4 +193,28 @@
             android:layout_marginTop="30dp"
             />
     </RelativeLayout>
+    <!-- <RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    android:background="@drawable/share_bg_repeat"
+	    android:id="@+id/index_loading_layout"
+	    android:visibility="gone"
+	    >
+		<ProgressBar 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/user_auto_progress"
+		    android:layout_centerInParent="true"
+		    />
+		<TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登录中……"
+            android:layout_below="@id/user_auto_progress"
+            android:layout_centerInParent="true"
+            android:textColor="#000"
+            android:layout_marginTop="30dp"
+            />
+</RelativeLayout> -->
 </RelativeLayout>

@@ -13,6 +13,7 @@ import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -21,6 +22,7 @@ import cn.com.mobnote.golukmobile.UserManager;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
+import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
@@ -82,6 +84,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	/**登陆管理类**/
 	public UserManager userManager;
+	
+	/**登录的三个状态**/
+	public int loginStatus ;
+	/**自动登录的三个状态**/
+	public int autoLoginStatus;
+	/**注销状态**/
+	public boolean loginoutStatus = false;
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -471,7 +480,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			//自动登录
 			case 12:
 				if(mPageSource == "Main"){
-					((MainActivity)mContext).autoLoginCallback(success, param2);
+					((MainActivity)mContext).initAutoLoginCallback(success, param2);
 				}
 				break;
 			//验证码PageType_GetVCode
@@ -525,6 +534,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 			
+			//注销
+			case PageType_SignOut:
+				Log.i("loginout", "======application======");
+				if(mPageSource == "UserSetup"){
+					((UserSetupActivity)mContext).getLogintoutCallback(success, param2);
+				}
+				break;
 		}
 	}
 	
