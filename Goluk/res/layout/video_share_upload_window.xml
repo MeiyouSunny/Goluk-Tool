@@ -2,11 +2,12 @@
 <!-- 视频上传window -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="25dp"
+    android:layout_height="30dp"
     android:background="#d0000000"
     android:clickable="false" >
 
     <!-- 上传进度 -->
+
     <View
         android:id="@+id/progress_bg"
         android:layout_width="match_parent"
@@ -21,7 +22,7 @@
         android:layout_centerInParent="true"
         android:text="@string/share_video_upload_text"
         android:textColor="#ffffff"
-        android:textSize="9sp" />
+        android:textSize="12sp" />
 
     <ImageView
         android:id="@+id/video_loading_img"
@@ -38,8 +39,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/video_upload_text"
         android:textColor="#ffffff"
-        android:textSize="9sp" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

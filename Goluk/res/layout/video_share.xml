@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tab_bg" >
+    android:background="@color/share_bg" >
 
     <!-- 视频分享title -->
 
@@ -135,5 +135,29 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/share_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/share_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/share_select_btn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="同时分享到视频广场"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+    </LinearLayout>
 
 </RelativeLayout>

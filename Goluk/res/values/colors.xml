@@ -22,6 +22,7 @@
 	<color name="border_bg">#191919</color>
 	<!-- 分享按钮颜色 -->
 	<color name="share_btn_bg">#14AFDC</color>
+	<color name="share_bg">#eeeeee</color>
 	
 	<!-- 按钮的背景颜色 -->
 	<color name="carrecorder_del_bg">#dedede</color>
@@ -29,7 +30,7 @@
 	
 	<color name="carrecorder_line_bg">#ff0000</color>
 	<color name="share_btn_curr_bg">#009BDC</color>
-	<color name="share_btn_disenable_bg">#D1D1D1</color>
+	<color name="share_btn_disenable_bg">#9c9c9c</color>
 	
 	<color name="carrecorder_tab_sel_color">#00c590</color>
 	<color name="carrecorder_tab_nor_color">#999999</color>
@@ -50,5 +51,7 @@
 	<color name="dialog_bg">#00000000</color>
 	<color name="setting_text_color_nor">#333333</color>
 	<color name="setting_text_color_sel">#29c5b1</color>
+	
+	
 	
 </resources>

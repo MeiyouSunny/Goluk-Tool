@@ -103,6 +103,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mIPCControlManager.addIPCManagerListener("application", this);
 		// 注册回调
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_HttpPage, this);
+		
+		GlobalWindow.getInstance().setApplication(this);
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -281,13 +283,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_TOUCH_MODAL |LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
 		mWMParams.gravity = Gravity.LEFT | Gravity.TOP;
 		mWMParams.x = 0;
-		mWMParams.y = 0;
+		mWMParams.y = 30;
 		mWMParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 		///获得根视图
 		View v = ((Activity) mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);
 		///状态栏标题栏的总高度,所以标题栏的高度为top2-top
 		int top2 = v.getTop();
-		mWMParams.height = top2;
+		mWMParams.height = 50;
 		
 		LayoutInflater inflater = LayoutInflater.from(mContext);
 		mVideoUploadLayout = (RelativeLayout) inflater.inflate(R.layout.video_share_upload_window, null);
@@ -326,9 +328,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		img.setVisibility(View.GONE);
 		TextView msgTv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_text);
 		msgTv.setVisibility(View.VISIBLE);
-		msgTv.setText(message);
-		
-		
+		msgTv.setText(message);	
 	}
 	
 	/**

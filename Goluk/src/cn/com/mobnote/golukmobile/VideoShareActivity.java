@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -18,24 +20,30 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
+import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.api.FileUtils;
 
 import com.bokecc.sdk.mobile.exception.DreamwinException;
 import com.bokecc.sdk.mobile.upload.UploadListener;
@@ -90,6 +98,24 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	// 配置视频回调地址
 	public final static String NOTIFY_URL = "http://server.xiaocheben.com/cdcRegister/uMengCallBack.htm";
 
+	public static final String PATH_FS1 = "/tiros-com-cn-ext";
+
+	final String fileFolder = Environment.getExternalStorageDirectory().getPath() + PATH_FS1 + "/Cache";
+	final String thumbFile = fileFolder + "/thumb11.jpg";
+
+	/** 上传视频更新进度 */
+	private final int MSG_H_UPLOAD_PROGRESS = 2;
+	/** 上传成功 */
+	private final int MSG_H_UPLOAD_SUCESS = 3;
+	/** 上传视频失败 */
+	private final int MSG_H_UPLOAD_ERROR = 4;
+	/** 取消上传 */
+	private final int MSG_H_UPLOAD_CANCEL = 5;
+
+	private final int MSG_H_START_UPLOAD = 6;
+
+	private final int MSG_H_COUNT = 7;
+
 	private final UMSocialService mController = UMServiceFactory.getUMSocialService(DESCRIPTOR);
 	/** application */
 	private GolukApplication mApp = null;
@@ -100,6 +126,10 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	/** 分享layout */
 	private RelativeLayout mShareLayout = null;
 	private ImageView mShortImg = null;
+	/** 是否分享到视频广场 */
+	private ImageView mIsShareToOther = null;
+	private Spinner mSpinner = null;
+	private EditText mDesEdit = null;
 
 	/** 系统loading */
 	private ProgressDialog mPdsave = null;
@@ -116,21 +146,17 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	/** 上传视频是否完成 */
 	private boolean mIsUploadSucess = false;
 
-	/** 上传视频更新进度 */
-	private final int MSG_H_UPLOAD_PROGRESS = 2;
-	/** 上传成功 */
-	private final int MSG_H_UPLOAD_SUCESS = 3;
-	/** 上传视频失败 */
-	private final int MSG_H_UPLOAD_ERROR = 4;
-	/** 取消上传 */
-	private final int MSG_H_UPLOAD_CANCEL = 5;
-
-	private final int MSG_H_START_UPLOAD = 6;
-	
-	private final int MSG_H_COUNT = 7;
-	
 	/** 统计 */
 	private int finishShowCount = 0;
+
+	/** 是否正在上传视频 */
+	private boolean isUploading = false;
+	private boolean mIsCheck = true;
+
+	private AlertDialog mErrorDialog = null;
+	/** 退出提示框 */
+	private AlertDialog mExitPromptDialog = null;
+	private Bitmap mShortBitmap = null;
 
 	public Handler mmmHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -150,34 +176,33 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			case MSG_H_UPLOAD_PROGRESS:
 				// 更新进度条
 				int percent = ((Integer) msg.obj).intValue();
-				mApp.refreshPercent(percent);
-
+				GlobalWindow.getInstance().refreshPercent(percent);
 				console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
-
-//				showToast("上传进度:" + percent);
 				break;
 			case MSG_H_UPLOAD_SUCESS:
 				showToast("上传完成");
-				mApp.topWindowSucess("上传完成");
-				mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
+				GlobalWindow.getInstance().topWindowSucess("上传完成");
+				// mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
 				shareCanEnable();
 				break;
 			case MSG_H_UPLOAD_ERROR:
 				// 上传失败
 				uploadFailed();
+			    
 				break;
 			case MSG_H_UPLOAD_CANCEL:
 
 				break;
 			case MSG_H_START_UPLOAD:
-				mApp.createVideoUploadWindow();
+				// mApp.createVideoUploadWindow();
 				break;
 			case MSG_H_COUNT:
+
 				finishShowCount++;
-				
 				if (finishShowCount >= 3) {
-					mApp.dimissGlobalWindow();
+					GlobalWindow.getInstance().dimissGlobalWindow();
 					mmmHandler.removeMessages(MSG_H_COUNT);
+					finishShowCount = 0;
 				} else {
 					mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
 				}
@@ -208,6 +233,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			case Uploader.FINISH:
 				// 上传完成
 				mIsUploadSucess = true;
+				isUploading = false;
 				console.log("upload service--VideoShareActivity-handleStatus---上传完成---FINISH----");
 				// 通知上传成功
 				mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_SUCESS);
@@ -238,12 +264,15 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			// 处理上传过程中出现的异常
 			console.log("upload service--VideoShareActivity-handleException----上传失败，" + exception.getMessage());
 			mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
+
+			isUploading = false;
 		}
 
 		@Override
 		public void handleCancel(String videoId) {
 			// 处理取消上传的后续操作
 			console.log("upload service--VideoShareActivity-handleCancel----取消上传---------videoId = " + videoId);
+			isUploading = false;
 		}
 	};
 
@@ -266,15 +295,12 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		configPlatforms();
 		// 获取第一帧缩略图
 		createThumb();
-
 		// 初始化
 		init();
-
 		// 上传已倒出的本地视频
 		uploadShareVideo();
 
-		mApp.createVideoUploadWindow();
-
+		GlobalWindow.getInstance().createVideoUploadWindow("正在上传文件");
 	}
 
 	private void createThumb() {
@@ -289,12 +315,32 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			Log.e("", "VideoShareActivity createThumb: NULL:");
 		}
 
+		try {
+
+			File file = new File(fileFolder);
+			file.mkdirs();
+			file = new File(thumbFile);
+			if (file.exists()) {
+				file.delete();
+			}
+
+			file.createNewFile();
+
+			FileOutputStream fos = new FileOutputStream(file);
+			mShortBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
+			String fsFile = FileUtils.javaToLibPath(thumbFile);
+
+			Log.e("", "VideoShareActivity createThumb: time: " + fsFile);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		long dur = System.currentTimeMillis() - startTime;
 
 		Log.e("", "VideoShareActivity createThumb: time:" + dur);
 	}
-
-	private AlertDialog mErrorDialog = null;
 
 	private void dimissErrorDialog() {
 		if (null != mErrorDialog) {
@@ -303,9 +349,43 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private void dimissExitDialog() {
+		if (null != mExitPromptDialog) {
+			mExitPromptDialog.dismiss();
+			mExitPromptDialog = null;
+		}
+	}
+
+	// CC上传失败，提示用户重试或退出
+	private void showExitDialog() {
+		dimissErrorDialog();
+
+		mExitPromptDialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("正在上传视频，是否中断？")
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dimissExitDialog();
+						exit();
+
+					}
+
+				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dimissExitDialog();
+					}
+
+				}).create();
+		mExitPromptDialog.show();
+	}
+
 	// CC上传失败，提示用户重试或退出
 	private void uploadFailed() {
 		dimissErrorDialog();
+		
+		GlobalWindow.getInstance().toFailed("上传失败");
 
 		mErrorDialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("上传失败")
 				.setPositiveButton("重试", new DialogInterface.OnClickListener() {
@@ -315,6 +395,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 						uploadShareVideo();
 						dimissErrorDialog();
 						showToast("重新开始上传");
+						
+						GlobalWindow.getInstance().createVideoUploadWindow("正在上传文件");
 
 					}
 
@@ -328,6 +410,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 					}
 
 				}).create();
+		
 		mErrorDialog.show();
 	}
 
@@ -345,20 +428,30 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private Bitmap mShortBitmap = null;
-
 	/**
 	 * 页面初始化
 	 */
 	private void init() {
 		// 获取页面元素
 		mBackBtn = (Button) findViewById(R.id.back_btn);
+		mIsShareToOther = (ImageView) findViewById(R.id.share_check);
+		if (mIsCheck) {
+			mIsShareToOther.setBackgroundResource(R.drawable.share_select_btn);
+		} else {
+			mIsShareToOther.setBackgroundResource(R.drawable.share_select_btn_down_down);
+		}
+
+		mIsShareToOther.setOnClickListener(this);
 
 		mShortImg = (ImageView) findViewById(R.id.share_img);
 		if (null != mShortBitmap) {
 			Drawable drawable = new BitmapDrawable(mShortBitmap);
 			mShortImg.setBackgroundDrawable(drawable);
 		}
+
+		mDesEdit = (EditText) findViewById(R.id.share_desc);
+
+		this.mSpinner = (Spinner) findViewById(R.id.spinner1);
 
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		// 注册事件
@@ -382,6 +475,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	 */
 	private void uploadShareVideo() {
 		if (!"".equals(mVideoPath) && null != mVideoPath) {
+			isUploading = true;
 			VideoInfo videoinfo = new VideoInfo();
 			videoinfo.setTitle("标题");
 			videoinfo.setTags("标签");
@@ -600,16 +694,52 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		switch (id) {
 		case R.id.back_btn:
 			// 返回
-			exit();
+			preExit();
 			break;
 		case R.id.share_layout:
 			click_share();
 			break;
+		case R.id.share_check:
+			click_Check();
+			break;
+		}
+	}
+
+	private void click_Check() {
+		if (mIsCheck) {
+			mIsCheck = false;
+			mIsShareToOther.setBackgroundResource(R.drawable.share_select_btn_down_down);
+		} else {
+			mIsCheck = true;
+			mIsShareToOther.setBackgroundResource(R.drawable.share_select_btn);
+		}
+	}
+
+	private void preExit() {
+		if (this.isUploading) {
+			// 正在上传视频，需要提示用户，
+			showExitDialog();
+		} else {
+			exit();
 		}
 	}
 
 	private void exit() {
+		this.dimissErrorDialog();
+		this.dimissExitDialog();
+		mUploader.cancel();
+		GlobalWindow.getInstance().dimissGlobalWindow();
 		VideoShareActivity.this.finish();
+
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			preExit();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	private void click_share() {
@@ -617,10 +747,17 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			Toast.makeText(VideoShareActivity.this, "上传视频成功后才可以分享", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		mPdsave = ProgressDialog.show(VideoShareActivity.this, "", "请求分享链接...");
+
 		final String json = createShareJson();
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
+
+		if (b) {
+			mPdsave = ProgressDialog.show(VideoShareActivity.this, "", "请求分享链接...");
+		} else {
+			showToast("分享失败");
+		}
+
 		Log.e("", "chxy__b__VideoShareActivity share11" + b);
 		Log.e("", "chxy____VideoShareActivity share11" + json);
 	}
@@ -661,7 +798,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		try {
 			String videoDes = "";
 			try {
-				videoDes = URLEncoder.encode("视频描述", "UTF-8");
+				videoDes = URLEncoder.encode(mDesEdit.getText().toString(), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -672,7 +809,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			obj.put("share", "1");
 			obj.put("attribute", "attribute_aaa");
 			obj.put("issquare", "1");
-			obj.put("imgpath", "fs1:/Cache/test11.jpg");
+			String fsFile = FileUtils.javaToLibPath(thumbFile);
+			obj.put("imgpath", fsFile);
 
 			json = obj.toString();
 		} catch (Exception e) {

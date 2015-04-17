@@ -23,6 +23,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.utils.Log;
 
+import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;

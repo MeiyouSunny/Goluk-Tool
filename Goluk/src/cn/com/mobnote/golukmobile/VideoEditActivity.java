@@ -554,11 +554,9 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 				//正在上传
 				mVideoLoadingLayout.setVisibility(View.GONE);
 				mVVPlayVideo.cancelSave();
-				return false;
-			}
-			else{
 				return true;
 			}
+			
 		}
 		return super.onKeyDown(keyCode, event);
 	}
