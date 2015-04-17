@@ -21,10 +21,10 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/user_head"
             android:layout_centerVertical="true"
-            android:orientation="vertical" 
-            android:layout_marginLeft="8dp">
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/user_head"
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/username"
@@ -64,31 +64,37 @@
             android:background="@drawable/livestreaming_report_btn" />
     </RelativeLayout>
 
-    
     <RelativeLayout
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-        
-        <SurfaceView 
+
+        <SurfaceView
             android:id="@+id/mSurfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        
+
         <ImageView
-			android:id="@+id/mPreLoading"
-			android:scaleType="fitXY"
+            android:id="@+id/mPreLoading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/video_sq_play" />
+            android:background="@drawable/video_sq_play"
+            android:scaleType="fitXY" />
+
+        <cn.com.mobnote.golukmobile.videosuqare.RingView
+            android:id="@+id/mRingView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
     </RelativeLayout>
-   
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:gravity="center_vertical"
-        android:orientation="vertical" >
+        android:orientation="vertical" >
+
         <TextView
             android:id="@+id/video_title"
             android:layout_width="wrap_content"

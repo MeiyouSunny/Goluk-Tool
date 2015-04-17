@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -76,7 +75,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mCustomProgressDialog.show();
 			}
 		}
-		boolean result = GolukApplication.getInstance().getVideoSquareManager().getHotList();
+		boolean result = GolukApplication.getInstance().getVideoSquareManager().getHotList("1","0");
 		if(!result){
 			closeProgressDialog();
 		}
@@ -102,6 +101,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 						mRTPullListView.onRefreshComplete();
 					}
 				}, 1500);
+				
 			}
 		});
 		
@@ -173,7 +173,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-		System.out.println("SSS=============msg="+msg+"===param2="+param2);
+		System.out.println("YYY======event="+event+"======msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
 			closeProgressDialog();
 			if(RESULE_SUCESS == msg){
@@ -202,6 +202,8 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mDataList.get(i).mVideoEntity = videoinfo.mVideoEntity;
 			}
 		}
+		
+		
 	}
 	
 }
