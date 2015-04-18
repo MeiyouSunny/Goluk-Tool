@@ -584,7 +584,6 @@ public class WifiConnectManager implements WifiConnectInterface {
 
 				msg.what = Integer.parseInt(type + "1");
 				WifiRsBean rs=wifiSupport.getConnResult();
-				rs.setPh_ip(apManagesupport.getNetworkIpAddress(apManagesupport.getApName(context)));
 				msg.obj = rs;
 				handler.sendMessage(msg);
 				// 获取wifi连接列表
@@ -622,8 +621,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 					e.printStackTrace();
 				}
 
-				// 如果wifi打开了
-				while (apManagesupport.getWifiApState()!=13) {
+				// 如果wifi打开了  并且获得ip后
+				while (apManagesupport.getWifiApState()!=13  || "".equals(apManagesupport.getNetworkIpAddress(apManagesupport.getApName(context)))) {
 					try {
 						int temp_2 = 200;
 						Thread.sleep(temp_2);
@@ -642,7 +641,8 @@ public class WifiConnectManager implements WifiConnectInterface {
 
 				msg.what = Integer.parseInt(type + "1");
 				WifiRsBean rs=wifiSupport.getConnResult();
-				rs.setPh_ip(apManagesupport.getNetworkIpAddress(apManagesupport.getApName(context)));
+			 rs.setPh_ip(apManagesupport.getNetworkIpAddress(apManagesupport.getApName(context)));
+				 
 				msg.obj = rs;
 				handler.sendMessage(msg);
 			 
