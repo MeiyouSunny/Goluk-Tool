@@ -46,7 +46,10 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		//getResources().getColor(R.color.textcolor_select)
 		mDataList = new ArrayList<VideoSquareInfo>();
 		LogUtils.d("SSS=================111111111===================");
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("hotlist", this);
+		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
+		if(null != mVideoSquareManager){
+			mVideoSquareManager.addVideoSquareManagerListener("hotlist", this);
+		}
 		httpPost(true);
 		mHandler = new Handler(){
 			@Override
@@ -78,11 +81,16 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mCustomProgressDialog.show();
 			}
 		}
-		boolean result = GolukApplication.getInstance().getVideoSquareManager().getHotList("1","0");
-		if(!result){
-			closeProgressDialog();
+		
+		if(null != GolukApplication.getInstance().getVideoSquareManager()){
+			boolean result = GolukApplication.getInstance().getVideoSquareManager().getHotList("1","0");
+			if(!result){
+				closeProgressDialog();
+			}
+			System.out.println("YYYY==22222==getHotList======result="+result);
+		}else{
+			System.out.println("YYYY==22222==getHotList======error=");
 		}
-		System.out.println("YYYY==22222==getHotList======result="+result);
 	}
 	
 	private void initLayout(){
@@ -124,6 +132,9 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			}
 			@Override
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
+				if(wonderfulFirstVisible != firstVisibleItem){
+					mVideoSquareListViewAdapter.updatePlayerState();
+				}
 				wonderfulFirstVisible=firstVisibleItem;
 				wonderfulVisibleCount=visibleItemCount;
 			}

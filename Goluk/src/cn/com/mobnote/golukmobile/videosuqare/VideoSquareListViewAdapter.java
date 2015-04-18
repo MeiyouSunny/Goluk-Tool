@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.tiros.lua.Lua;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -81,13 +82,13 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	public long getItemId(int arg0) {
 		return 0;
 	}
-	
+
 	ViewHolder holder;
-	
+
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		VideoSquareInfo mVideoSquareInfo = mVideoSquareListData.get(arg0);
-		
+
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(
 					R.layout.video_square_list_item, null);
@@ -113,10 +114,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 					.findViewById(R.id.live_icon);
 			holder.mPreLoading = (ImageView) convertView
 					.findViewById(R.id.mPreLoading);
-			holder.likebtn = (Button) convertView
-					.findViewById(R.id.like_btn);
+			holder.likebtn = (Button) convertView.findViewById(R.id.like_btn);
 			holder.sharebtn = (Button) convertView.findViewById(R.id.share_btn);
-			
+
 			holder.mRingView = (RingView) convertView
 					.findViewById(R.id.mRingView);
 
@@ -134,9 +134,11 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.liveicon.setVisibility(View.GONE);
 			holder.mSurfaceView.setVisibility(View.VISIBLE);
 		}
-		
-		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
-		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
+
+		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(
+				mContext, mVideoSquareListData, mVideoSquareInfo));
+		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(
+				mContext, mVideoSquareListData, mVideoSquareInfo));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
@@ -145,12 +147,14 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 				.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
 
 		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(
-				holder, mDWMediaPlayerList, mVideoSquareInfo));
+				mVideoSquareListData, holder, mDWMediaPlayerList,
+				mVideoSquareInfo));
 
+		holder.mPreLoading.setVisibility(View.GONE);
 		String videoid = mVideoSquareInfo.mVideoEntity.videoid;
 		if ("2".equals(mVideoSquareInfo.mVideoEntity.type)) {
 			if (!TextUtils.isEmpty(videoid)) {
-				if (!mDWMediaPlayerList.containsKey(videoid)) {
+				if (!mDWMediaPlayerList.containsKey(mVideoSquareInfo.id)) {
 					holder.mPreLoading.setVisibility(View.VISIBLE);
 					DWMediaPlayer mDWMediaPlayer = new DWMediaPlayer();
 					mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY,
@@ -159,21 +163,19 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 							mVideoSquareInfo));
 					mDWMediaPlayer
 							.setOnPreparedListener(new VideoOnPreparedListener(
-									mDWMediaPlayerList, mVideoSquareInfo));
+									mVideoSquareListData, mDWMediaPlayerList,
+									mVideoSquareInfo));
 					mDWMediaPlayer
 							.setOnBufferingUpdateListener(new VideoOnBufferingUpdateListener(
-									mDWMediaPlayerList, holder,
-									mVideoSquareInfo));
-					mDWMediaPlayerList.put(videoid, mDWMediaPlayer);
+									mVideoSquareListData, mDWMediaPlayerList,
+									holder, mVideoSquareInfo));
+					mDWMediaPlayerList.put(mVideoSquareInfo.id, mDWMediaPlayer);
 				} else {
 					DWMediaPlayer mDWMediaPlayer = mDWMediaPlayerList
 							.get(videoid);
 					if (null != mDWMediaPlayer) {
-						LogUtils.d("SSS==========1111=====videoid="
-								+ mVideoSquareInfo.mVideoEntity.videoid);
 						if (mDWMediaPlayer.isPlaying()) {
 							LogUtils.d("SSS=======222===GONE======");
-							holder.mPreLoading.setVisibility(View.GONE);
 						} else {
 
 						}
@@ -189,11 +191,12 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
 				width, height);
 		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
-		mSurfaceHolder.addCallback(new SurfaceViewCallback(mDWMediaPlayerList,
-				mVideoSquareInfo));
+		mSurfaceHolder.addCallback(new SurfaceViewCallback(
+				mVideoSquareListData, mDWMediaPlayerList, mVideoSquareInfo));
 
-//		imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait,
-//				holder.userhead, options, null);
+		// imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait,
+		// holder.userhead, options, null);
+		LogUtils.d("SSS=====picture="+mVideoSquareInfo.mVideoEntity.picture);
 		imageLoader.displayImage(mVideoSquareInfo.mVideoEntity.picture,
 				holder.mPreLoading, options, null);
 
@@ -229,7 +232,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 
 	public void onDestroy() {
 		if (null != imageLoader) {
-//			imageLoader.clearMemoryCache();
+			// imageLoader.clearMemoryCache();
 			// imageLoader.clearDiscCache();
 		}
 		if (null != mDWMediaPlayerList) {
@@ -248,22 +251,29 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 
 	@SuppressLint("SimpleDateFormat")
 	public String formatTime(String date) {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		ParsePosition pos = new ParsePosition(0);
-		Date strtodate = formatter.parse(date, pos);
-
-		formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
-		return formatter.format(strtodate);
-
+		String time="";
+		if(null != date){
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			ParsePosition pos = new ParsePosition(0);
+			Date strtodate = formatter.parse(date, pos);
+			
+			if(null != strtodate){
+				formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
+				if(null != formatter){
+					time =  formatter.format(strtodate);
+				}
+			}
+		}
+		
+		return time;
 	}
-	
 
 	public static class ViewHolder {
 		TextView username;
 		TextView looknumber;
 		ImageView userhead;
 		Button likenumber;
-		TextView videotitle;	
+		TextView videotitle;
 		TextView sharetime;
 		RelativeLayout mPlayerLayout;
 		SurfaceView mSurfaceView;
@@ -274,5 +284,19 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		Button likebtn;
 		RingView mRingView;
 	}
-
+	
+	public void updatePlayerState(){
+		for(int i=0; i<mDWMediaPlayerList.size(); i++){
+			DWMediaPlayer player = mDWMediaPlayerList.get(i);
+			if(null != player){
+				if(player.isPlaying()){
+					player.pause();
+					LogUtils.d("SSS======updatePlayerState============pause=====");
+					
+				}
+			}
+		}
+	}
+	
+	
 }

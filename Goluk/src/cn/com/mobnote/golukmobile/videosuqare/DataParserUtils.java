@@ -30,6 +30,7 @@ public class DataParserUtils {
 							String videocount = data.getString("videocount");
 							JSONArray videolist = data.getJSONArray("videolist");
 							if(null != videolist){
+								long time = System.currentTimeMillis();
 								for(int i=0; i<videolist.length(); i++){
 									JSONObject videoinfo = videolist.getJSONObject(i);
 									if(null != videoinfo){
@@ -60,9 +61,11 @@ public class DataParserUtils {
 											mUserEntity.headportrait = user.optString("headportrait");
 										}
 										
+										long id = time + i;
 										VideoSquareInfo mVideoSquareInfo = new VideoSquareInfo();
 										mVideoSquareInfo.mVideoEntity=mVideoEntity;
 										mVideoSquareInfo.mUserEntity=mUserEntity;
+										mVideoSquareInfo.id = ""+id;
 										list.add(mVideoSquareInfo);
 									}
 								}

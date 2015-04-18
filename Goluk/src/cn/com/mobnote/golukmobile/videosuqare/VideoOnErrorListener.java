@@ -13,7 +13,7 @@ private VideoSquareInfo mVideoSquareInfo=null;
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
-		LogUtils.d("SSS============onError=========arg1="+arg1+"==arg2="+arg2);
+		LogUtils.d("SSS=====onError=====arg1="+arg1+"==arg2="+arg2+"======id="+mVideoSquareInfo.id);
 		return false;
 	}
 	

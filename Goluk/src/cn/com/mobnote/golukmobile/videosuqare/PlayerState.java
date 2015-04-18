@@ -15,19 +15,17 @@ package cn.com.mobnote.golukmobile.videosuqare;
   *
   * 7.所有代码文件头部必须包含规则说明
   *
-  * 视频广场数据信息
+  * 播放器播放状态
   *
-  * 2015年4月14日
+  * 2015年4月18日
   *
   * @author xuhw
   */
-public class VideoSquareInfo {
-	/** 视频广场视频属性信息 */
-	public VideoEntity mVideoEntity=null;
-	/** 视频广场用户属性信息 */
-	public UserEntity mUserEntity=null;
-	/** 播放器播放状态 */
-	public PlayerState mPlayerState=PlayerState.noallow;
-	/** 唯一标识 */
-	public String id;
+public enum PlayerState {
+	noallow, //不可使用
+	allowbuffer, //允许缓冲
+	buffing, //缓冲中
+	bufferend, //缓冲结束，可以播放
+	playing, //播放中
+	pause //暂停
 }
