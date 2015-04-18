@@ -124,9 +124,10 @@ public class WiFiLinkCreateHotActivity extends Activity implements OnClickListen
 					//保存wifi账户密码
 					WiFiInfo.GolukSSID = wifiName;
 					WiFiInfo.GolukPWD = pwd;
+					String golukMac = WiFiInfo.GolukMAC.toString();
 					//写死ip,网关
-					String ip = "192.168.43.234";
-					String way = "192.168.43.1";
+					String ip = golukMac.substring(0,golukMac.lastIndexOf(".")) + ".101";
+					String way = WiFiInfo.GolukMAC;
 					//连接ipc热点wifi---调用ipc接口
 					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---1");
 					String appwd = WiFiInfo.AP_PWD;
