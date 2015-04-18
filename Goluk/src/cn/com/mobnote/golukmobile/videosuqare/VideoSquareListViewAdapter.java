@@ -220,7 +220,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 
 	public void onDestroy() {
 		if (null != imageLoader) {
-			imageLoader.clearMemoryCache();
+//			imageLoader.clearMemoryCache();
 			// imageLoader.clearDiscCache();
 		}
 		if (null != mDWMediaPlayerList) {

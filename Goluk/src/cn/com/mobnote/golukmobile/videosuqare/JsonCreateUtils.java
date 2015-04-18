@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
+
 /**
  * 1.编辑器必须显示空白处
  *
@@ -64,9 +66,29 @@ public class JsonCreateUtils {
 				arr.put(attribute.get(i));
 			}
 			
+			LogUtils.d("SSS=====$$$$$$$$$$$$=========arr.toString()=="+arr.toString());
 			String attributestr = URLEncoder.encode(arr.toString(), "UTF-8");
 			obj.put("attribute", attributestr);
 
+			json = obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getSquareListRequestJson(String channel, String type,
+			String attribute, String operation, String timestamp) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("channel", channel);
+			obj.put("type", type);
+			obj.put("operation", operation);
+			obj.put("timestamp", timestamp);
+			obj.put("attribute", attribute);
+			
 			json = obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,8 +2,10 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
@@ -40,6 +42,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		mRTPullListView.setDividerHeight((int)(2*jj));
 		//getResources().getColor(R.color.textcolor_select)
 		mDataList = new ArrayList<VideoSquareInfo>();
+		LogUtils.d("SSS=================111111111===================");
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("hotlist", this);
 		httpPost(true);
 	}
@@ -150,7 +153,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	public void onDestroy(){
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("hotlist");
 		if(null != mVideoSquareListViewAdapter){
-			mVideoSquareListViewAdapter.onDestroy();
+//			mVideoSquareListViewAdapter.onDestroy();
 		}
 	}
 

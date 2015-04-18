@@ -182,7 +182,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		if (null != mVideoSquareListViewAdapter) {
-			mVideoSquareListViewAdapter.onDestroy();
+//			mVideoSquareListViewAdapter.onDestroy();
 		}
 		GolukApplication.getInstance().getVideoSquareManager()
 				.removeVideoSquareManagerListener("videocategory");
