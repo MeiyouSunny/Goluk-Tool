@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
@@ -80,11 +81,13 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	public long getItemId(int arg0) {
 		return 0;
 	}
-
+	
+	ViewHolder holder;
+	
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		VideoSquareInfo mVideoSquareInfo = mVideoSquareListData.get(arg0);
-		ViewHolder holder;
+		
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(
 					R.layout.video_square_list_item, null);
@@ -110,6 +113,10 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 					.findViewById(R.id.live_icon);
 			holder.mPreLoading = (ImageView) convertView
 					.findViewById(R.id.mPreLoading);
+			holder.likebtn = (Button) convertView
+					.findViewById(R.id.like_btn);
+			holder.sharebtn = (Button) convertView.findViewById(R.id.share_btn);
+			
 			holder.mRingView = (RingView) convertView
 					.findViewById(R.id.mRingView);
 
@@ -127,7 +134,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.liveicon.setVisibility(View.GONE);
 			holder.mSurfaceView.setVisibility(View.VISIBLE);
 		}
-
+		
+		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
+		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
@@ -247,19 +256,22 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		return formatter.format(strtodate);
 
 	}
+	
 
 	public static class ViewHolder {
 		TextView username;
 		TextView looknumber;
 		ImageView userhead;
 		Button likenumber;
-		TextView videotitle;
+		TextView videotitle;	
 		TextView sharetime;
 		RelativeLayout mPlayerLayout;
 		SurfaceView mSurfaceView;
 		ImageView liveicon;
 		ImageView reporticon;
 		ImageView mPreLoading;
+		Button sharebtn;
+		Button likebtn;
 		RingView mRingView;
 	}
 
