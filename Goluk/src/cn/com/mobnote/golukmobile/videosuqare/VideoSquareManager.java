@@ -92,10 +92,12 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public boolean getSquareList(String channel, String type, String attribute,
 			String operation, String timestamp) {
-//		List<String> arr = new ArrayList<String>();
-//		arr.add(attribute);
+		List<String> arr = new ArrayList<String>();
+		arr.add(attribute);
 		String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
-				attribute, operation, timestamp);
+				arr, operation, timestamp);
+//		String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
+//				attribute, operation, timestamp);
 		LogUtils.d("YYY=========getSquareList==========json=="+json);
 		return mApplication.mGoluk
 				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,

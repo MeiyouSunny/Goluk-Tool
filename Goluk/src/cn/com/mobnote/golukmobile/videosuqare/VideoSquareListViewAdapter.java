@@ -192,8 +192,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		mSurfaceHolder.addCallback(new SurfaceViewCallback(mDWMediaPlayerList,
 				mVideoSquareInfo));
 
-		imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait,
-				holder.userhead, options, null);
+//		imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait,
+//				holder.userhead, options, null);
 		imageLoader.displayImage(mVideoSquareInfo.mVideoEntity.picture,
 				holder.mPreLoading, options, null);
 
