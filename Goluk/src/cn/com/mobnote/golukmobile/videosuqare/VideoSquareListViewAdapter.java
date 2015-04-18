@@ -119,7 +119,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 
 			holder.mRingView = (RingView) convertView
 					.findViewById(R.id.mRingView);
-
+			
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -139,6 +139,15 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 				mContext, mVideoSquareListData, mVideoSquareInfo));
 		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(
 				mContext, mVideoSquareListData, mVideoSquareInfo));
+		
+		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
+			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);//设置点赞背景
+		}else{
+			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn);//设置默认点赞背景
+		}
+		
+		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
+		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
