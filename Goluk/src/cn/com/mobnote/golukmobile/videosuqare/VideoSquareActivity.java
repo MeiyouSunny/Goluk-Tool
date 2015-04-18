@@ -1,7 +1,11 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import com.umeng.socialize.sso.UMSsoHandler;
+
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -19,6 +23,8 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 	private Button mTypeList = null;
 	/** 返回按钮 */
 	private Button mBackBtn = null;
+	
+	SharePlatformUtil sharePlatform;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +35,20 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 		mVideoSquareAdapter = new VideoSquareAdapter(this);
 		mViewPager.setAdapter(mVideoSquareAdapter);
 		mViewPager.setOnPageChangeListener(opcl);
+		sharePlatform = new SharePlatformUtil(this);
+		sharePlatform.configPlatforms();//设置分享平台的参数
 		init();
 		setListener();
+	}
+	
+	@Override 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    /**使用SSO授权必须添加如下代码 */
+	    UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode) ;
+	    if(ssoHandler != null){
+	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	    }
 	}
 
 	private void init() {
@@ -40,7 +58,6 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 		mTypeList = (Button) findViewById(R.id.mTypeList);
 		// 获取页面元素
 		mBackBtn = (Button) findViewById(R.id.back_btn);
-		
 		
 	}
 

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import android.app.ProgressDialog;
@@ -24,8 +25,7 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 	VideoSquareInfo mVideoSquareInfo;
 	SharePlatformUtil sharePlatform;
 	
-	/** 系统loading */
-	private ProgressDialog mPdsave = null;
+	private CustomProgressDialog mCustomProgressDialog=null;
 	
 	public VideoSquareOnClickListener(Context context, List<VideoSquareInfo> videoSquareListData,VideoSquareInfo videoSquareInfo){
 		mcontext = context;
@@ -42,12 +42,16 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.share_btn:
-			
-			mPdsave = ProgressDialog.show(mcontext, "", "请求分享链接...");
+			System.out.println("sss");
+			if(null == mCustomProgressDialog){
+				mCustomProgressDialog = new CustomProgressDialog(mcontext);
+				//mCustomProgressDialog.setCancelable(false);
+				//mCustomProgressDialog.show();
+			}
 			
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getShareUrl(mVideoSquareInfo.mVideoEntity.videoid, mVideoSquareInfo.mVideoEntity.type);
 			if(!result){
-				mPdsave.dismiss();
+				mCustomProgressDialog.dismiss();
 			}
 			break;
 		case R.id.like_btn:
@@ -78,17 +82,34 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 			break;
 		}
 	}
-
+	
+	/**
+	 * 关闭加载中对话框
+	 * @author xuhw
+	 * @date 2015年4月15日
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomProgressDialog){
+			if(mCustomProgressDialog.isShowing()){
+				System.out.println("FFFFFdialog");
+				mCustomProgressDialog.dismiss();
+			}
+		}
+	}
+	
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
 			Object param2) {
 		System.out.println("YYYY==888888==getSquareList====event=" + event
 				+ "===msg=" + msg + "==param2=" + param2);
+		closeProgressDialog();
 		if (event == SquareCmd_Req_GetShareUrl) {
-			mPdsave.dismiss();
+			//mPdsave.dismiss();
 			if (RESULE_SUCESS == msg) {
 				try {
-					JSONObject result = new JSONObject(param2.toString());
+					System.out.println("fuck111");
+					JSONObject result = new JSONObject((String)param2);
+					System.out.println("fuck222"+result);
 					if(result.getBoolean("success")){
 						JSONObject data =  result.getJSONObject("data");
 						String shareurl = data.getString("shorturl");
@@ -98,9 +119,12 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 						}
 						//设置分享内容
 						sharePlatform.setShareContent(shareurl, coverurl, "goluk分享");
+						System.out.println("fuck444"+result);
 						VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
 						CustomShareBoard shareBoard = new CustomShareBoard(vsa);
+						System.out.println("fuck555"+result);
 				        shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+				        System.out.println("fuck666"+result);
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
