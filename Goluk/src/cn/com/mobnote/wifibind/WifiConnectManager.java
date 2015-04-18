@@ -1,5 +1,6 @@
 package cn.com.mobnote.wifibind;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 
 import java.util.ArrayList;
@@ -47,7 +48,9 @@ public class WifiConnectManager implements WifiConnectInterface {
 		apManagesupport=new WifiApManagerSupport(wifiManager);
 	}
 
- 
+	public void createWifiAPFirst() {
+		createWifiAPFirst("6","icp1","123456789",20000);
+	}
 	/**
 	 * 通过用户名，密码连接ipc
 	 * 
@@ -158,6 +161,10 @@ public class WifiConnectManager implements WifiConnectInterface {
 				callback.wifiCallBack(5, 0, 2, "自动连接--当前已经连接", msg.obj);
 				break;
 			}
+			case 61: {
+				callback.wifiCallBack(6, 0, 0, "热点获取网关成功", msg.obj);
+				break;
+			}
 
 			// --------------------------------失败-----------------------//
 			// 负数失败
@@ -197,6 +204,14 @@ public class WifiConnectManager implements WifiConnectInterface {
 			}
 			case -53: {
 				callback.wifiCallBack(5, -1, msg.what, "自动连接失败", msg.obj);
+				break;
+			}
+			case -61: {
+				callback.wifiCallBack(6, 0, -1, "热点获取网关失败", msg.obj);
+				break;
+			}
+			case -62: {
+				callback.wifiCallBack(6, 0, -2, "热点获取网关超时", msg.obj);
 				break;
 			}
 			}
@@ -550,9 +565,9 @@ public class WifiConnectManager implements WifiConnectInterface {
 				}
 
 				// 如果wifi打开了
-				while (wifiSupport.getConnResult() == null) {
+				while (apManagesupport.getWifiApState()!=13) {
 					try {
-						int temp_2 = 100;
+						int temp_2 = 200;
 						Thread.sleep(temp_2);
 						tempTime += temp_2;
 						// 如果超时了 直接返回
@@ -582,6 +597,65 @@ public class WifiConnectManager implements WifiConnectInterface {
 		mythread.start();
 	}
 
+	
+	/**
+	 * 创建热点并返回连接列表
+	 * 
+	 * @param ssid
+	 * @param password
+	 * @param outTime
+	 */
+	private void createWifiAPFirst(final String type, final String ssid,
+			final String password, final int outTime) {
+
+		Runnable runnable = new Runnable() {
+			Message msg = new Message();
+		
+			public void run() {
+				int tempTime = 0;
+				wifiSupport.closeWifi();
+				wifiSupport.closeWifiAp(null);
+				try {
+					wifiSupport.createWifiHot(ssid, password);
+				} catch ( Exception e) {
+					// TODO Auto-gsenerated catch block
+					e.printStackTrace();
+				}
+
+				// 如果wifi打开了
+				while (apManagesupport.getWifiApState()!=13) {
+					try {
+						int temp_2 = 200;
+						Thread.sleep(temp_2);
+						tempTime += temp_2;
+						// 如果超时了 直接返回
+						if (tempTime > outTime) {
+							wifiSupport.closeWifi();
+							msg.what = Integer.parseInt("-" + type + "1");
+							msg.obj = null;
+							return;
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				msg.what = Integer.parseInt(type + "1");
+				WifiRsBean rs=wifiSupport.getConnResult();
+				rs.setPh_ip(apManagesupport.getNetworkIpAddress(apManagesupport.getApName(context)));
+				msg.obj = rs;
+				handler.sendMessage(msg);
+			 
+
+			};
+
+		};
+		Thread mythread = new Thread(runnable);
+		mythread.start();
+	}
+	
+	
+	
 	/**
 	 * 获取加入wifiAP的用户列表
 	 * 
