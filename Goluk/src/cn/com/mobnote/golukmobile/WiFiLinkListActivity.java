@@ -14,6 +14,7 @@ import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import cn.com.mobnote.wifibind.WifiRsBean;
+import cn.com.tiros.api.WIFIInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -102,8 +103,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		
 		//创建热点获取网关
 		getPhoneMac();
-		//获取wifi列表
-		//getWiFiList(false);
+		
 	}
 	
 	/**
@@ -143,9 +143,10 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	 * 
 	*/
 	private void getPhoneMac(){
+		mLoading.setVisibility(View.VISIBLE);
 		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm,this);
-		mWac.createWifiAP("goluk","12345678","ipc","");
+		mWac.createWifiAPFirst();
 	}
 	
 	/**
@@ -159,6 +160,23 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		}
 		// 获取文件列表tcay_ap_ipc
 		mWac.scanWifiList("",b);
+	}
+	
+	/**
+	 * 保存手机热点mac
+	 */
+	private void saveHotWiFiMac(WifiRsBean bean){
+		//获取网关
+		String mac = bean.getPh_ip();
+		if(!"".equals(mac) && null != mac){
+			WiFiInfo.GolukMAC = mac;
+			
+			//获取wifi列表
+			getWiFiList(false);
+		}
+		else{
+			console.toast("创建热点成功,没有获取到手机热点网关", mContext);
+		}
 	}
 	
 	/**
@@ -313,6 +331,23 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 				else{
 					mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn_ash);
 					mHasLinked = false;
+					console.toast(message, mContext);
+				}
+			break;
+			case 6:
+				if(state == 0){
+					switch(process){
+						case 0:
+							//创建热点成功
+							WifiRsBean bean = (WifiRsBean)arrays;
+							saveHotWiFiMac(bean);
+						break;
+						default:
+							console.toast(message, mContext);
+						break;
+					}
+				}
+				else{
 					console.toast(message, mContext);
 				}
 			break;

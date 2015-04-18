@@ -25,4 +25,5 @@ public class WiFiInfo {
 	public static String AP_MAC;
 	public static String GolukSSID;
 	public static String GolukPWD;
+	public static String GolukMAC;
 }
