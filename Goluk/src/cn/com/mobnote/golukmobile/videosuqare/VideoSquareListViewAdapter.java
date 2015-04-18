@@ -119,7 +119,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			
 			holder.mRingView = (RingView) convertView
 					.findViewById(R.id.mRingView);
-
+			
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -133,6 +133,12 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.reporticon.setVisibility(View.VISIBLE);
 			holder.liveicon.setVisibility(View.GONE);
 			holder.mSurfaceView.setVisibility(View.VISIBLE);
+		}
+		
+		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
+			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);//设置点赞背景
+		}else{
+			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn);//设置默认点赞背景
 		}
 		
 		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
