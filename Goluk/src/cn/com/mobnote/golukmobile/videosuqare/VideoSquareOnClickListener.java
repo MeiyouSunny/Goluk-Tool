@@ -107,9 +107,7 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 			//mPdsave.dismiss();
 			if (RESULE_SUCESS == msg) {
 				try {
-					System.out.println("fuck111");
 					JSONObject result = new JSONObject((String)param2);
-					System.out.println("fuck222"+result);
 					if(result.getBoolean("success")){
 						JSONObject data =  result.getJSONObject("data");
 						String shareurl = data.getString("shorturl");
@@ -119,12 +117,9 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 						}
 						//设置分享内容
 						sharePlatform.setShareContent(shareurl, coverurl, "goluk分享");
-						System.out.println("fuck444"+result);
 						VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
 						CustomShareBoard shareBoard = new CustomShareBoard(vsa);
-						System.out.println("fuck555"+result);
 				        shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-				        System.out.println("fuck666"+result);
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
