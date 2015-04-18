@@ -860,9 +860,24 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public void checkWiFiStatus(){
 		if(mWiFiStatus == 0){
 			//wifi未链接
-			//跳转到wifi连接首页
-			Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
-			startActivity(wifiIndex);
+			//判断是否已绑定ipc
+			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",MODE_PRIVATE);
+			//取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+			boolean isbind = preferences.getBoolean("isbind",false);
+			//isbind = false;
+			if(!isbind){
+				//跳转到wifi连接首页
+				Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
+				startActivity(wifiIndex);
+			}
+			else{
+				console.toast("IPC已绑定等待连接...",mContext);
+			}
+		}
+		else{
+			//跳转到ipc页面
+			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+			startActivity(i);
 		}
 	}
 	
@@ -1025,8 +1040,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.wifi_status_btn:
 				//跳转到ipc页面
-				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-				startActivity(i);
+				checkWiFiStatus();
 			break;
 			case R.id.more_btn:
 				//读取SharedPreference中用户的信息

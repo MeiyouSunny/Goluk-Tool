@@ -50,6 +50,8 @@ import com.rd.car.RecorderStateException;
 public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn , ILocationFn{
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
+	/** ip地址 */
+	public String mIpcIp = null;
 	/** 保存上下文 */
 	private Context mContext = null;
 	/** 来源标示,用来强转activity */
@@ -64,7 +66,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private WiFiConnection mWiFiConnection = null;
 	
 	private static GolukApplication instance=null;
-	private IPCControlManager mIPCControlManager=null;
+	public IPCControlManager mIPCControlManager=null;
 	/** 登录IPC是否登录成功 */
 	private boolean isIpcLoginSuccess = false;
 	/**　用户是否登录小车本服务器成功 */
@@ -261,6 +263,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public boolean getIpcIsLogin() {
 		return isIpcLoginSuccess;
+	}
+	
+	/**
+	 * 设置IPC退出登录
+	 */
+	public void setIpcLoginOut(){
+		isIpcLoginSuccess = false;
+		if(null != mMainActivity){
+			mMainActivity.wiFiLinkStatus(3);
+		}
 	}
 	
 	/**

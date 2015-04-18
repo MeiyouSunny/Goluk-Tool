@@ -8,32 +8,55 @@
 	<RelativeLayout
 		android:id="@+id/title_layout"
 		android:layout_width="match_parent"
-		android:layout_height="42dp"
-		android:background="@color/bg">
+		android:layout_height="62dp"
+		android:background="#f1f1f1">
 		
 		<ImageButton
 			android:id="@+id/back_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="10dp"
 			android:layout_centerVertical="true"
-			android:background="@drawable/btn_back_btn"
+			android:background="@drawable/connect_back_btn_btn"
 			android:contentDescription="@string/imgdes" />
-		
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:textSize="18sp"
-			android:textColor="@color/white"
-			android:text="@string/wifi_link_7_text"/>
 	</RelativeLayout>
+	
+	<TextView
+		android:id="@+id/textView1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="25dp"
+		android:layout_marginRight="25dp"
+		android:layout_below="@id/title_layout"
+		android:textSize="24sp"
+		android:textColor="#595959"
+		android:text="@string/wifi_link_17_text" />
+	
+	<ImageView
+		android:id="@+id/imageView1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textView1"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="38dp"
+		android:src="@drawable/connect_gif_ipc_bluelight"
+		android:contentDescription="@string/imgdes"/>
+	
+	<ImageView
+		android:id="@+id/imageView2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textView1"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="38dp"
+		android:background="@anim/ipc_signal"
+		android:contentDescription="@string/imgdes"/>
 	
 	<RelativeLayout
 		android:id="@+id/list_title_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/title_layout"
+		android:layout_marginTop="15dp"
+		android:layout_below="@id/imageView1"
 		android:background="#F1F1F1">
 		
 		<TextView
@@ -41,37 +64,51 @@
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="18dp"
 			android:layout_marginTop="26dp"
-			android:textSize="18sp"
-			android:textColor="#6C99B5"
+			android:textSize="20sp"
+			android:textColor="#28b6a4"
 			android:text="@string/wifi_link_8_text"/>
-		
 		
 		<ImageButton
 			android:id="@+id/refresh_help_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="26dp"
-			android:layout_marginRight="36dp"
+			android:layout_marginRight="18dp"
 			android:layout_alignParentRight="true"
-			android:background="@drawable/refresh_help"
+			android:background="@drawable/connect_refresh_btn"
 			android:contentDescription="@string/imgdes" />
 		
 		<ImageView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="10dp"
-			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"
+			android:layout_marginLeft="18dp"
+			android:layout_marginRight="18dp"
 			android:layout_below="@id/refresh_help_btn"
-			android:background="@drawable/solid_help"
+			android:background="@drawable/connect_line_green"
 			android:contentDescription="@string/imgdes"/>
 	</RelativeLayout>
+	
+	<Button
+		android:id="@+id/next_btn"
+		android:layout_width="match_parent"
+		android:layout_height="52dp"
+		android:layout_marginBottom="34dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/connect_mianbtn_ash"
+		android:textSize="20sp"
+		android:textColor="@color/white"
+		android:text="@string/next_text" />
 	
 	<ListView
 		android:id="@+id/wifi_list_listview"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_marginBottom="34dp"
 		android:layout_below="@id/list_title_layout"
+		android:layout_above="@id/next_btn"
 		android:scrollbars="none" >
 	</ListView>
 	
