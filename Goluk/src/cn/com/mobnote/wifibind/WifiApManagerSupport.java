@@ -243,4 +243,31 @@ public class WifiApManagerSupport {
 		}
 		return "";
 	}
+	
+	
+	     /**
+	       * Endable/disable wifi
+	       * @param enabled
+	       * @return WifiAP state
+	       */
+	      public void closeWifiAP( ) {
+	          Log.d("WifiAP", "*** setWifiApEnabled CALLED **** " );
+	          try {
+	          if (mWifiManager.getConnectionInfo() !=null) {
+	        	  mWifiManager.setWifiEnabled(false);
+	              try {Thread.sleep(1500);} catch (Exception e) {}
+	          
+	   
+	        	  mWifiManager.setWifiEnabled(false);
+	              Method method1 = mWifiManager.getClass().getMethod("setWifiApEnabled",
+	                  WifiConfiguration.class, boolean.class);
+	              method1.invoke(mWifiManager, null, false); // true
+	              
+	          }
+	          } catch (Exception e) {
+	            
+	             // toastText += "ERROR " + e.getMessage();
+	          }
+	          
+	      }
 }  

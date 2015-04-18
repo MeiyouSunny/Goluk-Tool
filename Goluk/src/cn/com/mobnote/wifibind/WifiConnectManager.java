@@ -375,7 +375,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 	 */
 	private Thread scanWifiList(final String matching, final boolean reset,
 			final int outTime) {
-
+		wifiSupport.closeWifiAp(wifiManager);
 		Runnable runnable = new Runnable() {
 			Message msg = new Message();
 
@@ -751,7 +751,7 @@ public class WifiConnectManager implements WifiConnectInterface {
 			};
 
 		};
-
+		
 		Thread mythread = new Thread(runnable);
 		mythread.start();
 	}
