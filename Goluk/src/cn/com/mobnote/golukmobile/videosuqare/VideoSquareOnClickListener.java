@@ -24,16 +24,17 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 	List<VideoSquareInfo> mVideoSquareListData;
 	VideoSquareInfo mVideoSquareInfo;
 	SharePlatformUtil sharePlatform;
+	int form = 1;
 	
 	private CustomProgressDialog mCustomProgressDialog=null;
 	
-	public VideoSquareOnClickListener(Context context, List<VideoSquareInfo> videoSquareListData,VideoSquareInfo videoSquareInfo){
+	public VideoSquareOnClickListener(Context context, List<VideoSquareInfo> videoSquareListData,VideoSquareInfo videoSquareInfo,int plform){
 		mcontext = context;
 		mVideoSquareListData = videoSquareListData;
 		mVideoSquareInfo = videoSquareInfo;
 		sharePlatform = new SharePlatformUtil(mcontext);
 		sharePlatform.configPlatforms();//设置分享平台的参数
-		
+		form = plform;
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
 	}
 	
@@ -69,6 +70,8 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 					break;
 				}
 			}
+			
+			boolean flog = GolukApplication.getInstance().getVideoSquareManager().clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
 
 			if(null != VideoSquareListView.mHandler){
 				Message msg = new Message();
@@ -117,9 +120,18 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 						}
 						//设置分享内容
 						sharePlatform.setShareContent(shareurl, coverurl, "goluk分享");
-						VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
-						CustomShareBoard shareBoard = new CustomShareBoard(vsa);
-				        shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+						
+						if(form == 2){
+							VideoSquarePlayActivity vsa = (VideoSquarePlayActivity) mcontext;
+							CustomShareBoard shareBoard = new CustomShareBoard(vsa);
+					        shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+						}else{
+							VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
+							CustomShareBoard shareBoard = new CustomShareBoard(vsa);
+					        shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+						}
+						
+						
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

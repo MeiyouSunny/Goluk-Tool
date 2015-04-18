@@ -81,7 +81,7 @@ public class VideoSquarePlayActivity extends Activity implements
 		mBackBtn.setOnClickListener(this);
 
 		if (null == mVideoSquareListViewAdapter) {
-			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(this);
+			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(this,2);
 		}
 
 		mVideoSquareListViewAdapter.setData(mDataList);

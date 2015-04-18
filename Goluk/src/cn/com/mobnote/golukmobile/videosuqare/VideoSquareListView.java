@@ -96,7 +96,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private void initLayout(){
 		
 		if(null == mVideoSquareListViewAdapter){
-			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mContext);
+			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mContext,1);
 		}
 		
 		mVideoSquareListViewAdapter.setData(mDataList);
