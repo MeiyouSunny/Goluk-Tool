@@ -108,6 +108,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 					.findViewById(R.id.mPlayerLayout);
 			holder.mSurfaceView = (SurfaceView) convertView
 					.findViewById(R.id.mSurfaceView);
+			holder.mSurfaceView.setZOrderMediaOverlay(true);
 			holder.reporticon = (ImageView) convertView
 					.findViewById(R.id.report_icon);
 			holder.liveicon = (ImageView) convertView
@@ -191,6 +192,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 					}
 				}
 			}
+		}else{
+			holder.mPreLoading.setVisibility(View.VISIBLE);
 		}
 
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
@@ -205,7 +208,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 
 		// imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait,
 		// holder.userhead, options, null);
-		LogUtils.d("SSS=====picture="+mVideoSquareInfo.mVideoEntity.picture);
 		imageLoader.displayImage(mVideoSquareInfo.mVideoEntity.picture,
 				holder.mPreLoading, options, null);
 
