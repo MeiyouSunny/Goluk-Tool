@@ -105,8 +105,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		mEditTextIdentify = (EditText) findViewById(R.id.user_repwd_identify);
 		mBtnIdentity = (Button) findViewById(R.id.user_repwd_identify_btn);
 		mBtnOK = (Button) findViewById(R.id.user_repwd_ok_btn);
-		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
-		mIdentifyLoading = (RelativeLayout) findViewById(R.id.loading_identify);
+		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);//重置中……
+		mIdentifyLoading = (RelativeLayout) findViewById(R.id.loading_identify);//获取验证码……
 		
 		/**
 		 * 绑定监听
@@ -139,7 +139,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					if(!password.equals("")){
 						if(password.length()<6 || password.length()>16){
 //							mEditTextPwd.setError("手机号格式不正确");
-							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
+							UserUtils.showDialog(UserRepwdActivity.this, "密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
 						}
 					}
 				}
@@ -152,12 +152,13 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				if(!"".equals(phone)){
 					if(phone.length() == 11 && phone.startsWith("1")){
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
-						mBtnOK.setEnabled(true);
 						mBtnIdentity.setEnabled(true);
+						if(!UserUtils.isMobileNO(phone)){
+							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
+						}
 					}else{
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
 						mBtnIdentity.setEnabled(false);
-						mBtnOK.setEnabled(false);
 					}
 				}else{
 					//手机号为空
@@ -317,17 +318,17 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		}
 		/*if(!"".equals(phone)){
 			if(phone.startsWith("1") && phone.length() == 11){
+				Log.i("aaa", "=======3333");
+				mBtnIdentity.setEnabled(true);
 				if(!"".equals(password)){
 					if(password.length()>=6 && password.length()<=16){
 						String isIdentify = "{\"PNumber\":\"" + phone  + "\",\"type\":\"2\"}";
 						console.log(isIdentify);
-<<<<<<< HEAD
-						boolean b = mApplication.mGoluk.GoLuk_CommonGetPage(GolukMobile.PageType_GetVCode, isIdentify);
-=======
+						Log.i("aaa", "=======");
 						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVCode, isIdentify);
 						console.log(b+"");
->>>>>>> develop
 						if(b){
+							identifyClick = true;
 							UserUtils.hideSoftMethod(this);
 							mIdentifyLoading.setVisibility(View.VISIBLE);
 							console.log(b+"");
@@ -339,7 +340,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						}
 						
 					}else{
-						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母或常用符号，字母区分大小写");
+						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
 					}
 				}
 			}else{
@@ -372,7 +373,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				
 				/*unregisterReceiver(smsReceiver);
 				flag = false;*/
-				mIdentifyLoading.setVisibility(View.GONE);
+				
 				switch (code) {
 				case 200:
 					console.toast("验证码已经发送，请查收短信", mContext);
@@ -416,6 +417,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
 								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
 								startActivity(intentRepwd);
+								finish();
 							}
 						}).create().show();
 					}else{
@@ -427,6 +429,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					break;
 				case 480:
 					UserUtils.showDialog(this, "验证码获取失败");
+					Log.i("bbb", "111111");
 					break;
 				default:
 					
@@ -439,6 +442,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		}
 		else{
 			console.toast("验证码获取失败", mContext);
+			Log.i("bbb", "122222");
+//			mIdentifyLoading.setVisibility(View.GONE);
 		}
 	}
 	/**
@@ -448,23 +453,36 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		String phone = mEditTextPhone.getText().toString();
 		String password = mEditTextPwd.getText().toString();
 		String identify = mEditTextIdentify.getText().toString();
-		if(!"".equals(identify)){
-			//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
-			String isRepwd = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
-			console.log(isRepwd);
-			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyPwd, isRepwd);
-			console.log(b+"");
-			if(b){
-				//隐藏软件盘
-			   UserUtils.hideSoftMethod(this);
-				mLoading.setVisibility(View.VISIBLE);
-				mEditTextPhone.setEnabled(false);
-				mEditTextIdentify.setEnabled(false);
-				mEditTextPwd.setEnabled(false);
-			}
-		}else{
-//			UserUtils.showDialog(this, "请先获取验证码");
-			mBtnOK.setBackgroundResource(R.drawable.icon_more);
+		
+		if(!"".equals(password) && !"".equals(identify)){
+			mBtnOK.setFocusable(true);
+			if(password.length()>=6 && password.length()<=16){
+				if(!UserUtils.isNetDeviceAvailable(mContext)){
+					console.toast("当前网络状态不佳，请检查网络后重试", mContext);
+				}else{
+					//初始化定时器
+				
+				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
+				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
+				console.log(isRegist);
+				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyPwd, isRegist);
+				console.log(b+"");
+				if(b){
+					//隐藏软件盘
+					UserUtils.hideSoftMethod(this);
+					mLoading.setVisibility(View.VISIBLE);
+					mEditTextPhone.setEnabled(false);
+					mEditTextIdentify.setEnabled(false);
+					mEditTextPwd.setEnabled(false);
+				}else{
+					initTimer();
+					handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.
+				}
+		}
+			}else{
+				mBtnOK.setFocusable(false);
+//			UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
+		}
 		}
 	}
 	/**
@@ -484,9 +502,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 				String msg = json.getString("msg");
 				
 				mLoading.setVisibility(View.GONE);
-				mEditTextPhone.setEnabled(true);
+				/*mEditTextPhone.setEnabled(true);
 				mEditTextPwd.setEnabled(true);
-				mEditTextIdentify.setEnabled(true);
+				mEditTextIdentify.setEnabled(true);*/
 				switch (code) {
 				case 200:
 					//注册成功
@@ -495,6 +513,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						console.toast("重置密码成功", mContext);
 						Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
 						startActivity(it);
+						finish();
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
 					}
@@ -517,6 +536,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
 								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
 								startActivity(intentRepwd);
+								finish();
 							}
 						}).create().show();
 					}else{

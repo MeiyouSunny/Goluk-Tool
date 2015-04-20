@@ -75,6 +75,8 @@ tiros.base.gps = {} -- gps新接口
 tiros.base.moduledata = {} -- 数据仓库新接口
 tiros.base.udp = {} -- udp新接口
 tiros.base.http = {} -- http新接口
+tiros.grouplist = {} -- 对讲机群组接口
+tiros.TalkerMgr = {} -- 对讲机管理接口
 
 DeclareGlobal("createmodule",function(t,name,value)
 	if rawget(t,name) ~= nil then

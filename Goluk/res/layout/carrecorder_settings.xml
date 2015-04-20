@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
-            android:background="@drawable/carrecorder_tit_btn_back" />
+            android:background="@drawable/live_btn_back" />
 
         <TextView
             android:layout_centerVertical="true"

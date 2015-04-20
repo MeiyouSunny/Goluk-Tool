@@ -3,6 +3,9 @@ package cn.com.mobnote.module.page;
 import cn.com.mobnote.logic.IGolukCommFn;
 
 public interface IPageNotifyFn extends IGolukCommFn {
+
+	public static final int PAGE_RESULT_SUCESS = 1;
+
 	/**
 	 * 页面访问类事件声明,主要用于处理各种页面数据的访问接口及其回调通知等
 	 * */
@@ -41,6 +44,27 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static int PageType_Register = 16;
 	/** 修改密码 */
 	public static int PageType_ModifyPwd = 17;
+	/** 主动开启直播 */
+	public static int PageType_LiveStart = 18;
+	/** 直播结束 */
+	public static int PageType_LiveStop = 19;
+	/** 看别人直播 */
+	public static int PageType_PlayStart = 20;
+	/** 停止观看别人直播 */
+	public static int PageType_PlayStop = 21;
+	/** 直播分享 */
+	public static int PageType_LiveShare = 22;
+	/** 直播点赞 */
+	public static int PageType_LiveLike = 23;
+	public static int PageType_ModifyUserInfo = 24;
+
+	/**
+	 * 
+	 * 以下为同步获取信息标识
+	 * */
+
+	/** 同步获取登录用户信息命令 */
+	public static final int PageType_GetUserInfo_Get = 0;
 
 	/** 视频分享后通知logic */
 	public static final int PageType_ShareNotify = 25;

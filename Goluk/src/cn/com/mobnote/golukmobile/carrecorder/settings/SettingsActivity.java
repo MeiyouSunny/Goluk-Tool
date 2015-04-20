@@ -65,19 +65,6 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	private void initView(){
 		mAutoRecordBtn = (Button)findViewById(R.id.zdxhlx);
 		mAudioBtn = (Button)findViewById(R.id.sylz);
-		if(GolukApplication.getInstance().getIpcIsLogin()){
-			boolean record = GolukApplication.getInstance().getIPCControlManager().getRecordState();
-			System.out.println("YYY=========getRecordState========="+record);
-			if(!record){//循环录制状态获取失败
-				mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-			}
-			
-			boolean audio = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
-			System.out.println("YYY=========getVideoEncodeCfg========="+audio);
-			if(!audio){//声音录制状态获取失败
-				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-			}
-		}
 
 //		boolean ztts = SettingUtils.getInstance().getBoolean("ztts", true);//状态提示灯初始化
 //		if(ztts){
@@ -221,6 +208,27 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
+		if(null != mVideoConfigState){
+			if(1 == mVideoConfigState.AudioEnabled){
+				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+			}else{
+				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			}
+		}else{
+			mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+		}
+		
+		if(!GolukApplication.getInstance().getAutoRecordState()){
+			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+		}else{
+			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+		}
+	}
+	
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
@@ -255,11 +263,11 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){//获取IPC系统音视频编码配置
-				System.out.print("YYY=========IPC_VDCP_Msg_GetVedioEncodeCfg======param1="+param1+"=======param2="+param2);
+				System.out.print("YYY=========get audio======param1="+param1+"=======param2="+param2);
 				if(RESULE_SUCESS == param1){
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
 					if(null != mVideoConfigState){
-						System.out.print("YYY=========IPC_VDCP_Msg_GetVedioEncodeCfg=======111111111===========");
+						System.out.print("YYY==========get audio========111111111===========");
 						if(1 == mVideoConfigState.AudioEnabled){
 							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 						}else{
@@ -269,28 +277,12 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 						mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 					}
 				}else{
+					System.out.print("YYY==========get audio========2222====fail=======");
 					mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){//设置IPC系统音视频编码配置
-				System.out.print("YYY=========IPC_VDCP_Msg_SetVedioEncodeCfg======param1="+param1+"=======param2="+param2);
 				if(RESULE_SUCESS == param1){
-					if(null != mVideoConfigState){
-						if(1 == mVideoConfigState.AudioEnabled){
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-						}else{
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-						}
-					}
-				}else{
-					if(null != mVideoConfigState){
-						if(1 == mVideoConfigState.AudioEnabled){
-							mVideoConfigState.AudioEnabled=0;
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-						}else{
-							mVideoConfigState.AudioEnabled=1;
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-						}
-					}
+					System.out.print("YYY==========set audio========111111===success======");
 				}
 			}
 		}

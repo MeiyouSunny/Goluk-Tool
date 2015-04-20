@@ -145,9 +145,22 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 						if(!UserUtils.isMobileNO(phone)){
 //								console.toast("手机号格式不对", mContext);
 //							mEditTextPhone.setError("手机号格式不正确");
-							mBtnIdentify.setEnabled(true);
 							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
 						}
+					}
+				}
+			}
+		});
+		//密码判断
+		mEditTextIdentify.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				String identify = mEditTextIdentify.getText().toString();
+				if(!"".equals(identify)){
+					if(identify.length()<6){
+						UserUtils.showDialog(mContext, "密码不正确，请重新输入");
 					}
 				}
 			}
@@ -161,6 +174,10 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					if(phone.length() == 11 && phone.startsWith("1")){ 
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 						mBtnIdentify.setEnabled(true);
+						if(!UserUtils.isMobileNO(phone)){
+							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
+						}
+						
 					}else{
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
 						mBtnIdentify.setEnabled(false);
@@ -182,8 +199,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				String password = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
-				String mEditText = mEditTextPhone.getText().toString();
-				if(!"".equals(password) && !"".equals(identify)&&!mEditText.equals("")){
+				String phone = mEditTextPhone.getText().toString();
+				if(!"".equals(password) && !"".equals(identify)&&!phone.equals("")){
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 					mBtnRegist.setEnabled(true);
 				}else{
@@ -247,8 +264,9 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			break;
 		// 登陆
 		case R.id.user_regist_login:
-			Intent itLogin = new Intent(UserRegistActivity.this,UserLoginActivity.class);
-			startActivity(itLogin);
+//			Intent itLogin = new Intent(UserRegistActivity.this,UserLoginActivity.class);
+//			startActivity(itLogin);
+			finish();
 			break;
 		}
 	}
@@ -313,7 +331,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
 			console.log(isIdentify);
 			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
-			
+
 			identifyClick = true;
 			UserUtils.hideSoftMethod(this);
 			mIdentifyLoading.setVisibility(View.VISIBLE);
@@ -389,6 +407,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 							Intent itRegist = new Intent(UserRegistActivity.this,UserLoginActivity.class);
 							itRegist.putExtra("intentRegist", mEditTextPhone.getText().toString());
 							startActivity(itRegist);
+							finish();
 						}
 					}).create().show();
 					break;
@@ -479,6 +498,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					console.toast("注册成功", mContext);
 					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
 					startActivity(it);
+					finish();
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
@@ -497,7 +517,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				case 407:
 					String phone = mEditTextPhone.getText().toString();
 					if(UserUtils.isMobileNO(phone)){
-//						UserUtils.showDialog(this, "输入验证码超时");
 						if(identifyClick){
 							UserUtils.showDialog(this, "输入验证码超时");
 						}else{

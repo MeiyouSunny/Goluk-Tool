@@ -99,22 +99,18 @@ public class StorageCpacityQueryActivity extends BaseActivity implements IPCMana
 				if(param1 == RESULE_SUCESS){
 					RecordStorgeState mRecordStorgeState = IpcDataParser.parseRecordStorageStatus((String)param2);
 					if(null != mRecordStorgeState){
-						double totalsize = mRecordStorgeState.totalSdSize/1024;
 						double usedsize = mRecordStorgeState.totalSdSize - mRecordStorgeState.leftSize;
 						double cyclesize = mRecordStorgeState.normalRecQuota - mRecordStorgeState.normalRecSize;
 						double wonderfulsize = mRecordStorgeState.wonderfulRecQuota - mRecordStorgeState.wonderfulRecSize;
 						double emergencysize = mRecordStorgeState.urgentRecQuota - mRecordStorgeState.urgentRecSize;
 						double picsize = mRecordStorgeState.picQuota - mRecordStorgeState.picSize;
 						
-						java.text.DecimalFormat   df=new   java.text.DecimalFormat("#.##");  
-						String totalsizestr = df.format(totalsize);
-						
-						mTotalSize.setText(totalsizestr + "GB");
-						mUsedSize.setText(usedsize + "MB");
-						mCycleSize.setText(cyclesize + "MB");
-						mWonderfulSize.setText(wonderfulsize + "MB");
-						mEmergencySize.setText(emergencysize + "MB");
-						mOtherSize.setText(picsize + "MB");
+						mTotalSize.setText(getSize(mRecordStorgeState.totalSdSize));
+						mUsedSize.setText(getSize(usedsize));
+						mCycleSize.setText(getSize(cyclesize));
+						mWonderfulSize.setText(getSize(wonderfulsize));
+						mEmergencySize.setText(getSize(emergencysize));
+						mOtherSize.setText(getSize(picsize));
 						
 						System.out.println("YYY===========２２２２２=========normalRecQuota="+mRecordStorgeState.normalRecQuota+"=====normalRecSize="+mRecordStorgeState.normalRecSize);
 					}
@@ -124,6 +120,29 @@ public class StorageCpacityQueryActivity extends BaseActivity implements IPCMana
 				}
 			}
 		}
+	}
+	
+	/**
+	 * 容量大小转字符串
+	 * @param size 容量大小
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月11日
+	 */
+	private String getSize(double size){
+		String result="";
+		double totalsize=0;
+		
+		java.text.DecimalFormat   df=new   java.text.DecimalFormat("#.##");
+		if(size >= 1024){
+			totalsize = size/1024;
+			result = df.format(totalsize) + "GB";
+		}else{
+			totalsize = size;
+			result = df.format(totalsize) + "MB";
+		}
+
+		return result;
 	}
 
 }

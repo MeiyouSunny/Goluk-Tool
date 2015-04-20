@@ -43,7 +43,7 @@ DeclareGlobal("releaseHandle", function (list,htype)
 end)
 --输出调试信息
 DeclareGlobal("luaprint", function (...)
-	print(...);
+	--print(...);
 end)
 --输出_G全局表中所有的key和value
 DeclareGlobal("showglobal", function()

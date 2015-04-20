@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.carrecorder.entity;
 
+import java.io.Serializable;
+
  /**
   * 1.编辑器必须显示空白处
   *

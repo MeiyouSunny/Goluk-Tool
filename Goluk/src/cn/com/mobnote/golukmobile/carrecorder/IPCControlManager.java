@@ -7,6 +7,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
@@ -63,7 +64,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean setIPCWifiState(boolean isConnect){
 		int state = isConnect ? 1 : 0;
-		String ip = null;
+		String ip = "192.168.43.234";
 		String json = JsonUtil.getWifiChangeJson(state, ip);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
 	}
@@ -241,6 +242,16 @@ public class IPCControlManager implements IPCManagerFn{
 	}
 	
 	/**
+	 * 获取IPC系统时间
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月13日
+	 */
+	public boolean getIPCSystemTime(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetTime, "");
+	}
+	
+	/**
 	 * 设置IPC系统WIFI配置
 	 * @author xuhw
 	 * @date 2015年4月3日
@@ -268,6 +279,19 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean setVideoEncodeCfg(VideoQualityActivity.SensitivityType type){
 		String json = JsonUtil.getVideoConfig(type);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
+	}
+	
+	/**
+	 * 设置IPC系统音视频编码配置
+	 * @param mVideoConfigState
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	public boolean setVideoEncodeCfg(VideoConfigState mVideoConfigState){
+		String json = JsonUtil.getVideoConfig(mVideoConfigState);
+		LogUtils.d("YYY===getVideoConfig===json="+json);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
 	}
 	

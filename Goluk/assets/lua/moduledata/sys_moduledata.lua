@@ -31,7 +31,7 @@ local function modulecfg(moduleID)
 	if moduledatacfgtable[moduleID] == nil then
 		return false
 	end
-]]--
+--]]
 	return true
 end
 

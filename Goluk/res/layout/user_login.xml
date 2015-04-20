@@ -112,7 +112,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:text="@string/user_login_phone" 
-                android:id="@+id/user_login_phoneRegist"/>
+                android:id="@+id/user_login_phoneRegist"
+                android:padding="10dp"/>
 
             <TextView
                 style="@style/user_login"
@@ -120,7 +121,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="@string/user_login_forgetpwd" 
-                android:id="@+id/user_login_forgetpwd"/>
+                android:id="@+id/user_login_forgetpwd"
+                android:padding="10dp"/>
         </RelativeLayout>
         </LinearLayout>
 		
@@ -188,6 +190,7 @@
             android:layout_below="@id/user_regist_include"
             android:layout_centerInParent="true"
             android:textColor="#000"
+            android:layout_marginTop="30dp"
             />
     </RelativeLayout>
 </RelativeLayout>

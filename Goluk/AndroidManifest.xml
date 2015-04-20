@@ -9,6 +9,7 @@
 	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
 
 	<application android:name="cn.com.mobnote.application.GolukApplication" android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name">
 		<activity android:theme="@style/Theme.AppStartLoad" android:label="@string/app_name" android:name="cn.com.mobnote.golukmobile.GuideActivity" android:screenOrientation="portrait">
@@ -23,6 +24,14 @@
 		<activity android:name="cn.com.mobnote.golukmobile.UserLoginActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserRegistActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserRepwdActivity" android:screenOrientation="portrait"/>
+												<!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
+		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalHomeActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalInfoActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalEditActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalSignActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalNameActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalHeadActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.IndexMoreNoLoginActivity" android:screenOrientation="portrait"/>
 		
 		<!-- 网络变化广播监听 -->
 		<receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver">
@@ -57,6 +66,11 @@
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+
+		<activity
+		    android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
+		    android:screenOrientation="portrait" />
+
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VersionActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
@@ -67,7 +81,6 @@
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.StorageCpacityQueryActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.WatermarkSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.TimeSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		
 		
 		
 		  <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
