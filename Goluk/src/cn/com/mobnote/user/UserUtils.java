@@ -3,6 +3,8 @@ package cn.com.mobnote.user;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONObject;
+
 import cn.com.mobnote.golukmobile.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -93,7 +95,7 @@ public class UserUtils {
 			textSex.setText("女");
 		}else if(headString.equals("7")){
 			headImage.setImageResource(R.drawable.individual_center_head_moren);
-			textSex.setText("男");
+			textSex.setText("未知");
 		}
 	 }
 	 
@@ -116,6 +118,25 @@ public class UserUtils {
 			}else if(headString.equals("7")){
 				headImage.setImageResource(R.drawable.individual_center_head_moren);
 			}
+	 }
+	 
+	 public static String getImage2Sex(int drawableImage,String image){
+		 if(drawableImage == R.drawable.individual_center_head_boy_one){
+			 image = "1";
+		 }else if(drawableImage == R.drawable.individual_center_head_boy_two){
+			 image = "2";
+		 }else if(drawableImage == R.drawable.individual_center_head_boy_three){
+			 image = "3";
+		 }else if(drawableImage == R.drawable.individual_center_head_girl_one){
+			 image = "4";
+		 }else if(drawableImage == R.drawable.individual_center_head_girl_two){
+			 image = "5";
+		 }else if(drawableImage == R.drawable.individual_center_head_girl_three){
+			 image = "6";
+		 }else if(drawableImage == R.drawable.individual_center_head_moren){
+			 image = "7";
+		 }
+		 return image;
 	 }
 	
 }

@@ -1,29 +1,44 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.UserManager;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
-import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
-import cn.com.mobnote.golukmobile.UserTestRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
-import cn.com.mobnote.golukmobile.UserRepwdActivity;
-import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
@@ -37,6 +52,7 @@ import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.util.console;
@@ -52,10 +68,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
-public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn{
+public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn , ILocationFn{
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
 	/** 保存上下文 */
@@ -78,6 +95,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean isIpcLoginSuccess = false;
 	/**　用户是否登录小车本服务器成功 */
 	public boolean isUserLoginSucess = false;
+	/** CC视频上传地址 */
+	public String mCCUrl = null;
+	/** 当前登录用户的UID */
+	public String mCurrentUId = null;
+	/** 当前登录用户的Aid */
+	public String mCurrentAid = null;
 	/** 行车记录仪缓冲路径 */
 	private String carrecorderCachePath="";
 	/** 爱滔客回调 */
@@ -90,10 +113,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	private WifiApAdmin wifiAp;
 	/** 当前地址 */
-	public String mCurAddr=null;
+	public String mCurAddr = null;
+	/** 全局提示框 */
+	public WindowManager mWindowManager = null;
+	public WindowManager.LayoutParams mWMParams = null;
+	public RelativeLayout mVideoUploadLayout = null;
+	private TextView tv = null;
 	
 	/**登陆管理类**/
 	public UserManager userManager;
+	
+	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String,ILocationFn>();
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -110,6 +140,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //		createWifi();
 		//实例化JIN接口,请求网络数据
 		initImageLoader(getApplicationContext());
+
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -132,6 +163,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_HttpPage, this);
 		// 注册爱滔客回调协议
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Talk, this);
+		// 注册定位回调
+		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Location, this);
+		GlobalWindow.getInstance().setApplication(this);
 	}
 	
 	/**
@@ -326,6 +360,86 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //		}
 	}
 	
+	private boolean isShowGlobalwindow = false;
+	
+	public void dimissGlobalWindow() {
+		if (isShowGlobalwindow) {
+			mWindowManager.removeView(mVideoUploadLayout);
+			isShowGlobalwindow = false;
+		}
+	}
+	
+	@SuppressLint("InflateParams")
+	public void createVideoUploadWindow(){
+		console.log("upload service--VideoShareActivity-handleCancel----顶层窗口显示---111 ");
+		if (isShowGlobalwindow) {
+			dimissGlobalWindow();
+		}
+		
+		console.log("upload service--VideoShareActivity-handleCancel----顶层窗口显示 ");
+		
+		isShowGlobalwindow = true;
+		
+		//获取LayoutParams对象
+		mWMParams = new WindowManager.LayoutParams();
+		//获取的是CompatModeWrapper对象
+		mWindowManager = (WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+		
+		mWMParams.type = LayoutParams.TYPE_SYSTEM_ERROR;
+		//mWMParams.type = LayoutParams.TYPE_PRIORITY_PHONE;
+		mWMParams.format = PixelFormat.RGBA_8888;
+		//mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+		mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_TOUCH_MODAL |LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
+		mWMParams.gravity = Gravity.LEFT | Gravity.TOP;
+		mWMParams.x = 0;
+		mWMParams.y = 30;
+		mWMParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+		///获得根视图
+		View v = ((Activity) mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+		///状态栏标题栏的总高度,所以标题栏的高度为top2-top
+		int top2 = v.getTop();
+		mWMParams.height = 50;
+		
+		LayoutInflater inflater = LayoutInflater.from(mContext);
+		mVideoUploadLayout = (RelativeLayout) inflater.inflate(R.layout.video_share_upload_window, null);
+		tv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_percent);
+		mWindowManager.addView(mVideoUploadLayout,mWMParams);
+		ImageView view = (ImageView)mVideoUploadLayout.findViewById(R.id.video_loading_img);
+		Animation rotateAnimation = AnimationUtils.loadAnimation(this.getContext(), R.anim.upload_loading);
+		LinearInterpolator lin = new LinearInterpolator();
+		rotateAnimation.setInterpolator(lin);
+		view.startAnimation(rotateAnimation);
+		//setContentView(R.layout.main);
+		//mFloatView = (Button)mFloatLayout.findViewById(R.id.float_id);
+	}
+	
+	public void refreshPercent(int percent) {
+		console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent: " + percent);
+		if (null == mVideoUploadLayout) {
+			return;
+		 }
+		console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent222: ");
+		TextView tvtv = (TextView)mVideoUploadLayout.findViewById(R.id.video_upload_percent);
+		if (null != tvtv) {
+			console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent3333: ");
+			tvtv.setText("" + percent +"%");
+		}
+	}
+	
+	public void topWindowSucess(String message){
+		if (null == mVideoUploadLayout) {
+			return;
+		}
+		TextView tvtv = (TextView)mVideoUploadLayout.findViewById(R.id.video_upload_percent);
+		tvtv.setVisibility(View.GONE);
+		ImageView img = (ImageView) mVideoUploadLayout.findViewById(R.id.video_loading_img);
+		img.getAnimation().cancel();
+		img.setVisibility(View.GONE);
+		TextView msgTv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_text);
+		msgTv.setVisibility(View.VISIBLE);
+		msgTv.setText(message);	
+	}
+	
 	/**
 	 * 首页,在线视频基础数据,图片下载数据回调
 	 * @param status,0/1,基础数据/图片下载
@@ -351,8 +465,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @param vid,视频ID
 	 */
 	public void localVideoUpLoadCallBack(int success,String vid){
-		if(mPageSource == "VideoEdit"){
-			((VideoEditActivity)mContext).videoUploadCallBack(success,vid);
+		if(mPageSource == "VideoShare"){
+			((VideoShareActivity)mContext).videoUploadCallBack(success,vid);
 		}
 	}
 	
@@ -440,7 +554,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 			break;
 			case 1:
-				//本地视频编辑页面,点击下一步上传本地视频回调
+				//本地视频编辑页面,点击下一步,在上传页面上传本地视频回调
 				localVideoUpLoadCallBack(success,String.valueOf(param2));
 			break;
 			case 2:
@@ -457,6 +571,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if(mPageSource == "LiveVideoList"){
 					console.log("pageNotifyCallBack---直播列表数据---" + String.valueOf(param2));
 					((LiveVideoListActivity)mContext).LiveListDataCallback(success,param2);
+				}
+				
+				// 为了更新直播界面的别人的位置信息
+				if (null != mContext && mContext instanceof LiveActivity) {
+					((LiveActivity) mContext).pointDataCallback(success, param2);
 				}
 			break;
 			case 8:
@@ -484,7 +603,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 			//登陆
 			case 11:
-				
+				parseLoginData(success, param2);
 				if(null != mMainActivity){
 					//地图大头针图片
 					console.log("pageNotifyCallBack---登录---" + String.valueOf(param2));
@@ -496,6 +615,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 			//自动登录
 			case 12:
+				parseLoginData(success, param2);
 				if(mPageSource == "Main"){
 					((MainActivity)mContext).autoLoginCallback(success, param2);
 				}
@@ -551,6 +671,42 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 			
+		}
+	}
+
+	
+	/**
+	 * 处理登录结果
+	 * 
+	 * @param success
+	 *            1/其它 成功/失败
+	 * @param param2
+	 *            登录回调数据
+	 * @author jiayf
+	 * @date Apr 20, 2015
+	 */
+	private void parseLoginData(int success, Object param2) {
+		if (1 != success || null == param2) {
+			return;
+		}
+
+		try {
+			JSONObject rootObj = new JSONObject((String) param2);
+			int code = Integer.valueOf(rootObj.getString("code"));
+			if (200 != code) {
+				return;
+			}
+
+			JSONObject dataObj = rootObj.getJSONObject("data");
+			// 获得CC上传视频接口
+			mCCUrl = dataObj.getString("ccbackurl");
+			mCurrentUId = dataObj.getString("uid");
+			mCurrentAid = dataObj.getString("aid");
+			isUserLoginSucess = true;
+			
+			LogUtil.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl +" uid:" + mCurrentUId +" aid:" + mCurrentAid);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -819,6 +975,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				.build();//开始构建   
 		
 		ImageLoader.getInstance().init(config);
+	}
+
+	public void addLocationListener(String key, ILocationFn fn) {
+		if (!mLocationHashMap.containsValue(key)){
+			return;
+		}
+		mLocationHashMap.put(key, fn);
+	}
+	
+	public void removeLocationListener(String key) {
+		mLocationHashMap.remove(key);
+	}
+
+	@Override
+	public void LocationCallBack(String locationJson) {
+		// TODO 定位回调
+		LogUtil.e("" , "jyf-------Application   LocationCallBack: " + locationJson) ;
+		if (null == mLocationHashMap) {
+			return;
+		}
+		
+		Iterator <Entry<String, ILocationFn>> it = mLocationHashMap.entrySet().iterator();
+		while(it.hasNext()) {
+			Entry<String, ILocationFn> entry = it.next();
+			entry.getValue().LocationCallBack(locationJson);
+		}
 	}
 	
 }

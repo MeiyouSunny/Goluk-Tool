@@ -152,6 +152,9 @@
                 android:text="@string/user_regist_bottom_login_btn"
                 android:textColor="@color/user_regist_bottom_login_btn"
                 android:textSize="15sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
                 />
         </LinearLayout>
     </LinearLayout>

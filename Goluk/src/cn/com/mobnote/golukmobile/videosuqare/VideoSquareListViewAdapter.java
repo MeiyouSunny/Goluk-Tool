@@ -7,12 +7,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -154,44 +152,49 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 				mVideoSquareListData, holder, mDWMediaPlayerList,
 				mVideoSquareInfo));
 
-		holder.mPreLoading.setVisibility(View.GONE);
-		String videoid = mVideoSquareInfo.mVideoEntity.videoid;
-		if ("2".equals(mVideoSquareInfo.mVideoEntity.type)) {
-			if (!TextUtils.isEmpty(videoid)) {
-				if (!mDWMediaPlayerList.containsKey(mVideoSquareInfo.id)) {
-					holder.mPreLoading.setVisibility(View.VISIBLE);
-					DWMediaPlayer mDWMediaPlayer = new DWMediaPlayer();
-					mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY,
-							mContext);
-					mDWMediaPlayer.setOnErrorListener(new VideoOnErrorListener(
-							mVideoSquareInfo));
-					mDWMediaPlayer.setOnPreparedListener(new VideoOnPreparedListener(
-									mVideoSquareListData, mDWMediaPlayerList,
-									mVideoSquareInfo));
-					mDWMediaPlayer.setOnBufferingUpdateListener(new VideoOnBufferingUpdateListener(
-									mVideoSquareListData, mDWMediaPlayerList,
-									holder, mVideoSquareInfo));
-					mDWMediaPlayerList.put(mVideoSquareInfo.id, mDWMediaPlayer);
-				} else {
-					DWMediaPlayer mDWMediaPlayer = mDWMediaPlayerList
-							.get(videoid);
-					if (null != mDWMediaPlayer) {
-						if (mDWMediaPlayer.isPlaying()) {
-							LogUtils.d("SSS=======222===GONE======");
-						} else {
-
-						}
-					}
-				}
-			}
-		}else{
-			holder.mPreLoading.setVisibility(View.VISIBLE);
-		}
+//		holder.mPreLoading.setVisibility(View.GONE);
+//		String videoid = mVideoSquareInfo.mVideoEntity.videoid;
+//		if ("2".equals(mVideoSquareInfo.mVideoEntity.type)) {
+//			if (!TextUtils.isEmpty(videoid)) {
+//				if (!mDWMediaPlayerList.containsKey(mVideoSquareInfo.id)) {
+//					holder.mPreLoading.setVisibility(View.VISIBLE);
+//					DWMediaPlayer mDWMediaPlayer = new DWMediaPlayer();
+//					mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY,
+//							mContext);
+//					mDWMediaPlayer.setOnErrorListener(new VideoOnErrorListener(
+//							mVideoSquareInfo));
+//					mDWMediaPlayer
+//							.setOnPreparedListener(new VideoOnPreparedListener(
+//									mVideoSquareListData, mDWMediaPlayerList,
+//									mVideoSquareInfo));
+//					mDWMediaPlayer
+//							.setOnBufferingUpdateListener(new VideoOnBufferingUpdateListener(
+//									mVideoSquareListData, mDWMediaPlayerList,
+//									holder, mVideoSquareInfo));
+//					mDWMediaPlayerList.put(mVideoSquareInfo.id, mDWMediaPlayer);
+//				} else {
+//					DWMediaPlayer mDWMediaPlayer = mDWMediaPlayerList
+//							.get(mVideoSquareInfo.id);
+//					if (null != mDWMediaPlayer) {
+//						if (mDWMediaPlayer.isPlaying()) {
+//							LogUtils.d("SSS=======222===GONE======");
+//							
+//						} else {
+//							
+//						}
+//					}
+//				}
+//			}
+//		}else{
+//			holder.mPreLoading.setVisibility(View.VISIBLE);
+//		}
 
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);
 
+		holder.mSurfaceView.destroyDrawingCache();
 		SurfaceHolder mSurfaceHolder = holder.mSurfaceView.getHolder();
+		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
 				width, height);
 		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);

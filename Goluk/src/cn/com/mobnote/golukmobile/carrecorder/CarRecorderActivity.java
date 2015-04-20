@@ -220,7 +220,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			};
 		};
 
-		initSensor();
+//		initSensor();
 		initView();
 		setListener();
 		// 开启视频录制计时器

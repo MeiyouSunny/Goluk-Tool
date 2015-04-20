@@ -95,8 +95,6 @@ public class VideoEditMusicActivity extends Activity implements OnClickListener 
 		Intent intent = getIntent();
 		mCheckMusicPath = intent.getStringExtra("cn.com.mobnote.golukmobile.musicfilepath");
 		
-		//视频初始化
-		//videoInit();
 		//页面初始化
 		init();
 		

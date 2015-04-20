@@ -3,8 +3,6 @@ package cn.com.mobnote.golukmobile;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
-
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -24,7 +22,6 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 /**
@@ -51,19 +48,20 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	private GolukApplication mApplication = null;
 	//context
 	private Context mContext = null;
-	//修改用户信息
-	private String name;
-	private String head;
-	private String sex;
-	private String desc;
-	private String nameOk,descOk;
-	//UserPersonalHeadActivity传来的head编号
-	private String index;
-	private String editHead;
-	//从UserPersonalInfoActivity中传来的头像编号
-	private String infoHead;
-	//获取文本框中的数据
-	private String infoName,infoSex,infoDesc;
+	
+	/**传值**/
+	private String head = null;
+	private String name = null;
+	private String sex = null;
+	private String sign = null;
+	//utf-8
+	private String newName = null;
+	private String newSign = null;
+	// info传来的信息
+	private String intentHead = null;
+	private String intentName = null;
+	private String intentSex = null;
+	private String intentSign = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +79,14 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//title
 		mTextTitle.setText("编辑资料");
 				
+		initData();
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
 	}
 	//初始化控件
 	public void initView(){
@@ -93,37 +99,21 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//昵称
 		mTextName = (TextView) findViewById(R.id.user_personal_name_text);
 		//性别
-		mTextSex = (TextView) findViewById(R.id.user_personal_sex_text);
+//		mTextSex = (TextView) findViewById(R.id.user_personal_sex_text);
 		//个性签名
 		mTextSign = (TextView) findViewById(R.id.user_personal_sign_text);
 		//点击每一项
 		mLayoutHead = (RelativeLayout) findViewById(R.id.user_personal_edit_layout1);
 		mLayoutName = (RelativeLayout) findViewById(R.id.user_personal_edit_layout2);
-		mLayoutSex = (RelativeLayout) findViewById(R.id.user_personal_edit_layout3);
+//		mLayoutSex = (RelativeLayout) findViewById(R.id.user_personal_edit_layout3);
 		mLayoutSign = (RelativeLayout) findViewById(R.id.user_personal_edit_layout4);
-				
-		/**
-		 *从UserPersonalInfoActivity传来的信息 
-		 *
-		 */		
-		Intent intentInfo = getIntent();
-		if(null!=intentInfo.getStringExtra("intentInfoName")){
-			infoName = intentInfo.getStringExtra("intentInfoName").toString();
-			mTextName.setText(infoName);
-		}
-		if(null!=intentInfo.getStringExtra("intentInfoDesc")){
-			infoDesc = intentInfo.getStringExtra("intentInfoDesc").toString();
-			mTextSign.setText(infoDesc);
-		}
-		if(null!=intentInfo.getStringExtra("intentInfoSex")){
-			infoSex = intentInfo.getStringExtra("intentInfoSex").toString();
-			mTextSex.setText(infoSex);
-		}
-		if(null !=intentInfo.getStringExtra("intentInfoHead")){
-			infoHead = intentInfo.getStringExtra("intentInfoHead").toString();
-			UserUtils.userHeadChange(mImageHead, infoHead,mTextSex);
-		}
-				
+			
+		Intent it = getIntent();
+		intentHead = it.getStringExtra("infoHead").toString();
+		intentName = it.getStringExtra("infoName").toString();
+		intentSex = it.getStringExtra("infoSex").toString();
+		intentSign = it.getStringExtra("infoSign").toString();
+		
 		/**
 		 * 监听
 		 */
@@ -136,7 +126,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//昵称
 		mLayoutName.setOnClickListener(this);
 		//性别
-		mLayoutSex.setOnClickListener(this);
+//		mLayoutSex.setOnClickListener(this);
 		//个性签名
 		mLayoutSign.setOnClickListener(this);
 		
@@ -153,7 +143,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		case R.id.user_title_right:
 			//点击保存将修改的数据存储
 			saveInfo();
-			
 			break;
 		/**
 		 * 点击每一项
@@ -161,35 +150,29 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			//点击头像
 		case R.id.user_personal_edit_layout1:
 			Intent itHead = new Intent(UserPersonalEditActivity.this,UserPersonalHeadActivity.class);
-			if(null !=infoHead){
+			if(null !=head){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentHeadText", infoHead);
+				bundle.putString("intentHeadText", head);
 				itHead.putExtras(bundle);
 				startActivityForResult(itHead, 3);
 			}
 			break;
 		//点击昵称
 		case R.id.user_personal_edit_layout2:
-			String nameText = mTextName.getText().toString();
 			Intent itName = new Intent(UserPersonalEditActivity.this,UserPersonalNameActivity.class);
-			if(null!=nameText){
+			if(null!=name){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentNameText", nameText);
+				bundle.putString("intentNameText", name);
 				itName.putExtras(bundle);
 				startActivityForResult(itName, 1);
 			}
 			break;
-		//点击性别
-		case R.id.user_personal_edit_layout3:
-			
-			break;
 		//点击个性签名
 		case R.id.user_personal_edit_layout4:
-			String signText = mTextSign.getText().toString();
 			Intent itSign = new Intent(UserPersonalEditActivity.this,UserPersonalSignActivity.class);
-			if(null != signText){
+			if(null != sign){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentSignText", signText);
+				bundle.putString("intentSignText", sign);
 				itSign.putExtras(bundle);
 				startActivityForResult(itSign, 2);
 			}
@@ -202,18 +185,14 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	 * 修改用户信息
 	 */
 	public void saveInfo(){
-		name = mTextName.getText().toString();
-		head = editHead;
-		sex = mTextSex.getText().toString();
-		desc = mTextSign.getText().toString();
 		try{
-			nameOk = URLEncoder.encode(name, "utf-8");
-			descOk = URLEncoder.encode(desc, "utf-8");
+			newName = URLEncoder.encode(name, "utf-8");
+			newSign = URLEncoder.encode(sign,"utf-8");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		//{NickName：“昵称”，UserHead:”1”，UserSex:”1”,Desc:""}
-		String isSave = "{\"NickName\":\"" + nameOk + "\",\"UserHead\":\""+ head +  "\",\"UserSex\":\""+sex+"\",\"Desc\":\""+descOk+"\"}";
+		String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\""+ head +  "\",\"UserSex\":\""+sex+"\",\"Desc\":\""+newSign+"\"}";
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
 		if(b){
 			
@@ -224,6 +203,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	/**
 	 * 修改用户信息回调
 	 */
+	
 	public void saveInfoCallBack(int success,Object obj){
 		console.log("修改用户信息回调---saveInfoCallBack---" + success + "---" + obj);
 		if(1 == success){
@@ -231,30 +211,33 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				String data = (String)obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				String msg = json.getString("msg");
-				//解析修改后数据
+				
+				//回调返回的结果
 				JSONObject json2 = json.getJSONObject("data");
+				String json2Sign = json2.getString("desc");
+				String json2Name = json2.getString("nickname");
+				String json2Head = json2.getString("head");
 				
-				Log.i("xxx", json2.toString());
-				String sex = json2.getString("sex");
-				String desc = json2.getString("desc");
-				String name = json2.getString("nickname");
-				String head = json2.getString("head");
-				Intent itSave = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
-				
+				Log.i("edit", json2Head+"========"+intentHead);
+				Intent it = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
 				switch (code) {
-				//如果修改用户信息返回信息成功的话，携带参数跳转页面
 				case 200:
-//					if(infoDesc.equals(desc) &&  infoName.equals(name) && editHead.equals(head)){
-//						this.finish();
-//						console.toast("没有修改", mContext);
-//					}else{
-						console.toast("数据修成功", mContext);
-						itSave.putExtra("saveName", name);
-						itSave.putExtra("saveHead", head);
-						itSave.putExtra("saveSex", sex);
-						startActivity(itSave);
-//					}
+					if(intentSign.equals(json2Sign) && intentName.equals(json2Name) && intentHead.equals(json2Head)){
+//						console.toast("没有修改信息", mContext);
+						startActivity(it);
+						this.finish();
+					}else{
+						console.toast("数据修改成功", mContext);
+						startActivity(it);
+						this.finish();
+					}
+					break;
+				case 405:
+					console.toast("该用户未注册", mContext);
+					break;
+
+				case 500:
+					console.toast("服务器异常", mContext);
 					break;
 
 				default:
@@ -304,25 +287,48 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//修改昵称
 		case 1:
 			Bundle bundle = data.getExtras();
-			String editName = bundle.getString("itName");
-			mTextName.setText(editName);
+			name = bundle.getString("itName");
+			mTextName.setText(name);
 			break;
 		//修改个性签名
 		case 2:
 			Bundle bundle2 = data.getExtras();
-			String editSign = bundle2.getString("itSign");
-			mTextSign.setText(editSign);
+			sign = bundle2.getString("itSign");
+			mTextSign.setText(sign);
 			break;
 		//修改头像
 		case 3:
 			Bundle bundle3 = data.getExtras();
-			editHead = bundle3.getString("intentSevenHead");
-			infoHead = editHead;
-			UserUtils.userHeadChange(mImageHead, editHead, mTextSex);
+			head = bundle3.getString("intentSevenHead");
+//			UserUtils.userHeadChange(mImageHead, head, mTextSex);
+			UserUtils.focusHead(head, mImageHead);
 			break;
 
 		default:
 			break;
+		}
+	}
+	
+	/**
+	 * 初始化用户信息
+	 */
+	public void initData(){
+		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		try{
+			JSONObject json = new JSONObject(info);
+			
+			Log.i("edit", "====json===="+json);
+			head = json.getString("head");
+			name = json.getString("nickname");
+			sign = json.getString("desc");
+	
+			mTextName.setText(name);
+//			UserUtils.userHeadChange(mImageHead, head, mTextSex);
+			UserUtils.focusHead(head, mImageHead);
+			mTextSign.setText(sign);
+			
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 }
