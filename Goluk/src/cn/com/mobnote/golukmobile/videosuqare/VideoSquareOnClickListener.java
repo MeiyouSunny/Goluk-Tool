@@ -37,8 +37,6 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
 		if(null == mCustomProgressDialog){
 			mCustomProgressDialog = new CustomProgressDialog(mcontext);
-//			mCustomProgressDialog.setCancelable(false);
-//			mCustomProgressDialog.show();
 		}
 	}
 	
@@ -49,8 +47,6 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 		case R.id.share_btn:
 			System.out.println("sss");
 			if(null != mCustomProgressDialog){
-//				mCustomProgressDialog = new CustomProgressDialog(mcontext);
-//				mCustomProgressDialog.setCancelable(false);
 				mCustomProgressDialog.show();
 			}
 			
