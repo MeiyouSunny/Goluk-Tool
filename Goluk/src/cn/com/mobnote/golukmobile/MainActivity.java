@@ -1063,11 +1063,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //				this.finish();
 			break;
 			case R.id.share_local_video_btn:
-				//跳转到本地视频分享列表
-				Intent localVideoShareList = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
-				startActivity(localVideoShareList);
-				//关闭视频分享
-				mShareLayout.setVisibility(View.GONE);
+				click_toLocalVideoShare();
 			break;
 			case R.id.share_mylive_btn:
 				toShareLive();
@@ -1090,6 +1086,20 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //				login();
 			break;
 		}
+	}
+	
+	private void click_toLocalVideoShare() {
+		if (!mApp.isUserLoginSucess) {
+			// TODO 未登录成功
+			mShareLayout.setVisibility(View.GONE);
+			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			return;
+		}
+		//跳转到本地视频分享列表
+		Intent localVideoShareList = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
+		startActivity(localVideoShareList);
+		//关闭视频分享
+		mShareLayout.setVisibility(View.GONE);
 	}
 	
 	/**

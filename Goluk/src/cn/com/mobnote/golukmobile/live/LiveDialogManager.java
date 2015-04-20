@@ -106,6 +106,7 @@ public class LiveDialogManager {
 
 		mLoginDialog.setTitle("提示");
 		mLoginDialog.setMessage(message);
+		mLoginDialog.setCancelable(false);
 
 		mLoginDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialoginterface, int i) {

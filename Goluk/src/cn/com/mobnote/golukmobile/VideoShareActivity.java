@@ -481,26 +481,32 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	 * 调用CC接口上传视频
 	 */
 	private void uploadShareVideo() {
-		if (!"".equals(mVideoPath) && null != mVideoPath) {
-			isUploading = true;
-			VideoInfo videoinfo = new VideoInfo();
-			videoinfo.setTitle("标题");
-			videoinfo.setTags("标签");
-			// TODO 登录成功后的UID
-			videoinfo.setDescription("简介");
-			videoinfo.setFilePath(mVideoPath);
-			console.log("upload service---上传视频路径--VideoShareActivity-mVideoPath---" + mVideoPath);
-			videoinfo.setUserId(USERID);
-			// TODO 登录成功后的回调接口url
-			videoinfo.setNotifyUrl(NOTIFY_URL);
-			if (mUploader != null) {
-				mUploader = null;
-			}
-			mUploader = new Uploader(videoinfo, API_KEY);
-			mUploader.setUploadListener(uploadListenner);
-			mUploader.start();
-			// 显示上传进度条
+		if (null == mVideoPath || "".equals(mVideoPath)) {
+			return;
 		}
+
+		isUploading = true;
+		VideoInfo videoinfo = new VideoInfo();
+		videoinfo.setTitle("标题");
+		videoinfo.setTags("标签");
+		// TODO 登录成功后的UID
+		videoinfo.setDescription(mApp.mCurrentUId);
+		videoinfo.setFilePath(mVideoPath);
+		videoinfo.setUserId(USERID);
+		// TODO 登录成功后的回调接口url
+		String uploadURL = NOTIFY_URL2;
+		if (null != mApp.mCCUrl && !"".equals(mApp.mCCUrl)) {
+			uploadURL = mApp.mCCUrl;
+		}
+		videoinfo.setNotifyUrl(uploadURL);
+		if (mUploader != null) {
+			mUploader = null;
+		}
+		mUploader = new Uploader(videoinfo, API_KEY);
+		mUploader.setUploadListener(uploadListenner);
+		mUploader.start();
+		// 显示上传进度条
+
 	}
 
 	/**
@@ -771,9 +777,9 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		final String isSeque = mIsCheck ? "1" : "0";
 		int type = mVideoType == 2 ? 2 : 1;
 		final String json = createShareJson(selectJson, isSeque, "" + type);
-		
+
 		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
-		
+
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
 
@@ -798,9 +804,9 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		final String json = createShareSucesNotifyJson(mVideoVid, "1");
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_ShareNotify, json);
-		
+
 		Toast.makeText(VideoShareActivity.this, "调用Logic分享结果:" + json, Toast.LENGTH_SHORT).show();
-		
+
 		if (!b) {
 			Toast.makeText(VideoShareActivity.this, "调用Logic分享结果失败:" + channel, Toast.LENGTH_SHORT).show();
 		}

@@ -85,6 +85,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean isIpcLoginSuccess = false;
 	/**　用户是否登录小车本服务器成功 */
 	public boolean isUserLoginSucess = false;
+	/** CC视频上传地址 */
+	public String mCCUrl = null;
+	/** 当前登录用户的UID */
+	public String mCurrentUId = null;
+	/** 当前登录用户的Aid */
+	public String mCurrentAid = null;
 	/** 行车记录仪缓冲路径 */
 	private String carrecorderCachePath="";
 	/** 爱滔客回调 */
@@ -574,6 +580,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 			//登陆
 			case 11:
+				parseLoginData(success, param2);
 				if(null != mMainActivity){
 					//地图大头针图片
 					console.log("pageNotifyCallBack---登录---" + String.valueOf(param2));
@@ -585,6 +592,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 			//自动登录
 			case 12:
+				parseLoginData(success, param2);
 				if(mPageSource == "Main"){
 					((MainActivity)mContext).autoLoginCallback(success, param2);
 				}
@@ -640,6 +648,42 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 			
+		}
+	}
+
+	
+	/**
+	 * 处理登录结果
+	 * 
+	 * @param success
+	 *            1/其它 成功/失败
+	 * @param param2
+	 *            登录回调数据
+	 * @author jiayf
+	 * @date Apr 20, 2015
+	 */
+	private void parseLoginData(int success, Object param2) {
+		if (1 != success || null == param2) {
+			return;
+		}
+
+		try {
+			JSONObject rootObj = new JSONObject((String) param2);
+			int code = Integer.valueOf(rootObj.getString("code"));
+			if (200 != code) {
+				return;
+			}
+
+			JSONObject dataObj = rootObj.getJSONObject("data");
+			// 获得CC上传视频接口
+			mCCUrl = dataObj.getString("ccbackurl");
+			mCurrentUId = dataObj.getString("uid");
+			mCurrentAid = dataObj.getString("aid");
+			isUserLoginSucess = true;
+			
+			LogUtil.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl +" uid:" + mCurrentUId +" aid:" + mCurrentAid);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
