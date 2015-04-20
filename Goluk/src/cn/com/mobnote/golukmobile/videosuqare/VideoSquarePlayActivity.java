@@ -2,8 +2,12 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.umeng.socialize.sso.UMSsoHandler;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
@@ -32,7 +36,9 @@ public class VideoSquarePlayActivity extends Activity implements
 	private boolean isHaveData = true;
 	/** 视频广场类型 */
 	private String category;
-
+	
+	SharePlatformUtil sharePlatform;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,8 +51,21 @@ public class VideoSquarePlayActivity extends Activity implements
 				.addVideoSquareManagerListener("videocategory", this);
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
+		
+		sharePlatform = new SharePlatformUtil(this);
+		sharePlatform.configPlatforms();//设置分享平台的参数
 
 		httpPost(true);
+	}
+	
+	@Override 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    /**使用SSO授权必须添加如下代码 */
+	    UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode) ;
+	    if(ssoHandler != null){
+	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	    }
 	}
 
 	/**

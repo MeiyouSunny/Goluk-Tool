@@ -139,6 +139,14 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		if(null != mVideoSquareAdapter){
+			mVideoSquareAdapter.onResume();
+		}
+	}
+	
+	@Override
 	protected void onStop() {
 		super.onStop();
 		if(null != mVideoSquareAdapter){

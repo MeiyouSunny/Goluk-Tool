@@ -178,6 +178,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		}
 	}
 	
+	public void onResume(){
+		if(null != mVideoSquareListViewAdapter){
+			mVideoSquareListViewAdapter.notifyDataSetChanged();
+		}
+	}
+	
 	public void onDestroy(){
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("hotlist");
 		if(null != mVideoSquareListViewAdapter){

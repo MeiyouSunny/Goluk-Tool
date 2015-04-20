@@ -10,7 +10,6 @@ import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Message;
 import android.view.Gravity;
@@ -26,16 +25,21 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 	SharePlatformUtil sharePlatform;
 	int form = 1;
 	
-	private CustomProgressDialog mCustomProgressDialog=null;
+	public static CustomProgressDialog mCustomProgressDialog=null;
 	
 	public VideoSquareOnClickListener(Context context, List<VideoSquareInfo> videoSquareListData,VideoSquareInfo videoSquareInfo,int plform){
 		mcontext = context;
 		mVideoSquareListData = videoSquareListData;
 		mVideoSquareInfo = videoSquareInfo;
 		sharePlatform = new SharePlatformUtil(mcontext);
-		sharePlatform.configPlatforms();//设置分享平台的参数
+		//sharePlatform.configPlatforms();//设置分享平台的参数
 		form = plform;
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
+		if(null == mCustomProgressDialog){
+			mCustomProgressDialog = new CustomProgressDialog(mcontext);
+//			mCustomProgressDialog.setCancelable(false);
+//			mCustomProgressDialog.show();
+		}
 	}
 	
 	@Override
@@ -44,13 +48,14 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 		switch (view.getId()) {
 		case R.id.share_btn:
 			System.out.println("sss");
-			if(null == mCustomProgressDialog){
-				mCustomProgressDialog = new CustomProgressDialog(mcontext);
-				//mCustomProgressDialog.setCancelable(false);
-				//mCustomProgressDialog.show();
+			if(null != mCustomProgressDialog){
+//				mCustomProgressDialog = new CustomProgressDialog(mcontext);
+//				mCustomProgressDialog.setCancelable(false);
+				mCustomProgressDialog.show();
 			}
 			
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getShareUrl(mVideoSquareInfo.mVideoEntity.videoid, mVideoSquareInfo.mVideoEntity.type);
+			System.out.println("YYYY+RESULT3333333333"+result);
 			if(!result){
 				mCustomProgressDialog.dismiss();
 			}
@@ -103,14 +108,18 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
 			Object param2) {
-		System.out.println("YYYY==888888==getSquareList====event=" + event
+		System.out.println("YYYY==888888==getSquareList8888====form==="+form+"event="+ event
 				+ "===msg=" + msg + "==param2=" + param2);
-		closeProgressDialog();
+		
+		System.out.println("YYYY+RESULT-2-2-2-2-2-2-2");
 		if (event == SquareCmd_Req_GetShareUrl) {
-			//mPdsave.dismiss();
+			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
+			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				try {
+					System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
 					JSONObject result = new JSONObject((String)param2);
+					System.out.println("YYYY+RESULT00000000");
 					if(result.getBoolean("success")){
 						JSONObject data =  result.getJSONObject("data");
 						String shareurl = data.getString("shorturl");
@@ -118,17 +127,26 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 						if("".equals(coverurl)){
 							
 						}
+						System.out.println("YYYY+RESULT11111111");
 						//设置分享内容
 						sharePlatform.setShareContent(shareurl, coverurl, "goluk分享");
+						System.out.println("YYYY+RESULT22222222");
 						
 						if(form == 2){
-							VideoSquarePlayActivity vsa = (VideoSquarePlayActivity) mcontext;
-							CustomShareBoard shareBoard = new CustomShareBoard(vsa);
-					        shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
+							if(!vspa.isFinishing()){
+								CustomShareBoard shareBoard = new CustomShareBoard(vspa);
+						        shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							}
+								
+							
 						}else{
 							VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
-							CustomShareBoard shareBoard = new CustomShareBoard(vsa);
-					        shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							if(!vsa.isFinishing()){
+								CustomShareBoard shareBoard = new CustomShareBoard(vsa);
+						        shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							}
+							
 						}
 						
 						
