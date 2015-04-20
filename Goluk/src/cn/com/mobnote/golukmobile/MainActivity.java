@@ -26,11 +26,14 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.utils.Log;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity;
 import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.user.User;
+import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
@@ -140,7 +143,7 @@ import com.umeng.socialize.utils.Log;
  */
 
 @SuppressLint("HandlerLeak")
-public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack, OnTouchListener{
+public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack, OnTouchListener,UserInterface{
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -252,6 +255,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		CrashReport.initCrashReport(this,appId ,isDebug);
 		
 		mContext = this;
+		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(this,"Main");
@@ -284,13 +288,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //			}
 //		});
 		
+		
 		//不是第一次登录，并且上次登录成功过，进行自动登录
 		mPreferencesＡuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferencesＡuto.getBoolean("FirstLogin", true);
 		if(!isFirstLogin && !mApp.isUserLoginSucess){
-			initAutoLogin();
-		}else{
-			//自动登录失败
+			mApp.mUser.initAutoLogin();
 		}
 	}
 	
@@ -357,7 +360,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						checkLinkWiFi();
 						//网络状态改变
 						mApp.VerifyWiFiConnect();
-						initAutoLogin();
+						if(mApp.isUserLoginSucess == true || mApp.autoLoginStatus !=2){
+							mApp.mUser.initAutoLogin();							
+						}
 					break;
 					
 					
@@ -1018,18 +1023,23 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.more_btn:
 				//读取SharedPreference中用户的信息
-				/*SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
-				boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);*/
 				//判断是否是第一次登录
-				if(!isFirstLogin){//登录过
+				/*if(!isFirstLogin || mApp.isUserLoginSucess == true){//登录过
 					//更多页面
-					Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
-					startActivity(more);
+					if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+						Intent more = new Intent(MainActivity.this,IndexMoreNoLoginActivity.class);
+						startActivity(more);
+					}else{
+						Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
+						startActivity(more);
+					}
 				}else{
 					//未登录
 					Intent moreNoLogin = new Intent(MainActivity.this,IndexMoreNoLoginActivity.class);
 					startActivity(moreNoLogin);
-				}
+				}*/
+				Intent it = new Intent(MainActivity.this,IndexMoreActivity.class);
+				startActivity(it);
 //				this.finish();
 			break;
 			case R.id.share_local_video_btn:
@@ -1156,8 +1166,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		String mJoinGroupJson = "{\"title\":\"创建组\",\"grouptype\":\"0\",\"groupid\":\"C8770\",\"groupnumber\":\"0\",\"tag\":0,\"membercount\":1}";
 		
 //		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd, mJoinGroupJson);
-		
-		
 		
 		// 开启直播
 		Intent intent = new Intent(this, LiveActivity.class);
@@ -1315,116 +1323,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //		mApp.VerifyWiFiConnect();
 	}	
 	
-	/**
-	 * 不是第一次登录的话，调用自动登录
-	 * 当用户使用到需要『登录在线』条件下登录权限的功能时
-	 * ——判断用户是否在自动登录，若是，则客户端使用系统 loading 提示：正在为您登录，请稍后…
-	 */
-	public void initAutoLogin(){
-		//网络判断
-		if(!UserUtils.isNetDeviceAvailable(mContext)){
-			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
-		}else{
-			//判断是否已经登录了
-			/*SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
-			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);*/
-			if(isFirstLogin){
-				//已经登录了
-				return;
-			}else{//没有登录
-				//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
-				initTimer();
-				handler.postDelayed(runnable,50000);
-				
-				//{tag:”android/ios/pad/pc”}
-				String autoLogin = "{\"tag\":\"android\"}";
-				boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_AutoLogin, autoLogin);
-				if(b){
-//					console.toast("自动登录成功", mContext);
-				}else{
-					
-				}
-			}
-		}
+	@Override
+	public void statusChange() {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	/**
-	 * 自动登录回调
-	 * 
-	 */
-	public void initAutoLoginCallback(int success,Object obj){
-		console.log("---------------自动登录回调---------------");
-		mApp.autoLoginStatus = 0;//自动登录中
-		Log.i("ooo", "自动登录中……"+mApp.autoLoginStatus);
-		if(1 == success){
-			handler.removeCallbacks(runnable);
-			try{
-				String data = (String)obj;
-				JSONObject json = new JSONObject(data);
-				int code = Integer.valueOf(json.getString("code"));
-				String msg = json.getString("msg");
-				console.log(data);
-				switch (code) {
-				case 200:
-					console.toast("自动登录成功", mContext);
-					mApp.autoLoginStatus = 1;//自动登录成功
-					Log.i("ooo", "自动登录成功……"+mApp.autoLoginStatus);
-					break;
-				//服务器内部错误或者账号未注册，再次启动程序——提示框：自动登录失败，弹出提示框，提示内容：账号异常，请重新登录；
-				case 500:
-					//服务端异常
-					UserUtils.showDialog(mContext, "账号异常，请重新登录");
-					break;
-					
-				case 405:
-					//用户为注册
-					UserUtils.showDialog(mContext, "账号异常，请重新登录");
-					break;
-					
-				case 402:
-					//登录密码错误
-					UserUtils.showDialog(mContext, "密码错误，请重新登录");
-					break;
-
-				default:
-					break;
-				}
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}else{
-			mApp.autoLoginStatus = 2;//自动登录失败
-			Log.i("ooo", "自动登录失败……"+mApp.autoLoginStatus);
-			//超时处理
-			Builder dialog = new AlertDialog.Builder(mContext);
-				dialog.setTitle("提示");
-				dialog.setMessage("网络连接超时，请重试?");
-				dialog.setPositiveButton("取消",null);
-				dialog.setNegativeButton("重试",new DialogInterface.OnClickListener(){
-					public void onClick(DialogInterface dialoginterface, int i){
-						//按钮事件,重试
-						initAutoLogin();	
-					}
-				});
-				dialog.create().show();
-		}
-}
-	//网络链接超时
-	final private Handler handler = new Handler();
-	private Runnable runnable;
-	private void initTimer(){
-		runnable = new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-//				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
-				android.util.Log.i("xxx", "5分钟后自动登录重试");
-				initAutoLogin();
-			}
-		};
-	}
-	
 }
 
 

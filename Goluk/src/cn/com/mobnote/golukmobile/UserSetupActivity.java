@@ -9,10 +9,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -62,10 +64,15 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	private Button btnLoginout;
 	/**用户信息**/
 	private String head = null;
-	private String id = null;
-	private String name = null;
+	private String id = null;//key
+	private String name = null;//nickname
 	private String sex = null;
-	private String sign = null;
+	private String sign = null;//desc
+	private String phone = null;
+	/**登录的状态**/
+	private SharedPreferences mPreferences = null;
+	private boolean isFirstLogin = false;
+	private Editor mEditor = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -104,23 +111,20 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
 		
 		//没有登录过的状态
-		SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
-		boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 		
 		if(!isFirstLogin ){//登录过
 			Log.i("out", "xxxxxxx"+mApp.loginoutStatus);
-			if(mApp.loginStatus == 1){//上次登录成功
+			Log.i("setauto", "----"+mApp.autoLoginStatus);
+			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2){//上次登录成功
 				btnLoginout.setText("退出");
+				//是否退出
 				if(mApp.loginoutStatus == true){
 					btnLoginout.setText("登录");
 				}else{
 					btnLoginout.setText("退出");
 				}
-				/*if(mApp.autoLoginStatus == 0 || mApp.autoLoginStatus == 2 ){
-					btnLoginout.setText("登录");
-				}else{
-					btnLoginout.setText("退出");
-				}*/
 			}else{
 				btnLoginout.setText("登录");
 			}
@@ -155,13 +159,14 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		switch(id){
 			case R.id.back_btn:
 				//返回
-				if(mApp.loginoutStatus){
+				/*if(mApp.loginoutStatus){
 					Intent it = new Intent(UserSetupActivity.this,IndexMoreNoLoginActivity.class);
 					startActivity(it);
-					this.finish();
+//					this.finish();
 				}else{
 					finish();					
-				}
+				}*/
+				this.finish();
 			break;
 			case R.id.setup_item:
 				//跳转到设置页面
@@ -174,7 +179,7 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 				}else if(btnLoginout.getText().toString().equals("退出")){
 					new AlertDialog.Builder(mContext)
 					.setMessage("是否确认退出？")
-					.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+					.setNegativeButton("确认", new DialogInterface.OnClickListener() {
 						
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
@@ -182,7 +187,7 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 							getLoginout();
 						}
 					})
-					.setNegativeButton("取消", null)
+					.setPositiveButton("取消", null)
 					.create().show();
 				}
 				break;
@@ -198,9 +203,17 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 			//注销成功
 			mApp.isUserLoginSucess = false;
 			mApp.loginoutStatus = true;//注销成功
+			
+			mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+			mEditor = mPreferences.edit();
+			mEditor.putBoolean("FirstLogin", true);//注销完成后，设置为没有登录过的一个状态
+			//提交修改
+			mEditor.commit();
+			
+			initData();
 			console.toast("退出登录成功", mContext);
 			btnLoginout.setText("登录");
-			Log.i("loginout", "=====setup===="+mApp.isUserLoginSucess);
+			
 		}else{
 			//注销失败
 			mApp.loginoutStatus = false;
@@ -222,12 +235,18 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		try{
 			JSONObject json = new JSONObject(info);
 			
-			Log.i("info", "====json===="+json);
+			Log.i("info", "====json()===="+json);
 			head = json.getString("head");
 			name = json.getString("nickname");
 			id = json.getString("key");
 			sex = json.getString("sex");
 			sign = json.getString("desc");
+			phone = json.getString("phone");
+			//退出登录后，将信息存储
+			mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+			mEditor = mPreferences.edit();
+			mEditor.putString("setupPhone", phone);
+			mEditor.commit();
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -240,5 +259,25 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	public void initIntent(Class intentClass){
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
 		startActivity(it);
+		this.finish();
+	}
+	
+	/**
+	 * 退出登录后，点击返回键，返回到无用户信息的页面
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			/*if(mApp.loginoutStatus){
+				Intent it = new Intent(UserSetupActivity.this,IndexMoreNoLoginActivity.class);
+				startActivity(it);
+				this.finish();
+			}else{
+				this.finish();
+			}*/
+			this.finish();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

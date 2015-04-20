@@ -1,28 +1,37 @@
 package cn.com.mobnote.golukmobile;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.json.JSONObject;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.user.UserInterface;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.console;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -44,7 +53,8 @@ import android.widget.TextView;
  * 
  */
 
-public class IndexMoreActivity extends Activity implements OnClickListener {
+@SuppressLint("HandlerLeak")
+public class IndexMoreActivity extends Activity implements OnClickListener,UserInterface {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -78,7 +88,13 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 	private TextView mTextName;
 	
 	/**自动登录中的loading提示框**/
-	private RelativeLayout mLayoutLoading = null;
+	private Builder mBuilder = null;
+	private SharedPreferences mPreferences = null;
+	private boolean isFirstLogin ;
+	/**头部有无信息替换**/
+	private LinearLayout mLayoutHasInfo = null;
+	private LinearLayout mLayoutNoInfo = null;
+	private boolean isHasInfo = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,15 +108,18 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 	protected void onResume(){
 		super.onResume();
 		
+		mPreferences= getSharedPreferences("firstLogin", MODE_PRIVATE);
+		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+		
 		mContext = this;
+		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(mContext,"IndexMore");
 		
 		//页面初始化
 		init();
-		//
-		initData();
+//		initData();
 	}
 
 	/**
@@ -124,8 +143,28 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 		mImageHead = (ImageView) findViewById(R.id.photo_img);
 		mImageSex = (ImageView) findViewById(R.id.user_sex_image);
 		mTextName = (TextView) findViewById(R.id.user_name_text);
-		//自动登录中的提示loading
-		mLayoutLoading = (RelativeLayout) findViewById(R.id.index_loading_layout);
+		//头部有无信息的布局替换
+		mLayoutHasInfo = (LinearLayout) findViewById(R.id.index_more_hasinfo);
+		mLayoutNoInfo = (LinearLayout) findViewById(R.id.index_more_noinfo);
+		if(!isFirstLogin || mApp.isUserLoginSucess == true){//登录过
+		//更多页面
+		if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){//没有用户信息
+			mLayoutHasInfo.setVisibility(View.GONE);
+			mLayoutNoInfo.setVisibility(View.VISIBLE);
+			mImageHead.setImageResource(R.drawable.more_head_no_log_in);
+			isHasInfo = false;
+		}else{//有用户信息
+			mLayoutHasInfo.setVisibility(View.VISIBLE);
+			mLayoutNoInfo.setVisibility(View.GONE);
+			initData();
+			isHasInfo = true;
+		}
+	}else{
+		//未登录
+		mLayoutHasInfo.setVisibility(View.GONE);
+		mLayoutNoInfo.setVisibility(View.VISIBLE);
+		mImageHead.setImageResource(R.drawable.more_head_no_log_in);
+	}
 		
 		//注册事件
 //		mBackBtn.setOnClickListener(this);
@@ -147,7 +186,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 		};
 	}
 	
-	
+	AlertDialog 	dialog = null;
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -156,7 +195,16 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 		switch(id){
 			case R.id.back_btn_layout:
 				//返回
-				finish();
+				//自动登录失败，显示未登录用户的头像等信息
+//				if(mApp.autoLoginStatus == 3){
+//					intent = new Intent(IndexMoreActivity.this,IndexMoreNoLoginActivity.class);
+//					startActivity(intent);
+//					this.finish();
+//				}
+				SysApplication.getInstance().exit();
+				Intent it = new Intent(IndexMoreActivity.this,MainActivity.class);
+				startActivity(it);
+				this.finish();
 			break;
 			case R.id.local_video_item:
 				intent = new Intent(IndexMoreActivity.this,LocalVideoListActivity.class);
@@ -176,22 +224,58 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 				console.log("onclick---setup--item");
 				intent = new Intent(IndexMoreActivity.this,UserSetupActivity.class);
 				startActivity(intent);
+				if(mApp.loginoutStatus == true){
+					SysApplication.getInstance().exit();
+				}
 			break;
 			//点击跳转到我的主页
 			case R.id.head_layout:
-				/*if(mApp.autoLoginStatus == 0){//自动登录中
-					mLayoutLoading.setVisibility(View.VISIBLE);
-				}else if(mApp.autoLoginStatus == 1 || mApp.loginStatus == 1){//自动登录成功
-					mLayoutLoading.setVisibility(View.GONE);*/
-					intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
-					startActivity(intent);
-//					this.finish();
-				/*}else if(mApp.autoLoginStatus == 2){
-					//登录失败
-					mLayoutLoading.setVisibility(View.GONE);
-				}*/
+				//自动登录中，成功，失败，超时
+				Log.i("autostatus", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
+				if(isHasInfo){
+					mApp.mUser.setUserInterface(this);
+					if(mApp.autoLoginStatus == 1){
+						mBuilder = new AlertDialog.Builder(mContext);
+						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
+						.setCancelable(false)
+						.setOnKeyListener(new OnKeyListener() {
+							@Override
+							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+								// TODO Auto-generated method stub
+								if(keyCode == KeyEvent.KEYCODE_BACK){
+									return true;
+								}
+								return false;
+							}
+						}).create();
+						
+						dialog	.show();
+					}else if(mApp.autoLoginStatus == 2){
+						intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+						startActivity(intent);
+						if(mApp.loginoutStatus == true){
+							this.finish();
+						}
+					}
+				}else{
+					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
+					// 判断是否为自动登录失败或超时请求的登录功能
+					if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
+						mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+						String phone = mPreferences.getString("setupPhone", "");
+						itNo.putExtra("autoPhone", phone);
+					}
+					startActivity(itNo);
+					finish();
+				}
 				break;
-				
+		}
+	}
+	
+	private void dismissDialog() {
+		if (null != dialog){
+			dialog.dismiss();
+			dialog = null;
 		}
 	}
 	
@@ -219,6 +303,27 @@ public class IndexMoreActivity extends Activity implements OnClickListener {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 对话框消失
+	 */
+	@Override
+	public void statusChange() {
+		// TODO Auto-generated method stub
+		Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus);
+		if(mApp.autoLoginStatus == 2){
+			dismissDialog();
+		
+			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
+			Intent it = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+			startActivity(it);
+		}else if(mApp.autoLoginStatus == 3 || mApp.isUserLoginSucess == false){
+			dismissDialog();
+			console.toast("登录失败", mContext);
+			mLayoutHasInfo.setVisibility(View.GONE);
+			mLayoutNoInfo.setVisibility(View.VISIBLE);
 		}
 	}
 	

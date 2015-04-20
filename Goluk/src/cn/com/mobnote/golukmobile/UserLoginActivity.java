@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Contacts.Intents;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -113,6 +114,19 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 			mEditTextPhoneNumber.setText(phoneNumber);
 		}
 		
+		//如果是注销成功，则接收从UserStartActivity传来的手机号填入手机号框
+		Intent intentStart = getIntent();
+		if(null != intentStart.getStringExtra("startActivity")){
+			String phone = intentStart.getStringExtra("startActivity").toString();
+			mEditTextPhoneNumber.setText(phone);
+		}
+		//如果是自动登录失败、超时，则接收从IndexMoreLoginActivity传来的手机号，并填入手机号
+		if(null !=intentStart.getStringExtra("autoPhone")){
+			String phoneAuto = intentStart.getStringExtra("autoPhone").toString();
+			Log.i("autostatus", "----自动登录失败手机号手机号手机号----"+phoneAuto);
+			mEditTextPhoneNumber.setText(phoneAuto);
+		}
+		
 		/**
 		 * 监听绑定
 		 */
@@ -211,10 +225,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		mImageViewWeichat.setOnClickListener(this);
 		mImageViewSina.setOnClickListener(this);
 		mImageViewQQ.setOnClickListener(this);
-
-		//--------------------一个标记，判断登录中，登录成功，登录失败的状态---------------------------
-		/*mPreferencesLoginStatus = getSharedPreferences("loginstatus", Context.MODE_PRIVATE);
-		mEditorLoginStatus = mPreferencesLoginStatus.edit();*/
 		
 	}
 
@@ -228,9 +238,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 			break;
 		// 登陆按钮
 		case R.id.user_login_btn:
-			//参数PNumber：“13054875692”，Password：“1234”,tag:”android/ios/pad/pc”}
 			login();
-			
 			break;
 		// 手机快速注册
 		case R.id.user_login_phoneRegist:
@@ -308,9 +316,8 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 	 */
 	public void loginCallBack(int success,Object obj){
 		console.log("登录回调---loginCallBack---" + success + "---" + obj);
-		//--------------------------------------登录中的状态  0------------------------------------------------
-//		mApplication.loginStatus = 0;
-//		Log.i("autologin", "=====回调111====loginStatus==="+mApplication.loginStatus);
+		//--------------------------------------登录中的状态  0-------------------------------------
+		mApplication.loginStatus = 0;
 		if(1 == success){
 			handler.removeCallbacks(runnable);
 			try{
@@ -318,7 +325,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				Log.i("test", data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				String msg = json.getString("msg");
 				mLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
@@ -326,17 +332,15 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 					mEditor = mSharedPreferences.edit();
 					mEditor.putBoolean("FirstLogin", false);
-					
 					//提交修改
 					mEditor.commit();
-					//---------------------------------登录成功的状态  1------------------------------
-//					mApplication.loginStatus = 1;
-//					Log.i("autologin", "=====回调222====loginStatus==="+mApplication.loginStatus);
+					//---------------------------登录成功的状态  1------------------------------
 					//登录成功跳转
 					SysApplication.getInstance().exit();//杀死前边所有的Activity
 					console.toast("登录成功", mContext);
 					mApplication.loginStatus=1;//登录成功
 					mApplication.isUserLoginSucess = true;
+					Log.i("ppp", ""+mApplication.loginStatus);
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
 					finish();
@@ -386,8 +390,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		mEditTextPhoneNumber.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
 		
-		//--------------------------------提交-------------------------------------
-//		mEditorLoginStatus.commit();
 	}
 	
 	@Override

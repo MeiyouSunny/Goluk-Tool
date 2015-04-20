@@ -1,14 +1,17 @@
 package cn.com.mobnote.golukmobile;
 
-import junit.framework.Test;
-import cn.com.mobnote.application.SysApplication;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 
 /**
  * 
@@ -22,7 +25,13 @@ import android.widget.ImageView;
  */
 public class UserStartActivity extends Activity implements OnClickListener {
 
-	ImageView mImageViewHave, mImageViewLook;
+	private ImageView mImageViewHave, mImageViewLook;
+	//
+	private Context mContext = null;
+	private GolukApplication mApp = null;
+	//如果是注销进来的，需要将手机号填进去
+	private SharedPreferences mPreferences = null;
+	private String phone = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +40,10 @@ public class UserStartActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_start);
 
+		mContext = this;
+		mApp = (GolukApplication) getApplication();
+		mApp.setContext(mContext, "UserStart");
+		
 		SysApplication.getInstance().addActivity(this);
 		initView();
 	}
@@ -38,6 +51,10 @@ public class UserStartActivity extends Activity implements OnClickListener {
 	public void initView() {
 		mImageViewHave = (ImageView) findViewById(R.id.user_start_have);
 		mImageViewLook = (ImageView) findViewById(R.id.user_start_look);
+		//获取注销成功后传来的信息
+		mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+		phone = mPreferences.getString("setupPhone", "");//最后一个参数为默认值
+		
 		mImageViewHave.setOnClickListener(this);
 		mImageViewLook.setOnClickListener(this);
 	}
@@ -49,7 +66,14 @@ public class UserStartActivity extends Activity implements OnClickListener {
 		case R.id.user_start_have:
 			//我有Goluk
 			Intent it = new Intent(UserStartActivity.this,UserLoginActivity.class);
-			startActivity(it);
+			//在黑页面判断是注销进来的还是首次登录进来的
+			Log.i("yyy", ""+mApp.loginoutStatus);
+			if(!mApp.loginoutStatus){//注销
+				it.putExtra("startActivity", phone);
+				startActivity(it);
+			}else{
+				startActivity(it);
+			}
 			break;
 
 		case R.id.user_start_look:
