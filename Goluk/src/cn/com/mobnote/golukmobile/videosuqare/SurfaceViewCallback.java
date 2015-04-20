@@ -23,7 +23,7 @@ public class SurfaceViewCallback implements Callback{
 		
 		@Override
 		public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-			LogUtils.d("SSS====surfaceChanged====arg1="+arg1+"===arg2="+arg2+"===arg3="+arg3);
+//			LogUtils.d("SSS====surfaceChanged====arg1="+arg1+"===arg2="+arg2+"===arg3="+arg3);
 		}
 
 		@Override
