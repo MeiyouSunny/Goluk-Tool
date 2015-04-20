@@ -169,7 +169,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private void initLayout(){
 		
 		if(null == mVideoSquareListViewAdapter){
-			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mContext);
+			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mContext,1);
 		}
 		
 		mVideoSquareListViewAdapter.setData(mDataList);
@@ -300,6 +300,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	public void onStop() {
 		if(null != mVideoSquareListViewAdapter){
 			mVideoSquareListViewAdapter.onStop();
+		}
+	}
+	
+	public void onResume(){
+		if(null != mVideoSquareListViewAdapter){
+			mVideoSquareListViewAdapter.notifyDataSetChanged();
 		}
 	}
 	

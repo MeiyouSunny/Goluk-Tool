@@ -39,13 +39,14 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	private final String USERID = "77D36B9636FF19CF";
 	private final String API_KEY = "O8g0bf8kqiWroHuJaRmihZfEmj7VWImF";
 	private DisplayImageOptions options;
+	private int form = 1;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 
-	public VideoSquareListViewAdapter(Context context) {
+	public VideoSquareListViewAdapter(Context context,int plform) {
 		mContext = context;
 		mVideoSquareListData = new ArrayList<VideoSquareInfo>();
 		mDWMediaPlayerList = new HashMap<String, DWMediaPlayer>();
-
+		form = plform;//1:热门页面 2:广场页
 		options = new DisplayImageOptions.Builder()
 				// .showImageOnLoading(R.drawable.ic_stub)
 				// .showImageForEmptyUri(R.drawable.ic_empty)
@@ -131,11 +132,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.liveicon.setVisibility(View.GONE);
 			holder.mSurfaceView.setVisibility(View.VISIBLE);
 		}
-
-		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(
-				mContext, mVideoSquareListData, mVideoSquareInfo));
-		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(
-				mContext, mVideoSquareListData, mVideoSquareInfo));
 		
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
 			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);//设置点赞背景
@@ -143,8 +139,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn);//设置默认点赞背景
 		}
 		
-		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
-		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo));
+		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
+		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
