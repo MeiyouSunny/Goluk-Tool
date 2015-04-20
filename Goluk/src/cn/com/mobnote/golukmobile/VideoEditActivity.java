@@ -113,6 +113,8 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	private String mStrMusicFilePath = "";
 	/** 进度条线程 */
 	private Thread mProgressThread = null;
+	/** 当前编辑的视频类型*/
+	private int mCurrentVideoType = 0;
 	
 	
 	
@@ -140,6 +142,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		//获取视频路径
 		Intent intent = getIntent();
 		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
+		mCurrentVideoType = intent.getIntExtra("type", 2);
 		
 		mMVListLayout = (LinearLayout)findViewById(R.id.mvlistlayout);
 		
@@ -371,6 +374,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 							//视频保存成功,跳转到分享页面
 							Intent videoShare = new Intent(mContext,VideoShareActivity.class);
 							videoShare.putExtra("cn.com.mobnote.golukmobile.videopath",mVideoSavePath);
+							videoShare.putExtra("type", mCurrentVideoType);
 							startActivity(videoShare);
 						}
 						

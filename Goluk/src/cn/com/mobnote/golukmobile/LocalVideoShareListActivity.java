@@ -400,7 +400,7 @@ public class LocalVideoShareListActivity extends Activity implements  OnClickLis
 		if(!TextUtils.isEmpty(path)){
 			Intent intent = new Intent(mContext, VideoEditActivity.class);
 			//intent.putExtra("from", "local");
-			//intent.putExtra("type", mCurrentType);
+			intent.putExtra("type", mCurrentType);
 			intent.putExtra("cn.com.mobnote.video.path", path);
 			startActivity(intent);
 		}

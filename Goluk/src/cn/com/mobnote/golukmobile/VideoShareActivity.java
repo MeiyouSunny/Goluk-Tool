@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +45,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.utils.LogUtil;
 
 import com.bokecc.sdk.mobile.exception.DreamwinException;
 import com.bokecc.sdk.mobile.upload.UploadListener;
@@ -97,6 +99,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	public final static String DOWNLOAD_DIR = "CCDownload";
 	// 配置视频回调地址
 	public final static String NOTIFY_URL = "http://server.xiaocheben.com/cdcRegister/uMengCallBack.htm";
+	/** 236服务器分享地址 */
+	public static final String NOTIFY_URL2 = "http://svr.xiaocheben.com/navidog4MeetTrans/ccVideoApiCallback.htm";
 
 	public static final String PATH_FS1 = "/tiros-com-cn-ext";
 
@@ -157,6 +161,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	/** 退出提示框 */
 	private AlertDialog mExitPromptDialog = null;
 	private Bitmap mShortBitmap = null;
+	/** 2/3 紧急/精彩 */
+	private int mVideoType = 0;
 
 	public Handler mmmHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -188,7 +194,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			case MSG_H_UPLOAD_ERROR:
 				// 上传失败
 				uploadFailed();
-			    
+
 				break;
 			case MSG_H_UPLOAD_CANCEL:
 
@@ -286,6 +292,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		// 获取视频Id
 		Intent intent = getIntent();
 		mVideoPath = intent.getStringExtra("cn.com.mobnote.golukmobile.videopath");
+		mVideoType = intent.getIntExtra("type", 0);
 
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -384,7 +391,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	// CC上传失败，提示用户重试或退出
 	private void uploadFailed() {
 		dimissErrorDialog();
-		
+
 		GlobalWindow.getInstance().toFailed("上传失败");
 
 		mErrorDialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("上传失败")
@@ -395,7 +402,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 						uploadShareVideo();
 						dimissErrorDialog();
 						showToast("重新开始上传");
-						
+
 						GlobalWindow.getInstance().createVideoUploadWindow("正在上传文件");
 
 					}
@@ -410,7 +417,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 					}
 
 				}).create();
-		
+
 		mErrorDialog.show();
 	}
 
@@ -742,13 +749,31 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	private String getSpinnerSelect() {
+		int position = mSpinner.getSelectedItemPosition();
+		// 为了保证与服务器协议兼容，需要加1
+		position++;
+
+		String type = createType("1");
+
+		LogUtil.e("", "spinner select :" + position + " type:" + type);
+
+		return type;
+	}
+
 	private void click_share() {
 		if (!this.mIsUploadSucess) {
 			Toast.makeText(VideoShareActivity.this, "上传视频成功后才可以分享", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		final String json = createShareJson();
+		final String selectJson = getSpinnerSelect();
+		final String isSeque = mIsCheck ? "1" : "0";
+		int type = mVideoType == 2 ? 2 : 1;
+		final String json = createShareJson(selectJson, isSeque, "" + type);
+		
+		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
+		
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
 
@@ -768,11 +793,14 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			Toast.makeText(VideoShareActivity.this, "第三方分享失败", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		Toast.makeText(VideoShareActivity.this, "第三方分享成功:" + channel, Toast.LENGTH_SHORT).show();
+		Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
 
 		final String json = createShareSucesNotifyJson(mVideoVid, "1");
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_ShareNotify, json);
+		
+		Toast.makeText(VideoShareActivity.this, "调用Logic分享结果:" + json, Toast.LENGTH_SHORT).show();
+		
 		if (!b) {
 			Toast.makeText(VideoShareActivity.this, "调用Logic分享结果失败:" + channel, Toast.LENGTH_SHORT).show();
 		}
@@ -793,24 +821,37 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		return json;
 	}
 
-	private String createShareJson() {
+	private String createType(String type) {
+		JSONArray array = new JSONArray();
+		array.put(type);
+		return array.toString();
+	}
+
+	// attribute: 用户选择的视频类型
+	// issquare 是否分享到视频广场
+	private String createShareJson(String attribute, String issquare, String type) {
 		String json = null;
 		try {
 			String videoDes = "";
+			String attriDefault = "";
 			try {
 				videoDes = URLEncoder.encode(mDesEdit.getText().toString(), "UTF-8");
+				attriDefault = URLEncoder.encode(attribute, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 			JSONObject obj = new JSONObject();
 			obj.put("videoid", mVideoVid);
-			obj.put("type", "1");
 			obj.put("describe", videoDes);
-			obj.put("share", "1");
-			obj.put("attribute", "attribute_aaa");
-			obj.put("issquare", "1");
+			obj.put("attribute", attriDefault);
+			// 是否分享到视频广场 0/1 否/是
+			obj.put("issquare", issquare);
+			// 缩略图路径
 			String fsFile = FileUtils.javaToLibPath(thumbFile);
 			obj.put("imgpath", fsFile);
+
+			// type: 1/2 精彩视频 / 紧急视频
+			obj.put("type", "1");
 
 			json = obj.toString();
 		} catch (Exception e) {
