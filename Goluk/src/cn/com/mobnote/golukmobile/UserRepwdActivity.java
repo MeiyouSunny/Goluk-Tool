@@ -417,6 +417,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
 								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
 								startActivity(intentRepwd);
+								finish();
 							}
 						}).create().show();
 					}else{
@@ -512,6 +513,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 						console.toast("重置密码成功", mContext);
 						Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
 						startActivity(it);
+						finish();
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
 					}
@@ -534,6 +536,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
 								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
 								startActivity(intentRepwd);
+								finish();
 							}
 						}).create().show();
 					}else{

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,15 +71,18 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
+		
 		SysApplication.getInstance().addActivity(this);
 	}
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
 		mContext = this;
 		//获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserLogin");
+		
 		initView();
 		// 设置title
 		mTextViewTitle.setText("登录");
@@ -267,7 +271,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						handler.postDelayed(runnable, 3000);//san 秒执行一次runnable.
 						String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
 						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
-//						boolean b = mApplication.userManager.loginStatus(phone, pwd);
 						if(b){
 							//隐藏软件盘
 						    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -323,6 +326,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 					mApplication.isUserLoginSucess = true;
 					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 					startActivity(login);
+					finish();
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,6 +39,7 @@ public class UserPersonalHeadActivity extends Activity implements OnClickListene
 			initView();
 			mTextTitle.setText("编辑头像");
 		}
+		
 		public void initView(){
 			//title
 			btnBack = (Button) findViewById(R.id.back_btn);
@@ -61,25 +63,32 @@ public class UserPersonalHeadActivity extends Activity implements OnClickListene
 			mImageHint7 = (ImageView) findViewById(R.id.user_personal_hint_image7);
 			
 			/**
-			 * 从编辑界面传来的head编号
+			 * 从编辑界面(UserPersonalEditActivity)传来的head编号
 			 */
 			Intent it = getIntent();
 			if(null!= it.getStringExtra("intentHeadText")){
 				String headText = it.getStringExtra("intentHeadText");
 				if(headText.equals("1")){
 					mImageHint1.setVisibility(View.VISIBLE);
+					imageIndex = "1";
 				}else if(headText.equals("2")){
 					mImageHint2.setVisibility(View.VISIBLE);
+					imageIndex = "2";
 				}else if(headText.equals("3")){
 					mImageHint3.setVisibility(View.VISIBLE);
+					imageIndex = "3";
 				}else if(headText.equals("4")){
 					mImageHint4.setVisibility(View.VISIBLE);
+					imageIndex = "4";
 				}else if(headText.equals("5")){
 					mImageHint5.setVisibility(View.VISIBLE);
+					imageIndex = "5";
 				}else if(headText.equals("6")){
 					mImageHint6.setVisibility(View.VISIBLE);
+					imageIndex = "6";
 				}else if(headText.equals("7")){
 					mImageHint7.setVisibility(View.VISIBLE);
+					imageIndex = "7";
 				}
 			}
 			/**

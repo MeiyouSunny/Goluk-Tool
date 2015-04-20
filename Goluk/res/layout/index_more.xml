@@ -10,14 +10,20 @@
 		android:layout_width="match_parent"
 		android:layout_height="42dp">
 		
-		<ImageButton
-			android:id="@+id/back_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10dp"
-			android:layout_centerVertical="true"
-			android:background="@drawable/more_arrow_button_btn"
-			android:contentDescription="@string/imgdes"/>
+	    <RelativeLayout 
+	        android:layout_width="50dp"
+	        android:layout_height="42dp"
+	        android:id="@+id/back_btn_layout"
+	        >
+	        <ImageButton
+				android:id="@+id/back_btn"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:layout_centerVertical="true"
+				android:background="@drawable/more_arrow_button_btn"
+				android:contentDescription="@string/imgdes"/>
+	    </RelativeLayout>
 		
 		<TextView
 			android:layout_width="wrap_content"
@@ -72,16 +78,27 @@
 			android:background="@drawable/more_next_button"
 			android:contentDescription="@string/imgdes"/>
 		
+		<ImageView 
+		    android:id="@+id/user_sex_image"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="17dp"
+		    android:layout_centerVertical="true"
+		    android:layout_toRightOf="@id/photo_default_img"
+		    android:src="@drawable/more_man"
+		    />
+		
 		<TextView
 			android:id="@+id/user_name_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="17dp"
+			android:layout_marginLeft="8dp"
 			android:layout_centerVertical="true"
-			android:layout_toRightOf="@id/photo_default_img"
+			android:layout_toRightOf="@id/user_sex_image"
 			android:text="@string/username_text"
 			android:textColor="#333333"
-			android:textSize="16sp"/>
+			android:textSize="16sp"
+			android:layout_toLeftOf="@id/right_btn"/>
 	</RelativeLayout>
 	
 	<RelativeLayout
@@ -142,7 +159,7 @@
 			android:background="#dedede"/>
 	</RelativeLayout>
 	
-	<RelativeLayout
+	<!-- <RelativeLayout
 		android:id="@+id/video_square_item"
 		android:layout_width="match_parent"
 		android:layout_height="52dp"
@@ -184,13 +201,13 @@
 			android:layout_marginRight="25dp"
 			android:layout_alignParentBottom="true"
 			android:background="#dedede"/>
-	</RelativeLayout>
+	</RelativeLayout> -->
 	
 	<RelativeLayout
 		android:id="@+id/draft_item"
 		android:layout_width="match_parent"
 		android:layout_height="52dp"
-		android:layout_below="@id/video_square_item">
+		android:layout_below="@id/local_video_item">
 		
 		<ImageView
 			android:id="@+id/draft_img"

@@ -32,7 +32,6 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:id="@+id/user_personal_homepage_sex"
-	            android:src="@drawable/more_man"
 	            android:layout_toRightOf="@id/user_personal_homepage_head"
 	            android:layout_marginLeft="4dp"
 	            android:layout_alignBottom="@id/user_personal_homepage_head"
