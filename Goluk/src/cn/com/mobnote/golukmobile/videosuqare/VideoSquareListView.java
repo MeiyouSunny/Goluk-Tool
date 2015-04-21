@@ -2,27 +2,16 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.bokecc.sdk.mobile.play.DWMediaPlayer;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
-import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
@@ -38,79 +27,20 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private List<VideoSquareInfo> mDataList=null;
 	private CustomProgressDialog mCustomProgressDialog=null;
 	private Float jj= SoundUtils.getInstance().getDisplayMetrics().density;
-	
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
-	
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
 	/** 是否还有分页*/
 	private boolean isHaveData = true;
 	public  static Handler mHandler=null;
 	private RelativeLayout mRootLayout=null;
-	private SurfaceView mSurfaceView=null;
-	private SurfaceHolder mSurfaceHolder=null;
-	private final String USERID = "77D36B9636FF19CF";
-	private final String API_KEY = "O8g0bf8kqiWroHuJaRmihZfEmj7VWImF";
-	private DWMediaPlayer mDWMediaPlayer=null;
 	
 	public VideoSquareListView(Context context){
 		mContext=context;
-		
-		mSurfaceView = new SurfaceView(mContext);
-		mSurfaceHolder = mSurfaceView.getHolder();
-		mSurfaceHolder.addCallback(new Callback() {
-			@Override
-			public void surfaceDestroyed(SurfaceHolder arg0) {
-				System.out.println("SSSYYY===111======surfaceDestroyed===");
-			}
-			
-			@Override
-			public void surfaceCreated(SurfaceHolder arg0) {
-				mSurfaceHolder=arg0;
-				System.out.println("SSSYYY===111======surfaceCreated===");
-				
-			}
-			
-			@Override
-			public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
-				System.out.println("SSSYYY===111======surfaceChanged===");
-			}
-		});
-		
-		mDWMediaPlayer = new DWMediaPlayer();
-		mDWMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
-			@Override
-			public void onPrepared(MediaPlayer arg0) {
-				arg0.start();
-				System.out.println("SSSYYY========arg0.start();=======");
-			}
-		});
-		mDWMediaPlayer.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
-			@Override
-			public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
-				System.out.println("SSSYYY========onBufferingUpdate======arg1="+arg1);
-			}
-		});
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		mRTPullListView = new ListView(mContext);
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
 		mRTPullListView.setDividerHeight((int)(2*jj));
-		//getResources().getColor(R.color.textcolor_select)
 		mDataList = new ArrayList<VideoSquareInfo>();
 		LogUtils.d("SSS=================111111111===================");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
@@ -135,9 +65,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		
 		mRootLayout = new RelativeLayout(mContext);
 		mRootLayout.addView(mRTPullListView);
-		
-		RelativeLayout.LayoutParams surfaceParams = new RelativeLayout.LayoutParams(200, 200);
-		mRootLayout.addView(mSurfaceView, surfaceParams);
 	}
 	
 	/**
@@ -169,7 +96,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private void initLayout(){
 		
 		if(null == mVideoSquareListViewAdapter){
-			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mContext,1);
+			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mRTPullListView, mContext,1);
 		}
 		
 		mVideoSquareListViewAdapter.setData(mDataList);
@@ -189,13 +116,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 //			}
 //		});
 		
-		mRootLayout.removeView(mSurfaceView);
-		updateSurfaceViewIndex(0);
 		
 		mRTPullListView.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
+					mVideoSquareListViewAdapter.startPlayer();
 					if(mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
 						if(isHaveData){
 							Toast.makeText(mContext, "上拉刷新", Toast.LENGTH_SHORT).show();
@@ -207,27 +133,9 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			}
 			@Override
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
-//				System.out.println("SSSYYY==11111===firstVisibleItem="+firstVisibleItem+"===visibleItemCount="+visibleItemCount+"==arg3="+arg3);
-//				if(firstVisibleItem == 0){
-//					mRootLayout.removeView(mSurfaceView);
-//					View view = mRTPullListView.getChildAt(firstVisibleItem);
-//					if(null != view){
-//						System.out.println("SSSYYY==222222222===firstVisibleItem="+firstVisibleItem);
-//						RelativeLayout mPlayerLayout = (RelativeLayout)view.findViewById(R.id.mPlayerLayout);
-//						if(null != mPlayerLayout){
-//							String tag = (String)mPlayerLayout.getTag();
-//							if(TextUtils.isEmpty(tag)){
-//								mPlayerLayout.addView(mSurfaceView);
-//								mPlayerLayout.setTag("add");
-//								System.out.println("SSSYYY==333333333333===firstVisibleItem="+firstVisibleItem);
-//							}
-//						}
-//					}
-//					
-//					
-//				}
+				mVideoSquareListViewAdapter.pausePlayer();
 				if(wonderfulFirstVisible != firstVisibleItem){
-					System.out.println("SSSYYY==22222===firstVisibleItem="+firstVisibleItem+"===visibleItemCount="+visibleItemCount+"==arg3="+arg3);
+					mVideoSquareListViewAdapter.updatePlayerState(firstVisibleItem);
 				}
 				wonderfulFirstVisible=firstVisibleItem;
 				wonderfulVisibleCount=visibleItemCount;
@@ -237,37 +145,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		RelativeLayout loading = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.video_square_below_loading, null); 
 		mRTPullListView.addFooterView(loading);
 		
-	}
-	
-	private void updateSurfaceViewIndex(int index){
-		System.out.println("SSSYYY==aaa111122===index="+index);
-		mDWMediaPlayer.reset();
-		View view = mRTPullListView.getChildAt(index);
-		if(null != view){
-			System.out.println("SSSYYY==222222222===index="+index);
-			SurfaceView surface = (SurfaceView)view.findViewById(R.id.mSurfaceView);
-			if(null != surface){
-				System.out.println("SSSYYY==333333===videoid="+mDataList.get(index).mVideoEntity.videoid);
-				surface = mSurfaceView;
-				mDWMediaPlayer.setDisplay(mSurfaceHolder);
-				mDWMediaPlayer.setVideoPlayInfo(mDataList.get(index).mVideoEntity.videoid, USERID, API_KEY,mContext);
-				mDWMediaPlayer.prepareAsync();
-			}
-			
-			
-//			RelativeLayout mPlayerLayout = (RelativeLayout)view.findViewById(R.id.mPlayerLayout);
-//			if(null != mPlayerLayout){
-//				String tag = (String)mPlayerLayout.getTag();
-//				if(TextUtils.isEmpty(tag)){
-//					mPlayerLayout.addView(mSurfaceView);
-//					mPlayerLayout.setTag("add");
-//					System.out.println("SSSYYY==33333333===index="+index+"==videoid="+mDataList.get(index).mVideoEntity.videoid);
-//					mDWMediaPlayer.setDisplay(mSurfaceHolder);
-//					mDWMediaPlayer.setVideoPlayInfo(mDataList.get(index).mVideoEntity.videoid, USERID, API_KEY,mContext);
-//					mDWMediaPlayer.prepareAsync();
-//				}
-//			}
-		}
 	}
 	
 	public void flush(){
@@ -312,7 +189,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	public void onDestroy(){
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("hotlist");
 		if(null != mVideoSquareListViewAdapter){
-//			mVideoSquareListViewAdapter.onDestroy();
+			mVideoSquareListViewAdapter.onDestroy();
 		}
 	}
 
@@ -347,7 +224,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mDataList.get(i).mVideoEntity = videoinfo.mVideoEntity;
 			}
 		}
-		
 		
 	}
 	

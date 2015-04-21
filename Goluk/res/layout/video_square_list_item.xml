@@ -68,12 +68,18 @@
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+        <!--  
+        <TextureView 
+            android:id="@+id/mTextureView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+		-->
         <SurfaceView
             android:id="@+id/mSurfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
+		
         <ImageView
             android:id="@+id/mPreLoading"
             android:layout_width="match_parent"
