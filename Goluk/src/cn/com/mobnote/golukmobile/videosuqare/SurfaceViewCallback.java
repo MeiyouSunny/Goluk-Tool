@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.HashMap;
 import java.util.List;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -14,11 +15,18 @@ public class SurfaceViewCallback implements Callback{
 		private VideoSquareInfo mVideoSquareInfo=null;
 		private HashMap<String, DWMediaPlayer> mDWMediaPlayerList=null;
 		private List<VideoSquareInfo> mVideoSquareListData=null;
+		private int position;
+		private HashMap<String, SurfaceHolder> mHolderList=null;
+		private Context mContext = null;
+		private VideoSquareListViewAdapter mVideoSquareListViewAdapter=null;
 		
-		public SurfaceViewCallback(List<VideoSquareInfo> _mVideoSquareListData, HashMap<String, DWMediaPlayer> _mDWMediaPlayerList, VideoSquareInfo _mVideoSquareInfo){
+		public SurfaceViewCallback(VideoSquareListViewAdapter _mVideoSquareListViewAdapter, int _position, HashMap<String, SurfaceHolder> _mHolderList, List<VideoSquareInfo> _mVideoSquareListData, HashMap<String, DWMediaPlayer> _mDWMediaPlayerList, VideoSquareInfo _mVideoSquareInfo){
+			this.position=_position;
+			this.mHolderList=_mHolderList;
 			this.mVideoSquareInfo=_mVideoSquareInfo;
 			this.mDWMediaPlayerList = _mDWMediaPlayerList;
 			this.mVideoSquareListData = _mVideoSquareListData;
+			this.mVideoSquareListViewAdapter = _mVideoSquareListViewAdapter;
 		}
 		
 		@Override
@@ -28,36 +36,23 @@ public class SurfaceViewCallback implements Callback{
 
 		@Override
 		public void surfaceCreated(SurfaceHolder arg0) {
-			DWMediaPlayer player = mDWMediaPlayerList.get(mVideoSquareInfo.id);
-			if(null !=player){
-				LogUtils.d("SSS============surfaceCreated=====111====id="+mVideoSquareInfo.id);
-				updatePlayerState(PlayerState.allowbuffer);
-				player.setDisplay(arg0);
-				player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			LogUtils.d("SSS============surfaceCreated=====111====position="+position);
+			if(!mHolderList.containsKey(""+position)){
+				mHolderList.put(""+position, arg0);
+				LogUtils.d("SSS============mHolderList=====position="+position+"===11111===SurfaceHolder===="+arg0);
+			}
+			
+			if(0 == position){
+				mVideoSquareListViewAdapter.updatePlayerState(0);
 			}
 		}
 
 		@Override
 		public void surfaceDestroyed(SurfaceHolder arg0) {
-			LogUtils.d("SSS============surfaceDestroyed=========id="+mVideoSquareInfo.id);
-			DWMediaPlayer player = mDWMediaPlayerList.get(mVideoSquareInfo.id);
-			if(null !=player){
-				if(player.isPlaying()){
-					player.pause();
-					updatePlayerState(PlayerState.pause);
-				}
+			if(mHolderList.containsKey(""+position)){
+				mHolderList.remove(""+position);
 			}
+			
+			LogUtils.d("SSS============surfaceDestroyed=========position="+position);
 		}
-		
-		private void updatePlayerState(PlayerState mPlayerState){
-			mVideoSquareInfo.mPlayerState=mPlayerState;
-			for(int i=0; i<mVideoSquareListData.size(); i++){
-				String id = mVideoSquareListData.get(i).id;
-				if(id.equals(mVideoSquareInfo.id)){
-					mVideoSquareListData.get(i).mPlayerState = mPlayerState;
-					break;
-				}
-			}
-		}
-		
 }

@@ -7,25 +7,33 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnErrorListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,11 +50,18 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	private DisplayImageOptions options;
 	private int form = 1;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
+	private DWMediaPlayer mDWMediaPlayer=null;
+	private HashMap<String, SurfaceHolder> mHolderList=null;
+	private String curVideoid="";
+	private int index;
+	private ListView mRTPullListView=null;
 
-	public VideoSquareListViewAdapter(Context context,int plform) {
+	public VideoSquareListViewAdapter(ListView _mRTPullListView, Context context,int plform) {
 		mContext = context;
+		this.mRTPullListView=_mRTPullListView;
 		mVideoSquareListData = new ArrayList<VideoSquareInfo>();
 		mDWMediaPlayerList = new HashMap<String, DWMediaPlayer>();
+		mHolderList = new HashMap<String, SurfaceHolder>();
 		form = plform;//1:热门页面 2:广场页
 		options = new DisplayImageOptions.Builder()
 				// .showImageOnLoading(R.drawable.ic_stub)
@@ -57,6 +72,55 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				// .displayer(new RoundedBitmapDisplayer(20))
 				.build();
+		
+//		mDWMediaPlayer = new DWMediaPlayer();
+//		mDWMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
+//			@Override
+//			public void onPrepared(MediaPlayer arg0) {
+//				arg0.start();
+//				System.out.println("SSSYYY========arg0.start();=======");
+//			}
+//		});
+//		mDWMediaPlayer.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
+//			@Override
+//			public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
+//				int first = mRTPullListView.getFirstVisiblePosition();
+//				int position = index - first;
+//				View view = mRTPullListView.getChildAt(position);
+//				if(null != view){
+//					RingView ring = (RingView)view.findViewById(R.id.mRingView);
+//					ImageView image = (ImageView)view.findViewById(R.id.mPreLoading);
+//					if(null != ring){
+//						ring.setVisibility(View.VISIBLE);
+//						ring.setProcess(arg1);
+//						System.out.println("SSSYYY========onBufferingUpdate==VISIBLE====arg1="+arg1);
+//						if(arg1 >= 100){
+//							ring.setVisibility(View.GONE);
+//						}
+//					}
+//					if(null != image){
+//						if(arg1 >= 100){
+//							image.setVisibility(View.GONE);
+//						}
+//					}
+//				}
+////				System.out.println("SSSYYY========onBufferingUpdate======arg1="+arg1);
+//			}
+//		});
+//		mDWMediaPlayer.setOnErrorListener(new OnErrorListener() {
+//			@Override
+//			public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+//				System.out.println("SSSYYY========onError======arg1="+arg1+"=arg2="+arg2);
+//				return false;
+//			}
+//		});
+//		mDWMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+//			@Override
+//			public void onCompletion(MediaPlayer arg0) {
+//				mDWMediaPlayer.setDisplay(null);
+//				System.out.println("SSSYYY========onCompletion======");
+//			}
+//		});
 	}
 
 	public void setData(List<VideoSquareInfo> data) {
@@ -86,7 +150,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		VideoSquareInfo mVideoSquareInfo = mVideoSquareListData.get(arg0);
-
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(
 					R.layout.video_square_list_item, null);
@@ -118,7 +181,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 
 			holder.mRingView = (RingView) convertView
 					.findViewById(R.id.mRingView);
-			
+//			holder.mTextureView = (TextureView)convertView.findViewById(R.id.mTextureView);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -194,14 +257,14 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);
 
-		holder.mSurfaceView.destroyDrawingCache();
-		SurfaceHolder mSurfaceHolder = holder.mSurfaceView.getHolder();
-		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
-				width, height);
-		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
-		mSurfaceHolder.addCallback(new SurfaceViewCallback(
-				mVideoSquareListData, mDWMediaPlayerList, mVideoSquareInfo));
+//		holder.mSurfaceView.setZOrderMediaOverlay(true);
+//		SurfaceHolder mSurfaceHolder = holder.mSurfaceView.getHolder();
+////		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
+//				width, height);
+//		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
+//		mSurfaceHolder.addCallback(new SurfaceViewCallback(this, arg0, mHolderList,
+//				mVideoSquareListData, mDWMediaPlayerList, mVideoSquareInfo));
 
 		// imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait,
 		// holder.userhead, options, null);
@@ -243,17 +306,21 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			// imageLoader.clearMemoryCache();
 			// imageLoader.clearDiscCache();
 		}
-		if (null != mDWMediaPlayerList) {
-			Iterator<String> iter = mDWMediaPlayerList.keySet().iterator();
-			while (iter.hasNext()) {
-				Object key = iter.next();
-				if (null != key) {
-					DWMediaPlayer player = mDWMediaPlayerList.get(key);
-					if (null != player) {
-						player.release();
-					}
-				}
-			}
+//		if (null != mDWMediaPlayerList) {
+//			Iterator<String> iter = mDWMediaPlayerList.keySet().iterator();
+//			while (iter.hasNext()) {
+//				Object key = iter.next();
+//				if (null != key) {
+//					DWMediaPlayer player = mDWMediaPlayerList.get(key);
+//					if (null != player) {
+//						player.release();
+//					}
+//				}
+//			}
+//		}
+		
+		if(null != mDWMediaPlayer){
+			mDWMediaPlayer.release();
 		}
 	}
 
@@ -291,19 +358,60 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		Button sharebtn;
 		Button likebtn;
 		RingView mRingView;
+		TextureView mTextureView;
 	}
 	
-	public void updatePlayerState(){
-		for(int i=0; i<mDWMediaPlayerList.size(); i++){
-			DWMediaPlayer player = mDWMediaPlayerList.get(i);
-			if(null != player){
-				if(player.isPlaying()){
-					player.pause();
-					LogUtils.d("SSS======updatePlayerState============pause=====");
-					
-				}
-			}
-		}
+	public void pausePlayer(){
+//		if(mDWMediaPlayer.isPlaying()){
+//			mDWMediaPlayer.pause();
+//		}
+	}
+	
+	public void startPlayer(){
+//		if(!mDWMediaPlayer.isPlaying()){
+//			mDWMediaPlayer.start();
+//		}
+	}
+	
+	public void updatePlayerState(int _index){
+//		String vid = mVideoSquareListData.get(_index).mVideoEntity.videoid;
+////		LogUtils.d("SSS===updatePlayerState==vid==="+vid);
+//		if(!curVideoid.equals(vid)){
+////			LogUtils.d("SSS===updatePlayerState==index==="+_index+"==vid="+vid);
+////			LogUtils.d("SSS===updatePlayerState==mHolderList==="+mHolderList.size());
+//			
+//			View view = mRTPullListView.getChildAt(index);
+//			if(null != view){
+//				RingView ring = (RingView)view.findViewById(R.id.mRingView);
+//				ImageView image = (ImageView)view.findViewById(R.id.mPreLoading);
+//				if(null != ring){
+//					ring.setProcess(0);
+//					ring.setVisibility(View.GONE);
+//				}
+//				if(null != image){
+//					image.setVisibility(View.VISIBLE);
+//				}
+//			}
+//				
+//			mDWMediaPlayer.reset();
+//			int first = mRTPullListView.getFirstVisiblePosition();
+//			int position = _index - first;
+//			SurfaceHolder mSurfaceHolder=null;
+//			if(position <= 0)
+//				position = 0;
+//			if(position >= mHolderList.size())
+//				position = mHolderList.size() - 1;
+//			mSurfaceHolder = mHolderList.get(""+_index);
+//			
+//			LogUtils.d("SSS===updatePlayerState==_index==="+_index+"===2222===mSurfaceHolder==="+mSurfaceHolder);
+//			
+//			index = _index;
+//			curVideoid = vid;
+//			String videoid = mVideoSquareListData.get(_index).mVideoEntity.videoid;
+//			mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY, mContext);
+//			mDWMediaPlayer.setDisplay(mSurfaceHolder);
+//			mDWMediaPlayer.prepareAsync();
+//		}
 	}
 	
 	
