@@ -49,6 +49,15 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 			if(null != mCustomProgressDialog){
 				mCustomProgressDialog.show();
 			}
+			if(mcontext instanceof VideoSquareActivity){
+				VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
+				vsa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
+				System.out.println("shareid="+vsa.shareVideoId);
+			}else if(mcontext instanceof VideoSquarePlayActivity){
+				VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
+				vspa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
+				System.out.println("shareid="+vspa.shareVideoId);
+			}
 			
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getShareUrl(mVideoSquareInfo.mVideoEntity.videoid, mVideoSquareInfo.mVideoEntity.type);
 			System.out.println("YYYY+RESULT3333333333"+result);
