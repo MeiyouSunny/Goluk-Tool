@@ -250,7 +250,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 						}).create();
 						
 						dialog	.show();
-					}else if(mApp.autoLoginStatus == 2){
+					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess == true){
 						intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
 						startActivity(intent);
 						if(mApp.loginoutStatus == true){
