@@ -158,6 +158,8 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 			WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 			mWac = new WifiConnectManager(wm,this);
 		}
+		
+		console.log("获取wifi列表---getWiFiList---");
 		// 获取文件列表tcay_ap_ipc
 		mWac.scanWifiList("",b);
 	}
@@ -168,11 +170,12 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	private void saveHotWiFiMac(WifiRsBean bean){
 		//获取网关
 		String mac = bean.getPh_ip();
+		console.log("手机网关地址---saveHotWiFiMac---" + mac);
 		if(!"".equals(mac) && null != mac){
 			WiFiInfo.GolukMAC = mac;
 			
 			//获取wifi列表
-			getWiFiList(false);
+			getWiFiList(true);
 		}
 		else{
 			console.toast("创建热点成功,没有获取到手机热点网关", mContext);

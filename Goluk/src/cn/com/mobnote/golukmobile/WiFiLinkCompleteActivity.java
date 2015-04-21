@@ -114,7 +114,7 @@ public class WiFiLinkCompleteActivity extends Activity implements OnClickListene
 		mLinkedDesc = (TextView) findViewById(R.id.linked_desc);
 		mLinkImage = (ImageView) findViewById(R.id.imageView2);
 		mLinkAnim = (AnimationDrawable)mLinkImage.getBackground();
-		
+		mLinkAnim.start();
 		mCompleteBtn = (Button)findViewById(R.id.complete_btn);
 		
 		//注册事件
