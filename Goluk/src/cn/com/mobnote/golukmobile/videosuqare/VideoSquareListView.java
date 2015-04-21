@@ -117,7 +117,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 //		});
 		
 		
-		mRTPullListView.setOnScrollListener(new OnScrollListener() {
+		/*mRTPullListView.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
@@ -143,7 +143,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		});
 		
 		RelativeLayout loading = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.video_square_below_loading, null); 
-		mRTPullListView.addFooterView(loading);
+		mRTPullListView.addFooterView(loading);*/
 		
 	}
 	

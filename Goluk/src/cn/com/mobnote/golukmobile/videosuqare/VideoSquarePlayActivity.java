@@ -8,8 +8,11 @@ import com.umeng.socialize.sso.UMSsoHandler;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
 public class VideoSquarePlayActivity extends Activity implements
@@ -28,6 +32,8 @@ public class VideoSquarePlayActivity extends Activity implements
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter = null;
 	private List<VideoSquareInfo> mDataList = null;
 	private CustomProgressDialog mCustomProgressDialog = null;
+	
+	public String shareVideoId; 
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
@@ -166,6 +172,18 @@ public class VideoSquarePlayActivity extends Activity implements
 			break;
 		}
 	}
+	
+	// 分享成功后需要调用的接口
+	public void shareSucessDeal(boolean isSucess, String channel) {
+			if (!isSucess) {
+				Toast.makeText(VideoSquarePlayActivity.this, "第三方分享失败", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			Toast.makeText(VideoSquarePlayActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
+			System.out.println("shareid"+shareVideoId);
+			boolean result = GolukApplication.getInstance().getVideoSquareManager().getShareUrl(shareVideoId,channel);
+			System.out.println("shareid"+result);
+		}
 
 	/**
 	 * 关闭加载中对话框

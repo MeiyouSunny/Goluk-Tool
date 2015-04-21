@@ -801,7 +801,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		}
 		Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
 
-		final String json = createShareSucesNotifyJson(mVideoVid, "1");
+		final String json = createShareSucesNotifyJson(mVideoVid, channel);
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_ShareNotify, json);
 
