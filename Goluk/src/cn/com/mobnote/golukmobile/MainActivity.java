@@ -8,38 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
-import com.rd.car.CarRecorderManager;
-import com.tencent.bugly.crashreport.CrashReport;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.utils.Log;
-
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.entity.LngLat;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.map.BaiduMapManage;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.LocalVideoListAdapter;
-import cn.com.mobnote.video.LocalVideoManage;
-import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
-import cn.com.mobnote.video.OnLineVideoManage;
-import cn.com.mobnote.view.MyGridView;
-import cn.com.mobnote.wifi.WiFiConnection;
-import cn.com.mobnote.wifi.WifiAutoConnectManager;
-import cn.com.mobnote.wifi.WifiConnCallBack;
-import cn.com.mobnote.wifi.WifiRsBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -52,6 +20,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiInfo;
@@ -68,21 +37,28 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.entity.LngLat;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -149,7 +125,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private LayoutInflater mLayoutInflater = null;
 	
 	/** 地图layout */
-	private RelativeLayout mMapLayout = null;
+	private LinearLayout mMapLayout = null;
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
 	/** 直播marker列表按钮 */
@@ -177,17 +153,21 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private Button mIpcWiFiBtn = null;
 	/** 更多按钮 */
 	private Button mMoreBtn = null;
+	/** 视频广场按钮 */
+	private Button msquareBtn = null;
 	/** 本地视频按钮 */
 	private Button mLocalVideoListBtn = null;
 	/** 分享网络直播 */
 	private Button mShareLiveBtn = null;
-	
-	
+	/** wifi连接状态 */
+	private ImageView mWifiState = null;
 	
 	/** 登录状态 */
 	private Button mLoginStatusBtn = null;
 	/** wifi连接状态文本 */
 	private Button mWiFiLinkStatus = null;
+	private TextView mWifiStateTv = null;
+	private RelativeLayout mWifiLayout = null;
 	private int mWiFiStatus = 0;
 	/** 登录布局 */
 	private View mLoginLayout = null;
@@ -302,8 +282,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
 		
-		mIpcWiFiBtn = (Button) findViewById(R.id.wifi_status_btn);
+//		mIpcWiFiBtn = (Button) findViewById(R.id.wifi_status_btn);
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
+		msquareBtn = (Button) findViewById(R.id.index_square_btn);
+		mWifiLayout = (RelativeLayout) findViewById(R.id.index_wifi_layout);
+		mWifiState = (ImageView) findViewById(R.id.index_wiifstate);
+		mWifiStateTv = (TextView) findViewById(R.id.wifi_conn_txt);
 		
 		//本地视频更多按钮
 		mLocalVideoListBtn = (Button)findViewById(R.id.share_local_video_btn);
@@ -325,10 +309,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mShareBtn.setOnClickListener(this);
 		mShareBtn.setOnTouchListener(this);
 		mCloseShareBtn.setOnClickListener(this);
-		mIpcWiFiBtn.setOnClickListener(this);
-		mIpcWiFiBtn.setOnTouchListener(this);
+		mWifiState.setOnClickListener(this);
+//		mIpcWiFiBtn.setOnClickListener(this);
+//		mIpcWiFiBtn.setOnTouchListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
+		msquareBtn.setOnClickListener(this);
+		msquareBtn.setOnTouchListener(this);
 		mLocalVideoListBtn.setOnClickListener(this);
 		findViewById(R.id.share_mylive_btn).setOnClickListener(this);
 		
@@ -399,7 +386,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 * 初始化地图
 	 */
 	private void initMap(){
-		mMapLayout = (RelativeLayout) findViewById(R.id.map_layout);
+		mMapLayout = (LinearLayout) findViewById(R.id.map_layout);
 		//获取地图控件引用
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		
@@ -430,22 +417,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		option.setScanSpan(5000);
 		mLocClient.setLocOption(option);
 		mLocClient.start();
-		
-		//注册touch拦截事件
-		//为了解决地图拖动事件冲突问题
-//		RelativeLayout mapBlankView = (RelativeLayout)findViewById(R.id.map_blankview);
-//		mapBlankView.setOnTouchListener(new View.OnTouchListener() {
-//			@SuppressLint("ClickableViewAccessibility")
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				if(event.getAction() == MotionEvent.ACTION_UP){
-//					mScrollView.requestDisallowInterceptTouchEvent(false);
-//				}else{
-//					mScrollView.requestDisallowInterceptTouchEvent(true);
-//				}
-//				return false;
-//			}
-//		});
 		
 		//地图加载完成事件
 		mBaiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
@@ -799,6 +770,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
+	/** 连接中 */
+	private final int WIFI_STATE_CONNING = 1;
+	/** 连接*/
+	private final int WIFI_STATE_SUCCESS = 2;
+	/** 未连接 */
+	private final int WIFI_STATE_FAILED = 3;
+	
 	/**
 	 * 链接中断更新页面
 	 */
@@ -813,23 +791,55 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case 2:
 				//已连接
-				mIpcWiFiBtn.setText("已连接");
-				mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
-				img = res.getDrawable(R.drawable.index_icon_xingche_connect);
+//				mIpcWiFiBtn.setText("已连接");
+//				mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
+//				img = res.getDrawable(R.drawable.index_icon_xingche_connect);
+				wifiConnectedSucess();
 				mWiFiStatus = 2;
 			break;
 			case 3:
 				//未连接
-				mIpcWiFiBtn.setText("未连接");
-				mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
-				img = res.getDrawable(R.drawable.index_icon_xingche_btn);
+//				mIpcWiFiBtn.setText("未连接");
+//				mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
+//				img = res.getDrawable(R.drawable.index_icon_xingche_btn);
 				mWiFiStatus = 0;
+				wifiConnectFailed();
 			break;
 		}
 		//调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-		mIpcWiFiBtn.setCompoundDrawables(null, img, null, null);
+//		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+		//mIpcWiFiBtn.setCompoundDrawables(null, img, null, null);
 	}
+	
+	/** 音量图片动画 */
+	private AnimationDrawable mVolumeImgAnimation = null;
+	private void startWifi() {
+		mWifiState.setBackgroundResource(R.anim.anim_wifi);
+		this.mVolumeImgAnimation = (AnimationDrawable) this.mWifiState.getBackground();
+		this.mVolumeImgAnimation.start();
+	}
+	
+	private void wifiConnectedSucess() {
+		if (null != mVolumeImgAnimation) {
+			mVolumeImgAnimation.stop();
+			mVolumeImgAnimation = null;
+		}
+		mWifiStateTv.setText("已连接");
+		mWifiLayout.setBackgroundResource(R.drawable.index_linked);
+		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
+	}
+	
+	private void wifiConnectFailed() {
+		if (null != mVolumeImgAnimation) {
+			mVolumeImgAnimation.stop();
+			mVolumeImgAnimation = null;
+		}
+		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
+		mWifiStateTv.setText("未连接");
+		mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
+		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
+	}
+	
 	
 	/**
 	 * 登录回调
@@ -963,19 +973,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (v.getId()) {
-			case R.id.wifi_status_btn:
-				//如果已连接,不改变文字颜色
-				if(mWiFiStatus != 2){
-					switch (action) {
-						case MotionEvent.ACTION_DOWN:
-							mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
-						break;
-						case MotionEvent.ACTION_UP:
-							mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
-						break;
-					}
-				}
-			break;
+//			case R.id.wifi_status_btn:
+//				//如果已连接,不改变文字颜色
+//				if(mWiFiStatus != 2){
+//					switch (action) {
+//						case MotionEvent.ACTION_DOWN:
+//							mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
+//						break;
+//						case MotionEvent.ACTION_UP:
+//							mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
+//						break;
+//					}
+//				}
+//			break;
 			case R.id.more_btn:
 				switch (action) {
 					case MotionEvent.ACTION_DOWN:
@@ -996,18 +1006,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					break;
 				}
 			break;
+			case R.id.index_square_btn:
+				switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					msquareBtn.setTextColor(Color.rgb(0,197,177));
+					break;
+				case MotionEvent.ACTION_UP:
+					msquareBtn.setTextColor(Color.rgb(103,103,103));
+					break;
+				}
+				break;
 		}
 		return false;
-	}
-	
-	private void test111() {
-		double lonStr = 116.357428;
-		double latStr = 39.93923;
-		
-		double lonSe= 116.445671;
-		double latSe = 39.928892;
-		
-		GetBaiduAddress.getInstance().searchAddress(latSe, lonSe);
 	}
 	
 	@Override
@@ -1034,26 +1044,15 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
-			case R.id.wifi_status_btn:
-				//跳转到ipc页面
-				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-				startActivity(i);
-			break;
+//			case R.id.wifi_status_btn:
+//				//跳转到ipc页面
+//				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+//				startActivity(i);
+//			break;
 			case R.id.more_btn:
-				//读取SharedPreference中用户的信息
-				SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
-				boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-				//判断是否是第一次登录
-				if(!isFirstLogin){//登录过
-					//更多页面
-					Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
-					startActivity(more);
-				}else{
-					//未登录
-					Intent moreNoLogin = new Intent(MainActivity.this,IndexMoreNoLoginActivity.class);
-					startActivity(moreNoLogin);
-				}
-//				this.finish();
+				//更多页面
+				Intent more = new Intent(MainActivity.this, IndexMoreActivity.class);
+				startActivity(more);
 			break;
 			case R.id.share_local_video_btn:
 				click_toLocalVideoShare();
@@ -1077,9 +1076,16 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			case R.id.login_btn:
 				//登录
 //				login();
-			break;
+				break;
+			case R.id.index_square_btn:
+				// 视频广场
+				break;
+			case R.id.index_wiifstate:
+				startWifi();
+				break;
 		}
 	}
+	
 	
 	private void click_toLocalVideoShare() {
 		if (!mApp.isUserLoginSucess) {
