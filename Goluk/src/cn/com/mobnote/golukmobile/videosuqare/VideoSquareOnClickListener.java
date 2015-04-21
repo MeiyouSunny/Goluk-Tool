@@ -10,12 +10,16 @@ import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareManagerFn {
 	
@@ -24,6 +28,12 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 	VideoSquareInfo mVideoSquareInfo;
 	SharePlatformUtil sharePlatform;
 	int form = 1;
+	AlertDialog dialog;
+	
+	AlertDialog	ad;
+	
+	AlertDialog	confirmation;
+	
 	
 	public static CustomProgressDialog mCustomProgressDialog=null;
 	
@@ -82,7 +92,6 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 			}
 			
 			boolean flog = GolukApplication.getInstance().getVideoSquareManager().clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
-
 			if(null != VideoSquareListView.mHandler){
 				Message msg = new Message();
 				msg.what = 1;
@@ -91,9 +100,94 @@ public class VideoSquareOnClickListener implements OnClickListener ,VideoSuqareM
 			}
 			
 			break;
+		case R.id.report_icon:
+			this.showDialog();
+			break;
 		default:
 			break;
 		}
+	}
+	
+	/**
+	  * 弹出举报的窗口
+	  * @Title: showDialog 
+	  * @Description: TODO void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	public void showDialog(){
+		dialog = new AlertDialog.Builder(mcontext).create();
+		dialog.show();  
+		dialog.getWindow().setContentView(R.layout.video_square_dialog_main);  
+		dialog.getWindow().findViewById(R.id.report).setOnClickListener(new View.OnClickListener() {  
+            @Override  
+            public void onClick(View v) {
+            	dialog.dismiss();
+            	ad = new AlertDialog.Builder(mcontext).create();
+            	ad.show();  
+            	ad.getWindow().setContentView(R.layout.video_square_dialog_selected);  
+            	ad.getWindow().findViewById(R.id.sqds).setOnClickListener(new View.OnClickListener() {  
+                    @Override  
+                    public void onClick(View v) {
+                    	confirmation("1");
+                    }  
+                });
+            	ad.getWindow().findViewById(R.id.yyhz).setOnClickListener(new View.OnClickListener() {  
+                    @Override  
+                    public void onClick(View v) {
+                    	confirmation("2");
+                    }  
+                });
+            	ad.getWindow().findViewById(R.id.zzmg).setOnClickListener(new View.OnClickListener() {  
+                    @Override  
+                    public void onClick(View v) { 
+                    	confirmation("3");
+                    }  
+                });
+            	ad.getWindow().findViewById(R.id.qtyy).setOnClickListener(new View.OnClickListener() {  
+                    @Override  
+                    public void onClick(View v) {
+                    	confirmation("4");
+                    }  
+                });
+            	ad.getWindow().findViewById(R.id.qx).setOnClickListener(new View.OnClickListener() {  
+                    @Override  
+                    public void onClick(View v) {
+                    	ad.dismiss();
+                    }  
+                });
+            }  
+        });
+		
+		dialog.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {  
+            @Override  
+            public void onClick(View v) {  
+            	dialog.dismiss();  
+            }  
+        });  
+	}
+	
+	public void confirmation(final String reporttype){
+		ad.dismiss();
+		confirmation  = new AlertDialog.Builder(mcontext).create();
+		confirmation.show();  
+		confirmation.getWindow().setContentView(R.layout.video_square_dialog_confirmation);  
+		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {  
+            @Override  
+            public void onClick(View v) { 
+            	boolean flog = GolukApplication.getInstance().getVideoSquareManager().report("1", mVideoSquareInfo.mVideoEntity.videoid, reporttype);
+            	if(flog){
+            		Toast.makeText(mcontext, "举报成功，我们稍后会进行处理",Toast.LENGTH_SHORT).show();
+            	}
+            	confirmation.dismiss();  
+            }  
+        });  
+		confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {  
+            @Override  
+            public void onClick(View v) {  
+            	confirmation.dismiss();  
+            }  
+        });  
 	}
 	
 	/**

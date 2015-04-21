@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="210dp"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:background="#ff0000"
+	android:orientation="vertical">
+    <Button 
+        android:id="@+id/sqds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="色情低俗"/>
+    <Button 
+        android:id="@+id/yyhz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="谣言惑众"/>
+    <Button 
+        android:id="@+id/zzmg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="政治敏感"/>
+    <Button 
+        android:id="@+id/qtyy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="其它原因"/>
+    <Button 
+        android:id="@+id/qx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="取消"/>
+</LinearLayout>

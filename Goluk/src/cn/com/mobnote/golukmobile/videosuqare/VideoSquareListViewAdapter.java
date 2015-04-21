@@ -24,6 +24,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Button;
@@ -106,7 +107,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.mSurfaceView = (SurfaceView) convertView
 					.findViewById(R.id.mSurfaceView);
 			holder.mSurfaceView.setZOrderMediaOverlay(true);
-			holder.reporticon = (ImageView) convertView
+			holder.reporticon = (ImageButton) convertView
 					.findViewById(R.id.report_icon);
 			holder.liveicon = (ImageView) convertView
 					.findViewById(R.id.live_icon);
@@ -131,6 +132,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.reporticon.setVisibility(View.VISIBLE);
 			holder.liveicon.setVisibility(View.GONE);
 			holder.mSurfaceView.setVisibility(View.VISIBLE);
+			holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
 		}
 		
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
@@ -284,7 +286,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		RelativeLayout mPlayerLayout;
 		SurfaceView mSurfaceView;
 		ImageView liveicon;
-		ImageView reporticon;
+		ImageButton reporticon;
 		ImageView mPreLoading;
 		Button sharebtn;
 		Button likebtn;

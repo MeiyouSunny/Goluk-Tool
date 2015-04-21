@@ -85,7 +85,7 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 		
 		System.out.println("shareid"+shareVideoId);
 		boolean result = GolukApplication.getInstance().getVideoSquareManager()
-				.getShareUrl(shareVideoId, channel);
+				.shareVideoUp(channel,shareVideoId);
 		System.out.println("shareid"+result);
 	}
 

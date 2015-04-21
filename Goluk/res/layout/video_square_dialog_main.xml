@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="210dp"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:background="#ffffff"
+	android:orientation="vertical">
+    <Button 
+        android:id="@+id/report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#828282"
+        android:textColor="#ffffff"
+        android:text="举报"/>
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"/>
+    <Button 
+        android:id="@+id/exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#828282"
+        android:textColor="#ffffff"
+        android:text="取消"/>
+    
+</LinearLayout>

@@ -83,39 +83,38 @@ public class VideoCategoryView{
 			// TODO Auto-generated method stub
 			switch (view.getId()) {
 				case R.id.live_categroy:
-//					startActivity("0");
+					startActivity("1","0");
 					break;
 				case R.id.category_btn_one:
-					startActivity("1");
+					startActivity("2","1");
 					break;
 				case R.id.category_btn_two:
-					startActivity("2");
+					startActivity("2","2");
 					break;
 				case R.id.category_btn_three:
-					startActivity("3");
+					startActivity("2","3");
 					break;
 				case R.id.category_btn_four:
-					startActivity("4");
+					startActivity("2","4");
 					break;
 				case R.id.category_btn_five:
-					startActivity("5");
+					startActivity("2","5");
 					break;
 				case R.id.category_btn_six:
-					startActivity("6");
+					startActivity("2","6");
 					break;
 				case R.id.category_btn_seven:
-					startActivity("7");
+					startActivity("2","7");
 					break;
 				case R.id.category_btn_eight:
-					startActivity("8");
+					startActivity("2","8");
 					break;
 				case R.id.category_btn_nine:
-					startActivity("9");
+					startActivity("2","9");
 					break;
 				case R.id.category_btn_ten:
-					startActivity("10");
+					startActivity("2","10");
 					break;
-				
 				case R.id.back_btn:
 					VideoSquarePlayActivity vpa = (VideoSquarePlayActivity) mContext;
 					vpa.finish();
@@ -127,10 +126,11 @@ public class VideoCategoryView{
 		}
 	}
 
-	public void startActivity(String type) {
+	public void startActivity(String type,String attribute) {
 		VideoSquareActivity play = (VideoSquareActivity)mContext;
 		Intent intent = new Intent(); 
-		intent.putExtra("category", type);
+		intent.putExtra("type", type);
+		intent.putExtra("attribute", attribute);
         intent.setClass(play,VideoSquarePlayActivity.class);
         play.startActivity(intent);
 	}

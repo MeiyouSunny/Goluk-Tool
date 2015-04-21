@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
@@ -123,8 +124,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 					}
 				}
 				mCurrentShareType = null;
-				// Toast.makeText(mActivity, showText,
-				// Toast.LENGTH_SHORT).show();
+				//Toast.makeText(mActivity, showText,Toast.LENGTH_SHORT).show();
 				dismiss();
 			}
 		});

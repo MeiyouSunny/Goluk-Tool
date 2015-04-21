@@ -41,7 +41,9 @@ public class VideoSquarePlayActivity extends Activity implements
 	/** 是否还有分页 */
 	private boolean isHaveData = true;
 	/** 视频广场类型 */
-	private String category;
+	private String type;
+	//点播分类
+	private String attribute;
 	
 	SharePlatformUtil sharePlatform;
 	
@@ -51,8 +53,8 @@ public class VideoSquarePlayActivity extends Activity implements
 		setContentView(R.layout.video_square_play);
 		Intent intent = getIntent();
 
-		category = intent.getStringExtra("category");// 视频广场类型
-
+		type = intent.getStringExtra("type");// 视频广场类型
+		attribute = intent.getStringExtra("attribute");//点播类型
 		GolukApplication.getInstance().getVideoSquareManager()
 				.addVideoSquareManagerListener("videocategory", this);
 		mDataList = new ArrayList<VideoSquareInfo>();
@@ -92,7 +94,7 @@ public class VideoSquarePlayActivity extends Activity implements
 		}
 
 		boolean result = GolukApplication.getInstance().getVideoSquareManager()
-				.getSquareList("1", "0", category, "0", "");
+				.getSquareList("1", type, attribute, "0", "");
 		if (!result) {
 			closeProgressDialog();
 		}
@@ -181,7 +183,7 @@ public class VideoSquarePlayActivity extends Activity implements
 			}
 			Toast.makeText(VideoSquarePlayActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
 			System.out.println("shareid"+shareVideoId);
-			boolean result = GolukApplication.getInstance().getVideoSquareManager().getShareUrl(shareVideoId,channel);
+			boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
 			System.out.println("shareid"+result);
 		}
 
