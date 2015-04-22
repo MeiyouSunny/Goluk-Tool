@@ -142,7 +142,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 						enableSecurity = 1;
 					}
 					boolean c = GolukApplication.getInstance().getIPCControlManager().setMotionCfg(enableSecurity, snapInterval);
-					System.out.println("YYY===========setMotionCfg==========a="+c);
+					LogUtil.e("xuhw", "YYYYYY===========setMotionCfg==========a="+c);
 					break;
 				case R.id.sylz://声音录制
 					if(null != mVideoConfigState){

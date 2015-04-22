@@ -2,14 +2,18 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.utils.LogUtil;
 
  /**
   * 1.编辑器必须显示空白处
@@ -43,7 +47,9 @@ public class FormatSDCardActivity extends BaseActivity implements OnClickListene
 		setTitle("格式化SD卡");
 		
 		findViewById(R.id.mFormat).setOnClickListener(this);
-		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("format", this);
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("format", this);
+		}
 	}
 	
 	@Override
@@ -51,16 +57,27 @@ public class FormatSDCardActivity extends BaseActivity implements OnClickListene
 		super.onClick(v);
 		switch (v.getId()) {
 			case R.id.mFormat:
-				if(GolukApplication.getInstance().getIpcIsLogin()){
-					
-				}
-				
-				if(null == mCustomFormatDialog){
-					mCustomFormatDialog = new CustomFormatDialog(this);
-//					mCustomFormatDialog.cancel();
-					mCustomFormatDialog.setMessage("正在格式化SD卡，请稍候...");
-					mCustomFormatDialog.show();
-				}
+				CustomDialog dialog = new CustomDialog(this);
+				dialog.setMessage("是否格式化SD卡？", Gravity.CENTER);
+				dialog.setLeftButton("是", new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						if(GolukApplication.getInstance().getIpcIsLogin()){
+							boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
+							LogUtil.e("xuhw", "YYYYYY=====formatDisk===flag="+flag);
+							if(flag){
+//								if(null == mCustomFormatDialog){
+									mCustomFormatDialog = new CustomFormatDialog(FormatSDCardActivity.this);
+									mCustomFormatDialog.setCancelable(false);
+									mCustomFormatDialog.setMessage("正在格式化SD卡，可能需要1~2分钟，请稍候...");
+									mCustomFormatDialog.show();
+//								}
+							}
+						}
+					}
+				});
+				dialog.setRightButton("否", null);
+				dialog.show();
 				break;
 	
 			default:
@@ -77,17 +94,29 @@ public class FormatSDCardActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("format");
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("format");
+		}
 	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(msg == IPC_VDCP_Msg_FormatDisk){
-				System.out.println("YYY====IPC_VDCP_Msg_FormatDisk====msg="+msg+"===param1="+param1+"==param2="+param2);
-				if(param1 == RESULE_SUCESS){
-					
+				if(null != mCustomFormatDialog && mCustomFormatDialog.isShowing()){
+					mCustomFormatDialog.dismiss();
 				}
+				LogUtil.e("xuhw", "YYYYYY====IPC_VDCP_Msg_FormatDisk====msg="+msg+"===param1="+param1+"==param2="+param2);
+				String message="";
+				if(param1 == RESULE_SUCESS){
+					message = "SD卡格式化成功";
+				}else{
+					message = "SD卡格式化失败";
+				}
+				CustomDialog dialog = new CustomDialog(this);
+				dialog.setMessage(message, Gravity.CENTER);
+				dialog.setLeftButton("确定", null);
+				dialog.show();
 			}
 		}
 	}
