@@ -88,6 +88,7 @@ import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.location.BaiduPosition;
@@ -1047,20 +1048,22 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(i);
 			break;
 			case R.id.more_btn:
-				//读取SharedPreference中用户的信息
-				SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
-				boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-				//判断是否是第一次登录
-				if(!isFirstLogin){//登录过
-					//更多页面
-					Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
-					startActivity(more);
-				}else{
-					//未登录
-					Intent moreNoLogin = new Intent(MainActivity.this,IndexMoreNoLoginActivity.class);
-					startActivity(moreNoLogin);
-				}
-//				this.finish();
+				Intent more = new Intent(MainActivity.this,VideoSquareActivity.class);
+				startActivity(more);
+//				//读取SharedPreference中用户的信息
+//				SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+//				boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+//				//判断是否是第一次登录
+//				if(!isFirstLogin){//登录过
+//					//更多页面
+//					Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
+//					startActivity(more);
+//				}else{
+//					//未登录
+//					Intent moreNoLogin = new Intent(MainActivity.this,IndexMoreNoLoginActivity.class);
+//					startActivity(moreNoLogin);
+//				}
+////				this.finish();
 			break;
 			case R.id.share_local_video_btn:
 				click_toLocalVideoShare();

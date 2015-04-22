@@ -188,5 +188,12 @@
     <string name="live_login_prompt">登录后就可以和直播用户实时对讲了</string>
 
     <!-- 行车记录仪  	END -->
+    
+    
+    <!-- 视频广场 -->
+    <string name="release_to_refresh">松开刷新</string>
+    <string name="pull_to_refresh">下拉刷新</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="updating">最近更新：</string>
 
 </resources>
