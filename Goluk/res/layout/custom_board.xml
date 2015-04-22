@@ -152,6 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
+            android:textSize="18sp"
             android:background="#00000000"
             android:text="取消" />
     </LinearLayout>

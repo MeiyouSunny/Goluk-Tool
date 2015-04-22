@@ -151,10 +151,13 @@ public class VideoSquarePlayActivity extends Activity implements
 				wonderfulVisibleCount = visibleItemCount;
 			}
 		});
-
-		RelativeLayout loading = (RelativeLayout) LayoutInflater.from(this)
-				.inflate(R.layout.video_square_below_loading, null);
-		mRTPullListView.addFooterView(loading);
+		
+		//有下一页刷新
+		if(isHaveData){
+			RelativeLayout loading = (RelativeLayout) LayoutInflater.from(this)
+					.inflate(R.layout.video_square_below_loading, null);
+			mRTPullListView.addFooterView(loading);
+		}
 
 	}
 
