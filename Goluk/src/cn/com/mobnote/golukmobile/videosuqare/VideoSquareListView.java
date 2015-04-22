@@ -7,6 +7,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
+import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.content.Context;
 import android.os.Handler;
@@ -21,8 +22,8 @@ import android.widget.AbsListView.OnScrollListener;
 
 public class VideoSquareListView implements VideoSuqareManagerFn{
 	private Context mContext=null;
-	private ListView mRTPullListView=null;
-//	private RTPullListView mRTPullListView=null;
+	//private ListView mRTPullListView=null;
+	private RTPullListView mRTPullListView=null;
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter=null;
 	private List<VideoSquareInfo> mDataList=null;
 	private CustomProgressDialog mCustomProgressDialog=null;
@@ -31,14 +32,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
-	/** 是否还有分页*/
-	private boolean isHaveData = true;
 	public  static Handler mHandler=null;
 	private RelativeLayout mRootLayout=null;
 	
 	public VideoSquareListView(Context context){
 		mContext=context;
-		mRTPullListView = new ListView(mContext);
+		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
 		mRTPullListView.setDividerHeight((int)(2*jj));
 		mDataList = new ArrayList<VideoSquareInfo>();
@@ -101,49 +100,14 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		
 		mVideoSquareListViewAdapter.setData(mDataList);
 		mRTPullListView.setAdapter(mVideoSquareListViewAdapter);
-//		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
-//			@Override
-//			public void onRefresh() {
-////				mRTPullListView.onRefreshComplete();
-//				Toast.makeText(mContext, "下拉刷新", Toast.LENGTH_SHORT).show();
-//				mRTPullListView.postDelayed(new Runnable() {
-//					@Override
-//					public void run() {
-//						mRTPullListView.onRefreshComplete();
-//					}
-//				}, 1500);
-//				
-//			}
-//		});
-		
-		
-		/*mRTPullListView.setOnScrollListener(new OnScrollListener() {
+		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
-			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-					mVideoSquareListViewAdapter.startPlayer();
-					if(mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
-						if(isHaveData){
-							Toast.makeText(mContext, "上拉刷新", Toast.LENGTH_SHORT).show();
-							httpPost(false);
-						}
-						
-					}
-				}
-			}
-			@Override
-			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
-				mVideoSquareListViewAdapter.pausePlayer();
-				if(wonderfulFirstVisible != firstVisibleItem){
-					mVideoSquareListViewAdapter.updatePlayerState(firstVisibleItem);
-				}
-				wonderfulFirstVisible=firstVisibleItem;
-				wonderfulVisibleCount=visibleItemCount;
+			public void onRefresh() {
+//				mRTPullListView.onRefreshComplete();
+				Toast.makeText(mContext, "下拉刷新", Toast.LENGTH_SHORT).show();
+				httpPost(true);
 			}
 		});
-		
-		RelativeLayout loading = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.video_square_below_loading, null); 
-		mRTPullListView.addFooterView(loading);*/
 		
 	}
 	
@@ -198,21 +162,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		System.out.println("YYY======event="+event+"======msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
 			closeProgressDialog();
+			mRTPullListView.onRefreshComplete();
 			if(RESULE_SUCESS == msg){
 				List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param2);
-				if(list.size()>=2){
-					isHaveData = true;
-				}else{
-					isHaveData = false;
-				}
-				
-				if(mDataList.size()<=0){
-					mDataList = list;
-					initLayout();
-				}else{
-					mDataList.addAll(list);
-					flush();
-				}
+				mDataList.clear();
+				mDataList.addAll(list);
+				initLayout();
 			}
 		}
 	}

@@ -32,6 +32,8 @@ public class VideoSquarePlayActivity extends Activity implements
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter = null;
 	private List<VideoSquareInfo> mDataList = null;
 	private CustomProgressDialog mCustomProgressDialog = null;
+	private VideoSquareInfo begantime = null;
+	private VideoSquareInfo endtime = null;
 	
 	public String shareVideoId; 
 	/** 保存列表一个显示项索引 */
@@ -42,6 +44,10 @@ public class VideoSquarePlayActivity extends Activity implements
 	private boolean isHaveData = true;
 	/** 视频广场类型 */
 	private String type;
+	/**
+	 * 1：上拉  2：下拉   0:第一次
+	 */
+	private int uptype = 0;
 	//点播分类
 	private String attribute;
 	
@@ -62,8 +68,8 @@ public class VideoSquarePlayActivity extends Activity implements
 		
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();//设置分享平台的参数
-
-		httpPost(true);
+		
+		httpPost(true, type, "0", "");
 	}
 	
 	@Override 
@@ -84,7 +90,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
-	private void httpPost(boolean flag) {
+	private void httpPost(boolean flag,String type,String operation,String timestamp) {
 		if (flag) {
 			if (null == mCustomProgressDialog) {
 				mCustomProgressDialog = new CustomProgressDialog(this);
@@ -94,7 +100,7 @@ public class VideoSquarePlayActivity extends Activity implements
 		}
 
 		boolean result = GolukApplication.getInstance().getVideoSquareManager()
-				.getSquareList("1", type, attribute, "0", "");
+				.getSquareList("1", type, attribute, operation, timestamp);
 		if (!result) {
 			closeProgressDialog();
 		}
@@ -116,15 +122,14 @@ public class VideoSquarePlayActivity extends Activity implements
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				// mRTPullListView.onRefreshComplete();
-				// Toast.makeText(VideoSquarePlayActivity.this, "下拉刷新",
-				// Toast.LENGTH_SHORT).show();
-				mRTPullListView.postDelayed(new Runnable() {
+				uptype = 2;
+				httpPost(true, type, "2", begantime.mVideoEntity.sharingtime);
+				/*mRTPullListView.postDelayed(new Runnable() {
 					@Override
 					public void run() {
 						mRTPullListView.onRefreshComplete();
 					}
-				}, 1500);
+				}, 1500);*/
 			}
 		});
 
@@ -133,9 +138,9 @@ public class VideoSquarePlayActivity extends Activity implements
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
-
+						uptype = 1;
 						if (isHaveData) {
-							httpPost(true);
+							httpPost(true, type, "2", endtime.mVideoEntity.sharingtime);
 						}
 						// Toast.makeText(VideoSquarePlayActivity.this,
 						// "滑动到最后了222", 1000).show();
@@ -241,18 +246,30 @@ public class VideoSquarePlayActivity extends Activity implements
 
 				List<VideoSquareInfo> list = DataParserUtils
 						.parserVideoSquareListData((String) param2);
-				if (list.size() >= 2) {
+				if (list.size() >= 30) {
 					isHaveData = true;
 				} else {
 					isHaveData = false;
 				}
-
-				if (mDataList.size() <= 0) {
-					mDataList = list;
+				mDataList = list;
+				
+				
+				if(list.size()>0){
+					begantime = list.get(0);
+					begantime = list.get(list.size()-1);
+				}
+				
+				if (uptype == 0) {
 					init();
 				} else {
-					mDataList.addAll(list);
-					flush();
+					if(2 == uptype){//如果如果是下拉,把下拉的窗口关掉
+						mRTPullListView.onRefreshComplete();
+					}
+					if(list.size()>0){
+						mDataList.addAll(list);
+						flush();
+					}
+					
 				}
 			}
 		}
