@@ -232,8 +232,10 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				false);
 
 		// 注册回调监听
-		GolukApplication.getInstance().getIPCControlManager()
-				.addIPCManagerListener("main", this);
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager()
+			.addIPCManagerListener("main", this);
+		}
 		
 	}
 

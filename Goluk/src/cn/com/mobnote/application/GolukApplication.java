@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -59,7 +60,6 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.utils.LogUtil;
 
-
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -99,6 +99,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private VideoConfigState mVideoConfigState=null;
 	/** 自动循环录制状态标识 */
 	private boolean autoRecordFlag=false;
+	/** 停车安防配置 */
+	private int[] motioncfg;
 	
 	
 	private WifiApAdmin wifiAp;
@@ -153,6 +155,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		// 注册定位回调
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Location, this);
 		GlobalWindow.getInstance().setApplication(this);
+		motioncfg = new int[2];
 	}
 	
 	/**
@@ -218,6 +221,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public boolean getAutoRecordState(){
 		return this.autoRecordFlag;
+	}
+	
+	/**
+	 * 获取停车安防状态
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public int[] getMotionCfg(){
+		return this.motioncfg;
 	}
 	
 	/**
@@ -751,6 +764,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						getVideoEncodeCfg();
 						//发起获取自动循环录制状态
 						updateAutoRecordState();
+						//获取停车安防配置信息
+						updateMotionCfg();
 						//自动同步系统时间
 						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
 							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
@@ -818,7 +833,27 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case IPC_VDCP_Msg_StopRecord:
 					autoRecordFlag = false;
 					break;
-					
+				case IPC_VDCP_Msg_GetMotionCfg:
+					if(param1 == RESULE_SUCESS){
+						try {
+							JSONObject json = new JSONObject((String)param2);
+							if(null != json){
+								int enableSecurity = json.optInt("enableSecurity");
+								int snapInterval = json.optInt("snapInterval");
+								
+								motioncfg[0] = enableSecurity;
+								motioncfg[1] = snapInterval;
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+					break;
+				case IPC_VDCP_Msg_SetMotionCfg:
+					if(param1 == RESULE_SUCESS){
+						updateMotionCfg();
+					}
+					break;
 			}
 		}
 		
@@ -911,6 +946,23 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				public void run() {
 					boolean record = GolukApplication.getInstance().getIPCControlManager().getRecordState();
 					System.out.println("YYY=========getRecordState========="+record);
+				}
+			}).start();
+		}
+	}
+	
+	/**
+	 * 获取停车安防配置
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	private void updateMotionCfg(){
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					boolean record = GolukApplication.getInstance().getIPCControlManager().getMotionCfg();
+					System.out.println("YYY=========getMotionCfg========="+record);
 				}
 			}).start();
 		}
