@@ -491,7 +491,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					mMainActivity.loginCallBack(success,param2);
 				}
 				//登录
-				mLoginManage.loginCallBack(success,param1, param2);
+				if(mPageSource !="UserRegist"){
+					mLoginManage.loginCallBack(success,param1, param2);
+				}
 				
 				if(mPageSource == "UserRegist"){
 					((UserRegistActivity)mContext).registLoginCallBack(success, param2);

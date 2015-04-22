@@ -84,7 +84,7 @@ public class UserLoginManage {
 					mEditor.commit();
 					//---------------------------登录成功的状态  1------------------------------
 					//登录成功跳转
-//					console.toast("登录成功", mApp.getContext());
+					console.toast("登录成功", mApp.getContext());
 					loginStatusChange(1);//登录成功
 					mApp.isUserLoginSucess = true;
 					mApp.loginoutStatus = false;
