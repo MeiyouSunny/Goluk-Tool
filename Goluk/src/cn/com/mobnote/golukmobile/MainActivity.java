@@ -290,6 +290,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mWifiState = (ImageView) findViewById(R.id.index_wiifstate);
 		mWifiStateTv = (TextView) findViewById(R.id.wifi_conn_txt);
 		
+		mWifiLayout.setOnClickListener(this);
+		
 		//本地视频更多按钮
 		mLocalVideoListBtn = (Button)findViewById(R.id.share_local_video_btn);
 		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
@@ -310,7 +312,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mShareBtn.setOnClickListener(this);
 		mShareBtn.setOnTouchListener(this);
 		mCloseShareBtn.setOnClickListener(this);
-		mWifiState.setOnClickListener(this);
+//		mWifiState.setOnClickListener(this);
 //		mIpcWiFiBtn.setOnClickListener(this);
 //		mIpcWiFiBtn.setOnTouchListener(this);
 		mMoreBtn.setOnClickListener(this);
@@ -1085,6 +1087,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				break;
 			case R.id.index_wiifstate:
 				//startWifi();
+			
+				break;
+			case R.id.index_wifi_layout:
 				toCard();
 				break;
 		}
