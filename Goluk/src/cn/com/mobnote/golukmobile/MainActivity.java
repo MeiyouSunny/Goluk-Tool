@@ -942,8 +942,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(null != mMapView){
 			mMapView.onPause();
 		}
-		isCurrent = false;
-		mMainHandler.removeMessages(2);
+//		isCurrent = false;
+//		mMainHandler.removeMessages(2);
 		
 		//离开页面停止定位
 		if(null != mLocClient){
