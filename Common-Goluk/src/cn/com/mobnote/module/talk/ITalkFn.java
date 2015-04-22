@@ -19,7 +19,7 @@ public interface ITalkFn extends IGolukCommFn {
 	public static final int Talk_CommCmd_TalkRelease = 4;
 	/** 网络恢复 */
 	public static final int Talk_CommCmd_RecoveryNetwork = 5;
-	/** 开始上报自己的位置(用于开启直播功能中使用)*/
+	/** 开始上报自己的位置(用于开启直播功能中使用) */
 	public static final int Talk_Command_StartUploadPosition = 6;
 	/** 停止上报位置 (退出直播时功能使用) */
 	public static final int Talk_Command_StopUploadPosition = 7;
@@ -28,8 +28,8 @@ public interface ITalkFn extends IGolukCommFn {
 	 * 爱滔客回调事件
 	 * */
 
-	/** 设置用户修改信息事件 */
-	public static final int Talk_Event_SetUserInfo = 1;
+	/** AID相关的操作 */
+	public static final int EVENT_AID = 1;
 	/** 进入频道相关事件 */
 	public static final int Talk_Event_ChanleIn = 2;
 	/** 频道内交互事件 */

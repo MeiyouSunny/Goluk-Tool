@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -45,6 +46,7 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.mobnote.wifi.WifiAutoConnectManager;
 import cn.com.mobnote.wifi.WifiConnCallBack;
 import cn.com.mobnote.wifi.WifiRsBean;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -57,6 +59,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiInfo;
@@ -73,9 +76,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,13 +89,21 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
@@ -117,7 +131,6 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.bugly.proguard.V;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.utils.Log;
 
@@ -143,7 +156,10 @@ import com.umeng.socialize.utils.Log;
  */
 
 @SuppressLint("HandlerLeak")
-public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack, OnTouchListener,UserInterface{
+
+public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack, OnTouchListener, ILiveDialogManagerFn, 
+			ILocationFn, IBaiduGeoCoderFn ,UserInterface{
+
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -151,7 +167,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private LayoutInflater mLayoutInflater = null;
 	
 	/** 地图layout */
-	private RelativeLayout mMapLayout = null;
+	private LinearLayout mMapLayout = null;
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
 	/** 直播marker列表按钮 */
@@ -179,17 +195,21 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private Button mIpcWiFiBtn = null;
 	/** 更多按钮 */
 	private Button mMoreBtn = null;
+	/** 视频广场按钮 */
+	private Button msquareBtn = null;
 	/** 本地视频按钮 */
 	private Button mLocalVideoListBtn = null;
 	/** 分享网络直播 */
 	private Button mShareLiveBtn = null;
-	
-	
+	/** wifi连接状态 */
+	private ImageView mWifiState = null;
 	
 	/** 登录状态 */
 	private Button mLoginStatusBtn = null;
 	/** wifi连接状态文本 */
 	private Button mWiFiLinkStatus = null;
+	private TextView mWifiStateTv = null;
+	private RelativeLayout mWifiLayout = null;
 	private int mWiFiStatus = 0;
 	/** 登录布局 */
 	private View mLoginLayout = null;
@@ -289,12 +309,16 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //		});
 		
 		
+
 		//不是第一次登录，并且上次登录成功过，进行自动登录
 		mPreferencesAuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferencesAuto.getBoolean("FirstLogin", true);
 		if(!isFirstLogin && !mApp.isUserLoginSucess){
 			mApp.mUser.initAutoLogin();
 		}
+
+		GetBaiduAddress.getInstance().setCallBackListener(this);
+	
 	}
 	
 	/**
@@ -311,8 +335,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
 		
-		mIpcWiFiBtn = (Button) findViewById(R.id.wifi_status_btn);
+//		mIpcWiFiBtn = (Button) findViewById(R.id.wifi_status_btn);
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
+		msquareBtn = (Button) findViewById(R.id.index_square_btn);
+		mWifiLayout = (RelativeLayout) findViewById(R.id.index_wifi_layout);
+		mWifiState = (ImageView) findViewById(R.id.index_wiifstate);
+		mWifiStateTv = (TextView) findViewById(R.id.wifi_conn_txt);
+		
+		mWifiLayout.setOnClickListener(this);
 		
 		//本地视频更多按钮
 		mLocalVideoListBtn = (Button)findViewById(R.id.share_local_video_btn);
@@ -333,10 +363,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mShareBtn.setOnClickListener(this);
 		mShareBtn.setOnTouchListener(this);
 		mCloseShareBtn.setOnClickListener(this);
-		mIpcWiFiBtn.setOnClickListener(this);
-		mIpcWiFiBtn.setOnTouchListener(this);
+//		mWifiState.setOnClickListener(this);
+//		mIpcWiFiBtn.setOnClickListener(this);
+//		mIpcWiFiBtn.setOnTouchListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
+		msquareBtn.setOnClickListener(this);
+		msquareBtn.setOnTouchListener(this);
 		mLocalVideoListBtn.setOnClickListener(this);
 		findViewById(R.id.share_mylive_btn).setOnClickListener(this);
 		
@@ -359,9 +392,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						checkLinkWiFi();
 						//网络状态改变
 						mApp.VerifyWiFiConnect();
+
 						if(mApp.isUserLoginSucess == true || mApp.autoLoginStatus !=2){
 							mApp.mUser.initAutoLogin();							
 						}
+
+						notifyLogicNetWorkState((Boolean) msg.obj);
+
 					break;
 					
 					
@@ -387,11 +424,28 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//MainActivity.mMainHandler.sendMessageDelayed(msg,5000);
 	}
 	
+	
+	/**
+	 * 通知Logic，网络恢复
+	 * 
+	 * @param isConnected true/false 网络恢复/不可用
+	 * @author jiayf
+	 * @date Apr 13, 2015
+	 */
+	private void notifyLogicNetWorkState(boolean isConnected) {
+		if (null == mApp.mGoluk) {
+			return;
+		}
+		if (isConnected) {
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_RecoveryNetwork, "");
+		}
+	}
+	
 	/**
 	 * 初始化地图
 	 */
 	private void initMap(){
-		mMapLayout = (RelativeLayout) findViewById(R.id.map_layout);
+		mMapLayout = (LinearLayout) findViewById(R.id.map_layout);
 		//获取地图控件引用
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		
@@ -422,22 +476,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		option.setScanSpan(5000);
 		mLocClient.setLocOption(option);
 		mLocClient.start();
-		
-		//注册touch拦截事件
-		//为了解决地图拖动事件冲突问题
-//		RelativeLayout mapBlankView = (RelativeLayout)findViewById(R.id.map_blankview);
-//		mapBlankView.setOnTouchListener(new View.OnTouchListener() {
-//			@SuppressLint("ClickableViewAccessibility")
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				if(event.getAction() == MotionEvent.ACTION_UP){
-//					mScrollView.requestDisallowInterceptTouchEvent(false);
-//				}else{
-//					mScrollView.requestDisallowInterceptTouchEvent(true);
-//				}
-//				return false;
-//			}
-//		});
 		
 		//地图加载完成事件
 		mBaiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
@@ -689,6 +727,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
+	/** 连接中 */
+	private final int WIFI_STATE_CONNING = 1;
+	/** 连接*/
+	private final int WIFI_STATE_SUCCESS = 2;
+	/** 未连接 */
+	private final int WIFI_STATE_FAILED = 3;
+	
 	/**
 	 * 链接中断更新页面
 	 */
@@ -703,23 +748,55 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case 2:
 				//已连接
-				mIpcWiFiBtn.setText("已连接");
-				mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
-				img = res.getDrawable(R.drawable.index_icon_xingche_connect);
+//				mIpcWiFiBtn.setText("已连接");
+//				mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
+//				img = res.getDrawable(R.drawable.index_icon_xingche_connect);
+				wifiConnectedSucess();
 				mWiFiStatus = 2;
 			break;
 			case 3:
 				//未连接
-				mIpcWiFiBtn.setText("未连接");
-				mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
-				img = res.getDrawable(R.drawable.index_icon_xingche_btn);
+//				mIpcWiFiBtn.setText("未连接");
+//				mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
+//				img = res.getDrawable(R.drawable.index_icon_xingche_btn);
 				mWiFiStatus = 0;
+				wifiConnectFailed();
 			break;
 		}
 		//调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-		mIpcWiFiBtn.setCompoundDrawables(null, img, null, null);
+//		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+		//mIpcWiFiBtn.setCompoundDrawables(null, img, null, null);
 	}
+	
+	/** 音量图片动画 */
+	private AnimationDrawable mVolumeImgAnimation = null;
+	private void startWifi() {
+		mWifiState.setBackgroundResource(R.anim.anim_wifi);
+		this.mVolumeImgAnimation = (AnimationDrawable) this.mWifiState.getBackground();
+		this.mVolumeImgAnimation.start();
+	}
+	
+	private void wifiConnectedSucess() {
+		if (null != mVolumeImgAnimation) {
+			mVolumeImgAnimation.stop();
+			mVolumeImgAnimation = null;
+		}
+		mWifiStateTv.setText("已连接");
+		mWifiLayout.setBackgroundResource(R.drawable.index_linked);
+		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
+	}
+	
+	private void wifiConnectFailed() {
+		if (null != mVolumeImgAnimation) {
+			mVolumeImgAnimation.stop();
+			mVolumeImgAnimation = null;
+		}
+		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
+		mWifiStateTv.setText("未连接");
+		mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
+		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
+	}
+	
 	
 	/**
 	 * 登录回调
@@ -787,6 +864,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	@Override
 	protected void onResume() {
 		mApp.setContext(this,"Main");
+		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 		
 		//在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		if(null != mMapView){
@@ -823,8 +901,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(null != mMapView){
 			mMapView.onPause();
 		}
-		isCurrent = false;
-		mMainHandler.removeMessages(2);
+//		isCurrent = false;
+//		mMainHandler.removeMessages(2);
 		
 		//离开页面停止定位
 		if(null != mLocClient){
@@ -852,19 +930,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (v.getId()) {
-			case R.id.wifi_status_btn:
-				//如果已连接,不改变文字颜色
-				if(mWiFiStatus != 2){
-					switch (action) {
-						case MotionEvent.ACTION_DOWN:
-							mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
-						break;
-						case MotionEvent.ACTION_UP:
-							mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
-						break;
-					}
-				}
-			break;
+//			case R.id.wifi_status_btn:
+//				//如果已连接,不改变文字颜色
+//				if(mWiFiStatus != 2){
+//					switch (action) {
+//						case MotionEvent.ACTION_DOWN:
+//							mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
+//						break;
+//						case MotionEvent.ACTION_UP:
+//							mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
+//						break;
+//					}
+//				}
+//			break;
 			case R.id.more_btn:
 				switch (action) {
 					case MotionEvent.ACTION_DOWN:
@@ -885,6 +963,16 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					break;
 				}
 			break;
+			case R.id.index_square_btn:
+				switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					msquareBtn.setTextColor(Color.rgb(0,197,177));
+					break;
+				case MotionEvent.ACTION_UP:
+					msquareBtn.setTextColor(Color.rgb(103,103,103));
+					break;
+				}
+				break;
 		}
 		return false;
 	}
@@ -913,21 +1001,19 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
-			case R.id.wifi_status_btn:
-				//跳转到ipc页面
-				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-				startActivity(i);
-			break;
+//			case R.id.wifi_status_btn:
+//				//跳转到ipc页面
+//				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+//				startActivity(i);
+//			break;
 			case R.id.more_btn:
-				Intent it = new Intent(MainActivity.this,IndexMoreActivity.class);
-				startActivity(it);
+
+				//更多页面
+				Intent more = new Intent(MainActivity.this, IndexMoreActivity.class);
+				startActivity(more);
 			break;
 			case R.id.share_local_video_btn:
-				//跳转到本地视频分享列表
-				Intent localVideoShareList = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
-				startActivity(localVideoShareList);
-				//关闭视频分享
-				mShareLayout.setVisibility(View.GONE);
+				click_toLocalVideoShare();
 			break;
 			case R.id.share_mylive_btn:
 				toShareLive();
@@ -948,11 +1034,44 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			case R.id.login_btn:
 				//登录
 //				login();
-			break;
+				break;
+			case R.id.index_square_btn:
+				// 视频广场
+				toSqu();
+				break;
+			case R.id.index_wiifstate:
+				//startWifi();
+			
+				break;
+			case R.id.index_wifi_layout:
+				toCard();
+				break;
 		}
 	}
 	
-	private boolean isTestData = false;
+	private void toCard() {
+		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+		startActivity(i);
+	}
+	
+	private void toSqu() {
+		Intent more = new Intent(MainActivity.this,VideoSquareActivity.class);
+		startActivity(more);
+	}
+	
+	private void click_toLocalVideoShare() {
+		if (!mApp.isUserLoginSucess) {
+			// TODO 未登录成功
+			mShareLayout.setVisibility(View.GONE);
+			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			return;
+		}
+		//跳转到本地视频分享列表
+		Intent localVideoShareList = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
+		startActivity(localVideoShareList);
+		//关闭视频分享
+		mShareLayout.setVisibility(View.GONE);
+	}
 	
 	/**
 	 * 发起主动直播
@@ -961,43 +1080,23 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 * @date Apr 2, 2015
 	 */
 	private void toShareLive() {
-		if (isTestData) {
-			test();
-		} else {
-//			if (!mApp.isUserLoginSucess) {
-//				// TODO 未登录成功
-//				Toast.makeText(this, "请先登录", Toast.LENGTH_LONG).show();
-//				return;
-//			}
-			
-			
-			
-			// 开启直播
-			Intent intent = new Intent(this, LiveActivity.class);
-			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-			intent.putExtra(LiveActivity.KEY_GROUPID, "");
-			
-			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
 
-			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-			
-//			intent.putExtra(LiveActivity.KEY_LIVE_DATA, dataInfo);
-//			intent.putExtra(LiveActivity.KEY_USERINFO, currentUserInfo);
-
-			startActivity(intent);
-			
-			
-			// 跳转直播界面
-//			
-//			boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-//					IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson());
-//			if (!isSucess) {
-//				startLiveFailed();
-//			} else {
-//				// TODO 弹对话框
-//				Toast.makeText(this, "发起直播", Toast.LENGTH_LONG).show();
-//			}
+		if (!mApp.isUserLoginSucess) {
+				// TODO 未登录成功
+			mShareLayout.setVisibility(View.GONE);
+			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			return;
 		}
+
+	// 开启直播
+		Intent intent = new Intent(this, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+		intent.putExtra(LiveActivity.KEY_GROUPID, "");
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+		startActivity(intent);
+		mShareLayout.setVisibility(View.GONE);
+
 	}
 	
 	// 查看他人的直播
@@ -1019,17 +1118,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 
 		startActivity(intent);
 		
-		LogUtil.e(null,"jyf-----click------677777777");
-		
 		LogUtil.e(null, "jyf----20150406----MainActivity----startLiveLook");
 		
-//		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-//				IPageNotifyFn.PageType_GetVideoDetail, JsonUtil.getStartLookLiveJson(userInfo.uid, userInfo.aid));
-//		if (!isSucess) {
-//			startLiveLookFailed();
-//		} else {
-//			// TODO 弹对话框
-//		}
 	}
 
 	private void startLiveFailed() {
@@ -1208,6 +1298,39 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void dialogManagerCallBack(int dialogType, int function, String data) {
+		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
+			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
+				// TODO 去登录界面
+				mShareLayout.setVisibility(View.GONE);
+				Intent intent = new Intent(this, UserLoginActivity.class);
+				startActivity(intent);
+			}
+		}
+		
+	}
+
+	@Override
+	public void LocationCallBack(String gpsJson) {
+		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+
+		if (location == null || mMapView == null){
+			return;
+		}
+		
+	}
+
+	@Override
+	public void CallBack_BaiduGeoCoder(int function, Object obj) {
+		if (null == obj) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
+			return;
+		}
+		
+	}
+	
 }
 
 

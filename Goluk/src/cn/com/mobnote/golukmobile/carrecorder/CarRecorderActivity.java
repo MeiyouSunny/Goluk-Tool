@@ -184,6 +184,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.carrecorder_main);
+		
 
 		mHandler = new Handler() {
 			public void handleMessage(final android.os.Message msg) {
@@ -195,7 +196,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					queryFileExit();
 					break;
 				case EMERGENCY:
-					startEmergencyRecording();
+//					startEmergencyRecording();
 					break;
 				case MOUNTS:
 					startTrimVideo();
@@ -220,7 +221,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			};
 		};
 
-		initSensor();
+//		initSensor();
 		initView();
 		setListener();
 		// 开启视频录制计时器
@@ -232,8 +233,10 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 				false);
 
 		// 注册回调监听
-		GolukApplication.getInstance().getIPCControlManager()
-				.addIPCManagerListener("main", this);
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager()
+			.addIPCManagerListener("main", this);
+		}
 		
 	}
 
@@ -729,6 +732,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		GolukApplication.getInstance().setContext(this, "carrecorder");
 		if (isBackGroundStart) {
 			this.moveTaskToBack(true);
 			isBackGroundStart = false;
@@ -773,9 +777,10 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		GolukApplication.getInstance().getIPCControlManager()
-				.removeIPCManagerListener("main");
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager()
+			.removeIPCManagerListener("main");
+		}
 
 		if (null != mRtmpPlayerView) {
 			mRtmpPlayerView.removeCallbacks(retryRunnable);
@@ -880,53 +885,53 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						public void run() {
 							switch (mShootTime) {
 							case 1:
-								SoundUtils.getInstance().play(
-										SoundUtils.RECORD_SEC);
+//								SoundUtils.getInstance().play(
+//										SoundUtils.RECORD_SEC);
 								m8sBtn.setBackgroundResource(R.drawable.btn_6s);
 								break;
 							case 2:
 
 								break;
 							case 3:
-								SoundUtils.getInstance().play(
-										SoundUtils.RECORD_SEC);
+//								SoundUtils.getInstance().play(
+//										SoundUtils.RECORD_SEC);
 								m8sBtn.setBackgroundResource(R.drawable.btn_5s);
 								break;
 							case 4:
 
 								break;
 							case 5:
-								SoundUtils.getInstance().play(
-										SoundUtils.RECORD_SEC);
+//								SoundUtils.getInstance().play(
+//										SoundUtils.RECORD_SEC);
 								m8sBtn.setBackgroundResource(R.drawable.btn_4s);
 								break;
 							case 6:
 
 								break;
 							case 7:
-								SoundUtils.getInstance().play(
-										SoundUtils.RECORD_SEC);
+//								SoundUtils.getInstance().play(
+//										SoundUtils.RECORD_SEC);
 								m8sBtn.setBackgroundResource(R.drawable.btn_3s);
 								break;
 							case 8:
 
 								break;
 							case 9:
-								SoundUtils.getInstance().play(
-										SoundUtils.RECORD_SEC);
+//								SoundUtils.getInstance().play(
+//										SoundUtils.RECORD_SEC);
 								m8sBtn.setBackgroundResource(R.drawable.btn_2s);
 								break;
 							case 10:
 
 								break;
 							case 11:
-								SoundUtils.getInstance().play(
-										SoundUtils.RECORD_SEC);
+//								SoundUtils.getInstance().play(
+//										SoundUtils.RECORD_SEC);
 								m8sBtn.setBackgroundResource(R.drawable.btn_1s);
 								break;
 							case 13:
-								SoundUtils.getInstance().play(
-										SoundUtils.RECORD_CAMERA);
+//								SoundUtils.getInstance().play(
+//										SoundUtils.RECORD_CAMERA);
 								break;
 
 							default:

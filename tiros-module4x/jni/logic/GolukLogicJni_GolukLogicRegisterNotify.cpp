@@ -14,9 +14,11 @@
 #include "../../lib/logic/Goluk_Module_def.h"
 
 
+#include "module_videosquare/Module_videosquare.h"
 #include "module_ipcmanage/Module_ipcManager.h"
 #include "module_page/Module_page.h"
 #include "module_talk/Module_talk.h"
+#include "module_location/Module_location.h"
 
 #include <android/log.h>
 
@@ -30,11 +32,23 @@ JNIEXPORT jint JNICALL Java_cn_com_mobnote_logic_GolukLogicJni_GolukLogicRegiste
 	  
 	switch(mId) {
 	case Goluk_Module_HttpPage:
+	
 		return ((Goluk_LogicEngine *)pLogic)->RegistNotify(mId, (unsigned long)PageNotify_CallBack, 0);
+		
 	case Goluk_Module_Talk:
+	
 		return ((Goluk_LogicEngine *)pLogic)->RegistNotify(mId, (unsigned long)CallBack_Talk, 0);
+		
 	case Goluk_Module_IPCManager:
+	
 		return ((Goluk_LogicEngine *)pLogic)->RegistNotify(mId, (unsigned long)CallBack_ipcManager, 0);
+	case Goluk_Module_Square:
+		return ((Goluk_LogicEngine *)pLogic)->RegistNotify(mId, (unsigned long)CallBack_videosquare, 0);
+		
+	case Goluk_Module_Location:
+		
+		return ((Goluk_LogicEngine *)pLogic)->RegistNotify(mId, (unsigned long)LocationNotify_CallBack, 0);
+		
 	default:
 		break;	
 	}

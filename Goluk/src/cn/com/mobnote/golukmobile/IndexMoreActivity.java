@@ -2,6 +2,16 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
+
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.console;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -63,11 +73,11 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	private RelativeLayout mLocalVideoItem = null;
 	/** 视频广场item */
 	/**草稿箱item */
-	private RelativeLayout mDraftItem = null;
+//	private RelativeLayout mDraftItem = null;
 	/** 去商店item */
-	private RelativeLayout mShoppingItem = null;
+//	private RelativeLayout mShoppingItem = null;
 	/** Goluk学堂item */
-	private RelativeLayout mGolukSchoolItem = null;
+//	private RelativeLayout mGolukSchoolItem = null;
 	/** 设置item */
 	private RelativeLayout mSetupItem = null;
 	
@@ -124,9 +134,12 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		mLayoutBack = (RelativeLayout) findViewById(R.id.back_btn_layout);
 		
 		mLocalVideoItem = (RelativeLayout) findViewById(R.id.local_video_item);
-		mDraftItem = (RelativeLayout) findViewById(R.id.draft_item);
-		mShoppingItem = (RelativeLayout) findViewById(R.id.shopping_item);
-		mGolukSchoolItem = (RelativeLayout) findViewById(R.id.goluk_item);
+
+//		mVideoSquareItem = (RelativeLayout) findViewById(R.id.video_square_item);
+//		mDraftItem = (RelativeLayout) findViewById(R.id.draft_item);
+//		mShoppingItem = (RelativeLayout) findViewById(R.id.shopping_item);
+//		mGolukSchoolItem = (RelativeLayout) findViewById(R.id.goluk_item);
+
 		mSetupItem = (RelativeLayout) findViewById(R.id.setup_item);
 		//进入我的主页
 		mLayoutHome = (RelativeLayout) findViewById(R.id.head_layout);		
@@ -162,9 +175,10 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		//注册事件
 		mLayoutBack.setOnClickListener(this);
 		mLocalVideoItem.setOnClickListener(this);
-		mDraftItem.setOnClickListener(this);
-		mShoppingItem.setOnClickListener(this);
-		mGolukSchoolItem.setOnClickListener(this);
+//		mVideoSquareItem.setOnClickListener(this);
+//		mDraftItem.setOnClickListener(this);
+//		mShoppingItem.setOnClickListener(this);
+//		mGolukSchoolItem.setOnClickListener(this);
 		mSetupItem.setOnClickListener(this);
 		
 		mLayoutHome.setOnClickListener(this);
@@ -180,7 +194,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	AlertDialog 	dialog = null;
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		Intent intent = null;
 		switch(id){
@@ -191,15 +204,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			case R.id.local_video_item:
 				intent = new Intent(IndexMoreActivity.this,LocalVideoListActivity.class);
 				startActivity(intent);
-			break;
-			case R.id.draft_item:
-				console.toast("草稿箱", mContext);
-			break;
-			case R.id.shopping_item:
-				console.toast("去商店", mContext);
-			break;
-			case R.id.goluk_item:
-				console.toast("Goluk学堂", mContext);
 			break;
 			case R.id.setup_item:
 				//跳转到设置页面

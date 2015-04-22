@@ -2,10 +2,14 @@ package cn.com.mobnote.logic;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.ILocationFn;
+import cn.com.mobnote.module.location.LocationNotifyAdapter;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.page.PageNotifyAdapter;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.talk.TalkNotifyAdapter;
+import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 
 public class GolukLogic {
 
@@ -61,6 +65,12 @@ public class GolukLogic {
 			break;
 		case GolukModule.Goluk_Module_IPCManager:
 			IPCManagerAdapter.setIPcManageListener((IPCManagerFn) fn);
+			break;
+		case GolukModule.Goluk_Module_Square:
+			VideoSquareManagerAdapter.setVideoSuqareListener((VideoSuqareManagerFn) fn);
+			break;
+		case GolukModule.Goluk_Module_Location:
+			LocationNotifyAdapter.setLocationNotifyListener((ILocationFn) fn);
 			break;
 		default:
 			break;

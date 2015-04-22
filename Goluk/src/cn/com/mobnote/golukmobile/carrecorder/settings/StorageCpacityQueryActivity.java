@@ -144,5 +144,11 @@ public class StorageCpacityQueryActivity extends BaseActivity implements IPCMana
 
 		return result;
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "storagecpacityquery");
+	}
 
 }

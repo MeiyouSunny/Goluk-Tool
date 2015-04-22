@@ -1,13 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e0000000" >
+    android:background="#B2000000" >
 
     <RelativeLayout
+        android:id="@+id/bottomL"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/white" >
+        android:background="#ededed" >
 
         <!-- 进入直播间 -->
 
@@ -51,12 +52,13 @@
                 <EditText
                     android:id="@+id/description"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:contentDescription="@string/def"
-                    android:gravity="center_vertical"
+                    android:focusable="true"
+                    android:hint="@string/description"
                     android:inputType="text"
-                    android:text="@string/description" />
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
             </RelativeLayout>
 
             <!-- 视频类型 -->
@@ -67,7 +69,8 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/carrecorder_setup_option_bg"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
+                android:paddingRight="14dp"
+                android:visibility="gone" >
 
                 <ImageView
                     android:id="@+id/voice_type"
@@ -133,16 +136,16 @@
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="124dp"
                         android:layout_height="18dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
                         android:background="@drawable/carrecorder_live_setup_time_bg"
-                        android:max="150"
+                        android:max="10800"
                         android:progress="60"
                         android:progressDrawable="@drawable/carrecorder_jdt"
                         android:thumb="@drawable/carrecorder_thumb" />
                 </RelativeLayout>
 
                 <TextView
+                    android:id="@+id/livesetting_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"

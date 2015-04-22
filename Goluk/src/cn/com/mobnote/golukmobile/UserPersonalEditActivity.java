@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;

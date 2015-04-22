@@ -37,6 +37,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 
@@ -109,18 +110,20 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private boolean addWonderfulFooter=false;
 	private boolean addEmergencyFooter=false;
 	private boolean addLoopFooter=false;
+	private CustomProgressDialog mCustomProgressDialog=null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.carrecorder_videolist);
+		mCustomProgressDialog = new CustomProgressDialog(this);
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager",this);
 				
 		initView();
 		setListener();
 		
-		getRecorderFileFromLocal(IPCManagerFn.TYPE_CIRCULATE);
+		getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE);
 	}
 	
 	/**
@@ -654,7 +657,13 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	 * @author xuhw
 	 * @date 2015年3月25日
 	 */
-	private void getRecorderFileFromLocal(int type) {
+	private void getRecorderFileFromLocal(boolean flag, int type) {
+		if(flag){
+			if(!mCustomProgressDialog.isShowing()){
+				mCustomProgressDialog.setCancelable(false);
+				mCustomProgressDialog.show();
+			}
+		}
 		isGetFileListDataing=true;
 		mOprateType = type;
 		updateButtonState(type);
@@ -740,7 +749,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						if(IPCManagerFn.TYPE_SHORTCUT != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_SHORTCUT;
 							if(null == mWonderfulVideoAdapter){
-								getRecorderFileFromLocal(IPCManagerFn.TYPE_SHORTCUT);
+								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_SHORTCUT);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -759,7 +768,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						if(IPCManagerFn.TYPE_URGENT != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_URGENT;
 							if(null == mEmergencyVideoAdapter){
-								getRecorderFileFromLocal(IPCManagerFn.TYPE_URGENT);
+								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_URGENT);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -778,7 +787,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						if(IPCManagerFn.TYPE_CIRCULATE != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_CIRCULATE;
 							if(null == mLoopVideoAdapter){
-								getRecorderFileFromLocal(IPCManagerFn.TYPE_CIRCULATE);
+								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -1099,6 +1108,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
 			if (IPC_VDCP_Msg_Query == msg) {
+				if(mCustomProgressDialog.isShowing()){
+					mCustomProgressDialog.dismiss();
+				}
 				isGetFileListDataing=false;
 				LogUtils.d("YYY===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
@@ -1265,6 +1277,12 @@ System.out.println("TTT=======1111111==================tag="+tag);
 			break;
 		}
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "ipcfilemanager");
 	}
 
 

@@ -1,6 +1,8 @@
 package cn.com.mobnote.map;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,7 +10,6 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -20,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -166,6 +166,7 @@ public class BaiduMapManage {
 		if (null == json) {
 			return;
 		}
+		LogUtil.e("","jyf------AddMapPoint----11111");
 		// 清楚历史marker
 		mBaiduMap.clear();
 		mMarkerData.clear();
@@ -175,6 +176,7 @@ public class BaiduMapManage {
 		for (int i = 0, len = json.length(); i < len; i++) {
 			try {
 				data = json.getJSONObject(i);
+				LogUtil.e("","jyf------AddMapPoint----array[i]: " + data);
 				String lon = data.getString("lon");
 				String lat = data.getString("lat");
 				if (!"".equals(lon) && !"".equals(lat)) {
@@ -197,12 +199,75 @@ public class BaiduMapManage {
 					mMarkerData.put(mk, data);
 
 					mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
+					
+					LogUtil.e("","jyf------AddMapPoint----array[2]: ");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
+				LogUtil.e("","jyf------AddMapPoint----array Exception: ");
 			}
 		}
+		
+		LogUtil.e("","jyf------AddMapPoint----array : 333333");
+	}
 	
+	// 添加单个点,不清除数据
+	public void addSinglePoint(String userinfo) {
+		try {
+			JSONObject 	data = new JSONObject(userinfo);
+			String lon = data.getString("lon");
+			String lat = data.getString("lat");
+			if (!"".equals(lon) && !"".equals(lat)) {
+				// 用户头像类型
+				int utype = Integer.valueOf(data.getString("head"));
+				int head = mHeadImg[utype];
+
+				// 定义Maker坐标点
+				LatLng point = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
+
+				// 构建Marker图标
+				BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
+				// 构建MarkerOption，用于在地图上添加Marker
+				OverlayOptions option = new MarkerOptions().position(point).icon(bitmap).zIndex(1);
+				// 在地图上添加Marker，并显示
+				Marker mk = (Marker) (mBaiduMap.addOverlay(option));
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("utype", utype);
+				mk.setExtraInfo(bundle);
+				mMarkerData.put(mk, data);
+
+				mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
+			}
+		} catch (Exception e) {
+			
+		}
+
+		
+	}
+	
+	// 更新点的位置
+	public void updatePosition(String aid, double lon, double lat) {
+		if (null == mMarkerData) {
+			return;
+		}
+		
+		Iterator<Entry<Marker,Object>> it = mMarkerData.entrySet().iterator();
+		while(it.hasNext()) {
+			Entry<Marker,Object > obj = it.next();
+			try {
+				UserInfo temp = JsonUtil.parseSingleUserInfoJson((JSONObject) obj.getValue());
+				if (temp.aid.equals(aid)) {
+					// 更新位置
+					Marker marker = obj.getKey();
+					LatLng point = ConvertLonLat(lat, lon);
+					marker.setPosition(point);
+					break;
+				}
+			} catch (Exception e) {
+				
+			}
+			
+		}
 	}
 	
 	/**
@@ -268,7 +333,7 @@ public class BaiduMapManage {
 		}
 		
 		nameView.setText(nickName);
-		speedView.setText(speed + "公里/小时");
+		speedView.setText(speed);
 		
 		mBubbleView.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -355,11 +420,7 @@ public class BaiduMapManage {
 	}
 	
 	class MyOnMarkerClickListener implements OnMarkerClickListener{
-//		private int mIndex;
-//		public MyOnMarkerClickListener(int index){
-//			mIndex = index;
-//		}
-		
+
 		@Override
 		public boolean onMarkerClick(Marker marker) {
 
@@ -389,6 +450,7 @@ public class BaiduMapManage {
 				String lon = data.getString("lon");
 				String lat = data.getString("lat");
 				String open = data.getString("open");
+				String zan = data.getString("zan");
 				
 				LogUtil.e(null,"jyf-----click------AAAAA:" + data);
 				
@@ -418,7 +480,7 @@ public class BaiduMapManage {
 				if(mPageSource == "Main"){
 					((MainActivity)mContext).downloadBubbleImg(picUrl,aid);
 				}
-				createBubbleInfo(nikeName,speed,lon,lat,open);
+				createBubbleInfo(nikeName,zan,lon,lat,open);
 			}
 			catch (JSONException e) {
 				e.printStackTrace();

@@ -1,21 +1,30 @@
 package cn.com.mobnote.golukmobile.live;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,32 +40,50 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity.VideoType;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
+import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
 import com.rd.car.player.RtmpPlayerView;
 
 public class LiveActivity extends Activity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
-		View.OnTouchListener, ITalkFn, IPopwindowFn, ILiveDialogManagerFn, ITimerManagerFn {
+		View.OnTouchListener, ITalkFn, IPopwindowFn, ILiveDialogManagerFn, ITimerManagerFn, ILocationFn,
+		IBaiduGeoCoderFn, IPCManagerFn {
 
+	private static final String TAG = "LiveActivity";
 	/** 是否是直播 */
 	public static final String KEY_IS_LIVE = "isLive";
 	/** 要加入的群组ID */
@@ -67,12 +94,17 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	public static final String KEY_USERINFO = "key_userinfo";
 	public static final String KEY_LIVE_DATA = "key_livedata";
 
-	final int[] shootImg = { R.drawable.live_btn_8s_record, R.drawable.live_btn_7s_record,
-			R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record, R.drawable.live_btn_4s_record,
-			R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record, R.drawable.live_btn_1s_record };
+	final int[] shootImg = { R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
+			R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,
+			R.drawable.live_btn_1s_record };
 
 	/** 自己预览地址 */
 	private static final String VIEW_SELF_PLAY = "rtsp://admin:123456@192.168.43.234/sub";
+	// private static final String DEFAULT_PLAY_ID = "jyf_play_id100";
+
+	private static final int LOCATION_TYPE_UNKNOW = -1;
+	private static final int LOCATION_TYPE_POINT = 0;
+	private static final int LOCATION_TYPE_HEAD = 1;
 
 	/** application */
 	private GolukApplication mApp = null;
@@ -136,10 +168,26 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private LinearLayout mExitLayout = null;
 	private ImageView mQiangpaiImg = null;
 	private ImageView mExitBtn = null;
+	/** 说话状态标识 */
+	private ImageView mTalkingSign = null;
+	/** 当前正在说话的 */
+	private TextView mTalkingTv = null;
+	/** 说话中计时显示 */
+	private TextView mTalkingTimeTv = null;
+	private RelativeLayout mSpeakingLayout = null;
+	/** 登录布局 */
+	private RelativeLayout mLoginLayout = null;
+	private Button mLoginBtn = null;
+	/** 视频描述 */
+	private TextView mDescTv = null;
+	/** 分享 */
+	private ImageView mShareImg = null;
 
 	private String mJoinGroupJson = null;
 	private UserInfo currentUserInfo = null;
 	private LiveDataInfo mDataInfo = null;
+	/** 我的登录信息 如果未登录，则为空 */
+	private UserInfo myInfo = null;
 
 	private boolean isStart = false;
 
@@ -154,19 +202,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/** 当前拍摄时间 */
 	private int mShootTime = 0;
 
-	/** 说话状态标识 */
-	private ImageView mTalkingSign = null;
-	/** 当前正在说话的 */
-	private TextView mTalkingTv = null;
-	/** 说话中计时显示 */
-	private TextView mTalkingTimeTv = null;
-
-	private boolean isTest = false;
-
-	private RelativeLayout mSpeakingLayout = null;
-
-	// private static final String DEFAULT_PLAY_ID = "jyf_play_id100";
-
 	private boolean isSucessBind = false;
 
 	private boolean isKaiGeSucess = false;
@@ -180,6 +215,17 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private boolean isAlreadExit = false;
 
 	private String mCurrentVideoId = null;
+
+	/** 标识是否正在获取地址 */
+	private boolean isGetingAddress = false;
+
+	/** -1/0/1 未定位/小蓝点/气泡 */
+	private int mCurrentLocationType = LOCATION_TYPE_UNKNOW;
+	/** 当前点赞次数 */
+	private int mCurrentOKCount = 0;
+
+	/** 8s视频 */
+	public static final int MOUNTS = 114;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -205,6 +251,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		initMap();
 		// 开始预览或开始直播
 		if (isShareLive) {
+			mLoginLayout.setVisibility(View.GONE);
 			mCurrentVideoId = getVideoId();
 			startVideoAndLive("");
 			mTitleTv.setText("我的直播");
@@ -212,11 +259,19 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			if (null != currentUserInfo) {
 				mLiveCountSecond = currentUserInfo.liveDuration;
 			}
-
 			mTitleTv.setText(currentUserInfo.nickName + " 的直播");
+			if (!mApp.isUserLoginSucess) {
+				// 未登录成功
+				mLoginLayout.setVisibility(View.VISIBLE);
+			} else {
+				mLoginLayout.setVisibility(View.GONE);
+			}
 		}
 
+		getMyInfo();
+		// testDraw();
 		drawPersonsHead();
+
 		// 加入爱滔客群组
 		joinAitalkGroup();
 
@@ -224,26 +279,71 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mliveSettingWindow.setCallBackNotify(this);
 
 		if (isShareLive) {
-			mLiveVideoHandler.sendEmptyMessageDelayed(100, 1000);
+			// 显示设置窗口
+			mLiveVideoHandler.sendEmptyMessageDelayed(100, 800);
+
+			updateCount(0, 0);
+
 		} else {
 			startLiveLook(currentUserInfo);
+			updateCount(Integer.parseInt(currentUserInfo.zanCount), Integer.parseInt(currentUserInfo.persons));
 		}
 
-		refreshPPTTTT();
+		// 在没有进入群组时，按钮不可按
+		refreshPPtState(false);
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
 		mLiveManager = new TimerManager(10);
 		mLiveManager.setListener(this);
+
+		mApp.addLocationListener(TAG, this);
+
+		GetBaiduAddress.getInstance().setCallBackListener(this);
+		// 注册回调监听
+		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("live", this);
 	}
 
-	private void refreshPPTTTT() {
-		if (isTest) {
-			refreshPPtState(true);
-		} else {
-			// 在没有进入群组时，按钮不可按
-			refreshPPtState(false);
+	/**
+	 * 视频截图
+	 * 
+	 * @author xuhw
+	 * @date 2015年3月4日
+	 */
+	private void screenShoot() {
+		GolukApplication.getInstance().getIPCControlManager().screenShot();
+	}
+
+	// 更新观看人数和点赞人数
+	private void updateCount(int okCount, int lookCount) {
+		mCurrentOKCount = okCount;
+		if (null != mZancountTv) {
+			mZancountTv.setText("" + okCount);
 		}
+		if (null != mLookCountTv) {
+			mLookCountTv.setText("" + lookCount);
+		}
+	}
+
+	// 获取当前登录用户的信息
+	private void getMyInfo() {
+		try {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----getMyInfo111 :" + mApp.isUserLoginSucess);
+			if (mApp.isUserLoginSucess) {
+				String userInfo = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
+						IPageNotifyFn.PageType_GetUserInfo_Get, "");
+				if (null != userInfo) {
+
+					myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
+					LogUtil.e(null, "jyf----20150406----LiveActivity----getMyInfo :" + userInfo);
+				}
+			}
+
+			LogUtil.e(null, "jyf----20150406----LiveActivity----getMyInfo 333:");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void getIntentData() {
@@ -274,9 +374,15 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	// 开启自己的直播,请求服务器 (在用户点击完设置后开始请求)
 	private void startLiveForServer() {
+		if (null == mApp) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----startLiveForServer----111 NULL: ");
+		}
+		if (null == mApp.mGoluk) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----startLiveForServer----2222 NULL: ");
+		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson(mCurrentVideoId));
-		
+				IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson(mCurrentVideoId, mSettingData));
+
 		if (!isSucess) {
 			startLiveFailed();
 		} else {
@@ -331,9 +437,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mLiveOk.setOnClickListener(this);
 
 		mLiveCountDownTv = (TextView) findViewById(R.id.live_countdown);
+		mDescTv = (TextView) findViewById(R.id.live_desc);
 
 		mPauseBtn = (Button) findViewById(R.id.live_pause);
 		mPauseBtn.setOnClickListener(this);
+
+		mShareImg = (ImageView) findViewById(R.id.live_share);
+		mShareImg.setOnClickListener(this);
 
 		mBottomLayout = (RelativeLayout) findViewById(R.id.live_bottomlayout);
 		mLiveLookTalk = (ImageButton) findViewById(R.id.livelook_ppt);
@@ -341,7 +451,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mQiangPaiLayout = (LinearLayout) findViewById(R.id.live_qiangpai);
 		mExitLayout = (LinearLayout) findViewById(R.id.live_exit);
 		mExitBtn = (ImageView) findViewById(R.id.live_exit_btn);
-		mQiangPaiLayout.setOnTouchListener(this);
+		mQiangPaiLayout.setOnClickListener(this);
 		mExitLayout.setOnTouchListener(this);
 		mLiveLookTalk.setOnTouchListener(this);
 		mLiveTalk.setOnTouchListener(this);
@@ -353,6 +463,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mTalkingTimeTv = (TextView) findViewById(R.id.live_talktime);
 
 		mQiangpaiImg = (ImageView) findViewById(R.id.qiangpai_img);
+
+		mLoginLayout = (RelativeLayout) findViewById(R.id.loginlayout);
+		mLoginBtn = (Button) findViewById(R.id.live_login);
+		mLoginBtn.setOnClickListener(this);
+//		mQiangpaiImg.setOnClickListener(this);
 
 		mRPVPalyVideo = (RtmpPlayerView) findViewById(R.id.live_vRtmpPlayVideo);
 		// 先显示气泡上的默认图片
@@ -461,12 +576,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
+	// 初次进入
 	private void switchView() {
 		if (isShareLive) {
 			// 直播
 			mBottomLayout.setVisibility(View.VISIBLE);
 			mLiveLookTalk.setVisibility(View.GONE);
-			mLiveTalk.setVisibility(View.VISIBLE);
+			mLiveTalk.setVisibility(View.GONE);
 		} else {
 			// 看别人直播
 			mBottomLayout.setVisibility(View.GONE);
@@ -503,6 +619,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mMapView.showZoomControls(false);
 		mMapView.showScaleControl(false);
 		mBaiduMap = mMapView.getMap();
+		// 找开定位图层，可以显示我的位置小蓝点
+		mBaiduMap.setMyLocationEnabled(true);
 		mBaiduMapManage = new BaiduMapManage(this, mBaiduMap, "LiveVideo");
 	}
 
@@ -605,6 +723,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		LogUtil.e("", "jyf------TTTTT------------开始上传直播----2222");
 		if (CarRecorderManager.isRTSPLiving()) {
 			LogUtil.e("", "jyf------TTTTT------------RTSP正在播放，不可以开始");
+			showToast("RTSP正在直播，不可以开始");
 			return;
 		}
 		try {
@@ -624,40 +743,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		} catch (RecorderStateException e) {
 			e.printStackTrace();
+			showToast("上传视频报异常");
 			LogUtil.e("", "jyf------TTTTT------------开始上传直播----666666666---报异常");
 		}
 
-	}
-
-	private String secondToString(final int second) {
-		String timeStr = "";
-		if (second >= 60) {
-			int min = second / 60;
-			int sec = second % 60;
-
-			String minStr = "";
-			String secStr = "";
-			if (min >= 10) {
-				minStr = min + ":";
-			} else {
-				minStr = "0" + min + ":";
-			}
-			if (sec >= 10) {
-				secStr = sec + "";
-			} else {
-				secStr = "0" + sec;
-			}
-
-			timeStr = minStr + secStr;
-		} else {
-			if (second >= 10) {
-				timeStr = "00:" + second;
-			} else {
-				timeStr = "00:0" + second;
-			}
-		}
-
-		return timeStr;
 	}
 
 	private void stopRTSPUpload() {
@@ -731,12 +820,123 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
+	String userInfo = "{\"uid\":\"c2ee35c5-4051-41ef-8ca2-09fe921d5efb\",\"aid\":\"11000000030\",\"mid\":\"1c:2a:27:07:e1:b7\",\"active\":\"1\",\"tag\":\"android\",\"persons\":0,\"open\":\"1\",\"lon\":\"116.445645\",\"lat\":\"39.928527\",\"speed\":0,\"desc\":\"\",\"talk\":\"1\",\"restime\":\"0\",\"zan\":0,\"picurl\":\"\",\"nickname\":\"MB1ABD\",\"sex\":\"0\",\"head\":\"7\"}";
+
+	private void testDraw() {
+
+		try {
+			JSONObject obj = new JSONObject(userInfo);
+			mBaiduMapManage.addSinglePoint(userInfo);
+		} catch (Exception e) {
+
+		}
+
+	}
+
+	double currentLon = 116.455645;
+	double currentLat = 39.928527;
+
+	private void testUpdatePosition() {
+		currentLon += 0.01;
+		mBaiduMapManage.updatePosition("11000000030", currentLon, currentLat);
+	}
+
 	private void drawPersonsHead() {
-		String lonStr = "116.357428";
-		String latStr = "39.93923";
-		// 添加地图大头针
-		mBaiduMapManage.AddMapPoint(lonStr, latStr, "");
-		mBaiduMapManage.SetMapCenter(Double.parseDouble(lonStr), Double.parseDouble(latStr));
+		LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----111: ");
+		try {
+			String jsonMyPos = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Location,
+					ILocationFn.LOCATION_CMD_GET_POSITION, "");
+			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----2222: " + jsonMyPos);
+			if (null != jsonMyPos) {
+				BaiduPosition myPosition = JsonUtil.parseLocatoinJson(jsonMyPos);
+				if (null != myPosition) {
+					// 开始绘制我的位置
+
+					if (mApp.isUserLoginSucess) {
+						// 画大头针
+						// drawPin(myPosition.rawLon, myPosition.rawLat, "me",
+						// true);
+
+						if (null == myInfo) {
+							this.getMyInfo();
+						}
+						LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head: "
+								+ myInfo.nickName);
+						if (null != myInfo) {
+							LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head2: ");
+							mCurrentLocationType = LOCATION_TYPE_HEAD;
+							myInfo.lon = String.valueOf(myPosition.rawLon);
+							myInfo.lat = String.valueOf(myPosition.rawLat);
+
+							mBaiduMapManage.addSinglePoint(JsonUtil.UserInfoToString(myInfo));
+							LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head3: ");
+						}
+
+						LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head4: ");
+
+					} else {
+						mCurrentLocationType = LOCATION_TYPE_POINT;
+						// 画小蓝点
+						MyLocationData locData = new MyLocationData.Builder().accuracy((float) myPosition.radius)
+								.direction(100).latitude(myPosition.rawLat).longitude(myPosition.rawLon).build();
+						// 确认地图我的位置点是否更新位置
+						mBaiduMap.setMyLocationData(locData);
+
+						// LatLng ll = new
+						// LatLng(myPosition.rawLat,myPosition.rawLon);
+						// MapStatusUpdate u =
+						// MapStatusUpdateFactory.newLatLng(ll);
+						// mBaiduMap.animateMapStatus(u);
+					}
+
+				} else {
+					showToast("无法获取我的位置信息");
+				}
+			} else {
+				showToast("无法获取我的位置信息");
+			}
+
+			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----3333: ");
+
+			if (isShareLive) {
+				// 自己直播不再绘制其它人的点
+				return;
+			}
+
+			if (null == currentUserInfo) {
+				showToast("无法获取看直播人的经纬度");
+				return;
+			}
+
+			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----aid  : " + currentUserInfo.aid);
+
+			// drawPin(Double.parseDouble(currentUserInfo.lon),
+			// Double.parseDouble(currentUserInfo.lat),
+			// currentUserInfo.aid, false);
+
+			mBaiduMapManage.addSinglePoint(JsonUtil.UserInfoToString(currentUserInfo));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----Exception : ");
+		}
+
+		/** 以下为测试代码 */
+		// String lonStr = "116.357428";
+		// String latStr = "39.93923";
+		// // 添加地图大头针
+		// mBaiduMapManage.AddMapPoint(lonStr, latStr, "");
+		// mBaiduMapManage.SetMapCenter(Double.parseDouble(lonStr),
+		// Double.parseDouble(latStr));
+	}
+
+	private void drawPin(double lon, double lat, String headId, boolean isCenter) {
+		// mBaiduMapManage.addSinglePoint(userinfo);
+		//
+		// (String.valueOf(lon), String.valueOf(lat), headId);
+		// if (isCenter) {
+		// mBaiduMapManage.SetMapCenter(lon, lat);
+		// }
 	}
 
 	private void liveFailedStart(boolean isLive) {
@@ -768,6 +968,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 
 		isKaiGeSucess = true;
+
+		if (this.isShareLive) {
+			// 开始视频，上传图片
+			screenShoot();
+		}
 
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StartUploadPosition, "");
 		Toast.makeText(this, "开始上报位置", Toast.LENGTH_LONG).show();
@@ -837,10 +1042,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			String groupId = liveData.groupId;
 			if (null == groupId || "".equals(groupId) || 0 >= groupId.length()) {
 				LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----7777 : ");
+				showToast("对方不支持加入群组");
 				// 不支持加入群组
 				switchLookShareTalkView(true, false);
 			} else {
-
+				showToast("加入对方的群组");
 				// 调用爱滔客加入群组
 				mJoinGroupJson = JsonUtil.getJoinGroup(liveData.groupType, liveData.membercount, liveData.title,
 						liveData.groupId, liveData.groupnumber);
@@ -943,10 +1149,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		case R.id.live_back_btn:
 			// 返回
 			exit();
+
+			// testUpdatePosition();
+
 			break;
 		case R.id.live_refirsh_btn:
 			// 刷新,请求视频直播数据
-			getVideoLiveData();
+			// getVideoLiveData();
+
+			// showToast("显示更多菜单");
+
+			showDialog();
+
 			break;
 		case R.id.live_play_layout:
 			// 继续观看
@@ -963,7 +1177,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 			break;
 		case R.id.live_ok:
-			Toast.makeText(this, "点赞", Toast.LENGTH_LONG).show();
+
 			click_OK();
 			break;
 		case R.id.live_pause:
@@ -980,19 +1194,140 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// 如果是开启直播，则停止上报自己的位置
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
 					"");
-
+			break;
+		case R.id.live_login:
+			click_login();
+			break;
+		case R.id.live_share:
+			click_share();
+			break;
+		case R.id.live_qiangpai:
+			pre_startTrimVideo();
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void click_OK() {
+	private AlertDialog dialog = null;
+	private AlertDialog ad = null;
+	private AlertDialog confirmation = null;
 
+	/**
+	 * 弹出举报的窗口
+	 * 
+	 * @Title: showDialog
+	 * @Description: TODO void
+	 * @author 曾浩
+	 * @throws
+	 */
+	public void showDialog() {
+		dialog = new AlertDialog.Builder(LiveActivity.this).create();
+		dialog.show();
+		dialog.getWindow().setContentView(R.layout.video_square_dialog_main);
+		dialog.getWindow().findViewById(R.id.report).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+				ad = new AlertDialog.Builder(LiveActivity.this).create();
+				ad.show();
+				ad.getWindow().setContentView(R.layout.video_square_dialog_selected);
+				ad.getWindow().findViewById(R.id.sqds).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						confirmation("1");
+					}
+				});
+				ad.getWindow().findViewById(R.id.yyhz).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						confirmation("2");
+					}
+				});
+				ad.getWindow().findViewById(R.id.zzmg).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						confirmation("3");
+					}
+				});
+				ad.getWindow().findViewById(R.id.qtyy).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						confirmation("4");
+					}
+				});
+				ad.getWindow().findViewById(R.id.qx).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+					}
+				});
+			}
+		});
+
+		dialog.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+	}
+
+	public void confirmation(final String reporttype) {
+		ad.dismiss();
+		confirmation = new AlertDialog.Builder(LiveActivity.this).create();
+		confirmation.show();
+		confirmation.getWindow().setContentView(R.layout.video_square_dialog_confirmation);
+		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				// 开启请求服务器举报
+
+				// boolean flog =
+				// GolukApplication.getInstance().getVideoSquareManager().report("1",
+				// mVideoSquareInfo.mVideoEntity.videoid, reporttype);
+				// if(flog){
+				// Toast.makeText(mcontext,
+				// "举报成功，我们稍后会进行处理",Toast.LENGTH_SHORT).show();
+				// }
+				confirmation.dismiss();
+
+			}
+		});
+		confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				confirmation.dismiss();
+			}
+		});
+	}
+
+	private void click_share() {
+		showToast("分享");
+		// boolean isSucess =
+		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+		// IPageNotifyFn.PageType_LiveShare, param);
+	}
+
+	private void click_login() {
+		showToast("去登录界面");
+	}
+
+	private void click_OK() {
 		if (isAlreadClickOK) {
+			showToast("不能重复点赞");
 			return;
 		}
-		final String uid = isShareLive ? "c2ee35c5-4051-41ef-8ca2-09fe921d5efb" : currentUserInfo.uid;
+		Toast.makeText(this, "点赞", Toast.LENGTH_LONG).show();
+		isAlreadClickOK = true;
+		mLiveOk.setBackgroundResource(R.drawable.live_icon_heart);
+		mCurrentOKCount++;
+		if (null != mZancountTv) {
+			mZancountTv.setText("" + mCurrentOKCount);
+		}
+
+		final String uid = isShareLive ? myInfo.uid : currentUserInfo.uid;
 		final String okJson = JsonUtil.getLiveOKJson(uid);
 		LogUtil.e(null, "jyf----20150406----LiveActivity----click_OK----okJson : " + okJson);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
@@ -1057,7 +1392,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mVideoLoading.setVisibility(View.GONE);
 		if (!isShareLive) {
 			// 开启timer开始计时
-			updateCountDown(secondToString(mLiveCountSecond));
+			updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
 			mLiveManager.startTimer(mLiveCountSecond, true);
 		}
 	}
@@ -1077,6 +1412,46 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// LogUtil.e(null,
 		// "jyf----20150406----LiveActivity----PlayerCallback----onGetCurrentPosition : ");
 	}
+
+	private void pre_startTrimVideo() {
+		LogUtil.e(null, "jyf----20150406----LiveActivity----pre_startTrimVideo----11111 : ");
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----pre_startTrimVideo----2222 : " + isRecording);
+			if (!isRecording) {
+				// 设置按下状态
+				mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_8s_press);
+				isRecording = true;
+				mCurVideoType = VideoType.mounts;
+				boolean isSucess = GolukApplication.getInstance().getIPCControlManager().startWonderfulVideo();
+				
+				LogUtil.e(null, "jyf----20150406----LiveActivity----pre_startTrimVideo----4444444 : " + isSucess);
+
+				if (!isSucess) {
+					videoTriggerFail();
+				}
+			}
+		} else {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----pre_startTrimVideo----333333 : ");
+			dialog();
+			// 未登录
+
+		}
+	}
+
+	/**
+	 * 摄像头未连接提示
+	 * 
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	private void dialog() {
+		CustomDialog d = new CustomDialog(this);
+		d.setMessage("请检查摄像头是否正常连接", Gravity.CENTER);
+		d.setLeftButton("确定", null);
+		d.show();
+	}
+
+	private final int TRIM_COUNT = 12;
 
 	/**
 	 * 8s视频一键抢拍
@@ -1098,27 +1473,87 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					@Override
 					public void run() {
 						LogUtil.e("", "mShootTime-------: " + mShootTime);
-						if (mShootTime > 16) {
-							stopTrimVideo();
-							return;
-						}
-						if (mShootTime % 2 != 0) {
-							if (1 == mShootTime) {
-								SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
-							}
-							mQiangpaiImg.setBackgroundResource(shootImg[mShootTime / 2]);
-						} else {
-							if (16 == mShootTime) {
-								SoundUtils.getInstance().play(SoundUtils.RECORD_CAMERA);
-							} else {
-								SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
-							}
-						}
+
+						refre8second(mShootTime);
+
+						// if (mShootTime % 2 != 0) {
+						// if (1 == mShootTime) {
+						// SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+						// }
+						// mQiangpaiImg.setBackgroundResource(shootImg[mShootTime
+						// / 2]);
+						// } else {
+						// if (TRIM_COUNT == mShootTime) {
+						// SoundUtils.getInstance().play(SoundUtils.RECORD_CAMERA);
+						// } else {
+						// SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+						// }
+						// }
+						//
+						// if (mShootTime > TRIM_COUNT + 1) {
+						// stopTrimVideo();
+						// return;
+						// }
+
 					}
 				});
 			}
 		};
 		m8sTimer.schedule(task, 500, 500);
+	}
+
+	private void refre8second(int mShootTime) {
+		switch (mShootTime) {
+		case 1:
+			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_record);
+			break;
+		case 2:
+
+			break;
+		case 3:
+			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_5s_record);
+			break;
+		case 4:
+
+			break;
+		case 5:
+			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_4s_record);
+			break;
+		case 6:
+
+			break;
+		case 7:
+			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_3s_record);
+			break;
+		case 8:
+
+			break;
+		case 9:
+			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_2s_record);
+			break;
+		case 10:
+
+			break;
+		case 11:
+			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_1s_record);
+			break;
+		case 13:
+			SoundUtils.getInstance().play(SoundUtils.RECORD_CAMERA);
+			break;
+
+		default:
+			break;
+		}
+
+		if (mShootTime > 13) {
+			stopTrimVideo();
+		}
 	}
 
 	/**
@@ -1128,6 +1563,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @date 2015年3月8日
 	 */
 	private void stopTrimVideo() {
+		mHandler.sendEmptyMessageDelayed(MSG_H_QUERYFILEEXIT, QUERYFILETIME);
+
 		mShootTime = 0;
 		mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_8s);
 		if (null != m8sTimer) {
@@ -1147,6 +1584,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (isAlreadExit) {
 			return;
 		}
+		// 注册回调监听
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");
+		// 移除监听
+		mApp.removeLocationListener(TAG);
+		mJoinGroupJson = null;
 		isAlreadExit = true;
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
@@ -1184,6 +1626,82 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		finish();
 	}
 
+	/** 视频文件生成查询时间（10s超时） */
+	private int videoFileQueryTime = 0;
+	/** 保存录制的文件名字 */
+	public String mRecordVideFileName = "";
+	/** 保存录制中的状态 */
+	public boolean isRecording = false;
+
+	public enum VideoType {
+		mounts, emergency, idle
+	};
+
+	/** 保存当前录制的视频类型 */
+	public VideoType mCurVideoType = VideoType.idle;
+
+	/**
+	 * 单个文件查询
+	 * 
+	 * @author xuhw
+	 * @date 2015年3月8日
+	 */
+	private void queryFileExit() {
+		videoFileQueryTime++;
+		mHandler.removeMessages(MSG_H_QUERYFILEEXIT);
+		if (!TextUtils.isEmpty(mRecordVideFileName)) {
+			if (videoFileQueryTime <= 15) {
+				if (GolukApplication.getInstance().getIpcIsLogin()) {
+					boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
+							.querySingleFile(mRecordVideFileName);
+
+					if (!isSucess) {
+						mHandler.sendEmptyMessageDelayed(MSG_H_QUERYFILEEXIT, 1000);
+					}
+				} else {
+					// IPC未登录
+				}
+			} else {
+				videoFileQueryTime = 0;
+				videoTriggerFail();
+			}
+		} else {
+			videoFileQueryTime = 0;
+			resetTrimVideoState();
+		}
+
+	}
+
+	/**
+	 * 恢复视频截取状态
+	 * 
+	 * @author xuhw
+	 * @date 2015年3月5日
+	 */
+	private void resetTrimVideoState() {
+		isRecording = false;
+		mCurVideoType = VideoType.idle;
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				mQiangpaiImg.setBackgroundResource(R.drawable.btn_live_8s);
+			}
+		});
+	}
+
+	/**
+	 * 视频截取命令失败回复状态
+	 * 
+	 * @author xuhw
+	 * @date 2015年3月18日
+	 */
+	private void videoTriggerFail() {
+		if (mCurVideoType == VideoType.emergency) {
+		} else if (mCurVideoType == VideoType.mounts) {
+		}
+		resetTrimVideoState();
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (KeyEvent.KEYCODE_BACK == keyCode) {
@@ -1193,9 +1711,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	/** 开启超时记录定时器 */
-	private static final int MSG_SPEECH_OUT_TIME = 1;
+	private static final int MSG_H_SPEECH_OUT_TIME = 1;
 	/** 对讲倒计时定时器 */
-	private static final int MSG_SPEECH_COUNT_DOWN = 2;
+	private static final int MSG_H_SPEECH_COUNT_DOWN = 2;
+	/** 定时查询录制视频文件是否存在 */
+	public static final int MSG_H_QUERYFILEEXIT = 3;
+	/** 文件查询时间 */
+	public static final int QUERYFILETIME = 500;
+
 	/** 记录对讲超时时间(30s) */
 	private int mSpeechOutTime = 0;
 	/** 记录对讲超时计时(3s) */
@@ -1210,14 +1733,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case MSG_SPEECH_OUT_TIME:
+			case MSG_H_SPEECH_OUT_TIME:
 				mSpeechOutTime++;
 				if (mSpeechOutTime >= 30) {
 					talkrelease();
 					if (mIsMe) {
 						mTimeOutEnable = true;
 						mSpeechCountDownTime = 3;
-						mHandler.sendEmptyMessage(MSG_SPEECH_COUNT_DOWN);
+						mHandler.sendEmptyMessage(MSG_H_SPEECH_COUNT_DOWN);
 					} else {
 						mSpeechOutTime = 0;
 					}
@@ -1229,15 +1752,15 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 						str = "00:" + mSpeechOutTime;
 					}
 					refreshTimerTv(str);
-					mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
-					mHandler.sendEmptyMessageDelayed(MSG_SPEECH_OUT_TIME, 1000);
+					mHandler.removeMessages(MSG_H_SPEECH_OUT_TIME);
+					mHandler.sendEmptyMessageDelayed(MSG_H_SPEECH_OUT_TIME, 1000);
 				}
 				break;
-			case MSG_SPEECH_COUNT_DOWN:
+			case MSG_H_SPEECH_COUNT_DOWN:
 				if (mSpeechCountDownTime < 0) {
 					mTalkTouchDown = false;
 					mTimeOutEnable = false;
-					mHandler.removeMessages(MSG_SPEECH_COUNT_DOWN);
+					mHandler.removeMessages(MSG_H_SPEECH_COUNT_DOWN);
 					// 目前为可按状态
 					refreshPPtState(true);
 				} else {
@@ -1245,9 +1768,15 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					final String showTimeStr = "00:0" + mSpeechCountDownTime;
 					refreshTimerTv(showTimeStr);
 					mSpeechCountDownTime--;
-					mHandler.removeMessages(MSG_SPEECH_COUNT_DOWN);
-					mHandler.sendEmptyMessageDelayed(MSG_SPEECH_COUNT_DOWN, 1000);
+					mHandler.removeMessages(MSG_H_SPEECH_COUNT_DOWN);
+					mHandler.sendEmptyMessageDelayed(MSG_H_SPEECH_COUNT_DOWN, 1000);
 				}
+				break;
+			case MSG_H_QUERYFILEEXIT:
+				queryFileExit();
+				break;
+			case MOUNTS:
+				startTrimVideo();
 				break;
 			default:
 				break;
@@ -1271,12 +1800,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				LogUtil.e(null, "mobile-----onTouch-----:  exit down");
 				mExitBtn.setBackgroundResource(R.drawable.live_btn_off_press);
 			} else if (id == R.id.livelook_ppt || id == R.id.live_ppt) {
+				if (mIsJoinGroupSucess) {
+
+				} else {
+
+				}
 				pptTouchDown();
 			}
 			break;
 		case MotionEvent.ACTION_UP:
 			if (id == R.id.live_qiangpai) {
-				startTrimVideo();
+				pre_startTrimVideo();
+				// startTrimVideo();
 				LogUtil.e(null, "mobile-----onTouch-----:  qiangpai up");
 			} else if (id == R.id.live_exit) {
 				LogUtil.e(null, "mobile-----onTouch-----:  exit up");
@@ -1386,12 +1921,16 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	/** 用户是否成功加入爱滔客频道 */
 	private boolean mIsJoinGroupSucess = false;
+	/** 爱滔客登录是否成功 */
+	private boolean mIsAirtalkLoginSucess = false;
 	/** 用户加入的爱滔客群组信息 */
 	private String mCurrentGroupInfo = null;
 	/** 网络连接是否可用 */
 	private boolean mLinkEnable = true;
 	/** 别人说话时可以　不能说话　 */
 	private boolean isCanSpeak = true;
+	/** 当前正在说话的人 */
+	private String mSpeakName = "";
 
 	// 刷新说话中的状态, name表示说话的名字 isMe　表示是否是自己说话
 	private void speekingUIRefresh(int event, String name, boolean isMe) {
@@ -1402,6 +1941,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_yellow);
 			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setTextColor(getResources().getColor(R.color.live_speaking));
 			mTalkingTv.setText("准备中...");
 			break;
 		case MSG_SPEAKING_START_SPEAK:
@@ -1410,6 +1950,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_green);
 			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setTextColor(getResources().getColor(R.color.live_speaking));
 			if (isMe) {
 				mTalkingTv.setText("说话中...");
 			} else {
@@ -1436,13 +1977,16 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_red);
 			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setTextColor(Color.RED);
 			mTalkingTv.setText("超时禁用中，请稍后...");
+			refreshPPtState(false);
 			break;
 		case MSG_SPEEKING_BUSY:
 			mSpeakingLayout.setVisibility(View.VISIBLE);
 			mTalkingSign.setVisibility(View.VISIBLE);
 			mTalkingSign.setImageResource(R.drawable.live_icon_ptt_red);
 			mTalkingTv.setVisibility(View.VISIBLE);
+			mTalkingTv.setTextColor(Color.RED);
 			mTalkingTv.setText("占线中，请稍候再试...");
 			break;
 		}
@@ -1454,6 +1998,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		LogUtil.e(null, "jyf-------live------TalkNotifyCallBack type: " + type + "  data:" + data);
 		int state = -1;
 		switch (type) {
+		case EVENT_AID:
+			state = JsonUtil.getJsonIntValue(data, "state", -1);
+			loginAndHeartEvent(state);
+			break;
 		case Talk_Event_ChanleIn:
 			// 进入频道相关
 			state = JsonUtil.getJsonIntValue(data, "state", -1);
@@ -1465,6 +2013,48 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			channelInteractionEvent(state, data);
 			break;
 		default:
+			break;
+		}
+	}
+
+	/**
+	 * 登录及心跳相关事件
+	 * 
+	 * @param event
+	 * @author qianwei
+	 * @date 2014/04/08
+	 */
+	private void loginAndHeartEvent(int event) {
+		switch (event) {
+		case -1:
+			// 网络掉线
+			refreshPPtState(false);
+			break;
+		case 0:
+			// 正在获取aid及其配置参数 UI--弹出提示框
+			break;
+		case 1:
+			/** 获取aid及其配置参数成功 */
+			break;
+		case 2:
+			/** 获取aid及其配置参数失败 */
+			break;
+		case 3:
+			// 正在登录爱淘客
+			break;
+		case 4:
+			// 登录爱淘客成功
+			mIsAirtalkLoginSucess = true;
+			break;
+		case 6:// 登录爱淘客失败
+			break;
+		case 7:// 用户重复登录爱淘客
+			break;
+		case 9:
+			// aid登录中
+			break;
+		case 10:
+			// aid超时
 			break;
 		}
 	}
@@ -1490,16 +2080,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		case 3:// 正在进入爱淘客频道
 			break;
 		case 4:// 进入爱淘客频道成功
-			mIsJoinGroupSucess = true;
-			showToast("加入群组成功");
-			// 按钮可以按下
-			refreshPPtState(true);
+			callBack_JoinGroupSucess();
 			break;
 		case 5:// 自动重新进入爱淘客频道成功
 			mLinkEnable = false;
 			// 改为说话可用,更新UI
 			break;
 		case 6:// 进入爱淘客频道失败
+			mIsJoinGroupSucess = false;
 			break;
 		case 7:// 频道退出
 			break;
@@ -1538,8 +2126,37 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
-	/** 当前正在说话的人 */
-	private String mSpeakName = "";
+	/**
+	 * 加入群组成功后的处理
+	 * 
+	 * @author jiayf
+	 * @date Apr 13, 2015
+	 */
+	private void callBack_JoinGroupSucess() {
+		mIsJoinGroupSucess = true;
+		showToast("加入群组成功");
+		// 加入群组成功后的对讲按钮的变化
+		if (this.isShareLive) {
+			if (null != mSettingData && mSettingData.isCanTalk) {
+				// 可以支持对讲
+				// 对讲按钮可以显示
+				mBottomLayout.setVisibility(View.VISIBLE);
+				mLiveTalk.setVisibility(View.VISIBLE);
+				mLiveLookTalk.setVisibility(View.GONE);
+			} else {
+				mBottomLayout.setVisibility(View.VISIBLE);
+				mLiveTalk.setVisibility(View.GONE);
+				mLiveLookTalk.setVisibility(View.GONE);
+			}
+		} else {
+			mBottomLayout.setVisibility(View.GONE);
+			mLiveTalk.setVisibility(View.GONE);
+			mLiveLookTalk.setVisibility(View.VISIBLE);
+		}
+
+		// 按钮可以按下
+		refreshPPtState(true);
+	}
 
 	// 有人开始说话
 	private void callBack_startSpeak(String message) {
@@ -1555,8 +2172,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		refreshTimerTv("00:00");
 		// 不管是其它人　还是　自己，开始说话，就倒计时30秒
-		mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
-		mHandler.sendEmptyMessageDelayed(MSG_SPEECH_OUT_TIME, 1000);
+		mHandler.removeMessages(MSG_H_SPEECH_OUT_TIME);
+		mHandler.sendEmptyMessageDelayed(MSG_H_SPEECH_OUT_TIME, 1000);
 
 	}
 
@@ -1564,7 +2181,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private void callBack_endSpeak(String message) {
 		String aidEnd = JsonUtil.getJsonStringValue(message, "aid", null);
 		boolean isMeEnd = JsonUtil.getJsonBooleanValue(message, "isme", false);
-
+		mSpeakName = "";
 		mIsMe = false;
 		if (isMeEnd) {
 			mSpeechOutTime = 0;
@@ -1574,40 +2191,132 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			speekingUIRefresh(MSG_SPEAKING_OTHER_END, "", false);
 		}
 
-		mHandler.removeMessages(MSG_SPEECH_OUT_TIME);
+		mHandler.removeMessages(MSG_H_SPEECH_OUT_TIME);
 	}
 
-	private void hideMapSpeechLoading() {
+	/** 用户设置数据 */
+	LiveSettingBean mSettingData = null;
 
-	}
-
-	private void refreshUICanSpeakDown() {
-
-	}
-
+	// POPWindow回调操作
 	@Override
 	public void callBackPopWindow(int event, Object data) {
 		if (LiveSettingPopWindow.EVENT_ENTER == event) {
 			if (null != mliveSettingWindow) {
 				mliveSettingWindow.close();
 			}
-			if (null != data) {
-				LiveSettingBean settingData = (LiveSettingBean) data;
-				// 通过用户的设置，判断用户是否支持对讲
-				switchShareTalkView(settingData.isCanTalk);
-				mLiveCountSecond = settingData.duration;
-				refreshPPTTTT();
-				// 开始视频上传
-				startLive(mCurrentVideoId);
-				updateCountDown(secondToString(mLiveCountSecond));
-				// 开始计时
-				mLiveManager.startTimer(mLiveCountSecond, true);
-			} else {
+			if (null == data) {
 				showToast("用户设置出错");
+				return;
 			}
+			mSettingData = (LiveSettingBean) data;
+			// 通过用户的设置，判断用户是否支持对讲
+			switchShareTalkView(mSettingData.isCanTalk);
+			mLiveCountSecond = mSettingData.duration;
+			if (null != mDescTv && null != mSettingData.desc && !"".equals(mSettingData.desc)) {
+				mDescTv.setText(mSettingData.desc);
+			} else {
+				mDescTv.setVisibility(View.GONE);
+			}
+			// 在没有进入群组时，按钮不可按
+			refreshPPtState(false);
+			// 开始视频上传
+			startLive(mCurrentVideoId);
+			updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
+			// 开始计时
+			mLiveManager.startTimer(mLiveCountSecond, true);
+
+			test1();
 		}
 	}
 
+	private void test1() {
+		startLiveForServer();
+	}
+
+	/**
+	 * 首页大头针数据返回
+	 */
+	public void pointDataCallback(int success, Object obj) {
+		if (1 != success) {
+			LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type:  sucess:" + success);
+			return;
+		}
+
+		final String str = (String) obj;
+
+		LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type111:  str：" + str);
+		// String str =
+		// "{\"code\":\"200\",\"state\":\"true\",\"info\":[{\"utype\":\"1\",\"aid\":\"1\",\"nickname\":\"张三\",\"lon\":\"116.357428\",\"lat\":\"39.93923\",\"picurl\":\"http://img2.3lian.com/img2007/18/18/003.png\",\"speed\":\"34公里/小时\"},{\"aid\":\"2\",\"utype\":\"2\",\"nickname\":\"李四\",\"lon\":\"116.327428\",\"lat\":\"39.91923\",\"picurl\":\"http://img.cool80.com/i/png/217/02.png\",\"speed\":\"342公里/小时\"}]}";
+		try {
+			JSONObject json = new JSONObject(str);
+			// 请求成功
+			JSONArray memberJsonArray = json.getJSONArray("info");
+
+			UserInfo tempUserInfo = null;
+			UserInfo tempMyInfo = null;
+
+			int length = memberJsonArray.length();
+
+			for (int i = 0; i < length; i++) {
+				JSONObject tempObj = memberJsonArray.getJSONObject(i);
+				String aid = tempObj.getString("aid");
+				if (this.isShareLive) {
+					if (aid.equals(myInfo.aid)) {
+						// 我自己的信息
+						tempMyInfo = JsonUtil.parseSingleUserInfoJson(tempObj);
+						break;
+					}
+				} else {
+					if (aid.equals(currentUserInfo.aid)) {
+						tempUserInfo = JsonUtil.parseSingleUserInfoJson(tempObj);
+						break;
+					}
+				}
+			}
+
+			if (this.isShareLive) {
+				// 如果是我发起的直播,更新我的信息即可
+				if (null == tempMyInfo) {
+					return;
+				}
+				this.updateCount(Integer.parseInt(tempMyInfo.zanCount), Integer.parseInt(tempMyInfo.persons));
+
+				LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback 3333333:  更新我自己的赞 zanCount："
+						+ tempMyInfo.zanCount + "	permson:" + tempMyInfo.persons);
+				return;
+			}
+			if (null == tempUserInfo) {
+				showToast("未找到用户信息");
+				return;
+			}
+
+			LogUtil.e(null, "jyf----20150406----LiveActivity----pointDataCallback----aid  : " + tempUserInfo.aid
+					+ " lon:" + tempUserInfo.lon + " lat:" + tempUserInfo.lat);
+
+			mBaiduMapManage.updatePosition(tempUserInfo.aid, Double.parseDouble(tempUserInfo.lon),
+					Double.parseDouble(tempUserInfo.lat));
+
+			currentUserInfo.lat = tempUserInfo.lat;
+			currentUserInfo.lon = tempUserInfo.lon;
+
+			// 设置“赞”的人数，和观看人数
+			this.updateCount(Integer.parseInt(tempUserInfo.zanCount), Integer.parseInt(tempUserInfo.persons));
+
+			if (!isShareLive) {
+				if (!isGetingAddress) {
+					isGetingAddress = true;
+					GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
+							Double.parseDouble(currentUserInfo.lon));
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// 对话框操作回调
 	@Override
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		switch (dialogType) {
@@ -1621,6 +2330,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	}
 
+	// timer回调操作
 	@Override
 	public void CallBack_timer(int function, int result, int current) {
 		if (isShareLive) {
@@ -1631,7 +2341,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this, "直播结束");
 				}
 				// 直播功能
-				updateCountDown(secondToString(current));
+				updateCountDown(GolukUtils.secondToString(current));
 			}
 		} else {
 			// 看别人直播
@@ -1639,8 +2349,194 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				if (TimerManager.RESULT_FINISH == result) {
 					showToast("查看别人直播结束");
 				}
-				updateCountDown(secondToString(current));
+				updateCountDown(GolukUtils.secondToString(current));
 			}
+		}
+	}
+
+	private void baiduDrawMyPosition(double lon, double lat, double radius) {
+		MyLocationData locData = new MyLocationData.Builder().accuracy((float) radius).direction(100).latitude(lat)
+				.longitude(lon).build();
+		// 确认地图我的位置点是否更新位置
+		mBaiduMap.setMyLocationData(locData);
+	}
+
+	@Override
+	public void LocationCallBack(String gpsJson) {
+		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----0000  : ");
+		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----111  : ");
+
+		if (null != location) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----updatePositon  : ");
+			if (mApp.isUserLoginSucess) {
+				if (null == myInfo) {
+					this.getMyInfo();
+				}
+				LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head: " + myInfo.nickName);
+				if (null != myInfo) {
+					if (LOCATION_TYPE_UNKNOW == this.mCurrentLocationType) {
+						// 当前是未定位的,　直接画气泡
+
+					} else if (LOCATION_TYPE_POINT == mCurrentLocationType) {
+						// 当前画的是蓝点，需要清除掉蓝点，再画气泡
+
+					} else {
+						// 当前是画的气泡，直接更新气泡的位置即可
+						mBaiduMapManage.updatePosition(myInfo.aid, location.rawLon, location.rawLat);
+					}
+
+					// 设置当前画的是头像
+					mCurrentLocationType = LOCATION_TYPE_HEAD;
+
+				}
+			} else {
+				baiduDrawMyPosition(location.rawLon, location.rawLat, location.radius);
+			}
+		}
+
+		if (!isShareLive) {
+			// 只有在直播界面时才获取自己的位置
+			return;
+		}
+
+		if (!isGetingAddress) {
+			// 调用百度的反地理编码
+			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
+		}
+	}
+
+	@Override
+	public void CallBack_BaiduGeoCoder(int function, Object obj) {
+		isGetingAddress = false;
+		if (null == obj) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
+			return;
+		}
+		final String currentAddress = (String) obj;
+		if (this.isShareLive) {
+			// 如果是自己直播，则直接更新地址
+			if (null != mAddressTv) {
+				mAddressTv.setText(currentAddress);
+			}
+		}
+		LogUtil.e(null, "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
+	}
+
+	@Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+			callBack_VDCP(msg, param1, param2);
+		}
+	}
+
+	/**
+	 * 处理VDCP命令回调
+	 * 
+	 * @param msg
+	 *            　命令id
+	 * @param param1
+	 *            ¨¨ 0:命令发送成功 非0:发送失败
+	 * @param param2
+	 *            命令对应的json字符串
+	 * @author xuhw
+	 * @date 2015年3月17日
+	 */
+	private void callBack_VDCP(int msg, int param1, Object param2) {
+		switch (msg) {
+		// 实时抓图
+		case IPC_VDCPCmd_SnapPic:
+			dealSnapCallBack(param1, param2);
+			break;
+		// 请求紧急、精彩视频录制
+		case IPC_VDCPCmd_TriggerRecord:
+			dealTriggerRecordCallBack(param1, param2);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void dealTriggerRecordCallBack(int param1, Object param2) {
+		LogUtils.d("m8sBtn===IPC_VDCPCmd_TriggerRecord===4444=====param1=" + param1 + "==param2=" + param2);
+
+		TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
+		if (null != record) {
+			if (RESULE_SUCESS == param1) {
+				mRecordVideFileName = record.fileName;
+				LogUtils.d("m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type=" + record.type);
+				// 精彩视频
+				if (TYPE_SHORTCUT == record.type) {
+					GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
+					mHandler.sendEmptyMessage(MOUNTS);
+				}
+			} else {
+				GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+				videoTriggerFail();
+			}
+		} else {
+			LogUtils.d("m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
+			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
+			videoTriggerFail();
+		}
+	}
+
+	private void dealSnapCallBack(int param1, Object param2) {
+		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令回调");
+
+		if (RESULE_SUCESS != param1) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令失败-------");
+			return;
+		}
+		// 文件路径格式：fs1:/IPC_Snap_Pic/snapPic.jpg
+		String imageFilePath = (String) param2;
+
+		if (TextUtils.isEmpty(imageFilePath)) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片路径为空");
+			return;
+		}
+
+		String uploadJson = JsonUtil.getUploadSnapJson(mCurrentVideoId, imageFilePath);
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_LiveUploadPic, uploadJson);
+
+		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----343434 startUpload Img:   " + isSucess);
+
+		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----333 imagePath:   " + imageFilePath);
+
+		String path = FileUtils.libToJavaPath(imageFilePath);
+		if (TextUtils.isEmpty(path)) {
+			return;
+		}
+
+		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----4444 path:   " + path);
+
+		long time = System.currentTimeMillis();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		String timename = format.format(new Date(time));
+
+		// 创建文件夹
+		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+				+ File.separator + "goluk" + File.separator + "screenshot";
+		GFileUtils.makedir(dirname);
+
+		String picName = dirname + File.separator + timename + ".jpg";
+		// 保存原始图片
+		String orgPicName = dirname + File.separator + "original_" + timename + ".jpg";
+
+		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----55555 picName:   " + picName);
+
+		GFileUtils.copyFile(path, orgPicName);
+		GFileUtils.compressImageToDisk(path, picName);
+
+		File file = new File(picName);
+		if (file.exists()) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令成功------22222");
+
+			// TachographApplication.getInstance().uploadPicture(
+			// picName);
+		} else {
+
 		}
 	}
 }
