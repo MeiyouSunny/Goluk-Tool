@@ -1,8 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -59,14 +56,12 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
 	private RelativeLayout mLayoutBack =  null;
 	
 	/** 本地视频item */
 	private RelativeLayout mLocalVideoItem = null;
 	/** 视频广场item */
-//	private RelativeLayout mVideoSquareItem = null;
 	/**草稿箱item */
 	private RelativeLayout mDraftItem = null;
 	/** 去商店item */
@@ -106,7 +101,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	@Override
 	protected void onResume(){
 		super.onResume();
-		
+		Log.i("hhh", "------onResume------");
 		mPreferences= getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 		
@@ -118,7 +113,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		
 		//页面初始化
 		init();
-//		initData();
 	}
 
 	/**
@@ -192,15 +186,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		switch(id){
 			case R.id.back_btn_layout:
 				//返回
-				//自动登录失败，显示未登录用户的头像等信息
-//				if(mApp.autoLoginStatus == 3){
-//					intent = new Intent(IndexMoreActivity.this,IndexMoreNoLoginActivity.class);
-//					startActivity(intent);
-//					this.finish();
-//				}
-				SysApplication.getInstance().exit();
-				Intent it = new Intent(IndexMoreActivity.this,MainActivity.class);
-				startActivity(it);
 				this.finish();
 			break;
 			case R.id.local_video_item:
@@ -222,14 +207,15 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 				intent = new Intent(IndexMoreActivity.this,UserSetupActivity.class);
 				startActivity(intent);
 				if(mApp.loginoutStatus == true){
-					SysApplication.getInstance().exit();
+//					SysApplication.getInstance().exit();
 				}
 			break;
 			//点击跳转到我的主页
 			case R.id.head_layout:
 				//自动登录中，成功，失败，超时、密码错误
 				Log.i("autostatus", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
-				if(isHasInfo){
+				if(isHasInfo && mApp.loginoutStatus == false){
+					Log.i("userinterface", "----------------");
 					mApp.mUser.setUserInterface(this);
 					if(mApp.autoLoginStatus == 1){
 						mBuilder = new AlertDialog.Builder(mContext);
@@ -247,16 +233,14 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 						}).create();
 						dialog	.show();
 					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess == true){
+						Log.i("userinterface", "--------更多页面-------");
 						intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
 						startActivity(intent);
-						if(mApp.loginoutStatus == true){
-							this.finish();
-						}
 					}
 				}else{
 					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
 					//登录页回调判断
-					itNo.putExtra("isInfo", "");
+					itNo.putExtra("isInfo", "back");
 					// 判断是否为自动登录失败或超时请求的登录功能
 					if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
 						mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
@@ -265,7 +249,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 					}
 					startActivity(itNo);
 					isHasInfo = true;
-					finish();
+//					finish();
 				}
 				break;
 		}
@@ -305,6 +289,15 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		}
 	}
 	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+//			this.finish();
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	/**
 	 * 对话框消失
 	 */
@@ -320,7 +313,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			startActivity(it);
 		}else if(mApp.autoLoginStatus == 3 || mApp.isUserLoginSucess == false){
 			dismissDialog();
-			console.toast("登录失败", mContext);
+			console.toast("登录失败------IndexMoreActivity-----", mContext);
+			Log.i("userinterface", "------"+mApp.autoLoginStatus+"--------indexmoreactivity");
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
 		}else if(mApp.autoLoginStatus == 5){

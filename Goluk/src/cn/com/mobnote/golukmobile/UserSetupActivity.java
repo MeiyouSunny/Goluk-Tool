@@ -54,8 +54,6 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
 	private Button mBackBtn = null;
-	/** 设置item */
-	private RelativeLayout mSetupItem = null;
 	
 	/** 个人中心页面handler用来接收消息,更新UI*/
 	public static Handler mUserCenterHandler = null;
@@ -79,6 +77,13 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_setup);
+		
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		
 		mContext = this;
 		
 		//获得GolukApplication对象
@@ -96,17 +101,6 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	private void init(){
 		//获取页面元素
 		mBackBtn = (Button)findViewById(R.id.back_btn);
-		//mSetupItem = (RelativeLayout) findViewById(R.id.setup_item);
-//		mNextBtn = (Button)findViewById(R.id.next_btn);
-//		mPlayLayout = (RelativeLayout)findViewById(R.id.play_layout);
-//		mPlayStatusImage = (ImageView)findViewById(R.id.play_image);
-//		mPlayBtn.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mMedioPlayer.start();
-//			}
-//		});
-		
 		//退出按钮
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
 		
@@ -115,16 +109,8 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 		
 		if(!isFirstLogin ){//登录过
-			Log.i("out", "xxxxxxx"+mApp.loginoutStatus);
-			Log.i("setauto", "----"+mApp.autoLoginStatus);
-			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2){//上次登录成功
+			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true){//上次登录成功
 				btnLoginout.setText("退出");
-				//是否退出
-				if(mApp.loginoutStatus == true){
-					btnLoginout.setText("登录");
-				}else{
-					btnLoginout.setText("退出");
-				}
 			}else{
 				btnLoginout.setText("登录");
 			}
@@ -135,7 +121,6 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
-		//mSetupItem.setOnClickListener(this);
 		
 		//更新UI handler
 		mUserCenterHandler = new Handler(){
@@ -147,25 +132,12 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	
 	
 	@Override
-	protected void onResume(){
-		mApp.setContext(this,"UserSetup");
-		super.onResume();
-	}
-	
-	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
 			case R.id.back_btn:
 				//返回
-				/*if(mApp.loginoutStatus){
-					Intent it = new Intent(UserSetupActivity.this,IndexMoreNoLoginActivity.class);
-					startActivity(it);
-//					this.finish();
-				}else{
-					finish();					
-				}*/
 				this.finish();
 			break;
 			case R.id.setup_item:
@@ -217,6 +189,7 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		}else{
 			//注销失败
 			mApp.loginoutStatus = false;
+			mApp.isUserLoginSucess = true;
 		}
 	}
 	
@@ -258,8 +231,9 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	 */
 	public void initIntent(Class intentClass){
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
+		it.putExtra("isInfo", "back");
 		startActivity(it);
-		this.finish();
+//		this.finish();
 	}
 	
 	/**

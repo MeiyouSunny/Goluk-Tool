@@ -59,6 +59,9 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	//将用户的手机号和密码保存到本地
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
+	
+	//判断登录
+	private String justLogin = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
 		
-		SysApplication.getInstance().addActivity(this);
+//		SysApplication.getInstance().addActivity(this);
 	}
 	@Override
 	protected void onResume() {
@@ -119,6 +122,10 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			String phoneAuto = intentStart.getStringExtra("autoPhone").toString();
 			Log.i("autostatus", "----自动登录失败手机号手机号手机号----"+phoneAuto);
 			mEditTextPhoneNumber.setText(phoneAuto);
+		}
+		//登录页面返回
+		if(null != intentStart.getStringExtra("isInfo")){
+			justLogin = intentStart.getStringExtra("isInfo").toString();
 		}
 		
 		/**
@@ -304,7 +311,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mTextViewRegist.setEnabled(false);
 							mTextViewForgetPwd.setEnabled(false);
 						}else{
-							console.toast("登录失败", this);
+							console.toast("登录失败======UserLoginActivity----", this);
 							mApplication.loginStatus = 2;
 						}
 					}else{
@@ -326,16 +333,14 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		// TODO Auto-generated method stub
 		switch (mApplication.loginStatus) {
 		case 0:
-			/*UserUtils.hideSoftMethod(this);
-			mLoading.setVisibility(View.VISIBLE);
-			mEditTextPhoneNumber.setEnabled(false);
-			mEditTextPwd.setEnabled(false);*/
 			break;
 		case 1:
 			mApplication.isUserLoginSucess = true;
 			mLoading.setVisibility(View.GONE);
-			Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
-			startActivity(login);
+			if(justLogin.equals("main")){
+				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
+				startActivity(login);
+			}
 			this.finish();
 			break;
 		case 2:

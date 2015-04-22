@@ -84,10 +84,10 @@ public class UserLoginManage {
 					mEditor.commit();
 					//---------------------------登录成功的状态  1------------------------------
 					//登录成功跳转
-					SysApplication.getInstance().exit();//杀死前边所有的Activity
-					console.toast("登录成功", mApp.getContext());
+//					console.toast("登录成功", mApp.getContext());
 					loginStatusChange(1);//登录成功
 					mApp.isUserLoginSucess = true;
+					mApp.loginoutStatus = false;
 					break;
 				case 500:
 					UserUtils.showDialog(mApp.getContext(), "服务端程序异常");
@@ -111,16 +111,15 @@ public class UserLoginManage {
 		}
 		else{
 			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-			android.util.Log.i("outtime", "-----网络链接超时超时超时"+codeOut);
+			android.util.Log.i("outtime", "-----网络链接超时超时超时-------xxxx---"+codeOut);
 			switch (codeOut) {
-			case 700:
+			case 1:
 				loginStatusChange(4);
 				break;
-			case 600:
-				//网络未链接
+			case 2:
 				loginStatusChange(4);
-			case 601:
-				//http封装错误
+				break;
+			case 3:
 				loginStatusChange(4);
 				break;
 			default:

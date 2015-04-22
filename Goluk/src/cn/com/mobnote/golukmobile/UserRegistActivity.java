@@ -271,7 +271,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		case R.id.user_regist_btn:
 			//点按钮后,弹出登录中的提示,样式使用系统 loading 样式,文字描述:注册中
 			//注册成功:弹出系统短提示:注册成功,以登录状态进入 Goluk 首页
-//			regist();
+			regist();
 			Log.i("registLogin", mApplication.registStatus+"&&&&&&");
 			break;
 		// 获取验证码按钮
@@ -324,8 +324,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				}
 			}
 		};
-//		registerReceiver(smsReceiver, smsFilter);
-		
 		/**
 		 * 对获取验证码进行判断
 		 */
@@ -346,7 +344,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			mBtnRegist.setEnabled(true);
 		}else{
 			mBtnIdentify.setEnabled(false);
-//			UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 		}
 		
 	}
@@ -360,7 +357,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
-//		handler1.removeCallbacks(runnable);
 		mIdentifyLoading.setVisibility(View.GONE);
 		if(1 == success){
 			try{
@@ -368,10 +364,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				console.log(data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-//				String msg = json.getString("msg");
-				
-				/*unregisterReceiver(smsReceiver);
-				click = 2;*/
 				switch (code) {
 				case 200:
 					console.toast("验证码已经发送，请查收短信", mContext);
@@ -452,15 +444,10 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				if(!UserUtils.isNetDeviceAvailable(mContext)){
 					console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 				}else{
-					//初始化定时器
-				/*initTimer();
-				handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.*/
 				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 				console.log(isRegist);
 				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
-				
-				console.log(b+"");
 				if(b){
 					//隐藏软件盘
 					UserUtils.hideSoftMethod(this);
@@ -472,7 +459,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		}
 			}else{
 			mBtnRegist.setFocusable(false);
-//			UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
 		}
 		}
 	}
@@ -482,7 +468,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	 */
 	public void registCallback(int success,Object outTime,Object obj){
 		int codeOut = (Integer) outTime;
-//		handler1.removeCallbacks(runnable);
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
@@ -502,7 +487,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					SysApplication.getInstance().exit();//杀死之前的所有activity，实现一键退出
 					console.toast("注册成功", mContext);
 					mApplication.registStatus = 1;//注册成功的状态
-					Log.i("registLogin", "-------"+mApplication.registStatus);
 					//注册成功后再次调用登录的接口
 					registLogin();
 					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
@@ -549,21 +533,18 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				e.printStackTrace();
 			}
 		}else{
-			/*console.log("注册失败");
-			mApplication.registStatus = 2;//注册失败的状态
-*/			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
+		//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
 			android.util.Log.i("outtime", "-----网络链接超时超时超时"+codeOut);
 			switch (codeOut) {
-			case 700:
+			case 1:
+				mApplication.registStatus = 2;
+				break;
+			case 2:
+				mApplication.registStatus = 2;
+				break;
+			case 3://超时
 				mApplication.registStatus = 2;
 				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
-				break;
-			case 600:
-				//网络未链接
-				mApplication.registStatus = 2;
-			case 601:
-				//http封装错误
-				mApplication.registStatus = 2;
 				break;
 			default:
 				break;
@@ -574,17 +555,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	 * 销毁广播
 	 */
 	private int click = 0;
-	/*final Handler handler1=new Handler();
-	private Runnable runnable;
-	private void initTimer(){
-		runnable=new Runnable(){
-		@Override
-		public void run() {
-			console.toast("当前网络状态不佳，请检查网络后重试", mContext);
-			mLoading.setVisibility(View.GONE);
-			}
-		};
-	}*/
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -592,16 +562,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			unregisterReceiver(smsReceiver);
 		}
 	}
-//	@Override
-	/*protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-		Log.i("bug", "==========regist");
-		if(click == 1){
-			unregisterReceiver(smsReceiver);
-		}
-	}*/
-	
 	/**
 	 * 注册完成后自动调一次登录的接口，以存储用户信息
 	 */
@@ -613,12 +573,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 		if(b){
 			Log.i("yyy", "=======UserRegistActivity====="+b);
-			//登录成功后，存储用户的登录信息
-			mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-			mEditor = mSharedPreferences.edit();
-			mEditor.putBoolean("FirstLogin", false);
-			//提交修改
-			mEditor.commit();
 			//---------------------------登录成功的状态  1----------------------------
 			//登录成功跳转
 			SysApplication.getInstance().exit();//杀死前边所有的Activity
@@ -633,7 +587,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	 */
 	public void registLoginCallBack(int success,Object obj){
 		console.log("---------------registLoginCallBack()-------------------");
-		mApplication.loginStatus=0;//登录成功
+		mApplication.loginStatus=0;//登录中
 		if(1 == success){
 			try{
 				String data = (String)obj;

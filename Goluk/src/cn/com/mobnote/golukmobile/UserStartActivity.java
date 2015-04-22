@@ -67,7 +67,7 @@ public class UserStartActivity extends Activity implements OnClickListener {
 			//我有Goluk
 			Intent it = new Intent(UserStartActivity.this,UserLoginActivity.class);
 			//登录页回调判断
-			it.putExtra("isInfo", "woyougoluk");
+			it.putExtra("isInfo", "main");
 			//在黑页面判断是注销进来的还是首次登录进来的
 			if(!mApp.loginoutStatus){//注销
 				it.putExtra("startActivity", phone);
