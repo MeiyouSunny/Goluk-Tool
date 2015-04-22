@@ -3,6 +3,9 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
@@ -11,6 +14,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.tiros.utils.LogUtil;
 
 
  /**
@@ -366,18 +370,121 @@ public class IPCControlManager implements IPCManagerFn{
 	public boolean getGSensorControlCfg(){
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetGSensorControlCfg, "");
 	}
-	
 	/**
 	 * 设置IPC GSensor控制紧急录像策略
+	 * @param policy
 	 * @return
 	 * @author xuhw
-	 * @date 2015年4月9日
+	 * @date 2015年4月22日
 	 */
-	public boolean setGSensorControlCfg(){
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetGSensorControlCfg, "");
+	public boolean setGSensorControlCfg(int policy){
+		JSONObject json = new JSONObject();
+		try {
+			json.put("policy", policy);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		//"{\"policy\":1}");
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetGSensorControlCfg, json.toString());
 	}
 	
+	/**
+	 * IPC设备进行升级
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean ipcUpgrade(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_IPCUpgrade, "");
+	}
 	
+	/**
+	 * 读取安防模式和移动侦测参数
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean getMotionCfg(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetMotionCfg, "");
+	}
+	
+	/**
+	 * 设置安防模式和移动侦测参数
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean setMotionCfg(int enableSecurity, int snapInterval){
+		JSONObject json = new JSONObject();
+		try {
+			json.put("enableSecurity", enableSecurity);
+			json.put("snapInterval", snapInterval);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetMotionCfg, json.toString());
+	}
+	
+	/**
+	 * 读取IPC版本信息
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean getVersion(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetVersion, "");
+	}
+	
+	/**
+	 * SD卡图片查询
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean queryPic(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_QueryPic, "");
+	}
+	
+	/**
+	 * SD卡查询单张图片
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean singleQueryPic(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SingleQueryPic, "");
+	}
+	
+	/**
+	 * 删除多个SD卡录像、图片
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean recPicEraseMulti(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_RecPicEraseMulti, "");
+	}
+	
+	/**
+	 * 按条件删除录像
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean recErase(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_RecErase, "");
+	}
+	
+	/**
+	 * 按条件删除图片
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月21日
+	 */
+	public boolean ricErase(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_PicErase, "");
+	}
 	
 	/**
 	 * 添加IPC管理监听
@@ -402,7 +509,8 @@ public class IPCControlManager implements IPCManagerFn{
 	
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		
+//		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----222222222---------IPCManagerAdapter-22---event:" + event + " msg:" + msg+"==data:"+(String)param2);
+
 		Iterator<String> iter = mIpcManagerListener.keySet().iterator();
 		while (iter.hasNext()) {
 			Object key = iter.next();
@@ -410,6 +518,7 @@ public class IPCControlManager implements IPCManagerFn{
 				IPCManagerFn fn = mIpcManagerListener.get(key);
 				if (null != fn) {
 					fn.IPCManage_CallBack(event, msg, param1, param2);
+//					LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----3333---------key="+(String)key+"---event:" + event + " msg:" + msg+"==data:"+(String)param2);
 				}
 			}
 		}

@@ -57,6 +57,7 @@ import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.location.BaiduPosition;
@@ -944,8 +945,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(null != mMapView){
 			mMapView.onPause();
 		}
-		isCurrent = false;
-		mMainHandler.removeMessages(2);
+//		isCurrent = false;
+//		mMainHandler.removeMessages(2);
 		
 		//离开页面停止定位
 		if(null != mLocClient){
@@ -1053,6 +1054,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//更多页面
 				Intent more = new Intent(MainActivity.this, IndexMoreActivity.class);
 				startActivity(more);
+
 			break;
 			case R.id.share_local_video_btn:
 				click_toLocalVideoShare();
@@ -1079,13 +1081,24 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				break;
 			case R.id.index_square_btn:
 				// 视频广场
+				toSqu();
 				break;
 			case R.id.index_wiifstate:
-				startWifi();
+				//startWifi();
+				toCard();
 				break;
 		}
 	}
 	
+	private void toCard() {
+		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+		startActivity(i);
+	}
+	
+	private void toSqu() {
+		Intent more = new Intent(MainActivity.this,VideoSquareActivity.class);
+		startActivity(more);
+	}
 	
 	private void click_toLocalVideoShare() {
 		if (!mApp.isUserLoginSucess) {

@@ -12,8 +12,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
@@ -57,6 +60,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.qq).setOnClickListener(this);
 		rootView.findViewById(R.id.sms).setOnClickListener(this);
 		rootView.findViewById(R.id.sina).setOnClickListener(this);
+		rootView.findViewById(R.id.share_cancel).setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
 		setHeight(LayoutParams.WRAP_CONTENT);
@@ -89,6 +93,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			mCurrentShareType = TYPE_WEIBO_XINLANG;
 			performShare(SHARE_MEDIA.SINA);
 			break;
+		case R.id.share_cancel:
+			dismiss();
+			break;
 		default:
 			break;
 		}
@@ -108,6 +115,10 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				if (eCode == StatusCode.ST_CODE_SUCCESSED) {
 					if (mActivity instanceof VideoShareActivity) {
 						((VideoShareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+					}else if (mActivity instanceof VideoSquareActivity){
+						((VideoSquareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+					} else if(mActivity instanceof VideoSquarePlayActivity){
+						((VideoSquarePlayActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 					}
 					showText += "平台分享成功";
 				} else {
@@ -117,8 +128,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 					}
 				}
 				mCurrentShareType = null;
-				// Toast.makeText(mActivity, showText,
-				// Toast.LENGTH_SHORT).show();
+				//Toast.makeText(mActivity, showText,Toast.LENGTH_SHORT).show();
 				dismiss();
 			}
 		});

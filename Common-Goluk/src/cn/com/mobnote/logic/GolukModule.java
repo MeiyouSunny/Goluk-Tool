@@ -28,7 +28,9 @@ public class GolukModule {
 	public static final int Goluk_Module_IPCManager = 2;
 	/** 定位管理模块 */
 	public static final int Goluk_Module_Location = 3;
+	/** 视频广场管理模块 */
+	public static final int Goluk_Module_Square = 4;
 
-	public static final int Goluk_Module_MaxID = 4;
+	public static final int Goluk_Module_MaxID = 5;
 
 }

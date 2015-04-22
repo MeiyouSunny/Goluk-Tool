@@ -12,14 +12,13 @@ public class CustomProgressDialog extends Dialog{
 		super(context); 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.custom_progress_dialog);
-		setCancelable(false);
 		
 		
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_BACK){ 
-        	dismiss();
+//        	dismiss();
         	return false; 
         }
         return super.onKeyDown(keyCode, event);

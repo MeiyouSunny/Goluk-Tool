@@ -573,4 +573,20 @@ public class JsonUtil {
 
 		return null;
 	}
+
+	// 获取图片上传的json串
+	public static  String getUploadSnapJson(String vid, String imgPath) {
+		try {
+			JSONObject rootObj = new JSONObject();
+			rootObj.put("vid", vid);
+			rootObj.put("imgpath", imgPath);
+
+			return rootObj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 }
