@@ -195,9 +195,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.reporticon.setVisibility(View.VISIBLE);
 			holder.liveicon.setVisibility(View.GONE);
 			holder.mSurfaceView.setVisibility(View.VISIBLE);
-			holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
 		}
-		
+		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
 			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);//设置点赞背景
 		}else{
@@ -215,7 +214,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 
 		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(
 				mVideoSquareListData, holder, mDWMediaPlayerList,
-				mVideoSquareInfo));
+				mVideoSquareInfo,mContext,form));
 
 //		holder.mPreLoading.setVisibility(View.GONE);
 //		String videoid = mVideoSquareInfo.mVideoEntity.videoid;

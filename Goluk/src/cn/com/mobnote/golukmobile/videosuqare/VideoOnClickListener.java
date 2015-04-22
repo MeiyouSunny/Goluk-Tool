@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListViewAdapter.ViewHolder;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -18,8 +21,9 @@ public class VideoOnClickListener implements OnClickListener{
 	private ViewHolder mViewHolder=null;
 	private ImageView mPreLoading=null;
 	private List<VideoSquareInfo> mVideoSquareListData=null;
+	private Context mContext = null;
 	
-	public VideoOnClickListener(List<VideoSquareInfo> _mVideoSquareListData, ViewHolder _mViewHolder, HashMap<String, DWMediaPlayer> _mDWMediaPlayerList, VideoSquareInfo _mVideoSquareInfo){
+	public VideoOnClickListener(List<VideoSquareInfo> _mVideoSquareListData, ViewHolder _mViewHolder, HashMap<String, DWMediaPlayer> _mDWMediaPlayerList, VideoSquareInfo _mVideoSquareInfo,Context context,int form){
 		this.mViewHolder = _mViewHolder;
 		this.mVideoSquareInfo=_mVideoSquareInfo;
 		this.mDWMediaPlayerList = _mDWMediaPlayerList;
@@ -59,7 +63,13 @@ public class VideoOnClickListener implements OnClickListener{
 			}
 		}else{
 			//直播点击跳转
-			
+			 // 开启直播
+	        Intent intent = new Intent(mContext, LiveActivity.class);
+	        intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+	        intent.putExtra(LiveActivity.KEY_GROUPID, "");
+	        intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+	        intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+	        //intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
 		}
 	}
 	
