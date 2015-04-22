@@ -61,7 +61,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	private Context mContext = null;
 	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
-//	private ImageButton mBackBtn = null;
 	private RelativeLayout mLayoutBack =  null;
 	
 	/** 本地视频item */
@@ -128,11 +127,9 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	@SuppressLint("HandlerLeak")
 	private void init(){
 		//获取页面元素
-//		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
 		mLayoutBack = (RelativeLayout) findViewById(R.id.back_btn_layout);
 		
 		mLocalVideoItem = (RelativeLayout) findViewById(R.id.local_video_item);
-//		mVideoSquareItem = (RelativeLayout) findViewById(R.id.video_square_item);
 		mDraftItem = (RelativeLayout) findViewById(R.id.draft_item);
 		mShoppingItem = (RelativeLayout) findViewById(R.id.shopping_item);
 		mGolukSchoolItem = (RelativeLayout) findViewById(R.id.goluk_item);
@@ -146,19 +143,21 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		//头部有无信息的布局替换
 		mLayoutHasInfo = (LinearLayout) findViewById(R.id.index_more_hasinfo);
 		mLayoutNoInfo = (LinearLayout) findViewById(R.id.index_more_noinfo);
+		Log.i("testtest", "----------"+mApp.autoLoginStatus+mApp.isUserLoginSucess);
 		if(!isFirstLogin || mApp.isUserLoginSucess == true){//登录过
-		//更多页面
-		if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){//没有用户信息
-			mLayoutHasInfo.setVisibility(View.GONE);
-			mLayoutNoInfo.setVisibility(View.VISIBLE);
-			mImageHead.setImageResource(R.drawable.more_head_no_log_in);
-			isHasInfo = false;
-		}else{//有用户信息
-			mLayoutHasInfo.setVisibility(View.VISIBLE);
-			mLayoutNoInfo.setVisibility(View.GONE);
-			initData();
-			isHasInfo = true;
-		}
+			Log.i("testtest", "---------------"+mApp.autoLoginStatus+"------loginStatus------"+mApp.loginStatus);
+			//更多页面
+			if(mApp.loginStatus == 1 || mApp.autoLoginStatus == 1 || mApp.autoLoginStatus == 2){//登录成功、自动登录中、自动登录成功
+				mLayoutHasInfo.setVisibility(View.VISIBLE);
+				mLayoutNoInfo.setVisibility(View.GONE);
+				initData();
+				isHasInfo = true;
+			}else {//没有用户信息
+				mLayoutHasInfo.setVisibility(View.GONE);
+				mLayoutNoInfo.setVisibility(View.VISIBLE);
+				mImageHead.setImageResource(R.drawable.more_head_no_log_in);
+				isHasInfo = false;
+			}
 	}else{
 		//未登录
 		mLayoutHasInfo.setVisibility(View.GONE);
@@ -167,10 +166,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	}
 		
 		//注册事件
-//		mBackBtn.setOnClickListener(this);
 		mLayoutBack.setOnClickListener(this);
 		mLocalVideoItem.setOnClickListener(this);
-//		mVideoSquareItem.setOnClickListener(this);
 		mDraftItem.setOnClickListener(this);
 		mShoppingItem.setOnClickListener(this);
 		mGolukSchoolItem.setOnClickListener(this);
@@ -230,7 +227,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			break;
 			//点击跳转到我的主页
 			case R.id.head_layout:
-				//自动登录中，成功，失败，超时
+				//自动登录中，成功，失败，超时、密码错误
 				Log.i("autostatus", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
 				if(isHasInfo){
 					mApp.mUser.setUserInterface(this);
@@ -248,7 +245,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 								return false;
 							}
 						}).create();
-						
 						dialog	.show();
 					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess == true){
 						intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
@@ -259,6 +255,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 					}
 				}else{
 					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
+					//登录页回调判断
+					itNo.putExtra("isInfo", "");
 					// 判断是否为自动登录失败或超时请求的登录功能
 					if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
 						mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
@@ -266,6 +264,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 						itNo.putExtra("autoPhone", phone);
 					}
 					startActivity(itNo);
+					isHasInfo = true;
 					finish();
 				}
 				break;
@@ -324,6 +323,9 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			console.toast("登录失败", mContext);
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
+		}else if(mApp.autoLoginStatus == 5){
+			mLayoutHasInfo.setVisibility(View.VISIBLE);
+			mLayoutNoInfo.setVisibility(View.GONE);
 		}
 	}
 	

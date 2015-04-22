@@ -35,6 +35,8 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.CountDownButtonHelper;
+import cn.com.mobnote.user.UserIdentifyInterface;
+import cn.com.mobnote.user.UserRegistInterface;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
@@ -48,7 +50,7 @@ import cn.com.mobnote.util.console;
  * @author mobnote
  *
  */
-public class UserRegistActivity extends Activity implements OnClickListener {
+public class UserRegistActivity extends Activity implements OnClickListener,UserRegistInterface,UserIdentifyInterface {
 
 	// 注册title
 	private Button mBackButton;
@@ -269,7 +271,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		case R.id.user_regist_btn:
 			//点按钮后,弹出登录中的提示,样式使用系统 loading 样式,文字描述:注册中
 			//注册成功:弹出系统短提示:注册成功,以登录状态进入 Goluk 首页
-			regist();
+//			regist();
 			Log.i("registLogin", mApplication.registStatus+"&&&&&&");
 			break;
 		// 获取验证码按钮
@@ -278,8 +280,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			break;
 		// 登陆
 		case R.id.user_regist_login:
-//			Intent itLogin = new Intent(UserRegistActivity.this,UserLoginActivity.class);
-//			startActivity(itLogin);
 			finish();
 			break;
 		}
@@ -300,13 +300,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				super.handleMessage(msg);
-//				TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-//				String localPhoneNumber = telManager.getLine1Number();
-//				if(localPhoneNumber.equals(mEditTextPhone.getText().toString())){
-					mEditTextIdentify.setText(strBody);
-				/*}else{
-					mEditTextIdentify.setText("");
-				}*/
+				mEditTextIdentify.setText(strBody);
 			}
 		};
 		smsFilter = new IntentFilter();
@@ -327,9 +321,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					strBody = m.replaceAll("").trim();
 					handler.sendEmptyMessage(1);
 					
-					// 服务端发送短息的手机号。。+86开头？
-//					String from = sms.getOriginatingAddress();
-//					String from = "10690148001667";//goluk发送验证码的服务端号码
 				}
 			}
 		};
@@ -369,7 +360,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
-		handler1.removeCallbacks(runnable);
+//		handler1.removeCallbacks(runnable);
 		mIdentifyLoading.setVisibility(View.GONE);
 		if(1 == success){
 			try{
@@ -411,7 +402,6 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 
 				case 405:
 					new AlertDialog.Builder(this)
-					.setTitle("Goluk温馨提示：")
 					.setMessage("此手机号已经被注册啦!")
 					.setNegativeButton("取消", null)
 					.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
@@ -463,8 +453,8 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 					console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 				}else{
 					//初始化定时器
-				initTimer();
-				handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.
+				/*initTimer();
+				handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.*/
 				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 				console.log(isRegist);
@@ -490,8 +480,9 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 	/**
 	 * 注册回调
 	 */
-	public void registCallback(int success,Object obj){
-		handler1.removeCallbacks(runnable);
+	public void registCallback(int success,Object outTime,Object obj){
+		int codeOut = (Integer) outTime;
+//		handler1.removeCallbacks(runnable);
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
@@ -558,15 +549,32 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 		}else{
-			console.log("注册失败");
+			/*console.log("注册失败");
 			mApplication.registStatus = 2;//注册失败的状态
+*/			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
+			android.util.Log.i("outtime", "-----网络链接超时超时超时"+codeOut);
+			switch (codeOut) {
+			case 700:
+				mApplication.registStatus = 2;
+				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
+				break;
+			case 600:
+				//网络未链接
+				mApplication.registStatus = 2;
+			case 601:
+				//http封装错误
+				mApplication.registStatus = 2;
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	/**
 	 * 销毁广播
 	 */
 	private int click = 0;
-	final Handler handler1=new Handler();
+	/*final Handler handler1=new Handler();
 	private Runnable runnable;
 	private void initTimer(){
 		runnable=new Runnable(){
@@ -576,7 +584,7 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 			mLoading.setVisibility(View.GONE);
 			}
 		};
-	}
+	}*/
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -656,5 +664,15 @@ public class UserRegistActivity extends Activity implements OnClickListener {
 		}else{
 			//回调执行失败
 		}
+	}
+	@Override
+	public void registStatusChange() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void identifyCallbackInterface() {
+		// TODO Auto-generated method stub
+		
 	}
 }

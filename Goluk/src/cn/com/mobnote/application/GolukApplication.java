@@ -38,6 +38,8 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.User;
+import cn.com.mobnote.user.UserLoginManage;
+import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
@@ -82,18 +84,23 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	/** 当前地址 */
 	public String mCurAddr=null;
 	
-	/**登录的三个状态**/
+	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时**/
 	public int loginStatus ;
-	/**注册的三个状态**/
+	/**注册的三个状态  0注册中  1注册成功  2 注册失败**/
 	public int registStatus;
-	/**自动登录的四个状态   1自动登录中  2自动登录成功  3自动登录失败  4自动登录超时**/
+	/**自动登录的四个状态   1自动登录中  2自动登录成功  3自动登录失败  4自动登录超时  5密码错误**/
 	public int autoLoginStatus;
 	/**注销状态**/
 	public boolean loginoutStatus = false;
-	
+	/**获取验证码的四个状态  0 获取中  1获取成功  2获取失败   3手机号未注册**/
+	public int identifyStatus;
 	
 	/**User管理类**/
 	public User mUser = null;
+	/**登录管理类**/
+	public UserLoginManage mLoginManage = null;
+	/**注册管理类**/
+	public UserRegistManage mRegistManage = null;
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -110,7 +117,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //		createWifi();
 		//实例化JIN接口,请求网络数据
 		
+		/**
+		 *自动登录、登录、注册、重置密码、注销的管理类 
+		 */
 		mUser = new User(this);
+		mLoginManage = new UserLoginManage(this);
+		mRegistManage = new UserRegistManage(this);
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -478,19 +490,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					console.log("pageNotifyCallBack---登录---" + String.valueOf(param2));
 					mMainActivity.loginCallBack(success,param2);
 				}
-				if(mPageSource == "UserLogin"){
-					((UserLoginActivity)mContext).loginCallBack(success, param2);
-				}
+				//登录
+				mLoginManage.loginCallBack(success,param1, param2);
+				
 				if(mPageSource == "UserRegist"){
-					Log.i("appli", "=======");
 					((UserRegistActivity)mContext).registLoginCallBack(success, param2);
 				}
 			break;
 			//自动登录
 			case PageType_AutoLogin:
-//				if(mPageSource == "Main"){
-					mUser.initAutoLoginCallback(success,param1, param2);
-//				}
+				
+				mUser.initAutoLoginCallback(success,param1, param2);
 				break;
 			//验证码PageType_GetVCode
 			case PageType_GetVCode:
@@ -506,7 +516,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			//注册PageType_Register
 			case PageType_Register:
 				if(mPageSource == "UserRegist"){
-					((UserRegistActivity)mContext).registCallback(success, param2);
+					((UserRegistActivity)mContext).registCallback(success,param1, param2);
 				}
 				break;
 			//重置密码PageType_ModifyPwd

@@ -269,13 +269,6 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		if(keyCode == KeyEvent.KEYCODE_BACK){
-			/*if(mApp.loginoutStatus){
-				Intent it = new Intent(UserSetupActivity.this,IndexMoreNoLoginActivity.class);
-				startActivity(it);
-				this.finish();
-			}else{
-				this.finish();
-			}*/
 			this.finish();
 		}
 		return super.onKeyDown(keyCode, event);

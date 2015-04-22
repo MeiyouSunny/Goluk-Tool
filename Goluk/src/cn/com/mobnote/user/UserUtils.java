@@ -3,19 +3,16 @@ package cn.com.mobnote.user;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONObject;
-
-import cn.com.mobnote.golukmobile.R;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cn.com.mobnote.golukmobile.R;
 
 public class UserUtils {
 
@@ -23,11 +20,11 @@ public class UserUtils {
 	 * AlertDialog
 	 */
 	public static void showDialog(Context context,String message){
-		new AlertDialog.Builder(context)
-		.setTitle("Goluk温馨提示：")
-		.setMessage(message)
+		Builder builder = new AlertDialog.Builder(context);
+		AlertDialog dialog = builder.setMessage(message)
 		.setPositiveButton("确定", null)
-		.create().show();
+		.create();
+		dialog.show();
 	}
 	/**
 	 * 隐藏软件盘
@@ -59,17 +56,6 @@ public class UserUtils {
 	        }
 	        return bisConnFlag;
 	    }
-	 /**
-	  * 删除SharedPreferences中的信息
-	  * 点击退出的话，删除本地的密码
-	  */
-	 private void clear(Context context) {//清除内容
-		 SharedPreferences mSharedpreferences = context.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-	      /** 开始清除SharedPreferences中保存的内容 **/
-	      Editor editor = mSharedpreferences.edit();
-	      editor.remove("password");
-	      editor.commit();
-	   }
 	 
 	 /**
 	  * 个人中心模块头像的变化

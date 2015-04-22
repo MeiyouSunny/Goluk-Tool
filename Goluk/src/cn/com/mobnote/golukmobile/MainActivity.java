@@ -231,7 +231,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public MediaPlayer mMediaPlayer = new MediaPlayer();
 	
 	/**记录登录状态**/
-	public SharedPreferences mPreferencesＡuto ;
+	public SharedPreferences mPreferencesAuto;
 	public boolean isFirstLogin;
 	
 	@Override
@@ -290,8 +290,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		
 		//不是第一次登录，并且上次登录成功过，进行自动登录
-		mPreferencesＡuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
-		isFirstLogin = mPreferencesＡuto.getBoolean("FirstLogin", true);
+		mPreferencesAuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
+		isFirstLogin = mPreferencesAuto.getBoolean("FirstLogin", true);
 		if(!isFirstLogin && !mApp.isUserLoginSucess){
 			mApp.mUser.initAutoLogin();
 		}
@@ -320,7 +320,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mShareLiveBtn.setOnClickListener(this);
 		
 		//自动登录时，loading显示
-		
 //		mLoginStatusBtn = (Button) findViewById(R.id.login_status_btn);
 //		mWiFiLinkStatus = (Button) findViewById(R.id.wifi_link_text);
 
@@ -471,108 +470,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			}
 		});
 	}
-	
-	
-	/**
-	 * 检测登录状态
-	 */
-	@SuppressLint("InflateParams")
-	private void checkLoginStatus(){
-		if(mLoginDialog == null){
-			mLoginLayout = mLayoutInflater.inflate(R.layout.login, null);
-			
-			mLoginPhoneText = (EditText) mLoginLayout.findViewById(R.id.login_phone_text);
-			mLoginPwdText = (EditText) mLoginLayout.findViewById(R.id.login_pwd_text);
-			mLoginBtn = (Button) mLoginLayout.findViewById(R.id.login_btn);
-			
-			mLoginPhoneText.addTextChangedListener(new TextWatcher() {
-				@Override
-				public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-					String pwd = mLoginPwdText.getText().toString();
-					if("".equals(arg0.toString())){
-						if("".equals(pwd)){
-							//显示普通按钮
-							mLoginBtn.setBackgroundResource(R.drawable.btn_log);
-						}
-					}
-					else{
-						if(!"".equals(pwd)){
-							//显示高亮登录按钮
-							mLoginBtn.setBackgroundResource(R.drawable.btn_log_btn);
-						}
-					}
-				}
-				@Override
-				public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
-				@Override
-				public void afterTextChanged(Editable arg0) {}
-			});
-			mLoginPwdText.addTextChangedListener(new TextWatcher() {
-				@Override
-				public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-					String phone = mLoginPhoneText.getText().toString();
-					if("".equals(arg0.toString())){
-						if("".equals(phone)){
-							//显示普通按钮
-							mLoginBtn.setBackgroundResource(R.drawable.btn_log);
-						}
-					}
-					else{
-						if(!"".equals(phone)){
-							//显示高亮登录按钮
-							mLoginBtn.setBackgroundResource(R.drawable.btn_log_btn);
-						}
-					}
-				}
-				@Override
-				public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
-				@Override
-				public void afterTextChanged(Editable arg0) {}
-			});
-			mLoginBtn.setOnClickListener(this);
-			
-			AlertDialog.Builder builder =new AlertDialog.Builder(mContext);
-			builder.setView(mLoginLayout);
-			mLoginDialog = builder.create();
-			mLoginDialog.show();
-			//showKeybord();
-		}
-		else{
-			mLoginDialog.show();
-			//showKeybord();
-		}
-	}
-	
-	/**
-	 * 登录
-	 */
-	private void login(){
-		String phone = mLoginPhoneText.getText().toString();
-		String pwd = mLoginPwdText.getText().toString();
-		if(!"".equals(phone) && !"".equals(pwd)){
-			if(phone.length() == 11){
-				if(pwd.length() > 5){
-					console.log("调用登录接口---login---" + phone + "---" + pwd);
-					String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
-					boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
-					if(!b){
-						console.log("调用登录接口失败---b---" + b);
-					}else{
-//						Intent login = new Intent(MainActivity.this,UserCenterActivity.class);
-//						startActivity(login);
-						mLoginDialog.hide();
-					}
-				}
-				else{
-					console.toast("密码少于6位", mContext);
-				}
-			}
-			else{
-				console.toast("手机号输入错误", mContext);
-			}
-		}
-	}
-	
 	/**
 	 * 播放视频下载完成声音
 	 */
@@ -1022,25 +919,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(i);
 			break;
 			case R.id.more_btn:
-				//读取SharedPreference中用户的信息
-				//判断是否是第一次登录
-				/*if(!isFirstLogin || mApp.isUserLoginSucess == true){//登录过
-					//更多页面
-					if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-						Intent more = new Intent(MainActivity.this,IndexMoreNoLoginActivity.class);
-						startActivity(more);
-					}else{
-						Intent more = new Intent(MainActivity.this,IndexMoreActivity.class);
-						startActivity(more);
-					}
-				}else{
-					//未登录
-					Intent moreNoLogin = new Intent(MainActivity.this,IndexMoreNoLoginActivity.class);
-					startActivity(moreNoLogin);
-				}*/
 				Intent it = new Intent(MainActivity.this,IndexMoreActivity.class);
 				startActivity(it);
-//				this.finish();
 			break;
 			case R.id.share_local_video_btn:
 				//跳转到本地视频分享列表
@@ -1059,7 +939,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			break;
 			case R.id.login_status_btn:
 				//登录状态
-				checkLoginStatus();
+//				checkLoginStatus();
 			break;
 			case R.id.wifi_link_text:
 				//wifi链接状态

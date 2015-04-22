@@ -15,6 +15,11 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.console;
 
+/**
+ * 自动登录
+ * @author mobnote
+ *
+ */
 public class User {
 	
 	/**记录登录状态**/
@@ -78,6 +83,7 @@ public class User {
 					StatusChange(1);//自动登录中
 					Log.i("setauto", "------自动登录-------"+b+"------自动登录的状态值-----"+mApp.autoLoginStatus);
 				}else{
+					Log.i("sss", "------------");
 					StatusChange(3);//自动登录失败
 				}
 			}
@@ -121,10 +127,13 @@ public class User {
 					//服务端异常
 					break;
 				case 405:
-					//用户为注册
+					//用户未注册
 					break;
 				case 402:
 					//登录密码错误
+					StatusChange(5);
+					Log.i("setauto", "-------402 --"+mApp.autoLoginStatus);
+					console.toast("密码错误，请重试", mContext);
 					break;
 				default:
 					break;
