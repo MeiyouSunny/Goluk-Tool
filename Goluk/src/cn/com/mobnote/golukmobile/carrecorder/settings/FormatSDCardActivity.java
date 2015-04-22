@@ -69,6 +69,12 @@ public class FormatSDCardActivity extends BaseActivity implements OnClickListene
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "formatsdcard");
+	}
+	
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("format");

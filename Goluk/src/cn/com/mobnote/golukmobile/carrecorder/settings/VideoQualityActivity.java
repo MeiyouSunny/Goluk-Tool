@@ -154,6 +154,7 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onResume() {
 		super.onResume();
+		GolukApplication.getInstance().setContext(this, "videoquality");
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
 			if("1080P".equals(mVideoConfigState.resolution)){
@@ -242,4 +243,6 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			}
 		}
 	}
+	
+	
 }

@@ -1278,6 +1278,12 @@ System.out.println("TTT=======1111111==================tag="+tag);
 		}
 
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "ipcfilemanager");
+	}
 
 
 }

@@ -370,15 +370,22 @@ public class IPCControlManager implements IPCManagerFn{
 	public boolean getGSensorControlCfg(){
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetGSensorControlCfg, "");
 	}
-	
 	/**
 	 * 设置IPC GSensor控制紧急录像策略
+	 * @param policy
 	 * @return
 	 * @author xuhw
-	 * @date 2015年4月9日
+	 * @date 2015年4月22日
 	 */
-	public boolean setGSensorControlCfg(){
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetGSensorControlCfg, "");
+	public boolean setGSensorControlCfg(int policy){
+		JSONObject json = new JSONObject();
+		try {
+			json.put("policy", policy);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		//"{\"policy\":1}");
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetGSensorControlCfg, json.toString());
 	}
 	
 	/**

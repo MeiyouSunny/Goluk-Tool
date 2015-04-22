@@ -220,6 +220,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	@Override
 	protected void onResume() {
 		super.onResume();
+		GolukApplication.getInstance().setContext(this, "carrecordsettings");
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
 			if(1 == mVideoConfigState.AudioEnabled){
@@ -256,7 +257,9 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+		}
 	}
 
 	@Override

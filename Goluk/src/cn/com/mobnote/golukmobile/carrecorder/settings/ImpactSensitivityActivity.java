@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.utils.LogUtil;
 
  /**
   * 1.编辑器必须显示空白处
@@ -44,9 +48,7 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 	private ImageButton mLowIcon=null;
 	private ImageButton mMiddleIcon=null;
 	private ImageButton mHighIcon=null;
-	
-	private enum SensitivityType{close, low, middle, high};
-	private SensitivityType curType=SensitivityType.close;
+	private int policy=0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,9 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 		setTitle("碰撞感应灵敏度");
 		
 		initView();
-		updateSensitivity(SensitivityType.close);
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("sensitivity", this);
+		boolean flag = GolukApplication.getInstance().getIPCControlManager().getGSensorControlCfg();
+		LogUtil.e("xuhw", "YYYYY===getIPCControlManager============getGSensorControlCfg======flag="+flag);
 	}
 	
 	/**
@@ -88,8 +91,8 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 	 * @author xuhw
 	 * @date 2015年4月6日
 	 */
-	private void updateSensitivity(SensitivityType type){
-		curType = type;
+	private void updateSensitivity(int _policy){
+		policy = _policy;
 		mCloseText.setTextColor(getResources().getColor(R.color.setting_text_color_nor));
 		mLowText.setTextColor(getResources().getColor(R.color.setting_text_color_nor));
 		mMiddleText.setTextColor(getResources().getColor(R.color.setting_text_color_nor));
@@ -99,13 +102,13 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 		mMiddleIcon.setVisibility(View.GONE);
 		mHighIcon.setVisibility(View.GONE);
 		
-		if(SensitivityType.close == curType){
+		if(0 == policy){
 			mCloseIcon.setVisibility(View.VISIBLE);
 			mCloseText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-		}else if(SensitivityType.low == curType){
+		}else if(1 == policy){
 			mLowIcon.setVisibility(View.VISIBLE);
 			mLowText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-		}else if(SensitivityType.middle == curType){
+		}else if(2 == policy){
 			mMiddleIcon.setVisibility(View.VISIBLE);
 			mMiddleText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
 		}else{
@@ -119,16 +122,16 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 		super.onClick(v);
 		switch (v.getId()) {
 			case R.id.close:
-				updateSensitivity(SensitivityType.close);
+				updateSensitivity(0);
 				break;
 			case R.id.low:
-				updateSensitivity(SensitivityType.low);
+				updateSensitivity(1);
 				break;
 			case R.id.middle:
-				updateSensitivity(SensitivityType.middle);
+				updateSensitivity(2);
 				break;
 			case R.id.high:
-				updateSensitivity(SensitivityType.high);
+				updateSensitivity(3);
 				break;
 	
 			default:
@@ -137,18 +140,32 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "impactsensitivity");
+	}
+	
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		boolean flag = GolukApplication.getInstance().getIPCControlManager().setGSensorControlCfg(policy);
+		LogUtil.e("xuhw", "YYYYY====setGSensorControlCfg===policy="+policy+"==flag="+flag);
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("sensitivity");
 	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		LogUtil.e("xuhw","YYYYY===GSensor====event="+event+"==msg="+msg+"===param1="+param1+"==param2="+param2);
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(msg == IPC_VDCP_Msg_GetGSensorControlCfg){
-				System.out.println("YYY====IPC_VDCP_Msg_GetGSensorControlCfg====msg="+msg+"===param1="+param1+"==param2="+param2);
 				if(param1 == RESULE_SUCESS){
-					
+					try {
+						JSONObject json = new JSONObject((String)param2);
+						policy = json.optInt("policy");
+						updateSensitivity(policy);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

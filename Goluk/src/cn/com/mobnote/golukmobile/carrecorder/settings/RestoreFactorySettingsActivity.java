@@ -78,6 +78,12 @@ public class RestoreFactorySettingsActivity extends BaseActivity implements OnCl
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "restorefactory");
+	}
+	
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("restore");

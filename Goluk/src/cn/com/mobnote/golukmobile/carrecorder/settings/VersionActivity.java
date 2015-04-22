@@ -84,5 +84,11 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 		}
 		
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "carrecordversion");
+	}
 
 }

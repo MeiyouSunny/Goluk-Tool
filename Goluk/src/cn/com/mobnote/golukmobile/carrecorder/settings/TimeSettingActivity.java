@@ -281,4 +281,10 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 		}
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "timesetting");
+	}
+	
 }
