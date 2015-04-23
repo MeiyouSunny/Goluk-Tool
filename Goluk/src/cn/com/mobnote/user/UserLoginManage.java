@@ -23,6 +23,14 @@ public class UserLoginManage {
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
 	private UserLoginInterface mLoginInterface = null;
+	
+	/**用户信息**/
+	private String head = null;
+	private String id = null;//key
+	private String name = null;//nickname
+	private String sex = null;
+	private String sign = null;//desc
+	private String phone = null;
 
 	public UserLoginManage(GolukApplication mApp) {
 		super();
@@ -125,6 +133,34 @@ public class UserLoginManage {
 			default:
 				break;
 			}
+		}
+	}
+	
+	/**
+	 * 同步获取用户信息
+	 */
+	public void initData(){
+		Log.i("lily", "------initData()-----UserLoginManage-----");
+		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		try{
+			JSONObject json = new JSONObject(info);
+			
+			Log.i("info", "====json()===="+json);
+			head = json.getString("head");
+			name = json.getString("nickname");
+			id = json.getString("key");
+			sex = json.getString("sex");
+			sign = json.getString("desc");
+			phone = json.getString("phone");
+			//退出登录后，将信息存储
+			mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
+			mEditor = mSharedPreferences.edit();
+			Log.i("lily", "------UserLoginManage----"+phone);
+			mEditor.putString("setupPhone", phone);
+			mEditor.commit();
+			
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	
