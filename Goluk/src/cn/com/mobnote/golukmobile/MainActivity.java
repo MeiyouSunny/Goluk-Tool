@@ -1064,6 +1064,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if (!mApp.isUserLoginSucess) {
 			// TODO 未登录成功
 			mShareLayout.setVisibility(View.GONE);
+			if(mApp.autoLoginStatus == 1){
+				LiveDialogManager.getManagerInstance().showAutoLoginingDialog(this, "正在为您登录，请稍候……");
+				return ;
+			}
+			if(mApp.autoLoginStatus == 2){
+				LiveDialogManager.getManagerInstance().dismissAutoLoginDialog();
+			}
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
 			return;
 		}

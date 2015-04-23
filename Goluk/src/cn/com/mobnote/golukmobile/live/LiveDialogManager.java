@@ -11,6 +11,8 @@ public class LiveDialogManager {
 	/** 授权load对话框 */
 	private AlertDialog mLoginDialog = null;
 	private AlertDialog mLiveExitDialog = null;
+	/**自动登录对话框**/
+	private AlertDialog mAutoLoginDialog = null;
 
 	/** 对话框回调方法 */
 	private ILiveDialogManagerFn dialogManagerFn = null;
@@ -115,7 +117,25 @@ public class LiveDialogManager {
 			}
 		});
 		mLoginDialog.show();
-
+		
+	}
+	//显示正在自动登录中的对话框
+	public void showAutoLoginingDialog(Context context, String message){
+		if (null != mAutoLoginDialog) {
+			return;
+		}
+		mAutoLoginDialog = new AlertDialog.Builder(context).create();
+		mAutoLoginDialog.setTitle("提示");
+		mAutoLoginDialog.setMessage(message);
+		mAutoLoginDialog.setCancelable(false);
+		
+	}
+	//销毁自动登录中的对话框
+	public void dismissAutoLoginDialog(){
+		if(null != mAutoLoginDialog){
+			mAutoLoginDialog.dismiss();
+			mAutoLoginDialog = null;
+		}
 	}
 
 	// 销毁登录对话框
