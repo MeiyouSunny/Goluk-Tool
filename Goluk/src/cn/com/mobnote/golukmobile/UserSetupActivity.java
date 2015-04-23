@@ -1,56 +1,30 @@
 package cn.com.mobnote.golukmobile;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.SinaShareContent;
-import com.umeng.socialize.media.SmsShareContent;
-import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.SmsHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
-
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.MVListAdapter;
-import cn.com.mobnote.video.MVManage;
-import cn.com.mobnote.video.MVManage.MVEditData;
-import cn.com.mobnote.view.MyGridView;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.console;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -80,20 +54,36 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
 	private Button mBackBtn = null;
-	/** 设置item */
-	private RelativeLayout mSetupItem = null;
 	
 	/** 个人中心页面handler用来接收消息,更新UI*/
 	public static Handler mUserCenterHandler = null;
 	
 	/**退出按钮**/
-	Button btnLoginout;
+	private Button btnLoginout;
+	/**用户信息**/
+	private String head = null;
+	private String id = null;//key
+	private String name = null;//nickname
+	private String sex = null;
+	private String sign = null;//desc
+	private String phone = null;
+	/**登录的状态**/
+	private SharedPreferences mPreferences = null;
+	private boolean isFirstLogin = false;
+	private Editor mEditor = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_setup);
+		
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		
 		mContext = this;
 		
 		//获得GolukApplication对象
@@ -111,23 +101,26 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	private void init(){
 		//获取页面元素
 		mBackBtn = (Button)findViewById(R.id.back_btn);
-		//mSetupItem = (RelativeLayout) findViewById(R.id.setup_item);
-//		mNextBtn = (Button)findViewById(R.id.next_btn);
-//		mPlayLayout = (RelativeLayout)findViewById(R.id.play_layout);
-//		mPlayStatusImage = (ImageView)findViewById(R.id.play_image);
-//		mPlayBtn.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mMedioPlayer.start();
-//			}
-//		});
 		//退出按钮
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
+		
+		//没有登录过的状态
+		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
+		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+		
+		if(!isFirstLogin ){//登录过
+			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true){//上次登录成功
+				btnLoginout.setText("退出");
+			}else{
+				btnLoginout.setText("登录");
+			}
+		}else{
+			btnLoginout.setText("登录");
+		}
 		btnLoginout.setOnClickListener(this);
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
-		//mSetupItem.setOnClickListener(this);
 		
 		//更新UI handler
 		mUserCenterHandler = new Handler(){
@@ -139,19 +132,13 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	
 	
 	@Override
-	protected void onResume(){
-		mApp.setContext(this,"UserSetup");
-		super.onResume();
-	}
-	
-	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
 			case R.id.back_btn:
 				//返回
-				finish();
+				this.finish();
 			break;
 			case R.id.setup_item:
 				//跳转到设置页面
@@ -159,7 +146,22 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 			break;
 		//退出按钮
 			case R.id.loginout_btn:
-				
+				if(btnLoginout.getText().toString().equals("登录")){
+					initIntent(UserLoginActivity.class);
+				}else if(btnLoginout.getText().toString().equals("退出")){
+					new AlertDialog.Builder(mContext)
+					.setMessage("是否确认退出？")
+					.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							// TODO Auto-generated method stub
+							getLoginout();
+						}
+					})
+					.setPositiveButton("取消", null)
+					.create().show();
+				}
 				break;
 		}
 	}
@@ -169,6 +171,80 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	public void getLoginout(){
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
 		console.log(b+"");
+		if(b){
+			//注销成功
+			mApp.isUserLoginSucess = false;
+			mApp.loginoutStatus = true;//注销成功
+			
+			mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+			mEditor = mPreferences.edit();
+			mEditor.putBoolean("FirstLogin", true);//注销完成后，设置为没有登录过的一个状态
+			//提交修改
+			mEditor.commit();
+			
+			initData();
+			console.toast("退出登录成功", mContext);
+			btnLoginout.setText("登录");
+			
+		}else{
+			//注销失败
+			mApp.loginoutStatus = false;
+			mApp.isUserLoginSucess = true;
+		}
+	}
+	
+	/**
+	 * 退出登录的回调
+	 */
+	public void getLogintoutCallback(int success,Object obj){
+		console.log("-----------------退出登录回调--------------------");
 		
+	}
+	/**
+	 * 同步获取用户信息
+	 */
+	public void initData(){
+		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		try{
+			JSONObject json = new JSONObject(info);
+			
+			Log.i("info", "====json()===="+json);
+			head = json.getString("head");
+			name = json.getString("nickname");
+			id = json.getString("key");
+			sex = json.getString("sex");
+			sign = json.getString("desc");
+			phone = json.getString("phone");
+			//退出登录后，将信息存储
+			mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+			mEditor = mPreferences.edit();
+			mEditor.putString("setupPhone", phone);
+			mEditor.commit();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 没有登录过、登录失败、正在登录需要登录
+	 */
+	public void initIntent(Class intentClass){
+		Intent it = new Intent(UserSetupActivity.this, intentClass);
+		it.putExtra("isInfo", "back");
+		startActivity(it);
+//		this.finish();
+	}
+	
+	/**
+	 * 退出登录后，点击返回键，返回到无用户信息的页面
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			this.finish();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

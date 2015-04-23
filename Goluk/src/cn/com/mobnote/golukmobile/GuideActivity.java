@@ -1,15 +1,22 @@
 package cn.com.mobnote.golukmobile;
 
 
+import org.json.JSONObject;
+
 import com.tencent.bugly.elfparser.Main;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.guide.GolukGuideManage;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,6 +24,10 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.guide.GolukGuideManage;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.console;
 
 /**
  * <pre>
@@ -55,7 +66,7 @@ public class GuideActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.guide);
 		
 		mContext = this;
-		
+				
 		//初始化
 		init();
 		//加载引导页
@@ -75,23 +86,23 @@ public class GuideActivity extends Activity implements OnClickListener {
 		//取得相应的值,如果没有该值,说明还未写入,用true作为默认值
 		boolean isFirstIn = preferences.getBoolean("isfirst", true);
 		//判断程序第几次启动
-		if (!isFirstIn) {
+		if (!isFirstIn) {//启动过
 			//读取SharedPreference中用户的信息
 			SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
 			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 			//判断是否是第一次登录
 			if(!isFirstLogin){
-				//不是第一次登录,跳转到地图首页进行自动登录
+				//登录过，跳转到地图首页进行自动登录
 				Intent it = new Intent(this,MainActivity.class);
 				startActivity(it);
 			}else{
-				//是第一次登录
+				//是第一次登录(没有登录过)
 				// Intent intent = new Intent(this, MainActivity.class);
 				Intent intent = new Intent(this, UserStartActivity.class);
 				startActivity(intent);
 			}
 			this.finish();
-		} else {
+		} else {//没有启动过
 //			Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
 //			SplashActivity.this.startActivity(intent);
 //			SplashActivity.this.finish();
@@ -126,7 +137,7 @@ public class GuideActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 	}
 	
-	@Override
+@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK )
@@ -139,5 +150,4 @@ public class GuideActivity extends Activity implements OnClickListener {
 		}
 		return false;
 	}
-	
 }

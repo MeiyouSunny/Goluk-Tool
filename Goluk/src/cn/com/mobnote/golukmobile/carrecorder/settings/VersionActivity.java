@@ -10,6 +10,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VersionState;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.utils.LogUtil;
 
  /**
   * 1.编辑器必须显示空白处
@@ -45,12 +46,14 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_version, null)); 
 		setTitle("版本信息");
 		
-		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("version", this);
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("version", this);
+		}
 		mDeviceId = (TextView)findViewById(R.id.mDeviceId);
 		mVersion = (TextView)findViewById(R.id.mVersion);
 		
-		mDeviceId.setText("IPC Camera");
-		mVersion.setText("V1.0");
+		mDeviceId.setText("1");
+		mVersion.setText("IPC Camera");
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCIdentity();
 			System.out.println("YYY=======getIPCIdentity============a="+a);
@@ -60,14 +63,16 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("version");
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("version");
+		}
 	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(msg == IPC_VDCP_Msg_GetIdentity){
-				System.out.println("YYY====IPC_VDCP_Msg_GetIdentity====msg="+msg+"===param1="+param1+"==param2="+param2);
+				LogUtil.e("xuhw", "YYY====IPC_VDCP_Msg_GetIdentity====msg="+msg+"===param1="+param1+"==param2="+param2);
 				if(param1 == RESULE_SUCESS){
 					final VersionState mVersionState = IpcDataParser.parseVersionState((String)param2);
 					if(null != mVersionState){
@@ -83,6 +88,12 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 			}
 		}
 		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "carrecordversion");
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -18,6 +19,10 @@ import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
+
+import android.util.Log;
+import cn.com.mobnote.golukmobile.GuideActivity;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +40,13 @@ import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
-import cn.com.mobnote.golukmobile.UserManager;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
+
+import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.mobnote.golukmobile.VideoEditActivity;
+
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
@@ -55,6 +63,9 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.user.User;
+import cn.com.mobnote.user.UserLoginManage;
+import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
@@ -109,6 +120,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private VideoConfigState mVideoConfigState=null;
 	/** 自动循环录制状态标识 */
 	private boolean autoRecordFlag=false;
+	/** 停车安防配置 */
+	private int[] motioncfg;
 	
 	
 	private WifiApAdmin wifiAp;
@@ -120,8 +133,23 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public RelativeLayout mVideoUploadLayout = null;
 	private TextView tv = null;
 	
-	/**登陆管理类**/
-	public UserManager userManager;
+	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时**/
+	public int loginStatus ;
+	/**注册的三个状态  0注册中  1注册成功  2 注册失败**/
+	public int registStatus;
+	/**自动登录的四个状态   1自动登录中  2自动登录成功  3自动登录失败  4自动登录超时  5密码错误**/
+	public int autoLoginStatus;
+	/**注销状态**/
+	public boolean loginoutStatus = false;
+	/**获取验证码的四个状态  0 获取中  1获取成功  2获取失败   3手机号未注册**/
+	public int identifyStatus;
+	
+	/**User管理类**/
+	public User mUser = null;
+	/**登录管理类**/
+	public UserLoginManage mLoginManage = null;
+	/**注册管理类**/
+	public UserRegistManage mRegistManage = null;
 	
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String,ILocationFn>();
 	
@@ -139,8 +167,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		initCachePath();
 //		createWifi();
 		//实例化JIN接口,请求网络数据
+		
+		/**
+		 *自动登录、登录、注册、重置密码、注销的管理类 
+		 */
+		mUser = new User(this);
+		mLoginManage = new UserLoginManage(this);
+		mRegistManage = new UserRegistManage(this);
 		initImageLoader(getApplicationContext());
-
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -166,6 +200,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		// 注册定位回调
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Location, this);
 		GlobalWindow.getInstance().setApplication(this);
+		motioncfg = new int[2];
 	}
 	
 	/**
@@ -231,6 +266,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public boolean getAutoRecordState(){
 		return this.autoRecordFlag;
+	}
+	
+	/**
+	 * 获取停车安防状态
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	public int[] getMotionCfg(){
+		return this.motioncfg;
 	}
 	
 	/**
@@ -358,86 +403,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //				mMainActivity.WiFiLinkStatus(3);
 //			}
 //		}
-	}
-	
-	private boolean isShowGlobalwindow = false;
-	
-	public void dimissGlobalWindow() {
-		if (isShowGlobalwindow) {
-			mWindowManager.removeView(mVideoUploadLayout);
-			isShowGlobalwindow = false;
-		}
-	}
-	
-	@SuppressLint("InflateParams")
-	public void createVideoUploadWindow(){
-		console.log("upload service--VideoShareActivity-handleCancel----顶层窗口显示---111 ");
-		if (isShowGlobalwindow) {
-			dimissGlobalWindow();
-		}
-		
-		console.log("upload service--VideoShareActivity-handleCancel----顶层窗口显示 ");
-		
-		isShowGlobalwindow = true;
-		
-		//获取LayoutParams对象
-		mWMParams = new WindowManager.LayoutParams();
-		//获取的是CompatModeWrapper对象
-		mWindowManager = (WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-		
-		mWMParams.type = LayoutParams.TYPE_SYSTEM_ERROR;
-		//mWMParams.type = LayoutParams.TYPE_PRIORITY_PHONE;
-		mWMParams.format = PixelFormat.RGBA_8888;
-		//mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-		mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_TOUCH_MODAL |LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
-		mWMParams.gravity = Gravity.LEFT | Gravity.TOP;
-		mWMParams.x = 0;
-		mWMParams.y = 30;
-		mWMParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-		///获得根视图
-		View v = ((Activity) mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);
-		///状态栏标题栏的总高度,所以标题栏的高度为top2-top
-		int top2 = v.getTop();
-		mWMParams.height = 50;
-		
-		LayoutInflater inflater = LayoutInflater.from(mContext);
-		mVideoUploadLayout = (RelativeLayout) inflater.inflate(R.layout.video_share_upload_window, null);
-		tv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_percent);
-		mWindowManager.addView(mVideoUploadLayout,mWMParams);
-		ImageView view = (ImageView)mVideoUploadLayout.findViewById(R.id.video_loading_img);
-		Animation rotateAnimation = AnimationUtils.loadAnimation(this.getContext(), R.anim.upload_loading);
-		LinearInterpolator lin = new LinearInterpolator();
-		rotateAnimation.setInterpolator(lin);
-		view.startAnimation(rotateAnimation);
-		//setContentView(R.layout.main);
-		//mFloatView = (Button)mFloatLayout.findViewById(R.id.float_id);
-	}
-	
-	public void refreshPercent(int percent) {
-		console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent: " + percent);
-		if (null == mVideoUploadLayout) {
-			return;
-		 }
-		console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent222: ");
-		TextView tvtv = (TextView)mVideoUploadLayout.findViewById(R.id.video_upload_percent);
-		if (null != tvtv) {
-			console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent3333: ");
-			tvtv.setText("" + percent +"%");
-		}
-	}
-	
-	public void topWindowSucess(String message){
-		if (null == mVideoUploadLayout) {
-			return;
-		}
-		TextView tvtv = (TextView)mVideoUploadLayout.findViewById(R.id.video_upload_percent);
-		tvtv.setVisibility(View.GONE);
-		ImageView img = (ImageView) mVideoUploadLayout.findViewById(R.id.video_loading_img);
-		img.getAnimation().cancel();
-		img.setVisibility(View.GONE);
-		TextView msgTv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_text);
-		msgTv.setVisibility(View.VISIBLE);
-		msgTv.setText(message);	
 	}
 	
 	/**
@@ -602,26 +567,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 			break;
 			//登陆
-			case 11:
-				parseLoginData(success, param2);
+
+			case PageType_Login:
+
 				if(null != mMainActivity){
 					//地图大头针图片
 					console.log("pageNotifyCallBack---登录---" + String.valueOf(param2));
 					mMainActivity.loginCallBack(success,param2);
 				}
-				if(mPageSource == "UserLogin"){
-					((UserLoginActivity)mContext).loginCallBack(success, param2);
+				//登录
+				if(mPageSource !="UserRegist"){
+					mLoginManage.loginCallBack(success,param1, param2);
+				}
+				
+				if(mPageSource == "UserRegist"){
+					((UserRegistActivity)mContext).registLoginCallBack(success, param2);
 				}
 			break;
 			//自动登录
-			case 12:
-				parseLoginData(success, param2);
-				if(mPageSource == "Main"){
-					((MainActivity)mContext).autoLoginCallback(success, param2);
-				}
+
+			case PageType_AutoLogin:
+				
+				mUser.initAutoLoginCallback(success,param1, param2);
+
 				break;
 			//验证码PageType_GetVCode
-			case 15:
+			case PageType_GetVCode:
 				//注册获取验证码
 				if(mPageSource == "UserRegist"){
 					((UserRegistActivity)mContext).identifyCallback(success, param2);
@@ -632,13 +603,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 			//注册PageType_Register
-			case 16:
+			case PageType_Register:
 				if(mPageSource == "UserRegist"){
-					((UserRegistActivity)mContext).registCallback(success, param2);
+					((UserRegistActivity)mContext).registCallback(success,param1, param2);
 				}
 				break;
 			//重置密码PageType_ModifyPwd
-			case 17:
+			case PageType_ModifyPwd:
 				if(mPageSource == "UserRepwd"){
 					((UserRepwdActivity)mContext).repwdCallBack(success,param2);
 				}
@@ -671,6 +642,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 			
+			//注销
+			case PageType_SignOut:
+				Log.i("loginout", "======application======");
+				if(mPageSource == "UserSetup"){
+					((UserSetupActivity)mContext).getLogintoutCallback(success, param2);
+				}
+				break;
 		}
 	}
 
@@ -774,6 +752,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						getVideoEncodeCfg();
 						//发起获取自动循环录制状态
 						updateAutoRecordState();
+						//获取停车安防配置信息
+						updateMotionCfg();
 						//自动同步系统时间
 						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
 							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
@@ -841,7 +821,27 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case IPC_VDCP_Msg_StopRecord:
 					autoRecordFlag = false;
 					break;
-					
+				case IPC_VDCP_Msg_GetMotionCfg:
+					if(param1 == RESULE_SUCESS){
+						try {
+							JSONObject json = new JSONObject((String)param2);
+							if(null != json){
+								int enableSecurity = json.optInt("enableSecurity");
+								int snapInterval = json.optInt("snapInterval");
+								
+								motioncfg[0] = enableSecurity;
+								motioncfg[1] = snapInterval;
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+					break;
+				case IPC_VDCP_Msg_SetMotionCfg:
+					if(param1 == RESULE_SUCESS){
+						updateMotionCfg();
+					}
+					break;
 			}
 		}
 		
@@ -940,7 +940,24 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 	
 	/**
-	 * 初始化ImageLoader
+	 * 获取停车安防配置
+	 * @author xuhw
+	 * @date 2015年4月10日
+	 */
+	private void updateMotionCfg(){
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					boolean record = GolukApplication.getInstance().getIPCControlManager().getMotionCfg();
+					System.out.println("YYY=========getMotionCfg========="+record);
+				}
+			}).start();
+		}
+	}
+	
+	/**
+	* 初始化ImageLoader
 	 * @param context
 	 * @author xuhw
 	 * @date 2015年4月16日

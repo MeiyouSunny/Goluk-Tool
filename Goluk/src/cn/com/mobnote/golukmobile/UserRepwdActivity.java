@@ -457,7 +457,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 		if(!"".equals(password) && !"".equals(identify)){
 			mBtnOK.setFocusable(true);
 			if(password.length()>=6 && password.length()<=16){
-				if(!UserUtils.isNetDeviceAvailable(mContext)){
+				if(!UserUtils.isNetDeviceAvailable(this)){
 					console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 				}else{
 					//初始化定时器

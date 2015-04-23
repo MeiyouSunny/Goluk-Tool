@@ -109,6 +109,24 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_GetGSensorControlCfg = 1021;
 	/** 设置IPC GSensor控制紧急录像策略 */
 	public static final int IPC_VDCP_Msg_SetGSensorControlCfg = 1022;
+	/** IPC升级状态 */
+	public static final int IPC_VDCP_Msg_IPCUpgrade = 1023;
+	/** IPC 自动录制紧急、精彩视频 */
+	public static final int IPC_VDCP_Msg_IPCKit = 1024;
+	/** 读取安防模式和移动侦测参数 */
+	public static final int IPC_VDCP_Msg_GetMotionCfg = 1025;
+	/** 设置安防模式和移动侦测参数 */
+	public static final int IPC_VDCP_Msg_SetMotionCfg = 1026;
+	/** 读取IPC版本信息 */
+	public static final int IPC_VDCP_Msg_GetVersion = 1027;
+	/** SD卡图片查询 */
+	public static final int IPC_VDCP_Msg_QueryPic = 1028;
+	/** SD卡查询单张图片 */
+	public static final int IPC_VDCP_Msg_SingleQueryPic = 1029;
+	/** 删除多个SD卡录像、图片 */
+	public static final int IPC_VDCP_Msg_RecPicEraseMulti = 1030;
+	/** 按条件删除图片 */
+	public static final int IPC_VDCP_Msg_PicErase = 1031;
 	
 	
 	/**
@@ -190,6 +208,24 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetGSensorControlCfg = 1021;
 	/** 设置IPC GSensor控制紧急录像策略 */
 	public static final int IPC_VDCPCmd_SetGSensorControlCfg = 1022;
+	/** /IPC设备进行升级 */
+	public static final int IPC_VDCPCmd_IPCUpgrade = 1023;
+	/** 读取安防模式和移动侦测参数 */
+	public static final int IPC_VDCPCmd_GetMotionCfg = 1024;
+	/** 设置安防模式和移动侦测参数 */
+	public static final int IPC_VDCPCmd_SetMotionCfg = 1025;
+	/** 读取IPC版本信息 */
+	public static final int IPC_VDCPCmd_GetVersion = 1026;
+	/** SD卡图片查询 */
+	public static final int IPC_VDCPCmd_QueryPic = 1027;
+	/** SD卡查询单张图片 */
+	public static final int IPC_VDCPCmd_SingleQueryPic = 1028;
+	/** 删除多个SD卡录像、图片 */
+	public static final int IPC_VDCPCmd_RecPicEraseMulti = 1029;
+	/** 按条件删除录像 */
+	public static final int IPC_VDCPCmd_RecErase = 1030;
+	/** 按条件删除图片 */
+	public static final int IPC_VDCPCmd_PicErase = 1031;
 	
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }

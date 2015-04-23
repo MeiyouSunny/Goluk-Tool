@@ -60,6 +60,7 @@
     <string name="local_video_title_text">选择视频</string>
     <string name="wifi_name_text">WiFi Name</string>
     <string name="wifi_link_text">未连接</string>
+    <string name="index_square">广场</string>
     <string name="square_title_text">视频广场</string>
     <string name="watch_live_text">轻触继续观看</string>
     <string name="video_live_5s_tip">稍候片刻,即将进入直播</string>
@@ -180,6 +181,12 @@
     <string name="user_personal_home_nologin_name">未登录</string>
 
     <!-- 直播界面 -->
+
+
+	<!-- 个人中心 -->
+
+	<string name="user_personal_autoloading_progress">正在为您登录，请稍候……</string>
+	
     <string name="live_title">网络直播</string>
     <string name="live_pause">暂停</string>
     <string name="live_exit">结束直播</string>

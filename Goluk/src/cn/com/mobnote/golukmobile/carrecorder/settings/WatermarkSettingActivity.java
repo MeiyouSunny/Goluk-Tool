@@ -90,4 +90,9 @@ public class WatermarkSettingActivity extends BaseActivity implements OnClickLis
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "watermarksetting");
+	}
 }

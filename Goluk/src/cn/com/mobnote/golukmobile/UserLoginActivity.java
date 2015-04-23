@@ -1,7 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,8 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 
@@ -40,7 +35,7 @@ import cn.com.mobnote.util.console;
  * 
  * @author mobnote
  */
-public class UserLoginActivity extends Activity implements OnClickListener {
+public class UserLoginActivity extends Activity implements OnClickListener,UserLoginInterface {
 	//判断是否能点击提交按钮
 	private boolean isOnClick=false;
 	// 登陆title
@@ -59,11 +54,14 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 	private GolukApplication mApplication = null;
 	//context
 	private Context mContext = null;
-	private String phone;
-	private String pwd;
+	private String phone = null;
+	private String pwd = null;
 	//将用户的手机号和密码保存到本地
-	private SharedPreferences mSharedPreferences;
-	private Editor mEditor;
+	private SharedPreferences mSharedPreferences = null;
+	private Editor mEditor = null;
+	
+	//判断登录
+	private String justLogin = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +70,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
 		
-		SysApplication.getInstance().addActivity(this);
+//		SysApplication.getInstance().addActivity(this);
 	}
 	@Override
 	protected void onResume() {
@@ -105,11 +103,29 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
 		// loading组件
 		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
+//		mLoading = (RelativeLayout) findViewById(R.id.index_loading_layout);
 		
 		Intent itentGetRegist = getIntent();
 		if(null !=  itentGetRegist.getStringExtra("intentRegist")){
 			String phoneNumber = itentGetRegist.getStringExtra("intentRegist").toString();
 			mEditTextPhoneNumber.setText(phoneNumber);
+		}
+		
+		//如果是注销成功，则接收从UserStartActivity传来的手机号填入手机号框
+		Intent intentStart = getIntent();
+		if(null != intentStart.getStringExtra("startActivity")){
+			String phone = intentStart.getStringExtra("startActivity").toString();
+			mEditTextPhoneNumber.setText(phone);
+		}
+		//如果是自动登录失败、超时，则接收从IndexMoreLoginActivity传来的手机号，并填入手机号
+		if(null !=intentStart.getStringExtra("autoPhone")){
+			String phoneAuto = intentStart.getStringExtra("autoPhone").toString();
+			Log.i("autostatus", "----自动登录失败手机号手机号手机号----"+phoneAuto);
+			mEditTextPhoneNumber.setText(phoneAuto);
+		}
+		//登录页面返回
+		if(null != intentStart.getStringExtra("isInfo")){
+			justLogin = intentStart.getStringExtra("isInfo").toString();
 		}
 		
 		/**
@@ -135,7 +151,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 						}
 				}else{
 					isOnClick=false;
-//					mEditTextPhoneNumber.setError("手机号格式不正确");
 					UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
 				}
 				if(isOnClick&&!psw.equals("")){
@@ -148,8 +163,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 				}
 			}
 		});
-		//
-		
+
 		//手机号、密码文本框
 		mEditTextPhoneNumber.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -176,6 +190,21 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 			}
 		} );
 		//密码监听
+		mEditTextPwd.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				String pwd=mEditTextPwd.getText().toString();
+				if(arg1){
+					
+				}else{
+					if(pwd.equals("") || pwd.length()<6 || pwd.length()>16){
+						UserUtils.showDialog(UserLoginActivity.this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
+					}
+				}
+			}
+		});
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
@@ -210,7 +239,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		mImageViewWeichat.setOnClickListener(this);
 		mImageViewSina.setOnClickListener(this);
 		mImageViewQQ.setOnClickListener(this);
-
+		
 	}
 
 	@Override
@@ -223,9 +252,7 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 			break;
 		// 登陆按钮
 		case R.id.user_login_btn:
-			//参数PNumber：“13054875692”，Password：“1234”,tag:”android/ios/pad/pc”}
-			login();
-			
+			loginManage();
 			break;
 		// 手机快速注册
 		case R.id.user_login_phoneRegist:
@@ -251,126 +278,6 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-	/**
-	 * 登陆
-	 * 当帐号和密码输入框都有内容时,激活为可点击状态
-	 */
-	private void login(){
-		phone = mEditTextPhoneNumber.getText().toString();
-		pwd = mEditTextPwd.getText().toString();
-		if(!"".equals(phone) ){
-			if(phone.startsWith("1") && phone.length() == 11){
-				if(!"".equals(pwd)){
-					if(pwd.length()>=6 && pwd.length()<=16){
-						//网络判断
-						if(!UserUtils.isNetDeviceAvailable(mContext)){
-							console.toast("当前网络状态不佳，请检查网络后重试", mContext);
-						}else{
-							//初始化定时器
-						initTimer();
-						handler.postDelayed(runnable, 3000);//san 秒执行一次runnable.
-						String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
-						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
-						if(b){
-							//隐藏软件盘
-						    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-						    imm.hideSoftInputFromWindow(UserLoginActivity.this.getCurrentFocus().getWindowToken(), 0);
-							mLoading.setVisibility(View.VISIBLE);
-							console.log("回调成功");
-							//文本框不可被修改
-							mEditTextPhoneNumber.setEnabled(false);
-							mEditTextPwd.setEnabled(false);
-							}
-						}
-					}else{
-						UserUtils.showDialog(this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
-					}
-				}else{
-//					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
-				}
-			}else{
-				UserUtils.showDialog(this, "手机号格式错误,请重新输入");
-			}
-		}else{
-			mEditTextPhoneNumber.setFocusable(true);
-			mEditTextPwd.setFocusable(true);
-		}
-	}
-	
-	/**
-	 * 登录回调
-	 * @param obj
-	 */
-	public void loginCallBack(int success,Object obj){
-		console.log("登录回调---loginCallBack---" + success + "---" + obj);
-		if(1 == success){
-			handler.removeCallbacks(runnable);
-			try{
-				String data = (String)obj;
-				JSONObject json = new JSONObject(data);
-				int code = Integer.valueOf(json.getString("code"));
-				String msg = json.getString("msg");
-				mLoading.setVisibility(View.GONE);
-				switch (code) {
-				case 200:
-					//登录成功后，存储用户的登录信息
-					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-					mEditor = mSharedPreferences.edit();
-					mEditor.putBoolean("FirstLogin", false);
-					//提交修改
-					mEditor.commit();
-					
-					//登录成功跳转
-					SysApplication.getInstance().exit();//杀死前边所有的Activity
-					console.toast("登录成功！", mContext);
-					mApplication.isUserLoginSucess = true;
-					Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
-					startActivity(login);
-					finish();
-					break;
-				case 500:
-					UserUtils.showDialog(this, "服务端程序异常");
-					break;
-				case 405:
-					String phone = mEditTextPhoneNumber.getText().toString();
-					if(UserUtils.isMobileNO(phone)){
-						new AlertDialog.Builder(this)
-						.setTitle("Goluk温馨提示：")
-						.setMessage("此手机号码还没有被注册")
-						.setNegativeButton("取消", null)
-						.setPositiveButton("注册", new DialogInterface.OnClickListener() {
-							
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
-								it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
-								startActivity(it);
-							}
-						}).create().show();
-					}else{
-						UserUtils.showDialog(this, "手机号格式错误,请重新输入");
-					}
-					break;
-				case 402:
-					console.toast("密码错误,请重试", mContext);
-					break;
-				default:
-					break;
-				}
-				mEditTextPhoneNumber.setFocusable(true);
-				mEditTextPwd.setFocusable(true);
-			}
-			catch(Exception ex){
-				ex.printStackTrace();
-			}
-		}
-		else{
-			console.toast("登录失败", mContext);
-		}
-		mEditTextPhoneNumber.setEnabled(true);
-		mEditTextPwd.setEnabled(true);
-	}
-	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
@@ -381,14 +288,105 @@ public class UserLoginActivity extends Activity implements OnClickListener {
 		}*/
 		return super.onKeyDown(keyCode, event);
 	}
-	final Handler handler=new Handler();
-	private Runnable runnable;
-	private void initTimer(){
-		runnable=new Runnable(){
-		@Override
-		public void run() {
-			console.toast("当前网络不佳", mContext);
+	
+	/**
+	 * 登录管理类
+	 * 
+	 */
+	public void loginManage(){
+		phone = mEditTextPhoneNumber.getText().toString();
+		pwd = mEditTextPwd.getText().toString();
+		if(!"".equals(phone) ){
+			if(UserUtils.isMobileNO(phone)){
+				if(!"".equals(pwd)){
+					if(pwd.length()>=6 && pwd.length()<=16){
+						mApplication.mLoginManage.setUserLoginInterface(this);
+						boolean b = mApplication.mLoginManage.login(phone, pwd);
+						if(b){
+							mApplication.loginStatus = 0;
+							UserUtils.hideSoftMethod(this);
+							mLoading.setVisibility(View.VISIBLE);
+							mEditTextPhoneNumber.setEnabled(false);
+							mEditTextPwd.setEnabled(false);
+							mTextViewRegist.setEnabled(false);
+							mTextViewForgetPwd.setEnabled(false);
+						}else{
+							console.toast("登录失败======UserLoginActivity----", this);
+							mApplication.loginStatus = 2;
+						}
+					}else{
+						UserUtils.showDialog(mApplication.getContext(), "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
+					}
+				}
+			}else{
+					UserUtils.showDialog(mApplication.getContext(), "手机号格式错误,请重新输入");
 			}
-		};
+		}
+	}
+
+	/**
+	 * 登录管理类回调返回的状态
+	 * 0登录中  1登录成功  2登录失败  3用户未注册  4登录超时
+	 */
+	@Override
+	public void loginCallbackStatus() {
+		// TODO Auto-generated method stub
+		switch (mApplication.loginStatus) {
+		case 0:
+			break;
+		case 1:
+			mApplication.isUserLoginSucess = true;
+			mLoading.setVisibility(View.GONE);
+			if(justLogin.equals("main")){
+				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
+				startActivity(login);
+			}
+			this.finish();
+			break;
+		case 2:
+			mApplication.isUserLoginSucess = false;
+			mLoading.setVisibility(View.GONE);
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			break;
+		case 3:
+			mApplication.isUserLoginSucess = false;
+			mLoading.setVisibility(View.GONE);
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			if(UserUtils.isMobileNO(phone)){
+				new AlertDialog.Builder(this)
+				.setTitle("Goluk温馨提示：")
+				.setMessage("此手机号码还没有被注册")
+				.setNegativeButton("取消", null)
+				.setPositiveButton("注册", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
+						it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
+						startActivity(it);
+					}
+				}).create().show();
+			}else{
+				UserUtils.showDialog(this, "手机号格式错误,请重新输入");
+			}
+			break;
+		case 4:
+			console.toast("网络连接超时", this);
+			mApplication.isUserLoginSucess = false;
+			mLoading.setVisibility(View.GONE);
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			break;
+		default:
+			break;
+		}
 	}
 }
