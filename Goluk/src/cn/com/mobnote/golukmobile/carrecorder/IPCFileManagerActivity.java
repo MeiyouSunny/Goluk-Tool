@@ -110,6 +110,11 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private boolean addWonderfulFooter=false;
 	private boolean addEmergencyFooter=false;
 	private boolean addLoopFooter=false;
+	private int cycleListTime = 0;//循环列表最后的时间戳
+	private int marvellousListTime = 0;//精彩列表最后的时间戳
+	private int emergencyListTime = 0;//紧急列表最后的时间戳
+	private boolean ishaveData = false;
+	private boolean isbelow = true;
 	private CustomProgressDialog mCustomProgressDialog=null;
 	
 	@Override
@@ -125,7 +130,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		initView();
 		setListener();
 		
-		getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE);
+		getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE,0);//初始化
 	}
 	
 	/**
@@ -250,16 +255,20 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		if(!addWonderfulFooter){
 			addWonderfulFooter=true;
 			LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
-			mWonderfulVideoList.addFooterView(layout);
+			//mWonderfulVideoList.addFooterView(layout);
 		}
-		mWonderfulVideoList.setAdapter(mWonderfulVideoAdapter);
 		
+		if(wonderfulVideoData.size() <= 40){
+			mWonderfulVideoList.setAdapter(mWonderfulVideoAdapter);
+		}
 		mWonderfulVideoList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mWonderfulVideoList.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
-						
+						if(ishaveData){
+							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_SHORTCUT,marvellousListTime);//初始化
+						}
 //						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
 						System.out.println("TTTTT=====滑动到最后了222");
 					}
@@ -344,12 +353,18 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						
 					}
 				}
-				
-				
 				 
 				}
 			});
-		
+		if(ishaveData){
+			if(isbelow){
+				RelativeLayout loading = (RelativeLayout) LayoutInflater.from(this)
+						.inflate(R.layout.video_square_below_loading, null);
+				mWonderfulVideoList.addFooterView(loading);
+				isbelow = false;
+			}
+			
+		}
 	}
 	
 	
@@ -409,16 +424,21 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		if(!addEmergencyFooter){
 			addEmergencyFooter=true;
 			LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
-			mEmergencyVideoList.addFooterView(layout);
+			//mEmergencyVideoList.addFooterView(layout);
 		}
-		mEmergencyVideoList.setAdapter(mEmergencyVideoAdapter);
+		
+		if(emergencyVideoData.size() <= 40){
+			mEmergencyVideoList.setAdapter(mEmergencyVideoAdapter);
+		}
 		
 		mEmergencyVideoList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mEmergencyVideoList.getAdapter().getCount() == (emergencyFirstVisible + emergencyVisibleCount)){
-						
+						if(ishaveData){
+							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_URGENT,emergencyListTime);//初始化
+						}
 //						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
 						System.out.println("TTTTT=====滑动到最后了222");
 					}
@@ -506,6 +526,16 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				
 			}
 		});
+		
+		if(ishaveData){
+			if(isbelow){
+				RelativeLayout loading = (RelativeLayout) LayoutInflater.from(this)
+						.inflate(R.layout.video_square_below_loading, null);
+				mEmergencyVideoList.addFooterView(loading);
+				isbelow = false;
+			}
+			
+		}
 	}
 	
 	/**
@@ -530,21 +560,29 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			mLoopVideoAdapter = new IPCFileAdapter(this);
 		}
 		mLoopVideoAdapter.setData(loopGroupName, loopVideoData);
+		
+		mLoopVideoAdapter.notifyDataSetChanged();
+		
 		if(!addLoopFooter){
 			addLoopFooter=true;
 			LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
-			mLoopVideoList.addFooterView(layout);
+			//mLoopVideoList.addFooterView(layout);
 		}
-		mLoopVideoList.setAdapter(mLoopVideoAdapter);
+		
+		if(mLoopVideoData.size() <= 40){
+			mLoopVideoList.setAdapter(mLoopVideoAdapter);
+		}
 		
 		mLoopVideoList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mLoopVideoList.getAdapter().getCount() == (loopFirstVisible + loopVisibleCount)){
-						
+						if(ishaveData){
+							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_CIRCULATE,cycleListTime);//初始化
+						}
 //						Toast.makeText(IPCFileManagerActivity.this, "循环视频　滑动到最后了222", 1000).show();
-						System.out.println("TTTTT=====滑动到最后了222");
+						System.out.println("TTTTT=====滑动到最后了222 endtime="+cycleListTime);
 					}
 				}
 			}
@@ -554,6 +592,8 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				loopVisibleCount=visibleItemCount;
 			}
 		});
+		
+		
 		mLoopVideoList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -619,6 +659,17 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				}
 			}
 		});
+		
+		if(ishaveData){
+			if(isbelow){
+				RelativeLayout loading = (RelativeLayout) LayoutInflater.from(this)
+						.inflate(R.layout.video_square_below_loading, null);
+				mLoopVideoList.addFooterView(loading);
+				isbelow = false;
+			}
+			
+		}
+		
 	}
 	
 	/**
@@ -659,7 +710,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	 * @author xuhw
 	 * @date 2015年3月25日
 	 */
-	private void getRecorderFileFromLocal(boolean flag, int type) {
+	private void getRecorderFileFromLocal(boolean flag, int type,int time) {
 		if(flag){
 			if(!mCustomProgressDialog.isShowing()){
 				mCustomProgressDialog.setCancelable(false);
@@ -669,7 +720,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		isGetFileListDataing=true;
 		mOprateType = type;
 		updateButtonState(type);
-		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, 0);
+		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, time);
 		GFileUtils.writeIPCLog("===========获取文件列表===1111===================isSucess=="+isSucess);
 		if(!isSucess){
 			isGetFileListDataing=false;
@@ -751,7 +802,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						if(IPCManagerFn.TYPE_SHORTCUT != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_SHORTCUT;
 							if(null == mWonderfulVideoAdapter){
-								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_SHORTCUT);
+								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_SHORTCUT,0);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -770,7 +821,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						if(IPCManagerFn.TYPE_URGENT != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_URGENT;
 							if(null == mEmergencyVideoAdapter){
-								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_URGENT);
+								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_URGENT,0);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -789,7 +840,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						if(IPCManagerFn.TYPE_CIRCULATE != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_CIRCULATE;
 							if(null == mLoopVideoAdapter){
-								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE);
+								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE,0);
 							}else{
 								mCurrentType = mOprateType;
 								updateButtonState(mCurrentType);
@@ -1097,8 +1148,8 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			info.videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 		} else {
 			 if(1 == mVideoFileInfo.withSnapshot){
-				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
-				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
+//				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
+//				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
 			 }
 		}
 		
@@ -1120,22 +1171,32 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
 					int total = IpcDataParser.getFileListCount((String) param2);
 					if (null != fileList) {
+						VideoFileInfo vfi = fileList.get(fileList.size()-1);
+						
 						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
+						if(fileList.size()<40){
+							ishaveData = false;
+						}else{
+							ishaveData = true;
+						}
 						mCurrentType = mOprateType;
 						if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){//精彩视频
+							marvellousListTime = (int) vfi.time;
 							wonderfulTotalCount = total;
 							initWonderfulLayout(fileList);
 						}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){//紧急视频
+							emergencyListTime = (int) vfi.time;
 							emergencyTotalCount = total;
 							initEmergencyLayout(fileList);
 						}else{//循环视频
+							cycleListTime = (int) vfi.time;
 							loopVisibleCount = total;
 							initLoopLayout(fileList);
 						}
 					} else {
 						// 列表数据空
-						GFileUtils
-								.writeIPCLog("===========获取文件列表===5555============ data null=========");
+						GFileUtils.writeIPCLog("===========获取文件列表===5555============ data null=========");
+						ishaveData = false;
 					}
 				} else {
 					// 命令发送失败
@@ -1165,7 +1226,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 							String filename = json.optString("filename");
 							String tag = json.optString("tag");
-System.out.println("TTT=======1111111==================tag="+tag);
+							System.out.println("TTT=======1111111==================tag="+tag);
 							if(tag.contains("IPC_IMAGE")){
 							if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){//精彩视频
 								if (null != mWonderfulVideoAdapter) {
