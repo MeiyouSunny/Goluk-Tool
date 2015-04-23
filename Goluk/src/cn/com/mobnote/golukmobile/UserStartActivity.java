@@ -75,6 +75,7 @@ public class UserStartActivity extends Activity implements OnClickListener {
 			}else{
 				startActivity(it);
 			}
+			this.finish();
 			break;
 
 		case R.id.user_start_look:

@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
@@ -81,9 +80,12 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserLogin");
 		
+		mApplication.mLoginManage.initData();
+		
 		initView();
 		// 设置title
 		mTextViewTitle.setText("登录");
+		
 	}
 	private boolean mDelAllNum = false;
 	public void initView() {
@@ -113,7 +115,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		
 		//如果是注销成功，则接收从UserStartActivity传来的手机号填入手机号框
 		Intent intentStart = getIntent();
-		if(null != intentStart.getStringExtra("startActivity")){
+		/*if(null != intentStart.getStringExtra("startActivity")){
 			String phone = intentStart.getStringExtra("startActivity").toString();
 			mEditTextPhoneNumber.setText(phone);
 		}
@@ -122,10 +124,19 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			String phoneAuto = intentStart.getStringExtra("autoPhone").toString();
 			Log.i("autostatus", "----自动登录失败手机号手机号手机号----"+phoneAuto);
 			mEditTextPhoneNumber.setText(phoneAuto);
-		}
+		}*/
 		//登录页面返回
 		if(null != intentStart.getStringExtra("isInfo")){
 			justLogin = intentStart.getStringExtra("isInfo").toString();
+		}
+		/**
+		 * 填写手机号
+		 */
+		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+		if(null != mSharedPreferences.getString("setupPhone", "") || !"".equals(mSharedPreferences.getString("setupPhone", ""))){
+			String phone = mSharedPreferences.getString("setupPhone", "");
+			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
+			mEditTextPhoneNumber.setText(phone);
 		}
 		
 		/**
