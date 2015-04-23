@@ -418,6 +418,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// TODO 开启直接失败
 	}
 
+	/** IPC登录是否成功 */
+	private boolean ipcIsOk = false;
+
 	/**
 	 * 页面初始化
 	 */
@@ -467,7 +470,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mLoginLayout = (RelativeLayout) findViewById(R.id.loginlayout);
 		mLoginBtn = (Button) findViewById(R.id.live_login);
 		mLoginBtn.setOnClickListener(this);
-//		mQiangpaiImg.setOnClickListener(this);
+		// mQiangpaiImg.setOnClickListener(this);
+
+		mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_press1);
+
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			ipcIsOk = true;
+			mQiangpaiImg.setBackgroundResource(R.drawable.btn_live_6s);
+		}
 
 		mRPVPalyVideo = (RtmpPlayerView) findViewById(R.id.live_vRtmpPlayVideo);
 		// 先显示气泡上的默认图片
@@ -1419,11 +1429,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			LogUtil.e(null, "jyf----20150406----LiveActivity----pre_startTrimVideo----2222 : " + isRecording);
 			if (!isRecording) {
 				// 设置按下状态
-				mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_8s_press);
+				mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_press1);
 				isRecording = true;
 				mCurVideoType = VideoType.mounts;
 				boolean isSucess = GolukApplication.getInstance().getIPCControlManager().startWonderfulVideo();
-				
+
 				LogUtil.e(null, "jyf----20150406----LiveActivity----pre_startTrimVideo----4444444 : " + isSucess);
 
 				if (!isSucess) {
@@ -1566,7 +1576,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mHandler.sendEmptyMessageDelayed(MSG_H_QUERYFILEEXIT, QUERYFILETIME);
 
 		mShootTime = 0;
-		mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_8s);
+		mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_press1);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
 			m8sTimer.purge();
@@ -1647,23 +1657,38 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @date 2015年3月8日
 	 */
 	private void queryFileExit() {
+		LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----111111 : ");
 		videoFileQueryTime++;
 		mHandler.removeMessages(MSG_H_QUERYFILEEXIT);
+
+		LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----222222 : ");
+
 		if (!TextUtils.isEmpty(mRecordVideFileName)) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----333333 : ");
 			if (videoFileQueryTime <= 15) {
+				LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----444444 : ");
 				if (GolukApplication.getInstance().getIpcIsLogin()) {
+					LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----555555 : ");
 					boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
 							.querySingleFile(mRecordVideFileName);
+
+					LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----66666 : " + isSucess);
 
 					if (!isSucess) {
 						mHandler.sendEmptyMessageDelayed(MSG_H_QUERYFILEEXIT, 1000);
 					}
+
+					LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----777777 : ");
+
 				} else {
 					// IPC未登录
+					LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----88888 : ");
 				}
 			} else {
 				videoFileQueryTime = 0;
 				videoTriggerFail();
+
+				LogUtil.e(null, "jyf----20150406----LiveActivity----queryFileExit----999999 : ");
 			}
 		} else {
 			videoFileQueryTime = 0;
@@ -1684,7 +1709,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				mQiangpaiImg.setBackgroundResource(R.drawable.btn_live_8s);
+				mQiangpaiImg.setBackgroundResource(R.drawable.btn_live_6s);
 			}
 		});
 	}
@@ -1794,7 +1819,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					// 正在录制
 					return true;
 				}
-				mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_8s_press);
+				// mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_8s_press);
 				LogUtil.e(null, "mobile-----onTouch-----:  qiangpai down");
 			} else if (id == R.id.live_exit) {
 				LogUtil.e(null, "mobile-----onTouch-----:  exit down");
@@ -2425,6 +2450,28 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
+			if (ConnectionStateMsg_Connected != msg) {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						ipcIsOk = false;
+						mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_press1);
+					}
+				});
+			}
+		}
+
+		if (ENetTransEvent_IPC_VDCP_CommandResp == event && IPC_VDCP_Msg_Init == msg && 0 == param1) {
+			ipcIsOk = true;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mQiangpaiImg.setBackgroundResource(R.drawable.btn_live_6s);
+				}
+			});
+		}
+
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
 			callBack_VDCP(msg, param1, param2);
 		}
@@ -2443,6 +2490,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @date 2015年3月17日
 	 */
 	private void callBack_VDCP(int msg, int param1, Object param2) {
+		LogUtils.d("m8sBtn===IPC_VDCPCmd_TriggerRecord===callBack_VDCP=====param1=   " + param1 + "     ==param2="
+				+ param2 + "	msg:" + msg);
 		switch (msg) {
 		// 实时抓图
 		case IPC_VDCPCmd_SnapPic:
@@ -2452,9 +2501,50 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		case IPC_VDCPCmd_TriggerRecord:
 			dealTriggerRecordCallBack(param1, param2);
 			break;
+		case IPC_VDCPCmd_SingleQuery:
+			dealSingleFile(param1, param2);
+			break;
 		default:
 			break;
 		}
+	}
+
+	/** 精彩视频名称 */
+	private String wonderfulVideoName = null;
+
+	private void dealSingleFile(int param1, Object param2) {
+		GFileUtils.writeIPCLog("===========IPC_VDCPCmd_SingleQuery===11111=========param1=" + param1 + "=====param2="
+				+ param2);
+		if (RESULE_SUCESS != param1) {
+			mHandler.sendEmptyMessageDelayed(MSG_H_QUERYFILEEXIT, 1000);
+			return;
+		}
+		VideoFileInfo fileInfo = IpcDataParser.parseSingleFileResult((String) param2);
+		if (null == fileInfo) {
+			mHandler.sendEmptyMessageDelayed(MSG_H_QUERYFILEEXIT, 1000);
+			return;
+		}
+		if (!TextUtils.isEmpty(fileInfo.location)) {
+			Intent mIntent = new Intent("sendfile");
+			if (TYPE_SHORTCUT == fileInfo.type) {// 精彩
+				mIntent.putExtra("filetype", "mounts");
+				mIntent.putExtra("filename", fileInfo.location);
+
+				String path = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+						+ File.separator + "video" + File.separator + "wonderful";
+				wonderfulVideoName = path + File.separator + mRecordVideFileName;
+
+				LogUtils.d("m8sBtn===IPC_VDCPCmd_TriggerRecord===callBack_VDCP=====param1=   查询文件成功");
+
+			}
+
+			mRecordVideFileName = "";
+			videoFileQueryTime = 0;
+			resetTrimVideoState();
+		} else {
+			mHandler.sendEmptyMessageDelayed(MSG_H_QUERYFILEEXIT, 1000);
+		}
+
 	}
 
 	private void dealTriggerRecordCallBack(int param1, Object param2) {
@@ -2467,16 +2557,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				LogUtils.d("m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type=" + record.type);
 				// 精彩视频
 				if (TYPE_SHORTCUT == record.type) {
-					GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
 					mHandler.sendEmptyMessage(MOUNTS);
 				}
 			} else {
-				GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
 				videoTriggerFail();
 			}
 		} else {
 			LogUtils.d("m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
-			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
 			videoTriggerFail();
 		}
 	}
