@@ -12,6 +12,7 @@ import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 
 import java.io.IOException;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import android.app.Activity;
 import android.graphics.PixelFormat;
@@ -510,6 +511,13 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		}
 		 
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "videoplayer");
 	}
 
 }

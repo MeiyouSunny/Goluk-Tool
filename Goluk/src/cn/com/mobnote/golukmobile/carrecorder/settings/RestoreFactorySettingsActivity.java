@@ -11,6 +11,7 @@ import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.utils.LogUtil;
 
  /**
   * 1.编辑器必须显示空白处
@@ -55,17 +56,10 @@ public class RestoreFactorySettingsActivity extends BaseActivity implements OnCl
 					mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
 						@Override
 						public void onClickListener() {
-							
-							new Thread(new Runnable() {
-								@Override
-								public void run() {
-									if(GolukApplication.getInstance().getIpcIsLogin()){
-										boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
-										System.out.println("YYY=================restoreIPC============a="+a);
-									}
-								}
-							}).start();
-							
+							if(GolukApplication.getInstance().getIpcIsLogin()){
+								boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
+								LogUtil.e("xuhw", "YYYYYY=================restoreIPC============a="+a);
+							}
 						}
 					});
 					mCustomDialog.setRightButton("取消", null);
@@ -75,6 +69,12 @@ public class RestoreFactorySettingsActivity extends BaseActivity implements OnCl
 			default:
 				break;
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "restorefactory");
 	}
 	
 	@Override
@@ -88,19 +88,24 @@ public class RestoreFactorySettingsActivity extends BaseActivity implements OnCl
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(msg == IPC_VDCP_Msg_Restore){
 				System.out.println("YYY====IPC_VDCP_Msg_Restore====msg="+msg+"===param1="+param1+"==param2="+param2);
+				String message="";
 				if(param1 == RESULE_SUCESS){
 					System.out.println("YYY=====IPC_VDCP_Msg_Restore============OK=============");
-					CustomDialog mCustomDialog = new CustomDialog(this);
-					mCustomDialog.setCancelable(false);
-					mCustomDialog.setMessage("恢复出厂设置成功", Gravity.CENTER);
-					mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
-						@Override
-						public void onClickListener() {
-							finish();
-						}
-					});
-					mCustomDialog.show();
+					message = "恢复出厂设置成功";
+				}else{
+					message = "恢复出厂设置失败";
 				}
+				
+				CustomDialog mCustomDialog = new CustomDialog(this);
+				mCustomDialog.setCancelable(false);
+				mCustomDialog.setMessage(message, Gravity.CENTER);
+				mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						finish();
+					}
+				});
+				mCustomDialog.show();
 			}
 		}
 	}

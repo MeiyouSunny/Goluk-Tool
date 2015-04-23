@@ -57,6 +57,10 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 直播点赞 */
 	public static int PageType_LiveLike = 23;
 	public static int PageType_ModifyUserInfo = 24;
+	/** 视频分享后通知logic */
+	public static final int PageType_ShareNotify = 25;
+	/** 上传视频第一帧图片 */
+	public static final int PageType_LiveUploadPic = 26;
 
 	/**
 	 * 

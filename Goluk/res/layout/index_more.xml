@@ -11,7 +11,7 @@
 		android:layout_height="42dp">
 		
 	    <RelativeLayout 
-	        android:layout_width="50dp"
+	        android:layout_width="60dp"
 	        android:layout_height="42dp"
 	        android:id="@+id/back_btn_layout"
 	        >
@@ -78,13 +78,20 @@
 			android:background="@drawable/more_next_button"
 			android:contentDescription="@string/imgdes"/>
 		
+		<LinearLayout 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/index_more_hasinfo"
+		    android:layout_toRightOf="@id/photo_default_img"
+		    android:layout_toLeftOf="@id/right_btn"
+		    android:layout_centerVertical="true"
+		    android:visibility="gone"
+		    >
 		<ImageView 
 		    android:id="@+id/user_sex_image"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_marginLeft="17dp"
-		    android:layout_centerVertical="true"
-		    android:layout_toRightOf="@id/photo_default_img"
 		    android:src="@drawable/more_man"
 		    />
 		
@@ -93,12 +100,54 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="8dp"
-			android:layout_centerVertical="true"
-			android:layout_toRightOf="@id/user_sex_image"
 			android:text="@string/username_text"
 			android:textColor="#333333"
 			android:textSize="16sp"
-			android:layout_toLeftOf="@id/right_btn"/>
+			/>
+		</LinearLayout>
+		<LinearLayout 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/index_more_noinfo"
+		    android:orientation="vertical"
+		    android:layout_toRightOf="@id/photo_default_img"
+		    android:layout_toLeftOf="@id/right_btn"
+		    android:layout_centerVertical="true"
+		    >
+		    <RelativeLayout 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        >
+		         <ImageView 
+				    android:id="@+id/user_sex_image_nologin"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginLeft="15dp"
+				    android:layout_centerVertical="true"
+				    android:src="@drawable/more_no_log_in_icon"
+				    />
+		
+		<TextView
+			android:id="@+id/user_name_text_nologin"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="8dp"
+			android:layout_centerVertical="true"
+			android:layout_toRightOf="@id/user_sex_image_nologin"
+			android:text="@string/user_personal_home_nologin_name"
+			android:textColor="#333333"
+			android:textSize="16sp"/>
+		</RelativeLayout>
+		   <TextView 
+		       android:layout_width="wrap_content"
+		       android:layout_height="wrap_content"
+		       android:text="@string/user_personal_home_nologin"
+		       android:layout_marginLeft="15dp"
+		       android:layout_marginTop="12dp"
+		       android:textSize="12sp"
+		       android:textColor="@color/user_home_nologin"
+		       />
+		</LinearLayout>
 	</RelativeLayout>
 	
 	<RelativeLayout
@@ -158,188 +207,13 @@
 			android:layout_alignParentBottom="true"
 			android:background="#dedede"/>
 	</RelativeLayout>
-	
-	<!-- <RelativeLayout
-		android:id="@+id/video_square_item"
-		android:layout_width="match_parent"
-		android:layout_height="52dp"
-		android:layout_below="@id/local_video_item">
-		
-		<ImageView
-			android:id="@+id/square_img"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="26dp"
-			android:background="@drawable/more_video_icon"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		
-		<TextView
-			android:id="@+id/square_video_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:layout_toRightOf="@id/square_img"
-			android:text="@string/square_title_text"
-			android:textSize="14sp"
-			android:textColor="#333333"
-			android:layout_centerVertical="true"/>
-		
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="36dp"
-			android:background="@drawable/icon_next_press"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:layout_marginLeft="25dp"
-			android:layout_marginRight="25dp"
-			android:layout_alignParentBottom="true"
-			android:background="#dedede"/>
-	</RelativeLayout> -->
-	
-	<RelativeLayout
-		android:id="@+id/draft_item"
-		android:layout_width="match_parent"
-		android:layout_height="52dp"
-		android:layout_below="@id/local_video_item">
-		
-		<ImageView
-			android:id="@+id/draft_img"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="26dp"
-			android:background="@drawable/more_draftbox_icon"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		
-		<TextView
-			android:id="@+id/draft_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:layout_toRightOf="@id/draft_img"
-			android:text="@string/draft_box_text"
-			android:textSize="14sp"
-			android:textColor="#333333"
-			android:layout_centerVertical="true"/>
-		
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="36dp"
-			android:background="@drawable/icon_next_press"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:layout_marginLeft="25dp"
-			android:layout_marginRight="25dp"
-			android:layout_alignParentBottom="true"
-			android:background="#dedede"/>
-	</RelativeLayout>
-	
-	<RelativeLayout
-		android:id="@+id/shopping_item"
-		android:layout_width="match_parent"
-		android:layout_height="52dp"
-		android:layout_below="@id/draft_item">
-		
-		<ImageView
-			android:id="@+id/shopping_img"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="26dp"
-			android:background="@drawable/more_store_icon"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		
-		<TextView
-			android:id="@+id/shopping_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:layout_toRightOf="@id/shopping_img"
-			android:text="@string/shopping_text"
-			android:textSize="14sp"
-			android:textColor="#333333"
-			android:layout_centerVertical="true"/>
-		
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="36dp"
-			android:background="@drawable/icon_next_press"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:layout_marginLeft="25dp"
-			android:layout_marginRight="25dp"
-			android:layout_alignParentBottom="true"
-			android:background="#dedede"/>
-	</RelativeLayout>
-	
-	<RelativeLayout
-		android:id="@+id/goluk_item"
-		android:layout_width="match_parent"
-		android:layout_height="52dp"
-		android:layout_below="@id/shopping_item">
-		
-		<ImageView
-			android:id="@+id/goluk_img"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="26dp"
-			android:background="@drawable/more_school_icon"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		
-		<TextView
-			android:id="@+id/goluk_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:layout_toRightOf="@id/goluk_img"
-			android:text="@string/goluk_school_text"
-			android:textSize="14sp"
-			android:textColor="#333333"
-			android:layout_centerVertical="true"/>
-		
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="36dp"
-			android:background="@drawable/icon_next_press"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:layout_marginLeft="25dp"
-			android:layout_marginRight="25dp"
-			android:layout_alignParentBottom="true"
-			android:background="#dedede"/>
-	</RelativeLayout>
+
 	
 	<RelativeLayout
 		android:id="@+id/setup_item"
 		android:layout_width="match_parent"
 		android:layout_height="52dp"
-		android:layout_below="@id/goluk_item">
+		android:layout_below="@id/local_video_item">
 		
 		<ImageView
 			android:id="@+id/setup_img"
@@ -371,6 +245,31 @@
 			android:contentDescription="@string/imgdes"/>
 		
 	</RelativeLayout>
+	<!-- android:background="@drawable/share_bg_repeat" -->
+	<RelativeLayout
+	    android:layout_width="170dp"
+	    android:layout_height="170dp"
+	    android:orientation="vertical"
+	    android:background="#20000000"
+	    android:id="@+id/index_loading_layout"
+	    android:layout_centerInParent="true"
+	    android:visibility="gone"
+	    >
+		<ProgressBar 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/user_auto_progress"
+		    android:layout_centerInParent="true"
+		    />
+		<TextView 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/user_auto_progress"
+		    android:text="@string/user_personal_autoloading_progress"
+		    android:layout_centerInParent="true"
+		    android:layout_marginTop="20dp"
+		    />
+</RelativeLayout>
 </RelativeLayout>
 
 

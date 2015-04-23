@@ -63,7 +63,9 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 		initView();
 		setListener();
 			
-		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("videoquality", this);
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("videoquality", this);
+		}
 	}
 	
 	/**
@@ -154,6 +156,7 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onResume() {
 		super.onResume();
+		GolukApplication.getInstance().setContext(this, "videoquality");
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
 			if("1080P".equals(mVideoConfigState.resolution)){
@@ -181,13 +184,13 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 				if(GolukApplication.getInstance().getIpcIsLogin()){
 					if(SensitivityType._1080h == curType){
 						mVideoConfigState.resolution="1080P";
-						mVideoConfigState.bitrate=8192;
+						mVideoConfigState.bitrate=10240;
 					}else if(SensitivityType._1080l == curType){
 						mVideoConfigState.resolution="1080P";
-						mVideoConfigState.bitrate=5120;
+						mVideoConfigState.bitrate=8192;
 					}else if(SensitivityType._720h == curType){
 						mVideoConfigState.resolution="720P";
-						mVideoConfigState.bitrate=6144;
+						mVideoConfigState.bitrate=5120;
 					}else{
 						mVideoConfigState.resolution="720P";
 						mVideoConfigState.bitrate=4096;
@@ -198,7 +201,9 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			}
 		}).start();
 
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("videoquality");
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("videoquality");
+		}
 	}
 
 	@Override
@@ -242,4 +247,6 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			}
 		}
 	}
+	
+	
 }

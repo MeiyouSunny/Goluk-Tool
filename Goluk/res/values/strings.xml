@@ -13,6 +13,7 @@
     <string name="login_out">未登录</string>
     <string name="title_activity_local_video_list">LocalVideoListActivity</string>
     <string name="back_text">返回</string>
+    <string name="delete_text">删除</string>
     <string name="edit_text">编辑</string>
     <string name="share_text">分享</string>
     <string name="next_text">下一步</string>
@@ -20,10 +21,11 @@
     <string name="mv_text">MV</string>
     <string name="draft_text">草稿箱</string>
     <string name="more_text">更多</string>
-    <string name="front_cover_text">设置封面</string>
+    <string name="front_cover_text">封面</string>
     <string name="share_btn_text">分享</string>
     <string name="video_play_text">视频播放</string>
     <string name="driving_share_text">行车分享</string>
+    <string name="share_video_upload_text">视频正在传输</string>
     <string name="share_live_text">分享网络直播</string>
     <string name="share_local_video_text">分享精彩视频</string>
     <string name="share_myvideo_text">分享我的直播</string>
@@ -32,6 +34,7 @@
     <string name="video_play_comment_send">发送</string>
     <string name="video_share_desc_title">添加描述</string>
     <string name="video_share_topic_text">#话题#</string>
+    <string name="video_export_text">视频生成中1%</string>
     <string name="keep_on_text">继续</string>
     <string name="wifi_link_1_text">请让小车本与Goluk连接</string>
     <string name="wifi_link_2_text">您第一次使用Goluk需要确认您的WiFi是否是开启状态,并设置WiFi连接.</string>
@@ -70,6 +73,7 @@
     <string name="local_video_title_text">选择视频</string>
     <string name="wifi_name_text">WiFi Name</string>
     <string name="wifi_link_text">未连接</string>
+    <string name="index_square">广场</string>
     <string name="square_title_text">视频广场</string>
     <string name="watch_live_text">轻触继续观看</string>
     <string name="video_live_5s_tip">稍候片刻,即将进入直播</string>
@@ -95,7 +99,6 @@
     <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
     <string name="bubble_username">龙王三太子</string>
     <string name="bubble_speed">50公里/小时</string>
-    <string name="bubble_count">2000</string>
     <string name="username_text">BG1TTR</string>
     <string name="like_num_text">56</string>
     <string name="speed_text">50公里/小时</string>
@@ -105,20 +108,24 @@
     <string name="cache_size_text">3.15M</string>
 
     <string-array name="video_share_class">
-        <item>分类1</item>
-        <item>分类2</item>
-        <item>分类3</item>
-        <item>分类4</item>
-        <item>分类5</item>
+        <item>碰瓷达人</item>
+        <item>奇葩演技</item>
+        <item>路上风景</item>
+        <item>随手拍</item>
+        <item>事故大爆炸</item>
+        <item>教辅预警</item>
+        <item>惊现十分</item>
+        <item>疯狂超车</item>
+        <item>感人瞬间</item>
+        <item>传递正能量</item>
     </string-array>
 
-    <!-- 行车记录仪 		START -->
-
-    <string name="delete_text">删除</string>
 	<string name="pwd_text">密码</string>
 	<string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
 	<string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
 	
+    <string name="bubble_count">2000</string>
+
     <!-- 行车记录仪 		START -->
 
     <string name="filemanager_title">文件浏览</string>
@@ -191,6 +198,12 @@
     <string name="user_personal_home_nologin_name">未登录</string>
 
     <!-- 直播界面 -->
+
+
+	<!-- 个人中心 -->
+
+	<string name="user_personal_autoloading_progress">正在为您登录，请稍候……</string>
+	
     <string name="live_title">网络直播</string>
     <string name="live_pause">暂停</string>
     <string name="live_exit">结束直播</string>
@@ -199,5 +212,12 @@
     <string name="live_login_prompt">登录后就可以和直播用户实时对讲了</string>
 
     <!-- 行车记录仪  	END -->
+    
+    
+    <!-- 视频广场 -->
+    <string name="release_to_refresh">松开刷新</string>
+    <string name="pull_to_refresh">下拉刷新</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="updating">最近更新：</string>
 
 </resources>

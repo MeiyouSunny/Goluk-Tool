@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
@@ -8,6 +11,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.utils.LogUtil;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -43,10 +47,11 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	private Button mAutoRecordBtn=null;
 	/** 声音录制开关按钮 */
 	private Button mAudioBtn=null;
-	
 	/**  音视频配置信息  */
 	private VideoConfigState mVideoConfigState=null;
-
+	private int enableSecurity=0;
+	private int snapInterval = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,7 +59,9 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 		initView();
 		setListener();
 		
-		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("settings", this);
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("settings", this);
+		}
 	}
 	
 	/**
@@ -65,13 +72,6 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	private void initView(){
 		mAutoRecordBtn = (Button)findViewById(R.id.zdxhlx);
 		mAudioBtn = (Button)findViewById(R.id.sylz);
-
-//		boolean ztts = SettingUtils.getInstance().getBoolean("ztts", true);//状态提示灯初始化
-//		if(ztts){
-//			findViewById(R.id.ztts).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
-//		}else{
-//			findViewById(R.id.ztts).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
-//		}
 	}
 	
 	/**
@@ -83,6 +83,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 		findViewById(R.id.back_btn).setOnClickListener(this);//返回按钮
 		findViewById(R.id.mVideoDefinition).setOnClickListener(this);//视频质量
 		findViewById(R.id.zdxhlx).setOnClickListener(this);//自动循环录像按钮
+		findViewById(R.id.tcaf).setOnClickListener(this);//停车安防按钮
 		findViewById(R.id.sylz).setOnClickListener(this);//声音录制
 		findViewById(R.id.ztts).setOnClickListener(this);//状态提示灯
 		findViewById(R.id.pzgylmd_line).setOnClickListener(this);//碰撞感应灵敏度
@@ -133,6 +134,15 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 						boolean b = GolukApplication.getInstance().getIPCControlManager().startRecord();
 						System.out.println("YYY===========startRecord=============b="+b);
 					}
+					break;
+				case R.id.tcaf://停车安防
+					if(1 == enableSecurity){
+						enableSecurity = 0;
+					}else{
+						enableSecurity = 1;
+					}
+					boolean c = GolukApplication.getInstance().getIPCControlManager().setMotionCfg(enableSecurity, snapInterval);
+					LogUtil.e("xuhw", "YYYYYY===========setMotionCfg==========a="+c);
 					break;
 				case R.id.sylz://声音录制
 					if(null != mVideoConfigState){
@@ -210,6 +220,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	@Override
 	protected void onResume() {
 		super.onResume();
+		GolukApplication.getInstance().setContext(this, "carrecordsettings");
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
 			if(1 == mVideoConfigState.AudioEnabled){
@@ -226,19 +237,37 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 		}else{
 			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 		}
+		
+		int[] motioncfg = GolukApplication.getInstance().getMotionCfg();
+		if(null != motioncfg){
+			if(2 == motioncfg.length){
+				enableSecurity = motioncfg[0];
+				snapInterval = motioncfg[1];
+			}
+			
+			if(1 == enableSecurity){
+				findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
+			}else{
+				findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
+			}
+		}
+		
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+		}
 	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----44444-----------event:" + event + " msg:" + msg+"==data:"+(String)param2);
+
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
 			if(msg == IPC_VDCP_Msg_GetRecordState){//获取IPC行车影像录制状态
-				System.out.print("YYY=========get=======param1="+param1+"=======param2="+param2);
 				if(RESULE_SUCESS == param1){
 					recordState = IpcDataParser.getAutoRecordState((String)param2);
 					if(!recordState){
@@ -251,23 +280,19 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_StartRecord){//设置IPC行车影像开始录制
-				System.out.print("YYY=========StartRecord=======param1="+param1+"=======param2="+param2);
 				if(RESULE_SUCESS == param1){
 					recordState=true;
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 				}
 			}else if(msg == IPC_VDCP_Msg_StopRecord){//设置IPC行车影像开始录制
-				System.out.print("YYY=========StopRecord======param1="+param1+"=======param2="+param2);
 				if(RESULE_SUCESS == param1){
 					recordState=false;
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){//获取IPC系统音视频编码配置
-				System.out.print("YYY=========get audio======param1="+param1+"=======param2="+param2);
 				if(RESULE_SUCESS == param1){
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
 					if(null != mVideoConfigState){
-						System.out.print("YYY==========get audio========111111111===========");
 						if(1 == mVideoConfigState.AudioEnabled){
 							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 						}else{
@@ -277,12 +302,42 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 						mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 					}
 				}else{
-					System.out.print("YYY==========get audio========2222====fail=======");
 					mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){//设置IPC系统音视频编码配置
 				if(RESULE_SUCESS == param1){
-					System.out.print("YYY==========set audio========111111===success======");
+					
+				}
+			}else if(msg == IPC_VDCP_Msg_GetMotionCfg){//读取安防模式和移动侦测参数
+				if(RESULE_SUCESS == param1){
+					try {
+						JSONObject json = new JSONObject((String)param2);
+						if(null != json){
+							enableSecurity = json.getInt("enableSecurity");
+							snapInterval = json.getInt("snapInterval");
+							if(1 == enableSecurity){
+								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
+							}else{
+								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
+							}
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}else if(msg == IPC_VDCP_Msg_SetMotionCfg){//设置安防模式和移动侦测参数
+				if(RESULE_SUCESS == param1){
+					if(1 == enableSecurity){
+						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
+					}else{
+						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
+					}
+				}else{
+					if(1 == enableSecurity){
+						enableSecurity = 0;
+					}else{
+						enableSecurity = 1;
+					}
 				}
 			}
 		}

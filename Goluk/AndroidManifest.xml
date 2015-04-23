@@ -31,7 +31,6 @@
 		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalSignActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalNameActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalHeadActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.IndexMoreNoLoginActivity" android:screenOrientation="portrait"/>
 		
 		<!-- 网络变化广播监听 -->
 		<receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver">
@@ -51,7 +50,6 @@
 		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.MainActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.IndexMoreActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.VideoSquareActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserCenterActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserSetupActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoListActivity" android:screenOrientation="portrait"/>
@@ -84,7 +82,8 @@
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.StorageCpacityQueryActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.WatermarkSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.TimeSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		
+		<activity android:name="cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Translucent.NoTitleBar" ></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Translucent.NoTitleBar" ></activity>
 		
 		  <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
         <activity

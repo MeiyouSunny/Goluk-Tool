@@ -1,200 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 视频分享 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/tab_bg" >
-	
-	<!-- 视频分享title -->
-	<RelativeLayout
-		android:id="@+id/title_layout"
-		android:layout_width="match_parent"
-		android:layout_height="42dp"
-		android:background="@color/bg">
-		
-		<Button
-			android:id="@+id/back_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10dp"
-			android:gravity="center|left"
-			android:drawableLeft="@drawable/icon_back_btn"
-			android:drawablePadding="8dp"
-			android:background="@color/bg"
-			android:textColor="@color/white"
-			android:textSize="16sp"
-			android:text="@string/back_text"/>
-		
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:textSize="18sp"
-			android:textColor="@color/white"
-			android:text="@string/share_text"/>
-		
-		<Button
-			android:id="@+id/next_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginRight="10dp"
-			android:gravity="center|right"
-			android:layout_alignParentRight="true"
-			android:drawablePadding="8dp"
-			android:background="@color/bg"
-			android:textColor="@color/white"
-			android:textSize="16sp"
-			android:text="@string/draft_text"/>
-	</RelativeLayout>
-	
-	<!-- 设置封面 -->
-	<RelativeLayout
-		android:id="@+id/front_cover_play_layout"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/title_layout">
-		
-		<ImageView
-			android:id="@+id/share_img"
-			android:layout_width="192dp"
-			android:layout_height="108dp"
-			android:layout_marginTop="48dp"
-			android:layout_centerHorizontal="true"
-			android:background="@drawable/screenshot"
-			android:contentDescription="@string/imgdes"/>
-		
-		<TextView
-			android:layout_width="192dp"
-			android:layout_height="30dp"
-			android:gravity="center"
-			android:layout_centerHorizontal="true"
-			android:layout_alignBottom="@id/share_img"
-			android:background="#cc000000"
-			android:textColor="#EEEEEE"
-			android:textSize="14sp"
-			android:text="@string/front_cover_text"/>
-	</RelativeLayout>
-	
-	<!-- 设置封面 -->
-	<RelativeLayout
-		android:id="@+id/share_type_layout"
-		android:layout_width="318dp"
-		android:layout_height="28dp"
-		android:layout_marginTop="38dp"
-		android:layout_centerHorizontal="true"
-		android:layout_below="@+id/front_cover_play_layout">
-		
-		<Spinner
-			android:id="@+id/spinner1"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@drawable/addclassify_bg"
-			android:entries="@array/video_share_class"/>
-		
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:background="@drawable/icon_addclassify"
-			android:layout_centerInParent="true"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="14dp"
-			android:contentDescription="@string/imgdes"/>
-	</RelativeLayout>
-	
-	<!-- 设置封面 -->
-	<RelativeLayout
-		android:id="@+id/share_desc_layout"
-		android:layout_width="318dp"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="38dp"
-		android:paddingBottom="10dp"
-		android:layout_centerHorizontal="true"
-		android:layout_below="@+id/share_type_layout"
-		android:background="@drawable/text_bg">
-		
-		<TextView
-			android:id="@+id/share_desc_title"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="5dp"
-			android:textColor="#5A5A5A"
-			android:textSize="16sp"
-			android:text="@string/video_share_desc_title"/>
-		
-		<EditText
-			android:id="@+id/share_desc"
-			android:layout_width="match_parent"
-			android:layout_height="30dp"
-			android:layout_alignLeft="@id/share_desc_title"
-			android:layout_below="@id/share_desc_title"
-			android:background="#FFFFFF"
-			android:textColor="#000000"
-			android:inputType="text" />
-		
-		<ImageButton
-			android:id="@+id/share_feel_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="10dp"
-			android:layout_alignLeft="@id/share_desc"
-			android:layout_below="@id/share_desc"
-			android:background="@drawable/icon_countenance_btn"
-			android:contentDescription="@string/imgdes"/>
-		
-		<ImageButton
-			android:id="@+id/share_location_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="10dp"
-			android:layout_marginLeft="10dp"
-			android:layout_below="@id/share_desc"
-			android:layout_toRightOf="@id/share_feel_btn"
-			android:background="@drawable/icon_position_btn"
-			android:contentDescription="@string/imgdes"/>
-		
-		<Button
-			android:id="@+id/share_topic_btn"
-			android:layout_width="54dp"
-			android:layout_height="24dp"
-			android:layout_marginTop="10dp"
-			android:layout_marginLeft="14dp"
-			android:paddingTop="3dp"
-			android:layout_below="@id/share_desc"
-			android:layout_toRightOf="@id/share_location_btn"
-			android:background="@drawable/subject_bg"
-			android:text="@string/video_share_topic_text"
-			android:textSize="14sp"
-			android:textColor="#373737"
-			android:contentDescription="@string/imgdes"/>
-	</RelativeLayout>
-	
-	<!-- 分享按钮 -->
-	<RelativeLayout
-		android:id="@+id/share_layout"
-		android:layout_width="match_parent"
-		android:layout_height="72dp"
-		android:layout_alignParentBottom="true"
-		android:background="@drawable/video_ym_share_btn"
-		android:clickable="true">
-		
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingLeft="22dp"
-			android:layout_centerInParent="true"
-			android:drawableRight="@drawable/icon_share"
-			android:drawablePadding="10dp"
-			android:text="@string/share_btn_text"
-			android:textColor="@color/white"
-			android:textSize="16sp"/>
-	</RelativeLayout>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/share_bg" >
+
+    <!-- 视频分享title -->
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@color/bg" >
+
+        <Button
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@color/bg"
+            android:drawableLeft="@drawable/icon_back_btn"
+            android:drawablePadding="8dp"
+            android:gravity="center|left"
+            android:text="@string/back_text"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/share_text"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <!-- 设置封面 -->
+
+    <RelativeLayout
+        android:id="@+id/front_cover_play_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_layout" >
+
+        <ImageView
+            android:id="@+id/share_img"
+            android:layout_width="192dp"
+            android:layout_height="108dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/screenshot"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:layout_width="192dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@id/share_img"
+            android:layout_centerHorizontal="true"
+            android:background="#cc000000"
+            android:gravity="center"
+            android:text="@string/front_cover_text"
+            android:textColor="#EEEEEE"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <!-- 设置封面 -->
+
+    <RelativeLayout
+        android:id="@+id/share_type_layout"
+        android:layout_width="318dp"
+        android:layout_height="28dp"
+        android:layout_below="@+id/front_cover_play_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="38dp" >
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/addclassify_bg"
+            android:entries="@array/video_share_class" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/icon_addclassify"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+
+    <!-- 设置封面 -->
+
+    <RelativeLayout
+        android:id="@+id/share_desc_layout"
+        android:layout_width="318dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/share_type_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="38dp"
+        android:background="@drawable/text_bg"
+        android:paddingBottom="10dp" >
+
+        <EditText
+            android:id="@+id/share_desc"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FFFFFF"
+            android:hint="@string/video_share_desc_title"
+            android:inputType="text"
+            android:maxLines="3"
+            android:textColor="#000000" />
+    </RelativeLayout>
+
+    <!-- 分享按钮 -->
+
+    <RelativeLayout
+        android:id="@+id/share_layout"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/share_btn_disenable_bg"
+        android:clickable="false" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/icon_share"
+            android:paddingLeft="22dp"
+            android:text="@string/share_btn_text"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/share_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/share_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/share_select_btn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="同时分享到视频广场"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+    </LinearLayout>
+
 </RelativeLayout>
-
-
-
-
-
-
-
-
-
