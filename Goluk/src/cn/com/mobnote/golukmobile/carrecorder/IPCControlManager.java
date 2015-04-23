@@ -2,19 +2,15 @@ package cn.com.mobnote.golukmobile.carrecorder;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.tiros.utils.LogUtil;
 
 
  /**
@@ -136,8 +132,6 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean queryFileListInfo(int filetype, int limitCount, int timestart) {
 		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, 2147483647);
-		GFileUtils.writeIPCLog("===========获取文件列表===1111=====================queryParam=" + queryParam);
-
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
 				queryParam);
 	}
@@ -295,7 +289,6 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean setVideoEncodeCfg(VideoConfigState mVideoConfigState){
 		String json = JsonUtil.getVideoConfig(mVideoConfigState);
-		LogUtils.d("YYY===getVideoConfig===json="+json);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
 	}
 	
@@ -384,7 +377,6 @@ public class IPCControlManager implements IPCManagerFn{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		//"{\"policy\":1}");
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetGSensorControlCfg, json.toString());
 	}
 	

@@ -118,7 +118,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		setContentView(R.layout.carrecorder_videolist);
 		mCustomProgressDialog = new CustomProgressDialog(this);
 		// 注册回调监听
-		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager",this);
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager",this);
+		}
 				
 		initView();
 		setListener();

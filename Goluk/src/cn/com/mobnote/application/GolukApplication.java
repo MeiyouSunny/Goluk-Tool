@@ -3,6 +3,7 @@ package cn.com.mobnote.application;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.json.JSONException;
@@ -19,10 +20,8 @@ import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-
 import android.util.Log;
 import cn.com.mobnote.golukmobile.GuideActivity;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,14 +42,13 @@ import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
-
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
-
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
+import cn.com.mobnote.golukmobile.carrecorder.entity.ExternalEventsDataInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
@@ -79,7 +77,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -755,10 +752,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						//获取停车安防配置信息
 						updateMotionCfg();
 						//自动同步系统时间
-						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
-							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
-							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
-						}
+//						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
+//							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
+//							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
+//						}
 						console.log("IPC_TTTTTT=================Login Success===============");
 						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
 						//改变首页链接状态
@@ -842,6 +839,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						updateMotionCfg();
 					}
 					break;
+				case IPC_VDCP_Msg_IPCKit:
+					if(param1 == RESULE_SUCESS){
+						List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String)param2);
+						if(kit.size() > 0){
+							
+							
+							
+							
+						}
+					}
+					break;
+				
 			}
 		}
 		
