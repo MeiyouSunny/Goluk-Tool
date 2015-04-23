@@ -403,6 +403,7 @@ public class IpcDataParser {
 						info.location = obj.optString("location");
 						info.withSnapshot = obj.optInt("withSnapshot");
 						info.withGps = obj.optInt("withGps");
+						dataList.add(info);
 					}
 				}
 			}

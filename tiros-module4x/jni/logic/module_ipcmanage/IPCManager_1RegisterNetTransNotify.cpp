@@ -18,9 +18,9 @@ void CallBack_ipcManager(void* pvUser, Net_Trans_Event event ,int msg , unsigned
 	jclass cls =g_env->FindClass("cn/com/mobnote/module/ipcmanager/IPCManagerAdapter");
 	jmethodID mId_CallBack = g_env->GetStaticMethodID(cls,"IPCManage_CallBack","(IIILjava/lang/Object;)V");
 	
-	if(0 == msg){
-		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,0,0);
-	}else{
+	//if(0 == msg){
+	//	g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,0,0);
+	//}else{
 		jstring data = 0;
 		if(0 != param2){
 			data = (g_env)->NewStringUTF((char *)param2);
@@ -29,7 +29,7 @@ void CallBack_ipcManager(void* pvUser, Net_Trans_Event event ,int msg , unsigned
 		dbgprintf("IPCManager-----JNI------CallBack_ipcManager----22222");
 	
 		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,(jint)param1,data);
-	}	
+	//}	
 	
 	
 	dbgprintf("IPCManager-----JNI------CallBack_ipcManager----33333");
