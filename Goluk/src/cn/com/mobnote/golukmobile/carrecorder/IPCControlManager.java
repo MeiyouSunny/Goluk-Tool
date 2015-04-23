@@ -2,8 +2,10 @@ package cn.com.mobnote.golukmobile.carrecorder;
 
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
@@ -11,6 +13,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.tiros.utils.LogUtil;
 
 
  /**
@@ -65,6 +68,7 @@ public class IPCControlManager implements IPCManagerFn{
 	public boolean setIPCWifiState(boolean isConnect){
 		int state = isConnect ? 1 : 0;
 		String ip = "192.168.43.234";
+//		String ip = "192.168.43.112";
 		String json = JsonUtil.getWifiChangeJson(state, ip);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
 	}
@@ -501,7 +505,7 @@ public class IPCControlManager implements IPCManagerFn{
 	
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-//		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----222222222---------IPCManagerAdapter-22---event:" + event + " msg:" + msg+"==data:"+(String)param2);
+//		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----222222222---------IPCManagerAdapter-22---event:" + event + " msg:" + msg+"==param1="+param1+"==data:"+(String)param2);
 
 		Iterator<String> iter = mIpcManagerListener.keySet().iterator();
 		while (iter.hasNext()) {

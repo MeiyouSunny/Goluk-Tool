@@ -840,13 +840,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					}
 					break;
 				case IPC_VDCP_Msg_IPCKit:
+					LogUtil.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="+param1+"===param2="+param2);
 					if(param1 == RESULE_SUCESS){
 						List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String)param2);
 						if(kit.size() > 0){
-							
-							
-							
-							
+							for(int i=0; i<kit.size(); i++){
+								ExternalEventsDataInfo info = kit.get(i);
+								boolean flag = GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
+								LogUtil.e("xuhw", "YYYYYY=====querySingleFile=====type="+info.type+"==flag="+flag);
+							}
 						}
 					}
 					break;
