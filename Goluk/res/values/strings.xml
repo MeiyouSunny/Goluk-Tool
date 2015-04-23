@@ -181,6 +181,12 @@
     <string name="user_personal_home_nologin_name">未登录</string>
 
     <!-- 直播界面 -->
+
+
+	<!-- 个人中心 -->
+
+	<string name="user_personal_autoloading_progress">正在为您登录，请稍候……</string>
+	
     <string name="live_title">网络直播</string>
     <string name="live_pause">暂停</string>
     <string name="live_exit">结束直播</string>

@@ -19,6 +19,10 @@ import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
+
+import android.util.Log;
+import cn.com.mobnote.golukmobile.GuideActivity;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,10 +40,13 @@ import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
-import cn.com.mobnote.golukmobile.UserManager;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
+
+import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.mobnote.golukmobile.VideoEditActivity;
+
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
@@ -56,6 +63,9 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.user.User;
+import cn.com.mobnote.user.UserLoginManage;
+import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
@@ -123,8 +133,23 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public RelativeLayout mVideoUploadLayout = null;
 	private TextView tv = null;
 	
-	/**登陆管理类**/
-	public UserManager userManager;
+	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时**/
+	public int loginStatus ;
+	/**注册的三个状态  0注册中  1注册成功  2 注册失败**/
+	public int registStatus;
+	/**自动登录的四个状态   1自动登录中  2自动登录成功  3自动登录失败  4自动登录超时  5密码错误**/
+	public int autoLoginStatus;
+	/**注销状态**/
+	public boolean loginoutStatus = false;
+	/**获取验证码的四个状态  0 获取中  1获取成功  2获取失败   3手机号未注册**/
+	public int identifyStatus;
+	
+	/**User管理类**/
+	public User mUser = null;
+	/**登录管理类**/
+	public UserLoginManage mLoginManage = null;
+	/**注册管理类**/
+	public UserRegistManage mRegistManage = null;
 	
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String,ILocationFn>();
 	
@@ -142,8 +167,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		initCachePath();
 //		createWifi();
 		//实例化JIN接口,请求网络数据
+		
+		/**
+		 *自动登录、登录、注册、重置密码、注销的管理类 
+		 */
+		mUser = new User(this);
+		mLoginManage = new UserLoginManage(this);
+		mRegistManage = new UserRegistManage(this);
 		initImageLoader(getApplicationContext());
-
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -536,26 +567,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 			break;
 			//登陆
-			case 11:
-				parseLoginData(success, param2);
+
+			case PageType_Login:
+
 				if(null != mMainActivity){
 					//地图大头针图片
 					console.log("pageNotifyCallBack---登录---" + String.valueOf(param2));
 					mMainActivity.loginCallBack(success,param2);
 				}
-				if(mPageSource == "UserLogin"){
-					((UserLoginActivity)mContext).loginCallBack(success, param2);
+				//登录
+				if(mPageSource !="UserRegist"){
+					mLoginManage.loginCallBack(success,param1, param2);
+				}
+				
+				if(mPageSource == "UserRegist"){
+					((UserRegistActivity)mContext).registLoginCallBack(success, param2);
 				}
 			break;
 			//自动登录
-			case 12:
-				parseLoginData(success, param2);
-				if(mPageSource == "Main"){
-					((MainActivity)mContext).autoLoginCallback(success, param2);
-				}
+
+			case PageType_AutoLogin:
+				
+				mUser.initAutoLoginCallback(success,param1, param2);
+
 				break;
 			//验证码PageType_GetVCode
-			case 15:
+			case PageType_GetVCode:
 				//注册获取验证码
 				if(mPageSource == "UserRegist"){
 					((UserRegistActivity)mContext).identifyCallback(success, param2);
@@ -566,13 +603,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 			//注册PageType_Register
-			case 16:
+			case PageType_Register:
 				if(mPageSource == "UserRegist"){
-					((UserRegistActivity)mContext).registCallback(success, param2);
+					((UserRegistActivity)mContext).registCallback(success,param1, param2);
 				}
 				break;
 			//重置密码PageType_ModifyPwd
-			case 17:
+			case PageType_ModifyPwd:
 				if(mPageSource == "UserRepwd"){
 					((UserRepwdActivity)mContext).repwdCallBack(success,param2);
 				}
@@ -605,6 +642,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 			
+			//注销
+			case PageType_SignOut:
+				Log.i("loginout", "======application======");
+				if(mPageSource == "UserSetup"){
+					((UserSetupActivity)mContext).getLogintoutCallback(success, param2);
+				}
+				break;
 		}
 	}
 
