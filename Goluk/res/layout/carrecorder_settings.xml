@@ -145,7 +145,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
-                android:text="停车安防"
+                android:text="开启安防模式后，当检测到车辆静止时进入一秒一拍模式;当检测到车辆运动时自动录制循环影像。"
                 android:textColor="#999999"
                 android:textSize="12sp" />
             
