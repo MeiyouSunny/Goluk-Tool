@@ -111,7 +111,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	@Override
 	protected void onResume(){
 		super.onResume();
-		Log.i("hhh", "------onResume------");
 		mPreferences= getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 		
@@ -123,6 +122,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		
 		//页面初始化
 		init();
+		
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 				if(isHasInfo && mApp.loginoutStatus == false){
 					Log.i("userinterface", "----------------");
 					mApp.mUser.setUserInterface(this);
-					if(mApp.autoLoginStatus == 1){
+					if(mApp.autoLoginStatus == 1 ||mApp.autoLoginStatus == 4){
 						mBuilder = new AlertDialog.Builder(mContext);
 						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
 						.setCancelable(false)
@@ -242,15 +242,17 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 						startActivity(intent);
 					}
 				}else{
+					Log.i("lily", "-------自动登录失败,跳转登录页------"+mApp.autoLoginStatus);
 					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
 					//登录页回调判断
 					itNo.putExtra("isInfo", "back");
 					// 判断是否为自动登录失败或超时请求的登录功能
-					if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
+					/*if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
 						mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 						String phone = mPreferences.getString("setupPhone", "");
+						Log.i("lily", "---自动登录-----phone---"+phone);
 						itNo.putExtra("autoPhone", phone);
-					}
+					}*/
 					startActivity(itNo);
 					isHasInfo = true;
 //					finish();
