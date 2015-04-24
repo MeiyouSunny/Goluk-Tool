@@ -511,8 +511,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					String password = mEditTextPwd.getText().toString();
 					if(password.length()>=6 && password.length()<=16){
 						console.toast("重置密码成功", mContext);
-						Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
-						startActivity(it);
+						/*Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
+						it.putExtra("isInfo", "main");
+						startActivity(it);*/
 						finish();
 					}else{
 						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");

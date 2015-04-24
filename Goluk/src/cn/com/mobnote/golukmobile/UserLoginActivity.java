@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
@@ -100,9 +101,9 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mTextViewRegist = (TextView) findViewById(R.id.user_login_phoneRegist);
 		mTextViewForgetPwd = (TextView) findViewById(R.id.user_login_forgetpwd);
 		// 第三方登录
-		mImageViewWeichat = (ImageView) findViewById(R.id.user_login_weichat);
-		mImageViewSina = (ImageView) findViewById(R.id.user_login_sina);
-		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
+//		mImageViewWeichat = (ImageView) findViewById(R.id.user_login_weichat);
+//		mImageViewSina = (ImageView) findViewById(R.id.user_login_sina);
+//		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
 		// loading组件
 		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
 //		mLoading = (RelativeLayout) findViewById(R.id.index_loading_layout);
@@ -110,6 +111,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		Intent itentGetRegist = getIntent();
 		if(null !=  itentGetRegist.getStringExtra("intentRegist")){
 			String phoneNumber = itentGetRegist.getStringExtra("intentRegist").toString();
+			Log.i("lily", "----------intentRegist--------phoneNumber =   "+phoneNumber);
 			mEditTextPhoneNumber.setText(phoneNumber);
 		}
 		
@@ -246,10 +248,10 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		// 快速注册
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
-		// 第三方登录
-		mImageViewWeichat.setOnClickListener(this);
-		mImageViewSina.setOnClickListener(this);
-		mImageViewQQ.setOnClickListener(this);
+//		// 第三方登录
+//		mImageViewWeichat.setOnClickListener(this);
+//		mImageViewSina.setOnClickListener(this);
+//		mImageViewQQ.setOnClickListener(this);
 		
 	}
 
@@ -275,18 +277,18 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			Intent itForget = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
 			startActivity(itForget);
 			break;
-		// 第三方——微信
-		case R.id.user_login_weichat:
-
-			break;
-		// 第三方——新浪
-		case R.id.user_login_sina:
-			
-			break;
-		// 第三方——QQ
-		case R.id.user_login_qq:
-			
-			break;
+//		// 第三方——微信
+//		case R.id.user_login_weichat:
+//
+//			break;
+//		// 第三方——新浪
+//		case R.id.user_login_sina:
+//			
+//			break;
+//		// 第三方——QQ
+//		case R.id.user_login_qq:
+//			
+//			break;
 		}
 	}
 	@Override

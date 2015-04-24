@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.live;
 
+import cn.com.mobnote.application.GolukApplication;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -120,9 +121,8 @@ public class LiveDialogManager {
 			}
 		});
 		mLoginDialog.show();
-
+		
 	}
-
 	// 销毁登录对话框
 	public void dimissLoginExitDialog() {
 		if (null != mLoginDialog) {

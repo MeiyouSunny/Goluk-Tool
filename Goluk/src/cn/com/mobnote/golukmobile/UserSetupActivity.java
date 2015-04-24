@@ -5,10 +5,12 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +25,7 @@ import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 /**
@@ -46,7 +49,7 @@ import cn.com.mobnote.util.console;
  * 
  */
 
-public class UserSetupActivity extends Activity implements OnClickListener {
+public class UserSetupActivity extends Activity implements OnClickListener,UserInterface {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -130,6 +133,8 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		};
 	}
 	
+	private Builder mBuilder = null;
+	private AlertDialog dialog = null;
 	
 	@Override
 	public void onClick(View v) {
@@ -147,6 +152,24 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		//退出按钮
 			case R.id.loginout_btn:
 				if(btnLoginout.getText().toString().equals("登录")){
+					mApp.mUser.setUserInterface(this);
+					if(mApp.autoLoginStatus == 1){
+						mBuilder = new AlertDialog.Builder(mContext);
+						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
+						.setCancelable(false)
+						.setOnKeyListener(new OnKeyListener() {
+							@Override
+							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+								// TODO Auto-generated method stub
+								if(keyCode == KeyEvent.KEYCODE_BACK){
+									return true;
+								}
+								return false;
+							}
+						}).create();
+						dialog	.show();
+						return ;
+					}
 					initIntent(UserLoginActivity.class);
 				}else if(btnLoginout.getText().toString().equals("退出")){
 					new AlertDialog.Builder(mContext)
@@ -246,5 +269,26 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 			this.finish();
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	/**
+	 * 取消正在自动登录的对话框
+	 */
+	public void dismissAutoDialog(){
+		if (null != dialog){
+			dialog.dismiss();
+			dialog = null;
+		}
+	}
+	
+	@Override
+	public void statusChange() {
+		// TODO Auto-generated method stub
+		if(mApp.autoLoginStatus !=1){
+			dismissAutoDialog();
+			if(mApp.autoLoginStatus == 2){
+				btnLoginout.setText("退出");
+			}
+		}
 	}
 }
