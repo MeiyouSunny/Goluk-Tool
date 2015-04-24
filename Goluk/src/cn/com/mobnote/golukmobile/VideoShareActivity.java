@@ -760,7 +760,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		// 为了保证与服务器协议兼容，需要加1
 		position++;
 
-		String type = createType("1");
+		String type = createType("" + position);
 
 		LogUtil.e("", "spinner select :" + position + " type:" + type);
 

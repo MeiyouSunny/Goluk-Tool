@@ -1,8 +1,10 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.json.JSONException;
@@ -19,10 +21,9 @@ import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-
+import android.text.TextUtils;
 import android.util.Log;
 import cn.com.mobnote.golukmobile.GuideActivity;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,14 +44,13 @@ import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
-
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
-
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
+import cn.com.mobnote.golukmobile.carrecorder.entity.ExternalEventsDataInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
@@ -79,7 +79,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -152,6 +151,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public UserRegistManage mRegistManage = null;
 	
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String,ILocationFn>();
+	/** 未下载文件列表 */
+	private List<String> mNoDownLoadFileList;
+	/** 所有下载文件列表 */
+	private List<String> mDownLoadFileList;
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -201,6 +204,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Location, this);
 		GlobalWindow.getInstance().setApplication(this);
 		motioncfg = new int[2];
+		mDownLoadFileList = new ArrayList<String>();
+		mNoDownLoadFileList = new ArrayList<String>();
 	}
 	
 	/**
@@ -472,6 +477,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				//调用下载视频接口
 				mIPCControlManager.downloadFile(fileName,"videodownload",savePath);
+				if(!mDownLoadFileList.contains(fileName)){
+					mDownLoadFileList.add(fileName);
+				}
+				if(!GlobalWindow.getInstance().isShow()){
+					LogUtil.e("xuhw", "YYYYYY======1111111111=========");
+					GlobalWindow.getInstance().createVideoUploadWindow("正在从Goluk中传输视频到手机" +mNoDownLoadFileList.size()+ "/"+mDownLoadFileList.size());
+				}else{
+					LogUtil.e("xuhw", "YYYYYY======22222=========");
+					GlobalWindow.getInstance().updateText("正在从Goluk中传输视频到手机" +mNoDownLoadFileList.size()+ "/"+mDownLoadFileList.size());
+				}
 			}
 			catch(Exception e){
 				console.log("解析视频下载JSON数据错误");
@@ -487,10 +502,37 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @author chenxy
 	 */
 	public void ipcVideoDownLoadCallBack(int success,String data){
+		
+		if(TextUtils.isEmpty(data)){
+			return;
+		}
+		
 		if(1 == success){
 			//下载中
-		}
-		else if(0 == success){
+			int percent = 0;
+			try {
+				JSONObject json = new JSONObject(data);
+				String filename = json.optString("filename");
+				String tag = json.optString("tag");
+				long filesize = json.optLong("filesize");
+				long filerecvsize = json.optLong("filerecvsize");
+				percent = (int)((filerecvsize*100)/filesize);
+				LogUtil.e("xuhw", "YYYYYY==filename="+filename+"==percent="+percent);
+				if(tag.equals("videodownload")){
+					if(!mNoDownLoadFileList.contains(filename)){
+						mNoDownLoadFileList.add(filename);
+					}
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			if(GlobalWindow.getInstance().isShow()){
+				GlobalWindow.getInstance().refreshPercent(percent);
+				GlobalWindow.getInstance().updateText("正在从Goluk中传输视频到手机" +mNoDownLoadFileList.size()+ "/"+mDownLoadFileList.size());
+			}
+			
+		}else if(0 == success){
 			//下载完成
 			if(null != mMainActivity){
 				//{"filename":"WND1_150402183837_0012.mp4", "tag":"videodownload"}
@@ -498,7 +540,44 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
 				mMainActivity.videoAnalyzeComplete(data);
 			}
+			
+			if(checkDownloadCompleteState()){
+				mDownLoadFileList.clear();
+				mNoDownLoadFileList.clear();
+				GlobalWindow.getInstance().topWindowSucess("视频传输完成");
+			}
+		}else{
+			if(checkDownloadCompleteState()){
+				mDownLoadFileList.clear();
+				mNoDownLoadFileList.clear();
+				GlobalWindow.getInstance().toFailed("视频传输失败");
+			}
 		}
+	}
+	
+	/**
+	 * 检查下载是否完成
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月23日
+	 */
+	private boolean checkDownloadCompleteState(){
+		boolean result=true;
+		if(mDownLoadFileList.size() == mNoDownLoadFileList.size()){
+			for(int i=0; i<mDownLoadFileList.size(); i++){
+				String name = mDownLoadFileList.get(i);
+				if(mNoDownLoadFileList.contains(name)){
+					continue;
+				}else{
+					result=false;
+					break;
+				}
+			}
+		}else{
+			result=false;
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -755,10 +834,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						//获取停车安防配置信息
 						updateMotionCfg();
 						//自动同步系统时间
-						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
-							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
-							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
-						}
+//						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
+//							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
+//							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
+//						}
 						console.log("IPC_TTTTTT=================Login Success===============");
 						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
 						//改变首页链接状态
@@ -842,6 +921,24 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						updateMotionCfg();
 					}
 					break;
+				case IPC_VDCP_Msg_IPCKit:
+					LogUtil.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="+param1+"===param2="+param2);
+					if(param1 == RESULE_SUCESS){
+						List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String)param2);
+						if(kit.size() > 0){
+							for(int i=0; i<kit.size(); i++){
+								ExternalEventsDataInfo info = kit.get(i);
+								if(!mDownLoadFileList.contains(info.location)){
+									mDownLoadFileList.add(info.location);
+									
+									boolean flag = GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
+									LogUtil.e("xuhw", "YYYYYY=====querySingleFile=====type="+info.type+"==flag="+flag);
+								}
+							}
+						}
+					}
+					break;
+				
 			}
 		}
 		

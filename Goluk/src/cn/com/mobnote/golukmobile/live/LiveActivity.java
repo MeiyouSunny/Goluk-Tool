@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile.live;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,14 +39,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity.VideoType;
-import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
-import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
-import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
@@ -57,6 +52,7 @@ import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
+import cn.com.mobnote.golukmobile.videosuqare.JsonCreateUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -64,6 +60,7 @@ import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
@@ -249,12 +246,17 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		setViewInitData();
 		// 地图初始化
 		initMap();
+		// 获取我的登录信息
+		getMyInfo();
 		// 开始预览或开始直播
 		if (isShareLive) {
 			mLoginLayout.setVisibility(View.GONE);
 			mCurrentVideoId = getVideoId();
 			startVideoAndLive("");
 			mTitleTv.setText("我的直播");
+			if (null != mRefirshBtn) {
+				mRefirshBtn.setVisibility(View.GONE);
+			}
 		} else {
 			if (null != currentUserInfo) {
 				mLiveCountSecond = currentUserInfo.liveDuration;
@@ -268,7 +270,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			}
 		}
 
-		getMyInfo();
 		// testDraw();
 		drawPersonsHead();
 
@@ -280,7 +281,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		if (isShareLive) {
 			// 显示设置窗口
-			mLiveVideoHandler.sendEmptyMessageDelayed(100, 800);
+			mLiveVideoHandler.sendEmptyMessageDelayed(100, 600);
 
 			updateCount(0, 0);
 
@@ -366,6 +367,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	private String getVideoId() {
+		if (null != myInfo) {
+			return myInfo.uid;
+		}
 		Date dt = new Date();
 		long time = dt.getTime();
 
@@ -1041,6 +1045,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		// liveData.active = 1;
 
+		this.isKaiGeSucess = true;
+
 		if (1 == liveData.active) {
 			LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : ");
 			// 主动直播
@@ -1158,19 +1164,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		switch (id) {
 		case R.id.live_back_btn:
 			// 返回
-			exit();
-
-			// testUpdatePosition();
-
+			preExit();
 			break;
 		case R.id.live_refirsh_btn:
-			// 刷新,请求视频直播数据
-			// getVideoLiveData();
-
-			// showToast("显示更多菜单");
-
 			showDialog();
-
 			break;
 		case R.id.live_play_layout:
 			// 继续观看
@@ -1184,10 +1181,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			if (null != mLiveManager) {
 				mLiveManager.timerResume();
 			}
-
 			break;
 		case R.id.live_ok:
-
 			click_OK();
 			break;
 		case R.id.live_pause:
@@ -1217,6 +1212,44 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * 点赞
+	 * 
+	 * @param channel
+	 *            分享渠道：1.视频广场 2.微信 3.微博 4.QQ
+	 * @param videoid
+	 *            视频id
+	 * @param type
+	 *            点赞类型：0.取消点赞 1.点赞
+	 * @return true:命令发送成功 false:失败
+	 * @author xuhw
+	 * @date 2015年4月17日
+	 */
+	public boolean clickPraise(String channel, String videoid, String type) {
+		String json = JsonCreateUtils.getClickPraiseRequestJson(channel, videoid, type);
+		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VideoSuqareManagerFn.SquareCmd_Req_Praise, json);
+	}
+
+	/**
+	 * 举报
+	 * 
+	 * @param channel
+	 *            分享渠道：1.视频广场 2.微信 3.微博 4.QQ
+	 * @param videoid
+	 *            视频id
+	 * @param reporttype
+	 *            举报类型：1.色情低俗 2.谣言惑众 3.政治敏感 4.其他原因
+	 * @return true:命令发送成功 false:失败
+	 * @author xuhw
+	 * @date 2015年4月17日
+	 */
+	public boolean report(String channel, String videoid, String reporttype) {
+		String json = JsonCreateUtils.getReportRequestJson(channel, videoid, reporttype);
+		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VideoSuqareManagerFn.SquareCmd_Req_ReportUp, json);
 	}
 
 	private AlertDialog dialog = null;
@@ -1292,15 +1325,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			@Override
 			public void onClick(View v) {
 
+				boolean isSucess = report("1", getCurrentVideoId(), reporttype);
+
 				// 开启请求服务器举报
 
 				// boolean flog =
 				// GolukApplication.getInstance().getVideoSquareManager().report("1",
 				// mVideoSquareInfo.mVideoEntity.videoid, reporttype);
-				// if(flog){
-				// Toast.makeText(mcontext,
-				// "举报成功，我们稍后会进行处理",Toast.LENGTH_SHORT).show();
-				// }
+				if (isSucess) {
+					showToast("举报成功,我们稍后会进行处理");
+				} else {
+					showToast("举报失败!");
+				}
 				confirmation.dismiss();
 
 			}
@@ -1324,7 +1360,20 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		showToast("去登录界面");
 	}
 
+	private String getCurrentVideoId() {
+		if (isShareLive) {
+			return mCurrentVideoId;
+		}
+		if (null != liveData) {
+			return liveData.vid;
+		}
+		return "";
+	}
+
 	private void click_OK() {
+		if (!this.isKaiGeSucess) {
+			return;
+		}
 		if (isAlreadClickOK) {
 			showToast("不能重复点赞");
 			return;
@@ -1336,12 +1385,17 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (null != mZancountTv) {
 			mZancountTv.setText("" + mCurrentOKCount);
 		}
+		// String tempVideoId = this.isShareLive ? this.mCurrentVideoId :
+		// mCurrentVideoId;
+		boolean isSucess = clickPraise("1", getCurrentVideoId(), "1");
 
-		final String uid = isShareLive ? myInfo.uid : currentUserInfo.uid;
-		final String okJson = JsonUtil.getLiveOKJson(uid);
-		LogUtil.e(null, "jyf----20150406----LiveActivity----click_OK----okJson : " + okJson);
-		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_LiveLike, okJson);
+		// final String uid = isShareLive ? myInfo.uid : currentUserInfo.uid;
+		// final String okJson = JsonUtil.getLiveOKJson(uid);
+		// LogUtil.e(null,
+		// "jyf----20150406----LiveActivity----click_OK----okJson : " + okJson);
+		// boolean isSucess =
+		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+		// IPageNotifyFn.PageType_LiveLike, okJson);
 
 		LogUtil.e(null, "jyf----20150406----LiveActivity----click_OK----isSucess : " + isSucess);
 	}
@@ -1727,10 +1781,17 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		resetTrimVideoState();
 	}
 
+	private void preExit() {
+		String message = this.isShareLive ? "您当前正在直播中，是否退出直播？" : "是否退出观看直播?";
+		LiveDialogManager.getManagerInstance()
+				.showLiveBackDialog(this, LiveDialogManager.DIALOG_TYPE_LIVEBACK, message);
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (KeyEvent.KEYCODE_BACK == keyCode) {
-			this.exit();
+			preExit();
+			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -2255,7 +2316,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	private void test1() {
-		startLiveForServer();
+		// startLiveForServer();
 	}
 
 	/**
@@ -2346,6 +2407,12 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		switch (dialogType) {
 		case LiveDialogManager.DIALOG_TYPE_EXIT_LIVE:
+			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
+				// 按了退出按钮
+				this.exit();
+			}
+			break;
+		case LiveDialogManager.DIALOG_TYPE_LIVEBACK:
 			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
 				// 按了退出按钮
 				this.exit();
