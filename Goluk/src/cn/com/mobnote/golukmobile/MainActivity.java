@@ -1080,8 +1080,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 		
 		// 跳转看他人界面
-		
-		// 开启直播
 		Intent intent = new Intent(this, LiveActivity.class);
 		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
 		intent.putExtra(LiveActivity.KEY_GROUPID, "");
@@ -1090,67 +1088,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
 
 		startActivity(intent);
-		
 		LogUtil.e(null, "jyf----20150406----MainActivity----startLiveLook");
-		
-	}
-
-	private void startLiveFailed() {
-		// TODO 开启直接失败
-	}
-
-	private void startLiveLookFailed() {
-		// TODO 开启直接失败
 	}
 	
-	public void callBack_LiveLookStart(boolean isLive, int success, Object param1,Object param2) {
-		if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
-			liveFailedStart(isLive);
-			return;
-		}
-		final String data = (String) param2;
-		// 解析回调数据
-		LiveDataInfo dataInfo = JsonUtil.parseLiveDataJson(data);
-		if (null == dataInfo) {
-			liveFailedStart(isLive);
-			return;
-		}
-
-		if (200 != dataInfo.code || null == dataInfo.groupId || "".equals(dataInfo.groupId)) {
-			liveFailedStart(isLive);
-			return;
-		}
-		final String joniGroup = JsonUtil.getJoinGroup(dataInfo.groupType, dataInfo.membercount, dataInfo.title,
-				dataInfo.groupId, dataInfo.groupnumber);
-
-		UserInfo currentUserInfo = null;
-		if (!isLive) {
-			currentUserInfo = mBaiduMapManage.getCurrentUserInfo();
-		}
-
-		// 开启直播
-		Intent intent = new Intent(this, LiveActivity.class);
-		intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
-		intent.putExtra(LiveActivity.KEY_GROUPID, dataInfo.groupId);
-		if (null != dataInfo.playUrl) {
-			intent.putExtra(LiveActivity.KEY_PLAY_URL, dataInfo.playUrl);
-		}
-		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, joniGroup);
-		
-		intent.putExtra(LiveActivity.KEY_LIVE_DATA, dataInfo);
-		intent.putExtra(LiveActivity.KEY_USERINFO, currentUserInfo);
-
-		startActivity(intent);
-	}
-	
-	private void liveFailedStart(boolean isLive) {
-		if (isLive) {
-			startLiveFailed();
-		} else {
-			startLiveLookFailed();
-		}
-	}
-
 	/**
 	 * 定位SDK监听函数
 	 */
