@@ -512,6 +512,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 					if(password.length()>=6 && password.length()<=16){
 						console.toast("重置密码成功", mContext);
 						Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
+						it.putExtra("isInfo", "main");
 						startActivity(it);
 						finish();
 					}else{

@@ -246,13 +246,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
 					//登录页回调判断
 					itNo.putExtra("isInfo", "back");
-					// 判断是否为自动登录失败或超时请求的登录功能
-					/*if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
-						mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-						String phone = mPreferences.getString("setupPhone", "");
-						Log.i("lily", "---自动登录-----phone---"+phone);
-						itNo.putExtra("autoPhone", phone);
-					}*/
 					startActivity(itNo);
 					isHasInfo = true;
 //					finish();

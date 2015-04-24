@@ -75,13 +75,14 @@ public class UserStartActivity extends Activity implements OnClickListener {
 			}else{
 				startActivity(it);
 			}
-			this.finish();
+//			this.finish();
 			break;
 
 		case R.id.user_start_look:
 			//随便看看
 			Intent it2 = new Intent(UserStartActivity.this,MainActivity.class);
 			startActivity(it2);
+//			this.finish();
 			break;
 		}
 	}

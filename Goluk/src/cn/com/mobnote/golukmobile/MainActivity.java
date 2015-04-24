@@ -54,6 +54,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -251,7 +252,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**记录登录状态**/
 	public SharedPreferences mPreferencesAuto;
 	public boolean isFirstLogin;
-	
+	/**记录行车分享   分享精彩视频为false  点击分享网络直播为true*/
+	private boolean isClickShareVideo = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -920,6 +922,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //			int PID = android.os.Process.myPid();
 //			android.os.Process.killProcess(PID);
 //			android.os.Process.sendSignal(PID, 9);
+			if(mApp.isUserLoginSucess){
+				SysApplication.getInstance().exit();
+			}
 			finish();
 		}
 		return false;
@@ -1014,9 +1019,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(more);
 			break;
 			case R.id.share_local_video_btn:
+				//点击精彩视频
+				isClickShareVideo = false;
 				click_toLocalVideoShare();
 			break;
 			case R.id.share_mylive_btn:
+				//点击视频直播
+				isClickShareVideo = true;
 				toShareLive();
 			break;
 			case R.id.video_square_more_btn:
@@ -1059,21 +1068,35 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		Intent more = new Intent(MainActivity.this,VideoSquareActivity.class);
 		startActivity(more);
 	}
-	
+	private Builder mBuilder = null;
+	private AlertDialog dialog = null;
 	private void click_toLocalVideoShare() {
+		Log.i("lily", "-------isUserLoginSuccess------"+mApp.isUserLoginSucess+"------autologinStatus-----"+mApp.autoLoginStatus);
 		if (!mApp.isUserLoginSucess) {
 			// TODO 未登录成功
 			mShareLayout.setVisibility(View.GONE);
+			mApp.mUser.setUserInterface(this);
 			if(mApp.autoLoginStatus == 1){
-				LiveDialogManager.getManagerInstance().showAutoLoginingDialog(this, "正在为您登录，请稍候……");
+				mBuilder = new AlertDialog.Builder(mContext);
+				 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
+				.setCancelable(false)
+				.setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						// TODO Auto-generated method stub
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							return true;
+						}
+						return false;
+					}
+				}).create();
+				dialog	.show();
 				return ;
-			}
-			if(mApp.autoLoginStatus == 2){
-				LiveDialogManager.getManagerInstance().dismissAutoLoginDialog();
 			}
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
 			return;
 		}
+		
 		//跳转到本地视频分享列表
 		Intent localVideoShareList = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
 		startActivity(localVideoShareList);
@@ -1092,6 +1115,24 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if (!mApp.isUserLoginSucess) {
 				// TODO 未登录成功
 			mShareLayout.setVisibility(View.GONE);
+			mApp.mUser.setUserInterface(this);
+			if(mApp.autoLoginStatus == 1){
+				mBuilder = new AlertDialog.Builder(mContext);
+				 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
+				.setCancelable(false)
+				.setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						// TODO Auto-generated method stub
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							return true;
+						}
+						return false;
+					}
+				}).create();
+				dialog	.show();
+				return ;
+			}
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
 			return;
 		}
@@ -1301,9 +1342,27 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //		mApp.VerifyWiFiConnect();
 	}	
 	
+	public void dismissAutoDialog(){
+		if (null != dialog){
+			dialog.dismiss();
+			dialog = null;
+		}
+	}
 	@Override
 	public void statusChange() {
 		// TODO Auto-generated method stub
+		if(mApp.autoLoginStatus !=1){
+			dismissAutoDialog();
+			Intent it = null;
+			if(mApp.autoLoginStatus == 2){
+				if(!isClickShareVideo){
+					it = new Intent(MainActivity.this,LocalVideoShareListActivity.class);
+				}else{
+					it = new Intent(MainActivity.this,LiveActivity.class);
+				}
+				startActivity(it);
+			}
+		}
 		
 	}
 
