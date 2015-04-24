@@ -22,13 +22,16 @@ public class VideoOnClickListener implements OnClickListener{
 	private ImageView mPreLoading=null;
 	private List<VideoSquareInfo> mVideoSquareListData=null;
 	private Context mContext = null;
+	private int form ;
 	
-	public VideoOnClickListener(List<VideoSquareInfo> _mVideoSquareListData, ViewHolder _mViewHolder, HashMap<String, DWMediaPlayer> _mDWMediaPlayerList, VideoSquareInfo _mVideoSquareInfo,Context context,int form){
+	public VideoOnClickListener(List<VideoSquareInfo> _mVideoSquareListData, ViewHolder _mViewHolder, HashMap<String, DWMediaPlayer> _mDWMediaPlayerList, VideoSquareInfo _mVideoSquareInfo,Context context,int platform){
 		this.mViewHolder = _mViewHolder;
 		this.mVideoSquareInfo=_mVideoSquareInfo;
 		this.mDWMediaPlayerList = _mDWMediaPlayerList;
 		this.mPreLoading = mViewHolder.mPreLoading;
 		this.mVideoSquareListData = _mVideoSquareListData;
+		this.mContext = context;
+		this.form = platform;
 	}
 	
 	@Override
