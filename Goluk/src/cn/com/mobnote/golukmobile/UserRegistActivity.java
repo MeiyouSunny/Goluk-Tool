@@ -137,13 +137,14 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		/**
 		 * 注册  --->  退出 --->  再次进入  ----->  登录页面获得注册传来的phone
 		 */
-		if(mApplication.loginoutStatus = true){
+		/*if(mApplication.loginoutStatus = true){
 			String phone = mEditTextPhone.getText().toString();
 			mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 			mEditor = mSharedPreferences.edit();
 			mEditor.putString("setupPhone", phone);
 			mEditor.commit();
-		}
+		}*/
+		getPhone();
 		
 		/**
 		 * 监听绑定
@@ -394,15 +395,17 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 
 				case 405:
 					new AlertDialog.Builder(this)
-					.setMessage("此手机号已经被注册啦!")
+					.setMessage("此手机号已经被注册")
 					.setNegativeButton("取消", null)
 					.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							// TODO Auto-generated method stub
-							Intent itRegist = new Intent(UserRegistActivity.this,UserLoginActivity.class);
+							/*Intent itRegist = new Intent(UserRegistActivity.this,UserLoginActivity.class);
 							itRegist.putExtra("intentRegist", mEditTextPhone.getText().toString());
-							startActivity(itRegist);
+							Log.i("lily", "------intentRegist ------"+mEditTextPhone.getText().toString()+"--------");
+							startActivity(itRegist);*/
+							getPhone();
 							finish();
 						}
 					}).create().show();
@@ -629,4 +632,17 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		// TODO Auto-generated method stub
 		
 	}
+	/**
+	 * 获取手机号
+	 */
+	public void getPhone(){
+		if(mApplication.loginoutStatus = true){
+			String phone = mEditTextPhone.getText().toString();
+			mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+			mEditor = mSharedPreferences.edit();
+			mEditor.putString("setupPhone", phone);
+			mEditor.commit();
+		}
+	}
+	
 }

@@ -700,19 +700,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case PageType_LiveStart:
 				// 获取直播信息成功
 				if (null != mContext) {
-					if (mContext instanceof MainActivity) {
-						((MainActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
-					} else if (mContext instanceof LiveActivity) {
+					 if (mContext instanceof LiveActivity) {
 						((LiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
 					}	
 				}
 				
 				break;
 			case PageType_PlayStart:
-				// 看别人直播
-				if (null != mContext && mContext instanceof MainActivity) {
-					((MainActivity) mContext).callBack_LiveLookStart(false,success, param1, param2);
-				}
+			
 				break;
 			case PageType_LiveLike:
 				// 直播点赞

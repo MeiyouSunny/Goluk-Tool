@@ -246,9 +246,11 @@ public class JsonUtil {
 			String netCountStr = null != beanData ? "" + beanData.netCountStr : "";
 			String vtypStr = null != beanData ? "" + beanData.vtype : "";
 
+			String talk = beanData.isCanTalk ? "1" : "0";
+
 			JSONObject obj = new JSONObject();
 			obj.put("active", "1");
-			obj.put("talk", "1");
+			obj.put("talk", talk);
 			obj.put("tag", "android");
 			obj.put("vid", vid);
 			obj.put("desc", desc);
@@ -442,6 +444,7 @@ public class JsonUtil {
 			info.playUrl = playUrl;
 			info.membercount = membercount;
 			info.title = title;
+			info.vid = getJsonStringValue(obj, "vid", "");
 			return info;
 
 		} catch (Exception e) {
@@ -575,7 +578,7 @@ public class JsonUtil {
 	}
 
 	// 获取图片上传的json串
-	public static  String getUploadSnapJson(String vid, String imgPath) {
+	public static String getUploadSnapJson(String vid, String imgPath) {
 		try {
 			JSONObject rootObj = new JSONObject();
 			rootObj.put("vid", vid);
