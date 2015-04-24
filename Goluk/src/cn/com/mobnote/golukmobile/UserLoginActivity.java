@@ -70,7 +70,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
 		
-//		SysApplication.getInstance().addActivity(this);
+		SysApplication.getInstance().addActivity(this);
 	}
 	@Override
 	protected void onResume() {

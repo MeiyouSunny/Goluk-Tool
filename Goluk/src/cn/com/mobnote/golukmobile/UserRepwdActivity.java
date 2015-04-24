@@ -578,6 +578,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener{
 			}
 		}else{
 			console.log("重置密码失败");
+			mLoading.setVisibility(View.GONE);
 		}
 	}
 	
