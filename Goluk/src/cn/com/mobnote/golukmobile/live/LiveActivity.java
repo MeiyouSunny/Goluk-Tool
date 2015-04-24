@@ -281,7 +281,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		if (isShareLive) {
 			// 显示设置窗口
-			mLiveVideoHandler.sendEmptyMessageDelayed(100, 800);
+			mLiveVideoHandler.sendEmptyMessageDelayed(100, 600);
 
 			updateCount(0, 0);
 
@@ -1164,19 +1164,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		switch (id) {
 		case R.id.live_back_btn:
 			// 返回
-			exit();
-
-			// testUpdatePosition();
-
+			preExit();
 			break;
 		case R.id.live_refirsh_btn:
-			// 刷新,请求视频直播数据
-			// getVideoLiveData();
-
-			// showToast("显示更多菜单");
-
 			showDialog();
-
 			break;
 		case R.id.live_play_layout:
 			// 继续观看
@@ -1190,10 +1181,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			if (null != mLiveManager) {
 				mLiveManager.timerResume();
 			}
-
 			break;
 		case R.id.live_ok:
-
 			click_OK();
 			break;
 		case R.id.live_pause:
@@ -1792,10 +1781,17 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		resetTrimVideoState();
 	}
 
+	private void preExit() {
+		String message = this.isShareLive ? "您当前正在直播中，是否退出直播？" : "是否退出观看直播?";
+		LiveDialogManager.getManagerInstance()
+				.showLiveBackDialog(this, LiveDialogManager.DIALOG_TYPE_LIVEBACK, message);
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (KeyEvent.KEYCODE_BACK == keyCode) {
-			this.exit();
+			preExit();
+			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -2411,6 +2407,12 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		switch (dialogType) {
 		case LiveDialogManager.DIALOG_TYPE_EXIT_LIVE:
+			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
+				// 按了退出按钮
+				this.exit();
+			}
+			break;
+		case LiveDialogManager.DIALOG_TYPE_LIVEBACK:
 			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
 				// 按了退出按钮
 				this.exit();

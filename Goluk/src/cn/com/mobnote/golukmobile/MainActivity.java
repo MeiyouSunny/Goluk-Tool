@@ -28,11 +28,8 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity;
 import cn.com.mobnote.map.BaiduMapManage;
-import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserInterface;
-import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoManage;
@@ -46,9 +43,7 @@ import cn.com.mobnote.wifi.WifiRsBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -63,8 +58,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -72,8 +65,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -82,9 +73,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.entity.LngLat;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -94,41 +82,12 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.LocalVideoListAdapter;
-import cn.com.mobnote.video.LocalVideoManage;
-import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
-import cn.com.mobnote.video.OnLineVideoManage;
-import cn.com.mobnote.view.MyGridView;
-import cn.com.mobnote.wifi.WiFiConnection;
-import cn.com.mobnote.wifi.WifiAutoConnectManager;
-import cn.com.mobnote.wifi.WifiConnCallBack;
-import cn.com.mobnote.wifi.WifiRsBean;
 import cn.com.tiros.utils.LogUtil;
-
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
-import com.rd.car.CarRecorderManager;
-import com.tencent.bugly.crashreport.CrashReport;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.utils.Log;
 
 /**
  * <pre>
@@ -1090,7 +1049,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 * @date Apr 2, 2015
 	 */
 	private void toShareLive() {
-
 		if (!mApp.isUserLoginSucess) {
 				// TODO 未登录成功
 			mShareLayout.setVisibility(View.GONE);
@@ -1144,26 +1102,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private void startLiveLookFailed() {
 		// TODO 开启直接失败
 	}
-	
-	private void test() {
-		
-		final int cmd =  ITalkFn.Talk_CommCmd_JoinGroupWithInfo ;
-		String mJoinGroupJson = "{\"title\":\"创建组\",\"grouptype\":\"0\",\"groupid\":\"C8770\",\"groupnumber\":\"0\",\"tag\":0,\"membercount\":1}";
-		
-//		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd, mJoinGroupJson);
-		
-		// 开启直播
-		Intent intent = new Intent(this, LiveActivity.class);
-		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-		intent.putExtra(LiveActivity.KEY_GROUPID, 111);
-				
-		intent.putExtra(LiveActivity.KEY_PLAY_URL, "---");
-				
-		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, mJoinGroupJson);
-				
-		startActivity(intent);
-	}
-	
 	
 	public void callBack_LiveLookStart(boolean isLive, int success, Object param1,Object param2) {
 		if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
