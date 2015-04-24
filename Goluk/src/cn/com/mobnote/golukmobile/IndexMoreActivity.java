@@ -167,6 +167,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			}
 	}else{
 		//未登录
+		isHasInfo = false;
 		mLayoutHasInfo.setVisibility(View.GONE);
 		mLayoutNoInfo.setVisibility(View.VISIBLE);
 		mImageHead.setImageResource(R.drawable.more_head_no_log_in);
@@ -218,6 +219,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			case R.id.head_layout:
 				//自动登录中，成功，失败，超时、密码错误
 				Log.i("autostatus", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
+				Log.i("lily", "-----IndexMoreActivity----未登录的个人中心点击无反应------isHasInfo----"
+				+isHasInfo+"----loginoutStatus----"+mApp.loginoutStatus);
 				if(isHasInfo && mApp.loginoutStatus == false){
 					Log.i("userinterface", "----------------");
 					mApp.mUser.setUserInterface(this);
@@ -236,7 +239,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 							}
 						}).create();
 						dialog	.show();
-					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess == true){
+					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess){
 						Log.i("userinterface", "--------更多页面-------");
 						intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
 						startActivity(intent);
@@ -248,7 +251,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 					itNo.putExtra("isInfo", "back");
 					startActivity(itNo);
 					isHasInfo = true;
-//					finish();
 				}
 				break;
 		}
@@ -310,9 +312,9 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
 			Intent it = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
 			startActivity(it);
-		}else if(mApp.autoLoginStatus == 3 || mApp.isUserLoginSucess == false){
+		}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4 || mApp.isUserLoginSucess == false){
 			dismissDialog();
-			console.toast("登录失败------IndexMoreActivity-----", mContext);
+			console.toast("登录失败", mContext);
 			Log.i("userinterface", "------"+mApp.autoLoginStatus+"--------indexmoreactivity");
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);

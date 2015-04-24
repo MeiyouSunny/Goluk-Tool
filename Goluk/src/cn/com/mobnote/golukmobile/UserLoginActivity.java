@@ -111,6 +111,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		Intent itentGetRegist = getIntent();
 		if(null !=  itentGetRegist.getStringExtra("intentRegist")){
 			String phoneNumber = itentGetRegist.getStringExtra("intentRegist").toString();
+			Log.i("lily", "----------intentRegist--------phoneNumber =   "+phoneNumber);
 			mEditTextPhoneNumber.setText(phoneNumber);
 		}
 		

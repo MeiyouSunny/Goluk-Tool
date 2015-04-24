@@ -124,9 +124,9 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 			head = json.getString("head");
 			String name = json.getString("nickname");
 			String sex = json.getString("sex");
+			Log.i("lily", "-----UserPersonalHomeActivity-----"+json.toString());
 	
 			mTextName.setText(name);
-			Log.i("mmm", head);
 			UserUtils.focusHead(head, mImageHead);
 			if(sex.equals("1")){
 				mImageSex.setImageResource(R.drawable.more_man);
