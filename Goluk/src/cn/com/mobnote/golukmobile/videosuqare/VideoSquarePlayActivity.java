@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
@@ -34,6 +35,8 @@ public class VideoSquarePlayActivity extends Activity implements
 	private CustomProgressDialog mCustomProgressDialog = null;
 	private VideoSquareInfo begantime = null;
 	private VideoSquareInfo endtime = null;
+	private ImageButton mBackBtn = null;
+	private RelativeLayout loading = null;
 	
 	public String shareVideoId; 
 	/** 保存列表一个显示项索引 */
@@ -68,7 +71,7 @@ public class VideoSquarePlayActivity extends Activity implements
 		
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();//设置分享平台的参数
-		
+		loadHistorydata();//显示历史请求数据
 		httpPost(true, type, "0", "");
 	}
 	
@@ -107,10 +110,9 @@ public class VideoSquarePlayActivity extends Activity implements
 		System.out.println("YYYY==22222==getSquareList======result=" + result);
 	}
 
-	private void init() {
+	private void init(boolean isloading) {
 		/** 返回按钮 */
-		Button mBackBtn = (Button) findViewById(R.id.back_btn);
-		;
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mBackBtn.setOnClickListener(this);
 
 		if (null == mVideoSquareListViewAdapter) {
@@ -161,13 +163,15 @@ public class VideoSquarePlayActivity extends Activity implements
 			}
 		});
 		
-		//有下一页刷新
-		if(isHaveData){
-			RelativeLayout loading = (RelativeLayout) LayoutInflater.from(this)
-					.inflate(R.layout.video_square_below_loading, null);
-			mRTPullListView.addFooterView(loading);
+		if(isloading == false){
+			//有下一页刷新
+			if(isHaveData){
+				loading = (RelativeLayout) LayoutInflater.from(this)
+						.inflate(R.layout.video_square_below_loading, null);
+				mRTPullListView.addFooterView(loading);
+			}
 		}
-
+		
 	}
 
 	public void flush() {
@@ -260,11 +264,18 @@ public class VideoSquarePlayActivity extends Activity implements
 				
 				if(list.size()>0){
 					begantime = list.get(0);
-					begantime = list.get(list.size()-1);
+					endtime = list.get(list.size()-1);
+				}else{
+					if(loading != null){
+						if(mRTPullListView!=null){
+							mRTPullListView.removeFooterView(loading);
+							loading = null;
+						}
+					}
 				}
 				
 				if (uptype == 0) {
-					init();
+					init(false);
 				} else {
 					if(2 == uptype){//如果如果是下拉,把下拉的窗口关掉
 						mRTPullListView.onRefreshComplete();
@@ -277,6 +288,23 @@ public class VideoSquarePlayActivity extends Activity implements
 				}
 			}
 		}
+	}
+	
+	/**
+	 * 初始化历史请求数据
+	  * @Title: loadHistorydata 
+	  * @Description: TODO void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	public void loadHistorydata(){
+		String param = GolukApplication.getInstance().getVideoSquareManager().getSquareList();
+		if(param != null && !"".equals(param)){
+			List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param);
+			mDataList = list;
+			init(true);
+		}
+		
 	}
 
 }

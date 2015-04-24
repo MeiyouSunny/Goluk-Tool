@@ -19,6 +19,11 @@ public interface VideoSuqareManagerFn extends IGolukCommFn{
 	/** 获取分享地址 */
 	public static final int SquareCmd_Req_GetShareUrl = 1537;
 	
+	/** 获取本地广场视频列表缓存 */
+    public static final int SquareCmd_Get_SquareCache = 0;
+    /** 获取本地热门视频列表缓存 */
+    public static final int SquareCmd_Get_HotCache = 256;
+	
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2);
 
 }

@@ -46,6 +46,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		if(null != mVideoSquareManager){
 			mVideoSquareManager.addVideoSquareManagerListener("hotlist", this);
 		}
+		loadHistorydata();//同步历史数据
 		httpPost(true);
 		mHandler = new Handler(){
 			@Override
@@ -178,6 +179,17 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			if(vsi.mVideoEntity.videoid.equals(videoinfo.mVideoEntity.videoid)){
 				mDataList.get(i).mVideoEntity = videoinfo.mVideoEntity;
 			}
+		}
+		
+	}
+	
+	public void loadHistorydata(){
+		String param = GolukApplication.getInstance().getVideoSquareManager().getHotList();
+		if(param != null && !"".equals(param)){
+			List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param);
+			mDataList.clear();
+			mDataList.addAll(list);
+			initLayout();
 		}
 		
 	}

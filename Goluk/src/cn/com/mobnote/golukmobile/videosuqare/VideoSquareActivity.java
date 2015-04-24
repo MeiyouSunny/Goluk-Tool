@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 	private Button mVideoList = null;
 	private Button mTypeList = null;
 	/** 返回按钮 */
-	private Button mBackBtn = null;
+	private ImageButton mBackBtn = null;
 
 	SharePlatformUtil sharePlatform;
 
@@ -62,7 +63,7 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 		mVideoList = (Button) findViewById(R.id.mVideoList);
 		mTypeList = (Button) findViewById(R.id.mTypeList);
 		// 获取页面元素
-		mBackBtn = (Button) findViewById(R.id.back_btn);
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 
 	}
 
