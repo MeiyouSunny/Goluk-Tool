@@ -123,13 +123,17 @@ public class VideoSquarePlayActivity extends Activity implements
 			@Override
 			public void onRefresh() {
 				uptype = 2;
-				httpPost(true, type, "2", begantime.mVideoEntity.sharingtime);
-				/*mRTPullListView.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						mRTPullListView.onRefreshComplete();
-					}
-				}, 1500);*/
+				if(begantime !=null){
+					httpPost(true, type, "2", begantime.mVideoEntity.sharingtime);
+				}else{
+					mRTPullListView.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							mRTPullListView.onRefreshComplete();
+						}
+					}, 1500);
+				}
+				
 			}
 		});
 

@@ -182,7 +182,7 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 			//提交修改
 			mEditor.commit();
 			
-			initData();
+//			initData();
 			console.toast("退出登录成功", mContext);
 			btnLoginout.setText("登录");
 			

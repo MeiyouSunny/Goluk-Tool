@@ -17,15 +17,20 @@ void CallBack_videosquare(void* pvUser, int event, int msg, unsigned long param1
 	
 	jclass cls =g_env->FindClass("cn/com/mobnote/module/videosquare/VideoSquareManagerAdapter");
 	jmethodID mId_CallBack = g_env->GetStaticMethodID(cls,"VideoSquare_CallBack","(IIILjava/lang/Object;)V");
-	jstring data = 0;
-	if(0 != param2){
-		data = (g_env)->NewStringUTF((char *)param2);
+	
+	if(0 == msg){
+		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,0,0);
+	}else{
+		jstring data = 0;
+		if(0 != param2){
+			data = (g_env)->NewStringUTF((char *)param2);
+		}
+	
+		dbgprintf("xuhw------videosquare-----JNI------CallBack_ipcManager----22222==%s",(char *)param2);
+	
+		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,(jint)param1,data);
 	}
-	
-	dbgprintf("xuhw------videosquare-----JNI------CallBack_ipcManager----22222==%s",(char *)param2);
-	
-	g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,(jint)param1,data);
-	
+
 	dbgprintf("xuhw-----videosquare-----JNI------CallBack_ipcManager----33333");
 	
 	// free
