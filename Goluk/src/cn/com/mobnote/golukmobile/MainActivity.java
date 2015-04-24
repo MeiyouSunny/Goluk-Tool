@@ -1,8 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -995,8 +993,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(liveList);
 			break;
 			case R.id.share_btn:
-				//视频分享
-				mShareLayout.setVisibility(View.VISIBLE);
+				click_share();
 			break;
 			case R.id.close_share_btn:
 				//关闭视频分享
@@ -1050,6 +1047,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
+	private void click_share() {
+		if (!mApp.isUserLoginSucess) {
+			mShareLayout.setVisibility(View.GONE);
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
+			return;
+		}
+		//视频分享
+		mShareLayout.setVisibility(View.VISIBLE);
+	}
+	
 	private void toCard() {
 		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 		startActivity(i);
@@ -1086,6 +1095,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				// TODO 未登录成功
 			mShareLayout.setVisibility(View.GONE);
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			return;
+		}
+		
+		if (!mApp.getIpcIsLogin()) {
+			Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
