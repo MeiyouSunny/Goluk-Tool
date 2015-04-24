@@ -249,6 +249,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		setViewInitData();
 		// 地图初始化
 		initMap();
+		// 获取我的登录信息
+		getMyInfo();
 		// 开始预览或开始直播
 		if (isShareLive) {
 			mLoginLayout.setVisibility(View.GONE);
@@ -268,7 +270,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			}
 		}
 
-		getMyInfo();
 		// testDraw();
 		drawPersonsHead();
 
@@ -366,6 +367,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	private String getVideoId() {
+		if (null != myInfo) {
+			return myInfo.uid;
+		}
 		Date dt = new Date();
 		long time = dt.getTime();
 
@@ -2255,7 +2259,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	private void test1() {
-		startLiveForServer();
+		//startLiveForServer();
 	}
 
 	/**
