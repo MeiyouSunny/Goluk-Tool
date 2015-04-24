@@ -11,8 +11,8 @@ public class LiveDialogManager {
 	/** 授权load对话框 */
 	private AlertDialog mLoginDialog = null;
 	private AlertDialog mLiveExitDialog = null;
-	/**自动登录中的对话框*/
-	private AlertDialog mAutoLoginDialog = null;
+	/** 用户主动点击退出时，提示对话框 */
+	private AlertDialog mLiveBackDialog = null;
 
 	/** 对话框回调方法 */
 	private ILiveDialogManagerFn dialogManagerFn = null;
@@ -28,6 +28,10 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_EXIT_LIVE = 1;
 	/** 登录对话框 */
 	public static final int DIALOG_TYPE_LOGIN = 2;
+	/** 直播返回*/
+	public static final int DIALOG_TYPE_LIVEBACK = 3;
+
+	private int mCurrentDialogType = 0;
 
 	/**
 	 * 获取当前类的一个实例
@@ -150,6 +154,44 @@ public class LiveDialogManager {
 		if (null != mLiveExitDialog) {
 			mLiveExitDialog.dismiss();
 			mLiveExitDialog = null;
+		}
+	}
+
+	public void showLiveBackDialog(Context context, int function, String message) {
+
+		if (null != mLiveBackDialog) {
+			return;
+		}
+		mCurrentDialogType = function;
+		mLiveBackDialog = new AlertDialog.Builder(context).create();
+
+		mLiveBackDialog.setTitle("提示");
+		mLiveBackDialog.setMessage(message);
+
+		mLiveBackDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
+				dismissLiveBackDialog();
+			}
+		});
+
+		mLiveBackDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialoginterface, int i) {
+				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
+
+				dismissLiveBackDialog();
+			}
+		});
+		mLiveBackDialog.show();
+
+	}
+
+	public void dismissLiveBackDialog() {
+		if (null != mLiveBackDialog) {
+			mLiveBackDialog.dismiss();
+			mLiveBackDialog = null;
 		}
 	}
 

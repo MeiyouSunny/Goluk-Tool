@@ -13,6 +13,8 @@ public class LiveDataInfo implements Serializable {
 	public int active;
 	/** 视频播放地址 */
 	public String playUrl;
+	/** 视频ID */
+	public String vid;
 
 	/** 群组Id */
 	public String groupId;

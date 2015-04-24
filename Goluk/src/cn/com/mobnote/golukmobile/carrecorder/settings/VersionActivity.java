@@ -8,7 +8,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
-import cn.com.mobnote.golukmobile.carrecorder.entity.VersionState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.utils.LogUtil;
 
@@ -74,7 +74,7 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 			if(msg == IPC_VDCP_Msg_GetIdentity){
 				LogUtil.e("xuhw", "YYY====IPC_VDCP_Msg_GetIdentity====msg="+msg+"===param1="+param1+"==param2="+param2);
 				if(param1 == RESULE_SUCESS){
-					final VersionState mVersionState = IpcDataParser.parseVersionState((String)param2);
+					final IPCIdentityState mVersionState = IpcDataParser.parseVersionState((String)param2);
 					if(null != mVersionState){
 						runOnUiThread(new Runnable() {
 							@Override
