@@ -1,13 +1,10 @@
 package cn.com.mobnote.golukmobile;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -46,7 +43,6 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.mobnote.wifi.WifiAutoConnectManager;
 import cn.com.mobnote.wifi.WifiConnCallBack;
 import cn.com.mobnote.wifi.WifiRsBean;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -254,6 +250,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	public SharedPreferences mPreferencesAuto;
 	public boolean isFirstLogin;
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -393,7 +390,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						//网络状态改变
 						mApp.VerifyWiFiConnect();
 
+						android.util.Log.i("setauto","------自动登录网络状态变化1111------");
 						if(mApp.isUserLoginSucess == true || mApp.autoLoginStatus !=2){
+							android.util.Log.i("setauto","------自动登录网络状态变化2222------");
 							mApp.mUser.initAutoLogin();							
 						}
 
@@ -994,8 +993,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(liveList);
 			break;
 			case R.id.share_btn:
-				//视频分享
-				mShareLayout.setVisibility(View.VISIBLE);
+				click_share();
 			break;
 			case R.id.close_share_btn:
 				//关闭视频分享
@@ -1049,6 +1047,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
+	private void click_share() {
+		if (!mApp.isUserLoginSucess) {
+			mShareLayout.setVisibility(View.GONE);
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
+			return;
+		}
+		//视频分享
+		mShareLayout.setVisibility(View.VISIBLE);
+	}
+	
 	private void toCard() {
 		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 		startActivity(i);
@@ -1085,6 +1095,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				// TODO 未登录成功
 			mShareLayout.setVisibility(View.GONE);
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			return;
+		}
+		
+		if (!mApp.getIpcIsLogin()) {
+			Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -1299,6 +1314,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 	}
 
+
 	@Override
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
@@ -1306,6 +1322,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				// TODO 去登录界面
 				mShareLayout.setVisibility(View.GONE);
 				Intent intent = new Intent(this, UserLoginActivity.class);
+				intent.putExtra("isInfo", "back");
 				startActivity(intent);
 			}
 		}
