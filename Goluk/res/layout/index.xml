@@ -80,7 +80,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/index_linked" >
+            android:background="@drawable/index_no_link" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="已连接" />
+                    android:text="未连接" />
 
                 <ImageView
                     android:id="@+id/index_wiifstate"
@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="7dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/index_wifi_four" />
+                    android:background="@drawable/index_wifi_five" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
