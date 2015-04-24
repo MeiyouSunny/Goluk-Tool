@@ -50,4 +50,6 @@ public class VideoEntity {
 	public String ondemandsdkaddress;
 	/** 是否点过赞：0.否1.是 */
 	public String ispraise;
+	
+	public LiveVideoData livevideodata;
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListViewAdapter.ViewHolder;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
@@ -67,12 +68,27 @@ public class VideoOnClickListener implements OnClickListener{
 		}else{
 			//直播点击跳转
 			 // 开启直播
+			UserInfo  user = new UserInfo();
+			user.active = mVideoSquareInfo.mVideoEntity.livevideodata.active;
+			user.aid = mVideoSquareInfo.mVideoEntity.livevideodata.aid;
+			user.lat = mVideoSquareInfo.mVideoEntity.livevideodata.lat;
+			user.liveDuration = Integer.parseInt(mVideoSquareInfo.mVideoEntity.livevideodata.restime);
+			user.lon = mVideoSquareInfo.mVideoEntity.livevideodata.lon;
+			user.nickName = mVideoSquareInfo.mUserEntity.nickname;
+			user.persons = mVideoSquareInfo.mVideoEntity.clicknumber;
+			user.picurl = mVideoSquareInfo.mVideoEntity.picture;
+			user.sex = mVideoSquareInfo.mUserEntity.sex;
+			user.speed = mVideoSquareInfo.mVideoEntity.livevideodata.speed;
+			user.tag = mVideoSquareInfo.mVideoEntity.livevideodata.tag;
+			user.uid = mVideoSquareInfo.mUserEntity.uid;
+			user.zanCount = mVideoSquareInfo.mVideoEntity.praisenumber;
 	        Intent intent = new Intent(mContext, LiveActivity.class);
 	        intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
 	        intent.putExtra(LiveActivity.KEY_GROUPID, "");
 	        intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
 	        intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-	        //intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
+	        intent.putExtra(LiveActivity.KEY_USERINFO, user);
+	        mContext.startActivity(intent);
 		}
 	}
 	
