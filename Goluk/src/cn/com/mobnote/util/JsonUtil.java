@@ -432,7 +432,7 @@ public class JsonUtil {
 			membercount = obj.getInt("membercount");
 			title = obj.getString("title");
 			groupnumber = obj.getString("groupnumber");
-
+			
 			LiveDataInfo info = new LiveDataInfo();
 			info.code = code;
 			info.active = active;
@@ -442,6 +442,7 @@ public class JsonUtil {
 			info.playUrl = playUrl;
 			info.membercount = membercount;
 			info.title = title;
+			info.vid = getJsonStringValue(obj, "vid", "");;
 			return info;
 
 		} catch (Exception e) {

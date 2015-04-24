@@ -167,7 +167,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
 	/** 直播marker列表按钮 */
-	private Button mMapMarkeListBtn = null;
+//	private Button mMapMarkeListBtn = null;
 	/** 百度地图 */
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
@@ -323,7 +323,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 */
 	private void init(){
 		mLayoutInflater = LayoutInflater.from(mContext);
-		mMapMarkeListBtn = (Button)findViewById(R.id.map_marke_list_btn);
+//		mMapMarkeListBtn = (Button)findViewById(R.id.map_marke_list_btn);
 		//地图我的位置按钮
 		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
 		//分享按钮
@@ -355,7 +355,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //		mIndexLayout = (LinearLayout)findViewById(R.id.index_layout);
 		
 		//注册事件
-		mMapMarkeListBtn.setOnClickListener(this);
+//		mMapMarkeListBtn.setOnClickListener(this);
 		mMapLocationBtn.setOnClickListener(this);
 		mShareBtn.setOnClickListener(this);
 		mShareBtn.setOnTouchListener(this);
@@ -987,11 +987,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(u);
 			break;
-			case R.id.map_marke_list_btn:
-				//跳转到视频直播点列表
-				Intent liveList = new Intent(MainActivity.this,LiveVideoListActivity.class);
-				startActivity(liveList);
-			break;
+//			case R.id.map_marke_list_btn:
+//				//跳转到视频直播点列表
+//				Intent liveList = new Intent(MainActivity.this,LiveVideoListActivity.class);
+//				startActivity(liveList);
+//			break;
 			case R.id.share_btn:
 				click_share();
 			break;
