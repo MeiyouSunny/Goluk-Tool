@@ -1,6 +1,9 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+<<<<<<< HEAD
 import java.text.SimpleDateFormat;
+=======
+>>>>>>> 132c0078f553d28e50056374fd1eacf6cd98fd48
 import java.util.Date;
 
 import cn.com.mobnote.golukmobile.R;
@@ -64,8 +67,11 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 	private int visibleLastIndex;
 	private int visibleItemCount;
+<<<<<<< HEAD
 	
 	private SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+=======
+>>>>>>> 132c0078f553d28e50056374fd1eacf6cd98fd48
 
 	public RTPullListView(Context context) {
 		super(context);
@@ -332,7 +338,11 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 	public void onRefreshComplete() {
 		state = DONE;
+<<<<<<< HEAD
 		lastUpdatedTextView.setText(getResources().getString(R.string.updating) +formatter.format(new Date()) );
+=======
+		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + new Date().toLocaleString());
+>>>>>>> 132c0078f553d28e50056374fd1eacf6cd98fd48
 		changeHeaderViewByState();
 		invalidateViews();
 		setSelection(0);
@@ -370,7 +380,11 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	}
 
 	public void setAdapter(BaseAdapter adapter) {
+<<<<<<< HEAD
 		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + formatter.format(new Date()));
+=======
+		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + new Date().toLocaleString());
+>>>>>>> 132c0078f553d28e50056374fd1eacf6cd98fd48
 		super.setAdapter(adapter);
 	}
 }

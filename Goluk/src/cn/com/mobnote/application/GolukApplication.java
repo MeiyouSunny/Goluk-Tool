@@ -52,6 +52,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.entity.ExternalEventsDataInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -69,6 +70,7 @@ import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
+import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -507,56 +509,66 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return;
 		}
 		
-		if(1 == success){
-			//下载中
-			int percent = 0;
-			try {
+		try{
+		JSONObject jsonobj = new JSONObject(data);
+		String tag = jsonobj.optString("tag");
+		if(tag.equals("videodownload")){
+			if(1 == success){
+				//下载中
+				int percent = 0;
 				JSONObject json = new JSONObject(data);
 				String filename = json.optString("filename");
-				String tag = json.optString("tag");
 				long filesize = json.optLong("filesize");
 				long filerecvsize = json.optLong("filerecvsize");
 				percent = (int)((filerecvsize*100)/filesize);
 				LogUtil.e("xuhw", "YYYYYY==filename="+filename+"==percent="+percent);
-				if(tag.equals("videodownload")){
-					if(!mNoDownLoadFileList.contains(filename)){
-						mNoDownLoadFileList.add(filename);
-					}
+				if(!mNoDownLoadFileList.contains(filename)){
+					mNoDownLoadFileList.add(filename);
 				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
-			if(GlobalWindow.getInstance().isShow()){
-				GlobalWindow.getInstance().refreshPercent(percent);
-				GlobalWindow.getInstance().updateText("正在从Goluk中传输视频到手机" +mNoDownLoadFileList.size()+ "/"+mDownLoadFileList.size());
-			}
-			
-		}else if(0 == success){
-			//下载完成
-			if(null != mMainActivity){
-				//{"filename":"WND1_150402183837_0012.mp4", "tag":"videodownload"}
-				//地图大头针图片
-				console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
-				mMainActivity.videoAnalyzeComplete(data);
-			}
-			
-			if(checkDownloadCompleteState()){
-				mDownLoadFileList.clear();
-				mNoDownLoadFileList.clear();
-				GlobalWindow.getInstance().topWindowSucess("视频传输完成");
-			}
-		}else{
-			if(checkDownloadCompleteState()){
-				mDownLoadFileList.clear();
-				mNoDownLoadFileList.clear();
-				GlobalWindow.getInstance().toFailed("视频传输失败");
+				
+				if(GlobalWindow.getInstance().isShow()){
+					LogUtil.e("xuhw", "YYYYYY=====GlobalWindow=====percent="+percent);
+					GlobalWindow.getInstance().refreshPercent(percent);
+					GlobalWindow.getInstance().updateText("正在从Goluk中传输视频到手机" +mNoDownLoadFileList.size()+ "/"+mDownLoadFileList.size());
+				}else{
+					GlobalWindow.getInstance().createVideoUploadWindow("正在从Goluk中传输视频到手机" +mNoDownLoadFileList.size()+ "/"+mDownLoadFileList.size());
+				}
+				
+			}else if(0 == success){
+				//下载完成
+				if(null != mMainActivity){
+					//{"filename":"WND1_150402183837_0012.mp4", "tag":"videodownload"}
+					//地图大头针图片
+					console.log("视频下载完成---ipcVideoDownLoadCallBack---" + data);
+					mMainActivity.videoAnalyzeComplete(data);
+				}
+				
+				if(checkDownloadCompleteState()){
+					mDownLoadFileList.clear();
+					mNoDownLoadFileList.clear();
+					GlobalWindow.getInstance().topWindowSucess("视频传输完成");
+				}
+				
+				//更新最新下载文件的时间
+				long curtime = System.currentTimeMillis()/1000;
+				SettingUtils.getInstance().putLong("querytime", curtime);
+			}else{
+				if(checkDownloadCompleteState()){
+					mDownLoadFileList.clear();
+					mNoDownLoadFileList.clear();
+					GlobalWindow.getInstance().toFailed("视频传输失败");
+				}
 			}
 		}
+		
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	/**
-	 * 检查下载是否完成
+	 * 检查下载是否全部完成
 	 * @return
 	 * @author xuhw
 	 * @date 2015年4月23日
@@ -788,6 +800,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case ConnectionStateMsg_Idle:
 					//msg = 0 空闲
 					isIpcLoginSuccess = false;
+					ipcDisconnect();
 					if(null != mMainActivity){
 						mMainActivity.wiFiLinkStatus(3);
 					}
@@ -795,6 +808,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case ConnectionStateMsg_Connecting:
 					//msg = 1 连接中
 					isIpcLoginSuccess = false;
+					ipcDisconnect();
 					if(null != mMainActivity){
 						mMainActivity.wiFiLinkStatus(3);
 					}
@@ -806,6 +820,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				case ConnectionStateMsg_DisConnected:
 					//msg = 3 连接断开
 					isIpcLoginSuccess = false;
+					ipcDisconnect();
 					if(null != mMainActivity){
 						mMainActivity.wiFiLinkStatus(3);
 					}
@@ -833,6 +848,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
 //							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
 //						}
+						
+						//查询新文件列表（最多10条）
+						long time = SettingUtils.getInstance().getLong("querytime", 0);
+						long curtime = System.currentTimeMillis()/1000;
+						if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
+							queryNewFileList();
+							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
+						}
 						console.log("IPC_TTTTTT=================Login Success===============");
 						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
 						//改变首页链接状态
@@ -842,10 +865,49 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					}
 					else{
 						isIpcLoginSuccess = false;
+						ipcDisconnect();
 					}
 				break;
 				case IPC_VDCP_Msg_Query:
 					//msg = 1000 多文件目录查询
+					if(RESULE_SUCESS == param1){
+						LogUtil.e("xuhw", "YYYYYY=====IPC_VDCP_Msg_Query====param2="+param2);
+						if(!"ipcfilemanager".equals(mPageSource)){
+							if(TextUtils.isEmpty((String)param2)){
+								return;
+							}
+							ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
+							for(int i=0; i<fileList.size(); i++){
+								VideoFileInfo info = fileList.get(i);
+								String filename = info.location;
+								
+								String filePath = "";
+								if(filename.contains("WND")){
+									filePath = "fs1:/video/wonderful/";
+								}else if(filename.contains("URG")){
+									filePath = "fs1:/video/urgent/";
+								}
+								
+								if(TextUtils.isEmpty(filePath)){
+									break;
+								}
+								
+								filePath = FileUtils.javaToLibPath(filePath);
+								String path = filePath + File.separator + filename;
+								File file = new File(path);
+								if(!file.exists()){
+									if(!mDownLoadFileList.contains(info.location)){
+										mDownLoadFileList.add(info.location);
+											
+										boolean flag = GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
+										LogUtil.e("xuhw", "YYYYYY=====querySingleFile=====type="+info.type+"==flag="+flag);
+									}
+								}
+								
+							}
+							
+						}
+					}
 				break;
 				case IPC_VDCP_Msg_SingleQuery:
 					//msg = 1001 单文件查询
@@ -932,6 +994,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 							}
 						}
 					}
+					break;
+				case IPC_VDCP_Msg_GetVersion:
+					//{"product": 67698688, "model": "", "macid": "", "serial": "", "version": "V1.4.21_tzz_vb_rootfs"}
 					break;
 				
 			}
@@ -1109,6 +1174,28 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		while(it.hasNext()) {
 			Entry<String, ILocationFn> entry = it.next();
 			entry.getValue().LocationCallBack(locationJson);
+		}
+	}
+	
+	/**
+	 * 查询新文件列表（最多10条）
+	 * @author xuhw
+	 * @date 2015年4月24日
+	 */
+	private void queryNewFileList(){
+		mIPCControlManager.queryFileListInfo(6, 10, 0);
+	}
+	
+	/**
+	 * IPC断开连接处理
+	 * @author xuhw
+	 * @date 2015年4月24日
+	 */
+	private void ipcDisconnect(){
+		mDownLoadFileList.clear();
+		mNoDownLoadFileList.clear();
+		if(GlobalWindow.getInstance().isShow()){
+			GlobalWindow.getInstance().dimissGlobalWindow();
 		}
 	}
 	

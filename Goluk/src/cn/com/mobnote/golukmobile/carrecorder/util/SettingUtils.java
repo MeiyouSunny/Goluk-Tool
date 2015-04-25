@@ -1,7 +1,6 @@
 package cn.com.mobnote.golukmobile.carrecorder.util;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
@@ -84,8 +83,17 @@ public class SettingUtils {
 		return preferences.getInt(key, value);
 	}
 	
+	public void putLong(String key, long value){
+		editor.putLong(key, value);
+		editor.commit();
+	}
 	
-
+	public long getLong(String key){
+		return preferences.getLong(key, -1);
+	}
 	
+	public long getLong(String key, int value){
+		return preferences.getInt(key, value);
+	}
 	
 }
