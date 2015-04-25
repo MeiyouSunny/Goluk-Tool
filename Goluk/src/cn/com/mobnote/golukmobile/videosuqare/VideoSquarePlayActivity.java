@@ -25,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
@@ -52,6 +53,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	 * 1：上拉  2：下拉   0:第一次
 	 */
 	private int uptype = 0;
+	private TextView title;
 	//点播分类
 	private String attribute;
 	
@@ -62,9 +64,33 @@ public class VideoSquarePlayActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.video_square_play);
 		Intent intent = getIntent();
-
+		title = (TextView) findViewById(R.id.title);
 		type = intent.getStringExtra("type");// 视频广场类型
 		attribute = intent.getStringExtra("attribute");//点播类型
+		if("1".equals(attribute)){
+			title.setText("曝光台");
+		}else if("2".equals(attribute)){
+			title.setText("碰瓷达人");
+		}else if("3".equals(attribute)){
+			title.setText("路上风景");
+		}else if("4".equals(attribute)){
+			title.setText("随手拍");
+		}else if("5".equals(attribute)){
+			title.setText("事故大爆料");
+		}else if("6".equals(attribute)){
+			title.setText("堵车预警");
+		}else if("7".equals(attribute)){
+			title.setText("惊险十分");
+		}else if("8".equals(attribute)){
+			title.setText("疯狂超车");
+		}else if("9".equals(type)){
+			title.setText("感人瞬间");
+		}else if("10".equals(attribute)){
+			title.setText("传递正能量");
+		}else{
+			title.setText("热门直播");
+		}
+		
 		GolukApplication.getInstance().getVideoSquareManager()
 				.addVideoSquareManagerListener("videocategory", this);
 		mDataList = new ArrayList<VideoSquareInfo>();
