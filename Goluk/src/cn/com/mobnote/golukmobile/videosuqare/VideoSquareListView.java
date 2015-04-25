@@ -41,7 +41,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
 		mRTPullListView.setDividerHeight((int)(2*jj));
 		mDataList = new ArrayList<VideoSquareInfo>();
-		LogUtils.d("SSS=================111111111===================");
+		LogUtils.d("YYYYYYYY=================111111111===================");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if(null != mVideoSquareManager){
 			mVideoSquareManager.addVideoSquareManagerListener("hotlist", this);
@@ -142,6 +142,9 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	public void onStop() {
 		if(null != mVideoSquareListViewAdapter){
 			mVideoSquareListViewAdapter.onStop();
+		}
+		if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()){
+			mCustomProgressDialog.dismiss();
 		}
 	}
 	

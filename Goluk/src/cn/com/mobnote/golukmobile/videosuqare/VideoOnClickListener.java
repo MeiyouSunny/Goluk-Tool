@@ -39,19 +39,19 @@ public class VideoOnClickListener implements OnClickListener{
 	@Override
 	public void onClick(View arg0) {
 		if("2".equals(mVideoSquareInfo.mVideoEntity.type)){
-//			if(1 == form){
-//				VideoSquareActivity a = (VideoSquareActivity)mContext;
-//				Intent intent = new Intent(a, CCPlayerPage.class);
-//				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
-//				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
-//				a.startActivity(intent);
-//			}else{
-//				VideoSquarePlayActivity a = (VideoSquarePlayActivity)mContext;
-//				Intent intent = new Intent(a, CCPlayerPage.class);
-//				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
-//				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
-//				a.startActivity(intent);
-//			}
+			if(1 == form){
+				VideoSquareActivity a = (VideoSquareActivity)mContext;
+				Intent intent = new Intent(a, CCPlayerPage.class);
+				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
+				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+				a.startActivity(intent);
+			}else{
+				VideoSquarePlayActivity a = (VideoSquarePlayActivity)mContext;
+				Intent intent = new Intent(a, CCPlayerPage.class);
+				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
+				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+				a.startActivity(intent);
+			}
 			
 //			PlayerState mPlayerState = mVideoSquareInfo.mPlayerState;
 //			DWMediaPlayer player = mDWMediaPlayerList.get(mVideoSquareInfo.id);
