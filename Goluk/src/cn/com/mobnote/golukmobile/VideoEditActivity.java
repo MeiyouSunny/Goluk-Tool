@@ -313,11 +313,11 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 //				editorParam.nVideoWidth = 854;
 //				editorParam.nVideoHeight = 480;
 			//标清
-			editorParam.nVideoWidth = 854;
-			editorParam.nVideoHeight = 480;
+//			editorParam.nVideoWidth = 854;
+//			editorParam.nVideoHeight = 480;
 //			//分辨率	帧率	码率 480*270	30fps	1400kbps
-			editorParam.nVideoBitrate = 768 * 1024;
-			editorParam.nFps = 30;
+//			editorParam.nVideoBitrate = 768 * 1024;
+//			editorParam.nFps = 20;
 			
 			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
 			mVVPlayVideo.saveVideo(mVideoSavePath, editorParam,

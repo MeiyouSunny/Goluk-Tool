@@ -1,8 +1,13 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import cn.com.mobnote.golukmobile.R;
+
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class RTPullListView extends ListView implements OnScrollListener {  
-	//private static final String TAG = "RTPullListView";
+	private static final String TAG = "RTPullListView";
 
 	private final static int RELEASE_To_REFRESH = 0;
 	private final static int PULL_To_REFRESH = 1;
@@ -27,6 +32,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	private final static int DONE = 3;
 	private final static int LOADING = 4;
 
+	// 实际的padding的距离与界面上偏移距离的比例
 	private final static int RATIO = 3;
 
 	private LayoutInflater inflater;
@@ -41,8 +47,10 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	private RotateAnimation animation;
 	private RotateAnimation reverseAnimation;
 
+	// 用于保证startY的值在一个完整的touch事件中只被记录一次
 	private boolean isRecored;
 
+//	private int headContentWidth;
 	private int headContentHeight;
 
 	private int startY;
@@ -56,8 +64,8 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 	private int visibleLastIndex;
 	private int visibleItemCount;
-	private boolean isRefreshFoot;
-	private scrollListener mListener;
+	
+	private SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
 	public RTPullListView(Context context) {
 		super(context);
@@ -73,13 +81,15 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		inflater = LayoutInflater.from(context);
 		headView = (LinearLayout) inflater.inflate(R.layout.pulllist_head, null);
 		arrowImageView = (ImageView) headView.findViewById(R.id.head_arrowImageView);
-
+//		arrowImageView.setMinimumWidth(70);
+//		arrowImageView.setMinimumHeight(50);
 		progressBar = (ProgressBar) headView.findViewById(R.id.head_progressBar);
 		tipsTextview = (TextView) headView.findViewById(R.id.head_tipsTextView);
 		lastUpdatedTextView = (TextView) headView.findViewById(R.id.head_lastUpdatedTextView);
 
 		measureView(headView);
 		headContentHeight = headView.getMeasuredHeight();
+//		headContentWidth = headView.getMeasuredWidth();
 
 		headView.setPadding(0, -1 * headContentHeight, 0, 0);
 		headView.invalidate();
@@ -114,11 +124,6 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		if(firstItemIndex == 1 && !isPush){
 			setSelection(0);
 		}
-		if(firstVisiableItem + arg2 == arg3){
-			isRefreshFoot = true;
-        }else{
-        	isRefreshFoot = false;
-        }	
 	}
 	
 	public void setSelectionfoot(){
@@ -126,22 +131,8 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	}
 
 	public void onScrollStateChanged(AbsListView arg0, int arg1) {
-		if(arg1 == OnScrollListener.SCROLL_STATE_IDLE) {
-			if(isRefreshFoot){
-				if(mListener != null)
-					mListener.scrollEnd();
-			} 
-		}
+		
 	}
-	
-	public void setListener(scrollListener listener){
-		mListener = listener;
-	}
-	
-	public interface scrollListener{
-		public void scrollEnd();
-	}
-	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
@@ -152,82 +143,124 @@ public class RTPullListView extends ListView implements OnScrollListener {
 					isRecored = true;
 					isPush = true;
 					startY = (int) event.getY();
+					Log.v(TAG, "在down时候记录当前位置‘");
 				}
 				break;
 			case MotionEvent.ACTION_UP:
 				if (state != REFRESHING && state != LOADING) {
 					if (state == DONE) {
+						// 什么都不做
 					}
 					if (state == PULL_To_REFRESH) {
 						state = DONE;
 						changeHeaderViewByState();
+
+						Log.v(TAG, "由下拉刷新状态，到done状态");
 					}
 					if (state == RELEASE_To_REFRESH) {
 						state = REFRESHING;
 						changeHeaderViewByState();
 						onRefresh();
+
+						Log.v(TAG, "由松开刷新状态，到done状态");
 					}
 				}
+
 				isRecored = false;
 				isBack = false;
+
 				break;
 
 			case MotionEvent.ACTION_MOVE:
 				int tempY = (int) event.getY();
+
 				if (!isRecored && firstItemIndex == 0) {
+					Log.v(TAG, "在move时候记录下位置");
 					isRecored = true;
 					startY = tempY;
 				}
 
 				if (state != REFRESHING && isRecored && state != LOADING) {
+
+					// 保证在设置padding的过程中，当前的位置一直是在head，否则如果当列表超出屏幕的话，当在上推的时候，列表会同时进行滚动
+
+					// 可以松手去刷新了
 					if (state == RELEASE_To_REFRESH) {
 
 						setSelection(0);
-						if (((tempY - startY) / RATIO < headContentHeight) && (tempY - startY) > 0) {
+
+						// 往上推了，推到了屏幕足够掩盖head的程度，但是还没有推到全部掩盖的地步
+						if (((tempY - startY) / RATIO < headContentHeight)
+								&& (tempY - startY) > 0) {
 							state = PULL_To_REFRESH;
 							changeHeaderViewByState();
+
+							Log.v(TAG, "由松开刷新状态转变到下拉刷新状态");
 						}
+						// 一下子推到顶了
 						else if (tempY - startY <= 0) {
 							state = DONE;
 							changeHeaderViewByState();
+
+							Log.v(TAG, "由松开刷新状态转变到done状态");
 						}
+						// 往下拉了，或者还没有上推到屏幕顶部掩盖head的地步
 						else {
+							// 不用进行特别的操作，只用更新paddingTop的值就行了
 						}
 					}
+					// 还没有到达显示松开刷新的时候,DONE或者是PULL_To_REFRESH状态
 					if (state == PULL_To_REFRESH) {
+
 						setSelection(0);
+
+						// 下拉到可以进入RELEASE_TO_REFRESH的状态
 						if ((tempY - startY) / RATIO >= headContentHeight) {
 							state = RELEASE_To_REFRESH;
 							isBack = true;
 							changeHeaderViewByState();
+							Log.v(TAG, "由done或者下拉刷新状态转变到松开刷新");
 						}
-
+						// 上推到顶了
 						else if (tempY - startY <= 0) {
 							state = DONE;
 							changeHeaderViewByState();
 							isPush = false;
+							Log.v(TAG, "由DOne或者下拉刷新状态转变到done状态");
 						}
 					}
 
+					// done状态下
 					if (state == DONE) {
 						if (tempY - startY > 0) {
 							state = PULL_To_REFRESH;
 							changeHeaderViewByState();
 						}
 					}
+
+					// 更新headView的size
 					if (state == PULL_To_REFRESH) {
-						headView.setPadding(0, -1 * headContentHeight + (tempY - startY) / RATIO, 0, 0);
+						headView.setPadding(0, -1 * headContentHeight
+								+ (tempY - startY) / RATIO, 0, 0);
+
 					}
+
+					// 更新headView的paddingTop
 					if (state == RELEASE_To_REFRESH) {
-						headView.setPadding(0, (tempY - startY) / RATIO- headContentHeight, 0, 0);
+						headView.setPadding(0, (tempY - startY) / RATIO
+								- headContentHeight, 0, 0);
 					}
+
 				}
+
 				break;
 			}
 		}
+
 		return super.onTouchEvent(event);
 	}
 
+	// 当状态改变时候，调用该方法，以更新界面
 	private void changeHeaderViewByState() {
 		switch (state) {
 		case RELEASE_To_REFRESH:
@@ -235,9 +268,13 @@ public class RTPullListView extends ListView implements OnScrollListener {
 			progressBar.setVisibility(View.GONE);
 			tipsTextview.setVisibility(View.VISIBLE);
 			lastUpdatedTextView.setVisibility(View.VISIBLE);
+
 			arrowImageView.clearAnimation();
 			arrowImageView.startAnimation(animation);
+
 			tipsTextview.setText(getResources().getString(R.string.release_to_refresh));
+
+			Log.v(TAG, "当前状态，松开刷新");
 			break;
 		case PULL_To_REFRESH:
 			progressBar.setVisibility(View.GONE);
@@ -245,32 +282,41 @@ public class RTPullListView extends ListView implements OnScrollListener {
 			lastUpdatedTextView.setVisibility(View.VISIBLE);
 			arrowImageView.clearAnimation();
 			arrowImageView.setVisibility(View.VISIBLE);
+			// 是由RELEASE_To_REFRESH状态转变来的
 			if (isBack) {
 				isBack = false;
 				arrowImageView.clearAnimation();
 				arrowImageView.startAnimation(reverseAnimation);
 
 				tipsTextview.setText(getResources().getString(R.string.pull_to_refresh));
-			}
-			else {
+			} else {
 				tipsTextview.setText(getResources().getString(R.string.pull_to_refresh));
 			}
+			Log.v(TAG, "当前状态，下拉刷新");
 			break;
+
 		case REFRESHING:
+
 			headView.setPadding(0, 0, 0, 0);
+
 			progressBar.setVisibility(View.VISIBLE);
 			arrowImageView.clearAnimation();
 			arrowImageView.setVisibility(View.GONE);
 			tipsTextview.setText(getResources().getString(R.string.refreshing));
 			lastUpdatedTextView.setVisibility(View.VISIBLE);
+
+			Log.v(TAG, "当前状态,正在刷新...");
 			break;
 		case DONE:
 			headView.setPadding(0, -1 * headContentHeight, 0, 0);
+
 			progressBar.setVisibility(View.GONE);
 			arrowImageView.clearAnimation();
 			arrowImageView.setImageResource(R.drawable.pulltorefresh);
 			tipsTextview.setText(getResources().getString(R.string.pull_to_refresh));
 			lastUpdatedTextView.setVisibility(View.VISIBLE);
+
+			Log.v(TAG, "当前状态，done");
 			break;
 		}
 	}
@@ -284,13 +330,9 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		public void onRefresh();
 	}
 
-	public void setUpdateTime(String time){
-		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + time);
-	}
-	
 	public void onRefreshComplete() {
 		state = DONE;
-//		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + new Date().toLocaleString());
+		lastUpdatedTextView.setText(getResources().getString(R.string.updating) +formatter.format(new Date()) );
 		changeHeaderViewByState();
 		invalidateViews();
 		setSelection(0);
@@ -307,6 +349,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		changeHeaderViewByState();
 	}
 	
+	// 此方法直接照搬自网络上的一个下拉刷新的demo，此处是“估计”headView的width以及height
 	private void measureView(View child) {
 		ViewGroup.LayoutParams p = child.getLayoutParams();
 		if (p == null) {
@@ -317,15 +360,17 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		int lpHeight = p.height;
 		int childHeightSpec;
 		if (lpHeight > 0) {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight,MeasureSpec.EXACTLY);
+			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight,
+					MeasureSpec.EXACTLY);
 		} else {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(0,MeasureSpec.UNSPECIFIED);
+			childHeightSpec = MeasureSpec.makeMeasureSpec(0,
+					MeasureSpec.UNSPECIFIED);
 		}
 		child.measure(childWidthSpec, childHeightSpec);
 	}
 
 	public void setAdapter(BaseAdapter adapter) {
-//		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + new Date().toLocaleString());
+		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + formatter.format(new Date()));
 		super.setAdapter(adapter);
 	}
-}  
+}

@@ -9,6 +9,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.logic.GolukModule;
@@ -32,7 +33,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	private RTPullListView mRTPullListView = null;
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter = null;
 	private List<VideoSquareInfo> mDataList = null;
-	private CustomProgressDialog mCustomProgressDialog = null;
+	public  CustomLoadingDialog mCustomProgressDialog = null;
 	private VideoSquareInfo begantime = null;
 	private VideoSquareInfo endtime = null;
 	private ImageButton mBackBtn = null;
@@ -96,8 +97,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	private void httpPost(boolean flag,String type,String operation,String timestamp) {
 		if (flag) {
 			if (null == mCustomProgressDialog) {
-				mCustomProgressDialog = new CustomProgressDialog(this);
-				mCustomProgressDialog.setCancelable(false);
+				mCustomProgressDialog = new CustomLoadingDialog(this);
 				mCustomProgressDialog.show();
 			}
 		}
@@ -126,6 +126,7 @@ public class VideoSquarePlayActivity extends Activity implements
 			public void onRefresh() {
 				uptype = 2;
 				if(begantime !=null){
+					System.out.println("下拉刷新时间="+begantime.mVideoEntity.sharingtime);
 					httpPost(true, type, "2", begantime.mVideoEntity.sharingtime);
 				}else{
 					mRTPullListView.postDelayed(new Runnable() {
@@ -146,6 +147,7 @@ public class VideoSquarePlayActivity extends Activity implements
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
 						uptype = 1;
 						if (isHaveData) {
+							System.out.println("上拉刷新时间="+endtime.mVideoEntity.sharingtime);
 							httpPost(true, type, "2", endtime.mVideoEntity.sharingtime);
 						}
 						// Toast.makeText(VideoSquarePlayActivity.this,
@@ -211,9 +213,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	 */
 	private void closeProgressDialog() {
 		if (null != mCustomProgressDialog) {
-			if (mCustomProgressDialog.isShowing()) {
-				mCustomProgressDialog.dismiss();
-			}
+				mCustomProgressDialog.close();
 		}
 	}
 

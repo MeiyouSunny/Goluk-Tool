@@ -8,13 +8,12 @@ import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
@@ -36,8 +35,6 @@ public class VideoSquareOnClickListener implements OnClickListener,
 
 	AlertDialog confirmation;
 
-	public static CustomProgressDialog mCustomProgressDialog = null;
-
 	public VideoSquareOnClickListener(Context context,
 			List<VideoSquareInfo> videoSquareListData,
 			VideoSquareInfo videoSquareInfo, int plform) {
@@ -49,9 +46,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 		form = plform;
 		GolukApplication.getInstance().getVideoSquareManager()
 				.addVideoSquareManagerListener("videosharehotlist", this);
-		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomProgressDialog(mcontext);
-		}
+		
 	}
 
 	@Override
@@ -60,28 +55,41 @@ public class VideoSquareOnClickListener implements OnClickListener,
 		switch (view.getId()) {
 		case R.id.share_btn:
 			System.out.println("sss");
-			if (null != mCustomProgressDialog) {
-				mCustomProgressDialog.show();
-			}
+//			if (null == mCustomProgressDialog) {]
+				//mCustomProgressDialog = new CustomLoadingDialog(mcontext);
+//			}
+			//if (null != mCustomProgressDialog) {
+				//mCustomProgressDialog.show();
+			//}
 			if (mcontext instanceof VideoSquareActivity) {
 				VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
 				vsa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
+				vsa.mCustomProgressDialog = new CustomLoadingDialog(vsa);
+				vsa.mCustomProgressDialog.show();
 				System.out.println("shareid=" + vsa.shareVideoId);
+				boolean result = GolukApplication.getInstance().getVideoSquareManager().getShareUrl(mVideoSquareInfo.mVideoEntity.videoid,
+						mVideoSquareInfo.mVideoEntity.type);
+				System.out.println("YYYY+RESULT3333333333" + result);
+				if (!result) {
+					vsa.mCustomProgressDialog.close();
+				}
 			} else if (mcontext instanceof VideoSquarePlayActivity) {
 				VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
+				vspa.mCustomProgressDialog = new CustomLoadingDialog(vspa);
+				vspa.mCustomProgressDialog.show();
+				
 				vspa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
 				System.out.println("shareid=" + vspa.shareVideoId);
+				
+				boolean result = GolukApplication.getInstance().getVideoSquareManager().getShareUrl(mVideoSquareInfo.mVideoEntity.videoid,
+						mVideoSquareInfo.mVideoEntity.type);
+				System.out.println("YYYY+RESULT3333333333" + result);
+				if (!result) {
+					vspa.mCustomProgressDialog.close();
+				}
 			}
 
-			boolean result = GolukApplication
-					.getInstance()
-					.getVideoSquareManager()
-					.getShareUrl(mVideoSquareInfo.mVideoEntity.videoid,
-							mVideoSquareInfo.mVideoEntity.type);
-			System.out.println("YYYY+RESULT3333333333" + result);
-			if (!result) {
-				mCustomProgressDialog.dismiss();
-			}
+			
 			break;
 		case R.id.like_btn:
 			
@@ -224,20 +232,6 @@ public class VideoSquareOnClickListener implements OnClickListener,
 				});
 	}
 
-	/**
-	 * 关闭加载中对话框
-	 * 
-	 * @author xuhw
-	 * @date 2015年4月15日
-	 */
-	private void closeProgressDialog() {
-		if (null != mCustomProgressDialog) {
-			if (mCustomProgressDialog.isShowing()) {
-				System.out.println("FFFFFdialog");
-				mCustomProgressDialog.dismiss();
-			}
-		}
-	}
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
@@ -248,7 +242,6 @@ public class VideoSquareOnClickListener implements OnClickListener,
 		System.out.println("YYYY+RESULT-2-2-2-2-2-2-2");
 		if (event == SquareCmd_Req_GetShareUrl) {
 			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
-			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				try {
 					System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
@@ -269,20 +262,18 @@ public class VideoSquareOnClickListener implements OnClickListener,
 
 						if (form == 2) {
 							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
+							vspa.mCustomProgressDialog.close();
 							if (!vspa.isFinishing()) {
-								CustomShareBoard shareBoard = new CustomShareBoard(
-										vspa);
-								shareBoard.showAtLocation(vspa.getWindow()
-										.getDecorView(), Gravity.BOTTOM, 0, 0);
+								CustomShareBoard shareBoard = new CustomShareBoard(vspa);
+								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
 
 						} else {
 							VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
+							vsa.mCustomProgressDialog.close();
 							if (!vsa.isFinishing()) {
-								CustomShareBoard shareBoard = new CustomShareBoard(
-										vsa);
-								shareBoard.showAtLocation(vsa.getWindow()
-										.getDecorView(), Gravity.BOTTOM, 0, 0);
+								CustomShareBoard shareBoard = new CustomShareBoard(vsa);
+								shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
 
 						}

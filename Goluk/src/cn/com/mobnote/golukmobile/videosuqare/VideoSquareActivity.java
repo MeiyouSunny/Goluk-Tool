@@ -5,6 +5,7 @@ import com.umeng.socialize.sso.UMSsoHandler;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 	private ImageView square = null;
 	private Button mVideoList = null;
 	private Button mTypeList = null;
+	public CustomLoadingDialog mCustomProgressDialog;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
 
