@@ -556,10 +556,24 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// System.out.println("KKKKKK 直播失败 : " + nResult + strResultInfo);
 			// }
 
-			LogUtil.e("", "jyf------TTTTT------------managerReceiver----3333:" + nResult);
-
+			LogUtil.e("", "YYYYYY===onLiveRecordFailed=====111111====" + nResult);
+			
+			
+			mLiveBackBtn.removeCallbacks(mRunnable);
+			mLiveBackBtn.postDelayed(mRunnable, 5000);
 		}
 
+	};
+	
+	Runnable mRunnable = new Runnable() {
+		@Override
+		public void run() {
+			if (!CarRecorderManager.isRTSPLiving()) {
+				isStartLive = false;
+				startLive(mCurrentVideoId);
+				LogUtil.e("", "YYYYYY===onLiveRecordFailed=====222222====" );
+			}
+		}
 	};
 
 	private void showToast(String msg) {
