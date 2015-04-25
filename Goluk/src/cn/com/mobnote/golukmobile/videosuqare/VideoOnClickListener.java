@@ -11,6 +11,7 @@ import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.sax.StartElementListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -37,33 +38,47 @@ public class VideoOnClickListener implements OnClickListener{
 	@Override
 	public void onClick(View arg0) {
 		if("2".equals(mVideoSquareInfo.mVideoEntity.type)){
-			PlayerState mPlayerState = mVideoSquareInfo.mPlayerState;
-			DWMediaPlayer player = mDWMediaPlayerList.get(mVideoSquareInfo.id);
-			if(null !=player){
-				if(PlayerState.allowbuffer == mPlayerState){
-					player.prepareAsync();
-					updatePlayerState(PlayerState.buffing);
-					LogUtils.d("SSS=========buffing====1111====");
-				}else if(PlayerState.buffing == mPlayerState){
-					LogUtils.d("SSS=========buffing===2222=====");
-				}else if(PlayerState.bufferend == mPlayerState){
-					player.start();
-					updatePlayerState(PlayerState.playing);
-					LogUtils.d("SSS=========playing========");
-				}else if(PlayerState.playing == mPlayerState){
-					if(player.isPlaying()){
-						player.pause();
-						updatePlayerState(PlayerState.pause);
-						LogUtils.d("SSS=========pause========");
-					}
-				}else if(PlayerState.pause == mPlayerState){
-					player.start();
-					updatePlayerState(PlayerState.playing);
-					LogUtils.d("SSS=========playing========");
-				}else {
-					LogUtils.d("SSS=========noallow========");
-				}
-			}
+//			if(1 == form){
+//				VideoSquareActivity a = (VideoSquareActivity)mContext;
+//				Intent intent = new Intent(a, CCPlayerPage.class);
+//				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
+//				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+//				a.startActivity(intent);
+//			}else{
+//				VideoSquarePlayActivity a = (VideoSquarePlayActivity)mContext;
+//				Intent intent = new Intent(a, CCPlayerPage.class);
+//				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
+//				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+//				a.startActivity(intent);
+//			}
+			
+//			PlayerState mPlayerState = mVideoSquareInfo.mPlayerState;
+//			DWMediaPlayer player = mDWMediaPlayerList.get(mVideoSquareInfo.id);
+//			if(null !=player){
+//				if(PlayerState.allowbuffer == mPlayerState){
+//					player.prepareAsync();
+//					updatePlayerState(PlayerState.buffing);
+//					LogUtils.d("SSS=========buffing====1111====");
+//				}else if(PlayerState.buffing == mPlayerState){
+//					LogUtils.d("SSS=========buffing===2222=====");
+//				}else if(PlayerState.bufferend == mPlayerState){
+//					player.start();
+//					updatePlayerState(PlayerState.playing);
+//					LogUtils.d("SSS=========playing========");
+//				}else if(PlayerState.playing == mPlayerState){
+//					if(player.isPlaying()){
+//						player.pause();
+//						updatePlayerState(PlayerState.pause);
+//						LogUtils.d("SSS=========pause========");
+//					}
+//				}else if(PlayerState.pause == mPlayerState){
+//					player.start();
+//					updatePlayerState(PlayerState.playing);
+//					LogUtils.d("SSS=========playing========");
+//				}else {
+//					LogUtils.d("SSS=========noallow========");
+//				}
+//			}
 		}else{
 			//直播点击跳转
 			 // 开启直播

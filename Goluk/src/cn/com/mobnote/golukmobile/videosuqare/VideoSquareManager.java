@@ -216,6 +216,26 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 						SquareCmd_Req_ShareVideo, json);
 	}
+	
+	/**
+	 * 同步获取视频广场列表数据
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月24日
+	 */
+	public String getSquareList(){
+		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square, SquareCmd_Get_SquareCache, "");
+	}
+	
+	/**
+	 * 同步获取热门列表数据
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月24日
+	 */
+	public String getHotList(){
+		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square, SquareCmd_Get_HotCache, "");
+	}
 
 	/**
 	 * 添加视频广场监听
