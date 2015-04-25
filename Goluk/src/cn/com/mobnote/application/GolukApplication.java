@@ -55,6 +55,8 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
@@ -184,7 +186,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	public Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 1001:
+				tips();
+				break;
 
+			default:
+				break;
+			}
 		};
 	};
 	
@@ -876,36 +885,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 							if(TextUtils.isEmpty((String)param2)){
 								return;
 							}
-							ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
-							for(int i=0; i<fileList.size(); i++){
-								VideoFileInfo info = fileList.get(i);
-								String filename = info.location;
-								
-								String filePath = "";
-								if(filename.contains("WND")){
-									filePath = "fs1:/video/wonderful/";
-								}else if(filename.contains("URG")){
-									filePath = "fs1:/video/urgent/";
-								}
-								
-								if(TextUtils.isEmpty(filePath)){
-									break;
-								}
-								
-								filePath = FileUtils.javaToLibPath(filePath);
-								String path = filePath + File.separator + filename;
-								File file = new File(path);
-								if(!file.exists()){
-									if(!mDownLoadFileList.contains(info.location)){
-										mDownLoadFileList.add(info.location);
-											
-										boolean flag = GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
-										LogUtil.e("xuhw", "YYYYYY=====querySingleFile=====type="+info.type+"==flag="+flag);
-									}
-								}
-								
-							}
-							
+							fileList = IpcDataParser.parseMoreFile((String) param2);
+							mHandler.sendEmptyMessage(1001);
 						}
 					}
 				break;
@@ -1197,6 +1178,47 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if(GlobalWindow.getInstance().isShow()){
 			GlobalWindow.getInstance().dimissGlobalWindow();
 		}
+	}
+	
+	ArrayList<VideoFileInfo> fileList;
+	private void tips(){
+		CustomDialog mCustomDialog = new CustomDialog(this);
+		mCustomDialog.setMessage("有"+fileList.size()+"个新文件，确定要下载吗？");
+		mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+			@Override
+			public void onClickListener() {
+				for(int i=0; i<fileList.size(); i++){
+					VideoFileInfo info = fileList.get(i);
+					String filename = info.location;
+					
+					String filePath = "";
+					if(filename.contains("WND")){
+						filePath = "fs1:/video/wonderful/";
+					}else if(filename.contains("URG")){
+						filePath = "fs1:/video/urgent/";
+					}
+					
+					if(TextUtils.isEmpty(filePath)){
+						break;
+					}
+					
+					filePath = FileUtils.javaToLibPath(filePath);
+					String path = filePath + File.separator + filename;
+					File file = new File(path);
+					if(!file.exists()){
+						if(!mDownLoadFileList.contains(info.location)){
+							mDownLoadFileList.add(info.location);
+								
+							boolean flag = GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
+							LogUtil.e("xuhw", "YYYYYY=====querySingleFile=====type="+info.type+"==flag="+flag);
+						}
+					}
+					
+				}
+			}
+		});
+		mCustomDialog.setRightButton("取消", null);
+		mCustomDialog.show();
 	}
 	
 }
