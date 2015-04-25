@@ -127,7 +127,7 @@ public class VideoSquarePlayActivity extends Activity implements
 				uptype = 2;
 				if(begantime !=null){
 					System.out.println("下拉刷新时间="+begantime.mVideoEntity.sharingtime);
-					httpPost(true, type, "2", begantime.mVideoEntity.sharingtime);
+					httpPost(true, type, "1", begantime.mVideoEntity.sharingtime);
 				}else{
 					mRTPullListView.postDelayed(new Runnable() {
 						@Override
