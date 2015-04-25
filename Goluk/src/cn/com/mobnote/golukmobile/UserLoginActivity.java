@@ -328,6 +328,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mTextViewRegist.setEnabled(false);
 							mTextViewForgetPwd.setEnabled(false);
 						}else{
+							mLoading.setVisibility(View.GONE);
 							console.toast("登录失败======UserLoginActivity----", this);
 							mApplication.loginStatus = 2;
 						}

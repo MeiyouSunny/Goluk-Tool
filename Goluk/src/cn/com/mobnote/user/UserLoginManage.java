@@ -31,6 +31,8 @@ public class UserLoginManage {
 	private String sex = null;
 	private String sign = null;//desc
 	private String phone = null;
+	/**输入密码错误限制*/
+	public int countErrorPassword = 1;
 
 	public UserLoginManage(GolukApplication mApp) {
 		super();
@@ -107,6 +109,7 @@ public class UserLoginManage {
 				case 402:
 					console.toast("密码错误,请重试", mApp.getContext());
 					loginStatusChange(2);
+					countErrorPassword++;
 					break;
 				default:
 					break;

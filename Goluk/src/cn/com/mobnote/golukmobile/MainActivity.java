@@ -1020,6 +1020,24 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private void click_share() {
 		if (!mApp.isUserLoginSucess) {
 			mShareLayout.setVisibility(View.GONE);
+			mApp.mUser.setUserInterface(this);
+			if(mApp.autoLoginStatus == 1){
+				mBuilder = new AlertDialog.Builder(mContext);
+				 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
+				.setCancelable(false)
+				.setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						// TODO Auto-generated method stub
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							return true;
+						}
+						return false;
+					}
+				}).create();
+				dialog	.show();
+				return ;
+			}
 			Intent intent = new Intent(this, UserLoginActivity.class);
 			intent.putExtra("isInfo", "back");
 			startActivity(intent);
@@ -1305,7 +1323,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	@Override
 	public void statusChange() {
 		// TODO Auto-generated method stub
-		if(mApp.autoLoginStatus !=1){
+		/*if(mApp.autoLoginStatus !=1){
 			dismissAutoDialog();
 			Intent it = null;
 			if(mApp.autoLoginStatus == 2){
@@ -1315,6 +1333,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					it = new Intent(MainActivity.this,LiveActivity.class);
 				}
 				startActivity(it);
+			}
+		}*/
+		if(mApp.autoLoginStatus != 1){
+			dismissAutoDialog();
+			if(mApp.autoLoginStatus == 2){
+				mShareLayout.setVisibility(View.VISIBLE);
 			}
 		}
 		

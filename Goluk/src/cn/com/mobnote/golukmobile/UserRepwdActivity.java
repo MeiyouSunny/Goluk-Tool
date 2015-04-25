@@ -127,7 +127,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				if(!arg1){
 					if(!phone.equals("")){
 						if(!UserUtils.isMobileNO(phone)){
-//							mEditTextPhone.setError("手机号格式不正确");
 							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}
@@ -152,7 +151,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				String phone = mEditTextPhone.getText().toString();
-				if(!"".equals(phone)){
+				/*if(!"".equals(phone)){
 					if(phone.length() == 11 && phone.startsWith("1")){
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
 						mBtnIdentity.setEnabled(true);
@@ -165,6 +164,20 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 					}
 				}else{
 					//手机号为空
+				}*/
+				if(!"".equals(phone)){
+					if(phone.length() == 11 && phone.startsWith("1") && UserUtils.isMobileNO(phone)){
+						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
+						mBtnIdentity.setEnabled(true);
+					}else{
+						//手机号不合法
+						mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
+						mBtnIdentity.setEnabled(false);
+					}
+				}else{
+					//手机号为空
+					mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
+					mBtnIdentity.setEnabled(false);
 				}
 			}
 			@Override
@@ -257,15 +270,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				super.handleMessage(msg);
-				//获取本机手机号
-				TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-				String localPhoneNumber = telManager.getLine1Number();
-				console.log(localPhoneNumber);
-//				if(localPhoneNumber.equals(mEditTextPhone.getText().toString())){
-					mEditTextIdentify.setText(smsCode);
-//				}else{
-//					mEditTextIdentify.setText("");
-//				}
+				mEditTextIdentify.setText(smsCode);
 			}
 		};
 		
@@ -308,6 +313,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			}else{
 				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
 				
+				identifyClick = true;
 				UserUtils.hideSoftMethod(this);
 				mIdentifyLoading.setVisibility(View.VISIBLE);
 				registerReceiver(smsReceiver, smsFilter);
@@ -317,7 +323,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			}
 		}else{
 			mBtnIdentity.setEnabled(false);
-//			UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 		}
 		
 	}
@@ -398,7 +403,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 					break;
 				case 480:
 					UserUtils.showDialog(this, "验证码获取失败");
-					Log.i("bbb", "111111");
 					break;
 				default:
 					
@@ -411,7 +415,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		}
 		else{
 			console.toast("验证码获取失败", mContext);
-			Log.i("bbb", "122222");
 //			mIdentifyLoading.setVisibility(View.GONE);
 		}
 	}
@@ -429,8 +432,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				if(!UserUtils.isNetDeviceAvailable(this)){
 					console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 				}else{
-					//初始化定时器
-				
 				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 				console.log(isRegist);
@@ -450,7 +451,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		}
 			}else{
 				mBtnOK.setFocusable(false);
-//			UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
 		}
 		}
 	}
@@ -606,19 +606,21 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			}
 			break;
 		case R.id.user_repwd_identify_btn:
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				mBtnIdentity.setBackgroundResource(R.drawable.icon_login_click);
-				break;
-			case MotionEvent.ACTION_UP:
-				mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
-				break;
+			String phone = mEditTextPhone.getText().toString();
+			if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
+				switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					mBtnIdentity.setBackgroundResource(R.drawable.icon_login_click);
+					break;
+				case MotionEvent.ACTION_UP:
+					mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
+					break;
 
-			default:
+				default:
+					break;
+				}
 				break;
 			}
-			break;
-
 		default:
 			break;
 		}
