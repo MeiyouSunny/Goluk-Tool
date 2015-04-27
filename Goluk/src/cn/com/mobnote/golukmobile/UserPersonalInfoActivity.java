@@ -139,7 +139,7 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 				itEdit.putExtra("infoSign", sign);
 				Log.i("info", head+name+sex+sign);
 				startActivity(itEdit);
-//				this.finish();
+				this.finish();
 				break;
 			default:
 				break;

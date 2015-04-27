@@ -327,9 +327,11 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mEditTextPwd.setEnabled(false);
 							mTextViewRegist.setEnabled(false);
 							mTextViewForgetPwd.setEnabled(false);
+							mBtnLogin.setEnabled(false);
+							mBackButton.setEnabled(false);
 						}else{
 							mLoading.setVisibility(View.GONE);
-							console.toast("登录失败======UserLoginActivity----", this);
+//							console.toast("登录失败", this);
 							mApplication.loginStatus = 2;
 						}
 					}else{
@@ -355,6 +357,12 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 1:
 			mApplication.isUserLoginSucess = true;
 			mLoading.setVisibility(View.GONE);
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			if(justLogin.equals("main")){
 				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 				startActivity(login);
@@ -368,6 +376,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			break;
 		case 3:
 			mApplication.isUserLoginSucess = false;
@@ -376,6 +386,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			if(UserUtils.isMobileNO(phone)){
 				new AlertDialog.Builder(this)
 				.setTitle("Goluk温馨提示：")
@@ -402,6 +414,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			break;
 		default:
 			break;

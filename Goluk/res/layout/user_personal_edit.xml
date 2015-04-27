@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/user_login_bg"
     >
-    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
     <!-- 编辑资料的头部标题 -->
 	<include layout="@layout/user_personal_edit_title"/>
 	
@@ -231,6 +234,35 @@
 	        android:layout_height="1dp"
 	        android:background="@drawable/solid" />
 	</LinearLayout>
-	
-	
-</LinearLayout>
+	</LinearLayout>
+	<RelativeLayout 
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:id="@+id/loading_layout"     
+        android:layout_centerInParent="true"
+        android:background="#40000000"
+        android:visibility="gone"
+        >
+
+        <include
+            android:id="@+id/user_regist_include"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="23dp"
+            layout="@layout/loading"
+            android:paddingTop="100dp" />
+
+         <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="数据修改中,请稍候……"
+            android:layout_below="@id/user_regist_include"
+            android:layout_centerInParent="true"
+            android:textColor="#fff"
+            android:layout_marginTop="20dp"
+            />
+    </RelativeLayout>
+</RelativeLayout>
