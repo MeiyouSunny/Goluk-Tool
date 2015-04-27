@@ -331,7 +331,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mBackButton.setEnabled(false);
 						}else{
 							mLoading.setVisibility(View.GONE);
-							console.toast("登录失败", this);
+//							console.toast("登录失败", this);
 							mApplication.loginStatus = 2;
 						}
 					}else{

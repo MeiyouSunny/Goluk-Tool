@@ -41,7 +41,7 @@ public class UserRegistManage {
 	public UserRegistManage(GolukApplication mApp) {
 		super();
 		this.mApp = mApp;
-		mApp.initLogic();
+//		mApp.initLogic();
 	}
 	
 	public void setIdentifyInterface(UserIdentifyInterface identifyInterface){

@@ -1037,6 +1037,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				}).create();
 				dialog	.show();
 				return ;
+			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+				mShareLayout.setVisibility(View.VISIBLE);
+				return ;
 			}
 			Intent intent = new Intent(this, UserLoginActivity.class);
 			intent.putExtra("isInfo", "back");
@@ -1080,6 +1083,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				}).create();
 				dialog	.show();
 				return ;
+			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+				console.toast("网络连接异常，请重试", mContext);
+				return ;
 			}
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
 			return;
@@ -1118,6 +1124,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					}
 				}).create();
 				dialog	.show();
+				return ;
+			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+				console.toast("网络连接异常，请重试", mContext);
 				return ;
 			}
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");

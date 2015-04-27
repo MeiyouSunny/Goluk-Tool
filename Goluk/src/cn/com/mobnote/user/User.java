@@ -41,7 +41,7 @@ public class User {
 		this.mApp = mApp;
 		mContext = mApp.getApplicationContext();
 		
-		mApp.initLogic();
+//		mApp.initLogic();
 		
 		//初始化Handler
 		mHandler = new Handler() {

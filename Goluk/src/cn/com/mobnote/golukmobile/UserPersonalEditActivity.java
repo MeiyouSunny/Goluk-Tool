@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -141,7 +143,10 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		switch (arg0.getId()) {
 		//title返回
 		case R.id.back_btn:
-			finish();
+//			finish();
+			Intent it = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
+			startActivity(it);
+			this.finish();
 			break;
 		//保存
 		case R.id.user_title_right:
@@ -358,5 +363,16 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			Intent it = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
+			startActivity(it);
+			this.finish();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
