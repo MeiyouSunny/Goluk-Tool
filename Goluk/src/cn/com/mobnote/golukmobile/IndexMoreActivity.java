@@ -241,7 +241,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 						dialog	.show();
 					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess || mApp.autoLoginStatus == 3){
 						Log.i("userinterface", "--------更多页面-------");
-						intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+//						intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+						intent = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
 						startActivity(intent);
 					}
 				}else{
@@ -326,7 +327,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			dismissDialog();
 		
 			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
-			Intent it = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+//			Intent it = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+			Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
 			startActivity(it);
 		}else if(mApp.isUserLoginSucess == false){
 			dismissDialog();

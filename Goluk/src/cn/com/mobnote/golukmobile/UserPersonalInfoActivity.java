@@ -19,7 +19,6 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -139,7 +138,7 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 				itEdit.putExtra("infoSign", sign);
 				Log.i("info", head+name+sex+sign);
 				startActivity(itEdit);
-				this.finish();
+//				this.finish();
 				break;
 			default:
 				break;
