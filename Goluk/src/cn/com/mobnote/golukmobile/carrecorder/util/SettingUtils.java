@@ -93,7 +93,7 @@ public class SettingUtils {
 	}
 	
 	public long getLong(String key, int value){
-		return preferences.getInt(key, value);
+		return preferences.getLong(key, value);
 	}
 	
 }

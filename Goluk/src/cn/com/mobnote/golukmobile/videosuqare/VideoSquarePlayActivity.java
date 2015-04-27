@@ -324,7 +324,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	  * @throws
 	 */
 	public void loadHistorydata(){
-		String param = GolukApplication.getInstance().getVideoSquareManager().getSquareList();
+		String param = GolukApplication.getInstance().getVideoSquareManager().getSquareList(attribute);
 		if(param != null && !"".equals(param)){
 			List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param);
 			mDataList = list;
