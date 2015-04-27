@@ -602,6 +602,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (!isShowPop) {
 			isShowPop = true;
 		}
+		if (mApp.isUserLoginSucess) {
+			// 登录成功
+			mLoginLayout.setVisibility(View.GONE);
+		}
 	}
 
 	// 初次进入
@@ -1804,7 +1808,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (KeyEvent.KEYCODE_BACK == keyCode) {
-			preExit();
+			if (mliveSettingWindow.isShowing()) {
+				// 直接退出
+				mliveSettingWindow.close();
+				this.exit();
+			} else {
+				preExit();
+			}
+			
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

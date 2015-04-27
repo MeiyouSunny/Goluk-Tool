@@ -53,6 +53,8 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	private boolean mIsCanSound = true;
 	/** 当前选择视频类型 */
 	private int mVideoType = 0;
+	
+	private boolean isShow = false;
 
 	public void setCallBackNotify(IPopwindowFn fn) {
 		this.mListener = fn;
@@ -110,11 +112,17 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 			mPopWindow.setOutsideTouchable(true);
 			mPopWindow.setBackgroundDrawable(new BitmapDrawable());
 			mPopWindow.showAtLocation(mParentLayout, Gravity.RIGHT | Gravity.BOTTOM, 0, 0);
+			isShow = true;
 		}
+	}
+	
+	public boolean isShowing() {
+		return this.isShow;
 	}
 
 	public void close() {
 		if (null != mPopWindow) {
+			isShow = false;
 			mPopWindow.dismiss();
 			mPopWindow = null;
 		}
