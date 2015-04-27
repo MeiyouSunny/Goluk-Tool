@@ -155,9 +155,9 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		LogUtil.e("xuhw","YYYYY===GSensor====event="+event+"==msg="+msg+"===param1="+param1+"==param2="+param2);
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(msg == IPC_VDCP_Msg_GetGSensorControlCfg){
+				LogUtil.e("xuhw","YYYYY===GSensor====event="+event+"==msg="+msg+"===param1="+param1+"==param2="+param2);
 				if(param1 == RESULE_SUCESS){
 					try {
 						JSONObject json = new JSONObject((String)param2);

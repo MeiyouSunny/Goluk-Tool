@@ -36,7 +36,23 @@ public class DataParserUtils {
 									if(null != videoinfo){
 										VideoEntity mVideoEntity = new VideoEntity();
 										JSONObject video = videoinfo.getJSONObject("video");
+										JSONObject live = video.getJSONObject("videodata");
 										if(null != video){
+											LiveVideoData lvd = new LiveVideoData();
+											if(null != live){
+												lvd.active = live.getString("active");
+												lvd.aid = live.getString("aid");
+												lvd.flux = live.getString("flux");
+												lvd.lat= live.getString("lat");
+												lvd.lon = live.getString("lon");
+												lvd.mid = live.getString("mid");
+												lvd.open = live.getString("open");
+												lvd.restime = live.getString("restime");
+												lvd.speed = live.getString("speed");
+												lvd.tag = live.getString("tag");
+												lvd.talk = live.getString("talk");
+												lvd.vtype = live.getString("vtype");
+											}
 											mVideoEntity.videoid = video.optString("videoid");
 											mVideoEntity.type = video.optString("type");
 											mVideoEntity.sharingtime = video.optString("sharingtime");
@@ -51,6 +67,8 @@ public class DataParserUtils {
 											mVideoEntity.ondemandwebaddress = video.optString("ondemandwebaddress");
 											mVideoEntity.ondemandsdkaddress = video.optString("ondemandsdkaddress");
 											mVideoEntity.ispraise = video.optString("ispraise");
+											mVideoEntity.livevideodata = lvd;
+											
 										}
 										
 										UserEntity mUserEntity = new UserEntity();
@@ -59,6 +77,7 @@ public class DataParserUtils {
 											mUserEntity.uid = user.optString("uid");
 											mUserEntity.nickname = user.optString("nickname");
 											mUserEntity.headportrait = user.optString("headportrait");
+											mUserEntity.sex = user.optString("sex");
 										}
 										
 										long id = time + i;

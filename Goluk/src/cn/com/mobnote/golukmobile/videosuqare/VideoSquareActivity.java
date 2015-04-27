@@ -5,6 +5,7 @@ import com.umeng.socialize.sso.UMSsoHandler;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -23,8 +25,9 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 	private ImageView square = null;
 	private Button mVideoList = null;
 	private Button mTypeList = null;
+	public CustomLoadingDialog mCustomProgressDialog;
 	/** 返回按钮 */
-	private Button mBackBtn = null;
+	private ImageButton mBackBtn = null;
 
 	SharePlatformUtil sharePlatform;
 
@@ -62,7 +65,7 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 		mVideoList = (Button) findViewById(R.id.mVideoList);
 		mTypeList = (Button) findViewById(R.id.mTypeList);
 		// 获取页面元素
-		mBackBtn = (Button) findViewById(R.id.back_btn);
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 
 	}
 

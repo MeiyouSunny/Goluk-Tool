@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- 视频loading -->
+		<RelativeLayout
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/loading_bg"
+			android:layout_width="126dp"
+			android:layout_height="126dp"
+			android:layout_centerInParent="true"
+			android:background="@drawable/edit_loading_bg">
+			
+			<TextView
+				android:id="@+id/loading_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_alignParentBottom="true"
+				android:layout_marginBottom="18dp"
+				android:text="加载中，请稍后..."
+				android:textSize="14sp"
+				android:textColor="#ffffff"/>
+			
+			<ImageView
+				android:id="@+id/loading_img"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_marginBottom="5dp"
+				android:layout_above="@id/loading_text"
+				android:contentDescription="@string/imgdes"
+				android:background="@anim/loading" />
+			
+</RelativeLayout>
+
+
+
+
+
+
+
+
+
