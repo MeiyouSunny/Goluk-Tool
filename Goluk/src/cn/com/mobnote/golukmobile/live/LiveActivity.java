@@ -1667,7 +1667,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * @author jiayf
 	 * @date Apr 2, 2015
 	 */
-	private void exit() {
+	public void exit() {
 		if (isAlreadExit) {
 			return;
 		}
@@ -1808,6 +1808,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		LogUtil.e(null, "jyf----20150406----LiveActivity----onKeyDown----111111 : ");
 		if (KeyEvent.KEYCODE_BACK == keyCode) {
 			if (mliveSettingWindow.isShowing()) {
 				// 直接退出
