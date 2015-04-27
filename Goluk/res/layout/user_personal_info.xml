@@ -120,6 +120,7 @@
 		        android:id="@+id/user_personal_info_sing_text"
 		        android:textColor="@color/user_personal_black"
 		        android:textSize="18sp"
+		        android:hint="介绍一下自己吧！"
 		        />
 		</LinearLayout>
 		<!-- 性别 -->
