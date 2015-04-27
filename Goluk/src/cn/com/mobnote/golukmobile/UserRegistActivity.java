@@ -355,14 +355,22 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 			}else{
 				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
-
-				identifyClick = true;
-				UserUtils.hideSoftMethod(this);
-				mIdentifyLoading.setVisibility(View.VISIBLE);
-				registerReceiver(smsReceiver, smsFilter);
-				click = 1;
-				console.log(b + "");
-				mBtnRegist.setEnabled(true);
+				if(b){
+					identifyClick = true;
+					UserUtils.hideSoftMethod(this);
+					mIdentifyLoading.setVisibility(View.VISIBLE);
+					registerReceiver(smsReceiver, smsFilter);
+					click = 1;
+					console.log(b + "");
+					mBtnRegist.setEnabled(false);
+					mEditTextPhone.setEnabled(false);
+					mEditTextPwd.setEnabled(false);
+					mEditTextIdentify.setEnabled(false);
+					mBackButton.setEnabled(false);
+					mTextViewLogin.setEnabled(false);
+				}else{
+					
+				}
 			}
 		}else{
 			mBtnIdentify.setEnabled(false);
@@ -379,6 +387,9 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
+		mBackButton.setEnabled(true);
+		mBtnRegist.setEnabled(true);
+		mTextViewLogin.setEnabled(true);
 		mIdentifyLoading.setVisibility(View.GONE);
 		if(1 == success){
 			try{
@@ -479,6 +490,9 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					mEditTextPhone.setEnabled(false);
 					mEditTextIdentify.setEnabled(false);
 					mEditTextPwd.setEnabled(false);
+					mBtnIdentify.setEnabled(false);
+					mTextViewLogin.setEnabled(false);
+					mBackButton.setEnabled(false);
 				}
 		}
 			}else{
@@ -496,6 +510,9 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
+		mBtnIdentify.setEnabled(true);
+		mTextViewLogin.setEnabled(true);
+		mBackButton.setEnabled(true);
 		console.log("注册回调---registCallback---"+success+"---"+obj);
 		mApplication.registStatus = 0;//注册中……
 		if(1 == success){
@@ -506,6 +523,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				console.log(code+"");
 				
 				mLoading.setVisibility(View.GONE);
+				
 				switch (code) {
 				case 200:
 					//注册成功

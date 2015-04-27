@@ -62,6 +62,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	private String intentName = null;
 	private String intentSex = null;
 	private String intentSign = null;
+	//保存数据的loading
+	private RelativeLayout mLoading = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		mLayoutName = (RelativeLayout) findViewById(R.id.user_personal_edit_layout2);
 //		mLayoutSex = (RelativeLayout) findViewById(R.id.user_personal_edit_layout3);
 		mLayoutSign = (RelativeLayout) findViewById(R.id.user_personal_edit_layout4);
+		//保存数据的loading
+		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
 			
 		Intent it = getIntent();
 		intentHead = it.getStringExtra("infoHead").toString();
@@ -195,7 +199,13 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\""+ head +  "\",\"UserSex\":\""+sex+"\",\"Desc\":\""+newSign+"\"}";
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
 		if(b){
-			
+			//保存中
+			mLoading.setVisibility(View.VISIBLE);
+			btnBack.setEnabled(false);
+			btnRight.setEnabled(false);
+			mLayoutHead.setEnabled(false);
+			mLayoutName.setEnabled(false);
+			mLayoutSign.setEnabled(false);
 		}else{
 			
 		}
@@ -222,8 +232,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				Intent it = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
 				switch (code) {
 				case 200:
+					mLoading.setVisibility(View.GONE);
 					if(intentSign.equals(json2Sign) && intentName.equals(json2Name) && intentHead.equals(json2Head)){
-//						console.toast("没有修改信息", mContext);
 						startActivity(it);
 						this.finish();
 					}else{
@@ -234,10 +244,22 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 					break;
 				case 405:
 					console.toast("该用户未注册", mContext);
+					mLoading.setVisibility(View.GONE);
+					btnBack.setEnabled(true);
+					btnRight.setEnabled(true);
+					mLayoutHead.setEnabled(true);
+					mLayoutName.setEnabled(true);
+					mLayoutSign.setEnabled(true);
 					break;
 
 				case 500:
 					console.toast("服务器异常", mContext);
+					mLoading.setVisibility(View.GONE);
+					btnBack.setEnabled(true);
+					btnRight.setEnabled(true);
+					mLayoutHead.setEnabled(true);
+					mLayoutName.setEnabled(true);
+					mLayoutSign.setEnabled(true);
 					break;
 
 				default:
@@ -249,6 +271,12 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}else{
 			//success不等于1
 			console.toast("数据修改失败,请重试", mContext);
+			mLoading.setVisibility(View.GONE);
+			btnBack.setEnabled(true);
+			btnRight.setEnabled(true);
+			mLayoutHead.setEnabled(true);
+			mLayoutName.setEnabled(true);
+			mLayoutSign.setEnabled(true);
 		}
 	}
 	@SuppressLint("ClickableViewAccessibility")

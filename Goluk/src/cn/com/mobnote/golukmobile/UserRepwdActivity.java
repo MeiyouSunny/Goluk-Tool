@@ -303,23 +303,27 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		 * 对获取验证码进行判断
 		 */
 		if(UserUtils.isMobileNO(phone)){
-			mEditTextPhone.setEnabled(false);
-			mEditTextIdentify.setEnabled(false);
-			mEditTextPwd.setEnabled(false);
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"2\"}";
 			console.log(isIdentify);
 			if(!UserUtils.isNetDeviceAvailable(mContext)){
 				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 			}else{
 				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
-				
-				identifyClick = true;
-				UserUtils.hideSoftMethod(this);
-				mIdentifyLoading.setVisibility(View.VISIBLE);
-				registerReceiver(smsReceiver, smsFilter);
-				click = 1;
-				console.log(b + "");
-				mBtnOK.setEnabled(true);
+				if(b){
+					identifyClick = true;
+					UserUtils.hideSoftMethod(this);
+					mIdentifyLoading.setVisibility(View.VISIBLE);
+					registerReceiver(smsReceiver, smsFilter);
+					click = 1;
+					console.log(b + "");
+					mBtnOK.setEnabled(false);
+					mEditTextPhone.setEnabled(false);
+					mEditTextPwd.setEnabled(false);
+					mEditTextIdentify.setEnabled(false);
+					mBtnBack.setEnabled(false);
+				}else{
+					
+				}
 			}
 		}else{
 			mBtnIdentity.setEnabled(false);
@@ -334,6 +338,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
+		mBtnOK.setEnabled(true);
+		mBtnBack.setEnabled(true);
 		handler1.removeCallbacks(runnable);
 		mIdentifyLoading.setVisibility(View.GONE);
 //		console.toast("发送中，请稍后", mContext);
@@ -380,7 +386,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 					String phone =  mEditTextPhone.getText().toString();
 					if(UserUtils.isMobileNO(phone)){
 						new AlertDialog.Builder(this)
-				        .setTitle("Goluk温馨提示：")
 				        .setMessage("此手机号还未被注册")
 						.setNegativeButton("取消", null)
 						.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
@@ -444,6 +449,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 					mEditTextPhone.setEnabled(false);
 					mEditTextIdentify.setEnabled(false);
 					mEditTextPwd.setEnabled(false);
+					mBtnIdentity.setEnabled(false);
+					mBtnBack.setEnabled(false);
 				}else{
 					initTimer();
 					handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.
@@ -459,9 +466,11 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	 */
 	public void repwdCallBack(int success,Object obj){
 		console.log("---重置密码回调-----"+success+"----"+obj);
-		mEditTextPhone.setEnabled(false);
-		mEditTextIdentify.setEnabled(false);
-		mEditTextPwd.setEnabled(false);
+		mEditTextPhone.setEnabled(true);
+		mEditTextIdentify.setEnabled(true);
+		mEditTextPwd.setEnabled(true);
+		mBtnIdentity.setEnabled(true);
+		mBtnBack.setEnabled(true);
 		if(1 == success){
 			try{
 				String data = (String) obj;

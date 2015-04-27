@@ -136,7 +136,7 @@ public class User {
 					//登录密码错误
 					StatusChange(5);
 					Log.i("setauto", "-------402 -----"+mApp.autoLoginStatus);
-					console.toast("密码错误，请重试", mContext);
+//					console.toast("密码错误，请重试", mContext);
 					break;
 				default:
 					break;
