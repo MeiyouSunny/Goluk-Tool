@@ -6,19 +6,15 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
 
 public class VideoSquareListView implements VideoSuqareManagerFn{
 	private Context mContext=null;
@@ -26,7 +22,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private RTPullListView mRTPullListView=null;
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter=null;
 	private List<VideoSquareInfo> mDataList=null;
-	private CustomProgressDialog mCustomProgressDialog=null;
+	private CustomLoadingDialog mCustomProgressDialog=null;
 	private Float jj= SoundUtils.getInstance().getDisplayMetrics().density;
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
@@ -41,11 +37,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
 		mRTPullListView.setDividerHeight((int)(2*jj));
 		mDataList = new ArrayList<VideoSquareInfo>();
-		LogUtils.d("SSS=================111111111===================");
+		LogUtils.d("YYYYYYYY=================111111111===================");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if(null != mVideoSquareManager){
 			mVideoSquareManager.addVideoSquareManagerListener("hotlist", this);
 		}
+		loadHistorydata();//同步历史数据
 		httpPost(true);
 		mHandler = new Handler(){
 			@Override
@@ -75,10 +72,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private void httpPost(boolean flag){
 		if(flag){
 			if(null == mCustomProgressDialog){
-				mCustomProgressDialog = new CustomProgressDialog(mContext);
-				mCustomProgressDialog.setCancelable(false);
+				mCustomProgressDialog = new CustomLoadingDialog(mContext);
 				mCustomProgressDialog.show();
 			}
+//			AlertDialog dialog = new AlertDialog.Builder(mContext).create();
+//			dialog.show();
+//			dialog.getWindow().setContentView(R.layout.video_square_loading);
 		}
 		
 		if(null != GolukApplication.getInstance().getVideoSquareManager()){
@@ -122,9 +121,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	 */
 	private void closeProgressDialog(){
 		if(null != mCustomProgressDialog){
-			if(mCustomProgressDialog.isShowing()){
-				mCustomProgressDialog.dismiss();
-			}
+			mCustomProgressDialog.close();
 		}
 	}
 	
@@ -142,6 +139,9 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		if(null != mVideoSquareListViewAdapter){
 			mVideoSquareListViewAdapter.onStop();
 		}
+		if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()){
+			mCustomProgressDialog.close();
+		}
 	}
 	
 	public void onResume(){
@@ -154,6 +154,10 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("hotlist");
 		if(null != mVideoSquareListViewAdapter){
 			mVideoSquareListViewAdapter.onDestroy();
+		}
+		
+		if (mCustomProgressDialog != null ){
+			mCustomProgressDialog.close();
 		}
 	}
 
@@ -178,6 +182,17 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			if(vsi.mVideoEntity.videoid.equals(videoinfo.mVideoEntity.videoid)){
 				mDataList.get(i).mVideoEntity = videoinfo.mVideoEntity;
 			}
+		}
+		
+	}
+	
+	public void loadHistorydata(){
+		String param = GolukApplication.getInstance().getVideoSquareManager().getHotList();
+		if(param != null && !"".equals(param)){
+			List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param);
+			mDataList.clear();
+			mDataList.addAll(list);
+			initLayout();
 		}
 		
 	}

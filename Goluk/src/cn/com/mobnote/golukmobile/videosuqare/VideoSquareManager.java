@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.logic.GolukModule;
@@ -62,16 +65,16 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月17日
 	 */
-	public boolean getSquareList(String channel, String type, List<String> attribute,
-			String operation, String timestamp) {
+	public boolean getSquareList(String channel, String type,
+			List<String> attribute, String operation, String timestamp) {
 		String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
 				attribute, operation, timestamp);
-		LogUtils.d("YYY=========getSquareList==========json=="+json);
+		LogUtils.d("YYY=========getSquareList==========json==" + json);
 		return mApplication.mGoluk
 				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 						SquareCmd_Req_SquareList, json);
 	}
-	
+
 	/**
 	 * 获取广场列表数据
 	 * 
@@ -96,9 +99,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		arr.add(attribute);
 		String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
 				arr, operation, timestamp);
-//		String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
-//				attribute, operation, timestamp);
-		LogUtils.d("YYY=========getSquareList==========json=="+json);
+		// String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
+		// attribute, operation, timestamp);
+		LogUtils.d("YYY=========getSquareList==========json==" + json);
 		return mApplication.mGoluk
 				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 						SquareCmd_Req_SquareList, json);
@@ -215,6 +218,40 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		return mApplication.mGoluk
 				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 						SquareCmd_Req_ShareVideo, json);
+	}
+
+	/**
+	 * 同步获取视频广场列表数据
+	 * @param attribute
+	 *            属性标签： 0.全部 1.碰瓷达人 2.奇葩演技 3.路上风景 4.随手拍 5.事故大爆料 6.堵车预警 7.惊险十分
+	 *            8.疯狂超车 9.感人瞬间 10.传递正能量
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月27日
+	 */
+	public String getSquareList(String attribute) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("attribute", attribute);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return mApplication.mGoluk.GolukLogicCommGet(
+				GolukModule.Goluk_Module_Square, SquareCmd_Get_SquareCache,
+				json.toString());
+	}
+
+	/**
+	 * 同步获取热门列表数据
+	 * 
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月24日
+	 */
+	public String getHotList() {
+		return mApplication.mGoluk.GolukLogicCommGet(
+				GolukModule.Goluk_Module_Square, SquareCmd_Get_HotCache, "");
 	}
 
 	/**

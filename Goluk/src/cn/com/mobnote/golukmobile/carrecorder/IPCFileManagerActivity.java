@@ -1148,8 +1148,8 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			info.videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 		} else {
 			 if(1 == mVideoFileInfo.withSnapshot){
-//				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
-//				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
+				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
+				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
 			 }
 		}
 		
@@ -1168,9 +1168,15 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				LogUtils.d("YYY===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
+					if(TextUtils.isEmpty((String)param2)){
+						return;
+					}
 					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
 					int total = IpcDataParser.getFileListCount((String) param2);
 					if (null != fileList) {
+						if(fileList.size() <= 0){
+							return;
+						}
 						VideoFileInfo vfi = fileList.get(fileList.size()-1);
 						
 						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
@@ -1220,6 +1226,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			if (IPC_VDTP_Msg_File == msg) {
 				// 文件下载成功
 				if (RESULE_SUCESS == param1) {
+					if(TextUtils.isEmpty((String)(param2))){
+						return;
+					}
 					try {
 						JSONObject json = new JSONObject((String) param2);
 						if (null != json) {
