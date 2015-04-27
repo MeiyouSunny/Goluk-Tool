@@ -1178,47 +1178,59 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if(GlobalWindow.getInstance().isShow()){
 			GlobalWindow.getInstance().dimissGlobalWindow();
 		}
+		
+		if(null != mCustomDialog && mCustomDialog.isShowing()){
+			mCustomDialog.dismiss();
+		}
 	}
 	
 	ArrayList<VideoFileInfo> fileList;
+	CustomDialog mCustomDialog=null;
 	private void tips(){
-		CustomDialog mCustomDialog = new CustomDialog(this);
-		mCustomDialog.setMessage("有"+fileList.size()+"个新文件，确定要下载吗？");
-		mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
-			@Override
-			public void onClickListener() {
-				for(int i=0; i<fileList.size(); i++){
-					VideoFileInfo info = fileList.get(i);
-					String filename = info.location;
-					
-					String filePath = "";
-					if(filename.contains("WND")){
-						filePath = "fs1:/video/wonderful/";
-					}else if(filename.contains("URG")){
-						filePath = "fs1:/video/urgent/";
-					}
-					
-					if(TextUtils.isEmpty(filePath)){
-						break;
-					}
-					
-					filePath = FileUtils.javaToLibPath(filePath);
-					String path = filePath + File.separator + filename;
-					File file = new File(path);
-					if(!file.exists()){
-						if(!mDownLoadFileList.contains(info.location)){
-							mDownLoadFileList.add(info.location);
-								
-							boolean flag = GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
-							LogUtil.e("xuhw", "YYYYYY=====querySingleFile=====type="+info.type+"==flag="+flag);
+		if(null != mCustomDialog && mCustomDialog.isShowing()){
+			return;
+		}
+		
+		if(mContext instanceof Activity && fileList.size() > 0){
+			mCustomDialog = new CustomDialog(mContext);
+			mCustomDialog.setMessage("有"+fileList.size()+"个新文件，确定要下载吗？", Gravity.CENTER);
+			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+				@Override
+				public void onClickListener() {
+					for(int i=0; i<fileList.size(); i++){
+						VideoFileInfo info = fileList.get(i);
+						String filename = info.location;
+						
+						String filePath = "";
+						if(filename.contains("WND")){
+							filePath = "fs1:/video/wonderful/";
+						}else if(filename.contains("URG")){
+							filePath = "fs1:/video/urgent/";
 						}
+						
+						if(TextUtils.isEmpty(filePath)){
+							break;
+						}
+						
+						filePath = FileUtils.javaToLibPath(filePath);
+						String path = filePath + File.separator + filename;
+						File file = new File(path);
+						if(!file.exists()){
+							if(!mDownLoadFileList.contains(info.location)){
+								mDownLoadFileList.add(info.location);
+									
+								boolean flag = GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
+								LogUtil.e("xuhw", "YYYYYY=====querySingleFile=====type="+info.type+"==flag="+flag);
+							}
+						}
+						
 					}
-					
 				}
-			}
-		});
-		mCustomDialog.setRightButton("取消", null);
-		mCustomDialog.show();
+			});
+			mCustomDialog.setRightButton("取消", null);
+			mCustomDialog.show();
+		}
+		
 	}
 	
 }

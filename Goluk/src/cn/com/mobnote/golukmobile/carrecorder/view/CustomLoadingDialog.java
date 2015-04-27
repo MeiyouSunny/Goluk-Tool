@@ -53,6 +53,14 @@ public class CustomLoadingDialog{
 		}
 	}
 	
+	public boolean isShowing(){
+		if(null != customDialog){
+			return customDialog.isShowing();
+		}
+		
+		return false;
+	}
+	
 //	customDialog.setOnShowListener(new AlertDialog.OnShowListener() {
 //
 //		public void onShow(android.content.DialogInterface dialog) {

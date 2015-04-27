@@ -140,7 +140,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			mVideoSquareListViewAdapter.onStop();
 		}
 		if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()){
-			mCustomProgressDialog.dismiss();
+			mCustomProgressDialog.close();
 		}
 	}
 	
