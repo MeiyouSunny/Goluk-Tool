@@ -310,7 +310,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			//点按钮后,弹出登录中的提示,样式使用系统 loading 样式,文字描述:注册中
 			//注册成功:弹出系统短提示:注册成功,以登录状态进入 Goluk 首页
 			regist();
-			Log.i("registLogin", mApplication.registStatus+"&&&&&&");
 			break;
 		// 获取验证码按钮
 		case R.id.user_regist_identify_btn:
@@ -489,35 +488,40 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		String phone = mEditTextPhone.getText().toString();
 		String password = mEditTextPwd.getText().toString();
 		String identify = mEditTextIdentify.getText().toString();
-		if(!"".equals(password) && !"".equals(identify)){
-			mBtnRegist.setEnabled(true);
-			if(password.length()>=6 && password.length()<=16){
-				if(!UserUtils.isNetDeviceAvailable(mContext)){
-					console.toast("当前网络不可用，请检查网络后重试", mContext);
-				}else{
-				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
-				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
-				console.log(isRegist);
-				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
-				if(b){
-					mApplication.registStatus = 0;//注册中……
-					//隐藏软件盘
-					UserUtils.hideSoftMethod(this);
-					mLoading.setVisibility(View.VISIBLE);
-					mEditTextPhone.setEnabled(false);
-					mEditTextIdentify.setEnabled(false);
-					mEditTextPwd.setEnabled(false);
-					mBtnIdentify.setEnabled(false);
-					mTextViewLogin.setEnabled(false);
-					mBackButton.setEnabled(false);
-					mBtnRegist.setEnabled(false);
-					}
-				}
-			}else{
-				UserUtils.showDialog(UserRegistActivity.this,"密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
+		
+		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
+			if(!"".equals(password) && !"".equals(identify)){
 				mBtnRegist.setEnabled(true);
-			}
-	}
+				if(password.length()>=6 && password.length()<=16){
+					if(!UserUtils.isNetDeviceAvailable(mContext)){
+						console.toast("当前网络不可用，请检查网络后重试", mContext);
+					}else{
+					//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
+					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
+					console.log(isRegist);
+					boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
+					if(b){
+						mApplication.registStatus = 0;//注册中……
+						//隐藏软件盘
+						UserUtils.hideSoftMethod(this);
+						mLoading.setVisibility(View.VISIBLE);
+						mEditTextPhone.setEnabled(false);
+						mEditTextIdentify.setEnabled(false);
+						mEditTextPwd.setEnabled(false);
+						mBtnIdentify.setEnabled(false);
+						mTextViewLogin.setEnabled(false);
+						mBackButton.setEnabled(false);
+						mBtnRegist.setEnabled(false);
+						}
+					}
+				}else{
+					UserUtils.showDialog(UserRegistActivity.this,"密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
+					mBtnRegist.setEnabled(true);
+				}
+		}
+		}else{
+			UserUtils.showDialog(mContext, "手机格式输入错误，请重新输入");
+		}
 		
 }
 	
