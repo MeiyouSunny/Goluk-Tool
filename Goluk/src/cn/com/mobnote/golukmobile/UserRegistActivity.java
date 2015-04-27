@@ -346,9 +346,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		 * 对获取验证码进行判断
 		 */
 		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
-			mEditTextPhone.setEnabled(false);
-			mEditTextIdentify.setEnabled(false);
-			mEditTextPwd.setEnabled(false);
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
 			console.log(isIdentify);
 			if(!UserUtils.isNetDeviceAvailable(mContext)){

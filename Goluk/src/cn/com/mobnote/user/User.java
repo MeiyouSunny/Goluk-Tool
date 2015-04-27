@@ -69,7 +69,7 @@ public class User {
 		Log.i("setauto", "-----initAtuoLogin ---------");
 		//网络判断
 		if(!UserUtils.isNetDeviceAvailable(mContext)){
-			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
+//			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
 			StatusChange(3);//自动登录失败
 		}else{
 			//判断是否已经登录了
