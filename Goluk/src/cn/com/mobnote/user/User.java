@@ -41,7 +41,7 @@ public class User {
 		this.mApp = mApp;
 		mContext = mApp.getApplicationContext();
 		
-		mApp.initLogic();
+//		mApp.initLogic();
 		
 		//初始化Handler
 		mHandler = new Handler() {
@@ -69,7 +69,7 @@ public class User {
 		Log.i("setauto", "-----initAtuoLogin ---------");
 		//网络判断
 		if(!UserUtils.isNetDeviceAvailable(mContext)){
-			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
+//			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
 			StatusChange(3);//自动登录失败
 		}else{
 			//判断是否已经登录了
@@ -136,7 +136,7 @@ public class User {
 					//登录密码错误
 					StatusChange(5);
 					Log.i("setauto", "-------402 -----"+mApp.autoLoginStatus);
-					console.toast("密码错误，请重试", mContext);
+//					console.toast("密码错误，请重试", mContext);
 					break;
 				default:
 					break;

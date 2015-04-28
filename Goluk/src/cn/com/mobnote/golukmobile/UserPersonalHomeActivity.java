@@ -83,7 +83,7 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 		mImageSex = (ImageView) findViewById(R.id.user_personal_homepage_sex);
 		mImageArrow = (ImageView) findViewById(R.id.user_personal_homepage_arrow);
 		mTextName = (TextView) findViewById(R.id.user_personal_homepage_name);
-		mTextShare = (TextView) findViewById(R.id.user_personal_homepage_share);
+//		mTextShare = (TextView) findViewById(R.id.user_personal_homepage_share);
 //		lv = (ListView) findViewById(R.id.user_personal_homepage_listview);
 		mLayoutInto = (RelativeLayout) findViewById(R.id.user_personal_homepage_detail_layout);
 		/**

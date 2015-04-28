@@ -31,11 +31,13 @@ public class UserLoginManage {
 	private String sex = null;
 	private String sign = null;//desc
 	private String phone = null;
+	/**输入密码错误限制*/
+	public int countErrorPassword = 1;
 
 	public UserLoginManage(GolukApplication mApp) {
 		super();
 		this.mApp = mApp;
-		mApp.initLogic();
+//		mApp.initLogic();
 	}
 
 	public void setUserLoginInterface(UserLoginInterface mInterface){
@@ -59,7 +61,7 @@ public class UserLoginManage {
 		boolean b = false;
 		// 网络判断
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			console.toast("当前网络状态不佳，请检查网络后重试", mApp.getContext());
+			console.toast("当前网络不可用，请检查网络后重试", mApp.getContext());
 			loginStatusChange(2);// 登录失败
 		} else {
 			String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+ pwd + "\",\"tag\":\"android\"}";
@@ -107,6 +109,7 @@ public class UserLoginManage {
 				case 402:
 					console.toast("密码错误,请重试", mApp.getContext());
 					loginStatusChange(2);
+					countErrorPassword++;
 					break;
 				default:
 					break;

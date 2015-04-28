@@ -112,7 +112,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 		
 		if(!isFirstLogin ){//登录过
-			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true){//上次登录成功
+			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true || mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){//上次登录成功
 				btnLoginout.setText("退出");
 			}else{
 				btnLoginout.setText("登录");
@@ -172,18 +172,22 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 					}
 					initIntent(UserLoginActivity.class);
 				}else if(btnLoginout.getText().toString().equals("退出")){
-					new AlertDialog.Builder(mContext)
-					.setMessage("是否确认退出？")
-					.setNegativeButton("确认", new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
-							getLoginout();
-						}
-					})
-					.setPositiveButton("取消", null)
-					.create().show();
+					if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+						console.toast("网络连接异常，检查后请重试", mContext);
+					}else{
+						new AlertDialog.Builder(mContext)
+						.setMessage("是否确认退出？")
+						.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// TODO Auto-generated method stub
+								getLoginout();
+							}
+						})
+						.setPositiveButton("取消", null)
+						.create().show();
+					}
 				}
 				break;
 		}
@@ -286,7 +290,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		// TODO Auto-generated method stub
 		if(mApp.autoLoginStatus !=1){
 			dismissAutoDialog();
-			if(mApp.autoLoginStatus == 2){
+			if(mApp.autoLoginStatus == 2 || mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
 				btnLoginout.setText("退出");
 			}
 		}

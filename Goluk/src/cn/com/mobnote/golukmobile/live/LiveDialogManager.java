@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile.live;
 
-import cn.com.mobnote.application.GolukApplication;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +12,8 @@ public class LiveDialogManager {
 	private AlertDialog mLiveExitDialog = null;
 	/** 用户主动点击退出时，提示对话框 */
 	private AlertDialog mLiveBackDialog = null;
+
+	private AlertDialog mSingleButtonDialog = null;
 
 	/** 对话框回调方法 */
 	private ILiveDialogManagerFn dialogManagerFn = null;
@@ -28,8 +29,10 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_EXIT_LIVE = 1;
 	/** 登录对话框 */
 	public static final int DIALOG_TYPE_LOGIN = 2;
-	/** 直播返回*/
+	/** 直播返回 */
 	public static final int DIALOG_TYPE_LIVEBACK = 3;
+	/** 直播超时 */
+	public static final int DIALOG_TYPE_LIVE_TIMEOUT = 4;
 
 	private int mCurrentDialogType = 0;
 
@@ -67,6 +70,34 @@ public class LiveDialogManager {
 		 * 对话框管理类的回调方法
 		 * */
 		public void dialogManagerCallBack(int dialogType, int function, String data);
+	}
+
+	public void showSingleBtnDialog(Context context, int type, String title, String message) {
+		if (null != mSingleButtonDialog) {
+			return;
+		}
+		mCurrentDialogType = type;
+
+		mSingleButtonDialog = new AlertDialog.Builder(context).create();
+
+		mSingleButtonDialog.setTitle(title);
+		mSingleButtonDialog.setMessage(message);
+		mSingleButtonDialog.setCancelable(false);
+
+		mSingleButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialoginterface, int i) {
+				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
+				dismissSingleBtnDialog();
+			}
+		});
+		mSingleButtonDialog.show();
+	}
+
+	public void dismissSingleBtnDialog() {
+		if (null != mSingleButtonDialog) {
+			mSingleButtonDialog.dismiss();
+			mSingleButtonDialog = null;
+		}
 	}
 
 	public void showNoMobileDialog(Context context, String title, String message) {
@@ -121,8 +152,9 @@ public class LiveDialogManager {
 			}
 		});
 		mLoginDialog.show();
-		
+
 	}
+
 	// 销毁登录对话框
 	public void dimissLoginExitDialog() {
 		if (null != mLoginDialog) {

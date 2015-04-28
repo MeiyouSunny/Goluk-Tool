@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,9 +13,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +38,7 @@ import cn.com.mobnote.util.console;
  * 
  * @author mobnote
  */
-public class UserLoginActivity extends Activity implements OnClickListener,UserLoginInterface {
+public class UserLoginActivity extends Activity implements OnClickListener,UserLoginInterface ,OnTouchListener{
 	//判断是否能点击提交按钮
 	private boolean isOnClick=false;
 	// 登陆title
@@ -70,7 +73,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
 		
-//		SysApplication.getInstance().addActivity(this);
+		SysApplication.getInstance().addActivity(this);
 	}
 	@Override
 	protected void onResume() {
@@ -245,6 +248,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		});
 		//登录按钮
 		mBtnLogin.setOnClickListener(this);
+		mBtnLogin.setOnTouchListener(this);
 		// 快速注册
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
@@ -323,8 +327,11 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mEditTextPwd.setEnabled(false);
 							mTextViewRegist.setEnabled(false);
 							mTextViewForgetPwd.setEnabled(false);
+							mBtnLogin.setEnabled(false);
+							mBackButton.setEnabled(false);
 						}else{
-							console.toast("登录失败======UserLoginActivity----", this);
+							mLoading.setVisibility(View.GONE);
+//							console.toast("登录失败", this);
 							mApplication.loginStatus = 2;
 						}
 					}else{
@@ -350,6 +357,12 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 1:
 			mApplication.isUserLoginSucess = true;
 			mLoading.setVisibility(View.GONE);
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			if(justLogin.equals("main")){
 				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 				startActivity(login);
@@ -363,6 +376,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			break;
 		case 3:
 			mApplication.isUserLoginSucess = false;
@@ -371,6 +386,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			if(UserUtils.isMobileNO(phone)){
 				new AlertDialog.Builder(this)
 				.setTitle("Goluk温馨提示：")
@@ -397,9 +414,35 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			break;
 		default:
 			break;
 		}
+	}
+	@SuppressLint("ClickableViewAccessibility")
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		// TODO Auto-generated method stub
+		int action = event.getAction();
+		switch (view.getId()) {
+		case R.id.user_login_btn:
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				mBtnLogin.setBackgroundResource(R.drawable.icon_login_click);
+				break;
+			case MotionEvent.ACTION_UP:
+				mBtnLogin.setBackgroundResource(R.drawable.icon_login);
+				break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+		return false;
 	}
 }
