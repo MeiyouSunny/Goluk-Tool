@@ -93,7 +93,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private int emergencyTotalCount=0;
 	private int loopTotalCount=0;
 	/** 数据分页个数 */
-	private int pageCount=40;
+	private int pageCount=12;
 	/** 编辑按钮 */
 	private Button mEditBtn=null;
 	/** 功能按钮布局 */
@@ -284,11 +284,12 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mWonderfulVideoList.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
+						LogUtils.d("fuckingAction===="+marvellousListTime);
 						if(mWonderfulVideoData.size() > 0 &&(mWonderfulVideoData.size()%pageCount) == 0){
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_SHORTCUT,marvellousListTime);//初始化
 						}
 //						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
-						System.out.println("TTTTT=====滑动到最后了222");
+						System.out.println("TTTTT=====滑动到最后了222 最后时间"+marvellousListTime);
 					}
 				}
 			}
@@ -463,7 +464,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_URGENT,emergencyListTime);//初始化
 						}
 //						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
-						System.out.println("TTTTT=====滑动到最后了222");
+						System.out.println("TTTTT=====滑动到最后了222 最后时间"+emergencyListTime);
 					}
 				}
 			}
@@ -1195,7 +1196,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						}
 						
 						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
-						if(fileList.size()<40){
+						if(fileList.size()<pageCount){
 							ishaveData = false;
 						}else{
 							ishaveData = true;
