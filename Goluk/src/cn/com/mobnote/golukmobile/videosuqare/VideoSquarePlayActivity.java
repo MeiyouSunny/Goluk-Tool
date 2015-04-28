@@ -11,6 +11,7 @@ import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
+import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -166,7 +167,7 @@ public class VideoSquarePlayActivity extends Activity implements
 			}
 		});
 
-		mRTPullListView.setOnScrollListener(new OnScrollListener() {
+		mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
@@ -176,9 +177,6 @@ public class VideoSquarePlayActivity extends Activity implements
 							System.out.println("上拉刷新时间="+endtime.mVideoEntity.sharingtime);
 							httpPost(true, type, "2", endtime.mVideoEntity.sharingtime);
 						}
-						// Toast.makeText(VideoSquarePlayActivity.this,
-						// "滑动到最后了222", 1000).show();
-						// System.out.println("TTTTT=====滑动到最后了222");
 					}
 				}
 			}
