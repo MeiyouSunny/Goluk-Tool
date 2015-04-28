@@ -112,7 +112,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 		
 		if(!isFirstLogin ){//登录过
-			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true || mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){//上次登录成功
+			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true ){//上次登录成功
 				btnLoginout.setText("退出");
 			}else{
 				btnLoginout.setText("登录");
@@ -172,9 +172,6 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 					}
 					initIntent(UserLoginActivity.class);
 				}else if(btnLoginout.getText().toString().equals("退出")){
-					if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-						console.toast("网络连接异常，检查后请重试", mContext);
-					}else{
 						new AlertDialog.Builder(mContext)
 						.setMessage("是否确认退出？")
 						.setNegativeButton("确认", new DialogInterface.OnClickListener() {
@@ -187,7 +184,6 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 						})
 						.setPositiveButton("取消", null)
 						.create().show();
-					}
 				}
 				break;
 		}
@@ -196,28 +192,32 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 	 * 退出
 	 */
 	public void getLoginout(){
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
-		console.log(b+"");
-		if(b){
-			//注销成功
-			mApp.isUserLoginSucess = false;
-			mApp.loginoutStatus = true;//注销成功
-			
-			mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-			mEditor = mPreferences.edit();
-			mEditor.putBoolean("FirstLogin", true);//注销完成后，设置为没有登录过的一个状态
-			//提交修改
-			mEditor.commit();
-			
-//			initData();
-			console.toast("退出登录成功", mContext);
-			btnLoginout.setText("登录");
-			
+		if(UserUtils.isNetDeviceAvailable(mContext)){
+			console.toast("当前网络不可用，请检查网络后重试", mContext);
 		}else{
-			//注销失败
-			mApp.loginoutStatus = false;
-			mApp.isUserLoginSucess = true;
+			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
+			console.log(b+"");
+			if(b){
+				//注销成功
+				mApp.isUserLoginSucess = false;
+				mApp.loginoutStatus = true;//注销成功
+				
+				mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+				mEditor = mPreferences.edit();
+				mEditor.putBoolean("FirstLogin", true);//注销完成后，设置为没有登录过的一个状态
+				//提交修改
+				mEditor.commit();
+				
+				console.toast("退出登录成功", mContext);
+				btnLoginout.setText("登录");
+				
+			}else{
+				//注销失败
+				mApp.loginoutStatus = false;
+				mApp.isUserLoginSucess = true;
+			}
 		}
+		
 	}
 	
 	/**
@@ -258,7 +258,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 	 */
 	public void initIntent(Class intentClass){
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
-		it.putExtra("isInfo", "back");
+		it.putExtra("isInfo", "setup");
 		startActivity(it);
 //		this.finish();
 	}

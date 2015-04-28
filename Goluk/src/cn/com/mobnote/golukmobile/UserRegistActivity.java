@@ -85,6 +85,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	/**记录注册成功的状态**/
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
+	/**注册成功跳转页面的判断标志*/
+	private String registOk = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +138,15 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			mEditTextPhone.setText(repwdNum);
 			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 		}
+		
+		/**
+		 *	判断是从哪个入口进行的注册 
+		 */
+		Intent itRegist = getIntent();
+		if(null != itRegist.getStringExtra("fromRegist")){
+			registOk = itRegist.getStringExtra("fromRegist").toString();
+		}
+		
 		/**
 		 * 注册  --->  退出 --->  再次进入  ----->  登录页面获得注册传来的phone
 		 */
@@ -464,6 +475,9 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				case 480:
 					UserUtils.showDialog(this, "验证码获取失败");
 					break;
+				case 470:
+					UserUtils.showDialog(mContext, "获取验证码已达上限");
+					break;
 				default:
 					break;
 				}
@@ -554,8 +568,11 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					mApplication.registStatus = 1;//注册成功的状态
 					//注册成功后再次调用登录的接口
 					registLogin();
-					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
-					startActivity(it);
+					Intent it = null;
+					if(registOk.equals("fromStart")){
+						it = new Intent(UserRegistActivity.this,MainActivity.class);
+						startActivity(it);
+					}
 					finish();
 					break;
 				case 500:

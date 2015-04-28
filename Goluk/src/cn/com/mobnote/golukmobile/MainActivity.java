@@ -353,11 +353,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						//网络状态改变
 						mApp.VerifyWiFiConnect();
 
-						android.util.Log.i("setauto","------自动登录网络状态变化1111------");
+						/*android.util.Log.i("setauto","------自动登录网络状态变化1111------");
 						if(mApp.isUserLoginSucess == true || mApp.autoLoginStatus !=2){
 							android.util.Log.i("setauto","------自动登录网络状态变化2222------");
 							mApp.mUser.initAutoLogin();							
-						}
+						}*/
 
 						notifyLogicNetWorkState((Boolean) msg.obj);
 
