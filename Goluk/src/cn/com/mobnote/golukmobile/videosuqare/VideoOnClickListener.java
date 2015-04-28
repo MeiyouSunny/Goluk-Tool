@@ -1,8 +1,13 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -44,12 +49,14 @@ public class VideoOnClickListener implements OnClickListener{
 				Intent intent = new Intent(a, CCPlayerPage.class);
 				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
 				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+				uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 				a.startActivity(intent);
 			}else{
 				VideoSquarePlayActivity a = (VideoSquarePlayActivity)mContext;
 				Intent intent = new Intent(a, CCPlayerPage.class);
 				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
 				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+				uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 				a.startActivity(intent);
 			}
 			
@@ -103,8 +110,31 @@ public class VideoOnClickListener implements OnClickListener{
 	        intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
 	        intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 	        intent.putExtra(LiveActivity.KEY_USERINFO, user);
+	        
+	        uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 	        mContext.startActivity(intent);
 		}
+	}
+	
+	/**
+	 * 
+	  * @Title: uploadPlayer 
+	  * @Description: TODO
+	  * @param videoid
+	  * @param channel
+	  * @param clicknumber void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	private void uploadPlayer(String videoid,String channel,String clicknumber){
+		VideoSquareInfo vsi = new VideoSquareInfo();
+		VideoEntity ve = new VideoEntity();
+		ve.videoid = videoid;
+		ve.clicknumber = clicknumber;
+		vsi.mVideoEntity = ve;
+		List<VideoSquareInfo> list = new ArrayList<VideoSquareInfo>() ;
+		list.add(vsi);
+		boolean result = GolukApplication.getInstance().getVideoSquareManager().clickNumberUpload(channel, list);
 	}
 	
 	private void updatePlayerState(PlayerState mPlayerState){
