@@ -192,7 +192,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 	 * 退出
 	 */
 	public void getLoginout(){
-		if(UserUtils.isNetDeviceAvailable(mContext)){
+		if(!UserUtils.isNetDeviceAvailable(mContext)){
 			console.toast("当前网络不可用，请检查网络后重试", mContext);
 		}else{
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
