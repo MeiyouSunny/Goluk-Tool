@@ -216,28 +216,29 @@
 		android:background="@drawable/carrecorder_flle_edit_bg"
 		android:visibility="gone" >
 		
-		<TextView
-			android:id="@+id/video_delete_txt"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/delete_text"
-			android:duplicateParentState="true"
-			android:layout_centerInParent="true"
-			android:textColor="#b2b2b2"
-			android:background="#00000000"
-			android:textSize="16sp" />
-		
-		<ImageView
-			android:id="@+id/video_delete_img"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_toLeftOf="@id/video_delete_txt"
-			android:layout_centerVertical="true"
-			android:layout_marginRight="16sp"
-			android:duplicateParentState="true"
-			android:background="@drawable/carrecorder_delete_btn"
-			android:contentDescription="@string/def"/>
-			
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerInParent="true">
+				
+				<ImageView
+					android:id="@+id/video_delete_img"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginRight="10sp"
+					android:duplicateParentState="true"
+					android:background="@drawable/carrecorder_delete_btn"
+					android:contentDescription="@string/def" />
+				<TextView
+					android:id="@+id/video_delete_txt"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/delete_text"
+					android:duplicateParentState="true"
+					android:textColor="#b2b2b2"
+					android:background="#00000000"
+					android:textSize="16sp" />
+			</LinearLayout>
 		</RelativeLayout>
 		
 </RelativeLayout>
