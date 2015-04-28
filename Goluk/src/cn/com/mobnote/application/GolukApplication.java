@@ -170,18 +170,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		super.onCreate();
 		instance=this;
 		Const.setAppContext(this);
-		initRdCardSDK();
-		initCachePath();
-//		createWifi();
-		//实例化JIN接口,请求网络数据
-		
-		/**
-		 *自动登录、登录、注册、重置密码、注销的管理类 
-		 */
-		mUser = new User(this);
-		mLoginManage = new UserLoginManage(this);
-		mRegistManage = new UserRegistManage(this);
-		initImageLoader(getApplicationContext());
+		// TODO 此处不要做初始化相关的工作
 	}
 	
 	public Handler mHandler = new Handler() {
@@ -201,7 +190,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (null != mGoluk) {
 			return;
 		}
+		initRdCardSDK();
+		initCachePath();
+//		createWifi();
+		//实例化JIN接口,请求网络数据
+		
 		mGoluk = new GolukLogic();
+		
+		/**
+		 *自动登录、登录、注册、重置密码、注销的管理类 
+		 */
+		mUser = new User(this);
+		mLoginManage = new UserLoginManage(this);
+		mRegistManage = new UserRegistManage(this);
+		initImageLoader(getApplicationContext());
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
@@ -1164,7 +1166,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年4月24日
 	 */
 	private void queryNewFileList(){
-		mIPCControlManager.queryFileListInfo(6, 10, 0);
+		mIPCControlManager.queryFileListInfo(6, 10, 2147483647);
 	}
 	
 	/**

@@ -1204,14 +1204,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			GolukApplication.getInstance().mCurAddr = location.getAddrStr();
 			System.out.println("YYY=========mCurAddr="+location.getAddrStr()+"==lon="+LngLat.lng+"==lat="+LngLat.lat);
 			//更新IPC经纬度
-			if(GolukApplication.getInstance().getIpcIsLogin()){
-				long lon = (long)(location.getLongitude()*3600000);
-				long lat = (long)(location.getLatitude()*3600000);
-				int speed = (int)location.getSpeed();
-				int direction = (int)location.getDirection();
-				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
-				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
-			}
+//			if(GolukApplication.getInstance().getIpcIsLogin()){
+//				long lon = (long)(location.getLongitude()*3600000);
+//				long lat = (long)(location.getLatitude()*3600000);
+//				int speed = (int)location.getSpeed();
+//				int direction = (int)location.getDirection();
+//				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
+//				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
+//			}
 			
 			//更新行车记录仪地址
 			if(null != CarRecorderActivity.mHandler){

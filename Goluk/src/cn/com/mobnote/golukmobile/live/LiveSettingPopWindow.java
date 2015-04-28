@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -53,8 +54,10 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	private boolean mIsCanSound = true;
 	/** 当前选择视频类型 */
 	private int mVideoType = 0;
-	
+
 	private boolean isShow = false;
+	/** 是否用户主动点击取消 */
+	private boolean isUserDimiss = false;
 
 	public void setCallBackNotify(IPopwindowFn fn) {
 		this.mListener = fn;
@@ -112,15 +115,31 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 			mPopWindow.setOutsideTouchable(true);
 			mPopWindow.setBackgroundDrawable(new BitmapDrawable());
 			mPopWindow.showAtLocation(mParentLayout, Gravity.RIGHT | Gravity.BOTTOM, 0, 0);
+			mPopWindow.setOnDismissListener(new OnDismissListener() {
+
+				@Override
+				public void onDismiss() {
+					LogUtil.e(null, "jyf----20150406----LiveActivity----mPopWindow-----dimiss:");
+
+					isShow = false;
+					if (!isUserDimiss) {
+						if (null != mContext && mContext instanceof LiveActivity){
+							((LiveActivity)mContext).exit();
+						}
+					}
+
+				}
+			});
 			isShow = true;
 		}
 	}
-	
+
 	public boolean isShowing() {
 		return this.isShow;
 	}
 
 	public void close() {
+		isUserDimiss = true;
 		if (null != mPopWindow) {
 			isShow = false;
 			mPopWindow.dismiss();
