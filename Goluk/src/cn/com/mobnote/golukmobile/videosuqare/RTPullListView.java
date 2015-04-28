@@ -124,6 +124,9 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		if(firstItemIndex == 1 && !isPush){
 			setSelection(0);
 		}
+		
+		if(null != mOnRTScrollListener)
+			mOnRTScrollListener.onScroll(arg0, firstVisiableItem, arg2, arg3);
 	}
 	
 	public void setSelectionfoot(){
@@ -131,7 +134,8 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	}
 
 	public void onScrollStateChanged(AbsListView arg0, int arg1) {
-		
+		if(null != mOnRTScrollListener)
+			mOnRTScrollListener.onScrollStateChanged(arg0, arg1);
 	}
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -233,8 +237,10 @@ public class RTPullListView extends ListView implements OnScrollListener {
 					// done状态下
 					if (state == DONE) {
 						if (tempY - startY > 0) {
-							state = PULL_To_REFRESH;
-							changeHeaderViewByState();
+							if(firstItemIndex <= 0){
+								state = PULL_To_REFRESH;
+								changeHeaderViewByState();
+							}
 						}
 					}
 
@@ -373,4 +379,15 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + formatter.format(new Date()));
 		super.setAdapter(adapter);
 	}
+	
+	public void setOnRTScrollListener(OnRTScrollListener _mOnRTScrollListener){
+		mOnRTScrollListener = _mOnRTScrollListener;
+	}
+	
+	public interface OnRTScrollListener{
+		public void onScrollStateChanged(AbsListView arg0, int scrollState);
+		public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3);
+	}
+	
+	public OnRTScrollListener mOnRTScrollListener=null;
 }

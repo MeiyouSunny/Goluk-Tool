@@ -1186,7 +1186,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年4月24日
 	 */
 	private void queryNewFileList(){
-		mIPCControlManager.queryFileListInfo(6, 10, 0);
+		mIPCControlManager.queryFileListInfo(6, 10, 2147483647);
 	}
 	
 	/**

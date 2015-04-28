@@ -60,6 +60,7 @@ public class JsonCreateUtils {
 			obj.put("type", type);
 			obj.put("operation", operation);
 			obj.put("timestamp", timestamp);
+			obj.put("attributeUncode", attribute.get(0));
 			
 			JSONArray arr = new JSONArray();
 			for(int i=0; i<attribute.size(); i++){

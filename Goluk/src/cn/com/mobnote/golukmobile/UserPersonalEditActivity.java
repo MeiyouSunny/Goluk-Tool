@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,11 +40,11 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	//昵称
 	private TextView mTextName;
 	//性别
-	private TextView mTextSex;
+//	private TextView mTextSex;
 	//个性签名
 	private TextView mTextSign;
 	//点击每一项
-	private RelativeLayout mLayoutHead,mLayoutName,mLayoutSex,mLayoutSign;
+	private RelativeLayout mLayoutHead,mLayoutName,mLayoutSign;
 	//application
 	private GolukApplication mApplication = null;
 	//context
@@ -143,9 +142,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		switch (arg0.getId()) {
 		//title返回
 		case R.id.back_btn:
-//			finish();
-			Intent it = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
-			startActivity(it);
 			this.finish();
 			break;
 		//保存
@@ -234,16 +230,13 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				String json2Head = json2.getString("head");
 				
 				Log.i("edit", json2Head+"========"+intentHead);
-				Intent it = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
 				switch (code) {
 				case 200:
 					mLoading.setVisibility(View.GONE);
 					if(intentSign.equals(json2Sign) && intentName.equals(json2Name) && intentHead.equals(json2Head)){
-						startActivity(it);
 						this.finish();
 					}else{
 						console.toast("数据修改成功", mContext);
-						startActivity(it);
 						this.finish();
 					}
 					break;
@@ -333,7 +326,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		case 3:
 			Bundle bundle3 = data.getExtras();
 			head = bundle3.getString("intentSevenHead");
-//			UserUtils.userHeadChange(mImageHead, head, mTextSex);
 			UserUtils.focusHead(head, mImageHead);
 			break;
 
@@ -356,7 +348,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			sign = json.getString("desc");
 	
 			mTextName.setText(name);
-//			UserUtils.userHeadChange(mImageHead, head, mTextSex);
 			UserUtils.focusHead(head, mImageHead);
 			mTextSign.setText(sign);
 			
@@ -365,14 +356,4 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		if(keyCode == KeyEvent.KEYCODE_BACK){
-			Intent it = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
-			startActivity(it);
-			this.finish();
-		}
-		return super.onKeyDown(keyCode, event);
-	}
 }

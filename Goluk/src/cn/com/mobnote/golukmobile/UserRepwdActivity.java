@@ -418,6 +418,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				case 480:
 					UserUtils.showDialog(this, "验证码获取失败");
 					break;
+				case 470:
+					UserUtils.showDialog(mContext, "获取验证码已达上限");
+					break;
 				default:
 					
 					break;

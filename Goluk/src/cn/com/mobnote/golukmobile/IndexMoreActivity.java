@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
@@ -21,9 +20,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,12 +29,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.user.UserInterface;
-import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -154,7 +146,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		if(!isFirstLogin || mApp.isUserLoginSucess == true){//登录过
 			Log.i("testtest", "---------------"+mApp.autoLoginStatus+"------loginStatus------"+mApp.loginStatus);
 			//更多页面
-			if(mApp.loginStatus == 1 || mApp.autoLoginStatus !=5 ){//登录成功、自动登录中、自动登录成功
+			if(mApp.loginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
 				mLayoutHasInfo.setVisibility(View.VISIBLE);
 				mLayoutNoInfo.setVisibility(View.GONE);
 				initData();
@@ -239,16 +231,16 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 							}
 						}).create();
 						dialog	.show();
-					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess || mApp.autoLoginStatus == 3){
+					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess ){
 						Log.i("userinterface", "--------更多页面-------");
-						intent = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+						intent = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
 						startActivity(intent);
 					}
 				}else{
-					Log.i("lily", "-------自动登录失败,跳转登录页------"+mApp.autoLoginStatus);
+					Log.i("lily", "-------用户登出成功,跳转登录页------"+mApp.autoLoginStatus);
 					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
 					//登录页回调判断
-					itNo.putExtra("isInfo", "back");
+					itNo.putExtra("isInfo", "indexmore");
 					startActivity(itNo);
 					isHasInfo = true;
 				}
@@ -306,27 +298,28 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	public void statusChange() {
 		// TODO Auto-generated method stub
 		Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus);
-		/*if(mApp.autoLoginStatus == 2){
+		if(mApp.autoLoginStatus == 2){
 			dismissDialog();
 		
 			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
-			Intent it = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+			Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
 			startActivity(it);
 		}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4 || mApp.isUserLoginSucess == false){
 			dismissDialog();
-			console.toast("登录失败", mContext);
+			console.toast("自动登录失败", mContext);
 			Log.i("userinterface", "------"+mApp.autoLoginStatus+"--------indexmoreactivity");
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
 		}else if(mApp.autoLoginStatus == 5){
 			mLayoutHasInfo.setVisibility(View.VISIBLE);
 			mLayoutNoInfo.setVisibility(View.GONE);
-		}*/
-		if(mApp.autoLoginStatus != 1){
+		}
+		/*if(mApp.autoLoginStatus != 1){
 			dismissDialog();
 		
 			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
-			Intent it = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+//			Intent it = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
+			Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
 			startActivity(it);
 		}else if(mApp.isUserLoginSucess == false){
 			dismissDialog();
@@ -334,7 +327,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			Log.i("userinterface", "------"+mApp.autoLoginStatus+"--------indexmoreactivity");
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
-		}
+		}*/
 	}
 	
 }

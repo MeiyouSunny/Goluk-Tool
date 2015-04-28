@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,7 +20,6 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -50,7 +48,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	// 快速注册
 	private TextView mTextViewRegist, mTextViewForgetPwd;
 	// 第三方登陆
-	private ImageView mImageViewWeichat, mImageViewSina, mImageViewQQ;
+//	private ImageView mImageViewWeichat, mImageViewSina, mImageViewQQ;
 	// loading组件
 	private RelativeLayout mLoading;
 	//application
@@ -61,7 +59,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	private String pwd = null;
 	//将用户的手机号和密码保存到本地
 	private SharedPreferences mSharedPreferences = null;
-	private Editor mEditor = null;
 	
 	//判断登录
 	private String justLogin = null;
@@ -91,7 +88,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mTextViewTitle.setText("登录");
 		
 	}
-	private boolean mDelAllNum = false;
+//	private boolean mDelAllNum = false;
 	public void initView() {
 		// 登录title
 		mBackButton = (Button) findViewById(R.id.back_btn);
@@ -142,6 +139,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			String phone = mSharedPreferences.getString("setupPhone", "");
 			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
 			mEditTextPhoneNumber.setText(phone);
+			mEditTextPhoneNumber.setSelection(phone.length());
 		}
 		
 		/**
@@ -224,7 +222,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				String number = mEditTextPhoneNumber.getText().toString();
+//				String number = mEditTextPhoneNumber.getText().toString();
 				String psw=mEditTextPwd.getText().toString();
 				if(isOnClick){
 					if(!psw.equals("")){
@@ -274,6 +272,13 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		// 手机快速注册
 		case R.id.user_login_phoneRegist:
 			Intent itRegist = new Intent(UserLoginActivity.this,UserRegistActivity.class);
+			if(justLogin.equals("main")){//从起始页注册
+				itRegist.putExtra("fromRegist", "fromStart");
+			}else if(justLogin.equals("indexmore")){//从更多页个人中心注册
+				itRegist.putExtra("fromRegist", "fromIndexMore");
+			}else if(justLogin.equals("setup")){//从设置页注册
+				itRegist.putExtra("fromRegist", "fromSetup");
+			}
 			startActivity(itRegist);
 			break;
 		// 忘记密码
