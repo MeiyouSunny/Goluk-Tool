@@ -136,7 +136,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public RelativeLayout mVideoUploadLayout = null;
 	private TextView tv = null;
 	
-	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时**/
+	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时   5密码错误达上限去重置密码**/
 	public int loginStatus ;
 	/**注册的三个状态  0注册中  1注册成功  2 注册失败**/
 	public int registStatus;

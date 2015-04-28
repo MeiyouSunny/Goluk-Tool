@@ -422,6 +422,10 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mBtnLogin.setEnabled(true);
 			mBackButton.setEnabled(true);
 			break;
+		case 5:
+			Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
+			startActivity(it);
+			break;
 		default:
 			break;
 		}
