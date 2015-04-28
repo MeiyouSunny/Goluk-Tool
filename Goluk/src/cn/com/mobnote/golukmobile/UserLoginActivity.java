@@ -139,6 +139,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			String phone = mSharedPreferences.getString("setupPhone", "");
 			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
 			mEditTextPhoneNumber.setText(phone);
+			mEditTextPhoneNumber.setSelection(phone.length());
 		}
 		
 		/**
