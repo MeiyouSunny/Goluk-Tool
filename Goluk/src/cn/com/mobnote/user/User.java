@@ -122,6 +122,7 @@ public class User {
 					Log.i("setauto", "----ok---"+mApp.autoLoginStatus);
 					mApp.loginoutStatus = false;
 					mApp.isUserLoginSucess = true;
+					mApp.showContinuteLive();
 					break;
 				//自动登录的一切异常都不进行提示
 				case 500:

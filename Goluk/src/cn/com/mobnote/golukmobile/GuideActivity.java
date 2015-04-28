@@ -71,7 +71,7 @@ public class GuideActivity extends Activity implements OnClickListener {
 		init();
 		//加载引导页
 		initViewPager();
-		
+	
 		((GolukApplication)this.getApplication()).initLogic();
 	}
 	

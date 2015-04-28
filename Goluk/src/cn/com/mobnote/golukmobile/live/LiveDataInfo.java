@@ -22,5 +22,7 @@ public class LiveDataInfo implements Serializable {
 	public String groupType;
 	public int membercount;
 	public String title;
+	/** 视频剩余时间 */
+	public int restTime;
 
 }
