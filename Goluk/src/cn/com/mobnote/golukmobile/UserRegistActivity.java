@@ -85,6 +85,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	/**记录注册成功的状态**/
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
+	/**注册成功跳转页面的判断标志*/
+	private String registOk = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +138,15 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			mEditTextPhone.setText(repwdNum);
 			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 		}
+		
+		/**
+		 *	判断是从哪个入口进行的注册 
+		 */
+		Intent itRegist = getIntent();
+		if(null != itRegist.getStringExtra("fromRegist")){
+			registOk = itRegist.getStringExtra("fromRegist").toString();
+		}
+		
 		/**
 		 * 注册  --->  退出 --->  再次进入  ----->  登录页面获得注册传来的phone
 		 */
@@ -194,6 +205,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				String phone = mEditTextPhone.getText().toString();
+				String pwd = mEditTextPwd.getText().toString();
+				String identify = mEditTextIdentify.getText().toString();
 				if(!"".equals(phone)){
 					/*if(phone.length() == 11 && phone.startsWith("1")){ 
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
@@ -218,6 +231,14 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					//手机号为空
 					mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
 					mBtnIdentify.setEnabled(false);
+				}
+				//注册按钮
+				if(!"".equals(phone) && !"".equals(pwd) && !"".equals(identify)){
+					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+					mBtnRegist.setEnabled(true);
+				}else{
+					mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+					mBtnRegist.setEnabled(false);
 				}
 			}
 			@Override
@@ -254,9 +275,18 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				String password = mEditTextPwd.getText().toString();
+				String phone = mEditTextPhone.getText().toString();
+				String pwd = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
-				if(!"".equals(password) && !"".equals(identify)){
+				/*if(!"".equals(password) && !"".equals(identify)){
+					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+					mBtnRegist.setEnabled(true);
+				}else{
+					mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+					mBtnRegist.setEnabled(false);
+				}*/
+				//注册按钮
+				if(!"".equals(phone) && !"".equals(pwd) && !"".equals(identify)){
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 					mBtnRegist.setEnabled(true);
 				}else{
@@ -291,7 +321,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			//点按钮后,弹出登录中的提示,样式使用系统 loading 样式,文字描述:注册中
 			//注册成功:弹出系统短提示:注册成功,以登录状态进入 Goluk 首页
 			regist();
-			Log.i("registLogin", mApplication.registStatus+"&&&&&&");
 			break;
 		// 获取验证码按钮
 		case R.id.user_regist_identify_btn:
@@ -346,23 +375,28 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		 * 对获取验证码进行判断
 		 */
 		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
-			mEditTextPhone.setEnabled(false);
-			mEditTextIdentify.setEnabled(false);
-			mEditTextPwd.setEnabled(false);
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
 			console.log(isIdentify);
 			if(!UserUtils.isNetDeviceAvailable(mContext)){
-				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
+				console.toast("当前网络不可用，请检查网络后重试", mContext);
 			}else{
 				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
-
-				identifyClick = true;
-				UserUtils.hideSoftMethod(this);
-				mIdentifyLoading.setVisibility(View.VISIBLE);
-				registerReceiver(smsReceiver, smsFilter);
-				click = 1;
-				console.log(b + "");
-				mBtnRegist.setEnabled(true);
+				if(b){
+					identifyClick = true;
+					UserUtils.hideSoftMethod(this);
+					mIdentifyLoading.setVisibility(View.VISIBLE);
+					registerReceiver(smsReceiver, smsFilter);
+					click = 1;
+					console.log(b + "");
+					mBtnRegist.setEnabled(false);
+					mEditTextPhone.setEnabled(false);
+					mEditTextPwd.setEnabled(false);
+					mEditTextIdentify.setEnabled(false);
+					mBackButton.setEnabled(false);
+					mTextViewLogin.setEnabled(false);
+				}else{
+					
+				}
 			}
 		}else{
 			mBtnIdentify.setEnabled(false);
@@ -379,6 +413,9 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
+		mBackButton.setEnabled(true);
+		mBtnRegist.setEnabled(true);
+		mTextViewLogin.setEnabled(true);
 		mIdentifyLoading.setVisibility(View.GONE);
 		if(1 == success){
 			try{
@@ -438,6 +475,9 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				case 480:
 					UserUtils.showDialog(this, "验证码获取失败");
 					break;
+				case 470:
+					UserUtils.showDialog(mContext, "获取验证码已达上限");
+					break;
 				default:
 					break;
 				}
@@ -462,42 +502,57 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		String phone = mEditTextPhone.getText().toString();
 		String password = mEditTextPwd.getText().toString();
 		String identify = mEditTextIdentify.getText().toString();
-		if(!"".equals(password) && !"".equals(identify)){
-			mBtnRegist.setEnabled(true);
-			if(password.length()>=6 && password.length()<=16){
-				if(!UserUtils.isNetDeviceAvailable(mContext)){
-					console.toast("当前网络状态不佳，请检查网络后重试", mContext);
+		
+		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
+			if(!"".equals(password) && !"".equals(identify)){
+				mBtnRegist.setEnabled(true);
+				if(password.length()>=6 && password.length()<=16){
+					if(!UserUtils.isNetDeviceAvailable(mContext)){
+						console.toast("当前网络不可用，请检查网络后重试", mContext);
+					}else{
+					//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
+					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
+					console.log(isRegist);
+					boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
+					if(b){
+						mApplication.registStatus = 0;//注册中……
+						//隐藏软件盘
+						UserUtils.hideSoftMethod(this);
+						mLoading.setVisibility(View.VISIBLE);
+						mEditTextPhone.setEnabled(false);
+						mEditTextIdentify.setEnabled(false);
+						mEditTextPwd.setEnabled(false);
+						mBtnIdentify.setEnabled(false);
+						mTextViewLogin.setEnabled(false);
+						mBackButton.setEnabled(false);
+						mBtnRegist.setEnabled(false);
+						}
+					}
 				}else{
-				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
-				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
-				console.log(isRegist);
-				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
-				if(b){
-					//隐藏软件盘
-					UserUtils.hideSoftMethod(this);
-					mLoading.setVisibility(View.VISIBLE);
-					mEditTextPhone.setEnabled(false);
-					mEditTextIdentify.setEnabled(false);
-					mEditTextPwd.setEnabled(false);
+					UserUtils.showDialog(UserRegistActivity.this,"密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
+					mBtnRegist.setEnabled(true);
 				}
 		}
-			}else{
-			mBtnRegist.setEnabled(false);
-		}
+		}else{
+			UserUtils.showDialog(mContext, "手机格式输入错误，请重新输入");
 		}
 		
-	}
+}
 	
 	/**
 	 * 注册回调
 	 */
 	public void registCallback(int success,Object outTime,Object obj){
 		int codeOut = (Integer) outTime;
+		console.log("注册回调---registCallback---"+success+"---"+obj);
+		mLoading.setVisibility(View.GONE);
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
-		console.log("注册回调---registCallback---"+success+"---"+obj);
-		mApplication.registStatus = 0;//注册中……
+		mBtnIdentify.setEnabled(true);
+		mTextViewLogin.setEnabled(true);
+		mBackButton.setEnabled(true);
+		mBtnRegist.setEnabled(true);
 		if(1 == success){
 			try{
 				String data = (String) obj;
@@ -505,7 +560,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				int code = Integer.valueOf(json.getString("code"));
 				console.log(code+"");
 				
-				mLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
 					//注册成功
@@ -514,8 +568,11 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					mApplication.registStatus = 1;//注册成功的状态
 					//注册成功后再次调用登录的接口
 					registLogin();
-					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
-					startActivity(it);
+					Intent it = null;
+					if(registOk.equals("fromStart")){
+						it = new Intent(UserRegistActivity.this,MainActivity.class);
+						startActivity(it);
+					}
 					finish();
 					break;
 				case 500:

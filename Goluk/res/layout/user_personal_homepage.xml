@@ -63,7 +63,7 @@
 	            android:text="BG1TTR"
 	            android:textColor="@color/user_personal_homepage_text"
 	            />
-	        <TextView 
+	        <!-- <TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="/"
@@ -82,7 +82,7 @@
 	            android:layout_height="wrap_content"
 	            android:text="分享"
 	            android:textColor="@color/user_personal_homepage_text"
-	            />
+	            /> -->
 	    </LinearLayout>
 	</RelativeLayout>
 	<!-- 我的视频 -->
@@ -91,5 +91,5 @@
 	    android:layout_height="match_parent"
 	    android:id="@+id/user_personal_homepage_listview"
 	    ></ListView> -->
-	    <include layout="@layout/user_personal_homepage_item"/>
+	    <!-- <include layout="@layout/user_personal_homepage_item"/> -->
 </LinearLayout>

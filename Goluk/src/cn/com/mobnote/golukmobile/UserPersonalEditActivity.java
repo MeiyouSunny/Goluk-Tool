@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -39,11 +40,11 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	//昵称
 	private TextView mTextName;
 	//性别
-	private TextView mTextSex;
+//	private TextView mTextSex;
 	//个性签名
 	private TextView mTextSign;
 	//点击每一项
-	private RelativeLayout mLayoutHead,mLayoutName,mLayoutSex,mLayoutSign;
+	private RelativeLayout mLayoutHead,mLayoutName,mLayoutSign;
 	//application
 	private GolukApplication mApplication = null;
 	//context
@@ -62,6 +63,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	private String intentName = null;
 	private String intentSex = null;
 	private String intentSign = null;
+	//保存数据的loading
+	private RelativeLayout mLoading = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		mLayoutName = (RelativeLayout) findViewById(R.id.user_personal_edit_layout2);
 //		mLayoutSex = (RelativeLayout) findViewById(R.id.user_personal_edit_layout3);
 		mLayoutSign = (RelativeLayout) findViewById(R.id.user_personal_edit_layout4);
+		//保存数据的loading
+		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
 			
 		Intent it = getIntent();
 		intentHead = it.getStringExtra("infoHead").toString();
@@ -137,7 +142,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		switch (arg0.getId()) {
 		//title返回
 		case R.id.back_btn:
-			finish();
+			this.finish();
 			break;
 		//保存
 		case R.id.user_title_right:
@@ -195,7 +200,13 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\""+ head +  "\",\"UserSex\":\""+sex+"\",\"Desc\":\""+newSign+"\"}";
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
 		if(b){
-			
+			//保存中
+			mLoading.setVisibility(View.VISIBLE);
+			btnBack.setEnabled(false);
+			btnRight.setEnabled(false);
+			mLayoutHead.setEnabled(false);
+			mLayoutName.setEnabled(false);
+			mLayoutSign.setEnabled(false);
 		}else{
 			
 		}
@@ -219,25 +230,34 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				String json2Head = json2.getString("head");
 				
 				Log.i("edit", json2Head+"========"+intentHead);
-				Intent it = new Intent(UserPersonalEditActivity.this,UserPersonalInfoActivity.class);
 				switch (code) {
 				case 200:
+					mLoading.setVisibility(View.GONE);
 					if(intentSign.equals(json2Sign) && intentName.equals(json2Name) && intentHead.equals(json2Head)){
-//						console.toast("没有修改信息", mContext);
-						startActivity(it);
 						this.finish();
 					}else{
 						console.toast("数据修改成功", mContext);
-						startActivity(it);
 						this.finish();
 					}
 					break;
 				case 405:
 					console.toast("该用户未注册", mContext);
+					mLoading.setVisibility(View.GONE);
+					btnBack.setEnabled(true);
+					btnRight.setEnabled(true);
+					mLayoutHead.setEnabled(true);
+					mLayoutName.setEnabled(true);
+					mLayoutSign.setEnabled(true);
 					break;
 
 				case 500:
 					console.toast("服务器异常", mContext);
+					mLoading.setVisibility(View.GONE);
+					btnBack.setEnabled(true);
+					btnRight.setEnabled(true);
+					mLayoutHead.setEnabled(true);
+					mLayoutName.setEnabled(true);
+					mLayoutSign.setEnabled(true);
 					break;
 
 				default:
@@ -249,6 +269,12 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}else{
 			//success不等于1
 			console.toast("数据修改失败,请重试", mContext);
+			mLoading.setVisibility(View.GONE);
+			btnBack.setEnabled(true);
+			btnRight.setEnabled(true);
+			mLayoutHead.setEnabled(true);
+			mLayoutName.setEnabled(true);
+			mLayoutSign.setEnabled(true);
 		}
 	}
 	@SuppressLint("ClickableViewAccessibility")
@@ -300,7 +326,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		case 3:
 			Bundle bundle3 = data.getExtras();
 			head = bundle3.getString("intentSevenHead");
-//			UserUtils.userHeadChange(mImageHead, head, mTextSex);
 			UserUtils.focusHead(head, mImageHead);
 			break;
 
@@ -323,7 +348,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			sign = json.getString("desc");
 	
 			mTextName.setText(name);
-//			UserUtils.userHeadChange(mImageHead, head, mTextSex);
 			UserUtils.focusHead(head, mImageHead);
 			mTextSign.setText(sign);
 			
@@ -331,4 +355,5 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			e.printStackTrace();
 		}
 	}
+	
 }

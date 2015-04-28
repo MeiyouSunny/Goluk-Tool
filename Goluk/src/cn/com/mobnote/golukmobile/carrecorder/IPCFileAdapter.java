@@ -44,6 +44,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		mDataList.addAll(data);
 		mGroupNameList.addAll(groupname);
 		count = mDataList.size();
+		this.notifyDataSetChanged();
 	}
 	
 	public View getView(int position, View convertView, ViewGroup parent) {

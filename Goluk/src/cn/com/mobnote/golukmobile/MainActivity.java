@@ -353,11 +353,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						//网络状态改变
 						mApp.VerifyWiFiConnect();
 
-						android.util.Log.i("setauto","------自动登录网络状态变化1111------");
+						/*android.util.Log.i("setauto","------自动登录网络状态变化1111------");
 						if(mApp.isUserLoginSucess == true || mApp.autoLoginStatus !=2){
 							android.util.Log.i("setauto","------自动登录网络状态变化2222------");
 							mApp.mUser.initAutoLogin();							
-						}
+						}*/
 
 						notifyLogicNetWorkState((Boolean) msg.obj);
 
@@ -1037,6 +1037,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				}).create();
 				dialog	.show();
 				return ;
+			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+				mShareLayout.setVisibility(View.VISIBLE);
+				return ;
 			}
 			Intent intent = new Intent(this, UserLoginActivity.class);
 			intent.putExtra("isInfo", "back");
@@ -1080,6 +1083,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				}).create();
 				dialog	.show();
 				return ;
+			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+				console.toast("网络连接异常，请重试", mContext);
+				return ;
 			}
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
 			return;
@@ -1118,6 +1124,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					}
 				}).create();
 				dialog	.show();
+				return ;
+			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+				console.toast("网络连接异常，请重试", mContext);
 				return ;
 			}
 			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
@@ -1195,14 +1204,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			GolukApplication.getInstance().mCurAddr = location.getAddrStr();
 			System.out.println("YYY=========mCurAddr="+location.getAddrStr()+"==lon="+LngLat.lng+"==lat="+LngLat.lat);
 			//更新IPC经纬度
-			if(GolukApplication.getInstance().getIpcIsLogin()){
-				long lon = (long)(location.getLongitude()*3600000);
-				long lat = (long)(location.getLatitude()*3600000);
-				int speed = (int)location.getSpeed();
-				int direction = (int)location.getDirection();
-				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
-				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
-			}
+//			if(GolukApplication.getInstance().getIpcIsLogin()){
+//				long lon = (long)(location.getLongitude()*3600000);
+//				long lat = (long)(location.getLatitude()*3600000);
+//				int speed = (int)location.getSpeed();
+//				int direction = (int)location.getDirection();
+//				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
+//				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
+//			}
 			
 			//更新行车记录仪地址
 			if(null != CarRecorderActivity.mHandler){

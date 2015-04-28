@@ -37,7 +37,7 @@ public class UserLoginManage {
 	public UserLoginManage(GolukApplication mApp) {
 		super();
 		this.mApp = mApp;
-		mApp.initLogic();
+//		mApp.initLogic();
 	}
 
 	public void setUserLoginInterface(UserLoginInterface mInterface){
@@ -61,7 +61,7 @@ public class UserLoginManage {
 		boolean b = false;
 		// 网络判断
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			console.toast("当前网络状态不佳，请检查网络后重试", mApp.getContext());
+			console.toast("当前网络不可用，请检查网络后重试", mApp.getContext());
 			loginStatusChange(2);// 登录失败
 		} else {
 			String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+ pwd + "\",\"tag\":\"android\"}";

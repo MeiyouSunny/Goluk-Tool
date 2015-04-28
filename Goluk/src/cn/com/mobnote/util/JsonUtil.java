@@ -353,6 +353,7 @@ public class JsonUtil {
 			userInfo.groupId = getJsonStringValue(rootObj, "gid", "");
 			userInfo.persons = String.valueOf(getJsonIntValue(rootObj, "persons", 0));
 			userInfo.zanCount = getJsonStringValue(rootObj, "zan", "0");
+			userInfo.liveDuration = Integer.valueOf(getJsonStringValue(rootObj, "restime", "60"));
 
 			return userInfo;
 		} catch (Exception e) {
