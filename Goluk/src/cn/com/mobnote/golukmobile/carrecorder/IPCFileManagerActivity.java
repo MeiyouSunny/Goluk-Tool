@@ -816,7 +816,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					if(!isEditState){
 						if(IPCManagerFn.TYPE_SHORTCUT != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_SHORTCUT;
-							if(null == mWonderfulVideoAdapter){
+							if(0 == mWonderfulVideoData.size()){
 								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_SHORTCUT, timeend);
 							}else{
 								mCurrentType = mOprateType;
@@ -835,7 +835,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					if(!isEditState){
 						if(IPCManagerFn.TYPE_URGENT != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_URGENT;
-							if(null == mEmergencyVideoAdapter){
+							if(0 == mEmergencyVideoData.size()){
 								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_URGENT, timeend);
 							}else{
 								mCurrentType = mOprateType;
@@ -854,7 +854,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					if(!isEditState){
 						if(IPCManagerFn.TYPE_CIRCULATE != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_CIRCULATE;
-							if(null == mLoopVideoAdapter){
+							if(0 == mLoopVideoData.size()){
 								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE, timeend);
 							}else{
 								mCurrentType = mOprateType;
@@ -1189,10 +1189,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
 					int total = IpcDataParser.getFileListCount((String) param2);
 					if (null != fileList) {
-						if(fileList.size() <= 0){
-							return;
+						VideoFileInfo vfi=null;
+						if(fileList.size() > 0){
+							vfi = fileList.get(fileList.size() - 1);
 						}
-						VideoFileInfo vfi = fileList.get(fileList.size() - 1);
 						
 						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
 						if(fileList.size()<40){
@@ -1202,15 +1202,21 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						}
 						mCurrentType = mOprateType;
 						if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){//精彩视频
-							marvellousListTime = (int) vfi.time - 1;
+							if(null != vfi){
+								marvellousListTime = (int) vfi.time - 1;
+							}
 							wonderfulTotalCount = total;
 							initWonderfulLayout(fileList);
 						}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){//紧急视频
-							emergencyListTime = (int) vfi.time - 1;
+							if(null != vfi){
+								emergencyListTime = (int) vfi.time - 1;						
+							}
 							emergencyTotalCount = total;
 							initEmergencyLayout(fileList);
 						}else{//循环视频
-							cycleListTime = (int) vfi.time - 1;
+							if(null != vfi){
+								cycleListTime = (int) vfi.time - 1;
+							}
 							loopVisibleCount = total;
 							initLoopLayout(fileList);
 						}
