@@ -61,7 +61,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	private SharedPreferences mSharedPreferences = null;
 	
 	//判断登录
-	private String justLogin = null;
+	private String justLogin = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

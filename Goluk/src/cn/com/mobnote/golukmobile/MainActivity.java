@@ -1030,7 +1030,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			
 				break;
 			case R.id.index_wifi_layout:
-				toCard();
+				if(GolukApplication.getInstance().getIpcIsLogin()){
+					toCard();
+				}
 				break;
 		}
 	}

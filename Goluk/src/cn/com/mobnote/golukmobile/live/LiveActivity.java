@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -418,6 +419,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		} else {
 			// TODO 弹对话框
 			showToast("查看他人直播：" + userInfo.uid);
+			LogUtil.e(null, "jyf----20150406----LiveActivity----startLiveLook----22 : TRUE TRUE");
 		}
 	}
 
@@ -621,10 +623,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (!isShowPop) {
 			isShowPop = true;
 		}
-		if (mApp.isUserLoginSucess) {
-			// 登录成功
-			mLoginLayout.setVisibility(View.GONE);
-		}
+		loginSucess();
+
 	}
 
 	// 初次进入
@@ -1025,6 +1025,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
+	private boolean isSupportJoinGroup = false;
+
 	/**
 	 * 查看别人直播
 	 * 
@@ -1057,7 +1059,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----4444 : " + (String) obj);
 		if (200 != liveData.code) {
 			videoInValid();
-
 			// 视频无效下线
 			return;
 		}
@@ -1082,17 +1083,24 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				switchLookShareTalkView(true, false);
 			} else {
 				showToast("加入对方的群组");
-				// 调用爱滔客加入群组
+
 				mJoinGroupJson = JsonUtil.getJoinGroup(liveData.groupType, liveData.membercount, liveData.title,
 						liveData.groupId, liveData.groupnumber);
 
-				LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----8888 : 开始加入群组 :"
-						+ mJoinGroupJson);
+				isSupportJoinGroup = true;
 
-				// 支持加入群组，显示对讲按钮
-				switchLookShareTalkView(true, true);
+				if (mApp.isUserLoginSucess) {
+					// 调用爱滔客加入群组
+					LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----8888 : 开始加入群组 :"
+							+ mJoinGroupJson);
+					// 支持加入群组，显示对讲按钮
+					switchLookShareTalkView(true, true);
 
-				joinAitalkGroup();
+					joinAitalkGroup();
+				} else {
+
+				}
+
 			}
 		} else {
 			// 被动直播
@@ -1118,7 +1126,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (isprompt) {
 			Toast.makeText(this, "查看别人直播服务器返回数据异常", Toast.LENGTH_LONG).show();
 		}
-
 	}
 
 	@Override
@@ -1337,8 +1344,45 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// IPageNotifyFn.PageType_LiveShare, param);
 	}
 
+	private void loginSucess() {
+		if (this.isShareLive) {
+			return;
+		}
+		
+		LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 111111");
+
+		if (mApp.isUserLoginSucess) {
+			// 登录成功
+			
+			LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 222222");
+			mLoginLayout.setVisibility(View.GONE);
+
+			if (!mIsJoinGroupSucess) {
+				LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 3333333");
+				if (isKaiGeSucess) {
+					LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 4444444");
+					if (this.isSupportJoinGroup) {
+						LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 5555555");
+						// 支持加入群組
+						// 支持加入群组，显示对讲按钮
+						switchLookShareTalkView(true, true);
+						joinAitalkGroup();
+						
+						LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 6666666");
+					}
+				} else {
+					LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 7777777");
+					startLiveLook(currentUserInfo);
+				}
+			}
+		}
+
+	}
+
 	private void click_login() {
 		showToast("去登录界面");
+		Intent intent = new Intent(this, UserLoginActivity.class);
+		startActivity(intent);
 	}
 
 	private String getCurrentVideoId() {
@@ -2369,7 +2413,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				return;
 			}
 			if (null == tempUserInfo) {
-				showToast("未找到用户信息");
+//				showToast("未找到用户信息");
 				return;
 			}
 

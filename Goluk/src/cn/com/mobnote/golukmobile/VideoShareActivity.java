@@ -161,6 +161,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	/** 退出提示框 */
 	private AlertDialog mExitPromptDialog = null;
 	private Bitmap mShortBitmap = null;
+	
+	SharePlatformUtil sharePlatform;
 	/** 2/3 紧急/精彩 */
 	private int mVideoType = 0;
 
@@ -287,7 +289,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.video_share);
-
+		
 		mContext = this;
 		// 获取视频Id
 		Intent intent = getIntent();
@@ -297,9 +299,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "VideoShare");
-
-		// 配置需要分享的相关平台
-		configPlatforms();
+		sharePlatform = new SharePlatformUtil(this);
+		
 		// 获取第一帧缩略图
 		createThumb();
 		// 初始化
@@ -512,114 +513,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 	}
 
-	/**
-	 * 配置分享平台参数</br>
-	 */
-	private void configPlatforms() {
-		// 添加新浪SSO授权
-		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-		// 添加微信、微信朋友圈平台
-		addWXPlatform();
-		// 添加短信
-		addSMS();
-		// 添加腾讯QQ
-		addQQQZonePlatform();
-	}
-
-	/**
-	 * @功能描述 : 添加微信平台分享
-	 * @return
-	 */
-	private void addWXPlatform() {
-		// 注意：在微信授权的时候，必须传递appSecret
-		// wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
-		String appId = "wx493f46bf1a71416f";
-		String appSecret = "b572ec9cbd3fac52e138e34eff0b4926";
-		// 添加微信平台
-		UMWXHandler wxHandler = new UMWXHandler(mContext, appId, appSecret);
-		wxHandler.addToSocialSDK();
-
-		// 支持微信朋友圈
-		UMWXHandler wxCircleHandler = new UMWXHandler(mContext, appId, appSecret);
-		wxCircleHandler.setToCircle(true);
-		wxCircleHandler.addToSocialSDK();
-	}
-
-	/**
-	 * @功能描述 : 添加QQ平台支持 QQ分享的内容， 包含四种类型， 即单纯的文字、图片、音乐、视频. 参数说明 : title, summary,
-	 *       image url中必须至少设置一个, targetUrl必须设置,网页地址必须以"http://"开头 . title :
-	 *       要分享标题 summary : 要分享的文字概述 image url : 图片地址 [以上三个参数至少填写一个] targetUrl
-	 *       : 用户点击该分享时跳转到的目标地址 [必填] ( 若不填写则默认设置为友盟主页 )
-	 * @return
-	 */
-	private void addQQQZonePlatform() {
-		String appId = "1104418156";
-		String appKey = "G7OfQ0qbqe5OJlUP";
-		// 添加QQ支持, 并且设置QQ分享内容的target url
-		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler((Activity) mContext, appId, appKey);
-		qqSsoHandler.addToSocialSDK();
-	}
-
-	/**
-	 * 添加短信平台</br>
-	 */
-	private void addSMS() {
-		// 添加短信
-		SmsHandler smsHandler = new SmsHandler();
-		smsHandler.addToSocialSDK();
-	}
-
-	/**
-	 * 根据不同的平台设置不同的分享内容</br>
-	 */
-	private void setShareContent(String videourl, String imageurl, String text) {
-
-		UMImage umimage = new UMImage(mContext, imageurl);
-		UMVideo video = new UMVideo(videourl);
-		video.setThumb(umimage);
-
-		// 配置新浪SSO
-		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-
-		// 微信
-		WeiXinShareContent weixinContent = new WeiXinShareContent();
-
-		weixinContent.setShareContent("Goluk分享内容");
-		weixinContent.setTitle(text);
-		weixinContent.setTargetUrl(videourl);
-		weixinContent.setShareMedia(video);
-		mController.setShareMedia(weixinContent);
-
-		// 设置朋友圈分享的内容
-		CircleShareContent circleMedia = new CircleShareContent();
-		circleMedia.setShareContent("Goluk分享内容");
-		circleMedia.setTitle(text);
-		circleMedia.setTargetUrl(videourl);
-		circleMedia.setShareMedia(video);
-		mController.setShareMedia(circleMedia);
-
-		// 设置短信分享内容
-		SmsShareContent sms = new SmsShareContent();
-		sms.setShareContent(text + "。" + videourl);
-		// sms.setShareImage(umimage);
-		mController.setShareMedia(sms);
-
-		// 新浪微博分享
-		SinaShareContent sinaContent = new SinaShareContent();
-		sinaContent.setShareContent("Goluk分享内容");
-		sinaContent.setTitle(text);
-		sinaContent.setTargetUrl(videourl);
-		sinaContent.setShareMedia(video);
-		mController.setShareMedia(sinaContent);
-
-		// qq分享
-		QQShareContent qqContent = new QQShareContent();
-		qqContent.setShareContent("Goluk分享内容");
-		qqContent.setTitle(text);
-		qqContent.setTargetUrl(videourl);
-		qqContent.setShareMedia(video);
-		mController.setShareMedia(qqContent);
-	}
 
 	/**
 	 * 本地视频上传回调
@@ -681,8 +574,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 
-			// 调用第三方分享
-			setShareContent(shortUrl, coverUrl, text);
+			// 设置分享内容
+			sharePlatform.setShareContent(shortUrl, coverUrl,text);
 			CustomShareBoard shareBoard = new CustomShareBoard(this);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 

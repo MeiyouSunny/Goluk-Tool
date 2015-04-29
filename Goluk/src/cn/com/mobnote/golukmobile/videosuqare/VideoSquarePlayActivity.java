@@ -16,6 +16,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.tiros.utils.LogUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -84,7 +85,7 @@ public class VideoSquarePlayActivity extends Activity implements
 			title.setText("惊险十分");
 		}else if("8".equals(attribute)){
 			title.setText("疯狂超车");
-		}else if("9".equals(type)){
+		}else if("9".equals(attribute)){
 			title.setText("感人瞬间");
 		}else if("10".equals(attribute)){
 			title.setText("传递正能量");
@@ -151,8 +152,8 @@ public class VideoSquarePlayActivity extends Activity implements
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				uptype = 2;
 				if(begantime !=null){
+					uptype = 2;
 					System.out.println("下拉刷新时间="+begantime.mVideoEntity.sharingtime);
 					httpPost(true, type, "1", begantime.mVideoEntity.sharingtime);
 				}else{
@@ -170,10 +171,12 @@ public class VideoSquarePlayActivity extends Activity implements
 		mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+				LogUtil.e("", "slslslslslsls=22222222222222222222222");
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+					
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
-						uptype = 1;
 						if (isHaveData) {
+							uptype = 1;
 							System.out.println("上拉刷新时间="+endtime.mVideoEntity.sharingtime);
 							httpPost(true, type, "2", endtime.mVideoEntity.sharingtime);
 						}
@@ -299,7 +302,9 @@ public class VideoSquarePlayActivity extends Activity implements
 				}
 				
 				if (uptype == 0) {
-					init(false);
+					if(list.size()>0){
+						init(false);
+					}
 				} else {
 					if(2 == uptype){//如果如果是下拉,把下拉的窗口关掉
 						mRTPullListView.onRefreshComplete();
@@ -310,6 +315,20 @@ public class VideoSquarePlayActivity extends Activity implements
 					}
 					
 				}
+			}else {
+				isHaveData = false;
+				
+				if(0 == uptype){
+					closeProgressDialog();
+				} else if (1 == uptype){
+					if(mRTPullListView!=null){
+						mRTPullListView.removeFooterView(loading);
+						loading = null;
+					}
+				} else if (2 == uptype){
+					mRTPullListView.onRefreshComplete();
+				}
+				Toast.makeText(VideoSquarePlayActivity.this, "网络连接失败!",Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
@@ -326,6 +345,8 @@ public class VideoSquarePlayActivity extends Activity implements
 		if(param != null && !"".equals(param)){
 			List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param);
 			mDataList = list;
+			begantime = list.get(0);
+			endtime = list.get(list.size()-1);
 			init(true);
 		}
 		

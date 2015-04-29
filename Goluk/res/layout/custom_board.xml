@@ -143,7 +143,7 @@
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
         android:layout_marginTop="18dp"
-        android:background="@drawable/live_share_mianbtn_ash"
+        android:background="@drawable/btn_share_cancel_bg"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:background="#00000000"
             android:text="取消" />
     </LinearLayout>
