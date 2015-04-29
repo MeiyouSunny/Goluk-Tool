@@ -124,12 +124,12 @@ public class NetUtil {
 							String address = mPacket.getSocketAddress().toString();
 							String address2 = mPacket.getAddress().toString();
 
-							if (address.contains("/")) {
-								address = address.replace("/", "");
+							if (address2.contains("/")) {
+								address2 = address2.replace("/", "");
 							}
 
 							WifiRsBean bean = new WifiRsBean();
-							bean.setIpc_ip(address);
+							bean.setIpc_ip(address2);
 
 							Message msg = new Message();
 							msg.what = 4;
