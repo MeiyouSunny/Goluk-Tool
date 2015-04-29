@@ -25,6 +25,12 @@ public class NetUtil {
 
 	private int mType = 0;
 
+	private static NetUtil mInstance = new NetUtil();
+
+	public static NetUtil getInstance() {
+		return mInstance;
+	}
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
