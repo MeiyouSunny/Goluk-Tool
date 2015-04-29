@@ -173,13 +173,13 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		mLoadingAnimation = (AnimationDrawable)mLoadingImage.getBackground();
 		
 		mVideoProgressBar = (ProgressBar) findViewById(R.id.video_progress_bar);
-		mMusicBtn = (ImageButton) findViewById(R.id.music_btn);
+		//mMusicBtn = (ImageButton) findViewById(R.id.music_btn);
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
 		mPlayLayout.setOnClickListener(this);
-		mMusicBtn.setOnClickListener(this);
+		//mMusicBtn.setOnClickListener(this);
 		
 		//更新UI handler
 		mVideoEditHandler = new Handler(){
@@ -632,11 +632,11 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 					mPlayStatusImage.setVisibility(View.GONE);
 				}
 			break;
-			case R.id.music_btn:
-				Intent music = new Intent(mContext,VideoEditMusicActivity.class);
-				music.putExtra("cn.com.mobnote.golukmobile.musicfilepath",mStrMusicFilePath);
-				startActivity(music);
-			break;
+//			case R.id.music_btn:
+//				Intent music = new Intent(mContext,VideoEditMusicActivity.class);
+//				music.putExtra("cn.com.mobnote.golukmobile.musicfilepath",mStrMusicFilePath);
+//				startActivity(music);
+//			break;
 		}
 	}
 }
