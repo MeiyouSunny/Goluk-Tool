@@ -34,8 +34,8 @@ public class VideoFileInfo {
 	public int size;
 	/**文件名  */
 	public String location;
-	/**分辨率  1:1080p 2:720p*/
-	public int resolution;
+	/**分辨率  1080p 720p*/
+	public String resolution;
 	/**是否具有录像截图文件。是(1) | 否(0) */
 	public int withSnapshot;
 	/**是否具有gps文件。是(1) | 否(0)  */

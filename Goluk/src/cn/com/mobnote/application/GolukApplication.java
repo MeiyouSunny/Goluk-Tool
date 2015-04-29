@@ -44,6 +44,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
@@ -945,66 +946,58 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				break;
 			}
 		}
-
-		// IPC控制命令应答 event = 1
-		if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
-			switch (msg) {
-			case IPC_VDCP_Msg_Init:
-				// msg = 0 初始化消息
-				// param1 = 0 成功 | 失败
-				if (0 == param1) {
-					// ipc控制初始化成功,可以看画面和拍摄8s视频
-					isIpcLoginSuccess = true;
-					// 获取音视频配置信息
-					getVideoEncodeCfg();
-					// 发起获取自动循环录制状态
-					updateAutoRecordState();
-					// 获取停车安防配置信息
-					updateMotionCfg();
-					// 自动同步系统时间
-					// if(SettingUtils.getInstance().getBoolean("systemtime",
-					// true)){
-					// boolean a =
-					// GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
-					// System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
-					// }
-					isconnection = true;// 连接成功
-					closeConnectionDialog();// 关闭连接的dialog
-
-					// 查询新文件列表（最多10条）
-					long time = SettingUtils.getInstance().getLong("querytime",
-							0);
-					long curtime = System.currentTimeMillis() / 1000;
-					if (Math.abs(curtime - time) > 5 * 60) {// 五分钟以内断开重新连接的不做处理
-						queryNewFileList();
-						LogUtil.e("xuhw",
-								"YYYYYYY===start==queryNewFileList====");
+	
+		if(ENetTransEvent_IPC_VDCP_CommandResp == event){
+			switch(msg){
+				case IPC_VDCP_Msg_Init:
+					//msg = 0 初始化消息
+					//param1 = 0 成功 | 失败
+					if(0 == param1){
+						//ipc控制初始化成功,可以看画面和拍摄8s视频
+						isIpcLoginSuccess = true;
+						//获取音视频配置信息
+						getVideoEncodeCfg();
+						//发起获取自动循环录制状态
+						updateAutoRecordState();
+						//获取停车安防配置信息
+						updateMotionCfg();
+						isconnection = true;// 连接成功
+						closeConnectionDialog();// 关闭连接的dialog
+						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
+						LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
+						
+						//查询新文件列表（最多10条）
+						long time = SettingUtils.getInstance().getLong("querytime", 0);
+						long curtime = System.currentTimeMillis()/1000;
+						if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
+							queryNewFileList();
+							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
+						}
+						console.log("IPC_TTTTTT=================Login Success===============");
+						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
+						//改变首页链接状态
+						if(null != mMainActivity){
+							mMainActivity.wiFiLinkStatus(2);
+						}
+					}else {
+						isIpcLoginSuccess = false;
+						ipcDisconnect();
 					}
-					console.log("IPC_TTTTTT=================Login Success===============");
-					// Toast.makeText(mContext, "IPC登录成功",
-					// Toast.LENGTH_SHORT).show();
-					// 改变首页链接状态
-					if (null != mMainActivity) {
-						mMainActivity.wiFiLinkStatus(2);
-					}
-				} else {
-					isIpcLoginSuccess = false;
-					ipcDisconnect();
-				}
 				break;
 			case IPC_VDCP_Msg_Query:
-				// msg = 1000 多文件目录查询
-				if (RESULE_SUCESS == param1) {
-					LogUtil.e("xuhw",
-							"YYYYYY=====IPC_VDCP_Msg_Query====param2=" + param2);
-					if (!"ipcfilemanager".equals(mPageSource)) {
-						if (TextUtils.isEmpty((String) param2)) {
-							return;
+					//msg = 1000 多文件目录查询
+					if(RESULE_SUCESS == param1){
+						LogUtil.e("xuhw", "YYYYYY=====IPC_VDCP_Msg_Query====param2="+param2);
+						if(!"ipcfilemanager".equals(mPageSource)){
+							if(TextUtils.isEmpty((String)param2)){
+								return;
+							}
+							fileList = IpcDataParser.parseMoreFile((String) param2);
+							mHandler.sendEmptyMessageDelayed(1001, 1000);
 						}
 						fileList = IpcDataParser.parseMoreFile((String) param2);
 						mHandler.sendEmptyMessage(1001);
 					}
-				}
 				break;
 			case IPC_VDCP_Msg_SingleQuery:
 				// msg = 1001 单文件查询
@@ -1103,12 +1096,29 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						}
 					}
 				}
-				break;
-			case IPC_VDCP_Msg_GetVersion:
-				// {"product": 67698688, "model": "", "macid": "", "serial": "",
-				// "version": "V1.4.21_tzz_vb_rootfs"}
-				break;
-
+					break;
+				case IPC_VDCP_Msg_GetVersion:
+					//{"product": 67698688, "model": "", "macid": "", "serial": "", "version": "V1.4.21_tzz_vb_rootfs"}
+					break;
+				case IPC_VDCP_Msg_GetTime:
+					if(param1 == RESULE_SUCESS){
+						if(TextUtils.isEmpty((String)param2)){
+							return;
+						}
+						long curtime = IpcDataParser.parseIPCTime((String)param2);
+						//自动同步系统时间
+						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
+							long time = SettingUtils.getInstance().getLong("cursystemtime");
+							LogUtil.e("xuhw", "YYYYYY===getIPCSystemTime==time="+time+"=curtime="+curtime);
+							if(Math.abs(curtime - time) > 60){//60秒内不自动同步
+								SettingUtils.getInstance().putLong("cursystemtime", curtime);
+								boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
+								LogUtil.e("xuhw", "YYYYYY===========setIPCSystemTime===============a="+a);
+							}
+						}
+					}
+					break;
+				
 			}
 		}
 

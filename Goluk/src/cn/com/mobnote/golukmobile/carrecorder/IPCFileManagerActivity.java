@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,6 +38,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -93,7 +95,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private int emergencyTotalCount=0;
 	private int loopTotalCount=0;
 	/** 数据分页个数 */
-	private int pageCount=12;
+	private int pageCount=40;
 	/** 编辑按钮 */
 	private Button mEditBtn=null;
 	/** 功能按钮布局 */
@@ -112,6 +114,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private boolean addWonderfulFooter=false;
 	private boolean addEmergencyFooter=false;
 	private boolean addLoopFooter=false;
+	private boolean addWonderfulEmptyFooter=false;
+	private boolean addEmergencyEmptyFooter=false;
+	private boolean addLoopEmptyFooter=false;
 	private int cycleListTime = 0;//循环列表最后的时间戳
 	private int marvellousListTime = 0;//精彩列表最后的时间戳
 	private int emergencyListTime = 0;//紧急列表最后的时间戳
@@ -248,14 +253,17 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					.inflate(R.layout.video_square_below_loading, null);
 			mWonderfulVideoList.addFooterView(wonderfulLoading);
 		}
-		
-		if(fileList.size() < 40){
+
+		if(fileList.size() < pageCount){
 			if(addWonderfulFooter){
 				addWonderfulFooter=false;
 				mWonderfulVideoList.removeFooterView(wonderfulLoading);
 				
-				LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
-				mWonderfulVideoList.addFooterView(layout);
+				if(!addWonderfulEmptyFooter){
+					addWonderfulEmptyFooter=true;
+					LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
+					mWonderfulVideoList.addFooterView(layout);
+				}
 			}
 		}
 		
@@ -348,7 +356,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							
 						}
 					}else{
-						
+						if(!GolukApplication.getInstance().getIpcIsLogin()){
+							dialog();
+							return;
+						}
 						
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
@@ -424,13 +435,16 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			mEmergencyVideoList.addFooterView(emergencyLoading);
 		}
 		
-		if(fileList.size() < 40){
+		if(fileList.size() < pageCount){
 			if(addEmergencyFooter){
 				addEmergencyFooter=false;
 				mEmergencyVideoList.removeFooterView(emergencyLoading);
 				
-				LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
-				mEmergencyVideoList.addFooterView(layout);
+				if(!addEmergencyEmptyFooter){
+					addEmergencyEmptyFooter=true;
+					LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
+					mEmergencyVideoList.addFooterView(layout);
+				}
 			}
 		}
 		
@@ -519,7 +533,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							
 						}
 					}else{
-					
+						if(!GolukApplication.getInstance().getIpcIsLogin()){
+							dialog();
+							return;
+						}
 					
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
@@ -567,13 +584,16 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			mLoopVideoList.addFooterView(loopLoading);
 		}
 		
-		if(fileList.size() < 40){
+		if(fileList.size() < pageCount){
 			if(addLoopFooter){
 				addLoopFooter=false;
 				mLoopVideoList.removeFooterView(loopLoading);
 				
-				LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
-				mLoopVideoList.addFooterView(layout);
+				if(!addLoopEmptyFooter){
+					addLoopEmptyFooter=true;
+					LinearLayout layout = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.carrecorder_videolist_footer, null); 
+					mLoopVideoList.addFooterView(layout);
+				}
 			}
 		}
 		
@@ -663,6 +683,11 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						}
 						}
 				}else{
+					if(!GolukApplication.getInstance().getIpcIsLogin()){
+						dialog();
+						return;
+					}
+					
 					//点击播放
 					if((screenX > 0) && (screenX < (screenWidth/2))){
 						if(!TextUtils.isEmpty(tag1)){
@@ -926,10 +951,11 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					String mp4 = FileUtils.libToJavaPath(videoSavePath+filename);
 					File file = new File(mp4);
 					if(!file.exists()){
-						System.out.println("TTT======@@@@@@=========111111=============");
-						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "download", videoSavePath);
+						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "videodownload", videoSavePath);
+						boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
+						LogUtil.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
 					}else{
-						System.out.println("TTT=======@@@@@@@@@@========222222=============");
+							
 					}
 					
 				}
@@ -1145,14 +1171,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		info.id = mVideoFileInfo.id;
 		info.videoSize = Utils.getSizeShow(mVideoFileInfo.size);
 		info.countTime = Utils.minutesTimeToString(mVideoFileInfo.period);
-		if (1 == mVideoFileInfo.resolution) {
-			info.videoHP = 1080;
-		} else {
-			info.videoHP = 720;
-		}
+		info.videoHP = mVideoFileInfo.resolution;
 		info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
 		 info.videoPath=mVideoFileInfo.location;
-
 		 
 		
 		String fileName = mVideoFileInfo.location;
@@ -1377,6 +1398,19 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	protected void onResume() {
 		super.onResume();
 		GolukApplication.getInstance().setContext(this, "ipcfilemanager");
+	}
+	
+	/**
+	 * 摄像头未连接提示
+	 * 
+	 * @author xuhw
+	 * @date 2015年4月8日
+	 */
+	private void dialog() {
+		CustomDialog d = new CustomDialog(this);
+		d.setMessage("请检查摄像头是否正常连接", Gravity.CENTER);
+		d.setLeftButton("确定", null);
+		d.show();
 	}
 
 

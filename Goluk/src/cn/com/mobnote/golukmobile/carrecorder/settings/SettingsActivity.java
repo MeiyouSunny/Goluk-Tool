@@ -129,10 +129,10 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 				case R.id.zdxhlx://自动循环录像
 					if(recordState){
 						boolean a = GolukApplication.getInstance().getIPCControlManager().stopRecord();
-						System.out.println("YYY===========stopRecord=============a="+a);
+						LogUtil.e("xuhw", "YYYYYY===========stopRecord=============a="+a);
 					}else{
 						boolean b = GolukApplication.getInstance().getIPCControlManager().startRecord();
-						System.out.println("YYY===========startRecord=============b="+b);
+						LogUtil.e("xuhw", "YYYYYY===========startRecord=============b="+b);
 					}
 					break;
 				case R.id.tcaf://停车安防
@@ -149,11 +149,11 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 						if(1 == mVideoConfigState.AudioEnabled){
 							mVideoConfigState.AudioEnabled=0;
 							boolean a = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
-							System.out.println("YYY===========setAudioCfg=======close=======a="+a);
+							LogUtil.e("xuhw", "YYYYYY===========setAudioCfg=======close=======a="+a);
 						}else{
 							mVideoConfigState.AudioEnabled=1;
 							boolean a = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
-							System.out.println("YYY===========setAudioCfg=======open=======a="+a);
+							LogUtil.e("xuhw", "YYYYYY===========setAudioCfg=======open=======a="+a);
 						}
 					}
 					break;
@@ -284,7 +284,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					recordState=true;
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 				}
-			}else if(msg == IPC_VDCP_Msg_StopRecord){//设置IPC行车影像开始录制
+			}else if(msg == IPC_VDCP_Msg_StopRecord){//设置IPC行车影像停止录制
 				if(RESULE_SUCESS == param1){
 					recordState=false;
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
