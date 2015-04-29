@@ -223,6 +223,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//注意该方法要再setContentView方法之前实现  
 		SDKInitializer.initialize(getApplicationContext());
 		
+		((GolukApplication)this.getApplication()).initSharedPreUtil(this);
+		
 		setContentView(R.layout.index);
 		
 		//添加umeng错误统计
@@ -846,6 +848,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			mLocClient.start();
 		}
 		
+		if (mApp.isNeedCheckLive) {
+			mApp.isNeedCheckLive = false;
+			showContinuteLive();
+		}
+		
 		/*
 		//回到页面重新检测wifi状态,只有未连接的情况下才重新检测
 		if(mWiFiStatus == 0){
@@ -854,6 +861,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		*/
 		super.onResume();
 		
+	}
+	
+	public void showContinuteLive() {
+		LogUtil.e(null, "jyf----20150406----showContinuteLive----showContinuteLive :");
+		// 标识正常退出
+		mApp.mSharedPreUtil.setIsLiveNormalExit(true);
+		if (mApp.getIpcIsLogin()) {
+			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
+					"提示", "是否继续直播");
+		} else {
+			
+		}
 	}
 	
 	@Override
@@ -1116,7 +1135,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				.setOnKeyListener(new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						// TODO Auto-generated method stub
 						if(keyCode == KeyEvent.KEYCODE_BACK){
 							return true;
 						}
@@ -1302,6 +1320,17 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				mShareLayout.setVisibility(View.GONE);
 				Intent intent = new Intent(this, UserLoginActivity.class);
 				intent.putExtra("isInfo", "back");
+				startActivity(intent);
+			}
+		} else if (LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE == dialogType) {
+			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
+				// 继续直播
+				Intent intent = new Intent(this, LiveActivity.class);
+				intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+				intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, true);
+				intent.putExtra(LiveActivity.KEY_GROUPID, "");
+				intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+				intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 				startActivity(intent);
 			}
 		}

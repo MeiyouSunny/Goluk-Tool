@@ -10,42 +10,27 @@ import java.util.Map.Entry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import cn.com.mobnote.golukmobile.GuideActivity;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import cn.com.mobnote.golukmobile.LiveVideoListActivity;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
-import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
+import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
-import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
@@ -69,6 +54,7 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
@@ -125,7 +111,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean autoRecordFlag=false;
 	/** 停车安防配置 */
 	private int[] motioncfg;
-	
+	/** 保存数据 */
+	public SharedPrefUtil mSharedPreUtil = null;
 	
 	private WifiApAdmin wifiAp;
 	/** 当前地址 */
@@ -134,7 +121,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public WindowManager mWindowManager = null;
 	public WindowManager.LayoutParams mWMParams = null;
 	public RelativeLayout mVideoUploadLayout = null;
-	private TextView tv = null;
 	
 	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时**/
 	public int loginStatus ;
@@ -186,6 +172,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		};
 	};
 	
+	public void initSharedPreUtil(Activity activity) {
+		if (null == mSharedPreUtil) {
+			mSharedPreUtil = new SharedPrefUtil(activity);
+		}
+	}
+	
 	public void initLogic() {
 		if (null != mGoluk) {
 			return;
@@ -194,9 +186,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		initCachePath();
 //		createWifi();
 		//实例化JIN接口,请求网络数据
-		
+				
 		mGoluk = new GolukLogic();
-		
+
 		/**
 		 *自动登录、登录、注册、重置密码、注销的管理类 
 		 */
@@ -685,6 +677,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if(mPageSource == "UserRegist"){
 					((UserRegistActivity)mContext).registLoginCallBack(success, param2);
 				}
+				
+				parseLoginData(success, param2);
 			break;
 			//自动登录
 
@@ -748,7 +742,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				break;
 		}
 	}
+	
+	public boolean isNeedCheckLive = false;
+	private boolean isCallContinue = false;
 
+	// 显示
+	public void showContinuteLive() {
+		
+		if (isCallContinue) {
+			return;
+		}
+		LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
+		isCallContinue = true;
+		if (mContext instanceof MainActivity) {
+			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp2222 :" );
+			isNeedCheckLive = false;
+			if (!mSharedPreUtil.getIsLiveNormalExit()) {
+				((MainActivity)mContext).showContinuteLive();
+			}
+			
+		} else {
+			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp33333 :" );
+			if (!mSharedPreUtil.getIsLiveNormalExit()) {
+				isNeedCheckLive = true;
+			}
+		}
+	}
 	
 	/**
 	 * 处理登录结果
@@ -779,6 +798,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mCurrentAid = dataObj.getString("aid");
 			isUserLoginSucess = true;
 			
+			this.showContinuteLive();
 			LogUtil.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl +" uid:" + mCurrentUId +" aid:" + mCurrentAid);
 		} catch (Exception e) {
 			e.printStackTrace();

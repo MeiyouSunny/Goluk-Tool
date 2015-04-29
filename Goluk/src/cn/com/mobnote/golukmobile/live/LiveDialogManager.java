@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.live;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
@@ -14,6 +15,7 @@ public class LiveDialogManager {
 	private AlertDialog mLiveBackDialog = null;
 
 	private AlertDialog mSingleButtonDialog = null;
+	private AlertDialog mTwoButtonDialog = null;
 
 	/** 对话框回调方法 */
 	private ILiveDialogManagerFn dialogManagerFn = null;
@@ -33,6 +35,12 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_LIVEBACK = 3;
 	/** 直播超时 */
 	public static final int DIALOG_TYPE_LIVE_TIMEOUT = 4;
+	/** 直播服务下线 */
+	public static final int DIALOG_TYPE_LIVE_OFFLINE = 5;
+
+	public static final int DIALOG_TYPE_LIVE_CONTINUE = 6;
+	/** 进入直播 */
+	public static final int DIALOG_TYPE_LIVE_START = 7;
 
 	private int mCurrentDialogType = 0;
 
@@ -72,6 +80,27 @@ public class LiveDialogManager {
 		public void dialogManagerCallBack(int dialogType, int function, String data);
 	}
 
+	ProgressDialog mProgressDialog = null;
+
+	public void showProgressDialog(Context context, String title, String message) {
+		dismissProgressDialog();
+		mProgressDialog = ProgressDialog.show(context, title, message, true, false);
+		mProgressDialog.setCancelable(false);
+	}
+
+	public void setProgressDialogMessage(String message) {
+		if (null != mProgressDialog) {
+			mProgressDialog.setMessage(message);
+		}
+	}
+
+	public void dismissProgressDialog() {
+		if (null != mProgressDialog) {
+			mProgressDialog.dismiss();
+			mProgressDialog = null;
+		}
+	}
+
 	public void showSingleBtnDialog(Context context, int type, String title, String message) {
 		if (null != mSingleButtonDialog) {
 			return;
@@ -97,6 +126,44 @@ public class LiveDialogManager {
 		if (null != mSingleButtonDialog) {
 			mSingleButtonDialog.dismiss();
 			mSingleButtonDialog = null;
+		}
+	}
+
+	public void showTwoBtnDialog(Context context, int function, String title, String message) {
+
+		if (null != mLiveBackDialog) {
+			return;
+		}
+		mCurrentDialogType = function;
+		mTwoButtonDialog = new AlertDialog.Builder(context).create();
+
+		mTwoButtonDialog.setTitle(title);
+		mTwoButtonDialog.setMessage(message);
+
+		mTwoButtonDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
+				dismissTwoButtonDialog();
+			}
+		});
+
+		mTwoButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialoginterface, int i) {
+				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
+
+				dismissTwoButtonDialog();
+			}
+		});
+		mTwoButtonDialog.show();
+
+	}
+
+	private void dismissTwoButtonDialog() {
+		if (null != mTwoButtonDialog) {
+			mTwoButtonDialog.dismiss();
+			mTwoButtonDialog = null;
 		}
 	}
 

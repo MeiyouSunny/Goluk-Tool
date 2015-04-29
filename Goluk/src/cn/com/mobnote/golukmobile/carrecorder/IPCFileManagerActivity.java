@@ -93,7 +93,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private int emergencyTotalCount=0;
 	private int loopTotalCount=0;
 	/** 数据分页个数 */
-	private int pageCount=40;
+	private int pageCount=12;
 	/** 编辑按钮 */
 	private Button mEditBtn=null;
 	/** 功能按钮布局 */
@@ -284,11 +284,12 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mWonderfulVideoList.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
+						LogUtils.d("fuckingAction===="+marvellousListTime);
 						if(mWonderfulVideoData.size() > 0 &&(mWonderfulVideoData.size()%pageCount) == 0){
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_SHORTCUT,marvellousListTime);//初始化
 						}
 //						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
-						System.out.println("TTTTT=====滑动到最后了222");
+						System.out.println("TTTTT=====滑动到最后了222 最后时间"+marvellousListTime);
 					}
 				}
 			}
@@ -463,7 +464,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_URGENT,emergencyListTime);//初始化
 						}
 //						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
-						System.out.println("TTTTT=====滑动到最后了222");
+						System.out.println("TTTTT=====滑动到最后了222 最后时间"+emergencyListTime);
 					}
 				}
 			}
@@ -816,7 +817,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					if(!isEditState){
 						if(IPCManagerFn.TYPE_SHORTCUT != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_SHORTCUT;
-							if(null == mWonderfulVideoAdapter){
+							if(0 == mWonderfulVideoData.size()){
 								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_SHORTCUT, timeend);
 							}else{
 								mCurrentType = mOprateType;
@@ -835,7 +836,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					if(!isEditState){
 						if(IPCManagerFn.TYPE_URGENT != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_URGENT;
-							if(null == mEmergencyVideoAdapter){
+							if(0 == mEmergencyVideoData.size()){
 								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_URGENT, timeend);
 							}else{
 								mCurrentType = mOprateType;
@@ -854,7 +855,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					if(!isEditState){
 						if(IPCManagerFn.TYPE_CIRCULATE != mCurrentType){
 							mOprateType = IPCManagerFn.TYPE_CIRCULATE;
-							if(null == mLoopVideoAdapter){
+							if(0 == mLoopVideoData.size()){
 								getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE, timeend);
 							}else{
 								mCurrentType = mOprateType;
@@ -1189,28 +1190,34 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
 					int total = IpcDataParser.getFileListCount((String) param2);
 					if (null != fileList) {
-						if(fileList.size() <= 0){
-							return;
+						VideoFileInfo vfi=null;
+						if(fileList.size() > 0){
+							vfi = fileList.get(fileList.size() - 1);
 						}
-						VideoFileInfo vfi = fileList.get(fileList.size() - 1);
 						
 						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
-						if(fileList.size()<40){
+						if(fileList.size()<pageCount){
 							ishaveData = false;
 						}else{
 							ishaveData = true;
 						}
 						mCurrentType = mOprateType;
 						if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){//精彩视频
-							marvellousListTime = (int) vfi.time - 1;
+							if(null != vfi){
+								marvellousListTime = (int) vfi.time - 1;
+							}
 							wonderfulTotalCount = total;
 							initWonderfulLayout(fileList);
 						}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){//紧急视频
-							emergencyListTime = (int) vfi.time - 1;
+							if(null != vfi){
+								emergencyListTime = (int) vfi.time - 1;						
+							}
 							emergencyTotalCount = total;
 							initEmergencyLayout(fileList);
 						}else{//循环视频
-							cycleListTime = (int) vfi.time - 1;
+							if(null != vfi){
+								cycleListTime = (int) vfi.time - 1;
+							}
 							loopVisibleCount = total;
 							initLoopLayout(fileList);
 						}
