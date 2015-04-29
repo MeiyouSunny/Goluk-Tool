@@ -390,8 +390,11 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 	// CC上传失败，提示用户重试或退出
 	private void uploadFailed() {
+		
 		dimissErrorDialog();
-
+		if (isExit) {
+			return;
+		}
 		GlobalWindow.getInstance().toFailed("上传失败");
 
 		mErrorDialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("上传失败")
@@ -738,6 +741,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	}
 
 	private void exit() {
+		isExit = true;
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
 		mUploader.cancel();
@@ -745,6 +749,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		VideoShareActivity.this.finish();
 
 	}
+	
+	boolean isExit = false;
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
