@@ -155,7 +155,7 @@ public class IpcDataParser {
 			int type = obj.getInt("type");
 			int size = obj.getInt("size");
 			String location = obj.getString("location");
-			int resolution = obj.getInt("resolution");
+			String resolution = obj.getString("resolution");
 			int withSnapshot = obj.getInt("withSnapshot");
 			int withGps = obj.getInt("withGps");
 

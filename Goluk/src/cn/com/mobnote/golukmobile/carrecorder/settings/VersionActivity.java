@@ -1,7 +1,11 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -47,16 +51,19 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 		setTitle("版本信息");
 		
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("version", this);
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carversion", this);
 		}
 		mDeviceId = (TextView)findViewById(R.id.mDeviceId);
 		mVersion = (TextView)findViewById(R.id.mVersion);
 		
-		mDeviceId.setText("1");
+		mDeviceId.setText("");
 		mVersion.setText("IPC Camera");
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCIdentity();
-			System.out.println("YYY=======getIPCIdentity============a="+a);
+			LogUtil.e("xuhw","YYYYYY=======getIPCIdentity============a="+a);
+			
+			boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
+			LogUtil.e("xuhw","YYYYYY=======getVersion============v="+v);
 		}
 	}
 	
@@ -64,26 +71,43 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 	protected void onDestroy() {
 		super.onDestroy();
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("version");
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carversion");
 		}
 	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		LogUtil.e("xuhw", "YYYYYY====IPC_VDCP_Msg_GetIdentity====msg="+msg+"===param1="+param1+"==param2="+param2);
+		
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(msg == IPC_VDCP_Msg_GetIdentity){
-				LogUtil.e("xuhw", "YYY====IPC_VDCP_Msg_GetIdentity====msg="+msg+"===param1="+param1+"==param2="+param2);
 				if(param1 == RESULE_SUCESS){
 					final IPCIdentityState mVersionState = IpcDataParser.parseVersionState((String)param2);
 					if(null != mVersionState){
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								mDeviceId.setText(""+mVersionState.code);
+//								mDeviceId.setText(""+mVersionState.code);
 								mVersion.setText(mVersionState.name);
 							}
 						});
 					}
+				}
+			}else if(IPC_VDCP_Msg_GetVersion == msg){
+				if(param1 == RESULE_SUCESS){
+					String str = (String)param2;
+					if(TextUtils.isEmpty(str)){
+						return;
+					}
+					
+					try {
+						JSONObject json = new JSONObject(str);
+						String version = json.optString("version");
+						mDeviceId.setText(version);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					
 				}
 			}
 		}
