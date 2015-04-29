@@ -18,9 +18,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
-
- 
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -38,12 +37,14 @@ import android.util.Log;
 
 public class WifiConnectManagerSupport {
 
-//	private static final String FILEPATH = Environment
-//			.getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
-	private static final String FILEPATH=Const.getAppContext().getCacheDir().getPath() +"/wificonfig/";
+	// private static final String FILEPATH = Environment
+	// .getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
+	private static final String FILEPATH = Const.getAppContext().getCacheDir()
+			.getPath()
+			+ "/wificonfig/";
 
 	private static final int BUF_SIZE = 1024;
-	private static final String TAG = "testhan";
+	private static final String TAG = "WifiConnectManagerSupport";
 	private WifiManager wifiManager = null;
 
 	public WifiConnectManagerSupport(WifiManager _wifiManager) {
@@ -165,12 +166,12 @@ public class WifiConnectManagerSupport {
 	boolean openWifi(boolean restart) {
 		// 打开 wifi 功能
 		boolean bRet = true;
-	 
-//		如果强制重启
-		if(restart){
+
+		// 如果强制重启
+		if (restart) {
 			bRet = wifiManager.setWifiEnabled(false);
 			bRet = wifiManager.setWifiEnabled(true);
-		}else{
+		} else {
 			if (!wifiManager.isWifiEnabled()) {
 				bRet = wifiManager.setWifiEnabled(true);
 			}
@@ -213,10 +214,11 @@ public class WifiConnectManagerSupport {
 	/**
 	 * 得到扫描结果
 	 */
-	public WifiRsBean[] getScanResult(String title) {
+	public WifiRsBean[] getScanResult(String title, Integer type) {
 		WifiRsBean bean = null;
 		WifiRsBean[] rs = null;
 		Collection<WifiRsBean> listRs = new ArrayList<WifiRsBean>();
+		boolean result = false;
 		String regEx = "^" + title;
 		WifiInfo info = wifiManager.getConnectionInfo();
 		String conSSid = info.getSSID();
@@ -225,11 +227,18 @@ public class WifiConnectManagerSupport {
 		List<ScanResult> scanResult = wifiManager.getScanResults();
 		Log.e(TAG, "sanrs-----------------" + (scanResult == null)
 				+ "------------");
+
 		if (scanResult != null) {
 			for (ScanResult tempResult : scanResult) {
+				//判断是相等还是模糊匹配
+				if (type == null) {
+					
+					result = Pattern.compile(regEx).matcher(tempResult.SSID)
+							.find();
+				} else {
+					result = title.equals(tempResult.SSID);
+				}
 
-				boolean result = Pattern.compile(regEx)
-						.matcher(tempResult.SSID).find();
 				if (result) {
 					bean = new WifiRsBean();
 					bean.setIpc_mac(tempResult.BSSID); // ssid
@@ -390,23 +399,28 @@ public class WifiConnectManagerSupport {
 	}
 
 	public void closeWifiAp(WifiManager mWifiManager) {
-		   try {
-		          if (mWifiManager.getConnectionInfo() !=null) {
-		        	  mWifiManager.setWifiEnabled(false);
-		              try {Thread.sleep(1500);} catch (Exception e) {}
-		          
-		   
-		        	  mWifiManager.setWifiEnabled(false);
-		              Method method1 = mWifiManager.getClass().getMethod("setWifiApEnabled",
-		                  WifiConfiguration.class, boolean.class);
-		              method1.invoke(mWifiManager, null, false); // true
-		              
-		          }
-		          } catch (Exception e) {
-		            
-		             // toastText += "ERROR " + e.getMessage();
-		          }
-	
+		try {
+
+			if (mWifiManager.getConnectionInfo() != null) {
+				mWifiManager.setWifiEnabled(false);
+				try {
+					Thread.sleep(1500);
+				} catch (Exception e) {
+				}
+
+				mWifiManager.setWifiEnabled(false);
+				Method method1 = mWifiManager.getClass().getMethod(
+						"setWifiApEnabled", WifiConfiguration.class,
+						boolean.class);
+				method1.invoke(mWifiManager, null, false); // true
+
+			}
+			console.logBytag(TAG, "热点关闭成功....");
+		} catch (Exception e) {
+
+			console.logBytag(TAG, "热点关闭失败....");
+		}
+
 	}
 
 	public boolean isWifiApEnabled(WifiManager wifiManager) {
@@ -423,64 +437,6 @@ public class WifiConnectManagerSupport {
 		}
 
 		return false;
-	}
-
-	/**
-	 * 获取加入wifiAP列表
-	 * 
-	 * @param onlyReachables
-	 * @param reachableTimeout
-	 * @return
-	 */
-	public WifiRsBean[] getJoinApList(boolean onlyReachables,
-			int reachableTimeout) {
-		BufferedReader br = null;
-		final ArrayList<WifiRsBean> result = new ArrayList<WifiRsBean>();
-//		InputStreamReader ir =null;
-//		  LineNumberReader input =null;
-		try {
-//			Process pp = Runtime.getRuntime().exec("cat /proc/net/arp");
-			br = new BufferedReader(new FileReader("/proc/net/arp"));
-//			  ir = new InputStreamReader(pp.getInputStream());
-//              input = new LineNumberReader(ir);
-           
-			String line;
-			while ((line =  br.readLine()) != null) {
-				String[] splitted = line.split(" +");
-
-				if ((splitted != null) && (splitted.length >= 4)) {
-					// Basic sanity check
-					String mac = splitted[3];
-
-					if (mac.matches("..:..:..:..:..:..")) {
-						boolean isReachable = InetAddress
-								.getByName(splitted[0]).isReachable(
-										reachableTimeout);
-
-						if (!onlyReachables || isReachable) {
-							// splitted[5] 连接方式 wlan0
-							result.add(new WifiRsBean(splitted[0], splitted[3],
-									isReachable));
-						}
-					}
-				}
-			}
-			if (result.size() > 0) {
-				return (WifiRsBean[]) result.toArray(new WifiRsBean[0]);
-			} else {
-				return null;
-			}
-
-		} catch (Exception e) {
-			Log.e(this.getClass().toString(), e.toString());
-			return null;
-		} finally {
-			try {
-				br.close();
-			} catch (IOException e) {
-				Log.e(this.getClass().toString(), e.getMessage());
-			}
-		}
 	}
 
 	/**
@@ -596,72 +552,75 @@ public class WifiConnectManagerSupport {
 			file = null;
 		}
 	}
-	  public boolean setWifiApEnabled(WifiConfiguration wifiConfig, boolean enabled) {
-		    try {
-		      if (enabled) { // disable WiFi in any case
-		    	  wifiManager.setWifiEnabled(false);
-		      }
-		 
-		      Method method = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
-		      return (Boolean) method.invoke(wifiManager, wifiConfig, enabled);
-		    } catch (Exception e) {
-		      Log.e(this.getClass().toString(), "", e);
-		      return false;
-		    }
-		  }
-	  
-	  
- 
-	 
-		// 获得当前WIFI热点信息
-		public WifiRsBean getNetworkSSID(Context mContext) {
-			WifiConfiguration ation=getWifiApConfiguration();
-			WifiRsBean bean=new WifiRsBean();
-			bean.setPh_ssid(ation.SSID);
-			return bean;
+
+	public boolean setWifiApEnabled(WifiConfiguration wifiConfig,
+			boolean enabled) {
+		try {
+			if (enabled) { // disable WiFi in any case
+				wifiManager.setWifiEnabled(false);
+			}
+
+			Method method = wifiManager.getClass().getMethod(
+					"setWifiApEnabled", WifiConfiguration.class, boolean.class);
+			return (Boolean) method.invoke(wifiManager, wifiConfig, enabled);
+		} catch (Exception e) {
+			Log.e(this.getClass().toString(), "", e);
+			return false;
 		}
-		 
-		   public WifiConfiguration getWifiApConfiguration() {
-		     try {
-		       Method method = wifiManager.getClass().getMethod("getWifiApConfiguration");
-		       return (WifiConfiguration) method.invoke(wifiManager);
-		     } catch (Exception e) {
-		       Log.e(this.getClass().toString(), "", e);
-		       return null;
-		     }
-		   }
-		   
-		   /**
-		    * Return whether Wi-Fi AP is enabled or disabled.
-		    * @return {@code true} if Wi-Fi AP is enabled
-		    * @see #getWifiApState()
-		    *
-		    * @hide Dont open yet
-		    */
-		   public boolean isWifiApEnabled() {
-		     return getWifiApState();
-		   }
-		   
-		   /**
-		    * Gets the Wi-Fi enabled state.
-		    * @return {@link WIFI_AP_STATE}
-		    * @see #isWifiApEnabled()
-		    */
-		   public boolean getWifiApState() {
-		     try {
-		       Method method = wifiManager.getClass().getMethod("getWifiApState");
-		  
-		       int tmp = ((Integer)method.invoke(wifiManager));
-		  
-		       // Fix for Android 4
-		       if (tmp >= 10) {
-		         tmp = tmp - 10;
-		       }
-		  
-		       return true;
-		     } catch (Exception e) {
-		       Log.e(this.getClass().toString(), "", e);
-		       return false;
-		     }
-		   }
+	}
+
+	// 获得当前WIFI热点信息
+	public WifiRsBean getNetworkSSID(Context mContext) {
+		WifiConfiguration ation = getWifiApConfiguration();
+		WifiRsBean bean = new WifiRsBean();
+		bean.setPh_ssid(ation.SSID);
+		return bean;
+	}
+
+	public WifiConfiguration getWifiApConfiguration() {
+		try {
+			Method method = wifiManager.getClass().getMethod(
+					"getWifiApConfiguration");
+			return (WifiConfiguration) method.invoke(wifiManager);
+		} catch (Exception e) {
+			Log.e(this.getClass().toString(), "", e);
+			return null;
+		}
+	}
+
+	/**
+	 * Return whether Wi-Fi AP is enabled or disabled.
+	 * 
+	 * @return {@code true} if Wi-Fi AP is enabled
+	 * @see #getWifiApState()
+	 * 
+	 * @hide Dont open yet
+	 */
+	public boolean isWifiApEnabled() {
+		return getWifiApState();
+	}
+
+	/**
+	 * Gets the Wi-Fi enabled state.
+	 * 
+	 * @return {@link WIFI_AP_STATE}
+	 * @see #isWifiApEnabled()
+	 */
+	public boolean getWifiApState() {
+		try {
+			Method method = wifiManager.getClass().getMethod("getWifiApState");
+
+			int tmp = ((Integer) method.invoke(wifiManager));
+
+			// Fix for Android 4
+			if (tmp >= 10) {
+				tmp = tmp - 10;
+			}
+
+			return true;
+		} catch (Exception e) {
+			Log.e(this.getClass().toString(), "", e);
+			return false;
+		}
+	}
 }

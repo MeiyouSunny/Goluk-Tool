@@ -1,7 +1,6 @@
 package cn.com.mobnote.wifibind;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.InetAddress;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,7 @@ import org.json.JSONObject;
 import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
 import cn.com.mobnote.golukmobile.multicast.MultiCastUtil;
 import cn.com.mobnote.golukmobile.multicast.NetUtil;
+import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -238,7 +238,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			Message msg = new Message();
 
 			public void run() {
-
+				console.logBytag(TAG, "加入IPC  wifi....1 关闭热点");
 				wifiSupport.closeWifiAp(wifiManager);
 				// 如果当前网络未开启 连接失败后 需要再关闭网络
 				boolean doClose = false;
@@ -260,19 +260,11 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				}
 				// wifi 打开后进行连接 检查用时
 				List<WifiRsBean> list = new ArrayList<WifiRsBean>();
-				openTime = getwifiList(list, "", openTime);
+				openTime = getwifiList(list, ssid,1,1, openTime);
 				if (list.size() > 0) {
 					beans = (WifiRsBean[]) list.toArray(new WifiRsBean[0]);
 				}
-				// 超时 报错返回
-				if (openTime == 0) {
-					if (doClose) {
-						wifiSupport.closeWifi();
-					}
-					msg.what = -21;
-					handler.sendMessage(msg);
-					return;
-				}
+			
 				// 如果周围没有连接不再继续进行--------------------------------------
 				if (beans == null) {
 					if (doClose) {
@@ -280,6 +272,17 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					}
 					msg.what = -22;
 					msg.obj = null;
+					handler.sendMessage(msg);
+					return;
+				}
+				
+				
+				// 超时 报错返回
+				if (openTime == 0) {
+					if (doClose) {
+						wifiSupport.closeWifi();
+					}
+					msg.what = -21;
 					handler.sendMessage(msg);
 					return;
 				}
@@ -453,15 +456,22 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 *            用于返回
 	 * @return
 	 */
-	private int getwifiList(List<WifiRsBean> beans, String ssid, int outTime) {
+	private int getwifiList(List<WifiRsBean> beans, String ssid,int type,int reset, int outTime) {
 		int tempTime = 0;
 		Log.e(TAG, "sagetwifiListn----------------start-------------");
-		// 扫描了表不为null
-		while (wifiManager.getScanResults() == null || wifiManager.getScanResults().size() == 0) {
+		// 扫描不到wifi列表 多扫描几次
+		int count=0;
+		while (wifiSupport.getScanResult(ssid,1) == null ) {
 			try {
 				int temp_1 = 200;
 				Thread.sleep(temp_1);
 				tempTime += temp_1;
+				//如果等待了5秒钟还没有 断开网络重新寻找
+				if(reset==1&&count==10){
+					wifiSupport.closeWifi();
+					wifiSupport.openWifi(true);
+				}
+				count++;
 				if (tempTime > outTime) {
 					Log.e(TAG, "sagetwifiListn----------------chaoshi-------------");
 					return 0;
@@ -472,14 +482,14 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			}
 		}
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Log.e(TAG, "sagetwifiListn----------------" + tempTime + "-------------");
 
-		WifiRsBean[] wifiArray = wifiSupport.getScanResult(ssid);
+		WifiRsBean[] wifiArray = wifiSupport.getScanResult(ssid,null);
 		if (wifiArray != null) {
 			for (WifiRsBean temp : wifiArray) {
 				beans.add(temp);
@@ -497,7 +507,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param type
 	 */
 	private int wifiScan(String matching, int outTime) {
-		Log.e(TAG, "san----------------start-------------");
+		console.logBytag(TAG, "扫描wifi....11111");
 		int tempTime = 0;
 		// 先提至500毫秒再进行查询
 		try {
@@ -515,16 +525,17 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				Thread.sleep(temp_1);
 				tempTime += temp_1;
 				if (tempTime > outTime) {
-					Log.e(TAG, "san----------------outTime-------------");
+					console.logBytag(TAG, "扫描wifi....超时");
 					return 0;
 				}
 			} catch (InterruptedException e) {
-				Log.e(TAG, "san-----------------" + e + "------------");
+				console.logBytag(TAG, "扫描wifi....失败");
 				e.printStackTrace();
 			}
 		}
-		Log.e(TAG, "san----------------no empty-------------");
-		WifiRsBean[] wifiBean = wifiSupport.getScanResult(matching);
+	
+		WifiRsBean[] wifiBean = wifiSupport.getScanResult(matching,null);
+		console.logBytag(TAG, "扫描wifi....已经获取列表");
 		// 将得到的扫描列表返回
 		Message msg = new Message();
 		msg.what = 11;
@@ -542,8 +553,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 */
 	private void createWifiAP(final String type, final String ssid, final String password, final String ipc_ssid,
 			final String ipc_mac, final String ipc_ip, final int outTime) {
-		
-		Log.e(TAG, "san----------------createWifiAP-------------11111111111111111ipc_mac: " + ipc_mac);
+		console.logBytag(TAG, "创建热点开始....11111");
 
 		Runnable runnable = new Runnable() {
 			Message msg = new Message();
@@ -560,18 +570,18 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					e.printStackTrace();
 				}
 				
-				Log.e(TAG, "san----------------createWifiAP-------------2222222");
+			 
 
 				// 如果wifi打开了
 				while (apManagesupport.getWifiApState() != 13) {
 					try {
-						Log.e(TAG, "san----------------createWifiAP-------------3333333");
+						console.logBytag(TAG, "创建热点等待状态变化....22222");
 						int temp_2 = 200;
 						Thread.sleep(temp_2);
 						tempTime += temp_2;
-						// 如果超时了 直接返回
+//						// 如果超时了 直接返回
 //						if (tempTime > outTime) {
-//							Log.e(TAG, "san----------------createWifiAP-------------444444444");
+//					 
 //							wifiSupport.closeWifi();
 //							msg.what = Integer.parseInt("-" + type + "1");
 //							msg.obj = null;
@@ -582,7 +592,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					}
 				}
 				
-				Log.e(TAG, "san----------------createWifiAP-------------5555555");
+				console.logBytag(TAG, "创建热成功");
 
 				msg.what = Integer.parseInt(type + "1");
 				WifiRsBean rs = wifiSupport.getConnResult();
@@ -594,10 +604,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					e.printStackTrace();
 				}
 				
-				Log.e(TAG, "san----------------createWifiAP-------------666666");
+				console.logBytag(TAG, "创建热点等待ipc接入");
 				netUtil.findServerIpAddress(Integer.parseInt(type),ipc_mac, "", 60 * 1000);
 				
-				Log.e(TAG, "san----------------createWifiAP-------------7777777");
+			 
 				// 获取wifi连接列表
 //				getClientList(ipc_ssid, ipc_mac, ipc_ip, type, 40000);
 
@@ -606,7 +616,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			
 
 		};
-		Log.e(TAG, "san----------------createWifiAP-------------8888888");
 		Thread mythread = new Thread(runnable);
 		mythread.start();
 	}
@@ -667,100 +676,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		mythread.start();
 	}
 
-	/**
-	 * 获取加入wifiAP的用户列表
-	 * 
-	 */
-	private void getClientList(final String ipc_ssid, final String ipc_mac, final String ipc_ip, final String type,
-			final int outTime) {
-
-		Runnable runnable = new Runnable() {
-			Message msg = new Message();
-
-			public void run() {
-				boolean reflag = false;
-				int tempTime = 0;
-				// 获取wifi 扫描列表
-				WifiRsBean[] beans = null;
-				while (true) {
-					int temp_2 = 400;
-					try {
-
-						beans = wifiSupport.getJoinApList(false, 300);
-						if (beans != null) {
-							for (WifiRsBean temp : beans) {
-
-								if (temp.getIpc_mac().substring(2).toLowerCase()
-										.equals(ipc_mac.substring(2).toLowerCase())) {
-									beans = new WifiRsBean[1];
-
-									beans[0] = temp;
-
-									reflag = true;
-									break;
-								}
-							}
-							if (reflag) {
-								break;
-							}
-						}
-
-						// 如果ip ping通了 返回可连接状态
-						if (!"".equals(ipc_ip)) {
-							Log.e(TAG, "list ipc_ip----------------" + ipc_ip + "-------------");
-							boolean isReachable;
-							Process p = Runtime.getRuntime().exec("ping -c 1 " + ipc_ip);// m_strForNetAddress是输入的网址或者Ip地址
-							int temp = p.waitFor(); // status 只能获取是否成功，无法获取更多的信息
-							if (temp == 0) {
-								isReachable = true;
-							} else {
-								isReachable = false;
-							}
-
-							Thread.sleep(temp_2);
-
-							tempTime += temp_2;
-							// 如果 ping通了 跳出循环
-							if (isReachable) {
-								Log.e(TAG, "ipc getpin     -------ipc_ip" + ipc_ip + "--------ipc_mac" + ipc_mac
-										+ "-----------------");
-								beans = new WifiRsBean[1];
-								beans[0] = new WifiRsBean();
-								beans[0].setIpc_ip(ipc_ip);
-								beans[0].setIpc_mac(ipc_mac);
-
-								reflag = true;
-								break;
-							}
-						}
-						// 如果超时了 直接返回
-						if (tempTime > outTime) {
-
-							break;
-						}
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				if (beans != null) {
-					msg.what = Integer.parseInt(type + "2");
-					msg.obj = beans;
-					handler.sendMessage(msg);
-					return;
-				} else {
-					wifiSupport.closeWifi();
-					msg.what = Integer.parseInt("-" + type + "2");
-					msg.obj = null;
-					return;
-				}
-			};
-
-		};
-
-		Thread mythread = new Thread(runnable);
-		mythread.start();
-	}
+	
 
 	/**
 	 * 保存配置文件
@@ -876,7 +792,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 							handler.sendMessage(msg);
 
 							//
-							getClientList(ipc_ssid, ipc_mac, ipc_ip, "5", outTime);
+							netUtil.findServerIpAddress(5,ipc_mac, "", 60 * 1000);
 							return;
 						} else {
 							wifiSupport.closeWifiAp(null);
@@ -962,7 +878,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		}
 		openTime += 500;
 
-		openTime = getwifiList(list, ssid, openTime);
+		openTime = getwifiList(list, ssid,1,0, openTime);
 		if (list.size() > 0) {
 			beans = (WifiRsBean[]) list.toArray(new WifiRsBean[0]);
 		}
@@ -987,14 +903,17 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 	@Override
 	public void MultiCaskCallBack(int type, int sucess, Object obj) {
+	
 		int what = 0;
 		if (type == 3) {
+			console.logBytag(TAG, "创建热点ipc接入结果 ：创建热点"+sucess);
 			if (sucess == 1) {
 				what = 32;
 			} else {
 				what = -32;
 			}
 		} else {
+			console.logBytag(TAG, "创建热点ipc接入结果 ：自动连接热点"+sucess);
 			if (sucess == 1) {
 				what = 52;
 			} else {
