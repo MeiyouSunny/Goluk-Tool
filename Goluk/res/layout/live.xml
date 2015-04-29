@@ -478,7 +478,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            
             android:singleLine="true"
             android:text="00:09"
             android:textSize="@dimen/live_text_time1_size" />
