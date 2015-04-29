@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.tiros.utils.LogUtil;
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
@@ -91,12 +92,9 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("TTT======11111111111111111111=");
 		if (!LibsChecker.checkVitamioLibs(this))
 			return;
-		System.out.println("TTT======22222222222222222222222=");
 		setContentView(R.layout.carrecorder_videoplayer);
-		System.out.println("TTT======３３３３３３３３３３３３３３３３３３=");
 		String from = getIntent().getStringExtra("from");
 		filename = getIntent().getStringExtra("filename");
 		if(!TextUtils.isEmpty(from)){
@@ -113,10 +111,9 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 				}
 			}
 		}
-		System.out.println("TTT===４４４４４４４４４４４４４４４４===playUrl="+playUrl);
+
 		initView();
 		setListener();
-		
 	}
 	
 	/**
@@ -163,12 +160,10 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			@Override
 			public void onStopTrackingTouch(SeekBar arg0) {
 				int progress = mSeekBar.getProgress();
-				System.out.println("TTT===========aaaaaa==========");
 				if(null != mMediaPlayer){
 					mMediaPlayer.seekTo(progress);
 					if(!mMediaPlayer.isPlaying()){
 						mMediaPlayer.start();
-						System.out.println("TTT===========bbbbbb==========");
 					}
 				}
 			}
@@ -193,7 +188,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 							long curPosition = mMediaPlayer.getCurrentPosition();
 							long duration = mMediaPlayer.getDuration();
 							
-							System.out.println("TTT========duration=="+duration+"=====curPosition="+curPosition);
+							LogUtil.e("xuhw", "TTT========duration=="+duration+"=====curPosition="+curPosition);
 							mCurTime.setText(long2TimeStr(curPosition));
 							mTotalTime.setText(long2TimeStr(duration));
 							mSeekBar.setMax((int)duration);
@@ -424,7 +419,6 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
 		long duration = mMediaPlayer.getDuration();
-		System.out.println("TTT========onCompletion=====duration="+duration);
 		
 		mCurTime.setText(long2TimeStr(0));
 		mTotalTime.setText(long2TimeStr(duration));
@@ -433,10 +427,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		
 		if(null != mMediaPlayer){
 			mMediaPlayer.seekTo(0);
-//			mMediaPlayer.pause();
 			mMediaPlayer.start();
-//			mMediaPlayer.release();
-//			mMediaPlayer = null;
 		}
 	}
 
@@ -451,7 +442,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
-		System.out.println("TTT=============onError=");
+		LogUtil.e("xuhw", "TTT=============onError=");
 		hideLoading();
 		Toast.makeText(VideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
 		mCurTime.setText("00:00");
@@ -478,7 +469,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public void onPrepared(MediaPlayer arg0) {
-		System.out.println("TTT=============onPrepared=");
+		LogUtil.e("xuhw", "TTT=============onPrepared=");
 		mIsVideoReadyToBePlayed = true;
 		if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
 			startVideoPlayback();
@@ -540,7 +531,6 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		GolukApplication.getInstance().setContext(this, "videoplayer");
 	}
