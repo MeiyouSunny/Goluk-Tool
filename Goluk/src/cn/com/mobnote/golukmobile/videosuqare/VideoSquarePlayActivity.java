@@ -315,6 +315,20 @@ public class VideoSquarePlayActivity extends Activity implements
 					}
 					
 				}
+			}else {
+				isHaveData = false;
+				
+				if(0 == uptype){
+					closeProgressDialog();
+				} else if (1 == uptype){
+					if(mRTPullListView!=null){
+						mRTPullListView.removeFooterView(loading);
+						loading = null;
+					}
+				} else if (2 == uptype){
+					mRTPullListView.onRefreshComplete();
+				}
+				Toast.makeText(VideoSquarePlayActivity.this, "网络连接失败!",Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

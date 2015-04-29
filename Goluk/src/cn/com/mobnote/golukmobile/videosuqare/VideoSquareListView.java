@@ -103,7 +103,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			@Override
 			public void onRefresh() {
 //				mRTPullListView.onRefreshComplete();
-				Toast.makeText(mContext, "下拉刷新", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(mContext, "下拉刷新", Toast.LENGTH_SHORT).show();
 				httpPost(true);
 			}
 		});
@@ -172,6 +172,8 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mDataList.clear();
 				mDataList.addAll(list);
 				initLayout();
+			}else{
+				Toast.makeText(mContext, "网络连接失败!",Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
