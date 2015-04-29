@@ -66,13 +66,13 @@ public class GuideActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.guide);
 		
 		mContext = this;
+		((GolukApplication)this.getApplication()).initLogic();
 				
 		//初始化
 		init();
 		//加载引导页
 		initViewPager();
-	
-		((GolukApplication)this.getApplication()).initLogic();
+
 	}
 	
 	/**
