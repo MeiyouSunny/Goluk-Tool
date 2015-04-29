@@ -235,11 +235,11 @@ public class VideoEditMusicActivity extends Activity implements OnClickListener 
 			case R.id.no_music_item:
 				changeNoMusicStatus(true,"");
 			break;
-			case R.id.music_btn:
-				Intent music = new Intent(mContext,VideoShareActivity.class);
-				//videoShare.putExtra("cn.com.mobnote.golukmobile.videovid",vid);
-				startActivity(music);
-			break;
+//			case R.id.music_btn:
+//				Intent music = new Intent(mContext,VideoShareActivity.class);
+//				//videoShare.putExtra("cn.com.mobnote.golukmobile.videovid",vid);
+//				startActivity(music);
+//			break;
 		}
 	}
 
