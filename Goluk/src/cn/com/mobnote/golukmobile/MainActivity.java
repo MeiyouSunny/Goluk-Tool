@@ -790,6 +790,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		} else {
 			// 已经绑定
 			console.toast("IPC已绑定等待连接...", mContext);
+			if (null != mWac) {
+				mWac.autoWifiManage();
+			}
+			
 		}
 	}
 	
