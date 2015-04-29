@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import cn.com.mobnote.util.console;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

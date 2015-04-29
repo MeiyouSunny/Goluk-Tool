@@ -45,7 +45,8 @@
                     android:background="@null"
                     android:maxLength="11"
                     android:singleLine="true"
-                    android:textColorHint="@color/user_hint_text_color"/>
+                    android:textColorHint="@color/user_hint_text_color"
+                   />
             </LinearLayout>
 			<ImageView 
 			    android:layout_width="match_parent"

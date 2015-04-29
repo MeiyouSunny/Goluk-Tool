@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -113,7 +112,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		
 		if(!isFirstLogin ){//登录过
 			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true ){//上次登录成功
-				btnLoginout.setText("退出");
+				btnLoginout.setText("退出登录");
 			}else{
 				btnLoginout.setText("登录");
 			}
@@ -171,7 +170,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 						return ;
 					}
 					initIntent(UserLoginActivity.class);
-				}else if(btnLoginout.getText().toString().equals("退出")){
+				}else if(btnLoginout.getText().toString().equals("退出登录")){
 						new AlertDialog.Builder(mContext)
 						.setMessage("是否确认退出？")
 						.setNegativeButton("确认", new DialogInterface.OnClickListener() {
@@ -256,6 +255,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 	/**
 	 * 没有登录过、登录失败、正在登录需要登录
 	 */
+	@SuppressWarnings("rawtypes")
 	public void initIntent(Class intentClass){
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
 		it.putExtra("isInfo", "setup");
@@ -290,8 +290,8 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		// TODO Auto-generated method stub
 		if(mApp.autoLoginStatus !=1){
 			dismissAutoDialog();
-			if(mApp.autoLoginStatus == 2 || mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-				btnLoginout.setText("退出");
+			if(mApp.autoLoginStatus == 2 ){
+				btnLoginout.setText("退出登录");
 			}
 		}
 	}

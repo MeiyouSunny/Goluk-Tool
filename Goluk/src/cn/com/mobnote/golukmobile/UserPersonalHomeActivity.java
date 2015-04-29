@@ -4,9 +4,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.user.UserPersonalHomeAdapter;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,10 +30,11 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 	private TextView mTextTitle;
 	//个人信息
 	private ImageView mImageHead,mImageSex,mImageArrow;
-	private TextView mTextName,mTextShare;
+	private TextView mTextName;
+//	private TextView mTextShare;
 	//适配器
-	private UserPersonalHomeAdapter adapter;
-	private ListView lv;
+//	private UserPersonalHomeAdapter adapter;
+//	private ListView lv;
 	private RelativeLayout mLayoutInto;
 	
 	//application

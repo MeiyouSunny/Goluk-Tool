@@ -87,6 +87,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	private Editor mEditor = null;
 	/**注册成功跳转页面的判断标志*/
 	private String registOk = null;
+	/**获取验证码的次数**/
+	private int countIdentify = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -324,7 +326,13 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			break;
 		// 获取验证码按钮
 		case R.id.user_regist_identify_btn:
-			getIdentify();
+			countIdentify++;
+			Log.i("lily", "-------获取验证码的次数------"+countIdentify);
+			if(!UserUtils.isNetDeviceAvailable(mContext)){
+				console.toast("当前网络不可用，请检查网络后重试", mContext);
+			}else{	
+				getIdentify();
+			}
 			break;
 		// 登陆
 		case R.id.user_regist_login:
@@ -377,26 +385,22 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
 			console.log(isIdentify);
-			if(!UserUtils.isNetDeviceAvailable(mContext)){
-				console.toast("当前网络不可用，请检查网络后重试", mContext);
-			}else{
-				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
-				if(b){
-					identifyClick = true;
-					UserUtils.hideSoftMethod(this);
-					mIdentifyLoading.setVisibility(View.VISIBLE);
-					registerReceiver(smsReceiver, smsFilter);
-					click = 1;
-					console.log(b + "");
-					mBtnRegist.setEnabled(false);
-					mEditTextPhone.setEnabled(false);
-					mEditTextPwd.setEnabled(false);
-					mEditTextIdentify.setEnabled(false);
-					mBackButton.setEnabled(false);
-					mTextViewLogin.setEnabled(false);
-				}else{
-					
-				}
+			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
+			if(b){
+				identifyClick = true;
+				UserUtils.hideSoftMethod(this);
+				mIdentifyLoading.setVisibility(View.VISIBLE);
+				registerReceiver(smsReceiver, smsFilter);
+				click = 1;
+				console.log(b + "");
+				mBtnRegist.setEnabled(false);
+				mEditTextPhone.setEnabled(false);
+				mEditTextPwd.setEnabled(false);
+				mEditTextIdentify.setEnabled(false);
+				mBackButton.setEnabled(false);
+				mTextViewLogin.setEnabled(false);
+			} else {
+
 			}
 		}else{
 			mBtnIdentify.setEnabled(false);
@@ -409,14 +413,14 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	 */
 	public void identifyCallback(int success,Object obj){
 		console.log("验证码获取回调---identifyCallBack---" + success + "---" + obj);
+		mIdentifyLoading.setVisibility(View.GONE);
 		//点击验证码按钮手机号、密码不可被修改
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
 		mBackButton.setEnabled(true);
 		mBtnRegist.setEnabled(true);
-		mTextViewLogin.setEnabled(true);
-		mIdentifyLoading.setVisibility(View.GONE);
+		mTextViewLogin.setEnabled(true);		
 		if(1 == success){
 			try{
 				String data = (String)obj;
@@ -442,6 +446,18 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 						}
 					});
 					mCountDownhelper.start();
+					
+					if(countIdentify == 2){//第二次获取验证码
+						new AlertDialog.Builder(mContext)
+						.setMessage("此手机号还有 1 次获取验证码的机会,请确保手机号码正确和手机号所在的设备有信号")
+						.setPositiveButton("确定", null)
+						.create().show();
+					}else if(countIdentify == 3){//第三次获取验证码
+						new AlertDialog.Builder(mContext)
+						.setMessage("此手机号之后已经不能再获取验证码,请确保手机号码正确和手机号所在的设备有信号")
+						.setPositiveButton("确定", null)
+						.create().show();
+					}
 					break;
 				case 201:
 					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");
@@ -459,10 +475,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							// TODO Auto-generated method stub
-							/*Intent itRegist = new Intent(UserRegistActivity.this,UserLoginActivity.class);
-							itRegist.putExtra("intentRegist", mEditTextPhone.getText().toString());
-							Log.i("lily", "------intentRegist ------"+mEditTextPhone.getText().toString()+"--------");
-							startActivity(itRegist);*/
 							getPhone();
 							finish();
 						}
@@ -476,7 +488,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					UserUtils.showDialog(this, "验证码获取失败");
 					break;
 				case 470:
-					UserUtils.showDialog(mContext, "获取验证码已达上限");
+					UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限");
 					break;
 				default:
 					break;

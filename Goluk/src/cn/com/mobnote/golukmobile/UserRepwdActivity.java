@@ -73,6 +73,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	private RelativeLayout mIdentifyLoading = null;
 	//判断获取验证码按钮是否已经被点击
 	private boolean identifyClick = false;
+	//获取验证码达上限的次数
+	private int countIdentify = 0;
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +122,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				if(!arg1){
 					if(!phone.equals("")){
 						if(!UserUtils.isMobileNO(phone)){
-							Log.i("lily", "------123行------");
 							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}else{
@@ -137,7 +138,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				if(!arg1){
 					if(!password.equals("")){
 						if(password.length()<6 || password.length()>16){
-							Log.i("lily", "-------139行---------");
 							UserUtils.showDialog(UserRepwdActivity.this, "密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
 						}
 					}else{
@@ -252,8 +252,13 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			break;
 		//获取验证码按钮
 		case R.id.user_repwd_identify_btn:
+			countIdentify++;
 			//点击状态:点击后弹出系统短提示:发送中,请稍后;发送后弹出系统短提示:验证码已经发送,请查收短信。
-			getRepwdIdentify();
+			if(!UserUtils.isNetDeviceAvailable(mContext)){
+				console.toast("当前网络不可用，请检查网络后重试", mContext);
+			}else{
+				getRepwdIdentify();
+			}
 			break;
 		//重设按钮
 		case R.id.user_repwd_ok_btn:
@@ -314,30 +319,25 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		if(UserUtils.isMobileNO(phone)){
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"2\"}";
 			console.log(isIdentify);
-			if(!UserUtils.isNetDeviceAvailable(mContext)){
-				console.toast("当前网络不可用，请检查网络后重试", mContext);
-			}else{
-				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
-				if(b){
-					identifyClick = true;
-					UserUtils.hideSoftMethod(this);
-					mIdentifyLoading.setVisibility(View.VISIBLE);
-					registerReceiver(smsReceiver, smsFilter);
-					click = 1;
-					console.log(b + "");
-					mBtnOK.setEnabled(false);
-					mEditTextPhone.setEnabled(false);
-					mEditTextPwd.setEnabled(false);
-					mEditTextIdentify.setEnabled(false);
-					mBtnBack.setEnabled(false);
-				}else{
-					
-				}
+			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
+			if (b) {
+				identifyClick = true;
+				UserUtils.hideSoftMethod(this);
+				mIdentifyLoading.setVisibility(View.VISIBLE);
+				registerReceiver(smsReceiver, smsFilter);
+				click = 1;
+				console.log(b + "");
+				mBtnOK.setEnabled(false);
+				mEditTextPhone.setEnabled(false);
+				mEditTextPwd.setEnabled(false);
+				mEditTextIdentify.setEnabled(false);
+				mBtnBack.setEnabled(false);
+			} else {
+
 			}
-		}else{
+		} else {
 			mBtnIdentity.setEnabled(false);
 		}
-		
 	}
 	/**
 	 * 获取验证码回调
@@ -383,6 +383,17 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 						}
 					});
 					mCountDownHelper.start();
+					if(countIdentify == 2){//第二次获取验证码
+						new AlertDialog.Builder(mContext)
+						.setMessage("此手机号还有 1 次获取验证码的机会,请确保手机号码正确和手机号所在的设备有信号")
+						.setPositiveButton("确定", null)
+						.create().show();
+					}else if(countIdentify == 3){//第三次获取验证码
+						new AlertDialog.Builder(mContext)
+						.setMessage("此手机号之后已经不能再获取验证码,请确保手机号码正确和手机号所在的设备有信号")
+						.setPositiveButton("确定", null)
+						.create().show();
+					}
 					break;
 				case 201:
 					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");

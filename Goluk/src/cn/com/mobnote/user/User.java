@@ -86,6 +86,7 @@ public class User {
 					Log.i("setauto", "------自动登录-------"+b+"------自动登录的状态值-----"+mApp.autoLoginStatus);
 				}else{
 					StatusChange(3);//自动登录失败
+					console.toast("自动登录失败", mContext);
 				}
 			}
 		}
