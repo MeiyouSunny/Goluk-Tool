@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.utils.LogUtil;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,8 @@ public class NetUtil {
 
 	private DatagramSocket mUdpSocket = null;
 
+	private int mType = 0;
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -38,8 +41,8 @@ public class NetUtil {
 			case 4:
 				Log.e("", "SUccess!!!!!!!");
 				isCanScan = false;
-				String address = (String) msg.obj;
-				sendData(SUCESS, address);
+				WifiRsBean bean = (WifiRsBean) msg.obj;
+				sendData(SUCESS, bean);
 				break;
 			case 5:
 				break;
@@ -65,7 +68,7 @@ public class NetUtil {
 	private void sendData(int sucess, Object obj) {
 		LogUtil.e("", "MultiCastUtil-----sendData------ip2222222:   " + sucess);
 		if (null != mFn) {
-			mFn.MultiCaskCallBack(0, sucess, obj);
+			mFn.MultiCaskCallBack(mType, sucess, obj);
 		}
 	}
 
@@ -81,7 +84,9 @@ public class NetUtil {
 		}
 	}
 
-	public void findServerIpAddress() {
+	public void findServerIpAddress(int type, final String mac, final String ip, int seconds) {
+
+		mType = type;
 
 		Log.e("", "++++++++++++++++++++TestUDP--------findServerIpAddress-----1");
 		if (mUdpSocket == null) {
@@ -117,9 +122,12 @@ public class NetUtil {
 								address = address.replace("/", "");
 							}
 
+							WifiRsBean bean = new WifiRsBean();
+							bean.setIpc_ip(address);
+
 							Message msg = new Message();
 							msg.what = 4;
-							msg.obj = address;
+							msg.obj = bean;
 							mHandler.sendMessage(msg);
 
 							Log.e("", "++TestUDP--------findServerIpAddress-----6 recvbuf=Goluk,good luck:  " + s
