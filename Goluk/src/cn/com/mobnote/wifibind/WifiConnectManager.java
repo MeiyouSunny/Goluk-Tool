@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
 import cn.com.mobnote.golukmobile.multicast.MultiCastUtil;
+import cn.com.mobnote.golukmobile.multicast.NetUtil;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -33,7 +34,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	WifiConnectManagerSupport support = null;
 	ConnectivityManager connectivity = null;
 	WifiApManagerSupport apManagesupport = null;
-
+	private NetUtil netUtil=null;
 	// 构造函数
 	public WifiConnectManager(WifiManager wifiManager, Object callback) {
 		this.wifiManager = wifiManager;
@@ -43,6 +44,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		// 初始化wifi工具类
 		support = new WifiConnectManagerSupport(wifiManager);
 		apManagesupport = new WifiApManagerSupport(wifiManager);
+		  netUtil=NetUtil.getInstance();
+		  netUtil.setMultiCastListener(this);
 	}
 
 	public void createWifiAPFirst() {
@@ -592,7 +595,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				}
 				
 				Log.e(TAG, "san----------------createWifiAP-------------666666");
-				MultiCastUtil.getInstance().findServerIP(Integer.parseInt(type),ipc_mac, "", 60 * 1000);
+				netUtil.findServerIpAddress(Integer.parseInt(type),ipc_mac, "", 60 * 1000);
 				
 				Log.e(TAG, "san----------------createWifiAP-------------7777777");
 				// 获取wifi连接列表
@@ -986,13 +989,13 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	public void MultiCaskCallBack(int type, int sucess, Object obj) {
 		int what = 0;
 		if (type == 3) {
-			if (sucess == 0) {
+			if (sucess == 1) {
 				what = 32;
 			} else {
 				what = -32;
 			}
 		} else {
-			if (sucess == 0) {
+			if (sucess == 1) {
 				what = 52;
 			} else {
 				what = -52;
