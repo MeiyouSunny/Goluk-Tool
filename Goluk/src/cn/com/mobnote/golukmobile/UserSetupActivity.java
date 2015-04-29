@@ -112,7 +112,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		
 		if(!isFirstLogin ){//登录过
 			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true ){//上次登录成功
-				btnLoginout.setText("退出");
+				btnLoginout.setText("退出登录");
 			}else{
 				btnLoginout.setText("登录");
 			}
@@ -170,7 +170,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 						return ;
 					}
 					initIntent(UserLoginActivity.class);
-				}else if(btnLoginout.getText().toString().equals("退出")){
+				}else if(btnLoginout.getText().toString().equals("退出登录")){
 						new AlertDialog.Builder(mContext)
 						.setMessage("是否确认退出？")
 						.setNegativeButton("确认", new DialogInterface.OnClickListener() {
@@ -291,7 +291,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		if(mApp.autoLoginStatus !=1){
 			dismissAutoDialog();
 			if(mApp.autoLoginStatus == 2 ){
-				btnLoginout.setText("退出");
+				btnLoginout.setText("退出登录");
 			}
 		}
 	}

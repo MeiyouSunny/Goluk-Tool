@@ -300,8 +300,9 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			dismissDialog();
 		
 			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
-			Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
-			startActivity(it);
+			personalChanged();
+			/*Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
+			startActivity(it);*/
 		}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4 || mApp.isUserLoginSucess == false){
 			dismissDialog();
 			console.toast("自动登录失败", mContext);
