@@ -73,8 +73,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	private RelativeLayout mIdentifyLoading = null;
 	//判断获取验证码按钮是否已经被点击
 	private boolean identifyClick = false;
-	//获取验证码达上限的次数
-	private int countIdentify = 0;
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +112,15 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		mBtnIdentity.setOnTouchListener(this);
 		mBtnOK.setOnTouchListener(this);
 		
+		/**
+		 * 登录页密码输入错误超过五次，跳转到重置密码也，并且填入手机号
+		 */
+		Intent it = getIntent();
+		if(null != it.getStringExtra("errorPwdOver")){
+			String phone = it.getStringExtra("errorPwdOver").toString();
+			mEditTextPhone.setText(phone);
+		}
+		
 		//手机号输入后，离开立即判断
 		mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
@@ -152,20 +159,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				String phone = mEditTextPhone.getText().toString();
 				String pwd = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
-				/*if(!"".equals(phone)){
-					if(phone.length() == 11 && phone.startsWith("1")){
-						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
-						mBtnIdentity.setEnabled(true);
-						if(!UserUtils.isMobileNO(phone)){
-							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
-						}
-					}else{
-						mBtnIdentity.setBackgroundResource(R.drawable.icon_more);
-						mBtnIdentity.setEnabled(false);
-					}
-				}else{
-					//手机号为空
-				}*/
 				if(!"".equals(phone)){
 					if(phone.length() == 11 && phone.startsWith("1") && UserUtils.isMobileNO(phone)){
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
@@ -252,7 +245,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			break;
 		//获取验证码按钮
 		case R.id.user_repwd_identify_btn:
-			countIdentify++;
 			//点击状态:点击后弹出系统短提示:发送中,请稍后;发送后弹出系统短提示:验证码已经发送,请查收短信。
 			if(!UserUtils.isNetDeviceAvailable(mContext)){
 				console.toast("当前网络不可用，请检查网络后重试", mContext);
@@ -358,7 +350,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				console.log(data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				
+				String freq = json.getString("freq");
 				/*unregisterReceiver(smsReceiver);
 				flag = false;*/
 				
@@ -383,12 +375,12 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 						}
 					});
 					mCountDownHelper.start();
-					if(countIdentify == 2){//第二次获取验证码
+					if(freq.equals("2")){//第二次获取验证码
 						new AlertDialog.Builder(mContext)
 						.setMessage("此手机号还有 1 次获取验证码的机会,请确保手机号码正确和手机号所在的设备有信号")
 						.setPositiveButton("确定", null)
 						.create().show();
-					}else if(countIdentify == 3){//第三次获取验证码
+					}else if(freq.equals("3")){//第三次获取验证码
 						new AlertDialog.Builder(mContext)
 						.setMessage("此手机号之后已经不能再获取验证码,请确保手机号码正确和手机号所在的设备有信号")
 						.setPositiveButton("确定", null)
@@ -512,18 +504,14 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				
 				switch (code) {
 				case 200:
-					//注册成功
-					String password = mEditTextPwd.getText().toString();
-//					if(password.length()>=6 && password.length()<=16){
-						console.toast("重置密码成功", mContext);
-						/*Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
-						it.putExtra("isInfo", "main");
-						startActivity(it);*/
-						finish();
-					/*}else{
-						Log.i("lily", "-------506行------");
-						UserUtils.showDialog(this, "密码格式输入不正确，请输入 6-16 位数字、字母，字母区分大小写");
-					}*/
+					//重置密码成功
+					console.toast("重置密码成功", mContext);
+					Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
+					it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					it.putExtra("repwdOk", mEditTextPhone.getText().toString());
+					startActivity(it);
+					finish();
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");

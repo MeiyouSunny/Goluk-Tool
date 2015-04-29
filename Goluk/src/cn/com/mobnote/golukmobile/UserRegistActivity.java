@@ -87,8 +87,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	private Editor mEditor = null;
 	/**注册成功跳转页面的判断标志*/
 	private String registOk = null;
-	/**获取验证码的次数**/
-	private int countIdentify = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -210,17 +208,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				String pwd = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
 				if(!"".equals(phone)){
-					/*if(phone.length() == 11 && phone.startsWith("1")){ 
-						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
-						mBtnIdentify.setEnabled(true);
-						if(!UserUtils.isMobileNO(phone)){
-							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
-						}
-						
-					}else{
-						mBtnIdentify.setBackgroundResource(R.drawable.icon_more);
-						mBtnIdentify.setEnabled(false);
-					}*/
 					if(phone.length() == 11 && phone.startsWith("1") && UserUtils.isMobileNO(phone)){
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 						mBtnIdentify.setEnabled(true);
@@ -280,13 +267,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				String phone = mEditTextPhone.getText().toString();
 				String pwd = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
-				/*if(!"".equals(password) && !"".equals(identify)){
-					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
-					mBtnRegist.setEnabled(true);
-				}else{
-					mBtnRegist.setBackgroundResource(R.drawable.icon_more);
-					mBtnRegist.setEnabled(false);
-				}*/
 				//注册按钮
 				if(!"".equals(phone) && !"".equals(pwd) && !"".equals(identify)){
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
@@ -326,8 +306,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			break;
 		// 获取验证码按钮
 		case R.id.user_regist_identify_btn:
-			countIdentify++;
-			Log.i("lily", "-------获取验证码的次数------"+countIdentify);
 			if(!UserUtils.isNetDeviceAvailable(mContext)){
 				console.toast("当前网络不可用，请检查网络后重试", mContext);
 			}else{	
@@ -427,9 +405,23 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				console.log(data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
+				String freq = json.getString("freq");
+				Log.i("lily", "------freq------"+freq);
 				switch (code) {
 				case 200:
 					console.toast("验证码已经发送，请查收短信", mContext);
+					
+					if(freq.equals("2")){//第二次获取验证码
+						new AlertDialog.Builder(mContext)
+						.setMessage("此手机号还有 1 次获取验证码的机会,请确保手机号码正确和手机号所在的设备有信号")
+						.setPositiveButton("确定", null)
+						.create().show();
+					}else if(freq.equals("3")){//第三次获取验证码
+						new AlertDialog.Builder(mContext)
+						.setMessage("此手机号之后已经不能再获取验证码,请确保手机号码正确和手机号所在的设备有信号")
+						.setPositiveButton("确定", null)
+						.create().show();
+					}
 					//验证码获取成功
 					/**
 					 * 点击获取验证码的时候进行倒计时
@@ -447,17 +439,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					});
 					mCountDownhelper.start();
 					
-					if(countIdentify == 2){//第二次获取验证码
-						new AlertDialog.Builder(mContext)
-						.setMessage("此手机号还有 1 次获取验证码的机会,请确保手机号码正确和手机号所在的设备有信号")
-						.setPositiveButton("确定", null)
-						.create().show();
-					}else if(countIdentify == 3){//第三次获取验证码
-						new AlertDialog.Builder(mContext)
-						.setMessage("此手机号之后已经不能再获取验证码,请确保手机号码正确和手机号所在的设备有信号")
-						.setPositiveButton("确定", null)
-						.create().show();
-					}
 					break;
 				case 201:
 					UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");
@@ -527,7 +508,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					console.log(isRegist);
 					boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
 					if(b){
-						mApplication.registStatus = 0;//注册中……
+						mApplication.registStatus = 1;//注册中……
 						//隐藏软件盘
 						UserUtils.hideSoftMethod(this);
 						mLoading.setVisibility(View.VISIBLE);
@@ -575,14 +556,25 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				switch (code) {
 				case 200:
 					//注册成功
-					SysApplication.getInstance().exit();//杀死之前的所有activity，实现一键退出
 					console.toast("注册成功", mContext);
-					mApplication.registStatus = 1;//注册成功的状态
+					mApplication.registStatus = 2;//注册成功的状态
 					//注册成功后再次调用登录的接口
 					registLogin();
 					Intent it = null;
 					if(registOk.equals("fromStart")){
 						it = new Intent(UserRegistActivity.this,MainActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					}else if(registOk.equals("fromIndexMore")){
+						it = new Intent(UserRegistActivity.this,IndexMoreActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					}else if(registOk.equals("fromSetup")){
+						it = new Intent(UserRegistActivity.this,UserSetupActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
 					}
 					finish();
@@ -631,13 +623,13 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			android.util.Log.i("outtime", "-----网络链接超时超时超时"+codeOut);
 			switch (codeOut) {
 			case 1:
-				mApplication.registStatus = 2;
+				mApplication.registStatus = 3;
 				break;
 			case 2:
-				mApplication.registStatus = 2;
+				mApplication.registStatus = 3;
 				break;
 			case 3://超时
-				mApplication.registStatus = 2;
+				mApplication.registStatus = 3;
 				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 				break;
 			default:
@@ -669,7 +661,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			Log.i("yyy", "=======UserRegistActivity====="+b);
 			//---------------------------登录成功的状态  1----------------------------
 			//登录成功跳转
-			SysApplication.getInstance().exit();//杀死前边所有的Activity
 			mApplication.loginStatus=1;//登录成功
 			mApplication.isUserLoginSucess = true;
 		}else{
@@ -687,7 +678,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				String data = (String)obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				mLoading.setVisibility(View.GONE);
 				switch (code) {
 				case 200:
 					//登录成功后，存储用户的登录信息
@@ -698,7 +688,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					mEditor.commit();
 					//---------------------------登录成功的状态  1----------------------------
 					//登录成功跳转
-					SysApplication.getInstance().exit();//杀死前边所有的Activity
 					mApplication.loginStatus=1;//登录成功
 					mApplication.isUserLoginSucess = true;
 					break;

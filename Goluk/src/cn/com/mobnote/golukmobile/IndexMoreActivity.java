@@ -146,17 +146,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		if(!isFirstLogin || mApp.isUserLoginSucess == true){//登录过
 			Log.i("testtest", "---------------"+mApp.autoLoginStatus+"------loginStatus------"+mApp.loginStatus);
 			//更多页面
-			/*if(mApp.loginStatus == 1 || mApp.autoLoginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
-				mLayoutHasInfo.setVisibility(View.VISIBLE);
-				mLayoutNoInfo.setVisibility(View.GONE);
-				initData();
-				isHasInfo = true;
-			}else {//没有用户信息
-				mLayoutHasInfo.setVisibility(View.GONE);
-				mLayoutNoInfo.setVisibility(View.VISIBLE);
-				mImageHead.setImageResource(R.drawable.more_head_no_log_in);
-				isHasInfo = false;
-			}*/
 			personalChanged();
 	}else{
 		//未登录

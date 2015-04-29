@@ -109,15 +109,20 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		//没有登录过的状态
 		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-		
+		Log.i("lily", "----------UserSetupActivity11111-------"+mApp.registStatus);
 		if(!isFirstLogin ){//登录过
-			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true ){//上次登录成功
+			Log.i("lily", "----------UserSetupActivity-------"+mApp.registStatus);
+			if(mApp.loginStatus == 1 || mApp.registStatus == 2 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true){//上次登录成功
 				btnLoginout.setText("退出登录");
 			}else{
 				btnLoginout.setText("登录");
 			}
 		}else{
-			btnLoginout.setText("登录");
+			if( mApp.registStatus == 2){
+				btnLoginout.setText("退出登录");
+			}else{
+				btnLoginout.setText("登录");
+			}
 		}
 		btnLoginout.setOnClickListener(this);
 		
@@ -200,6 +205,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 				//注销成功
 				mApp.isUserLoginSucess = false;
 				mApp.loginoutStatus = true;//注销成功
+				mApp.registStatus = 3;//注册失败
 				
 				mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 				mEditor = mPreferences.edit();

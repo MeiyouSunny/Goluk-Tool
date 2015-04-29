@@ -1036,6 +1036,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	}
 	
 	private void click_share() {
+		Log.i("lily", "----------click------");
 		if (!mApp.isUserLoginSucess) {
 			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
@@ -1062,10 +1063,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(intent);
 				return ;
 			}
+			mShareLayout.setVisibility(View.VISIBLE);
 			return;
 		}
 		//视频分享
-//		mShareLayout.setVisibility(View.VISIBLE);
+		mShareLayout.setVisibility(View.VISIBLE);
 	}
 	
 	private void toCard() {
@@ -1105,6 +1107,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //				console.toast("网络连接异常，请重试", mContext);
 				return ;
 			}
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
 			return;
 		}
 		
@@ -1145,6 +1150,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //				console.toast("网络连接异常，请重试", mContext);
 				return ;
 			}
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
 			return;
 		}
 		

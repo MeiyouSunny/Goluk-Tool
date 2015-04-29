@@ -280,6 +280,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 				itRegist.putExtra("fromRegist", "fromSetup");
 			}
 			startActivity(itRegist);
+			Log.i("lily", "--------UserLoginActivity-判断注册后还是否有登录页-------"+mApplication.registStatus);
 			break;
 		// 忘记密码
 		case R.id.user_login_forgetpwd:
@@ -424,6 +425,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			break;
 		case 5:
 			Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
+			it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
 			startActivity(it);
 			break;
 		default:
