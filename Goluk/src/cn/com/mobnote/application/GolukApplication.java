@@ -39,6 +39,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.ExternalEventsDataInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
@@ -874,11 +875,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						updateAutoRecordState();
 						//获取停车安防配置信息
 						updateMotionCfg();
-						//自动同步系统时间
-//						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
-//							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
-//							System.out.println("IPC_TTTTTT===========setIPCSystemTime===============a="+a);
-//						}
+						
+						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
+						LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
 						
 						//查询新文件列表（最多10条）
 						long time = SettingUtils.getInstance().getLong("querytime", 0);
@@ -908,7 +907,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 								return;
 							}
 							fileList = IpcDataParser.parseMoreFile((String) param2);
-							mHandler.sendEmptyMessage(1001);
+							mHandler.sendEmptyMessageDelayed(1001, 1000);
 						}
 					}
 				break;
@@ -1000,6 +999,24 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					break;
 				case IPC_VDCP_Msg_GetVersion:
 					//{"product": 67698688, "model": "", "macid": "", "serial": "", "version": "V1.4.21_tzz_vb_rootfs"}
+					break;
+				case IPC_VDCP_Msg_GetTime:
+					if(param1 == RESULE_SUCESS){
+						if(TextUtils.isEmpty((String)param2)){
+							return;
+						}
+						long curtime = IpcDataParser.parseIPCTime((String)param2);
+						//自动同步系统时间
+						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
+							long time = SettingUtils.getInstance().getLong("cursystemtime");
+							LogUtil.e("xuhw", "YYYYYY===getIPCSystemTime==time="+time+"=curtime="+curtime);
+							if(Math.abs(curtime - time) > 60){//60秒内不自动同步
+								SettingUtils.getInstance().putLong("cursystemtime", curtime);
+								boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
+								LogUtil.e("xuhw", "YYYYYY===========setIPCSystemTime===============a="+a);
+							}
+						}
+					}
 					break;
 				
 			}

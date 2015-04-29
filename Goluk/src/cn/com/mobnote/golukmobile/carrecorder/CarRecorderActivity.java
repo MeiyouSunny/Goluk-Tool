@@ -367,13 +367,13 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						updateVideoState();
 						rpv.removeCallbacks(retryRunnable);
 						reconnectionMaxNumber++;
-						if (reconnectionMaxNumber <= RECONNECTIONMAXBUMNER) {
+//						if (reconnectionMaxNumber <= RECONNECTIONMAXBUMNER) {
 							showLoading();
 							rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
-						} else {
-							mLoading.setVisibility(View.GONE);
-							mLoadingText.setText("您的摄像头好像没有连接哦！");
-						}
+//						} else {
+//							mLoading.setVisibility(View.GONE);
+//							mLoadingText.setText("您的摄像头好像没有连接哦！");
+//						}
 
 						return false;
 					}
@@ -385,13 +385,13 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						updateVideoState();
 						rpv.removeCallbacks(retryRunnable);
 						reconnectionMaxNumber++;
-						if (reconnectionMaxNumber <= RECONNECTIONMAXBUMNER) {
+//						if (reconnectionMaxNumber <= RECONNECTIONMAXBUMNER) {
 							showLoading();
 							rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
-						} else {
-							mLoading.setVisibility(View.GONE);
-							mLoadingText.setText("您的摄像头好像没有连接哦！");
-						}
+//						} else {
+//							mLoading.setVisibility(View.GONE);
+//							mLoadingText.setText("您的摄像头好像没有连接哦！");
+//						}
 
 					}
 
