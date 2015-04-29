@@ -87,6 +87,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	private Editor mEditor = null;
 	/**注册成功跳转页面的判断标志*/
 	private String registOk = null;
+	/**获取验证码的次数**/
+	private String freq = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -405,7 +407,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				console.log(data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				String freq = json.getString("freq");
+				freq = json.getString("freq");
 				Log.i("lily", "------freq------"+freq);
 				switch (code) {
 				case 200:
@@ -506,19 +508,24 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 					console.log(isRegist);
-					boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
-					if(b){
-						mApplication.registStatus = 1;//注册中……
-						//隐藏软件盘
-						UserUtils.hideSoftMethod(this);
-						mLoading.setVisibility(View.VISIBLE);
-						mEditTextPhone.setEnabled(false);
-						mEditTextIdentify.setEnabled(false);
-						mEditTextPwd.setEnabled(false);
-						mBtnIdentify.setEnabled(false);
-						mTextViewLogin.setEnabled(false);
-						mBackButton.setEnabled(false);
-						mBtnRegist.setEnabled(false);
+					int freqInt = Integer.valueOf(freq);
+					if(freqInt>3){
+						UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
+					}else{
+						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
+						if(b){
+							mApplication.registStatus = 1;//注册中……
+							//隐藏软件盘
+							UserUtils.hideSoftMethod(this);
+							mLoading.setVisibility(View.VISIBLE);
+							mEditTextPhone.setEnabled(false);
+							mEditTextIdentify.setEnabled(false);
+							mEditTextPwd.setEnabled(false);
+							mBtnIdentify.setEnabled(false);
+							mTextViewLogin.setEnabled(false);
+							mBackButton.setEnabled(false);
+							mBtnRegist.setEnabled(false);
+							}
 						}
 					}
 				}else{

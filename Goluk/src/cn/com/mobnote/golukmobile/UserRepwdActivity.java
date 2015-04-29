@@ -73,6 +73,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	private RelativeLayout mIdentifyLoading = null;
 	//判断获取验证码按钮是否已经被点击
 	private boolean identifyClick = false;
+	/**重置密码获取验证码后台返回的次数**/
+	private String freq = "";
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,11 +117,11 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		/**
 		 * 登录页密码输入错误超过五次，跳转到重置密码也，并且填入手机号
 		 */
-		Intent it = getIntent();
+		/*Intent it = getIntent();
 		if(null != it.getStringExtra("errorPwdOver")){
 			String phone = it.getStringExtra("errorPwdOver").toString();
 			mEditTextPhone.setText(phone);
-		}
+		}*/
 		
 		//手机号输入后，离开立即判断
 		mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -350,7 +352,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				console.log(data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				String freq = json.getString("freq");
+				freq = json.getString("freq");
 				/*unregisterReceiver(smsReceiver);
 				flag = false;*/
 				
@@ -368,7 +370,7 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 						@Override
 						public void finish() {
 							// TODO Auto-generated method stub
-							mBtnIdentity.setText("再次发送");
+							mBtnIdentity.setText("重新获取");
 							mEditTextPhone.setEnabled(true);
 							mEditTextPhone.setFocusable(true);
 							mEditTextPwd.setFocusable(true);
@@ -455,21 +457,27 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 						// {PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
 						console.log(isRegist);
-						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_ModifyPwd, isRegist);
-						console.log(b + "");
-						if (b) {
-							// 隐藏软件盘
-							UserUtils.hideSoftMethod(this);
-							mLoading.setVisibility(View.VISIBLE);
-							mEditTextPhone.setEnabled(false);
-							mEditTextIdentify.setEnabled(false);
-							mEditTextPwd.setEnabled(false);
-							mBtnIdentity.setEnabled(false);
-							mBtnBack.setEnabled(false);
-							mBtnOK.setEnabled(false);
-						} else {
-							initTimer();
-							handler1.postDelayed(runnable, 3000);// 三秒执行一次runnable.
+						int freqInt = Integer.valueOf(freq);
+						Log.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
+						if(freqInt>3){
+							UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
+						}else{
+							boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_ModifyPwd, isRegist);
+							console.log(b + "");
+							if (b) {
+								// 隐藏软件盘
+								UserUtils.hideSoftMethod(this);
+								mLoading.setVisibility(View.VISIBLE);
+								mEditTextPhone.setEnabled(false);
+								mEditTextIdentify.setEnabled(false);
+								mEditTextPwd.setEnabled(false);
+								mBtnIdentity.setEnabled(false);
+								mBtnBack.setEnabled(false);
+								mBtnOK.setEnabled(false);
+							} else {
+								initTimer();
+								handler1.postDelayed(runnable, 3000);// 三秒执行一次runnable.
+							}
 						}
 					}
 				} else {

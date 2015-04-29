@@ -424,9 +424,9 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mBackButton.setEnabled(true);
 			break;
 		case 5:
-			Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
+			/*Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
 			it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
-			startActivity(it);
+			startActivity(it);*/
 			break;
 		default:
 			break;
