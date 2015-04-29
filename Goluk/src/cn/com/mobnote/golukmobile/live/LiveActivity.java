@@ -419,6 +419,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		} else {
 			// TODO 弹对话框
 			showToast("查看他人直播：" + userInfo.uid);
+			LogUtil.e(null, "jyf----20150406----LiveActivity----startLiveLook----22 : TRUE TRUE");
 		}
 	}
 
@@ -1347,19 +1348,31 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (this.isShareLive) {
 			return;
 		}
+		
+		LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 111111");
 
 		if (mApp.isUserLoginSucess) {
 			// 登录成功
+			
+			LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 222222");
 			mLoginLayout.setVisibility(View.GONE);
 
 			if (!mIsJoinGroupSucess) {
+				LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 3333333");
 				if (isKaiGeSucess) {
+					LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 4444444");
 					if (this.isSupportJoinGroup) {
+						LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 5555555");
 						// 支持加入群組
 						// 支持加入群组，显示对讲按钮
 						switchLookShareTalkView(true, true);
 						joinAitalkGroup();
+						
+						LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 6666666");
 					}
+				} else {
+					LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 7777777");
+					startLiveLook(currentUserInfo);
 				}
 			}
 		}
@@ -2400,7 +2413,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				return;
 			}
 			if (null == tempUserInfo) {
-				showToast("未找到用户信息");
+//				showToast("未找到用户信息");
 				return;
 			}
 
