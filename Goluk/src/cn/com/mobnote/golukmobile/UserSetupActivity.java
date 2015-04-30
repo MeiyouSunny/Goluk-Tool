@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
+import java.io.File;
+
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -21,12 +23,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.api.Const;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -73,12 +77,14 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 	private SharedPreferences mPreferences = null;
 	private boolean isFirstLogin = false;
 	private Editor mEditor = null;
+	/**清楚缓存**/
+	private RelativeLayout mClearCache = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.user_setup);
+		setContentView(R.layout.user_personal_setup);
 		
 	}
 	
@@ -135,6 +141,9 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 			public void handleMessage(Message msg) {
 			}
 		};
+		
+		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
+		mClearCache.setOnClickListener(this);
 	}
 	
 	private Builder mBuilder = null;
@@ -189,6 +198,21 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 						.setPositiveButton("取消", null)
 						.create().show();
 				}
+				break;
+				//清除缓存
+			case R.id.remove_cache_item:
+				Log.i("lily", "----清楚缓存-----"+Const.getAppContext().getCacheDir().getPath());
+				Log.i("lily", "=====清除缓存======="+Const.getAppContext().getCacheDir());
+				new AlertDialog.Builder(mContext)
+				.setMessage("清除？")
+				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
+						deleteFilesByDirectory(Const.getAppContext().getCacheDir());
+					}
+				}).create().show();
 				break;
 		}
 	}
@@ -301,4 +325,17 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 			}
 		}
 	}
+	
+	/**删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理
+	 *  @param directory 
+	 *
+	 */
+	private static void deleteFilesByDirectory(File directory) {
+		if (directory != null && directory.exists() && directory.isDirectory()) {
+			for (File item : directory.listFiles()) {
+				item.delete();
+			}
+		}
+	}
+
 }
