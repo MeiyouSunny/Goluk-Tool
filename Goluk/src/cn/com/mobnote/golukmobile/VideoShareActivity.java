@@ -40,6 +40,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
@@ -105,7 +106,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	public static final String PATH_FS1 = "/tiros-com-cn-ext";
 
 	final String fileFolder = Environment.getExternalStorageDirectory().getPath() + PATH_FS1 + "/Cache";
-	final String thumbFile = fileFolder + "/thumb11.jpg";
+	private String thumbFile = fileFolder + "/thumb11.jpg";
 
 	/** 上传视频更新进度 */
 	private final int MSG_H_UPLOAD_PROGRESS = 2;
@@ -165,6 +166,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	SharePlatformUtil sharePlatform;
 	/** 2/3 紧急/精彩 */
 	private int mVideoType = 0;
+	
+	private String videoName ;
 
 	public Handler mmmHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -295,7 +298,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		Intent intent = getIntent();
 		mVideoPath = intent.getStringExtra("cn.com.mobnote.golukmobile.videopath");
 		mVideoType = intent.getIntExtra("type", 0);
-
+		videoName = intent.getStringExtra("videoName");
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "VideoShare");
@@ -313,37 +316,11 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 	private void createThumb() {
 		long startTime = System.currentTimeMillis();
-		mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
-		if (mShortBitmap != null) {
-			int width = mShortBitmap.getWidth();
-			int height = mShortBitmap.getHeight();
+		//mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
+		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+		thumbFile = filePath + File.separator + videoName;
+		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
 
-			Log.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
-		} else {
-			Log.e("", "VideoShareActivity createThumb: NULL:");
-		}
-
-		try {
-
-			File file = new File(fileFolder);
-			file.mkdirs();
-			file = new File(thumbFile);
-			if (file.exists()) {
-				file.delete();
-			}
-
-			file.createNewFile();
-
-			FileOutputStream fos = new FileOutputStream(file);
-			mShortBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-
-			String fsFile = FileUtils.javaToLibPath(thumbFile);
-
-			Log.e("", "VideoShareActivity createThumb: time: " + fsFile);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		long dur = System.currentTimeMillis() - startTime;
 
