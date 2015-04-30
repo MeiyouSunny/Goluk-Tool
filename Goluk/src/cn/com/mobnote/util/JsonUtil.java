@@ -354,6 +354,7 @@ public class JsonUtil {
 			userInfo.persons = String.valueOf(getJsonIntValue(rootObj, "persons", 0));
 			userInfo.zanCount = getJsonStringValue(rootObj, "zan", "0");
 			userInfo.liveDuration = Integer.valueOf(getJsonStringValue(rootObj, "restime", "60"));
+			userInfo.desc = getJsonStringValue(rootObj, "desc", "");
 
 			return userInfo;
 		} catch (Exception e) {
@@ -431,6 +432,7 @@ public class JsonUtil {
 				restime = "0";
 			}
 			info.restTime = Integer.valueOf(restime);
+			info.desc = getJsonStringValue(obj, "desc", "");
 			return info;
 
 		} catch (Exception e) {

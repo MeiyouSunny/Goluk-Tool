@@ -41,6 +41,8 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_LIVE_CONTINUE = 6;
 	/** 进入直播 */
 	public static final int DIALOG_TYPE_LIVE_START = 7;
+	/** ipc未登录提示 */
+	public static final int DIALOG_TYPE_IPC_LOGINOUT = 8;
 
 	private int mCurrentDialogType = 0;
 

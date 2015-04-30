@@ -758,7 +758,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
 		mWifiStateTv.setText("未连接");
 		mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
 	}
 	
 	
@@ -1095,7 +1094,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				.setOnKeyListener(new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						// TODO Auto-generated method stub
 						if(keyCode == KeyEvent.KEYCODE_BACK){
 							return true;
 						}
@@ -1154,7 +1152,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 		
 		if (!mApp.getIpcIsLogin()) {
-			Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
+			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, LiveDialogManager.DIALOG_TYPE_IPC_LOGINOUT, "提示", "请先连接摄像头");
 			return;
 		}
 

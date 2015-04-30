@@ -264,6 +264,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				mRefirshBtn.setVisibility(View.GONE);
 			}
 		} else {
+			if (null != currentUserInfo && null != currentUserInfo.desc) {
+				mDescTv.setText(currentUserInfo.desc);
+			}
 			mApp.mSharedPreUtil.setIsLiveNormalExit(true);
 			if (null != currentUserInfo) {
 				mLiveCountSecond = currentUserInfo.liveDuration;
@@ -1065,6 +1068,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		this.isKaiGeSucess = true;
 		mLiveCountSecond = liveData.restTime;
+
+		mDescTv.setText(liveData.desc);
 
 		if (1 == liveData.active) {
 			LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : ");

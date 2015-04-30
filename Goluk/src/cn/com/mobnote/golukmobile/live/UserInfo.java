@@ -33,4 +33,6 @@ public class UserInfo implements Serializable {
 	public String zanCount;
 	/** 直播开启时间 */
 	public int liveDuration;
+	/** 视频描述 */
+	public String desc;
 }
