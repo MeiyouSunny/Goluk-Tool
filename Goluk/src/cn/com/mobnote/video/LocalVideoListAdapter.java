@@ -156,10 +156,12 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 		}else{
 			holder.mTMLayout1.setVisibility(View.GONE);
 		}
-		if(1080 == mVideoInfo1.videoHP){
+		if(1 == mVideoInfo1.videoHP){
 			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
-		}else{
+		}else if(2 == mVideoInfo1.videoHP){
 			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_720);
+		}else if(3 == mVideoInfo1.videoHP){
+			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_480);
 		}
 		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate);
