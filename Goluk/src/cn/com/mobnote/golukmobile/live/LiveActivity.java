@@ -496,9 +496,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 		mRPVPalyVideo = (RtmpPlayerView) findViewById(R.id.live_vRtmpPlayVideo);
 		// 视频事件回调注册
-		// mRPVPalyVideo.setPlayerListener(this);
-		// mRPVPalyVideo.setBufferTime(1000);
-		// mRPVPalyVideo.setConnectionTimeout(30000);
+		mRPVPalyVideo.setPlayerListener(this);
+		mRPVPalyVideo.setBufferTime(1000);
+		mRPVPalyVideo.setConnectionTimeout(30000);
 		// 先显示气泡上的默认图片
 
 		// 注册事件
@@ -712,14 +712,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	 * 视频播放初始化
 	 */
 	private void startVideoAndLive(String url) {
-		mRPVPalyVideo.setPlayerListener(this);
-		mRPVPalyVideo.setBufferTime(1000);
-		mRPVPalyVideo.setConnectionTimeout(30000);
+
 		// 设置视频源
 		if (isShareLive) {
 			// 预览自己的图像
 			mFilePath = VIEW_SELF_PLAY;
 			mRPVPalyVideo.setDataSource(mFilePath);
+			mRPVPalyVideo.setAudioMute(true);
 		} else {
 			mRPVPalyVideo.setDataSource(url);
 		}
@@ -1580,46 +1579,46 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private void refre8second(int mShootTime) {
 		switch (mShootTime) {
 		case 1:
-			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			// SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_record);
 			break;
 		case 2:
 
 			break;
 		case 3:
-			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			// SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_5s_record);
 			break;
 		case 4:
 
 			break;
 		case 5:
-			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			// SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_4s_record);
 			break;
 		case 6:
 
 			break;
 		case 7:
-			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			// SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_3s_record);
 			break;
 		case 8:
 
 			break;
 		case 9:
-			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			// SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_2s_record);
 			break;
 		case 10:
 
 			break;
 		case 11:
-			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			// SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_1s_record);
 			break;
 		case 13:
-			//SoundUtils.getInstance().play(SoundUtils.RECORD_CAMERA);
+			// SoundUtils.getInstance().play(SoundUtils.RECORD_CAMERA);
 			break;
 
 		default:
@@ -1676,6 +1675,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (null != mRPVPalyVideo) {
 			mRPVPalyVideo.removeCallbacks(retryRunnable);
 			mRPVPalyVideo.cleanUp();
+			mRPVPalyVideo = null;
 		}
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
@@ -1693,10 +1693,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		} else {
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_QuitGroup, "");
 		}
-		if (null != mRPVPalyVideo) {
-			mRPVPalyVideo.cleanUp();
-			mRPVPalyVideo = null;
-		}
+
 		if (isSucessBind) {
 			unregisterReceiver(managerReceiver);
 			isSucessBind = false;
