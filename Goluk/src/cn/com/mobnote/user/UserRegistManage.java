@@ -230,7 +230,7 @@ public class UserRegistManage {
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
 		console.log("注册回调---registCallback---"+success+"---"+obj);
-		mApplication.registStatus = 0;//注册中……
+		mApplication.registStatus = 1;//注册中……
 		if(1 == success){
 			try{
 				String data = (String) obj;
@@ -244,7 +244,7 @@ public class UserRegistManage {
 					//注册成功
 					SysApplication.getInstance().exit();//杀死之前的所有activity，实现一键退出
 					console.toast("注册成功", mContext);
-					mApplication.registStatus = 1;//注册成功的状态
+					mApplication.registStatus = 2;//注册成功的状态
 					Log.i("registLogin", "-------"+mApplication.registStatus);
 					//注册成功后再次调用登录的接口
 					registLogin();
@@ -293,7 +293,7 @@ public class UserRegistManage {
 			}
 		}else{
 			console.log("注册失败");
-			mApp.registStatus = 2;//注册失败的状态
+			mApp.registStatus = 3;//注册失败的状态
 		}
 	}*/
 	

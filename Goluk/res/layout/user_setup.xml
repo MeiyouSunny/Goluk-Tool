@@ -23,7 +23,7 @@
 			android:background="@color/bg"
 			android:textColor="@color/white"
 			android:textSize="16sp"
-			android:text="@string/back_text"/>
+			/>
 		
 		<TextView
 			android:layout_width="wrap_content"

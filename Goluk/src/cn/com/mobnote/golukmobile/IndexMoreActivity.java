@@ -146,17 +146,7 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		if(!isFirstLogin || mApp.isUserLoginSucess == true){//登录过
 			Log.i("testtest", "---------------"+mApp.autoLoginStatus+"------loginStatus------"+mApp.loginStatus);
 			//更多页面
-			if(mApp.loginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
-				mLayoutHasInfo.setVisibility(View.VISIBLE);
-				mLayoutNoInfo.setVisibility(View.GONE);
-				initData();
-				isHasInfo = true;
-			}else {//没有用户信息
-				mLayoutHasInfo.setVisibility(View.GONE);
-				mLayoutNoInfo.setVisibility(View.VISIBLE);
-				mImageHead.setImageResource(R.drawable.more_head_no_log_in);
-				isHasInfo = false;
-			}
+			personalChanged();
 	}else{
 		//未登录
 		isHasInfo = false;
@@ -203,9 +193,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 				console.log("onclick---setup--item");
 				intent = new Intent(IndexMoreActivity.this,UserSetupActivity.class);
 				startActivity(intent);
-				if(mApp.loginoutStatus == true){
-//					SysApplication.getInstance().exit();
-				}
 			break;
 			//点击跳转到我的主页
 			case R.id.head_layout:
@@ -302,32 +289,37 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			dismissDialog();
 		
 			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
-			Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
-			startActivity(it);
+			personalChanged();
+			/*Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
+			startActivity(it);*/
 		}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4 || mApp.isUserLoginSucess == false){
 			dismissDialog();
 			console.toast("自动登录失败", mContext);
 			Log.i("userinterface", "------"+mApp.autoLoginStatus+"--------indexmoreactivity");
+			personalChanged();
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
 		}else if(mApp.autoLoginStatus == 5){
 			mLayoutHasInfo.setVisibility(View.VISIBLE);
 			mLayoutNoInfo.setVisibility(View.GONE);
 		}
-		/*if(mApp.autoLoginStatus != 1){
-			dismissDialog();
-		
-			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
-//			Intent it = new Intent(IndexMoreActivity.this,UserPersonalHomeActivity.class);
-			Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
-			startActivity(it);
-		}else if(mApp.isUserLoginSucess == false){
-			dismissDialog();
-			console.toast("登录失败", mContext);
-			Log.i("userinterface", "------"+mApp.autoLoginStatus+"--------indexmoreactivity");
+	}
+	
+	/**
+	 * 自动登录失败后个人中心状态的变化
+	 */
+	public void personalChanged(){
+		if(mApp.loginStatus == 1 || mApp.autoLoginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
+			mLayoutHasInfo.setVisibility(View.VISIBLE);
+			mLayoutNoInfo.setVisibility(View.GONE);
+			initData();
+			isHasInfo = true;
+		}else {//没有用户信息
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
-		}*/
+			mImageHead.setImageResource(R.drawable.more_head_no_log_in);
+			isHasInfo = false;
+		}
 	}
 	
 }

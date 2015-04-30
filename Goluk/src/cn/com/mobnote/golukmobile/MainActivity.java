@@ -79,7 +79,6 @@ import android.widget.Toast;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
-import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -1038,6 +1037,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	}
 	
 	private void click_share() {
+		Log.i("lily", "----------click------");
 		if (!mApp.isUserLoginSucess) {
 			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
@@ -1058,12 +1058,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				dialog	.show();
 				return ;
 			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-				mShareLayout.setVisibility(View.VISIBLE);
+//				mShareLayout.setVisibility(View.VISIBLE);
+				Intent intent = new Intent(this, UserLoginActivity.class);
+				intent.putExtra("isInfo", "back");
+				startActivity(intent);
 				return ;
 			}
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
+			mShareLayout.setVisibility(View.VISIBLE);
 			return;
 		}
 		//视频分享
@@ -1103,10 +1104,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				dialog	.show();
 				return ;
 			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-				console.toast("网络连接异常，请重试", mContext);
+//				console.toast("网络连接异常，请重试", mContext);
 				return ;
 			}
-			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
 			return;
 		}
 		
@@ -1144,10 +1147,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				dialog	.show();
 				return ;
 			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-				console.toast("网络连接异常，请重试", mContext);
+//				console.toast("网络连接异常，请重试", mContext);
 				return ;
 			}
-			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
 			return;
 		}
 		

@@ -129,9 +129,10 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	public WindowManager mWindowManager = null;
 	public WindowManager.LayoutParams mWMParams = null;
 	public RelativeLayout mVideoUploadLayout = null;
-
-	/** 登录的五个状态 0登录中 1 登录成功 2登录失败 3手机号未注册，跳转注册页面 4超时 **/
-	public int loginStatus;
+	
+	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时   5密码错误达上限去重置密码**/
+	public int loginStatus ;
+	/**注册的三个状态  1注册中  2注册成功  3 注册失败**/
 	/** 注册的三个状态 0注册中 1注册成功 2 注册失败 **/
 	public int registStatus;
 	/** 自动登录的四个状态 1自动登录中 2自动登录成功 3自动登录失败 4自动登录超时 5密码错误 **/
