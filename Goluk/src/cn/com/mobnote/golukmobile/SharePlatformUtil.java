@@ -94,11 +94,9 @@ public class SharePlatformUtil{
 		UMImage umimage = new UMImage(mContext,imageurl);
 		UMVideo video = new UMVideo(videourl);
 		video.setThumb(umimage);
-		
 
 		// 配置新浪SSO
 		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-		
 		
 		//微信
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
@@ -106,7 +104,7 @@ public class SharePlatformUtil{
 		weixinContent.setShareContent("Goluk分享内容");
 		weixinContent.setTitle(text);
 		weixinContent.setTargetUrl(videourl);
-		weixinContent.setShareMedia(video);
+		weixinContent.setShareImage(umimage);
 		mController.setShareMedia(weixinContent);
 		
 		// 设置朋友圈分享的内容
@@ -114,7 +112,7 @@ public class SharePlatformUtil{
 		circleMedia.setShareContent("Goluk分享内容");
 		circleMedia.setTitle(text);
 		circleMedia.setTargetUrl(videourl);
-		circleMedia.setShareMedia(video);
+		circleMedia.setShareImage(umimage);
 		mController.setShareMedia(circleMedia);
 
 		// 设置短信分享内容
@@ -139,7 +137,7 @@ public class SharePlatformUtil{
 		qqContent.setShareContent("Goluk分享内容");
 		qqContent.setTitle(text);
 		qqContent.setTargetUrl(videourl);
-		qqContent.setShareMedia(video);
+		qqContent.setShareImage(umimage);
 		mController.setShareMedia(qqContent);
 	}
 	

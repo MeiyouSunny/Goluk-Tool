@@ -39,6 +39,8 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	private SeekBar mSeekBar = null;
 	/** 视频直播设置时长 */
 	private TextView mTimeTv = null;
+	/** 预计本次流量 */
+	private TextView mFlowTv = null;
 
 	private RelativeLayout mEnter = null;
 	/** 回调对象 */
@@ -86,6 +88,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		mTimeTv = (TextView) mRootLayout.findViewById(R.id.livesetting_time);
 		mDescEdit = (EditText) mRootLayout.findViewById(R.id.description);
 		mSeekBar = (SeekBar) mRootLayout.findViewById(R.id.progress);
+		mFlowTv = (TextView) mRootLayout.findViewById(R.id.live_flowl_txt);
 
 		mSeekBar.setProgress(DEFAULT_SECOND);
 		mTimeTv.setText(GolukUtils.secondToString(DEFAULT_SECOND));
@@ -100,6 +103,8 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		} else {
 			mSoundBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 		}
+
+		mFlowTv.setText(getCurrentFlow(mCurrentLiveSecond));
 
 		// 设置监听
 		mEnter.setOnClickListener(this);
@@ -123,8 +128,8 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 
 					isShow = false;
 					if (!isUserDimiss) {
-						if (null != mContext && mContext instanceof LiveActivity){
-							((LiveActivity)mContext).exit();
+						if (null != mContext && mContext instanceof LiveActivity) {
+							((LiveActivity) mContext).exit();
 						}
 					}
 
@@ -158,7 +163,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		}
 		bean.isCanTalk = mIsCanTalk;
 		bean.isCanVoice = mIsCanSound;
-		bean.netCountStr = "15.20MB";
+		bean.netCountStr = getCurrentFlow(mCurrentLiveSecond);
 		return bean;
 	}
 
@@ -199,11 +204,19 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 
 	}
 
+	// 计算本次直播所需要的流量
+	private String getCurrentFlow(int progress) {
+		int size = (int) (mCurrentLiveSecond * 0.1);
+		return "" + size + "MB";
+	}
+
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		LogUtil.e(null, "LiveSetting-------onProgressChanged : " + progress + "	fromUser:" + fromUser);
 		mCurrentLiveSecond = progress;
 		mTimeTv.setText(GolukUtils.secondToString(progress));
+
+		mFlowTv.setText(getCurrentFlow(progress));
 	}
 
 	@Override

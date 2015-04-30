@@ -84,7 +84,7 @@
             android:id="@+id/mPreLoading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/video_sq_play"
+            android:background="@drawable/tacitly_pic"
             android:scaleType="fitXY" />
 
         <cn.com.mobnote.golukmobile.videosuqare.RingView

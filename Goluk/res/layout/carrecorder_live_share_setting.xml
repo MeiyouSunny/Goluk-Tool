@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/bottomL"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="350dp"
         android:layout_alignParentBottom="true"
         android:background="#ededed" >
 
@@ -187,8 +187,8 @@
 
                 <Button
                     android:id="@+id/car_talk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="51dp"
+                    android:layout_height="31dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/carrecorder_setup_option_on" />
@@ -224,8 +224,8 @@
 
                 <Button
                     android:id="@+id/voice_switch_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="51dp"
+                    android:layout_height="31dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/carrecorder_setup_option_on" />

@@ -79,7 +79,6 @@ import android.widget.Toast;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
-import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -758,7 +757,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
 		mWifiStateTv.setText("未连接");
 		mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
 	}
 	
 	
@@ -1031,12 +1029,15 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			
 				break;
 			case R.id.index_wifi_layout:
-				toCard();
+				if(GolukApplication.getInstance().getIpcIsLogin()){
+					toCard();
+				}
 				break;
 		}
 	}
 	
 	private void click_share() {
+		Log.i("lily", "----------click------");
 		if (!mApp.isUserLoginSucess) {
 			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
@@ -1057,12 +1058,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				dialog	.show();
 				return ;
 			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-				mShareLayout.setVisibility(View.VISIBLE);
+//				mShareLayout.setVisibility(View.VISIBLE);
+				Intent intent = new Intent(this, UserLoginActivity.class);
+				intent.putExtra("isInfo", "back");
+				startActivity(intent);
 				return ;
 			}
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
+			mShareLayout.setVisibility(View.VISIBLE);
 			return;
 		}
 		//视频分享
@@ -1093,7 +1095,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				.setOnKeyListener(new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						// TODO Auto-generated method stub
 						if(keyCode == KeyEvent.KEYCODE_BACK){
 							return true;
 						}
@@ -1103,10 +1104,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				dialog	.show();
 				return ;
 			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-				console.toast("网络连接异常，请重试", mContext);
+//				console.toast("网络连接异常，请重试", mContext);
 				return ;
 			}
-			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
 			return;
 		}
 		
@@ -1144,15 +1147,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				dialog	.show();
 				return ;
 			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
-				console.toast("网络连接异常，请重试", mContext);
+//				console.toast("网络连接异常，请重试", mContext);
 				return ;
 			}
-			LiveDialogManager.getManagerInstance().showLoginDialog(this, "请登录");
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
 			return;
 		}
 		
 		if (!mApp.getIpcIsLogin()) {
-			Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
+			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, LiveDialogManager.DIALOG_TYPE_IPC_LOGINOUT, "提示", "请先连接摄像头");
 			return;
 		}
 

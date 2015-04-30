@@ -61,7 +61,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	// info传来的信息
 	private String intentHead = null;
 	private String intentName = null;
-	private String intentSex = null;
+//	private String intentSex = null;
 	private String intentSign = null;
 	//保存数据的loading
 	private RelativeLayout mLoading = null;
@@ -116,7 +116,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		Intent it = getIntent();
 		intentHead = it.getStringExtra("infoHead").toString();
 		intentName = it.getStringExtra("infoName").toString();
-		intentSex = it.getStringExtra("infoSex").toString();
+//		intentSex = it.getStringExtra("infoSex").toString();
 		intentSign = it.getStringExtra("infoSign").toString();
 		
 		/**
