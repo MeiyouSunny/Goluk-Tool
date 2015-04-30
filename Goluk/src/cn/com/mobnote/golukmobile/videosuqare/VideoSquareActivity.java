@@ -87,9 +87,8 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 				Toast.LENGTH_SHORT).show();
 		
 		System.out.println("shareid"+shareVideoId);
-		boolean result = GolukApplication.getInstance().getVideoSquareManager()
-				.shareVideoUp(channel,shareVideoId);
-		System.out.println("shareid"+result);
+		//boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
+		//System.out.println("shareid"+result);
 	}
 
 	private OnPageChangeListener opcl = new OnPageChangeListener() {
