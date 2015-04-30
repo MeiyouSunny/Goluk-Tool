@@ -317,15 +317,53 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	private void createThumb() {
 		long startTime = System.currentTimeMillis();
 		//mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
-		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-		thumbFile = filePath + File.separator + videoName;
-		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
+			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+			thumbFile = filePath + File.separator + videoName;
+			mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
+			
+			File image = new File(thumbFile);
+			if(image.exists()){
+				return ;
+			}else{
+				thumbFile = fileFolder + "/thumb11.jpg";
+				mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
+				if (mShortBitmap != null) {
+					int width = mShortBitmap.getWidth();
+					int height = mShortBitmap.getHeight();
 
+					Log.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
+				} else {
+					Log.e("", "VideoShareActivity createThumb: NULL:");
+				}
+
+				try {
+
+					File file = new File(fileFolder);
+					file.mkdirs();
+					file = new File(thumbFile);
+					if (file.exists()) {
+						file.delete();
+					}
+
+					file.createNewFile();
+
+					FileOutputStream fos = new FileOutputStream(file);
+					mShortBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
+					String fsFile = FileUtils.javaToLibPath(thumbFile);
+
+					Log.e("", "VideoShareActivity createThumb: time: " + fsFile);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
 		long dur = System.currentTimeMillis() - startTime;
 
 		Log.e("", "VideoShareActivity createThumb: time:" + dur);
 	}
+	
 
 	private void dimissErrorDialog() {
 		if (null != mErrorDialog) {
