@@ -645,7 +645,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 	private void click_share() {
 		if (!this.mIsUploadSucess) {
-			Toast.makeText(VideoShareActivity.this, "上传视频成功后才可以分享", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(VideoShareActivity.this, "上传视频成功后才可以分享", Toast.LENGTH_SHORT).show();
+			Toast.makeText(VideoShareActivity.this, "正在上传视频,请稍等", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -675,13 +676,13 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			Toast.makeText(VideoShareActivity.this, "第三方分享失败", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
 
 		final String json = createShareSucesNotifyJson(mVideoVid, channel);
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_ShareNotify, json);
 
-		Toast.makeText(VideoShareActivity.this, "调用Logic分享结果:" + json, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(VideoShareActivity.this, "调用Logic分享结果:" + json, Toast.LENGTH_SHORT).show();
 
 		if (!b) {
 			Toast.makeText(VideoShareActivity.this, "调用Logic分享结果失败:" + channel, Toast.LENGTH_SHORT).show();
