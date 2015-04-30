@@ -13,6 +13,7 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
+import cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity;
 import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
@@ -664,7 +665,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	 */
 	private void gotoVideoPlayPage(String path){
 		if(!TextUtils.isEmpty(path)){
-			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+			Intent intent = new Intent(mContext, LocalVideoPlayerActivity.class);
 			intent.putExtra("from", "local");
 			//intent.putExtra("type", mCurrentType);
 			intent.putExtra("path", path);

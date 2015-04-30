@@ -129,10 +129,10 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 				case R.id.zdxhlx://自动循环录像
 					if(recordState){
 						boolean a = GolukApplication.getInstance().getIPCControlManager().stopRecord();
-						LogUtil.e("xuhw", "YYYYYY===========stopRecord=============a="+a);
+						LogUtil.e("xuhw", "video===========stopRecord=============a="+a);
 					}else{
 						boolean b = GolukApplication.getInstance().getIPCControlManager().startRecord();
-						LogUtil.e("xuhw", "YYYYYY===========startRecord=============b="+b);
+						LogUtil.e("xuhw", "video===========startRecord=============b="+b);
 					}
 					break;
 				case R.id.tcaf://停车安防
@@ -232,6 +232,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 			mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 		}
 		
+		recordState = GolukApplication.getInstance().getAutoRecordState();
 		if(!GolukApplication.getInstance().getAutoRecordState()){
 			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 		}else{
