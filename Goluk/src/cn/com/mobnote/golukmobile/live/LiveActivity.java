@@ -947,7 +947,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			liveFailedStart(isLive);
 			LiveDialogManager.getManagerInstance().dismissProgressDialog();
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_LIVE_OFFLINE, "提示", "直播已经下线");
+					LiveDialogManager.DIALOG_TYPE_LIVE_OFFLINE, "提示", "直播已经结束");
 			return;
 		}
 		LiveDialogManager.getManagerInstance().dismissProgressDialog();
@@ -1115,7 +1115,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	// 视频已经下线
 	private void videoInValid() {
 		LiveDialogManager.getManagerInstance().showSingleBtnDialog(LiveActivity.this,
-				LiveDialogManager.DIALOG_TYPE_LIVE_OFFLINE, "提示", "视频已经下线");
+				LiveDialogManager.DIALOG_TYPE_LIVE_OFFLINE, "提示", "该用户直播己结束，谢谢观看");
 		mHandler.removeMessages(MSG_H_RETRY_REQUEST_DETAIL);
 		mHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
 		if (null != mLiveManager) {
