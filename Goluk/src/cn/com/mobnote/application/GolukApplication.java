@@ -1428,10 +1428,13 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			mconnection = new CustomFormatDialog(mContext);
 			mconnection.setCancelable(false);
 			mconnection.setMessage("摄像头断开，正在为您重连…");
-
-			mconnection.show();
-			mHandler.removeMessages(1002);
-			mHandler.sendEmptyMessageDelayed(1002, 10000);
+			
+			if(!((Activity)mContext).isFinishing()){
+				mconnection.show();
+				mHandler.removeMessages(1002);
+				mHandler.sendEmptyMessageDelayed(1002, 10000);
+			}
+			
 		}
 	}
 
@@ -1456,7 +1459,10 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				}
 			});
 			if (backHomedialog.isShowing() == false) {
-				backHomedialog.show();
+				if(!((Activity)mContext).isFinishing()){
+					backHomedialog.show();
+				}
+				
 			}
 		}
 
