@@ -70,6 +70,7 @@
 		    android:screenOrientation="portrait" />
 
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VersionActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>

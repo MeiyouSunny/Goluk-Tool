@@ -1050,13 +1050,19 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月10日
 	 */
 	private void updateVideoState() {
-		if (rtmpIsOk == false && ipcIsOk == false) {
-			mConnectTip.setText("摄像头未连接");
-		} else if (rtmpIsOk == true && ipcIsOk == true) {
-			mConnectTip.setText("摄像头已连接");
-		} else {
-			mConnectTip.setText("摄像头连接中...");
+		if (rtmpIsOk == true){
+			mConnectTip.setText("摄像头影像正常");
+		}else{
+			mConnectTip.setText("摄像头影像加载中…");
 		}
+		
+//		if (rtmpIsOk == false && ipcIsOk == false) {
+//			mConnectTip.setText("摄像头未连接");
+//		} else if (rtmpIsOk == true && ipcIsOk == true) {
+//			mConnectTip.setText("摄像头已连接");
+//		} else {
+//			mConnectTip.setText("摄像头影像加载中…");
+//		}
 	}
 
 	@Override
@@ -1067,7 +1073,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					@Override
 					public void run() {
 						ipcIsOk = false;
-						updateVideoState();
+//						updateVideoState();
 						mShareBtn.setVisibility(View.GONE);
 						m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
 						// mFileBtn.setBackgroundResource(R.drawable.btn_file_sel);
@@ -1082,7 +1088,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		if (ENetTransEvent_IPC_VDCP_CommandResp == event
 				&& IPC_VDCP_Msg_Init == msg && 0 == param1) {
 			ipcIsOk = true;
-			updateVideoState();
+//			updateVideoState();
 			if (!ipcFirstLogin) {
 				ipcFirstLogin = true;
 				if (!isConnecting) {

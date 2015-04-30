@@ -1,15 +1,5 @@
 package cn.com.mobnote.golukmobile.carrecorder;
 
-import io.vov.vitamio.LibsChecker;
-import io.vov.vitamio.MediaPlayer;
-import io.vov.vitamio.MediaPlayer.OnBufferingUpdateListener;
-import io.vov.vitamio.MediaPlayer.OnCompletionListener;
-import io.vov.vitamio.MediaPlayer.OnErrorListener;
-import io.vov.vitamio.MediaPlayer.OnInfoListener;
-import io.vov.vitamio.MediaPlayer.OnPreparedListener;
-import io.vov.vitamio.MediaPlayer.OnSeekCompleteListener;
-import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
-
 import java.io.IOException;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -19,6 +9,14 @@ import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnErrorListener;
+import android.media.MediaPlayer.OnInfoListener;
+import android.media.MediaPlayer.OnPreparedListener;
+import android.media.MediaPlayer.OnSeekCompleteListener;
+import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -57,7 +55,7 @@ import android.widget.Toast;
   *
   * @author xuhw
   */
-public class VideoPlayerActivity extends Activity implements OnCompletionListener, OnBufferingUpdateListener, OnSeekCompleteListener
+public class LocalVideoPlayerActivity extends Activity implements OnCompletionListener, OnBufferingUpdateListener, OnSeekCompleteListener
 ,OnErrorListener, OnInfoListener, OnPreparedListener, OnClickListener, SurfaceHolder.Callback, OnVideoSizeChangedListener{
 	/** 视频播放器 */
 	private MediaPlayer mMediaPlayer=null;
@@ -93,8 +91,6 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (!LibsChecker.checkVitamioLibs(this))
-			return;
 		setContentView(R.layout.carrecorder_videoplayer);
 		from = getIntent().getStringExtra("from");
 		filename = getIntent().getStringExtra("filename");
@@ -390,13 +386,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	private void playVideo(){
 		System.out.println("TTT=============playVideo=");
 		try {
-			mMediaPlayer = new MediaPlayer(this);
-			 if(getIntent().getStringExtra("from").equals("ipc")){
-				 mMediaPlayer.setBufferSize(500*1024);
-			 }else{
-				 mMediaPlayer.setBufferSize(0);
-			 }
-//			mMediaPlayer.setLooping(true);
+			mMediaPlayer = new MediaPlayer();
 			mMediaPlayer.setDataSource(playUrl);
 			mMediaPlayer.setDisplay(mSurfaceHolder);
 			mMediaPlayer.setOnInfoListener(this);
@@ -449,7 +439,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		mHandler.removeMessages(GETPROGRESS);
 		LogUtil.e("xuhw", "TTT=============onError=");
 		hideLoading();
-		Toast.makeText(VideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
+		Toast.makeText(LocalVideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
 		mCurTime.setText("00:00");
 		mTotalTime.setText("00:00");
 		return false;

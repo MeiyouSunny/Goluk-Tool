@@ -11,6 +11,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -361,25 +363,22 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							return;
 						}
 						
+						
+						Message msg = mHandler.obtainMessage(1);
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							if(!TextUtils.isEmpty(tag1)){
-								Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-								intent.putExtra("from", "ipc");
-								intent.putExtra("type", mCurrentType);
-								intent.putExtra("filename", tag1);
-								startActivity(intent);
+								msg.obj = tag1;
+								mHandler.removeMessages(1);
+								mHandler.sendMessage(msg);
 							}
 						}else{
 							if(!TextUtils.isEmpty(tag2)){
-								Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-								intent.putExtra("from", "ipc");
-								intent.putExtra("type", mCurrentType);
-								intent.putExtra("filename", tag2);
-								startActivity(intent);
+								msg.obj = tag2;
+								mHandler.removeMessages(1);
+								mHandler.sendMessage(msg);
 							}
 						}
-						
 						
 					}
 				}
@@ -387,6 +386,36 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				}
 			});
 		
+	}
+	
+	Handler mHandler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 1:
+				mHandler.removeMessages(1);
+				playerVideo((String)msg.obj);
+				break;
+
+			default:
+				break;
+			}
+		};
+	};
+	
+	/**
+	 * 播放IPC视频
+	 * @param filename 视频名称
+	 * @author xuhw
+	 * @date 2015年4月30日
+	 */
+	private void playerVideo(String filename){
+		if(null == VideoPlayerActivity.mHandler){
+			Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
+			intent.putExtra("from", "ipc");
+			intent.putExtra("type", mCurrentType);
+			intent.putExtra("filename", filename);
+			startActivity(intent);
+		}
 	}
 	
 
@@ -538,25 +567,22 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							return;
 						}
 					
+						Message msg = mHandler.obtainMessage(1);
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							if(!TextUtils.isEmpty(tag1)){
-								Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-								intent.putExtra("from", "ipc");
-								intent.putExtra("type", mCurrentType);
-								intent.putExtra("filename", tag1);
-								startActivity(intent);
+								msg.obj = tag1;
+								mHandler.removeMessages(1);
+								mHandler.sendMessage(msg);
 							}
 						}else{
 							if(!TextUtils.isEmpty(tag2)){
-								Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-								intent.putExtra("from", "ipc");
-								intent.putExtra("type", mCurrentType);
-								intent.putExtra("filename", tag2);
-								startActivity(intent);
+								msg.obj = tag2;
+								mHandler.removeMessages(1);
+								mHandler.sendMessage(msg);
 							}
 						}
-					
+						
 					
 					}
 				
@@ -688,24 +714,22 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						return;
 					}
 					
+					Message msg = mHandler.obtainMessage(1);
 					//点击播放
 					if((screenX > 0) && (screenX < (screenWidth/2))){
 						if(!TextUtils.isEmpty(tag1)){
-							Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-							intent.putExtra("from", "ipc");
-							intent.putExtra("type", mCurrentType);
-							intent.putExtra("filename", tag1);
-							startActivity(intent);
+							msg.obj = tag1;
+							mHandler.removeMessages(1);
+							mHandler.sendMessage(msg);
 						}
 					}else{
 						if(!TextUtils.isEmpty(tag2)){
-							Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-							intent.putExtra("from", "ipc");
-							intent.putExtra("type", mCurrentType);
-							intent.putExtra("filename", tag2);
-							startActivity(intent);
+							msg.obj = tag2;
+							mHandler.removeMessages(1);
+							mHandler.sendMessage(msg);
 						}
 					}
+					
 					}
 				}
 			}
