@@ -260,14 +260,14 @@ public class LiveDialogManager {
 
 	public void showLiveBackDialog(Context context, int function, String message) {
 
-		if (null != mLiveBackDialog) {
-			return;
-		}
+		dismissLiveBackDialog();
+
 		mCurrentDialogType = function;
 		mLiveBackDialog = new AlertDialog.Builder(context).create();
 
 		mLiveBackDialog.setTitle("提示");
 		mLiveBackDialog.setMessage(message);
+		mLiveBackDialog.setCancelable(false);
 
 		mLiveBackDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
 

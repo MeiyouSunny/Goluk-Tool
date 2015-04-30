@@ -247,6 +247,7 @@ public class JsonUtil {
 			String vtypStr = null != beanData ? "" + beanData.vtype : "";
 
 			String talk = beanData.isCanTalk ? "1" : "0";
+			String voice = beanData.isCanVoice ? "1" : "0";
 
 			JSONObject obj = new JSONObject();
 			obj.put("active", "1");
@@ -257,6 +258,8 @@ public class JsonUtil {
 			obj.put("restime", duration);
 			obj.put("flux", netCountStr);
 			obj.put("vtype", "" + vtypStr);
+			obj.put("voice", voice);
+
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -433,6 +436,8 @@ public class JsonUtil {
 			}
 			info.restTime = Integer.valueOf(restime);
 			info.desc = getJsonStringValue(obj, "desc", "");
+			info.voice = getJsonStringValue(obj, "voice", "1");
+
 			return info;
 
 		} catch (Exception e) {

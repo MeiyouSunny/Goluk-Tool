@@ -227,6 +227,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	/** 8s视频 */
 	public static final int MOUNTS = 114;
+	/** 是否支持声音 */
+	private boolean isCanVoice = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -721,6 +723,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			mRPVPalyVideo.setAudioMute(true);
 		} else {
 			mRPVPalyVideo.setDataSource(url);
+			if (isCanVoice) {
+				mRPVPalyVideo.setAudioMute(false);
+			} else {
+				mRPVPalyVideo.setAudioMute(true);
+			}
 		}
 		mRPVPalyVideo.start();
 	}
@@ -1062,7 +1069,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			return;
 		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
-
+		isCanVoice = liveData.voice.equals("1") ? true : false;
 		this.isKaiGeSucess = true;
 		mLiveCountSecond = liveData.restTime;
 
