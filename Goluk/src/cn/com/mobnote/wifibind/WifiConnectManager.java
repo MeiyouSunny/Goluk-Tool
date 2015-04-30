@@ -575,7 +575,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					tempTime = openWifi(false, outTime);
 					wifiSupport.closeWifi();
 					wifiSupport.closeWifiAp(null);
-					wifiSupport.createWifiHot(ssid, password);
+					apManagesupport.createWifiHot(ssid, password);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block 这里需要异常处理
 					e.printStackTrace();
@@ -645,7 +645,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				wifiSupport.closeWifi();
 				wifiSupport.closeWifiAp(null);
 				try {
-					wifiSupport.createWifiHot(ssid, password);
+					apManagesupport.createWifiHot(ssid, password);
 				} catch (Exception e) {
 					// TODO Auto-gsenerated catch block
 					e.printStackTrace();

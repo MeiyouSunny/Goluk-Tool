@@ -2,6 +2,7 @@ package cn.com.mobnote.wifibind;
 
 
 import java.lang.reflect.Field;  
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;  
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -270,4 +271,63 @@ public class WifiApManagerSupport {
 	          }
 	          
 	      }
+	      
+	  	/**
+	  	 * 创建wifi ap
+	  	 * 
+	  	 * @param ssid
+	  	 * @param password
+	  	 * @throws NoSuchMethodException
+	  	 * @throws InvocationTargetException
+	  	 * @throws IllegalAccessException
+	  	 * @throws IllegalArgumentException
+	  	 */
+	  	public WifiConfiguration putWifiConfiguration(String ssid, String password)
+	  			throws NoSuchMethodException, IllegalArgumentException,
+	  			IllegalAccessException, InvocationTargetException {
+	  		Method method1 = null;
+ 
+	  		WifiConfiguration netConfig = new WifiConfiguration();
+
+	  		netConfig.SSID = ssid;
+	  		netConfig.preSharedKey = password;
+
+	  		netConfig.allowedAuthAlgorithms
+	  				.set(WifiConfiguration.AuthAlgorithm.OPEN);
+	  		netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+	  		netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+	  		netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+	  		netConfig.allowedPairwiseCiphers
+	  				.set(WifiConfiguration.PairwiseCipher.CCMP);
+	  		netConfig.allowedPairwiseCiphers
+	  				.set(WifiConfiguration.PairwiseCipher.TKIP);
+	  		netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+	  		netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+
+	  		return netConfig;
+
+	  	}
+	  	
+	 
+		/**
+		 * @param ssid
+		 * @param password
+		 */
+		public void createWifiHot(String ssid, String password){
+			try {
+				setWifiApEnabled(putWifiConfiguration(ssid,password),true);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 }  
