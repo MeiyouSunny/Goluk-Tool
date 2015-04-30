@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.carrecorder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,8 +10,9 @@ import org.json.JSONObject;
 import com.iflytek.speech.Version;
 
 import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.ExternalEventsDataInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
-import cn.com.mobnote.golukmobile.carrecorder.entity.VersionState;
+import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import android.text.TextUtils;
@@ -153,7 +155,7 @@ public class IpcDataParser {
 			int type = obj.getInt("type");
 			int size = obj.getInt("size");
 			String location = obj.getString("location");
-			int resolution = obj.getInt("resolution");
+			String resolution = obj.getString("resolution");
 			int withSnapshot = obj.getInt("withSnapshot");
 			int withGps = obj.getInt("withGps");
 
@@ -330,9 +332,9 @@ public class IpcDataParser {
 	 * @author xuhw
 	 * @date 2015年4月9日
 	 */
-	public static VersionState parseVersionState(String json){
+	public static IPCIdentityState parseVersionState(String json){
 		try {
-			VersionState mVersionState = new VersionState();
+			IPCIdentityState mVersionState = new IPCIdentityState();
 			JSONObject obj = new JSONObject(json);
 			if(null != obj){
 				int code = obj.optInt("code");
@@ -374,6 +376,42 @@ public class IpcDataParser {
 		}
 		
 		return time;
+	}
+	
+	/**
+	 * 解析kit和紧急视频返回的数据
+	 * @param json
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月23日
+	 */
+	public static List<ExternalEventsDataInfo> parseKitData(String json){
+		List<ExternalEventsDataInfo> dataList = new ArrayList<ExternalEventsDataInfo>();
+		try {
+			JSONArray array = new JSONArray(json);
+			if(null != array){
+				for(int i=0; i<array.length(); i++){
+					ExternalEventsDataInfo info = new ExternalEventsDataInfo();
+					JSONObject obj = array.getJSONObject(i);
+					if(null != obj){
+						info.id = obj.optDouble("id");
+						info.type = obj.optInt("type");
+						info.resolution = obj.optString("resolution");
+						info.period = obj.optInt("period");
+						info.time = obj.optInt("time");
+						info.size = obj.optDouble("size");
+						info.location = obj.optString("location");
+						info.withSnapshot = obj.optInt("withSnapshot");
+						info.withGps = obj.optInt("withGps");
+						dataList.add(info);
+					}
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return dataList;
 	}
 
 }

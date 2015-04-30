@@ -12,20 +12,16 @@
 		android:layout_height="42dp"
 		android:background="@color/bg">
 		
-		<Button
-			android:id="@+id/back_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10dp"
-			android:gravity="center|left"
-			android:drawableLeft="@drawable/icon_back_btn"
-			android:layout_centerVertical="true"
-			android:drawablePadding="8dp"
-			android:background="@color/bg"
-			android:textColor="@color/white"
-			android:textSize="16sp"/>
+		<ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/live_btn_back" />
 		
 		<TextView
+		    android:id="@+id/title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"

@@ -17,7 +17,7 @@
     <string name="edit_text">编辑</string>
     <string name="share_text">分享</string>
     <string name="next_text">下一步</string>
-    <string name="filter_text">滤镜</string>
+    <string name="filter_text">添加滤镜</string>
     <string name="mv_text">MV</string>
     <string name="draft_text">草稿箱</string>
     <string name="more_text">更多</string>
@@ -108,13 +108,13 @@
     <string name="cache_size_text">3.15M</string>
 
     <string-array name="video_share_class">
+        <item>曝光台</item>
         <item>碰瓷达人</item>
-        <item>奇葩演技</item>
         <item>路上风景</item>
         <item>随手拍</item>
-        <item>事故大爆炸</item>
-        <item>教辅预警</item>
-        <item>惊现十分</item>
+        <item>事故大爆料</item>
+        <item>堵车预警</item>
+        <item>惊险十分</item>
         <item>疯狂超车</item>
         <item>感人瞬间</item>
         <item>传递正能量</item>
@@ -198,6 +198,7 @@
     <string name="user_personal_home_share">分享</string>
     <string name="user_personal_home_nologin">立即登录看看我的主页</string>
     <string name="user_personal_home_nologin_name">未登录</string>
+    <string name="user_personal_setup_update">Goluk固件升级</string>
 
     <!-- 直播界面 -->
 

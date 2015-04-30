@@ -13,6 +13,10 @@ public class LiveDataInfo implements Serializable {
 	public int active;
 	/** 视频播放地址 */
 	public String playUrl;
+	/** 视频ID */
+	public String vid;
+	/** 是否可以声音 */
+	public String voice;
 
 	/** 群组Id */
 	public String groupId;
@@ -20,5 +24,9 @@ public class LiveDataInfo implements Serializable {
 	public String groupType;
 	public int membercount;
 	public String title;
+	/** 视频剩余时间 */
+	public int restTime;
+	/** 视频描述 */
+	public String desc;
 
 }

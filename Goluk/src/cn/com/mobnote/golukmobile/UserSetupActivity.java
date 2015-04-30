@@ -5,10 +5,12 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,10 +21,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 /**
@@ -46,7 +48,7 @@ import cn.com.mobnote.util.console;
  * 
  */
 
-public class UserSetupActivity extends Activity implements OnClickListener {
+public class UserSetupActivity extends Activity implements OnClickListener,UserInterface {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -107,15 +109,20 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		//没有登录过的状态
 		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-		
+		Log.i("lily", "----------UserSetupActivity11111-------"+mApp.registStatus);
 		if(!isFirstLogin ){//登录过
-			if(mApp.loginStatus == 1 || mApp.registStatus == 1 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true){//上次登录成功
-				btnLoginout.setText("退出");
+			Log.i("lily", "----------UserSetupActivity-------"+mApp.registStatus);
+			if(mApp.loginStatus == 1 || mApp.registStatus == 2 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true){//上次登录成功
+				btnLoginout.setText("退出登录");
 			}else{
 				btnLoginout.setText("登录");
 			}
 		}else{
-			btnLoginout.setText("登录");
+			if( mApp.registStatus == 2){
+				btnLoginout.setText("退出登录");
+			}else{
+				btnLoginout.setText("登录");
+			}
 		}
 		btnLoginout.setOnClickListener(this);
 		
@@ -130,6 +137,8 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		};
 	}
 	
+	private Builder mBuilder = null;
+	private AlertDialog dialog = null;
 	
 	@Override
 	public void onClick(View v) {
@@ -147,20 +156,38 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 		//退出按钮
 			case R.id.loginout_btn:
 				if(btnLoginout.getText().toString().equals("登录")){
+					mApp.mUser.setUserInterface(this);
+					if(mApp.autoLoginStatus == 1){
+						mBuilder = new AlertDialog.Builder(mContext);
+						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
+						.setCancelable(false)
+						.setOnKeyListener(new OnKeyListener() {
+							@Override
+							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+								// TODO Auto-generated method stub
+								if(keyCode == KeyEvent.KEYCODE_BACK){
+									return true;
+								}
+								return false;
+							}
+						}).create();
+						dialog	.show();
+						return ;
+					}
 					initIntent(UserLoginActivity.class);
-				}else if(btnLoginout.getText().toString().equals("退出")){
-					new AlertDialog.Builder(mContext)
-					.setMessage("是否确认退出？")
-					.setNegativeButton("确认", new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
-							getLoginout();
-						}
-					})
-					.setPositiveButton("取消", null)
-					.create().show();
+				}else if(btnLoginout.getText().toString().equals("退出登录")){
+						new AlertDialog.Builder(mContext)
+						.setMessage("是否确认退出？")
+						.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// TODO Auto-generated method stub
+								getLoginout();
+							}
+						})
+						.setPositiveButton("取消", null)
+						.create().show();
 				}
 				break;
 		}
@@ -169,28 +196,33 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	 * 退出
 	 */
 	public void getLoginout(){
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
-		console.log(b+"");
-		if(b){
-			//注销成功
-			mApp.isUserLoginSucess = false;
-			mApp.loginoutStatus = true;//注销成功
-			
-			mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-			mEditor = mPreferences.edit();
-			mEditor.putBoolean("FirstLogin", true);//注销完成后，设置为没有登录过的一个状态
-			//提交修改
-			mEditor.commit();
-			
-			initData();
-			console.toast("退出登录成功", mContext);
-			btnLoginout.setText("登录");
-			
+		if(!UserUtils.isNetDeviceAvailable(mContext)){
+			console.toast("当前网络不可用，请检查网络后重试", mContext);
 		}else{
-			//注销失败
-			mApp.loginoutStatus = false;
-			mApp.isUserLoginSucess = true;
+			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
+			console.log(b+"");
+			if(b){
+				//注销成功
+				mApp.isUserLoginSucess = false;
+				mApp.loginoutStatus = true;//注销成功
+				mApp.registStatus = 3;//注册失败
+				
+				mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+				mEditor = mPreferences.edit();
+				mEditor.putBoolean("FirstLogin", true);//注销完成后，设置为没有登录过的一个状态
+				//提交修改
+				mEditor.commit();
+				
+				console.toast("退出登录成功", mContext);
+				btnLoginout.setText("登录");
+				
+			}else{
+				//注销失败
+				mApp.loginoutStatus = false;
+				mApp.isUserLoginSucess = true;
+			}
 		}
+		
 	}
 	
 	/**
@@ -229,9 +261,10 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 	/**
 	 * 没有登录过、登录失败、正在登录需要登录
 	 */
+	@SuppressWarnings("rawtypes")
 	public void initIntent(Class intentClass){
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
-		it.putExtra("isInfo", "back");
+		it.putExtra("isInfo", "setup");
 		startActivity(it);
 //		this.finish();
 	}
@@ -246,5 +279,26 @@ public class UserSetupActivity extends Activity implements OnClickListener {
 			this.finish();
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	/**
+	 * 取消正在自动登录的对话框
+	 */
+	public void dismissAutoDialog(){
+		if (null != dialog){
+			dialog.dismiss();
+			dialog = null;
+		}
+	}
+	
+	@Override
+	public void statusChange() {
+		// TODO Auto-generated method stub
+		if(mApp.autoLoginStatus !=1){
+			dismissAutoDialog();
+			if(mApp.autoLoginStatus == 2 ){
+				btnLoginout.setText("退出登录");
+			}
+		}
 	}
 }

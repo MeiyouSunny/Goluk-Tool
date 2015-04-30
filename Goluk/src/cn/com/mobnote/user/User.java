@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import cn.com.mobnote.util.console;
  * @author mobnote
  *
  */
+@SuppressLint("HandlerLeak")
 public class User {
 	
 	/**记录登录状态**/
@@ -39,7 +41,7 @@ public class User {
 		this.mApp = mApp;
 		mContext = mApp.getApplicationContext();
 		
-		mApp.initLogic();
+//		mApp.initLogic();
 		
 		//初始化Handler
 		mHandler = new Handler() {
@@ -47,7 +49,7 @@ public class User {
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				if (msg.what == 1) {//  1是处理5分钟超时的处理
-					mTimer.cancel();
+					timerCancel();
 					initAutoLogin();
 				}
 				super.handleMessage(msg);
@@ -67,14 +69,14 @@ public class User {
 		Log.i("setauto", "-----initAtuoLogin ---------");
 		//网络判断
 		if(!UserUtils.isNetDeviceAvailable(mContext)){
-			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
+//			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
 			StatusChange(3);//自动登录失败
 		}else{
 			//判断是否已经登录了
 			if(isFirstLogin){
-				//已经登录了
+				//是第一次登录
 				return;
-			}else{//没有登录
+			}else{//不是第一次登录
 				//{tag:”android/ios/pad/pc”}
 				String autoLogin = "{\"tag\":\"android\"}";
 				Log.i("setauto", "------自动登录-------");
@@ -83,8 +85,8 @@ public class User {
 					StatusChange(1);//自动登录中
 					Log.i("setauto", "------自动登录-------"+b+"------自动登录的状态值-----"+mApp.autoLoginStatus);
 				}else{
-					Log.i("sss", "------------");
 					StatusChange(3);//自动登录失败
+					console.toast("自动登录失败", mContext);
 				}
 			}
 		}
@@ -112,6 +114,7 @@ public class User {
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				console.log(data);
+				Log.i("lily", "----User-----"+data);
 				switch (code) {
 				case 200:
 					//自动登录成功无提示
@@ -119,6 +122,8 @@ public class User {
 					StatusChange(2);//自动登录成功
 					Log.i("setauto", "----ok---"+mApp.autoLoginStatus);
 					mApp.loginoutStatus = false;
+					mApp.isUserLoginSucess = true;
+					mApp.showContinuteLive();
 					break;
 				//自动登录的一切异常都不进行提示
 				case 500:
@@ -132,8 +137,8 @@ public class User {
 				case 402:
 					//登录密码错误
 					StatusChange(5);
-					Log.i("setauto", "-------402 --"+mApp.autoLoginStatus);
-					console.toast("密码错误，请重试", mContext);
+					Log.i("setauto", "-------402 -----"+mApp.autoLoginStatus);
+//					console.toast("密码错误，请重试", mContext);
 					break;
 				default:
 					break;
@@ -144,20 +149,21 @@ public class User {
 			}
 		}else{
 			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
-			android.util.Log.i("outtime", "-----网络链接超时超时超时"+codeOut);
+			android.util.Log.i("setauto", "-----自动登录网络链接超时-----"+codeOut);
 			switch (codeOut) {
-			case 700:
+			case 1://没有网络
+				timerTask();
+				StatusChange(4);//自动登录失败
+				break;
+			case 2://服务端错误
+				timerTask();
+				StatusChange(4);//自动登录失败
+				break;
+			case 3://网络链接超时
 				timerTask();
 				StatusChange(4);//自动登录超时
 				break;
-			case 600:
-				//网络未链接
-			case 601:
-				//http封装错误
-				StatusChange(3);//自动登录失败
-				break;
 			default:
-				StatusChange(3);//自动登录失败
 				break;
 			}
 			
@@ -166,11 +172,12 @@ public class User {
 	
 	/**
 	 * 设置网络5分钟自动重试机制的定时器
+	 * 1000x60x5=300000
 	 */
 	public void timerTask(){
-		if(mTimer == null ){
-			mTimer = new Timer();
-		}
+		Log.i("setauto", "------timerTask()-----");
+		timerCancel();
+		mTimer = new Timer();
 		mTimer.schedule(new TimerTask() {
 			
 			@Override
@@ -180,4 +187,12 @@ public class User {
 			}
 		}, 300000);
 	}
+	
+	public void timerCancel(){
+		if(mTimer !=null){
+			mTimer.cancel();
+			mTimer = null;
+		}
+	}
+	
 }

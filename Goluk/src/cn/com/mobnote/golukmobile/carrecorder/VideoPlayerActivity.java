@@ -29,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -82,6 +83,8 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	private ImageButton mPlayBtn=null;
 	private ImageButton mPlayBigBtn=null;
 	private SeekBar mSeekBar=null;
+	private RelativeLayout mTitleLayout=null;
+	private RelativeLayout mBottomLayout=null;
 	
 	
 	
@@ -114,7 +117,6 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		initView();
 		setListener();
 		
-		//http://192.168.43.234:5080/rec/wonderful/WND1_100101153739_0012.mp4
 	}
 	
 	/**
@@ -123,6 +125,8 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	 * @date 2015年3月31日
 	 */
 	private void initView(){
+		mTitleLayout = (RelativeLayout)findViewById(R.id.title_layout);
+		mBottomLayout = (RelativeLayout)findViewById(R.id.mBottomLayout);
 		mSurfaceView = (SurfaceView)findViewById(R.id.mSurfaceView);
 		mSurfaceHolder = mSurfaceView.getHolder();
 		mSurfaceHolder.addCallback(this);
@@ -152,6 +156,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	 * @date 2015年4月1日
 	 */
 	private void setListener(){
+		mSurfaceView.setOnClickListener(this);
 		mPlayBtn.setOnClickListener(this);
 		mPlayBigBtn.setOnClickListener(this);
 		mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -319,11 +324,30 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 				}
 				
 				break;
+			case R.id.mSurfaceView:
+				if(View.VISIBLE == mTitleLayout.getVisibility()){
+					mTitleLayout.setVisibility(View.GONE);
+					mBottomLayout.setVisibility(View.GONE);
+				}else{
+					mTitleLayout.setVisibility(View.VISIBLE);
+					mBottomLayout.setVisibility(View.VISIBLE);
+					mTitleLayout.removeCallbacks(mRunnable);
+					mTitleLayout.postDelayed(mRunnable, 3000);
+				}
+				break;
 	
 			default:
 				break;
 		}
 	}
+	
+	Runnable mRunnable = new Runnable() {
+		@Override
+		public void run() {
+			mTitleLayout.setVisibility(View.GONE);
+			mBottomLayout.setVisibility(View.GONE);
+		}
+	};
 	
 	@Override
 	protected void onDestroy() {
@@ -409,7 +433,8 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		
 		if(null != mMediaPlayer){
 			mMediaPlayer.seekTo(0);
-			mMediaPlayer.pause();
+//			mMediaPlayer.pause();
+			mMediaPlayer.start();
 //			mMediaPlayer.release();
 //			mMediaPlayer = null;
 		}

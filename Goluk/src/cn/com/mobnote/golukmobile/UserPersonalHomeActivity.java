@@ -4,9 +4,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.user.UserPersonalHomeAdapter;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,10 +30,11 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 	private TextView mTextTitle;
 	//个人信息
 	private ImageView mImageHead,mImageSex,mImageArrow;
-	private TextView mTextName,mTextShare;
+	private TextView mTextName;
+//	private TextView mTextShare;
 	//适配器
-	private UserPersonalHomeAdapter adapter;
-	private ListView lv;
+//	private UserPersonalHomeAdapter adapter;
+//	private ListView lv;
 	private RelativeLayout mLayoutInto;
 	
 	//application
@@ -83,7 +80,7 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 		mImageSex = (ImageView) findViewById(R.id.user_personal_homepage_sex);
 		mImageArrow = (ImageView) findViewById(R.id.user_personal_homepage_arrow);
 		mTextName = (TextView) findViewById(R.id.user_personal_homepage_name);
-		mTextShare = (TextView) findViewById(R.id.user_personal_homepage_share);
+//		mTextShare = (TextView) findViewById(R.id.user_personal_homepage_share);
 //		lv = (ListView) findViewById(R.id.user_personal_homepage_listview);
 		mLayoutInto = (RelativeLayout) findViewById(R.id.user_personal_homepage_detail_layout);
 		/**
@@ -124,9 +121,9 @@ public class UserPersonalHomeActivity extends Activity implements OnClickListene
 			head = json.getString("head");
 			String name = json.getString("nickname");
 			String sex = json.getString("sex");
+			Log.i("lily", "-----UserPersonalHomeActivity-----"+json.toString());
 	
 			mTextName.setText(name);
-			Log.i("mmm", head);
 			UserUtils.focusHead(head, mImageHead);
 			if(sex.equals("1")){
 				mImageSex.setImageResource(R.drawable.more_man);

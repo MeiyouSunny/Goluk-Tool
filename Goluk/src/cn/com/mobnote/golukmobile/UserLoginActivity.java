@@ -1,24 +1,25 @@
 package cn.com.mobnote.golukmobile;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -35,7 +36,7 @@ import cn.com.mobnote.util.console;
  * 
  * @author mobnote
  */
-public class UserLoginActivity extends Activity implements OnClickListener,UserLoginInterface {
+public class UserLoginActivity extends Activity implements OnClickListener,UserLoginInterface ,OnTouchListener{
 	//判断是否能点击提交按钮
 	private boolean isOnClick=false;
 	// 登陆title
@@ -47,7 +48,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	// 快速注册
 	private TextView mTextViewRegist, mTextViewForgetPwd;
 	// 第三方登陆
-	private ImageView mImageViewWeichat, mImageViewSina, mImageViewQQ;
+//	private ImageView mImageViewWeichat, mImageViewSina, mImageViewQQ;
 	// loading组件
 	private RelativeLayout mLoading;
 	//application
@@ -58,10 +59,9 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	private String pwd = null;
 	//将用户的手机号和密码保存到本地
 	private SharedPreferences mSharedPreferences = null;
-	private Editor mEditor = null;
 	
 	//判断登录
-	private String justLogin = null;
+	private String justLogin = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
 		
-//		SysApplication.getInstance().addActivity(this);
+		SysApplication.getInstance().addActivity(this);
 	}
 	@Override
 	protected void onResume() {
@@ -81,11 +81,14 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserLogin");
 		
+		mApplication.mLoginManage.initData();
+		
 		initView();
 		// 设置title
 		mTextViewTitle.setText("登录");
+		
 	}
-	private boolean mDelAllNum = false;
+//	private boolean mDelAllNum = false;
 	public void initView() {
 		// 登录title
 		mBackButton = (Button) findViewById(R.id.back_btn);
@@ -98,9 +101,9 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mTextViewRegist = (TextView) findViewById(R.id.user_login_phoneRegist);
 		mTextViewForgetPwd = (TextView) findViewById(R.id.user_login_forgetpwd);
 		// 第三方登录
-		mImageViewWeichat = (ImageView) findViewById(R.id.user_login_weichat);
-		mImageViewSina = (ImageView) findViewById(R.id.user_login_sina);
-		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
+//		mImageViewWeichat = (ImageView) findViewById(R.id.user_login_weichat);
+//		mImageViewSina = (ImageView) findViewById(R.id.user_login_sina);
+//		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
 		// loading组件
 		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
 //		mLoading = (RelativeLayout) findViewById(R.id.index_loading_layout);
@@ -108,12 +111,13 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		Intent itentGetRegist = getIntent();
 		if(null !=  itentGetRegist.getStringExtra("intentRegist")){
 			String phoneNumber = itentGetRegist.getStringExtra("intentRegist").toString();
+			Log.i("lily", "----------intentRegist--------phoneNumber =   "+phoneNumber);
 			mEditTextPhoneNumber.setText(phoneNumber);
 		}
 		
 		//如果是注销成功，则接收从UserStartActivity传来的手机号填入手机号框
 		Intent intentStart = getIntent();
-		if(null != intentStart.getStringExtra("startActivity")){
+		/*if(null != intentStart.getStringExtra("startActivity")){
 			String phone = intentStart.getStringExtra("startActivity").toString();
 			mEditTextPhoneNumber.setText(phone);
 		}
@@ -122,10 +126,20 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			String phoneAuto = intentStart.getStringExtra("autoPhone").toString();
 			Log.i("autostatus", "----自动登录失败手机号手机号手机号----"+phoneAuto);
 			mEditTextPhoneNumber.setText(phoneAuto);
-		}
+		}*/
 		//登录页面返回
 		if(null != intentStart.getStringExtra("isInfo")){
 			justLogin = intentStart.getStringExtra("isInfo").toString();
+		}
+		/**
+		 * 填写手机号
+		 */
+		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+		if(null != mSharedPreferences.getString("setupPhone", "") || !"".equals(mSharedPreferences.getString("setupPhone", ""))){
+			String phone = mSharedPreferences.getString("setupPhone", "");
+			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
+			mEditTextPhoneNumber.setText(phone);
+			mEditTextPhoneNumber.setSelection(phone.length());
 		}
 		
 		/**
@@ -208,7 +222,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				String number = mEditTextPhoneNumber.getText().toString();
+//				String number = mEditTextPhoneNumber.getText().toString();
 				String psw=mEditTextPwd.getText().toString();
 				if(isOnClick){
 					if(!psw.equals("")){
@@ -232,13 +246,14 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		});
 		//登录按钮
 		mBtnLogin.setOnClickListener(this);
+		mBtnLogin.setOnTouchListener(this);
 		// 快速注册
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
-		// 第三方登录
-		mImageViewWeichat.setOnClickListener(this);
-		mImageViewSina.setOnClickListener(this);
-		mImageViewQQ.setOnClickListener(this);
+//		// 第三方登录
+//		mImageViewWeichat.setOnClickListener(this);
+//		mImageViewSina.setOnClickListener(this);
+//		mImageViewQQ.setOnClickListener(this);
 		
 	}
 
@@ -257,25 +272,33 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		// 手机快速注册
 		case R.id.user_login_phoneRegist:
 			Intent itRegist = new Intent(UserLoginActivity.this,UserRegistActivity.class);
+			if(justLogin.equals("main")){//从起始页注册
+				itRegist.putExtra("fromRegist", "fromStart");
+			}else if(justLogin.equals("indexmore")){//从更多页个人中心注册
+				itRegist.putExtra("fromRegist", "fromIndexMore");
+			}else if(justLogin.equals("setup")){//从设置页注册
+				itRegist.putExtra("fromRegist", "fromSetup");
+			}
 			startActivity(itRegist);
+			Log.i("lily", "--------UserLoginActivity-判断注册后还是否有登录页-------"+mApplication.registStatus);
 			break;
 		// 忘记密码
 		case R.id.user_login_forgetpwd:
 			Intent itForget = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
 			startActivity(itForget);
 			break;
-		// 第三方——微信
-		case R.id.user_login_weichat:
-
-			break;
-		// 第三方——新浪
-		case R.id.user_login_sina:
-			
-			break;
-		// 第三方——QQ
-		case R.id.user_login_qq:
-			
-			break;
+//		// 第三方——微信
+//		case R.id.user_login_weichat:
+//
+//			break;
+//		// 第三方——新浪
+//		case R.id.user_login_sina:
+//			
+//			break;
+//		// 第三方——QQ
+//		case R.id.user_login_qq:
+//			
+//			break;
 		}
 	}
 	@Override
@@ -310,8 +333,11 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mEditTextPwd.setEnabled(false);
 							mTextViewRegist.setEnabled(false);
 							mTextViewForgetPwd.setEnabled(false);
+							mBtnLogin.setEnabled(false);
+							mBackButton.setEnabled(false);
 						}else{
-							console.toast("登录失败======UserLoginActivity----", this);
+							mLoading.setVisibility(View.GONE);
+//							console.toast("登录失败", this);
 							mApplication.loginStatus = 2;
 						}
 					}else{
@@ -337,6 +363,12 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 1:
 			mApplication.isUserLoginSucess = true;
 			mLoading.setVisibility(View.GONE);
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			if(justLogin.equals("main")){
 				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
 				startActivity(login);
@@ -350,6 +382,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			break;
 		case 3:
 			mApplication.isUserLoginSucess = false;
@@ -358,6 +392,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 			if(UserUtils.isMobileNO(phone)){
 				new AlertDialog.Builder(this)
 				.setTitle("Goluk温馨提示：")
@@ -384,9 +420,40 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
+			break;
+		case 5:
+			/*Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
+			it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
+			startActivity(it);*/
 			break;
 		default:
 			break;
 		}
+	}
+	@SuppressLint("ClickableViewAccessibility")
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		// TODO Auto-generated method stub
+		int action = event.getAction();
+		switch (view.getId()) {
+		case R.id.user_login_btn:
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				mBtnLogin.setBackgroundResource(R.drawable.icon_login_click);
+				break;
+			case MotionEvent.ACTION_UP:
+				mBtnLogin.setBackgroundResource(R.drawable.icon_login);
+				break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+		return false;
 	}
 }

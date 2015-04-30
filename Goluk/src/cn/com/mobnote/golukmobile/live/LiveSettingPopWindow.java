@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -38,6 +39,8 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	private SeekBar mSeekBar = null;
 	/** 视频直播设置时长 */
 	private TextView mTimeTv = null;
+	/** 预计本次流量 */
+	private TextView mFlowTv = null;
 
 	private RelativeLayout mEnter = null;
 	/** 回调对象 */
@@ -53,6 +56,10 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	private boolean mIsCanSound = true;
 	/** 当前选择视频类型 */
 	private int mVideoType = 0;
+
+	private boolean isShow = false;
+	/** 是否用户主动点击取消 */
+	private boolean isUserDimiss = false;
 
 	public void setCallBackNotify(IPopwindowFn fn) {
 		this.mListener = fn;
@@ -81,6 +88,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		mTimeTv = (TextView) mRootLayout.findViewById(R.id.livesetting_time);
 		mDescEdit = (EditText) mRootLayout.findViewById(R.id.description);
 		mSeekBar = (SeekBar) mRootLayout.findViewById(R.id.progress);
+		mFlowTv = (TextView) mRootLayout.findViewById(R.id.live_flowl_txt);
 
 		mSeekBar.setProgress(DEFAULT_SECOND);
 		mTimeTv.setText(GolukUtils.secondToString(DEFAULT_SECOND));
@@ -96,6 +104,8 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 			mSoundBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 		}
 
+		mFlowTv.setText(getCurrentFlow(mCurrentLiveSecond));
+
 		// 设置监听
 		mEnter.setOnClickListener(this);
 		mSoundBtn.setOnClickListener(this);
@@ -110,11 +120,33 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 			mPopWindow.setOutsideTouchable(true);
 			mPopWindow.setBackgroundDrawable(new BitmapDrawable());
 			mPopWindow.showAtLocation(mParentLayout, Gravity.RIGHT | Gravity.BOTTOM, 0, 0);
+			mPopWindow.setOnDismissListener(new OnDismissListener() {
+
+				@Override
+				public void onDismiss() {
+					LogUtil.e(null, "jyf----20150406----LiveActivity----mPopWindow-----dimiss:");
+
+					isShow = false;
+					if (!isUserDimiss) {
+						if (null != mContext && mContext instanceof LiveActivity) {
+							((LiveActivity) mContext).exit();
+						}
+					}
+
+				}
+			});
+			isShow = true;
 		}
 	}
 
+	public boolean isShowing() {
+		return this.isShow;
+	}
+
 	public void close() {
+		isUserDimiss = true;
 		if (null != mPopWindow) {
+			isShow = false;
 			mPopWindow.dismiss();
 			mPopWindow = null;
 		}
@@ -131,7 +163,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		}
 		bean.isCanTalk = mIsCanTalk;
 		bean.isCanVoice = mIsCanSound;
-		bean.netCountStr = "15.20MB";
+		bean.netCountStr = getCurrentFlow(mCurrentLiveSecond);
 		return bean;
 	}
 
@@ -172,11 +204,19 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 
 	}
 
+	// 计算本次直播所需要的流量
+	private String getCurrentFlow(int progress) {
+		int size = (int) (mCurrentLiveSecond * 0.1);
+		return "" + size + "MB";
+	}
+
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		LogUtil.e(null, "LiveSetting-------onProgressChanged : " + progress + "	fromUser:" + fromUser);
 		mCurrentLiveSecond = progress;
 		mTimeTv.setText(GolukUtils.secondToString(progress));
+
+		mFlowTv.setText(getCurrentFlow(progress));
 	}
 
 	@Override

@@ -382,7 +382,7 @@ public class LocalVideoListManage {
 		try {
 			fis = new FileInputStream(f);
 			int fileLen = fis.available();
-			size = String.format("%.1f", fileLen / 1024.f / 1024.f) + "M";
+			size = String.format("%.1f", fileLen / 1024.f / 1024.f) + "MB";
 		}
 		catch(Exception e){
 			e.printStackTrace();

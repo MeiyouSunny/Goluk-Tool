@@ -2,12 +2,12 @@ package cn.com.mobnote.user;
 
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.console;
@@ -23,11 +23,21 @@ public class UserLoginManage {
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
 	private UserLoginInterface mLoginInterface = null;
+	
+	/**用户信息**/
+	private String head = null;
+	private String id = null;//key
+	private String name = null;//nickname
+	private String sex = null;
+	private String sign = null;//desc
+	private String phone = null;
+	/**输入密码错误限制*/
+	public int countErrorPassword = 1;
 
 	public UserLoginManage(GolukApplication mApp) {
 		super();
 		this.mApp = mApp;
-		mApp.initLogic();
+//		mApp.initLogic();
 	}
 
 	public void setUserLoginInterface(UserLoginInterface mInterface){
@@ -51,11 +61,26 @@ public class UserLoginManage {
 		boolean b = false;
 		// 网络判断
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			console.toast("当前网络状态不佳，请检查网络后重试", mApp.getContext());
+			console.toast("当前网络不可用，请检查网络后重试", mApp.getContext());
 			loginStatusChange(2);// 登录失败
 		} else {
 			String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+ pwd + "\",\"tag\":\"android\"}";
-			b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Login, condi);
+			if(countErrorPassword >5){
+				new AlertDialog.Builder(mApp.getContext())
+				.setMessage("登录密码出错已经达到 5 次上限,账户被锁定 2 小时")
+				/*.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
+						loginStatusChange(5);
+					}
+				})*/
+				.setPositiveButton("确定", null)
+				.create().show();
+			}else{				
+				b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Login, condi);
+			}
 		}
 		return b;
 	}
@@ -99,6 +124,7 @@ public class UserLoginManage {
 				case 402:
 					console.toast("密码错误,请重试", mApp.getContext());
 					loginStatusChange(2);
+					countErrorPassword++;
 					break;
 				default:
 					break;
@@ -125,6 +151,34 @@ public class UserLoginManage {
 			default:
 				break;
 			}
+		}
+	}
+	
+	/**
+	 * 同步获取用户信息
+	 */
+	public void initData(){
+		Log.i("lily", "------initData()-----UserLoginManage-----");
+		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		try{
+			JSONObject json = new JSONObject(info);
+			
+			Log.i("info", "====json()===="+json);
+			head = json.getString("head");
+			name = json.getString("nickname");
+			id = json.getString("key");
+			sex = json.getString("sex");
+			sign = json.getString("desc");
+			phone = json.getString("phone");
+			//退出登录后，将信息存储
+			mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
+			mEditor = mSharedPreferences.edit();
+			Log.i("lily", "------UserLoginManage----"+phone);
+			mEditor.putString("setupPhone", phone);
+			mEditor.commit();
+			
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	

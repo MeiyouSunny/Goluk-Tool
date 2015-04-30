@@ -44,6 +44,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		mDataList.addAll(data);
 		mGroupNameList.addAll(groupname);
 		count = mDataList.size();
+		this.notifyDataSetChanged();
 	}
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -101,7 +102,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		}else{
 			holder.mTMLayout1.setVisibility(View.GONE);
 		}
-		if(1080 == mVideoInfo1.videoHP){
+		if("1080P".equals(mVideoInfo1.videoHP)){
 			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
 		}else{
 			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_720);
@@ -125,7 +126,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 			}
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
-			if(1080 == mVideoInfo2.videoHP){
+			if("1080P".equals(mVideoInfo2.videoHP)){
 				holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_1080);
 			}else{
 				holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_720);

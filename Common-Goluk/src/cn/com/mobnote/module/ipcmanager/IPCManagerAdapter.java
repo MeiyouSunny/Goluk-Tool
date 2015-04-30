@@ -22,7 +22,7 @@ public class IPCManagerAdapter {
 
 	public static void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 //		LogUtil.e("jyf", "jyf-----IPCManage_CallBack--------------IPCManagerAdapter-11---event:" + event + "	param1:"
-//				+ param1 + " msg:");
+//				+ param1 + " msg:"+"==param2="+param2);
 		if (null == fn) {
 			return;
 		}

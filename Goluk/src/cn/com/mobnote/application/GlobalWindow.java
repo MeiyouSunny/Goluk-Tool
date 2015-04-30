@@ -118,9 +118,9 @@ public class GlobalWindow {
 		mWMParams.y = 0;
 		mWMParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 		// /获得根视图
-		View v = ((Activity) mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+//		View v = ((Activity) mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);
 		// /状态栏标题栏的总高度,所以标题栏的高度为top2-top
-		int top2 = v.getTop();
+//		int top2 = v.getTop();
 		mWMParams.height = 85;
 
 		LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -143,6 +143,27 @@ public class GlobalWindow {
 		rotateAnimation.setInterpolator(lin);
 		mStateImg.startAnimation(rotateAnimation);
 
+	}
+	
+	public boolean isShow(){
+		return isShowGlobalwindow;
+	}
+	
+	/**
+	 * 更新文本信息
+	 * @param promptText 文本信息
+	 * @author xuhw
+	 * @date 2015年4月23日
+	 */
+	public void updateText(String promptText) {
+		if (!isShowGlobalwindow) {
+			// 窗口未显示
+			return;
+		}
+		
+		if (null != mPrompTv) {
+			mPrompTv.setText(promptText);
+		}
 	}
 
 	/**

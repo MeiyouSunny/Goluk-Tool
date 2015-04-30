@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -203,15 +205,32 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn);//设置默认点赞背景
 		}
 		
+		if("1".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_one);
+		}else if("2".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_two);
+		}else if("3".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_three);
+		}else if("4".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_one);
+		}else if("5".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_two);
+		}else if("6".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_three);
+		}else if("7".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
+		}else {
+			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
+		}
+		
 		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
 		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
-		holder.sharetime.setText(this
-				.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
-
+		holder.sharetime.setText(this.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
+		
 		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(
 				mVideoSquareListData, holder, mDWMediaPlayerList,
 				mVideoSquareInfo,mContext,form));
@@ -327,16 +346,21 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	public String formatTime(String date) {
 		String time="";
 		if(null != date){
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-			ParsePosition pos = new ParsePosition(0);
-			Date strtodate = formatter.parse(date, pos);
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 			
-			if(null != strtodate){
-				formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
-				if(null != formatter){
-					time =  formatter.format(strtodate);
+			try {
+				Date strtodate = formatter.parse(date);
+				if(null != strtodate){
+					formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
+					if(null != formatter){
+						time =  formatter.format(strtodate);
+					}
 				}
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			
 		}
 		
 		return time;

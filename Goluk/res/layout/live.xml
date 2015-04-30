@@ -259,7 +259,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:text="视频描述视频描述视频描述视频描述视频描述视频描述"
+            android:text="暫无"
             android:textColor="#8e8e8e"
             android:textSize="12sp" />
 
@@ -308,6 +308,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/live_icon_share"
                 android:contentDescription="@string/imgdes" />
         </LinearLayout>
@@ -478,7 +479,6 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:singleLine="true"
             android:text="00:09"
             android:textSize="@dimen/live_text_time1_size" />

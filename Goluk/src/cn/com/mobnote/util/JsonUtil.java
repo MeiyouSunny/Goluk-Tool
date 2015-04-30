@@ -246,15 +246,20 @@ public class JsonUtil {
 			String netCountStr = null != beanData ? "" + beanData.netCountStr : "";
 			String vtypStr = null != beanData ? "" + beanData.vtype : "";
 
+			String talk = beanData.isCanTalk ? "1" : "0";
+			String voice = beanData.isCanVoice ? "1" : "0";
+
 			JSONObject obj = new JSONObject();
 			obj.put("active", "1");
-			obj.put("talk", "1");
+			obj.put("talk", talk);
 			obj.put("tag", "android");
 			obj.put("vid", vid);
 			obj.put("desc", desc);
 			obj.put("restime", duration);
 			obj.put("flux", netCountStr);
 			obj.put("vtype", "" + vtypStr);
+			obj.put("voice", voice);
+
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -351,6 +356,8 @@ public class JsonUtil {
 			userInfo.groupId = getJsonStringValue(rootObj, "gid", "");
 			userInfo.persons = String.valueOf(getJsonIntValue(rootObj, "persons", 0));
 			userInfo.zanCount = getJsonStringValue(rootObj, "zan", "0");
+			userInfo.liveDuration = Integer.valueOf(getJsonStringValue(rootObj, "restime", "60"));
+			userInfo.desc = getJsonStringValue(rootObj, "desc", "");
 
 			return userInfo;
 		} catch (Exception e) {
@@ -409,39 +416,28 @@ public class JsonUtil {
 
 	public static LiveDataInfo parseLiveDataJson(String data) {
 		try {
-			int code = 0;
-			String groupId = null;
-			String playUrl = null; // 直播地址
-			String grouptype = null;
-			int membercount = 0;
-			String title = null;
-			String groupnumber = null;
-			int tag = 0;
-			String joniGroup = null;
-			int active = 1;
-
 			JSONObject obj = new JSONObject(data);
-			code = Integer.valueOf(obj.getString("code"));
-			active = Integer.valueOf(obj.getString("active"));
-			groupId = obj.getString("groupid");
-			if (!obj.isNull("vurl")) {
-				playUrl = obj.getString("vurl");
-			}
-
-			grouptype = obj.getString("grouptype");
-			membercount = obj.getInt("membercount");
-			title = obj.getString("title");
-			groupnumber = obj.getString("groupnumber");
 
 			LiveDataInfo info = new LiveDataInfo();
-			info.code = code;
-			info.active = active;
-			info.groupId = groupId;
-			info.groupnumber = groupnumber;
-			info.groupType = grouptype;
-			info.playUrl = playUrl;
-			info.membercount = membercount;
-			info.title = title;
+			info.code = Integer.valueOf(getJsonStringValue(obj, "code", "0"));
+			info.active = Integer.valueOf(getJsonStringValue(obj, "active", "1"));
+			info.groupId = getJsonStringValue(obj, "groupid", "");
+			info.groupnumber = getJsonStringValue(obj, "groupnumber", "");
+			info.groupType = getJsonStringValue(obj, "grouptype", "");
+			info.playUrl = getJsonStringValue(obj, "vurl", "");
+
+			info.membercount = getJsonIntValue(obj, "membercount", 0);
+			info.title = getJsonStringValue(obj, "title", "");
+
+			info.vid = getJsonStringValue(obj, "vid", "");
+			String restime = getJsonStringValue(obj, "restime", "0");
+			if (null == restime || "".equals(restime)) {
+				restime = "0";
+			}
+			info.restTime = Integer.valueOf(restime);
+			info.desc = getJsonStringValue(obj, "desc", "");
+			info.voice = getJsonStringValue(obj, "voice", "1");
+
 			return info;
 
 		} catch (Exception e) {
@@ -575,7 +571,7 @@ public class JsonUtil {
 	}
 
 	// 获取图片上传的json串
-	public static  String getUploadSnapJson(String vid, String imgPath) {
+	public static String getUploadSnapJson(String vid, String imgPath) {
 		try {
 			JSONObject rootObj = new JSONObject();
 			rootObj.put("vid", vid);

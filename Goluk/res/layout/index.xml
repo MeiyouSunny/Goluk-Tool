@@ -118,14 +118,6 @@
         android:layout_marginRight="14dp"
         android:orientation="vertical" >
 
-        <!-- 直播列表按钮 -->
-
-        <Button
-            android:id="@+id/map_marke_list_btn"
-            android:layout_width="44dp"
-            android:layout_height="34dp"
-            android:background="@drawable/icon_layers_btn" />
-
         <!-- 定位按钮 -->
 
         <Button

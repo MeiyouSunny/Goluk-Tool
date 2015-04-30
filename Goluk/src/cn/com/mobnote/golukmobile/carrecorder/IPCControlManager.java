@@ -10,7 +10,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
@@ -69,7 +68,6 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean setIPCWifiState(boolean isConnect,String ip){
 		int state = isConnect ? 1 : 0;
-		//String ip = "192.168.43.234";
 		String json = JsonUtil.getWifiChangeJson(state, ip);
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
 		return isSucess;
@@ -146,10 +144,9 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean queryFileListInfo(int filetype, int limitCount, int timestart) {
-		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, 2147483647);
-		GFileUtils.writeIPCLog("===========获取文件列表===1111=====================queryParam=" + queryParam);
-
+	public boolean queryFileListInfo(int filetype, int limitCount, int timeend) {
+		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, 0, timeend);
+		LogUtil.e("xuhw", "YYYYYY===queryParam="+queryParam);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
 				queryParam);
 	}
@@ -307,7 +304,6 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean setVideoEncodeCfg(VideoConfigState mVideoConfigState){
 		String json = JsonUtil.getVideoConfig(mVideoConfigState);
-		LogUtils.d("YYY===getVideoConfig===json="+json);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetVideoEncodeCfg, json);
 	}
 	
@@ -396,7 +392,6 @@ public class IPCControlManager implements IPCManagerFn{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		//"{\"policy\":1}");
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetGSensorControlCfg, json.toString());
 	}
 	
@@ -521,7 +516,7 @@ public class IPCControlManager implements IPCManagerFn{
 	
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-//		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----222222222---------IPCManagerAdapter-22---event:" + event + " msg:" + msg+"==data:"+(String)param2);
+//		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----222222222---------IPCManagerAdapter-22---event:" + event + " msg:" + msg+"==param1="+param1+"==data:"+(String)param2);
 
 		Iterator<String> iter = mIpcManagerListener.keySet().iterator();
 		while (iter.hasNext()) {
