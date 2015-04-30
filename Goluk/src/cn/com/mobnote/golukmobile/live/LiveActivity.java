@@ -47,7 +47,6 @@ import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
@@ -346,7 +345,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				String userInfo = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
 						IPageNotifyFn.PageType_GetUserInfo_Get, "");
 				if (null != userInfo) {
-
 					myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
 					LogUtil.e(null, "jyf----20150406----LiveActivity----getMyInfo :" + userInfo);
 				}
@@ -1582,46 +1580,46 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private void refre8second(int mShootTime) {
 		switch (mShootTime) {
 		case 1:
-			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_record);
 			break;
 		case 2:
 
 			break;
 		case 3:
-			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_5s_record);
 			break;
 		case 4:
 
 			break;
 		case 5:
-			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_4s_record);
 			break;
 		case 6:
 
 			break;
 		case 7:
-			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_3s_record);
 			break;
 		case 8:
 
 			break;
 		case 9:
-			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_2s_record);
 			break;
 		case 10:
 
 			break;
 		case 11:
-			SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
+			//SoundUtils.getInstance().play(SoundUtils.RECORD_SEC);
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_1s_record);
 			break;
 		case 13:
-			SoundUtils.getInstance().play(SoundUtils.RECORD_CAMERA);
+			//SoundUtils.getInstance().play(SoundUtils.RECORD_CAMERA);
 			break;
 
 		default:
