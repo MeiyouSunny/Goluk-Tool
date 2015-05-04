@@ -7,6 +7,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.tiros.utils.LogUtil;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 
@@ -102,13 +103,19 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		}else{
 			holder.mTMLayout1.setVisibility(View.GONE);
 		}
-		if(mVideoInfo1.videoHP.contains("1080")){
-			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
-		}else if(mVideoInfo1.videoHP.contains("720")){
-			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_720);
-		}else{
+		
+		if(mVideoInfo1.videoPath.contains("WND3")){
 			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_480);
+		}else{
+			if(mVideoInfo1.videoHP.contains("1080")){
+				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
+			}else if(mVideoInfo1.videoHP.contains("720")){
+				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_720);
+			}else{
+				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_480);
+			}
 		}
+		
 		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate);
 		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
@@ -128,12 +135,17 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 			}
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
-			if(mVideoInfo2.videoHP.contains("1080")){
-				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
-			}else if(mVideoInfo2.videoHP.contains("720")){
-				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_720);
+			
+			if(mVideoInfo2.videoPath.contains("WND3")){
+				holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_480);
 			}else{
-				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_480);
+				if(mVideoInfo2.videoHP.contains("1080")){
+					holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_1080);
+				}else if(mVideoInfo2.videoHP.contains("720")){
+					holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_720);
+				}else{
+					holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_480);
+				}
 			}
 			
 			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
@@ -147,8 +159,6 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 				holder.image2.setBackgroundDrawable(bd);
 			}
 		}
-		
-
 
 		return convertView;
 	}
