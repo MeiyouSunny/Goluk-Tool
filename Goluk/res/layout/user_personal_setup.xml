@@ -64,7 +64,6 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
 			android:layout_marginRight="19dp"
-			android:text="@string/cache_size_text"
 			android:layout_centerVertical="true"
 			android:textSize="18sp"
 			android:contentDescription="@string/imgdes"/>
@@ -134,7 +133,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="10dp"
-	        android:text="\@2015"
+	        android:text="\@2015 Mobnote,Inc."
 	        android:textSize="14sp"
 	        android:textColor="@color/user_home_nologin"
 	        />

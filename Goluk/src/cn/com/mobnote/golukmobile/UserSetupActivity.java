@@ -2,10 +2,10 @@ package cn.com.mobnote.golukmobile;
 
 import java.io.File;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -17,6 +17,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,12 +26,18 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
+import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
+import cn.com.tiros.utils.LogUtil;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -52,7 +59,7 @@ import cn.com.tiros.api.Const;
  * 
  */
 
-public class UserSetupActivity extends Activity implements OnClickListener,UserInterface {
+public class UserSetupActivity extends BaseActivity implements OnClickListener,UserInterface,IPCManagerFn {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -77,8 +84,23 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 	private SharedPreferences mPreferences = null;
 	private boolean isFirstLogin = false;
 	private Editor mEditor = null;
+	/**正在登录对话框*/
+	private Builder mBuilder = null;
+	private AlertDialog dialog = null;
 	/**清楚缓存**/
 	private RelativeLayout mClearCache = null;
+	private Handler mHandler = null;
+	/**固件升级*/
+	private RelativeLayout mUpdateItem = null;
+	/**传输文件*/
+	private Builder mSendMessageBuilder = null;
+	private AlertDialog mSendDialog = null;
+	/**正在升级中*/
+	private Builder mUpdateBuilder = null;
+	private AlertDialog mUpdateDialog = null;
+	/**升级成功**/
+	private Builder mUpdateSuccess = null;
+	private AlertDialog mUpdateDialogSuccess = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +110,7 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		
 	}
 	
+	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onResume(){
 		super.onResume();
@@ -100,6 +123,21 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		
 		//页面初始化
 		init();
+		
+		mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				super.handleMessage(msg);
+				if(msg.what == 0){
+					Log.i("lily", "已清除过缓存");
+				}
+			}
+		};
+		
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carupgrade", this);
+		}
 	}
 	
 	/**
@@ -141,14 +179,14 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 			public void handleMessage(Message msg) {
 			}
 		};
-		
+		/**清除缓存*/
 		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
 		mClearCache.setOnClickListener(this);
+		/**固件升级*/
+		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
+		mUpdateItem.setOnClickListener(this);
 	}
-	
-	private Builder mBuilder = null;
-	private AlertDialog dialog = null;
-	
+		
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -202,17 +240,40 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 				//清除缓存
 			case R.id.remove_cache_item:
 				Log.i("lily", "----清楚缓存-----"+Const.getAppContext().getCacheDir().getPath());
-				Log.i("lily", "=====清除缓存======="+Const.getAppContext().getCacheDir());
 				new AlertDialog.Builder(mContext)
-				.setMessage("清除？")
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				.setMessage("确定清除缓存？")
+				.setNegativeButton("取消", null)
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						// TODO Auto-generated method stub
-						deleteFilesByDirectory(Const.getAppContext().getCacheDir());
+						DeleteFile(Const.getAppContext().getCacheDir());
 					}
 				}).create().show();
+				break;
+				//固件升级
+			case R.id.update_item:
+				/**
+				 * 固件升级
+				 */
+				new AlertDialog.Builder(mContext)
+				.setMessage("是否给您的摄像头进行固件升级？")
+				.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
+						if(GolukApplication.getInstance().getIpcIsLogin()){
+							//ipcUpgrade()
+							boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade();
+							LogUtil.e("lily","YYYYYY=======ipcUpgrade()============u="+u);
+						}
+					}
+				})
+				.setPositiveButton("取消", null)
+				.create().show();
+				
 				break;
 		}
 	}
@@ -326,15 +387,144 @@ public class UserSetupActivity extends Activity implements OnClickListener,UserI
 		}
 	}
 	
-	/**删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理
-	 *  @param directory 
-	 *
+	/**
+     * 递归删除文件和文件夹
+     * 
+     * @param file
+     * 
+     */ 
+    public void DeleteFile(File file) { 
+        if (file.exists() == false) { 
+            mHandler.sendEmptyMessage(0); 
+            return; 
+        } else { 
+            if (file.isFile()) { 
+                file.delete(); 
+                return; 
+            } 
+            if (file.isDirectory()) { 
+                File[] childFile = file.listFiles(); 
+                if (childFile == null || childFile.length == 0) { 
+                    file.delete(); 
+                    return; 
+                } 
+                for (File f : childFile) { 
+                    DeleteFile(f); 
+                } 
+                file.delete(); 
+            } 
+        } 
+    }
+
+	
+    /**
+	 * 固件升级
 	 */
-	private static void deleteFilesByDirectory(File directory) {
-		if (directory != null && directory.exists() && directory.isDirectory()) {
-			for (File item : directory.listFiles()) {
-				item.delete();
+    @Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		// TODO Auto-generated method stub
+    	LogUtil.e("lily", "YYYYYY====IPC_VDCP_Msg_IPCUpgrade====msg="+msg+"===param1="+param1+"==param2="+param2+"--------event-----"+event);
+		if(event == ENetTransEvent_Mobnote_ConnectState){
+			if(IPC_VDCP_Msg_IPCUpgrade == msg){
+				LogUtil.e("lily", "---------连接ipc-------");
+				if(param1 == RESULE_SUCESS){
+					String str = (String)param2;
+					if(TextUtils.isEmpty(str)){
+						return ;
+					}
+					
+					try{
+						JSONObject json = new JSONObject(str);
+						Log.i("lily", "-------设置页固件升级返回-----"+json);
+						String stage = json.getString("stage");
+						String percent = json.getString("percent");
+						Log.i("lily", "---------stage-----"+stage+"-------percent----"+percent);
+						if(stage.equals("1")){
+							if(mSendMessageBuilder==null){
+								mSendMessageBuilder = new AlertDialog.Builder(mContext);
+								mSendDialog = mSendMessageBuilder.setMessage("正在传输文件，请稍候……"+percent+"%")
+										.setCancelable(false)
+										.setOnKeyListener(new OnKeyListener() {
+											@Override
+											public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+												// TODO Auto-generated method stub
+												if(keyCode == KeyEvent.KEYCODE_BACK){
+													return true;
+												}
+												return false;
+											}
+										}).create();
+										 mSendDialog.show();
+							}else{
+								mSendDialog.setMessage("正在传输文件，请稍候……"+percent+"%");
+							}
+						}
+						if(stage.equals("2")){
+							dismissSendDialog();//正在传输文件的对话框消失
+							if(mUpdateBuilder == null){
+								mUpdateBuilder = new AlertDialog.Builder(mContext);
+								 mUpdateDialog = mUpdateBuilder.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电"+percent+"%")
+								.setCancelable(false)
+								.setOnKeyListener(new OnKeyListener() {
+
+									@Override
+									public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+										// TODO Auto-generated method stub
+										if(keyCode == KeyEvent.KEYCODE_BACK){
+											return true;
+										}
+										return false;
+									}
+								}).create();
+								 mUpdateDialog.show();
+							}else{
+								mUpdateDialog.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电"+percent+"%");
+							}
+						}
+						if(stage.equals("2") && percent.equals("100")){
+							//升级成功
+							dismissUpdateDialog();
+							/*if(mUpdateSuccess == null){
+								mUpdateSuccess = new AlertDialog.Builder(mContext);
+								mUpdateDialogSuccess = mUpdateSuccess.setMessage("升级成功")
+										.setPositiveButton("确定", null)
+										
+							}*/
+						}
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
 			}
+			
+		}
+	} 
+    
+    /**
+     * 固件升级正在传输文件对话框消失
+     */
+    public void dismissSendDialog(){
+		if (null != mSendDialog){
+			mSendDialog.dismiss();
+			mSendDialog = null;
+		}
+	}
+    
+    /**
+     * 固件升级正在升级中对话框消失
+     */
+    public void dismissUpdateDialog(){
+		if (null != mUpdateDialog){
+			mUpdateDialog.dismiss();
+			mUpdateDialog = null;
+		}
+	}
+    
+    @Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carversion");
 		}
 	}
 
