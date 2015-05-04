@@ -68,23 +68,17 @@
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-        <!--  
-        <TextureView 
-            android:id="@+id/mTextureView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-		-->
+		
         <SurfaceView
             android:id="@+id/mSurfaceView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 		
         <ImageView
             android:id="@+id/mPreLoading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/video_sq_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tacitly_pic"
             android:scaleType="fitXY" />
 
         <cn.com.mobnote.golukmobile.videosuqare.RingView
@@ -97,7 +91,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="28dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical" >
 

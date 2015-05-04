@@ -160,13 +160,13 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
 			if("1080P".equals(mVideoConfigState.resolution)){
-				if(8192 == mVideoConfigState.bitrate){
+				if(10240 == mVideoConfigState.bitrate){
 					updateSensitivity(SensitivityType._1080h);
 				}else{
 					updateSensitivity(SensitivityType._1080l);
 				}
 			}else{
-				if(6144 == mVideoConfigState.bitrate){
+				if(5120 == mVideoConfigState.bitrate){
 					updateSensitivity(SensitivityType._720h);
 				}else{
 					updateSensitivity(SensitivityType._720l);
@@ -218,13 +218,13 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 						System.out.println("YYY================22222==============resolution====="+mVideoConfigState.resolution);
 						if("1080P".equals(mVideoConfigState.resolution)){
 							//bitrate数据返回的不对
-							if(8192 == mVideoConfigState.bitrate){
+							if(10240 == mVideoConfigState.bitrate){
 								updateSensitivity(SensitivityType._1080h);
 							}else{
 								updateSensitivity(SensitivityType._1080l);
 							}
 						}else{
-							if(6144 == mVideoConfigState.bitrate){
+							if(5120 == mVideoConfigState.bitrate){
 								updateSensitivity(SensitivityType._720h);
 							}else{
 								updateSensitivity(SensitivityType._720l);

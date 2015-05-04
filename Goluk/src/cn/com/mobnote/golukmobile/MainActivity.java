@@ -757,7 +757,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
 		mWifiStateTv.setText("未连接");
 		mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
 	}
 	
 	
@@ -966,7 +965,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		switch(id){
 			case R.id.map_location_btn:
 				//回到我的位置
-				//移动地图中心点
 				LatLng ll = new LatLng(LngLat.lat,LngLat.lng);
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(u);
@@ -1038,19 +1036,16 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	}
 	
 	private void click_share() {
-		Log.i("lily", "----------click------");
+		LogUtil.e("lily", "----------click------");
 		if (!mApp.isUserLoginSucess) {
 			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
-			if(mApp.autoLoginStatus == 1){
+			if (mApp.autoLoginStatus == 1) {
 				mBuilder = new AlertDialog.Builder(mContext);
-				 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
-				.setCancelable(false)
-				.setOnKeyListener(new OnKeyListener() {
+				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						// TODO Auto-generated method stub
-						if(keyCode == KeyEvent.KEYCODE_BACK){
+						if (keyCode == KeyEvent.KEYCODE_BACK) {
 							return true;
 						}
 						return false;
@@ -1060,15 +1055,15 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				return ;
 			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
 				mShareLayout.setVisibility(View.GONE);
+				dialog.show();
+			} else {
 				Intent intent = new Intent(this, UserLoginActivity.class);
 				intent.putExtra("isInfo", "back");
 				startActivity(intent);
-				return ;
 			}
-			mShareLayout.setVisibility(View.VISIBLE);
 			return;
 		}
-		//视频分享
+		// 视频分享
 		mShareLayout.setVisibility(View.VISIBLE);
 	}
 	
@@ -1096,7 +1091,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				.setOnKeyListener(new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						// TODO Auto-generated method stub
 						if(keyCode == KeyEvent.KEYCODE_BACK){
 							return true;
 						}
@@ -1159,7 +1153,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 		
 		if (!mApp.getIpcIsLogin()) {
-			Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
+			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, LiveDialogManager.DIALOG_TYPE_IPC_LOGINOUT, "提示", "请先连接摄像头");
 			return;
 		}
 

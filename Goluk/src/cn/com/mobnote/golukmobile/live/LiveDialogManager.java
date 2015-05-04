@@ -41,6 +41,8 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_LIVE_CONTINUE = 6;
 	/** 进入直播 */
 	public static final int DIALOG_TYPE_LIVE_START = 7;
+	/** ipc未登录提示 */
+	public static final int DIALOG_TYPE_IPC_LOGINOUT = 8;
 
 	private int mCurrentDialogType = 0;
 
@@ -139,6 +141,7 @@ public class LiveDialogManager {
 
 		mTwoButtonDialog.setTitle(title);
 		mTwoButtonDialog.setMessage(message);
+		mTwoButtonDialog.setCancelable(false);
 
 		mTwoButtonDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
 
@@ -169,29 +172,10 @@ public class LiveDialogManager {
 
 	public void showNoMobileDialog(Context context, String title, String message) {
 
-		// String[] msg = SingleButtonCustomDialog.splitMessage(message);
-		// if (null == msg) {
-		// return;
-		// }
-		//
-		// hideNoMobileDialog();
-		//
-		// mNoMobileDialog = new SingleButtonCustomDialog.Builder(context,
-		// msg.length).setTitle(title).setMessage(msg)
-		// .setLeftButton("确定", new View.OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// hideNoMobileDialog();
-		// }
-		// }).setCancelable(false).create();
-		// mNoMobileDialog.show();
 	}
 
 	public void hideNoMobileDialog() {
-		// if (null != mNoMobileDialog) {
-		// mNoMobileDialog.dismiss();
-		// mNoMobileDialog = null;
-		// }
+
 	}
 
 	private void sendMessageCallBack(int dialogType, int function, String data) {
@@ -238,6 +222,7 @@ public class LiveDialogManager {
 
 		mLiveExitDialog.setTitle("提示");
 		mLiveExitDialog.setMessage("直播时间到，请返回");
+		mLiveExitDialog.setCancelable(false);
 
 		mLiveExitDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialoginterface, int i) {
@@ -258,14 +243,14 @@ public class LiveDialogManager {
 
 	public void showLiveBackDialog(Context context, int function, String message) {
 
-		if (null != mLiveBackDialog) {
-			return;
-		}
+		dismissLiveBackDialog();
+
 		mCurrentDialogType = function;
 		mLiveBackDialog = new AlertDialog.Builder(context).create();
 
 		mLiveBackDialog.setTitle("提示");
 		mLiveBackDialog.setMessage(message);
+		mLiveBackDialog.setCancelable(false);
 
 		mLiveBackDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
 
@@ -305,28 +290,11 @@ public class LiveDialogManager {
 	 * @date 2014-5-22
 	 */
 	public void showAuthLoadingDialog(Context context, String message) {
-		// if (mAuthLoadingDialog == null) {
-		// mAuthLoadingDialog = new
-		// MeetRecordDialog.Builder(context).setMessage(message)
-		// .setOnCloseListener(new View.OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// hideAuthLoadingDialog();
-		// if (null != dialogManagerFn) {
-		// dialogManagerFn.dialogManagerCallBack(DIALOG_TYPE_AUTHENTICATION,
-		// FUNCTION_DIALOG_CANCEL, null);
-		// }
-		// }
-		// }).setCancelable(false).create();
-		// mAuthLoadingDialog.show();
-		// }
+
 	}
 
 	public boolean isAuthLoading() {
-		// if (null == mAuthLoadingDialog) {
-		// return false;
-		// }
-		// return mAuthLoadingDialog.isShowing();
+
 		return false;
 	}
 
@@ -337,10 +305,7 @@ public class LiveDialogManager {
 	 * @date 2014-5-22
 	 */
 	public void hideAuthLoadingDialog() {
-		// if (mAuthLoadingDialog != null) {
-		// mAuthLoadingDialog.dismiss();
-		// mAuthLoadingDialog = null;
-		// }
+
 	}
 
 }

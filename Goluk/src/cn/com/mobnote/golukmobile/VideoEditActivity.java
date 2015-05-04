@@ -116,6 +116,9 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 	/** 当前编辑的视频类型*/
 	private int mCurrentVideoType = 0;
 	
+	/** 分享的视频名称 */
+	private String videoName = "";
+	
 	
 	
 	/** 当前重叠配音路径列表 */
@@ -142,6 +145,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		//获取视频路径
 		Intent intent = getIntent();
 		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
+		interceptVideoName(mFilePath);//拿到视频名称
 		mCurrentVideoType = intent.getIntExtra("type", 2);
 		
 		mMVListLayout = (LinearLayout)findViewById(R.id.mvlistlayout);
@@ -156,6 +160,23 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 		videoInit();
 		//编辑选项表格
 		initVideoEditList();
+	}
+	
+	/**
+	  * 
+	  * @Title: interceptVideoName 
+	  * @Description: TODO
+	  * @param videopath void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	private void interceptVideoName(String videopath){
+		if(videopath!=null && !"".equals(videopath)){
+			String [] strs = videopath.split("/");
+			videoName = strs[strs.length-1];
+			videoName = videoName.replace("mp4", "jpg");
+		}
+		
 	}
 	
 	/**
@@ -375,6 +396,7 @@ public class VideoEditActivity extends Activity implements  OnClickListener {
 							Intent videoShare = new Intent(mContext,VideoShareActivity.class);
 							videoShare.putExtra("cn.com.mobnote.golukmobile.videopath",mVideoSavePath);
 							videoShare.putExtra("type", mCurrentVideoType);
+							videoShare.putExtra("videoName", videoName);
 							startActivity(videoShare);
 						}
 						
