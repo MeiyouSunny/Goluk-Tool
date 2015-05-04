@@ -8,11 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Contacts.Intents;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -329,7 +327,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mBackButton.setEnabled(false);
 						}else{
 							mLoading.setVisibility(View.GONE);
-//							console.toast("登录失败", this);
 							mApplication.loginStatus = 2;
 						}
 					}else{

@@ -2,9 +2,7 @@ package cn.com.mobnote.user;
 
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
@@ -79,8 +77,8 @@ public class UserLoginManage {
 				})
 				.setPositiveButton("确定", null)
 				.create().show();*/
-//			}else{				
-				b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Login, condi);
+//			}else{	
+			b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Login, condi);
 //			}
 		}
 		return b;
@@ -110,7 +108,9 @@ public class UserLoginManage {
 					mEditor.commit();
 					//---------------------------登录成功的状态  1------------------------------
 					//登录成功跳转
-					console.toast("登录成功", mApp.getContext());
+					if(mApp.registStatus !=2){						
+						console.toast("登录成功", mApp.getContext());
+					}
 					loginStatusChange(1);//登录成功
 					mApp.isUserLoginSucess = true;
 					mApp.loginoutStatus = false;

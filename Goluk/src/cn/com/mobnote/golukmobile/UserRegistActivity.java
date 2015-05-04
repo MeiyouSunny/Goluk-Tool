@@ -673,7 +673,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 		if(b){
 			Log.i("yyy", "=======UserRegistActivity====="+b);
-			//---------------------------登录成功的状态  1----------------------------
+			//---------------------------登录成功的状态  1-------------------------
 			//登录成功跳转
 			mApplication.loginStatus=1;//登录成功
 			mApplication.isUserLoginSucess = true;

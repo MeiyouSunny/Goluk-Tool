@@ -101,6 +101,9 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	/**升级成功**/
 	private Builder mUpdateSuccess = null;
 	private AlertDialog mUpdateDialogSuccess = null;
+	/**升级失败**/
+	private Builder mUpdateFail = null;
+	private AlertDialog mUpdateDialogFail = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -127,7 +130,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		mHandler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				if(msg.what == 0){
 					Log.i("lily", "已清除过缓存");
@@ -189,7 +191,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
 			case R.id.back_btn:
@@ -211,7 +212,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 						.setOnKeyListener(new OnKeyListener() {
 							@Override
 							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-								// TODO Auto-generated method stub
 								if(keyCode == KeyEvent.KEYCODE_BACK){
 									return true;
 								}
@@ -229,7 +229,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 							
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
-								// TODO Auto-generated method stub
 								getLoginout();
 							}
 						})
@@ -247,7 +246,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						// TODO Auto-generated method stub
 						DeleteFile(Const.getAppContext().getCacheDir());
 					}
 				}).create().show();
@@ -263,9 +261,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						// TODO Auto-generated method stub
 						if(GolukApplication.getInstance().getIpcIsLogin()){
-							//ipcUpgrade()
 							boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade();
 							LogUtil.e("lily","YYYYYY=======ipcUpgrade()============u="+u);
 						}
@@ -359,7 +355,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
 		if(keyCode == KeyEvent.KEYCODE_BACK){
 			this.finish();
 		}
@@ -378,7 +373,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	
 	@Override
 	public void statusChange() {
-		// TODO Auto-generated method stub
 		if(mApp.autoLoginStatus !=1){
 			dismissAutoDialog();
 			if(mApp.autoLoginStatus == 2 ){
@@ -422,17 +416,16 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	 */
     @Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		// TODO Auto-generated method stub
     	LogUtil.e("lily", "YYYYYY====IPC_VDCP_Msg_IPCUpgrade====msg="+msg+"===param1="+param1+"==param2="+param2+"--------event-----"+event);
-		if(event == ENetTransEvent_Mobnote_ConnectState){
+		if(event == ENetTransEvent_IPC_UpGrade_Resp){
 			if(IPC_VDCP_Msg_IPCUpgrade == msg){
 				LogUtil.e("lily", "---------连接ipc-------");
 				if(param1 == RESULE_SUCESS){
 					String str = (String)param2;
+					Log.i("lily", "--str----"+str);
 					if(TextUtils.isEmpty(str)){
 						return ;
 					}
-					
 					try{
 						JSONObject json = new JSONObject(str);
 						Log.i("lily", "-------设置页固件升级返回-----"+json);
@@ -447,7 +440,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 										.setOnKeyListener(new OnKeyListener() {
 											@Override
 											public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-												// TODO Auto-generated method stub
 												if(keyCode == KeyEvent.KEYCODE_BACK){
 													return true;
 												}
@@ -469,7 +461,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 
 									@Override
 									public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-										// TODO Auto-generated method stub
 										if(keyCode == KeyEvent.KEYCODE_BACK){
 											return true;
 										}
@@ -478,21 +469,30 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 								}).create();
 								 mUpdateDialog.show();
 							}else{
-								mUpdateDialog.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电"+percent+"%");
+								mUpdateDialog.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
 							}
 						}
 						if(stage.equals("2") && percent.equals("100")){
 							//升级成功
 							dismissUpdateDialog();
-							/*if(mUpdateSuccess == null){
+							if(mUpdateSuccess == null){
 								mUpdateSuccess = new AlertDialog.Builder(mContext);
 								mUpdateDialogSuccess = mUpdateSuccess.setMessage("升级成功")
 										.setPositiveButton("确定", null)
-										
-							}*/
+										.create();
+								mUpdateDialogSuccess.show();
+							}
 						}
 					}catch(Exception e){
 						e.printStackTrace();
+					}
+				}else{
+					if(mUpdateFail == null){
+						mUpdateFail = new AlertDialog.Builder(mContext);
+						mUpdateDialogFail = mUpdateFail.setMessage("升级失败")
+								.setPositiveButton("确定", null)
+								.create();
+						mUpdateDialogFail.show();
 					}
 				}
 			}

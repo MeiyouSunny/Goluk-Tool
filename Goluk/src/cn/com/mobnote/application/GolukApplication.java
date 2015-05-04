@@ -132,7 +132,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	
 	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时   5密码错误达上限去重置密码**/
 	public int loginStatus ;
-	/** 注册的三个状态 0注册中 1注册成功 2 注册失败 **/
+	/** 注册的三个状态 1注册中 2注册成功   3注册失败 **/
 	public int registStatus;
 	/** 自动登录的四个状态 1自动登录中 2自动登录成功 3自动登录失败 4自动登录超时 5密码错误 **/
 	public int autoLoginStatus;
@@ -731,8 +731,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 			if (null != mMainActivity) {
 				// 地图大头针图片
-				console.log("pageNotifyCallBack---登录---"
-						+ String.valueOf(param2));
+				console.log("pageNotifyCallBack---登录---"+ String.valueOf(param2));
 				mMainActivity.loginCallBack(success, param2);
 			}
 			// 登录
@@ -741,8 +740,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			}
 
 			if (mPageSource == "UserRegist") {
-				((UserRegistActivity) mContext).registLoginCallBack(success,
-						param2);
+				((UserRegistActivity) mContext).registLoginCallBack(success,param2);
 			}
 
 			parseLoginData(success, param2);
