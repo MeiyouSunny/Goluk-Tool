@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -786,7 +787,6 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		updateButtonState(type);
 		LogUtil.e("xuhw", "YYYYYY=====queryFileListInfo===timeend="+timeend);
 		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, timeend);
-		GFileUtils.writeIPCLog("===========获取文件列表===1111===================isSucess=="+isSucess);
 		if(!isSucess){
 			isGetFileListDataing=false;
 		}
@@ -859,7 +859,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 			case R.id.back_btn:
-				finish();
+				exit();
 				break;
 			case R.id.video_jcsp:
 				if(!isGetFileListDataing){
@@ -1103,12 +1103,23 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
+	}
+	
+	/**
+	 * 退出
+	 * @author xuhw
+	 * @date 2015年5月4日
+	 */
+	public void exit(){
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager");
+		finish();
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager");
+		
 		
 		if(null != wonderfulVideoData){
 			for(int i=0;i<wonderfulVideoData.size();i++){
@@ -1226,7 +1237,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					mCustomProgressDialog.close();
 				}
 				isGetFileListDataing=false;
-				LogUtils.d("YYYYYY=======获取文件列表===@@@======param1="+ param1 + "=====param2=" + param2);
+				LogUtil.e("xuhw","YYYYYY=======获取文件列表===@@@======param1="+ param1 + "=====param2=" + param2);
 				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					if(TextUtils.isEmpty((String)param2)){
@@ -1436,6 +1447,13 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		d.setLeftButton("确定", null);
 		d.show();
 	}
-
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
+	}
 
 }

@@ -6,7 +6,9 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
@@ -70,9 +72,7 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carversion");
-		}
+		
 	}
 
 	@Override
@@ -118,6 +118,33 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 	protected void onResume() {
 		super.onResume();
 		GolukApplication.getInstance().setContext(this, "carrecordversion");
+	}
+	
+	public void exit(){
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carversion");
+		}
+		finish();
+	}
+	
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.back_btn:
+				exit(); 
+				break;
+				
+			default:
+				break;
+		}
+	}  
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
 	}
 
 }
