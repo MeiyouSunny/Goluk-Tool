@@ -128,9 +128,9 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 			}
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
-			if(mVideoInfo1.videoHP.contains("1080")){
+			if(mVideoInfo2.videoHP.contains("1080")){
 				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
-			}else if(mVideoInfo1.videoHP.contains("720")){
+			}else if(mVideoInfo2.videoHP.contains("720")){
 				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_720);
 			}else{
 				holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_480);
