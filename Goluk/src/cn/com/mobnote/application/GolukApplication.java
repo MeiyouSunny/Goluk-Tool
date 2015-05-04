@@ -1017,16 +1017,26 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			case IPC_VDCP_Msg_Query:
 					//msg = 1000 多文件目录查询
 					if(RESULE_SUCESS == param1){
-						LogUtil.e("xuhw", "YYYYYY=====IPC_VDCP_Msg_Query====param2="+param2);
-						if(!"ipcfilemanager".equals(mPageSource)){
-							if(TextUtils.isEmpty((String)param2)){
-								return;
+						LogUtil.e("xuhw", "YYYYYY=====IPC_VDCP_Msg_Query==mPageSource="+mPageSource+"=param2="+param2);
+						
+						long time = SettingUtils.getInstance().getLong("newfiletime");
+						long curtime = System.currentTimeMillis()/1000;
+						//5分钟内不做提示
+						if(Math.abs(curtime - time) >= 5*60){
+							if(!"ipcfilemanager".equals(mPageSource)){
+								if(TextUtils.isEmpty((String)param2)){
+									return;
+								}
+								fileList = IpcDataParser.parseMoreFile((String) param2);
+								mHandler.sendEmptyMessageDelayed(1001, 1000);
+								
+								fileList = IpcDataParser.parseMoreFile((String) param2);
+								mHandler.removeMessages(1001);
+								mHandler.sendEmptyMessage(1001);
+								SettingUtils.getInstance().putLong("newfiletime", curtime);
 							}
-							fileList = IpcDataParser.parseMoreFile((String) param2);
-							mHandler.sendEmptyMessageDelayed(1001, 1000);
 						}
-						fileList = IpcDataParser.parseMoreFile((String) param2);
-						mHandler.sendEmptyMessage(1001);
+						
 					}
 				break;
 			case IPC_VDCP_Msg_SingleQuery:
@@ -1082,15 +1092,18 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				}
 				break;
 			case IPC_VDCP_Msg_GetRecordState:
+				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_GetRecordState===param1="+param1+"=param2="+param2);
 				if (param1 == RESULE_SUCESS) {
 					autoRecordFlag = IpcDataParser
 							.getAutoRecordState((String) param2);
 				}
 				break;
 			case IPC_VDCP_Msg_StartRecord:
+				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_StartRecord===param1="+param1+"=param2="+param2);
 				autoRecordFlag = true;
 				break;
 			case IPC_VDCP_Msg_StopRecord:
+				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_StopRecord===param1="+param1+"=param2="+param2);
 				autoRecordFlag = false;
 				break;
 			case IPC_VDCP_Msg_GetMotionCfg:
@@ -1449,14 +1462,19 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		if (mconnection != null && mconnection.isShowing()) {
 			return;
 		}
-
-		mconnection = new CustomFormatDialog(mContext);
-		mconnection.setCancelable(false);
-		mconnection.setMessage("摄像头连接失败，请稍候...");
-
-		mconnection.show();
-		mHandler.removeMessages(1002);
-		mHandler.sendEmptyMessageDelayed(1002, 10000);
+		
+		if (mContext instanceof Activity){
+			mconnection = new CustomFormatDialog(mContext);
+			mconnection.setCancelable(false);
+			mconnection.setMessage("摄像头断开，正在为您重连…");
+			
+			if(!((Activity)mContext).isFinishing()){
+				mconnection.show();
+				mHandler.removeMessages(1002);
+				mHandler.sendEmptyMessageDelayed(1002, 10000);
+			}
+			
+		}
 	}
 
 	private CustomDialog backHomedialog;
@@ -1468,7 +1486,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			return;
 		}else{
 			backHomedialog = new CustomDialog(mContext);
-			backHomedialog.setMessage("摄像头连接失败！", Gravity.CENTER);
+			backHomedialog.setMessage("您好像没有连接摄像头哦。", Gravity.CENTER);
 			backHomedialog.setLeftButton("确定", new OnLeftClickListener() {
 				@Override
 				public void onClickListener() {
@@ -1480,7 +1498,10 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				}
 			});
 			if (backHomedialog.isShowing() == false) {
-				backHomedialog.show();
+				if(!((Activity)mContext).isFinishing()){
+					backHomedialog.show();
+				}
+				
 			}
 		}
 

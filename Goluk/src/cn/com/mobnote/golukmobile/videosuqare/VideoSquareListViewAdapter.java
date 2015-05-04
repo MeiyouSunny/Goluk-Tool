@@ -278,9 +278,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 //		holder.mSurfaceView.setZOrderMediaOverlay(true);
 //		SurfaceHolder mSurfaceHolder = holder.mSurfaceView.getHolder();
 ////		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-//		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
-//				width, height);
-//		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
+		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
+				width, height);
+		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
 //		mSurfaceHolder.addCallback(new SurfaceViewCallback(this, arg0, mHolderList,
 //				mVideoSquareListData, mDWMediaPlayerList, mVideoSquareInfo));
 

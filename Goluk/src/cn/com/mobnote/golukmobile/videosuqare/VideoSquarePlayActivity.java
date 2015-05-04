@@ -98,6 +98,10 @@ public class VideoSquarePlayActivity extends Activity implements
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		
+		/** 返回按钮 */
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+		mBackBtn.setOnClickListener(this);
+		
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();//设置分享平台的参数
 		loadHistorydata();//显示历史请求数据
@@ -139,9 +143,6 @@ public class VideoSquarePlayActivity extends Activity implements
 	}
 
 	private void init(boolean isloading) {
-		/** 返回按钮 */
-		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
-		mBackBtn.setOnClickListener(this);
 
 		if (null == mVideoSquareListViewAdapter) {
 			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mRTPullListView, this,2);
@@ -228,8 +229,8 @@ public class VideoSquarePlayActivity extends Activity implements
 			}
 			Toast.makeText(VideoSquarePlayActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
 			System.out.println("shareid"+shareVideoId);
-			boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
-			System.out.println("shareid"+result);
+			//boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
+			//System.out.println("shareid"+result);
 		}
 
 	/**
