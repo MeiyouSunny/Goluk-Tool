@@ -89,13 +89,14 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	public  static Handler mHandler=null;
 	private final int GETPROGRESS=1;
 	private String from;
-	
+	private GolukApplication mApp = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (!LibsChecker.checkVitamioLibs(this))
 			return;
 		setContentView(R.layout.carrecorder_videoplayer);
+		mApp = (GolukApplication)getApplication();
 		from = getIntent().getStringExtra("from");
 		filename = getIntent().getStringExtra("filename");
 		if(!TextUtils.isEmpty(from)){
@@ -104,11 +105,11 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			}else if(from.equals("ipc")){
 				int type = getIntent().getIntExtra("type", -1);
 				if(4 == type){
-					playUrl="http://192.168.43.234:5080/rec/wonderful/"+filename;
+					playUrl="http://"+ mApp.mIpcIp + ":5080/rec/wonderful/"+filename;
 				}else if(2 == type){
-					playUrl="http://192.168.43.234:5080/rec/urgent/"+filename;
+					playUrl="http://" + mApp.mIpcIp + ":5080/rec/urgent/"+filename;
 				}else{
-					playUrl="http://192.168.43.234:5080/rec/normal/"+filename;
+					playUrl="http://" + mApp.mIpcIp + ":5080/rec/normal/"+filename;
 				}
 			}
 		}

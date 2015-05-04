@@ -97,7 +97,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			R.drawable.live_btn_1s_record };
 
 	/** 自己预览地址 */
-	private static final String VIEW_SELF_PLAY = "rtsp://admin:123456@192.168.43.234/sub";
+	private static String VIEW_SELF_PLAY = "";
 
 	private static final int LOCATION_TYPE_UNKNOW = -1;
 	private static final int LOCATION_TYPE_POINT = 0;
@@ -241,6 +241,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "LiveVideo");
+
+		VIEW_SELF_PLAY = "rtsp://admin:123456@" + mApp.mIpcIp + "/sub";
 
 		// 获取数据
 		getIntentData();

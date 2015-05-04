@@ -1279,40 +1279,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 
-	//@Override
-//	public void wifiCallBack(int type, int state, int process, String message,Object arrays) {
-//		switch(type){
-//		case 5:
-//			if(state == 0){
-//				switch(process){
-//					case 0:
-//						//创建热点成功
-//						//hotWiFiCreateSuccess();
-//					break;
-//					case 1:
-//						//ipc成功连接上热点
-//						WifiRsBean[] bean = (WifiRsBean[])arrays;
-//						if(null != bean){
-//							console.log("自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
-//							if(bean.length > 0){
-//								sendLogicLinkIpc(bean[0].getIpc_ip(),bean[0].getIpc_mac());
-//							}
-//						}
-//					break;
-//					case 2:
-//					break;
-//					default:
-//						//console.toast(message, mContext);
-//					break;
-//				}
-//			}
-//			else{
-//				//console.toast(message, mContext);
-//			}
-//		break;
-//	}
-	//}	
-	
 	public void dismissAutoDialog(){
 		if (null != dialog){
 			dialog.dismiss();
@@ -1409,17 +1375,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 							}
 						}
 					break;
-					case 2:
-					break;
 					default:
-						//console.toast(message, mContext);
 					break;
 				}
 			}
 			
 		break;
 	}
-		
 	}
 	
 	/**
@@ -1432,11 +1394,5 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,ip);
 		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
-
 	
 }
-
-
-
-
-
