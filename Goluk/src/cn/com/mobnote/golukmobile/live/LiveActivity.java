@@ -69,8 +69,11 @@ import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
@@ -95,6 +98,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	final int[] shootImg = { R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
 			R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,
 			R.drawable.live_btn_1s_record };
+
+	final int[] mHeadImg = { 0, R.drawable.editor_boy_one, R.drawable.editor_boy_two,
+			R.drawable.editor_boy_three, R.drawable.editor_girl_one, R.drawable.editor_girl_two,
+			R.drawable.editor_girl_two, R.drawable.head_unknown };
 
 	/** 自己预览地址 */
 	private static final String VIEW_SELF_PLAY = "rtsp://admin:123456@192.168.43.234/sub";
@@ -229,6 +236,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	public static final int MOUNTS = 114;
 	/** 是否支持声音 */
 	private boolean isCanVoice = true;
+	private ImageView mHead = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -264,6 +272,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			if (null != mRefirshBtn) {
 				mRefirshBtn.setVisibility(View.GONE);
 			}
+			setUserHeadImage(myInfo.head);
 		} else {
 			if (null != currentUserInfo && null != currentUserInfo.desc) {
 				mDescTv.setText(currentUserInfo.desc);
@@ -279,6 +288,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			} else {
 				mLoginLayout.setVisibility(View.GONE);
 			}
+			setUserHeadImage(currentUserInfo.head);
 		}
 		drawPersonsHead();
 		// 加入爱滔客群组
@@ -456,6 +466,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mLiveOk = (ImageView) findViewById(R.id.live_ok);
 		mLiveOk.setOnClickListener(this);
 
+		mHead = (ImageView) findViewById(R.id.live_userhead);
+
 		mLiveCountDownTv = (TextView) findViewById(R.id.live_countdown);
 		mDescTv = (TextView) findViewById(R.id.live_desc);
 
@@ -572,6 +584,14 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			liveUploadVideoFailed();
 		}
 	};
+
+	private void setUserHeadImage(String headStr) {
+		if (null != mHead) {
+			int utype = Integer.valueOf(headStr);
+			int head = mHeadImg[utype];
+			mHead.setBackgroundResource(head);
+		}
+	}
 
 	// 直播上传失败
 	private void liveUploadVideoFailed() {
