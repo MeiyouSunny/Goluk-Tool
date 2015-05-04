@@ -36,6 +36,7 @@ import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -1424,7 +1425,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			return;
 		}
 		
-		if (mContext instanceof Activity){
+		if (this.testActivity()){
 			mconnection = new CustomFormatDialog(mContext);
 			mconnection.setCancelable(false);
 			mconnection.setMessage("摄像头断开，正在为您重连…");
@@ -1436,6 +1437,23 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			}
 			
 		}
+	}
+	
+	/**
+	 * 验证固定的几个activity 可以弹框
+	  * @Title: testActivity 
+	  * @Description: TODO
+	  * @return boolean 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	public boolean testActivity(){
+		if(mContext instanceof CarRecorderActivity){
+			return true;
+		}else{
+			return false;
+		}
+		
 	}
 
 	private CustomDialog backHomedialog;
