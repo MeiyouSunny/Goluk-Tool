@@ -131,6 +131,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private boolean isbelow = true;
 	private CustomLoadingDialog mCustomProgressDialog=null;
 	private int timeend = 2147483647;
+	private boolean isShowPlayer=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -410,12 +411,15 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	 * @date 2015年4月30日
 	 */
 	private void playerVideo(String filename){
-		if(null == VideoPlayerActivity.mHandler){
-			Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-			intent.putExtra("from", "ipc");
-			intent.putExtra("type", mCurrentType);
-			intent.putExtra("filename", filename);
-			startActivity(intent);
+		if(!isShowPlayer){
+			isShowPlayer=true;
+			if(null == VideoPlayerActivity.mHandler){
+				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
+				intent.putExtra("from", "ipc");
+				intent.putExtra("type", mCurrentType);
+				intent.putExtra("filename", filename);
+				startActivity(intent);
+			}
 		}
 	}
 	
@@ -1432,6 +1436,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		isShowPlayer=false;
 		GolukApplication.getInstance().setContext(this, "ipcfilemanager");
 	}
 	
