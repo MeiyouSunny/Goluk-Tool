@@ -129,7 +129,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	private void httpPost(boolean flag,String type,String operation,String timestamp) {
 		if (flag) {
 			if (null == mCustomProgressDialog) {
-				mCustomProgressDialog = new CustomLoadingDialog(this);
+				mCustomProgressDialog = new CustomLoadingDialog(this,null);
 				mCustomProgressDialog.show();
 			}
 		}
