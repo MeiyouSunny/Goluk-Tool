@@ -79,7 +79,7 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 		}
 		final String address = result.getAddress();
 		sendCallBackData(FUN_GET_ADDRESS, address);
-		
+
 		LogUtil.e(null, "jyf----20150406----GetBaiduAddress----onGetReverseGeoCodeResult----  : " + address);
 	}
 

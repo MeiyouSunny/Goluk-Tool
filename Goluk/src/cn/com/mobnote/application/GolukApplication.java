@@ -1310,7 +1310,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	}
 
 	public void addLocationListener(String key, ILocationFn fn) {
-		if (!mLocationHashMap.containsValue(key)) {
+		if (mLocationHashMap.containsValue(key)) {
 			return;
 		}
 		mLocationHashMap.put(key, fn);

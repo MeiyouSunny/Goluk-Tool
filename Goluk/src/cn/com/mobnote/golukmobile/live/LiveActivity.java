@@ -831,13 +831,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 	}
 
-	String userInfo = "{\"uid\":\"c2ee35c5-4051-41ef-8ca2-09fe921d5efb\",\"aid\":\"11000000030\",\"mid\":\"1c:2a:27:07:e1:b7\",\"active\":\"1\",\"tag\":\"android\",\"persons\":0,\"open\":\"1\",\"lon\":\"116.445645\",\"lat\":\"39.928527\",\"speed\":0,\"desc\":\"\",\"talk\":\"1\",\"restime\":\"0\",\"zan\":0,\"picurl\":\"\",\"nickname\":\"MB1ABD\",\"sex\":\"0\",\"head\":\"7\"}";
-
-	double currentLon = 116.455645;
-	double currentLat = 39.928527;
-
 	private void drawPersonsHead() {
-		LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----111: ");
+		LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----1111111: ");
 		try {
 			String jsonMyPos = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Location,
 					ILocationFn.LOCATION_CMD_GET_POSITION, "");
@@ -848,81 +843,61 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					// 开始绘制我的位置
 
 					if (mApp.isUserLoginSucess) {
-						// 画大头针
-						// drawPin(myPosition.rawLon, myPosition.rawLat, "me",
-						// true);
-
 						if (null == myInfo) {
 							this.getMyInfo();
 						}
-						LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head: "
+						LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head 333333: "
 								+ myInfo.nickName);
 						if (null != myInfo) {
-							LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head2: ");
+							LogUtil.e(null,
+									"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head4444444444: ");
 							mCurrentLocationType = LOCATION_TYPE_HEAD;
 							myInfo.lon = String.valueOf(myPosition.rawLon);
 							myInfo.lat = String.valueOf(myPosition.rawLat);
-
-							mBaiduMapManage.addSinglePoint(JsonUtil.UserInfoToString(myInfo));
-							LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head3: ");
+							String drawTxt = JsonUtil.UserInfoToString(myInfo);
+							mBaiduMapManage.addSinglePoint(drawTxt);
+							LogUtil.e(null,
+									"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head555555555: "
+											+ drawTxt);
 						}
 
-						LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head4: ");
+						LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head6666666666: ");
 
 					} else {
+						LogUtil.e(null,
+								"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head777777777777777: ");
 						mCurrentLocationType = LOCATION_TYPE_POINT;
 						// 画小蓝点
 						MyLocationData locData = new MyLocationData.Builder().accuracy((float) myPosition.radius)
 								.direction(100).latitude(myPosition.rawLat).longitude(myPosition.rawLon).build();
 						// 确认地图我的位置点是否更新位置
 						mBaiduMap.setMyLocationData(locData);
-
-						// LatLng ll = new
-						// LatLng(myPosition.rawLat,myPosition.rawLon);
-						// MapStatusUpdate u =
-						// MapStatusUpdateFactory.newLatLng(ll);
-						// mBaiduMap.animateMapStatus(u);
 					}
 
 				} else {
 					showToast("无法获取我的位置信息");
+					LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head8888888888: ");
 				}
 			} else {
 				showToast("无法获取我的位置信息");
 			}
-
-			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----3333: ");
-
+			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----999999999999: ");
 			if (isShareLive) {
 				// 自己直播不再绘制其它人的点
 				return;
 			}
-
 			if (null == currentUserInfo) {
 				showToast("无法获取看直播人的经纬度");
 				return;
 			}
-
-			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----aid  : " + currentUserInfo.aid);
-
-			// drawPin(Double.parseDouble(currentUserInfo.lon),
-			// Double.parseDouble(currentUserInfo.lat),
-			// currentUserInfo.aid, false);
-
+			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----AAAAAAAAAA  : "
+					+ currentUserInfo.aid);
 			mBaiduMapManage.addSinglePoint(JsonUtil.UserInfoToString(currentUserInfo));
-
 		} catch (Exception e) {
 			e.printStackTrace();
-			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----Exception : ");
+			LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---BBBBBBBB-Exception : ");
 		}
 
-		/** 以下为测试代码 */
-		// String lonStr = "116.357428";
-		// String latStr = "39.93923";
-		// // 添加地图大头针
-		// mBaiduMapManage.AddMapPoint(lonStr, latStr, "");
-		// mBaiduMapManage.SetMapCenter(Double.parseDouble(lonStr),
-		// Double.parseDouble(latStr));
 	}
 
 	private void liveFailedStart(boolean isLive) {
@@ -2533,7 +2508,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				if (null == myInfo) {
 					this.getMyInfo();
 				}
-				LogUtil.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head: " + myInfo.nickName);
+				LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack---draw MY Head: "
+						+ myInfo.nickName);
 				if (null != myInfo) {
 					if (LOCATION_TYPE_UNKNOW == this.mCurrentLocationType) {
 						// 当前是未定位的,　直接画气泡
@@ -2543,6 +2519,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 					} else {
 						// 当前是画的气泡，直接更新气泡的位置即可
+						LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack---lon:: "
+								+ location.rawLon + "	lat:" + location.rawLat);
 						mBaiduMapManage.updatePosition(myInfo.aid, location.rawLon, location.rawLat);
 					}
 
