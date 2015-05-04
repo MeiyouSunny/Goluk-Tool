@@ -303,7 +303,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "VideoShare");
 		sharePlatform = new SharePlatformUtil(this);
-		
+		sharePlatform.configPlatforms();// 设置分享平台的参数
 		// 获取第一帧缩略图
 		createThumb();
 		// 初始化
