@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -146,8 +148,7 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 			this.updateState(1);
 			break;
 		case R.id.back_btn:
-			// 返回
-			this.finish();
+			exit();
 			break;
 		default:
 			break;
@@ -181,9 +182,24 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+	
+	public void exit(){
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onDestroy();
 		}
+		
+		ImageLoader.getInstance().clearMemoryCache();
+		
+		finish();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
 	}
 
 }

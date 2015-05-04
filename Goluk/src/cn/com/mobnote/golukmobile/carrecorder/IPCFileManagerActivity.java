@@ -790,7 +790,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mOprateType = type;
 		updateButtonState(type);
 		LogUtil.e("xuhw", "YYYYYY=====queryFileListInfo===timeend="+timeend);
-		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, timeend);
+		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, 0, timeend);
 		if(!isSucess){
 			isGetFileListDataing=false;
 		}

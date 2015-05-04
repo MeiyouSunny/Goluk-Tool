@@ -571,6 +571,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					if (!mNoDownLoadFileList.contains(filename)) {
 						mNoDownLoadFileList.add(filename);
 					}
+					if (!mDownLoadFileList.contains(filename)) {
+						mDownLoadFileList.add(filename);
+					}
 
 					if (GlobalWindow.getInstance().isShow()) {
 						LogUtil.e("xuhw",
@@ -971,7 +974,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						long time = SettingUtils.getInstance().getLong("querytime", 0);
 						long curtime = System.currentTimeMillis()/1000;
 						if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
-							queryNewFileList();
+							queryNewFileList(0);
 							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
 						}
 						console.log("IPC_TTTTTT=================Login Success===============");
@@ -1279,11 +1282,11 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 				this)
 				// .memoryCacheExtraOptions(480, 800) //即保存的每个缓存文件的最大长宽
-				.threadPoolSize(3)
+				.threadPoolSize(2)
 				// 线程池内加载的数量
-				.threadPriority(Thread.NORM_PRIORITY - 2)
+				.threadPriority(Thread.NORM_PRIORITY - 3)
 				.denyCacheImageMultipleSizesInMemory()
-				.memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
+				.memoryCache(new UsingFreqLimitedMemoryCache(4 * 1024 * 1024))
 				// 你可以通过自己的内存缓存实现
 				.memoryCacheSize(8 * 1024 * 1024)
 				.discCacheSize(50 * 1024 * 1024)
@@ -1342,8 +1345,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 * @author xuhw
 	 * @date 2015年4月24日
 	 */
-	private void queryNewFileList() {
-		mIPCControlManager.queryFileListInfo(6, 10, 2147483647);
+	private void queryNewFileList(int starttime) {
+		mIPCControlManager.queryFileListInfo(6, 10, starttime, 2147483647);
 	}
 
 	/**
@@ -1375,43 +1378,47 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		if (mContext instanceof Activity && fileList.size() > 0) {
 			Activity a = (Activity)mContext;
 			if(!a.isFinishing()){
+				int size = fileList.size();
+				for (int i = 0; i < fileList.size(); i++) {
+					VideoFileInfo info = fileList.get(i);
+					String filename = info.location;
+					
+					String filePath = "";
+					if (filename.contains("WND")) {
+						filePath = "fs1:/video/wonderful/";
+					} else if (filename.contains("URG")) {
+						filePath = "fs1:/video/urgent/";
+					}
+				
+					if (TextUtils.isEmpty(filePath)) {
+						break;
+					}
+
+					filePath = FileUtils.javaToLibPath(filePath);
+					String path = filePath + File.separator + filename;
+					File file = new File(path);
+					if (file.exists()) {
+						size -= 1;
+					}else{
+						if (!mDownLoadFileList.contains(info.location)) {
+							mDownLoadFileList.add(info.location);
+						}
+					}
+					
+				}
+				
 				mCustomDialog = new CustomDialog(mContext);
-				mCustomDialog.setMessage("有" + fileList.size() + "个新文件，确定要下载吗？",
+				mCustomDialog.setMessage("有" + size + "个新文件，确定要下载吗？",
 						Gravity.CENTER);
 				mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 					@Override
 					public void onClickListener() {
-						for (int i = 0; i < fileList.size(); i++) {
-							VideoFileInfo info = fileList.get(i);
-							String filename = info.location;
-
-							String filePath = "";
-							if (filename.contains("WND")) {
-								filePath = "fs1:/video/wonderful/";
-							} else if (filename.contains("URG")) {
-								filePath = "fs1:/video/urgent/";
-							}
-
-							if (TextUtils.isEmpty(filePath)) {
-								break;
-							}
-
-							filePath = FileUtils.javaToLibPath(filePath);
-							String path = filePath + File.separator + filename;
-							File file = new File(path);
-							if (!file.exists()) {
-								if (!mDownLoadFileList.contains(info.location)) {
-									mDownLoadFileList.add(info.location);
-
-									boolean flag = GolukApplication.getInstance()
-											.getIPCControlManager()
-											.querySingleFile(info.location);
-									LogUtil.e("xuhw",
-											"YYYYYY=====querySingleFile=====type="
-													+ info.type + "==flag=" + flag);
-								}
-							}
-
+						for(String name : mDownLoadFileList){
+							boolean flag = GolukApplication.getInstance()
+									.getIPCControlManager()
+									.querySingleFile(name);
+							LogUtil.e("xuhw",
+									"YYYYYY=====querySingleFile=====name="+name+"==flag=" + flag);
 						}
 					}
 				});
