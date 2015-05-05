@@ -574,7 +574,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				try {
 					tempTime = openWifi(false, outTime);
 					wifiSupport.closeWifi();
-					wifiSupport.closeWifiAp(null);
+					wifiSupport.closeWifiAp(wifiManager);
 					apManagesupport.createWifiHot(ssid, password);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block 这里需要异常处理
@@ -643,7 +643,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			public void run() {
 				int tempTime = 0;
 				wifiSupport.closeWifi();
-				wifiSupport.closeWifiAp(null);
+				wifiSupport.closeWifiAp(wifiManager);
 				try {
 					apManagesupport.createWifiHot(ssid, password);
 				} catch (Exception e) {
@@ -808,9 +808,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 									60 * 1000);
 							return;
 						} else {
-							wifiSupport.closeWifiAp(null);
+							wifiSupport.closeWifiAp(wifiManager);
 							// 创建热点
-							createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
+							autoWifiManage();
 							return;
 						}
 					}
@@ -820,7 +820,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					if ((mWifi == null || !mWifi.isConnected())) {
 						// 关闭所有的网络
 						wifiSupport.closeWifi();
-						wifiSupport.closeWifiAp(null);
+						wifiSupport.closeWifiAp(wifiManager);
 
 						Log.e(TAG,
 								"自动连接----------------AP和wifi 都没有开启------------");

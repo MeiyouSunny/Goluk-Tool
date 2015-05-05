@@ -365,7 +365,7 @@ public class WifiConnectManagerSupport {
 	public void closeWifiAp(WifiManager mWifiManager) {
 		try {
 
-			if (mWifiManager.getConnectionInfo() != null) {
+			if (mWifiManager!=null &&mWifiManager.getConnectionInfo() != null) {
 				mWifiManager.setWifiEnabled(false);
 				try {
 					Thread.sleep(1500);
