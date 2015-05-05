@@ -152,6 +152,7 @@ public class IPCControlManager implements IPCManagerFn{
 	public boolean downloadFile(String filename, String tag, String savepath, long filetime) {
 		String json = JsonUtil.getDownFileJson(filename, tag, savepath, filetime);
 		GFileUtils.writeIPCLog("==downloadFile==json="+json);
+		LogUtil.e("xuhw", "YYYYYY====downloadFile=====json="+json);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
 				json);
 	}

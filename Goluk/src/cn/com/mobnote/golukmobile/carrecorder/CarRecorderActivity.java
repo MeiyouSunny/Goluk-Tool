@@ -312,7 +312,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			start();
 		}
 
-		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 		mConnectTip.setText("摄像头未连接");
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			ipcIsOk = true;
@@ -588,7 +588,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (!isRecording) {
-					m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+					m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 					isRecording = true;
 					mCurVideoType = VideoType.mounts;
 					LogUtils.d("m8sBtn========================2222======");
@@ -660,7 +660,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月5日
 	 */
 	private void sendEmergencyCommitId() {
-		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 		isRecording = true;
 		mCurVideoType = VideoType.emergency;
 
@@ -957,7 +957,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
 				CarRecorderActivity.QUERYFILETIME);
 		mShootTime = 0;
-		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
 			m8sTimer.purge();
@@ -1068,7 +1068,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						ipcIsOk = false;
 //						updateVideoState();
 						mShareBtn.setVisibility(View.GONE);
-						m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+						m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 						// mFileBtn.setBackgroundResource(R.drawable.btn_file_sel);
 
 						downloadFileNumber = 0;

@@ -520,7 +520,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					savePath = mVideoSavePath + "wonderful/";
 				}
 				// 调用下载视频接口
-				mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
+				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
+				LogUtil.e("xuhw", "YYYYYY====start==VideoDownLoad===flag="+a+"===data="+data);
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}
