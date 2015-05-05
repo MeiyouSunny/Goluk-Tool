@@ -233,7 +233,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		CrashReport.initCrashReport(this,appId ,isDebug);
 		
 		mContext = this;
-		SysApplication.getInstance().addActivity(this);
+//		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(this,"Main");
@@ -929,20 +929,27 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK )
-		{
-			//退出对话框
-//			int PID = android.os.Process.myPid();
-//			android.os.Process.killProcess(PID);
-//			android.os.Process.sendSignal(PID, 9);
-			if(mApp.isUserLoginSucess){
-				SysApplication.getInstance().exit();
-			}
-			finish();
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_APP_EXIT, "提示",
+					"退出程序？");
+			// 退出对话框
+			// int PID = android.os.Process.myPid();
+			// android.os.Process.killProcess(PID);
+			// android.os.Process.sendSignal(PID, 9);
+			return true;
 		}
 		return false;
+	}
+	
+	// 退出程序
+	private void exit() {
+		if (mApp.isUserLoginSucess) {
+			SysApplication.getInstance().exit();
+		}
+		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		mApp.mGoluk.GolukLogicDestroy();
+		finish();
 	}
 	
 	@SuppressLint("ClickableViewAccessibility")
@@ -1330,6 +1337,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
 				intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 				startActivity(intent);
+			}
+		} else if(LiveDialogManager.DIALOG_TYPE_APP_EXIT == dialogType) {
+			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
+				exit();
 			}
 		}
 		
