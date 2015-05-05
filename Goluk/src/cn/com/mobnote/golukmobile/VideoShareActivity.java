@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
@@ -578,7 +579,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 
 			// 设置分享内容
-			sharePlatform.setShareContent(shortUrl, coverUrl,mDesEdit.getText().toString());
+			sharePlatform.setShareContent(shortUrl, coverUrl, mDesEdit.getText().toString());
 			CustomShareBoard shareBoard = new CustomShareBoard(this);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
@@ -684,17 +685,21 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
 
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,json);
+		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
+				json);
 
 		if (b) {
 			mPdsave = ProgressDialog.show(VideoShareActivity.this, "", "请求分享链接...");
-//		//	mPdsave.setCancelable(true);
-//			mPdsave.setOnCancelListener(new OnCancelListener(){
-//
-//				@Override
-//				public void onCancel(DialogInterface arg0) {
-//					cancelDialog();
-//				}});
+			mPdsave.setCancelable(true);
+			mPdsave.setOnCancelListener(new OnCancelListener() {
+
+				@Override
+				public void onCancel(DialogInterface arg0) {
+					cancelDialog();
+					boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+							IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
+				}
+			});
 		} else {
 			showToast("分享失败");
 		}
@@ -702,7 +707,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		Log.e("", "chxy__b__VideoShareActivity share11" + b);
 		Log.e("", "chxy____VideoShareActivity share11" + json);
 	}
-	
+
 	private void cancelDialog() {
 		if (null != mPdsave) {
 			mPdsave.dismiss();

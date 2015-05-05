@@ -586,4 +586,16 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static String getCancelJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("cancel", 1);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
 }
