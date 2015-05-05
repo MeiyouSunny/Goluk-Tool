@@ -794,7 +794,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			sp.edit().putString("url_live", UPLOAD_VOIDE_PRE + liveVid).apply();
 			sp.edit().commit();
 			CarRecorderManager.updateLiveConfiguration(new PreferencesReader(this).getConfig());
-			CarRecorderManager.setLiveMute(!mSettingData.isCanVoice);
+			if (null != mSettingData) {
+				CarRecorderManager.setLiveMute(!mSettingData.isCanVoice);
+			}
 			LogUtil.e("", "jyf------TTTTT------------开始上传直播----44444444");
 			CarRecorderManager.startRTSPLive();
 			isStartLive = true;
