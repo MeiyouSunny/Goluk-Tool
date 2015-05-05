@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
@@ -61,6 +62,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	
 	//判断登录
 	private String justLogin = "";
+	private CustomLoadingDialog mCustomProgressDialog=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -319,6 +321,10 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mApplication.loginStatus = 0;
 							UserUtils.hideSoftMethod(this);
 							mLoading.setVisibility(View.VISIBLE);
+							/*if(null == mCustomProgressDialog){
+								mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
+								mCustomProgressDialog.show();
+							}*/
 							mEditTextPhoneNumber.setEnabled(false);
 							mEditTextPwd.setEnabled(false);
 							mTextViewRegist.setEnabled(false);
@@ -326,7 +332,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mBtnLogin.setEnabled(false);
 							mBackButton.setEnabled(false);
 						}else{
-							mLoading.setVisibility(View.GONE);
+//							mLoading.setVisibility(View.GONE);
+							closeProgressDialog();
 							mApplication.loginStatus = 2;
 						}
 					}else{
@@ -352,6 +359,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 1:
 			mApplication.isUserLoginSucess = true;
 			mLoading.setVisibility(View.GONE);
+//			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -367,6 +375,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 2:
 			mApplication.isUserLoginSucess = false;
 			mLoading.setVisibility(View.GONE);
+//			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -377,6 +386,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 3:
 			mApplication.isUserLoginSucess = false;
 			mLoading.setVisibility(View.GONE);
+//			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -405,6 +415,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			console.toast("网络连接超时", this);
 			mApplication.isUserLoginSucess = false;
 			mLoading.setVisibility(View.GONE);
+//			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -415,6 +426,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 5:
 			mApplication.isUserLoginSucess = false;
 			mLoading.setVisibility(View.GONE);
+//			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -462,5 +474,16 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			break;
 		}
 		return false;
+	}
+	
+	/**
+	 * 关闭加载中对话框
+	 * @author xuhw
+	 * @date 2015年4月15日
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomProgressDialog){
+			mCustomProgressDialog.close();
+		}
 	}
 }
