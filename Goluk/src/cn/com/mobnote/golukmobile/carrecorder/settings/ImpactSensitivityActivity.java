@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -121,6 +122,9 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
+			case R.id.back_btn:
+				exit(); 
+				break;
 			case R.id.close:
 				updateSensitivity(0);
 				break;
@@ -148,9 +152,7 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		boolean flag = GolukApplication.getInstance().getIPCControlManager().setGSensorControlCfg(policy);
-		LogUtil.e("xuhw", "YYYYY====setGSensorControlCfg===policy="+policy+"==flag="+flag);
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("sensitivity");
+		
 	}
 
 	@Override
@@ -169,6 +171,21 @@ public class ImpactSensitivityActivity extends BaseActivity implements OnClickLi
 				}
 			}
 		}
+	}
+	
+	public void exit(){
+		boolean flag = GolukApplication.getInstance().getIPCControlManager().setGSensorControlCfg(policy);
+		LogUtil.e("xuhw", "YYYYY====setGSensorControlCfg===policy="+policy+"==flag="+flag);
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("sensitivity");
+		finish();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
 	}
 	
 }

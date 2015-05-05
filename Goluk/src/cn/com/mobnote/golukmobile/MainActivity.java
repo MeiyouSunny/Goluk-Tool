@@ -5,7 +5,41 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
+import com.rd.car.CarRecorderManager;
+import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.utils.Log;
 
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.entity.LngLat;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.user.UserInterface;
+import cn.com.mobnote.util.console;
+import cn.com.mobnote.video.LocalVideoListAdapter;
+import cn.com.mobnote.video.LocalVideoManage;
+import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
+import cn.com.mobnote.video.OnLineVideoManage;
+import cn.com.mobnote.view.MyGridView;
+import cn.com.mobnote.wifi.WiFiConnection;
+import cn.com.mobnote.wifi.WifiAutoConnectManager;
+import cn.com.mobnote.wifi.WifiConnCallBack;
+import cn.com.mobnote.wifi.WifiRsBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -599,9 +633,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		try {
 			JSONObject json = new JSONObject(str);
 			String tag = json.getString("tag");
+			long time = json.optLong("filetime");
 			if(tag.equals("videodownload")){
 				//只有视频下载才提示音频
 				playDownLoadedSound();
+				// 更新最新下载文件的时间
+				SettingUtils.getInstance().putLong("downloadfiletime", time);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -1056,11 +1093,11 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				}).create();
 				dialog	.show();
 				return ;
-			} else {
+			}
+				mShareLayout.setVisibility(View.GONE);
 				Intent intent = new Intent(this, UserLoginActivity.class);
 				intent.putExtra("isInfo", "back");
 				startActivity(intent);
-			}
 			return;
 		}
 		// 视频分享

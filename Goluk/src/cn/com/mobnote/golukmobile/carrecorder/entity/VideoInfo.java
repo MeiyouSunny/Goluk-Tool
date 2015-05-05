@@ -25,5 +25,6 @@ public class VideoInfo {
 	public String videoHP;
 	/** 释放标识 */
 	public boolean isRecycle=false;
-
+	/**视频文件录制起始时间（秒）  */
+	public long time;
 }

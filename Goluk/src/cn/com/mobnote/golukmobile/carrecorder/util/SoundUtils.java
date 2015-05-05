@@ -79,9 +79,9 @@ public class SoundUtils {
 	 * @author xuhw
 	 * @date 2015年3月8日
 	 */
-//	public  void play(String sound) {
-//		new playSound(sound).start();
-//	}
+	public  void play(String sound) {
+		new playSound(sound).start();
+	}
 
 	/**
 	 *  播放声音

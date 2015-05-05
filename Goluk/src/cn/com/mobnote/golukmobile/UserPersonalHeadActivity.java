@@ -30,7 +30,6 @@ public class UserPersonalHeadActivity extends Activity implements OnClickListene
 	
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
-			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 			setContentView(R.layout.user_personal_edit_head);
@@ -109,7 +108,6 @@ public class UserPersonalHeadActivity extends Activity implements OnClickListene
 		}
 		@Override
 		public void onClick(View arg0) {
-			// TODO Auto-generated method stub
 			switch (arg0.getId()) {
 			//返回
 			case R.id.back_btn:
@@ -205,7 +203,6 @@ public class UserPersonalHeadActivity extends Activity implements OnClickListene
 		@SuppressLint("ClickableViewAccessibility")
 		@Override
 		public boolean onTouch(View view, MotionEvent event) {
-			// TODO Auto-generated method stub
 			int action = event.getAction();
 			switch (view.getId()) {
 			case R.id.user_title_right:

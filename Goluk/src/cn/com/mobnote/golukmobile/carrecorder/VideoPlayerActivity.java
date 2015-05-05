@@ -89,6 +89,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	public  static Handler mHandler=null;
 	private final int GETPROGRESS=1;
 	private String from;
+	private boolean isShow=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -257,18 +258,21 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	 * @date 2015年3月8日
 	 */
 	private void showLoading() {
-		mLoadingLayout.setVisibility(View.VISIBLE);
-		mLoading.setVisibility(View.VISIBLE);
-		mLoading.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (mAnimationDrawable != null) {
-					if (!mAnimationDrawable.isRunning()) {
-						mAnimationDrawable.start();
+		if(!isShow){
+			
+			mLoadingLayout.setVisibility(View.VISIBLE);
+			mLoading.setVisibility(View.VISIBLE);
+			mLoading.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (mAnimationDrawable != null) {
+						if (!mAnimationDrawable.isRunning()) {
+							mAnimationDrawable.start();
+						}
 					}
 				}
-			}
-		}, 100);
+			}, 100);
+		}
 	}
 	
 	/**
@@ -278,12 +282,16 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	 * @date 2015年3月8日
 	 */
 	private void hideLoading() {
-		if (mAnimationDrawable != null) {
-			if (mAnimationDrawable.isRunning()) {
-				mAnimationDrawable.stop();
+		if(!isShow){
+			isShow=true;
+			
+			if (mAnimationDrawable != null) {
+				if (mAnimationDrawable.isRunning()) {
+					mAnimationDrawable.stop();
+				}
 			}
+			mLoadingLayout.setVisibility(View.GONE);
 		}
-		mLoadingLayout.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -392,7 +400,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		try {
 			mMediaPlayer = new MediaPlayer(this);
 			 if(getIntent().getStringExtra("from").equals("ipc")){
-				 mMediaPlayer.setBufferSize(500*1024);
+				 mMediaPlayer.setBufferSize(100*1024);
 			 }else{
 				 mMediaPlayer.setBufferSize(0);
 			 }

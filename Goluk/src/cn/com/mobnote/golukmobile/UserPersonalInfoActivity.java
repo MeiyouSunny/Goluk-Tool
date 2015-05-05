@@ -50,7 +50,6 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -60,7 +59,6 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		
 		mContext = this;
@@ -102,7 +100,6 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (view.getId()) {
 		case R.id.user_title_right:
@@ -124,7 +121,6 @@ public class UserPersonalInfoActivity extends Activity implements OnClickListene
 	}
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 			switch (arg0.getId()) {
 			case R.id.back_btn:
 				finish();

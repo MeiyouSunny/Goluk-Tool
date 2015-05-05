@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
@@ -65,10 +66,10 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	private String intentSign = null;
 	//保存数据的loading
 	private RelativeLayout mLoading = null;
+	private CustomLoadingDialog mCustomProgressDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_personal_edit);
@@ -78,6 +79,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserPersonalEdit");
 		
+		if(null == mCustomProgressDialog){
+			mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
+		}
 		initView();
 		//title
 		mTextTitle.setText("编辑资料");
@@ -87,7 +91,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		
 	}
@@ -145,7 +148,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	}
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
 		//title返回
 		case R.id.back_btn:
@@ -211,7 +213,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
 			if(b){
 				//保存中
-				mLoading.setVisibility(View.VISIBLE);
+//				mLoading.setVisibility(View.VISIBLE);
+				mCustomProgressDialog.show();
 				btnBack.setEnabled(false);
 				btnRight.setEnabled(false);
 				mLayoutHead.setEnabled(false);
@@ -239,7 +242,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				String json2Name = json2.getString("nickname");
 				String json2Head = json2.getString("head");
 				
-				mLoading.setVisibility(View.GONE);				
+//				mLoading.setVisibility(View.GONE);
+				closeProgressDialog();
 				switch (code) {
 				case 200:
 					Log.i("lily", "======"+intentName+"==jsonName===="+json2Name);
@@ -252,7 +256,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 					break;
 				case 405:
 					console.toast("该用户未注册", mContext);
-					mLoading.setVisibility(View.GONE);
+//					mLoading.setVisibility(View.GONE);
+					closeProgressDialog();
 					btnBack.setEnabled(true);
 					btnRight.setEnabled(true);
 					mLayoutHead.setEnabled(true);
@@ -262,7 +267,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 
 				case 500:
 					console.toast("服务器异常", mContext);
-					mLoading.setVisibility(View.GONE);
+//					mLoading.setVisibility(View.GONE);
+					closeProgressDialog();
 					btnBack.setEnabled(true);
 					btnRight.setEnabled(true);
 					mLayoutHead.setEnabled(true);
@@ -279,7 +285,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}else{
 			//success不等于1
 			console.toast("数据修改失败,请重试", mContext);
-			mLoading.setVisibility(View.GONE);
+//			mLoading.setVisibility(View.GONE);
+			closeProgressDialog();
 			btnBack.setEnabled(true);
 			btnRight.setEnabled(true);
 			mLayoutHead.setEnabled(true);
@@ -290,7 +297,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (view.getId()) {
 		case R.id.user_title_right:
@@ -317,7 +323,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (resultCode) {
 		//修改昵称
@@ -341,6 +346,17 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 
 		default:
 			break;
+		}
+	}
+	
+	/**
+	 * 关闭加载中对话框
+	 * @author xuhw
+	 * @date 2015年4月15日
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomProgressDialog){
+			mCustomProgressDialog.close();
 		}
 	}
 	
