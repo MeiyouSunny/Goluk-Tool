@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -140,6 +139,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
 			mEditTextPhoneNumber.setText(phone);
 			mEditTextPhoneNumber.setSelection(phone.length());
+			mEditTextPwd.setText("");
 		}
 		
 		/**
@@ -301,16 +301,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 //			break;
 		}
 	}
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-			/*if(keyCode == event.KEYCODE_DEL){
-				if(mDelAllNum){
-					mEditTextPhoneNumber.setText("");
-				}
-		}*/
-		return super.onKeyDown(keyCode, event);
-	}
 	
 	/**
 	 * 登录管理类
@@ -337,7 +327,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mBackButton.setEnabled(false);
 						}else{
 							mLoading.setVisibility(View.GONE);
-//							console.toast("登录失败", this);
 							mApplication.loginStatus = 2;
 						}
 					}else{
@@ -424,9 +413,27 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mBackButton.setEnabled(true);
 			break;
 		case 5:
-			/*Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
-			it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
-			startActivity(it);*/
+			mApplication.isUserLoginSucess = false;
+			mLoading.setVisibility(View.GONE);
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
+			new AlertDialog.Builder(mContext)
+			.setMessage("登录密码出错已经达到 5 次上限,账户被锁定 2 小时,请重置密码后登录")
+			.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
+					it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
+					startActivity(it);
+				}
+			})
+			.create().show();
 			break;
 		default:
 			break;

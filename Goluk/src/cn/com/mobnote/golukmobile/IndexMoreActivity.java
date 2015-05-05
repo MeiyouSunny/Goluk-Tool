@@ -210,7 +210,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 						.setOnKeyListener(new OnKeyListener() {
 							@Override
 							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-								// TODO Auto-generated method stub
 								if(keyCode == KeyEvent.KEYCODE_BACK){
 									return true;
 								}
@@ -269,15 +268,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		}
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		if(keyCode == KeyEvent.KEYCODE_BACK){
-//			this.finish();
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-	
 	/**
 	 * 对话框消失
 	 */
@@ -285,13 +275,12 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	public void statusChange() {
 		// TODO Auto-generated method stub
 		Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus);
+//		console.toast(""+mApp.autoLoginStatus, mContext);
 		if(mApp.autoLoginStatus == 2){
 			dismissDialog();
 		
 			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
 			personalChanged();
-			/*Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
-			startActivity(it);*/
 		}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4 || mApp.isUserLoginSucess == false){
 			dismissDialog();
 			console.toast("自动登录失败", mContext);
@@ -309,9 +298,11 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	 * 自动登录失败后个人中心状态的变化
 	 */
 	public void personalChanged(){
+//		console.toast("-----mApp.loginStatus-------"+mApp.loginStatus+"------mApp.autoLoginStatus-------"+mApp.autoLoginStatus, mContext);
 		if(mApp.loginStatus == 1 || mApp.autoLoginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
 			mLayoutHasInfo.setVisibility(View.VISIBLE);
 			mLayoutNoInfo.setVisibility(View.GONE);
+			mImageHead.setImageResource(R.drawable.individual_center_head_moren);
 			initData();
 			isHasInfo = true;
 		}else {//没有用户信息

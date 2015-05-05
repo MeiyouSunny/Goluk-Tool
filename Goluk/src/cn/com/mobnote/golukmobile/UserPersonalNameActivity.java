@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -54,6 +55,7 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 		if(null!=it.getStringExtra("intentNameText")){
 			Bundle bundle = it.getExtras();
 			nameText = bundle.getString("intentNameText");
+			Log.i("lily", "----------UserPersonalNameActivity---------name====="+nameText);
 		}
 		mEditName.setText(nameText);
 		
@@ -75,6 +77,7 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 		//que认
 		case R.id.user_title_right:
 			String name = mEditName.getText().toString();
+			Log.i("lily", "------UserPersonalNameActivity--修改昵称------"+name);
 			Intent it = new Intent(UserPersonalNameActivity.this,UserPersonalEditActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putString("itName", name);
@@ -84,7 +87,7 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 			break;
 		//
 		case R.id.user_personal_name_image:
-			//点击晴空
+			//点击清空
 			mEditName.setText("");
 			break;
 

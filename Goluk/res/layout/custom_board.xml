@@ -136,7 +136,7 @@
    
 
     <LinearLayout
-        android:id="@+id/share_cancel"
+        android:id="@+id/share_cancel_line"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@id/shares"
@@ -148,19 +148,19 @@
         android:orientation="horizontal" >
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/share_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
             android:textSize="18sp"
-            android:background="#00000000"
+            android:background="@drawable/btn_share_cancel_bg"
             android:text="取消" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="18dp"
-        android:layout_below="@+id/share_cancel"
+        android:layout_below="@+id/share_cancel_line"
         android:background="#00000000" />
 
 </RelativeLayout>

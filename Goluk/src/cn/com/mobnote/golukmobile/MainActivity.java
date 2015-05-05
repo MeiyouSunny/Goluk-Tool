@@ -1054,6 +1054,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						return false;
 					}
 				}).create();
+				dialog	.show();
+				return ;
+			}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4){
+				mShareLayout.setVisibility(View.GONE);
 				dialog.show();
 			} else {
 				Intent intent = new Intent(this, UserLoginActivity.class);
