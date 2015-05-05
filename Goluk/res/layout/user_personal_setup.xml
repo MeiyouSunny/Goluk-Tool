@@ -64,7 +64,6 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
 			android:layout_marginRight="19dp"
-			android:text="@string/cache_size_text"
 			android:layout_centerVertical="true"
 			android:textSize="18sp"
 			android:contentDescription="@string/imgdes"/>
@@ -97,15 +96,48 @@
 		
 	</RelativeLayout>
 
-	<!-- 登录/退出登录按钮 -->
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    >
+	    <!-- 登录/退出登录按钮 -->
 	<Button
 		android:id="@+id/loginout_btn"
 		android:layout_width="312dp"
 		android:layout_height="54dp"
-		android:layout_alignParentBottom="true"
 		android:layout_centerHorizontal="true"
-		android:background="@drawable/btn_log_btn"
+		android:background="@drawable/btn_share_cancel_bg"
 		android:gravity="center"
 		android:textSize="18sp"
 		android:textColor="#f0fefc"/>
+	
+	<!-- 底部提示信息 -->
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_below="@id/loginout_btn"
+	    android:paddingBottom="20dp"
+	    android:paddingTop="20dp"
+	    android:gravity="center"
+	    >
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/user_personal_setup_update_bottom_text1"
+	        android:textSize="14sp"
+	        android:textColor="@color/user_home_nologin"
+	        />
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="10dp"
+	        android:text="\@2015 Mobnote,Inc."
+	        android:textSize="14sp"
+	        android:textColor="@color/user_home_nologin"
+	        />
+	</LinearLayout>
+	</RelativeLayout>
+	
 </RelativeLayout>

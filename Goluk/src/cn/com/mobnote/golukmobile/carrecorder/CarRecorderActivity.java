@@ -804,7 +804,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 //		if (null == mEmergencyRecordingTimer) {
 //			System.out.println("PPPPPPPPPPP   emergency 222222");
 //			isRecording = true;
-////			SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT);
+//			SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT);
 //			mEmergencyRecordingTimer = new Timer();
 //			TimerTask task = new TimerTask() {
 //				public void run() {

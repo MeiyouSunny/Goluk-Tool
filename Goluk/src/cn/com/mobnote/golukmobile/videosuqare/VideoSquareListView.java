@@ -72,7 +72,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private void httpPost(boolean flag){
 		if(flag){
 			if(null == mCustomProgressDialog){
-				mCustomProgressDialog = new CustomLoadingDialog(mContext);
+				mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
 				mCustomProgressDialog.show();
 			}
 //			AlertDialog dialog = new AlertDialog.Builder(mContext).create();

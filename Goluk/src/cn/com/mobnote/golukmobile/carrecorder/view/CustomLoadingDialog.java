@@ -7,15 +7,20 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
 import android.graphics.drawable.AnimationDrawable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class CustomLoadingDialog{
 	
 	AlertDialog customDialog;
-	
+	String textTitle;
 	AnimationDrawable ad ;
 	
-	public CustomLoadingDialog(Context context) {
+	public CustomLoadingDialog(Context context,String txt) {
 		customDialog = new AlertDialog.Builder(context).create();
+		if(txt !=null){
+			textTitle = txt;
+		}
+	
 	}
 	
 	public void show(){
@@ -25,7 +30,10 @@ public class CustomLoadingDialog{
 			public void onShow(DialogInterface arg0) {
 				// TODO Auto-generated method stub
 				ImageView image = (ImageView) customDialog.getWindow().findViewById(R.id.loading_img);
-
+				TextView txt = (TextView) customDialog.getWindow().findViewById(R.id.loading_text);
+				if(textTitle!=null&&!"".equals(textTitle)){
+					txt.setText(textTitle);
+				}
 				ad = (AnimationDrawable) image.getBackground();
 
 				if (ad != null) {

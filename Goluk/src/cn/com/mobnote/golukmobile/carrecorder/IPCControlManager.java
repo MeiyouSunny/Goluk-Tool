@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
@@ -391,7 +392,8 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年4月21日
 	 */
 	public boolean ipcUpgrade(){
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_IPCUpgrade, "");
+		Log.i("lily", "---------ipcUpgrade------"+IPC_VDCPCmd_IPCUpgrade);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_IPCUpgrade, "fs1:/update/ipc_upgrade_2015-04-30-15-58.bin");
 	}
 	
 	/**
