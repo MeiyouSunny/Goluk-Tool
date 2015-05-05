@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -44,6 +45,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
@@ -54,18 +56,7 @@ import com.bokecc.sdk.mobile.upload.Uploader;
 import com.bokecc.sdk.mobile.upload.VideoInfo;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.QQShareContent;
-import com.umeng.socialize.media.SinaShareContent;
-import com.umeng.socialize.media.SmsShareContent;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMVideo;
-import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.SmsHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.sso.UMSsoHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 /**
  * <pre>
@@ -162,12 +153,12 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	/** 退出提示框 */
 	private AlertDialog mExitPromptDialog = null;
 	private Bitmap mShortBitmap = null;
-	
+
 	SharePlatformUtil sharePlatform;
 	/** 2/3 紧急/精彩 */
 	private int mVideoType = 0;
-	
-	private String videoName ;
+
+	private String videoName;
 
 	public Handler mmmHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -292,7 +283,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.video_share);
-		
+
 		mContext = this;
 		// 获取视频Id
 		Intent intent = getIntent();
@@ -316,54 +307,54 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 	private void createThumb() {
 		long startTime = System.currentTimeMillis();
-		//mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
-			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-			thumbFile = filePath + File.separator + videoName;
-			mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
-			
-			File image = new File(thumbFile);
-			if(image.exists()){
-				return ;
-			}else{
-				thumbFile = fileFolder + "/thumb11.jpg";
-				mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
-				if (mShortBitmap != null) {
-					int width = mShortBitmap.getWidth();
-					int height = mShortBitmap.getHeight();
+		// mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath,
+		// Thumbnails.MINI_KIND);
+		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+		thumbFile = filePath + File.separator + videoName;
+		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
 
-					Log.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
-				} else {
-					Log.e("", "VideoShareActivity createThumb: NULL:");
-				}
+		File image = new File(thumbFile);
+		if (image.exists()) {
+			return;
+		} else {
+			thumbFile = fileFolder + "/thumb11.jpg";
+			mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
+			if (mShortBitmap != null) {
+				int width = mShortBitmap.getWidth();
+				int height = mShortBitmap.getHeight();
 
-				try {
-
-					File file = new File(fileFolder);
-					file.mkdirs();
-					file = new File(thumbFile);
-					if (file.exists()) {
-						file.delete();
-					}
-
-					file.createNewFile();
-
-					FileOutputStream fos = new FileOutputStream(file);
-					mShortBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-
-					String fsFile = FileUtils.javaToLibPath(thumbFile);
-
-					Log.e("", "VideoShareActivity createThumb: time: " + fsFile);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				Log.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
+			} else {
+				Log.e("", "VideoShareActivity createThumb: NULL:");
 			}
+
+			try {
+
+				File file = new File(fileFolder);
+				file.mkdirs();
+				file = new File(thumbFile);
+				if (file.exists()) {
+					file.delete();
+				}
+
+				file.createNewFile();
+
+				FileOutputStream fos = new FileOutputStream(file);
+				mShortBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
+				String fsFile = FileUtils.javaToLibPath(thumbFile);
+
+				Log.e("", "VideoShareActivity createThumb: time: " + fsFile);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 		long dur = System.currentTimeMillis() - startTime;
 
 		Log.e("", "VideoShareActivity createThumb: time:" + dur);
 	}
-	
 
 	private void dimissErrorDialog() {
 		if (null != mErrorDialog) {
@@ -406,7 +397,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 	// CC上传失败，提示用户重试或退出
 	private void uploadFailed() {
-		
+
 		dimissErrorDialog();
 		if (isExit) {
 			return;
@@ -528,7 +519,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 	}
 
-
 	/**
 	 * 本地视频上传回调
 	 * 
@@ -585,12 +575,11 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			JSONObject dataObj = obj.getJSONObject("data");
 			final String shortUrl = dataObj.getString("shorturl");
 			final String coverUrl = dataObj.getString("coverurl");
-			final String text = "查看分享";
 
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 
 			// 设置分享内容
-			sharePlatform.setShareContent(shortUrl, coverUrl,text);
+			sharePlatform.setShareContent(shortUrl, coverUrl, mDesEdit.getText().toString());
 			CustomShareBoard shareBoard = new CustomShareBoard(this);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
@@ -657,7 +646,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		VideoShareActivity.this.finish();
 
 	}
-	
+
 	boolean isExit = false;
 
 	@Override
@@ -683,7 +672,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 	private void click_share() {
 		if (!this.mIsUploadSucess) {
-			//Toast.makeText(VideoShareActivity.this, "上传视频成功后才可以分享", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(VideoShareActivity.this, "上传视频成功后才可以分享",
+			// Toast.LENGTH_SHORT).show();
 			Toast.makeText(VideoShareActivity.this, "正在上传视频,请稍等", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -700,6 +690,16 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 		if (b) {
 			mPdsave = ProgressDialog.show(VideoShareActivity.this, "", "请求分享链接...");
+			mPdsave.setCancelable(true);
+			mPdsave.setOnCancelListener(new OnCancelListener() {
+
+				@Override
+				public void onCancel(DialogInterface arg0) {
+					cancelDialog();
+					boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+							IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
+				}
+			});
 		} else {
 			showToast("分享失败");
 		}
@@ -708,19 +708,28 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		Log.e("", "chxy____VideoShareActivity share11" + json);
 	}
 
+	private void cancelDialog() {
+		if (null != mPdsave) {
+			mPdsave.dismiss();
+			mPdsave = null;
+		}
+	}
+
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
 			Toast.makeText(VideoShareActivity.this, "第三方分享失败", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		//Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
+		// Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel,
+		// Toast.LENGTH_SHORT).show();
 
 		final String json = createShareSucesNotifyJson(mVideoVid, channel);
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_ShareNotify, json);
 
-		//Toast.makeText(VideoShareActivity.this, "调用Logic分享结果:" + json, Toast.LENGTH_SHORT).show();
+		// Toast.makeText(VideoShareActivity.this, "调用Logic分享结果:" + json,
+		// Toast.LENGTH_SHORT).show();
 
 		if (!b) {
 			Toast.makeText(VideoShareActivity.this, "调用Logic分享结果失败:" + channel, Toast.LENGTH_SHORT).show();

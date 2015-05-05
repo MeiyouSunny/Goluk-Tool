@@ -329,7 +329,7 @@ public class JsonUtil {
 			obj.put("talk", "1");
 			obj.put("zan", userInfo.zanCount);
 			obj.put("sex", userInfo.sex);
-			obj.put("head", "7");
+			obj.put("head", userInfo.head);
 
 			return obj.toString();
 		} catch (Exception e) {
@@ -358,6 +358,7 @@ public class JsonUtil {
 			userInfo.zanCount = getJsonStringValue(rootObj, "zan", "0");
 			userInfo.liveDuration = Integer.valueOf(getJsonStringValue(rootObj, "restime", "60"));
 			userInfo.desc = getJsonStringValue(rootObj, "desc", "");
+			userInfo.head = getJsonStringValue(rootObj, "head", "7");
 
 			return userInfo;
 		} catch (Exception e) {
@@ -583,6 +584,18 @@ public class JsonUtil {
 		}
 
 		return null;
+	}
+
+	public static String getCancelJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("cancel", 1);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 
 }

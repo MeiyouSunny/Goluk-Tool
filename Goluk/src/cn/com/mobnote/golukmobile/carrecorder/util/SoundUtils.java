@@ -59,9 +59,9 @@ public class SoundUtils {
 		mContext=GolukApplication.getInstance();
 		mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
 		soundData = new HashMap<String, Integer>();
-		soundData.put(RECORD_CAMERA, mSoundPool.load(mContext, R.raw.recode_camera, 1));
-		soundData.put(RECORD_EMERGENT, mSoundPool.load(mContext, R.raw.recorde_emergent, 1));
-		soundData.put(RECORD_SEC, mSoundPool.load(mContext, R.raw.recorde_sec, 1));
+//		soundData.put(RECORD_CAMERA, mSoundPool.load(mContext, R.raw.recode_camera, 1));
+//		soundData.put(RECORD_EMERGENT, mSoundPool.load(mContext, R.raw.recorde_emergent, 1));
+//		soundData.put(RECORD_SEC, mSoundPool.load(mContext, R.raw.recorde_sec, 1));
 		
 		mDisplayMetrics = new DisplayMetrics();
 		WindowManager windowManager = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);  
@@ -79,9 +79,9 @@ public class SoundUtils {
 	 * @author xuhw
 	 * @date 2015年3月8日
 	 */
-	public  void play(String sound) {
-		new playSound(sound).start();
-	}
+//	public  void play(String sound) {
+//		new playSound(sound).start();
+//	}
 
 	/**
 	 *  播放声音
