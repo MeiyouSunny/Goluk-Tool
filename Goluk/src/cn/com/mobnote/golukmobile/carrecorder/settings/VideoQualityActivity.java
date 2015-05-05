@@ -160,13 +160,13 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
 			if("1080P".equals(mVideoConfigState.resolution)){
-				if(10240 == mVideoConfigState.bitrate){
+				if(8192 == mVideoConfigState.bitrate){
 					updateSensitivity(SensitivityType._1080h);
 				}else{
 					updateSensitivity(SensitivityType._1080l);
 				}
 			}else{
-				if(5120 == mVideoConfigState.bitrate){
+				if(4096 == mVideoConfigState.bitrate){
 					updateSensitivity(SensitivityType._720h);
 				}else{
 					updateSensitivity(SensitivityType._720l);
@@ -184,16 +184,16 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 				if(GolukApplication.getInstance().getIpcIsLogin()){
 					if(SensitivityType._1080h == curType){
 						mVideoConfigState.resolution="1080P";
-						mVideoConfigState.bitrate=10240;
+						mVideoConfigState.bitrate=8192;
 					}else if(SensitivityType._1080l == curType){
 						mVideoConfigState.resolution="1080P";
-						mVideoConfigState.bitrate=8192;
+						mVideoConfigState.bitrate=6144;
 					}else if(SensitivityType._720h == curType){
 						mVideoConfigState.resolution="720P";
-						mVideoConfigState.bitrate=5120;
+						mVideoConfigState.bitrate=4096;
 					}else{
 						mVideoConfigState.resolution="720P";
-						mVideoConfigState.bitrate=4096;
+						mVideoConfigState.bitrate=3072;
 					}
 					boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);
 					System.out.println("YYY==========curType=========flag="+flag);
@@ -218,13 +218,13 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 						System.out.println("YYY================22222==============resolution====="+mVideoConfigState.resolution);
 						if("1080P".equals(mVideoConfigState.resolution)){
 							//bitrate数据返回的不对
-							if(10240 == mVideoConfigState.bitrate){
+							if(8192 == mVideoConfigState.bitrate){
 								updateSensitivity(SensitivityType._1080h);
 							}else{
 								updateSensitivity(SensitivityType._1080l);
 							}
 						}else{
-							if(5120 == mVideoConfigState.bitrate){
+							if(4096 == mVideoConfigState.bitrate){
 								updateSensitivity(SensitivityType._720h);
 							}else{
 								updateSensitivity(SensitivityType._720l);
