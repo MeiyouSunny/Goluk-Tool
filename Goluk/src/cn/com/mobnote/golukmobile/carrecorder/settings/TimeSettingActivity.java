@@ -13,6 +13,7 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -106,16 +107,6 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 			}
 		}).start();
 		
-//	    Time t=new Time();
-//	    t.setToNow();
-//	    year = t.year;  
-//	    month = t.month + 1;  
-//	    day = t.monthDay;  
-//	    hour = t.hour;
-//	    minute = t.minute;  
-//	    
-//	    mDateText.setText(year + "-" + month + "-" + day);
-//	    mTimeText.setText(hour+":"+minute);
 	}
 	
 	/**
@@ -136,6 +127,9 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
+			case R.id.back_btn:
+				exit(); 
+				break;
 			case R.id.mAutoBtn:
 				if(systemtime){
 					systemtime=false;
@@ -198,44 +192,7 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("timesetting");
 		
-		if(GolukApplication.getInstance().getIpcIsLogin()){
-			long time = 0;
-			if(systemtime){
-				time = System.currentTimeMillis()/1000;
-			}else{
-				SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-				 Date date;
-				try {
-					 Time t=new Time();
-					 t.setToNow();
-					 int sec = t.second;
-					String timestr = year + "-"+ month + "-" + day + " " + hour + ":" + minute + ":"+sec;
-					date = sdf.parse(timestr);
-					time = date.getTime()/1000;
-				} catch (ParseException e) {
-					System.out.println("YYY====str to time fail======22222222222222==");  
-				}
-			}
-			
-			
-			System.out.println("YYY=============time=="+time);
-			if(0 != time){
-			
-				final long times = time;
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						if(GolukApplication.getInstance().getIpcIsLogin()){
-							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(times);
-							System.out.println("YYY============setIPCSystemTime===============a="+a);
-						}
-					}
-				}).start();
-				
-			}
-		}
 		
 	}
 
@@ -285,6 +242,59 @@ public class TimeSettingActivity extends BaseActivity implements OnClickListener
 	protected void onResume() {
 		super.onResume();
 		GolukApplication.getInstance().setContext(this, "timesetting");
+	}
+	
+	public void exit(){
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("timesetting");
+		}
+		
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			long time = 0;
+			if(systemtime){
+				time = System.currentTimeMillis()/1000;
+			}else{
+				SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+				 Date date;
+				try {
+					 Time t=new Time();
+					 t.setToNow();
+					 int sec = t.second;
+					String timestr = year + "-"+ month + "-" + day + " " + hour + ":" + minute + ":"+sec;
+					date = sdf.parse(timestr);
+					time = date.getTime()/1000;
+				} catch (ParseException e) {
+					System.out.println("YYY====str to time fail======22222222222222==");  
+				}
+			}
+			
+			
+			System.out.println("YYY=============time=="+time);
+			if(0 != time){
+			
+				final long times = time;
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						if(GolukApplication.getInstance().getIpcIsLogin()){
+							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(times);
+							System.out.println("YYY============setIPCSystemTime===============a="+a);
+						}
+					}
+				}).start();
+				
+			}
+		}
+		
+		finish();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
 	}
 	
 }

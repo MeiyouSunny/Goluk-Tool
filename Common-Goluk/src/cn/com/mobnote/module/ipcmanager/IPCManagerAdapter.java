@@ -30,7 +30,7 @@ public class IPCManagerAdapter {
 		if (param2 instanceof String) {
 			data = (String)param2;
 		}
-//		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack--------------IPCManagerAdapter-22---event:" + event + " msg:" + msg+"==data:"+data);
+//		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack--------------IPCManagerAdapter-22---event:" + event + " msg:" + msg+"=param1="+param1+"==param2:"+data);
 		fn.IPCManage_CallBack(event, msg, param1, param2);
 	}
 
