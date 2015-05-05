@@ -166,12 +166,13 @@ public class JsonUtil {
 	 * @author jiayf
 	 * @date Mar 27, 2015
 	 */
-	public static String getDownFileJson(String filename, String tag, String savepath) {
+	public static String getDownFileJson(String filename, String tag, String savepath, long filetime) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("filename", filename);
 			obj.put("tag", tag);
 			obj.put("savepath", savepath);
+			obj.put("filetime", ""+filetime);
 
 			return obj.toString();
 		} catch (Exception e) {

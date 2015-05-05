@@ -28,6 +28,7 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.console;
@@ -599,9 +600,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		try {
 			JSONObject json = new JSONObject(str);
 			String tag = json.getString("tag");
+			long time = json.optLong("filetime");
 			if(tag.equals("videodownload")){
 				//只有视频下载才提示音频
 				playDownLoadedSound();
+				// 更新最新下载文件的时间
+				SettingUtils.getInstance().putLong("downloadfiletime", time);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

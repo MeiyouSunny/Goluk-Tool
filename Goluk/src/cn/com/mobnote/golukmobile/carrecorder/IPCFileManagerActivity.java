@@ -972,14 +972,14 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 						File file = new File(filePath + File.separator + fileName);
 						if (!file.exists()) {
-							GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "download", FileUtils.javaToLibPath(filePath));
+							GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "download", FileUtils.javaToLibPath(filePath), findtime(fileName));
 						}
 					}
 					
 					String mp4 = FileUtils.libToJavaPath(videoSavePath+filename);
 					File file = new File(mp4);
 					if(!file.exists()){
-						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "videodownload", videoSavePath);
+						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "videodownload", videoSavePath, findtime(filename));
 						boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
 						LogUtil.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
 					}else{
@@ -1111,6 +1111,35 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	}
 	
 	/**
+	 * 查询文件录制起始时间
+	 * @param filename　文件名
+	 * @return 文件录制起始时间
+	 * @author xuhw
+	 * @date 2015年5月5日
+	 */
+	private long findtime(String filename){
+		long time=0;
+		List<VideoInfo> datalist = null;
+		if(filename.contains("WND")){
+			datalist = mWonderfulVideoData;
+		}else if(filename.contains("URG")){
+			datalist = mEmergencyVideoData;
+		}else if(filename.contains("NRM")){
+			datalist = mLoopVideoData;
+		}
+		
+		if(null != datalist){
+			for(int i=0;i<datalist.size();i++){
+				if(filename.equals(datalist.get(i).videoPath)){
+					return datalist.get(i).time;
+				}
+			}
+		}
+		
+		return time;
+	}
+	
+	/**
 	 * 退出
 	 * @author xuhw
 	 * @date 2015年5月4日
@@ -1213,7 +1242,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		info.videoHP = mVideoFileInfo.resolution;
 		info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
 		 info.videoPath=mVideoFileInfo.location;
-		 
+		 info.time=mVideoFileInfo.time;
 		
 		String fileName = mVideoFileInfo.location;
 		fileName = fileName.substring(0, fileName.length() - 4) + ".jpg";
@@ -1224,7 +1253,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			info.videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 		} else {
 			 if(1 == mVideoFileInfo.withSnapshot){
-				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
+				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath), mVideoFileInfo.time);
 				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
 			 }
 		}
