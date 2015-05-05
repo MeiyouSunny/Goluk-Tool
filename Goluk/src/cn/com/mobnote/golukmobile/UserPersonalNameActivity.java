@@ -29,7 +29,6 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_personal_edit_name);
@@ -68,7 +67,6 @@ public class UserPersonalNameActivity extends Activity implements OnClickListene
 	}
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
 		//返回
 		case R.id.back_btn:

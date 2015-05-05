@@ -6,6 +6,7 @@
 			android:layout_width="126dp"
 			android:layout_height="126dp"
 			android:layout_centerInParent="true"
+			android:layout_gravity="center"
 			android:background="@drawable/edit_loading_bg">
 			
 			<TextView
