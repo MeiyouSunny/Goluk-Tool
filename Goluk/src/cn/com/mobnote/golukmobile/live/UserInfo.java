@@ -16,6 +16,8 @@ public class UserInfo implements Serializable {
 	public String picurl;
 	/** 性别 */
 	public String sex;
+	/** 头像 */
+	public String head;
 
 	public String lon;
 	public String lat;
@@ -35,4 +37,5 @@ public class UserInfo implements Serializable {
 	public int liveDuration;
 	/** 视频描述 */
 	public String desc;
+
 }
