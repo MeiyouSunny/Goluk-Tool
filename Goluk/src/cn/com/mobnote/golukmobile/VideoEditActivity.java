@@ -332,14 +332,14 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 			// 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
 			EditorParam editorParam = new EditorParam();
 			// 高清
-			// editorParam.nVideoWidth = 854;
-			// editorParam.nVideoHeight = 480;
+			 editorParam.nVideoWidth = 854;
+			 editorParam.nVideoHeight = 480;
 			// 标清
 			// editorParam.nVideoWidth = 854;
 			// editorParam.nVideoHeight = 480;
 			// //分辨率 帧率 码率 480*270 30fps 1400kbps
-			// editorParam.nVideoBitrate = 768 * 1024;
-			// editorParam.nFps = 20;
+			 editorParam.nVideoBitrate = 768 * 1024;
+			 editorParam.nFps = 20;
 
 			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
 			mVVPlayVideo.saveVideo(mVideoSavePath, editorParam, new FilterPlaybackView.FilterVideoEditorListener() {
