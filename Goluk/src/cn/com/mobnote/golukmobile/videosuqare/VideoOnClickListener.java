@@ -104,6 +104,7 @@ public class VideoOnClickListener implements OnClickListener{
 			user.tag = mVideoSquareInfo.mVideoEntity.livevideodata.tag;
 			user.uid = mVideoSquareInfo.mUserEntity.uid;
 			user.zanCount = mVideoSquareInfo.mVideoEntity.praisenumber;
+			user.head = mVideoSquareInfo.mUserEntity.headportrait;
 	        Intent intent = new Intent(mContext, LiveActivity.class);
 	        intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
 	        intent.putExtra(LiveActivity.KEY_GROUPID, "");
