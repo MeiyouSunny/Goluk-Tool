@@ -129,7 +129,7 @@ public class VideoSquarePlayActivity extends Activity implements
 	private void httpPost(boolean flag,String type,String operation,String timestamp) {
 		if (flag) {
 			if (null == mCustomProgressDialog) {
-				mCustomProgressDialog = new CustomLoadingDialog(this);
+				mCustomProgressDialog = new CustomLoadingDialog(this,null);
 				mCustomProgressDialog.show();
 			}
 		}
@@ -227,10 +227,10 @@ public class VideoSquarePlayActivity extends Activity implements
 				Toast.makeText(VideoSquarePlayActivity.this, "第三方分享失败", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			Toast.makeText(VideoSquarePlayActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
-			System.out.println("shareid"+shareVideoId);
+			//Toast.makeText(VideoSquarePlayActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
+			System.out.println("shareid======"+shareVideoId + "channel======="+channel);
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
-			System.out.println("shareid"+result);
+			//System.out.println("shareid"+result);
 		}
 
 	/**

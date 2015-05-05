@@ -36,6 +36,7 @@ import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -132,8 +133,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	
 	/**登录的五个状态  0登录中  1 登录成功  2登录失败  3手机号未注册，跳转注册页面  4超时   5密码错误达上限去重置密码**/
 	public int loginStatus ;
-	/**注册的三个状态  1注册中  2注册成功  3 注册失败**/
-	/** 注册的三个状态 0注册中 1注册成功 2 注册失败 **/
+	/** 注册的三个状态 1注册中 2注册成功   3注册失败 **/
 	public int registStatus;
 	/** 自动登录的四个状态 1自动登录中 2自动登录成功 3自动登录失败 4自动登录超时 5密码错误 **/
 	public int autoLoginStatus;
@@ -732,8 +732,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 			if (null != mMainActivity) {
 				// 地图大头针图片
-				console.log("pageNotifyCallBack---登录---"
-						+ String.valueOf(param2));
+				console.log("pageNotifyCallBack---登录---"+ String.valueOf(param2));
 				mMainActivity.loginCallBack(success, param2);
 			}
 			// 登录
@@ -742,8 +741,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			}
 
 			if (mPageSource == "UserRegist") {
-				((UserRegistActivity) mContext).registLoginCallBack(success,
-						param2);
+				((UserRegistActivity) mContext).registLoginCallBack(success,param2);
 			}
 
 			parseLoginData(success, param2);
@@ -777,7 +775,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		// 重置密码PageType_ModifyPwd
 		case PageType_ModifyPwd:
 			if (mPageSource == "UserRepwd") {
-				((UserRepwdActivity) mContext).repwdCallBack(success, param2);
+				((UserRepwdActivity) mContext).repwdCallBack(success,param1, param2);
 			}
 			break;
 		case IPageNotifyFn.PageType_ModifyUserInfo:
@@ -1424,15 +1422,35 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			return;
 		}
 		
-		if (mContext instanceof Activity){
+		if (this.testActivity()){
 			mconnection = new CustomFormatDialog(mContext);
 			mconnection.setCancelable(false);
 			mconnection.setMessage("摄像头断开，正在为您重连…");
-
-			mconnection.show();
-			mHandler.removeMessages(1002);
-			mHandler.sendEmptyMessageDelayed(1002, 10000);
+			
+			if(!((Activity)mContext).isFinishing()){
+				mconnection.show();
+				mHandler.removeMessages(1002);
+				mHandler.sendEmptyMessageDelayed(1002, 10000);
+			}
+			
 		}
+	}
+	
+	/**
+	 * 验证固定的几个activity 可以弹框
+	  * @Title: testActivity 
+	  * @Description: TODO
+	  * @return boolean 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	public boolean testActivity(){
+		if(mContext instanceof CarRecorderActivity){
+			return true;
+		}else{
+			return false;
+		}
+		
 	}
 
 	private CustomDialog backHomedialog;
@@ -1456,7 +1474,10 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				}
 			});
 			if (backHomedialog.isShowing() == false) {
-				backHomedialog.show();
+				if(!((Activity)mContext).isFinishing()){
+					backHomedialog.show();
+				}
+				
 			}
 		}
 

@@ -44,7 +44,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	private UMSocialService mController = UMServiceFactory.getUMSocialService(Constants.DESCRIPTOR);
 	private Activity mActivity;
 	/** 保存当前的分享方式 */
-	private String mCurrentShareType = null;
+	private String mCurrentShareType = "2";
 
 	public CustomShareBoard(Activity activity) {
 		super(activity);
@@ -111,7 +111,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 			@Override
 			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-				String showText = platform.toString();
+				System.out.println("mCurrentShareType------"+mCurrentShareType);
+				//String showText = platform.toString();
 				if (eCode == StatusCode.ST_CODE_SUCCESSED) {
 					if (mActivity instanceof VideoShareActivity) {
 						((VideoShareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
@@ -120,14 +121,14 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 					} else if(mActivity instanceof VideoSquarePlayActivity){
 						((VideoSquarePlayActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 					}
-					showText += "平台分享成功";
+					//showText += "平台分享成功";
 				} else {
-					showText += "平台分享失败";
+					//showText += "平台分享失败";
 					if (mActivity instanceof VideoShareActivity) {
 						((VideoShareActivity) mActivity).shareSucessDeal(false, null);
 					}
 				}
-				mCurrentShareType = null;
+				//mCurrentShareType = null;
 				//Toast.makeText(mActivity, showText,Toast.LENGTH_SHORT).show();
 				dismiss();
 			}

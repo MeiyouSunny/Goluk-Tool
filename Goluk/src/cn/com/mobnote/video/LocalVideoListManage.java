@@ -283,7 +283,7 @@ public class LocalVideoListManage {
 								String[] names = fileName.split("_");
 								console.log("fileName---" + fileName);
 								String vt = names[0];
-								
+								int hp = Integer.valueOf(vt.substring(3,4));
 								//视频时长,秒
 								int period = 8;
 								if(names.length > 2){
@@ -312,7 +312,7 @@ public class LocalVideoListManage {
 								//视频时长,没有数据
 								data.countTime = Utils.minutesTimeToString(period);
 								//视频质量,没有数据
-								data.videoHP = 1080;
+								data.videoHP = hp;
 								//时间显示需求
 								data.videoCreateDate = time;
 								data.videoPath = path;
@@ -1121,7 +1121,7 @@ public class LocalVideoListManage {
 		public String videoPath;
 		/** 视频时长 */
 		public String countTime = null;
-		/**分辨率  1:1080p 2:720p*/
+		/**分辨率  1:1080p 2:720p 3:480p*/
 		public int videoHP = 0;
 		/** 释放标识 */
 		public boolean isRecycle=false;

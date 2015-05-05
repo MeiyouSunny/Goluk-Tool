@@ -508,30 +508,36 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
 					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 					console.log(isRegist);
-					int freqInt = Integer.valueOf(freq);
-					if(freqInt>3){
-						UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
-					}else{
-						boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
-						if(b){
-							mApplication.registStatus = 1;//注册中……
-							//隐藏软件盘
-							UserUtils.hideSoftMethod(this);
-							mLoading.setVisibility(View.VISIBLE);
-							mEditTextPhone.setEnabled(false);
-							mEditTextIdentify.setEnabled(false);
-							mEditTextPwd.setEnabled(false);
-							mBtnIdentify.setEnabled(false);
-							mTextViewLogin.setEnabled(false);
-							mBackButton.setEnabled(false);
-							mBtnRegist.setEnabled(false);
+					Log.i("lily", "------UserRegistActivity---不点击获取验证码---111------"+freq);
+					if(identifyClick){
+						int freqInt = Integer.parseInt(freq);
+						Log.i("lily", "------UserRegistActivity---不点击获取验证码---------"+freq);
+						if(freqInt>3){
+							UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
+						}else{
+							boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
+							if(b){
+								mApplication.registStatus = 1;//注册中……
+								//隐藏软件盘
+								UserUtils.hideSoftMethod(this);
+								mLoading.setVisibility(View.VISIBLE);
+								mEditTextPhone.setEnabled(false);
+								mEditTextIdentify.setEnabled(false);
+								mEditTextPwd.setEnabled(false);
+								mBtnIdentify.setEnabled(false);
+								mTextViewLogin.setEnabled(false);
+								mBackButton.setEnabled(false);
+								mBtnRegist.setEnabled(false);
+								}
 							}
-						}
+					}else{
+						console.toast("请先获取验证码", mContext);
 					}
+				}
 				}else{
 					UserUtils.showDialog(UserRegistActivity.this,"密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
 					mBtnRegist.setEnabled(true);
-				}
+			}
 		}
 		}else{
 			UserUtils.showDialog(mContext, "手机格式输入错误，请重新输入");
@@ -626,8 +632,10 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 				e.printStackTrace();
 			}
 		}else{
-		//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-			android.util.Log.i("outtime", "-----网络链接超时超时超时"+codeOut);
+			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
+			android.util.Log.i("outtime", "-----网络链接超时超时超时" + codeOut);
+//			console.toast("当前网络状况不佳，请检查网络", mContext);
+			console.toast("网络连接超时", mContext);
 			switch (codeOut) {
 			case 1:
 				mApplication.registStatus = 3;
@@ -635,9 +643,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			case 2:
 				mApplication.registStatus = 3;
 				break;
-			case 3://超时
+			case 3:// 超时
 				mApplication.registStatus = 3;
-				console.toast("当前网络状态不佳，请检查网络后重试", mContext);
 				break;
 			default:
 				break;
@@ -666,7 +673,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 		if(b){
 			Log.i("yyy", "=======UserRegistActivity====="+b);
-			//---------------------------登录成功的状态  1----------------------------
+			//---------------------------登录成功的状态  1-------------------------
 			//登录成功跳转
 			mApplication.loginStatus=1;//登录成功
 			mApplication.isUserLoginSucess = true;
