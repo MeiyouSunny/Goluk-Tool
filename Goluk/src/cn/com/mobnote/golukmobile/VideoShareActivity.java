@@ -585,12 +585,11 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			JSONObject dataObj = obj.getJSONObject("data");
 			final String shortUrl = dataObj.getString("shorturl");
 			final String coverUrl = dataObj.getString("coverurl");
-			final String text = "查看分享";
 
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 
 			// 设置分享内容
-			sharePlatform.setShareContent(shortUrl, coverUrl,text);
+			sharePlatform.setShareContent(shortUrl, coverUrl,mDesEdit.getText().toString());
 			CustomShareBoard shareBoard = new CustomShareBoard(this);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
@@ -695,8 +694,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
 
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
-				json);
+		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,json);
 
 		if (b) {
 			mPdsave = ProgressDialog.show(VideoShareActivity.this, "", "请求分享链接...");
