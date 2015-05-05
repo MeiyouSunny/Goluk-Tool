@@ -191,7 +191,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			public void handleMessage(final android.os.Message msg) {
 				switch (msg.what) {
 				case SCREENSHOOT:
-					screenShoot();
+//					screenShoot();
 					break;
 				case QUERYFILEEXIT:
 					queryFileExit();
@@ -203,7 +203,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					startTrimVideo();
 					break;
 				case EMERGENCYQUERY:
-					emergencyQuery();
+//					emergencyQuery();
 					break;
 				case ADDR:
 					String addr = (String) msg.obj;
@@ -499,39 +499,39 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mHandler.sendEmptyMessageDelayed(STARTVIDEORECORD, 1000);
 	}
 
-	/**
-	 * 初始化传感器监听
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月9日
-	 */
-	private void initSensor() {
-		if (SensorDetector.isSupportAccelerometerSensor(this)) {
-			mSensorDetector = new SensorDetector(this);
-			mSensorDetector
-					.registerAccelerometerListener(new AccelerometerListener() {
-						@Override
-						public void onChanged() {
-
-							if (GolukApplication.getInstance().getIpcIsLogin()) {
-								if (!isRecording) {
-									sendEmergencyCommitId();
-								} else {
-									if (!emergencyQueuing) {
-										GFileUtils
-												.writeIPCLog("=====================紧急视频开始排队====================");
-										emergencyQueuing = true;
-										mHandler.sendEmptyMessage(EMERGENCYQUERY);
-									}
-								}
-							} else {
-								// 未登录
-							}
-
-						}
-					});
-		}
-	}
+//	/**
+//	 * 初始化传感器监听
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月9日
+//	 */
+//	private void initSensor() {
+//		if (SensorDetector.isSupportAccelerometerSensor(this)) {
+//			mSensorDetector = new SensorDetector(this);
+//			mSensorDetector
+//					.registerAccelerometerListener(new AccelerometerListener() {
+//						@Override
+//						public void onChanged() {
+//
+//							if (GolukApplication.getInstance().getIpcIsLogin()) {
+//								if (!isRecording) {
+//									sendEmergencyCommitId();
+//								} else {
+//									if (!emergencyQueuing) {
+//										GFileUtils
+//												.writeIPCLog("=====================紧急视频开始排队====================");
+//										emergencyQueuing = true;
+//										mHandler.sendEmptyMessage(EMERGENCYQUERY);
+//									}
+//								}
+//							} else {
+//								// 未登录
+//							}
+//
+//						}
+//					});
+//		}
+//	}
 
 	/**
 	 * 重连runnable
@@ -782,83 +782,83 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 
 	};
 
-	/**
-	 * 视频截图
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月4日
-	 */
-	private void screenShoot() {
-		GolukApplication.getInstance().getIPCControlManager().screenShot();
-		mHandler.removeMessages(SCREENSHOOT);
-		mHandler.sendEmptyMessageDelayed(SCREENSHOOT, SCREENSHOOTTIME);
-	}
-
-	/**
-	 * 开启紧急录制
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月4日
-	 */
-	private void startEmergencyRecording() {
-		if (null == mEmergencyRecordingTimer) {
-			System.out.println("PPPPPPPPPPP   emergency 222222");
-			isRecording = true;
-			SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT);
-			mEmergencyRecordingTimer = new Timer();
-			TimerTask task = new TimerTask() {
-				public void run() {
-					stopEmergencyRecording();
-				}
-			};
-			mEmergencyRecordingTimer.schedule(task,
-					emergencyRecordingTime * 1000,
-					emergencyRecordingTime * 1000);
-		}
-	}
-
-	/**
-	 * 关闭紧急录制
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月4日
-	 */
-	private void stopEmergencyRecording() {
-		isRecording = false;
-		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
-				QUERYFILETIME);
-		SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT, 2);
-		if (null != mEmergencyRecordingTimer) {
-			mEmergencyRecordingTimer.cancel();
-			mEmergencyRecordingTimer.purge();
-			mEmergencyRecordingTimer = null;
-		}
-	}
-
-	/**
-	 * 处理紧急视频排队情况
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月9日
-	 */
-	private void emergencyQuery() {
-		mHandler.removeMessages(EMERGENCYQUERY);
-		if (!isRecording) {
-			emergencyQueryTimeout = 0;
-			emergencyQueuing = false;
-			sendEmergencyCommitId();
-		} else {
-			emergencyQueryTimeout++;
-			if (emergencyQueryTimeout <= 15) {
-				GFileUtils
-						.writeIPCLog("=====================紧急视频开始排队===============emergencyQueryTimeout=="
-								+ emergencyQueryTimeout);
-				mHandler.sendEmptyMessageDelayed(EMERGENCYQUERY, 1000);
-			} else {
-				emergencyQueryTimeout = 0;
-			}
-		}
-	}
+//	/**
+//	 * 视频截图
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月4日
+//	 */
+//	private void screenShoot() {
+//		GolukApplication.getInstance().getIPCControlManager().screenShot();
+//		mHandler.removeMessages(SCREENSHOOT);
+//		mHandler.sendEmptyMessageDelayed(SCREENSHOOT, SCREENSHOOTTIME);
+//	}
+//
+//	/**
+//	 * 开启紧急录制
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月4日
+//	 */
+//	private void startEmergencyRecording() {
+//		if (null == mEmergencyRecordingTimer) {
+//			System.out.println("PPPPPPPPPPP   emergency 222222");
+//			isRecording = true;
+////			SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT);
+//			mEmergencyRecordingTimer = new Timer();
+//			TimerTask task = new TimerTask() {
+//				public void run() {
+//					stopEmergencyRecording();
+//				}
+//			};
+//			mEmergencyRecordingTimer.schedule(task,
+//					emergencyRecordingTime * 1000,
+//					emergencyRecordingTime * 1000);
+//		}
+//	}
+//
+//	/**
+//	 * 关闭紧急录制
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月4日
+//	 */
+//	private void stopEmergencyRecording() {
+//		isRecording = false;
+//		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
+//				QUERYFILETIME);
+//		SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT, 2);
+//		if (null != mEmergencyRecordingTimer) {
+//			mEmergencyRecordingTimer.cancel();
+//			mEmergencyRecordingTimer.purge();
+//			mEmergencyRecordingTimer = null;
+//		}
+//	}
+//
+//	/**
+//	 * 处理紧急视频排队情况
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月9日
+//	 */
+//	private void emergencyQuery() {
+//		mHandler.removeMessages(EMERGENCYQUERY);
+//		if (!isRecording) {
+//			emergencyQueryTimeout = 0;
+//			emergencyQueuing = false;
+//			sendEmergencyCommitId();
+//		} else {
+//			emergencyQueryTimeout++;
+//			if (emergencyQueryTimeout <= 15) {
+//				GFileUtils
+//						.writeIPCLog("=====================紧急视频开始排队===============emergencyQueryTimeout=="
+//								+ emergencyQueryTimeout);
+//				mHandler.sendEmptyMessageDelayed(EMERGENCYQUERY, 1000);
+//			} else {
+//				emergencyQueryTimeout = 0;
+//			}
+//		}
+//	}
 
 	/**
 	 * 8s视频一键抢拍
