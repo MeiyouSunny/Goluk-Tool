@@ -2503,10 +2503,12 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					// 计时器完成
 					stopRTSPUpload();
 					LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this, "直播结束");
+					// 停止上报功能
+					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
+							ITalkFn.Talk_Command_StopUploadPosition, "");
 				}
-				// 停止上报功能
-				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
-						ITalkFn.Talk_Command_StopUploadPosition, "");
+				LogUtil.e("aaaaaa", "-------------aaaaa-----stop------");
+
 				// 直播功能
 				updateCountDown(GolukUtils.secondToString(current));
 			}
