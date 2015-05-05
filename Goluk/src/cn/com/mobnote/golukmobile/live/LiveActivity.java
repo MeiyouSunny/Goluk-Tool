@@ -102,6 +102,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	final int[] mHeadImg = { 0, R.drawable.editor_boy_one, R.drawable.editor_boy_two,
 			R.drawable.editor_boy_three, R.drawable.editor_girl_one, R.drawable.editor_girl_two,
 			R.drawable.editor_girl_two, R.drawable.head_unknown };
+	
+	/** 视频上传地址 */
+	private final String UPLOAD_VOIDE_PRE = "rtmp://goluk.8686c.com/live/";
 
 	/** 自己预览地址 */
 	private static final String VIEW_SELF_PLAY = "rtsp://admin:123456@192.168.43.234/sub";
@@ -781,7 +784,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		try {
 			LogUtil.e("", "jyf------TTTTT------------开始上传直播----3333");
 			SharedPreferences sp = getSharedPreferences("CarRecorderPreferaces", Context.MODE_PRIVATE);
-			sp.edit().putString("url_live", "rtmp://211.103.234.234/live/" + liveVid).apply();
+//			sp.edit().putString("url_live", "rtmp://211.103.234.234/live/" + liveVid).apply();
+			
+			sp.edit().putString("url_live", UPLOAD_VOIDE_PRE + liveVid).apply();
 			sp.edit().commit();
 			CarRecorderManager.updateLiveConfiguration(new PreferencesReader(this).getConfig());
 			CarRecorderManager.setLiveMute(!mSettingData.isCanVoice);
