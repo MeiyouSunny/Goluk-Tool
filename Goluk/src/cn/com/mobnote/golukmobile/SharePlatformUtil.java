@@ -35,6 +35,8 @@ public class SharePlatformUtil{
 	public void configPlatforms() {
 		// 添加新浪SSO授权
 		mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		mController.getConfig().closeToast();
+
 		// 添加微信、微信朋友圈平台
 		addWXPlatform();
 		//添加短信
