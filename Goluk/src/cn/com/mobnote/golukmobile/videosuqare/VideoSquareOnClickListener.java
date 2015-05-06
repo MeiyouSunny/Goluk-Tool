@@ -250,12 +250,17 @@ public class VideoSquareOnClickListener implements OnClickListener,
 						JSONObject data = result.getJSONObject("data");
 						String shareurl = data.getString("shorturl");
 						String coverurl = data.getString("coverurl");
+						String describe = "";
+						if(!data.isNull("describe")){
+							describe = data.getString("describe");
+						}
+						
 						if ("".equals(coverurl)) {
 
 						}
 						System.out.println("YYYY+RESULT11111111");
 						// 设置分享内容
-						sharePlatform.setShareContent(shareurl, coverurl,mVideoSquareInfo.mVideoEntity.describe);
+						sharePlatform.setShareContent(shareurl, coverurl,describe);
 						System.out.println("YYYY+RESULT22222222");
 
 						if (form == 2) {

@@ -173,7 +173,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mDataList.addAll(list);
 				initLayout();
 			}else{
-				Toast.makeText(mContext, "网络连接失败!",Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

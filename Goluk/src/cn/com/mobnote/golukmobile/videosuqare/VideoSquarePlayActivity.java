@@ -329,7 +329,7 @@ public class VideoSquarePlayActivity extends Activity implements
 				} else if (2 == uptype){
 					mRTPullListView.onRefreshComplete();
 				}
-				Toast.makeText(VideoSquarePlayActivity.this, "网络连接失败!",Toast.LENGTH_SHORT).show();
+				Toast.makeText(VideoSquarePlayActivity.this, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
