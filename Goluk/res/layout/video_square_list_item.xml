@@ -68,12 +68,12 @@
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-		
+		<!--  
         <SurfaceView
             android:id="@+id/mSurfaceView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-		
+		-->
         <ImageView
             android:id="@+id/mPreLoading"
             android:layout_width="wrap_content"
