@@ -512,12 +512,19 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						+ fileName);
 				int type = json.getInt("type");
 				String savePath = "";
-				if (type == 2) {
-					// 紧急视频
-					savePath = mVideoSavePath + "urgent/";
-				} else {
-					// 精彩视频
+//				if (type == 2) {a
+//					// 紧急视频
+//					savePath = mVideoSavePath + "urgent/";
+//				} else {
+//					// 精彩视频
+//					savePath = mVideoSavePath + "wonderful/";
+//				}
+				if(IPCManagerFn.TYPE_SHORTCUT == type){
 					savePath = mVideoSavePath + "wonderful/";
+				}else if(IPCManagerFn.TYPE_URGENT == type){
+					savePath = mVideoSavePath + "urgent/";
+				}else{
+					savePath = mVideoSavePath + "loop/";
 				}
 				// 调用下载视频接口
 				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
