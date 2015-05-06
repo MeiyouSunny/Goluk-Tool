@@ -5,41 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
-import com.rd.car.CarRecorderManager;
-import com.tencent.bugly.crashreport.CrashReport;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.utils.Log;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.entity.LngLat;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.map.BaiduMapManage;
-import cn.com.mobnote.user.UserInterface;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.LocalVideoListAdapter;
-import cn.com.mobnote.video.LocalVideoManage;
-import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
-import cn.com.mobnote.video.OnLineVideoManage;
-import cn.com.mobnote.view.MyGridView;
-import cn.com.mobnote.wifi.WiFiConnection;
-import cn.com.mobnote.wifi.WifiAutoConnectManager;
-import cn.com.mobnote.wifi.WifiConnCallBack;
-import cn.com.mobnote.wifi.WifiRsBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,7 +14,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
@@ -56,7 +21,6 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -80,6 +44,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -101,16 +66,14 @@ import cn.com.mobnote.video.LocalVideoManage;
 import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
 import cn.com.mobnote.video.OnLineVideoManage;
 import cn.com.mobnote.view.MyGridView;
-import cn.com.mobnote.wifi.WiFiConnection;
-import cn.com.mobnote.wifi.WifiAutoConnectManager;
-import cn.com.mobnote.wifi.WifiConnCallBack;
-import cn.com.mobnote.wifi.WifiRsBean;
+import cn.com.mobnote.wifibind.WifiConnCallBack;
+import cn.com.mobnote.wifibind.WifiConnectManager;
+import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatus;
@@ -147,7 +110,7 @@ import com.umeng.socialize.utils.Log;
 
 @SuppressLint("HandlerLeak")
 
-public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack, OnTouchListener, ILiveDialogManagerFn, 
+public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack,OnTouchListener, ILiveDialogManagerFn, 
 			ILocationFn, IBaiduGeoCoderFn ,UserInterface{
 
 	/** application */
@@ -230,7 +193,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	
 	/** 本地视频无数据显示提示 */
 	private RelativeLayout mDefaultTipLayout = null;
-	private WifiAutoConnectManager mWac = null;
+	/** wifi列表manage */
+	private WifiConnectManager mWac = null;
 	/** 定时请求直播点时间 */
 	private int mTiming = 1 * 60 * 1000;
 	/** 首页handler用来接收消息,更新UI*/
@@ -269,7 +233,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		CrashReport.initCrashReport(this,appId ,isDebug);
 		
 		mContext = this;
-		SysApplication.getInstance().addActivity(this);
+//		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(this,"Main");
@@ -289,6 +253,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		//连接小车本wifi
 		//linkMobnoteWiFi();
+		
+		//启动创建热点
+		createWiFiHot();
 		
 		mApp.VerifyWiFiConnect();
 		
@@ -314,6 +281,17 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
 	
+	}
+	
+	
+	/**
+	 * 启动软件创建wifi热点
+	 */
+	private void createWiFiHot(){
+		console.log("自动连接小车本wifi---linkMobnoteWiFi---1");
+		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+		mWac = new WifiConnectManager(wm, this);
+		mWac.autoWifiManage();
 	}
 	
 	/**
@@ -384,7 +362,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 					break;
 					case 3:
 						//检测是否已连接小车本热点
-						checkLinkWiFi();
+						//checkLinkWiFi();
 						//网络状态改变
 						mApp.VerifyWiFiConnect();
 
@@ -397,8 +375,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 						notifyLogicNetWorkState((Boolean) msg.obj);
 
 					break;
-					
-					
 					case 99:
 						//测试加点
 						//Object obj = new Object();
@@ -525,44 +501,20 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
-	/**
-	 * 创建wifi回调广播
-	 * @param wac
-	 */
-	private void createReceiver(WifiAutoConnectManager wac){
-		String  action = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(action);
-		registerReceiver(wac, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-	}
+	
 	
 	/**
 	 * 自动连接小车本wifi
 	 */
 	private void linkMobnoteWiFi(){
 		console.log("自动连接小车本wifi---linkMobnoteWiFi---1");
-		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-		mWac = new WifiAutoConnectManager(wm,this);
-		createReceiver(mWac);
-		//连接wifi
-		mWac.connect();
+//		WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+//		mWac = new WifiAutoConnectManager(wm,this);
+//		createReceiver(mWac);
+//		//连接wifi
+//		mWac.connect();
 	}
 	
-	/**
-	 * 判断已连接的wifi是否是小车本热点
-	 */
-	private void checkLinkWiFi(){
-		WifiManager mWifiManage = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-		WiFiConnection connection = new WiFiConnection(mWifiManage,mContext);
-		WifiInfo info = connection.getWiFiInfo();
-		WifiAutoConnectManager wac = new WifiAutoConnectManager(mWifiManage,this);
-		boolean b = wac.getEffectiveWifi(info);
-		if(b){
-			String wifiName = info.getSSID();
-			//保存wifi校验名称
-			WiFiConnection.SaveWiFiName(wifiName);
-		}
-	}
 	
 	/**
 	 * 在线视频基础数据回调
@@ -727,12 +679,13 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
+	/** 未连接 */
+	private final int WIFI_STATE_FAILED = 0;
 	/** 连接中 */
 	private final int WIFI_STATE_CONNING = 1;
 	/** 连接*/
 	private final int WIFI_STATE_SUCCESS = 2;
-	/** 未连接 */
-	private final int WIFI_STATE_FAILED = 3;
+	
 	
 	/**
 	 * 链接中断更新页面
@@ -744,22 +697,23 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		switch(status){
 			case 1:
 				//连接中
-				mWiFiStatus = 1;
+				mWiFiStatus = WIFI_STATE_CONNING;
 			break;
 			case 2:
 				//已连接
 //				mIpcWiFiBtn.setText("已连接");
 //				mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
 //				img = res.getDrawable(R.drawable.index_icon_xingche_connect);
+				mWiFiStatus = WIFI_STATE_SUCCESS;
 				wifiConnectedSucess();
-				mWiFiStatus = 2;
+				
 			break;
 			case 3:
 				//未连接
 //				mIpcWiFiBtn.setText("未连接");
 //				mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
 //				img = res.getDrawable(R.drawable.index_icon_xingche_btn);
-				mWiFiStatus = 0;
+				mWiFiStatus = WIFI_STATE_FAILED;
 				wifiConnectFailed();
 			break;
 		}
@@ -831,16 +785,68 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
+	private void clickConnFailed() {
+		// wifi未链接
+		// 判断是否已绑定ipc
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+		boolean isbind = preferences.getBoolean("isbind", false);
+		if (!isbind) {
+			// 跳转到wifi连接首页
+			Intent wifiIndex = new Intent(MainActivity.this, WiFiLinkIndexActivity.class);
+			startActivity(wifiIndex);
+		} else {
+			// 已经绑定
+			console.toast("IPC已绑定等待连接...", mContext);
+			if (null != mWac) {
+				mWac.autoWifiManage();
+			}
+			
+		}
+	}
+	
 	/**
 	 * 检测wifi链接状态
 	 */
 	public void checkWiFiStatus(){
-		if(mWiFiStatus == 0){
-			//wifi未链接
-			//跳转到wifi连接首页
-			Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
-			startActivity(wifiIndex);
+		console.log("登录回调---loginCallBack---checkWiFiStatus--" + mWiFiStatus);
+		switch (mWiFiStatus) {
+		case WIFI_STATE_FAILED:
+			clickConnFailed();
+			break;
+		case WIFI_STATE_CONNING:
+			
+			break;
+		case WIFI_STATE_SUCCESS:
+			// 跳转到行车记录仪界面
+			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+			startActivity(i);
+			break;
+		default:
+			break;
 		}
+		
+//		if(mWiFiStatus == 0){
+//			//wifi未链接
+//			//判断是否已绑定ipc
+//			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",MODE_PRIVATE);
+//			//取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+//			boolean isbind = preferences.getBoolean("isbind",false);
+//			//isbind = false;
+//			if(!isbind){
+//				//跳转到wifi连接首页
+//				Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
+//				startActivity(wifiIndex);
+//			}
+//			else{
+//				console.toast("IPC已绑定等待连接...",mContext);
+//			}
+//		}
+//		else{
+//			//跳转到ipc页面
+//			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+//			startActivity(i);
+//		}
 	}
 	
 	@Override
@@ -929,20 +935,27 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK )
-		{
-			//退出对话框
-//			int PID = android.os.Process.myPid();
-//			android.os.Process.killProcess(PID);
-//			android.os.Process.sendSignal(PID, 9);
-			if(mApp.isUserLoginSucess){
-				SysApplication.getInstance().exit();
-			}
-			finish();
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_APP_EXIT, "提示",
+					"退出程序？");
+			// 退出对话框
+			// int PID = android.os.Process.myPid();
+			// android.os.Process.killProcess(PID);
+			// android.os.Process.sendSignal(PID, 9);
+			return true;
 		}
 		return false;
+	}
+	
+	// 退出程序
+	private void exit() {
+		if (mApp.isUserLoginSucess) {
+			SysApplication.getInstance().exit();
+		}
+		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		mApp.mGoluk.GolukLogicDestroy();
+		finish();
 	}
 	
 	@SuppressLint("ClickableViewAccessibility")
@@ -1021,10 +1034,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
+
 //			case R.id.wifi_status_btn:
 //				//跳转到ipc页面
-//				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-//				startActivity(i);
+//				checkWiFiStatus();che
 //			break;
 			case R.id.more_btn:
 
@@ -1068,9 +1081,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			
 				break;
 			case R.id.index_wifi_layout:
-				if(GolukApplication.getInstance().getIpcIsLogin()){
-					toCard();
-				}
+				checkWiFiStatus();
 				break;
 		}
 	}
@@ -1283,43 +1294,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 
-	@Override
-	public void wifiCallBack(int state, String message, WifiRsBean[] arrays) {
-		// TODO Auto-generated method stub
-		console.log("首页wifi自动连接接口回调---state---" + state + "---message---" + message + "---arrays---" + arrays);
-//		switch (state) {
-//			case -1:
-//				//console.toast(message, mContext);
-//			break;
-//			case -3:
-//				//已连接
-//				if(null != arrays){
-//					if(arrays.length > 0){
-//						String wifiName = arrays[0].getWifiName();
-//						console.log("自动连接小车本wifi---wifiName---" + wifiName);
-//						//保存wifi校验名称
-//						WiFiConnection.SaveWiFiName(wifiName);
-//					}
-//				}
-//			break;
-//			case 1:
-//				if(null != arrays){
-//					if(arrays.length > 0){
-//						String wifiName = arrays[0].getWifiName();
-//						console.log("自动连接小车本wifi---wifiName---" + wifiName);
-//						//保存wifi校验名称
-//						WiFiConnection.SaveWiFiName(wifiName);
-//					}
-//				}
-//			break;
-//			case 11:
-//			break;
-//		}
-//		unregisterReceiver(mWac);
-//		//校验wifi连接状态
-//		mApp.VerifyWiFiConnect();
-	}	
-	
 	public void dismissAutoDialog(){
 		if (null != dialog){
 			dialog.dismiss();
@@ -1370,6 +1344,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
 				intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 				startActivity(intent);
+			}
+		} else if(LiveDialogManager.DIALOG_TYPE_APP_EXIT == dialogType) {
+			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
+				exit();
 			}
 		}
 		
@@ -1423,5 +1401,48 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 		
 	}
+
+
+
+	@Override
+	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
+		switch(type){
+		case 5:
+			if(state == 0){
+				switch(process){
+					case 0:
+						//创建热点成功
+						//hotWiFiCreateSuccess();
+					break;
+					case 1:
+						//ipc成功连接上热点
+						WifiRsBean[] bean = (WifiRsBean[])arrays;
+						if(null != bean){
+							console.log("自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
+							if(bean.length > 0){
+								sendLogicLinkIpc(bean[0].getIpc_ip(),bean[0].getIpc_mac());
+							}
+						}
+					break;
+					default:
+					break;
+				}
+			}
+			
+		break;
+	}
+	}
+	
+	/**
+	 * 通知logic连接ipc
+	 */
+	private void sendLogicLinkIpc(String ip,String ipcmac){
+		//连接ipc热点wifi---调用ipc接口
+		console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
+		mApp.mIpcIp = ip;
+		boolean b = mApp.mIPCControlManager.setIPCWifiState(true,ip);
+		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+	}
 	
 }
+

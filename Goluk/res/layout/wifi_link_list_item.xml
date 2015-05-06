@@ -12,7 +12,7 @@
 			android:id="@+id/wifi_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="12dp"
+			android:layout_marginLeft="18dp"
 			android:layout_centerVertical="true"
 			android:textSize="14sp"
 			android:text="@string/wifi_link_9_text"
@@ -22,17 +22,27 @@
 			android:id="@+id/wifi_status"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginRight="36dp"
+			android:layout_marginRight="18dp"
 			android:layout_centerVertical="true"
 			android:layout_alignParentRight="true"
-			android:background="@drawable/wifi_no_link"
+			android:background="@drawable/connect_wifi_icon_ash"
+			android:contentDescription="@string/imgdes"/>
+		
+		<ImageView
+			android:id="@+id/wifi_pwd_status"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="15dp"
+			android:layout_centerVertical="true"
+			android:layout_toLeftOf="@id/wifi_status"
+			android:background="@drawable/connect_lock_icon_ash"
 			android:contentDescription="@string/imgdes"/>
 		
 		<ImageView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"
+			android:layout_marginLeft="18dp"
+			android:layout_marginRight="18dp"
 			android:layout_alignParentBottom="true"
 			android:background="@drawable/solid_"
 			android:contentDescription="@string/imgdes"/>

@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 
 import com.rd.car.modal.CarRecoderConfig;
@@ -62,7 +63,7 @@ public class PreferencesReader {
      * 
      * @param c
      */
-    public PreferencesReader(Context c) {
+    public PreferencesReader(Context c, boolean isDefault) {
 	SharedPreferences sp = c.getSharedPreferences(PREFERENCES_NAME,
 		Context.MODE_PRIVATE);
 
@@ -97,7 +98,14 @@ public class PreferencesReader {
 	// 直播缓冲时间
 	m_crcConfig.setLiveBufferTime(0);
 	// 指定RTSP源地址
-	m_crcConfig.setSourceRTSPUrl(c.getString(R.string.default_rtsp_url));
+	if (isDefault) {
+		m_crcConfig.setSourceRTSPUrl(c.getString(R.string.default_rtsp_url));
+	} else {
+		String pre = c.getString(R.string.default_rtsp_pre);
+		String back = c.getString(R.string.default_rtsp_back);
+		m_crcConfig.setSourceRTSPUrl(pre + GolukApplication.mIpcIp + back);
+	}
+	
     }
 
     /**

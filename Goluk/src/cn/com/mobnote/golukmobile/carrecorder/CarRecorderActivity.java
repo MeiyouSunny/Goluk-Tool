@@ -179,12 +179,15 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	private VideoConfigState mVideoConfigState=null;
 	/** 视频分辨率显示 */
 	private ImageView mVideoResolutions=null;
+	
+	private GolukApplication mApp = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.carrecorder_main);
+		mApp = (GolukApplication) getApplication();
 		
 
 		mHandler = new Handler() {
@@ -552,8 +555,14 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	public void start() {
 		if (null != mRtmpPlayerView) {
 			mRtmpPlayerView.setVisibility(View.VISIBLE);
-			mRtmpPlayerView.setDataSource(getResources().getString(
-					R.string.default_rtsp_url));
+			String preUrl = getResources().getString(R.string.default_rtsp_pre);
+			String backUrl = getResources().getString(R.string.default_rtsp_back);
+			String url = preUrl + mApp.mIpcIp + backUrl;
+			
+			LogUtil.e("", "CarRecorset Datasource URL:" + url);
+			
+			mRtmpPlayerView.setDataSource(url);
+
 			mRtmpPlayerView.start();
 		}
 	}

@@ -43,6 +43,8 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_LIVE_START = 7;
 	/** ipc未登录提示 */
 	public static final int DIALOG_TYPE_IPC_LOGINOUT = 8;
+	/** 程序退出提示框 */
+	public static final int DIALOG_TYPE_APP_EXIT = 9;
 
 	private int mCurrentDialogType = 0;
 

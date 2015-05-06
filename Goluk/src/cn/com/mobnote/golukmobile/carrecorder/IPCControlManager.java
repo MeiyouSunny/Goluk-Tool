@@ -57,21 +57,31 @@ public class IPCControlManager implements IPCManagerFn{
 				IPC_CommCmd_SetMode, json);
 
 		// WIFI连接状态
-		setIPCWifiState(true);
+		//setIPCWifiState(true);
 	}
 	
 	/**
 	 * 告知IPC wifi连接状态
 	 * @param isConnect ture:连接　false:未连接
+	 * @param ip ipc热点ip地址
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean setIPCWifiState(boolean isConnect){
+	public boolean setIPCWifiState(boolean isConnect,String ip){
 		int state = isConnect ? 1 : 0;
-		String ip = "192.168.43.234";
-//		String ip = "192.168.43.112";
 		String json = JsonUtil.getWifiChangeJson(state, ip);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
+		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
+		return isSucess;
+	}
+	
+	/**
+	 * 通知ipc连接手机热点
+	 * @param json
+	 * @return
+	 */
+	public boolean setIpcLinkPhoneHot(String json){
+		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetWifiCfg, json);
+		return isSucess;
 	}
 	
 	/**
