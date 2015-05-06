@@ -116,6 +116,7 @@ public class User {
 				case 200:
 					//自动登录成功无提示
 					console.toast("自动登录成功", mContext);
+					Log.i("lily", "--------User-----自动登录个人中心页变化--------"+mApp.autoLoginStatus);
 					StatusChange(2);//自动登录成功
 					Log.i("setauto", "----ok---"+mApp.autoLoginStatus);
 					mApp.loginoutStatus = false;
@@ -134,8 +135,6 @@ public class User {
 				case 402:
 					//登录密码错误
 					StatusChange(5);
-					Log.i("setauto", "-------402-----"+mApp.autoLoginStatus);
-//					console.toast("密码错误，请重试", mContext);
 					break;
 				default:
 					break;

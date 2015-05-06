@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.CountDownButtonHelper;
@@ -78,8 +79,10 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	private String strBody;
 	//注册进度条
 	private RelativeLayout mLoading = null;
+	private CustomLoadingDialog mCustomProgressDialog=null;//注册
 	//注册获取验证码显示进度条
 	private RelativeLayout mIdentifyLoading = null;
+	private CustomLoadingDialog mCustomProgressDialogIdentify = null;//获取验证码
 	//判断获取验证码按钮是否被点击过
 	private boolean identifyClick = false;
 	/**记录注册成功的状态**/
@@ -104,6 +107,13 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		//获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserRegist");
+		
+		if(null == mCustomProgressDialog){
+			mCustomProgressDialog = new CustomLoadingDialog(mContext,"注册中，请稍候……");
+		}
+		if(null == mCustomProgressDialogIdentify){
+			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, "验证码获取中……");
+		}
 		initView();
 		// title
 		mTextViewTitle.setText("注册");
@@ -294,7 +304,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
 		// 返回
 		case R.id.back_btn:
@@ -333,7 +342,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		handler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				mEditTextIdentify.setText(strBody);
 			}
@@ -369,7 +377,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			if(b){
 				identifyClick = true;
 				UserUtils.hideSoftMethod(this);
-				mIdentifyLoading.setVisibility(View.VISIBLE);
+//				mIdentifyLoading.setVisibility(View.VISIBLE);
+				mCustomProgressDialogIdentify.show();
 				registerReceiver(smsReceiver, smsFilter);
 				click = 1;
 				console.log(b + "");
@@ -393,7 +402,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	 */
 	public void identifyCallback(int success,Object obj){
 		console.log("验证码获取回调---identifyCallBack---" + success + "---" + obj);
-		mIdentifyLoading.setVisibility(View.GONE);
+//		mIdentifyLoading.setVisibility(View.GONE);
+		closeProgressDialogIdentify();
 		//点击验证码按钮手机号、密码不可被修改
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
@@ -433,7 +443,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					mCountDownhelper.setOnFinishListener(new OnFinishListener() {
 						@Override
 						public void finish() {
-							// TODO Auto-generated method stub
 							mBtnIdentify.setText("重新获取");
 							//倒计时结束后手机号、密码可以更改
 							mEditTextPhone.setEnabled(true);
@@ -457,7 +466,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
 							getPhone();
 							finish();
 						}
@@ -505,7 +513,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 					if(!UserUtils.isNetDeviceAvailable(mContext)){
 						console.toast("当前网络不可用，请检查网络后重试", mContext);
 					}else{
-					//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
+					//{PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 					console.log(isRegist);
 					Log.i("lily", "------UserRegistActivity---不点击获取验证码---111------"+freq);
@@ -520,7 +528,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 								mApplication.registStatus = 1;//注册中……
 								//隐藏软件盘
 								UserUtils.hideSoftMethod(this);
-								mLoading.setVisibility(View.VISIBLE);
+//								mLoading.setVisibility(View.VISIBLE);
+								mCustomProgressDialog.show();
 								mEditTextPhone.setEnabled(false);
 								mEditTextIdentify.setEnabled(false);
 								mEditTextPwd.setEnabled(false);
@@ -540,7 +549,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			}
 		}
 		}else{
-			UserUtils.showDialog(mContext, "手机格式输入错误，请重新输入");
+			mBtnRegist.setEnabled(false);
+//			UserUtils.showDialog(mContext, "手机格式输入错误，请重新输入");
 		}
 		
 }
@@ -551,7 +561,8 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	public void registCallback(int success,Object outTime,Object obj){
 		int codeOut = (Integer) outTime;
 		console.log("注册回调---registCallback---"+success+"---"+obj);
-		mLoading.setVisibility(View.GONE);
+//		mLoading.setVisibility(View.GONE);
+		closeProgressDialog();
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
@@ -718,12 +729,10 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	}
 	@Override
 	public void registStatusChange() {
-		// TODO Auto-generated method stub
 		
 	}
 	@Override
 	public void identifyCallbackInterface() {
-		// TODO Auto-generated method stub
 		
 	}
 	/**
@@ -742,7 +751,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (view.getId()) {
 		case R.id.user_regist_btn:
@@ -784,6 +792,23 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			break;
 		}
 		return false;
+	}
+	
+	/**
+	 * 关闭注册中的对话框
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomProgressDialog){
+			mCustomProgressDialog.close();
+		}
+	}
+	/**
+	 * 关闭注册中的对话框
+	 */
+	private void closeProgressDialogIdentify(){
+		if(null != mCustomProgressDialogIdentify){
+			mCustomProgressDialogIdentify.close();
+		}
 	}
 	
 }

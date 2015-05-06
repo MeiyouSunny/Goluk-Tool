@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,6 +57,9 @@ public class FormatSDCardActivity extends BaseActivity implements OnClickListene
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
+			case R.id.back_btn:
+				exit(); 
+				break;
 			case R.id.mFormat:
 				CustomDialog dialog = new CustomDialog(this);
 				dialog.setMessage("是否格式化SD卡？", Gravity.CENTER);
@@ -94,9 +98,7 @@ public class FormatSDCardActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("format");
-		}
+		
 	}
 
 	@Override
@@ -121,4 +123,19 @@ public class FormatSDCardActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
+	public void exit(){
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("format");
+		}
+		finish();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
+	}
+	
 }

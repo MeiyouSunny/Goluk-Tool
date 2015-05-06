@@ -48,6 +48,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -506,6 +507,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			try {
 				JSONObject json = new JSONObject(data);
 				String fileName = json.getString("location");
+				long time = json.optLong("time");
 				console.log("调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---"
 						+ fileName);
 				int type = json.getInt("type");
@@ -518,8 +520,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					savePath = mVideoSavePath + "wonderful/";
 				}
 				// 调用下载视频接口
-				mIPCControlManager.downloadFile(fileName, "videodownload",
-						savePath);
+				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
+				LogUtil.e("xuhw", "YYYYYY====start==VideoDownLoad===flag="+a+"===data="+data);
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}
@@ -566,16 +568,15 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					long filesize = json.optLong("filesize");
 					long filerecvsize = json.optLong("filerecvsize");
 					percent = (int) ((filerecvsize * 100) / filesize);
-					LogUtil.e("xuhw", "YYYYYY==filename=" + filename
-							+ "==percent=" + percent);
+
 					if (!mNoDownLoadFileList.contains(filename)) {
 						mNoDownLoadFileList.add(filename);
 					}
+					if (!mDownLoadFileList.contains(filename)) {
+						mDownLoadFileList.add(filename);
+					}
 
 					if (GlobalWindow.getInstance().isShow()) {
-						LogUtil.e("xuhw",
-								"YYYYYY=====GlobalWindow=====percent="
-										+ percent);
 						GlobalWindow.getInstance().refreshPercent(percent);
 						GlobalWindow.getInstance().updateText(
 								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
@@ -592,8 +593,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						// {"filename":"WND1_150402183837_0012.mp4",
 						// "tag":"videodownload"}
 						// 地图大头针图片
-						console.log("视频下载完成---ipcVideoDownLoadCallBack---"
-								+ data);
+						console.log("视频下载完成---ipcVideoDownLoadCallBack---"+ data);
+						LogUtil.e("xuhw", "YYYYYY======VideoDownLoad=====data="+data);
 						mMainActivity.videoAnalyzeComplete(data);
 					}
 
@@ -603,10 +604,16 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						GlobalWindow.getInstance().topWindowSucess("视频传输完成");
 					}
 
-					// 更新最新下载文件的时间
-					long curtime = System.currentTimeMillis() / 1000;
-					SettingUtils.getInstance().putLong("querytime", curtime);
+					
 				} else {
+					LogUtil.e("xuhw", "YYYYYY=＠＠＠＠===download==fail===success="+success+"==data="+data);
+					JSONObject json = new JSONObject(data);
+					String filename = json.optString("filename");
+					
+					if (!mNoDownLoadFileList.contains(filename)) {
+						mNoDownLoadFileList.add(filename);
+					}
+					
 					if (checkDownloadCompleteState()) {
 						mDownLoadFileList.clear();
 						mNoDownLoadFileList.clear();
@@ -968,7 +975,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						//查询新文件列表（最多10条）
 						long time = SettingUtils.getInstance().getLong("querytime", 0);
 						long curtime = System.currentTimeMillis()/1000;
+						LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
 						if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
+							SettingUtils.getInstance().putLong("querytime", curtime);
 							queryNewFileList();
 							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
 						}
@@ -987,25 +996,17 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					//msg = 1000 多文件目录查询
 					if(RESULE_SUCESS == param1){
 						LogUtil.e("xuhw", "YYYYYY=====IPC_VDCP_Msg_Query==mPageSource="+mPageSource+"=param2="+param2);
-						
-						long time = SettingUtils.getInstance().getLong("newfiletime");
-						long curtime = System.currentTimeMillis()/1000;
-						//5分钟内不做提示
-						if(Math.abs(curtime - time) >= 5*60){
-							if(!"ipcfilemanager".equals(mPageSource)){
-								if(TextUtils.isEmpty((String)param2)){
-									return;
-								}
-								fileList = IpcDataParser.parseMoreFile((String) param2);
-								mHandler.sendEmptyMessageDelayed(1001, 1000);
-								
-								fileList = IpcDataParser.parseMoreFile((String) param2);
-								mHandler.removeMessages(1001);
-								mHandler.sendEmptyMessage(1001);
-								SettingUtils.getInstance().putLong("newfiletime", curtime);
-							}
+						if("ipcfilemanager".equals(mPageSource)){
+							return;
 						}
-						
+						LogUtil.e("xuhw", "YYYYYY===@@@@@@=###====11111===");
+						if(TextUtils.isEmpty((String)param2)){
+							return;
+						}
+						LogUtil.e("xuhw", "YYYYYY===@@@@@@===####==2222===");
+						fileList = IpcDataParser.parseMoreFile((String) param2);
+						mHandler.removeMessages(1001);
+						mHandler.sendEmptyMessageDelayed(1001, 1000);
 					}
 				break;
 			case IPC_VDCP_Msg_SingleQuery:
@@ -1015,6 +1016,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				// 845., "period": 8, "resolution": 14, "type": 4, "size":
 				// 5865250., "location": "WND1_100101001032_0008.mp4",
 				// "withSnapshot": 1, "withGps": 0}
+				LogUtil.e("xuhw", "YYYYYY==@@@@==IPC_VDCP_Msg_SingleQuery==param1="+param1+"==param2="+param2);
+				GFileUtils.writeIPCLog("YYYYYY====IPC_VDCP_Msg_SingleQuery==param1="+param1+"==param2="+param2);
+				
 				ipcVideoSingleQueryCallBack(param1, (String) param2);
 				break;
 			case IPC_VDCP_Msg_Erase:
@@ -1089,6 +1093,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			case IPC_VDCP_Msg_IPCKit:
 				LogUtil.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="
 						+ param1 + "===param2=" + param2);
+				GFileUtils.writeIPCLog("YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="
+						+ param1 + "===param2=" + param2);
+				
 				if (param1 == RESULE_SUCESS) {
 					List<ExternalEventsDataInfo> kit = IpcDataParser
 							.parseKitData((String) param2);
@@ -1147,6 +1154,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				// 文件传输中消息 msg = 0
 				// param1 = 0,下载完成
 				// param1 = 1,下载中
+				LogUtil.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1="+param1);
+				GFileUtils.writeIPCLog("===IPC_VDTP_Msg_File===param1="+param1+"=param2="+param2);
+				
 				ipcVideoDownLoadCallBack(param1, (String) param2);
 				break;
 			}
@@ -1277,11 +1287,11 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 				this)
 				// .memoryCacheExtraOptions(480, 800) //即保存的每个缓存文件的最大长宽
-				.threadPoolSize(3)
+				.threadPoolSize(2)
 				// 线程池内加载的数量
-				.threadPriority(Thread.NORM_PRIORITY - 2)
+				.threadPriority(Thread.NORM_PRIORITY - 3)
 				.denyCacheImageMultipleSizesInMemory()
-				.memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
+				.memoryCache(new UsingFreqLimitedMemoryCache(4 * 1024 * 1024))
 				// 你可以通过自己的内存缓存实现
 				.memoryCacheSize(8 * 1024 * 1024)
 				.discCacheSize(50 * 1024 * 1024)
@@ -1341,7 +1351,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 * @date 2015年4月24日
 	 */
 	private void queryNewFileList() {
-		mIPCControlManager.queryFileListInfo(6, 10, 2147483647);
+		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
+		mIPCControlManager.queryFileListInfo(6, 10, starttime, 2147483647);
 	}
 
 	/**
@@ -1366,53 +1377,81 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	CustomDialog mCustomDialog = null;
 
 	private void tips() {
+		LogUtil.e("xuhw", "YYYYYY===@@@@@@=====11111===");
 		if (null != mCustomDialog && mCustomDialog.isShowing()) {
 			return;
 		}
-
+		LogUtil.e("xuhw", "YYYYYY===@@@@@@=====2222===");
 		if (mContext instanceof Activity && fileList.size() > 0) {
-			mCustomDialog = new CustomDialog(mContext);
-			mCustomDialog.setMessage("有" + fileList.size() + "个新文件，确定要下载吗？",
-					Gravity.CENTER);
-			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
-				@Override
-				public void onClickListener() {
-					for (int i = 0; i < fileList.size(); i++) {
-						VideoFileInfo info = fileList.get(i);
-						String filename = info.location;
-
-						String filePath = "";
-						if (filename.contains("WND")) {
-							filePath = "fs1:/video/wonderful/";
-						} else if (filename.contains("URG")) {
-							filePath = "fs1:/video/urgent/";
-						}
-
-						if (TextUtils.isEmpty(filePath)) {
-							break;
-						}
-
-						filePath = FileUtils.javaToLibPath(filePath);
-						String path = filePath + File.separator + filename;
-						File file = new File(path);
-						if (!file.exists()) {
-							if (!mDownLoadFileList.contains(info.location)) {
-								mDownLoadFileList.add(info.location);
-
-								boolean flag = GolukApplication.getInstance()
-										.getIPCControlManager()
-										.querySingleFile(info.location);
-								LogUtil.e("xuhw",
-										"YYYYYY=====querySingleFile=====type="
-												+ info.type + "==flag=" + flag);
-							}
-						}
-
+			LogUtil.e("xuhw", "YYYYYY===@@@@@@=====33333===");
+			Activity a = (Activity)mContext;
+			if(!a.isFinishing()){
+				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====44444===");
+				int size = fileList.size();
+				for (int i = 0; i < fileList.size(); i++) {
+					VideoFileInfo info = fileList.get(i);
+					String filename = info.location;
+					
+					String filePath = "";
+					if (filename.contains("WND")) {
+						filePath = "fs1:/video/wonderful/";
+					} else if (filename.contains("URG")) {
+						filePath = "fs1:/video/urgent/";
 					}
+				
+					if (TextUtils.isEmpty(filePath)) {
+						break;
+					}
+
+					filePath = FileUtils.javaToLibPath(filePath);
+					String path = filePath + File.separator + filename;
+					File file = new File(path);
+					if (file.exists()) {
+						size -= 1;
+					}else{
+						if (!mDownLoadFileList.contains(info.location)) {
+							mDownLoadFileList.add(info.location);
+						}
+					}
+					
 				}
-			});
-			mCustomDialog.setRightButton("取消", null);
-			mCustomDialog.show();
+				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====5555===");
+				if(size <= 0){
+					return;
+				}
+				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666===");
+				mCustomDialog = new CustomDialog(mContext);
+				mCustomDialog.setMessage("有" + size + "个新文件，确定要下载吗？",
+						Gravity.CENTER);
+				mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						for(String name : mDownLoadFileList){
+							boolean flag = GolukApplication.getInstance()
+									.getIPCControlManager()
+									.querySingleFile(name);
+							LogUtil.e("xuhw",
+									"YYYYYY=====querySingleFile=====name="+name+"==flag=" + flag);
+						}
+					}
+				});
+				mCustomDialog.setRightButton("取消", new OnRightClickListener() {
+					@Override
+					public void onClickListener() {
+						if(null != fileList && fileList.size() > 0){
+							long t1 = fileList.get(0).time;
+							long t2 = fileList.get(fileList.size()-1).time;
+							long time = t1 > t2 ? t1:t2;
+							SettingUtils.getInstance().putLong("downloadfiletime", time);
+							
+							mDownLoadFileList.clear();
+							mNoDownLoadFileList.clear();
+						}
+					}
+				});
+				mCustomDialog.show();
+			}
+			
 		}
 
 	}
@@ -1423,16 +1462,16 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 		
 		if (this.testActivity()){
-			mconnection = new CustomFormatDialog(mContext);
-			mconnection.setCancelable(false);
-			mconnection.setMessage("摄像头断开，正在为您重连…");
-			
-			if(!((Activity)mContext).isFinishing()){
+			Activity a = (Activity)mContext;
+			if(!a.isFinishing()){
+				mconnection = new CustomFormatDialog(mContext);
+				mconnection.setCancelable(false);
+				mconnection.setMessage("摄像头断开，正在为您重连…");
 				mconnection.show();
 				mHandler.removeMessages(1002);
 				mHandler.sendEmptyMessageDelayed(1002, 10000);
 			}
-			
+
 		}
 	}
 	
@@ -1461,23 +1500,26 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		if (backHomedialog != null && backHomedialog.isShowing()) {
 			return;
 		}else{
-			backHomedialog = new CustomDialog(mContext);
-			backHomedialog.setMessage("您好像没有连接摄像头哦。", Gravity.CENTER);
-			backHomedialog.setLeftButton("确定", new OnLeftClickListener() {
-				@Override
-				public void onClickListener() {
+			Activity a = (Activity)mContext;
+			if(!a.isFinishing()){
+				backHomedialog = new CustomDialog(mContext);
+				backHomedialog.setMessage("您好像没有连接摄像头哦。", Gravity.CENTER);
+				backHomedialog.setLeftButton("确定", new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
 
-					Intent it = new Intent(mContext, MainActivity.class);
-					it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					mContext.startActivity(it);
-				}
-			});
-			if (backHomedialog.isShowing() == false) {
-				if(!((Activity)mContext).isFinishing()){
-					backHomedialog.show();
-				}
+						Intent it = new Intent(mContext, MainActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						mContext.startActivity(it);
+					}
+				});
 				
+				if (backHomedialog.isShowing() == false) {
+					if(!((Activity)mContext).isFinishing()){
+						backHomedialog.show();
+					}
+				}
 			}
 		}
 

@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile;
 
 import java.io.File;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -26,13 +25,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
-import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
