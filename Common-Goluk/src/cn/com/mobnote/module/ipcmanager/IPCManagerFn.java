@@ -29,10 +29,12 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int ENetTransEvent_IPC_VDTP_ConnectState = 2;
 	/** IPC下载结果应答 */
 	public static final int ENetTransEvent_IPC_VDTP_Resp = 3;
+	
+	public static final int ENetTransEvent_IPC_UpGrade_Resp = 4;
 	/** Mobnote连接状态 */
-	public static final int ENetTransEvent_Mobnote_ConnectState = 4;
+	public static final int ENetTransEvent_Mobnote_ConnectState = 5;
 	/** Mobnote结构应答 */
-	public static final int ENetTransEvent_Mobnote_Resp = 5;
+	public static final int ENetTransEvent_Mobnote_Resp = 6;
 
 	/**
 	 * 

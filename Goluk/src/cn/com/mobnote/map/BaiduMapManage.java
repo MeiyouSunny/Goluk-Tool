@@ -41,8 +41,6 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.utils.CoordinateConverter;
-import com.baidu.mapapi.utils.CoordinateConverter.CoordType;
 
 /**
  * <pre>
@@ -65,108 +63,110 @@ import com.baidu.mapapi.utils.CoordinateConverter.CoordType;
  * 
  */
 public class BaiduMapManage {
-	
+
 	private Context mContext = null;
 	private LayoutInflater mLayoutInflater = null;
 	private String mPageSource = "";
 	private BaiduMap mBaiduMap = null;
 	/** 地图大头针数据集合 */
-	private HashMap<Marker,Object> mMarkerData = new HashMap<Marker,Object>();
+	private HashMap<Marker, Object> mMarkerData = new HashMap<Marker, Object>();
 	/** 当前点击的大头针数据 */
 	private String mCurrentAid = null;
 	/** 头像数据标识集合 */
-	private int[] mHeadImg = {0,R.drawable.needle_boy_one_little,R.drawable.needle_boy_two_little,R.drawable.needle_boy_three_little,
-			R.drawable.needle_girl_one_little,R.drawable.needle_girl_two_little,R.drawable.needle_girl_three_little,
-			R.drawable.needle_index_little
-	};
-	private int[] mBigHeadImg = {0,R.drawable.needle_boy_one_big,R.drawable.needle_boy_two_big,R.drawable.needle_boy_three_big,
-			R.drawable.needle_girl_one_big,R.drawable.needle_girl_two_big,R.drawable.needle_girl_three_big,
-			R.drawable.needle_index_big
-	};
+	private int[] mHeadImg = { 0, R.drawable.needle_boy_one_little, R.drawable.needle_boy_two_little,
+			R.drawable.needle_boy_three_little, R.drawable.needle_girl_one_little, R.drawable.needle_girl_two_little,
+			R.drawable.needle_girl_three_little, R.drawable.needle_index_little };
+	private int[] mBigHeadImg = { 0, R.drawable.needle_boy_one_big, R.drawable.needle_boy_two_big,
+			R.drawable.needle_boy_three_big, R.drawable.needle_girl_one_big, R.drawable.needle_girl_two_big,
+			R.drawable.needle_girl_three_big, R.drawable.needle_index_big };
 	/** 显示的气泡 */
 	private View mBubbleView = null;
 	/** 气泡用户名称 */
-	//private TextView mNameView = null;
+	// private TextView mNameView = null;
 	/** 气泡用户速度 */
-	//private TextView mSpeedView = null;
+	// private TextView mSpeedView = null;
 	/** 气泡显示图片 */
-	//private ImageView mBubbleImage = null;
-	
+	// private ImageView mBubbleImage = null;
+
 	/** 气泡显示图片 */
 	private String mBubbleImageUrl = "";
 	/** 当前高亮的大头针 */
 	private Marker mCurrentMarker = null;
 	/** 当前正操作的用户信息 */
 	private UserInfo mCurrentUserInfo = null;
-	
+
 	@SuppressLint("InflateParams")
-	public BaiduMapManage(Context context,BaiduMap map,String source){
+	public BaiduMapManage(Context context, BaiduMap map, String source) {
 		mContext = context;
 		mPageSource = source;
-		if(null == mLayoutInflater){
+		if (null == mLayoutInflater) {
 			mLayoutInflater = LayoutInflater.from(mContext);
 			mBaiduMap = map;
-			
-			//mBubbleView = mLayoutInflater.inflate(R.layout.bubble,null);
-			//mNameView = (TextView) mBubbleView.findViewById(R.id.username);
-			//mSpeedView = (TextView) mBubbleView.findViewById(R.id.speed);
-			//mBubbleImage = (ImageView) mBubbleView.findViewById(R.id.bubble_img);
+
+			// mBubbleView = mLayoutInflater.inflate(R.layout.bubble,null);
+			// mNameView = (TextView) mBubbleView.findViewById(R.id.username);
+			// mSpeedView = (TextView) mBubbleView.findViewById(R.id.speed);
+			// mBubbleImage = (ImageView)
+			// mBubbleView.findViewById(R.id.bubble_img);
 		}
 	}
-	
+
 	public UserInfo getCurrentUserInfo() {
 		return mCurrentUserInfo;
 	}
-	
+
 	/**
 	 * 将gps坐标转换成baidu坐标
+	 * 
 	 * @param lat
 	 * @param lon
 	 * @return
 	 */
-	public LatLng ConvertLonLat(double lat,double lon){
+	public LatLng ConvertLonLat(double lat, double lon) {
 		// 将google地图、soso地图、aliyun地图、mapabc地图和amap地图
 		// 所用坐标转换成百度坐标
-		//CoordinateConverter converter  = new CoordinateConverter();
-		//converter.from(CoordType.COMMON);
+		// CoordinateConverter converter = new CoordinateConverter();
+		// converter.from(CoordType.COMMON);
 		// sourceLatLng待转换坐标
-		//converter.coord(sourceLatLng);
-		//LatLng desLatLng = converter.convert();
-		
-		//原始坐标点
-		LatLng sourceLatLng = new LatLng(lat,lon);
+		// converter.coord(sourceLatLng);
+		// LatLng desLatLng = converter.convert();
+
+		// 原始坐标点
+		LatLng sourceLatLng = new LatLng(lat, lon);
 		// 将GPS设备采集的原始GPS坐标转换成百度坐标
-		CoordinateConverter converter = new CoordinateConverter();
-		converter.from(CoordType.GPS);
-		// sourceLatLng待转换坐标
-		converter.coord(sourceLatLng);
-		LatLng point = converter.convert();
-		return point;
+		// CoordinateConverter converter = new CoordinateConverter();
+		// converter.from(CoordType.GPS);
+		// // sourceLatLng待转换坐标
+		// converter.coord(sourceLatLng);
+		// LatLng point = converter.convert();
+		return sourceLatLng;
 	}
-	
+
 	/**
 	 * 设置地图中心点
+	 * 
 	 * @param lon
 	 * @param lat
 	 */
-	public void SetMapCenter(double lon,double lat){
-		LatLng lg = ConvertLonLat(lat,lon);
+	public void SetMapCenter(double lon, double lat) {
+		LatLng lg = ConvertLonLat(lat, lon);
 		MapStatus status = new MapStatus.Builder().target(lg).build();
 		MapStatusUpdate statusUpdate = MapStatusUpdateFactory.newMapStatus(status);
-		//改变地图中心点
+		// 改变地图中心点
 		mBaiduMap.setMapStatus(statusUpdate);
 	}
-	
+
 	/**
 	 * 添加地图大头针
+	 * 
 	 * @param map
 	 * @param json
 	 */
-	public void AddMapPoint(JSONArray json){
+	public void AddMapPoint(JSONArray json) {
 		if (null == json) {
 			return;
 		}
-		LogUtil.e("","jyf------AddMapPoint----11111");
+		LogUtil.e("", "jyf------AddMapPoint----11111");
 		// 清楚历史marker
 		mBaiduMap.clear();
 		mMarkerData.clear();
@@ -176,7 +176,7 @@ public class BaiduMapManage {
 		for (int i = 0, len = json.length(); i < len; i++) {
 			try {
 				data = json.getJSONObject(i);
-				LogUtil.e("","jyf------AddMapPoint----array[i]: " + data);
+				LogUtil.e("", "jyf------AddMapPoint----array[i]: " + data);
 				String lon = data.getString("lon");
 				String lat = data.getString("lat");
 				if (!"".equals(lon) && !"".equals(lat)) {
@@ -199,22 +199,22 @@ public class BaiduMapManage {
 					mMarkerData.put(mk, data);
 
 					mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
-					
-					LogUtil.e("","jyf------AddMapPoint----array[2]: ");
+
+					LogUtil.e("", "jyf------AddMapPoint----array[2]: ");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				LogUtil.e("","jyf------AddMapPoint----array Exception: ");
+				LogUtil.e("", "jyf------AddMapPoint----array Exception: ");
 			}
 		}
-		
-		LogUtil.e("","jyf------AddMapPoint----array : 333333");
+
+		LogUtil.e("", "jyf------AddMapPoint----array : 333333");
 	}
-	
+
 	// 添加单个点,不清除数据
 	public void addSinglePoint(String userinfo) {
 		try {
-			JSONObject 	data = new JSONObject(userinfo);
+			JSONObject data = new JSONObject(userinfo);
 			String lon = data.getString("lon");
 			String lat = data.getString("lat");
 			if (!"".equals(lon) && !"".equals(lat)) {
@@ -239,21 +239,20 @@ public class BaiduMapManage {
 				mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
 			}
 		} catch (Exception e) {
-			
+
 		}
 
-		
 	}
-	
+
 	// 更新点的位置
 	public void updatePosition(String aid, double lon, double lat) {
 		if (null == mMarkerData) {
 			return;
 		}
-		
-		Iterator<Entry<Marker,Object>> it = mMarkerData.entrySet().iterator();
-		while(it.hasNext()) {
-			Entry<Marker,Object > obj = it.next();
+
+		Iterator<Entry<Marker, Object>> it = mMarkerData.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<Marker, Object> obj = it.next();
 			try {
 				UserInfo temp = JsonUtil.parseSingleUserInfoJson((JSONObject) obj.getValue());
 				if (temp.aid.equals(aid)) {
@@ -264,126 +263,129 @@ public class BaiduMapManage {
 					break;
 				}
 			} catch (Exception e) {
-				
+
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * 根据经纬度添加大头针
+	 * 
 	 * @param lon
 	 * @param lat
 	 */
-	public void AddMapPoint(String lon,String lat,String headId){
-		if(!"".equals(lon) && !"".equals(lat)){
-			//清楚历史marker
+	public void AddMapPoint(String lon, String lat, String headId) {
+		if (!"".equals(lon) && !"".equals(lat)) {
+			// 清楚历史marker
 			mBaiduMap.clear();
-			
-			//用户头像类型
-			//String utype = data.getString("utype");
-			//定义Maker坐标点
-			LatLng point = ConvertLonLat(Double.parseDouble(lat),Double.parseDouble(lon));
-			
-			//用户头像类型
+
+			// 用户头像类型
+			// String utype = data.getString("utype");
+			// 定义Maker坐标点
+			LatLng point = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
+
+			// 用户头像类型
 			int utype = 7;
 			int head = mHeadImg[utype];
-			if(!"".equals(headId)){
+			if (!"".equals(headId)) {
 				utype = Integer.valueOf(headId);
 				head = mHeadImg[utype];
 			}
-			//构建Marker图标
+			// 构建Marker图标
 			BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
-			//构建MarkerOption，用于在地图上添加Marker
+			// 构建MarkerOption，用于在地图上添加Marker
 			OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
-			
-			//在地图上添加Marker，并显示
+
+			// 在地图上添加Marker，并显示
 			mBaiduMap.addOverlay(option);
-			//Marker mk = (Marker) (mBaiduMap.addOverlay(option));
-			//mMarkerData.put(mk,data);
-			
-			//mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener(i));
+			// Marker mk = (Marker) (mBaiduMap.addOverlay(option));
+			// mMarkerData.put(mk,data);
+
+			// mBaiduMap.setOnMarkerClickListener(new
+			// MyOnMarkerClickListener(i));
 		}
 	}
-	
+
 	@SuppressLint("InflateParams")
-	public void createBubbleInfo(String nickName,String speed,String lon,String lat,String open){
-//		OnInfoWindowClickListener listener = new OnInfoWindowClickListener() {
-//			public void onInfoWindowClick() {
-//				
-//			}
-//		};
-		
-		
-		//创建InfoWindow展示的view
-		//定义用于显示该InfoWindow的坐标点
-		LatLng pt = ConvertLonLat(Double.parseDouble(lat),Double.parseDouble(lon));
-		
-		mBubbleView = mLayoutInflater.inflate(R.layout.bubble,null);
+	public void createBubbleInfo(String nickName, String speed, String lon, String lat, String open) {
+		// OnInfoWindowClickListener listener = new OnInfoWindowClickListener()
+		// {
+		// public void onInfoWindowClick() {
+		//
+		// }
+		// };
+
+		// 创建InfoWindow展示的view
+		// 定义用于显示该InfoWindow的坐标点
+		LatLng pt = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
+
+		mBubbleView = mLayoutInflater.inflate(R.layout.bubble, null);
 		TextView nameView = (TextView) mBubbleView.findViewById(R.id.username);
 		TextView speedView = (TextView) mBubbleView.findViewById(R.id.speed);
 		ImageView playImage = (ImageView) mBubbleView.findViewById(R.id.play_img);
-		
+
 		int isOpen = Integer.parseInt(open);
-		if(1 == isOpen){
+		if (1 == isOpen) {
 			playImage.setVisibility(View.VISIBLE);
-		}
-		else{
+		} else {
 			playImage.setVisibility(View.GONE);
 		}
-		
+
 		nameView.setText(nickName);
 		speedView.setText(speed);
-		
+
 		mBubbleView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				LogUtil.e(null,"jyf-----click------1111");
-				if(mPageSource == "Main"){
-					LogUtil.e(null,"jyf-----click------2222");
+				LogUtil.e(null, "jyf-----click------1111");
+				if (mPageSource == "Main") {
+					LogUtil.e(null, "jyf-----click------2222");
 					lookOtherLive();
 				}
 			}
 		});
-		
-		//当前全屏,改成半屏
+
+		// 当前全屏,改成半屏
 		DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
 		float density = dm.density;
 		int offset = (int) (71 * density);
-		
-		//InfoWindow mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(mBubbleView),pt, -90,listener);
-		InfoWindow mInfoWindow = new InfoWindow(mBubbleView,pt,-offset);
+
+		// InfoWindow mInfoWindow = new
+		// InfoWindow(BitmapDescriptorFactory.fromView(mBubbleView),pt,
+		// -90,listener);
+		InfoWindow mInfoWindow = new InfoWindow(mBubbleView, pt, -offset);
 		mBaiduMap.showInfoWindow(mInfoWindow);
 	}
-	
+
 	private void lookOtherLive() {
 		// 首页地图气泡跳转到直播详情页
-//		Intent bubble = new Intent(mContext, LiveVideoPlayActivity.class);
-//		bubble.putExtra("cn.com.mobnote.map.aid", mCurrentAid);
-//		bubble.putExtra("cn.com.mobnote.map.uid", "1");
-//		bubble.putExtra("cn.com.mobnote.map.imageurl", mBubbleImageUrl);
-//		mContext.startActivity(bubble);
-		
-		LogUtil.e(null,"jyf-----click------3333");
+		// Intent bubble = new Intent(mContext, LiveVideoPlayActivity.class);
+		// bubble.putExtra("cn.com.mobnote.map.aid", mCurrentAid);
+		// bubble.putExtra("cn.com.mobnote.map.uid", "1");
+		// bubble.putExtra("cn.com.mobnote.map.imageurl", mBubbleImageUrl);
+		// mContext.startActivity(bubble);
+
+		LogUtil.e(null, "jyf-----click------3333");
 
 		// 通知主界面要观看别人的视频
 		if (mContext instanceof MainActivity) {
-			LogUtil.e(null,"jyf-----click------4444");
+			LogUtil.e(null, "jyf-----click------4444");
 			((MainActivity) mContext).startLiveLook(mCurrentUserInfo);
-			
-			LogUtil.e(null,"jyf-----click------55555");
+
+			LogUtil.e(null, "jyf-----click------55555");
 		}
 	}
-	
+
 	/**
 	 * 地图状态改变,隐藏气泡和大头针
 	 */
-	public void mapStatusChange(){
-		if(null != mBaiduMap){
-			//隐藏气泡框
+	public void mapStatusChange() {
+		if (null != mBaiduMap) {
+			// 隐藏气泡框
 			mBaiduMap.hideInfoWindow();
-			//如果有当前选择的大头针,需要复原
-			if(null != mCurrentMarker){
+			// 如果有当前选择的大头针,需要复原
+			if (null != mCurrentMarker) {
 				int utype = (Integer) mCurrentMarker.getExtraInfo().get("utype");
 				int head = mHeadImg[utype];
 				BitmapDescriptor sbitmap = BitmapDescriptorFactory.fromResource(head);
@@ -392,42 +394,43 @@ public class BaiduMapManage {
 			}
 		}
 	}
-	
+
 	/**
 	 * 气泡图片下载完成回调
+	 * 
 	 * @param json
 	 */
 	@SuppressWarnings("deprecation")
-	public void bubbleImageDownload(String json){
+	public void bubbleImageDownload(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
 			String path = obj.getString("path");
 			String localPath = FileUtils.libToJavaPath(path);
 			Drawable drawable = null;
-			
-			Bitmap bitmap =  BitmapFactory.decodeFile(localPath);
-			if (null != bitmap && null != mBubbleView){
-				drawable = new BitmapDrawable(mContext.getResources(),bitmap);
+
+			Bitmap bitmap = BitmapFactory.decodeFile(localPath);
+			if (null != bitmap && null != mBubbleView) {
+				drawable = new BitmapDrawable(mContext.getResources(), bitmap);
 				ImageView view = (ImageView) mBubbleView.findViewById(R.id.bubble_img);
 				view.setBackgroundDrawable(drawable);
-				//保存图片给视频详情用
+				// 保存图片给视频详情用
 				mBubbleImageUrl = localPath;
 			}
-				
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	class MyOnMarkerClickListener implements OnMarkerClickListener{
+
+	class MyOnMarkerClickListener implements OnMarkerClickListener {
 
 		@Override
 		public boolean onMarkerClick(Marker marker) {
 
 			JSONObject data = (JSONObject) mMarkerData.get(marker);
 			try {
-				if(null != mCurrentMarker){
-					//原来的大头针 换小图标
+				if (null != mCurrentMarker) {
+					// 原来的大头针 换小图标
 					int utype = (Integer) mCurrentMarker.getExtraInfo().get("utype");
 					int head = mHeadImg[utype];
 					BitmapDescriptor sbitmap = BitmapDescriptorFactory.fromResource(head);
@@ -436,13 +439,12 @@ public class BaiduMapManage {
 				}
 				marker.setZIndex(999);
 				mCurrentMarker = marker;
-				//构建Marker大图标
+				// 构建Marker大图标
 				int utype = (Integer) marker.getExtraInfo().get("utype");
 				int head = mBigHeadImg[utype];
 				BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
 				marker.setIcon(bitmap);
-				
-				
+
 				String picUrl = data.getString("picurl");
 				String aid = data.getString("aid");
 				String nikeName = data.getString("nickname");
@@ -451,45 +453,39 @@ public class BaiduMapManage {
 				String lat = data.getString("lat");
 				String open = data.getString("open");
 				String zan = data.getString("zan");
-				
-				LogUtil.e(null,"jyf-----click------AAAAA:" + data);
-				
+
+				LogUtil.e(null, "jyf-----click------AAAAA:" + data);
+
 				// 解析获取用户信息
 				mCurrentUserInfo = JsonUtil.parseSingleUserInfoJson(data);
-				
-				//改变地图中心点,让气泡框显示到屏幕中间
+
+				// 改变地图中心点,让气泡框显示到屏幕中间
 				DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
 				float density = dm.density;
 				int offset = (int) (75 * density);
-				LatLng ll = ConvertLonLat(Double.parseDouble(lat),Double.parseDouble(lon));
+				LatLng ll = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
 				Point pt = mBaiduMap.getProjection().toScreenLocation(ll);
 				pt.y = pt.y - offset;
 				LatLng lg = mBaiduMap.getProjection().fromScreenLocation(pt);
-				
+
 				MapStatus status = new MapStatus.Builder().target(lg).build();
 				MapStatusUpdate statusUpdate = MapStatusUpdateFactory.newMapStatus(status);
-				//改变地图中心点
+				// 改变地图中心点
 				mBaiduMap.setMapStatus(statusUpdate);
-				
-				//保存aid,跳转到
+
+				// 保存aid,跳转到
 				mCurrentAid = aid;
-				
+
 				console.log("下载气泡图片---onMarkerClick---" + picUrl);
-				
-				if(mPageSource == "Main"){
-					((MainActivity)mContext).downloadBubbleImg(picUrl,aid);
+
+				if (mPageSource == "Main") {
+					((MainActivity) mContext).downloadBubbleImg(picUrl, aid);
 				}
-				createBubbleInfo(nikeName,zan,lon,lat,open);
-			}
-			catch (JSONException e) {
+				createBubbleInfo(nikeName, zan, lon, lat, open);
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 			return false;
 		}
 	}
 }
-
-
-
-
-

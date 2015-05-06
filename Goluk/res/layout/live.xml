@@ -67,7 +67,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="6dp"
-            android:src="@drawable/live_icon_portrait" />
+            android:background="@drawable/live_icon_portrait" />
 
         <!-- 直播标识 -->
 

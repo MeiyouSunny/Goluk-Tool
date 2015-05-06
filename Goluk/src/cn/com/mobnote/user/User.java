@@ -41,13 +41,10 @@ public class User {
 		this.mApp = mApp;
 		mContext = mApp.getApplicationContext();
 		
-//		mApp.initLogic();
-		
 		//初始化Handler
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
 				if (msg.what == 1) {//  1是处理5分钟超时的处理
 					timerCancel();
 					initAutoLogin();
@@ -119,6 +116,7 @@ public class User {
 				case 200:
 					//自动登录成功无提示
 					console.toast("自动登录成功", mContext);
+					Log.i("lily", "--------User-----自动登录个人中心页变化--------"+mApp.autoLoginStatus);
 					StatusChange(2);//自动登录成功
 					Log.i("setauto", "----ok---"+mApp.autoLoginStatus);
 					mApp.loginoutStatus = false;
@@ -137,8 +135,6 @@ public class User {
 				case 402:
 					//登录密码错误
 					StatusChange(5);
-					Log.i("setauto", "-------402 -----"+mApp.autoLoginStatus);
-//					console.toast("密码错误，请重试", mContext);
 					break;
 				default:
 					break;
@@ -182,10 +178,9 @@ public class User {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				mHandler.sendEmptyMessage(1);
 			}
-		}, 300000);
+		}, 60000);
 	}
 	
 	public void timerCancel(){

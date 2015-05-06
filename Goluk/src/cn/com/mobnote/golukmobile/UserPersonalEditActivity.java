@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
@@ -51,24 +52,24 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	private Context mContext = null;
 	
 	/**传值**/
-	private String head = null;
+	/*private String head = null;
 	private String name = null;
 	private String sex = null;
-	private String sign = null;
+	private String sign = null;*/
 	//utf-8
 	private String newName = null;
 	private String newSign = null;
 	// info传来的信息
 	private String intentHead = null;
 	private String intentName = null;
-//	private String intentSex = null;
+	private String intentSex = null;
 	private String intentSign = null;
 	//保存数据的loading
 	private RelativeLayout mLoading = null;
+	private CustomLoadingDialog mCustomProgressDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_personal_edit);
@@ -78,16 +79,18 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserPersonalEdit");
 		
+		if(null == mCustomProgressDialog){
+			mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
+		}
 		initView();
 		//title
 		mTextTitle.setText("编辑资料");
 				
-		initData();
+//		initData();
 	}
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		
 	}
@@ -113,11 +116,18 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//保存数据的loading
 		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
 			
+		/**
+		 * 从UserPersonalInfoActivity传来的用户信息
+		 */
 		Intent it = getIntent();
 		intentHead = it.getStringExtra("infoHead").toString();
 		intentName = it.getStringExtra("infoName").toString();
-//		intentSex = it.getStringExtra("infoSex").toString();
+		intentSex = it.getStringExtra("infoSex").toString();
 		intentSign = it.getStringExtra("infoSign").toString();
+		UserUtils.focusHead(intentHead, mImageHead);
+		mTextName.setText(intentName);
+		mTextSign.setText(intentSign);
+		Log.i("lily", "------head--------"+intentHead+"-----name---"+intentName+"----sex----"+intentSex+"-----sign----"+intentSign);
 		
 		/**
 		 * 监听
@@ -138,7 +148,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	}
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
 		//title返回
 		case R.id.back_btn:
@@ -155,9 +164,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			//点击头像
 		case R.id.user_personal_edit_layout1:
 			Intent itHead = new Intent(UserPersonalEditActivity.this,UserPersonalHeadActivity.class);
-			if(null !=head){
+			if(null !=intentHead){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentHeadText", head);
+				bundle.putString("intentHeadText", intentHead);
 				itHead.putExtras(bundle);
 				startActivityForResult(itHead, 3);
 			}
@@ -165,9 +174,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//点击昵称
 		case R.id.user_personal_edit_layout2:
 			Intent itName = new Intent(UserPersonalEditActivity.this,UserPersonalNameActivity.class);
-			if(null!=name){
+			if(null!=intentName){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentNameText", name);
+				bundle.putString("intentNameText", intentName);
 				itName.putExtras(bundle);
 				startActivityForResult(itName, 1);
 			}
@@ -175,9 +184,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//点击个性签名
 		case R.id.user_personal_edit_layout4:
 			Intent itSign = new Intent(UserPersonalEditActivity.this,UserPersonalSignActivity.class);
-			if(null != sign){
+			if(null != intentSign){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentSignText", sign);
+				bundle.putString("intentSignText", intentSign);
 				itSign.putExtras(bundle);
 				startActivityForResult(itSign, 2);
 			}
@@ -191,25 +200,29 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	 */
 	public void saveInfo(){
 		try{
-			newName = URLEncoder.encode(name, "utf-8");
-			newSign = URLEncoder.encode(sign,"utf-8");
+			newName = URLEncoder.encode(intentName, "utf-8");
+			newSign = URLEncoder.encode(intentSign,"utf-8");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		//{NickName：“昵称”，UserHead:”1”，UserSex:”1”,Desc:""}
-		String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\""+ head +  "\",\"UserSex\":\""+sex+"\",\"Desc\":\""+newSign+"\"}";
-		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
-		if(b){
-			//保存中
-			mLoading.setVisibility(View.VISIBLE);
-			btnBack.setEnabled(false);
-			btnRight.setEnabled(false);
-			mLayoutHead.setEnabled(false);
-			mLayoutName.setEnabled(false);
-			mLayoutSign.setEnabled(false);
+		if(newName.equals("")){
+			UserUtils.showDialog(mContext, "数据修改失败，昵称不能为空");
 		}else{
-			
+			//{NickName：“昵称”，UserHead:”1”，UserSex:”1”,Desc:""}
+			String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\""+ intentHead +  "\",\"UserSex\":\""+intentSex+"\",\"Desc\":\""+newSign+"\"}";
+			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
+			if(b){
+				//保存中
+//				mLoading.setVisibility(View.VISIBLE);
+				mCustomProgressDialog.show();
+				btnBack.setEnabled(false);
+				btnRight.setEnabled(false);
+				mLayoutHead.setEnabled(false);
+				mLayoutName.setEnabled(false);
+				mLayoutSign.setEnabled(false);
+			}
 		}
+		
 	}
 	/**
 	 * 修改用户信息回调
@@ -229,10 +242,11 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				String json2Name = json2.getString("nickname");
 				String json2Head = json2.getString("head");
 				
-				Log.i("edit", json2Head+"========"+intentHead);
+//				mLoading.setVisibility(View.GONE);
+				closeProgressDialog();
 				switch (code) {
 				case 200:
-					mLoading.setVisibility(View.GONE);
+					Log.i("lily", "======"+intentName+"==jsonName===="+json2Name);
 					if(intentSign.equals(json2Sign) && intentName.equals(json2Name) && intentHead.equals(json2Head)){
 						this.finish();
 					}else{
@@ -242,7 +256,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 					break;
 				case 405:
 					console.toast("该用户未注册", mContext);
-					mLoading.setVisibility(View.GONE);
+//					mLoading.setVisibility(View.GONE);
+					closeProgressDialog();
 					btnBack.setEnabled(true);
 					btnRight.setEnabled(true);
 					mLayoutHead.setEnabled(true);
@@ -252,7 +267,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 
 				case 500:
 					console.toast("服务器异常", mContext);
-					mLoading.setVisibility(View.GONE);
+//					mLoading.setVisibility(View.GONE);
+					closeProgressDialog();
 					btnBack.setEnabled(true);
 					btnRight.setEnabled(true);
 					mLayoutHead.setEnabled(true);
@@ -269,7 +285,8 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}else{
 			//success不等于1
 			console.toast("数据修改失败,请重试", mContext);
-			mLoading.setVisibility(View.GONE);
+//			mLoading.setVisibility(View.GONE);
+			closeProgressDialog();
 			btnBack.setEnabled(true);
 			btnRight.setEnabled(true);
 			mLayoutHead.setEnabled(true);
@@ -280,7 +297,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (view.getId()) {
 		case R.id.user_title_right:
@@ -307,26 +323,25 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (resultCode) {
 		//修改昵称
 		case 1:
 			Bundle bundle = data.getExtras();
-			name = bundle.getString("itName");
-			mTextName.setText(name);
+			intentName = bundle.getString("itName");
+			mTextName.setText(intentName);
 			break;
 		//修改个性签名
 		case 2:
 			Bundle bundle2 = data.getExtras();
-			sign = bundle2.getString("itSign");
-			mTextSign.setText(sign);
+			intentSign = bundle2.getString("itSign");
+			mTextSign.setText(intentSign);
 			break;
 		//修改头像
 		case 3:
 			Bundle bundle3 = data.getExtras();
-			head = bundle3.getString("intentSevenHead");
-			UserUtils.focusHead(head, mImageHead);
+			intentHead = bundle3.getString("intentSevenHead");
+			UserUtils.focusHead(intentHead, mImageHead);
 			break;
 
 		default:
@@ -335,9 +350,20 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	}
 	
 	/**
+	 * 关闭加载中对话框
+	 * @author xuhw
+	 * @date 2015年4月15日
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomProgressDialog){
+			mCustomProgressDialog.close();
+		}
+	}
+	
+	/**
 	 * 初始化用户信息
 	 */
-	public void initData(){
+	/*public void initData(){
 		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
 		try{
 			JSONObject json = new JSONObject(info);
@@ -354,6 +380,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 }

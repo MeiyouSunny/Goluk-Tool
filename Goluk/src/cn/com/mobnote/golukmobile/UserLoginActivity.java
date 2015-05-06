@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
@@ -62,10 +62,10 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	
 	//判断登录
 	private String justLogin = "";
+	private CustomLoadingDialog mCustomProgressDialog=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
@@ -82,6 +82,10 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mApplication.setContext(mContext, "UserLogin");
 		
 		mApplication.mLoginManage.initData();
+		
+		if(null == mCustomProgressDialog){
+			mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
+		}
 		
 		initView();
 		// 设置title
@@ -140,6 +144,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
 			mEditTextPhoneNumber.setText(phone);
 			mEditTextPhoneNumber.setSelection(phone.length());
+			mEditTextPwd.setText("");
 		}
 		
 		/**
@@ -208,7 +213,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			
 			@Override
 			public void onFocusChange(View arg0, boolean arg1) {
-				// TODO Auto-generated method stub
 				String pwd=mEditTextPwd.getText().toString();
 				if(arg1){
 					
@@ -259,7 +263,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
 		// 返回
 		case R.id.back_btn:
@@ -301,16 +304,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 //			break;
 		}
 	}
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-			/*if(keyCode == event.KEYCODE_DEL){
-				if(mDelAllNum){
-					mEditTextPhoneNumber.setText("");
-				}
-		}*/
-		return super.onKeyDown(keyCode, event);
-	}
 	
 	/**
 	 * 登录管理类
@@ -328,7 +321,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 						if(b){
 							mApplication.loginStatus = 0;
 							UserUtils.hideSoftMethod(this);
-							mLoading.setVisibility(View.VISIBLE);
+//							mLoading.setVisibility(View.VISIBLE);
+							mCustomProgressDialog.show();
 							mEditTextPhoneNumber.setEnabled(false);
 							mEditTextPwd.setEnabled(false);
 							mTextViewRegist.setEnabled(false);
@@ -336,8 +330,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mBtnLogin.setEnabled(false);
 							mBackButton.setEnabled(false);
 						}else{
-							mLoading.setVisibility(View.GONE);
-//							console.toast("登录失败", this);
+//							mLoading.setVisibility(View.GONE);
+							closeProgressDialog();
 							mApplication.loginStatus = 2;
 						}
 					}else{
@@ -356,13 +350,13 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	 */
 	@Override
 	public void loginCallbackStatus() {
-		// TODO Auto-generated method stub
 		switch (mApplication.loginStatus) {
 		case 0:
 			break;
 		case 1:
 			mApplication.isUserLoginSucess = true;
-			mLoading.setVisibility(View.GONE);
+//			mLoading.setVisibility(View.GONE);
+			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -377,7 +371,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			break;
 		case 2:
 			mApplication.isUserLoginSucess = false;
-			mLoading.setVisibility(View.GONE);
+//			mLoading.setVisibility(View.GONE);
+			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -387,7 +382,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			break;
 		case 3:
 			mApplication.isUserLoginSucess = false;
-			mLoading.setVisibility(View.GONE);
+//			mLoading.setVisibility(View.GONE);
+			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -415,7 +411,8 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 4:
 			console.toast("网络连接超时", this);
 			mApplication.isUserLoginSucess = false;
-			mLoading.setVisibility(View.GONE);
+//			mLoading.setVisibility(View.GONE);
+			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
 			mTextViewRegist.setEnabled(true);
@@ -424,9 +421,27 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mBackButton.setEnabled(true);
 			break;
 		case 5:
-			/*Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
-			it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
-			startActivity(it);*/
+			mApplication.isUserLoginSucess = false;
+//			mLoading.setVisibility(View.GONE);
+			closeProgressDialog();
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
+			new AlertDialog.Builder(mContext)
+			.setMessage("登录密码出错已经达到 5 次上限,账户被锁定 2 小时,请重置密码后登录")
+			.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
+					it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
+					startActivity(it);
+				}
+			})
+			.create().show();
 			break;
 		default:
 			break;
@@ -435,7 +450,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (view.getId()) {
 		case R.id.user_login_btn:
@@ -455,5 +469,16 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			break;
 		}
 		return false;
+	}
+	
+	/**
+	 * 关闭加载中对话框
+	 * @author xuhw
+	 * @date 2015年4月15日
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomProgressDialog){
+			mCustomProgressDialog.close();
+		}
 	}
 }

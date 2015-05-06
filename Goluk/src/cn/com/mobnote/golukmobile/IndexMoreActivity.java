@@ -112,6 +112,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(mContext,"IndexMore");
 		
+		mApp.mUser.setUserInterface(this);
+		
 		//页面初始化
 		init();
 		
@@ -198,11 +200,8 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 			case R.id.head_layout:
 				//自动登录中，成功，失败，超时、密码错误
 				Log.i("autostatus", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
-				Log.i("lily", "-----IndexMoreActivity----未登录的个人中心点击无反应------isHasInfo----"
-				+isHasInfo+"----loginoutStatus----"+mApp.loginoutStatus);
 				if(isHasInfo && mApp.loginoutStatus == false){
-					Log.i("userinterface", "----------------");
-					mApp.mUser.setUserInterface(this);
+//					mApp.mUser.setUserInterface(this);
 					if(mApp.autoLoginStatus == 1 ||mApp.autoLoginStatus == 4){
 						mBuilder = new AlertDialog.Builder(mContext);
 						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
@@ -210,7 +209,6 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 						.setOnKeyListener(new OnKeyListener() {
 							@Override
 							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-								// TODO Auto-generated method stub
 								if(keyCode == KeyEvent.KEYCODE_BACK){
 									return true;
 								}
@@ -269,33 +267,20 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 		}
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		if(keyCode == KeyEvent.KEYCODE_BACK){
-//			this.finish();
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-	
 	/**
+	 * 自动登录状态变化     
 	 * 对话框消失
 	 */
 	@Override
 	public void statusChange() {
-		// TODO Auto-generated method stub
-		Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus);
+		Log.i("lily", "-------IndexMoreActivity-----自动登录个人中心变化----statusChange()-----mApp.autoLoginStatus-----"+mApp.autoLoginStatus);
 		if(mApp.autoLoginStatus == 2){
 			dismissDialog();
-		
-			Log.i("lastTest", "-------dismiss-----"+mApp.autoLoginStatus+"------ok-----dismiss---");
+			Log.i("lily", "-------IndexMoreActivity-----自动登录个人中心变化--------当autoLoginStatus==2时----");
 			personalChanged();
-			/*Intent it = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
-			startActivity(it);*/
 		}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4 || mApp.isUserLoginSucess == false){
 			dismissDialog();
-			console.toast("自动登录失败", mContext);
-			Log.i("userinterface", "------"+mApp.autoLoginStatus+"--------indexmoreactivity");
+//			console.toast("自动登录失败", mContext);
 			personalChanged();
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
@@ -309,9 +294,11 @@ public class IndexMoreActivity extends Activity implements OnClickListener,UserI
 	 * 自动登录失败后个人中心状态的变化
 	 */
 	public void personalChanged(){
+//		console.toast("-----mApp.loginStatus-------"+mApp.loginStatus+"------mApp.autoLoginStatus-------"+mApp.autoLoginStatus, mContext);
 		if(mApp.loginStatus == 1 || mApp.autoLoginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
 			mLayoutHasInfo.setVisibility(View.VISIBLE);
 			mLayoutNoInfo.setVisibility(View.GONE);
+			mImageHead.setImageResource(R.drawable.individual_center_head_moren);
 			initData();
 			isHasInfo = true;
 		}else {//没有用户信息

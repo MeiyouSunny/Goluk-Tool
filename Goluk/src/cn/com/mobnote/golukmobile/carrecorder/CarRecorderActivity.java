@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -193,7 +194,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			public void handleMessage(final android.os.Message msg) {
 				switch (msg.what) {
 				case SCREENSHOOT:
-					screenShoot();
+//					screenShoot();
 					break;
 				case QUERYFILEEXIT:
 					queryFileExit();
@@ -205,7 +206,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					startTrimVideo();
 					break;
 				case EMERGENCYQUERY:
-					emergencyQuery();
+//					emergencyQuery();
 					break;
 				case ADDR:
 					String addr = (String) msg.obj;
@@ -314,7 +315,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			start();
 		}
 
-		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 		mConnectTip.setText("摄像头未连接");
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			ipcIsOk = true;
@@ -501,39 +502,39 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mHandler.sendEmptyMessageDelayed(STARTVIDEORECORD, 1000);
 	}
 
-	/**
-	 * 初始化传感器监听
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月9日
-	 */
-	private void initSensor() {
-		if (SensorDetector.isSupportAccelerometerSensor(this)) {
-			mSensorDetector = new SensorDetector(this);
-			mSensorDetector
-					.registerAccelerometerListener(new AccelerometerListener() {
-						@Override
-						public void onChanged() {
-
-							if (GolukApplication.getInstance().getIpcIsLogin()) {
-								if (!isRecording) {
-									sendEmergencyCommitId();
-								} else {
-									if (!emergencyQueuing) {
-										GFileUtils
-												.writeIPCLog("=====================紧急视频开始排队====================");
-										emergencyQueuing = true;
-										mHandler.sendEmptyMessage(EMERGENCYQUERY);
-									}
-								}
-							} else {
-								// 未登录
-							}
-
-						}
-					});
-		}
-	}
+//	/**
+//	 * 初始化传感器监听
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月9日
+//	 */
+//	private void initSensor() {
+//		if (SensorDetector.isSupportAccelerometerSensor(this)) {
+//			mSensorDetector = new SensorDetector(this);
+//			mSensorDetector
+//					.registerAccelerometerListener(new AccelerometerListener() {
+//						@Override
+//						public void onChanged() {
+//
+//							if (GolukApplication.getInstance().getIpcIsLogin()) {
+//								if (!isRecording) {
+//									sendEmergencyCommitId();
+//								} else {
+//									if (!emergencyQueuing) {
+//										GFileUtils
+//												.writeIPCLog("=====================紧急视频开始排队====================");
+//										emergencyQueuing = true;
+//										mHandler.sendEmptyMessage(EMERGENCYQUERY);
+//									}
+//								}
+//							} else {
+//								// 未登录
+//							}
+//
+//						}
+//					});
+//		}
+//	}
 
 	/**
 	 * 重连runnable
@@ -570,7 +571,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 		case R.id.back_btn:
-			finish();
+			exit();
 			break;
 		case R.id.mShareBtn:
 			if (downloadFinish) {
@@ -596,7 +597,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (!isRecording) {
-					m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+					m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 					isRecording = true;
 					mCurVideoType = VideoType.mounts;
 					LogUtils.d("m8sBtn========================2222======");
@@ -668,7 +669,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	 * @date 2015年3月5日
 	 */
 	private void sendEmergencyCommitId() {
-		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 		isRecording = true;
 		mCurVideoType = VideoType.emergency;
 
@@ -786,95 +787,87 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager()
-			.removeIPCManagerListener("main");
-		}
-
-		if (null != mRtmpPlayerView) {
-			mRtmpPlayerView.removeCallbacks(retryRunnable);
-			mRtmpPlayerView.cleanUp();
-		}
+		
 
 	};
 
-	/**
-	 * 视频截图
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月4日
-	 */
-	private void screenShoot() {
-		GolukApplication.getInstance().getIPCControlManager().screenShot();
-		mHandler.removeMessages(SCREENSHOOT);
-		mHandler.sendEmptyMessageDelayed(SCREENSHOOT, SCREENSHOOTTIME);
-	}
-
-	/**
-	 * 开启紧急录制
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月4日
-	 */
-	private void startEmergencyRecording() {
-		if (null == mEmergencyRecordingTimer) {
-			System.out.println("PPPPPPPPPPP   emergency 222222");
-			isRecording = true;
-			SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT);
-			mEmergencyRecordingTimer = new Timer();
-			TimerTask task = new TimerTask() {
-				public void run() {
-					stopEmergencyRecording();
-				}
-			};
-			mEmergencyRecordingTimer.schedule(task,
-					emergencyRecordingTime * 1000,
-					emergencyRecordingTime * 1000);
-		}
-	}
-
-	/**
-	 * 关闭紧急录制
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月4日
-	 */
-	private void stopEmergencyRecording() {
-		isRecording = false;
-		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
-				QUERYFILETIME);
-		SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT, 2);
-		if (null != mEmergencyRecordingTimer) {
-			mEmergencyRecordingTimer.cancel();
-			mEmergencyRecordingTimer.purge();
-			mEmergencyRecordingTimer = null;
-		}
-	}
-
-	/**
-	 * 处理紧急视频排队情况
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月9日
-	 */
-	private void emergencyQuery() {
-		mHandler.removeMessages(EMERGENCYQUERY);
-		if (!isRecording) {
-			emergencyQueryTimeout = 0;
-			emergencyQueuing = false;
-			sendEmergencyCommitId();
-		} else {
-			emergencyQueryTimeout++;
-			if (emergencyQueryTimeout <= 15) {
-				GFileUtils
-						.writeIPCLog("=====================紧急视频开始排队===============emergencyQueryTimeout=="
-								+ emergencyQueryTimeout);
-				mHandler.sendEmptyMessageDelayed(EMERGENCYQUERY, 1000);
-			} else {
-				emergencyQueryTimeout = 0;
-			}
-		}
-	}
+//	/**
+//	 * 视频截图
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月4日
+//	 */
+//	private void screenShoot() {
+//		GolukApplication.getInstance().getIPCControlManager().screenShot();
+//		mHandler.removeMessages(SCREENSHOOT);
+//		mHandler.sendEmptyMessageDelayed(SCREENSHOOT, SCREENSHOOTTIME);
+//	}
+//
+//	/**
+//	 * 开启紧急录制
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月4日
+//	 */
+//	private void startEmergencyRecording() {
+//		if (null == mEmergencyRecordingTimer) {
+//			System.out.println("PPPPPPPPPPP   emergency 222222");
+//			isRecording = true;
+//			SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT);
+//			mEmergencyRecordingTimer = new Timer();
+//			TimerTask task = new TimerTask() {
+//				public void run() {
+//					stopEmergencyRecording();
+//				}
+//			};
+//			mEmergencyRecordingTimer.schedule(task,
+//					emergencyRecordingTime * 1000,
+//					emergencyRecordingTime * 1000);
+//		}
+//	}
+//
+//	/**
+//	 * 关闭紧急录制
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月4日
+//	 */
+//	private void stopEmergencyRecording() {
+//		isRecording = false;
+//		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
+//				QUERYFILETIME);
+//		SoundUtils.getInstance().play(SoundUtils.RECORD_EMERGENT, 2);
+//		if (null != mEmergencyRecordingTimer) {
+//			mEmergencyRecordingTimer.cancel();
+//			mEmergencyRecordingTimer.purge();
+//			mEmergencyRecordingTimer = null;
+//		}
+//	}
+//
+//	/**
+//	 * 处理紧急视频排队情况
+//	 * 
+//	 * @author xuhw
+//	 * @date 2015年3月9日
+//	 */
+//	private void emergencyQuery() {
+//		mHandler.removeMessages(EMERGENCYQUERY);
+//		if (!isRecording) {
+//			emergencyQueryTimeout = 0;
+//			emergencyQueuing = false;
+//			sendEmergencyCommitId();
+//		} else {
+//			emergencyQueryTimeout++;
+//			if (emergencyQueryTimeout <= 15) {
+//				GFileUtils
+//						.writeIPCLog("=====================紧急视频开始排队===============emergencyQueryTimeout=="
+//								+ emergencyQueryTimeout);
+//				mHandler.sendEmptyMessageDelayed(EMERGENCYQUERY, 1000);
+//			} else {
+//				emergencyQueryTimeout = 0;
+//			}
+//		}
+//	}
 
 	/**
 	 * 8s视频一键抢拍
@@ -973,7 +966,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
 				CarRecorderActivity.QUERYFILETIME);
 		mShootTime = 0;
-		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
 			m8sTimer.purge();
@@ -1084,7 +1077,7 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						ipcIsOk = false;
 //						updateVideoState();
 						mShareBtn.setVisibility(View.GONE);
-						m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_press);
+						m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
 						// mFileBtn.setBackgroundResource(R.drawable.btn_file_sel);
 
 						downloadFileNumber = 0;
@@ -1477,5 +1470,27 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			}
 		}
 	};
+	
+	public void exit(){
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager()
+			.removeIPCManagerListener("main");
+		}
+
+		if (null != mRtmpPlayerView) {
+			mRtmpPlayerView.removeCallbacks(retryRunnable);
+			mRtmpPlayerView.cleanUp();
+		}
+		
+		finish();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
+	}
 
 }

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
@@ -144,9 +145,8 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean queryFileListInfo(int filetype, int limitCount, int timeend) {
-		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, 0, timeend);
-		LogUtil.e("xuhw", "YYYYYY===queryParam="+queryParam);
+	public boolean queryFileListInfo(int filetype, int limitCount, long timestart, long timeend) {
+		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, timeend);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
 				queryParam);
 	}
@@ -159,8 +159,10 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月25日
 	 */
-	public boolean downloadFile(String filename, String tag, String savepath) {
-		String json = JsonUtil.getDownFileJson(filename, tag, savepath);
+	public boolean downloadFile(String filename, String tag, String savepath, long filetime) {
+		String json = JsonUtil.getDownFileJson(filename, tag, savepath, filetime);
+		GFileUtils.writeIPCLog("==downloadFile==json="+json);
+		LogUtil.e("xuhw", "YYYYYY====downloadFile=====json="+json);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
 				json);
 	}
@@ -402,7 +404,8 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年4月21日
 	 */
 	public boolean ipcUpgrade(){
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_IPCUpgrade, "");
+		Log.i("lily", "---------ipcUpgrade------"+IPC_VDCPCmd_IPCUpgrade);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_IPCUpgrade, "fs1:/update/ipc_upgrade_2015-04-30-15-58.bin");
 	}
 	
 	/**

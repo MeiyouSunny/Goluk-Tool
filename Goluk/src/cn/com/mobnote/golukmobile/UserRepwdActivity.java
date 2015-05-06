@@ -19,6 +19,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,6 +38,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 
@@ -69,16 +72,20 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	private GolukApplication mApplication = null;
 	//重置密码显示进度条
 	private RelativeLayout mLoading = null ;
+	private CustomLoadingDialog mCustomProgressDialog=null;//重置密码
 	//验证码获取显示进度条
 	private RelativeLayout mIdentifyLoading = null;
+	private CustomLoadingDialog mCustomProgressDialogIdentify = null;//获取验证码
 	//判断获取验证码按钮是否已经被点击
 	private boolean identifyClick = false;
 	/**重置密码获取验证码后台返回的次数**/
 	private String freq = "";
 	
+	private SharedPreferences mSharedPreferences = null;
+	private Editor mEditor = null; 
+	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_repwd);
@@ -89,6 +96,12 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserRepwd");
 		
+		if(null == mCustomProgressDialog){
+			mCustomProgressDialog = new CustomLoadingDialog(mContext,"重置中，请稍候……");
+		}
+		if(null == mCustomProgressDialogIdentify){
+			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, "验证码获取中……");
+		}
 		initView();
 		//title
 		mTextViewTitle.setText("重设密码");
@@ -117,11 +130,12 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		/**
 		 * 登录页密码输入错误超过五次，跳转到重置密码也，并且填入手机号
 		 */
-		/*Intent it = getIntent();
+		Intent it = getIntent();
 		if(null != it.getStringExtra("errorPwdOver")){
 			String phone = it.getStringExtra("errorPwdOver").toString();
 			mEditTextPhone.setText(phone);
-		}*/
+			mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
+		}
 		
 		//手机号输入后，离开立即判断
 		mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -276,7 +290,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		smsHandler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				mEditTextIdentify.setText(smsCode);
 			}
@@ -317,7 +330,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			if (b) {
 				identifyClick = true;
 				UserUtils.hideSoftMethod(this);
-				mIdentifyLoading.setVisibility(View.VISIBLE);
+//				mIdentifyLoading.setVisibility(View.VISIBLE);
+				mCustomProgressDialogIdentify.show();
 				registerReceiver(smsReceiver, smsFilter);
 				click = 1;
 				console.log(b + "");
@@ -343,8 +357,9 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		mEditTextPwd.setEnabled(true);
 		mBtnOK.setEnabled(true);
 		mBtnBack.setEnabled(true);
-		handler1.removeCallbacks(runnable);
-		mIdentifyLoading.setVisibility(View.GONE);
+//		handler1.removeCallbacks(runnable);
+//		mIdentifyLoading.setVisibility(View.GONE);
+		closeProgressDialogIdentify();
 //		console.toast("发送中，请稍后", mContext);
 		if(1 == success){
 			try{
@@ -369,7 +384,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 						
 						@Override
 						public void finish() {
-							// TODO Auto-generated method stub
 							mBtnIdentity.setText("重新获取");
 							mEditTextPhone.setEnabled(true);
 							mEditTextPhone.setFocusable(true);
@@ -405,7 +419,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 							
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
-								// TODO Auto-generated method stub
 								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
 								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
 								startActivity(intentRepwd);
@@ -413,7 +426,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 							}
 						}).create().show();
 					}else{
-						Log.i("lily", "-------408行--------");
 						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 					}
 					break;
@@ -454,34 +466,35 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 					if (!UserUtils.isNetDeviceAvailable(this)) {
 						console.toast("当前网络不可用，请检查网络后重试", mContext);
 					} else {
-						// {PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
+						// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
 						console.log(isRegist);
-						int freqInt = Integer.valueOf(freq);
-						Log.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
-						if(freqInt>3){
-							UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
-						}else{
-							boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_ModifyPwd, isRegist);
-							console.log(b + "");
-							if (b) {
-								// 隐藏软件盘
-								UserUtils.hideSoftMethod(this);
-								mLoading.setVisibility(View.VISIBLE);
-								mEditTextPhone.setEnabled(false);
-								mEditTextIdentify.setEnabled(false);
-								mEditTextPwd.setEnabled(false);
-								mBtnIdentity.setEnabled(false);
-								mBtnBack.setEnabled(false);
-								mBtnOK.setEnabled(false);
-							} else {
-								initTimer();
-								handler1.postDelayed(runnable, 3000);// 三秒执行一次runnable.
+						if(identifyClick){
+							int freqInt = Integer.valueOf(freq);
+							Log.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
+							if(freqInt>3){
+								UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
+							}else{
+								boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_ModifyPwd, isRegist);
+								console.log(b + "");
+								if (b) {
+									// 隐藏软件盘
+									UserUtils.hideSoftMethod(this);
+//									mLoading.setVisibility(View.VISIBLE);
+									mCustomProgressDialog.show();
+									mEditTextPhone.setEnabled(false);
+									mEditTextIdentify.setEnabled(false);
+									mEditTextPwd.setEnabled(false);
+									mBtnIdentity.setEnabled(false);
+									mBtnBack.setEnabled(false);
+									mBtnOK.setEnabled(false);
+								}
 							}
+						}else{
+							console.toast("请先获取验证码", mContext);
 						}
 					}
 				} else {
-					Log.i("lily", "-------470行-----");
 					mBtnOK.setFocusable(true);
 					UserUtils.showDialog(UserRepwdActivity.this,"密码格式输入不正确,请输入 6-16 位数字、字母，字母区分大小写");
 				}
@@ -494,15 +507,17 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	/**
 	 * 重置密码回调
 	 */
-	public void repwdCallBack(int success,Object obj){
+	public void repwdCallBack(int success,Object outTime,Object obj){
 		console.log("---重置密码回调-----"+success+"----"+obj);
-		mLoading.setVisibility(View.GONE);
+//		mLoading.setVisibility(View.GONE);
+		closeProgressDialog();
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
 		mBtnIdentity.setEnabled(true);
 		mBtnBack.setEnabled(true);
 		mBtnOK.setEnabled(true);
+		int codeOut = (Integer) outTime;
 		if(1 == success){
 			try{
 				String data = (String) obj;
@@ -514,12 +529,15 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				case 200:
 					//重置密码成功
 					console.toast("重置密码成功", mContext);
-					Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
+					/*Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
 					it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					it.putExtra("repwdOk", mEditTextPhone.getText().toString());
+					Log.i("lily", "--------密码错误，重置密码成功------"+mEditTextPhone.getText().toString());
 					startActivity(it);
-					finish();
+					this.finish();*/
+					putPhone();
+					this.finish();
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
@@ -535,7 +553,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 							
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
-								// TODO Auto-generated method stub
 								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
 								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
 								startActivity(intentRepwd);
@@ -556,11 +573,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 					}
 					break;
 				case 407:
-					/*if(identifyClick){
-						UserUtils.showDialog(this, "输入验证码超时");
-					}else{
-						console.toast("请先获取验证码", mContext);
-					}*/
 					String phones = mEditTextPhone.getText().toString();
 					if(UserUtils.isMobileNO(phones)){
 						if(identifyClick){
@@ -576,8 +588,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				case 480:
 					if(identifyClick){
 						UserUtils.showDialog(this, "验证码获取失败");
-						Log.i("bbb", "480");
-//						mLoading.setVisibility(View.GONE);
 					}else{
 						console.toast("请先获取验证码", mContext);
 					}
@@ -590,16 +600,27 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				e.printStackTrace();
 			}
 		}else{
-			console.log("重置密码失败");
-			mLoading.setVisibility(View.GONE);
+			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
+			android.util.Log.i("outtime", "-----网络链接超时超时超时-------xxxx---"+codeOut);
+			console.toast("网络连接超时", mContext);
+			switch (codeOut) {
+			case 1:
+				
+				break;
+			case 2:
+				
+				break;
+			case 3:
+				
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	
-	/**
-	 * 销毁广播
-	 */
 	private int click = 0;
-	final Handler handler1=new Handler();
+	/*final Handler handler1=new Handler();
 	private Runnable runnable;
 	private void initTimer(){
 		runnable=new Runnable(){
@@ -609,7 +630,11 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			mLoading.setVisibility(View.GONE);
 			}
 		};
-	}
+	}*/
+	
+	/**
+	 * 销毁广播
+	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -621,7 +646,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (view.getId()) {
 		case R.id.user_repwd_ok_btn:
@@ -658,4 +682,29 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		}
 		return false;
 	}
+	
+	public void putPhone(){
+		String phone = mEditTextPhone.getText().toString();
+		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+		mEditor = mSharedPreferences.edit();
+		mEditor.putString("setupPhone", phone);
+		mEditor.commit();
+	}
+	/**
+	 * 关闭注册中的对话框
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomProgressDialog){
+			mCustomProgressDialog.close();
+		}
+	}
+	/**
+	 * 关闭注册中的对话框
+	 */
+	private void closeProgressDialogIdentify(){
+		if(null != mCustomProgressDialogIdentify){
+			mCustomProgressDialogIdentify.close();
+		}
+	}
+	
 }

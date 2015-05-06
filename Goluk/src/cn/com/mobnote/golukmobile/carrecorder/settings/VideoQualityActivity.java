@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -127,14 +128,15 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 			mHighText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
 		}
 		
-		
-		
 	}
 	
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
+			case R.id.back_btn:
+				exit(); 
+				break;
 			case R.id.close:
 				updateSensitivity(SensitivityType._1080h);
 				break;
@@ -160,13 +162,13 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
 			if("1080P".equals(mVideoConfigState.resolution)){
-				if(10240 == mVideoConfigState.bitrate){
+				if(8192 == mVideoConfigState.bitrate){
 					updateSensitivity(SensitivityType._1080h);
 				}else{
 					updateSensitivity(SensitivityType._1080l);
 				}
 			}else{
-				if(5120 == mVideoConfigState.bitrate){
+				if(4096 == mVideoConfigState.bitrate){
 					updateSensitivity(SensitivityType._720h);
 				}else{
 					updateSensitivity(SensitivityType._720l);
@@ -178,32 +180,6 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				if(GolukApplication.getInstance().getIpcIsLogin()){
-					if(SensitivityType._1080h == curType){
-						mVideoConfigState.resolution="1080P";
-						mVideoConfigState.bitrate=10240;
-					}else if(SensitivityType._1080l == curType){
-						mVideoConfigState.resolution="1080P";
-						mVideoConfigState.bitrate=8192;
-					}else if(SensitivityType._720h == curType){
-						mVideoConfigState.resolution="720P";
-						mVideoConfigState.bitrate=5120;
-					}else{
-						mVideoConfigState.resolution="720P";
-						mVideoConfigState.bitrate=4096;
-					}
-					boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);
-					System.out.println("YYY==========curType=========flag="+flag);
-				}
-			}
-		}).start();
-
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("videoquality");
-		}
 	}
 
 	@Override
@@ -218,13 +194,13 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 						System.out.println("YYY================22222==============resolution====="+mVideoConfigState.resolution);
 						if("1080P".equals(mVideoConfigState.resolution)){
 							//bitrate数据返回的不对
-							if(10240 == mVideoConfigState.bitrate){
+							if(8192 == mVideoConfigState.bitrate){
 								updateSensitivity(SensitivityType._1080h);
 							}else{
 								updateSensitivity(SensitivityType._1080l);
 							}
 						}else{
-							if(5120 == mVideoConfigState.bitrate){
+							if(4096 == mVideoConfigState.bitrate){
 								updateSensitivity(SensitivityType._720h);
 							}else{
 								updateSensitivity(SensitivityType._720l);
@@ -248,5 +224,43 @@ public class VideoQualityActivity extends BaseActivity implements OnClickListene
 		}
 	}
 	
+	public void exit(){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if(GolukApplication.getInstance().getIpcIsLogin()){
+					if(SensitivityType._1080h == curType){
+						mVideoConfigState.resolution="1080P";
+						mVideoConfigState.bitrate=8192;
+					}else if(SensitivityType._1080l == curType){
+						mVideoConfigState.resolution="1080P";
+						mVideoConfigState.bitrate=6144;
+					}else if(SensitivityType._720h == curType){
+						mVideoConfigState.resolution="720P";
+						mVideoConfigState.bitrate=4096;
+					}else{
+						mVideoConfigState.resolution="720P";
+						mVideoConfigState.bitrate=3072;
+					}
+					boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);
+					System.out.println("YYY==========curType=========flag="+flag);
+				}
+			}
+		}).start();
+
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("videoquality");
+		}
+		
+		finish();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
+	}
 	
 }

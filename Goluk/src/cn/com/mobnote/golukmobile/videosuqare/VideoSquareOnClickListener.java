@@ -9,7 +9,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import android.app.AlertDialog;
@@ -64,7 +63,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 			if (mcontext instanceof VideoSquareActivity) {
 				VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
 				vsa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
-				vsa.mCustomProgressDialog = new CustomLoadingDialog(vsa);
+				vsa.mCustomProgressDialog = new CustomLoadingDialog(vsa,null);
 				vsa.mCustomProgressDialog.show();
 				System.out.println("shareid=" + vsa.shareVideoId);
 				boolean result = GolukApplication.getInstance().getVideoSquareManager().getShareUrl(mVideoSquareInfo.mVideoEntity.videoid,
@@ -75,7 +74,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 				}
 			} else if (mcontext instanceof VideoSquarePlayActivity) {
 				VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
-				vspa.mCustomProgressDialog = new CustomLoadingDialog(vspa);
+				vspa.mCustomProgressDialog = new CustomLoadingDialog(vspa,null);
 				vspa.mCustomProgressDialog.show();
 				
 				vspa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
@@ -256,8 +255,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 						}
 						System.out.println("YYYY+RESULT11111111");
 						// 设置分享内容
-						sharePlatform.setShareContent(shareurl, coverurl,
-								"goluk分享");
+						sharePlatform.setShareContent(shareurl, coverurl,mVideoSquareInfo.mVideoEntity.describe);
 						System.out.println("YYYY+RESULT22222222");
 
 						if (form == 2) {

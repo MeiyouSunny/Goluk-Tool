@@ -90,6 +90,9 @@ public class SharePlatformUtil{
 	 * 根据不同的平台设置不同的分享内容</br>
 	 */
 	public void setShareContent(String videourl,String imageurl,String text) {
+		if(text == null || "".equals(text)){
+			text = "Goluk精彩视频！";
+		}
 		
 		UMImage umimage = new UMImage(mContext,imageurl);
 		UMVideo video = new UMVideo(videourl);
@@ -101,16 +104,16 @@ public class SharePlatformUtil{
 		//微信
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
 		
-		weixinContent.setShareContent("Goluk分享内容");
-		weixinContent.setTitle(text);
+		weixinContent.setShareContent(text);
+		weixinContent.setTitle("Goluk精彩视频");
 		weixinContent.setTargetUrl(videourl);
 		weixinContent.setShareImage(umimage);
 		mController.setShareMedia(weixinContent);
 		
 		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent();
-		circleMedia.setShareContent("Goluk分享内容");
-		circleMedia.setTitle(text);
+		circleMedia.setShareContent(text);
+		circleMedia.setTitle("Goluk精彩视频");
 		circleMedia.setTargetUrl(videourl);
 		circleMedia.setShareImage(umimage);
 		mController.setShareMedia(circleMedia);
@@ -125,8 +128,8 @@ public class SharePlatformUtil{
 		
 		//新浪微博分享
 		SinaShareContent sinaContent = new SinaShareContent();
-		sinaContent.setShareContent("Goluk分享内容");
-		sinaContent.setTitle(text);
+		sinaContent.setShareContent(text);
+		sinaContent.setTitle("Goluk精彩视频");
 		sinaContent.setTargetUrl(videourl);
 		sinaContent.setShareMedia(video);
 		mController.setShareMedia(sinaContent);
@@ -134,8 +137,8 @@ public class SharePlatformUtil{
 		
 		//qq分享
 		QQShareContent  qqContent = new QQShareContent();
-		qqContent.setShareContent("Goluk分享内容");
-		qqContent.setTitle(text);
+		qqContent.setShareContent(text);
+		qqContent.setTitle("Goluk精彩视频");
 		qqContent.setTargetUrl(videourl);
 		qqContent.setShareImage(umimage);
 		mController.setShareMedia(qqContent);
