@@ -979,8 +979,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					String mp4 = FileUtils.libToJavaPath(videoSavePath+filename);
 					File file = new File(mp4);
 					if(!file.exists()){
-						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "videodownload", videoSavePath, findtime(filename));
+//						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "videodownload", videoSavePath, findtime(filename));
 						boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
+						GFileUtils.writeIPCLog("YYYYYY===a="+a+"==querySingleFile======filename="+filename);
 						LogUtil.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
 					}else{
 							
@@ -1271,7 +1272,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				}
 				isGetFileListDataing=false;
 				LogUtil.e("xuhw","YYYYYY=======获取文件列表===@@@======param1="+ param1 + "=====param2=" + param2);
-				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
+//				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					if(TextUtils.isEmpty((String)param2)){
 						return;
@@ -1284,7 +1285,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							vfi = fileList.get(fileList.size() - 1);
 						}
 						
-						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
+//						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
 						if(fileList.size()<pageCount){
 							ishaveData = false;
 						}else{
@@ -1312,17 +1313,17 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						}
 					} else {
 						// 列表数据空
-						GFileUtils.writeIPCLog("===========获取文件列表===5555============ data null=========");
+//						GFileUtils.writeIPCLog("===========获取文件列表===5555============ data null=========");
 						ishaveData = false;
 					}
 				} else {
 					// 命令发送失败
-					GFileUtils
-							.writeIPCLog("===========获取文件列表===6666============  not success =========");
+//					GFileUtils
+//							.writeIPCLog("===========获取文件列表===6666============  not success =========");
 				}
 			}else if(IPC_VDCPCmd_TriggerRecord == msg){
-				GFileUtils
-				.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==========222222222222222222 =========");
+//				GFileUtils
+//				.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==========222222222222222222 =========");
 			//文件删除
 			}else if(IPC_VDCPCmd_Erase == msg){
 				System.out.println("QQQ==========param1="+param1+"===param2="+param2);
@@ -1330,9 +1331,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			break;
 		// IPC下载结果应答
 		case ENetTransEvent_IPC_VDTP_Resp:
-			GFileUtils
-					.writeIPCLog("===========下载文件===2222222=============param1="
-							+ param1 + "=====param2=" + param2);
+//			GFileUtils
+//					.writeIPCLog("===========下载文件===2222222=============param1="
+//							+ param1 + "=====param2=" + param2);
 			// 文件传输消息
 			if (IPC_VDTP_Msg_File == msg) {
 				// 文件下载成功

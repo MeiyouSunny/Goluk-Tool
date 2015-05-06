@@ -528,12 +528,19 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						+ fileName);
 				int type = json.getInt("type");
 				String savePath = "";
-				if (type == 2) {
-					// 紧急视频
-					savePath = mVideoSavePath + "urgent/";
-				} else {
-					// 精彩视频
+//				if (type == 2) {a
+//					// 紧急视频
+//					savePath = mVideoSavePath + "urgent/";
+//				} else {
+//					// 精彩视频
+//					savePath = mVideoSavePath + "wonderful/";
+//				}
+				if(IPCManagerFn.TYPE_SHORTCUT == type){
 					savePath = mVideoSavePath + "wonderful/";
+				}else if(IPCManagerFn.TYPE_URGENT == type){
+					savePath = mVideoSavePath + "urgent/";
+				}else{
+					savePath = mVideoSavePath + "loop/";
 				}
 				// 调用下载视频接口
 				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
@@ -1194,7 +1201,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				// param1 = 0,下载完成
 				// param1 = 1,下载中
 				LogUtil.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1="+param1);
-				GFileUtils.writeIPCLog("===IPC_VDTP_Msg_File===param1="+param1+"=param2="+param2);
+				if(((String)param2).equals(".mp4"))
+					GFileUtils.writeIPCLog("===IPC_VDTP_Msg_File===param1="+param1+"=param2="+param2);
 				
 				ipcVideoDownLoadCallBack(param1, (String) param2);
 				break;

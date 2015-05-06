@@ -1229,9 +1229,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			break;
 		// 单文件查询
 		case IPC_VDCPCmd_SingleQuery:
-			GFileUtils
-					.writeIPCLog("===========IPC_VDCPCmd_SingleQuery===11111=========param1="
-							+ param1 + "=====param2=" + param2);
+//			GFileUtils
+//					.writeIPCLog("===========IPC_VDCPCmd_SingleQuery===11111=========param1="
+//							+ param1 + "=====param2=" + param2);
 			if (RESULE_SUCESS == param1) {
 				VideoFileInfo fileInfo = IpcDataParser
 						.parseSingleFileResult((String) param2);
@@ -1242,8 +1242,8 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 							mIntent.putExtra("filetype", "mounts");
 							mIntent.putExtra("filename", fileInfo.location);
 							// sendBroadcast(mIntent);
-							GFileUtils
-									.writeIPCLog("===========IPC_VDCPCmd_SingleQuery==2222=======精彩视频查询成功===========");
+//							GFileUtils
+//									.writeIPCLog("===========IPC_VDCPCmd_SingleQuery==2222=======精彩视频查询成功===========");
 
 							downloadFileNumber++;
 							String path = Environment

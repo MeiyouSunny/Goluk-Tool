@@ -11,6 +11,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
@@ -68,6 +69,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年3月21日
 	 */
 	public boolean setIPCWifiState(boolean isConnect,String ip){
+		SettingUtils.getInstance().putString("IPC_IP", ip);
 		int state = isConnect ? 1 : 0;
 		String json = JsonUtil.getWifiChangeJson(state, ip);
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
@@ -161,8 +163,10 @@ public class IPCControlManager implements IPCManagerFn{
 	 */
 	public boolean downloadFile(String filename, String tag, String savepath, long filetime) {
 		String json = JsonUtil.getDownFileJson(filename, tag, savepath, filetime);
-		GFileUtils.writeIPCLog("==downloadFile==json="+json);
-		LogUtil.e("xuhw", "YYYYYY====downloadFile=====json="+json);
+		if(filename.contains(".mp4")){
+			GFileUtils.writeIPCLog("==downloadFile==json="+json);
+			LogUtil.e("xuhw", "YYYYYY====downloadFile=====json="+json);
+		}
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
 				json);
 	}

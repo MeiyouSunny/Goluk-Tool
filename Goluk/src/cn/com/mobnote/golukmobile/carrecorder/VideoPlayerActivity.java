@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.tiros.utils.LogUtil;
 import android.app.Activity;
 import android.graphics.PixelFormat;
@@ -101,21 +102,23 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		mApp = (GolukApplication)getApplication();
 		from = getIntent().getStringExtra("from");
 		filename = getIntent().getStringExtra("filename");
+		String ip = SettingUtils.getInstance().getString("IPC_IP");
 		if(!TextUtils.isEmpty(from)){
 			if(from.equals("local")){
 				playUrl=getIntent().getStringExtra("path");
 			}else if(from.equals("ipc")){
 				int type = getIntent().getIntExtra("type", -1);
 				if(4 == type){
-					playUrl="http://"+ mApp.mIpcIp + ":5080/rec/wonderful/"+filename;
+					playUrl="http://"+ ip + ":5080/rec/wonderful/"+filename;
 				}else if(2 == type){
-					playUrl="http://" + mApp.mIpcIp + ":5080/rec/urgent/"+filename;
+					playUrl="http://" + ip + ":5080/rec/urgent/"+filename;
 				}else{
-					playUrl="http://" + mApp.mIpcIp + ":5080/rec/normal/"+filename;
+					playUrl="http://" + ip + ":5080/rec/normal/"+filename;
 				}
 			}
 		}
 
+		LogUtil.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl="+playUrl);
 		initView();
 		setListener();
 		
