@@ -169,9 +169,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.sharetime = (TextView) convertView.findViewById(R.id.time);
 			holder.mPlayerLayout = (RelativeLayout) convertView
 					.findViewById(R.id.mPlayerLayout);
-			holder.mSurfaceView = (SurfaceView) convertView
-					.findViewById(R.id.mSurfaceView);
-			holder.mSurfaceView.setZOrderMediaOverlay(true);
+//			holder.mSurfaceView = (SurfaceView) convertView
+//					.findViewById(R.id.mSurfaceView);
+//			holder.mSurfaceView.setZOrderMediaOverlay(true);
 			holder.reporticon = (ImageButton) convertView
 					.findViewById(R.id.report_icon);
 			holder.liveicon = (ImageView) convertView
@@ -192,11 +192,11 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
 			holder.reporticon.setVisibility(View.GONE);
 			holder.liveicon.setVisibility(View.VISIBLE);
-			holder.mSurfaceView.setVisibility(View.GONE);
+//			holder.mSurfaceView.setVisibility(View.GONE);
 		} else {// 点播
 			holder.reporticon.setVisibility(View.VISIBLE);
 			holder.liveicon.setVisibility(View.GONE);
-			holder.mSurfaceView.setVisibility(View.VISIBLE);
+//			holder.mSurfaceView.setVisibility(View.VISIBLE);
 		}
 		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
@@ -281,6 +281,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
 				width, height);
 		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
+		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
+				width, height);
+		holder.mPreLoading.setLayoutParams(mPreLoadingParams);
 //		mSurfaceHolder.addCallback(new SurfaceViewCallback(this, arg0, mHolderList,
 //				mVideoSquareListData, mDWMediaPlayerList, mVideoSquareInfo));
 
@@ -374,14 +377,14 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		TextView videotitle;
 		TextView sharetime;
 		RelativeLayout mPlayerLayout;
-		SurfaceView mSurfaceView;
+//		SurfaceView mSurfaceView;
 		ImageView liveicon;
 		ImageButton reporticon;
 		ImageView mPreLoading;
 		Button sharebtn;
 		Button likebtn;
 		RingView mRingView;
-		TextureView mTextureView;
+//		TextureView mTextureView;
 	}
 	
 	public void pausePlayer(){

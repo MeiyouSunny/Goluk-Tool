@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.io.IOException;
+import java.util.Map;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.tiros.utils.LogUtil;
 
@@ -66,12 +69,26 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 		mRingView.setProcess(0);
 		mRingView.setVisibility(View.VISIBLE);
 		mPreLoading.setVisibility(View.VISIBLE);
+		
 	}
 
 	@Override
 	public void onPrepared(MediaPlayer arg0) {
-		arg0.start();		
 		LogUtil.e("xuhw", "YYYYYYY========onPrepared===========");
+//		try {
+//			// 获取清晰度列表
+//			Map<String, Integer> definitions = mDWMediaPlayer.getDefinitions();
+//			LogUtil.e("xuhw", "YYYYYY===definitions="+definitions.toString());
+//			//获取某种清晰度对应的状态码
+//			int definitionCode = definitions.get("definitionInfo");
+//			// 设置播放清晰度
+//			mDWMediaPlayer.setDefinition(this, definitionCode);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+		arg0.start();		
 	}
 
 	@Override
@@ -102,9 +119,9 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
-		
+	public void surfaceChanged(SurfaceHolder arg0, int arg1, int width, int height) {
+		arg0.setFixedSize(width, height);
+		mDWMediaPlayer.setDisplay(arg0);
 	}
 
 	@Override
