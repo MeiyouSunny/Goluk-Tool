@@ -1162,7 +1162,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				// param1 = 0,下载完成
 				// param1 = 1,下载中
 				LogUtil.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1="+param1);
-				GFileUtils.writeIPCLog("===IPC_VDTP_Msg_File===param1="+param1+"=param2="+param2);
+				if(((String)param2).equals(".mp4"))
+					GFileUtils.writeIPCLog("===IPC_VDTP_Msg_File===param1="+param1+"=param2="+param2);
 				
 				ipcVideoDownLoadCallBack(param1, (String) param2);
 				break;
