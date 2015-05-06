@@ -90,7 +90,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		mSeekBar = (SeekBar) mRootLayout.findViewById(R.id.progress);
 		mFlowTv = (TextView) mRootLayout.findViewById(R.id.live_flowl_txt);
 
-		mSeekBar.setProgress(DEFAULT_SECOND);
+		//mSeekBar.setProgress(DEFAULT_SECOND);
 		mTimeTv.setText(GolukUtils.secondToString(DEFAULT_SECOND));
 		if (mIsCanTalk) {
 			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
