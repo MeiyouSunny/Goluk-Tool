@@ -169,6 +169,24 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 				}
 			}
 		});
+		// 验证码输入后，离开立即判断
+		mEditTextIdentify.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				String identify = mEditTextIdentify.getText().toString();
+				if (!arg1) {
+					if (!"".equals(identify)) {
+						if (identify.length() < 6) {
+							UserUtils.showDialog(mContext, "验证码格式输入不正确");
+						}
+					} else {
+						UserUtils.showDialog(mContext, "验证码不能为空");
+					}
+				}
+			}
+		});
 		mEditTextPhone.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
@@ -475,19 +493,23 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 							if(freqInt>3){
 								UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
 							}else{
-								boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_ModifyPwd, isRegist);
-								console.log(b + "");
-								if (b) {
-									// 隐藏软件盘
-									UserUtils.hideSoftMethod(this);
-//									mLoading.setVisibility(View.VISIBLE);
-									mCustomProgressDialog.show();
-									mEditTextPhone.setEnabled(false);
-									mEditTextIdentify.setEnabled(false);
-									mEditTextPwd.setEnabled(false);
-									mBtnIdentity.setEnabled(false);
-									mBtnBack.setEnabled(false);
-									mBtnOK.setEnabled(false);
+								if(identify.length()<6){
+									UserUtils.showDialog(mContext, "验证码格式输入不正确");
+								}else{
+									boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_ModifyPwd, isRegist);
+									console.log(b + "");
+									if (b) {
+										// 隐藏软件盘
+										UserUtils.hideSoftMethod(this);
+//										mLoading.setVisibility(View.VISIBLE);
+										mCustomProgressDialog.show();
+										mEditTextPhone.setEnabled(false);
+										mEditTextIdentify.setEnabled(false);
+										mEditTextPwd.setEnabled(false);
+										mBtnIdentity.setEnabled(false);
+										mBtnBack.setEnabled(false);
+										mBtnOK.setEnabled(false);
+									}
 								}
 							}
 						}else{

@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +20,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -43,9 +40,7 @@ import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.entity.ExternalEventsDataInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
-import cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
@@ -780,8 +775,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			break;
 		case IPageNotifyFn.PageType_ModifyUserInfo:
 			if (mPageSource == "UserPersonalEdit") {
-				((UserPersonalEditActivity) mContext).saveInfoCallBack(success,
-						param2);
+				((UserPersonalEditActivity) mContext).saveInfoCallBack(success,param2);
 			}
 		case PageType_LiveStart:
 			// 获取直播信息成功

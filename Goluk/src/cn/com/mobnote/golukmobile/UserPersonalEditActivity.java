@@ -80,7 +80,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		mApplication.setContext(mContext, "UserPersonalEdit");
 		
 		if(null == mCustomProgressDialog){
-			mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
+			mCustomProgressDialog = new CustomLoadingDialog(mContext,"保存中，请稍候……");
 		}
 		initView();
 		//title
@@ -246,10 +246,13 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				closeProgressDialog();
 				switch (code) {
 				case 200:
-					Log.i("lily", "======"+intentName+"==jsonName===="+json2Name);
+					Log.i("lily", "------intentName----"+intentName+"-----intentHead-----"+intentHead+"-----intentSign-----"+intentSign);
+					Log.i("lily", "------json2Name----"+json2Name+"-----json2Head-----"+json2Head+"-----json2Sign-----"+json2Sign);
 					if(intentSign.equals(json2Sign) && intentName.equals(json2Name) && intentHead.equals(json2Head)){
+						Log.i("lily", "-------没有修改数据-------");
 						this.finish();
 					}else{
+						Log.i("lily", "-------数据修改成功-------");
 						console.toast("数据修改成功", mContext);
 						this.finish();
 					}
