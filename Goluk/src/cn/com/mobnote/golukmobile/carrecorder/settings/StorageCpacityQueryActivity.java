@@ -1,7 +1,10 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
@@ -31,7 +34,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
   *
   * @author xuhw
   */
-public class StorageCpacityQueryActivity extends BaseActivity implements IPCManagerFn{
+public class StorageCpacityQueryActivity extends BaseActivity implements IPCManagerFn, OnClickListener{
 	/**  SD卡总容量  */
 	private TextView mTotalSize=null;
 	/**  已用容量  */
@@ -88,7 +91,7 @@ public class StorageCpacityQueryActivity extends BaseActivity implements IPCMana
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("storage");
+		
 	}
 
 	@Override
@@ -149,6 +152,33 @@ public class StorageCpacityQueryActivity extends BaseActivity implements IPCMana
 	protected void onResume() {
 		super.onResume();
 		GolukApplication.getInstance().setContext(this, "storagecpacityquery");
+	}
+	
+	public void exit(){
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("storage");
+		}
+		finish();
+	}
+	
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.back_btn:
+				exit(); 
+				break;
+				
+			default:
+				break;
+		}
+	}  
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
 	}
 
 }

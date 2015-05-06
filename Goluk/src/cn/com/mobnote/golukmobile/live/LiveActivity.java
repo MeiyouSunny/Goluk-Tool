@@ -66,14 +66,10 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
-
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
@@ -1899,6 +1895,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					mHandler.removeMessages(MSG_H_SPEECH_COUNT_DOWN);
 					// 目前为可按状态
 					refreshPPtState(true);
+					mSpeakingLayout.setVisibility(View.GONE);
+
 				} else {
 					speekingUIRefresh(4, "", false);
 					final String showTimeStr = "00:0" + mSpeechCountDownTime;
@@ -2295,17 +2293,20 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		showToast("加入群组成功");
 		// 加入群组成功后的对讲按钮的变化
 		if (this.isShareLive) {
-			if (null != mSettingData && mSettingData.isCanTalk) {
-				// 可以支持对讲
-				// 对讲按钮可以显示
-				mBottomLayout.setVisibility(View.VISIBLE);
-				mLiveTalk.setVisibility(View.VISIBLE);
-				mLiveLookTalk.setVisibility(View.GONE);
-			} else {
-				mBottomLayout.setVisibility(View.VISIBLE);
-				mLiveTalk.setVisibility(View.GONE);
-				mLiveLookTalk.setVisibility(View.GONE);
+			if (!this.isContinueLive) {
+				if (null != mSettingData && mSettingData.isCanTalk) {
+					// 可以支持对讲
+					// 对讲按钮可以显示
+					mBottomLayout.setVisibility(View.VISIBLE);
+					mLiveTalk.setVisibility(View.VISIBLE);
+					mLiveLookTalk.setVisibility(View.GONE);
+				} else {
+					mBottomLayout.setVisibility(View.VISIBLE);
+					mLiveTalk.setVisibility(View.GONE);
+					mLiveLookTalk.setVisibility(View.GONE);
+				}
 			}
+
 		} else {
 			mBottomLayout.setVisibility(View.GONE);
 			mLiveTalk.setVisibility(View.GONE);
