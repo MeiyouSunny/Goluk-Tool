@@ -1895,6 +1895,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					mHandler.removeMessages(MSG_H_SPEECH_COUNT_DOWN);
 					// 目前为可按状态
 					refreshPPtState(true);
+					mSpeakingLayout.setVisibility(View.GONE);
+
 				} else {
 					speekingUIRefresh(4, "", false);
 					final String showTimeStr = "00:0" + mSpeechCountDownTime;
