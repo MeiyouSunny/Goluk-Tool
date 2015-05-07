@@ -66,8 +66,10 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
+
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.rd.car.CarRecorderManager;
@@ -235,6 +237,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/** 是否支持声音 */
 	private boolean isCanVoice = true;
 	private ImageView mHead = null;
+	
+	/** */
+	private RelativeLayout mMapRootLayout = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -500,6 +505,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mLoginBtn = (Button) findViewById(R.id.live_login);
 		mLoginBtn.setOnClickListener(this);
 		// mQiangpaiImg.setOnClickListener(this);
+		
+		mMapRootLayout = (RelativeLayout) findViewById(R.id.live_map_layout);
 
 		mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_press1);
 
@@ -698,7 +705,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	private void initMap() {
 		// 获取地图控件引用
-		mMapView = (MapView) findViewById(R.id.live_bmapView);
+		// mMapView = (MapView) findViewById(R.id.live_bmapView);
+		
+		BaiduMapOptions options = new BaiduMapOptions();
+		options.rotateGesturesEnabled(false); // 不允许手势
+		options.overlookingGesturesEnabled(false);
+		mMapView = new MapView(this, options);
+		mMapView.setClickable(true);
+		
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		mMapRootLayout.addView(mMapView, 0, params);
+		
+		
 
 		mMapView.showZoomControls(false);
 		mMapView.showScaleControl(false);

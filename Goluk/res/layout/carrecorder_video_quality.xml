@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="1080P全高清"
+            android:text="1080P高"
             android:textColor="#333333"
             android:textSize="18sp" />
 
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="1080P标清"
+            android:text="1080P中"
             android:textColor="#333333"
             android:textSize="18sp" />
 
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="720P全高清"
+            android:text="720P高"
             android:textColor="#333333"
             android:textSize="18sp" />
 
@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="720P标清"
+            android:text="720P中"
             android:textColor="#333333"
             android:textSize="18sp" />
 

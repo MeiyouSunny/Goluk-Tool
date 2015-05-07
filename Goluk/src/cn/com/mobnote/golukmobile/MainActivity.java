@@ -70,12 +70,10 @@ import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.utils.LogUtil;
-
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -130,7 +128,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	private BaiduMap mBaiduMap = null;
 	/** 定位相关 */
 	private LocationClient mLocClient;
-	private MyLocationListenner myListener = new MyLocationListenner();
+
 	/** 是否首次定位 */
 	private boolean isFirstLoc = true;
 	private BaiduMapManage mBaiduMapManage = null;
@@ -210,6 +208,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**记录行车分享   分享精彩视频为false  点击分享网络直播为true*/
 	private boolean isClickShareVideo = false;
 	
+	private RelativeLayout mRootLayout = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -221,7 +221,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		((GolukApplication)this.getApplication()).initSharedPreUtil(this);
 		
-		setContentView(R.layout.index);
+		mRootLayout =(RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
+		
+		setContentView(mRootLayout);
 		
 		//添加umeng错误统计
 		MobclickAgent.setCatchUncaughtExceptions(true);
@@ -299,7 +301,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 */
 	private void init(){
 		mLayoutInflater = LayoutInflater.from(mContext);
-//		mMapMarkeListBtn = (Button)findViewById(R.id.map_marke_list_btn);
+
 		//地图我的位置按钮
 		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
 		//分享按钮
@@ -308,7 +310,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
 		
-//		mIpcWiFiBtn = (Button) findViewById(R.id.wifi_status_btn);
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		msquareBtn = (Button) findViewById(R.id.index_square_btn);
 		mWifiLayout = (RelativeLayout) findViewById(R.id.index_wifi_layout);
@@ -418,9 +419,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 * 初始化地图
 	 */
 	private void initMap(){
+
 		mMapLayout = (LinearLayout) findViewById(R.id.map_layout);
 		//获取地图控件引用
-		mMapView = (MapView) findViewById(R.id.bmapView);
+		//mMapView = (MapView) findViewById(R.id.bmapView);
+		
+		BaiduMapOptions options = new BaiduMapOptions();
+		options.rotateGesturesEnabled(false); // 不允许手势
+		options.overlookingGesturesEnabled(false);
+		mMapView = new MapView(this, options);
+		
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		this.mRootLayout.addView(mMapView, 0, params);
 		
 		//隐藏缩放按钮
 		mMapView.showZoomControls(false);
@@ -433,22 +443,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);
-		// 定位初始化
-//		mLocClient = new LocationClient(this);
-//		mLocClient.registerLocationListener(myListener);
-//		LocationClientOption option = new LocationClientOption();
-//		// 设置定位模式,没有设置定位模式接口setLocationMode
-//		// 打开gps
-//		option.setOpenGps(true);
-//		option.setIsNeedAddress(true);
-//		// 设置坐标类型
-//		// 返回国测局经纬度坐标系 coor=gcj02
-//		// 返回百度墨卡托坐标系 coor=bd09
-//		// 返回百度经纬度坐标系 coor=bd09ll
-//		option.setCoorType("bd09ll");
-//		option.setScanSpan(5000);
-//		mLocClient.setLocOption(option);
-//		mLocClient.start();
+
 		
 		//地图加载完成事件
 		mBaiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
@@ -463,7 +458,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
 			@Override
 			public void onMapStatusChangeStart(MapStatus arg0) {
-				//console.log("onMapStatusChangeStart");
 				//隐藏气泡,大头针
 				mBaiduMapManage.mapStatusChange();
 				//移动了地图,第一次不改变地图中心点位置
@@ -472,12 +466,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			
 			@Override
 			public void onMapStatusChangeFinish(MapStatus arg0) {
-				//console.log("onMapStatusChangeFinish");
 			}
 			
 			@Override
 			public void onMapStatusChange(MapStatus arg0) {
-				//console.log("onMapStatusChange");
 			}
 		});
 	}
@@ -1236,65 +1228,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		LogUtil.e(null, "jyf----20150406----MainActivity----startLiveLook");
 	}
 	
-	/**
-	 * 定位SDK监听函数
-	 */
-	public class MyLocationListenner implements BDLocationListener {
-
-		@Override
-		public void onReceiveLocation(BDLocation location) {
-			// map view 销毁后不在处理新接收的位置
-//			if (location == null || mMapView == null){
-//				return;
-//			}
-//			//console.log("radius:" + location.getRadius() + "---lat:" + location.getLatitude() + "---lon:" + location.getLongitude());
-//			// 此处设置开发者获取到的方向信息，顺时针0-360
-//			MyLocationData locData = new MyLocationData.Builder()
-//				.accuracy(location.getRadius()).direction(100)
-//				.latitude(location.getLatitude()).longitude(location.getLongitude()).build();
-//			//确认地图我的位置点是否更新位置
-//			mBaiduMap.setMyLocationData(locData);
-//			
-//			//移动了地图,第一次不改变地图中心点位置
-//			if (isFirstLoc) {
-//				isFirstLoc = false;
-//				//移动地图中心点
-//				LatLng ll = new LatLng(location.getLatitude(),location.getLongitude());
-//				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-//				mBaiduMap.animateMapStatus(u);
-//			}
-//			
-//			//保存经纬度
-//			LngLat.lng = location.getLongitude();
-//			LngLat.lat = location.getLatitude();
-//			
-//			//保存地址信息
-//			GolukApplication.getInstance().mCurAddr = location.getAddrStr();
-//			System.out.println("YYY=========mCurAddr="+location.getAddrStr()+"==lon="+LngLat.lng+"==lat="+LngLat.lat);
-//			//更新IPC经纬度
-////			if(GolukApplication.getInstance().getIpcIsLogin()){
-////				long lon = (long)(location.getLongitude()*3600000);
-////				long lat = (long)(location.getLatitude()*3600000);
-////				int speed = (int)location.getSpeed();
-////				int direction = (int)location.getDirection();
-////				boolean a = GolukApplication.getInstance().getIPCControlManager().updateGPS(lon, lat, speed, direction);
-////				System.out.println("YYY=====updateGPS====a="+a+"===lon="+lon+"===lat="+lat);
-////			}
-//			
-//			//更新行车记录仪地址
-//			if(null != CarRecorderActivity.mHandler){
-//				Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
-//				msg.obj = location.getAddrStr();
-//				CarRecorderActivity.mHandler.sendMessage(msg);
-//			}
-			
-		}
-
-		public void onReceivePoi(BDLocation poiLocation) {
-		}
-	}
-
-	public void dismissAutoDialog(){
+	public void dismissAutoDialog() {
 		if (null != dialog){
 			dialog.dismiss();
 			dialog = null;

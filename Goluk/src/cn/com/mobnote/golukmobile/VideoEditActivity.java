@@ -28,15 +28,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.MVListAdapter;
 import cn.com.mobnote.video.MVManage;
 import cn.com.mobnote.video.MVManage.MVEditData;
 import cn.com.mobnote.view.MyGridView;
-import cn.com.tiros.api.FileUtils;
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.EditorParam;
 import com.rd.car.editor.FilterPlaybackView;
@@ -302,10 +299,6 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 			mVVPlayVideo.switchFilterId(0);
 			mVVPlayVideo.start();
 
-			// setMuteVideo(false);
-			// mVideoEditHandler.sendEmptyMessageDelayed(2,100);
-			// setMixAudioFilePath("1.mp3", true);
-
 		} catch (FilterVideoEditorException e) {
 			e.printStackTrace();
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -332,14 +325,14 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 			// 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
 			EditorParam editorParam = new EditorParam();
 			// 高清
-			 editorParam.nVideoWidth = 854;
-			 editorParam.nVideoHeight = 480;
+			editorParam.nVideoWidth = 854;
+			editorParam.nVideoHeight = 480;
 			// 标清
 			// editorParam.nVideoWidth = 854;
 			// editorParam.nVideoHeight = 480;
 			// //分辨率 帧率 码率 480*270 30fps 1400kbps
-			 editorParam.nVideoBitrate = 768 * 1024;
-			 editorParam.nFps = 20;
+			editorParam.nVideoBitrate = 768 * 1024;
+			editorParam.nFps = 20;
 
 			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
 			mVVPlayVideo.saveVideo(mVideoSavePath, editorParam, new FilterPlaybackView.FilterVideoEditorListener() {
@@ -348,28 +341,15 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 
 				@Override
 				public void onFilterVideoSaveStart() {
-					// m_pdSave = ProgressDialog.show(VideoEditActivity.this,
-					// "", "开始保存编辑。。。");
-					// m_pdSave.setCanceledOnTouchOutside(false);
-					// m_pdSave.setCancelable(true);
-					// m_pdSave.setOnCancelListener(new
-					// DialogInterface.OnCancelListener() {
-					// @Override
-					// public void onCancel(DialogInterface dialog) {
-					// mVVPlayVideo.cancelSave();
-					// }
-					// });
 					// 显示视频导出loading
 					mVideoLoadingLayout.setVisibility(View.VISIBLE);
 					// 启动loading动画
 					mLoadingAnimation.start();
-
 					m_lUseTimeChecker = SystemClock.uptimeMillis();
 				}
 
 				@Override
 				public boolean onFilterVideoSaving(int nProgress, int nMax) {
-					// m_pdSave.setMessage(String.format("保存编辑中%d%%...",nProgress));
 					mLoadingText.setText("视频生成中" + nProgress + "%");
 					// 返回false代表取消保存。。。
 					return true;
@@ -382,17 +362,9 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 					// 停止loading动画
 					mLoadingAnimation.stop();
 
-					// m_pdSave.dismiss();
-					// String strInfo = "";
 					if (bCancel) {
 						// strInfo = "已取消视频保存！";
 					} else if (bSuccess) {
-						// strInfo = "保存视频成功！";
-						// item.setVideoPath(AssetsFileUtils.getCreateTempFileDir(VideoEditActivity.this)
-						// + "/测试保存编辑和上传后.mp4");
-						// uploadVideo(item);
-						// 保存成功,上传视频
-						// videoUpload(mVideoSavePath);
 
 						// 视频保存成功,跳转到分享页面
 						Intent videoShare = new Intent(mContext, VideoShareActivity.class);
@@ -402,8 +374,6 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 						startActivity(videoShare);
 					}
 
-					// Toast.makeText(VideoEditActivity.this,
-					// strInfo,Toast.LENGTH_SHORT).show();
 					if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
 						try {
 							mVVPlayVideo.reload();
@@ -412,7 +382,8 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 									.show();
 						}
 					}
-					/**/
+					
+					
 					Toast.makeText(VideoEditActivity.this,
 							"视频编辑保存使用时间：" + (SystemClock.uptimeMillis() - m_lUseTimeChecker) + "ms", Toast.LENGTH_SHORT)
 							.show();

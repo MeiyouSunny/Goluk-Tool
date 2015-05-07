@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -9,6 +8,7 @@ import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -187,8 +187,6 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 			mVideoSquareAdapter.onDestroy();
 		}
 		
-		ImageLoader.getInstance().clearMemoryCache();
-		
 		finish();
 	}
 	
@@ -199,5 +197,6 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
         }else
         	return super.onKeyDown(keyCode, event); 
 	}
+	
 
 }

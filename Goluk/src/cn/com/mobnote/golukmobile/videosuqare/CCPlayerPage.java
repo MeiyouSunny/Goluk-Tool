@@ -1,19 +1,13 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
-import java.io.IOException;
-import java.util.Map;
-
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.tiros.utils.LogUtil;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -25,6 +19,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 public class CCPlayerPage extends Activity implements OnPreparedListener, OnBufferingUpdateListener
@@ -36,19 +31,13 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 	private final String API_KEY = "O8g0bf8kqiWroHuJaRmihZfEmj7VWImF";
 	private ImageView mPreLoading=null;
 	private RingView mRingView=null;
-	private DisplayImageOptions options;
-	private ImageLoader imageLoader = ImageLoader.getInstance();
+	private ImageButton mPlayBigBtn=null;
+	private boolean allow=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ccplayer);
-		
-		options = new DisplayImageOptions.Builder()
-		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-		.cacheInMemory(true).cacheOnDisc(true).considerExifParams(true)
-		.bitmapConfig(Bitmap.Config.RGB_565)
-		.build();
 		
 		String videoid = getIntent().getStringExtra("videoid");
 		String image = getIntent().getStringExtra("image");
@@ -56,6 +45,7 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 		mSurfaceView = (SurfaceView)findViewById(R.id.mSurfaceView);
 		mPreLoading = (ImageView)findViewById(R.id.mPreLoading);
 		mRingView = (RingView)findViewById(R.id.mRingView);
+		mPlayBigBtn = (ImageButton)findViewById(R.id.mPlayBigBtn);
 		mDWMediaPlayer = new DWMediaPlayer();
 		mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY, this);
 		mDWMediaPlayer.setOnPreparedListener(this);
@@ -64,8 +54,9 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 		mDWMediaPlayer.setOnCompletionListener(this);
 		mSurfaceHolder = mSurfaceView.getHolder();
 		mSurfaceHolder.addCallback(this);
+		mSurfaceView.setOnClickListener(this);
 		findViewById(R.id.back_btn).setOnClickListener(this);
-		imageLoader.displayImage(image,mPreLoading, options, null);
+		BitmapManager.getInstance().mBitmapUtils.display(mPreLoading, image);
 		mRingView.setProcess(0);
 		mRingView.setVisibility(View.VISIBLE);
 		mPreLoading.setVisibility(View.VISIBLE);
@@ -75,19 +66,6 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 	@Override
 	public void onPrepared(MediaPlayer arg0) {
 		LogUtil.e("xuhw", "YYYYYYY========onPrepared===========");
-//		try {
-//			// 获取清晰度列表
-//			Map<String, Integer> definitions = mDWMediaPlayer.getDefinitions();
-//			LogUtil.e("xuhw", "YYYYYY===definitions="+definitions.toString());
-//			//获取某种清晰度对应的状态码
-//			int definitionCode = definitions.get("definitionInfo");
-//			// 设置播放清晰度
-//			mDWMediaPlayer.setDefinition(this, definitionCode);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
 		arg0.start();		
 	}
 
@@ -126,6 +104,7 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
+		allow=true;
 		mSurfaceHolder=arg0;
 		mDWMediaPlayer.setDisplay(mSurfaceHolder);
 		mDWMediaPlayer.prepareAsync();
@@ -134,6 +113,7 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
+		allow=false;
 		mDWMediaPlayer.setDisplay(null);
 		if(mDWMediaPlayer.isPlaying()){
 			mDWMediaPlayer.pause();
@@ -147,13 +127,23 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 		case R.id.back_btn:
 			finish();
 			break;
+		case R.id.mSurfaceView:
+			if(allow){
+				if(mDWMediaPlayer.isPlaying()){
+					mDWMediaPlayer.pause();
+					mPlayBigBtn.setVisibility(View.VISIBLE);
+				}else{
+					mDWMediaPlayer.start();
+					mPlayBigBtn.setVisibility(View.GONE);
+				}
+			}
+			break;
 
 		default:
 			break;
 		}
 	}
 
-	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -161,5 +151,6 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 			mDWMediaPlayer.release();
 		}
 	}
+	
 
 }

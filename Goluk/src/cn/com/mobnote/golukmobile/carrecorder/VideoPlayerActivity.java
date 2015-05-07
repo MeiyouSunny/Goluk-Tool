@@ -235,7 +235,11 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			int min = seconds/60;
 			int sec = seconds%60;
 			if(min > 9){
-				time = min+":";
+				if(min > 59){
+					time = "00:";
+				}else{
+					time = min+":";
+				}
 			}else{
 				time = "0"+min+":";
 			}

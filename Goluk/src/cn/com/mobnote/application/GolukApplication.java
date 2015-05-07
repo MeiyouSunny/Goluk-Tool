@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +20,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -46,9 +43,7 @@ import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.entity.ExternalEventsDataInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
-import cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
@@ -72,15 +67,6 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
-
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -217,7 +203,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		mUser = new User(this);
 		mLoginManage = new UserLoginManage(this);
 		mRegistManage = new UserRegistManage(this);
-		initImageLoader(getApplicationContext());
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
@@ -810,8 +795,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			break;
 		case IPageNotifyFn.PageType_ModifyUserInfo:
 			if (mPageSource == "UserPersonalEdit") {
-				((UserPersonalEditActivity) mContext).saveInfoCallBack(success,
-						param2);
+				((UserPersonalEditActivity) mContext).saveInfoCallBack(success,param2);
 			}
 		case PageType_LiveStart:
 			// 获取直播信息成功
@@ -1316,51 +1300,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				}
 			}).start();
 		}
-	}
-
-	/**
-	 * 初始化ImageLoader
-	 * 
-	 * @param context
-	 * @author xuhw
-	 * @date 2015年4月16日
-	 */
-	private void initImageLoader(Context context) {
-		String httpcache = Environment.getExternalStorageDirectory()
-				+ File.separator + "tiros-com-cn-ext" + File.separator
-				+ "VideoSquare" + File.separator + "cache";
-		GFileUtils.makedir(carrecorderCachePath);
-		File cache = new File(httpcache);
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				this)
-				// .memoryCacheExtraOptions(480, 800) //即保存的每个缓存文件的最大长宽
-				.threadPoolSize(2)
-				// 线程池内加载的数量
-				.threadPriority(Thread.NORM_PRIORITY - 3)
-				.denyCacheImageMultipleSizesInMemory()
-				.memoryCache(new UsingFreqLimitedMemoryCache(4 * 1024 * 1024))
-				// 你可以通过自己的内存缓存实现
-				.memoryCacheSize(8 * 1024 * 1024)
-				.discCacheSize(50 * 1024 * 1024)
-				.discCacheFileNameGenerator(new Md5FileNameGenerator())
-				// 将保存的时候的URI名称用MD5 加密
-				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.discCacheFileCount(200)
-				// 缓存的文件数量
-				.discCache(new UnlimitedDiscCache(cache))
-				// 自定义缓存路径
-				.defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-				.imageDownloader(
-						new BaseImageDownloader(this, 5 * 1000, 30 * 1000)) // connectTimeout
-																			// (5
-																			// s),
-																			// readTimeout
-																			// (30
-																			// s)超时时间
-				.writeDebugLogs() // Remove for releaseapp
-				.build();// 开始构建
-
-		ImageLoader.getInstance().init(config);
 	}
 
 	public void addLocationListener(String key, ILocationFn fn) {
