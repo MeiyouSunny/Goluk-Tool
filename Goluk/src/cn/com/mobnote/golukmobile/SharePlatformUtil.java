@@ -37,6 +37,8 @@ public class SharePlatformUtil{
 		mController.getConfig().setSsoHandler(new SinaSsoHandler());
 		mController.getConfig().closeToast();
 
+
+
 		// 添加微信、微信朋友圈平台
 		addWXPlatform();
 		//添加短信
@@ -55,6 +57,7 @@ public class SharePlatformUtil{
 		String appSecret = "b572ec9cbd3fac52e138e34eff0b4926";
 		// 添加微信平台
 		UMWXHandler wxHandler = new UMWXHandler(mContext, appId, appSecret);
+		wxHandler.showCompressToast(false);
 		wxHandler.addToSocialSDK();
 		
 		// 支持微信朋友圈
