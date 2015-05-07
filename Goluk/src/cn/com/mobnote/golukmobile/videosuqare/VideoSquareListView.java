@@ -3,8 +3,12 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.PauseOnScrollListener;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -109,7 +113,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				httpPost(true);
 			}
 		});
-		
 	}
 	
 	public void flush(){

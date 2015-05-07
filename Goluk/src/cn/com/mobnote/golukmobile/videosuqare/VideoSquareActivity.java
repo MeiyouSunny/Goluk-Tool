@@ -1,8 +1,6 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.sso.UMSsoHandler;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
@@ -185,8 +183,6 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onDestroy();
 		}
-		
-		ImageLoader.getInstance().clearMemoryCache();
 		
 		finish();
 	}
