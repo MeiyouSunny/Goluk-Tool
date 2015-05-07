@@ -74,6 +74,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		int id = v.getId();
 		switch (id) {
 		case R.id.wechat:
+			
 			mCurrentShareType = TYPE_WEIXIN;
 			performShare(SHARE_MEDIA.WEIXIN);
 			break;
@@ -82,8 +83,15 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
 			break;
 		case R.id.qq:
+			@SuppressWarnings("static-access")
+			Boolean isQQ=mController.getConfig().isSupportQQZoneSSO(mActivity);
 			mCurrentShareType = TYPE_QQ;
-			performShare(SHARE_MEDIA.QQ);
+			if(isQQ){
+				performShare(SHARE_MEDIA.QQ);
+			}else{
+				Toast.makeText(mActivity, "你还没有安装QQ或版本太低",Toast.LENGTH_SHORT).show();
+			}
+			
 			break;
 		case R.id.sms:
 			mCurrentShareType = TYPE_SMS;

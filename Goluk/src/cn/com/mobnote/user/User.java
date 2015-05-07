@@ -180,7 +180,7 @@ public class User {
 			public void run() {
 				mHandler.sendEmptyMessage(1);
 			}
-		}, 60000);
+		}, 300000);
 	}
 	
 	public void timerCancel(){

@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.tiros.utils.LogUtil;
 import android.app.Activity;
 import android.graphics.PixelFormat;
@@ -89,6 +90,8 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	public  static Handler mHandler=null;
 	private final int GETPROGRESS=1;
 	private String from;
+	private GolukApplication mApp = null;
+	private boolean isShow=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,23 +99,26 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		if (!LibsChecker.checkVitamioLibs(this))
 			return;
 		setContentView(R.layout.carrecorder_videoplayer);
+		mApp = (GolukApplication)getApplication();
 		from = getIntent().getStringExtra("from");
 		filename = getIntent().getStringExtra("filename");
+		String ip = SettingUtils.getInstance().getString("IPC_IP");
 		if(!TextUtils.isEmpty(from)){
 			if(from.equals("local")){
 				playUrl=getIntent().getStringExtra("path");
 			}else if(from.equals("ipc")){
 				int type = getIntent().getIntExtra("type", -1);
 				if(4 == type){
-					playUrl="http://192.168.43.234:5080/rec/wonderful/"+filename;
+					playUrl="http://"+ ip + ":5080/rec/wonderful/"+filename;
 				}else if(2 == type){
-					playUrl="http://192.168.43.234:5080/rec/urgent/"+filename;
+					playUrl="http://" + ip + ":5080/rec/urgent/"+filename;
 				}else{
-					playUrl="http://192.168.43.234:5080/rec/normal/"+filename;
+					playUrl="http://" + ip + ":5080/rec/normal/"+filename;
 				}
 			}
 		}
 
+		LogUtil.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl="+playUrl);
 		initView();
 		setListener();
 		
@@ -257,18 +263,21 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	 * @date 2015年3月8日
 	 */
 	private void showLoading() {
-		mLoadingLayout.setVisibility(View.VISIBLE);
-		mLoading.setVisibility(View.VISIBLE);
-		mLoading.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (mAnimationDrawable != null) {
-					if (!mAnimationDrawable.isRunning()) {
-						mAnimationDrawable.start();
+		if(!isShow){
+			
+			mLoadingLayout.setVisibility(View.VISIBLE);
+			mLoading.setVisibility(View.VISIBLE);
+			mLoading.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (mAnimationDrawable != null) {
+						if (!mAnimationDrawable.isRunning()) {
+							mAnimationDrawable.start();
+						}
 					}
 				}
-			}
-		}, 100);
+			}, 100);
+		}
 	}
 	
 	/**
@@ -278,12 +287,16 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	 * @date 2015年3月8日
 	 */
 	private void hideLoading() {
-		if (mAnimationDrawable != null) {
-			if (mAnimationDrawable.isRunning()) {
-				mAnimationDrawable.stop();
+		if(!isShow){
+			isShow=true;
+			
+			if (mAnimationDrawable != null) {
+				if (mAnimationDrawable.isRunning()) {
+					mAnimationDrawable.stop();
+				}
 			}
+			mLoadingLayout.setVisibility(View.GONE);
 		}
-		mLoadingLayout.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -392,7 +405,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 		try {
 			mMediaPlayer = new MediaPlayer(this);
 			 if(getIntent().getStringExtra("from").equals("ipc")){
-				 mMediaPlayer.setBufferSize(500*1024);
+				 mMediaPlayer.setBufferSize(100*1024);
 			 }else{
 				 mMediaPlayer.setBufferSize(0);
 			 }

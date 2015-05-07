@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -130,6 +131,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	private boolean isbelow = true;
 	private CustomLoadingDialog mCustomProgressDialog=null;
 	private int timeend = 2147483647;
+	private boolean isShowPlayer=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -409,12 +411,15 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	 * @date 2015年4月30日
 	 */
 	private void playerVideo(String filename){
-		if(null == VideoPlayerActivity.mHandler){
-			Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-			intent.putExtra("from", "ipc");
-			intent.putExtra("type", mCurrentType);
-			intent.putExtra("filename", filename);
-			startActivity(intent);
+		if(!isShowPlayer){
+			isShowPlayer=true;
+			if(null == VideoPlayerActivity.mHandler){
+				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
+				intent.putExtra("from", "ipc");
+				intent.putExtra("type", mCurrentType);
+				intent.putExtra("filename", filename);
+				startActivity(intent);
+			}
 		}
 	}
 	
@@ -785,8 +790,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		mOprateType = type;
 		updateButtonState(type);
 		LogUtil.e("xuhw", "YYYYYY=====queryFileListInfo===timeend="+timeend);
-		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, timeend);
-		GFileUtils.writeIPCLog("===========获取文件列表===1111===================isSucess=="+isSucess);
+		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, 0, timeend);
 		if(!isSucess){
 			isGetFileListDataing=false;
 		}
@@ -859,7 +863,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 			case R.id.back_btn:
-				finish();
+				exit();
 				break;
 			case R.id.video_jcsp:
 				if(!isGetFileListDataing){
@@ -968,15 +972,16 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 						File file = new File(filePath + File.separator + fileName);
 						if (!file.exists()) {
-							GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "download", FileUtils.javaToLibPath(filePath));
+							GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "download", FileUtils.javaToLibPath(filePath), findtime(fileName));
 						}
 					}
 					
 					String mp4 = FileUtils.libToJavaPath(videoSavePath+filename);
 					File file = new File(mp4);
 					if(!file.exists()){
-						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "videodownload", videoSavePath);
+//						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "videodownload", videoSavePath, findtime(filename));
 						boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
+						GFileUtils.writeIPCLog("YYYYYY===a="+a+"==querySingleFile======filename="+filename);
 						LogUtil.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
 					}else{
 							
@@ -1103,12 +1108,52 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
+	}
+	
+	/**
+	 * 查询文件录制起始时间
+	 * @param filename　文件名
+	 * @return 文件录制起始时间
+	 * @author xuhw
+	 * @date 2015年5月5日
+	 */
+	private long findtime(String filename){
+		long time=0;
+		List<VideoInfo> datalist = null;
+		if(filename.contains("WND")){
+			datalist = mWonderfulVideoData;
+		}else if(filename.contains("URG")){
+			datalist = mEmergencyVideoData;
+		}else if(filename.contains("NRM")){
+			datalist = mLoopVideoData;
+		}
+		
+		if(null != datalist){
+			for(int i=0;i<datalist.size();i++){
+				if(filename.equals(datalist.get(i).videoPath)){
+					return datalist.get(i).time;
+				}
+			}
+		}
+		
+		return time;
+	}
+	
+	/**
+	 * 退出
+	 * @author xuhw
+	 * @date 2015年5月4日
+	 */
+	public void exit(){
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager");
+		finish();
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager");
+		
 		
 		if(null != wonderfulVideoData){
 			for(int i=0;i<wonderfulVideoData.size();i++){
@@ -1198,7 +1243,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		info.videoHP = mVideoFileInfo.resolution;
 		info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
 		 info.videoPath=mVideoFileInfo.location;
-		 
+		 info.time=mVideoFileInfo.time;
 		
 		String fileName = mVideoFileInfo.location;
 		fileName = fileName.substring(0, fileName.length() - 4) + ".jpg";
@@ -1209,7 +1254,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			info.videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 		} else {
 			 if(1 == mVideoFileInfo.withSnapshot){
-				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath));
+				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath), mVideoFileInfo.time);
 				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
 			 }
 		}
@@ -1226,8 +1271,8 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 					mCustomProgressDialog.close();
 				}
 				isGetFileListDataing=false;
-				LogUtils.d("YYYYYY=======获取文件列表===@@@======param1="+ param1 + "=====param2=" + param2);
-				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
+				LogUtil.e("xuhw","YYYYYY=======获取文件列表===@@@======param1="+ param1 + "=====param2=" + param2);
+//				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					if(TextUtils.isEmpty((String)param2)){
 						return;
@@ -1240,7 +1285,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 							vfi = fileList.get(fileList.size() - 1);
 						}
 						
-						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
+//						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
 						if(fileList.size()<pageCount){
 							ishaveData = false;
 						}else{
@@ -1268,17 +1313,17 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 						}
 					} else {
 						// 列表数据空
-						GFileUtils.writeIPCLog("===========获取文件列表===5555============ data null=========");
+//						GFileUtils.writeIPCLog("===========获取文件列表===5555============ data null=========");
 						ishaveData = false;
 					}
 				} else {
 					// 命令发送失败
-					GFileUtils
-							.writeIPCLog("===========获取文件列表===6666============  not success =========");
+//					GFileUtils
+//							.writeIPCLog("===========获取文件列表===6666============  not success =========");
 				}
 			}else if(IPC_VDCPCmd_TriggerRecord == msg){
-				GFileUtils
-				.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==========222222222222222222 =========");
+//				GFileUtils
+//				.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==========222222222222222222 =========");
 			//文件删除
 			}else if(IPC_VDCPCmd_Erase == msg){
 				System.out.println("QQQ==========param1="+param1+"===param2="+param2);
@@ -1286,9 +1331,9 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			break;
 		// IPC下载结果应答
 		case ENetTransEvent_IPC_VDTP_Resp:
-			GFileUtils
-					.writeIPCLog("===========下载文件===2222222=============param1="
-							+ param1 + "=====param2=" + param2);
+//			GFileUtils
+//					.writeIPCLog("===========下载文件===2222222=============param1="
+//							+ param1 + "=====param2=" + param2);
 			// 文件传输消息
 			if (IPC_VDTP_Msg_File == msg) {
 				// 文件下载成功
@@ -1421,6 +1466,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		isShowPlayer=false;
 		GolukApplication.getInstance().setContext(this, "ipcfilemanager");
 	}
 	
@@ -1436,6 +1482,13 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		d.setLeftButton("确定", null);
 		d.show();
 	}
-
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
+	}
 
 }

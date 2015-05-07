@@ -69,11 +69,9 @@ import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
@@ -106,7 +104,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	private final String UPLOAD_VOIDE_PRE = "rtmp://goluk.8686c.com/live/";
 
 	/** 自己预览地址 */
-	private static final String VIEW_SELF_PLAY = "rtsp://admin:123456@192.168.43.234/sub";
+	private static String VIEW_SELF_PLAY = "";
 
 	private static final int LOCATION_TYPE_UNKNOW = -1;
 	private static final int LOCATION_TYPE_POINT = 0;
@@ -239,6 +237,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	/** 是否支持声音 */
 	private boolean isCanVoice = true;
 	private ImageView mHead = null;
+	
+	/** */
+	private RelativeLayout mMapRootLayout = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -251,6 +252,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "LiveVideo");
+
+		VIEW_SELF_PLAY = "rtsp://admin:123456@" + mApp.mIpcIp + "/sub";
 
 		// 获取数据
 		getIntentData();
@@ -502,6 +505,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		mLoginBtn = (Button) findViewById(R.id.live_login);
 		mLoginBtn.setOnClickListener(this);
 		// mQiangpaiImg.setOnClickListener(this);
+		
+		mMapRootLayout = (RelativeLayout) findViewById(R.id.live_map_layout);
 
 		mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_press1);
 
@@ -700,7 +705,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	private void initMap() {
 		// 获取地图控件引用
-		mMapView = (MapView) findViewById(R.id.live_bmapView);
+		// mMapView = (MapView) findViewById(R.id.live_bmapView);
+		
+		BaiduMapOptions options = new BaiduMapOptions();
+		options.rotateGesturesEnabled(false); // 不允许手势
+		options.overlookingGesturesEnabled(false);
+		mMapView = new MapView(this, options);
+		mMapView.setClickable(true);
+		
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		mMapRootLayout.addView(mMapView, 0, params);
+		
+		
 
 		mMapView.showZoomControls(false);
 		mMapView.showScaleControl(false);
@@ -793,7 +809,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 			sp.edit().putString("url_live", UPLOAD_VOIDE_PRE + liveVid).apply();
 			sp.edit().commit();
-			CarRecorderManager.updateLiveConfiguration(new PreferencesReader(this).getConfig());
+			CarRecorderManager.updateLiveConfiguration(new PreferencesReader(this, false).getConfig());
 			if (null != mSettingData) {
 				CarRecorderManager.setLiveMute(!mSettingData.isCanVoice);
 			}
@@ -1899,6 +1915,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 					mHandler.removeMessages(MSG_H_SPEECH_COUNT_DOWN);
 					// 目前为可按状态
 					refreshPPtState(true);
+					mSpeakingLayout.setVisibility(View.GONE);
+
 				} else {
 					speekingUIRefresh(4, "", false);
 					final String showTimeStr = "00:0" + mSpeechCountDownTime;
@@ -2295,17 +2313,20 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		showToast("加入群组成功");
 		// 加入群组成功后的对讲按钮的变化
 		if (this.isShareLive) {
-			if (null != mSettingData && mSettingData.isCanTalk) {
-				// 可以支持对讲
-				// 对讲按钮可以显示
-				mBottomLayout.setVisibility(View.VISIBLE);
-				mLiveTalk.setVisibility(View.VISIBLE);
-				mLiveLookTalk.setVisibility(View.GONE);
-			} else {
-				mBottomLayout.setVisibility(View.VISIBLE);
-				mLiveTalk.setVisibility(View.GONE);
-				mLiveLookTalk.setVisibility(View.GONE);
+			if (!this.isContinueLive) {
+				if (null != mSettingData && mSettingData.isCanTalk) {
+					// 可以支持对讲
+					// 对讲按钮可以显示
+					mBottomLayout.setVisibility(View.VISIBLE);
+					mLiveTalk.setVisibility(View.VISIBLE);
+					mLiveLookTalk.setVisibility(View.GONE);
+				} else {
+					mBottomLayout.setVisibility(View.VISIBLE);
+					mLiveTalk.setVisibility(View.GONE);
+					mLiveLookTalk.setVisibility(View.GONE);
+				}
 			}
+
 		} else {
 			mBottomLayout.setVisibility(View.GONE);
 			mLiveTalk.setVisibility(View.GONE);

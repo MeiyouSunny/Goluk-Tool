@@ -135,13 +135,28 @@
                         android:id="@+id/progress"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="124dp"
-                        android:layout_height="18dp"
+                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:background="@drawable/carrecorder_live_setup_time_bg"
+                        android:background="@drawable/live_setup_time_bg"
                         android:max="10800"
-                        android:progress="60"
                         android:progressDrawable="@drawable/carrecorder_jdt"
                         android:thumb="@drawable/carrecorder_thumb" />
+
+                 <!--    <SeekBar
+                        android:id="@+id/mSeekBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/mTotalTime"
+                        android:layout_toRightOf="@+id/mCurTime"
+                        android:background="@drawable/player_time_bg"
+                        android:max="100"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/player_seekbar_style"
+                        android:thumb="@drawable/player_time_control_btn" /> -->
                 </RelativeLayout>
 
                 <TextView

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!--
-         <item
+   
+       <!-- <item
         android:id="@android:id/background"
-        android:drawable="@drawable/carrecorder_live_setup_time_bg"/>
-    -->
+        android:drawable="@drawable/live_setup_time_select_bg"/> -->
 
     <item android:id="@android:id/progress">
-        <clip android:drawable="@drawable/carrecorder_live_setup_time_select_bg" />
+        <clip android:drawable="@drawable/live_setup_time_select_bg" />
     </item>
 
 </layer-list>

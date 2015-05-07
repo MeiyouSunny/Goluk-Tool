@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +51,9 @@ public class RestoreFactorySettingsActivity extends BaseActivity implements OnCl
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
+			case R.id.back_btn:
+				exit(); 
+				break;
 			case R.id.mFormat:
 					CustomDialog mCustomDialog = new CustomDialog(this);
 					mCustomDialog.setMessage("是否确认恢复Goluk出厂设置", Gravity.CENTER);
@@ -80,7 +84,7 @@ public class RestoreFactorySettingsActivity extends BaseActivity implements OnCl
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("restore");
+		
 	}
 
 	@Override
@@ -102,12 +106,27 @@ public class RestoreFactorySettingsActivity extends BaseActivity implements OnCl
 				mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
 					@Override
 					public void onClickListener() {
-						finish();
+						exit();
 					}
 				});
 				mCustomDialog.show();
 			}
 		}
+	}
+	
+	public void exit(){
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("restore");
+		}
+		finish();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
 	}
 
 }

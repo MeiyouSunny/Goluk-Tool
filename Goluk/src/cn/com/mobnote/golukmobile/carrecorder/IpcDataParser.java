@@ -37,7 +37,7 @@ public class IpcDataParser {
 	 * @author jiayf
 	 * @date Mar 10, 2015
 	 */
-	public static String getQueryMoreFileJson(int type, int limitCount, int timestart, int timeend) {
+	public static String getQueryMoreFileJson(int type, int limitCount, long timestart, long timeend) {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("type", type);

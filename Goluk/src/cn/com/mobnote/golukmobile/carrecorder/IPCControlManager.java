@@ -11,6 +11,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
@@ -57,21 +58,32 @@ public class IPCControlManager implements IPCManagerFn{
 				IPC_CommCmd_SetMode, json);
 
 		// WIFI连接状态
-		setIPCWifiState(true);
+		//setIPCWifiState(true);
 	}
 	
 	/**
 	 * 告知IPC wifi连接状态
 	 * @param isConnect ture:连接　false:未连接
+	 * @param ip ipc热点ip地址
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean setIPCWifiState(boolean isConnect){
+	public boolean setIPCWifiState(boolean isConnect,String ip){
+		SettingUtils.getInstance().putString("IPC_IP", ip);
 		int state = isConnect ? 1 : 0;
-		String ip = "192.168.43.234";
-//		String ip = "192.168.43.112";
 		String json = JsonUtil.getWifiChangeJson(state, ip);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
+		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
+		return isSucess;
+	}
+	
+	/**
+	 * 通知ipc连接手机热点
+	 * @param json
+	 * @return
+	 */
+	public boolean setIpcLinkPhoneHot(String json){
+		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetWifiCfg, json);
+		return isSucess;
 	}
 	
 	/**
@@ -135,9 +147,8 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean queryFileListInfo(int filetype, int limitCount, int timeend) {
-		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, 0, timeend);
-		LogUtil.e("xuhw", "YYYYYY===queryParam="+queryParam);
+	public boolean queryFileListInfo(int filetype, int limitCount, long timestart, long timeend) {
+		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, timeend);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
 				queryParam);
 	}
@@ -150,8 +161,12 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @author xuhw
 	 * @date 2015年3月25日
 	 */
-	public boolean downloadFile(String filename, String tag, String savepath) {
-		String json = JsonUtil.getDownFileJson(filename, tag, savepath);
+	public boolean downloadFile(String filename, String tag, String savepath, long filetime) {
+		String json = JsonUtil.getDownFileJson(filename, tag, savepath, filetime);
+		if(filename.contains(".mp4")){
+			GFileUtils.writeIPCLog("==downloadFile==json="+json);
+			LogUtil.e("xuhw", "YYYYYY====downloadFile=====json="+json);
+		}
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
 				json);
 	}

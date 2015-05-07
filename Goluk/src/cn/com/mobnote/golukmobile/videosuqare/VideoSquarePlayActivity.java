@@ -3,12 +3,14 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
@@ -329,7 +331,7 @@ public class VideoSquarePlayActivity extends Activity implements
 				} else if (2 == uptype){
 					mRTPullListView.onRefreshComplete();
 				}
-				Toast.makeText(VideoSquarePlayActivity.this, "网络连接失败!",Toast.LENGTH_SHORT).show();
+				Toast.makeText(VideoSquarePlayActivity.this, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

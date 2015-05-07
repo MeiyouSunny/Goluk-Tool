@@ -55,8 +55,8 @@ public class CustomLoadingDialog{
 			if(customDialog.isShowing()){
 				if(ad != null){
 					ad.stop();
+					customDialog.dismiss();
 				}
-				customDialog.dismiss();
 			}
 		}
 	}

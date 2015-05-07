@@ -35,6 +35,10 @@ public class SharePlatformUtil{
 	public void configPlatforms() {
 		// 添加新浪SSO授权
 		mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		mController.getConfig().closeToast();
+
+
+
 		// 添加微信、微信朋友圈平台
 		addWXPlatform();
 		//添加短信
@@ -53,6 +57,7 @@ public class SharePlatformUtil{
 		String appSecret = "b572ec9cbd3fac52e138e34eff0b4926";
 		// 添加微信平台
 		UMWXHandler wxHandler = new UMWXHandler(mContext, appId, appSecret);
+		wxHandler.showCompressToast(false);
 		wxHandler.addToSocialSDK();
 		
 		// 支持微信朋友圈
@@ -90,6 +95,7 @@ public class SharePlatformUtil{
 	 * 根据不同的平台设置不同的分享内容</br>
 	 */
 	public void setShareContent(String videourl,String imageurl,String text) {
+		String title = "极路客分享";
 		if(text == null || "".equals(text)){
 			text = "Goluk精彩视频！";
 		}
@@ -105,7 +111,7 @@ public class SharePlatformUtil{
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
 		
 		weixinContent.setShareContent(text);
-		weixinContent.setTitle("Goluk精彩视频");
+		weixinContent.setTitle(title);
 		weixinContent.setTargetUrl(videourl);
 		weixinContent.setShareImage(umimage);
 		mController.setShareMedia(weixinContent);
@@ -113,7 +119,7 @@ public class SharePlatformUtil{
 		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent();
 		circleMedia.setShareContent(text);
-		circleMedia.setTitle("Goluk精彩视频");
+		circleMedia.setTitle(title);
 		circleMedia.setTargetUrl(videourl);
 		circleMedia.setShareImage(umimage);
 		mController.setShareMedia(circleMedia);
@@ -129,7 +135,7 @@ public class SharePlatformUtil{
 		//新浪微博分享
 		SinaShareContent sinaContent = new SinaShareContent();
 		sinaContent.setShareContent(text);
-		sinaContent.setTitle("Goluk精彩视频");
+		sinaContent.setTitle(title);
 		sinaContent.setTargetUrl(videourl);
 		sinaContent.setShareMedia(video);
 		mController.setShareMedia(sinaContent);
@@ -138,7 +144,7 @@ public class SharePlatformUtil{
 		//qq分享
 		QQShareContent  qqContent = new QQShareContent();
 		qqContent.setShareContent(text);
-		qqContent.setTitle("Goluk精彩视频");
+		qqContent.setTitle(title);
 		qqContent.setTargetUrl(videourl);
 		qqContent.setShareImage(umimage);
 		mController.setShareMedia(qqContent);

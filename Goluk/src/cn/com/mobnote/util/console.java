@@ -42,6 +42,10 @@ public class console {
 		Log.i(TAG, log);
 	}
 	
+	public static void logBytag(String s1, String s2) {
+		Log.i(s1, s2);
+	}
+	
 	public static void toast(String msg,Context mContext){
 		Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 	}

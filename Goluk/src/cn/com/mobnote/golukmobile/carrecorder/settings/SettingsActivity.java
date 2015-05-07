@@ -15,6 +15,7 @@ import cn.com.tiros.utils.LogUtil;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -108,7 +109,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 		d.setLeftButton("确定", new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
-				finish();
+				exit();
 			}
 		});
 		d.show();
@@ -117,7 +118,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	@Override
 	public void onClick(View arg0) {
 		if(R.id.back_btn == arg0.getId()){
-			finish();
+			exit(); 
 			return;
 		}
 		if(GolukApplication.getInstance().getIpcIsLogin()){
@@ -258,9 +259,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
-		}
+		
 	}
 
 	@Override
@@ -342,6 +341,21 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 				}
 			}
 		}
+	}
+	
+	public void exit(){
+		if(null != GolukApplication.getInstance().getIPCControlManager()){
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+		}
+		finish();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
 	}
 
 }

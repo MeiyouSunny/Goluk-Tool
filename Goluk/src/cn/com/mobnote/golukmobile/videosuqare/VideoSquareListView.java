@@ -2,13 +2,19 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.bitmap.PauseOnScrollListener;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.tiros.utils.LogUtil;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -107,7 +113,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				httpPost(true);
 			}
 		});
-		
 	}
 	
 	public void flush(){
@@ -163,7 +168,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-		System.out.println("YYY======event="+event+"======msg="+msg+"===param2="+param2);
+		LogUtil.e("xuhw","YYYYYYY===hotlist===event="+event+"======msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete();
@@ -173,7 +178,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mDataList.addAll(list);
 				initLayout();
 			}else{
-				Toast.makeText(mContext, "网络连接失败!",Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
