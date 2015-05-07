@@ -72,15 +72,6 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
-
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -217,7 +208,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		mUser = new User(this);
 		mLoginManage = new UserLoginManage(this);
 		mRegistManage = new UserRegistManage(this);
-		initImageLoader(getApplicationContext());
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
@@ -1316,51 +1306,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				}
 			}).start();
 		}
-	}
-
-	/**
-	 * 初始化ImageLoader
-	 * 
-	 * @param context
-	 * @author xuhw
-	 * @date 2015年4月16日
-	 */
-	private void initImageLoader(Context context) {
-		String httpcache = Environment.getExternalStorageDirectory()
-				+ File.separator + "tiros-com-cn-ext" + File.separator
-				+ "VideoSquare" + File.separator + "cache";
-		GFileUtils.makedir(carrecorderCachePath);
-		File cache = new File(httpcache);
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				this)
-				// .memoryCacheExtraOptions(480, 800) //即保存的每个缓存文件的最大长宽
-				.threadPoolSize(2)
-				// 线程池内加载的数量
-				.threadPriority(Thread.NORM_PRIORITY - 3)
-				.denyCacheImageMultipleSizesInMemory()
-				.memoryCache(new UsingFreqLimitedMemoryCache(4 * 1024 * 1024))
-				// 你可以通过自己的内存缓存实现
-				.memoryCacheSize(8 * 1024 * 1024)
-				.discCacheSize(50 * 1024 * 1024)
-				.discCacheFileNameGenerator(new Md5FileNameGenerator())
-				// 将保存的时候的URI名称用MD5 加密
-				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.discCacheFileCount(200)
-				// 缓存的文件数量
-				.discCache(new UnlimitedDiscCache(cache))
-				// 自定义缓存路径
-				.defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-				.imageDownloader(
-						new BaseImageDownloader(this, 5 * 1000, 30 * 1000)) // connectTimeout
-																			// (5
-																			// s),
-																			// readTimeout
-																			// (30
-																			// s)超时时间
-				.writeDebugLogs() // Remove for releaseapp
-				.build();// 开始构建
-
-		ImageLoader.getInstance().init(config);
 	}
 
 	public void addLocationListener(String key, ILocationFn fn) {
