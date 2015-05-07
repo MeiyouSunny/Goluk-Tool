@@ -1,21 +1,19 @@
 package cn.com.mobnote.application;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
@@ -48,6 +46,8 @@ public class GlobalWindow {
 	public final int MSG_H_COUNT = 10;
 	/** 统计 */
 	private int finishShowCount = 0;
+
+	private ProgressBar mProgressBar = null;
 
 	private Handler mHandler = new Handler() {
 
@@ -118,9 +118,10 @@ public class GlobalWindow {
 		mWMParams.y = 0;
 		mWMParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 		// /获得根视图
-//		View v = ((Activity) mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+		// View v = ((Activity)
+		// mContext).getWindow().findViewById(Window.ID_ANDROID_CONTENT);
 		// /状态栏标题栏的总高度,所以标题栏的高度为top2-top
-//		int top2 = v.getTop();
+		// int top2 = v.getTop();
 		mWMParams.height = 85;
 
 		LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -128,6 +129,9 @@ public class GlobalWindow {
 		mStateImg = (ImageView) mVideoUploadLayout.findViewById(R.id.video_loading_img);
 		mPrompTv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_text);
 		mPrecentTv = (TextView) mVideoUploadLayout.findViewById(R.id.video_upload_percent);
+
+		mProgressBar = (ProgressBar) mVideoUploadLayout.findViewById(R.id.progress_horizontal);
+		mProgressBar.setProgress(0);
 
 		// 显示顶层窗口
 		mWindowManager.addView(mVideoUploadLayout, mWMParams);
@@ -144,14 +148,16 @@ public class GlobalWindow {
 		mStateImg.startAnimation(rotateAnimation);
 
 	}
-	
-	public boolean isShow(){
+
+	public boolean isShow() {
 		return isShowGlobalwindow;
 	}
-	
+
 	/**
 	 * 更新文本信息
-	 * @param promptText 文本信息
+	 * 
+	 * @param promptText
+	 *            文本信息
 	 * @author xuhw
 	 * @date 2015年4月23日
 	 */
@@ -160,7 +166,7 @@ public class GlobalWindow {
 			// 窗口未显示
 			return;
 		}
-		
+
 		if (null != mPrompTv) {
 			mPrompTv.setText(promptText);
 		}
@@ -179,6 +185,9 @@ public class GlobalWindow {
 		if (!isShowGlobalwindow) {
 			// 窗口未显示
 			return;
+		}
+		if (null != mProgressBar) {
+			mProgressBar.setProgress(percent);
 		}
 		console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent: " + percent);
 		if (null != mPrecentTv) {
@@ -270,6 +279,7 @@ public class GlobalWindow {
 		mStateImg = null;
 		mPrompTv = null;
 		mPrecentTv = null;
+		mProgressBar = null;
 		mVideoUploadLayout = null;
 	}
 }
