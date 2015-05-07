@@ -695,7 +695,10 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 				@Override
 				public void onCancel(DialogInterface arg0) {
-					cancelDialog();
+					if (null != mPdsave) {
+						mPdsave.dismiss();
+						mPdsave = null;
+					}
 					boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
 				}
@@ -706,13 +709,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 		Log.e("", "chxy__b__VideoShareActivity share11" + b);
 		Log.e("", "chxy____VideoShareActivity share11" + json);
-	}
-
-	private void cancelDialog() {
-		if (null != mPdsave) {
-			mPdsave.dismiss();
-			mPdsave = null;
-		}
 	}
 
 	// 分享成功后需要调用的接口
