@@ -295,7 +295,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		// 手机快速注册
 		case R.id.user_login_phoneRegist:
 			Intent itRegist = new Intent(UserLoginActivity.this,UserRegistActivity.class);
-			if(justLogin.equals("main")){//从起始页注册
+			if(justLogin.equals("main") || justLogin.equals("back")){//从起始页注册
 				itRegist.putExtra("fromRegist", "fromStart");
 			}else if(justLogin.equals("indexmore")){//从更多页个人中心注册
 				itRegist.putExtra("fromRegist", "fromIndexMore");

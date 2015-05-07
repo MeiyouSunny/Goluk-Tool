@@ -202,6 +202,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		try{
 			newName = URLEncoder.encode(intentName, "utf-8");
 			newSign = URLEncoder.encode(intentSign,"utf-8");
+			//if (img.getDrawable()==getResources().getDrawable(R.drawable.图片资源)) {执行性别操作 }
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -322,7 +323,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	}
 	
 	/**
-	 * 
+	 * 分别获取从修改昵称、修改个性签名和修改头像页面的数据
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
