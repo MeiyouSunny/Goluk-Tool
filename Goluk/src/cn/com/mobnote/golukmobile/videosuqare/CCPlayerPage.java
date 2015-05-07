@@ -7,6 +7,7 @@ import cn.com.tiros.utils.LogUtil;
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -150,5 +151,6 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 			mDWMediaPlayer.release();
 		}
 	}
+	
 
 }
