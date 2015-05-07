@@ -76,6 +76,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -210,6 +211,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	/**记录行车分享   分享精彩视频为false  点击分享网络直播为true*/
 	private boolean isClickShareVideo = false;
 	
+	private RelativeLayout mRootLayout = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -221,7 +224,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		((GolukApplication)this.getApplication()).initSharedPreUtil(this);
 		
-		setContentView(R.layout.index);
+		mRootLayout =(RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
+		
+		setContentView(mRootLayout);
 		
 		//添加umeng错误统计
 		MobclickAgent.setCatchUncaughtExceptions(true);
@@ -418,9 +423,18 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	 * 初始化地图
 	 */
 	private void initMap(){
+
 		mMapLayout = (LinearLayout) findViewById(R.id.map_layout);
 		//获取地图控件引用
-		mMapView = (MapView) findViewById(R.id.bmapView);
+		//mMapView = (MapView) findViewById(R.id.bmapView);
+		
+		BaiduMapOptions options = new BaiduMapOptions();
+		options.rotateGesturesEnabled(false); // 不允许手势
+		options.overlookingGesturesEnabled(false);
+		mMapView = new MapView(this, options);
+		
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		this.mRootLayout.addView(mMapView, 0, params);
 		
 		//隐藏缩放按钮
 		mMapView.showZoomControls(false);
@@ -433,22 +447,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);
-		// 定位初始化
-//		mLocClient = new LocationClient(this);
-//		mLocClient.registerLocationListener(myListener);
-//		LocationClientOption option = new LocationClientOption();
-//		// 设置定位模式,没有设置定位模式接口setLocationMode
-//		// 打开gps
-//		option.setOpenGps(true);
-//		option.setIsNeedAddress(true);
-//		// 设置坐标类型
-//		// 返回国测局经纬度坐标系 coor=gcj02
-//		// 返回百度墨卡托坐标系 coor=bd09
-//		// 返回百度经纬度坐标系 coor=bd09ll
-//		option.setCoorType("bd09ll");
-//		option.setScanSpan(5000);
-//		mLocClient.setLocOption(option);
-//		mLocClient.start();
+
 		
 		//地图加载完成事件
 		mBaiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
@@ -463,7 +462,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
 			@Override
 			public void onMapStatusChangeStart(MapStatus arg0) {
-				//console.log("onMapStatusChangeStart");
 				//隐藏气泡,大头针
 				mBaiduMapManage.mapStatusChange();
 				//移动了地图,第一次不改变地图中心点位置
@@ -472,12 +470,10 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 			
 			@Override
 			public void onMapStatusChangeFinish(MapStatus arg0) {
-				//console.log("onMapStatusChangeFinish");
 			}
 			
 			@Override
 			public void onMapStatusChange(MapStatus arg0) {
-				//console.log("onMapStatusChange");
 			}
 		});
 	}
