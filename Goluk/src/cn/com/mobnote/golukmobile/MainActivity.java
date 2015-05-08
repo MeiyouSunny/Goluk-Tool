@@ -957,12 +957,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	
 	// 退出程序
 	private void exit() {
-		if (mApp.isUserLoginSucess) {
+//		if (mApp.isUserLoginSucess) {
 			SysApplication.getInstance().exit();
-		}
+//		}
 		mApp.mIPCControlManager.setIPCWifiState(false, "");
 		mApp.mGoluk.GolukLogicDestroy();
 		finish();
+		 int PID = android.os.Process.myPid();
+		 android.os.Process.killProcess(PID);
 	}
 	
 	@SuppressLint("ClickableViewAccessibility")
