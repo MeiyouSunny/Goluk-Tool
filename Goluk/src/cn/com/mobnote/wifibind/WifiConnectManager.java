@@ -23,7 +23,7 @@ import android.util.Log;
 
 public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
-	private static final String TAG = "testhan";
+	private static final String TAG = "Wifibind";
 	private static final String WIFICONFIG = "wifi.config";
 	private WifiConnCallBack callback = null;
 
@@ -48,9 +48,13 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		netUtil.setMultiCastListener(this);
 	}
 
+	/**
+	 * 绑定第一步 查看手机网关（已废弃？）
+	 */
 	public void createWifiAPFirst() {
 		MultiCastUtil.getInstance();
-		createWifiAPFirst("6", "icp1", "123456789", 20000);
+		console.logBytag(TAG, "绑定第一步 查看手机网关开始");
+		createWifiAPFirst("6", "icp1", "123456789", 20 * 1000);
 	}
 
 	/**
@@ -61,7 +65,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param type
 	 */
 	public void connectWifi(String ssid, String password, WifiCipherType type) {
-		connectWifi(ssid, password, "", type, 30000);
+		console.logBytag(TAG, "通过用户名，密码连接ipc开始");
+		connectWifi(ssid, password, "", type, 30 * 1000);
 	}
 
 	/**
@@ -69,7 +74,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 */
 	public void autoWifiManage() {
 		MultiCastUtil.getInstance();
-		autoWifiManage(300000);
+		console.logBytag(TAG, "启动软件后自动创建热点开始");
+		autoWifiManage(60 * 1000);
 	}
 
 	/**
@@ -80,7 +86,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 */
 	public void createWifiAP(String ph_ssid, String ph_password,
 			String ipc_ssid, String ipc_mac) {
-		createWifiAP("3", ph_ssid, ph_password, ipc_ssid, "", 300000);
+		console.logBytag(TAG, "通过用户名密码创建wifi热点开始");
+		createWifiAP("3", ph_ssid, ph_password, ipc_ssid, "", 30 * 1000);
 	}
 
 	/**
@@ -90,7 +97,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 *            关键字
 	 */
 	public void scanWifiList(String matching, boolean reset) {
-		scanWifiList(matching, reset, 30000);
+		console.logBytag(TAG, "通过关键字查询列表信息开始");
+		scanWifiList(matching, reset, 30 * 1000);
 	}
 
 	/**
@@ -99,7 +107,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param beans
 	 */
 	public void saveConfiguration(WifiRsBean beans) {
-		saveConfiguration(beans, 30000);
+		console.logBytag(TAG, "保存配置信息开始");
+		saveConfiguration(beans, 30 * 1000);
 	}
 
 	/**
@@ -562,8 +571,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param outTime
 	 */
 	private void createWifiAP(final String type, final String ssid,
-			final String password, final String ipc_ssid,
-			final String ipc_ip, final int outTime) {
+			final String password, final String ipc_ssid, final String ipc_ip,
+			final int outTime) {
 		console.logBytag(TAG, "创建热点开始....11111");
 
 		Runnable runnable = new Runnable() {
@@ -607,15 +616,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				WifiRsBean rs = wifiSupport.getConnResult();
 				msg.obj = rs;
 				handler.sendMessage(msg);
-				try {
-					Thread.sleep(10 * 1000);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 
-				console.logBytag(TAG, "创建热点等待ipc接入");
-				netUtil.findServerIpAddress(Integer.parseInt(type), "",
-						"", 60 * 1000);
+				console.logBytag(TAG, "创建热点ipc接入开始");
+				netUtil.findServerIpAddress(Integer.parseInt(type), "", "",
+						60 * 1000);
 
 				// 获取wifi连接列表
 				// getClientList(ipc_ssid, ipc_mac, ipc_ip, type, 40000);
@@ -779,7 +783,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					// -----------------------------------------如果 wifi
 					// 打开了-------------------------------//
 					if (mWifi != null && mWifi.isConnected()) {
-						Log.e(TAG, "自动连接----------------开启wifi------------");
+						console.logBytag(TAG,
+								"自动连接----------------开启wifi------------");
+
 						openTime = vaviAutoWifi(ipc_ssid, outTime);
 						if (openTime == 0) {
 
@@ -788,8 +794,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 						wifiSupport.closeWifi();
 						// 创建热点
-						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid,
-								ipc_ip, openTime);
+						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip,
+								openTime);
 						return;
 					}
 					// -----------------------------------------如果 ap打开了
@@ -797,15 +803,16 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					if (apManagesupport.getWifiApState() == 13) {
 						// 当前已经有IPC热点
 						WifiRsBean bb = wifiSupport.getNetworkSSID(context);
-						Log.e(TAG, "自动连接----------------开启热点------------");
+						console.logBytag(TAG,
+								"自动连接----------------开启热点------------");
 						if (bb.getPh_ssid().equals(ph_ssid)) {
 							msg.what = 53;
 							msg.obj = bb;
 							handler.sendMessage(msg);
 
-							//
-							netUtil.findServerIpAddress(5, "", "",
-									60 * 1000);
+							console.logBytag(TAG,
+									"自动连接----------------等待ipc回复开始------------");
+							netUtil.findServerIpAddress(5, "", "", 60 * 1000);
 							return;
 						} else {
 							wifiSupport.closeWifiAp(wifiManager);
@@ -821,25 +828,27 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 						// 关闭所有的网络
 						wifiSupport.closeWifi();
 						wifiSupport.closeWifiAp(wifiManager);
-
-						Log.e(TAG,
+						console.logBytag(TAG,
 								"自动连接----------------AP和wifi 都没有开启------------");
+
 						openTime = vaviAutoWifi(ipc_ssid, outTime);
 						if (openTime == 0) {
 
 							return;
 						}
 						// 创建热点
-						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid,
-								ipc_ip, openTime);
+						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip,
+								openTime);
 						return;
 					}
 
 					else
 
 					{ // 不是wifi 和热点 关了直接连
-						Log.e(TAG,
-								"autoconnn----------------networkINfo nostate------------");
+						
+						console.logBytag(TAG,
+								"自动连接----------------无网络状态创建连接------------");
+					 
 						openTime = vaviAutoWifi(ipc_ssid, outTime);
 						if (openTime == 0) {
 							// 扫描超时
@@ -852,8 +861,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 						wifiSupport.closeWifi();
 						wifiSupport.closeWifiAp(wifiManager);
 						// 创建热点
-						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid,
-								ipc_ip, openTime);
+						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip,
+								openTime);
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

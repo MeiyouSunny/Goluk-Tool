@@ -979,22 +979,26 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
 						LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
 						
-						//查询新文件列表（最多10条）
-						long time = SettingUtils.getInstance().getLong("querytime", 0);
-						long curtime = System.currentTimeMillis()/1000;
-						LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
-						if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
-							SettingUtils.getInstance().putLong("querytime", curtime);
-							queryNewFileList();
-							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
+						SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+						boolean isbind = preferences.getBoolean("isbind", false);
+						if (isbind) {
+							//查询新文件列表（最多10条）
+							long time = SettingUtils.getInstance().getLong("querytime", 0);
+							long curtime = System.currentTimeMillis()/1000;
+							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
+							if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
+								SettingUtils.getInstance().putLong("querytime", curtime);
+								queryNewFileList();
+								LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
+							}
 						}
+						
 						console.log("IPC_TTTTTT=================Login Success===============");
 						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
 						//改变首页链接状态
 						if(null != mMainActivity){
 							mMainActivity.wiFiLinkStatus(2);
 						}
-
 						
 						//如果在wifi连接页面,通知连接成功
 						if(mPageSource == "WiFiLinkList"){
@@ -1121,6 +1125,11 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				}
 				break;
 			case IPC_VDCP_Msg_IPCKit:
+				SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+				boolean isbind = preferences.getBoolean("isbind", false);
+				if (!isbind) {
+					return;
+				}
 				LogUtil.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="
 						+ param1 + "===param2=" + param2);
 				GFileUtils.writeIPCLog("YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="

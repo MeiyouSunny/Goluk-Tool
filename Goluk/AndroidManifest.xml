@@ -64,7 +64,7 @@
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity" android:screenOrientation="portrait"/>
 		
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"/>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 
@@ -72,8 +72,8 @@
 		    android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
 		    android:screenOrientation="portrait" />
 
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VersionActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
