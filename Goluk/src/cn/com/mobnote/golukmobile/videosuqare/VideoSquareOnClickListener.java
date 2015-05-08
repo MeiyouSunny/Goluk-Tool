@@ -72,6 +72,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 				System.out.println("YYYY+RESULT3333333333" + result);
 				if (!result) {
 					vsa.mCustomProgressDialog.close();
+					Toast.makeText(mcontext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 				}
 			} else if (mcontext instanceof VideoSquarePlayActivity) {
 				VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
@@ -217,8 +218,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 										mVideoSquareInfo.mVideoEntity.videoid,
 										reporttype);
 						if (flog) {
-							Toast.makeText(mcontext, "举报成功，我们稍后会进行处理",
-									Toast.LENGTH_SHORT).show();
+							Toast.makeText(mcontext, "举报成功，我们稍后会进行处理",Toast.LENGTH_SHORT).show();
 						}
 						confirmation.dismiss();
 					}
@@ -289,14 +289,46 @@ public class VideoSquareOnClickListener implements OnClickListener,
 
 						}
 
+					}else{
+						this.closeRqsDialog(mcontext);
+						Toast.makeText(mcontext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}else{
+				this.closeRqsDialog(mcontext);
+				Toast.makeText(mcontext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 			}
 		}
 
+	}
+	
+	/**
+	 * 关闭之前请求的dialog
+	  * @Title: closeRqsDialog 
+	  * @Description: TODO
+	  * @param context void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	private void closeRqsDialog(Context context){
+		if (mcontext instanceof VideoSquarePlayActivity) {
+			VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
+			if (vspa!=null && !vspa.isFinishing()) {
+				vspa.mCustomProgressDialog.close();
+			}
+
+		} else if(mcontext instanceof VideoSquareActivity){
+			System.out.println("YYYY+VideoSquareActivity");
+			VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
+			if(vsa!=null && !vsa.isFinishing()){
+				if(vsa.mCustomProgressDialog!=null){
+					vsa.mCustomProgressDialog.close();
+				}
+			}
+		}
 	}
 
 }
