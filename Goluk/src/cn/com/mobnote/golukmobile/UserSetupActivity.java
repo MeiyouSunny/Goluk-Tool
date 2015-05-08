@@ -184,8 +184,8 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
 		mClearCache.setOnClickListener(this);
 		/**固件升级*/
-		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
-		mUpdateItem.setOnClickListener(this);
+//		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
+//		mUpdateItem.setOnClickListener(this);
 	}
 		
 	@Override
@@ -250,10 +250,10 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				}).create().show();
 				break;
 				//固件升级
-			case R.id.update_item:
-				/**
+			/*case R.id.update_item:
+				*//**
 				 * 固件升级
-				 */
+				 *//*
 				new AlertDialog.Builder(mContext)
 				.setMessage("是否给您的摄像头进行固件升级？")
 				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
@@ -289,7 +289,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				.setNegativeButton("取消", null)
 				.create().show();
 				
-				break;
+				break;*/
 		}
 	}
 	/**

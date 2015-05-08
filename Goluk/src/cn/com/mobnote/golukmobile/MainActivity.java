@@ -70,6 +70,7 @@ import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.utils.LogUtil;
+
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -577,10 +578,24 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		try {
 			JSONObject json = new JSONObject(str);
 			String tag = json.getString("tag");
+			String filename = json.optString("filename");
 			long time = json.optLong("filetime");
 			if(tag.equals("videodownload")){
 				//只有视频下载才提示音频
 				playDownLoadedSound();
+				
+				try{
+					if(filename.length() >= 22){
+						String t = filename.substring(18, 22);
+						int tt = Integer.parseInt(t) + 1;
+						time += tt;
+					}
+				}catch(NumberFormatException e){
+					e.printStackTrace();
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
 				// 更新最新下载文件的时间
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
 			}
@@ -942,12 +957,14 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	
 	// 退出程序
 	private void exit() {
-		if (mApp.isUserLoginSucess) {
+//		if (mApp.isUserLoginSucess) {
 			SysApplication.getInstance().exit();
-		}
+//		}
 		mApp.mIPCControlManager.setIPCWifiState(false, "");
 		mApp.mGoluk.GolukLogicDestroy();
 		finish();
+		 int PID = android.os.Process.myPid();
+		 android.os.Process.killProcess(PID);
 	}
 	
 	@SuppressLint("ClickableViewAccessibility")
