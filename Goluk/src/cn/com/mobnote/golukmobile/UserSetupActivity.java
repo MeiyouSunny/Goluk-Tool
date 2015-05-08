@@ -100,6 +100,12 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	/**升级失败**/
 	private Builder mUpdateFail = null;
 	private AlertDialog mUpdateDialogFail = null;
+	/**升级准备中**/
+	private Builder mPrepareBuilder = null;
+	private AlertDialog mPrepareDialog = null;
+	/**升级校验不通过**/
+	private Builder mNoBuilder = null;
+	private AlertDialog mNoDialog = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -234,7 +240,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				break;
 				//清除缓存
 			case R.id.remove_cache_item:
-				Log.i("lily", "----清楚缓存-----"+Const.getAppContext().getCacheDir().getPath());
+				Log.i("lily", "----清除缓存-----"+Const.getAppContext().getCacheDir().getPath());
 				new AlertDialog.Builder(mContext)
 				.setMessage("确定清除缓存？")
 				.setNegativeButton("取消", null)
@@ -260,6 +266,26 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 						if(GolukApplication.getInstance().getIpcIsLogin()){
 							boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade();
 							LogUtil.e("lily","YYYYYY=======ipcUpgrade()============u="+u);
+							if(u){
+								if(mPrepareBuilder==null){
+									mPrepareBuilder = new AlertDialog.Builder(mContext);
+									mPrepareDialog = mPrepareBuilder.setMessage("正在为您准备传输文件，请稍候……")
+											.setCancelable(false)
+											.setOnKeyListener(new OnKeyListener() {
+												@Override
+												public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+													if(keyCode == KeyEvent.KEYCODE_BACK){
+														return true;
+													}
+													return false;
+												}
+											}).create();
+									mPrepareDialog.show();
+								}else{
+									mPrepareDialog.setMessage("正在为您准备传输文件，请稍候……");
+								}
+							}
+							
 						}
 					}
 				})
@@ -429,6 +455,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 						String percent = json.getString("percent");
 						Log.i("lily", "---------stage-----"+stage+"-------percent----"+percent);
 						if(stage.equals("1")){
+							dismissPrepareDialog();//准备文件的对话框消失
 							if(mSendMessageBuilder==null){
 								mSendMessageBuilder = new AlertDialog.Builder(mContext);
 								mSendDialog = mSendMessageBuilder.setMessage("正在传输文件，请稍候……"+percent+"%")
@@ -479,6 +506,28 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 								mUpdateDialogSuccess.show();
 							}
 						}
+						if(stage.equals("3")){
+							dismissSendDialog();//正在传输文件的对话框消失
+							if(mNoBuilder == null){
+								mNoBuilder = new AlertDialog.Builder(mContext);
+								 mNoDialog = mNoBuilder.setMessage("校验不通过，请检查摄像头")
+								.setPositiveButton("确定", null)
+								.setCancelable(false)
+								.setOnKeyListener(new OnKeyListener() {
+
+									@Override
+									public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+										if(keyCode == KeyEvent.KEYCODE_BACK){
+											return true;
+										}
+										return false;
+									}
+								}).create();
+								 mNoDialog.show();
+							}else{
+								mNoDialog.setMessage("校验不通过，请检查摄像头");
+							}
+						}
 					}catch(Exception e){
 						e.printStackTrace();
 					}
@@ -515,6 +564,16 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 			mUpdateDialog = null;
 		}
 	}
+    
+    /**
+     * 准备固件升级的文件
+     */
+    public void dismissPrepareDialog(){
+    	if(null != mPrepareDialog){
+    		mPrepareDialog.dismiss();
+    		mPrepareDialog = null;
+    	}
+    }
     
     @Override
 	protected void onDestroy() {
