@@ -14,6 +14,7 @@ public class NetUtil {
 
 	private static final int GRAM_PORT = 35293;
 	public static final int SUCESS = 1;
+	public static final int ERROR = 2;
 
 	private DatagramPacket mPacket = null;
 
@@ -49,6 +50,7 @@ public class NetUtil {
 			case 5:
 				break;
 			case 6:
+				sendData(ERROR, null);
 				Log.e("", "Error!!!!!!!");
 				cancel();
 				break;
@@ -81,18 +83,17 @@ public class NetUtil {
 	}
 
 	public void findServerIpAddress(int type, final String mac, final String ip, int seconds) {
-
 		if (null != mUdpSocket) {
 			return;
 		}
 		mType = type;
-		Log.e("", "++++++++++++++++++++TestUDP--------findServerIpAddress-----1");
+		Log.e("", "TestUDP--------findServerIpAddress-----1");
 		try {
 			mUdpSocket = new DatagramSocket(GRAM_PORT);
-			Log.e("", "++++++++++++++++++++TestUDP--------findServerIpAddress-----2");
+			Log.e("", "TestUDP--------findServerIpAddress-----2");
 		} catch (SocketException e) {
 			mHandler.sendEmptyMessage(6);
-			Log.e("", "++++++++++++++++++++TestUDP--------findServerIpAddress-----3");
+			Log.e("", "TestUDP--------findServerIpAddress-----Exception");
 			return;
 		}
 
@@ -105,9 +106,9 @@ public class NetUtil {
 				while (isCanScan) {
 					try {
 						mPacket = new DatagramPacket(recvbuf, 256);
-						Log.e("", "++TestUDP--------findServerIpAddress-----5");
+						Log.e("", "++TestUDP--------findServerIpAddress-----accept socket Data");
 						mUdpSocket.receive(mPacket);
-						Log.e("", "++TestUDP--------findServerIpAddress----6");
+						Log.e("", "++TestUDP--------findServerIpAddress----accept Sucess!!!!!!!!");
 						int length = mPacket.getLength();
 						byte[] data = mPacket.getData();
 						String s = new String(data, 0, length - 1, "GBK");
@@ -119,7 +120,7 @@ public class NetUtil {
 							Log.e("", "+++TestUDP--------findServerIpAddress-----77777 recvbuf1=" + s);
 						}
 					} catch (Exception e) {
-						Log.e("", "++TestUDP--------findServerIpAddress-------8888888888-ip=");
+						Log.e("", "++TestUDP--------findServerIpAddress-------8888888888-ip=  Accept Data Exception ");
 						e.printStackTrace();
 						mHandler.sendEmptyMessage(6);
 						isCanScan = false;
