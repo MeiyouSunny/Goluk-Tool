@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.tiros.utils.LogUtil;
 import android.app.Activity;
 import android.graphics.PixelFormat;
@@ -98,20 +99,37 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 		mApp = (GolukApplication) getApplication();
 		from = getIntent().getStringExtra("from");
 		filename = getIntent().getStringExtra("filename");
-		if (!TextUtils.isEmpty(from)) {
-			if (from.equals("local")) {
-				playUrl = getIntent().getStringExtra("path");
-			} else if (from.equals("ipc")) {
+		String ip = SettingUtils.getInstance().getString("IPC_IP");
+		if(!TextUtils.isEmpty(from)){
+			if(from.equals("local")){
+				playUrl=getIntent().getStringExtra("path");
+			}else if(from.equals("ipc")){
 				int type = getIntent().getIntExtra("type", -1);
-				if (4 == type) {
-					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/wonderful/" + filename;
-				} else if (2 == type) {
-					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/urgent/" + filename;
-				} else {
-					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/normal/" + filename;
+				if(4 == type){
+					playUrl="http://"+ ip + ":5080/rec/wonderful/"+filename;
+				}else if(2 == type){
+					playUrl="http://" + ip + ":5080/rec/urgent/"+filename;
+				}else{
+					playUrl="http://" + ip + ":5080/rec/normal/"+filename;
 				}
 			}
 		}
+		
+		
+//		if (!TextUtils.isEmpty(from)) {
+//			if (from.equals("local")) {
+//				playUrl = getIntent().getStringExtra("path");
+//			} else if (from.equals("ipc")) {
+//				int type = getIntent().getIntExtra("type", -1);
+//				if (4 == type) {
+//					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/wonderful/" + filename;
+//				} else if (2 == type) {
+//					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/urgent/" + filename;
+//				} else {
+//					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/normal/" + filename;
+//				}
+//			}
+//		}
 
 		initView();
 		setListener();
@@ -122,6 +140,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 				case GETPROGRESS:
 					if (null != mMediaPlayer) {
 						if (mMediaPlayer.isPlaying()) {
+							hideLoading();
 							long curPosition = mMediaPlayer.getCurrentPosition();
 							long duration = mMediaPlayer.getDuration();
 
@@ -177,11 +196,11 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 		mPlayBigBtn = (ImageButton) findViewById(R.id.mPlayBigBtn);
 		mSeekBar = (SeekBar) findViewById(R.id.mSeekBar);
 
-		if (from.equals("ipc")) {
+//		if (from.equals("ipc")) {
 			showLoading();
-		} else {
-			hideLoading();
-		}
+//		} else {
+//			hideLoading();
+//		}
 	}
 
 	/**
@@ -233,7 +252,11 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 			int min = seconds / 60;
 			int sec = seconds % 60;
 			if (min > 9) {
-				time = min + ":";
+				if(min > 59){
+					time = "00:";
+				}else{
+					time = min+":";
+				}
 			} else {
 				time = "0" + min + ":";
 			}
