@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.carrecorder.view;
 
 import cn.com.mobnote.golukmobile.R;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

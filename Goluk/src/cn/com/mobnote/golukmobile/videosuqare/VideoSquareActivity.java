@@ -151,7 +151,8 @@ public class VideoSquareActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-
+	
+	
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
