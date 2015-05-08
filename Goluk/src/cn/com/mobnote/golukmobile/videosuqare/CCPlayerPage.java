@@ -179,10 +179,13 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
 		allow=false;
-		mDWMediaPlayer.setDisplay(null);
-		if(mDWMediaPlayer.isPlaying()){
-			mDWMediaPlayer.pause();
+		if(null != mDWMediaPlayer){
+			mDWMediaPlayer.setDisplay(null);
+			if(mDWMediaPlayer.isPlaying()){
+				mDWMediaPlayer.pause();
+			}
 		}
+		
 		LogUtil.e("xuhw", "YYYYYYY========surfaceDestroyed===========");
 	}
 
@@ -212,11 +215,18 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(null != mDWMediaPlayer){
+			mDWMediaPlayer.release();
+			mDWMediaPlayer = null;
+		}
 	}
 	
 	private void exit(){
+		hideLoading();
 		if(null != mDWMediaPlayer){
-			mDWMediaPlayer.release();
+			if(mDWMediaPlayer.isPlaying()){
+				mDWMediaPlayer.pause();
+			}
 		}
 		finish();
 	}
