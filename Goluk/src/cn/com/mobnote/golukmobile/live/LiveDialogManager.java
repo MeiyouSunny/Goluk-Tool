@@ -45,6 +45,10 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_IPC_LOGINOUT = 8;
 	/** 程序退出提示框 */
 	public static final int DIALOG_TYPE_APP_EXIT = 9;
+	/** 重新上传视频 */
+	public static final int DIALOG_TYPE_LIVE_RELOAD_UPLOAD = 10;
+	/** 重新请服务*/
+	public static final int DIALOG_TYPE_LIVE_REQUEST_SERVER = 11;
 
 	private int mCurrentDialogType = 0;
 
