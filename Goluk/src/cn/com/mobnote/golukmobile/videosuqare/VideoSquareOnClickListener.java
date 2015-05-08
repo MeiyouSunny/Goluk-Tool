@@ -11,6 +11,7 @@ import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Message;
@@ -262,21 +263,28 @@ public class VideoSquareOnClickListener implements OnClickListener,
 						// 设置分享内容
 						sharePlatform.setShareContent(shareurl, coverurl,describe);
 						System.out.println("YYYY+RESULT22222222");
-
-						if (form == 2) {
+						
+						if (mcontext instanceof VideoSquarePlayActivity) {
+							System.out.println("YYYY+VideoSquarePlayActivity");
 							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
-							vspa.mCustomProgressDialog.close();
-							if (!vspa.isFinishing()) {
+							if (vspa!=null && !vspa.isFinishing()) {
+								vspa.mCustomProgressDialog.close();
 								CustomShareBoard shareBoard = new CustomShareBoard(vspa);
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
 
-						} else {
+						} else if(mcontext instanceof VideoSquareActivity){
+							System.out.println("YYYY+VideoSquareActivity");
 							VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
-							vsa.mCustomProgressDialog.close();
-							if (!vsa.isFinishing()) {
-								CustomShareBoard shareBoard = new CustomShareBoard(vsa);
-								shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							if(vsa == null || vsa.isFinishing()){
+								return ;
+							}else{
+								if(vsa.mCustomProgressDialog!=null){
+									vsa.mCustomProgressDialog.close();
+									CustomShareBoard shareBoard = new CustomShareBoard(vsa);
+									shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+								}
+								
 							}
 
 						}

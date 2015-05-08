@@ -183,7 +183,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 				break;
 			case MSG_H_UPLOAD_SUCESS:
 				showToast("上传完成");
-				GlobalWindow.getInstance().topWindowSucess("上传完成");
+				GlobalWindow.getInstance().topWindowSucess("视频上传成功");
 				// mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
 				shareCanEnable();
 				break;
@@ -196,7 +196,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 				break;
 			case MSG_H_START_UPLOAD:
-				// mApp.createVideoUploadWindow();
 				break;
 			case MSG_H_COUNT:
 
@@ -229,7 +228,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			case Uploader.UPLOAD:
 				// 开始上传
 				console.log("upload service--VideoShareActivity-handleStatus---开始上传---UPLOAD...");
-				// mApp.createVideoUploadWindow();
 				mmmHandler.sendEmptyMessage(MSG_H_START_UPLOAD);
 				break;
 			case Uploader.FINISH:
@@ -302,7 +300,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		// 上传已倒出的本地视频
 		uploadShareVideo();
 
-		GlobalWindow.getInstance().createVideoUploadWindow("正在上传文件");
+		GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 	}
 
 	private void createThumb() {
@@ -380,7 +378,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dimissExitDialog();
-						exit();
+						GlobalWindow.getInstance().toFailed("视频上传取消");
+						exit(false);
 
 					}
 
@@ -402,7 +401,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		if (isExit) {
 			return;
 		}
-		GlobalWindow.getInstance().toFailed("上传失败");
+		GlobalWindow.getInstance().toFailed("视频上传失败");
 
 		mErrorDialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("上传失败")
 				.setPositiveButton("重试", new DialogInterface.OnClickListener() {
@@ -413,7 +412,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 						dimissErrorDialog();
 						showToast("重新开始上传");
 
-						GlobalWindow.getInstance().createVideoUploadWindow("正在上传文件");
+						GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 
 					}
 
@@ -422,7 +421,8 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dimissErrorDialog();
-						exit();
+						GlobalWindow.getInstance().toFailed("视频上传取消");
+						exit(false);
 
 					}
 
@@ -633,18 +633,21 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 			// 正在上传视频，需要提示用户，
 			showExitDialog();
 		} else {
-			exit();
+			exit(true);
 		}
 	}
 
-	private void exit() {
+	private void exit(boolean isdestroyTopwindow) {
 		isExit = true;
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
+		long starTime = System.currentTimeMillis();
 		mUploader.cancel();
-		GlobalWindow.getInstance().dimissGlobalWindow();
+		Log.e("", "uploader   cancal time:--------:" + (System.currentTimeMillis() - starTime));
+		if (isdestroyTopwindow) {
+			GlobalWindow.getInstance().dimissGlobalWindow();
+		}
 		VideoShareActivity.this.finish();
-
 	}
 
 	boolean isExit = false;
@@ -695,7 +698,10 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 				@Override
 				public void onCancel(DialogInterface arg0) {
-					cancelDialog();
+					if (null != mPdsave) {
+						mPdsave.dismiss();
+						mPdsave = null;
+					}
 					boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
 				}
@@ -706,13 +712,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 		Log.e("", "chxy__b__VideoShareActivity share11" + b);
 		Log.e("", "chxy____VideoShareActivity share11" + json);
-	}
-
-	private void cancelDialog() {
-		if (null != mPdsave) {
-			mPdsave.dismiss();
-			mPdsave = null;
-		}
 	}
 
 	// 分享成功后需要调用的接口
