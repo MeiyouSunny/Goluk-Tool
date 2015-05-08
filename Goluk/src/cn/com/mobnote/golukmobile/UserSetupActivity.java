@@ -221,14 +221,14 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				}else if(btnLoginout.getText().toString().equals("退出登录")){
 						new AlertDialog.Builder(mContext)
 						.setMessage("是否确认退出？")
-						.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+						.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 							
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
 								getLoginout();
 							}
 						})
-						.setPositiveButton("取消", null)
+						.setNegativeButton("取消", null)
 						.create().show();
 				}
 				break;
@@ -253,7 +253,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				 */
 				new AlertDialog.Builder(mContext)
 				.setMessage("是否给您的摄像头进行固件升级？")
-				.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -263,7 +263,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 						}
 					}
 				})
-				.setPositiveButton("取消", null)
+				.setNegativeButton("取消", null)
 				.create().show();
 				
 				break;
