@@ -414,7 +414,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		if(!isShowPlayer){
 			isShowPlayer=true;
 			if(null == VideoPlayerActivity.mHandler){
-				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
+				Intent intent = new Intent(IPCFileManagerActivity.this, LocalVideoPlayerActivity.class);
 				intent.putExtra("from", "ipc");
 				intent.putExtra("type", mCurrentType);
 				intent.putExtra("filename", filename);
@@ -440,6 +440,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 			deltv = (TextView) findViewById(R.id.video_delete_txt);
 			deltv.setTextColor(this.getResources().getColor(R.color.carrecorder_del_def_bg));
 			
+			if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
+				findViewById(R.id.video_download_img).setBackgroundResource(R.drawable.carrecorder_icon_download_grey);
+				return;
+			}
 			findViewById(R.id.video_download_img).setBackgroundResource(R.drawable.carrecorder_icon_download);
 			downloadtv = (TextView) findViewById(R.id.video_download_txt);
 			downloadtv.setTextColor(this.getResources().getColor(R.color.carrecorder_del_def_bg));
@@ -953,6 +957,10 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 				}
 				break;
 			case R.id.mDownloadBtn:
+				if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
+					return;
+				}
+				
 				isEditState=false;
 				mEditBtn.setText("编辑");
 				mFunctionLayout.setVisibility(View.GONE);

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -59,6 +60,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	private String pwd = null;
 	//将用户的手机号和密码保存到本地
 	private SharedPreferences mSharedPreferences = null;
+	private Editor mEditor = null;
 	
 	//判断登录
 	private String justLogin = "";
@@ -135,6 +137,19 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		if(null != intentStart.getStringExtra("isInfo")){
 			justLogin = intentStart.getStringExtra("isInfo").toString();
 		}
+		
+		/**
+		 *如果填写手机号的EditText中有手机号，就保存 
+		 */
+		if(null != mEditTextPhoneNumber.getText().toString() && mEditTextPhoneNumber.length() == 11){
+			String phone = mEditTextPhoneNumber.getText().toString();
+			mSharedPreferences = getSharedPreferences("setup", Context.MODE_PRIVATE);
+			mEditor = mSharedPreferences.edit();
+			mEditor.putString("setupPhone", phone);
+			//提交
+			mEditor.commit();
+		}
+		
 		/**
 		 * 填写手机号
 		 */
@@ -161,17 +176,22 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 				if(arg1){
 					
 				}else{
-					if(!Phonenum.equals("")&&Phonenum.length()==11){
-						if(UserUtils.isMobileNO(Phonenum)){
-							isOnClick=true;
+					if(!Phonenum.equals("")){
+						if(Phonenum.length()==11){
+							if(UserUtils.isMobileNO(Phonenum)){
+								isOnClick=true;
+							}else{
+								isOnClick=false;
+								UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
+							}
 						}else{
 							isOnClick=false;
 							UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
 						}
-				}else{
-					isOnClick=false;
-					UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
-				}
+					}else{
+						isOnClick=false;
+						UserUtils.showDialog(UserLoginActivity.this, "手机号不能为空");
+					}
 				if(isOnClick&&!psw.equals("")){
 					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
 					mBtnLogin.setEnabled(true);
@@ -275,7 +295,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		// 手机快速注册
 		case R.id.user_login_phoneRegist:
 			Intent itRegist = new Intent(UserLoginActivity.this,UserRegistActivity.class);
-			if(justLogin.equals("main")){//从起始页注册
+			if(justLogin.equals("main") || justLogin.equals("back")){//从起始页注册
 				itRegist.putExtra("fromRegist", "fromStart");
 			}else if(justLogin.equals("indexmore")){//从更多页个人中心注册
 				itRegist.putExtra("fromRegist", "fromIndexMore");

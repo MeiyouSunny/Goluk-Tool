@@ -9,6 +9,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.utils.LogUtil;
@@ -52,6 +53,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 	private VideoConfigState mVideoConfigState=null;
 	private int enableSecurity=0;
 	private int snapInterval = 0;
+	private CustomLoadingDialog mCustomProgressDialog=null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 		initView();
 		setListener();
 		
+		mCustomProgressDialog = new CustomLoadingDialog(this,null);
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("settings", this);
 		}
@@ -128,6 +131,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					startActivity(mVideoDefinition);
 					break;
 				case R.id.zdxhlx://自动循环录像
+					showLoading();
 					if(recordState){
 						boolean a = GolukApplication.getInstance().getIPCControlManager().stopRecord();
 						LogUtil.e("xuhw", "video===========stopRecord=============a="+a);
@@ -137,6 +141,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					}
 					break;
 				case R.id.tcaf://停车安防
+					showLoading();
 					if(1 == enableSecurity){
 						enableSecurity = 0;
 					}else{
@@ -146,6 +151,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					LogUtil.e("xuhw", "YYYYYY===========setMotionCfg==========a="+c);
 					break;
 				case R.id.sylz://声音录制
+					showLoading();
 					if(null != mVideoConfigState){
 						if(1 == mVideoConfigState.AudioEnabled){
 							mVideoConfigState.AudioEnabled=0;
@@ -280,11 +286,13 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_StartRecord){//设置IPC行车影像开始录制
+				closeLoading();
 				if(RESULE_SUCESS == param1){
 					recordState=true;
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 				}
 			}else if(msg == IPC_VDCP_Msg_StopRecord){//设置IPC行车影像停止录制
+				closeLoading();
 				if(RESULE_SUCESS == param1){
 					recordState=false;
 					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
@@ -305,6 +313,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){//设置IPC系统音视频编码配置
+				closeLoading();
 				if(RESULE_SUCESS == param1){
 					
 				}
@@ -326,6 +335,7 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					}
 				}
 			}else if(msg == IPC_VDCP_Msg_SetMotionCfg){//设置安防模式和移动侦测参数
+				closeLoading();
 				if(RESULE_SUCESS == param1){
 					if(1 == enableSecurity){
 						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
@@ -340,6 +350,18 @@ public class SettingsActivity extends Activity implements OnClickListener, IPCMa
 					}
 				}
 			}
+		}
+	}
+	
+	private void showLoading(){
+		if(!mCustomProgressDialog.isShowing()){
+			mCustomProgressDialog.show();
+		}
+	}
+	
+	private void closeLoading(){
+		if(mCustomProgressDialog.isShowing()){
+			mCustomProgressDialog.close();
 		}
 	}
 	
