@@ -377,8 +377,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		releaseMediaPlayer();
-		doCleanUp();
+		
 	}
 
 	@Override
@@ -543,7 +542,9 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 	}
 
 	private void exit() {
-		android.os.Process.killProcess(android.os.Process.myPid());
+		releaseMediaPlayer();
+		doCleanUp();
+//		android.os.Process.killProcess(android.os.Process.myPid());
 		this.finish();
 	}
 
