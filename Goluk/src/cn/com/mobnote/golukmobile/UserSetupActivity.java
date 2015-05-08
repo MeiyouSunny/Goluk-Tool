@@ -103,9 +103,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	/**升级准备中**/
 	private Builder mPrepareBuilder = null;
 	private AlertDialog mPrepareDialog = null;
-	/**升级校验不通过**/
-	private Builder mNoBuilder = null;
-	private AlertDialog mNoDialog = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -504,28 +501,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 										.setPositiveButton("确定", null)
 										.create();
 								mUpdateDialogSuccess.show();
-							}
-						}
-						if(stage.equals("3")){
-							dismissSendDialog();//正在传输文件的对话框消失
-							if(mNoBuilder == null){
-								mNoBuilder = new AlertDialog.Builder(mContext);
-								 mNoDialog = mNoBuilder.setMessage("校验不通过，请检查摄像头")
-								.setPositiveButton("确定", null)
-								.setCancelable(false)
-								.setOnKeyListener(new OnKeyListener() {
-
-									@Override
-									public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-										if(keyCode == KeyEvent.KEYCODE_BACK){
-											return true;
-										}
-										return false;
-									}
-								}).create();
-								 mNoDialog.show();
-							}else{
-								mNoDialog.setMessage("校验不通过，请检查摄像头");
 							}
 						}
 					}catch(Exception e){
