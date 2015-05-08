@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
@@ -217,6 +218,10 @@ public class GlobalWindow {
 		if (null != mPrompTv) {
 			mPrompTv.setText(msg);
 		}
+		
+		if (null != mPrecentTv) {
+			mPrecentTv.setVisibility(View.GONE);
+		}
 
 		startTimer();
 
@@ -271,6 +276,7 @@ public class GlobalWindow {
 	 * @date Apr 17, 2015
 	 */
 	public void dimissGlobalWindow() {
+		LogUtil.e("", "jyf----------createVideoUploadWindow:-------dimissGlobalWindow: ");
 		if (!isShowGlobalwindow) {
 			return;
 		}
