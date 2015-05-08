@@ -64,18 +64,15 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	/** 返回按钮 */
 	private Button mBackBtn = null;
 	
-	/** 个人中心页面handler用来接收消息,更新UI*/
-	public static Handler mUserCenterHandler = null;
-	
 	/**退出按钮**/
 	private Button btnLoginout;
 	/**用户信息**/
-	private String head = null;
+	/*private String head = null;
 	private String id = null;//key
 	private String name = null;//nickname
 	private String sex = null;
 	private String sign = null;//desc
-	private String phone = null;
+*/	private String phone = null;
 	/**登录的状态**/
 	private SharedPreferences mPreferences = null;
 	private boolean isFirstLogin = false;
@@ -89,20 +86,20 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	/**固件升级*/
 	private RelativeLayout mUpdateItem = null;
 	/**传输文件*/
-	private Builder mSendMessageBuilder = null;
 	private AlertDialog mSendDialog = null;
 	/**正在升级中*/
-	private Builder mUpdateBuilder = null;
 	private AlertDialog mUpdateDialog = null;
 	/**升级成功**/
-	private Builder mUpdateSuccess = null;
 	private AlertDialog mUpdateDialogSuccess = null;
 	/**升级失败**/
-	private Builder mUpdateFail = null;
 	private AlertDialog mUpdateDialogFail = null;
 	/**升级准备中**/
-	private Builder mPrepareBuilder = null;
 	private AlertDialog mPrepareDialog = null;
+	
+	/**固件升级Handler更新UI显示**/
+	private Handler mUpdateHandler = null;
+	private String stage = "";
+	private String percent = "";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -139,6 +136,49 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carupgrade", this);
 		}
+		
+		/**
+		 * 固件升级更新UI显示
+		 * 11  正在准备文件
+		 * 12  传输文件
+		 * 13  正在升级
+		 * 14  升级成功
+		 * 15  升级失败
+		 * 16  文件存在判断
+		 */
+		mUpdateHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case 11:
+					UserUtils.showDialogUpdate(mPrepareDialog, mContext, "正在为您准备传输文件，请稍候……");
+					break;
+				case 12:
+					UserUtils.dismissUpdateDialog(mPrepareDialog);
+					UserUtils.showDialogUpdate(mSendDialog, mContext, "正在传输文件，请稍候……"+percent+"%");
+					break;
+				case 13:
+					UserUtils.dismissUpdateDialog(mSendDialog);
+					UserUtils.showDialogUpdate(mUpdateDialog, mContext, "开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
+					break;
+				case 14:
+					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, mContext, "升级成功");
+					break;
+				case 15:
+					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					UserUtils.showUpdateSuccess(mUpdateDialogFail, mContext, "升级失败");
+					break;
+				case 16:
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, mContext, "升级文件不存在，请检查后重试");
+					break;
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+		
 	}
 	
 	/**
@@ -173,19 +213,12 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
-		
-		//更新UI handler
-		mUserCenterHandler = new Handler(){
-			@Override
-			public void handleMessage(Message msg) {
-			}
-		};
 		/**清除缓存*/
 		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
 		mClearCache.setOnClickListener(this);
 		/**固件升级*/
-//		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
-//		mUpdateItem.setOnClickListener(this);
+		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
+		mUpdateItem.setOnClickListener(this);
 	}
 		
 	@Override
@@ -250,46 +283,38 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				}).create().show();
 				break;
 				//固件升级
-			/*case R.id.update_item:
-				*//**
+			case R.id.update_item:
+				/**
 				 * 固件升级
-				 *//*
+				 */
 				new AlertDialog.Builder(mContext)
 				.setMessage("是否给您的摄像头进行固件升级？")
 				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						if(GolukApplication.getInstance().getIpcIsLogin()){
-							boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade();
-							LogUtil.e("lily","YYYYYY=======ipcUpgrade()============u="+u);
-							if(u){
-								if(mPrepareBuilder==null){
-									mPrepareBuilder = new AlertDialog.Builder(mContext);
-									mPrepareDialog = mPrepareBuilder.setMessage("正在为您准备传输文件，请稍候……")
-											.setCancelable(false)
-											.setOnKeyListener(new OnKeyListener() {
-												@Override
-												public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-													if(keyCode == KeyEvent.KEYCODE_BACK){
-														return true;
-													}
-													return false;
-												}
-											}).create();
-									mPrepareDialog.show();
-								}else{
-									mPrepareDialog.setMessage("正在为您准备传输文件，请稍候……");
+						//判断是否有升级文件
+						boolean isHasFile = UserUtils.fileIsExists();
+						if(isHasFile){
+							if(GolukApplication.getInstance().getIpcIsLogin()){
+								boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade();
+								LogUtil.e("lily","YYYYYY=======ipcUpgrade()============u="+u);
+								if(u){
+									//正在准备文件，请稍候……
+									mUpdateHandler.sendEmptyMessage(11);//正在准备文件，请稍候……
 								}
 							}
-							
+						}else{
+							//文件不存在
+							mUpdateHandler.sendEmptyMessage(16);//文件不存在
 						}
+						
 					}
 				})
 				.setNegativeButton("取消", null)
 				.create().show();
 				
-				break;*/
+				break;
 		}
 	}
 	/**
@@ -330,7 +355,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	 */
 	public void getLogintoutCallback(int success,Object obj){
 		console.log("-----------------退出登录回调--------------------");
-		
 	}
 	/**
 	 * 同步获取用户信息
@@ -341,11 +365,11 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 			JSONObject json = new JSONObject(info);
 			
 			Log.i("info", "====json()===="+json);
-			head = json.getString("head");
+			/*head = json.getString("head");
 			name = json.getString("nickname");
 			id = json.getString("key");
 			sex = json.getString("sex");
-			sign = json.getString("desc");
+			sign = json.getString("desc");*/
 			phone = json.getString("phone");
 			//退出登录后，将信息存储
 			mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
@@ -366,7 +390,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
 		it.putExtra("isInfo", "setup");
 		startActivity(it);
-//		this.finish();
 	}
 	
 	/**
@@ -448,113 +471,38 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 					try{
 						JSONObject json = new JSONObject(str);
 						Log.i("lily", "-------设置页固件升级返回-----"+json);
-						String stage = json.getString("stage");
-						String percent = json.getString("percent");
+						stage = json.getString("stage");
+						percent = json.getString("percent");
 						Log.i("lily", "---------stage-----"+stage+"-------percent----"+percent);
 						if(stage.equals("1")){
-							dismissPrepareDialog();//准备文件的对话框消失
-							if(mSendMessageBuilder==null){
-								mSendMessageBuilder = new AlertDialog.Builder(mContext);
-								mSendDialog = mSendMessageBuilder.setMessage("正在传输文件，请稍候……"+percent+"%")
-										.setCancelable(false)
-										.setOnKeyListener(new OnKeyListener() {
-											@Override
-											public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-												if(keyCode == KeyEvent.KEYCODE_BACK){
-													return true;
-												}
-												return false;
-											}
-										}).create();
-										 mSendDialog.show();
-							}else{
-								mSendDialog.setMessage("正在传输文件，请稍候……"+percent+"%");
-							}
+							//正在传输文件，请稍候……
+							mUpdateHandler.sendEmptyMessage(12);
 						}
 						if(stage.equals("2")){
-							dismissSendDialog();//正在传输文件的对话框消失
-							if(mUpdateBuilder == null){
-								mUpdateBuilder = new AlertDialog.Builder(mContext);
-								 mUpdateDialog = mUpdateBuilder.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电"+percent+"%")
-								.setCancelable(false)
-								.setOnKeyListener(new OnKeyListener() {
-
-									@Override
-									public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-										if(keyCode == KeyEvent.KEYCODE_BACK){
-											return true;
-										}
-										return false;
-									}
-								}).create();
-								 mUpdateDialog.show();
-							}else{
-								mUpdateDialog.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
-							}
+							//开始升级，可能需要几分钟，请不要给摄像头断电。
+							mUpdateHandler.sendEmptyMessage(13);
 						}
 						if(stage.equals("2") && percent.equals("100")){
 							//升级成功
-							dismissUpdateDialog();
-							if(mUpdateSuccess == null){
-								mUpdateSuccess = new AlertDialog.Builder(mContext);
-								mUpdateDialogSuccess = mUpdateSuccess.setMessage("升级成功")
-										.setPositiveButton("确定", null)
-										.create();
-								mUpdateDialogSuccess.show();
-							}
+							mUpdateHandler.sendEmptyMessage(14);
 						}
 					}catch(Exception e){
 						e.printStackTrace();
 					}
 				}else{
-					if(mUpdateFail == null){
-						mUpdateFail = new AlertDialog.Builder(mContext);
-						mUpdateDialogFail = mUpdateFail.setMessage("升级失败")
-								.setPositiveButton("确定", null)
-								.create();
-						mUpdateDialogFail.show();
-					}
+					//升级失败
+					mUpdateHandler.sendEmptyMessage(15);
 				}
 			}
 			
 		}
 	} 
     
-    /**
-     * 固件升级正在传输文件对话框消失
-     */
-    public void dismissSendDialog(){
-		if (null != mSendDialog){
-			mSendDialog.dismiss();
-			mSendDialog = null;
-		}
-	}
-    
-    /**
-     * 固件升级正在升级中对话框消失
-     */
-    public void dismissUpdateDialog(){
-		if (null != mUpdateDialog){
-			mUpdateDialog.dismiss();
-			mUpdateDialog = null;
-		}
-	}
-    
-    /**
-     * 准备固件升级的文件
-     */
-    public void dismissPrepareDialog(){
-    	if(null != mPrepareDialog){
-    		mPrepareDialog.dismiss();
-    		mPrepareDialog = null;
-    	}
-    }
-    
     @Override
 	protected void onDestroy() {
 		super.onDestroy();
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carversion");
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
 		}
 	}
 
