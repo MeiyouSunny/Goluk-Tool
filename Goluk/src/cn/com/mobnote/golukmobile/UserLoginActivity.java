@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -374,6 +375,11 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 0:
 			break;
 		case 1:
+			//登录成功后关闭个人中心启动模块页面
+			if(null != UserStartActivity.mHandler){
+				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+			}
+			
 			mApplication.isUserLoginSucess = true;
 //			mLoading.setVisibility(View.GONE);
 			closeProgressDialog();

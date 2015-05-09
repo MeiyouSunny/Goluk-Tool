@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
-import cn.com.mobnote.golukmobile.multicast.MultiCastUtil;
 import cn.com.mobnote.golukmobile.multicast.NetUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
@@ -49,7 +48,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	}
 
 	public void createWifiAPFirst() {
-		MultiCastUtil.getInstance();
 		createWifiAPFirst("6", "icp1", "123456789", 20000);
 	}
 
@@ -61,15 +59,14 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param type
 	 */
 	public void connectWifi(String ssid, String password, WifiCipherType type) {
-		connectWifi(ssid, password, "", type, 30000);
+		connectWifi(ssid, password, "", type, 40*1000);
 	}
 
 	/**
 	 * 启动软件后自动管理wifi
 	 */
 	public void autoWifiManage() {
-		MultiCastUtil.getInstance();
-		autoWifiManage(300000);
+		autoWifiManage(40*1000);
 	}
 
 	/**
@@ -79,7 +76,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param password
 	 */
 	public void createWifiAP(String ph_ssid, String ph_password, String ipc_ssid, String ipc_mac) {
-		createWifiAP("3", ph_ssid, ph_password, ipc_ssid, "", 300000);
+		createWifiAP("3", ph_ssid, ph_password, ipc_ssid, "", 40*1000);
 	}
 
 	/**
@@ -89,7 +86,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 *            关键字
 	 */
 	public void scanWifiList(String matching, boolean reset) {
-		scanWifiList(matching, reset, 30000);
+		scanWifiList(matching, reset, 40*1000);
 	}
 
 	/**
@@ -98,7 +95,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param beans
 	 */
 	public void saveConfiguration(WifiRsBean beans) {
-		saveConfiguration(beans, 30000);
+		saveConfiguration(beans, 40*1000);
 	}
 
 	/**
@@ -116,6 +113,16 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		isConnectIPC(30000);
 	}
 
+	/**
+	 * 自动管理wifi重置
+	 * 
+	 * @param outTime
+	 */
+	public void autoWifiManageReset() {
+		wifiSupport.closeWifi();
+		wifiSupport.closeWifiAp(wifiManager);
+		autoWifiManage(40*1000);
+	}
 	// -------------------------------以上为封装后的对外接口----------------------------------------//
 	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler() {
@@ -161,6 +168,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			}
 			case 53: {
 				callback.wifiCallBack(5, 0, 2, "自动连接--当前已经连接", msg.obj);
+				break;
+			}
+			case 54: {
+				callback.wifiCallBack(5, 0, 3, "自动连接--当前有活动wifi", msg.obj);
 				break;
 			}
 			case 61: {
@@ -595,12 +606,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				WifiRsBean rs = wifiSupport.getConnResult();
 				msg.obj = rs;
 				handler.sendMessage(msg);
-				try {
-					Thread.sleep(10 * 1000);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
+		 
 				console.logBytag(TAG, "创建热点等待ipc接入");
 				netUtil.findServerIpAddress(Integer.parseInt(type), "", "", 60 * 1000);
 
@@ -758,16 +764,21 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					// -----------------------------------------如果 wifi
 					// 打开了-------------------------------//
 					if (mWifi != null && mWifi.isConnected()) {
-						Log.e(TAG, "自动连接----------------开启wifi------------");
-						openTime = vaviAutoWifi(ipc_ssid, outTime);
-						if (openTime == 0) {
 
-							return;
-						}
+						msg.what = 54;
+						msg.obj = null;
+						handler.sendMessage(msg);
+//						Log.e(TAG, "自动连接----------------开启wifi------------");
+//						openTime = vaviAutoWifi(ipc_ssid, outTime);
+//						if (openTime == 0) {
+//
+//							return;
+//						}
+//
+//						wifiSupport.closeWifi();
+//						// 创建热点
+//						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
 
-						wifiSupport.closeWifi();
-						// 创建热点
-						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
 						return;
 					}
 					// -----------------------------------------如果 ap打开了

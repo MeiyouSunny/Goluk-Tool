@@ -1395,8 +1395,19 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	private void click_share() {
+		String vid = null;
+		if (isShareLive) {
+			vid = mCurrentVideoId;
 
-		boolean isSucess = mVideoSquareManager.getShareUrl(mCurrentVideoId, "1");
+		} else {
+			if (!isKaiGeSucess) {
+
+				return;
+			}
+			vid = liveData.vid;
+		}
+
+		boolean isSucess = mVideoSquareManager.getShareUrl(vid, "1");
 		if (!isSucess) {
 			showToast("分享失败");
 		} else {

@@ -282,20 +282,26 @@ public class VideoSquarePlayActivity extends Activity implements
 		if (event == SquareCmd_Req_SquareList) {
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
-
+				
 				List<VideoSquareInfo> list = DataParserUtils
 						.parserVideoSquareListData((String) param2);
-				if (list.size() >= 30) {
-					isHaveData = true;
-				} else {
-					isHaveData = false;
-				}
-				mDataList = list;
+				System.out.println("ZZZZ===="+list.size());
 				
 				
 				if(list.size()>0){
 					begantime = list.get(0);
 					endtime = list.get(list.size()-1);
+					if (list.size() >= 30) {
+						isHaveData = true;
+					} else {
+						isHaveData = false;
+						if(loading != null){
+							if(mRTPullListView!=null){
+								mRTPullListView.removeFooterView(loading);
+								loading = null;
+							}
+						}
+					}
 				}else{
 					if(loading != null){
 						if(mRTPullListView!=null){
@@ -307,6 +313,7 @@ public class VideoSquarePlayActivity extends Activity implements
 				
 				if (uptype == 0) {
 					if(list.size()>0){
+						mDataList = list;
 						init(false);
 					}
 				} else {
