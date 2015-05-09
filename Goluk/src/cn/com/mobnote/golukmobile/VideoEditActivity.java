@@ -73,7 +73,7 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 	/** 上下文 */
 	private Context mContext = null;
 	/** 返回按钮 */
-	private Button mBackBtn = null;
+	private ImageButton mBackBtn = null;
 	/** 下一步按钮 */
 	private Button mNextBtn = null;
 	/** 视频路径 */
@@ -180,7 +180,7 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 	 */
 	private void init() {
 		// 获取页面元素
-		mBackBtn = (Button) findViewById(R.id.back_btn);
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mNextBtn = (Button) findViewById(R.id.next_btn);
 		mPlayLayout = (RelativeLayout) findViewById(R.id.play_layout);
 		mPlayStatusImage = (ImageView) findViewById(R.id.play_image);

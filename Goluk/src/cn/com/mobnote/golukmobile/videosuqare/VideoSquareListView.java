@@ -41,7 +41,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		mContext=context;
 		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
-		mRTPullListView.setDividerHeight((int)(2*jj));
+		//mRTPullListView.setDividerHeight((int)(22*jj));
 		mDataList = new ArrayList<VideoSquareInfo>();
 		LogUtils.d("YYYYYYYY=================111111111===================");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
