@@ -131,11 +131,17 @@
         android:layout_below="@id/live_video_desc_title"
         android:background="#000000" >
 
-        <com.rd.car.player.RtmpPlayerView
-            android:id="@+id/live_vRtmpPlayVideo"
+        <RelativeLayout
+            android:id="@+id/vLayout"
             android:layout_width="match_parent"
-            android:layout_height="206dp"
-            android:visibility="visible" />
+            android:layout_height="match_parent" >
+
+            <com.rd.car.player.RtmpPlayerView
+                android:id="@+id/live_vRtmpPlayVideo"
+                android:layout_width="match_parent"
+                android:layout_height="206dp"
+                android:visibility="visible" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/live_video_loading"
@@ -429,15 +435,14 @@
         android:background="#ededed" >
 
         <!-- 百度地图 -->
-<!--  
+        <!--
         <com.baidu.mapapi.map.MapView
             android:id="@+id/live_bmapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:clickable="true" />
-            
-            -->
+        -->
     </RelativeLayout>
 
     <RelativeLayout
@@ -471,7 +476,6 @@
             android:layout_marginTop="6dp"
             android:layout_toRightOf="@+id/live_talking_sign"
             android:singleLine="true"
-            android:text="XXX说话中..."
             android:textSize="@dimen/live_text_time1_size" />
 
         <TextView
@@ -482,7 +486,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:singleLine="true"
-            android:text="00:09"
             android:textSize="@dimen/live_text_time1_size" />
     </RelativeLayout>
 

@@ -1236,7 +1236,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	}
 	@Override
 	public void statusChange() {
-		// TODO Auto-generated method stub
 		/*if(mApp.autoLoginStatus !=1){
 			dismissAutoDialog();
 			Intent it = null;
