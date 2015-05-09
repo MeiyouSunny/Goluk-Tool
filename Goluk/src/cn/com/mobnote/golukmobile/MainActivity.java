@@ -211,6 +211,15 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 	
 	private RelativeLayout mRootLayout = null;
 	
+	/** 未连接 */
+	private final int WIFI_STATE_FAILED = 0;
+	/** 连接中 */
+	private final int WIFI_STATE_CONNING = 1;
+	/** 连接*/
+	private final int WIFI_STATE_SUCCESS = 2;
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -254,26 +263,17 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//加载本地视屏列表
 		//initLocalVideoList();
 		
-		//连接小车本wifi
-		//linkMobnoteWiFi();
-		
 		//启动创建热点
 		createWiFiHot();
-		
-		mApp.VerifyWiFiConnect();
-		
-		
-//		Button ipc = (Button)findViewById(R.id.mIPCBtn);
-//		ipc.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View arg0) {
-//				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-//				startActivity(i);
-//			}
-//		});
-		
-		
-
+		// 初始化连接与綁定状态
+		if(this.isBindSucess()) {
+			//mWiFiStatus = WIFI_STATE_CONNING;
+			startWifi();
+		} else {
+			//mWiFiStatus = WIFI_STATE_FAILED;
+			wifiConnectFailed();
+		}
+	
 		//不是第一次登录，并且上次登录成功过，进行自动登录
 		mPreferencesAuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferencesAuto.getBoolean("FirstLogin", true);
@@ -686,75 +686,116 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
-	/** 未连接 */
-	private final int WIFI_STATE_FAILED = 0;
-	/** 连接中 */
-	private final int WIFI_STATE_CONNING = 1;
-	/** 连接*/
-	private final int WIFI_STATE_SUCCESS = 2;
-	
-	
 	/**
 	 * 链接中断更新页面
 	 */
 	public void wiFiLinkStatus(int status){
-		Drawable img = null;
-		Resources res = getResources();
+		Log.e("", "wifiCallBack-------------wiFiLinkStatus:" + status);
 		mWiFiStatus = 0;
-		switch(status){
-			case 1:
-				//连接中
-				mWiFiStatus = WIFI_STATE_CONNING;
+		switch (status) {
+		case 1:
+			// 连接中
+			mWiFiStatus = WIFI_STATE_CONNING;
 			break;
-			case 2:
-				//已连接
-//				mIpcWiFiBtn.setText("已连接");
-//				mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
-//				img = res.getDrawable(R.drawable.index_icon_xingche_connect);
-				mWiFiStatus = WIFI_STATE_SUCCESS;
-				wifiConnectedSucess();
-				
+		case 2:
+			// 已连接
+			mWiFiStatus = WIFI_STATE_SUCCESS;
+			wifiConnectedSucess();
 			break;
-			case 3:
-				//未连接
-//				mIpcWiFiBtn.setText("未连接");
-//				mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
-//				img = res.getDrawable(R.drawable.index_icon_xingche_btn);
-				mWiFiStatus = WIFI_STATE_FAILED;
-				wifiConnectFailed();
+		case 3:
+			// 未连接
+			mWiFiStatus = WIFI_STATE_FAILED;
+			wifiConnectFailed();
 			break;
 		}
-		//调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-//		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-		//mIpcWiFiBtn.setCompoundDrawables(null, img, null, null);
 	}
+	
+	private static final String WIFI_CONNING_FAILED_STR  = "去连接Goluk";
+	private static final String WIFI_CONNING_STR = "正在连接Goluk";
+	private static final String WIFI_CONNED_STR = "己连接到Goluk";
 	
 	/** 音量图片动画 */
 	private AnimationDrawable mVolumeImgAnimation = null;
 	private void startWifi() {
+		Log.e("", "wifiCallBack-------------startWifi:");
+		if (WIFI_STATE_CONNING == mWiFiStatus) {
+			return;
+		}
+		mWiFiStatus = WIFI_STATE_CONNING;
+		mWifiStateTv.setText(WIFI_CONNING_STR);
 		mWifiState.setBackgroundResource(R.anim.anim_wifi);
 		this.mVolumeImgAnimation = (AnimationDrawable) this.mWifiState.getBackground();
 		this.mVolumeImgAnimation.start();
+		
 	}
-	
+	// 连接成功
 	private void wifiConnectedSucess() {
+		Log.e("", "wifiCallBack-------------wifiConnectedSucess:");
+		mWiFiStatus = WIFI_STATE_SUCCESS;
 		if (null != mVolumeImgAnimation) {
 			mVolumeImgAnimation.stop();
 			mVolumeImgAnimation = null;
 		}
-		mWifiStateTv.setText("已连接");
+		mWifiStateTv.setText(WIFI_CONNED_STR);
 		mWifiLayout.setBackgroundResource(R.drawable.index_linked);
 		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
 	}
-	
+	// 连接失败
 	private void wifiConnectFailed() {
+		Log.e("", "wifiCallBack-------------wifiConnectFailed:");
+		mWiFiStatus = WIFI_STATE_FAILED;
 		if (null != mVolumeImgAnimation) {
 			mVolumeImgAnimation.stop();
 			mVolumeImgAnimation = null;
 		}
 		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
-		mWifiStateTv.setText("未连接");
+		mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
 		mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
+	}
+	// 是否綁定过 Goluk
+	private boolean isBindSucess() {
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+		return  preferences.getBoolean("isbind", false);
+	}
+	
+	private void click_ConnFailed() {
+		if (!isBindSucess()) {
+			// 跳转到wifi连接首页
+			Intent wifiIndex = new Intent(MainActivity.this, WiFiLinkIndexActivity.class);
+			startActivity(wifiIndex);
+		} else {
+			// 已经绑定
+		
+			startWifi();
+			if (null != mWac) {
+				mWac.autoWifiManageReset();
+			}
+		}
+	}
+	
+	/**
+	 * 检测wifi链接状态
+	 */
+	public void checkWiFiStatus(){
+		console.log("登录回调---loginCallBack---checkWiFiStatus--" + mWiFiStatus);
+		
+		Log.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mWiFiStatus);
+		switch (mWiFiStatus) {
+		case WIFI_STATE_FAILED:
+			click_ConnFailed();
+			break;
+		case WIFI_STATE_CONNING:
+			
+			break;
+		case WIFI_STATE_SUCCESS:
+			// 跳转到行车记录仪界面
+			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+			startActivity(i);
+			break;
+		default:
+			break;
+		}
 	}
 	
 	
@@ -792,69 +833,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		}
 	}
 	
-	private void clickConnFailed() {
-		// wifi未链接
-		// 判断是否已绑定ipc
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-		boolean isbind = preferences.getBoolean("isbind", false);
-		if (!isbind) {
-			// 跳转到wifi连接首页
-			Intent wifiIndex = new Intent(MainActivity.this, WiFiLinkIndexActivity.class);
-			startActivity(wifiIndex);
-		} else {
-			// 已经绑定
-			console.toast("IPC已绑定等待连接...", mContext);
-			if (null != mWac) {
-				mWac.autoWifiManage();
-			}
-			
-		}
-	}
 	
-	/**
-	 * 检测wifi链接状态
-	 */
-	public void checkWiFiStatus(){
-		console.log("登录回调---loginCallBack---checkWiFiStatus--" + mWiFiStatus);
-		switch (mWiFiStatus) {
-		case WIFI_STATE_FAILED:
-			clickConnFailed();
-			break;
-		case WIFI_STATE_CONNING:
-			
-			break;
-		case WIFI_STATE_SUCCESS:
-			// 跳转到行车记录仪界面
-			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-			startActivity(i);
-			break;
-		default:
-			break;
-		}
-		
-//		if(mWiFiStatus == 0){
-//			//wifi未链接
-//			//判断是否已绑定ipc
-//			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",MODE_PRIVATE);
-//			//取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-//			boolean isbind = preferences.getBoolean("isbind",false);
-//			//isbind = false;
-//			if(!isbind){
-//				//跳转到wifi连接首页
-//				Intent wifiIndex = new Intent(MainActivity.this,WiFiLinkIndexActivity.class);
-//				startActivity(wifiIndex);
-//			}
-//			else{
-//				console.toast("IPC已绑定等待连接...",mContext);
-//			}
-//		}
-//		else{
-//			//跳转到ipc页面
-//			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-//			startActivity(i);
-//		}
-	}
 	
 	@Override
 	protected void onDestroy() {
@@ -863,14 +842,12 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		if(null != mMapView){
 			mMapView.onDestroy();
 		}
-		
 		try {
 		// 应用退出时调用
 		CarRecorderManager.onExit(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	@Override
@@ -1034,11 +1011,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				mBaiduMap.animateMapStatus(u);
 				
 			break;
-//			case R.id.map_marke_list_btn:
-//				//跳转到视频直播点列表
-//				Intent liveList = new Intent(MainActivity.this,LiveVideoListActivity.class);
-//				startActivity(liveList);
-//			break;
 			case R.id.share_btn:
 				click_share();
 			break;
@@ -1046,13 +1018,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				//关闭视频分享
 				mShareLayout.setVisibility(View.GONE);
 			break;
-
-//			case R.id.wifi_status_btn:
-//				//跳转到ipc页面
-//				checkWiFiStatus();che
-//			break;
 			case R.id.more_btn:
-
 				//更多页面
 				Intent more = new Intent(MainActivity.this, IndexMoreActivity.class);
 				startActivity(more);
@@ -1090,7 +1056,6 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				break;
 			case R.id.index_wiifstate:
 				//startWifi();
-			
 				break;
 			case R.id.index_wifi_layout:
 				checkWiFiStatus();
@@ -1360,31 +1325,37 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		switch(type){
+		Log.e("", "wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
+		switch (type) {
 		case 5:
-			if(state == 0){
-				switch(process){
-					case 0:
-						//创建热点成功
-						//hotWiFiCreateSuccess();
+			if (state == 0) {
+				switch (process) {
+				case 0:
+					// 创建热点成功
+					// hotWiFiCreateSuccess();
 					break;
-					case 1:
-						//ipc成功连接上热点
-						WifiRsBean[] bean = (WifiRsBean[])arrays;
-						if(null != bean){
-							console.log("自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
-							if(bean.length > 0){
-								sendLogicLinkIpc(bean[0].getIpc_ip(),bean[0].getIpc_mac());
-							}
+				case 1:
+					// ipc成功连接上热点
+					WifiRsBean[] bean = (WifiRsBean[]) arrays;
+					if (null != bean) {
+						console.log("自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
+						if (bean.length > 0) {
+							console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---");
+							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 						}
+					}
 					break;
-					default:
+				case 3:
+					// 用户已经连接到其它wifi，按连接失败处理
+					wifiConnectFailed();
+					break;
+				default:
 					break;
 				}
 			}
-			
-		break;
-	}
+
+			break;
+		}
 	}
 	
 	/**
