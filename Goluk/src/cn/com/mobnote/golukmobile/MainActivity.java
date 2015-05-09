@@ -16,15 +16,14 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -244,6 +243,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		//初始化SDK
 		CrashReport.initCrashReport(this,appId ,isDebug);
 		
+		CrashReport.setUserId(getIMEI());
+		
 		mContext = this;
 //		SysApplication.getInstance().addActivity(this);
 		//获得GolukApplication对象
@@ -284,6 +285,16 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
 	
+	}
+	
+	private String getIMEI() {
+		try {
+			String imei =((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+			return imei;
+		} catch (Exception e) {
+			
+		}
+		return "";
 	}
 	
 	
