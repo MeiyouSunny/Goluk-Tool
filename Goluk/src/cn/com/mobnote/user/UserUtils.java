@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.umeng.socialize.utils.Log;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -17,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.tiros.api.FileUtils;
 
 public class UserUtils {
 
@@ -128,33 +131,32 @@ public class UserUtils {
 		 }
 		 return image;
 	 }
-	 
 	 /**
 	  * 固件升级提示框
 	  */
-	public static void showDialogUpdate(AlertDialog showUpdateDialog,Context context,String message){
-		 if(showUpdateDialog==null){
-			 showUpdateDialog = new AlertDialog.Builder(context)
+	public static AlertDialog showDialogUpdate(Context context,String message){
+		AlertDialog  showUpdateDialog = null;
+		showUpdateDialog = new AlertDialog.Builder(context)
 				.setMessage(message)
-						.setCancelable(false)
-						.setOnKeyListener(new OnKeyListener() {
-							@Override
-							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-								if(keyCode == KeyEvent.KEYCODE_BACK){
-									return true;
-								}
-								return false;
-							}
-						}).show();
-			}else{
-				showUpdateDialog.setMessage(message);
-			}
+				.setCancelable(false)
+				.setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							return true;
+						}
+						return false;
+					}
+		}).show();
+		return showUpdateDialog;
 	 }
 	 /**
 	  * 固件升级取消对话框
 	  */
 	public static void dismissUpdateDialog(AlertDialog showUpdateDialog){
+		Log.i("lily", "------dismissUpdateDialog--------");
 		if (null != showUpdateDialog) {
+			Log.i("lily", "--------判断dialog是否为空--------");
 			showUpdateDialog.dismiss();
 			showUpdateDialog = null;
 		}
@@ -176,11 +178,13 @@ public class UserUtils {
 	 */
 	public static boolean fileIsExists(){
 		try {
-			File f = new File("fs1:/update/ipc_upgrade_2015-04-30-15-58.bin");
+			String filePath = FileUtils.libToJavaPath("fs1:/update/ipc_upgrade_2015-04-30-15-58.bin");
+			File f = new File(filePath);
 			if (!f.exists()) {
 				return false;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		return true;

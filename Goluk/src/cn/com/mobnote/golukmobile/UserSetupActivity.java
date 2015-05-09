@@ -1,6 +1,8 @@
 package cn.com.mobnote.golukmobile;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONObject;
 
@@ -80,13 +82,15 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	/**正在登录对话框*/
 	private Builder mBuilder = null;
 	private AlertDialog dialog = null;
-	/**清楚缓存**/
+	/**清除缓存**/
 	private RelativeLayout mClearCache = null;
 	private Handler mHandler = null;
 	/**固件升级*/
 	private RelativeLayout mUpdateItem = null;
 	/**传输文件*/
 	private AlertDialog mSendDialog = null;
+	/**传输文件成功**/
+	private AlertDialog mSendOk  = null;
 	/**正在升级中*/
 	private AlertDialog mUpdateDialog = null;
 	/**升级成功**/
@@ -100,6 +104,17 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	private Handler mUpdateHandler = null;
 	private String stage = "";
 	private String percent = "";
+	private Timer mTimer = null;
+	private static final int UPDATE_FILE_NOT_EXISTS = 10;//文件不存在
+	private static final int UPDATE_PREPARE_FILE = 11;//准备文件
+	private static final int UPDATE_TRANSFER_FILE = 12;//传输文件
+	private static final int UPDATE_TRANSFER_OK = 13;//文件传输成功
+	private static final int UPDATE_UPGRADEING = 14;//正在升级
+	private static final int UPDATE_UPGRADE_OK = 15;//升级成功
+	private static final int UPDATE_UPGRADE_FAIL = 16;//升级失败
+	private static final int UPDATE_UPGRADE_CHECK = 17;//校验不通过
+	private static final int UPDATE_IPC_UNUNITED = 18;//ipc未连接
+	private static final int UPDATE_IPC_DISCONNECT = 19;//ipc连接断开
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +130,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		super.onResume();
 		
 		mContext = this;
-		
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(mContext,"UserSetup");
@@ -133,44 +147,81 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 			}
 		};
 		
+		
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carupgrade", this);
 		}
 		
 		/**
 		 * 固件升级更新UI显示
+		 * 10  文件存在判断
 		 * 11  正在准备文件
 		 * 12  传输文件
-		 * 13  正在升级
-		 * 14  升级成功
-		 * 15  升级失败
-		 * 16  文件存在判断
+		 * 13  文件传输成功
+		 * 14  正在升级
+		 * 15  升级成功
+		 * 16  升级失败
+		 * 17  校验不通过
+		 * 18  摄像头未连接
+		 * 19  摄像头断开连接
 		 */
 		mUpdateHandler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-				case 11:
-					UserUtils.showDialogUpdate(mPrepareDialog, mContext, "正在为您准备传输文件，请稍候……");
+				case UPDATE_FILE_NOT_EXISTS:
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, mContext, "升级文件不存在，请检查后重试");
 					break;
-				case 12:
+				case UPDATE_PREPARE_FILE:
+					mPrepareDialog = UserUtils.showDialogUpdate(mContext, "正在为您准备传输文件，请稍候……");
+					break;
+				case UPDATE_TRANSFER_FILE:
+					Log.i("update", "-------正在传输文件------");
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
-					UserUtils.showDialogUpdate(mSendDialog, mContext, "正在传输文件，请稍候……"+percent+"%");
+					mPrepareDialog = null;
+					if(mSendDialog == null){
+						Log.i("update", "-------正在传输文件   dialog = null  ------");
+						mSendDialog = UserUtils.showDialogUpdate(mContext, "正在传输文件，请稍候……"+percent+"%");
+					}else{
+						Log.i("update", "-------正在传输文件   dialog != null  ------");
+						mSendDialog.setMessage("正在传输文件，请稍候……"+percent+"%");
+					}
 					break;
-				case 13:
+				case UPDATE_TRANSFER_OK:
 					UserUtils.dismissUpdateDialog(mSendDialog);
-					UserUtils.showDialogUpdate(mUpdateDialog, mContext, "开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
+					mSendDialog = null;
+					mSendOk = UserUtils.showDialogUpdate(mContext, "文件传输成功，正在为您准备升级");
 					break;
-				case 14:
+				case UPDATE_UPGRADEING:
+					UserUtils.dismissUpdateDialog(mSendOk);
+					mSendOk = null;
+					if(mUpdateDialog == null){
+						mUpdateDialog = UserUtils.showDialogUpdate(mContext, "开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
+					}else{
+						mUpdateDialog.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
+					}
+					break;
+				case UPDATE_UPGRADE_OK:
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mUpdateDialog = null;
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, mContext, "升级成功");
 					break;
-				case 15:
+				case UPDATE_UPGRADE_FAIL:
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mUpdateDialog = null;
 					UserUtils.showUpdateSuccess(mUpdateDialogFail, mContext, "升级失败");
 					break;
-				case 16:
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, mContext, "升级文件不存在，请检查后重试");
+				case UPDATE_UPGRADE_CHECK:
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, mContext, "校验不通过");
+					break;
+				case UPDATE_IPC_UNUNITED:
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, mContext, "摄像头未连接");
+					break;
+				case UPDATE_IPC_DISCONNECT:
+					timerCancel();
+					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mUpdateDialog = null;
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, mContext, "摄像头断开连接，请检查后重试");
 					break;
 				default:
 					break;
@@ -287,32 +338,39 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				/**
 				 * 固件升级
 				 */
-				new AlertDialog.Builder(mContext)
-				.setMessage("是否给您的摄像头进行固件升级？")
-				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						//判断是否有升级文件
-						boolean isHasFile = UserUtils.fileIsExists();
-						if(isHasFile){
-							if(GolukApplication.getInstance().getIpcIsLogin()){
-								boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade();
-								LogUtil.e("lily","YYYYYY=======ipcUpgrade()============u="+u);
-								if(u){
-									//正在准备文件，请稍候……
-									mUpdateHandler.sendEmptyMessage(11);//正在准备文件，请稍候……
-								}
-							}
-						}else{
-							//文件不存在
-							mUpdateHandler.sendEmptyMessage(16);//文件不存在
-						}
+				Log.i("lily", "------------isConnect-----------"+mApp.isIpcLoginSuccess);
+				if(!mApp.isIpcLoginSuccess){
+					//true   ipc未连接
+					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_UNUNITED);
+				}else{
+					//false   ipc已连接
+					new AlertDialog.Builder(mContext)
+					.setMessage("是否给您的摄像头进行固件升级？")
+					.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 						
-					}
-				})
-				.setNegativeButton("取消", null)
-				.create().show();
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							//判断是否有升级文件
+							boolean isHasFile = UserUtils.fileIsExists();
+							if(isHasFile){
+								if(GolukApplication.getInstance().getIpcIsLogin()){
+									boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade();
+									LogUtil.e("lily","YYYYYY=======ipcUpgrade()============u="+u);
+									if(u){
+										//正在准备文件，请稍候……
+										mUpdateHandler.sendEmptyMessage(UPDATE_PREPARE_FILE);//正在准备文件，请稍候……
+									}
+								}
+							}else{
+								//文件不存在
+								mUpdateHandler.sendEmptyMessage(UPDATE_FILE_NOT_EXISTS);//文件不存在
+							}
+							
+						}
+					})
+					.setNegativeButton("取消", null)
+					.create().show();
+				}
 				
 				break;
 		}
@@ -470,28 +528,40 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 					}
 					try{
 						JSONObject json = new JSONObject(str);
-						Log.i("lily", "-------设置页固件升级返回-----"+json);
 						stage = json.getString("stage");
 						percent = json.getString("percent");
 						Log.i("lily", "---------stage-----"+stage+"-------percent----"+percent);
 						if(stage.equals("1")){
 							//正在传输文件，请稍候……
-							mUpdateHandler.sendEmptyMessage(12);
+							mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
+						}
+						if(stage.equals("1") && percent.equals("100")){
+							//传输文件成功
+							mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
 						}
 						if(stage.equals("2")){
 							//开始升级，可能需要几分钟，请不要给摄像头断电。
-							mUpdateHandler.sendEmptyMessage(13);
+							mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADEING);
+							if(!percent.equals("100")){
+								timerTask();
+							}
+							timerCancel();
 						}
 						if(stage.equals("2") && percent.equals("100")){
 							//升级成功
-							mUpdateHandler.sendEmptyMessage(14);
+							mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_OK);
+						}
+						if(stage.equals("3")){
+							if(percent.equals("-1")){
+								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_CHECK);
+							}
 						}
 					}catch(Exception e){
 						e.printStackTrace();
 					}
 				}else{
 					//升级失败
-					mUpdateHandler.sendEmptyMessage(15);
+					mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
 				}
 			}
 			
@@ -503,6 +573,30 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		super.onDestroy();
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
+		}
+	}
+    
+    /**
+	 * 固件升级过程中超时
+	 * 1000x60=6000
+	 */
+	public void timerTask(){
+		timerCancel();
+		mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				//ipc断开
+				mUpdateHandler.sendEmptyMessage(UPDATE_IPC_DISCONNECT);
+			}
+		}, 6000);
+	}
+	
+	public void timerCancel(){
+		if(mTimer !=null){
+			mTimer.cancel();
+			mTimer = null;
 		}
 	}
 
