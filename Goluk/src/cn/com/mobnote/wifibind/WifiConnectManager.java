@@ -113,6 +113,16 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		isConnectIPC(30000);
 	}
 
+	/**
+	 * 自动管理wifi重置
+	 * 
+	 * @param outTime
+	 */
+	public void autoWifiManageReset() {
+		wifiSupport.closeWifi();
+		wifiSupport.closeWifiAp(wifiManager);
+		autoWifiManage(40*1000);
+	}
 	// -------------------------------以上为封装后的对外接口----------------------------------------//
 	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler() {
