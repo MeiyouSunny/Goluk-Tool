@@ -54,6 +54,7 @@ public class UserStartActivity extends Activity implements OnClickListener {
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 					case EXIT:
+						mHandler = null;
 						finish();
 						break;
 	

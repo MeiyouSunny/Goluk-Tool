@@ -962,6 +962,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 //		}
 		mApp.mIPCControlManager.setIPCWifiState(false, "");
 		mApp.mGoluk.GolukLogicDestroy();
+		if(null != UserStartActivity.mHandler){
+			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+		}
 		finish();
 		 int PID = android.os.Process.myPid();
 		 android.os.Process.killProcess(PID);
