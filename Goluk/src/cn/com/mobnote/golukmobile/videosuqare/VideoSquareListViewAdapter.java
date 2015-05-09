@@ -104,7 +104,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.mPreLoading = (ImageView) convertView
 					.findViewById(R.id.mPreLoading);
 			holder.likebtn = (Button) convertView.findViewById(R.id.like_btn);
-			holder.sharebtn = (Button) convertView.findViewById(R.id.share_btn);
+			holder.sharebtn = (ImageButton) convertView.findViewById(R.id.share_btn);
 
 			holder.mRingView = (RingView) convertView
 					.findViewById(R.id.mRingView);
@@ -288,7 +288,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		ImageView liveicon;
 		ImageButton reporticon;
 		ImageView mPreLoading;
-		Button sharebtn;
+		ImageButton sharebtn;
 		Button likebtn;
 		RingView mRingView;
 //		TextureView mTextureView;
