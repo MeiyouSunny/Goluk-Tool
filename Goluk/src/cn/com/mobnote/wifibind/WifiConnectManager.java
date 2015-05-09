@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
-import cn.com.mobnote.golukmobile.multicast.MultiCastUtil;
 import cn.com.mobnote.golukmobile.multicast.NetUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
@@ -49,7 +48,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	}
 
 	public void createWifiAPFirst() {
-		MultiCastUtil.getInstance();
 		createWifiAPFirst("6", "icp1", "123456789", 20000);
 	}
 
@@ -68,7 +66,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * 启动软件后自动管理wifi
 	 */
 	public void autoWifiManage() {
-		MultiCastUtil.getInstance();
 		autoWifiManage(300000);
 	}
 
@@ -595,12 +592,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				WifiRsBean rs = wifiSupport.getConnResult();
 				msg.obj = rs;
 				handler.sendMessage(msg);
-				try {
-					Thread.sleep(10 * 1000);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
+		 
 				console.logBytag(TAG, "创建热点等待ipc接入");
 				netUtil.findServerIpAddress(Integer.parseInt(type), "", "", 60 * 1000);
 
@@ -758,16 +750,17 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					// -----------------------------------------如果 wifi
 					// 打开了-------------------------------//
 					if (mWifi != null && mWifi.isConnected()) {
-						Log.e(TAG, "自动连接----------------开启wifi------------");
-						openTime = vaviAutoWifi(ipc_ssid, outTime);
-						if (openTime == 0) {
-
-							return;
-						}
-
-						wifiSupport.closeWifi();
-						// 创建热点
-						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
+						 
+//						Log.e(TAG, "自动连接----------------开启wifi------------");
+//						openTime = vaviAutoWifi(ipc_ssid, outTime);
+//						if (openTime == 0) {
+//
+//							return;
+//						}
+//
+//						wifiSupport.closeWifi();
+//						// 创建热点
+//						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
 						return;
 					}
 					// -----------------------------------------如果 ap打开了
