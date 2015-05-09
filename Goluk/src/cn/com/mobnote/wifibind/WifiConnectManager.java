@@ -59,14 +59,14 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param type
 	 */
 	public void connectWifi(String ssid, String password, WifiCipherType type) {
-		connectWifi(ssid, password, "", type, 30000);
+		connectWifi(ssid, password, "", type, 40*1000);
 	}
 
 	/**
 	 * 启动软件后自动管理wifi
 	 */
 	public void autoWifiManage() {
-		autoWifiManage(300000);
+		autoWifiManage(40*1000);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param password
 	 */
 	public void createWifiAP(String ph_ssid, String ph_password, String ipc_ssid, String ipc_mac) {
-		createWifiAP("3", ph_ssid, ph_password, ipc_ssid, "", 300000);
+		createWifiAP("3", ph_ssid, ph_password, ipc_ssid, "", 40*1000);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 *            关键字
 	 */
 	public void scanWifiList(String matching, boolean reset) {
-		scanWifiList(matching, reset, 30000);
+		scanWifiList(matching, reset, 40*1000);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param beans
 	 */
 	public void saveConfiguration(WifiRsBean beans) {
-		saveConfiguration(beans, 30000);
+		saveConfiguration(beans, 40*1000);
 	}
 
 	/**
@@ -158,6 +158,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			}
 			case 53: {
 				callback.wifiCallBack(5, 0, 2, "自动连接--当前已经连接", msg.obj);
+				break;
+			}
+			case 54: {
+				callback.wifiCallBack(5, 0, 3, "自动连接--当前有活动wifi", msg.obj);
 				break;
 			}
 			case 61: {
@@ -750,7 +754,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					// -----------------------------------------如果 wifi
 					// 打开了-------------------------------//
 					if (mWifi != null && mWifi.isConnected()) {
-						 
+						msg.what = 54;
+						msg.obj = null;
+						handler.sendMessage(msg);
 //						Log.e(TAG, "自动连接----------------开启wifi------------");
 //						openTime = vaviAutoWifi(ipc_ssid, outTime);
 //						if (openTime == 0) {
