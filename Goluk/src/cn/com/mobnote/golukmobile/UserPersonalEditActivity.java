@@ -177,9 +177,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			//点击头像
 		case R.id.user_personal_edit_layout1:
 			Intent itHead = new Intent(UserPersonalEditActivity.this,UserPersonalHeadActivity.class);
-			if(null !=intentHead){
+			if(null !=head){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentHeadText", intentHead);
+				bundle.putString("intentHeadText", head);
 				itHead.putExtras(bundle);
 				startActivityForResult(itHead, 3);
 			}
@@ -187,9 +187,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//点击昵称
 		case R.id.user_personal_edit_layout2:
 			Intent itName = new Intent(UserPersonalEditActivity.this,UserPersonalNameActivity.class);
-			if(null!=intentName){
+			if(null!=name){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentNameText", intentName);
+				bundle.putString("intentNameText", name);
 				itName.putExtras(bundle);
 				startActivityForResult(itName, 1);
 			}
@@ -197,9 +197,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//点击个性签名
 		case R.id.user_personal_edit_layout4:
 			Intent itSign = new Intent(UserPersonalEditActivity.this,UserPersonalSignActivity.class);
-			if(null != intentSign){
+			if(null != sign){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentSignText", intentSign);
+				bundle.putString("intentSignText", sign);
 				itSign.putExtras(bundle);
 				startActivityForResult(itSign, 2);
 			}
@@ -218,7 +218,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		if(newName.equals("")){
+		if(newName.trim().isEmpty() || name.trim().isEmpty()){
 			UserUtils.showDialog(mContext, "数据修改失败，昵称不能为空");
 		}else{
 			if(intentName.equals(name) && intentHead.equals(head) && intentSign.equals(sign)){
