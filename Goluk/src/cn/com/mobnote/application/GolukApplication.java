@@ -20,6 +20,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -67,6 +68,7 @@ import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -94,7 +96,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	private VideoSquareManager mVideoSquareManager = null;
 
 	/** 登录IPC是否登录成功 */
-	private boolean isIpcLoginSuccess = false;
+	public boolean isIpcLoginSuccess = false;
 	/** 　用户是否登录小车本服务器成功 */
 	public boolean isUserLoginSucess = false;
 	/** CC视频上传地址 */
