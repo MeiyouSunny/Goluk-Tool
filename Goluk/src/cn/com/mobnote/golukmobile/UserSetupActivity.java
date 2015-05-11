@@ -118,6 +118,12 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_personal_setup);
 		
+		// 获取页面元素
+		mBackBtn = (Button) findViewById(R.id.back_btn);
+		// 退出按钮
+		btnLoginout = (Button) findViewById(R.id.loginout_btn);
+		// 清除缓存大小显示
+		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -233,12 +239,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	 */
 	@SuppressLint("HandlerLeak")
 	private void init(){
-		//获取页面元素
-		mBackBtn = (Button)findViewById(R.id.back_btn);
-		//退出按钮
-		btnLoginout = (Button) findViewById(R.id.loginout_btn);
-		//清除缓存大小显示
-		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
+		
 		try {
 			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
 			mTextCacheSize.setText(cacheSize);
@@ -338,7 +339,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
 							DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
-							mTextCacheSize.setText("0M");
+							mTextCacheSize.setText("0.00B");
 						}
 					}).create().show();
 				}
