@@ -7,12 +7,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="42dp" >
+        android:layout_height="44dp" >
 
         <ImageView
             android:id="@+id/user_head"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:background="@drawable/livestreaming_head_boy_one"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="叽里咕噜"
-                android:textColor="#3d3d3d"
+                android:textColor="#333333"
                 android:textSize="14sp" />
 
             <TextView
@@ -40,8 +40,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/username"
+                android:textColor="#999999"
                 android:text="03-19  13:53"
-                android:textSize="14sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <ImageView
@@ -89,31 +90,29 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical" >
+        android:layout_height="36dp">
 
         <TextView
             android:id="@+id/video_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="12dp"
+            android:singleLine="true"
+			android:ellipsize="end"
+            android:textColor="#333333"
             android:text="该死的碰瓷党，还好我有goluk"
-            android:textSize="12sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="#d0d0d0" />
-    </LinearLayout>
+            android:textSize="14sp" />
+       
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp" >
+        android:layout_height="40dp" 
+        android:background="@drawable/livestreaming_like_line_bg">
 
         <ImageView
             android:id="@+id/looknumber_icon"
@@ -131,40 +130,33 @@
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/looknumber_icon"
             android:text="100"
-            android:textSize="14sp" />
+            android:textColor="#ababab"
+            android:textSize="16sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/share_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
             android:background="@drawable/livestreaming_share_btn"
-            android:gravity="center|right"
-            android:paddingRight="8dp"
-            android:text="分享" />
+            android:gravity="center|right"/>
 
-        <ImageView
-            android:id="@+id/share_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@+id/share_btn"
-            android:background="@drawable/livestreaming_solid" />
 
         <Button
             android:id="@+id/like_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@+id/share_line"
+            android:layout_centerHorizontal="true"
+            android:layout_toLeftOf="@+id/share_btn"
             android:background="@drawable/livestreaming_heart_btn"
-            android:gravity="center|right"
-            android:paddingRight="8dp"
-            android:text="502" />
+            android:paddingLeft="12dp"
+            android:paddingBottom="2dp"
+            android:text="502"/>
     </RelativeLayout>
-
+	 <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_alignParentBottom="true"
+            android:background="#ededed" />
 </LinearLayout>

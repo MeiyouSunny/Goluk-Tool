@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -31,6 +33,8 @@ public class UserStartActivity extends Activity implements OnClickListener {
 	//如果是注销进来的，需要将手机号填进去
 	private SharedPreferences mPreferences = null;
 	private String phone = null;
+	public  static Handler mHandler=null;
+	public  static final int EXIT=-1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,22 @@ public class UserStartActivity extends Activity implements OnClickListener {
 		
 		SysApplication.getInstance().addActivity(this);
 		initView();
+		
+		mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+					case EXIT:
+						mHandler = null;
+						finish();
+						break;
+	
+					default:
+						break;
+				}
+				super.handleMessage(msg);
+			}
+		};
 	}
 
 	public void initView() {
@@ -79,7 +99,7 @@ public class UserStartActivity extends Activity implements OnClickListener {
 			//随便看看
 			Intent it2 = new Intent(UserStartActivity.this,MainActivity.class);
 			startActivity(it2);
-//			this.finish();
+			this.finish();
 			break;
 		}
 	}

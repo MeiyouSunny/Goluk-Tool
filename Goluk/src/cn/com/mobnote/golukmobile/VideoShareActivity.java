@@ -35,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -118,7 +119,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	/** 上下文 */
 	private Context mContext = null;
 	/** 返回按钮 */
-	private Button mBackBtn = null;
+	private ImageButton mBackBtn = null;
 	/** 分享layout */
 	private RelativeLayout mShareLayout = null;
 	private ImageView mShortImg = null;
@@ -450,7 +451,7 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 	 */
 	private void init() {
 		// 获取页面元素
-		mBackBtn = (Button) findViewById(R.id.back_btn);
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mIsShareToOther = (ImageView) findViewById(R.id.share_check);
 		if (mIsCheck) {
 			mIsShareToOther.setBackgroundResource(R.drawable.share_select_btn);
