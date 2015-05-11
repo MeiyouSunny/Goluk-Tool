@@ -1,9 +1,8 @@
 package cn.com.mobnote.video;
 
 import java.util.ArrayList;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ import cn.com.mobnote.video.MVManage.MVEditData;
  * 
  */
 
+@SuppressLint("InflateParams")
 public class MVListAdapter extends BaseAdapter{
 	private Context mContext = null;
 	private ArrayList<MVEditData> mDataList = null;
@@ -96,8 +96,8 @@ public class MVListAdapter extends BaseAdapter{
 			holder = (ViewHolder) convertView.getTag();
 		}
 		MVEditData data = (MVEditData)mDataList.get(position);
-		Log.e("","chxy data" + data.name);
-		Log.e("","chxy data" + data.src);
+		//Log.e("","chxy data" + data.name);
+		//Log.e("","chxy data" + data.src);
 		
 		if(data.display){
 			holder.display.setVisibility(View.VISIBLE);

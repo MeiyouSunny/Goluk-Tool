@@ -560,7 +560,12 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 		if (t == 0) {
 			// 正在上传
 			mVideoLoadingLayout.setVisibility(View.GONE);
-			mVVPlayVideo.cancelSave();
+			
+			//为了修复上传的是时返回几率崩溃控制针问题.
+			//感觉可能崩溃到这里了,chenxy 5.11
+			if (null != mVVPlayVideo) {
+				mVVPlayVideo.cancelSave();
+			}
 		}
 		if (null != mVVPlayVideo) {
 			mVVPlayVideo.cleanUp();
