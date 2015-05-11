@@ -12,28 +12,33 @@ cd ../
 
 #判断第一个参数 test等是否存在
 echo "拷贝gitversion和version"
+
+rm -rf $3/assets/gitversion
+
 if [ -n "$1" ];
 then
+	echo $1 >> $3/assets/gitversion
 	if [ $1 = "dev" ];
 	then
 		echo "build dev"
-		cp -f 	git_version/gitversion_dev $3/assets/gitversion
+		#cp -f 	git_version/gitversion_dev $3/assets/gitversion
 		cp -f   version_test/version  $3/assets/version
 	elif [ $1 = "test" ];
 	then
 		echo "build test"
-		cp -f 	git_version/gitversion_test $3/assets/gitversion
+		#cp -f 	git_version/gitversion_test $3/assets/gitversion
 		cp -f   version_test/version  $3/assets/version
 	elif [ $1 = "nvd" ];
 	then
 		echo "build nvd"
-		cp -f 	git_version/gitversion_nvd $3/assets/gitversion
+		#cp -f 	git_version/gitversion_nvd $3/assets/gitversion
 	else
 		echo "$1 error"
 	fi
 else
 	echo "build test"
-	cp -f 	git_version/gitversion_test $3/assets/gitversion
+	echo "test" >> $3/assets/gitversion
+	#cp -f 	git_version/gitversion_test $3/assets/gitversion
 	cp -f   version_test/version  $3/assets/version
 fi
 
