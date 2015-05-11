@@ -350,7 +350,9 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 
 				@Override
 				public boolean onFilterVideoSaving(int nProgress, int nMax) {
-					mLoadingText.setText("视频生成中" + nProgress + "%");
+					if(nProgress > 0){
+						mLoadingText.setText("视频生成中" + nProgress + "%");
+					}
 					// 返回false代表取消保存。。。
 					return true;
 				}
