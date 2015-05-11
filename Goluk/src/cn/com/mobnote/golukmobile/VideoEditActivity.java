@@ -555,16 +555,18 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 
 	private void exit() {
 		isExit = true;
-		// 判断是否正在上传
-		int t = mVideoLoadingLayout.getVisibility();
-		if (t == 0) {
-			// 正在上传
-			mVideoLoadingLayout.setVisibility(View.GONE);
-			
-			//为了修复上传的是时返回几率崩溃控制针问题.
-			//感觉可能崩溃到这里了,chenxy 5.11
-			if (null != mVVPlayVideo) {
-				mVVPlayVideo.cancelSave();
+		if(null != mVideoLoadingLayout){
+			// 判断是否正在上传
+			int t = mVideoLoadingLayout.getVisibility();
+			if (t == 0) {
+				// 正在上传
+				mVideoLoadingLayout.setVisibility(View.GONE);
+				
+				//为了修复上传的是时返回几率崩溃控制针问题.
+				//感觉可能崩溃到这里了,chenxy 5.11
+				if (null != mVVPlayVideo) {
+					mVVPlayVideo.cancelSave();
+				}
 			}
 		}
 		if (null != mVVPlayVideo) {
