@@ -78,7 +78,7 @@
 		android:background="@drawable/solid"/>
 	
 	<!-- Goluk固件升级 -->
-	<RelativeLayout
+	<!-- <RelativeLayout
 		android:id="@+id/update_item"
 		android:layout_width="match_parent"
 		android:layout_height="47dp"
@@ -95,7 +95,7 @@
 			android:textColor="#3f3f3f"
 			android:layout_centerVertical="true"/>
 		
-	</RelativeLayout>
+	</RelativeLayout> -->
 
 	<RelativeLayout 
 	    android:layout_width="match_parent"

@@ -70,11 +70,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	/**缓存大小显示**/
 	private TextView mTextCacheSize = null;
 	/**用户信息**/
-	/*private String head = null;
-	private String id = null;//key
-	private String name = null;//nickname
-	private String sex = null;
-	private String sign = null;//desc*/
 	private String phone = null;
 	/**登录的状态**/
 	private SharedPreferences mPreferences = null;
@@ -87,7 +82,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	private RelativeLayout mClearCache = null;
 	public static Handler mHandler = null;
 	/**固件升级*/
-	private RelativeLayout mUpdateItem = null;
+//	private RelativeLayout mUpdateItem = null;
 	/**传输文件*/
 	private AlertDialog mSendDialog = null;
 	/**传输文件成功**/
@@ -278,8 +273,8 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
 		mClearCache.setOnClickListener(this);
 		/**固件升级*/
-		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
-		mUpdateItem.setOnClickListener(this);
+//		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
+//		mUpdateItem.setOnClickListener(this);
 	}
 		
 	@Override
@@ -349,10 +344,10 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				}
 				break;
 				//固件升级
-			case R.id.update_item:
-				/**
+			/*case R.id.update_item:
+				*//**
 				 * 固件升级
-				 */
+				 *//*
 				Log.i("lily", "------------isConnect-----------"+mApp.isIpcLoginSuccess);
 				if(!mApp.isIpcLoginSuccess){
 					//true   ipc未连接
@@ -387,7 +382,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 					.create().show();
 				}
 				
-				break;
+				break;*/
 		}
 	}
 	/**
