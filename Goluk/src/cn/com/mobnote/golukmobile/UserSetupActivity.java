@@ -246,11 +246,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		try {
 			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
-			if(cacheSize.equals("")){
-				mTextCacheSize.setText("0");
-			}else{
-				mTextCacheSize.setText(cacheSize);
-			}
+			mTextCacheSize.setText(cacheSize);
 			Log.i("lily", "------cacheSize-------"+cacheSize);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -336,17 +332,21 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				//清除缓存
 			case R.id.remove_cache_item:
 				Log.i("lily", "----清除缓存-----"+Const.getAppContext().getCacheDir().getPath());
-				new AlertDialog.Builder(mContext)
-				.setMessage("确定清除缓存？")
-				.setNegativeButton("取消", null)
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
-						mTextCacheSize.setText("0MB");
-					}
-				}).create().show();
+				if(mTextCacheSize.getText().toString().equals("0M")){
+					UserUtils.showDialog(mContext, "没有缓存数据");
+				}else{
+					new AlertDialog.Builder(mContext)
+					.setMessage("确定清除缓存？")
+					.setNegativeButton("取消", null)
+					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
+							mTextCacheSize.setText("0M");
+						}
+					}).create().show();
+				}
 				break;
 				//固件升级
 			case R.id.update_item:
