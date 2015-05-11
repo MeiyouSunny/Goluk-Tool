@@ -1,7 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import java.io.File;
-
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -29,13 +27,13 @@ import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.utils.LogUtil;
 /**
- * <pre>
  * 1.类命名首字母大写
  * 2.公共函数驼峰式命名
  * 3.属性函数驼峰式命名
@@ -70,11 +68,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	/**退出按钮**/
 	private Button btnLoginout;
 	/**用户信息**/
-	private String head = null;
-	private String id = null;//key
-	private String name = null;//nickname
-	private String sex = null;
-	private String sign = null;//desc
 	private String phone = null;
 	/**登录的状态**/
 	private SharedPreferences mPreferences = null;
@@ -85,7 +78,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	private AlertDialog dialog = null;
 	/**清楚缓存**/
 	private RelativeLayout mClearCache = null;
-	private Handler mHandler = null;
+	public static Handler mHandler = null;
 	/**固件升级*/
 	private RelativeLayout mUpdateItem = null;
 	/**传输文件*/
@@ -234,7 +227,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 				break;
 				//清除缓存
 			case R.id.remove_cache_item:
-				Log.i("lily", "----清楚缓存-----"+Const.getAppContext().getCacheDir().getPath());
+				Log.i("lily", "----清除缓存-----"+Const.getAppContext().getCacheDir().getPath());
 				new AlertDialog.Builder(mContext)
 				.setMessage("确定清除缓存？")
 				.setNegativeButton("取消", null)
@@ -242,7 +235,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						DeleteFile(Const.getAppContext().getCacheDir());
+						DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
 					}
 				}).create().show();
 				break;
@@ -318,11 +311,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 			JSONObject json = new JSONObject(info);
 			
 			Log.i("info", "====json()===="+json);
-			head = json.getString("head");
-			name = json.getString("nickname");
-			id = json.getString("key");
-			sex = json.getString("sex");
-			sign = json.getString("desc");
 			phone = json.getString("phone");
 			//退出登录后，将信息存储
 			mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
@@ -376,36 +364,6 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 			}
 		}
 	}
-	
-	/**
-     * 递归删除文件和文件夹
-     * 
-     * @param file
-     * 
-     */ 
-    public void DeleteFile(File file) { 
-        if (file.exists() == false) { 
-            mHandler.sendEmptyMessage(0); 
-            return; 
-        } else { 
-            if (file.isFile()) { 
-                file.delete(); 
-                return; 
-            } 
-            if (file.isDirectory()) { 
-                File[] childFile = file.listFiles(); 
-                if (childFile == null || childFile.length == 0) { 
-                    file.delete(); 
-                    return; 
-                } 
-                for (File f : childFile) { 
-                    DeleteFile(f); 
-                } 
-                file.delete(); 
-            } 
-        } 
-    }
-
 	
     /**
 	 * 固件升级
