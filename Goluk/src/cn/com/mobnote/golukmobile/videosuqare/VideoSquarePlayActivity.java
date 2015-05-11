@@ -270,6 +270,12 @@ public class VideoSquarePlayActivity extends Activity implements
 		if (null != mVideoSquareListViewAdapter) {
 //			mVideoSquareListViewAdapter.onDestroy();
 		}
+		
+		for(VideoSquareInfo info : mDataList){
+			String url = info.mVideoEntity.picture;
+			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(url);
+		}
+		
 		GolukApplication.getInstance().getVideoSquareManager()
 				.removeVideoSquareManagerListener("videocategory");
 	}

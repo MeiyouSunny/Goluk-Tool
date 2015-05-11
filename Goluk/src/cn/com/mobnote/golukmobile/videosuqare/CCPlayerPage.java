@@ -137,8 +137,13 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
-		mDWMediaPlayer.seekTo(0);
-		mDWMediaPlayer.start();
+		mPlayBigBtn.setVisibility(View.VISIBLE);
+//		if(null != mDWMediaPlayer){
+//			mDWMediaPlayer.seekTo(0);
+//			mDWMediaPlayer.start();
+//			mDWMediaPlayer.prepareAsync();
+//		}
+		
 		LogUtil.e("xuhw", "YYYYYYY========onCompletion===========");
 	}
 
