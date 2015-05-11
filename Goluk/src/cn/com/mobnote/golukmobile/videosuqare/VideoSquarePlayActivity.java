@@ -293,6 +293,11 @@ public class VideoSquarePlayActivity extends Activity implements
 					endtime = list.get(list.size()-1);
 					
 					if(uptype == 0){//说明是第一次
+						if(list.size() >= 30){
+							isHaveData = true;
+						}else{
+							isHaveData = false;
+						}
 						mDataList = list;
 						init(false);
 					}else if (uptype ==1){//上拉刷新
