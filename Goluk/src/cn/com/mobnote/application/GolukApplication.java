@@ -899,20 +899,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		// System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
-		/*
-		 * System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+
-		 * "===param1="+param1+"=========param2="+param2); if
-		 * (ENetTransEvent_IPC_VDCP_ConnectState == event) { if
-		 * (IPCManagerFn.ConnectionStateMsg_Connected != msg) {
-		 * isIpcLoginSuccess = false; } }
-		 * 
-		 * if (ENetTransEvent_IPC_VDCP_CommandResp == event && IPC_VDCP_Msg_Init
-		 * == msg && 0 == param1) { isIpcLoginSuccess = true;
-		 * System.out.println(
-		 * "IPC_TTTTTT=================Login Success==============="); }
-		 */
-
+		 System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		// console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		// IPC控制连接状态 event = 0
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
