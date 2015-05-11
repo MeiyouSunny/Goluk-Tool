@@ -13,11 +13,11 @@ cd ../
 #判断第一个参数 test等是否存在
 echo "拷贝gitversion和version"
 
-rm -rf $3/assets/gitversion
+rm -rf $3/assets/serverflag
 
 if [ -n "$1" ];
 then
-	echo $1 >> $3/assets/gitversion
+	echo $1 >> $3/assets/serverflag
 	if [ $1 = "dev" ];
 	then
 		echo "build dev"
@@ -37,7 +37,7 @@ then
 	fi
 else
 	echo "build test"
-	echo "test" >> $3/assets/gitversion
+	echo "test" >> $3/assets/serverflag
 	#cp -f 	git_version/gitversion_test $3/assets/gitversion
 	cp -f   version_test/version  $3/assets/version
 fi
