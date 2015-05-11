@@ -58,8 +58,8 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 		mDeviceId = (TextView)findViewById(R.id.mDeviceId);
 		mVersion = (TextView)findViewById(R.id.mVersion);
 		
-		mDeviceId.setText("");
-		mVersion.setText("IPC Camera");
+		mDeviceId.setText("IPC Camera");
+		mVersion.setText("");
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCIdentity();
 			LogUtil.e("xuhw","YYYYYY=======getIPCIdentity============a="+a);
@@ -88,7 +88,7 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 							@Override
 							public void run() {
 //								mDeviceId.setText(""+mVersionState.code);
-								mVersion.setText(mVersionState.name);
+								mDeviceId.setText(mVersionState.name);
 							}
 						});
 					}
@@ -103,7 +103,7 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 					try {
 						JSONObject json = new JSONObject(str);
 						String version = json.optString("version");
-						mDeviceId.setText(version);
+						mVersion.setText(version);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
