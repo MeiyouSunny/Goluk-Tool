@@ -58,8 +58,8 @@ public class VersionActivity extends BaseActivity implements IPCManagerFn{
 		mDeviceId = (TextView)findViewById(R.id.mDeviceId);
 		mVersion = (TextView)findViewById(R.id.mVersion);
 		
-		mDeviceId.setText("");
-		mVersion.setText("IPC Camera");
+		mDeviceId.setText("IPC Camera");
+		mVersion.setText("");
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCIdentity();
 			LogUtil.e("xuhw","YYYYYY=======getIPCIdentity============a="+a);
