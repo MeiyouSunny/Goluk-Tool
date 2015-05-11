@@ -247,7 +247,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-//				String number = mEditTextPhoneNumber.getText().toString();
+				String number = mEditTextPhoneNumber.getText().toString();
 				String psw=mEditTextPwd.getText().toString();
 				if(isOnClick){
 					if(!psw.equals("")){
@@ -257,6 +257,13 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 						mBtnLogin.setBackgroundResource(R.drawable.icon_more);
 						mBtnLogin.setEnabled(false);
 					}
+				}
+				if(!number.equals("")&&!psw.equals("")){
+					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
+					mBtnLogin.setEnabled(true);
+				}else{
+					mBtnLogin.setBackgroundResource(R.drawable.icon_more);
+					mBtnLogin.setEnabled(false);
 				}
 			}
 			@Override
