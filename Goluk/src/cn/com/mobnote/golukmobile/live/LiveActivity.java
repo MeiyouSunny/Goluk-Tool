@@ -56,9 +56,7 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
 import cn.com.mobnote.golukmobile.videosuqare.JsonCreateUtils;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -88,18 +86,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		View.OnTouchListener, ITalkFn, IPopwindowFn, ILiveDialogManagerFn, ITimerManagerFn, ILocationFn,
 		IBaiduGeoCoderFn, IPCManagerFn, ILive, VideoSuqareManagerFn {
 
-	private static final String TAG = "LiveActivity";
-
-	/** 视频上传地址 */
-	private final String UPLOAD_VOIDE_PRE = "rtmp://goluk.8686c.com/live/";
-
 	/** 自己预览地址 */
 	private static String VIEW_SELF_PLAY = "";
-
-	/** 8s视频 */
-	public static final int MOUNTS = 114;
-
-	private final int DURATION_TIMEOUT = 90 * 1000;
 
 	/** application */
 	private GolukApplication mApp = null;
@@ -368,6 +356,8 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 			updateCount(0, 0);
 		} else {
+			// 计时，90秒后，防止用户进入时没网
+			mHandler.sendEmptyMessageDelayed(MSG_H_UPLOAD_TIMEOUT, DURATION_TIMEOUT);
 			startLiveLook(currentUserInfo);
 			updateCount(Integer.parseInt(currentUserInfo.zanCount), Integer.parseInt(currentUserInfo.persons));
 		}
@@ -479,6 +469,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	public void startLiveLook(UserInfo userInfo) {
 		LogUtil.e(null, "jyf----20150406----LiveActivity----startLiveLook----111 uid: " + userInfo.uid + " aid:"
 				+ userInfo.aid);
+		if (isLiveUploadTimeOut) {
+			return;
+		}
 
 		String condi = "{\"uid\":\"" + userInfo.uid + "\",\"desAid\":\"" + userInfo.aid + "\"}";
 
@@ -489,18 +482,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			startLiveLookFailed();
 		} else {
 			// TODO 弹对话框
-			showToast("查看他人直播：" + userInfo.uid);
+			// showToast("查看他人直播：" + userInfo.uid);
 			LogUtil.e(null, "jyf----20150406----LiveActivity----startLiveLook----22 : TRUE TRUE");
 		}
 	}
 
 	private void startLiveFailed() {
 		LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-				LiveDialogManager.DIALOG_TYPE_LIVE_REQUEST_SERVER, LIVE_DIALOG_TITLE, "请球服务器失败，重新请球？");
+				LiveDialogManager.DIALOG_TYPE_LIVE_REQUEST_SERVER, LIVE_DIALOG_TITLE, LIVE_UPLOAD_FIRST_ERROR);
 	}
 
 	private void startLiveLookFailed() {
-		// TODO 开启直接失败
+		// showToast("查看他人直播失败");
 	}
 
 	/**
@@ -647,18 +640,18 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			CarRecorderManager.startRTSPLive();
 			isStartLive = true;
 			// showToast("开始上传视频");
-			LogUtil.e("", "jyf------TTTTT------------开始上传直播----555555");
+			LogUtil.e("", "jyf------TTTTT------------开始上传直播----start--------");
 		} catch (RecorderStateException e) {
 			e.printStackTrace();
 			liveUploadVideoFailed();
-			LogUtil.e("", "jyf------TTTTT------------开始上传直播----666666666---报异常");
+			LogUtil.e("", "jyf------TTTTT------------开始上传直播----Exception ");
 		}
 	}
 
 	private void stopRTSPUpload() {
 		if (CarRecorderManager.isRTSPLiving()) {
 			try {
-				showToast("停止上传直播");
+				// showToast("停止上传直播");
 				isStartLive = false;
 				CarRecorderManager.stopRTSPLive();
 			} catch (RecorderStateException e) {
@@ -741,7 +734,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			LiveDialogManager.getManagerInstance().dismissProgressDialog();
 			// 断开，提示用户是否继续上传
 			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_LIVE_RELOAD_UPLOAD, "提示", "是否重新上传");
+					LiveDialogManager.DIALOG_TYPE_LIVE_RELOAD_UPLOAD, LIVE_DIALOG_TITLE, LIVE_UPLOAD_FIRST_ERROR);
 		}
 	}
 
@@ -832,9 +825,6 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	private void initMap() {
-		// 获取地图控件引用
-		// mMapView = (MapView) findViewById(R.id.live_bmapView);
-
 		BaiduMapOptions options = new BaiduMapOptions();
 		options.rotateGesturesEnabled(false); // 不允许手势
 		options.overlookingGesturesEnabled(false);
@@ -872,24 +862,23 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	}
 
-	private void cancelTimer() {
-		if (null != mRecordTimer) {
-			mRecordTimer.cancel();
-			mRecordTimer.purge();
-			mRecordTimer = null;
-		}
-	}
-
 	/**
 	 * 视频播放初始化
 	 */
 	private void startVideoAndLive(String url) {
+		LogUtil.e(null, "jyf----20150406----LiveActivity----startVideoAndLive----url : " + url);
+		if (null == mRPVPalyVideo) {
+			return;
+		}
 		// 设置视频源
 		if (isShareLive) {
 			// 预览自己的图像
 			mFilePath = VIEW_SELF_PLAY;
-			mRPVPalyVideo.setDataSource(mFilePath);
-			mRPVPalyVideo.setAudioMute(true);
+			if (null != mRPVPalyVideo) {
+				mRPVPalyVideo.setDataSource(mFilePath);
+				mRPVPalyVideo.setAudioMute(true);
+			}
+
 		} else {
 			mRPVPalyVideo.setDataSource(url);
 			if (isCanVoice) {
@@ -898,6 +887,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				mRPVPalyVideo.setAudioMute(true);
 			}
 		}
+
 		mRPVPalyVideo.start();
 	}
 
@@ -1111,11 +1101,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----4444 : " + (String) obj);
 		if (200 != liveData.code) {
+			mHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
 			videoInValid();
 			// 视频无效下线
 			return;
 		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
+		mHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
 		isCanVoice = liveData.voice.equals("1") ? true : false;
 		this.isKaiGeSucess = true;
 		mLiveCountSecond = liveData.restTime;
@@ -1586,7 +1578,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// UI需要转圈loading
 			mHandler.sendEmptyMessage(MSG_H_PLAY_LOADING);
 			// 重新加载播放器预览
-			mHandler.sendEmptyMessage(MSG_H_RETRY_SHOW_VIEW);
+			mHandler.sendEmptyMessageDelayed(MSG_H_RETRY_SHOW_VIEW, 5000);
 		} else {
 			// UI需要转圈
 			mHandler.sendEmptyMessage(MSG_H_PLAY_LOADING);
@@ -1988,6 +1980,7 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				// 上传视频超时，提示用户上传失败，退出程序
 				isLiveUploadTimeOut = true;
 				mLiveManager.cancelTimer();
+				mVideoLoading.setVisibility(View.GONE);
 				freePlayer();
 				liveEnd();
 				LiveDialogManager.getManagerInstance().dismissProgressDialog();
@@ -2579,6 +2572,10 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 	}
 
 	private void liveEnd() {
+		isLiveUploadTimeOut = true;
+		mLiveManager.cancelTimer();
+		mVideoLoading.setVisibility(View.GONE);
+		freePlayer();
 		if (isShareLive) {
 			stopRTSPUpload();
 			// 停止上报自己的位置
@@ -2615,7 +2612,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 			// 看别人直播
 			if (10 == function) {
 				if (TimerManager.RESULT_FINISH == result) {
-					showToast("查看别人直播结束");
+					liveEnd();
+					LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this, LIVE_DIALOG_TITLE,
+							LIVE_TIME_END);
 				}
 				updateCountDown(GolukUtils.secondToString(current));
 			}
@@ -2631,18 +2630,26 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 	@Override
 	public void LocationCallBack(String gpsJson) {
-		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----0000  : ");
+		if (isLiveUploadTimeOut) {
+			// 不更新数据
+			return;
+		}
+		// LogUtil.e(null,
+		// "jyf----20150406----LiveActivity----LocationCallBack----0000  : ");
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----111  : ");
+		// LogUtil.e(null,
+		// "jyf----20150406----LiveActivity----LocationCallBack----111  : ");
 
 		if (null != location) {
-			LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----updatePositon  : ");
+			// LogUtil.e(null,
+			// "jyf----20150406----LiveActivity----LocationCallBack----updatePositon  : ");
 			if (mApp.isUserLoginSucess) {
 				if (null == myInfo) {
 					this.getMyInfo();
 				}
-				LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack---draw MY Head: "
-						+ myInfo.nickName);
+				// LogUtil.e(null,
+				// "jyf----20150406----LiveActivity----LocationCallBack---draw MY Head: "
+				// + myInfo.nickName);
 				if (null != myInfo) {
 					if (LOCATION_TYPE_UNKNOW == this.mCurrentLocationType) {
 						// 当前是未定位的,　直接画气泡
@@ -2652,8 +2659,9 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 
 					} else {
 						// 当前是画的气泡，直接更新气泡的位置即可
-						LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack---lon:: "
-								+ location.rawLon + "	lat:" + location.rawLat);
+						// LogUtil.e(null,
+						// "jyf----20150406----LiveActivity----LocationCallBack---lon:: "
+						// + location.rawLon + "	lat:" + location.rawLat);
 						mBaiduMapManage.updatePosition(myInfo.aid, location.rawLon, location.rawLat);
 					}
 
@@ -2870,13 +2878,11 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 		if (event == SquareCmd_Req_GetShareUrl) {
 			// TODO 销毁对话框
 			LiveDialogManager.getManagerInstance().dismissShareProgressDialog();
-			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
 			if (1 != msg) {
 				showToast("分享失败");
 				return;
 			}
 			try {
-				System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
 				JSONObject result = new JSONObject((String) param2);
 				System.out.println("YYYY+RESULT00000000");
 				if (!result.getBoolean("success")) {
@@ -2891,18 +2897,13 @@ public class LiveActivity extends Activity implements OnClickListener, RtmpPlaye
 				}
 				if ("".equals(coverurl)) {
 				}
-				System.out.println("YYYY+RESULT11111111");
 				// 设置分享内容
 				sharePlatform.setShareContent(shareurl, coverurl, describe);
-				System.out.println("YYYY+RESULT22222222");
-
 				CustomShareBoard shareBoard = new CustomShareBoard(this);
 				shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 	}

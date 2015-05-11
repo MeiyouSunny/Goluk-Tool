@@ -4,7 +4,7 @@ import cn.com.mobnote.golukmobile.R;
 
 public interface ILive {
 
-	public static final String LIVE_START_PROGRESS_MSG = "正在创建直播，请稍后...";
+	public static final String LIVE_START_PROGRESS_MSG = "正在创建直播，请稍候...";
 
 	public static final String LIVE_RETRY_UPLOAD_MSG = "直播断开，正在为您重新连接...";
 
@@ -12,19 +12,31 @@ public interface ILive {
 
 	public static final String LIVE_DIALOG_TITLE = "提示";
 
-	public static final String LIVE_RETRY_LIVE = "正在恢复直播，请稍后...";
+	public static final String LIVE_RETRY_LIVE = "正在恢复直播，请稍候...";
 
 	public static final String LIVE_TIME_END = "时光匆匆，直播结束，再见";
 
-	public static final String LIVE_CREATE = "正在创建直播，请稍后...";
+	public static final String LIVE_CREATE = "正在创建直播，请稍候...";
 
 	public static final String LIVE_EXIT_PROMPT = "您当前正在直播中，是否退出直播？";
 
 	public static final String LIVE_EXIT_PROMPT2 = "是否退出观看直播？";
+	
+	public static final String LIVE_UPLOAD_FIRST_ERROR = "很抱歉，直播创建不成功，再试一次吧。";
 
 	public static final int LOCATION_TYPE_UNKNOW = -1;
 	public static final int LOCATION_TYPE_POINT = 0;
 	public static final int LOCATION_TYPE_HEAD = 1;
+
+	public static final String TAG = "LiveActivity";
+
+	/** 8s视频 */
+	public static final int MOUNTS = 114;
+
+	public final int DURATION_TIMEOUT = 90 * 1000;
+
+	/** 视频上传地址 */
+	public static final String UPLOAD_VOIDE_PRE = "rtmp://goluk.8686c.com/live/";
 
 	/** 是否是直播 */
 	public static final String KEY_IS_LIVE = "isLive";
