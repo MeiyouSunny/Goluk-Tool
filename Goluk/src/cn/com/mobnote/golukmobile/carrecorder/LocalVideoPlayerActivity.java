@@ -90,6 +90,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 	private final int GETPROGRESS = 1;
 	private String from;
 	private GolukApplication mApp = null;
+	private boolean error=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,22 +116,6 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 			}
 		}
 		
-		
-//		if (!TextUtils.isEmpty(from)) {
-//			if (from.equals("local")) {
-//				playUrl = getIntent().getStringExtra("path");
-//			} else if (from.equals("ipc")) {
-//				int type = getIntent().getIntExtra("type", -1);
-//				if (4 == type) {
-//					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/wonderful/" + filename;
-//				} else if (2 == type) {
-//					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/urgent/" + filename;
-//				} else {
-//					playUrl = "http://" + mApp.mIpcIp + ":5080/rec/normal/" + filename;
-//				}
-//			}
-//		}
-
 		initView();
 		setListener();
 
@@ -138,6 +123,10 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
 				case GETPROGRESS:
+					mHandler.removeMessages(GETPROGRESS);
+					if(error){
+						return;
+					}
 					if (null != mMediaPlayer) {
 						if (mMediaPlayer.isPlaying()) {
 							hideLoading();
@@ -157,7 +146,6 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 						}
 					}
 
-					mHandler.removeMessages(GETPROGRESS);
 					mHandler.sendEmptyMessageDelayed(GETPROGRESS, 500);
 					break;
 
@@ -466,6 +454,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+		error=true;
 		LogUtil.e("xuhw", "YYYY====onError====");
 		mHandler.removeMessages(GETPROGRESS);
 		LogUtil.e("xuhw", "TTT=============onError=");
