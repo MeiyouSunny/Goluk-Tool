@@ -594,8 +594,11 @@ public class VideoEditActivity extends Activity implements OnClickListener {
 		if (mVVPlayVideo != null) {
 			mVVPlayVideo.onResume();
 		}
+		if(mLoadingText != null){
+			mLoadingText.setText("视频生成中0%");
+		}
 		mApp.setContext(this, "VideoEdit");
-
+		
 		super.onResume();
 	}
 
