@@ -42,6 +42,7 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 	private ImageView mLoading = null;
 	/** 加载中动画对象 */
 	private AnimationDrawable mAnimationDrawable = null;
+	private boolean isPlaying=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 					mHandler.removeMessages(1);
 					if(null != mDWMediaPlayer){
 						if(mDWMediaPlayer.isPlaying()){
+							isPlaying=true;
 							hideLoading();
 						}else{
 							mHandler.sendEmptyMessageDelayed(1, 500);
@@ -201,7 +203,7 @@ public class CCPlayerPage extends Activity implements OnPreparedListener, OnBuff
 			exit(); 
 			break;
 		case R.id.mSurfaceView:
-			if(allow){
+			if(allow && isPlaying){
 				if(mDWMediaPlayer.isPlaying()){
 					mDWMediaPlayer.pause();
 					mPlayBigBtn.setVisibility(View.VISIBLE);

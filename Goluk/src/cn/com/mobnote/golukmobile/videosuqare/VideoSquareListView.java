@@ -161,6 +161,11 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			mVideoSquareListViewAdapter.onDestroy();
 		}
 		
+		for(VideoSquareInfo info : mDataList){
+			String url = info.mVideoEntity.picture;
+			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(url);
+		}
+		
 		if (mCustomProgressDialog != null ){
 			mCustomProgressDialog.close();
 		}
