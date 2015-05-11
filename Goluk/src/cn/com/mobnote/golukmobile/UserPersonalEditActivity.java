@@ -177,9 +177,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			//点击头像
 		case R.id.user_personal_edit_layout1:
 			Intent itHead = new Intent(UserPersonalEditActivity.this,UserPersonalHeadActivity.class);
-			if(null !=intentHead){
+			if(null !=head){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentHeadText", intentHead);
+				bundle.putString("intentHeadText", head);
 				itHead.putExtras(bundle);
 				startActivityForResult(itHead, 3);
 			}
@@ -187,9 +187,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//点击昵称
 		case R.id.user_personal_edit_layout2:
 			Intent itName = new Intent(UserPersonalEditActivity.this,UserPersonalNameActivity.class);
-			if(null!=intentName){
+			if(null!=name){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentNameText", intentName);
+				bundle.putString("intentNameText", name);
 				itName.putExtras(bundle);
 				startActivityForResult(itName, 1);
 			}
@@ -197,9 +197,9 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		//点击个性签名
 		case R.id.user_personal_edit_layout4:
 			Intent itSign = new Intent(UserPersonalEditActivity.this,UserPersonalSignActivity.class);
-			if(null != intentSign){
+			if(null != sign){
 				Bundle bundle = new Bundle();
-				bundle.putString("intentSignText", intentSign);
+				bundle.putString("intentSignText", sign);
 				itSign.putExtras(bundle);
 				startActivityForResult(itSign, 2);
 			}
@@ -218,7 +218,7 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		if(newName.equals("")){
+		if(newName.trim().isEmpty() || name.trim().isEmpty()){
 			UserUtils.showDialog(mContext, "数据修改失败，昵称不能为空");
 		}else{
 			if(intentName.equals(name) && intentHead.equals(head) && intentSign.equals(sign)){
@@ -240,33 +240,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 			}
 		}
 	}
-	/*public void saveInfo(){
-		try{
-			newName = URLEncoder.encode(intentName, "utf-8");
-			newSign = URLEncoder.encode(intentSign,"utf-8");
-			//if (img.getDrawable()==getResources().getDrawable(R.drawable.图片资源)) {执行性别操作 }
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		if(newName.equals("")){
-			UserUtils.showDialog(mContext, "数据修改失败，昵称不能为空");
-		}else{
-			//{NickName：“昵称”，UserHead:”1”，UserSex:”1”,Desc:""}
-			String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\""+ intentHead +  "\",\"UserSex\":\""+intentSex+"\",\"Desc\":\""+newSign+"\"}";
-			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
-			if(b){
-				//保存中
-//				mLoading.setVisibility(View.VISIBLE);
-				mCustomProgressDialog.show();
-				btnBack.setEnabled(false);
-				btnRight.setEnabled(false);
-				mLayoutHead.setEnabled(false);
-				mLayoutName.setEnabled(false);
-				mLayoutSign.setEnabled(false);
-			}
-		}
-		
-	}*/
 	/**
 	 * 修改用户信息回调
 	 */
@@ -280,10 +253,10 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				int code = Integer.valueOf(json.getString("code"));
 				
 				//回调返回的结果
-				JSONObject json2 = json.getJSONObject("data");
+				/*JSONObject json2 = json.getJSONObject("data");
 				String json2Sign = json2.getString("desc");
 				String json2Name = json2.getString("nickname");
-				String json2Head = json2.getString("head");
+				String json2Head = json2.getString("head");*/
 				
 //				mLoading.setVisibility(View.GONE);
 				closeProgressDialog();
