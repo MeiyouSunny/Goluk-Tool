@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">GolukMobile</string>
+    <string name="app_name">极路客</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="imgdes">图片说明</string>
@@ -34,7 +34,7 @@
     <string name="video_play_comment_send">发送</string>
     <string name="video_share_desc_title">添加描述</string>
     <string name="video_share_topic_text">#话题#</string>
-    <string name="video_export_text">视频生成中1%</string>
+    <string name="video_export_text">视频生成中0%</string>
     <string name="keep_on_text">继续</string>
     <string name="wifi_link_1_text">请让小车本与Goluk连接</string>
     <string name="wifi_link_2_text">您第一次使用Goluk需要确认您的WiFi是否是开启状态,并设置WiFi连接.</string>

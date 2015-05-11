@@ -4,15 +4,15 @@
 
     <item
         android:drawable="@drawable/index_wifi_one"
-        android:duration="100"/>
+        android:duration="500"/>
     <item
         android:drawable="@drawable/index_wifi_two"
-        android:duration="100"/>
+        android:duration="500"/>
     <item
         android:drawable="@drawable/index_wifi_three"
-        android:duration="100"/>
+        android:duration="500"/>
     <item
         android:drawable="@drawable/index_wifi_four"
-        android:duration="100"/>
+        android:duration="500"/>
 
 </animation-list>

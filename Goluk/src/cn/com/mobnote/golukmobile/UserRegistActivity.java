@@ -571,7 +571,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			}
 		}
 		}else{
-			UserUtils.showDialog(mContext, "手机格式输入错误");
+			UserUtils.showDialog(mContext, "手机号格式错误,请重新输入");
 //			mBtnRegist.setEnabled(false);
 		}
 		

@@ -270,6 +270,12 @@ public class VideoSquarePlayActivity extends Activity implements
 		if (null != mVideoSquareListViewAdapter) {
 //			mVideoSquareListViewAdapter.onDestroy();
 		}
+		
+		for(VideoSquareInfo info : mDataList){
+			String url = info.mVideoEntity.picture;
+			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(url);
+		}
+		
 		GolukApplication.getInstance().getVideoSquareManager()
 				.removeVideoSquareManagerListener("videocategory");
 	}
@@ -287,45 +293,58 @@ public class VideoSquarePlayActivity extends Activity implements
 						.parserVideoSquareListData((String) param2);
 				System.out.println("ZZZZ===="+list.size());
 				
-				
+				//说明有数据
 				if(list.size()>0){
 					begantime = list.get(0);
 					endtime = list.get(list.size()-1);
-					if (list.size() >= 30) {
-						isHaveData = true;
-					} else {
-						isHaveData = false;
+					
+					if(uptype == 0){//说明是第一次
+						if(list.size() >= 30){
+							isHaveData = true;
+						}else{
+							isHaveData = false;
+						}
+						mDataList = list;
+						init(false);
+					}else if (uptype ==1){//上拉刷新
+						if (list.size() >= 30) {//数据超过30条
+							isHaveData = true;
+						} else {//数据没有30条
+							isHaveData = false;
+							if(loading != null){
+								if(mRTPullListView!=null){
+									mRTPullListView.removeFooterView(loading);
+									loading = null;
+								}
+							}
+						}
+						mDataList.addAll(list);
+						flush();
+					}else if (uptype ==2){//下拉刷新
+						if (list.size() >= 30) {//数据超过30条
+							isHaveData = true;
+						} else {//数据没有30条
+							isHaveData = false;
+						}
+						mDataList.addAll(list);
+						mRTPullListView.onRefreshComplete();
+						flush();
+					}
+					
+				}else{//没有数据
+					
+					if(uptype == 1){//上拉刷新
 						if(loading != null){
 							if(mRTPullListView!=null){
 								mRTPullListView.removeFooterView(loading);
 								loading = null;
 							}
 						}
-					}
-				}else{
-					if(loading != null){
-						if(mRTPullListView!=null){
-							mRTPullListView.removeFooterView(loading);
-							loading = null;
-						}
+					}else if(uptype == 2){//下拉刷新
+						mRTPullListView.onRefreshComplete();
 					}
 				}
 				
-				if (uptype == 0) {
-					if(list.size()>0){
-						mDataList = list;
-						init(false);
-					}
-				} else {
-					if(2 == uptype){//如果如果是下拉,把下拉的窗口关掉
-						mRTPullListView.onRefreshComplete();
-					}
-					if(list.size()>0){
-						mDataList.addAll(list);
-						flush();
-					}
-					
-				}
 			}else {
 				isHaveData = false;
 				

@@ -453,6 +453,7 @@ public class BaiduMapManage {
 				String lat = data.getString("lat");
 				String open = data.getString("open");
 				String zan = data.getString("zan");
+				String persons = data.getString("persons");
 
 				LogUtil.e(null, "jyf-----click------AAAAA:" + data);
 
@@ -481,7 +482,7 @@ public class BaiduMapManage {
 				if (mPageSource == "Main") {
 					((MainActivity) mContext).downloadBubbleImg(picUrl, aid);
 				}
-				createBubbleInfo(nikeName, zan, lon, lat, open);
+				createBubbleInfo(nikeName, persons, lon, lat, open);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
