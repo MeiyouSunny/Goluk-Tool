@@ -4,6 +4,7 @@ import java.io.File;
 import java.math.BigDecimal;
 
 import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.tiros.api.Const;
 import android.content.Context;
 import android.os.Environment;
 
@@ -13,7 +14,7 @@ public class DataCleanManage {
 		long cacheSize = getFolderSize(context.getCacheDir());
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-			cacheSize += getFolderSize(context.getExternalCacheDir());
+			cacheSize += getFolderSize(Const.getAppContext().getCacheDir());
 		}
 		return getFormatSize(cacheSize);
 	}

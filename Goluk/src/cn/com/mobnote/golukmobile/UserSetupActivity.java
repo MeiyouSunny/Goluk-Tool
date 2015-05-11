@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
 import cn.com.mobnote.logic.GolukModule;
@@ -61,12 +62,13 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	//private LayoutInflater mLayoutInflater = null;
 	/** 返回按钮 */
 	private Button mBackBtn = null;
 	
 	/**退出按钮**/
 	private Button btnLoginout;
+	/**缓存大小显示**/
+	private TextView mTextCacheSize = null;
 	/**用户信息**/
 	/*private String head = null;
 	private String id = null;//key
@@ -240,6 +242,19 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		mBackBtn = (Button)findViewById(R.id.back_btn);
 		//退出按钮
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
+		//清除缓存大小显示
+		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
+		try {
+			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
+			if(cacheSize.equals("")){
+				mTextCacheSize.setText("0");
+			}else{
+				mTextCacheSize.setText(cacheSize);
+			}
+			Log.i("lily", "------cacheSize-------"+cacheSize);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		//没有登录过的状态
 		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
@@ -329,6 +344,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
+						mTextCacheSize.setText("0MB");
 					}
 				}).create().show();
 				break;
