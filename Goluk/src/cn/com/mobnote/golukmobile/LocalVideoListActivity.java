@@ -762,7 +762,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mLoopVideoAdapter.notifyDataSetChanged();
 			
 			//删除选择的文件路径
-			mLocalLoopVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
+			mLocalLoopVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath,0);
 		}else if(2 == mCurrentType){
 			//重组group tab数据
 			mLocalWonderfulVideoListManage.setGroupTabData(mWonderfulVideoData);
@@ -772,7 +772,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mWonderfulVideoAdapter.notifyDataSetChanged();
 			
 			//删除选择的文件路径
-			mLocalWonderfulVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
+			mLocalWonderfulVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath,1);
 		}else{
 			//重组group tab数据
 			mLocalEmergencyVideoListManage.setGroupTabData(mEmergencyVideoData);
@@ -782,7 +782,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mEmergencyVideoAdapter.notifyDataSetChanged();
 			
 			//删除选择的文件路径
-			mLocalEmergencyVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
+			mLocalEmergencyVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath,2);
 		}
 	}
 	

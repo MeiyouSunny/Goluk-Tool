@@ -61,12 +61,14 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
+import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -513,6 +515,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						+ fileName);
 				int type = json.getInt("type");
 				String savePath = "";
+				String configPath = "";
 //				if (type == 2) {a
 //					// 紧急视频
 //					savePath = mVideoSavePath + "urgent/";
@@ -522,11 +525,18 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 //				}
 				if(IPCManagerFn.TYPE_SHORTCUT == type){
 					savePath = mVideoSavePath + "wonderful/";
+					configPath = savePath + "wonderful.txt";
 				}else if(IPCManagerFn.TYPE_URGENT == type){
 					savePath = mVideoSavePath + "urgent/";
+					configPath = savePath + "urgent.txt";
 				}else{
 					savePath = mVideoSavePath + "loop/";
+					configPath = savePath + "loop.txt";
 				}
+				
+				//写入本地视频配置文件信息chenxy 5.11
+				AssetsFileUtils.appendFileData(configPath,fileName + ",");
+				
 				// 调用下载视频接口
 				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
 				LogUtil.e("xuhw", "YYYYYY====start==VideoDownLoad===flag="+a+"===data="+data);

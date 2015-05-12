@@ -36,6 +36,7 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
+import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.console;
 
 /**
@@ -177,7 +178,7 @@ public class LocalVideoListManage {
 	 * @param filesPath 视频本件路径
 	 * @param imageFilesPath 视频本件截图路径
 	 */
-	public void deleteLocalVideoData(ArrayList<String> filesPath,ArrayList<String> imageFilesPath){
+	public void deleteLocalVideoData(ArrayList<String> filesPath,ArrayList<String> imageFilesPath,int videoType){
 		for(String path : filesPath){
 			File file = new File(path);
 			//判断目录或文件是否存在
@@ -210,6 +211,37 @@ public class LocalVideoListManage {
 				//不存在返回 不处理
 			}
 		}
+		
+		//删除配置文件
+		deleteVideoFileConfig(filesPath,videoType);
+	}
+	
+	public void deleteVideoFileConfig(ArrayList<String> filesPath,int videoType){
+		String[] filePaths = {"loop/loop.txt","wonderful/wonderful.txt","urgent/urgent.txt"};
+		String file = mFilePath + filePaths[videoType];
+		
+		String[] files = getVideoConfigFile(file);
+		
+		for(int i = 0,len = filesPath.size(); i < len; i++){
+			String allPath = filesPath.get(i);
+			String dFileName = allPath.substring(allPath.lastIndexOf("/") + 1);
+			for(int j = files.length - 1; j >=0; j--){
+				if(dFileName.equals(files[j])){
+					//删除配置文件数据
+					files[j] = null;
+					break;
+				}
+			}
+		}
+		
+		String configStr = "";
+		for(String s : files){
+			if(null != s){
+				configStr = configStr + s + ",";
+			}
+		}
+		
+		AssetsFileUtils.wirterFileData(file,configStr);
 	}
 	
 	/**
@@ -233,6 +265,115 @@ public class LocalVideoListManage {
 		return img;
 	}
 	
+	/**
+	 * 读取本地视频配置文件
+	 * @author chxy
+	 * @return
+	 */
+	private void readLocalVideoConfigFile(int videoType){
+		//清除缓存数据
+		mLocalVideoListData.clear();
+		//mLoadFileList.clear();
+		
+		String[] videoPaths = {"loop/","wonderful/","urgent/"};
+		String[] filePaths = {"loop/loop.txt","wonderful/wonderful.txt","urgent/urgent.txt"};
+		String file = mFilePath + filePaths[videoType];
+		
+		//必须是文件夹
+		String[] files = getVideoConfigFile(file);
+		if(null != files && files.length > 0){
+			
+			int fLen = files.length - 1;
+			for(int i = fLen; i >= 0; i--){
+				String fileName = files[i];
+				//文件全路径,判断文件是否存在
+				String videoPath = mFilePath + videoPaths[videoType] + fileName;
+				//console.log("拼接本地视频路径---readLocalVideoConfigFile---" + videoPath);
+				File videoFile = new File(videoPath);
+				if(videoFile.exists()){
+					//获取文件大小
+					String size = getFileSize(videoFile);
+					
+					//判断视频类别,WND1_,URG1_文件已这种格式开头为 8s/紧急
+					String[] names = fileName.split("_");
+					String vt = names[0];
+					int hp = 0;
+					try{
+						hp = Integer.valueOf(vt.substring(3,4));
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
+					//视频时长,秒
+					int period = 8;
+					if(names.length > 2){
+						String p = names[2];
+						try{
+							period = Integer.valueOf(p.substring(0,p.lastIndexOf(".")));
+						}
+						catch(Exception e){
+							e.printStackTrace();
+						}
+					}
+					String time = countFileDateToString(fileName);
+					
+					String tabTime = time.substring(0,10);
+					//保存分组数据
+					if(!mTabGroupName.contains(tabTime)){
+						mTabGroupName.add(tabTime);
+					}
+					
+					//保存数据
+					LocalVideoData data = new LocalVideoData();
+					data.isSelect = false;
+					//id有什么用,还没搞清除,先用path代替吧
+					data.id = videoPath;
+					data.videoSize = size;
+					//视频时长,没有数据
+					data.countTime = Utils.minutesTimeToString(period);
+					//视频质量,没有数据
+					data.videoHP = hp;
+					//时间显示需求
+					data.videoCreateDate = time;
+					data.videoPath = videoPath;
+					
+					//判断缓存有没有下载图片
+					String imgName = fileName.substring(0, fileName.length() - 4) + ".jpg";
+					String imgPath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+					//创建目录
+					GFileUtils.makedir(imgPath);
+					String videoImagePath = imgPath + File.separator + imgName;
+					File imgFile = new File(videoImagePath);
+					if (imgFile.exists()) {
+						data.videoImagePath = videoImagePath;
+						data.videoBitmap = ImageManager.getBitmapFromCache(videoImagePath,194, 109);
+					}
+					else {
+						//以后下载视频的时候会同时下载图片,没有图片就显示默认
+						//截取视频第一针,需要另开线程处理,先这么做吧
+						//data.videoBitmap = getVideoFirstImage(path);
+					}
+					data.videoCreateDate = time;
+					
+					data.videoType = vt;
+					mLocalVideoListData.add(data);
+				}
+			}
+		}
+			
+		if(mLocalVideoListData.size() > 0){
+			videoInfo2Double(mLocalVideoListData);
+			//发消息给主线程
+			Message msg = new Message();
+			msg.what = videoType;
+			if(mPageSource.equals("LocalVideoList")){
+				LocalVideoListActivity.mVideoListHandler.sendMessage(msg);
+			}
+			else if(mPageSource.equals("LocalVideoShareList")){
+				LocalVideoShareListActivity.mVideoShareListHandler.sendMessage(msg);
+			}
+		}
+	}
 	
 	/**
 	 * 读取本地视频文件
@@ -266,6 +407,7 @@ public class LocalVideoListManage {
 					}
 					else{
 						String fileName = f.getName();
+						
 						//得到后缀
 						int lastIndex = fileName.lastIndexOf(".");
 						if(-1 != lastIndex){
@@ -536,6 +678,33 @@ public class LocalVideoListManage {
 	}
 	
 	/**
+	 * 读取本地视频配置文件
+	 * @return
+	 */
+	private String[] getVideoConfigFile(String path){
+		String[] data = null;
+		File file=new File(path);
+		if(file.exists()){
+			try {
+				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
+				String str = br.readLine();
+				data = str.split(",");
+				
+				//去重
+				br.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return data;
+		}
+		else{
+			return null;
+		}
+	}
+	
+	/**
 	 * 点击视频播放的时候向日志文件中添加点击的文件名字
 	 * @param str
 	 */
@@ -564,9 +733,6 @@ public class LocalVideoListManage {
 			}
 		}
 	}
-	
-	
-	
 	
 	/**
 	 * 将原有数据格式化成列表需要的数据
@@ -1060,7 +1226,9 @@ public class LocalVideoListManage {
 		public void run(){
 			try{
 				Thread.sleep(1);
-				readLocalVideoFile(mVideoType);
+				readLocalVideoConfigFile(mVideoType);
+				//readLocalVideoFile(mVideoType);
+				
 				/*
 				if(!mHasOne){
 					getAllLocalVideo();
