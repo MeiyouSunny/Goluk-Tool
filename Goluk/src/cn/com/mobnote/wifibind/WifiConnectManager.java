@@ -764,7 +764,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					// -----------------------------------------如果 wifi
 					// 打开了-------------------------------//
 					if (mWifi != null && mWifi.isConnected()) {
-
 						msg.what = 54;
 						msg.obj = null;
 						handler.sendMessage(msg);
@@ -778,7 +777,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 //						wifiSupport.closeWifi();
 //						// 创建热点
 //						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
-
 						return;
 					}
 					// -----------------------------------------如果 ap打开了

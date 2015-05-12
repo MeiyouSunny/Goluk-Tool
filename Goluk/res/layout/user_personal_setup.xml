@@ -60,6 +60,7 @@
 			android:layout_centerVertical="true"/>
 		
 		<TextView
+		    android:id="@+id/user_personal_setup_cache_size"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
