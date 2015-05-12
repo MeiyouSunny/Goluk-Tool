@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,7 +20,6 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -51,8 +49,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	private TextView mTextViewRegist, mTextViewForgetPwd;
 	// 第三方登陆
 //	private ImageView mImageViewWeichat, mImageViewSina, mImageViewQQ;
-	// loading组件
-	private RelativeLayout mLoading;
 	//application
 	private GolukApplication mApplication = null;
 	//context
@@ -111,9 +107,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 //		mImageViewWeichat = (ImageView) findViewById(R.id.user_login_weichat);
 //		mImageViewSina = (ImageView) findViewById(R.id.user_login_sina);
 //		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
-		// loading组件
-		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
-//		mLoading = (RelativeLayout) findViewById(R.id.index_loading_layout);
 		
 		Intent itentGetRegist = getIntent();
 		if(null !=  itentGetRegist.getStringExtra("intentRegist")){
@@ -124,16 +117,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		
 		//如果是注销成功，则接收从UserStartActivity传来的手机号填入手机号框
 		Intent intentStart = getIntent();
-		/*if(null != intentStart.getStringExtra("startActivity")){
-			String phone = intentStart.getStringExtra("startActivity").toString();
-			mEditTextPhoneNumber.setText(phone);
-		}
-		//如果是自动登录失败、超时，则接收从IndexMoreLoginActivity传来的手机号，并填入手机号
-		if(null !=intentStart.getStringExtra("autoPhone")){
-			String phoneAuto = intentStart.getStringExtra("autoPhone").toString();
-			Log.i("autostatus", "----自动登录失败手机号手机号手机号----"+phoneAuto);
-			mEditTextPhoneNumber.setText(phoneAuto);
-		}*/
 		//登录页面返回
 		if(null != intentStart.getStringExtra("isInfo")){
 			justLogin = intentStart.getStringExtra("isInfo").toString();
@@ -349,7 +332,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 						if(b){
 							mApplication.loginStatus = 0;
 							UserUtils.hideSoftMethod(this);
-//							mLoading.setVisibility(View.VISIBLE);
 							mCustomProgressDialog.show();
 							mEditTextPhoneNumber.setEnabled(false);
 							mEditTextPwd.setEnabled(false);
@@ -358,7 +340,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 							mBtnLogin.setEnabled(false);
 							mBackButton.setEnabled(false);
 						}else{
-//							mLoading.setVisibility(View.GONE);
 							closeProgressDialog();
 							mApplication.loginStatus = 2;
 						}
@@ -388,7 +369,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			}
 			
 			mApplication.isUserLoginSucess = true;
-//			mLoading.setVisibility(View.GONE);
 			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
@@ -404,7 +384,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			break;
 		case 2:
 			mApplication.isUserLoginSucess = false;
-//			mLoading.setVisibility(View.GONE);
 			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
@@ -415,7 +394,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			break;
 		case 3:
 			mApplication.isUserLoginSucess = false;
-//			mLoading.setVisibility(View.GONE);
 			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
@@ -444,7 +422,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 		case 4:
 			console.toast("网络连接超时", this);
 			mApplication.isUserLoginSucess = false;
-//			mLoading.setVisibility(View.GONE);
 			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
@@ -455,7 +432,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			break;
 		case 5:
 			mApplication.isUserLoginSucess = false;
-//			mLoading.setVisibility(View.GONE);
 			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
 			mEditTextPwd.setEnabled(true);
@@ -506,8 +482,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 	
 	/**
 	 * 关闭加载中对话框
-	 * @author xuhw
-	 * @date 2015年4月15日
 	 */
 	private void closeProgressDialog(){
 		if(null != mCustomProgressDialog){
