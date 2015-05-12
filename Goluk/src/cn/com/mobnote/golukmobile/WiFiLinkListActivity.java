@@ -305,7 +305,6 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message,Object arrays) {
 		console.log("wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---" + message + "---arrays---" + arrays);
-		// TODO Auto-generated method stub
 		mLoading.setVisibility(View.GONE);
 		WifiRsBean[] beans = null;
 		switch(type){
