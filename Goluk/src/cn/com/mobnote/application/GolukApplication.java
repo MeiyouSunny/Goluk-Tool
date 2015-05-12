@@ -534,8 +534,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					configPath = savePath + "loop.txt";
 				}
 				
+				//console.log("下载视频保存配置---ipcVideoSingleQueryCallBack---" + fileName + ",");
 				//写入本地视频配置文件信息chenxy 5.11
-				AssetsFileUtils.appendFileData(configPath,fileName + ",");
+				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath),fileName + ",");
 				
 				// 调用下载视频接口
 				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
