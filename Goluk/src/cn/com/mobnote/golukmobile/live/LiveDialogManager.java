@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 
 public class LiveDialogManager {
 	/** 单例实例 */
@@ -45,6 +46,12 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_IPC_LOGINOUT = 8;
 	/** 程序退出提示框 */
 	public static final int DIALOG_TYPE_APP_EXIT = 9;
+	/** 重新上传视频 */
+	public static final int DIALOG_TYPE_LIVE_RELOAD_UPLOAD = 10;
+	/** 重新请服务 */
+	public static final int DIALOG_TYPE_LIVE_REQUEST_SERVER = 11;
+	/** 直播分享 */
+	public static final int DIALOG_TYPE_LIVE_SHARE = 12;
 
 	private int mCurrentDialogType = 0;
 
@@ -85,6 +92,28 @@ public class LiveDialogManager {
 	}
 
 	ProgressDialog mProgressDialog = null;
+	ProgressDialog mShareDialog = null;
+
+	public void showShareProgressDialog(Context context, int type, String title, String message) {
+		dismissShareProgressDialog();
+		mCurrentDialogType = type;
+		mShareDialog = ProgressDialog.show(context, title, message, true, false);
+		mShareDialog.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface arg0) {
+				// TODO Auto-generated method stub
+				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
+			}
+		});
+	}
+
+	public void dismissShareProgressDialog() {
+		if (null != mShareDialog) {
+			mShareDialog.dismiss();
+			mShareDialog = null;
+		}
+	}
 
 	public void showProgressDialog(Context context, String title, String message) {
 		dismissProgressDialog();
@@ -216,14 +245,14 @@ public class LiveDialogManager {
 		}
 	}
 
-	public void showLiveExitDialog(Context context, String message) {
+	public void showLiveExitDialog(Context context, String title, String message) {
 		if (null != mLiveExitDialog) {
 			return;
 		}
 		mLiveExitDialog = new AlertDialog.Builder(context).create();
 
 		mLiveExitDialog.setTitle("提示");
-		mLiveExitDialog.setMessage("直播时间到，请返回");
+		mLiveExitDialog.setMessage(message);
 		mLiveExitDialog.setCancelable(false);
 
 		mLiveExitDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
