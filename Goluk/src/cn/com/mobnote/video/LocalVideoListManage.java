@@ -216,19 +216,24 @@ public class LocalVideoListManage {
 		deleteVideoFileConfig(filesPath,videoType);
 	}
 	
+	/**
+	 * 删除本地视频配置文件数据
+	 * @param filesPath
+	 * @param videoType
+	 */
 	public void deleteVideoFileConfig(ArrayList<String> filesPath,int videoType){
 		String[] filePaths = {"loop/loop.txt","wonderful/wonderful.txt","urgent/urgent.txt"};
 		String file = mFilePath + filePaths[videoType];
 		
-		String[] files = getVideoConfigFile(file);
+		List<String> files = getVideoConfigFile(file);
 		
 		for(int i = 0,len = filesPath.size(); i < len; i++){
 			String allPath = filesPath.get(i);
 			String dFileName = allPath.substring(allPath.lastIndexOf("/") + 1);
-			for(int j = files.length - 1; j >=0; j--){
-				if(dFileName.equals(files[j])){
+			for(int j = files.size() - 1; j >=0; j--){
+				if(dFileName.equals(files.get(j))){
 					//删除配置文件数据
-					files[j] = null;
+					files.set(j,null);
 					break;
 				}
 			}
@@ -280,12 +285,12 @@ public class LocalVideoListManage {
 		String file = mFilePath + filePaths[videoType];
 		
 		//必须是文件夹
-		String[] files = getVideoConfigFile(file);
-		if(null != files && files.length > 0){
+		List<String> files = getVideoConfigFile(file);
+		if(null != files && files.size() > 0){
 			
-			int fLen = files.length - 1;
+			int fLen = files.size() - 1;
 			for(int i = fLen; i >= 0; i--){
-				String fileName = files[i];
+				String fileName = files.get(i);
 				//文件全路径,判断文件是否存在
 				String videoPath = mFilePath + videoPaths[videoType] + fileName;
 				//console.log("拼接本地视频路径---readLocalVideoConfigFile---" + videoPath);
@@ -681,16 +686,24 @@ public class LocalVideoListManage {
 	 * 读取本地视频配置文件
 	 * @return
 	 */
-	private String[] getVideoConfigFile(String path){
-		String[] data = null;
+	private List<String> getVideoConfigFile(String path){
+		//String[] data = null;
+		List<String> data = new ArrayList<String>();
+		
 		File file=new File(path);
 		if(file.exists()){
 			try {
 				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
 				String str = br.readLine();
-				data = str.split(",");
+				String[] files = str.split(",");
 				
 				//去重
+				for(String f : files){
+					if(!data.contains(f)){
+						data.add(f);
+					}
+				}
+				
 				br.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
