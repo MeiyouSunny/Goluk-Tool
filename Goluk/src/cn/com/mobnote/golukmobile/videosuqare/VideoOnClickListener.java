@@ -94,7 +94,12 @@ public class VideoOnClickListener implements OnClickListener{
 			user.active = mVideoSquareInfo.mVideoEntity.livevideodata.active;
 			user.aid = mVideoSquareInfo.mVideoEntity.livevideodata.aid;
 			user.lat = mVideoSquareInfo.mVideoEntity.livevideodata.lat;
-			user.liveDuration = Integer.parseInt(mVideoSquareInfo.mVideoEntity.livevideodata.restime);
+			if(mVideoSquareInfo.mVideoEntity.livevideodata.restime !=null && !"".equals(mVideoSquareInfo.mVideoEntity.livevideodata.restime)){
+				user.liveDuration = Integer.parseInt(mVideoSquareInfo.mVideoEntity.livevideodata.restime);
+			}else{
+				user.liveDuration = 0;
+			}
+			
 			user.lon = mVideoSquareInfo.mVideoEntity.livevideodata.lon;
 			user.nickName = mVideoSquareInfo.mUserEntity.nickname;
 			user.persons = mVideoSquareInfo.mVideoEntity.clicknumber;
