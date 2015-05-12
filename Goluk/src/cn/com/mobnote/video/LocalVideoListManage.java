@@ -271,6 +271,31 @@ public class LocalVideoListManage {
 	}
 	
 	/**
+	 * 根据文件的最后修改时间进行排序
+	 * @param files
+	 * @return
+	 */
+	private List<String> sortFile(List<String> files){
+		String file = "";
+		if(files != null && files.size() > 0){
+			for(int i = 0; i < files.size(); i++) {
+				for(int j = i + 1; j <= files.size() - 1; j++) {
+					String fileI = files.get(i);
+					String fileJ = files.get(j);
+					long timeI = Long.valueOf(fileI.substring(5, 15));
+					long timeJ = Long.valueOf(fileJ.substring(5, 15));
+					if(timeI > timeJ){
+						file = files.get(i);
+						files.set(i, files.get(j));
+						files.set(j, file);
+					}
+				}
+			}
+		}
+		return files;
+	}
+	
+	/**
 	 * 读取本地视频配置文件
 	 * @author chxy
 	 * @return
@@ -286,6 +311,8 @@ public class LocalVideoListManage {
 		
 		//必须是文件夹
 		List<String> files = getVideoConfigFile(file);
+		//对所有的文件排序
+		files = this.sortFile(files);
 		if(null != files && files.size() > 0){
 			
 			int fLen = files.size() - 1;
