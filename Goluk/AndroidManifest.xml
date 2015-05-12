@@ -67,7 +67,7 @@
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity" android:screenOrientation="portrait"/>
 		
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"/>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="keyboardHidden|orientation|screenSize"/>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
