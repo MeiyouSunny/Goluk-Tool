@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -35,7 +35,7 @@ import cn.com.tiros.utils.LogUtil;
   *
   * @author xuhw
   */
-public class RestoreFactorySettingsActivity extends BaseActivity implements OnClickListener, IPCManagerFn{
+public class RestoreFactorySettingsActivity extends CarRecordBaseActivity implements OnClickListener, IPCManagerFn{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

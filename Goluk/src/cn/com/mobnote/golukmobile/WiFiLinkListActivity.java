@@ -53,7 +53,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkListActivity extends Activity implements OnClickListener,WifiConnCallBack {
+public class WiFiLinkListActivity extends BaseActivity implements OnClickListener,WifiConnCallBack {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

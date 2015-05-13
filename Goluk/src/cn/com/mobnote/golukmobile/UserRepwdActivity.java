@@ -51,7 +51,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
  * @author mobnote
  *
  */
-public class UserRepwdActivity extends Activity implements OnClickListener,OnTouchListener{
+public class UserRepwdActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 
 	//title
 	private Button mBtnBack;

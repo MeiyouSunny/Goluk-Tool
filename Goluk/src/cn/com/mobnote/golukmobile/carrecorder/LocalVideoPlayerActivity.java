@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import java.io.IOException;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.tiros.utils.LogUtil;
@@ -56,7 +57,7 @@ import android.widget.Toast;
  *
  * @author xuhw
  */
-public class LocalVideoPlayerActivity extends Activity implements OnCompletionListener, OnBufferingUpdateListener,
+public class LocalVideoPlayerActivity extends BaseActivity implements OnCompletionListener, OnBufferingUpdateListener,
 		OnSeekCompleteListener, OnErrorListener, OnInfoListener, OnPreparedListener, OnClickListener,
 		SurfaceHolder.Callback, OnVideoSizeChangedListener {
 	/** 视频播放器 */

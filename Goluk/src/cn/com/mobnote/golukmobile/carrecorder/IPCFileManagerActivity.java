@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
@@ -51,7 +52,7 @@ import cn.com.tiros.utils.LogUtil;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint("ClickableViewAccessibility")
-public class IPCFileManagerActivity extends Activity implements OnClickListener, IPCManagerFn, OnTouchListener{
+public class IPCFileManagerActivity extends BaseActivity implements OnClickListener, IPCManagerFn, OnTouchListener{
 	private StickyListHeadersListView mWonderfulVideoList=null;
 	private StickyListHeadersListView mEmergencyVideoList=null;
 	private StickyListHeadersListView mLoopVideoList=null;

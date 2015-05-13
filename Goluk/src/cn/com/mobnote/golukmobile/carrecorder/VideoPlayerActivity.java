@@ -13,6 +13,7 @@ import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 import java.io.IOException;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.tiros.utils.LogUtil;
@@ -58,7 +59,7 @@ import android.widget.Toast;
   *
   * @author xuhw
   */
-public class VideoPlayerActivity extends Activity implements OnCompletionListener, OnBufferingUpdateListener, OnSeekCompleteListener
+public class VideoPlayerActivity extends BaseActivity implements OnCompletionListener, OnBufferingUpdateListener, OnSeekCompleteListener
 ,OnErrorListener, OnInfoListener, OnPreparedListener, OnClickListener, SurfaceHolder.Callback, OnVideoSizeChangedListener{
 	/** 视频播放器 */
 	private MediaPlayer mMediaPlayer=null;

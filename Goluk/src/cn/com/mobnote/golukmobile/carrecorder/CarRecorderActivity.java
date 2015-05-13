@@ -35,6 +35,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
@@ -78,7 +79,7 @@ import com.rd.car.player.RtmpPlayerView;
  * 
  * @author xuhw
  */
-public class CarRecorderActivity extends Activity implements OnClickListener,
+public class CarRecorderActivity extends BaseActivity implements OnClickListener,
 		IPCManagerFn {
 	public static Handler mHandler = null;
 	/** 保存当前录制的视频类型 */

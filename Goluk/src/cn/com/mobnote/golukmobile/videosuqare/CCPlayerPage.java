@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.tiros.utils.LogUtil;
@@ -26,7 +27,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-public class CCPlayerPage extends Activity implements OnPreparedListener, OnBufferingUpdateListener
+public class CCPlayerPage extends BaseActivity implements OnPreparedListener, OnBufferingUpdateListener
 	,OnErrorListener, OnCompletionListener, Callback, OnClickListener{
 	private SurfaceView mSurfaceView=null;
 	private SurfaceHolder mSurfaceHolder=null;

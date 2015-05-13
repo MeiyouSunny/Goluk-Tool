@@ -39,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
@@ -82,7 +83,7 @@ import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
 import com.rd.car.player.RtmpPlayerView;
 
-public class LiveActivity extends Activity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
+public class LiveActivity extends BaseActivity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
 		View.OnTouchListener, ITalkFn, IPopwindowFn, ILiveDialogManagerFn, ITimerManagerFn, ILocationFn,
 		IBaiduGeoCoderFn, IPCManagerFn, ILive, VideoSuqareManagerFn {
 

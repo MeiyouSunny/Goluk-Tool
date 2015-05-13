@@ -60,7 +60,7 @@ import com.rd.car.editor.FilterVideoEditorException;
  * 
  */
 @SuppressLint("HandlerLeak")
-public class VideoEditActivity extends Activity implements OnClickListener {
+public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	/** 视频编辑页面handler用来接收消息,更新UI */
 	public static Handler mVideoEditHandler = null;
 	/** mv滤镜appter */

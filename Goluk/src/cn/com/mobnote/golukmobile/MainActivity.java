@@ -109,7 +109,7 @@ import com.umeng.socialize.utils.Log;
 
 @SuppressLint("HandlerLeak")
 
-public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack,OnTouchListener, ILiveDialogManagerFn, 
+public class MainActivity extends BaseActivity implements OnClickListener , WifiConnCallBack,OnTouchListener, ILiveDialogManagerFn, 
 			ILocationFn, IBaiduGeoCoderFn ,UserInterface{
 
 	/** application */

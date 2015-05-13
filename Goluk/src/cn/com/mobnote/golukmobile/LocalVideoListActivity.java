@@ -71,7 +71,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * 
  */
 @SuppressLint("HandlerLeak")
-public class LocalVideoListActivity extends Activity implements  OnClickListener, IPCManagerFn, OnTouchListener {
+public class LocalVideoListActivity extends BaseActivity implements  OnClickListener, IPCManagerFn, OnTouchListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

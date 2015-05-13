@@ -155,6 +155,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	private CustomFormatDialog mconnection;
 	/** 是否已经连接成功过 */
 	private boolean isconnection = false;
+	/** 后台标识 */
+	private boolean isBackground=false;
 
 	static {
 		System.loadLibrary("golukmobile");
@@ -596,15 +598,17 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						mDownLoadFileList.add(filename);
 					}
 
-					if (GlobalWindow.getInstance().isShow()) {
-						GlobalWindow.getInstance().refreshPercent(percent);
-						GlobalWindow.getInstance().updateText(
-								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
-										+ "/" + mDownLoadFileList.size());
-					} else {
-						GlobalWindow.getInstance().createVideoUploadWindow(
-								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
-										+ "/" + mDownLoadFileList.size());
+					if(!isBackground){
+						if (GlobalWindow.getInstance().isShow()) {
+							GlobalWindow.getInstance().refreshPercent(percent);
+							GlobalWindow.getInstance().updateText(
+									"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
+											+ "/" + mDownLoadFileList.size());
+						} else {
+							GlobalWindow.getInstance().createVideoUploadWindow(
+									"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
+											+ "/" + mDownLoadFileList.size());
+						}
 					}
 
 				} else if (0 == success) {
@@ -1552,5 +1556,23 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 
 	}
-
+	
+	/**
+	 * 获取下载列表
+	 * @return
+	 * @author xuhw
+	 * @date 2015年5月13日
+	 */
+	public List<String> getDownLoadList(){
+		return mDownLoadFileList;
+	}
+	
+	public void setIsBackgroundState(boolean flag){
+		isBackground=flag;
+	}
+	
+	public boolean getIsBackgroundState(){
+		return isBackground;
+	}
+	
 }
