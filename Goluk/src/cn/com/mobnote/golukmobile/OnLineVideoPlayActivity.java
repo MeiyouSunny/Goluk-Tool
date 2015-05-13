@@ -57,7 +57,7 @@ import android.widget.LinearLayout.LayoutParams;
  * @author 陈宣宇
  * 
  */
-public class OnLineVideoPlayActivity extends Activity implements SurfaceHolder.Callback, OnClickListener {
+public class OnLineVideoPlayActivity extends BaseActivity implements SurfaceHolder.Callback, OnClickListener {
 	/** 上下文 */
 	private Context mContext = null;
 	//private LayoutInflater mLayoutInflater = null;

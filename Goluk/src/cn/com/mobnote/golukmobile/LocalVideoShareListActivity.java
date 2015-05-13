@@ -57,7 +57,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * 
  */
 @SuppressLint("HandlerLeak")
-public class LocalVideoShareListActivity extends Activity implements  OnClickListener, OnTouchListener {
+public class LocalVideoShareListActivity extends BaseActivity implements  OnClickListener, OnTouchListener {
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
 	private int emergencyFirstVisible;

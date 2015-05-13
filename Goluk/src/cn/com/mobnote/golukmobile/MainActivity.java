@@ -43,6 +43,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -108,7 +109,7 @@ import com.umeng.socialize.utils.Log;
 
 @SuppressLint("HandlerLeak")
 
-public class MainActivity extends Activity implements OnClickListener , WifiConnCallBack,OnTouchListener, ILiveDialogManagerFn, 
+public class MainActivity extends BaseActivity implements OnClickListener , WifiConnCallBack,OnTouchListener, ILiveDialogManagerFn, 
 			ILocationFn, IBaiduGeoCoderFn ,UserInterface{
 
 	/** application */
@@ -609,6 +610,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				
 				// 更新最新下载文件的时间
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
+				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime="+time);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

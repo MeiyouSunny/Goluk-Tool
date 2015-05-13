@@ -71,7 +71,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * 
  */
 @SuppressLint("HandlerLeak")
-public class LocalVideoListActivity extends Activity implements  OnClickListener, IPCManagerFn, OnTouchListener {
+public class LocalVideoListActivity extends BaseActivity implements  OnClickListener, IPCManagerFn, OnTouchListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -119,8 +119,8 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	/** 返回按钮 */
 	private ImageButton mBackBtn=null;
 	/** 当前在那个界面，包括循环影像(1) 紧急录像(2) 一键抢拍(3) 三个界面 */
-	private int mOprateType = 1;
-	private int mCurrentType = 1;
+	private int mOprateType = 2;
+	private int mCurrentType = 2;
 	/** 精彩视频切换按钮 */
 	private Button mWonderfulVideoBtn = null;
 	/** 紧急视频切换按钮 */
@@ -353,8 +353,8 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	 * 初始化视频列表管理类
 	 */
 	private void initListManage(){
-		mLocalLoopVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
-		mLocalLoopVideoListManage.getLocalVideoList(0);
+//		mLocalLoopVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
+//		mLocalLoopVideoListManage.getLocalVideoList(0);
 		
 		mLocalWonderfulVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
 		mLocalWonderfulVideoListManage.getLocalVideoList(1);
@@ -394,7 +394,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 		mWonderfulVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		mEmergencyVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		
-		mLoopVideoLine.setVisibility(View.INVISIBLE);
+		mLoopVideoLine.setVisibility(View.GONE);
 		mWonderfulVideoLine.setVisibility(View.INVISIBLE);
 		mEmergencyVideoLine.setVisibility(View.INVISIBLE);
 		
@@ -665,7 +665,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	 */
 	private void gotoVideoPlayPage(String path){
 		if(!TextUtils.isEmpty(path)){
-			Intent intent = new Intent(mContext, LocalVideoPlayerActivity.class);
+			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
 			intent.putExtra("from", "local");
 			//intent.putExtra("type", mCurrentType);
 			intent.putExtra("path", path);
@@ -762,7 +762,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mLoopVideoAdapter.notifyDataSetChanged();
 			
 			//删除选择的文件路径
-			mLocalLoopVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
+			mLocalLoopVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath,0);
 		}else if(2 == mCurrentType){
 			//重组group tab数据
 			mLocalWonderfulVideoListManage.setGroupTabData(mWonderfulVideoData);
@@ -772,7 +772,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mWonderfulVideoAdapter.notifyDataSetChanged();
 			
 			//删除选择的文件路径
-			mLocalWonderfulVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
+			mLocalWonderfulVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath,1);
 		}else{
 			//重组group tab数据
 			mLocalEmergencyVideoListManage.setGroupTabData(mEmergencyVideoData);
@@ -782,7 +782,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 			mEmergencyVideoAdapter.notifyDataSetChanged();
 			
 			//删除选择的文件路径
-			mLocalEmergencyVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath);
+			mLocalEmergencyVideoListManage.deleteLocalVideoData(filesPath,videoImagesPath,2);
 		}
 	}
 	

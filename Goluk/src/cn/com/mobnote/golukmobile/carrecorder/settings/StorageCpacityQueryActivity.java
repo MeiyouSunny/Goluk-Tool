@@ -9,7 +9,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
-import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
@@ -34,7 +34,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
   *
   * @author xuhw
   */
-public class StorageCpacityQueryActivity extends BaseActivity implements IPCManagerFn, OnClickListener{
+public class StorageCpacityQueryActivity extends CarRecordBaseActivity implements IPCManagerFn, OnClickListener{
 	/**  SD卡总容量  */
 	private TextView mTotalSize=null;
 	/**  已用容量  */

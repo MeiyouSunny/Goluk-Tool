@@ -52,7 +52,7 @@ import cn.com.mobnote.util.console;
  * @author mobnote
  *
  */
-public class UserRegistActivity extends Activity implements OnClickListener,UserRegistInterface,UserIdentifyInterface,OnTouchListener {
+public class UserRegistActivity extends BaseActivity implements OnClickListener,UserRegistInterface,UserIdentifyInterface,OnTouchListener {
 
 	// 注册title
 	private Button mBackButton;

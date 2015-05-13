@@ -13,7 +13,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
-import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.utils.LogUtil;
@@ -40,7 +40,7 @@ import cn.com.tiros.utils.LogUtil;
   * @author xuhw
   */
 @SuppressLint("InflateParams")
-public class VersionActivity extends BaseActivity implements IPCManagerFn{
+public class VersionActivity extends CarRecordBaseActivity implements IPCManagerFn{
 	/** Goluk设备编号 */
 	private TextView mDeviceId=null;
 	/** 固件版本号 */

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -226,4 +227,48 @@ public class AssetsFileUtils {
 	    e.printStackTrace();
 	}
     }
+    
+	/**
+	 * 方法追加文件：使用FileWriter
+	 */
+	public static void appendFileData(String path, String content) {
+		try {
+			File file = new File(path);
+			if(!file.exists()){
+				if (!file.getParentFile().exists()) {
+					file.getParentFile().mkdirs();
+				}
+				file.createNewFile();
+			}
+			//打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件
+			FileWriter writer = new FileWriter(path, true);
+			writer.write(content);
+			writer.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 方法追加文件：使用FileWriter
+	 */
+	public static void wirterFileData(String path, String content) {
+		try {
+			File file = new File(path);
+			if(!file.exists()){
+				if (!file.getParentFile().exists()) {
+					file.getParentFile().mkdirs();
+				}
+				file.createNewFile();
+			}
+			//打开一个写文件器，构造函数中的第二个参数false表示以覆盖形式写文件
+			FileWriter writer = new FileWriter(path, false);
+			writer.write(content);
+			writer.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

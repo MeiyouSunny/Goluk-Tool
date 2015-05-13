@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -20,7 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class VideoSquareActivity extends Activity implements OnClickListener {
+public class VideoSquareActivity extends BaseActivity implements OnClickListener {
 	private VideoSquareAdapter mVideoSquareAdapter = null;
 	private ViewPager mViewPager = null;
 	private ImageView hot = null;
