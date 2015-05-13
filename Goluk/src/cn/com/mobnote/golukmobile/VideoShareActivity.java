@@ -177,10 +177,17 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 				videoShareCallBack(1, json.toString());
 			case MSG_H_UPLOAD_PROGRESS:
-				// 更新进度条
-				int percent = ((Integer) msg.obj).intValue();
-				GlobalWindow.getInstance().refreshPercent(percent);
-				console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
+				if(!GolukApplication.getInstance().getIsBackgroundState()){
+					if(GlobalWindow.getInstance().isShow()){
+						// 更新进度条
+						int percent = ((Integer) msg.obj).intValue();
+						GlobalWindow.getInstance().refreshPercent(percent);
+						console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
+					}else{
+						GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
+					}
+				}
+				
 				break;
 			case MSG_H_UPLOAD_SUCESS:
 				showToast("上传完成");
