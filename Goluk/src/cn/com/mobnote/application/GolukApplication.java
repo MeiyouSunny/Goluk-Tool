@@ -20,7 +20,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -396,7 +395,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 * 设置IPC退出登录
 	 */
 	public void setIpcLoginOut(){
-		isIpcLoginSuccess = false;
+		setIpcLoginState(false);
 		if(null != mMainActivity){
 			mMainActivity.wiFiLinkStatus(3);
 		}
@@ -850,24 +849,20 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 	// 显示
 	public void showContinuteLive() {
-
 		if (isCallContinue) {
 			return;
 		}
-		LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp :"
-				+ mSharedPreUtil.getIsLiveNormalExit());
+		LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
 		isCallContinue = true;
 		if (mContext instanceof MainActivity) {
-			LogUtil.e(null,
-					"jyf----20150406----showContinuteLive----mApp2222 :");
+			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp2222 :");
 			isNeedCheckLive = false;
 			if (!mSharedPreUtil.getIsLiveNormalExit()) {
 				((MainActivity) mContext).showContinuteLive();
 			}
 
 		} else {
-			LogUtil.e(null,
-					"jyf----20150406----showContinuteLive----mApp33333 :");
+			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp33333 :");
 			if (!mSharedPreUtil.getIsLiveNormalExit()) {
 				isNeedCheckLive = true;
 			}
@@ -910,6 +905,10 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			e.printStackTrace();
 		}
 	}
+	// 设置连接状态
+	private void setIpcLoginState(boolean isSucess) {
+		isIpcLoginSuccess = isSucess;
+	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
@@ -921,7 +920,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			switch (msg) {
 			case ConnectionStateMsg_Idle:
 				// msg = 0 空闲
-				isIpcLoginSuccess = false;
+				setIpcLoginState(false);
 				ipcDisconnect();
 				// 已经连接成功过
 				if (isconnection) {
@@ -934,7 +933,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				break;
 			case ConnectionStateMsg_Connecting:
 				// msg = 1 连接中
-				isIpcLoginSuccess = false;
+				setIpcLoginState(false);
 				ipcDisconnect();
 				// 已经连接成功过
 				if (isconnection) {
@@ -950,7 +949,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				break;
 			case ConnectionStateMsg_DisConnected:
 				// msg = 3 连接断开
-				isIpcLoginSuccess = false;
+				setIpcLoginState(false);
 				ipcDisconnect();
 				// 已经连接成功过
 				if (isconnection) {
@@ -970,7 +969,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					//param1 = 0 成功 | 失败
 					if(0 == param1){
 						//ipc控制初始化成功,可以看画面和拍摄8s视频
-						isIpcLoginSuccess = true;
+						setIpcLoginState(true);
 						//获取音视频配置信息
 						getVideoEncodeCfg();
 						//发起获取自动循环录制状态
@@ -1015,7 +1014,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					}
 					else{
 
-						isIpcLoginSuccess = false;
+						setIpcLoginState(false);
 						ipcDisconnect();
 					}
 				break;
