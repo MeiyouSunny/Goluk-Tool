@@ -119,8 +119,8 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	/** 返回按钮 */
 	private ImageButton mBackBtn=null;
 	/** 当前在那个界面，包括循环影像(1) 紧急录像(2) 一键抢拍(3) 三个界面 */
-	private int mOprateType = 1;
-	private int mCurrentType = 1;
+	private int mOprateType = 2;
+	private int mCurrentType = 2;
 	/** 精彩视频切换按钮 */
 	private Button mWonderfulVideoBtn = null;
 	/** 紧急视频切换按钮 */
