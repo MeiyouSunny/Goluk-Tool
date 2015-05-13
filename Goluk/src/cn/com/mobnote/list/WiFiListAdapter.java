@@ -72,6 +72,23 @@ public class WiFiListAdapter extends BaseAdapter{
 		}
 	}
 	
+	public void refreshConnectState(String name, String mac) {
+		if (null == mDataList || mDataList.size() <= 0) {
+			return;
+		}
+		final int size = mDataList.size();
+		for (int i = 0; i < size ;i++) {
+			WiFiListData temp = mDataList.get(i);
+			if (temp.wifiName.equals(name) && temp.mac.equals(mac)) {
+				temp.wifiRealState = true;
+			} else {
+				temp.wifiRealState = false;
+			}
+		}
+		
+		this.notifyDataSetChanged();
+		
+	}
 	/**
 	 * 获取是否已连接ipc热点
 	 * @return
@@ -110,7 +127,7 @@ public class WiFiListAdapter extends BaseAdapter{
 		}
 		WiFiListData data = (WiFiListData)mDataList.get(position);
 		
-		if(data.wifiStatus){
+		if(data.wifiRealState){
 			linkIndex = position;
 			holder.wifiStatus.setBackgroundResource(R.drawable.connect_wifi_icon);
 			holder.pwdStatus.setBackgroundResource(R.drawable.connect_lock_icon);
@@ -188,7 +205,7 @@ public class WiFiListAdapter extends BaseAdapter{
 		public void onClick(View v) {
 			resIndex = index;
 			WiFiListData data = (WiFiListData)getItem(index);
-			if(!data.wifiStatus){
+			if(!data.wifiRealState){
 				//判断wifi有没有密码,没有密码直接连接
 				boolean hasPwd = data.hasPwd;
 				if(!hasPwd){

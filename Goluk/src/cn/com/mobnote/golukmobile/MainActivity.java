@@ -1362,6 +1362,9 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				default:
 					break;
 				}
+			} else {
+				// 未连接
+				wifiConnectFailed();
 			}
 
 			break;
