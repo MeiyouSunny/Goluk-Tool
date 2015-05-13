@@ -665,7 +665,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	 */
 	private void gotoVideoPlayPage(String path){
 		if(!TextUtils.isEmpty(path)){
-			Intent intent = new Intent(mContext, LocalVideoPlayerActivity.class);
+			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
 			intent.putExtra("from", "local");
 			//intent.putExtra("type", mCurrentType);
 			intent.putExtra("path", path);

@@ -1334,6 +1334,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 */
 	private void queryNewFileList() {
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
+		LogUtil.e("xuhw", "YYYYYY===queryNewFileList====starttime="+starttime);
 		mIPCControlManager.queryFileListInfo(6, 10, starttime, 2147483647);
 	}
 

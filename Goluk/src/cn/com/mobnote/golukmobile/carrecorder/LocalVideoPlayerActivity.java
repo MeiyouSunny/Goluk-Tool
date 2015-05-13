@@ -116,6 +116,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 			}
 		}
 		
+		LogUtil.e("xuhw", "YYYYYY====playUrl="+playUrl);
 		initView();
 		setListener();
 
@@ -183,12 +184,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 		mPlayBtn = (ImageButton) findViewById(R.id.mPlayBtn);
 		mPlayBigBtn = (ImageButton) findViewById(R.id.mPlayBigBtn);
 		mSeekBar = (SeekBar) findViewById(R.id.mSeekBar);
-
-//		if (from.equals("ipc")) {
-			showLoading();
-//		} else {
-//			hideLoading();
-//		}
+		showLoading();
 	}
 
 	/**
@@ -363,18 +359,13 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 	};
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		
-	}
-
-	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
+		LogUtil.e("xuhw", "YYYYYY=======surfaceCreated=======");
 		mSurfaceHolder = arg0;
 		if (null == mMediaPlayer) {
 			playVideo();
@@ -391,8 +382,11 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
+		LogUtil.e("xuhw", "YYYYYY=======surfaceDestroyed=======");
 		if (null != mMediaPlayer) {
-			mMediaPlayer.pause();
+			if(mMediaPlayer.isPlaying()){
+				mMediaPlayer.pause();
+			}
 		}
 	}
 
@@ -403,7 +397,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 	 * @date 2015年3月31日
 	 */
 	private void playVideo() {
-		System.out.println("TTT=============playVideo=");
+		LogUtil.e("xuhw", "YYYYYY=======playVideo=======");
 		try {
 			mMediaPlayer = new MediaPlayer();
 			mMediaPlayer.setDataSource(playUrl);
@@ -430,8 +424,12 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
+		if(error){
+			return;
+		}
+		
 		long duration = mMediaPlayer.getDuration();
-		LogUtil.e("xuhw", "YYYY====onCompletion===duration=" + duration);
+		LogUtil.e("xuhw", "YYYYYY====onCompletion===duration=" + duration);
 		mCurTime.setText(long2TimeStr(0));
 		mTotalTime.setText(long2TimeStr(duration));
 		mSeekBar.setMax((int) duration);
@@ -445,21 +443,20 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
-
-		// if(!mMediaPlayer.isPlaying()){
-		// mMediaPlayer.start();
-		// System.out.println("TTT===========bbbbbb==========");
-		// }
+		LogUtil.e("xuhw", "YYYYYY=======onSeekComplete=======");
 	}
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+		if(error){
+			return false;
+		}
+		
 		error=true;
-		LogUtil.e("xuhw", "YYYY====onError====");
+		LogUtil.e("xuhw", "YYYYYY====onError====");
 		mHandler.removeMessages(GETPROGRESS);
-		LogUtil.e("xuhw", "TTT=============onError=");
 		hideLoading();
-		Toast.makeText(LocalVideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
+		Toast.makeText(LocalVideoPlayerActivity.this, "播放错误", Toast.LENGTH_SHORT).show();
 		mCurTime.setText("00:00");
 		mTotalTime.setText("00:00");
 		return false;
@@ -485,7 +482,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 
 	@Override
 	public void onPrepared(MediaPlayer arg0) {
-		LogUtil.e("xuhw", "TTT=============onPrepared=");
+		LogUtil.e("xuhw", "YYYYYY=============onPrepared=");
 		mIsVideoReadyToBePlayed = true;
 		if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
 			startVideoPlayback();
@@ -494,7 +491,7 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 
 	@Override
 	public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
-		LogUtil.e("xuhw", "YYYY====onBufferingUpdate===arg1=" + arg1);
+		LogUtil.e("xuhw", "YYYYYY====onBufferingUpdate===arg1=" + arg1);
 	}
 
 	@Override
@@ -530,9 +527,15 @@ public class LocalVideoPlayerActivity extends Activity implements OnCompletionLi
 		mMediaPlayer.start();
 	}
 
-	private void exit() {
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 		releaseMediaPlayer();
 		doCleanUp();
+	}
+
+	private void exit() {
+		
 //		android.os.Process.killProcess(android.os.Process.myPid());
 		this.finish();
 	}
