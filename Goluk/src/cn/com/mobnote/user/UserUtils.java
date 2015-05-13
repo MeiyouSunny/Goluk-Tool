@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.umeng.socialize.utils.Log;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -113,24 +111,6 @@ public class UserUtils {
 			}
 	 }
 	 
-	 public static String getImage2Sex(int drawableImage,String image){
-		 if(drawableImage == R.drawable.individual_center_head_boy_one){
-			 image = "1";
-		 }else if(drawableImage == R.drawable.individual_center_head_boy_two){
-			 image = "2";
-		 }else if(drawableImage == R.drawable.individual_center_head_boy_three){
-			 image = "3";
-		 }else if(drawableImage == R.drawable.individual_center_head_girl_one){
-			 image = "4";
-		 }else if(drawableImage == R.drawable.individual_center_head_girl_two){
-			 image = "5";
-		 }else if(drawableImage == R.drawable.individual_center_head_girl_three){
-			 image = "6";
-		 }else if(drawableImage == R.drawable.individual_center_head_moren){
-			 image = "7";
-		 }
-		 return image;
-	 }
 	 /**
 	  * 固件升级提示框
 	  */
@@ -154,9 +134,7 @@ public class UserUtils {
 	  * 固件升级取消对话框
 	  */
 	public static void dismissUpdateDialog(AlertDialog showUpdateDialog){
-		Log.i("lily", "------dismissUpdateDialog--------");
 		if (null != showUpdateDialog) {
-			Log.i("lily", "--------判断dialog是否为空--------");
 			showUpdateDialog.dismiss();
 			showUpdateDialog = null;
 		}

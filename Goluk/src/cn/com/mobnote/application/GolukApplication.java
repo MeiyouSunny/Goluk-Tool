@@ -1,7 +1,9 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,6 +61,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.user.AppFileUtils;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
@@ -194,6 +197,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 		initRdCardSDK();
 		initCachePath();
+		
 		// createWifi();
 		// 实例化JIN接口,请求网络数据
 
@@ -1518,5 +1522,49 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 
 	}
+	
+	/**
+	 * 软件升级，获取当前版本号
+	 */
+	public int code(int k)
+	{
+		return (k + 255)%255;
+	}
+	
+	public void getVersionCode(){
+		byte[] versionData = AppFileUtils.readAssertsFile(this, "version");
+		if (versionData.length == 8)
+		{
+			int i1 = versionData[0];
+			int i2 = versionData[1];
+			int i3 = versionData[3] << 8 + versionData[2];
+			
+			int a1 = code(versionData[7]) ;
+			int a2 = code(versionData[6]) ;
+			int a3 = code(versionData[5]) ;
+			int a4 = code(versionData[4]) ;
+			int b1 = a4 << 8;
+			int b2 = (b1 + a3) << 8;
+			int b3 = (b2 + a2) << 8;
+			int b4 = b3 + a1;
+			int c1 = a1 << 8;
+			int c2 = (c1 + a2) << 8;
+			int c3 = (c2 + a3) << 8;
+			int c4 = c3 + a4;
+			
+			int i4 = ((a1 << 8 + a2) << 8 +  a3) << 8 +  a4;
+			int i5 = ((a4 << 8 + a3) << 8 +  a2) << 8 +  a1;
+			Log.e("", "" + i1 + "." + i2 + "." + i3 + "." + i4);
+		}
+	}
 
+	/**
+	 * 版本更新
+	 * ?method=upgradeGoluk&xieyi=100&version=1.0.0.1
+	 */
+	public void upgradeGoluk(){
+		String upgradeInfo = "{\"method\":\"" + "upgradeGoluk" + "\",\"xieyi\":\""+ "100" + "\",\"version\":\"1.0.0.1\"}";
+//		mGoluk.GolukLogicCommRequest(mId, cmd, param)
+	}
+	
 }
