@@ -353,8 +353,8 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 	 * 初始化视频列表管理类
 	 */
 	private void initListManage(){
-		mLocalLoopVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
-		mLocalLoopVideoListManage.getLocalVideoList(0);
+//		mLocalLoopVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
+//		mLocalLoopVideoListManage.getLocalVideoList(0);
 		
 		mLocalWonderfulVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
 		mLocalWonderfulVideoListManage.getLocalVideoList(1);
@@ -394,7 +394,7 @@ public class LocalVideoListActivity extends Activity implements  OnClickListener
 		mWonderfulVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		mEmergencyVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		
-		mLoopVideoLine.setVisibility(View.INVISIBLE);
+		mLoopVideoLine.setVisibility(View.GONE);
 		mWonderfulVideoLine.setVisibility(View.INVISIBLE);
 		mEmergencyVideoLine.setVisibility(View.INVISIBLE);
 		
