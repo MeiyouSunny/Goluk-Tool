@@ -1414,7 +1414,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				if(size <= 0){
 					return;
 				}
-				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666===");
+				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666==mDownLoadFileList="+mDownLoadFileList.toString());
+				long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
+				GFileUtils.writeIPCLog("YYYYYY===@@@@@@===downloadfiletime="+starttime+"==mDownLoadFileList="+mDownLoadFileList.toString());
 				mCustomDialog = new CustomDialog(mContext);
 				mCustomDialog.setMessage("有" + size + "个新文件，确定要下载吗？",
 						Gravity.CENTER);
@@ -1437,7 +1439,28 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 							long t1 = fileList.get(0).time;
 							long t2 = fileList.get(fileList.size()-1).time;
 							long time = t1 > t2 ? t1:t2;
+							String filename = "";
+							
+							if(time == t1){
+								filename = fileList.get(0).location;
+							}else{
+								filename = fileList.get(fileList.size()-1).location;
+							}
+					
+							try{
+								if(filename.length() >= 22){
+									String t = filename.substring(18, 22);
+									int tt = Integer.parseInt(t) + 1;
+									time += tt;
+								}
+							}catch(NumberFormatException e){
+								e.printStackTrace();
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+							
 							SettingUtils.getInstance().putLong("downloadfiletime", time);
+							GFileUtils.writeIPCLog("YYYYYY===@@@@@@==11111==downloadfiletime="+time);
 							
 							mDownLoadFileList.clear();
 							mNoDownLoadFileList.clear();
