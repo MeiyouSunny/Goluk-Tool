@@ -414,7 +414,7 @@ public class IPCFileManagerActivity extends Activity implements OnClickListener,
 		if(!isShowPlayer){
 			isShowPlayer=true;
 			if(null == VideoPlayerActivity.mHandler){
-				Intent intent = new Intent(IPCFileManagerActivity.this, LocalVideoPlayerActivity.class);
+				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
 				intent.putExtra("from", "ipc");
 				intent.putExtra("type", mCurrentType);
 				intent.putExtra("filename", filename);

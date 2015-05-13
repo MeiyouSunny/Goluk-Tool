@@ -92,6 +92,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	private String from;
 	private GolukApplication mApp = null;
 	private boolean isShow=false;
+	private boolean error=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +127,11 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
 					case GETPROGRESS:
+						mHandler.removeMessages(GETPROGRESS);
+						if(error){
+							return;
+						}
+						
 						if(null != mMediaPlayer){
 							if(mMediaPlayer.isPlaying()){
 								long curPosition = mMediaPlayer.getCurrentPosition();
@@ -144,8 +150,7 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 							}
 						}
 						
-						mHandler.removeMessages(GETPROGRESS);
-						mHandler.sendEmptyMessageDelayed(GETPROGRESS, 500);
+						mHandler.sendEmptyMessageDelayed(GETPROGRESS, 100);
 						break;
 		
 					default:
@@ -438,6 +443,10 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
+		if(error){
+			return;
+		}
+		
 		long duration = mMediaPlayer.getDuration();
 		LogUtil.e("xuhw", "YYYY====onCompletion===duration="+duration);
 		mCurTime.setText(long2TimeStr(0));
@@ -454,14 +463,15 @@ public class VideoPlayerActivity extends Activity implements OnCompletionListene
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
 		
-//		if(!mMediaPlayer.isPlaying()){
-//			mMediaPlayer.start();
-//			System.out.println("TTT===========bbbbbb==========");
-//		}
 	}
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+		if(error){
+			return false;
+		}
+		
+		error=true;
 		LogUtil.e("xuhw", "YYYY====onError====");
 		mHandler.removeMessages(GETPROGRESS);
 		LogUtil.e("xuhw", "TTT=============onError=");
