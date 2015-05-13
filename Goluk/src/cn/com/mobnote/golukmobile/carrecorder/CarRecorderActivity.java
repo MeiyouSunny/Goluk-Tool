@@ -393,6 +393,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						reconnectionMaxNumber++;
 						showLoading();
 						rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
+						if (m_bIsFullScreen) {
+						    setFullScreen(false);
+						}
 
 						return false;
 					}
@@ -406,6 +409,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 						reconnectionMaxNumber++;
 						showLoading();
 						rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
+						if (m_bIsFullScreen) {
+						    setFullScreen(false);
+						}
 					}
 
 					@Override
@@ -547,9 +553,17 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 		case R.id.back_btn:
+			if(m_bIsFullScreen){
+				return;
+			}
+			
 			exit();
 			break;
 		case R.id.mShareBtn:
+			if(m_bIsFullScreen){
+				return;
+			}
+			
 			if (downloadFinish) {
 				String path = Environment.getExternalStorageDirectory().getPath() + "/tiros-com-cn-ext/video/wonderful/"+wonderfulVideoName;
 				LogUtils.d("YYY====mShareBtn===path="+path);
@@ -568,6 +582,10 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 			}
 			break;
 		case R.id.m8sBtn:
+			if(m_bIsFullScreen){
+				return;
+			}
+			
 			LogUtils.d("m8sBtn========================11111======");
 			GFileUtils
 					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
@@ -599,6 +617,10 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		case R.id.mFileBtn:
 		case R.id.mFileText:
 		case R.id.mFileLayout:
+			if(m_bIsFullScreen){
+				return;
+			}
+			
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				Intent intent = new Intent(CarRecorderActivity.this,
 						IPCFileManagerActivity.class);
@@ -611,6 +633,10 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 		case R.id.mSettingBtn:
 		case R.id.mSettingText:
 		case R.id.mSettingLayout:
+			if(m_bIsFullScreen){
+				return;
+			}
+			
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				Intent setting = new Intent(CarRecorderActivity.this,
 						SettingsActivity.class);
@@ -1073,6 +1099,9 @@ public class CarRecorderActivity extends Activity implements OnClickListener,
 
 						downloadFileNumber = 0;
 						mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
+						if (m_bIsFullScreen) {
+							setFullScreen(false);
+						}
 					}
 				});
 			}
