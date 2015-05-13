@@ -50,7 +50,7 @@ import cn.com.mobnote.util.console;
  * 
  */
 @SuppressLint("HandlerLeak")
-public class GuideActivity extends Activity implements OnClickListener {
+public class GuideActivity extends BaseActivity implements OnClickListener {
 	/** application */
 	//private GolukApplication mApp = null;
 	//private LayoutInflater mLayoutInflater = null;

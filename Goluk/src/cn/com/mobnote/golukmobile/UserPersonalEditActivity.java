@@ -31,7 +31,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UserPersonalEditActivity extends Activity implements OnClickListener,OnTouchListener{
+public class UserPersonalEditActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 
 	//title
 	private Button btnBack,btnRight;

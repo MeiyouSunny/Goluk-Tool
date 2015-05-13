@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class UserPersonalHeadActivity extends Activity implements OnClickListener,OnTouchListener{
+public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 
 	//title
 	private Button btnBack,btnRight;

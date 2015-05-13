@@ -70,7 +70,7 @@ import android.widget.LinearLayout.LayoutParams;
  * 
  */
 
-public class UserCenterActivity extends Activity implements OnClickListener {
+public class UserCenterActivity extends BaseActivity implements OnClickListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

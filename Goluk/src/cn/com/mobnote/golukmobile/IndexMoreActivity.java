@@ -53,7 +53,7 @@ import cn.com.mobnote.user.UserInterface;
  */
 
 @SuppressLint("HandlerLeak")
-public class IndexMoreActivity extends Activity implements OnClickListener,UserInterface {
+public class IndexMoreActivity extends BaseActivity implements OnClickListener,UserInterface {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

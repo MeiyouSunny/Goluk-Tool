@@ -81,7 +81,7 @@ import com.umeng.socialize.sso.UMSsoHandler;
  */
 
 @SuppressLint("HandlerLeak")
-public class VideoShareActivity extends Activity implements OnClickListener {
+public class VideoShareActivity extends BaseActivity implements OnClickListener {
 
 	private static final String DESCRIPTOR = "com.umeng.share";
 	// 配置API KEY

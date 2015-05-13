@@ -24,7 +24,7 @@ import cn.com.mobnote.application.SysApplication;
  * @author mobnote
  *
  */
-public class UserStartActivity extends Activity implements OnClickListener {
+public class UserStartActivity extends BaseActivity implements OnClickListener {
 
 	private ImageView mImageViewHave, mImageViewLook;
 	//

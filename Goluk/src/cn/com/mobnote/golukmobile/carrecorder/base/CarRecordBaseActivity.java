@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.carrecorder.base;
 
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,7 +10,7 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class BaseActivity extends Activity implements OnClickListener{
+public class CarRecordBaseActivity extends BaseActivity implements OnClickListener{
 	private TextView title;
 	private RelativeLayout main;
 	

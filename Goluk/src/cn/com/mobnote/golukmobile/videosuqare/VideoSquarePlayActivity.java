@@ -7,6 +7,7 @@ import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
@@ -34,7 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
-public class VideoSquarePlayActivity extends Activity implements
+public class VideoSquarePlayActivity extends BaseActivity implements
 		OnClickListener, VideoSuqareManagerFn {
 	private RTPullListView mRTPullListView = null;
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter = null;

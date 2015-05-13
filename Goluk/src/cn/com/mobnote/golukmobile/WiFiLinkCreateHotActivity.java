@@ -45,7 +45,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkCreateHotActivity extends Activity implements OnClickListener{
+public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickListener{
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
