@@ -87,6 +87,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private String registOk = null;
 	/**获取验证码的次数**/
 	private String freq = "";
+	private String unRegist = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,12 +129,16 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		// 登陆
 		mTextViewLogin = (TextView) findViewById(R.id.user_regist_login);
 
+		//登录页用户未注册
 		Intent itLoginPhone = getIntent();
 		if(null != itLoginPhone.getStringExtra("intentLogin")){
 			String number = itLoginPhone.getStringExtra("intentLogin").toString();
 			Log.i("user", number);
 			mEditTextPhone.setText(number);
 			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
+		}
+		if(null != itLoginPhone.getStringExtra("unRegist")){
+			unRegist = itLoginPhone.getStringExtra("unRegist").toString();
 		}
 		Intent itRepassword = getIntent(); 
 		if(null != itRepassword.getStringExtra("intentRepassword")){
@@ -593,8 +598,26 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					mApplication.registStatus = 2;//注册成功的状态
 					//注册成功后再次调用登录的接口
 					registLogin();
+					
+					/*mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+					mEditor = mSharedPreferences.edit();
+					mEditor.putBoolean("FirstLogin", false);
+					//提交修改
+					mEditor.commit();*/
+					
 					Intent it = null;
+					Log.i("iiii", "========用户未注册1111======注册成功跳转到MainActivity");
+					if(unRegist.equals("toRegist")){
+						Log.i("iiii", "========用户未注册2222======注册成功跳转到MainActivity");
+						it = new Intent(UserRegistActivity.this,MainActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+						this.finish();
+						return ;
+					}
 					if(registOk.equals("fromStart")){
+						Log.i("iiii", "========用户未注册3333======注册成功跳转到MainActivity");
 						it = new Intent(UserRegistActivity.this,MainActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -602,7 +625,11 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					}else if(registOk.equals("fromIndexMore")){
 						it = new Intent(UserRegistActivity.this,IndexMoreActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+						mEditor = mSharedPreferences.edit();
+						mEditor.putBoolean("FirstLogin", false);
+						//提交修改
+						mEditor.commit();
 						startActivity(it);
 					}else if(registOk.equals("fromSetup")){
 						it = new Intent(UserRegistActivity.this,UserSetupActivity.class);
@@ -654,7 +681,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		}else{
 			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
 			android.util.Log.i("outtime", "-----网络链接超时超时超时" + codeOut);
-//			console.toast("当前网络状况不佳，请检查网络", mContext);
 			console.toast("网络连接超时", mContext);
 			switch (codeOut) {
 			case 1:
@@ -695,8 +721,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			Log.i("yyy", "=======UserRegistActivity====="+b);
 			//---------------------------登录成功的状态  1-------------------------
 			//登录成功跳转
-			mApplication.loginStatus=1;//登录成功
-			mApplication.isUserLoginSucess = true;
+			mApplication.loginStatus=0;//登录中
 		}else{
 			
 		}

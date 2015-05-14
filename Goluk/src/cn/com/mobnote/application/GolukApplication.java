@@ -758,7 +758,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			}
 			break;
 		// 登陆
-
 		case PageType_Login:
 
 			if (null != mMainActivity) {
