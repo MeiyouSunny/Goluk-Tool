@@ -64,7 +64,6 @@ import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.util.console;
-import cn.com.mobnote.wifi.WiFiConnection;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.utils.LogUtil;
@@ -88,8 +87,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	private String mVideoSavePath = "fs1:/video/";
 	/** wifi管理类 */
 	private WifiManager mWifiManage = null;
-	/** wifi链接 */
-	private WiFiConnection mWiFiConnection = null;
 
 	private static GolukApplication instance = null;
 	public IPCControlManager mIPCControlManager = null;
