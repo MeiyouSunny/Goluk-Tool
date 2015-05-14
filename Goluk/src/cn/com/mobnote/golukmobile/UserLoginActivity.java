@@ -409,7 +409,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 					public void onClick(DialogInterface arg0, int arg1) {
 						Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
 						it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
-						it.putExtra("fromRegist", "fromStart");
 						startActivity(it);
 					}
 				}).create().show();
