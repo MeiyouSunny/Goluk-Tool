@@ -1462,6 +1462,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 								e.printStackTrace();
 							}
 							
+							long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
+							time = time > oldtime ? time : oldtime;
 							SettingUtils.getInstance().putLong("downloadfiletime", time);
 							GFileUtils.writeIPCLog("YYYYYY===@@@@@@==11111==downloadfiletime="+time);
 							

@@ -608,6 +608,8 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				}
 				
 				// 更新最新下载文件的时间
+				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
+				time = time > oldtime ? time : oldtime;
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
 				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime="+time);
 			}
