@@ -20,9 +20,12 @@ package cn.com.mobnote.entity;
  * 
  */
 public class WiFiInfo {
+	/** 连接的Wifi的用户名与密码(手机连接其它Wifi)*/
 	public static String AP_SSID;
 	public static String AP_PWD;
 	public static String AP_MAC;
+	
+	/**手机热点的信息 (IPC连接到手机的wifi信息)*/
 	public static String GolukSSID;
 	public static String GolukPWD;
 	public static String GolukMAC;

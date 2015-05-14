@@ -100,8 +100,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		//页面初始化
 		init();
 		
+		getWiFiList(true);
+		
 		//创建热点获取网关
-		getPhoneMac();
+//		getPhoneMac();
 		
 	}
 	
