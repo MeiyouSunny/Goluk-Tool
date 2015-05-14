@@ -139,6 +139,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		}
 		if(null != itLoginPhone.getStringExtra("unRegist")){
 			unRegist = itLoginPhone.getStringExtra("unRegist").toString();
+			Log.i("lily", "=====unRegist===="+unRegist);
 		}
 		Intent itRepassword = getIntent(); 
 		if(null != itRepassword.getStringExtra("intentRepassword")){
@@ -598,12 +599,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					mApplication.registStatus = 2;//注册成功的状态
 					//注册成功后再次调用登录的接口
 					registLogin();
-					
-					/*mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-					mEditor = mSharedPreferences.edit();
-					mEditor.putBoolean("FirstLogin", false);
-					//提交修改
-					mEditor.commit();*/
 					
 					Intent it = null;
 					Log.i("iiii", "========用户未注册1111======注册成功跳转到MainActivity");
