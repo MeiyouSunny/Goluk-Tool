@@ -65,7 +65,7 @@ public class UpgradeManage {
 				Log.i(TAG, "-------goluk-----"+goluk);
 				if(goluk.equals("{}")){
 					Log.i(TAG, "------goluk为空，不用进行升级------");
-					console.toast("当前已是最新版本", mApp.getContext());
+//					console.toast("当前已是最新版本", mApp.getContext());
 				}else{
 					JSONObject jsonGoluk = new JSONObject(goluk);
 					String appcontent = jsonGoluk.getString("appcontent");
