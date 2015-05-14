@@ -139,12 +139,12 @@
     <string name="setting_title_text">设置</string>
     <string name="carrecorder_filemagager_title">文件浏览</string>
     <string name="spzl_title">视频质量</string>
-    <string name="spzl_text">小车本提供两种视频质量，高清为1080p，标准为720p。</string>
+    <string name="spzl_text">极路客提供四种视频质量，1080P高、1080P中、720P高、720P中。</string>
     <string name="zdxhlx_title">自动循环录像</string>
-    <string name="zdxhlx_text">启动选项后，小车本将每间隔５分钟自动保存行车录制影像。当存储空间不足时，将自动覆盖早期循环录像文件。</string>
+    <string name="zdxhlx_text">启动此项后，极路客将每隔5分钟自动保存一段行车影像。当存储空间不足时，将自动覆盖早期循环录制的文件。</string>
     <string name="sylz_title">声音录制开关</string>
     <string name="pzgy_title">碰撞感应灵敏度</string>
-    <string name="pzgy_text">设置此项后,车辆在行驶中如遭受异常的碰撞,行车记录仪会自动保存20秒(前8秒+后12秒)紧急视频影像。当存储空间不足时,将自动覆盖早期循环录像文件。</string>
+    <string name="pzgy_text">启动此项后，车辆在行驶中如遭受异常的碰撞，极路客会自动保存16秒（前8秒+后8秒）紧急视频影像。当存储空间不足时，将自动覆盖早期录制的文件。碰撞灵敏度有低、中、高三档自行选择。</string>
     <string name="rlcx_title">存储容量查询</string>
     <string name="sysz">水印设置</string>
     <string name="ztts">状态提示灯</string>

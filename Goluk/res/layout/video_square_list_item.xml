@@ -130,8 +130,8 @@
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/looknumber_icon"
             android:text="100"
-            android:textColor="#ababab"
-            android:textSize="16sp" />
+            android:textColor="#999999"
+            android:textSize="14sp" />
 
         <ImageButton
             android:id="@+id/share_btn"
@@ -152,7 +152,9 @@
             android:background="@drawable/livestreaming_heart_btn"
             android:paddingLeft="12dp"
             android:paddingBottom="2dp"
-            android:text="502"/>
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:text="0"/>
     </RelativeLayout>
 	 <!-- <View
             android:layout_width="match_parent"

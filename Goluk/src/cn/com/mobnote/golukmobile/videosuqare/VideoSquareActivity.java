@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;

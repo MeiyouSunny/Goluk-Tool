@@ -17,7 +17,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UserPersonalNameActivity extends Activity implements OnClickListener{
+public class UserPersonalNameActivity extends BaseActivity implements OnClickListener{
 
 	//title
 	Button btnBack;

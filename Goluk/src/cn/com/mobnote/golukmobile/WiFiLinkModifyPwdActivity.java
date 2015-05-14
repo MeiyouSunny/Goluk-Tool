@@ -42,7 +42,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListener {
+public class WiFiLinkModifyPwdActivity extends BaseActivity implements OnClickListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

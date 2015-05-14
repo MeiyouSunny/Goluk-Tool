@@ -49,6 +49,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
@@ -114,10 +115,10 @@ import com.umeng.socialize.utils.Log;
  * 
  */
 
-@SuppressLint("HandlerLeak")
-public class MainActivity extends Activity implements OnClickListener,
-		WifiConnCallBack, OnTouchListener, ILiveDialogManagerFn, ILocationFn,
-		IBaiduGeoCoderFn, UserInterface {
+@SuppressLint({ "HandlerLeak", "NewApi" })
+
+public class MainActivity extends BaseActivity implements OnClickListener , WifiConnCallBack,OnTouchListener, ILiveDialogManagerFn, 
+			ILocationFn, IBaiduGeoCoderFn ,UserInterface{
 
 	/** application */
 	private GolukApplication mApp = null;
@@ -237,6 +238,9 @@ public class MainActivity extends Activity implements OnClickListener,
 	
 	/** 链接行车记录仪 */
 	private ImageButton indexCarrecoderBtn = null;
+	
+	/** 连接ipc时的动画 */
+	Animation anim = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -675,7 +679,10 @@ public class MainActivity extends Activity implements OnClickListener,
 				}
 
 				// 更新最新下载文件的时间
+				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
+				time = time > oldtime ? time : oldtime;
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
+				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime="+time);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -812,8 +819,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		PlayVoiceRemote.getInstance().setSpeechEngine("test", 1000,
 				1000, 1000, 1000);
 
-		Animation anim = AnimationUtils.loadAnimation(mContext,
-				R.anim.ipc_action_loading);
+		anim = AnimationUtils.loadAnimation(mContext,R.anim.ipc_action_loading);
 		LinearInterpolator lir = new LinearInterpolator();
 		anim.setInterpolator(lir);
 		indexCarrecoderBtn.startAnimation(anim);
@@ -824,9 +830,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	private void wifiConnectedSucess() {
 		Log.e("", "wifiCallBack-------------wifiConnectedSucess:");
 		mWiFiStatus = WIFI_STATE_SUCCESS;
-		if (null != mVolumeImgAnimation) {
-			mVolumeImgAnimation.stop();
-			mVolumeImgAnimation = null;
+		if (null != anim) {
+			anim.cancel();
+			indexCarrecoderBtn.clearAnimation();
+			anim = null;
 		}
 		mWifiStateTv.setText(WIFI_CONNED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_linked);//临时注释
@@ -837,9 +844,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	private void wifiConnectFailed() {
 		Log.e("", "wifiCallBack-------------wifiConnectFailed:");
 		mWiFiStatus = WIFI_STATE_FAILED;
-		if (null != mVolumeImgAnimation) {
-			mVolumeImgAnimation.stop();
-			mVolumeImgAnimation = null;
+		if (null != anim) {
+			anim.cancel();
+			indexCarrecoderBtn.clearAnimation();
+			anim = null;
 		}
 		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
 		mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
@@ -1065,9 +1073,13 @@ public class MainActivity extends Activity implements OnClickListener,
 		case R.id.more_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
+				Drawable user_down = this.getResources().getDrawable(R.drawable.home_self_btn_click); 
+				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,user_down,null,null);
 				mMoreBtn.setTextColor(Color.rgb(0, 197, 177));
 				break;
 			case MotionEvent.ACTION_UP:
+				Drawable user_up = this.getResources().getDrawable(R.drawable.home_self_btn); 
+				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,user_up,null,null);
 				mMoreBtn.setTextColor(Color.rgb(103, 103, 103));
 				break;
 			}
@@ -1082,16 +1094,21 @@ public class MainActivity extends Activity implements OnClickListener,
 				break;
 			}
 			break;
-		/*case R.id.index_square_btn:
+		case R.id.index_share_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
-				msquareBtn.setTextColor(Color.rgb(0, 197, 177));
+				Drawable db_down = this.getResources().getDrawable(R.drawable.home_share_btn_click); 
+				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_down,null,null);
+				
+				mShareBtn.setTextColor(Color.rgb(0, 197, 177));
 				break;
 			case MotionEvent.ACTION_UP:
-				msquareBtn.setTextColor(Color.rgb(103, 103, 103));
+				Drawable db_up = this.getResources().getDrawable(R.drawable.home_share_btn); 
+				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_up,null,null);
+				mShareBtn.setTextColor(Color.rgb(103, 103, 103));
 				break;
 			}
-			break;*/
+			break;
 		}
 		return false;
 	}
@@ -1495,6 +1512,9 @@ public class MainActivity extends Activity implements OnClickListener,
 				default:
 					break;
 				}
+			} else {
+				// 未连接
+				wifiConnectFailed();
 			}
 
 			break;

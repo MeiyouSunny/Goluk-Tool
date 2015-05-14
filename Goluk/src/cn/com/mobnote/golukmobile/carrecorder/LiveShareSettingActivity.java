@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.carrecorder;
 
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import android.os.Bundle;
@@ -7,7 +8,7 @@ import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class LiveShareSettingActivity extends Activity implements
+public class LiveShareSettingActivity extends BaseActivity implements
 		OnClickListener {
 
 	@Override

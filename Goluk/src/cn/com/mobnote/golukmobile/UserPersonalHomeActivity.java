@@ -23,7 +23,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UserPersonalHomeActivity extends Activity implements OnClickListener{
+public class UserPersonalHomeActivity extends BaseActivity implements OnClickListener{
 
 	//title
 	private Button btnBack;

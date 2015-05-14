@@ -82,7 +82,7 @@ public class NetUtil {
 		}
 	}
 
-	public void findServerIpAddress(int type, final String mac, final String ip, int seconds) {
+	public void findServerIpAddress(int type, final String ssid, final String ip, int seconds) {
 		if (null != mUdpSocket) {
 			return;
 		}
@@ -114,7 +114,7 @@ public class NetUtil {
 						String s = new String(data, 0, length - 1, "GBK");
 						if (s.equals("Goluk,good luck!")) {
 							String address2 = mPacket.getAddress().toString();
-							receiveSucess(address2);
+							receiveSucess(ssid,address2);
 							break;
 						} else {
 							Log.e("", "+++TestUDP--------findServerIpAddress-----77777 recvbuf1=" + s);
@@ -133,7 +133,7 @@ public class NetUtil {
 
 	}
 
-	private void receiveSucess(String ip) {
+	private void receiveSucess(String ssid,String ip) {
 		Log.e("", "+++TestUDP--------receiveSucess-----1111111 recvbuf1=: " + ip);
 		if (ip.contains("/")) {
 			ip = ip.replace("/", "");
@@ -141,7 +141,7 @@ public class NetUtil {
 
 		WifiRsBean bean = new WifiRsBean();
 		bean.setIpc_ip(ip);
-
+		bean.setIpc_ssid(ssid);
 		Message msg = new Message();
 		msg.what = 4;
 		msg.obj = bean;
