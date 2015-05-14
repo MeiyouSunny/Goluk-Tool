@@ -156,6 +156,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	private boolean isconnection = false;
 	/** 后台标识 */
 	private boolean isBackground=false;
+	
+	public long startTime = 0;
 
 	static {
 		System.loadLibrary("golukmobile");
@@ -846,27 +848,46 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 	public boolean isNeedCheckLive = false;
 	private boolean isCallContinue = false;
+	public boolean isCheckContinuteLiveFinish = false;
+	private final int CONTINUTE_TIME_OUT = 15 * 1000;
 
 	// 显示
 	public void showContinuteLive() {
+		if (mSharedPreUtil.getIsLiveNormalExit()) {
+			isCheckContinuteLiveFinish = true;
+			// 不需要续直播
+			return;
+		}
+		if (System.currentTimeMillis() - startTime > CONTINUTE_TIME_OUT) {
+			// 超时
+			isCheckContinuteLiveFinish = true;
+			return;
+		}
+		if (isCheckContinuteLiveFinish) {
+			// 已经完成
+			return;
+		}
+		if (!isIpcLoginSuccess ||!isUserLoginSucess ){
+			return;
+		}
+		
 		if (isCallContinue) {
 			return;
 		}
-		LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
 		isCallContinue = true;
+		LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
+		
 		if (mContext instanceof MainActivity) {
 			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp2222 :");
 			isNeedCheckLive = false;
-			if (!mSharedPreUtil.getIsLiveNormalExit()) {
-				((MainActivity) mContext).showContinuteLive();
-			}
-
+			isCheckContinuteLiveFinish = true;
+			((MainActivity) mContext).showContinuteLive();
 		} else {
 			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp33333 :");
-			if (!mSharedPreUtil.getIsLiveNormalExit()) {
-				isNeedCheckLive = true;
-			}
+			isNeedCheckLive = true;
 		}
+		
+		isCallContinue = false;
 	}
 
 	/**
@@ -908,6 +929,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	// 设置连接状态
 	private void setIpcLoginState(boolean isSucess) {
 		isIpcLoginSuccess = isSucess;
+		if (isSucess) {
+			showContinuteLive();
+		}
 	}
 
 	@Override
