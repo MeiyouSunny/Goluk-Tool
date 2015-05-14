@@ -457,8 +457,14 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	// 开启自己的直播,请求服务器 (在用户点击完设置后开始请求)
 	private void startLiveForServer() {
 		isRequestedForServer = true;
+		String json = null;
+		if (this.isContinueLive) {
+
+		} else {
+			json = JsonUtil.getStartLiveJson(mCurrentVideoId, mSettingData);
+		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_LiveStart, JsonUtil.getStartLiveJson(mCurrentVideoId, mSettingData));
+				IPageNotifyFn.PageType_LiveStart, json);
 		if (!isSucess) {
 			startLiveFailed();
 		} else {
@@ -679,7 +685,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 				if (!isRequestedForServer) {
 					// 没有请求过服务器
-					mLiveVideoHandler.sendEmptyMessage(101);
+					if (!isContinueLive) {
+						// 不是续播，才可以请求
+						mLiveVideoHandler.sendEmptyMessage(101);
+					}
+					
 				} else {
 					LiveDialogManager.getManagerInstance().dismissProgressDialog();
 				}
@@ -1109,7 +1119,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			return;
 		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
-		mHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
+//		mHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
 		isCanVoice = liveData.voice.equals("1") ? true : false;
 		this.isKaiGeSucess = true;
 		mLiveCountSecond = liveData.restTime;
@@ -1515,6 +1525,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	public void onPlayerPrepared(RtmpPlayerView arg0) {
 		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerPrepared : ");
 		mRPVPalyVideo.setHideSurfaceWhilePlaying(true);
+		if (!this.isShareLive) {
+			mHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
+		}
 	}
 
 	@Override
