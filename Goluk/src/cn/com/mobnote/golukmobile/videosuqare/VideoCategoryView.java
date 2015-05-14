@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -127,12 +128,12 @@ public class VideoCategoryView{
 	}
 
 	public void startActivity(String type,String attribute) {
-		VideoSquareActivity play = (VideoSquareActivity)mContext;
+		MainActivity play = (MainActivity)mContext;
 		Intent intent = new Intent(); 
 		intent.putExtra("type", type);
 		intent.putExtra("attribute", attribute);
         intent.setClass(play,VideoSquarePlayActivity.class);
-        play.startActivity(intent);
+		mContext.startActivity(intent);
 	}
 
 	public View getView() {

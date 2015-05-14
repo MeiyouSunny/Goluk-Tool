@@ -73,7 +73,7 @@
     <string name="local_video_title_text">选择视频</string>
     <string name="wifi_name_text">WiFi Name</string>
     <string name="wifi_link_text">未连接</string>
-    <string name="index_square">广场</string>
+    <string name="index_square">发现</string>
     <string name="square_title_text">视频广场</string>
     <string name="watch_live_text">轻触继续观看</string>
     <string name="video_live_5s_tip">稍候片刻,即将进入直播</string>

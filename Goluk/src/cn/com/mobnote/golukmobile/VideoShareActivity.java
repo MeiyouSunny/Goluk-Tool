@@ -688,7 +688,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		final String json = createShareJson(selectJson, isSeque, "" + type);
 
 		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
-
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
 
