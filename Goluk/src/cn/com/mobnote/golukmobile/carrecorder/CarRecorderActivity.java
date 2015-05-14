@@ -326,7 +326,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRtmpPlayerLayout
 				.getLayoutParams();
 		lp.width = screenWidth;
-		lp.height = (int) (screenWidth / 1.777);
+		lp.height = (int) (screenWidth / 1.7833);
 		lp.leftMargin = 0;
 		mRtmpPlayerLayout.setLayoutParams(lp);
 

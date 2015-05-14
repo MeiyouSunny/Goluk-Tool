@@ -875,6 +875,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		//在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		if(null != mMapView){
 			mMapView.onResume();
+			mMapView.invalidate();
 		}
 		isCurrent = true;
 		
