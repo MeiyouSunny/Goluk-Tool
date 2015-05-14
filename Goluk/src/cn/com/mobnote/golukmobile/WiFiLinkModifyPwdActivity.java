@@ -105,7 +105,7 @@ public class WiFiLinkModifyPwdActivity extends BaseActivity implements OnClickLi
 		
 		//启动动画
 		mIpcWiFiAnim.start();
-		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#28b6a4\">Goluk</font> WiFi热点信息"));
+		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#0587ff\">Goluk</font> WiFi热点信息"));
 		mWiFiNameText.setText(mLinkWiFiName);
 		
 		//赋值密码

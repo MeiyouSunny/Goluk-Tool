@@ -137,7 +137,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		//启动动画
 		mIpcSignalAnim.start();
 		//修改title说明文字颜色
-		mDescTitleText.setText(Html.fromHtml("1.确认<font color=\"#28b6a4\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#28b6a4\"> Goluk xxxxx </font>的WiFi"));
+		mDescTitleText.setText(Html.fromHtml("1.确认<font color=\"#0587ff\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#0587ff\"> Goluk xxxxx </font>的WiFi"));
 	}
 	
 	/**
