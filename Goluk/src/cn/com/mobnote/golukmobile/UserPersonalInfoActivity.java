@@ -26,7 +26,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UserPersonalInfoActivity extends Activity implements OnClickListener,OnTouchListener{
+public class UserPersonalInfoActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 	
 	// application
 	private GolukApplication mApplication = null;

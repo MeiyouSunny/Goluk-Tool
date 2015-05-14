@@ -57,7 +57,7 @@ import com.rd.car.player.RtmpPlayerView;
  * @author 陈宣宇
  * 
  */
-public class LiveVideoPlayActivity extends Activity implements OnClickListener {
+public class LiveVideoPlayActivity extends BaseActivity implements OnClickListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

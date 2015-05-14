@@ -7,6 +7,7 @@ import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
@@ -34,7 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
-public class VideoSquarePlayActivity extends Activity implements
+public class VideoSquarePlayActivity extends BaseActivity implements
 		OnClickListener, VideoSuqareManagerFn {
 	private RTPullListView mRTPullListView = null;
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter = null;
@@ -299,6 +300,11 @@ public class VideoSquarePlayActivity extends Activity implements
 					endtime = list.get(list.size()-1);
 					
 					if(uptype == 0){//说明是第一次
+						if(list.size() >= 30){
+							isHaveData = true;
+						}else{
+							isHaveData = false;
+						}
 						mDataList = list;
 						init(false);
 					}else if (uptype ==1){//上拉刷新

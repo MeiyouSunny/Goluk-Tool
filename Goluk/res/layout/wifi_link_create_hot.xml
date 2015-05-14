@@ -76,6 +76,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="42dp"
 			android:layout_marginLeft="14dp"
+			android:textCursorDrawable="@null"
 			android:layout_toRightOf="@id/name_solid"
 			android:background="#00000000"
 			android:inputType="text"
@@ -114,6 +115,7 @@
 		<EditText
 			android:id="@+id/wifi_pwd_text"
 			android:layout_width="match_parent"
+			android:textCursorDrawable="@null"
 			android:layout_height="42dp"
 			android:layout_marginLeft="14dp"
 			android:layout_toRightOf="@id/pwd_solid"

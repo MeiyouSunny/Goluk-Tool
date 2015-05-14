@@ -119,6 +119,7 @@
 			android:background="#00000000"
 			android:digits="@string/wifi_pwd_digits"
 			android:inputType="text"
+			android:textCursorDrawable="@null"
 			android:maxLength="16"
 			android:textColor="#595959"
 			android:textSize="16sp"/>

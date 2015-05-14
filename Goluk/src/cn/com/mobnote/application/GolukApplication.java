@@ -20,7 +20,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -62,6 +61,7 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
+import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
@@ -154,6 +154,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	private CustomFormatDialog mconnection;
 	/** 是否已经连接成功过 */
 	private boolean isconnection = false;
+	/** 后台标识 */
+	private boolean isBackground=false;
+	public long startTime = 0;
 
 	static {
 		System.loadLibrary("golukmobile");
@@ -393,7 +396,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 * 设置IPC退出登录
 	 */
 	public void setIpcLoginOut(){
-		isIpcLoginSuccess = false;
+		setIpcLoginState(false);
 		if(null != mMainActivity){
 			mMainActivity.wiFiLinkStatus(3);
 		}
@@ -515,6 +518,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						+ fileName);
 				int type = json.getInt("type");
 				String savePath = "";
+				String configPath = "";
 //				if (type == 2) {a
 //					// 紧急视频
 //					savePath = mVideoSavePath + "urgent/";
@@ -524,11 +528,19 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 //				}
 				if(IPCManagerFn.TYPE_SHORTCUT == type){
 					savePath = mVideoSavePath + "wonderful/";
+					configPath = savePath + "wonderful.txt";
 				}else if(IPCManagerFn.TYPE_URGENT == type){
 					savePath = mVideoSavePath + "urgent/";
+					configPath = savePath + "urgent.txt";
 				}else{
 					savePath = mVideoSavePath + "loop/";
+					configPath = savePath + "loop.txt";
 				}
+				
+				//console.log("下载视频保存配置---ipcVideoSingleQueryCallBack---" + fileName + ",");
+				//写入本地视频配置文件信息chenxy 5.11
+				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath),fileName + ",");
+				
 				// 调用下载视频接口
 				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
 				LogUtil.e("xuhw", "YYYYYY====start==VideoDownLoad===flag="+a+"===data="+data);
@@ -586,15 +598,17 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						mDownLoadFileList.add(filename);
 					}
 
-					if (GlobalWindow.getInstance().isShow()) {
-						GlobalWindow.getInstance().refreshPercent(percent);
-						GlobalWindow.getInstance().updateText(
-								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
-										+ "/" + mDownLoadFileList.size());
-					} else {
-						GlobalWindow.getInstance().createVideoUploadWindow(
-								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
-										+ "/" + mDownLoadFileList.size());
+					if(!isBackground){
+						if (GlobalWindow.getInstance().isShow()) {
+							GlobalWindow.getInstance().refreshPercent(percent);
+							GlobalWindow.getInstance().updateText(
+									"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
+											+ "/" + mDownLoadFileList.size());
+						} else {
+							GlobalWindow.getInstance().createVideoUploadWindow(
+									"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
+											+ "/" + mDownLoadFileList.size());
+						}
 					}
 
 				} else if (0 == success) {
@@ -833,31 +847,46 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 	public boolean isNeedCheckLive = false;
 	private boolean isCallContinue = false;
+	public boolean isCheckContinuteLiveFinish = false;
+	private final int CONTINUTE_TIME_OUT = 15 * 1000;
 
 	// 显示
 	public void showContinuteLive() {
-
+		if (mSharedPreUtil.getIsLiveNormalExit()) {
+			isCheckContinuteLiveFinish = true;
+			// 不需要续直播
+			return;
+		}
+		if (System.currentTimeMillis() - startTime > CONTINUTE_TIME_OUT) {
+			// 超时
+			isCheckContinuteLiveFinish = true;
+			return;
+		}
+		if (isCheckContinuteLiveFinish) {
+			// 已经完成
+			return;
+		}
+		if (!isIpcLoginSuccess ||!isUserLoginSucess ){
+			return;
+		}
+		
 		if (isCallContinue) {
 			return;
 		}
-		LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp :"
-				+ mSharedPreUtil.getIsLiveNormalExit());
 		isCallContinue = true;
+		LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
+		
 		if (mContext instanceof MainActivity) {
-			LogUtil.e(null,
-					"jyf----20150406----showContinuteLive----mApp2222 :");
+			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp2222 :");
 			isNeedCheckLive = false;
-			if (!mSharedPreUtil.getIsLiveNormalExit()) {
-				((MainActivity) mContext).showContinuteLive();
-			}
-
+			isCheckContinuteLiveFinish = true;
+			((MainActivity) mContext).showContinuteLive();
 		} else {
-			LogUtil.e(null,
-					"jyf----20150406----showContinuteLive----mApp33333 :");
-			if (!mSharedPreUtil.getIsLiveNormalExit()) {
-				isNeedCheckLive = true;
-			}
+			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp33333 :");
+			isNeedCheckLive = true;
 		}
+		
+		isCallContinue = false;
 	}
 
 	/**
@@ -896,6 +925,13 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			e.printStackTrace();
 		}
 	}
+	// 设置连接状态
+	private void setIpcLoginState(boolean isSucess) {
+		isIpcLoginSuccess = isSucess;
+		if (isSucess) {
+			showContinuteLive();
+		}
+	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
@@ -907,7 +943,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			switch (msg) {
 			case ConnectionStateMsg_Idle:
 				// msg = 0 空闲
-				isIpcLoginSuccess = false;
+				setIpcLoginState(false);
 				ipcDisconnect();
 				// 已经连接成功过
 				if (isconnection) {
@@ -920,7 +956,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				break;
 			case ConnectionStateMsg_Connecting:
 				// msg = 1 连接中
-				isIpcLoginSuccess = false;
+				setIpcLoginState(false);
 				ipcDisconnect();
 				// 已经连接成功过
 				if (isconnection) {
@@ -936,7 +972,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				break;
 			case ConnectionStateMsg_DisConnected:
 				// msg = 3 连接断开
-				isIpcLoginSuccess = false;
+				setIpcLoginState(false);
 				ipcDisconnect();
 				// 已经连接成功过
 				if (isconnection) {
@@ -956,7 +992,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					//param1 = 0 成功 | 失败
 					if(0 == param1){
 						//ipc控制初始化成功,可以看画面和拍摄8s视频
-						isIpcLoginSuccess = true;
+						setIpcLoginState(true);
 						//获取音视频配置信息
 						getVideoEncodeCfg();
 						//发起获取自动循环录制状态
@@ -1001,7 +1037,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					}
 					else{
 
-						isIpcLoginSuccess = false;
+						setIpcLoginState(false);
 						ipcDisconnect();
 					}
 				break;
@@ -1336,6 +1372,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 */
 	private void queryNewFileList() {
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
+		LogUtil.e("xuhw", "YYYYYY===queryNewFileList====starttime="+starttime);
 		mIPCControlManager.queryFileListInfo(6, 10, starttime, 2147483647);
 	}
 
@@ -1403,7 +1440,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				if(size <= 0){
 					return;
 				}
-				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666===");
+				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666==mDownLoadFileList="+mDownLoadFileList.toString());
+				long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
+				GFileUtils.writeIPCLog("YYYYYY===@@@@@@===downloadfiletime="+starttime+"==mDownLoadFileList="+mDownLoadFileList.toString());
 				mCustomDialog = new CustomDialog(mContext);
 				mCustomDialog.setMessage("有" + size + "个新文件，确定要下载吗？",
 						Gravity.CENTER);
@@ -1426,7 +1465,30 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 							long t1 = fileList.get(0).time;
 							long t2 = fileList.get(fileList.size()-1).time;
 							long time = t1 > t2 ? t1:t2;
+							String filename = "";
+							
+							if(time == t1){
+								filename = fileList.get(0).location;
+							}else{
+								filename = fileList.get(fileList.size()-1).location;
+							}
+					
+							try{
+								if(filename.length() >= 22){
+									String t = filename.substring(18, 22);
+									int tt = Integer.parseInt(t) + 1;
+									time += tt;
+								}
+							}catch(NumberFormatException e){
+								e.printStackTrace();
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+							
+							long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
+							time = time > oldtime ? time : oldtime;
 							SettingUtils.getInstance().putLong("downloadfiletime", time);
+							GFileUtils.writeIPCLog("YYYYYY===@@@@@@==11111==downloadfiletime="+time);
 							
 							mDownLoadFileList.clear();
 							mNoDownLoadFileList.clear();
@@ -1518,5 +1580,23 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 
 	}
-
+	
+	/**
+	 * 获取下载列表
+	 * @return
+	 * @author xuhw
+	 * @date 2015年5月13日
+	 */
+	public List<String> getDownLoadList(){
+		return mDownLoadFileList;
+	}
+	
+	public void setIsBackgroundState(boolean flag){
+		isBackground=flag;
+	}
+	
+	public boolean getIsBackgroundState(){
+		return isBackground;
+	}
+	
 }

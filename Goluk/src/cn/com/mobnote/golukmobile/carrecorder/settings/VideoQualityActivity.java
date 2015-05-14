@@ -11,7 +11,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
-import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
@@ -37,7 +37,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
   * @author xuhw
   */
 @SuppressLint("InflateParams")
-public class VideoQualityActivity extends BaseActivity implements OnClickListener, IPCManagerFn{
+public class VideoQualityActivity extends CarRecordBaseActivity implements OnClickListener, IPCManagerFn{
 	/** 视频类型文字显示 */
 	private TextView mCloseText=null;
 	private TextView mLowText=null;

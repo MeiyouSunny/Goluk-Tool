@@ -6,7 +6,7 @@
 	
     
     <!-- 视频广场title -->
-	<RelativeLayout
+	<!-- <RelativeLayout
 		android:id="@+id/title_layout"
 		android:layout_width="match_parent"
 		android:layout_height="42dp"
@@ -29,7 +29,7 @@
 			android:textSize="18sp"
 			android:textColor="@color/white"
 			android:text="@string/square_title_text"/>
-	</RelativeLayout>
+	</RelativeLayout> -->
     
     <RelativeLayout
         android:id="@+id/title"
@@ -43,33 +43,69 @@
             android:layout_height="wrap_content"
             android:background="@drawable/flle_tit_bg"
             android:gravity="center" >
-
-            <Button
+			
+            
+            <LinearLayout 
+                android:orientation="horizontal"
                 android:id="@+id/mVideoList"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:text="热门"
-                android:textColor="#00c5b4"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:background="@drawable/flle_tit_line" />
-
-            <Button
-                android:id="@+id/mTypeList"
+                android:gravity="center|center_vertical"
+                android:background="@drawable/home_bg"
+                android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/hot_image"
+                    android:layout_width="wrap_content"
+               	 	android:layout_height="wrap_content"
+               	 	android:layout_marginRight="6dp"
+               	 	android:background="@drawable/home_hot_btn_click"/>
+                <TextView
+                    android:id="@+id/hot_title" 
+                    android:layout_width="wrap_content"
+               	 	android:layout_height="wrap_content"
+               	 	android:text="热门"
+                	android:textColor="#dde6f5"
+                	android:textSize="18sp"/>
+                
+            </LinearLayout>
+            
+             <LinearLayout 
+               	android:id="@+id/mTypeList"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
+                android:gravity="center|center_vertical"
+                android:background="@drawable/home_bg"
+                android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/square_image"
+                    android:layout_width="wrap_content"
+               	 	android:layout_height="wrap_content"
+               	 	android:layout_marginRight="6dp"
+               	 	android:background="@drawable/home_video_btn"/>
+                <TextView 
+                    android:id="@+id/square_title" 
+                    android:layout_width="wrap_content"
+               	 	android:layout_height="wrap_content"
+               	 	android:text="广场"
+                	android:textColor="#dde6f5"
+                	android:textSize="18sp"/>
+                
+            </LinearLayout>
+            <!-- <Button
+                android:id="@+id/mVideoList"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|center_vertical"
                 android:layout_weight="1"
-                android:background="#00000000"
-                android:text="广场"
-                android:textColor="#999999"
-                android:textSize="16sp" />
+                android:drawablePadding="1dp"
+                android:drawableLeft="@drawable/home_hot_btn"
+                android:background="@drawable/home_bg"
+                android:text="热门"
+                android:textColor="#dde6f5"
+                android:textSize="18sp" /> -->
+
+            <!-- <Button
+                 /> -->
         </LinearLayout>
 
         <LinearLayout
@@ -85,7 +121,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="#00c590"
+                android:background="#0b59be"
                 android:contentDescription="@string/def" />
 
             <ImageView
@@ -95,7 +131,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="#00c590"
+                android:background="#0b59be"
                 android:visibility="invisible"
                 android:contentDescription="@string/def" />
         </LinearLayout>
@@ -105,6 +141,7 @@
         android:id="@+id/mViewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/title" >
     </android.support.v4.view.ViewPager>
 

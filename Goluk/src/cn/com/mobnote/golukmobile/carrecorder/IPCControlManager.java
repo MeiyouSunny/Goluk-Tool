@@ -69,6 +69,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年3月21日
 	 */
 	public boolean setIPCWifiState(boolean isConnect,String ip){
+		LogUtil.e("xuhw", "YYYYYYY==============ip="+ip);
 		SettingUtils.getInstance().putString("IPC_IP", ip);
 		int state = isConnect ? 1 : 0;
 		String json = JsonUtil.getWifiChangeJson(state, ip);

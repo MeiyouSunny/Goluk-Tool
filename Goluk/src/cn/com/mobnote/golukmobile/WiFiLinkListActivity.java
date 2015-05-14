@@ -14,7 +14,6 @@ import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import cn.com.mobnote.wifibind.WifiRsBean;
-import cn.com.tiros.api.WIFIInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -54,7 +53,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkListActivity extends Activity implements OnClickListener,WifiConnCallBack {
+public class WiFiLinkListActivity extends BaseActivity implements OnClickListener,WifiConnCallBack {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -101,8 +100,10 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		//页面初始化
 		init();
 		
+		getWiFiList(true);
+		
 		//创建热点获取网关
-		getPhoneMac();
+//		getPhoneMac();
 		
 	}
 	
@@ -182,12 +183,20 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		}
 	}
 	
+	public static  String willConnName = null;
+	public static  String willConnMac = null;
+	
+	public static  String willConnName2 = null;
+	public static  String willConnMac2 = null;
+	
 	/**
 	 * 连接指定wifi
 	 * @param wifiName
 	 * @param pwd
 	 */
 	public void connectWiFi(String wifiName,String mac,String pwd){
+		willConnName2 = wifiName;
+		willConnMac2 = mac;
 		mLoading.setVisibility(View.VISIBLE);
 		//保存wifi校验名称 chenxy
 		//WiFiConnection.SaveWiFiName(wifiName);
@@ -210,6 +219,9 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	 * @param wifiName
 	 */
 	public void connectWiFi(String wifiName,String mac){
+		willConnName2 = wifiName;
+		willConnMac2 = mac;
+		
 		mLoading.setVisibility(View.VISIBLE);
 		//保存wifi校验名称 chenxy
 		//WiFiConnection.SaveWiFiName(wifiName);
@@ -254,10 +266,11 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		console.log("ipc连接成功回调---ipcLinkedCallBack---1");
 		mLoading.setVisibility(View.GONE);
 		//标识已连接ipc热点,可以点击下一步
-		mHasLinked = true;
-		
-		mWiFiListAdapter.changeWiFiStatus();
-		mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn);
+		this.nextCan();
+		if (willConnName2 != null && null != willConnMac2) {
+			mWiFiListAdapter.refreshConnectState(willConnName2, willConnMac2);
+		}
+//		mWiFiListAdapter.changeWiFiStatus();	
 	}
 	
 	@Override
@@ -275,7 +288,6 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
 			case R.id.back_btn:
@@ -302,28 +314,67 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 		}
 	}
 	
+	private void nextCan() {
+		mHasLinked = true;
+		mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn);
+	}
+
+	private void nextNotCan() {
+		mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn_ash);
+		mHasLinked = false;
+	}
+	
+	private void callBack_ScanWifiList( int state, int process, String message,Object arrays) {
+		console.log("wifi链接接口回调---type---callBack_ScanWifiList---state---" + state + "---process---" + process + "---message---" + message + "---arrays---" + arrays);
+		if (state < 0) {
+			return;
+		}
+		console.log("wifi链接接口回调---type---callBack_ScanWifiList---state---222222");
+		// 获取wifi列表
+		WifiRsBean[] beans = (WifiRsBean[]) arrays;
+		if (beans == null) {
+			return;
+		}
+		console.log("wifi链接接口回调---type---callBack_ScanWifiList---state---33333333");
+		mWiFiListManage.analyzeWiFiData(beans);
+		mWiFiListAdapter.notifyDataSetChanged();
+		this.nextNotCan();
+		console.log("wifi链接接口回调---type---callBack_ScanWifiList---state---44444");
+//		if (mWiFiListManage.isHasConnectData()) {
+//			WiFiListData wifiData = mWiFiListManage.getConnectWifiData();
+//			if (null != wifiData) {
+//				if (mWiFiListManage.isIPCWifi(wifiData.wifiName)) {
+//					if (wifiData.hasPwd) {
+//						mLinkWiFiName = wifiData.wifiName;
+//						// 保存ipc-wifi数据
+//						WiFiInfo.AP_SSID = mLinkWiFiName;
+//						WiFiInfo.AP_PWD = "123456789";
+//						WiFiInfo.AP_MAC = wifiData.mac;
+//					} else {
+//						mLinkWiFiName = wifiData.wifiName;
+//						// 保存ipc-wifi数据
+//						WiFiInfo.AP_SSID = mLinkWiFiName;
+//						WiFiInfo.AP_PWD = "";
+//						WiFiInfo.AP_MAC = wifiData.mac;
+//					}
+//					if (!mApp.isIpcLoginSuccess) {
+//						sendLogicLinkIpc();
+//					}
+//
+//					this.nextCan();
+//				}
+//			}
+//		}
+	}
+	
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message,Object arrays) {
 		console.log("wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---" + message + "---arrays---" + arrays);
-		// TODO Auto-generated method stub
 		mLoading.setVisibility(View.GONE);
-		WifiRsBean[] beans = null;
+		
 		switch(type){
 			case 1:
-				if(state >= 0){
-					//获取wifi列表
-					beans = (WifiRsBean[]) arrays;
-					if (beans != null) {
-						mWiFiListManage.analyzeWiFiData(beans);
-						mWiFiListAdapter.notifyDataSetChanged();
-					}
-					else {
-						console.toast(message, mContext);
-					}
-				}
-				else{
-					console.toast(message, mContext);
-				}
+				callBack_ScanWifiList(state, process, message, arrays);
 			break;
 			case 2:
 				if(state >= 0){
@@ -332,8 +383,7 @@ public class WiFiLinkListActivity extends Activity implements OnClickListener,Wi
 					sendLogicLinkIpc();
 				}
 				else{
-					mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn_ash);
-					mHasLinked = false;
+					this.nextNotCan();
 					console.toast(message, mContext);
 				}
 			break;

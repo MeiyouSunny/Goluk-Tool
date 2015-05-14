@@ -36,7 +36,7 @@ import cn.com.mobnote.util.console;
  * 
  * @author mobnote
  */
-public class UserLoginActivity extends Activity implements OnClickListener,UserLoginInterface ,OnTouchListener{
+public class UserLoginActivity extends BaseActivity implements OnClickListener,UserLoginInterface ,OnTouchListener{
 	//判断是否能点击提交按钮
 	private boolean isOnClick=false;
 	// 登陆title

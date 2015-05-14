@@ -52,7 +52,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:background="@drawable/live_icon_live"
+            android:background="@drawable/home_live_icon"
             android:visibility="gone" />
 
         <ImageButton
@@ -62,7 +62,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:background="@drawable/livestreaming_report_btn" />
+            android:background="@drawable/home_report_btn" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -130,8 +130,8 @@
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/looknumber_icon"
             android:text="100"
-            android:textColor="#ababab"
-            android:textSize="16sp" />
+            android:textColor="#999999"
+            android:textSize="14sp" />
 
         <ImageButton
             android:id="@+id/share_btn"
@@ -152,11 +152,13 @@
             android:background="@drawable/livestreaming_heart_btn"
             android:paddingLeft="12dp"
             android:paddingBottom="2dp"
-            android:text="502"/>
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:text="0"/>
     </RelativeLayout>
-	 <View
+	 <!-- <View
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:layout_alignParentBottom="true"
-            android:background="#ededed" />
+            android:background="#ededed" /> -->
 </LinearLayout>

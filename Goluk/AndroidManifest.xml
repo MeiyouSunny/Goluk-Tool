@@ -11,7 +11,7 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
 
-	<application android:name="cn.com.mobnote.application.GolukApplication" android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name">
+	<application android:name="cn.com.mobnote.application.GolukApplication" android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:hardwareAccelerated="false" >
 		<activity android:theme="@style/Theme.AppStartLoad" android:label="@string/app_name" android:name="cn.com.mobnote.golukmobile.GuideActivity" android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -48,7 +48,11 @@
 		<activity android:name="cn.com.mobnote.golukmobile.VideoShareActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.OnLineVideoPlayActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.MainActivity" android:screenOrientation="portrait"/>
+		<activity
+		    android:name="cn.com.mobnote.golukmobile.MainActivity"
+		    android:configChanges="screenSize|keyboardHidden|orientation"
+		    android:screenOrientation="portrait" />
+
 		<activity android:name="cn.com.mobnote.golukmobile.IndexMoreActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserCenterActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserSetupActivity" android:screenOrientation="portrait"/>
@@ -63,7 +67,7 @@
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity" android:screenOrientation="portrait"/>
 		
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"/>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="keyboardHidden|orientation|screenSize"/>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
@@ -72,10 +76,9 @@
 		    android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
 		    android:screenOrientation="portrait" />
 
-		<!--  <activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity> -->
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity> 
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity"  android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VersionActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.RestoreFactorySettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
@@ -115,17 +118,28 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 		
-		<!-- ###################添加UmengAppkey###################### -->
-		<meta-data android:name="UMENG_APPKEY" android:value="546341d6fd98c59a41003371"/>
-		<meta-data android:value="mobnote" android:name="UMENG_CHANNEL"/>
-		
-		<activity android:configChanges="orientation|keyboard" android:launchMode="singleTask" android:name="com.umeng.socialize.view.ShareActivity" android:noHistory="true" android:theme="@style/Theme.UMDialog" android:windowSoftInputMode="stateVisible|adjustResize"/>
-		<!-- 添加百度地图key -->
-		<!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
-		<meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="63che8lBbcckvH0IEgeBjrdA" />
-		
-		
-		<!-- 必须 录制主服务 -->
+        <!-- ###################添加UmengAppkey###################### -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="546341d6fd98c59a41003371" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="mobnote" />
+
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <!-- 添加百度地图key -->
+        <!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="63che8lBbcckvH0IEgeBjrdA" />
+
+        <!-- 必须 录制主服务 -->
         <service android:name="com.rd.car.CarRecorderService" />
 
         <!-- 可选 响应各种消息 （可以动态注册此receiver) -->
@@ -134,6 +148,7 @@
                 <action android:name="com.rd.car.RECORDER_MESSAGE" />
             </intent-filter>
         </receiver>
+
     </application>
 
     <!-- baidu地图权限 -->

@@ -81,7 +81,7 @@ import com.umeng.socialize.sso.UMSsoHandler;
  */
 
 @SuppressLint("HandlerLeak")
-public class VideoShareActivity extends Activity implements OnClickListener {
+public class VideoShareActivity extends BaseActivity implements OnClickListener {
 
 	private static final String DESCRIPTOR = "com.umeng.share";
 	// 配置API KEY
@@ -177,10 +177,17 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 
 				videoShareCallBack(1, json.toString());
 			case MSG_H_UPLOAD_PROGRESS:
-				// 更新进度条
-				int percent = ((Integer) msg.obj).intValue();
-				GlobalWindow.getInstance().refreshPercent(percent);
-				console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
+				if(!GolukApplication.getInstance().getIsBackgroundState()){
+					if(GlobalWindow.getInstance().isShow()){
+						// 更新进度条
+						int percent = ((Integer) msg.obj).intValue();
+						GlobalWindow.getInstance().refreshPercent(percent);
+						console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
+					}else{
+						GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
+					}
+				}
+				
 				break;
 			case MSG_H_UPLOAD_SUCESS:
 				showToast("上传完成");
@@ -688,7 +695,6 @@ public class VideoShareActivity extends Activity implements OnClickListener {
 		final String json = createShareJson(selectJson, isSeque, "" + type);
 
 		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
-
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
 

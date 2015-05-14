@@ -9,7 +9,6 @@ import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiRsBean;
 
-
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -36,22 +35,67 @@ public class WiFiListManage {
 	@SuppressWarnings("unused")
 	private Context mContext = null;
 	private ArrayList<WiFiListData> mWiFiListData = new ArrayList<WiFiListData>();
-	public WiFiListManage(Context context){
+	
+	public static final String GOLUK_PRE = "Goluk";
+
+	public WiFiListManage(Context context) {
 		mContext = context;
 	}
-	
+
 	/**
 	 * 获取本地滤镜主题列表
+	 * 
 	 * @return
 	 */
-	public ArrayList<WiFiListData> getWiFiList(){
+	public ArrayList<WiFiListData> getWiFiList() {
 		return mWiFiListData;
 	}
 	
+	public WiFiListData getConnectWifiData() {
+		if (null == mWiFiListData || mWiFiListData.size() <= 0) {
+			return null;
+		}
+		WiFiListData tempData = null;
+		boolean isHas = false;
+		final int size = mWiFiListData.size();
+		for (int i = 0; i < size; i++) {
+			if (mWiFiListData.get(i).wifiStatus) {
+				tempData = mWiFiListData.get(i);
+				break;
+			}
+		}
+
+		return tempData;
+	}
+
+	// 是否有连接的数据
+	public boolean isHasConnectData() {
+		if (null == mWiFiListData || mWiFiListData.size() <= 0) {
+			return false;
+		}
+		boolean isHas = false;
+		final int size = mWiFiListData.size();
+		for (int i = 0; i < size; i++) {
+			if (mWiFiListData.get(i).wifiStatus) {
+				isHas = true;
+				break;
+			}
+		}
+
+		return isHas;
+	}
+	
+	public boolean isIPCWifi(String ssid) {
+		if (null == ssid || "".equals(ssid)) {
+			return false;
+		}
+		return ssid.contains(GOLUK_PRE);
+	}
+
 	/**
 	 * 解析wifi列表数据
 	 */
-	public void analyzeWiFiData(WifiRsBean[] arrays){
+	public void analyzeWiFiData(WifiRsBean[] arrays) {
 		mWiFiListData.clear();
 		for (WifiRsBean wifi : arrays) {
 			String wifiName = wifi.getIpc_ssid();
@@ -62,37 +106,29 @@ public class WiFiListManage {
 			data.hasPwd = wifi.isPassnull();
 			data.mac = wifi.getIpc_bssid();
 
-			console.log("获取小车本wifi---getwifiList---" + wifiName + "---" + wifiStatus + "---mac---" + data.mac + "---pwd---" + data.hasPwd);
+			console.log("获取小车本wifi---getwifiList---" + wifiName + "---" + wifiStatus + "---mac---" + data.mac
+					+ "---pwd---" + data.hasPwd);
 			mWiFiListData.add(data);
-			
-			if(wifiStatus){
-				//如果已连接IPC热点,通知logic连接ipc
-//				((WiFiLinkListActivity)mContext).mLinkWiFiName = wifiName;
-//				((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
+
+			if (wifiStatus) {
+				// 如果已连接IPC热点,通知logic连接ipc
+				// ((WiFiLinkListActivity)mContext).mLinkWiFiName = wifiName;
+				// ((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
 			}
 		}
 	}
-	
-	public class WiFiListData{
-		//wifi名称
+
+	public class WiFiListData {
+		// wifi名称
 		public String wifiName;
-		//wifi状态标识
+		// wifi状态标识
 		public boolean wifiStatus = false;
-		//wifi信号
+		public boolean wifiRealState = false;
+		// wifi信号
 		public int signal = 9;
-		//是否有密码
+		// 是否有密码
 		public boolean hasPwd = true;
-		//mac地址
+		// mac地址
 		public String mac = "";
 	}
 }
-
-
-
-
-
-
-
-
-
-

@@ -37,7 +37,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
+public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

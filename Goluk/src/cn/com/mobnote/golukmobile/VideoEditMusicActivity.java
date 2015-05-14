@@ -48,7 +48,7 @@ import android.widget.RelativeLayout;
  * 
  */
 
-public class VideoEditMusicActivity extends Activity implements OnClickListener ,OnFooterRefreshListener{
+public class VideoEditMusicActivity extends BaseActivity implements OnClickListener ,OnFooterRefreshListener{
 
 	/** application */
 	private GolukApplication mApp = null;
