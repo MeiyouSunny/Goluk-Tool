@@ -56,7 +56,7 @@
 				android:gravity="center"
 				android:background="#00000000"
 				android:text="@string/videolist_jcsp"
-				android:textColor="#00c590"
+				android:textColor="@color/carrecorder_text_sel_color"
 				android:textSize="16sp" />
 
 			<ImageView
@@ -92,7 +92,7 @@
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="20dp"
 				android:layout_weight="1"
-				android:background="#00c590"
+				android:background="@color/carrecorder_text_sel_color"
 				android:contentDescription="@string/def"
 				android:visibility="visible" />
 
@@ -103,7 +103,7 @@
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="10dp"
 				android:layout_weight="1"
-				android:background="#00c590"
+				android:background="@color/carrecorder_text_sel_color"
 				android:contentDescription="@string/def"
 				android:visibility="invisible" />
 		</LinearLayout>

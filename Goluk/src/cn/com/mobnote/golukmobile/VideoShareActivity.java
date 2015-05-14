@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
@@ -318,13 +319,15 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 		thumbFile = filePath + File.separator + videoName;
 		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
-
+		LogUtil.e("xuhw", "BBBBBB======thumbFile="+thumbFile);
+		LogUtil.e("xuhw", "BBBBBB======mVideoPath="+mVideoPath);
 		File image = new File(thumbFile);
 		if (image.exists()) {
 			return;
 		} else {
 			thumbFile = fileFolder + "/thumb11.jpg";
-			mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
+			mShortBitmap = createVideoThumbnail(mVideoPath);
+//			mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
 			if (mShortBitmap != null) {
 				int width = mShortBitmap.getWidth();
 				int height = mShortBitmap.getHeight();
@@ -332,6 +335,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				Log.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
 			} else {
 				Log.e("", "VideoShareActivity createThumb: NULL:");
+				mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
 			}
 
 			try {
@@ -361,6 +365,26 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		Log.e("", "VideoShareActivity createThumb: time:" + dur);
 	}
+	
+	@SuppressLint("NewApi")
+	private Bitmap createVideoThumbnail(String filePath) {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            bitmap = retriever.getFrameAtTime();
+        } catch(IllegalArgumentException ex) {
+            // Assume this is a corrupt video file
+        } catch (RuntimeException ex) {
+            // Assume this is a corrupt video file.
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException ex) {
+            }
+        }
+        return bitmap;
+    }
 
 	private void dimissErrorDialog() {
 		if (null != mErrorDialog) {
