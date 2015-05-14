@@ -115,18 +115,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPhoneNumber.setText(phoneNumber);
 		}
 		
-		//如果是注销成功，则接收从UserStartActivity传来的手机号填入手机号框
 		Intent intentStart = getIntent();
-		/*if(null != intentStart.getStringExtra("startActivity")){
-			String phone = intentStart.getStringExtra("startActivity").toString();
-			mEditTextPhoneNumber.setText(phone);
-		}
-		//如果是自动登录失败、超时，则接收从IndexMoreLoginActivity传来的手机号，并填入手机号
-		if(null !=intentStart.getStringExtra("autoPhone")){
-			String phoneAuto = intentStart.getStringExtra("autoPhone").toString();
-			Log.i("autostatus", "----自动登录失败手机号手机号手机号----"+phoneAuto);
-			mEditTextPhoneNumber.setText(phoneAuto);
-		}*/
 		//登录页面返回
 		if(null != intentStart.getStringExtra("isInfo")){
 			justLogin = intentStart.getStringExtra("isInfo").toString();
@@ -420,9 +409,7 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 					public void onClick(DialogInterface arg0, int arg1) {
 						Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
 						it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
-						if(justLogin.equals("main") || justLogin.equals("back")){//从起始页注册
-							it.putExtra("fromRegist", "fromStart");
-						}
+						it.putExtra("fromRegist", "fromStart");
 						startActivity(it);
 					}
 				}).create().show();
