@@ -153,7 +153,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	private boolean isconnection = false;
 	/** 后台标识 */
 	private boolean isBackground=false;
-	
 	public long startTime = 0;
 
 	static {
@@ -1371,7 +1370,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	private void queryNewFileList() {
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
 		LogUtil.e("xuhw", "YYYYYY===queryNewFileList====starttime="+starttime);
-		mIPCControlManager.queryFileListInfo(6, 10, starttime, 2147483647);
+		mIPCControlManager.queryFileListInfo(6, 5, starttime, 2147483647);
 	}
 
 	/**
@@ -1381,10 +1380,12 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 * @date 2015年4月24日
 	 */
 	private void ipcDisconnect() {
-		mDownLoadFileList.clear();
-		mNoDownLoadFileList.clear();
-		if (GlobalWindow.getInstance().isShow()) {
-			GlobalWindow.getInstance().dimissGlobalWindow();
+		if(mDownLoadFileList.size() > 0){
+			mDownLoadFileList.clear();
+			mNoDownLoadFileList.clear();
+			if (GlobalWindow.getInstance().isShow()) {
+				GlobalWindow.getInstance().dimissGlobalWindow();
+			}
 		}
 
 		if (null != mCustomDialog && mCustomDialog.isShowing()) {
@@ -1438,15 +1439,15 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				if(size <= 0){
 					return;
 				}
-				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666==mDownLoadFileList="+mDownLoadFileList.toString());
-				long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
-				GFileUtils.writeIPCLog("YYYYYY===@@@@@@===downloadfiletime="+starttime+"==mDownLoadFileList="+mDownLoadFileList.toString());
-				mCustomDialog = new CustomDialog(mContext);
-				mCustomDialog.setMessage("有" + size + "个新文件，确定要下载吗？",
-						Gravity.CENTER);
-				mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
-					@Override
-					public void onClickListener() {
+//				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666==mDownLoadFileList="+mDownLoadFileList.toString());
+//				long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
+//				GFileUtils.writeIPCLog("YYYYYY===@@@@@@===downloadfiletime="+starttime+"==mDownLoadFileList="+mDownLoadFileList.toString());
+//				mCustomDialog = new CustomDialog(mContext);
+//				mCustomDialog.setMessage("有" + size + "个新文件，确定要下载吗？",
+//						Gravity.CENTER);
+//				mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+//					@Override
+//					public void onClickListener() {
 						for(String name : mDownLoadFileList){
 							boolean flag = GolukApplication.getInstance()
 									.getIPCControlManager()
@@ -1454,46 +1455,46 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 							LogUtil.e("xuhw",
 									"YYYYYY=====querySingleFile=====name="+name+"==flag=" + flag);
 						}
-					}
-				});
-				mCustomDialog.setRightButton("取消", new OnRightClickListener() {
-					@Override
-					public void onClickListener() {
-						if(null != fileList && fileList.size() > 0){
-							long t1 = fileList.get(0).time;
-							long t2 = fileList.get(fileList.size()-1).time;
-							long time = t1 > t2 ? t1:t2;
-							String filename = "";
-							
-							if(time == t1){
-								filename = fileList.get(0).location;
-							}else{
-								filename = fileList.get(fileList.size()-1).location;
-							}
-					
-							try{
-								if(filename.length() >= 22){
-									String t = filename.substring(18, 22);
-									int tt = Integer.parseInt(t) + 1;
-									time += tt;
-								}
-							}catch(NumberFormatException e){
-								e.printStackTrace();
-							}catch(Exception e){
-								e.printStackTrace();
-							}
-							
-							long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
-							time = time > oldtime ? time : oldtime;
-							SettingUtils.getInstance().putLong("downloadfiletime", time);
-							GFileUtils.writeIPCLog("YYYYYY===@@@@@@==11111==downloadfiletime="+time);
-							
-							mDownLoadFileList.clear();
-							mNoDownLoadFileList.clear();
-						}
-					}
-				});
-				mCustomDialog.show();
+//					}
+//				});
+//				mCustomDialog.setRightButton("取消", new OnRightClickListener() {
+//					@Override
+//					public void onClickListener() {
+//						if(null != fileList && fileList.size() > 0){
+//							long t1 = fileList.get(0).time;
+//							long t2 = fileList.get(fileList.size()-1).time;
+//							long time = t1 > t2 ? t1:t2;
+//							String filename = "";
+//							
+//							if(time == t1){
+//								filename = fileList.get(0).location;
+//							}else{
+//								filename = fileList.get(fileList.size()-1).location;
+//							}
+//					
+//							try{
+//								if(filename.length() >= 22){
+//									String t = filename.substring(18, 22);
+//									int tt = Integer.parseInt(t) + 1;
+//									time += tt;
+//								}
+//							}catch(NumberFormatException e){
+//								e.printStackTrace();
+//							}catch(Exception e){
+//								e.printStackTrace();
+//							}
+//							
+//							long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
+//							time = time > oldtime ? time : oldtime;
+//							SettingUtils.getInstance().putLong("downloadfiletime", time);
+//							GFileUtils.writeIPCLog("YYYYYY===@@@@@@==11111==downloadfiletime="+time);
+//							
+//							mDownLoadFileList.clear();
+//							mNoDownLoadFileList.clear();
+//						}
+//					}
+//				});
+//				mCustomDialog.show();
 			}
 			
 		}

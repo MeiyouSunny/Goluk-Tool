@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -61,8 +62,8 @@ public class VideoSquareOnClickListener implements OnClickListener,
 			//if (null != mCustomProgressDialog) {
 				//mCustomProgressDialog.show();
 			//}
-			if (mcontext instanceof VideoSquareActivity) {
-				VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
+			if (mcontext instanceof MainActivity) {
+				MainActivity vsa = (MainActivity) mcontext;
 				vsa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
 				vsa.mCustomProgressDialog = new CustomLoadingDialog(vsa,null);
 				vsa.mCustomProgressDialog.show();
@@ -273,9 +274,9 @@ public class VideoSquareOnClickListener implements OnClickListener,
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
 
-						} else if(mcontext instanceof VideoSquareActivity){
+						} else if(mcontext instanceof MainActivity){
 							System.out.println("YYYY+VideoSquareActivity");
-							VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
+							MainActivity vsa = (MainActivity) mcontext;
 							if(vsa == null || vsa.isFinishing()){
 								return ;
 							}else{
@@ -320,9 +321,9 @@ public class VideoSquareOnClickListener implements OnClickListener,
 				vspa.mCustomProgressDialog.close();
 			}
 
-		} else if(mcontext instanceof VideoSquareActivity){
+		} else if(mcontext instanceof MainActivity){
 			System.out.println("YYYY+VideoSquareActivity");
-			VideoSquareActivity vsa = (VideoSquareActivity) mcontext;
+			MainActivity vsa = (MainActivity) mcontext;
 			if(vsa!=null && !vsa.isFinishing()){
 				if(vsa.mCustomProgressDialog!=null){
 					vsa.mCustomProgressDialog.close();

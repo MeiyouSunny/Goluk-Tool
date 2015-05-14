@@ -8,6 +8,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,41 +20,66 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class VideoSquareActivity extends BaseActivity implements OnClickListener {
+public class VideoSquareActivity implements OnClickListener {
 	private VideoSquareAdapter mVideoSquareAdapter = null;
 	private ViewPager mViewPager = null;
 	private ImageView hot = null;
 	private ImageView square = null;
-	private Button mVideoList = null;
-	private Button mTypeList = null;
-	public CustomLoadingDialog mCustomProgressDialog;
+	private LinearLayout mVideoList = null;
+	private LinearLayout mTypeList = null;
+	private TextView hotTitle = null;
+	private TextView squareTitle = null; 
+	private ImageView hotImage = null;
+	private ImageView squareImage = null;
+	
 	/** 返回按钮 */
-	private ImageButton mBackBtn = null;
+	//private ImageButton mBackBtn = null;
 
 	SharePlatformUtil sharePlatform;
-
+	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
+	
+	RelativeLayout mRootLayout = null;
+	Context mContext = null;
+	public VideoSquareActivity(RelativeLayout rootlayout,Context context) {
+		mRootLayout = rootlayout;
+		mContext = context;
+		init();
+	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.video_square_main);
+	public void init() {
 
-		mViewPager = (ViewPager) findViewById(R.id.mViewpager);
-		mVideoSquareAdapter = new VideoSquareAdapter(this);
+		mViewPager = (ViewPager) mRootLayout.findViewById(R.id.mViewpager);
+		mVideoSquareAdapter = new VideoSquareAdapter(mContext);
 		mViewPager.setAdapter(mVideoSquareAdapter);
 		mViewPager.setOnPageChangeListener(opcl);
-		sharePlatform = new SharePlatformUtil(this);
+		sharePlatform = new SharePlatformUtil(mContext);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
-		init();
+		
+		
+		hot = (ImageView) mRootLayout.findViewById(R.id.line_hot);
+		square = (ImageView) mRootLayout.findViewById(R.id.line_square);
+		mVideoList = (LinearLayout) mRootLayout.findViewById(R.id.mVideoList);
+		mTypeList = (LinearLayout) mRootLayout.findViewById(R.id.mTypeList);
+		
+		hotTitle = (TextView) mRootLayout.findViewById(R.id.hot_title);
+		squareTitle = (TextView) mRootLayout.findViewById(R.id.square_title);
+		
+		squareImage = (ImageView) mRootLayout.findViewById(R.id.square_image);
+		hotImage = (ImageView) mRootLayout.findViewById(R.id.hot_image);
+		// 获取页面元素
+		//mBackBtn = (ImageButton) mRootLayout.findViewById(R.id.back_btn);
 		setListener();
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+	
+	private void onActivityResult(int requestCode, int resultCode, Intent data) {
+		//super.onActivityResult(requestCode, resultCode, data);
 		/** 使用SSO授权必须添加如下代码 */
 		UMSsoHandler ssoHandler = sharePlatform.mController.getConfig()
 				.getSsoHandler(requestCode);
@@ -62,27 +88,18 @@ public class VideoSquareActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
-	private void init() {
-		hot = (ImageView) findViewById(R.id.line_hot);
-		square = (ImageView) findViewById(R.id.line_square);
-		mVideoList = (Button) findViewById(R.id.mVideoList);
-		mTypeList = (Button) findViewById(R.id.mTypeList);
-		// 获取页面元素
-		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
-
-	}
 
 	private void setListener() {
 		mVideoList.setOnClickListener(this);
 		mTypeList.setOnClickListener(this);
-		mBackBtn.setOnClickListener(this);
+		//mBackBtn.setOnClickListener(this);
 
 	}
 
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			Toast.makeText(VideoSquareActivity.this, "第三方分享失败",Toast.LENGTH_SHORT).show();
+			//Toast.makeText(VideoSquareActivity.this, "第三方分享失败",Toast.LENGTH_SHORT).show();
 			return;
 		}
 		//Toast.makeText(VideoSquareActivity.this, "开始第三方分享:" + channel,Toast.LENGTH_SHORT).show();
@@ -118,19 +135,23 @@ public class VideoSquareActivity extends BaseActivity implements OnClickListener
 		if (0 == type) {
 			hot.setVisibility(View.VISIBLE);
 			square.setVisibility(View.INVISIBLE);
-
-			mVideoList.setTextColor(getResources().getColor(
-					R.color.textcolor_select));
-			mTypeList.setTextColor(getResources()
-					.getColor(R.color.textcolor_qx));
+			
+			hotImage.setBackgroundResource(R.drawable.home_hot_btn_click);
+			squareImage.setBackgroundResource(R.drawable.home_video_btn);
+			
+			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
+			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 		} else {
 			hot.setVisibility(View.INVISIBLE);
 			square.setVisibility(View.VISIBLE);
-
-			mVideoList.setTextColor(getResources().getColor(
+			
+			hotTitle.setTextColor(mContext.getResources().getColor(
 					R.color.textcolor_qx));
-			mTypeList.setTextColor(getResources().getColor(
+			squareTitle.setTextColor(mContext.getResources().getColor(
 					R.color.textcolor_select));
+			
+			squareImage.setBackgroundResource(R.drawable.home_video_btn_click);
+			hotImage.setBackgroundResource(R.drawable.home_hot_btn);
 		}
 	}
 
@@ -154,50 +175,42 @@ public class VideoSquareActivity extends BaseActivity implements OnClickListener
 	}
 	
 	
-	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onBackPressed();
 		}
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+	public void onResume() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onResume();
 		}
 	}
 
-	@Override
-	protected void onStop() {
-		super.onStop();
+	public void onStop() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onStop();
 		}
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	public void onDestroy() {
+		
 	}
 	
 	public void exit(){
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onDestroy();
 		}
-		
-		finish();
 	}
 	
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	/*public boolean onKeyDown(int keyCode, KeyEvent event) {
     	if(keyCode==KeyEvent.KEYCODE_BACK){
     		exit(); 
         	return true;
-        }else
+        }else{
         	return super.onKeyDown(keyCode, event); 
-	}
+        }
+	}*/
 	
 
 }

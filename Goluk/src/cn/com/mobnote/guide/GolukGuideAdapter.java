@@ -2,10 +2,12 @@ package cn.com.mobnote.guide;
 
 import java.util.List;
 
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -29,7 +31,9 @@ import android.view.View;
 
 public class GolukGuideAdapter extends PagerAdapter{
 	public List<View> views;
-
+	private int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+	private int height = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
+	
 	public GolukGuideAdapter(List<View> mListViews) {
 		this.views = mListViews;
 	}
@@ -50,7 +54,8 @@ public class GolukGuideAdapter extends PagerAdapter{
 	
 	@Override
 	public Object instantiateItem(View arg0, int arg1){
-		((ViewPager)arg0).addView(this.views.get(arg1),0);
+		ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, height);
+		((ViewPager)arg0).addView(this.views.get(arg1),0,params);
 		return this.views.get(arg1);
 	}
 

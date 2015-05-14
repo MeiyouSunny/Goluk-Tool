@@ -4,51 +4,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <!-- 百度地图 -->
-    <!--
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/bmapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true" />
-    -->
-    <!-- 底部显示布局 -->
-
     <RelativeLayout
         android:id="@+id/status_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:layout_alignParentBottom="true"
-        android:background="#dedede" >
+        android:background="#313131" >
 
         <!-- 更多 -->
 
         <Button
             android:id="@+id/more_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
+            android:layout_width="34dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="27dp"
             android:layout_marginTop="1dp"
+            android:layout_toRightOf="@+id/index_share_btn"
             android:background="#00000000"
-            android:drawableTop="@drawable/index_icon_gengduo_btn"
-            android:text="@string/more_text"
-            android:textColor="#676767"
+            android:drawableTop="@drawable/home_self_btn"
+            android:text="我"
+            android:textColor="#cccccc"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/index_share_btn"
+            android:layout_width="34dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="27dp"
+            android:layout_marginTop="1dp"
+            android:layout_toRightOf="@+id/index_carrecoder_btn"
+            android:background="#00000000"
+            android:drawableTop="@drawable/home_share_btn"
+            android:text="分享"
+            android:textColor="#cccccc"
             android:textSize="12sp" />
 
         <!-- 广场 -->
 
         <Button
             android:id="@+id/index_square_btn"
+            android:layout_width="34dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="27dp"
+            android:layout_toLeftOf="@+id/index_look_btn"
+            android:background="#00000000"
+            android:drawableTop="@drawable/home_find_btn_click"
+            android:text="@string/index_square"
+            android:textColor="#cccccc"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/index_look_btn"
+            android:layout_width="36dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="27dp"
+            android:layout_marginTop="1dp"
+            android:layout_toLeftOf="@+id/index_carrecoder_btn"
+            android:background="#00000000"
+            android:drawableTop="@drawable/home_local_btn"
+            android:text="看天下"
+            android:textColor="#cccccc"
+            android:textSize="12sp" />
+
+        <ImageButton
+            android:id="@+id/index_carrecoder_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="1dp"
-            android:background="#00000000"
-            android:drawableTop="@drawable/index_icon_square_btn"
-            android:text="@string/index_square"
-            android:textColor="#676767"
-            android:textSize="12sp" />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/home_tab_icon"
+            android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
     <View
@@ -59,10 +88,11 @@
         android:background="#bcbcbc" />
 
     <RelativeLayout
+        android:id="@+id/index_top_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_alignParentTop="true"
-        android:background="@color/black" >
+        android:background="#2790fc" >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -70,75 +100,76 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/index_tittle" />
+            android:background="@drawable/home_logo" />
 
-        <RelativeLayout
-            android:id="@+id/index_wifi_layout"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/index_no_link" >
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/wifi_conn_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:layout_marginLeft="10dp"
+                android:text="去连接Goluk"
+                android:textColor="#ffffff" />
 
-                <TextView
-                    android:id="@+id/wifi_conn_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="去连接Goluk" />
-
-                <ImageView
-                    android:id="@+id/index_wiifstate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/index_wifi_five" />
-            </LinearLayout>
-        </RelativeLayout>
+            <ImageView
+                android:id="@+id/index_wiifstate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/index_wifi_five" />
+        </LinearLayout>
     </RelativeLayout>
 
     <!-- 定位与直播列表按钮 -->
 
-    <LinearLayout
-        android:id="@+id/map_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/status_layout"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginRight="14dp"
-        android:orientation="vertical" >
+    <RelativeLayout
+        android:id="@+id/index_map_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:layout_above="@+id/status_layout"
+        android:layout_below="@+id/index_top_layout"
+        android:visibility="gone">
 
-        <!-- 定位按钮 -->
+        <LinearLayout
+            android:id="@+id/map_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="40dp"
+            android:layout_marginRight="14dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:visibility="visible" >
 
-        <Button
-            android:id="@+id/map_location_btn"
-            android:layout_width="44dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/location_btn" />
-    </LinearLayout>
+            <!-- 定位按钮 -->
 
-    <ImageButton
-        android:id="@+id/share_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/index_icon_videoplay_btn"
-        android:contentDescription="@string/imgdes" />
+            <Button
+                android:id="@+id/map_location_btn"
+                android:layout_width="44dp"
+                android:layout_height="34dp"
+                android:background="@drawable/location_btn" />
+        </LinearLayout>
+    </RelativeLayout>
 
-    <TextView
+    <include
+        android:id="@+id/video_square_layout"
+        android:layout_above="@+id/status_layout"
+        android:layout_below="@+id/index_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/video_square_main"
+        android:visibility="visible" />
+
+    <!--
+         <TextView
         android:id="@+id/driving_share_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -148,6 +179,8 @@
         android:text="@string/driving_share_text"
         android:textColor="#676767"
         android:textSize="12sp" />
+    -->
+
 
     <!-- 分享布局 -->
 
