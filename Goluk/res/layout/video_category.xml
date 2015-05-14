@@ -180,7 +180,19 @@
                     android:background="@drawable/livestreaming_square_ten" />
             </LinearLayout>
             
+            <LinearLayout
+                android:id="@+id/category_six"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/category_five"
+                android:orientation="horizontal" >
+                <View 
+             	android:layout_width="match_parent"
+             	android:layout_height="match_parent"
+             	android:background="#ffffff"/>
+                </LinearLayout>
+            
         </RelativeLayout>
     </ScrollView>
-
+	
 </RelativeLayout>

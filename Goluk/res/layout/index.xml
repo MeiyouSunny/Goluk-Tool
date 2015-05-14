@@ -58,7 +58,7 @@
 
         <Button
             android:id="@+id/index_look_btn"
-            android:layout_width="34dp"
+            android:layout_width="36dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="27dp"

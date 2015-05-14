@@ -85,7 +85,7 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 		//读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
 		SharedPreferences preferences = getSharedPreferences("golukmark",MODE_PRIVATE);
 		//取得相应的值,如果没有该值,说明还未写入,用true作为默认值
-		boolean isFirstIn = preferences.getBoolean("isfirst", true);
+		boolean isFirstIn = preferences.getBoolean("isfirst", false);
 		//判断程序第几次启动
 		if (!isFirstIn) {//启动过
 			//读取SharedPreference中用户的信息

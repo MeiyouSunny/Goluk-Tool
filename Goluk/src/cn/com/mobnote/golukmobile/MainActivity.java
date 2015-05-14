@@ -1082,7 +1082,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			case MotionEvent.ACTION_DOWN:
 				Drawable user_down = this.getResources().getDrawable(R.drawable.home_self_btn_click); 
 				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,user_down,null,null);
-				mMoreBtn.setTextColor(Color.rgb(0, 197, 177));
+				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable user_up = this.getResources().getDrawable(R.drawable.home_self_btn); 
@@ -1107,7 +1107,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				Drawable db_down = this.getResources().getDrawable(R.drawable.home_share_btn_click); 
 				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_down,null,null);
 				
-				mShareBtn.setTextColor(Color.rgb(0, 197, 177));
+				mShareBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable db_up = this.getResources().getDrawable(R.drawable.home_share_btn); 
@@ -1199,15 +1199,21 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			videoSquareLayout.setVisibility(View.GONE);
 			drawable = this.getResources().getDrawable(R.drawable.home_local_btn_click); 
 			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			indexLookBtn.setTextColor(Color.rgb(59, 151, 245));
+			
 			drawable = this.getResources().getDrawable(R.drawable.home_find_btn); 
 			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			msquareBtn.setTextColor(Color.rgb(103, 103, 103));
 		}else if (id == R.id.index_square_btn){
 			
 			indexMapLayout.setVisibility(View.GONE);
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			drawable = this.getResources().getDrawable(R.drawable.home_local_btn); 
 			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			indexLookBtn.setTextColor(Color.rgb(103, 103, 103));
+			
 			drawable = this.getResources().getDrawable(R.drawable.home_find_btn_click); 
+			msquareBtn.setTextColor(Color.rgb(59, 151, 245));
 			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
 		}
 	}
