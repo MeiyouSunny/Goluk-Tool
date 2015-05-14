@@ -241,7 +241,6 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	
 	/** 连接ipc时的动画 */
 	Animation anim = null;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -280,6 +279,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// mApp.mGoluk.GoLuk_WifiStateChanged(true);
 
 		// 页面初始化,获取页面控件
+		
+		mApp.startTime = System.currentTimeMillis();
+		
+		//mApp.mGoluk.GoLuk_WifiStateChanged(true);
+		
+		//页面初始化,获取页面控件
 		init();
 		// 初始化地图
 		initMap();
@@ -961,6 +966,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		if (null != mMapView) {
 			mMapView.onResume();
+			mMapView.invalidate();
 		}
 		isCurrent = true;
 
@@ -980,6 +986,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 		if (mApp.isNeedCheckLive) {
 			mApp.isNeedCheckLive = false;
+			mApp.isCheckContinuteLiveFinish = true;
 			showContinuteLive();
 		}
 
