@@ -1,7 +1,6 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,10 +60,11 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.mobnote.user.AppFileUtils;
+import cn.com.mobnote.user.UpgradeManage;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifi.WiFiConnection;
@@ -86,7 +86,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	/** 来源标示,用来强转activity */
 	private String mPageSource = "";
 	/** 主页activity */
-	private MainActivity mMainActivity = null;
+	public static MainActivity mMainActivity = null;
 	/** 视频保存地址 fs1:指向->sd卡/tiros-com-cn-ext目录 */
 	private String mVideoSavePath = "fs1:/video/";
 	/** wifi管理类 */
@@ -146,6 +146,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	public UserLoginManage mLoginManage = null;
 	/** 注册管理类 **/
 	public UserRegistManage mRegistManage = null;
+	/**版本升级管理类**/
+	public UpgradeManage mUpgrade = null;
 
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String, ILocationFn>();
 	/** 未下载文件列表 */
@@ -209,6 +211,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		mUser = new User(this);
 		mLoginManage = new UserLoginManage(this);
 		mRegistManage = new UserRegistManage(this);
+		mUpgrade = new UpgradeManage(this);
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
@@ -224,6 +227,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		motioncfg = new int[2];
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
+		
+		//版本升级
+		mUpgrade.upgradeGoluk();
 	}
 
 	/**
@@ -748,9 +754,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			}
 			break;
 		// 登陆
-
 		case PageType_Login:
-
 			if (null != mMainActivity) {
 				// 地图大头针图片
 				console.log("pageNotifyCallBack---登录---"+ String.valueOf(param2));
@@ -770,9 +774,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		// 自动登录
 
 		case PageType_AutoLogin:
-
 			mUser.initAutoLoginCallback(success, param1, param2);
-
 			break;
 		// 验证码PageType_GetVCode
 		case PageType_GetVCode:
@@ -826,11 +828,14 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 		// 注销
 		case PageType_SignOut:
-			Log.i("loginout", "======application======");
 			if (mPageSource == "UserSetup") {
 				((UserSetupActivity) mContext).getLogintoutCallback(success,
 						param2);
 			}
+			break;
+		//版本升级
+		case PageType_CheckUpgrade:
+			mUpgrade.upgradeGolukCallback(success, param1, param2);
 			break;
 		}
 	}
@@ -1522,49 +1527,4 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 
 	}
-	
-	/**
-	 * 软件升级，获取当前版本号
-	 */
-	public int code(int k)
-	{
-		return (k + 255)%255;
-	}
-	
-	public void getVersionCode(){
-		byte[] versionData = AppFileUtils.readAssertsFile(this, "version");
-		if (versionData.length == 8)
-		{
-			int i1 = versionData[0];
-			int i2 = versionData[1];
-			int i3 = versionData[3] << 8 + versionData[2];
-			
-			int a1 = code(versionData[7]) ;
-			int a2 = code(versionData[6]) ;
-			int a3 = code(versionData[5]) ;
-			int a4 = code(versionData[4]) ;
-			int b1 = a4 << 8;
-			int b2 = (b1 + a3) << 8;
-			int b3 = (b2 + a2) << 8;
-			int b4 = b3 + a1;
-			int c1 = a1 << 8;
-			int c2 = (c1 + a2) << 8;
-			int c3 = (c2 + a3) << 8;
-			int c4 = c3 + a4;
-			
-			int i4 = ((a1 << 8 + a2) << 8 +  a3) << 8 +  a4;
-			int i5 = ((a4 << 8 + a3) << 8 +  a2) << 8 +  a1;
-			Log.e("", "" + i1 + "." + i2 + "." + i3 + "." + i4);
-		}
-	}
-
-	/**
-	 * 版本更新
-	 * ?method=upgradeGoluk&xieyi=100&version=1.0.0.1
-	 */
-	public void upgradeGoluk(){
-		String upgradeInfo = "{\"method\":\"" + "upgradeGoluk" + "\",\"xieyi\":\""+ "100" + "\",\"version\":\"1.0.0.1\"}";
-//		mGoluk.GolukLogicCommRequest(mId, cmd, param)
-	}
-	
 }

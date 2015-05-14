@@ -47,6 +47,10 @@ public class UserStartActivity extends Activity implements OnClickListener {
 		mApp.setContext(mContext, "UserStart");
 		
 		SysApplication.getInstance().addActivity(this);
+		
+		//版本升级
+		mApp.mUpgrade.upgradeGoluk();
+		
 		initView();
 		
 		mHandler = new Handler(){

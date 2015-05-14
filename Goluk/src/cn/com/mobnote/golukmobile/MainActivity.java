@@ -284,8 +284,8 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
-	
-	}
+
+}
 	
 	private String getIMEI() {
 		try {
@@ -1244,6 +1244,7 @@ public class MainActivity extends Activity implements OnClickListener , WifiConn
 				startActivity(it);
 			}
 		}*/
+		Log.i("lily", "======statusChange===="+mApp.autoLoginStatus);
 		if(mApp.autoLoginStatus != 1){
 			dismissAutoDialog();
 			if(mApp.autoLoginStatus == 2){
