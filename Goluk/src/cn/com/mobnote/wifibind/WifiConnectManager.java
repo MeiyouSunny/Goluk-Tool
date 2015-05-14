@@ -374,9 +374,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					return 0;
 				}
 				state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-				if (State.DISCONNECTED == state) {
-					return 0;
-				}
+//				if (wifiManager.isWifiEnabled() &&State.DISCONNECTED == state) {
+//					return 0;
+//				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -613,7 +613,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				handler.sendMessage(msg);
 
 				console.logBytag(TAG, "创建热点等待ipc接入");
-				netUtil.findServerIpAddress(Integer.parseInt(type), "", "", 60 * 1000);
+				netUtil.findServerIpAddress(Integer.parseInt(type), ssid, "", 60 * 1000);
 
 				// 获取wifi连接列表
 				// getClientList(ipc_ssid, ipc_mac, ipc_ip, type, 40000);
