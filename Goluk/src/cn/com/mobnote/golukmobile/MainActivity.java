@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -235,12 +234,16 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	
 	/** 看天下按钮 */
 	private Button indexLookBtn = null;
-	
 	/** 链接行车记录仪 */
 	private ImageButton indexCarrecoderBtn = null;
-	
 	/** 连接ipc时的动画 */
 	Animation anim = null;
+	
+	private long exitTime = 0;
+
+	/** 当前连接的Goluk设备 */
+	private String mGolukName = "";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -802,9 +805,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 	}
 
-	private static final String WIFI_CONNING_FAILED_STR = "去连接Goluk";
-	private static final String WIFI_CONNING_STR = "正在连接Goluk";
-	private static final String WIFI_CONNED_STR = "己连接到Goluk";
+	private static final String WIFI_CONNING_FAILED_STR = "未连接Goluk";
+	private static final String WIFI_CONNING_STR = "正在连接Goluk...";
+	private static final String WIFI_CONNED_STR = "己连接Goluk";
 
 	/** 音量图片动画 */
 	private AnimationDrawable mVolumeImgAnimation = null;
@@ -866,16 +869,25 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
 		return preferences.getBoolean("isbind", false);
 	}
+	
+	private void toLogin() {
+		Intent intent = new Intent(this, UserLoginActivity.class);
+		intent.putExtra("isInfo", "back");
+		startActivity(intent);
+	}
 
 	private void click_ConnFailed() {
 		if (!isBindSucess()) {
 			// 跳转到wifi连接首页
-			Intent wifiIndex = new Intent(MainActivity.this,
-					WiFiLinkIndexActivity.class);
-			startActivity(wifiIndex);
+			if (mApp.isUserLoginSucess) {
+				Intent wifiIndex = new Intent(MainActivity.this,
+						WiFiLinkIndexActivity.class);
+				startActivity(wifiIndex);
+			} else {
+				toLogin();
+			}
 		} else {
 			// 已经绑定
-
 			startWifi();
 			if (null != mWac) {
 				mWac.autoWifiManageReset();
@@ -1032,18 +1044,14 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_APP_EXIT, "提示", "退出程序？");
-			// 退出对话框
-			// int PID = android.os.Process.myPid();
-			// android.os.Process.killProcess(PID);
-			// android.os.Process.sendSignal(PID, 9);
-			return true;
+			exit();
+            return false;
 		}
-		return false;
+        return super.onKeyDown(keyCode, event);
+
 	}
 
-	// 退出程序
+	/*// 退出程序
 	private void exit() {
 		// if (mApp.isUserLoginSucess) {
 		SysApplication.getInstance().exit();
@@ -1056,7 +1064,29 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		finish();
 		int PID = android.os.Process.myPid();
 		android.os.Process.killProcess(PID);
-	}
+	}*/
+	
+	public void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+        	
+        	SysApplication.getInstance().exit();
+    		// }
+    		mApp.mIPCControlManager.setIPCWifiState(false, "");
+    		mApp.mGoluk.GolukLogicDestroy();
+    		if (null != UserStartActivity.mHandler) {
+    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+    		}
+    		finish();
+    		int PID = android.os.Process.myPid();
+    		android.os.Process.killProcess(PID);
+            System.exit(0);
+        }
+    }
+
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
@@ -1241,9 +1271,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				return;
 			}
 			mShareLayout.setVisibility(View.GONE);
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
+			toLogin();
 			return;
 		}
 		// 视频分享
@@ -1313,7 +1341,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	 */
 	private void toShareLive() {
 		if (!mApp.isUserLoginSucess) {
-			// TODO 未登录成功
+			// 未登录成功
 			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
 			if (mApp.autoLoginStatus == 1) {
@@ -1513,6 +1541,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 								+ bean.length);
 						if (bean.length > 0) {
 							console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---");
+							mGolukName = bean[0].getIpc_ssid();
 							sendLogicLinkIpc(bean[0].getIpc_ip(),
 									bean[0].getIpc_mac());
 						}
