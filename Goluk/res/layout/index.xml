@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/index_wifi_five" />
+                android:background="@drawable/home_wifi_no_link" />
         </LinearLayout>
     </RelativeLayout>
 

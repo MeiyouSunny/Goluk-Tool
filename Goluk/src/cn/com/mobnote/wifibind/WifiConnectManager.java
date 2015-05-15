@@ -59,7 +59,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param type
 	 */
 	public void connectWifi(String ssid, String password, WifiCipherType type) {
-		connectWifi(ssid, password, "", type, 40 * 1000);
+		connectWifi(ssid, password, "", type, 20 * 1000);
 	}
 
 	/**
@@ -381,7 +381,14 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				e.printStackTrace();
 			}
 		}
-		return outTime - tempTime;
+		WifiRsBean bean_temp=wifiSupport.getConnResult();
+	
+		if(("\""+ssid+"\"").equals(bean_temp.getPh_ssid())){
+			return outTime - tempTime;
+		}else{
+			return 0;
+		}
+		 
 	}
 
 	/**

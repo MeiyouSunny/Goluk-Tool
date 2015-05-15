@@ -92,7 +92,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mApp.setContext(mContext, "WiFiLinkComplete");
 		// 页面初始化
 		init();
-		mBaseHandler.sendEmptyMessageDelayed(100, 500);
+		mBaseHandler.sendEmptyMessageDelayed(100, 3 * 1000);
 	}
 
 	@Override

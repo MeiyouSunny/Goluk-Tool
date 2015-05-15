@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -238,11 +239,16 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private ImageButton indexCarrecoderBtn = null;
 	/** 连接ipc时的动画 */
 	Animation anim = null;
-	
+
+	private SharedPreferences mPreferences = null;
+	private Editor mEditor = null;
 	private long exitTime = 0;
 
 	/** 当前连接的Goluk设备 */
 	private String mGolukName = "";
+	
+	/** 热门视频列表默认背景图片 */
+	private ImageView squareDefault;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -319,8 +325,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
 
-	}
-
+}
 	private String getIMEI() {
 		try {
 			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
@@ -371,6 +376,8 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		
 		indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
+		squareDefault = (ImageView) findViewById(R.id.square_default);
+		
 		mShareLiveBtn.setOnClickListener(this);
 		indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
@@ -845,7 +852,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 		mWifiStateTv.setText(WIFI_CONNED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_linked);//临时注释
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
+		mWifiState.setBackgroundResource(R.drawable.home_wifi_link_four);
 	}
 
 	// 连接失败
@@ -857,7 +864,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			indexCarrecoderBtn.clearAnimation();
 			anim = null;
 		}
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
+		mWifiState.setBackgroundResource(R.drawable.home_wifi_no_link);
 		mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
 	}
@@ -873,7 +880,21 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private void toLogin() {
 		Intent intent = new Intent(this, UserLoginActivity.class);
 		intent.putExtra("isInfo", "back");
+		mShareLayout.setVisibility(View.GONE);
+		mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+		mEditor = mPreferences.edit();
+		mEditor.putString("toRepwd", "mainActivity");
+		mEditor.commit();
 		startActivity(intent);
+	}
+	
+	public void setViewListBg(boolean flog){
+		if(flog){
+			squareDefault.setVisibility(View.VISIBLE);
+		}else{
+			squareDefault.setVisibility(View.GONE);
+		}
+		
 	}
 
 	private void click_ConnFailed() {
@@ -1270,7 +1291,6 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				dialog.show();
 				return;
 			}
-			mShareLayout.setVisibility(View.GONE);
 			toLogin();
 			return;
 		}
@@ -1418,13 +1438,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	@Override
 	public void statusChange() {
-		/*
-		 * if(mApp.autoLoginStatus !=1){ dismissAutoDialog(); Intent it = null;
-		 * if(mApp.autoLoginStatus == 2){ if(!isClickShareVideo){ it = new
-		 * Intent(MainActivity.this,LocalVideoShareListActivity.class); }else{
-		 * it = new Intent(MainActivity.this,LiveActivity.class); }
-		 * startActivity(it); } }
-		 */
+
 		if (mApp.autoLoginStatus != 1) {
 			dismissAutoDialog();
 			if (mApp.autoLoginStatus == 2) {

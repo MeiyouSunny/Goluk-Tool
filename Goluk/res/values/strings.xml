@@ -201,7 +201,7 @@
     <string name="user_personal_home_nologin">立即登录看看我的主页</string>
     <string name="user_personal_home_nologin_name">未登录</string>
     <string name="user_personal_setup_update">Goluk固件升级</string>
-    <string name="user_personal_setup_update_bottom_text1">当前版本1.0.0</string>
+    <string name="user_personal_setup_update_bottom_text1">当前版本 V </string>
     <!-- 直播界面 -->
 
 

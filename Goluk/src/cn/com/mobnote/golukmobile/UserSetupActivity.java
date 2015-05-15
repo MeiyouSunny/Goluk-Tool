@@ -69,6 +69,10 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private Button btnLoginout;
 	/**缓存大小显示**/
 	private TextView mTextCacheSize = null;
+	/**版本号显示**/
+	private TextView mTextVersionCode = null;
+	/**更新版本号信息**/
+	public static Handler mHandlerVersion = null;
 	/**用户信息**/
 	private String phone = null;
 	/**登录的状态**/
@@ -114,6 +118,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private static final int UPDATE_IPC_UNUNITED = 18;//ipc未连接
 	private static final int UPDATE_IPC_DISCONNECT = 19;//ipc连接断开
 	
+	@SuppressLint("HandlerLeak")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -130,6 +135,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		//解除绑定
 		mUnbindItem = (RelativeLayout) findViewById(R.id.unbind_item);
+		//版本号
+		mTextVersionCode = (TextView) findViewById(R.id.user_setup_versioncode);
+		SharedPreferences mPreferencesVersion = getSharedPreferences("version", Context.MODE_PRIVATE);
+		String versionCode = mPreferencesVersion.getString("versionCode", mTextVersionCode.getText().toString());
+		Log.i("lily", "===versionCode===="+versionCode);
+		mTextVersionCode.setText(versionCode);
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -465,6 +476,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	public void initIntent(Class intentClass){
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
 		it.putExtra("isInfo", "setup");
+		
+		mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+		mEditor = mPreferences.edit();
+		mEditor.putString("toRepwd", "set");
+		mEditor.commit();
+		
 		startActivity(it);
 	}
 	

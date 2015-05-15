@@ -64,22 +64,7 @@ public class UserLoginManage {
 			loginStatusChange(2);// 登录失败
 		} else {
 			String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+ pwd + "\",\"tag\":\"android\"}";
-//			if(countErrorPassword >5){
-				/*new AlertDialog.Builder(mApp.getContext())
-				.setMessage("登录密码出错已经达到 5 次上限,账户被锁定 2 小时")
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						// TODO Auto-generated method stub
-						loginStatusChange(5);
-					}
-				})
-				.setPositiveButton("确定", null)
-				.create().show();*/
-//			}else{	
 			b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Login, condi);
-//			}
 		}
 		return b;
 	}
