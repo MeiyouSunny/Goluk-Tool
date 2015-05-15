@@ -60,7 +60,7 @@
 		
 		<!-- 解绑按钮 -->
 		<Button
-		android:id="@+id/loginout_btn"
+		android:id="@+id/unbind_layout_btn"
 		android:layout_width="312dp"
 		android:layout_height="54dp"
 		android:layout_centerHorizontal="true"
