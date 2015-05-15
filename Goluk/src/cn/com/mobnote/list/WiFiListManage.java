@@ -35,7 +35,7 @@ public class WiFiListManage {
 	@SuppressWarnings("unused")
 	private Context mContext = null;
 	private ArrayList<WiFiListData> mWiFiListData = new ArrayList<WiFiListData>();
-	
+
 	public static final String GOLUK_PRE = "Goluk";
 
 	public WiFiListManage(Context context) {
@@ -50,7 +50,17 @@ public class WiFiListManage {
 	public ArrayList<WiFiListData> getWiFiList() {
 		return mWiFiListData;
 	}
-	
+
+	public void setNoSelect() {
+		if (null == mWiFiListData || mWiFiListData.size() <= 0) {
+			return;
+		}
+		int size = mWiFiListData.size();
+		for (int i = 0; i < size; i++) {
+			mWiFiListData.get(i).wifiStatus = false;
+		}
+	}
+
 	public WiFiListData getConnectWifiData() {
 		if (null == mWiFiListData || mWiFiListData.size() <= 0) {
 			return null;
@@ -84,7 +94,7 @@ public class WiFiListManage {
 
 		return isHas;
 	}
-	
+
 	public boolean isIPCWifi(String ssid) {
 		if (null == ssid || "".equals(ssid)) {
 			return false;

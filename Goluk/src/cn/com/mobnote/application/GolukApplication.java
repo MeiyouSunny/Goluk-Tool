@@ -978,6 +978,10 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				if (null != mMainActivity) {
 					mMainActivity.wiFiLinkStatus(3);
 				}
+				//如果在wifi连接页面,通知连接成功
+				if(mPageSource == "WiFiLinkList"){
+					((WiFiLinkListActivity)mContext).ipcLinkFailedCallBack();
+				}
 				break;
 			}
 		}

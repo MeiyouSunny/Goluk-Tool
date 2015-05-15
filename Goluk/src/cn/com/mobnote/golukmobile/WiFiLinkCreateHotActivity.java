@@ -101,6 +101,12 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 		// 启动动画
 		mPhoneWiFiAnim.start();
 		mDescTitleText.setText(Html.fromHtml("3.修改与<font color=\"#0587ff\">Goluk 相连手机</font>的 WiFi 热点信息"));
+
+		String wifiName = WiFiInfo.AP_SSID;
+		String name = wifiName.replace("Goluk", "GOLUK");
+		if (null != name && !"".equals(name)) {
+			mWiFiName.setText(name);
+		}
 	}
 
 	/**
