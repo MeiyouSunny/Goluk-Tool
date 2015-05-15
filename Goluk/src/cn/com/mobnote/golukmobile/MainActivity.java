@@ -850,7 +850,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 		mWifiStateTv.setText(WIFI_CONNED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_linked);//临时注释
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
+		mWifiState.setBackgroundResource(R.drawable.home_wifi_link_four);
 	}
 
 	// 连接失败
@@ -862,7 +862,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			indexCarrecoderBtn.clearAnimation();
 			anim = null;
 		}
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
+		mWifiState.setBackgroundResource(R.drawable.home_wifi_no_link);
 		mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
 	}
