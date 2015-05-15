@@ -322,8 +322,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
 
-	}
-
+}
 	private String getIMEI() {
 		try {
 			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
@@ -1432,13 +1431,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	@Override
 	public void statusChange() {
-		/*
-		 * if(mApp.autoLoginStatus !=1){ dismissAutoDialog(); Intent it = null;
-		 * if(mApp.autoLoginStatus == 2){ if(!isClickShareVideo){ it = new
-		 * Intent(MainActivity.this,LocalVideoShareListActivity.class); }else{
-		 * it = new Intent(MainActivity.this,LiveActivity.class); }
-		 * startActivity(it); } }
-		 */
+
 		if (mApp.autoLoginStatus != 1) {
 			dismissAutoDialog();
 			if (mApp.autoLoginStatus == 2) {

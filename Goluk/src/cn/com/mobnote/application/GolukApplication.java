@@ -2,6 +2,7 @@ package cn.com.mobnote.application;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -58,9 +59,11 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.user.UpgradeManage;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.util.console;
@@ -82,7 +85,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	/** 来源标示,用来强转activity */
 	private String mPageSource = "";
 	/** 主页activity */
-	private MainActivity mMainActivity = null;
+	public static MainActivity mMainActivity = null;
 	/** 视频保存地址 fs1:指向->sd卡/tiros-com-cn-ext目录 */
 	private String mVideoSavePath = "fs1:/video/";
 	/** wifi管理类 */
@@ -140,6 +143,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	public UserLoginManage mLoginManage = null;
 	/** 注册管理类 **/
 	public UserRegistManage mRegistManage = null;
+	/**版本升级管理类**/
+	public UpgradeManage mUpgrade = null;
 
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String, ILocationFn>();
 	/** 未下载文件列表 */
@@ -194,6 +199,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 		initRdCardSDK();
 		initCachePath();
+		
 		// createWifi();
 		// 实例化JIN接口,请求网络数据
 
@@ -205,6 +211,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		mUser = new User(this);
 		mLoginManage = new UserLoginManage(this);
 		mRegistManage = new UserRegistManage(this);
+		mUpgrade = new UpgradeManage(this);
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
@@ -220,6 +227,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		motioncfg = new int[2];
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
+		
+		//版本升级
+		mUpgrade.upgradeGoluk();
 	}
 
 	/**
@@ -755,9 +765,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			}
 			break;
 		// 登陆
-
 		case PageType_Login:
-
 			if (null != mMainActivity) {
 				// 地图大头针图片
 				console.log("pageNotifyCallBack---登录---"+ String.valueOf(param2));
@@ -777,9 +785,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		// 自动登录
 
 		case PageType_AutoLogin:
-
 			mUser.initAutoLoginCallback(success, param1, param2);
-
 			break;
 		// 验证码PageType_GetVCode
 		case PageType_GetVCode:
@@ -833,11 +839,14 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 		// 注销
 		case PageType_SignOut:
-			Log.i("loginout", "======application======");
 			if (mPageSource == "UserSetup") {
 				((UserSetupActivity) mContext).getLogintoutCallback(success,
 						param2);
 			}
+			break;
+		//版本升级
+		case PageType_CheckUpgrade:
+			mUpgrade.upgradeGolukCallback(success, param1, param2);
 			break;
 		}
 	}
