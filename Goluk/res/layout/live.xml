@@ -314,9 +314,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="2dp"
                 android:background="@drawable/live_icon_share"
                 android:contentDescription="@string/imgdes" />
+
+            <TextView
+                android:id="@+id/live_share_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="分享"
+                android:textColor="#8e8e8e"
+                android:textSize="@dimen/live_text_time1_size" >
+            </TextView>
         </LinearLayout>
 
         <ImageView
