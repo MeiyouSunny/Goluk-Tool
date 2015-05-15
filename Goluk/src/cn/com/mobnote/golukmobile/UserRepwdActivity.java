@@ -36,7 +36,6 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
@@ -52,7 +51,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
  * @author mobnote
  *
  */
-public class UserRepwdActivity extends Activity implements OnClickListener,OnTouchListener{
+public class UserRepwdActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 
 	//title
 	private Button mBtnBack;
@@ -71,10 +70,8 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	private Context mContext = null;
 	private GolukApplication mApplication = null;
 	//重置密码显示进度条
-	private RelativeLayout mLoading = null ;
 	private CustomLoadingDialog mCustomProgressDialog=null;//重置密码
 	//验证码获取显示进度条
-	private RelativeLayout mIdentifyLoading = null;
 	private CustomLoadingDialog mCustomProgressDialogIdentify = null;//获取验证码
 	//判断获取验证码按钮是否已经被点击
 	private boolean identifyClick = false;
@@ -115,8 +112,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		mEditTextIdentify = (EditText) findViewById(R.id.user_repwd_identify);
 		mBtnIdentity = (Button) findViewById(R.id.user_repwd_identify_btn);
 		mBtnOK = (Button) findViewById(R.id.user_repwd_ok_btn);
-		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);//重置中……
-		mIdentifyLoading = (RelativeLayout) findViewById(R.id.loading_identify);//获取验证码……
 		
 		/**
 		 * 绑定监听
@@ -174,7 +169,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 
 			@Override
 			public void onFocusChange(View arg0, boolean arg1) {
-				// TODO Auto-generated method stub
 				String identify = mEditTextIdentify.getText().toString();
 				if (!arg1) {
 					if (!"".equals(identify)) {
@@ -348,7 +342,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 			if (b) {
 				identifyClick = true;
 				UserUtils.hideSoftMethod(this);
-//				mIdentifyLoading.setVisibility(View.VISIBLE);
 				mCustomProgressDialogIdentify.show();
 				registerReceiver(smsReceiver, smsFilter);
 				click = 1;
@@ -376,7 +369,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		mBtnOK.setEnabled(true);
 		mBtnBack.setEnabled(true);
 //		handler1.removeCallbacks(runnable);
-//		mIdentifyLoading.setVisibility(View.GONE);
 		closeProgressDialogIdentify();
 //		console.toast("发送中，请稍后", mContext);
 		if(1 == success){
@@ -467,7 +459,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 		}
 		else{
 			console.toast("验证码获取失败", mContext);
-//			mIdentifyLoading.setVisibility(View.GONE);
 		}
 	}
 	/**
@@ -501,7 +492,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 									if (b) {
 										// 隐藏软件盘
 										UserUtils.hideSoftMethod(this);
-//										mLoading.setVisibility(View.VISIBLE);
 										mCustomProgressDialog.show();
 										mEditTextPhone.setEnabled(false);
 										mEditTextIdentify.setEnabled(false);
@@ -531,7 +521,6 @@ public class UserRepwdActivity extends Activity implements OnClickListener,OnTou
 	 */
 	public void repwdCallBack(int success,Object outTime,Object obj){
 		console.log("---重置密码回调-----"+success+"----"+obj);
-//		mLoading.setVisibility(View.GONE);
 		closeProgressDialog();
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);

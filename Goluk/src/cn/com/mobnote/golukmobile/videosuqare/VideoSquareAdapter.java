@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 public class VideoSquareAdapter extends PagerAdapter{
 	private Context mContext=null;
-	private VideoSquareListView mVideoSquareListView=null;
+	public VideoSquareListView mVideoSquareListView=null;
 	private VideoCategoryView mVideoCategoryView=null;
 	public VideoSquareAdapter(Context c) {
 		this.mContext=c;

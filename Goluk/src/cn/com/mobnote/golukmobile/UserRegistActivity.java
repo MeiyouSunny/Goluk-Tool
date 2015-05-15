@@ -30,7 +30,6 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -53,7 +52,7 @@ import cn.com.mobnote.util.console;
  * @author mobnote
  *
  */
-public class UserRegistActivity extends Activity implements OnClickListener,UserRegistInterface,UserIdentifyInterface,OnTouchListener {
+public class UserRegistActivity extends BaseActivity implements OnClickListener,UserRegistInterface,UserIdentifyInterface,OnTouchListener {
 
 	// 注册title
 	private Button mBackButton;
@@ -77,11 +76,7 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	private IntentFilter smsFilter;
 	private Handler handler;
 	private String strBody;
-	//注册进度条
-	private RelativeLayout mLoading = null;
 	private CustomLoadingDialog mCustomProgressDialog=null;//注册
-	//注册获取验证码显示进度条
-	private RelativeLayout mIdentifyLoading = null;
 	private CustomLoadingDialog mCustomProgressDialogIdentify = null;//获取验证码
 	//判断获取验证码按钮是否被点击过
 	private boolean identifyClick = false;
@@ -132,10 +127,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 		mEditTextIdentify = (EditText) findViewById(R.id.user_regist_identify);
 		// 登陆
 		mTextViewLogin = (TextView) findViewById(R.id.user_regist_login);
-		//注册按钮进度条
-		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
-		//获取验证码进度条
-		mIdentifyLoading = (RelativeLayout) findViewById(R.id.loading_identify);
 
 		Intent itLoginPhone = getIntent();
 		if(null != itLoginPhone.getStringExtra("intentLogin")){
@@ -218,7 +209,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			
 			@Override
 			public void onFocusChange(View arg0, boolean arg1) {
-				// TODO Auto-generated method stub
 				String identify = mEditTextIdentify.getText().toString();
 				if(!arg1){
 					if(!"".equals(identify)){
@@ -396,7 +386,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 			if(b){
 				identifyClick = true;
 				UserUtils.hideSoftMethod(this);
-//				mIdentifyLoading.setVisibility(View.VISIBLE);
 				mCustomProgressDialogIdentify.show();
 				registerReceiver(smsReceiver, smsFilter);
 				click = 1;
@@ -421,7 +410,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	 */
 	public void identifyCallback(int success,Object obj){
 		console.log("验证码获取回调---identifyCallBack---" + success + "---" + obj);
-//		mIdentifyLoading.setVisibility(View.GONE);
 		closeProgressDialogIdentify();
 		//点击验证码按钮手机号、密码不可被修改
 		mEditTextPhone.setEnabled(true);
@@ -583,7 +571,6 @@ public class UserRegistActivity extends Activity implements OnClickListener,User
 	public void registCallback(int success,Object outTime,Object obj){
 		int codeOut = (Integer) outTime;
 		console.log("注册回调---registCallback---"+success+"---"+obj);
-//		mLoading.setVisibility(View.GONE);
 		closeProgressDialog();
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);

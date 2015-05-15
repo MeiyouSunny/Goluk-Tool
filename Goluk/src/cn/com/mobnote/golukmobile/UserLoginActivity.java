@@ -36,7 +36,7 @@ import cn.com.mobnote.util.console;
  * 
  * @author mobnote
  */
-public class UserLoginActivity extends Activity implements OnClickListener,UserLoginInterface ,OnTouchListener{
+public class UserLoginActivity extends BaseActivity implements OnClickListener,UserLoginInterface ,OnTouchListener{
 	//判断是否能点击提交按钮
 	private boolean isOnClick=false;
 	// 登陆title
@@ -115,7 +115,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mEditTextPhoneNumber.setText(phoneNumber);
 		}
 		
-		//如果是注销成功，则接收从UserStartActivity传来的手机号填入手机号框
 		Intent intentStart = getIntent();
 		//登录页面返回
 		if(null != intentStart.getStringExtra("isInfo")){
@@ -294,7 +293,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 				itRegist.putExtra("fromRegist", "fromSetup");
 			}
 			startActivity(itRegist);
-			Log.i("lily", "--------UserLoginActivity-判断注册后还是否有登录页-------"+mApplication.registStatus);
 			break;
 		// 忘记密码
 		case R.id.user_login_forgetpwd:
@@ -403,7 +401,6 @@ public class UserLoginActivity extends Activity implements OnClickListener,UserL
 			mBackButton.setEnabled(true);
 			if(UserUtils.isMobileNO(phone)){
 				new AlertDialog.Builder(this)
-				.setTitle("Goluk温馨提示：")
 				.setMessage("此手机号码还没有被注册")
 				.setNegativeButton("取消", null)
 				.setPositiveButton("注册", new DialogInterface.OnClickListener() {

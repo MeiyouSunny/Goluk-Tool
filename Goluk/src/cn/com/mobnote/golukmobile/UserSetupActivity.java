@@ -27,7 +27,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.base.BaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -57,7 +57,7 @@ import cn.com.tiros.utils.LogUtil;
  * 
  */
 
-public class UserSetupActivity extends BaseActivity implements OnClickListener,UserInterface,IPCManagerFn {
+public class UserSetupActivity extends CarRecordBaseActivity implements OnClickListener,UserInterface,IPCManagerFn {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

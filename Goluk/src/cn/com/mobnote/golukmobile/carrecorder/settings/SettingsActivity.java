@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
@@ -42,7 +43,7 @@ import android.widget.Button;
   *
   * @author xuhw
   */
-public class SettingsActivity extends Activity implements OnClickListener, IPCManagerFn{
+public class SettingsActivity extends BaseActivity implements OnClickListener, IPCManagerFn{
 	/**  录制状态  */
 	private boolean recordState=false;
 	/** 自动循环录像开关按钮 */

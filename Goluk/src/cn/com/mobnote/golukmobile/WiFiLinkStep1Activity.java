@@ -35,7 +35,7 @@ import android.widget.ImageButton;
  * 
  */
 
-public class WiFiLinkStep1Activity extends Activity implements OnClickListener {
+public class WiFiLinkStep1Activity extends BaseActivity implements OnClickListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -45,7 +46,7 @@ public class VideoOnClickListener implements OnClickListener{
 	public void onClick(View arg0) {
 		if("2".equals(mVideoSquareInfo.mVideoEntity.type)){
 			if(1 == form){
-				VideoSquareActivity a = (VideoSquareActivity)mContext;
+				MainActivity a = (MainActivity)mContext;
 				Intent intent = new Intent(a, CCPlayerPage.class);
 				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
 				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
@@ -94,7 +95,12 @@ public class VideoOnClickListener implements OnClickListener{
 			user.active = mVideoSquareInfo.mVideoEntity.livevideodata.active;
 			user.aid = mVideoSquareInfo.mVideoEntity.livevideodata.aid;
 			user.lat = mVideoSquareInfo.mVideoEntity.livevideodata.lat;
-			user.liveDuration = Integer.parseInt(mVideoSquareInfo.mVideoEntity.livevideodata.restime);
+			if(mVideoSquareInfo.mVideoEntity.livevideodata.restime !=null && !"".equals(mVideoSquareInfo.mVideoEntity.livevideodata.restime)){
+				user.liveDuration = Integer.parseInt(mVideoSquareInfo.mVideoEntity.livevideodata.restime);
+			}else{
+				user.liveDuration = 0;
+			}
+			
 			user.lon = mVideoSquareInfo.mVideoEntity.livevideodata.lon;
 			user.nickName = mVideoSquareInfo.mUserEntity.nickname;
 			user.persons = mVideoSquareInfo.mVideoEntity.clicknumber;

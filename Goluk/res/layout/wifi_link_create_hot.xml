@@ -1,182 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 创建手机热点 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="#F1F1F1">
-	
-	<RelativeLayout
-		android:id="@+id/title_layout"
-		android:layout_width="match_parent"
-		android:layout_height="62dp"
-		android:background="#F1F1F1">
-		
-		<ImageButton
-			android:id="@+id/back_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:background="@drawable/connect_back_btn_btn"
-			android:contentDescription="@string/imgdes" />
-		
-	</RelativeLayout>
-	
-	<TextView
-		android:id="@+id/textView1"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="25dp"
-		android:layout_marginRight="25dp"
-		android:layout_below="@id/title_layout"
-		android:textSize="24sp"
-		android:textColor="#595959"
-		android:text="@string/wifi_link_23_text" />
-	
-	<TextView
-		android:id="@+id/textView2"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="25dp"
-		android:layout_marginRight="25dp"
-		android:layout_marginTop="4dp"
-		android:layout_below="@id/textView1"
-		android:textSize="16sp"
-		android:textColor="#828282"
-		android:text="@string/wifi_link_24_text" />
-	
-	<RelativeLayout
-		android:id="@+id/wifi_name_layout"
-		android:layout_width="match_parent"
-		android:layout_height="42dp"
-		android:layout_marginTop="25dp"
-		android:layout_marginLeft="10dp"
-		android:layout_marginRight="10dp"
-		android:layout_below="@id/textView2"
-		android:background="@drawable/connect_jump_bg">
-		
-		<TextView
-			android:id="@+id/wifi_name_title"
-			android:layout_width="96dp"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:gravity="center"
-			android:text="@string/wifi_link_21_text"
-			android:textSize="18sp"
-			android:textColor="#adadad"/>
-		
-		<View
-			android:id="@+id/name_solid"
-			android:layout_width="1dp"
-			android:layout_height="match_parent"
-			android:layout_toRightOf="@id/wifi_name_title"
-			android:background="#b1b1b1"/>
-		
-		<EditText
-			android:id="@+id/wifi_name_text"
-			android:layout_width="match_parent"
-			android:layout_height="42dp"
-			android:layout_marginLeft="14dp"
-			android:layout_toRightOf="@id/name_solid"
-			android:background="#00000000"
-			android:inputType="text"
-			android:text="@string/wifi_link_22_text"
-			android:textColor="#595959"
-			android:textSize="16sp"/>
-	</RelativeLayout>
-	
-	<RelativeLayout
-		android:id="@+id/wifi_pwd_layout"
-		android:layout_width="match_parent"
-		android:layout_height="42dp"
-		android:layout_marginLeft="10dp"
-		android:layout_marginRight="10dp"
-		android:layout_marginTop="12dp"
-		android:layout_below="@id/wifi_name_layout"
-		android:background="@drawable/connect_jump_bg">
-		
-		<TextView
-			android:id="@+id/wifi_pwd_title"
-			android:layout_width="96dp"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:gravity="center"
-			android:text="@string/pwd_text"
-			android:textSize="18sp"
-			android:textColor="#adadad"/>
-		
-		<View
-			android:id="@+id/pwd_solid"
-			android:layout_width="1dp"
-			android:layout_height="match_parent"
-			android:layout_toRightOf="@id/wifi_pwd_title"
-			android:background="#b1b1b1"/>
-		
-		<EditText
-			android:id="@+id/wifi_pwd_text"
-			android:layout_width="match_parent"
-			android:layout_height="42dp"
-			android:layout_marginLeft="14dp"
-			android:layout_toRightOf="@id/pwd_solid"
-			android:background="#00000000"
-			android:digits="@string/wifi_pwd_digits"
-			android:inputType="text"
-			android:textColor="#595959"
-			android:textSize="16sp"/>
-	</RelativeLayout>
-	
-	<LinearLayout
-		android:id="@+id/image_layout"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/wifi_pwd_layout"
-		android:layout_centerHorizontal="true"
-		android:layout_marginTop="25dp"
-		android:orientation="horizontal">
-		<ImageView
-			android:id="@+id/imageView1"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/connect_gif_phone"
-			android:contentDescription="@string/imgdes"/>
-		<ImageView
-			android:id="@+id/imageView2"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:background="@anim/phone_wifi"
-			android:contentDescription="@string/imgdes"/>
-		<ImageView
-			android:id="@+id/imageView3"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_vertical"
-			android:src="@drawable/connect_gif_ipc2"
-			android:contentDescription="@string/imgdes"/>
-	</LinearLayout>
-	
-	
-	<Button
-		android:id="@+id/next_btn"
-		android:layout_width="match_parent"
-		android:layout_height="52dp"
-		android:layout_marginBottom="34dp"
-		android:layout_marginLeft="20dp"
-		android:layout_marginRight="20dp"
-		android:layout_alignParentBottom="true"
-		android:background="@drawable/connect_mianbtn"
-		android:textSize="20sp"
-		android:textColor="@color/white"
-		android:text="@string/next_text" />
-	
-	<include
-		android:id="@+id/loading_layout"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:visibility="gone"
-		layout="@layout/loading"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F1F1F1" >
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:background="#F1F1F1" >
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/connect_back_btn_btn"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_layout"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:text="@string/wifi_link_23_text"
+        android:textColor="#595959"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView1"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/wifi_link_24_text"
+        android:textColor="#828282"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:id="@+id/wifi_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_below="@id/textView2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/connect_jump_bg" >
+
+        <TextView
+            android:id="@+id/wifi_name_title"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/wifi_link_21_text"
+            android:textColor="#adadad"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/name_solid"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/wifi_name_title"
+            android:background="#b1b1b1" />
+
+        <EditText
+            android:id="@+id/wifi_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@id/name_solid"
+            android:background="#00000000"
+            android:inputType="text"
+            android:maxLength="20"
+            android:text="@string/wifi_link_22_text"
+            android:textColor="#595959"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/wifi_pwd_layout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_below="@id/wifi_name_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/connect_jump_bg" >
+
+        <TextView
+            android:id="@+id/wifi_pwd_title"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/pwd_text"
+            android:textColor="#adadad"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/pwd_solid"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/wifi_pwd_title"
+            android:background="#b1b1b1" />
+
+        <EditText
+            android:id="@+id/wifi_pwd_text"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@id/pwd_solid"
+            android:background="#00000000"
+            android:digits="@string/wifi_pwd_digits"
+            android:inputType="text"
+            android:maxLength="20"
+            android:textColor="#595959"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/image_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wifi_pwd_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/connect_gif_phone" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@anim/phone_wifi"
+            android:contentDescription="@string/imgdes" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/connect_gif_ipc2" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="34dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/connect_mianbtn"
+        android:text="@string/next_text"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <include
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/loading"
+        android:visibility="gone" />
+
 </RelativeLayout>
-
-
-
-
-
-

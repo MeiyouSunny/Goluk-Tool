@@ -37,7 +37,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
+public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -86,7 +86,7 @@ public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
 		//mMoreHelpText.setOnClickListener(this);
 		
 		//修改title说明文字颜色
-		mDescTitleText.setText(Html.fromHtml("请让<font color=\"#28b6a4\">Goluk</font>与<font color=\"#28b6a4\">手机</font>连接"));
+		mDescTitleText.setText(Html.fromHtml("请让<font color=\"#0587ff\">Goluk</font>与<font color=\"#0587ff\">手机</font>连接"));
 	}
 	
 	
@@ -98,7 +98,6 @@ public class WiFiLinkIndexActivity extends Activity implements OnClickListener {
 	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch(id){
 			case R.id.back_btn:

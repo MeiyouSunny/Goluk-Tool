@@ -42,7 +42,7 @@ import android.widget.TextView;
  * 
  */
 
-public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListener {
+public class WiFiLinkModifyPwdActivity extends BaseActivity implements OnClickListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -105,7 +105,7 @@ public class WiFiLinkModifyPwdActivity extends Activity implements OnClickListen
 		
 		//启动动画
 		mIpcWiFiAnim.start();
-		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#28b6a4\">Goluk</font> WiFi热点信息"));
+		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#0587ff\">Goluk</font> WiFi热点信息"));
 		mWiFiNameText.setText(mLinkWiFiName);
 		
 		//赋值密码

@@ -65,8 +65,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="6dp"
             android:background="@drawable/live_icon_portrait" />
 
         <!-- 直播标识 -->
@@ -76,8 +76,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:src="@drawable/live_icon_live" />
 
         <!-- 用户名称 -->
@@ -101,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/live_nickname"
-            android:layout_marginTop="10dp"
+            android:layout_centerVertical="true"
             android:contentDescription="@string/imgdes"
             android:src="@drawable/live_icon_address" />
 
@@ -111,13 +111,13 @@
             android:id="@+id/live_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
             android:layout_toLeftOf="@id/live_sign"
             android:layout_toRightOf="@id/live_address_sign"
             android:singleLine="true"
-            android:text="北京市朝阳区朝外大街"
+            android:text=""
             android:textColor="@color/live_address_color"
             android:textSize="@dimen/live_address_size" />
     </RelativeLayout>
@@ -314,9 +314,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="2dp"
                 android:background="@drawable/live_icon_share"
                 android:contentDescription="@string/imgdes" />
+
+            <TextView
+                android:id="@+id/live_share_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="分享"
+                android:textColor="#8e8e8e"
+                android:textSize="@dimen/live_text_time1_size" >
+            </TextView>
         </LinearLayout>
 
         <ImageView

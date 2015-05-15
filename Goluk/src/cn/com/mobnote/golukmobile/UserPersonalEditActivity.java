@@ -31,7 +31,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UserPersonalEditActivity extends Activity implements OnClickListener,OnTouchListener{
+public class UserPersonalEditActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 
 	//title
 	private Button btnBack,btnRight;
@@ -65,7 +65,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 	private String intentSex = null;
 	private String intentSign = null;
 	//保存数据的loading
-	private RelativeLayout mLoading = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	
 	@Override
@@ -112,8 +111,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		mLayoutName = (RelativeLayout) findViewById(R.id.user_personal_edit_layout2);
 //		mLayoutSex = (RelativeLayout) findViewById(R.id.user_personal_edit_layout3);
 		mLayoutSign = (RelativeLayout) findViewById(R.id.user_personal_edit_layout4);
-		//保存数据的loading
-		mLoading = (RelativeLayout) findViewById(R.id.loading_layout);
 			
 		/**
 		 * 从UserPersonalInfoActivity传来的用户信息
@@ -229,7 +226,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_ModifyUserInfo, isSave);
 				if(b){
 					//保存中
-//					mLoading.setVisibility(View.VISIBLE);
 					mCustomProgressDialog.show();
 					btnBack.setEnabled(false);
 					btnRight.setEnabled(false);
@@ -258,7 +254,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 				String json2Name = json2.getString("nickname");
 				String json2Head = json2.getString("head");*/
 				
-//				mLoading.setVisibility(View.GONE);
 				closeProgressDialog();
 				switch (code) {
 				case 200:
@@ -267,7 +262,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 					break;
 				case 405:
 					console.toast("该用户未注册", mContext);
-//					mLoading.setVisibility(View.GONE);
 					closeProgressDialog();
 					btnBack.setEnabled(true);
 					btnRight.setEnabled(true);
@@ -278,7 +272,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 
 				case 500:
 					console.toast("服务器异常", mContext);
-//					mLoading.setVisibility(View.GONE);
 					closeProgressDialog();
 					btnBack.setEnabled(true);
 					btnRight.setEnabled(true);
@@ -296,7 +289,6 @@ public class UserPersonalEditActivity extends Activity implements OnClickListene
 		}else{
 			//success不等于1
 			console.toast("数据修改失败,请重试", mContext);
-//			mLoading.setVisibility(View.GONE);
 			closeProgressDialog();
 			btnBack.setEnabled(true);
 			btnRight.setEnabled(true);

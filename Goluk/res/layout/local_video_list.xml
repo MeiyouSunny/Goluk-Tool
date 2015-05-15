@@ -68,15 +68,17 @@
 				android:gravity="center"
 				android:background="#00000000"
 				android:text="@string/videolist_xhyx"
-				android:textColor="#00c590"
-				android:textSize="16sp" />
+				android:textColor="@color/carrecorder_text_sel_color"
+				android:textSize="16sp"
+				android:visibility="gone"/>
 
 			<ImageView
 				android:layout_width="wrap_content"
 				android:layout_height="24dp"
 				android:layout_gravity="center_vertical"
 				android:background="@drawable/carrecorder_flle_tit_line"
-				android:contentDescription="@string/def" />
+				android:contentDescription="@string/def"
+				android:visibility="gone"/>
 
 			<Button
 				android:id="@+id/video_jcsp"
@@ -87,7 +89,7 @@
 				android:gravity="center"
 				android:background="#00000000"
 				android:text="@string/videolist_jcsp"
-				android:textColor="#999999"
+				android:textColor="@color/carrecorder_text_sel_color"
 				android:textSize="16sp" />
 
 			<ImageView
@@ -123,9 +125,9 @@
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="20dp"
 				android:layout_weight="1"
-				android:background="#00c590"
+				android:background="@color/carrecorder_text_sel_color"
 				android:contentDescription="@string/def"
-				android:visibility="visible" />
+				android:visibility="gone" />
 
 			<ImageView
 				android:id="@+id/line_jcsp"
@@ -134,9 +136,9 @@
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="20dp"
 				android:layout_weight="1"
-				android:background="#00c590"
+				android:background="@color/carrecorder_text_sel_color"
 				android:contentDescription="@string/def"
-				android:visibility="invisible" />
+				android:visibility="visible" />
 
 			<ImageView
 				android:id="@+id/line_jjyx"
@@ -145,7 +147,7 @@
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="10dp"
 				android:layout_weight="1"
-				android:background="#00c590"
+				android:background="@color/carrecorder_text_sel_color"
 				android:contentDescription="@string/def"
 				android:visibility="invisible" />
 		</LinearLayout>
@@ -170,7 +172,7 @@
 			android:cacheColorHint="#00000000"
 			android:scrollbarStyle="outsideOverlay"
 			tools:listitem="@layout/test_list_item_layout"
-			android:visibility="visible" />
+			android:visibility="gone" />
 		
 		<com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
 			android:id="@+id/mWonderfulVideoList"
@@ -185,7 +187,7 @@
 			android:cacheColorHint="#00000000"
 			android:scrollbarStyle="outsideOverlay"
 			tools:listitem="@layout/test_list_item_layout"
-			android:visibility="gone" />
+			android:visibility="visible" />
 		
 		<com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
 			android:id="@+id/mEmergencyVideoList"

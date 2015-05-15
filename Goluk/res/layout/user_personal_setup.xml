@@ -67,7 +67,8 @@
 			android:layout_marginRight="19dp"
 			android:layout_centerVertical="true"
 			android:textSize="18sp"
-			android:contentDescription="@string/imgdes"/>
+			android:contentDescription="@string/imgdes"
+			android:textColor="#3f3f3f"/>
 		
 	</RelativeLayout>
 	<View
