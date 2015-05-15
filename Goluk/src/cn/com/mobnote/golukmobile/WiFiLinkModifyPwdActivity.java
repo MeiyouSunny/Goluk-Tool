@@ -7,7 +7,6 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -51,7 +50,7 @@ public class WiFiLinkModifyPwdActivity extends BaseActivity implements OnClickLi
 	private ImageButton mBackBtn = null;
 	/** 跳过 */
 	private Button mJumpBtn = null;
-	/** 描述title*/
+	/** 描述title */
 	private TextView mDescTitleText = null;
 	/** wifi名称 */
 	private TextView mWiFiNameText = null;
@@ -64,101 +63,97 @@ public class WiFiLinkModifyPwdActivity extends BaseActivity implements OnClickLi
 	private Button mNextBtn = null;
 	/** 连接wifi名称 */
 	private String mLinkWiFiName = null;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_modify_pwd);
 		mContext = this;
-		
+
 		SysApplication.getInstance().addActivity(this);
-		//获得GolukApplication对象
-		mApp = (GolukApplication)getApplication();
-		mApp.setContext(mContext,"WiFiLinkModifyPwd");
-		//获取视频路径
+		// 获得GolukApplication对象
+		mApp = (GolukApplication) getApplication();
+		mApp.setContext(mContext, "WiFiLinkModifyPwd");
+		// 获取视频路径
 		Intent intent = getIntent();
 		mLinkWiFiName = intent.getStringExtra("cn.com.mobnote.golukmobile.wifiname");
-		//页面初始化
+		// 页面初始化
 		init();
 	}
-	
+
 	/**
 	 * 页面初始化
 	 */
 	@SuppressLint("HandlerLeak")
-	private void init(){
-		//获取页面元素
-		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
-		mJumpBtn = (Button)findViewById(R.id.jump_btn);
+	private void init() {
+		// 获取页面元素
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+		mJumpBtn = (Button) findViewById(R.id.jump_btn);
 		mDescTitleText = (TextView) findViewById(R.id.textView1);
 		mWiFiNameText = (TextView) findViewById(R.id.wifi_name_text);
 		mWiFiPwdText = (EditText) findViewById(R.id.wifi_pwd_text);
-		mIpcWiFiImage = (ImageView)findViewById(R.id.imageView2);
-		mIpcWiFiAnim = (AnimationDrawable)mIpcWiFiImage.getBackground();
-		mNextBtn = (Button)findViewById(R.id.next_btn);
-		
-		//注册事件
+		mIpcWiFiImage = (ImageView) findViewById(R.id.imageView2);
+		mIpcWiFiAnim = (AnimationDrawable) mIpcWiFiImage.getBackground();
+		mNextBtn = (Button) findViewById(R.id.next_btn);
+
+		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		mJumpBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
-		
-		//启动动画
+
+		// 启动动画
 		mIpcWiFiAnim.start();
-		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#28b6a4\">Goluk</font> WiFi热点信息"));
+		mDescTitleText.setText(Html.fromHtml("2.修改<font color=\"#0587ff\">Goluk</font> WiFi热点信息"));
 		mWiFiNameText.setText(mLinkWiFiName);
-		
-		//赋值密码
+
+		// 赋值密码
 		String pwd = WiFiInfo.AP_PWD;
-		if(null != pwd && !"".equals(pwd)){
+		if (null != pwd && !"".equals(pwd)) {
 			mWiFiPwdText.setText(pwd);
 		}
 	}
-	
+
 	/**
 	 * 更新ipc-wifi密码
 	 */
-	private void updateIpcWiFiPwd(){
+	private void updateIpcWiFiPwd() {
 		String pwd = mWiFiPwdText.getText().toString().trim();
-		if(pwd.length() > 7){
-			//保存ipc-wifi数据
+		if (pwd.length() > 7) {
+			// 保存ipc-wifi数据
 			WiFiInfo.AP_SSID = mLinkWiFiName;
 			WiFiInfo.AP_PWD = pwd;
-			Intent hot = new Intent(WiFiLinkModifyPwdActivity.this,WiFiLinkCreateHotActivity.class);
+			Intent hot = new Intent(WiFiLinkModifyPwdActivity.this, WiFiLinkCreateHotActivity.class);
 			startActivity(hot);
-		}
-		else{
+		} else {
 			console.toast("密码至少需要8位", mContext);
 		}
 	}
-	
+
 	@Override
-	protected void onResume(){
-		mApp.setContext(this,"WiFiLinkModifyPwd");
+	protected void onResume() {
+		mApp.setContext(this, "WiFiLinkModifyPwd");
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
-		switch(id){
-			case R.id.back_btn:
-				//返回
-				finish();
+		switch (id) {
+		case R.id.back_btn:
+			// 返回
+			finish();
 			break;
-			case R.id.jump_btn:
-				//跳过,就相当于不保存密码
-				WiFiInfo.AP_PWD = "";
-				Intent jump = new Intent(WiFiLinkModifyPwdActivity.this,WiFiLinkCreateHotActivity.class);
-				startActivity(jump);
+		case R.id.jump_btn:
+			// 跳过,就相当于不保存密码
+			WiFiInfo.AP_PWD = "";
+			Intent jump = new Intent(WiFiLinkModifyPwdActivity.this, WiFiLinkCreateHotActivity.class);
+			startActivity(jump);
 			break;
-			case R.id.next_btn:
-				updateIpcWiFiPwd();
-				//Intent setup = new Intent(WiFiLinkModifyPwdActivity.this,WiFiLinkStep2Activity.class);
-				//startActivity(setup);
+		case R.id.next_btn:
+			updateIpcWiFiPwd();
 			break;
 		}
 	}
-	
+
 }

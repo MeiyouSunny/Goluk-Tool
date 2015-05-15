@@ -58,7 +58,7 @@
 
         <Button
             android:id="@+id/index_look_btn"
-            android:layout_width="34dp"
+            android:layout_width="36dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="27dp"
@@ -80,13 +80,7 @@
             android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_above="@id/status_layout"
-        android:layout_alignParentBottom="true"
-        android:background="#bcbcbc" />
-
+   
     <RelativeLayout
         android:id="@+id/index_top_layout"
         android:layout_width="match_parent"
@@ -124,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/index_wifi_five" />
+                android:background="@drawable/home_wifi_no_link" />
         </LinearLayout>
     </RelativeLayout>
 

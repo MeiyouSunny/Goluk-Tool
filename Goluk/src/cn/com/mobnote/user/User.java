@@ -83,7 +83,7 @@ public class User {
 					Log.i("setauto", "------自动登录-------"+b+"------自动登录的状态值-----"+mApp.autoLoginStatus);
 				}else{
 					StatusChange(3);//自动登录失败
-					console.toast("自动登录失败", mContext);
+//					console.toast("自动登录失败", mContext);
 				}
 			}
 		}
@@ -115,7 +115,7 @@ public class User {
 				switch (code) {
 				case 200:
 					//自动登录成功无提示
-					console.toast("自动登录成功", mContext);
+//					console.toast("自动登录成功", mContext);
 					Log.i("lily", "--------User-----自动登录个人中心页变化--------"+mApp.autoLoginStatus);
 					StatusChange(2);//自动登录成功
 					Log.i("setauto", "----ok---"+mApp.autoLoginStatus);

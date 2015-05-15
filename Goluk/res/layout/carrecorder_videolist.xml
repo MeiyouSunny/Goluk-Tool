@@ -126,7 +126,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="#00c590"
+                android:background="@color/carrecorder_tab_sel_color"
                 android:contentDescription="@string/def" />
 
             <ImageView
@@ -136,7 +136,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="#00c590"
+                android:background="@color/carrecorder_tab_sel_color"
                 android:contentDescription="@string/def" />
 
             <ImageView
@@ -146,7 +146,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="#00c590"
+                android:background="@color/carrecorder_tab_sel_color"
                 android:contentDescription="@string/def" />
 
         </LinearLayout>

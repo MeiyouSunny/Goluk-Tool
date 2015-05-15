@@ -100,7 +100,13 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 
 		// 启动动画
 		mPhoneWiFiAnim.start();
-		mDescTitleText.setText(Html.fromHtml("3.修改与<font color=\"#28b6a4\">Goluk 相连手机</font>的 WiFi 热点信息"));
+		mDescTitleText.setText(Html.fromHtml("3.修改与<font color=\"#0587ff\">Goluk 相连手机</font>的 WiFi 热点信息"));
+
+		String wifiName = WiFiInfo.AP_SSID;
+		String name = wifiName.replace("Goluk", "GOLUK");
+		if (null != name && !"".equals(name)) {
+			mWiFiName.setText(name);
+		}
 	}
 
 	/**
@@ -121,7 +127,7 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 					WiFiInfo.GolukSSID = wifiName;
 					WiFiInfo.GolukPWD = pwd;
 
-//					String golukMac = WiFiInfo.GolukMAC.toString();
+					// String golukMac = WiFiInfo.GolukMAC.toString();
 					// 写死ip,网关
 					String ip = "192.168.1.103";// golukMac.substring(0,
 												// golukMac.lastIndexOf(".")) +
@@ -163,10 +169,10 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 	public void setIpcLinkWiFiCallBack() {
 		// 隐藏loading
 		mLoading.setVisibility(View.GONE);
-		console.log("设置热点信息成功回调---setIpcLinkWiFiCallBack");
-		// 设置热点信息成功,跳转到成功页面创建热点
 		Intent complete = new Intent(WiFiLinkCreateHotActivity.this, WiFiLinkCompleteActivity.class);
 		startActivity(complete);
+
+		console.log("WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -236,15 +235,20 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	
 	/** 看天下按钮 */
 	private Button indexLookBtn = null;
-	
 	/** 链接行车记录仪 */
 	private ImageButton indexCarrecoderBtn = null;
-	
 	/** 连接ipc时的动画 */
 	Animation anim = null;
-	
+
 	private SharedPreferences mPreferences = null;
 	private Editor mEditor = null;
+	private long exitTime = 0;
+
+	/** 当前连接的Goluk设备 */
+	private String mGolukName = "";
+	
+	/** 热门视频列表默认背景图片 */
+	private ImageView squareDefault;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -321,8 +325,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
 
-	}
-
+}
 	private String getIMEI() {
 		try {
 			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
@@ -373,6 +376,8 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		
 		indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
+		squareDefault = (ImageView) findViewById(R.id.square_default);
+		
 		mShareLiveBtn.setOnClickListener(this);
 		indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
@@ -807,9 +812,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 	}
 
-	private static final String WIFI_CONNING_FAILED_STR = "去连接Goluk";
-	private static final String WIFI_CONNING_STR = "正在连接Goluk";
-	private static final String WIFI_CONNED_STR = "己连接到Goluk";
+	private static final String WIFI_CONNING_FAILED_STR = "未连接Goluk";
+	private static final String WIFI_CONNING_STR = "正在连接Goluk...";
+	private static final String WIFI_CONNED_STR = "己连接Goluk";
 
 	/** 音量图片动画 */
 	private AnimationDrawable mVolumeImgAnimation = null;
@@ -847,7 +852,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 		mWifiStateTv.setText(WIFI_CONNED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_linked);//临时注释
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
+		mWifiState.setBackgroundResource(R.drawable.home_wifi_link_four);
 	}
 
 	// 连接失败
@@ -859,7 +864,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			indexCarrecoderBtn.clearAnimation();
 			anim = null;
 		}
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
+		mWifiState.setBackgroundResource(R.drawable.home_wifi_no_link);
 		mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
 	}
@@ -871,16 +876,34 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
 		return preferences.getBoolean("isbind", false);
 	}
+	
+	private void toLogin() {
+		Intent intent = new Intent(this, UserLoginActivity.class);
+		intent.putExtra("isInfo", "back");
+		startActivity(intent);
+	}
+	
+	public void setViewListBg(boolean flog){
+		if(flog){
+			squareDefault.setVisibility(View.VISIBLE);
+		}else{
+			squareDefault.setVisibility(View.GONE);
+		}
+		
+	}
 
 	private void click_ConnFailed() {
 		if (!isBindSucess()) {
 			// 跳转到wifi连接首页
-			Intent wifiIndex = new Intent(MainActivity.this,
-					WiFiLinkIndexActivity.class);
-			startActivity(wifiIndex);
+			if (mApp.isUserLoginSucess) {
+				Intent wifiIndex = new Intent(MainActivity.this,
+						WiFiLinkIndexActivity.class);
+				startActivity(wifiIndex);
+			} else {
+				toLogin();
+			}
 		} else {
 			// 已经绑定
-
 			startWifi();
 			if (null != mWac) {
 				mWac.autoWifiManageReset();
@@ -1037,18 +1060,14 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_APP_EXIT, "提示", "退出程序？");
-			// 退出对话框
-			// int PID = android.os.Process.myPid();
-			// android.os.Process.killProcess(PID);
-			// android.os.Process.sendSignal(PID, 9);
-			return true;
+			exit();
+            return false;
 		}
-		return false;
+        return super.onKeyDown(keyCode, event);
+
 	}
 
-	// 退出程序
+	/*// 退出程序
 	private void exit() {
 		// if (mApp.isUserLoginSucess) {
 		SysApplication.getInstance().exit();
@@ -1061,7 +1080,29 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		finish();
 		int PID = android.os.Process.myPid();
 		android.os.Process.killProcess(PID);
-	}
+	}*/
+	
+	public void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+        	
+        	SysApplication.getInstance().exit();
+    		// }
+    		mApp.mIPCControlManager.setIPCWifiState(false, "");
+    		mApp.mGoluk.GolukLogicDestroy();
+    		if (null != UserStartActivity.mHandler) {
+    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+    		}
+    		finish();
+    		int PID = android.os.Process.myPid();
+    		android.os.Process.killProcess(PID);
+            System.exit(0);
+        }
+    }
+
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
@@ -1087,7 +1128,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			case MotionEvent.ACTION_DOWN:
 				Drawable user_down = this.getResources().getDrawable(R.drawable.home_self_btn_click); 
 				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,user_down,null,null);
-				mMoreBtn.setTextColor(Color.rgb(0, 197, 177));
+				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable user_up = this.getResources().getDrawable(R.drawable.home_self_btn); 
@@ -1112,7 +1153,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				Drawable db_down = this.getResources().getDrawable(R.drawable.home_share_btn_click); 
 				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_down,null,null);
 				
-				mShareBtn.setTextColor(Color.rgb(0, 197, 177));
+				mShareBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable db_up = this.getResources().getDrawable(R.drawable.home_share_btn); 
@@ -1204,15 +1245,21 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			videoSquareLayout.setVisibility(View.GONE);
 			drawable = this.getResources().getDrawable(R.drawable.home_local_btn_click); 
 			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			indexLookBtn.setTextColor(Color.rgb(59, 151, 245));
+			
 			drawable = this.getResources().getDrawable(R.drawable.home_find_btn); 
 			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			msquareBtn.setTextColor(Color.rgb(103, 103, 103));
 		}else if (id == R.id.index_square_btn){
 			
 			indexMapLayout.setVisibility(View.GONE);
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			drawable = this.getResources().getDrawable(R.drawable.home_local_btn); 
 			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			indexLookBtn.setTextColor(Color.rgb(103, 103, 103));
+			
 			drawable = this.getResources().getDrawable(R.drawable.home_find_btn_click); 
+			msquareBtn.setTextColor(Color.rgb(59, 151, 245));
 			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
 		}
 	}
@@ -1249,6 +1296,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			mEditor.commit();
 			
 			startActivity(intent);
+			toLogin();
 			return;
 		}
 		// 视频分享
@@ -1318,7 +1366,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	 */
 	private void toShareLive() {
 		if (!mApp.isUserLoginSucess) {
-			// TODO 未登录成功
+			// 未登录成功
 			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
 			if (mApp.autoLoginStatus == 1) {
@@ -1395,13 +1443,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	@Override
 	public void statusChange() {
-		/*
-		 * if(mApp.autoLoginStatus !=1){ dismissAutoDialog(); Intent it = null;
-		 * if(mApp.autoLoginStatus == 2){ if(!isClickShareVideo){ it = new
-		 * Intent(MainActivity.this,LocalVideoShareListActivity.class); }else{
-		 * it = new Intent(MainActivity.this,LiveActivity.class); }
-		 * startActivity(it); } }
-		 */
+
 		if (mApp.autoLoginStatus != 1) {
 			dismissAutoDialog();
 			if (mApp.autoLoginStatus == 2) {
@@ -1518,6 +1560,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 								+ bean.length);
 						if (bean.length > 0) {
 							console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---");
+							mGolukName = bean[0].getIpc_ssid();
 							sendLogicLinkIpc(bean[0].getIpc_ip(),
 									bean[0].getIpc_mac());
 						}

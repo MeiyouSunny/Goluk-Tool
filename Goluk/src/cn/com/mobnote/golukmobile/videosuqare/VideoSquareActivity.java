@@ -4,6 +4,7 @@ import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -46,6 +47,8 @@ public class VideoSquareActivity implements OnClickListener {
 	
 	RelativeLayout mRootLayout = null;
 	Context mContext = null;
+	MainActivity ma = null;
+	
 	public VideoSquareActivity(RelativeLayout rootlayout,Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
@@ -53,7 +56,7 @@ public class VideoSquareActivity implements OnClickListener {
 	}
 
 	public void init() {
-
+		ma = (MainActivity) mContext;
 		mViewPager = (ViewPager) mRootLayout.findViewById(R.id.mViewpager);
 		mVideoSquareAdapter = new VideoSquareAdapter(mContext);
 		mViewPager.setAdapter(mVideoSquareAdapter);
@@ -133,6 +136,11 @@ public class VideoSquareActivity implements OnClickListener {
 	private void updateState(int type) {
 
 		if (0 == type) {
+			if(mVideoSquareAdapter.mVideoSquareListView.mDataList.size()>0){
+				ma.setViewListBg(false);
+			}else{
+				ma.setViewListBg(true);
+			}
 			hot.setVisibility(View.VISIBLE);
 			square.setVisibility(View.INVISIBLE);
 			
@@ -142,6 +150,10 @@ public class VideoSquareActivity implements OnClickListener {
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 		} else {
+			//
+			
+			ma.setViewListBg(false);
+				
 			hot.setVisibility(View.INVISIBLE);
 			square.setVisibility(View.VISIBLE);
 			

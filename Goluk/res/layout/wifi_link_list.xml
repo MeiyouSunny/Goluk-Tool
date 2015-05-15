@@ -65,7 +65,7 @@
 			android:layout_marginLeft="18dp"
 			android:layout_marginTop="26dp"
 			android:textSize="20sp"
-			android:textColor="#28b6a4"
+			android:textColor="#0587ff"
 			android:text="@string/wifi_link_8_text"/>
 		
 		<ImageButton

@@ -425,6 +425,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 						}else if(justLogin.equals("setup")){//从设置页注册
 							it.putExtra("fromRegist", "fromSetup");
 						}
+						
 						startActivity(it);
 //						finish();
 					}
@@ -498,8 +499,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	
 	/**
 	 * 关闭加载中对话框
-	 * @author xuhw
-	 * @date 2015年4月15日
 	 */
 	private void closeProgressDialog(){
 		if(null != mCustomProgressDialog){

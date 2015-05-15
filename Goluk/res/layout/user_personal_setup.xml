@@ -67,7 +67,8 @@
 			android:layout_marginRight="19dp"
 			android:layout_centerVertical="true"
 			android:textSize="18sp"
-			android:contentDescription="@string/imgdes"/>
+			android:contentDescription="@string/imgdes"
+			android:textColor="#3f3f3f"/>
 		
 	</RelativeLayout>
 	<View
@@ -123,13 +124,26 @@
 	    android:paddingTop="20dp"
 	    android:gravity="center"
 	    >
-	    <TextView 
+	    <LinearLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="@string/user_personal_setup_update_bottom_text1"
-	        android:textSize="14sp"
-	        android:textColor="@color/user_home_nologin"
-	        />
+	        >
+	        <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/user_personal_setup_update_bottom_text1"
+		        android:textSize="14sp"
+		        android:textColor="@color/user_home_nologin"
+		        />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:id="@+id/user_setup_versioncode"
+	            android:textSize="14sp"
+	            android:textColor="@color/user_home_nologin"
+	            android:text=" 1.0.0"
+	            />
+	    </LinearLayout>
 	    <TextView 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"

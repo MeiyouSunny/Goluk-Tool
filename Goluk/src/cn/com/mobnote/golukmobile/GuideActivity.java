@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.guide.GolukGuideManage;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -66,6 +67,7 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 		setContentView(R.layout.guide);
 		
 		mContext = this;
+		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		((GolukApplication)this.getApplication()).initLogic();
 				
 		//初始化
@@ -73,7 +75,8 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 		//加载引导页
 		initViewPager();
 		
-		GolukApplication.getInstance().setContext(this, "GuideActivity");
+		SysApplication.getInstance().addActivity(this);
+		
 	}
 	
 	/**
@@ -85,7 +88,7 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 		//读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
 		SharedPreferences preferences = getSharedPreferences("golukmark",MODE_PRIVATE);
 		//取得相应的值,如果没有该值,说明还未写入,用true作为默认值
-		boolean isFirstIn = preferences.getBoolean("isfirst", true);
+		boolean isFirstIn = preferences.getBoolean("isfirst", false);
 		//判断程序第几次启动
 		if (!isFirstIn) {//启动过
 			//读取SharedPreference中用户的信息
