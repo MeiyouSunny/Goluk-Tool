@@ -83,6 +83,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	public static Handler mHandler = null;
 	/**固件升级*/
 //	private RelativeLayout mUpdateItem = null;
+	/**解除绑定**/
+	private RelativeLayout mUnbindItem = null;
 	/**传输文件*/
 	private AlertDialog mSendDialog = null;
 	/**传输文件成功**/
@@ -118,12 +120,16 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_personal_setup);
 		
+		/**清除缓存*/
+		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
 		// 获取页面元素
 		mBackBtn = (Button) findViewById(R.id.back_btn);
 		// 退出按钮
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
 		// 清除缓存大小显示
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
+		//解除绑定
+		mUnbindItem = (RelativeLayout) findViewById(R.id.unbind_item);
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -270,9 +276,10 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		
 		//注册事件
 		mBackBtn.setOnClickListener(this);
-		/**清除缓存*/
-		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
+		/**清除缓存**/
 		mClearCache.setOnClickListener(this);
+		/**解除绑定**/
+		mUnbindItem.setOnClickListener(this);
 		/**固件升级*/
 //		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
 //		mUpdateItem.setOnClickListener(this);
@@ -343,6 +350,11 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 						}
 					}).create().show();
 				}
+				break;
+			//解除绑定
+			case R.id.unbind_item:
+				Intent itUnbind = new Intent(UserSetupActivity.this,UnbindActivity.class);
+				startActivity(itUnbind);
 				break;
 				//固件升级
 			/*case R.id.update_item:
