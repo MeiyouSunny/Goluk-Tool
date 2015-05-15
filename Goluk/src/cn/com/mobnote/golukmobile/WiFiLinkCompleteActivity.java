@@ -220,6 +220,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		editor.commit();
 	}
 
+	// 保存绑定的wifi名称
+	private void saveBind(String name) {
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+		preferences.edit().putString("ipc_bind_name", name).commit();
+	}
+
 	/**
 	 * ipc连接成功回调
 	 */
@@ -238,6 +245,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		beans.setPh_pass(WiFiInfo.GolukPWD);
 		beans.setIpc_ip(mWiFiIp);
 		mWac.saveConfiguration(beans);
+
+		saveBind(WiFiInfo.AP_SSID);
 
 		// 保存绑定标识
 		saveBindMark();
