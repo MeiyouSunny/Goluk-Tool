@@ -133,6 +133,7 @@ public class UserSetupActivity extends BaseActivity implements OnClickListener,U
 		mTextVersionCode = (TextView) findViewById(R.id.user_setup_versioncode);
 		SharedPreferences mPreferencesVersion = getSharedPreferences("version", Context.MODE_PRIVATE);
 		String versionCode = mPreferencesVersion.getString("versionCode", mTextVersionCode.getText().toString());
+		Log.i("lily", "===versionCode===="+versionCode);
 		mTextVersionCode.setText(versionCode);
 	}
 	
