@@ -1,8 +1,10 @@
 package cn.com.mobnote.golukmobile;
 
+import cn.com.mobnote.application.GolukApplication;
 import io.vov.vitamio.utils.Log;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -27,6 +29,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 	private TextView mTextCameraName = null;
 	private Button mUnbindBtn = null;
 	
+	private GolukApplication mApplication = null;
+	private Context mContext = null;
+	
+	private String ipcName = "";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -39,6 +46,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		mContext = this;
+		//获得GolukApplication对象
+		mApplication = (GolukApplication) getApplication();
+		mApplication.setContext(mContext, "Unbind");
 		
 		initView();
 		
@@ -65,10 +77,10 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 		 */
 		boolean b = this.isBindSucess();
 		Log.i("lily", "====isBindSuccess===="+b);
-		
 		if(b){
 			mHaveipcLayout.setVisibility(View.VISIBLE);
 			mNoipcLayout.setVisibility(View.GONE);
+			mTextCameraName.setText(ipcName);
 		}else{
 			mHaveipcLayout.setVisibility(View.GONE);
 			mNoipcLayout.setVisibility(View.VISIBLE);
@@ -99,6 +111,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 					toUnbind();
 					mHaveipcLayout.setVisibility(View.GONE);
 					mNoipcLayout.setVisibility(View.VISIBLE);
+					mApplication.mIPCControlManager.setIPCWifiState(false, null);
+					mApplication.setIpcLoginOut();
+					
 				}
 			}).create().show();
 			break;
@@ -111,6 +126,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 	// 是否綁定过 Goluk  true为绑定
 	public boolean isBindSucess() {
 		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",MODE_PRIVATE);
+		ipcName = preferences.getString("ipc_bind_name", "");
 		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
 		return preferences.getBoolean("isbind", false);
 	}
