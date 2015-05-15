@@ -122,7 +122,19 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		}
 		
 		/**
-		 *如果填写手机号的EditText中有手机号，就保存 
+		 * 填写手机号
+		 */
+		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+		if(!"".equals(mSharedPreferences.getString("setupPhone", ""))){
+			String phone = mSharedPreferences.getString("setupPhone", "");
+			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
+			mEditTextPhoneNumber.setText(phone);
+			mEditTextPhoneNumber.setSelection(phone.length());
+			mEditTextPwd.setText("");
+		}
+		
+		/**
+		 *	如果填写手机号的EditText中有手机号，就保存 
 		 */
 		if(null != mEditTextPhoneNumber.getText().toString() && mEditTextPhoneNumber.length() == 11){
 			String phone = mEditTextPhoneNumber.getText().toString();
@@ -131,18 +143,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			mEditor.putString("setupPhone", phone);
 			//提交
 			mEditor.commit();
-		}
-		
-		/**
-		 * 填写手机号
-		 */
-		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-		if(null != mSharedPreferences.getString("setupPhone", "") || !"".equals(mSharedPreferences.getString("setupPhone", ""))){
-			String phone = mSharedPreferences.getString("setupPhone", "");
-			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
-			mEditTextPhoneNumber.setText(phone);
-			mEditTextPhoneNumber.setSelection(phone.length());
-			mEditTextPwd.setText("");
 		}
 		
 		/**
@@ -276,6 +276,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		switch (arg0.getId()) {
 		// 返回
 		case R.id.back_btn:
+			mApplication.mLoginManage.setUserLoginInterface(null);
 			finish();
 			break;
 		// 登陆按钮
@@ -284,6 +285,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			break;
 		// 手机快速注册
 		case R.id.user_login_phoneRegist:
+			mApplication.mLoginManage.setUserLoginInterface(null);
 			Intent itRegist = new Intent(UserLoginActivity.this,UserRegistActivity.class);
 			if(justLogin.equals("main") || justLogin.equals("back")){//从起始页注册
 				itRegist.putExtra("fromRegist", "fromStart");
@@ -296,6 +298,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			break;
 		// 忘记密码
 		case R.id.user_login_forgetpwd:
+			mApplication.mLoginManage.setUserLoginInterface(null);
 			Intent itForget = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
 			startActivity(itForget);
 			break;
@@ -374,8 +377,11 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
 			mBackButton.setEnabled(true);
+
 			if(justLogin.equals("main")){
+				mApplication.mLoginManage.setUserLoginInterface(null);
 				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
+				Log.i("main", "======MainActivity==UserLoginActivity====");
 				startActivity(login);
 			}
 			this.finish();
@@ -407,10 +413,20 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
+						mApplication.mLoginManage.setUserLoginInterface(null);
 						Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
 						it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
-						it.putExtra("unRegist", "toRegist");
+						it.putExtra("fromRegist", "fromStart");
+						
+						if(justLogin.equals("main") || justLogin.equals("back")){//从起始页注册
+							it.putExtra("fromRegist", "fromStart");
+						}else if(justLogin.equals("indexmore")){//从更多页个人中心注册
+							it.putExtra("fromRegist", "fromIndexMore");
+						}else if(justLogin.equals("setup")){//从设置页注册
+							it.putExtra("fromRegist", "fromSetup");
+						}
 						startActivity(it);
+//						finish();
 					}
 				}).create().show();
 			}else{
@@ -443,6 +459,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 					
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
+					mApplication.mLoginManage.setUserLoginInterface(null);
 					Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
 					it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
 					startActivity(it);
@@ -451,6 +468,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			.create().show();
 			break;
 		default:
+			
 			break;
 		}
 	}

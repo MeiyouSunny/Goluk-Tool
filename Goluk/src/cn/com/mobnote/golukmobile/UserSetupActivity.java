@@ -453,6 +453,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	public void initIntent(Class intentClass){
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
 		it.putExtra("isInfo", "setup");
+		
+		mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+		mEditor = mPreferences.edit();
+		mEditor.putString("toRepwd", "set");
+		mEditor.commit();
+		
 		startActivity(it);
 	}
 	

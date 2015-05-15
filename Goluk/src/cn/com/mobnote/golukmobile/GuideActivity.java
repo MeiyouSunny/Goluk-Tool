@@ -95,10 +95,10 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 			if(!isFirstLogin){
 				//登录过，跳转到地图首页进行自动登录
 				Intent it = new Intent(this,MainActivity.class);
+				Log.i("main", "======MainActivity==GuideActivity====");
 				startActivity(it);
 			}else{
 				//是第一次登录(没有登录过)
-				// Intent intent = new Intent(this, MainActivity.class);
 				Intent intent = new Intent(this, UserStartActivity.class);
 				startActivity(intent);
 			}

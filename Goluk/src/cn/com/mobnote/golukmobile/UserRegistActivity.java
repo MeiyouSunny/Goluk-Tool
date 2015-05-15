@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -87,8 +86,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private String registOk = null;
 	/**获取验证码的次数**/
 	private String freq = "";
-	private String unRegist = null;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -129,17 +127,12 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		// 登陆
 		mTextViewLogin = (TextView) findViewById(R.id.user_regist_login);
 
-		//登录页用户未注册
 		Intent itLoginPhone = getIntent();
 		if(null != itLoginPhone.getStringExtra("intentLogin")){
 			String number = itLoginPhone.getStringExtra("intentLogin").toString();
 			Log.i("user", number);
 			mEditTextPhone.setText(number);
 			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
-		}
-		if(null != itLoginPhone.getStringExtra("unRegist")){
-			unRegist = itLoginPhone.getStringExtra("unRegist").toString();
-			Log.i("lily", "=====unRegist===="+unRegist);
 		}
 		Intent itRepassword = getIntent(); 
 		if(null != itRepassword.getStringExtra("intentRepassword")){
@@ -597,22 +590,23 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					//注册成功
 					console.toast("注册成功", mContext);
 					mApplication.registStatus = 2;//注册成功的状态
+					
 					//注册成功后再次调用登录的接口
 					registLogin();
 					
+					/*//登录成功后，存储用户的登录信息
+					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+					mEditor = mSharedPreferences.edit();
+					mEditor.putBoolean("FirstLogin", false);
+					//提交修改
+					mEditor.commit();*/
+					//登录成功跳转
+					mApplication.loginStatus=1;//登录成功
+					mApplication.isUserLoginSucess = true;
+					
 					Intent it = null;
-					Log.i("iiii", "========用户未注册1111======注册成功跳转到MainActivity");
-					if(unRegist.equals("toRegist")){
-						Log.i("iiii", "========用户未注册2222======注册成功跳转到MainActivity");
-						it = new Intent(UserRegistActivity.this,MainActivity.class);
-						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(it);
-						this.finish();
-						return ;
-					}
 					if(registOk.equals("fromStart")){
-						Log.i("iiii", "========用户未注册3333======注册成功跳转到MainActivity");
+						Log.i("iiii", "========用户未注册2222======");
 						it = new Intent(UserRegistActivity.this,MainActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -620,11 +614,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					}else if(registOk.equals("fromIndexMore")){
 						it = new Intent(UserRegistActivity.this,IndexMoreActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-						mEditor = mSharedPreferences.edit();
-						mEditor.putBoolean("FirstLogin", false);
-						//提交修改
-						mEditor.commit();
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
 					}else if(registOk.equals("fromSetup")){
 						it = new Intent(UserRegistActivity.this,UserSetupActivity.class);
@@ -717,8 +707,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			//---------------------------登录成功的状态  1-------------------------
 			//登录成功跳转
 			mApplication.loginStatus=0;//登录中
-		}else{
-			
 		}
 	}
 	/**
@@ -740,7 +728,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					mEditor.putBoolean("FirstLogin", false);
 					//提交修改
 					mEditor.commit();
-					//---------------------------登录成功的状态  1----------------------------
 					//登录成功跳转
 					mApplication.loginStatus=1;//登录成功
 					mApplication.isUserLoginSucess = true;

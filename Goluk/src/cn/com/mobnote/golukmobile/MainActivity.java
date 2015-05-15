@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -241,6 +242,10 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	
 	/** 连接ipc时的动画 */
 	Animation anim = null;
+	
+	private SharedPreferences mPreferences = null;
+	private Editor mEditor = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1237,6 +1242,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			mShareLayout.setVisibility(View.GONE);
 			Intent intent = new Intent(this, UserLoginActivity.class);
 			intent.putExtra("isInfo", "back");
+			
+			mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+			mEditor = mPreferences.edit();
+			mEditor.putString("toRepwd", "mainActivity");
+			mEditor.commit();
+			
 			startActivity(intent);
 			return;
 		}
