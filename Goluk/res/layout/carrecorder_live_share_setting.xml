@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/bottomL"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:layout_alignParentBottom="true"
         android:background="#ededed" >
 
@@ -142,7 +142,8 @@
                         android:progressDrawable="@drawable/carrecorder_jdt"
                         android:thumb="@drawable/carrecorder_thumb" />
 
-                 <!--    <SeekBar
+                    <!--
+                         <SeekBar
                         android:id="@+id/mSeekBar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
@@ -156,7 +157,8 @@
                         android:paddingRight="8dp"
                         android:progress="0"
                         android:progressDrawable="@drawable/player_seekbar_style"
-                        android:thumb="@drawable/player_time_control_btn" /> -->
+                        android:thumb="@drawable/player_time_control_btn" />
+                    -->
                 </RelativeLayout>
 
                 <TextView
@@ -180,7 +182,8 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/carrecorder_setup_option_bg"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
+                android:paddingRight="14dp"
+                android:visibility="gone" >
 
                 <ImageView
                     android:id="@+id/voice_icon"
