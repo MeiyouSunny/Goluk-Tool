@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -238,7 +239,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private ImageButton indexCarrecoderBtn = null;
 	/** 连接ipc时的动画 */
 	Animation anim = null;
-	
+
+	private SharedPreferences mPreferences = null;
+	private Editor mEditor = null;
 	private long exitTime = 0;
 
 	/** 当前连接的Goluk设备 */
@@ -1284,6 +1287,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				return;
 			}
 			mShareLayout.setVisibility(View.GONE);
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			
+			mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+			mEditor = mPreferences.edit();
+			mEditor.putString("toRepwd", "mainActivity");
+			mEditor.commit();
+			
+			startActivity(intent);
 			toLogin();
 			return;
 		}

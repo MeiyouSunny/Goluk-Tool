@@ -769,15 +769,13 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			if (null != mMainActivity) {
 				// 地图大头针图片
 				console.log("pageNotifyCallBack---登录---"+ String.valueOf(param2));
-				mMainActivity.loginCallBack(success, param2);
+//				mMainActivity.loginCallBack(success, param2);
 			}
 			// 登录
 			if (mPageSource != "UserRegist") {
 				mLoginManage.loginCallBack(success, param1, param2);
-			}
-
-			if (mPageSource == "UserRegist") {
-				((UserRegistActivity) mContext).registLoginCallBack(success,param2);
+			}else{
+				((UserRegistActivity) mContext).registLoginCallBack(success,param2);				
 			}
 
 			parseLoginData(success, param2);
