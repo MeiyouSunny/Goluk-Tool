@@ -241,6 +241,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	
 	/** 连接ipc时的动画 */
 	Animation anim = null;
+	
+	private long exitTime = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1032,18 +1035,14 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_APP_EXIT, "提示", "退出程序？");
-			// 退出对话框
-			// int PID = android.os.Process.myPid();
-			// android.os.Process.killProcess(PID);
-			// android.os.Process.sendSignal(PID, 9);
-			return true;
+			exit();
+            return false;
 		}
-		return false;
+        return super.onKeyDown(keyCode, event);
+
 	}
 
-	// 退出程序
+	/*// 退出程序
 	private void exit() {
 		// if (mApp.isUserLoginSucess) {
 		SysApplication.getInstance().exit();
@@ -1056,7 +1055,29 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		finish();
 		int PID = android.os.Process.myPid();
 		android.os.Process.killProcess(PID);
-	}
+	}*/
+	
+	public void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+        	
+        	SysApplication.getInstance().exit();
+    		// }
+    		mApp.mIPCControlManager.setIPCWifiState(false, "");
+    		mApp.mGoluk.GolukLogicDestroy();
+    		if (null != UserStartActivity.mHandler) {
+    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+    		}
+    		finish();
+    		int PID = android.os.Process.myPid();
+    		android.os.Process.killProcess(PID);
+            System.exit(0);
+        }
+    }
+
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
