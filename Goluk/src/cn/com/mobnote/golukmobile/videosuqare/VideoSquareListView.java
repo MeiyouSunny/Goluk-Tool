@@ -7,6 +7,7 @@ import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
@@ -27,7 +28,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	//private ListView mRTPullListView=null;
 	private RTPullListView mRTPullListView=null;
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter=null;
-	private List<VideoSquareInfo> mDataList=null;
+	public List<VideoSquareInfo> mDataList=null;
 	private CustomLoadingDialog mCustomProgressDialog=null;
 	private Float jj= SoundUtils.getInstance().getDisplayMetrics().density;
 	/** 保存列表一个显示项索引 */
@@ -36,6 +37,8 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private int wonderfulVisibleCount;
 	public  static Handler mHandler=null;
 	private RelativeLayout mRootLayout=null;
+	
+	
 	
 	public VideoSquareListView(Context context){
 		mContext=context;
@@ -170,20 +173,30 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			mCustomProgressDialog.close();
 		}
 	}
+	
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
 		LogUtil.e("xuhw","YYYYYYY===hotlist===event="+event+"======msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
+			MainActivity ma = (MainActivity) mContext;
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete();
 			if(RESULE_SUCESS == msg){
 				List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param2);
+				
 				mDataList.clear();
 				mDataList.addAll(list);
 				initLayout();
 			}else{
 				Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+			}
+			
+			if(mDataList.size()>0){
+				ma.setViewListBg(false);
+			}else{
+				initLayout();
+				ma.setViewListBg(true);
 			}
 		}
 	}

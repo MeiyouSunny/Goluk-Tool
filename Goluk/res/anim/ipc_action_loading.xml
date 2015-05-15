@@ -5,6 +5,6 @@
     android:toDegrees="3600"    
     android:duration="10000"   
     android:pivotX="50%"   
-    android:pivotY="50%"   
-    />  
+    android:pivotY="50%"
+    android:repeatCount="-1"/>"
 </set> 

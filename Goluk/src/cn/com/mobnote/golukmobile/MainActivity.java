@@ -244,6 +244,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	/** 当前连接的Goluk设备 */
 	private String mGolukName = "";
 	
+	/** 热门视频列表默认背景图片 */
+	private ImageView squareDefault;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -371,6 +374,8 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		
 		indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
+		squareDefault = (ImageView) findViewById(R.id.square_default);
+		
 		mShareLiveBtn.setOnClickListener(this);
 		indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
@@ -874,6 +879,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		Intent intent = new Intent(this, UserLoginActivity.class);
 		intent.putExtra("isInfo", "back");
 		startActivity(intent);
+	}
+	
+	public void setViewListBg(boolean flog){
+		if(flog){
+			squareDefault.setVisibility(View.VISIBLE);
+		}else{
+			squareDefault.setVisibility(View.GONE);
+		}
+		
 	}
 
 	private void click_ConnFailed() {

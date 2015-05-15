@@ -36,8 +36,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkIndexActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
@@ -566,12 +569,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 			
 			if (downloadFinish) {
-				String path = Environment.getExternalStorageDirectory().getPath() + "/tiros-com-cn-ext/video/wonderful/"+wonderfulVideoName;
+				/*String path = Environment.getExternalStorageDirectory().getPath() + "/tiros-com-cn-ext/video/wonderful/"+wonderfulVideoName;
 				LogUtils.d("YYY====mShareBtn===path="+path);
+				
 				Intent i = new Intent(CarRecorderActivity.this,
 						VideoEditActivity.class);
 				i.putExtra("cn.com.mobnote.video.path", path);
-				startActivity(i);
+				startActivity(i);*/
+				
+				click_ConnFailed();
+				
 				mShareBtn.postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -656,6 +663,30 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		default:
 			break;
 		}
+	}
+	
+	/**
+	 * 验证当前是否是登陆状态，如果没登陆跳转到登陆页面
+	  * @Title: click_ConnFailed 
+	  * @Description: TODO void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	private void click_ConnFailed() {
+			// 跳转到wifi连接首页
+			if (mApp.isUserLoginSucess) {
+				String path = Environment.getExternalStorageDirectory().getPath() + "/tiros-com-cn-ext/video/wonderful/"+wonderfulVideoName;
+				LogUtils.d("YYY====mShareBtn===path="+path);
+				
+				Intent i = new Intent(CarRecorderActivity.this,
+						VideoEditActivity.class);
+				i.putExtra("cn.com.mobnote.video.path", path);
+				startActivity(i);
+			} else {
+				Intent intent = new Intent(this, UserLoginActivity.class);
+				intent.putExtra("isInfo", "back");
+				startActivity(intent);
+			}
 	}
 
 	/**
