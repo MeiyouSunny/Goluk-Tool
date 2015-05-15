@@ -1,7 +1,11 @@
 package cn.com.mobnote.golukmobile;
 
+import io.vov.vitamio.utils.Log;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,7 +42,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 		
 		initView();
 		
-		
 	}
 	
 	//初始化
@@ -53,7 +56,23 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 		mUnbindBtn = (Button) findViewById(R.id.unbind_layout_btn);
 		
 		mTextTitle.setText("摄像头管理");
-		mUnbindBtn.setText("解除摄像头绑定");
+		mUnbindBtn.setText("解除摄像头绑定连接");
+		
+		/**
+		 * 判断是否是否绑定
+		 * true  绑定  显示解绑UI
+		 * false  未绑定  显示未绑定UI
+		 */
+		boolean b = this.isBindSucess();
+		Log.i("lily", "====isBindSuccess===="+b);
+		
+		if(b){
+			mHaveipcLayout.setVisibility(View.VISIBLE);
+			mNoipcLayout.setVisibility(View.GONE);
+		}else{
+			mHaveipcLayout.setVisibility(View.GONE);
+			mNoipcLayout.setVisibility(View.VISIBLE);
+		}
 		
 		/**
 		 * 监听
@@ -70,7 +89,18 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 			this.finish();
 			break;
 		case R.id.unbind_layout_btn:
-			
+			new AlertDialog.Builder(this)
+			.setMessage("解除摄像头绑定连接？")
+			.setNegativeButton("取消", null)
+			.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					toUnbind();
+					mHaveipcLayout.setVisibility(View.GONE);
+					mNoipcLayout.setVisibility(View.VISIBLE);
+				}
+			}).create().show();
 			break;
 
 		default:
@@ -78,21 +108,20 @@ public class UnbindActivity extends BaseActivity implements OnClickListener{
 		}
 	}
 	
-	// 是否綁定过 Goluk
-			private boolean isBindSucess() {
-				SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
-						MODE_PRIVATE);
-				// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-				return preferences.getBoolean("isbind", false);
-			}
+	// 是否綁定过 Goluk  true为绑定
+	public boolean isBindSucess() {
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",MODE_PRIVATE);
+		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+		return preferences.getBoolean("isbind", false);
+	}
 			
-			//解绑
-			// 是否綁定过 Goluk
-			private void isBindSucess1() {
-				SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
-						MODE_PRIVATE);
-				// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-			preferences.edit().putBoolean("isbind", false);
-			}
+	// 解绑
+	public void toUnbind(){
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",MODE_PRIVATE);
+		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+		Editor mEditor = preferences.edit();
+		mEditor.putBoolean("isbind", false);
+		mEditor.commit();
+	}
 	
 }

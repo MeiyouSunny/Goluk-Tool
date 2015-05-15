@@ -13,7 +13,6 @@
 	    android:id="@+id/unbind_layout_haveipc"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:visibility="gone"
 	    >
 	    <View
 		android:id="@+id/solid_1"
@@ -76,6 +75,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:id="@+id/unbind_layout_noipc"
+	    android:visibility="gone"
 	    >
 	    <ImageView 
 	        android:layout_width="wrap_content"
