@@ -59,7 +59,7 @@
     <color name="live_color_time1">#b8b8b8</color>
     
     <color name="textcolor_select">#dde6f5</color>
-    <color name="textcolor_qx">#0d253a</color>
+    <color name="textcolor_qx">#0b59be</color>
     <color name="video_square_list_frame">#ededed</color>
     <!-- 说话中字体的颜色 -->
     <color name="live_speaking">#00e8f0</color>

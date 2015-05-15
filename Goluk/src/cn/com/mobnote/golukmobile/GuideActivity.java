@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.guide.GolukGuideManage;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -66,6 +67,7 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 		setContentView(R.layout.guide);
 		
 		mContext = this;
+		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		((GolukApplication)this.getApplication()).initLogic();
 				
 		//初始化
@@ -73,7 +75,8 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 		//加载引导页
 		initViewPager();
 		
-		GolukApplication.getInstance().setContext(this, "GuideActivity");
+		SysApplication.getInstance().addActivity(this);
+		
 	}
 	
 	/**

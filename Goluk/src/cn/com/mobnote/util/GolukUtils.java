@@ -1,5 +1,9 @@
 package cn.com.mobnote.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
 public class GolukUtils {
 
 	/**
@@ -53,6 +57,20 @@ public class GolukUtils {
 		}
 
 		return timeStr;
+	}
+	
+	/**
+	 * 默认浏览器打开指定的url
+	 * @param url
+	 * @param mContext
+	 */
+	public static void openUrl(String url,Context mContext){
+		//版本升级---打开浏览器
+		Intent intent = new Intent();       
+	    intent.setAction("android.intent.action.VIEW");   
+	    Uri content_url = Uri.parse(url);  
+	    intent.setData(content_url); 
+	     mContext.startActivity(intent);
 	}
 
 }

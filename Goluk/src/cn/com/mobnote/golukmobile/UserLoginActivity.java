@@ -479,8 +479,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	
 	/**
 	 * 关闭加载中对话框
-	 * @author xuhw
-	 * @date 2015年4月15日
 	 */
 	private void closeProgressDialog(){
 		if(null != mCustomProgressDialog){

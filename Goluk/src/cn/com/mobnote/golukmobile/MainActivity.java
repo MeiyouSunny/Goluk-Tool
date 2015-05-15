@@ -238,10 +238,14 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private ImageButton indexCarrecoderBtn = null;
 	/** 连接ipc时的动画 */
 	Animation anim = null;
+	
+	private long exitTime = 0;
+
 	/** 当前连接的Goluk设备 */
 	private String mGolukName = "";
 	
-	
+	/** 热门视频列表默认背景图片 */
+	private ImageView squareDefault;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -318,8 +322,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
 
-	}
-
+}
 	private String getIMEI() {
 		try {
 			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
@@ -370,6 +373,8 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		
 		indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
+		squareDefault = (ImageView) findViewById(R.id.square_default);
+		
 		mShareLiveBtn.setOnClickListener(this);
 		indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
@@ -844,7 +849,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 		mWifiStateTv.setText(WIFI_CONNED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_linked);//临时注释
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_four);
+		mWifiState.setBackgroundResource(R.drawable.home_wifi_link_four);
 	}
 
 	// 连接失败
@@ -856,7 +861,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			indexCarrecoderBtn.clearAnimation();
 			anim = null;
 		}
-		mWifiState.setBackgroundResource(R.drawable.index_wifi_five);
+		mWifiState.setBackgroundResource(R.drawable.home_wifi_no_link);
 		mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
 		// mWifiLayout.setBackgroundResource(R.drawable.index_no_link);
 	}
@@ -873,6 +878,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		Intent intent = new Intent(this, UserLoginActivity.class);
 		intent.putExtra("isInfo", "back");
 		startActivity(intent);
+	}
+	
+	public void setViewListBg(boolean flog){
+		if(flog){
+			squareDefault.setVisibility(View.VISIBLE);
+		}else{
+			squareDefault.setVisibility(View.GONE);
+		}
+		
 	}
 
 	private void click_ConnFailed() {
@@ -1043,18 +1057,14 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_APP_EXIT, "提示", "退出程序？");
-			// 退出对话框
-			// int PID = android.os.Process.myPid();
-			// android.os.Process.killProcess(PID);
-			// android.os.Process.sendSignal(PID, 9);
-			return true;
+			exit();
+            return false;
 		}
-		return false;
+        return super.onKeyDown(keyCode, event);
+
 	}
 
-	// 退出程序
+	/*// 退出程序
 	private void exit() {
 		// if (mApp.isUserLoginSucess) {
 		SysApplication.getInstance().exit();
@@ -1067,7 +1077,29 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		finish();
 		int PID = android.os.Process.myPid();
 		android.os.Process.killProcess(PID);
-	}
+	}*/
+	
+	public void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+        	
+        	SysApplication.getInstance().exit();
+    		// }
+    		mApp.mIPCControlManager.setIPCWifiState(false, "");
+    		mApp.mGoluk.GolukLogicDestroy();
+    		if (null != UserStartActivity.mHandler) {
+    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+    		}
+    		finish();
+    		int PID = android.os.Process.myPid();
+    		android.os.Process.killProcess(PID);
+            System.exit(0);
+        }
+    }
+
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
@@ -1399,13 +1431,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	@Override
 	public void statusChange() {
-		/*
-		 * if(mApp.autoLoginStatus !=1){ dismissAutoDialog(); Intent it = null;
-		 * if(mApp.autoLoginStatus == 2){ if(!isClickShareVideo){ it = new
-		 * Intent(MainActivity.this,LocalVideoShareListActivity.class); }else{
-		 * it = new Intent(MainActivity.this,LiveActivity.class); }
-		 * startActivity(it); } }
-		 */
+
 		if (mApp.autoLoginStatus != 1) {
 			dismissAutoDialog();
 			if (mApp.autoLoginStatus == 2) {

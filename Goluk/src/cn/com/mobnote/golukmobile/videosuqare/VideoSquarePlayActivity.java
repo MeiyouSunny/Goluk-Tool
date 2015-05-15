@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,10 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 	 * 1：上拉  2：下拉   0:第一次
 	 */
 	private int uptype = 0;
+	
+	/** 广场视频列表默认背景图片 */
+	private ImageView squareTypeDefault;
+	
 	private TextView title;
 	//点播分类
 	private String attribute;
@@ -101,7 +106,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 				.addVideoSquareManagerListener("videocategory", this);
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
-		
+		squareTypeDefault = (ImageView) findViewById(R.id.square_type_default);
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mBackBtn.setOnClickListener(this);
@@ -361,7 +366,14 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 				}
 				Toast.makeText(VideoSquarePlayActivity.this, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 			}
+			
+			if(mDataList.size()>0){
+				squareTypeDefault.setVisibility(View.GONE);
+			}else{
+				squareTypeDefault.setVisibility(View.VISIBLE);
+			}
 		}
+			
 	}
 	
 	/**

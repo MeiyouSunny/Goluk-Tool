@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000" >
+    android:background="#ffffff" >
 	
     
     <!-- 视频广场title -->
@@ -39,5 +39,14 @@
         android:layout_height="match_parent"
         >
     </cn.com.mobnote.golukmobile.videosuqare.RTPullListView>
+    
+    <ImageView 
+        android:id="@+id/square_type_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/qitadifang"
+        android:visibility="gone" 
+        android:contentDescription="TODO"/>
 
 </RelativeLayout>
