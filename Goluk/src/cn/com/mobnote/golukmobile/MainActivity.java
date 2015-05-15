@@ -880,6 +880,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private void toLogin() {
 		Intent intent = new Intent(this, UserLoginActivity.class);
 		intent.putExtra("isInfo", "back");
+		mShareLayout.setVisibility(View.GONE);
+		mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+		mEditor = mPreferences.edit();
+		mEditor.putString("toRepwd", "mainActivity");
+		mEditor.commit();
 		startActivity(intent);
 	}
 	
@@ -1286,16 +1291,6 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				dialog.show();
 				return;
 			}
-			mShareLayout.setVisibility(View.GONE);
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			
-			mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-			mEditor = mPreferences.edit();
-			mEditor.putString("toRepwd", "mainActivity");
-			mEditor.commit();
-			
-			startActivity(intent);
 			toLogin();
 			return;
 		}
