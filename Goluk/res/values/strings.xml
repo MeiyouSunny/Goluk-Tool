@@ -90,6 +90,8 @@
     <string name="synchronous_desc_text">与小车本连接后自动</string>
     <string name="update_text">检查更新</string>
     <string name="remove_cache_text">清除缓存</string>
+    <string name="unbind_text">摄像头管理</string>
+    <string name="unbind_camera">摄像头名称</string>
     <string name="loginout_text">退出</string>
     <string name="pull_to_refresh_pull_label">下拉刷新</string>
     <string name="pull_to_refresh_release_label">松开后刷新</string>

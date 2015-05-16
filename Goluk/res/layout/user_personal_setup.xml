@@ -86,6 +86,40 @@
 		android:layout_below="@id/remove_cache_item"
 		android:background="@drawable/solid"/>
 	
+	<View
+		android:id="@+id/solid_3"
+		android:layout_width="wrap_content"
+		android:layout_height="1dp"
+		android:layout_below="@id/solid_2"
+		android:background="@drawable/solid"
+		android:layout_marginTop="5dp"/>
+	
+	<RelativeLayout
+		android:id="@+id/unbind_item"
+		android:layout_width="match_parent"
+		android:layout_height="47dp"
+		android:layout_below="@id/solid_3"
+		android:background="#f4f4f4"
+		>
+		
+		<TextView
+			android:id="@+id/unbind_item_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="21dp"
+			android:text="@string/unbind_text"
+			android:textSize="16sp"
+			android:textColor="#3f3f3f"
+			android:layout_centerVertical="true"/>
+		
+	</RelativeLayout>
+	<View
+		android:id="@+id/solid_4"
+		android:layout_width="wrap_content"
+		android:layout_height="1dp"
+		android:layout_below="@id/unbind_item"
+		android:background="@drawable/solid"/>
+	
 	<!-- Goluk固件升级 -->
 	<!-- <RelativeLayout
 		android:id="@+id/update_item"
