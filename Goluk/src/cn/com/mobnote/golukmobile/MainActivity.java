@@ -1142,7 +1142,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			case MotionEvent.ACTION_UP:
 				Drawable user_up = this.getResources().getDrawable(R.drawable.home_self_btn); 
 				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,user_up,null,null);
-				mMoreBtn.setTextColor(Color.rgb(103, 103, 103));
+				mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
 			break;
@@ -1161,13 +1161,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			case MotionEvent.ACTION_DOWN:
 				Drawable db_down = this.getResources().getDrawable(R.drawable.home_share_btn_click); 
 				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_down,null,null);
-				
 				mShareBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable db_up = this.getResources().getDrawable(R.drawable.home_share_btn); 
 				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_up,null,null);
-				mShareBtn.setTextColor(Color.rgb(103, 103, 103));
+				mShareBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
 			break;

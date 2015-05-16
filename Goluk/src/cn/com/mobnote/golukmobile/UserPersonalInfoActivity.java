@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,7 +34,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	// context
 	private Context mContext = null;
 	//title
-	private Button backBtn,rightBtn;
+	private ImageButton backBtn;
+	
+	private Button rightBtn;
 	private TextView mTextCenter;
 	//头像
 	private ImageView mImageHead;
@@ -75,7 +78,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	
 	public void intiView(){
 		//title
-		backBtn = (Button) findViewById(R.id.back_btn);
+		backBtn = (ImageButton) findViewById(R.id.back_btn);
 		rightBtn = (Button) findViewById(R.id.user_title_right);
 		mTextCenter = (TextView) findViewById(R.id.user_title_text);
 		//头像

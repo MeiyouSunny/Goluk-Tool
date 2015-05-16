@@ -92,7 +92,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	/** application */
 	private GolukApplication mApp = null;
 	/** 返回按钮 */
-	private Button mLiveBackBtn = null;
+	private ImageButton mLiveBackBtn = null;
 	/** 刷新按钮 */
 	private Button mRefirshBtn = null;
 	/** 暂停按钮 */
@@ -510,7 +510,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 */
 	@SuppressLint("HandlerLeak")
 	private void initView() {
-		mLiveBackBtn = (Button) findViewById(R.id.live_back_btn);
+		mLiveBackBtn = (ImageButton) findViewById(R.id.live_back_btn);
 		mTitleTv = (TextView) findViewById(R.id.live_title);
 		mRefirshBtn = (Button) findViewById(R.id.live_refirsh_btn);
 

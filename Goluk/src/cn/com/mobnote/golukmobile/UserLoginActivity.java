@@ -20,6 +20,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -40,7 +41,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	//判断是否能点击提交按钮
 	private boolean isOnClick=false;
 	// 登陆title
-	private Button mBackButton;
+	private ImageButton mBackButton;
 	private TextView mTextViewTitle;
 	// 手机号和密码
 	private EditText mEditTextPhoneNumber, mEditTextPwd;
@@ -94,7 +95,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 //	private boolean mDelAllNum = false;
 	public void initView() {
 		// 登录title
-		mBackButton = (Button) findViewById(R.id.back_btn);
+		mBackButton = (ImageButton) findViewById(R.id.back_btn);
 		mTextViewTitle = (TextView) findViewById(R.id.user_title_text);
 		// 手机号和密码、登录按钮
 		mEditTextPhoneNumber = (EditText) findViewById(R.id.user_login_phonenumber);

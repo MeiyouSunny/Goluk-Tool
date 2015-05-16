@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,7 +27,7 @@ import android.widget.TextView;
 public class UserPersonalHomeActivity extends BaseActivity implements OnClickListener{
 
 	//title
-	private Button btnBack;
+	private ImageButton btnBack;
 	private TextView mTextTitle;
 	//个人信息
 	private ImageView mImageHead,mImageSex,mImageArrow;
@@ -72,7 +73,7 @@ public class UserPersonalHomeActivity extends BaseActivity implements OnClickLis
 	}
 	//初始化控件
 	public void initView(){
-		btnBack = (Button) findViewById(R.id.back_btn);
+		btnBack = (ImageButton) findViewById(R.id.back_btn);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mImageHead = (ImageView) findViewById(R.id.user_personal_homepage_head);
 		mImageSex = (ImageView) findViewById(R.id.user_personal_homepage_sex);

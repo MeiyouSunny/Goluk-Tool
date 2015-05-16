@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -63,7 +64,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	/** 上下文 */
 	private Context mContext = null;
 	/** 返回按钮 */
-	private Button mBackBtn = null;
+	private ImageButton mBackBtn = null;
 	
 	/**退出按钮**/
 	private Button btnLoginout;
@@ -124,7 +125,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		setContentView(R.layout.user_personal_setup);
 		
 		// 获取页面元素
-		mBackBtn = (Button) findViewById(R.id.back_btn);
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		// 退出按钮
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
 		// 清除缓存大小显示

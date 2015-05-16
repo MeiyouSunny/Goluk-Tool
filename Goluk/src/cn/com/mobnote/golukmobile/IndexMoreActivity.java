@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -59,7 +60,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 	/** 上下文 */
 	private Context mContext = null;
 	/** 返回按钮 */
-	private RelativeLayout mLayoutBack =  null;
+	private ImageButton mLayoutBack =  null;
 	
 	/** 本地视频item */
 	private RelativeLayout mLocalVideoItem = null;
@@ -126,7 +127,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 	@SuppressLint("HandlerLeak")
 	private void init(){
 		//获取页面元素
-		mLayoutBack = (RelativeLayout) findViewById(R.id.back_btn_layout);
+		mLayoutBack = (ImageButton) findViewById(R.id.back_btn);
 		
 		mLocalVideoItem = (RelativeLayout) findViewById(R.id.local_video_item);
 
@@ -184,7 +185,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 		int id = v.getId();
 		Intent intent = null;
 		switch(id){
-			case R.id.back_btn_layout:
+			case R.id.back_btn:
 				//返回
 				this.finish();
 			break;
