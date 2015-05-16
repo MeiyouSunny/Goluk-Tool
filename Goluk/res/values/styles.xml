@@ -1,7 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<!-- 设置背景图Theme -->
 	<style name="Theme.AppStartLoad" parent="android:Theme">
-		<item name="android:windowBackground">@drawable/guide_1</item>
+	    <item name="android:windowBackground">@drawable/guide_1</item>
 		<item name="android:windowNoTitle">true</item>
 	</style>
 	<!-- 设置透明Theme -->

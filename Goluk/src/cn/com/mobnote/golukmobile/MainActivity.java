@@ -481,8 +481,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 	}
 
+	VideoSquareActivity mVideoSquareActivity;
 	private void initVideoSquare() {
-		VideoSquareActivity vsa = new VideoSquareActivity(mRootLayout, this);
+		mVideoSquareActivity = new VideoSquareActivity(mRootLayout, this);
 	}
 
 	/**
@@ -1005,8 +1006,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			mMapView.onResume();
 			mMapView.invalidate();
 		}
+		
+		if(null != mVideoSquareActivity){
+			mVideoSquareActivity.onDestroy();
+		}
+		
 		isCurrent = true;
-
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 
 		boolean b = mMainHandler.hasMessages(2);
@@ -1057,6 +1062,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		if (null != mMapView) {
 			mMapView.onPause();
 		}
+		
+		if(null != mVideoSquareActivity){
+			mVideoSquareActivity.onDestroy();
+		}
+		
 		// isCurrent = false;
 		// mMainHandler.removeMessages(2);
 
@@ -1249,9 +1259,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	public void setBelowItem(int id){
 		Drawable drawable ;
 		if(id == R.id.index_look_btn){
-			
+			if (null != mMapView) {
+				mMapView.onResume();
+			}
 			indexMapLayout.setVisibility(View.VISIBLE);
 			videoSquareLayout.setVisibility(View.GONE);
+			mVideoSquareActivity.onDestroy();
 			drawable = this.getResources().getDrawable(R.drawable.home_local_btn_click); 
 			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
 			indexLookBtn.setTextColor(Color.rgb(59, 151, 245));
@@ -1260,9 +1273,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
 			msquareBtn.setTextColor(Color.rgb(103, 103, 103));
 		}else if (id == R.id.index_square_btn){
-			
+			if (null != mMapView) {
+				mMapView.onPause();
+			}
 			indexMapLayout.setVisibility(View.GONE);
 			videoSquareLayout.setVisibility(View.VISIBLE);
+			mVideoSquareActivity.onResume();
 			drawable = this.getResources().getDrawable(R.drawable.home_local_btn); 
 			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
 			indexLookBtn.setTextColor(Color.rgb(103, 103, 103));

@@ -1,10 +1,14 @@
 package cn.com.mobnote.golukmobile;
 
+import com.lidroid.xutils.BitmapUtils;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,8 +17,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 
 /**
  * 
@@ -38,6 +45,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	public  static Handler mHandler=null;
 	public  static final int EXIT=-1;
 	private Editor mEditor = null;
+	private Bitmap mBGBitmap=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,10 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_start);
 
+		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.bg);
+		RelativeLayout main = (RelativeLayout)findViewById(R.id.main);
+		main.setBackgroundDrawable(new BitmapDrawable(mBGBitmap));
+		
 		mContext = this;
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, "UserStart");
@@ -113,6 +125,18 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 			startActivity(it2);
 			this.finish();
 			break;
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		if(null != mBGBitmap){
+			if(!mBGBitmap.isRecycled()){
+				mBGBitmap.recycle();
+				mBGBitmap = null;
+			}
 		}
 	}
 }

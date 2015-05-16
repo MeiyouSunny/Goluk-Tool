@@ -127,8 +127,8 @@ public class GolukGuideManage {
 			view.setLayoutParams(params);
 			
 			mListViews.add(view);
-			ImageView img = (ImageView)view.findViewById(R.id.guide_img);
-			img.setBackgroundResource(imgId[i]);
+//			ImageView img = (ImageView)view.findViewById(R.id.guide_img);
+//			img.setBackgroundResource(imgId[i]);
 			
 			//添加圆点图标
 			addImageCursor();
