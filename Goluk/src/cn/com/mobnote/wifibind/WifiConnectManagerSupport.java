@@ -223,7 +223,7 @@ public class WifiConnectManagerSupport {
 		WifiInfo info = wifiManager.getConnectionInfo();
 		String conSSid = info.getSSID();
 		// 开始扫描网络
-
+		wifiManager.startScan();
 		List<ScanResult> scanResult = wifiManager.getScanResults();
 		Log.e(TAG, "sanrs-----------------" + (scanResult == null)
 				+ "------------");

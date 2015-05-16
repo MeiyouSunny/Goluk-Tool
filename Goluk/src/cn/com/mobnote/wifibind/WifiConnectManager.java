@@ -539,10 +539,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			e1.printStackTrace();
 		}
 		// 扫描了表不为null
-
+		wifiManager.startScan();
 		while (wifiManager.getScanResults() == null || wifiManager.getScanResults().size() == 0) {
 			try {
-				int temp_1 = 1000;
+				int temp_1 = 500;
 				Thread.sleep(temp_1);
 				tempTime += temp_1;
 				if (tempTime > outTime) {
@@ -554,7 +554,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				e.printStackTrace();
 			}
 		}
-
 		WifiRsBean[] wifiBean = wifiSupport.getScanResult(matching, null);
 		console.logBytag(TAG, "扫描wifi....已经获取列表");
 		// 将得到的扫描列表返回
