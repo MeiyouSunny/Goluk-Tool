@@ -7,7 +7,6 @@
 		android:id="@+id/guide_img"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:background="@drawable/guide_5"
 		android:contentDescription="@string/imgdes"/>
 	
 	<ImageButton

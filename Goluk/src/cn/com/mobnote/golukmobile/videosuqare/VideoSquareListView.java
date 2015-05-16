@@ -166,7 +166,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	}
 	
 	public void onDestroy(){
-		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("hotlist");
+//		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("hotlist");
 		if(null != mVideoSquareListViewAdapter){
 			mVideoSquareListViewAdapter.onDestroy();
 		}
@@ -174,6 +174,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		for(VideoSquareInfo info : mDataList){
 			String url = info.mVideoEntity.picture;
 			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(url);
+			LogUtil.e("xuhw", "YYYYYY==VideoSquareListView==onDestroy=url="+url);
 		}
 		
 		if (mCustomProgressDialog != null ){
