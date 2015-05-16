@@ -36,6 +36,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
@@ -54,7 +55,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 public class UserRepwdActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 
 	//title
-	private Button mBtnBack;
+	private ImageButton mBtnBack;
 	private TextView mTextViewTitle;
 	//手机号、密码、验证码
 	private EditText mEditTextPhone,mEditTextPwd,mEditTextIdentify;
@@ -105,7 +106,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		
 	}
 	public void initView(){
-		mBtnBack = (Button) findViewById(R.id.back_btn);
+		mBtnBack = (ImageButton) findViewById(R.id.back_btn);
 		mTextViewTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditTextPhone = (EditText) findViewById(R.id.user_repwd_phonenumber);
 		mEditTextPwd = (EditText) findViewById(R.id.user_repwd_pwd);

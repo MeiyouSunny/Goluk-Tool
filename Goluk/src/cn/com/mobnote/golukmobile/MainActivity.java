@@ -304,12 +304,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 加载本地视屏列表
 		// initLocalVideoList();
 
-		// 启动创建热点
-		createWiFiHot();
+		
 		// 初始化连接与綁定状态
+		boolean b = this.isBindSucess();
+		Log.i("bind", "======bind====status==="+b);
 		if (this.isBindSucess()) {
 			// mWiFiStatus = WIFI_STATE_CONNING;
 			startWifi();
+			// 启动创建热点
+			createWiFiHot();
 		} else {
 			// mWiFiStatus = WIFI_STATE_FAILED;
 			wifiConnectFailed();
@@ -888,14 +891,14 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		startActivity(intent);
 	}
 	
-	public void setViewListBg(boolean flog){
+	/*public void setViewListBg(boolean flog){
 		if(flog){
 			squareDefault.setVisibility(View.VISIBLE);
 		}else{
 			squareDefault.setVisibility(View.GONE);
 		}
 		
-	}
+	}*/
 
 	private void click_ConnFailed() {
 		if (!isBindSucess()) {
@@ -1142,7 +1145,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			case MotionEvent.ACTION_UP:
 				Drawable user_up = this.getResources().getDrawable(R.drawable.home_self_btn); 
 				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,user_up,null,null);
-				mMoreBtn.setTextColor(Color.rgb(103, 103, 103));
+				mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
 			break;
@@ -1161,13 +1164,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			case MotionEvent.ACTION_DOWN:
 				Drawable db_down = this.getResources().getDrawable(R.drawable.home_share_btn_click); 
 				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_down,null,null);
-				
 				mShareBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable db_up = this.getResources().getDrawable(R.drawable.home_share_btn); 
 				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_up,null,null);
-				mShareBtn.setTextColor(Color.rgb(103, 103, 103));
+				mShareBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
 			break;

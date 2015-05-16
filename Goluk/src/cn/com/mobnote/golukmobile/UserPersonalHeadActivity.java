@@ -11,13 +11,15 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 
 	//title
-	private Button btnBack,btnRight;
+	private ImageButton btnBack;
+	private Button btnRight;
 	private TextView mTextTitle;
 	//body
 	private ImageView mImageBoyOne, mImageBoyTwo, mImageBoyThree;
@@ -40,7 +42,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		
 		public void initView(){
 			//title
-			btnBack = (Button) findViewById(R.id.back_btn);
+			btnBack = (ImageButton) findViewById(R.id.back_btn);
 			mTextTitle = (TextView) findViewById(R.id.user_title_text);
 			btnRight = (Button) findViewById(R.id.user_title_right);
 			//body

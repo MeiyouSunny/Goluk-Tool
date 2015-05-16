@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 /**
@@ -18,7 +19,7 @@ import android.widget.TextView;
 public class UserPersonalSignActivity extends BaseActivity implements OnClickListener{
 
 	//title
-	private Button btnBack;
+	private ImageButton btnBack;
 	private TextView mTextTitle,mTextOk;
 	//body
 	private EditText mEditBody;
@@ -38,7 +39,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 	}
 	//初始化控件
 	public void initView(){
-		btnBack = (Button) findViewById(R.id.back_btn);
+		btnBack = (ImageButton) findViewById(R.id.back_btn);
 		mTextOk = (TextView) findViewById(R.id.user_title_right);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditBody = (EditText) findViewById(R.id.user_personal_edit_sign_body);
