@@ -1138,6 +1138,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				autoRecordFlag = false;
 				break;
 			case IPC_VDCP_Msg_GetMotionCfg:
+				LogUtil.e("xuhw", "YYYYYYYYYYYYYY===IPC_VDCP_Msg_GetMotionCfg===param1="+param1+"=param2="+param2);
 				if (param1 == RESULE_SUCESS) {
 					try {
 						JSONObject json = new JSONObject((String) param2);

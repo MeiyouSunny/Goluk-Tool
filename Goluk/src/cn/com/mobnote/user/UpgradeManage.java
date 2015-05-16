@@ -3,17 +3,25 @@ package cn.com.mobnote.user;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Message;
+import android.view.KeyEvent;
 
 import com.umeng.socialize.utils.Log;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.mobnote.golukmobile.UserStartActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 
 /**
@@ -76,7 +84,7 @@ public class UpgradeManage {
 					String url = jsonGoluk.getString("url");
 					String version = jsonGoluk.getString("version");
 					Log.i(TAG, "version="+version);
-					UserUtils.showUpgradeGoluk(mApp.getContext(),appcontent, url);
+					showUpgradeGoluk(mApp.getContext(),appcontent, url);
 				
 					SharedPreferences mPreferencesVersion = mApp.getContext().getSharedPreferences("version", Context.MODE_PRIVATE);
 					Editor mEditor = mPreferencesVersion.edit();
@@ -101,6 +109,55 @@ public class UpgradeManage {
 			}
 		}
 		
+	}
+	
+	
+	/**
+	 * 升级提示
+	 * @param mContext
+	 * @param message1
+	 * @param message2
+	 */
+	public void showUpgradeGoluk(final Context mContext,String message, final String url){
+		Builder mBuilder = new AlertDialog.Builder(mContext);
+		AlertDialog dialog = mBuilder.setTitle("发现新版本")
+				.setMessage(message)
+				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						//浏览器打开url
+						GolukUtils.openUrl(url, mContext);
+						
+						if(GolukApplication.mMainActivity != null){
+							GolukApplication.mMainActivity.finish();
+							GolukApplication.mMainActivity = null;
+						}
+						SysApplication.getInstance().exit();
+						
+						mApp.mIPCControlManager.setIPCWifiState(false, "");
+			    		mApp.mGoluk.GolukLogicDestroy();
+			    		if (null != UserStartActivity.mHandler) {
+			    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+			    		}
+			    		int PID = android.os.Process.myPid();
+			    		android.os.Process.killProcess(PID);
+			            System.exit(0);
+			            
+					}
+				})
+				.setCancelable(false)
+				.setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							return true;
+						}
+						return false;
+					}
+				})
+				.create();
+		dialog.show();
 	}
 }
 
