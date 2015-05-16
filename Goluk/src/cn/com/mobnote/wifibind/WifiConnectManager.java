@@ -536,14 +536,13 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			Thread.sleep(500);
 			tempTime = 500;
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		// 扫描了表不为null
 
 		while (wifiManager.getScanResults() == null || wifiManager.getScanResults().size() == 0) {
 			try {
-				int temp_1 = 200;
+				int temp_1 = 1000;
 				Thread.sleep(temp_1);
 				tempTime += temp_1;
 				if (tempTime > outTime) {
