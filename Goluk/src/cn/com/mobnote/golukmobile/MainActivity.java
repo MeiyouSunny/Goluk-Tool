@@ -304,14 +304,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 加载本地视屏列表
 		// initLocalVideoList();
 
-		// 启动创建热点
-		createWiFiHot();
+		
 		// 初始化连接与綁定状态
 		boolean b = this.isBindSucess();
 		Log.i("bind", "======bind====status==="+b);
 		if (this.isBindSucess()) {
 			// mWiFiStatus = WIFI_STATE_CONNING;
 			startWifi();
+			// 启动创建热点
+			createWiFiHot();
 		} else {
 			// mWiFiStatus = WIFI_STATE_FAILED;
 			wifiConnectFailed();
