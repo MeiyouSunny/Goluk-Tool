@@ -421,6 +421,11 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 					break;
 				case 405:
 					String phone =  mEditTextPhone.getText().toString();
+					
+					mSharedPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+					final String just = mSharedPreferences.getString("toRepwd", "");
+					Log.i("illness", "======just====SharedPreferences===="+just);
+					
 					if(UserUtils.isMobileNO(phone)){
 						new AlertDialog.Builder(this)
 				        .setMessage("此手机号还未被注册")
@@ -431,6 +436,15 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 							public void onClick(DialogInterface arg0, int arg1) {
 								Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
 								intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
+								
+								if(just.equals("start") || just.equals("mainActivity")){
+									intentRepwd.putExtra("fromRegist", "fromStart");
+								}else if(just.equals("more")){
+									intentRepwd.putExtra("fromRegist", "fromIndexMore");
+								}else if(just.equals("set")){
+									intentRepwd.putExtra("fromRegist", "fromSetup");
+								}
+								
 								startActivity(intentRepwd);
 								finish();
 							}
@@ -555,9 +569,9 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 					break;
 				case 405:
 					String phone = mEditTextPhone.getText().toString();
+					
 					if(UserUtils.isMobileNO(phone) && phone.startsWith("1")){
 						new AlertDialog.Builder(this)
-				        .setTitle("Goluk温馨提示：")
 				        .setMessage("此手机号还未被注册")
 						.setNegativeButton("取消", null)
 						.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
@@ -698,6 +712,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		String phone = mEditTextPhone.getText().toString();
 		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 		mEditor = mSharedPreferences.edit();
+		Log.i("lily", "phone=="+phone);
 		mEditor.putString("setupPhone", phone);
 		mEditor.commit();
 	}

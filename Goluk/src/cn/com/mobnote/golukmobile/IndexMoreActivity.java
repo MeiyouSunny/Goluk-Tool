@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
@@ -20,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -91,6 +91,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 	private LinearLayout mLayoutHasInfo = null;
 	private LinearLayout mLayoutNoInfo = null;
 	private boolean isHasInfo = false;
+	private Editor mEditor = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -145,7 +146,8 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 		mLayoutHasInfo = (LinearLayout) findViewById(R.id.index_more_hasinfo);
 		mLayoutNoInfo = (LinearLayout) findViewById(R.id.index_more_noinfo);
 		Log.i("testtest", "----------"+mApp.autoLoginStatus+mApp.isUserLoginSucess);
-		if(!isFirstLogin || mApp.isUserLoginSucess == true){//登录过
+		Log.i("illness", "=====mApp.registStatus ======="+mApp.registStatus);
+		if(!isFirstLogin || mApp.isUserLoginSucess == true || mApp.registStatus ==2){//登录过
 			Log.i("testtest", "---------------"+mApp.autoLoginStatus+"------loginStatus------"+mApp.loginStatus);
 			//更多页面
 			personalChanged();
@@ -226,6 +228,12 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
 					//登录页回调判断
 					itNo.putExtra("isInfo", "indexmore");
+					
+					mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+					mEditor = mPreferences.edit();
+					mEditor.putString("toRepwd", "more");
+					mEditor.commit();
+					
 					startActivity(itNo);
 					isHasInfo = true;
 				}
@@ -294,6 +302,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 	 * 自动登录失败后个人中心状态的变化
 	 */
 	public void personalChanged(){
+		Log.i("illness", "======registStatus===="+mApp.registStatus);
 //		console.toast("-----mApp.loginStatus-------"+mApp.loginStatus+"------mApp.autoLoginStatus-------"+mApp.autoLoginStatus, mContext);
 		if(mApp.loginStatus == 1 || mApp.autoLoginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
 			mLayoutHasInfo.setVisibility(View.VISIBLE);

@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -35,6 +37,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	private String phone = null;
 	public  static Handler mHandler=null;
 	public  static final int EXIT=-1;
+	private Editor mEditor = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,10 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 			Intent it = new Intent(UserStartActivity.this,UserLoginActivity.class);
 			//登录页回调判断
 			it.putExtra("isInfo", "main");
+			mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+			mEditor = mPreferences.edit();
+			mEditor.putString("toRepwd", "start");
+			mEditor.commit();
 			//在黑页面判断是注销进来的还是首次登录进来的
 			if(!mApp.loginoutStatus){//注销
 				it.putExtra("startActivity", phone);
@@ -102,6 +109,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		case R.id.user_start_look:
 			//随便看看
 			Intent it2 = new Intent(UserStartActivity.this,MainActivity.class);
+			Log.i("main", "======MainActivity==UserStartActivity====");
 			startActivity(it2);
 			this.finish();
 			break;

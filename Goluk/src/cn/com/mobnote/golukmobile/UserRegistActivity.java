@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -87,7 +86,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private String registOk = null;
 	/**获取验证码的次数**/
 	private String freq = "";
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -591,10 +590,23 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					//注册成功
 					console.toast("注册成功", mContext);
 					mApplication.registStatus = 2;//注册成功的状态
+					
 					//注册成功后再次调用登录的接口
 					registLogin();
+					
+					/*//登录成功后，存储用户的登录信息
+					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+					mEditor = mSharedPreferences.edit();
+					mEditor.putBoolean("FirstLogin", false);
+					//提交修改
+					mEditor.commit();*/
+					//登录成功跳转
+					mApplication.loginStatus=1;//登录成功
+					mApplication.isUserLoginSucess = true;
+					
 					Intent it = null;
 					if(registOk.equals("fromStart")){
+						Log.i("iiii", "========用户未注册2222======");
 						it = new Intent(UserRegistActivity.this,MainActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -654,7 +666,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		}else{
 			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
 			android.util.Log.i("outtime", "-----网络链接超时超时超时" + codeOut);
-//			console.toast("当前网络状况不佳，请检查网络", mContext);
 			console.toast("网络连接超时", mContext);
 			switch (codeOut) {
 			case 1:
@@ -695,10 +706,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			Log.i("yyy", "=======UserRegistActivity====="+b);
 			//---------------------------登录成功的状态  1-------------------------
 			//登录成功跳转
-			mApplication.loginStatus=1;//登录成功
-			mApplication.isUserLoginSucess = true;
-		}else{
-			
+			mApplication.loginStatus=0;//登录中
 		}
 	}
 	/**
@@ -720,7 +728,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					mEditor.putBoolean("FirstLogin", false);
 					//提交修改
 					mEditor.commit();
-					//---------------------------登录成功的状态  1----------------------------
 					//登录成功跳转
 					mApplication.loginStatus=1;//登录成功
 					mApplication.isUserLoginSucess = true;

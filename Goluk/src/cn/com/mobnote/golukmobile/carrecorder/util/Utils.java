@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.carrecorder.util;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
@@ -63,6 +65,46 @@ public class Utils {
 		return result;
 	}
 	
-	
+	/**
+	 * 冒泡排序
+	 * @param list 需要排序的列表
+	 * @param order true:正序　false:倒序
+	 * @return
+	 * @author xuhw
+	 * @date 2015年5月16日
+	 */
+	public static List<String> bubbleSort(List<String> list, boolean order){
+		String arr[] = new String[list.size()];
+		for(int i=0;i<list.size();i++){
+			arr[i] = list.get(i);
+		}
+		
+		int size=list.size();
+		String t;
+		for(int i=0;i<size-1;i++){
+			for(int j=0;j<size-i-1;j++){
+				if(order){
+					if(arr[j+1].compareTo(arr[j]) < 0){
+						t=arr[j+1];
+						arr[j+1]=arr[j];
+						arr[j]=t;
+					}
+				}else{
+					if(arr[j+1].compareTo(arr[j]) > 0){
+						t=arr[j+1];
+						arr[j+1]=arr[j];
+						arr[j]=t;
+					}
+				}
+			}
+		}
+		
+		List<String> arrlist = new ArrayList<String>();
+		for(int i=0;i<list.size();i++){
+			arrlist.add(arr[i]);
+		}
+		
+		return arrlist;
+	}	
 
 }

@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -238,7 +239,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private ImageButton indexCarrecoderBtn = null;
 	/** 连接ipc时的动画 */
 	Animation anim = null;
-	
+
+	private SharedPreferences mPreferences = null;
+	private Editor mEditor = null;
 	private long exitTime = 0;
 
 	/** 当前连接的Goluk设备 */
@@ -877,6 +880,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private void toLogin() {
 		Intent intent = new Intent(this, UserLoginActivity.class);
 		intent.putExtra("isInfo", "back");
+		mShareLayout.setVisibility(View.GONE);
+		mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+		mEditor = mPreferences.edit();
+		mEditor.putString("toRepwd", "mainActivity");
+		mEditor.commit();
 		startActivity(intent);
 	}
 	
@@ -924,6 +932,10 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 			break;
 		case WIFI_STATE_SUCCESS:
+			if(GolukApplication.getInstance().autodownloadfile){
+				Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
+				return;
+			}
 			// 跳转到行车记录仪界面
 			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 			startActivity(i);
@@ -1283,7 +1295,6 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				dialog.show();
 				return;
 			}
-			mShareLayout.setVisibility(View.GONE);
 			toLogin();
 			return;
 		}
@@ -1389,6 +1400,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 					.showSingleBtnDialog(this,
 							LiveDialogManager.DIALOG_TYPE_IPC_LOGINOUT, "提示",
 							"请先连接摄像头");
+			return;
+		}
+		
+		if(GolukApplication.getInstance().autodownloadfile){
+			Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
