@@ -880,14 +880,14 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		startActivity(intent);
 	}
 	
-	public void setViewListBg(boolean flog){
+	/*public void setViewListBg(boolean flog){
 		if(flog){
 			squareDefault.setVisibility(View.VISIBLE);
 		}else{
 			squareDefault.setVisibility(View.GONE);
 		}
 		
-	}
+	}*/
 
 	private void click_ConnFailed() {
 		if (!isBindSucess()) {

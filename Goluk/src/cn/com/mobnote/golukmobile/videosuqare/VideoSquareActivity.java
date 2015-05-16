@@ -136,11 +136,11 @@ public class VideoSquareActivity implements OnClickListener {
 	private void updateState(int type) {
 
 		if (0 == type) {
-			if(mVideoSquareAdapter.mVideoSquareListView.mDataList.size()>0){
-				ma.setViewListBg(false);
+			/*if(mVideoSquareAdapter.mVideoSquareListView.mDataList.size()>0){
+				mVideoSquareAdapter.mVideoSquareListView.setViewListBg(false);
 			}else{
-				ma.setViewListBg(true);
-			}
+				mVideoSquareAdapter.mVideoSquareListView.setViewListBg(true);
+			}*/
 			hot.setVisibility(View.VISIBLE);
 			square.setVisibility(View.INVISIBLE);
 			
@@ -152,7 +152,7 @@ public class VideoSquareActivity implements OnClickListener {
 		} else {
 			//
 			
-			ma.setViewListBg(false);
+			//mVideoSquareAdapter.mVideoSquareListView.setViewListBg(false);
 				
 			hot.setVisibility(View.INVISIBLE);
 			square.setVisibility(View.VISIBLE);
