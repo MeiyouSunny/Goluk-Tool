@@ -817,7 +817,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	private static final String WIFI_CONNING_FAILED_STR = "未连接Goluk";
 	private static final String WIFI_CONNING_STR = "正在连接Goluk...";
-	private static final String WIFI_CONNED_STR = "己连接Goluk";
+	private static final String WIFI_CONNED_STR = "已连接Goluk";
 
 	/** 音量图片动画 */
 	private AnimationDrawable mVolumeImgAnimation = null;

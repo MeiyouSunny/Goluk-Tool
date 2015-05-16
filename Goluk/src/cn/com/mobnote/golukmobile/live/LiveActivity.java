@@ -884,6 +884,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	}
 
+	boolean isSetAudioMute = false;
+
 	/**
 	 * 视频播放初始化
 	 */
@@ -898,19 +900,28 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mFilePath = VIEW_SELF_PLAY;
 			if (null != mRPVPalyVideo) {
 				mRPVPalyVideo.setDataSource(mFilePath);
-				mRPVPalyVideo.setAudioMute(true);
+				if (!isSetAudioMute) {
+					mRPVPalyVideo.setAudioMute(true);
+				}
+				isSetAudioMute = true;
 			}
 
 		} else {
 			mRPVPalyVideo.setDataSource(url);
-			if (isCanVoice) {
-				mRPVPalyVideo.setAudioMute(false);
-			} else {
-				mRPVPalyVideo.setAudioMute(true);
+			if (!isSetAudioMute) {
+				if (isCanVoice) {
+					mRPVPalyVideo.setAudioMute(false);
+				} else {
+					mRPVPalyVideo.setAudioMute(true);
+				}
 			}
+
+			isSetAudioMute = true;
+
 		}
 
 		mRPVPalyVideo.start();
+
 	}
 
 	private void updateCountDown(String msg) {
@@ -1563,7 +1574,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	public boolean onPlayerError(RtmpPlayerView rpv, int arg1, int arg2, String arg3) {
 		// 视频播放出错
 		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerError : " + arg2 + "  " + arg3);
-		playerError();
+		playerError(rpv);
 		// 加载画面
 		// rpv.removeCallbacks(retryRunnable);
 		// rpv.postDelayed(retryRunnable, 5000);
@@ -1574,7 +1585,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	public void onPlayerCompletion(RtmpPlayerView rpv) {
 		// 视频播放完成
 		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerCompletion : ");
-		playerError();
+		playerError(rpv);
 		// rpv.removeCallbacks(retryRunnable);
 		// rpv.postDelayed(retryRunnable, 5000);
 	}
@@ -1600,11 +1611,13 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	@Override
 	public void onPlayBuffering(RtmpPlayerView arg0, boolean start) {
-		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayBuffering : ");
+		LogUtil.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayBuffering : " + start);
 		if (start) {
 			// 缓冲开始
+			mHandler.sendEmptyMessage(MSG_H_PLAY_LOADING);
 		} else {
 			// 缓冲结束
+			mVideoLoading.setVisibility(View.GONE);
 		}
 	}
 
@@ -1613,7 +1626,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	}
 
 	// 播放器错误
-	private void playerError() {
+	private void playerError(RtmpPlayerView rpv) {
 		if (isLiveUploadTimeOut) {
 			// 90秒超时，直播结束
 			return;
