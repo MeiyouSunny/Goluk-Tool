@@ -23,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,7 +35,8 @@ import android.widget.TextView;
 public class UserPersonalEditActivity extends BaseActivity implements OnClickListener,OnTouchListener{
 
 	//title
-	private Button btnBack,btnRight;
+	private ImageButton btnBack;
+	private Button btnRight;
 	private TextView mTextTitle;
 	//头像
 	private ImageView mImageHead;
@@ -95,7 +97,7 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 	//初始化控件
 	public void initView(){
 		//title
-		btnBack = (Button) findViewById(R.id.back_btn);
+		btnBack = (ImageButton) findViewById(R.id.back_btn);
 		btnRight = (Button) findViewById(R.id.user_title_right);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		//头像

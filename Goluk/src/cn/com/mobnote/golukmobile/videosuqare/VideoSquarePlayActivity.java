@@ -113,7 +113,10 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();//设置分享平台的参数
-		loadHistorydata();//显示历史请求数据
+		//如果是直播就不拿历史数据
+		if(!"1".equals(type)){
+			loadHistorydata();//显示历史请求数据
+		}
 		httpPost(true, type, "0", "");
 	}
 	
@@ -387,10 +390,12 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		String param = GolukApplication.getInstance().getVideoSquareManager().getSquareList(attribute);
 		if(param != null && !"".equals(param)){
 			List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param);
-			mDataList = list;
-			begantime = list.get(0);
-			endtime = list.get(list.size()-1);
-			init(true);
+			if(list!=null && list.size()>0){
+				mDataList = list;
+				begantime = list.get(0);
+				endtime = list.get(list.size()-1);
+				init(true);
+			}
 		}
 		
 	}

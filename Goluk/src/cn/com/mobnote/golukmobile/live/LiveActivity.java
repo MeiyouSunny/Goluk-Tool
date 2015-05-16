@@ -92,7 +92,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	/** application */
 	private GolukApplication mApp = null;
 	/** 返回按钮 */
-	private Button mLiveBackBtn = null;
+	private ImageButton mLiveBackBtn = null;
 	/** 刷新按钮 */
 	private Button mRefirshBtn = null;
 	/** 暂停按钮 */
@@ -510,7 +510,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 */
 	@SuppressLint("HandlerLeak")
 	private void initView() {
-		mLiveBackBtn = (Button) findViewById(R.id.live_back_btn);
+		mLiveBackBtn = (ImageButton) findViewById(R.id.live_back_btn);
 		mTitleTv = (TextView) findViewById(R.id.live_title);
 		mRefirshBtn = (Button) findViewById(R.id.live_refirsh_btn);
 
@@ -1076,6 +1076,17 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 上次的视频还有效,开始上传直播，调用上报位置
 			startLive(mCurrentVideoId);
 			startUploadMyPosition();
+
+			this.isKaiGeSucess = true;
+			mLiveCountSecond = liveData.restTime;
+
+			mDescTv.setText(liveData.desc);
+
+			mLiveManager.cancelTimer();
+			// 开启timer开始计时
+			updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
+			mLiveManager.startTimer(mLiveCountSecond, true);
+
 			// if (null == liveData.groupId || "".equals(liveData.groupId)) {
 			// // 上次的直播不支持加入群組
 			// showToast("成功恢复直播, 不支持加入群组");
@@ -1444,12 +1455,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 222222");
 		mLoginLayout.setVisibility(View.GONE);
-//		if (mIsJoinGroupSucess) {
-//			// 加入群组成功
-//			return;
-//		}
-//		// 重新请求服务器，看是否需要加入群組
-//		startLiveLook(currentUserInfo);
+		// if (mIsJoinGroupSucess) {
+		// // 加入群组成功
+		// return;
+		// }
+		// // 重新请求服务器，看是否需要加入群組
+		// startLiveLook(currentUserInfo);
 
 		// LogUtil.e(null,
 		// "jyf----20150406----LiveActivity----loginSucess----22 : 3333333");

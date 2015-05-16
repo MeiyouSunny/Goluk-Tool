@@ -29,6 +29,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -54,7 +55,7 @@ import cn.com.mobnote.util.console;
 public class UserRegistActivity extends BaseActivity implements OnClickListener,UserRegistInterface,UserIdentifyInterface,OnTouchListener {
 
 	// 注册title
-	private Button mBackButton;
+	private ImageButton mBackButton;
 	private TextView mTextViewTitle;
 	// 手机号、密码、注册按钮
 	private EditText mEditTextPhone, mEditTextPwd;
@@ -115,7 +116,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	@SuppressLint("ResourceAsColor")
 	public void initView() {
 		// title
-		mBackButton = (Button) findViewById(R.id.back_btn);
+		mBackButton = (ImageButton) findViewById(R.id.back_btn);
 		mTextViewTitle = (TextView) findViewById(R.id.user_title_text);
 		// 手机号、密码、注册按钮
 		mEditTextPhone = (EditText) findViewById(R.id.user_regist_phonenumber);

@@ -20,7 +20,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 public class VideoSquareListView implements VideoSuqareManagerFn{
@@ -37,8 +39,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private int wonderfulVisibleCount;
 	public  static Handler mHandler=null;
 	private RelativeLayout mRootLayout=null;
-	
-	
+	private ImageView shareBg = null;
 	
 	public VideoSquareListView(Context context){
 		mContext=context;
@@ -46,11 +47,13 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
 		//mRTPullListView.setDividerHeight((int)(22*jj));
 		mDataList = new ArrayList<VideoSquareInfo>();
+		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
 		LogUtils.d("YYYYYYYY=================111111111===================");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if(null != mVideoSquareManager){
 			mVideoSquareManager.addVideoSquareManagerListener("hotlist", this);
 		}
+		
 		loadHistorydata();//同步历史数据
 		httpPost(true);
 		mHandler = new Handler(){
@@ -68,7 +71,11 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			}
 		};
 		
+		
 		mRootLayout = new RelativeLayout(mContext);
+		RelativeLayout.LayoutParams rlp =new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		rlp.addRule(RelativeLayout.CENTER_IN_PARENT);
+		mRootLayout.addView(shareBg,rlp);
 		mRootLayout.addView(mRTPullListView);
 	}
 	
@@ -180,7 +187,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
 		LogUtil.e("xuhw","YYYYYYY===hotlist===event="+event+"======msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
-			MainActivity ma = (MainActivity) mContext;
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete();
 			if(RESULE_SUCESS == msg){
@@ -194,11 +200,19 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			}
 			
 			if(mDataList.size()>0){
-				ma.setViewListBg(false);
+				setViewListBg(false);
 			}else{
 				initLayout();
-				ma.setViewListBg(true);
+				setViewListBg(true);
 			}
+		}
+	}
+	
+	public void setViewListBg(boolean flog){
+		if(flog){
+			shareBg.setVisibility(View.VISIBLE);
+		}else{
+			shareBg.setVisibility(View.GONE);
 		}
 	}
 	

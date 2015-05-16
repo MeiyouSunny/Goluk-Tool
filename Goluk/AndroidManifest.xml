@@ -31,6 +31,7 @@
 		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalSignActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalNameActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalHeadActivity" android:screenOrientation="portrait"/>
+		<activity android:name="cn.com.mobnote.golukmobile.UnbindActivity" android:screenOrientation="portrait"/>
 		
 		<!-- 网络变化广播监听 -->
 		<receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver">
