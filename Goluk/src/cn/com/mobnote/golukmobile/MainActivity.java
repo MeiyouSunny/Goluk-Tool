@@ -935,6 +935,10 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 			break;
 		case WIFI_STATE_SUCCESS:
+			if(GolukApplication.getInstance().autodownloadfile){
+				Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
+				return;
+			}
 			// 跳转到行车记录仪界面
 			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 			startActivity(i);
@@ -1399,6 +1403,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 					.showSingleBtnDialog(this,
 							LiveDialogManager.DIALOG_TYPE_IPC_LOGINOUT, "提示",
 							"请先连接摄像头");
+			return;
+		}
+		
+		if(GolukApplication.getInstance().autodownloadfile){
+			Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
 			return;
 		}
 

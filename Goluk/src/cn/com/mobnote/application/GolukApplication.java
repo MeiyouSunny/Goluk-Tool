@@ -46,6 +46,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
@@ -159,6 +160,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	/** 后台标识 */
 	private boolean isBackground=false;
 	public long startTime = 0;
+	public boolean autodownloadfile=false;
 
 	static {
 		System.loadLibrary("golukmobile");
@@ -630,6 +632,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					}
 
 					if (checkDownloadCompleteState()) {
+						autodownloadfile=false;
 						mDownLoadFileList.clear();
 						mNoDownLoadFileList.clear();
 						GlobalWindow.getInstance().topWindowSucess("视频传输完成");
@@ -1459,7 +1462,12 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 //				mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 //					@Override
 //					public void onClickListener() {
-						for(String name : mDownLoadFileList){
+						List<String> order = Utils.bubbleSort(mDownLoadFileList, true);
+						mDownLoadFileList.clear();
+						mDownLoadFileList.addAll(order);
+						autodownloadfile=true;
+						for(int i=0;i<mDownLoadFileList.size();i++){
+							String name = mDownLoadFileList.get(i);
 							boolean flag = GolukApplication.getInstance()
 									.getIPCControlManager()
 									.querySingleFile(name);

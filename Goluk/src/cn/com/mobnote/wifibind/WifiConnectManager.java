@@ -536,14 +536,13 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			Thread.sleep(500);
 			tempTime = 500;
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		// 扫描了表不为null
-
+		wifiManager.startScan();
 		while (wifiManager.getScanResults() == null || wifiManager.getScanResults().size() == 0) {
 			try {
-				int temp_1 = 200;
+				int temp_1 = 500;
 				Thread.sleep(temp_1);
 				tempTime += temp_1;
 				if (tempTime > outTime) {
@@ -555,7 +554,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				e.printStackTrace();
 			}
 		}
-
 		WifiRsBean[] wifiBean = wifiSupport.getScanResult(matching, null);
 		console.logBytag(TAG, "扫描wifi....已经获取列表");
 		// 将得到的扫描列表返回
