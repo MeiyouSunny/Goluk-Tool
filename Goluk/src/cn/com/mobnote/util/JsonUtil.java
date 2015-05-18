@@ -240,7 +240,7 @@ public class JsonUtil {
 			String desc = "";
 
 			if (null != beanData && null != beanData.desc) {
-				desc = URLEncoder.encode(beanData.desc);
+				desc = URLEncoder.encode(beanData.desc, "UTF-8");
 			}
 
 			String duration = null != beanData ? "" + beanData.duration : "3600";

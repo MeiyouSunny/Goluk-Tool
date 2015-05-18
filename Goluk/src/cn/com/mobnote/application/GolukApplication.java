@@ -2,7 +2,6 @@ package cn.com.mobnote.application;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,11 +17,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -48,7 +45,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -89,8 +85,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	public static MainActivity mMainActivity = null;
 	/** 视频保存地址 fs1:指向->sd卡/tiros-com-cn-ext目录 */
 	private String mVideoSavePath = "fs1:/video/";
-	/** wifi管理类 */
-	private WifiManager mWifiManage = null;
 
 	private static GolukApplication instance = null;
 	public IPCControlManager mIPCControlManager = null;
@@ -201,8 +195,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 		initRdCardSDK();
 		initCachePath();
-		
-		// createWifi();
 		// 实例化JIN接口,请求网络数据
 
 		mGoluk = new GolukLogic();
@@ -313,25 +305,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		return this.motioncfg;
 	}
 
-	/**
-	 * 创建wifi热点
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月23日
-	 */
-	private void createWifi() {
-		// FileManage mFileMange = new FileManage(this, null);
-
-		String wifi_ssid = SettingUtils.getInstance().getString("wifi_ssid",
-				"ipc_dev3");
-		String wifi_password = SettingUtils.getInstance().getString(
-				"wifi_password", "123456789");
-		wifiAp = new WifiApAdmin(this, mHandler);
-		if (!wifiAp.isWifiApEnabled()) {
-			wifiAp.startWifiAp(wifi_ssid, wifi_password);
-		}
-	}
-
 	public void editWifi(String wifiName, String password) {
 		SettingUtils.getInstance().putString("wifi_ssid", wifiName);
 		SettingUtils.getInstance().putString("wifi_password", password);
@@ -434,29 +407,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		this.mTalkListener = fn;
 	}
 
-	/**
-	 * 验证wifi链接状态
-	 */
-	public void VerifyWiFiConnect() {
-		// 判断小车本wifi是否链接成功
-		// mWifiManage =
-		// (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-		// mWiFiConnection = new WiFiConnection(mWifiManage,mContext);
-		// boolean b = mWiFiConnection.WiFiLinkStatus();
-		// if(b){
-		// console.log("wifi---通知logic链接成功---" + b);
-		// //通知logic链接成功
-		// // mGoluk.GoLuk_WifiStateChanged(true);
-		// }
-		// else{
-		// console.log("wifi---通知login断开链接--" + b);
-		// //通知login断开链接
-		// // mGoluk.GoLuk_WifiStateChanged(false);
-		// if(null != mMainActivity){
-		// mMainActivity.WiFiLinkStatus(3);
-		// }
-		// }
-	}
 
 	/**
 	 * 首页,在线视频基础数据,图片下载数据回调
@@ -943,7 +893,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		 System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
-		// console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		// IPC控制连接状态 event = 0
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
 			// 如果不是连接成功,都标识为失败
@@ -1002,40 +951,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					//msg = 0 初始化消息
 					//param1 = 0 成功 | 失败
 					if(0 == param1){
-						//ipc控制初始化成功,可以看画面和拍摄8s视频
-						setIpcLoginState(true);
-						//获取音视频配置信息
-						getVideoEncodeCfg();
-						//发起获取自动循环录制状态
-						updateAutoRecordState();
-						//获取停车安防配置信息
-						updateMotionCfg();
-						isconnection = true;// 连接成功
-						closeConnectionDialog();// 关闭连接的dialog
-						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
-						LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
-						
-						SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-						boolean isbind = preferences.getBoolean("isbind", false);
-						if (isbind) {
-							//查询新文件列表（最多10条）
-							long time = SettingUtils.getInstance().getLong("querytime", 0);
-							long curtime = System.currentTimeMillis()/1000;
-							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
-							if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
-								SettingUtils.getInstance().putLong("querytime", curtime);
-								queryNewFileList();
-								LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
-							}
-						}
-						
-						console.log("IPC_TTTTTT=================Login Success===============");
-						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
-						//改变首页链接状态
-						if(null != mMainActivity){
-							mMainActivity.wiFiLinkStatus(2);
-						}
-						
 						//如果在wifi连接页面,通知连接成功
 						if(mPageSource == "WiFiLinkList"){
 							((WiFiLinkListActivity)mContext).ipcLinkedCallBack();
@@ -1045,9 +960,43 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						if(mPageSource == "WiFiLinkComplete"){
 							((WiFiLinkCompleteActivity)mContext).ipcLinkWiFiCallBack();
 						}
-					}
-					else{
+						
+						SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+						boolean isbind = preferences.getBoolean("isbind", false);
 
+						if (isbind) {
+							//ipc控制初始化成功,可以看画面和拍摄8s视频
+							setIpcLoginState(true);
+							//获取音视频配置信息
+							getVideoEncodeCfg();
+							//发起获取自动循环录制状态
+							updateAutoRecordState();
+							//获取停车安防配置信息
+							updateMotionCfg();
+							isconnection = true;// 连接成功
+							closeConnectionDialog();// 关闭连接的dialog
+							boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
+							LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
+							//查询新文件列表（最多10条）
+							long time = SettingUtils.getInstance().getLong("querytime", 0);
+							long curtime = System.currentTimeMillis()/1000;
+							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
+							if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
+								SettingUtils.getInstance().putLong("querytime", curtime);
+								queryNewFileList();
+								LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
+							}
+							if(null != mMainActivity){
+								mMainActivity.wiFiLinkStatus(2);
+							}
+						}
+						
+						console.log("IPC_TTTTTT=================Login Success===============");
+
+						
+						
+						
+					} else {
 						setIpcLoginState(false);
 						ipcDisconnect();
 					}

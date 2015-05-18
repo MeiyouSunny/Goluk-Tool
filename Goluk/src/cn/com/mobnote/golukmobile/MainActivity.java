@@ -427,18 +427,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 					break;
 				case 3:
 					// 检测是否已连接小车本热点
-					// checkLinkWiFi();
 					// 网络状态改变
-					mApp.VerifyWiFiConnect();
-
-					/*
-					 * android.util.Log.i("setauto","------自动登录网络状态变化1111------")
-					 * ; if(mApp.isUserLoginSucess == true ||
-					 * mApp.autoLoginStatus !=2){
-					 * android.util.Log.i("setauto","------自动登录网络状态变化2222------"
-					 * ); mApp.mUser.initAutoLogin(); }
-					 */
-
 					notifyLogicNetWorkState((Boolean) msg.obj);
 
 					break;
@@ -573,18 +562,6 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		} catch (Exception ex) {
 
 		}
-	}
-
-	/**
-	 * 自动连接小车本wifi
-	 */
-	private void linkMobnoteWiFi() {
-		console.log("自动连接小车本wifi---linkMobnoteWiFi---1");
-		// WifiManager wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-		// mWac = new WifiAutoConnectManager(wm,this);
-		// createReceiver(mWac);
-		// //连接wifi
-		// mWac.connect();
 	}
 
 	/**
@@ -923,8 +900,6 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	 * 检测wifi链接状态
 	 */
 	public void checkWiFiStatus() {
-		console.log("登录回调---loginCallBack---checkWiFiStatus--" + mWiFiStatus);
-
 		Log.e("", "wifiCallBack-------------checkWiFiStatus   type:"
 				+ mWiFiStatus);
 		switch (mWiFiStatus) {
