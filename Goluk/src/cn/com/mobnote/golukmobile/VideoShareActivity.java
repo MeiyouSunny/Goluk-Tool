@@ -737,7 +737,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 						mPdsave.dismiss();
 						mPdsave = null;
 					}
-					//boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
+					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
 				}
 			});
 		} else {

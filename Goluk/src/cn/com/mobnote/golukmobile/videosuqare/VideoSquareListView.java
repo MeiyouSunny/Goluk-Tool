@@ -213,7 +213,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			if(mDataList.size()>0){
 				setViewListBg(false);
 			}else{
-				initLayout();
 				setViewListBg(true);
 			}
 		}
