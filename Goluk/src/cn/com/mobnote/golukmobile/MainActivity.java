@@ -532,8 +532,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			}
 		});
 
-		mBaiduMap
-				.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
+		mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
 					@Override
 					public void onMapStatusChangeStart(MapStatus arg0) {
 						// 隐藏气泡,大头针
@@ -1095,24 +1094,28 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	}*/
 	
 	public void exit() {
-        if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(getApplicationContext(), "再按一次退出程序",
-                    Toast.LENGTH_SHORT).show();
-            exitTime = System.currentTimeMillis();
-        } else {
-        	
-        	SysApplication.getInstance().exit();
-    		// }
-    		mApp.mIPCControlManager.setIPCWifiState(false, "");
-    		mApp.mGoluk.GolukLogicDestroy();
-    		if (null != UserStartActivity.mHandler) {
-    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-    		}
-    		finish();
-    		int PID = android.os.Process.myPid();
-    		android.os.Process.killProcess(PID);
-            System.exit(0);
-        }
+		if(mShareLayout!=null && mShareLayout.getVisibility() == View.VISIBLE){
+			mShareLayout.setVisibility(View.GONE);
+		}else{
+			if ((System.currentTimeMillis() - exitTime) > 2000) {
+	            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+	                    Toast.LENGTH_SHORT).show();
+	            exitTime = System.currentTimeMillis();
+	        } else {
+	        	
+	        	SysApplication.getInstance().exit();
+	    		// }
+	    		mApp.mIPCControlManager.setIPCWifiState(false, "");
+	    		mApp.mGoluk.GolukLogicDestroy();
+	    		if (null != UserStartActivity.mHandler) {
+	    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+	    		}
+	    		finish();
+	    		int PID = android.os.Process.myPid();
+	    		android.os.Process.killProcess(PID);
+	            System.exit(0);
+	        }
+		}
     }
 
 
