@@ -275,6 +275,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	VideoSquareManager mVideoSquareManager = null;
 
 	SharePlatformUtil sharePlatform;
+	/** 设置是否返回 */
+	private boolean isSettingCallBack = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -457,7 +459,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (!isSucess) {
 			startLiveFailed();
 		} else {
-			LiveDialogManager.getManagerInstance().setProgressDialogMessage(LIVE_CREATE);
+			if (!isAlreadExit) {
+				LiveDialogManager.getManagerInstance().setProgressDialogMessage(LIVE_CREATE);
+			}
 		}
 	}
 
@@ -484,8 +488,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	}
 
 	private void startLiveFailed() {
-		LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-				LiveDialogManager.DIALOG_TYPE_LIVE_REQUEST_SERVER, LIVE_DIALOG_TITLE, LIVE_UPLOAD_FIRST_ERROR);
+		if (!isAlreadExit) {
+			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
+					LiveDialogManager.DIALOG_TYPE_LIVE_REQUEST_SERVER, LIVE_DIALOG_TITLE, LIVE_UPLOAD_FIRST_ERROR);
+		}
 	}
 
 	private void startLiveLookFailed() {
@@ -720,7 +726,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 			if (!isTryingReUpload) {
 				// 显示Loading
-				LiveDialogManager.getManagerInstance().showProgressDialog(this, "提示", LIVE_RETRY_UPLOAD_MSG);
+				if (!isAlreadExit) {
+					LiveDialogManager.getManagerInstance().showProgressDialog(this, "提示", LIVE_RETRY_UPLOAD_MSG);
+				}
 			}
 
 			// 计时，90秒后，提示用户上传失败
@@ -732,8 +740,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		} else {
 			LiveDialogManager.getManagerInstance().dismissProgressDialog();
 			// 断开，提示用户是否继续上传
-			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_LIVE_RELOAD_UPLOAD, LIVE_DIALOG_TITLE, LIVE_UPLOAD_FIRST_ERROR);
+			if (!isAlreadExit) {
+				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
+						LiveDialogManager.DIALOG_TYPE_LIVE_RELOAD_UPLOAD, LIVE_DIALOG_TITLE, LIVE_UPLOAD_FIRST_ERROR);
+			}
 		}
 	}
 
@@ -1231,13 +1241,20 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			preExit();
 			break;
 		case R.id.live_refirsh_btn:
-			showDialog();
+			if (isSettingCallBack) {
+				showDialog();
+			}
 			break;
 		case R.id.live_oklayout:
-			click_OK();
+			if (isSettingCallBack) {
+				click_OK();
+			}
+
 			break;
 		case R.id.live_sharelayout:
-			click_share();
+			if (isSettingCallBack) {
+				click_share();
+			}
 			break;
 		case R.id.live_qiangpai:
 			pre_startTrimVideo();
@@ -1775,6 +1792,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (isAlreadExit) {
 			return;
 		}
+		isAlreadExit = true;
 		mApp.mSharedPreUtil.setIsLiveNormalExit(true);
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");
@@ -1782,13 +1800,14 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 移除监听
 		mApp.removeLocationListener(TAG);
 		mJoinGroupJson = null;
-		isAlreadExit = true;
 
 		mHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
 		mHandler.removeMessages(MSG_H_RETRY_UPLOAD);
 		mHandler.removeMessages(MSG_H_RETRY_SHOW_VIEW);
 		mHandler.removeMessages(MSG_H_RETRY_REQUEST_DETAIL);
 		mHandler.removeMessages(MSG_H_PLAY_LOADING);
+
+		dissmissAllDialog();
 
 		freePlayer();
 
@@ -1818,6 +1837,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 停止计时器
 		stopTrimVideo();
 		finish();
+	}
+
+	private void dissmissAllDialog() {
+		LiveDialogManager.getManagerInstance().dismissProgressDialog();
+		LiveDialogManager.getManagerInstance().dismissSingleBtnDialog();
 	}
 
 	/**
@@ -2006,6 +2030,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		final int id = v.getId();
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
+			if (!isSettingCallBack) {
+				return true;
+			}
 			if (id == R.id.live_qiangpai) {
 				if (null != m8sTimer) {
 					// 正在录制
@@ -2019,6 +2046,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			break;
 		case MotionEvent.ACTION_UP:
+			if (!isSettingCallBack) {
+				return true;
+			}
 			if (id == R.id.live_qiangpai) {
 				pre_startTrimVideo();
 				// startTrimVideo();
@@ -2162,19 +2192,18 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			} else {
 				mDescTv.setVisibility(View.GONE);
 			}
-			LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, LIVE_START_PROGRESS_MSG);
-			// 在没有进入群组时，按钮不可按
-			// refreshPPtState(false);
-
-			// 计时，90秒后，提示用户上传失败
-			// mHandler.sendEmptyMessageDelayed(MSG_H_UPLOAD_TIMEOUT,
-			// DURATION_TIMEOUT);
+			if (!isAlreadExit) {
+				LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE,
+						LIVE_START_PROGRESS_MSG);
+			}
 
 			// 开始视频上传
 			startLive(mCurrentVideoId);
 			updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
 			// 开始计时
 			mLiveManager.startTimer(mLiveCountSecond, true);
+
+			isSettingCallBack = true;
 		}
 	}
 
@@ -2286,8 +2315,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				// OK
 				// 重新上传
 				mHandler.sendEmptyMessageDelayed(MSG_H_RETRY_UPLOAD, 1000);
-				LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, LIVE_CREATE);
-
+				if (!isAlreadExit) {
+					LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, LIVE_CREATE);
+				}
 			} else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
 				// Cancel
 				exit();
@@ -2296,9 +2326,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		case LiveDialogManager.DIALOG_TYPE_LIVE_REQUEST_SERVER:
 			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
 				// OK
-				startLiveForServer();
-				LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, LIVE_CREATE);
-
+				if (!isAlreadExit) {
+					startLiveForServer();
+					LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, LIVE_CREATE);
+				}
 			} else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
 				exit();
 			}
@@ -2307,6 +2338,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
 				// 取消
 				// showToast("取消分享");
+				// boolean b =
+				// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				// IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
 			}
 			break;
 		}
@@ -2342,8 +2376,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				if (TimerManager.RESULT_FINISH == result) {
 					// 计时器完成
 					liveEnd();
-					LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this, LIVE_DIALOG_TITLE,
-							LIVE_TIME_END);
+					if (!isAlreadExit) {
+						LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this, LIVE_DIALOG_TITLE,
+								LIVE_TIME_END);
+					}
 				}
 				LogUtil.e("aaaaaa", "-------------aaaaa-----stop------");
 
@@ -2355,8 +2391,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			if (10 == function) {
 				if (TimerManager.RESULT_FINISH == result) {
 					liveEnd();
-					LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this, LIVE_DIALOG_TITLE,
-							LIVE_TIME_END);
+					if (!isAlreadExit) {
+						LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this, LIVE_DIALOG_TITLE,
+								LIVE_TIME_END);
+					}
 				}
 				updateCountDown(GolukUtils.secondToString(current));
 			}
