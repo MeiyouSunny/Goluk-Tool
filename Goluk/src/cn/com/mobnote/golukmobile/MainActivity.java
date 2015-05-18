@@ -1,7 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,9 +68,7 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoManage;
-import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
 import cn.com.mobnote.video.OnLineVideoManage;
-import cn.com.mobnote.view.MyGridView;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -124,14 +120,10 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	private LayoutInflater mLayoutInflater = null;
-
 	/** 地图layout */
 	private LinearLayout mMapLayout = null;
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
-	/** 直播marker列表按钮 */
-	// private Button mMapMarkeListBtn = null;
 	/** 百度地图 */
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
@@ -145,8 +137,6 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private boolean isCurrent = true;
 	/** 分享按钮 */
 	private Button mShareBtn = null;
-	/** 分享按钮文字 */
-	// private TextView mDrivingShareText = null;
 	/** 分享按钮布局 */
 	private RelativeLayout mShareLayout = null;
 	/** 关闭分享布局 */
@@ -175,28 +165,13 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private View mLoginLayout = null;
 	/** 登录弹出框 */
 	private AlertDialog mLoginDialog = null;
-	/** 登录手机号 */
-	private EditText mLoginPhoneText = null;
-	/** 登录密码 */
-	private EditText mLoginPwdText = null;
-	/** 登录按钮 */
-	private Button mLoginBtn = null;
 
-	/** 视频广场更多按钮 */
-	private Button mVideoSquareMoreBtn = null;
 	/** 在线视频管理类 */
 	private OnLineVideoManage mOnLineVideoManage = null;
-
-	/** 本地视频列表layout */
-	private LinearLayout mLocalVideoListLayout = null;
 	/** 本地视频管理类 */
 	public LocalVideoManage mLocalVideoManage = null;
 	/** 本地视频列表数据适配器 */
 	public LocalVideoListAdapter mLocalVideoListAdapter = null;
-	/** 本地视频列表数据 */
-	private ArrayList<LocalVideoData> mLocalVideoData = null;
-	/** 本地视频列表 */
-	private MyGridView mLocalVideoGridView = null;
 
 	/** 本地视频无数据显示提示 */
 	private RelativeLayout mDefaultTipLayout = null;
@@ -309,12 +284,10 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		boolean b = this.isBindSucess();
 		Log.i("bind", "======bind====status==="+b);
 		if (this.isBindSucess()) {
-			// mWiFiStatus = WIFI_STATE_CONNING;
 			startWifi();
 			// 启动创建热点
 			createWiFiHot();
 		} else {
-			// mWiFiStatus = WIFI_STATE_FAILED;
 			wifiConnectFailed();
 		}
 
@@ -354,8 +327,6 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
-		mLayoutInflater = LayoutInflater.from(mContext);
-
 		// 地图我的位置按钮
 		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
 		// 分享按钮
