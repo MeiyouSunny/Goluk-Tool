@@ -16,6 +16,7 @@ import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Message;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -113,7 +114,15 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		mApp.setContext(mContext, "WiFiLinkList");
 		// 页面初始化
 		init();
-		getWiFiList(true);
+		mLoading.setVisibility(View.VISIBLE);
+		// getWiFiList(true);
+		mBaseHandler.sendEmptyMessageDelayed(100, 1000);
+	}
+
+	protected void hMessage(Message msg) {
+		if (100 == msg.what) {
+			getWiFiList(true, true);
+		}
 	}
 
 	/**
@@ -154,9 +163,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	/**
 	 * 获取wifi列表
 	 */
-	private void getWiFiList(boolean b) {
+	private void getWiFiList(boolean isFrist, boolean b) {
 		mState = STATE_SCANING;
-		mLoading.setVisibility(View.VISIBLE);
+		if (!isFrist) {
+			mLoading.setVisibility(View.VISIBLE);
+		}
+
 		console.log("获取wifi列表---getWiFiList---");
 		// 获取文件列表tcay_ap_ipc
 		mWac.scanWifiList("", b);
@@ -276,7 +288,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			break;
 		case R.id.refresh_help_btn:
 			// 获取wifi列表
-			getWiFiList(true);
+			getWiFiList(false, true);
 			break;
 		case R.id.next_btn:
 			// 已连接ipc热点,可以跳转到修改密码页面

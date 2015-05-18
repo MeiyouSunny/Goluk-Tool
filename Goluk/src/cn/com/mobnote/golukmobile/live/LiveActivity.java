@@ -1584,6 +1584,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// UI需要转圈loading
 			mHandler.sendEmptyMessage(MSG_H_PLAY_LOADING);
 			// 重新加载播放器预览
+			mHandler.removeMessages(MSG_H_RETRY_SHOW_VIEW);
 			mHandler.sendEmptyMessageDelayed(MSG_H_RETRY_SHOW_VIEW, 5000);
 		} else {
 			// UI需要转圈
