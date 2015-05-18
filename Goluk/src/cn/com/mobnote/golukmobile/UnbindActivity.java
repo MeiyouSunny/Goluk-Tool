@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -19,7 +20,7 @@ import cn.com.mobnote.application.GolukApplication;
 public class UnbindActivity extends Activity implements OnClickListener{
 
 	//title
-	private Button mBackBtn = null;
+	private ImageButton mBackBtn = null;
 	private TextView mTextTitle = null;
 	//body
 	private RelativeLayout mHaveipcLayout = null;
@@ -55,7 +56,7 @@ public class UnbindActivity extends Activity implements OnClickListener{
 	//初始化
 	public void initView(){
 		//title
-		mBackBtn = (Button) findViewById(R.id.back_btn);
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		//body
 		mHaveipcLayout = (RelativeLayout) findViewById(R.id.unbind_layout_haveipc);

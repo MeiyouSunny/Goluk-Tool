@@ -1099,17 +1099,15 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			case IPC_VDCP_Msg_DeviceStatus:
 				// msg = 1006 查询设备状态
 				break;
-				case IPC_VDCPCmd_SetWifiCfg:
-					//msg = 1012 设置IPC系统WIFI配置
-					//param1 = 0 成功 | 失败
-					if(0 == param1){
-						//如果在wifi连接页面,通知设置成功
-						if(mPageSource == "WiFiLinkCreateHot"){
-							((WiFiLinkCreateHotActivity)mContext).setIpcLinkWiFiCallBack();
-						}
-					}
+			case IPC_VDCPCmd_SetWifiCfg:
+				//msg = 1012 设置IPC系统WIFI配置
+				//param1 = 0 成功 | 失败
+				//如果在wifi连接页面,通知设置成功
+				if(mPageSource == "WiFiLinkCreateHot"){
+					((WiFiLinkCreateHotActivity)mContext).setIpcLinkWiFiCallBack(param1);
+				}
 				break;
-				case IPC_VDCP_Msg_GetVedioEncodeCfg:
+			case IPC_VDCP_Msg_GetVedioEncodeCfg:
 					if(param1 == RESULE_SUCESS){
 						VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String)param2);
 						if(null != videocfg){
@@ -1140,6 +1138,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				autoRecordFlag = false;
 				break;
 			case IPC_VDCP_Msg_GetMotionCfg:
+				LogUtil.e("xuhw", "YYYYYYYYYYYYYY===IPC_VDCP_Msg_GetMotionCfg===param1="+param1+"=param2="+param2);
 				if (param1 == RESULE_SUCESS) {
 					try {
 						JSONObject json = new JSONObject((String) param2);

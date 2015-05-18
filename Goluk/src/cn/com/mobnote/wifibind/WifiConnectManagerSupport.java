@@ -39,8 +39,7 @@ public class WifiConnectManagerSupport {
 
 	// private static final String FILEPATH = Environment
 	// .getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
-	private static final String FILEPATH = Const.getAppContext().getCacheDir()
-			.getPath()
+	private static final String FILEPATH =  Const.getAppContext().getFilesDir().getPath()
 			+ "/wificonfig/";
 
 	private static final int BUF_SIZE = 1024;

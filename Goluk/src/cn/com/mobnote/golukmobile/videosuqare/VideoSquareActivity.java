@@ -206,7 +206,9 @@ public class VideoSquareActivity implements OnClickListener {
 	}
 
 	public void onDestroy() {
-		
+		if (null != mVideoSquareAdapter) {
+			mVideoSquareAdapter.onDestroy();
+		}
 	}
 	
 	public void exit(){

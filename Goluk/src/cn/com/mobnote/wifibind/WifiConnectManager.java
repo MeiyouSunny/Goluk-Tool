@@ -529,6 +529,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param type
 	 */
 	private int wifiScan(String matching, int outTime) {
+		wifiManager.startScan();
 		console.logBytag(TAG, "扫描wifi....11111");
 		int tempTime = 0;
 		// 先提至500毫秒再进行查询
@@ -539,7 +540,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			e1.printStackTrace();
 		}
 		// 扫描了表不为null
-		wifiManager.startScan();
+		
 		while (wifiManager.getScanResults() == null || wifiManager.getScanResults().size() == 0) {
 			try {
 				int temp_1 = 500;
