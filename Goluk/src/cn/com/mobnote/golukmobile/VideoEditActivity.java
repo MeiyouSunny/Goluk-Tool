@@ -363,7 +363,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 					mVideoLoadingLayout.setVisibility(View.GONE);
 					// 停止loading动画
 					mLoadingAnimation.stop();
-
+					System.out.println("chenxy==========bCancel:"+bCancel);
+					System.out.println("chenxy==========bSuccess:"+bSuccess);
 					if (bCancel) {
 						// strInfo = "已取消视频保存！";
 					} else if (bSuccess) {
