@@ -2,7 +2,6 @@ package cn.com.mobnote.application;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,11 +17,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -48,7 +45,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -89,8 +85,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	public static MainActivity mMainActivity = null;
 	/** 视频保存地址 fs1:指向->sd卡/tiros-com-cn-ext目录 */
 	private String mVideoSavePath = "fs1:/video/";
-	/** wifi管理类 */
-	private WifiManager mWifiManage = null;
 
 	private static GolukApplication instance = null;
 	public IPCControlManager mIPCControlManager = null;
@@ -201,8 +195,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 		initRdCardSDK();
 		initCachePath();
-		
-		// createWifi();
 		// 实例化JIN接口,请求网络数据
 
 		mGoluk = new GolukLogic();
@@ -313,25 +305,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		return this.motioncfg;
 	}
 
-	/**
-	 * 创建wifi热点
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月23日
-	 */
-	private void createWifi() {
-		// FileManage mFileMange = new FileManage(this, null);
-
-		String wifi_ssid = SettingUtils.getInstance().getString("wifi_ssid",
-				"ipc_dev3");
-		String wifi_password = SettingUtils.getInstance().getString(
-				"wifi_password", "123456789");
-		wifiAp = new WifiApAdmin(this, mHandler);
-		if (!wifiAp.isWifiApEnabled()) {
-			wifiAp.startWifiAp(wifi_ssid, wifi_password);
-		}
-	}
-
 	public void editWifi(String wifiName, String password) {
 		SettingUtils.getInstance().putString("wifi_ssid", wifiName);
 		SettingUtils.getInstance().putString("wifi_password", password);
@@ -434,29 +407,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		this.mTalkListener = fn;
 	}
 
-	/**
-	 * 验证wifi链接状态
-	 */
-	public void VerifyWiFiConnect() {
-		// 判断小车本wifi是否链接成功
-		// mWifiManage =
-		// (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-		// mWiFiConnection = new WiFiConnection(mWifiManage,mContext);
-		// boolean b = mWiFiConnection.WiFiLinkStatus();
-		// if(b){
-		// console.log("wifi---通知logic链接成功---" + b);
-		// //通知logic链接成功
-		// // mGoluk.GoLuk_WifiStateChanged(true);
-		// }
-		// else{
-		// console.log("wifi---通知login断开链接--" + b);
-		// //通知login断开链接
-		// // mGoluk.GoLuk_WifiStateChanged(false);
-		// if(null != mMainActivity){
-		// mMainActivity.WiFiLinkStatus(3);
-		// }
-		// }
-	}
 
 	/**
 	 * 首页,在线视频基础数据,图片下载数据回调
