@@ -107,6 +107,16 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		squareTypeDefault = (ImageView) findViewById(R.id.square_type_default);
+		squareTypeDefault.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				mCustomProgressDialog = null;
+				httpPost(true, type, "0", "");
+			}
+		});
+		
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mBackBtn.setOnClickListener(this);

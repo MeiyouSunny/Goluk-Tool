@@ -111,6 +111,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	}
 
 	private void performShare(SHARE_MEDIA platform) {
+		mController.getConfig().cleanListeners();
+
 		mController.postShare(mActivity, platform, new SnsPostListener() {
 
 			@Override
