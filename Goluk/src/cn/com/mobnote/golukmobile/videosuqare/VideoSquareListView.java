@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -48,6 +49,16 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		//mRTPullListView.setDividerHeight((int)(22*jj));
 		mDataList = new ArrayList<VideoSquareInfo>();
 		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
+		shareBg.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				mCustomProgressDialog = null;
+				httpPost(true);
+			}
+		});
+		
 		LogUtils.d("YYYYYYYY=================111111111===================");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if(null != mVideoSquareManager){
