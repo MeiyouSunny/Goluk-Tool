@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg" >
-        
+
         <ImageButton
             android:id="@+id/live_back_btn"
             android:layout_width="wrap_content"
@@ -496,40 +496,6 @@
             android:layout_marginRight="10dp"
             android:singleLine="true"
             android:textSize="@dimen/live_text_time1_size" />
-    </RelativeLayout>
-
-    <!-- 提示登录布局 -->
-
-    <RelativeLayout
-        android:id="@+id/loginlayout"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/live_loginlayout_color"
-        android:visibility="gone" >
-
-        <Button
-            android:id="@+id/live_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/live_login_btn"
-            android:paddingLeft="28dp"
-            android:paddingRight="28dp"
-            android:text="@string/live_login"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@id/live_login"
-            android:text="@string/live_login_prompt"
-            android:textSize="14sp" />
     </RelativeLayout>
 
     <!-- 直播界面说话按钮 -->

@@ -943,7 +943,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		 System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
-		// console.log("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		// IPC控制连接状态 event = 0
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
 			// 如果不是连接成功,都标识为失败
@@ -1002,40 +1001,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					//msg = 0 初始化消息
 					//param1 = 0 成功 | 失败
 					if(0 == param1){
-						//ipc控制初始化成功,可以看画面和拍摄8s视频
-						setIpcLoginState(true);
-						//获取音视频配置信息
-						getVideoEncodeCfg();
-						//发起获取自动循环录制状态
-						updateAutoRecordState();
-						//获取停车安防配置信息
-						updateMotionCfg();
-						isconnection = true;// 连接成功
-						closeConnectionDialog();// 关闭连接的dialog
-						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
-						LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
-						
-						SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-						boolean isbind = preferences.getBoolean("isbind", false);
-						if (isbind) {
-							//查询新文件列表（最多10条）
-							long time = SettingUtils.getInstance().getLong("querytime", 0);
-							long curtime = System.currentTimeMillis()/1000;
-							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
-							if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
-								SettingUtils.getInstance().putLong("querytime", curtime);
-								queryNewFileList();
-								LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
-							}
-						}
-						
-						console.log("IPC_TTTTTT=================Login Success===============");
-						//Toast.makeText(mContext, "IPC登录成功", Toast.LENGTH_SHORT).show();
-						//改变首页链接状态
-						if(null != mMainActivity){
-							mMainActivity.wiFiLinkStatus(2);
-						}
-						
 						//如果在wifi连接页面,通知连接成功
 						if(mPageSource == "WiFiLinkList"){
 							((WiFiLinkListActivity)mContext).ipcLinkedCallBack();
@@ -1045,9 +1010,43 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						if(mPageSource == "WiFiLinkComplete"){
 							((WiFiLinkCompleteActivity)mContext).ipcLinkWiFiCallBack();
 						}
-					}
-					else{
+						
+						SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+						boolean isbind = preferences.getBoolean("isbind", false);
 
+						if (isbind) {
+							//ipc控制初始化成功,可以看画面和拍摄8s视频
+							setIpcLoginState(true);
+							//获取音视频配置信息
+							getVideoEncodeCfg();
+							//发起获取自动循环录制状态
+							updateAutoRecordState();
+							//获取停车安防配置信息
+							updateMotionCfg();
+							isconnection = true;// 连接成功
+							closeConnectionDialog();// 关闭连接的dialog
+							boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
+							LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
+							//查询新文件列表（最多10条）
+							long time = SettingUtils.getInstance().getLong("querytime", 0);
+							long curtime = System.currentTimeMillis()/1000;
+							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
+							if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
+								SettingUtils.getInstance().putLong("querytime", curtime);
+								queryNewFileList();
+								LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
+							}
+							if(null != mMainActivity){
+								mMainActivity.wiFiLinkStatus(2);
+							}
+						}
+						
+						console.log("IPC_TTTTTT=================Login Success===============");
+
+						
+						
+						
+					} else {
 						setIpcLoginState(false);
 						ipcDisconnect();
 					}

@@ -128,10 +128,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private boolean isStartLive = false;
 	/** 直播视频id */
 	private String liveVid;
-	/** 直播录制定时器 */
-	private Timer mRecordTimer = null;
-	/** 直播录制时间 */
-	private int curRecordTime = 0;
 	/** 单次直播录制时间 (秒)(包括自己的时间与看别人的时间) */
 	private int mLiveCountSecond = 60;
 	/** 直播倒计时显示 */
@@ -153,9 +149,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	/** 说话中计时显示 */
 	private TextView mTalkingTimeTv = null;
 	private RelativeLayout mSpeakingLayout = null;
-	/** 登录布局 */
-	private RelativeLayout mLoginLayout = null;
-	private Button mLoginBtn = null;
 	/** 视频描述 */
 	private TextView mDescTv = null;
 
@@ -315,7 +308,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 开始预览或开始直播
 		if (isShareLive) {
 			mApp.mSharedPreUtil.setIsLiveNormalExit(false);
-			mLoginLayout.setVisibility(View.GONE);
 			mCurrentVideoId = getVideoId();
 			startVideoAndLive("");
 			mTitleTv.setText("我的直播");
@@ -332,12 +324,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				mLiveCountSecond = currentUserInfo.liveDuration;
 			}
 			mTitleTv.setText(currentUserInfo.nickName + " 的直播");
-			if (!mApp.isUserLoginSucess) {
-				// 未登录成功
-				mLoginLayout.setVisibility(View.VISIBLE);
-			} else {
-				mLoginLayout.setVisibility(View.GONE);
-			}
+
 			setUserHeadImage(currentUserInfo.head);
 		}
 		drawPersonsHead();
@@ -558,11 +545,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mTalkingTimeTv = (TextView) findViewById(R.id.live_talktime);
 
 		mQiangpaiImg = (ImageView) findViewById(R.id.qiangpai_img);
-
-		mLoginLayout = (RelativeLayout) findViewById(R.id.loginlayout);
-		mLoginBtn = (Button) findViewById(R.id.live_login);
-		mLoginBtn.setOnClickListener(this);
-		// mQiangpaiImg.setOnClickListener(this);
 
 		mMapRootLayout = (RelativeLayout) findViewById(R.id.live_map_layout);
 
@@ -1251,41 +1233,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		case R.id.live_refirsh_btn:
 			showDialog();
 			break;
-		case R.id.live_play_layout:
-			// // 继续观看
-			// mPlayLayout.setVisibility(View.GONE);
-			// mPauseBtn.setVisibility(View.VISIBLE);
-			// startLive(mCurrentVideoId);
-			// // 如果是开启直播，则停止上报自己的位置
-			// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
-			// ITalkFn.Talk_Command_StopUploadPosition,
-			// "");
-			//
-			// if (null != mLiveManager) {
-			// mLiveManager.timerResume();
-			// }
-			break;
 		case R.id.live_oklayout:
 			click_OK();
-			break;
-		case R.id.live_pause:
-			// Toast.makeText(this, "暂停", Toast.LENGTH_LONG).show();
-			// mPlayLayout.setVisibility(View.VISIBLE);
-			// mPauseBtn.setVisibility(View.GONE);
-			//
-			// if (null != mLiveManager) {
-			// mLiveManager.timerPause();
-			// }
-			//
-			// stopRTSPUpload();
-			// cancelTimer();
-			// // 如果是开启直播，则停止上报自己的位置
-			// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
-			// ITalkFn.Talk_Command_StopUploadPosition,
-			// "");
-			break;
-		case R.id.live_login:
-			click_login();
 			break;
 		case R.id.live_sharelayout:
 			click_share();
@@ -1465,7 +1414,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			return;
 		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 222222");
-		mLoginLayout.setVisibility(View.GONE);
 		// if (mIsJoinGroupSucess) {
 		// // 加入群组成功
 		// return;
@@ -1755,38 +1703,32 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_record);
 			break;
 		case 2:
-
 			break;
 		case 3:
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_5s_record);
 			break;
 		case 4:
-
 			break;
 		case 5:
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_4s_record);
 			break;
 		case 6:
-
 			break;
 		case 7:
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_3s_record);
 			break;
 		case 8:
-
 			break;
 		case 9:
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_2s_record);
 			break;
 		case 10:
-
 			break;
 		case 11:
 			mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_1s_record);
 			break;
 		case 13:
 			break;
-
 		default:
 			break;
 		}
@@ -2073,13 +2015,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			} else if (id == R.id.live_exit) {
 				LogUtil.e(null, "mobile-----onTouch-----:  exit down");
 				mExitBtn.setBackgroundResource(R.drawable.live_btn_off_press);
-			} else if (id == R.id.livelook_ppt || id == R.id.live_ppt) {
-				// if (mIsJoinGroupSucess) {
-				//
-				// } else {
-				//
-				// }
-				// pptTouchDown();
 			}
 			break;
 		case MotionEvent.ACTION_UP:
@@ -2090,57 +2025,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			} else if (id == R.id.live_exit) {
 				LogUtil.e(null, "mobile-----onTouch-----:  exit up");
 				preExit();
-			} else if (id == R.id.livelook_ppt || id == R.id.live_ppt) {
-				// pptTouchUp();
 			}
 			break;
 		default:
 			break;
 		}
 		return false;
-	}
-
-	private void pptTouchDown() {
-		if (mTimeOutEnable) {
-			// 用户上次说话超时，此时不能按下按钮
-			return;
-		}
-		if (isShareLive) {
-			mLiveTalk.setBackgroundResource(R.drawable.live_btn_ptt_press);
-		} else {
-			mLiveLookTalk.setBackgroundResource(R.drawable.livelook_btn_ptt_press);
-		}
-
-		speekingUIRefresh(0, "", false);
-
-		LogUtil.e(null, "jyf-------live------pptTouchDown type: ----1111");
-
-		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
-				ITalkFn.Talk_CommCmd_TalkRequest, "");
-
-		LogUtil.e(null, "jyf-------live------pptTouchDown type: ----2222: " + isSucess);
-
-	}
-
-	private void pptTouchUp() {
-		if (mTimeOutEnable) {
-			// 用户上次说话超时，此时不处理任何事件
-			return;
-		}
-
-		if (null != mSpeakName && !"".equals(mSpeakName)) {
-			// 当前有人说话
-			speekingUIRefresh(MSG_SPEAKING_START_SPEAK, mSpeakName, false);
-		} else {
-			speekingUIRefresh(2, "", false);
-		}
-		if (isShareLive) {
-			mLiveTalk.setBackgroundResource(R.drawable.live_btn_ptt_normal);
-		} else {
-			mLiveLookTalk.setBackgroundResource(R.drawable.livelook_btn_ptt_normal);
-		}
-
-		talkrelease();
 	}
 
 	private void talkrelease() {
@@ -2248,209 +2138,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	@Override
 	public void TalkNotifyCallBack(int type, String data) {
-		// LogUtil.e(null, "jyf-------live------TalkNotifyCallBack type: " +
-		// type + "  data:" + data);
-		// int state = -1;
-		// switch (type) {
-		// case EVENT_AID:
-		// state = JsonUtil.getJsonIntValue(data, "state", -1);
-		// loginAndHeartEvent(state);
-		// break;
-		// case Talk_Event_ChanleIn:
-		// // 进入频道相关
-		// state = JsonUtil.getJsonIntValue(data, "state", -1);
-		// intoChannelEvent(state, data);
-		// break;
-		// case Talk_Event_ChanleInterAction:
-		// // 频道内交互事件
-		// state = JsonUtil.getJsonIntValue(data, "state", -1);
-		// channelInteractionEvent(state, data);
-		// break;
-		// default:
-		// break;
-		// }
-	}
 
-	/**
-	 * 登录及心跳相关事件
-	 * 
-	 * @param event
-	 * @author qianwei
-	 * @date 2014/04/08
-	 */
-	private void loginAndHeartEvent(int event) {
-		switch (event) {
-		case -1:
-			// 网络掉线
-			refreshPPtState(false);
-			break;
-		case 0:
-			// 正在获取aid及其配置参数 UI--弹出提示框
-			break;
-		case 1:
-			/** 获取aid及其配置参数成功 */
-			break;
-		case 2:
-			/** 获取aid及其配置参数失败 */
-			break;
-		case 3:
-			// 正在登录爱淘客
-			break;
-		case 4:
-			// 登录爱淘客成功
-			mIsAirtalkLoginSucess = true;
-			break;
-		case 6:// 登录爱淘客失败
-			break;
-		case 7:// 用户重复登录爱淘客
-			break;
-		case 9:
-			// aid登录中
-			break;
-		case 10:
-			// aid超时
-			break;
-		}
-	}
-
-	/**
-	 * 进入频道相关事件
-	 * 
-	 * @param event
-	 * 
-	 * @author qianwei
-	 * @date 2014/04/08
-	 */
-	private void intoChannelEvent(int event, String message) {
-		switch (event) {
-		case 0:// 正在获取频道信息
-			LogUtil.e(null, "jyf-------live------TalkintoChannelEvent type: 正在获取频道信息");
-			break;
-		case 1:// 获取频道信息成功
-			mCurrentGroupInfo = message;
-			break;
-		case 2:// 获取频道信息失败
-			break;
-		case 3:// 正在进入爱淘客频道
-			break;
-		case 4:// 进入爱淘客频道成功
-			callBack_JoinGroupSucess();
-			break;
-		case 5:// 自动重新进入爱淘客频道成功
-			mLinkEnable = false;
-			// 改为说话可用,更新UI
-			break;
-		case 6:// 进入爱淘客频道失败
-			mIsJoinGroupSucess = false;
-			// 重新加入频道
-			this.joinAitalkGroup();
-			break;
-		case 7:// 频道退出
-			break;
-		}
-	}
-
-	/**
-	 * 频道内交互事件
-	 * 
-	 * @param event
-	 * 
-	 * @author qianwei
-	 * @date 2014/04/08
-	 */
-	private void channelInteractionEvent(int event, String message) {
-		switch (event) {
-		case 0:
-			// 有人开始说话
-			callBack_startSpeak(message);
-			break;
-		case 1:
-			// 有人结束说话
-			callBack_endSpeak(message);
-			break;
-		case 2:// 本人说话请求被拒绝
-		case 3:// 本人说话请求正在排队
-				// 本人说话请求被拒绝
-			// 战线中
-			speekingUIRefresh(MSG_SPEEKING_BUSY, "", false);
-			break;
-		case 4:// 本人说话请求状态错误
-				// 说话请求状态错误
-			// 占线中
-			speekingUIRefresh(MSG_SPEEKING_BUSY, "", false);
-			break;
-		}
-	}
-
-	/**
-	 * 加入群组成功后的处理
-	 * 
-	 * @author jiayf
-	 * @date Apr 13, 2015
-	 */
-	private void callBack_JoinGroupSucess() {
-		mIsJoinGroupSucess = true;
-		// showToast("加入群组成功");
-		// 加入群组成功后的对讲按钮的变化
-		if (this.isShareLive) {
-			if (!this.isContinueLive) {
-				if (null != mSettingData && mSettingData.isCanTalk) {
-					// 可以支持对讲
-					// 对讲按钮可以显示
-					mBottomLayout.setVisibility(View.VISIBLE);
-					mLiveTalk.setVisibility(View.VISIBLE);
-					mLiveLookTalk.setVisibility(View.GONE);
-				} else {
-					mBottomLayout.setVisibility(View.VISIBLE);
-					mLiveTalk.setVisibility(View.GONE);
-					mLiveLookTalk.setVisibility(View.GONE);
-				}
-			}
-
-		} else {
-			mBottomLayout.setVisibility(View.GONE);
-			mLiveTalk.setVisibility(View.GONE);
-			mLiveLookTalk.setVisibility(View.VISIBLE);
-		}
-
-		// 按钮可以按下
-		refreshPPtState(true);
-	}
-
-	// 有人开始说话
-	private void callBack_startSpeak(String message) {
-		mIsMe = JsonUtil.getJsonBooleanValue(message, "isme", false);
-		mSpeakName = JsonUtil.getJsonStringValue(message, "name", "");
-		final String aid = JsonUtil.getJsonStringValue(message, "aid", "");
-
-		if (mIsMe) {
-			mSpeakName = "";
-		}
-		mSpeechOutTime = 0;
-		speekingUIRefresh(MSG_SPEAKING_START_SPEAK, mSpeakName, mIsMe);
-
-		refreshTimerTv("00:00");
-		// 不管是其它人　还是　自己，开始说话，就倒计时30秒
-		mHandler.removeMessages(MSG_H_SPEECH_OUT_TIME);
-		mHandler.sendEmptyMessageDelayed(MSG_H_SPEECH_OUT_TIME, 1000);
-
-	}
-
-	// 有人结束说话
-	private void callBack_endSpeak(String message) {
-		String aidEnd = JsonUtil.getJsonStringValue(message, "aid", null);
-		boolean isMeEnd = JsonUtil.getJsonBooleanValue(message, "isme", false);
-		mSpeakName = "";
-		mIsMe = false;
-		if (isMeEnd) {
-			mSpeechOutTime = 0;
-			refreshTimerTv("00:00");
-			speekingUIRefresh(MSG_SPEAKING_OTHER_END, "", true);
-		} else {
-			speekingUIRefresh(MSG_SPEAKING_OTHER_END, "", false);
-		}
-
-		mHandler.removeMessages(MSG_H_SPEECH_OUT_TIME);
 	}
 
 	// POPWindow回调操作
@@ -2687,11 +2375,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 不更新数据
 			return;
 		}
-		// LogUtil.e(null,
-		// "jyf----20150406----LiveActivity----LocationCallBack----0000  : ");
+		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----0000  : ");
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		// LogUtil.e(null,
-		// "jyf----20150406----LiveActivity----LocationCallBack----111  : ");
+		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----111  : ");
 
 		if (null != location) {
 			// LogUtil.e(null,
@@ -2732,8 +2418,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			return;
 		}
 
+		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----565656  : ");
+
 		if (!isGetingAddress) {
 			// 调用百度的反地理编码
+			LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----57575757  : ");
 			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
 		}
 	}
@@ -2757,13 +2446,15 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		LogUtil.e(null, "jyf----20150406----LiveActivity----IPCManage_CallBack----event  : " + event + " msg:" + msg);
+
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
 			if (ConnectionStateMsg_Connected != msg) {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						ipcIsOk = false;
-						mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s_press1);
+						mQiangpaiImg.setBackgroundResource(R.drawable.live_btn_6s1);
 					}
 				});
 			}
@@ -2929,7 +2620,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == SquareCmd_Req_GetShareUrl) {
-			// TODO 销毁对话框
+			// 销毁对话框
 			LiveDialogManager.getManagerInstance().dismissShareProgressDialog();
 			if (1 != msg) {
 				showToast("分享失败");
@@ -2958,6 +2649,5 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				e.printStackTrace();
 			}
 		}
-
 	}
 }
