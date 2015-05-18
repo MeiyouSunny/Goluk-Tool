@@ -719,8 +719,12 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		final String json = createShareJson(selectJson, isSeque, "" + type);
 
 		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
-				json);
+		boolean b = false;
+		if( mApp !=null && mApp.mGoluk != null){
+			b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,json);
+		}else{
+			LogUtil.e("", "jyf-----VideoShareActivity -----mAPP 为空 或者 mGoluk 为空");
+		}
 
 		if (b) {
 			mPdsave = ProgressDialog.show(VideoShareActivity.this, "", "请求分享链接...");
@@ -733,8 +737,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 						mPdsave.dismiss();
 						mPdsave = null;
 					}
-					boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-							IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
+					//boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
 				}
 			});
 		} else {
