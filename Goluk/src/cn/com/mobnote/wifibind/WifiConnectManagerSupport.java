@@ -180,9 +180,18 @@ public class WifiConnectManagerSupport {
 
 	// 关闭wifi功能
 	boolean closeWifi() {
-		boolean bRet = true;
-		if (wifiManager.isWifiEnabled()) {
+		boolean bRet = wifiManager.isWifiEnabled();
+		if (bRet) {
 			bRet = wifiManager.setWifiEnabled(false);
+		}
+		bRet = wifiManager.isWifiEnabled();
+		while (!bRet){
+			try {
+				Thread.sleep(200);
+				bRet=wifiManager.isWifiEnabled();
+			} catch (Exception e) {
+			}
+			
 		}
 		return bRet;
 	}
@@ -361,30 +370,7 @@ public class WifiConnectManagerSupport {
 
  
 
-	public void closeWifiAp(WifiManager mWifiManager) {
-		try {
-
-			if (mWifiManager!=null &&mWifiManager.getConnectionInfo() != null) {
-				mWifiManager.setWifiEnabled(false);
-				try {
-					Thread.sleep(1500);
-				} catch (Exception e) {
-				}
-
-				mWifiManager.setWifiEnabled(false);
-				Method method1 = mWifiManager.getClass().getMethod(
-						"setWifiApEnabled", WifiConfiguration.class,
-						boolean.class);
-				method1.invoke(mWifiManager, null, false); // true
-
-			}
-			console.logBytag(TAG, "热点关闭成功....");
-		} catch (Exception e) {
-
-			console.logBytag(TAG, "热点关闭失败....");
-		}
-
-	}
+	
 
 	public boolean isWifiApEnabled(WifiManager wifiManager) {
 		try {

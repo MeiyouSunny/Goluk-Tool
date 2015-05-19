@@ -98,16 +98,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		saveConfiguration(beans, 40 * 1000);
 	}
 
-	/**
-	 * 关闭wifi 及AP
-	 * 
-	 * @return
-	 */
-	public boolean closeWifiAP() {
-		wifiSupport.closeWifi();
-		wifiSupport.closeWifiAp(wifiManager);
-		return true;
-	}
+ 
 
 	public void isConnectIPC() {
 		isConnectIPC(30000);
@@ -120,7 +111,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 */
 	public void autoWifiManageReset() {
 		wifiSupport.closeWifi();
-		wifiSupport.closeWifiAp(wifiManager);
+		apManagesupport.closeWifiAP();
 		autoWifiManage(40 * 1000);
 	}
 
@@ -251,11 +242,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 			public void run() {
 				console.logBytag(TAG, "加入IPC  wifi....1 关闭热点");
-				wifiSupport.closeWifiAp(wifiManager);
+				apManagesupport.closeWifiAP();
 				wifiSupport.closeWifi();
 				// 如果当前网络未开启 连接失败后 需要再关闭网络
 				boolean doClose = false;
-				WifiRsBean[] beans = null;
 				// 1：打开wifi
 				int openTime = openWifi(false, outTime);
 				// 代表当前网络已经开启
@@ -400,13 +390,15 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 *            超时时间
 	 */
 	private Thread scanWifiList(final String matching, final boolean reset, final int outTime) {
-		wifiSupport.closeWifiAp(wifiManager);
+	 
 		Runnable runnable = new Runnable() {
 			Message msg = new Message();
 
 			public void run() {
+				apManagesupport.closeWifiAP();
 				// 1：打开wifi
 				int openTime = openWifi(reset, outTime);
+//				int openTime=outTime;
 				// 超时错误
 				if (openTime == 0) {
 					msg.what = -11;
@@ -584,7 +576,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				try {
 					tempTime = openWifi(false, outTime);
 					wifiSupport.closeWifi();
-					wifiSupport.closeWifiAp(wifiManager);
+					apManagesupport.closeWifiAP();
 					apManagesupport.createWifiHot(ssid, password);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block 这里需要异常处理
@@ -646,7 +638,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			public void run() {
 				int tempTime = 0;
 				wifiSupport.closeWifi();
-				wifiSupport.closeWifiAp(wifiManager);
+				apManagesupport.closeWifiAP();
 				try {
 					apManagesupport.createWifiHot(ssid, password);
 				} catch (Exception e) {
@@ -806,7 +798,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 							netUtil.findServerIpAddress(5, "", "", 60 * 1000);
 							return;
 						} else {
-							wifiSupport.closeWifiAp(wifiManager);
+							apManagesupport.closeWifiAP();
 							// 创建热点
 							autoWifiManage();
 							return;
@@ -818,7 +810,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					if ((mWifi == null || !mWifi.isConnected())) {
 						// 关闭所有的网络
 						wifiSupport.closeWifi();
-						wifiSupport.closeWifiAp(wifiManager);
+						apManagesupport.closeWifiAP();
 
 						Log.e(TAG, "自动连接----------------AP和wifi 都没有开启------------");
 						openTime = vaviAutoWifi(ipc_ssid, outTime);
@@ -845,7 +837,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 						}
 						// 不管开着什么 都关掉
 						wifiSupport.closeWifi();
-						wifiSupport.closeWifiAp(wifiManager);
+						apManagesupport.closeWifiAP();
 						// 创建热点
 						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
 					}
@@ -951,5 +943,14 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		handler.sendMessage(msg);
 
 	}
-
+	/**
+	 * 关闭wifi 及AP
+	 * 
+	 * @return
+	 */
+	public boolean closeWifiAP() {
+		wifiSupport.closeWifi();
+		apManagesupport.closeWifiAP();
+		return true;
+	}
 }
