@@ -12,7 +12,6 @@ import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.util.console;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -364,13 +363,13 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 	 */
 	public void isRepwdCallBack(int success,Object obj){
 		console.log("验证码获取回调---isRepwdCallBack---" + success + "---" + obj);
+		closeProgressDialogIdentify();
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
 		mBtnOK.setEnabled(true);
 		mBtnBack.setEnabled(true);
 //		handler1.removeCallbacks(runnable);
-		closeProgressDialogIdentify();
 //		console.toast("发送中，请稍后", mContext);
 		if(1 == success){
 			try{
