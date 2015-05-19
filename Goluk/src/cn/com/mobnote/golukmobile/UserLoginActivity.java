@@ -1,7 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -70,18 +69,19 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
 		
+		mContext = this;
+		//获得GolukApplication对象
+		mApplication = (GolukApplication) getApplication();
+		
 		SysApplication.getInstance().addActivity(this);
+		
+		mApplication.mLoginManage.initData();
 	}
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		mContext = this;
-		//获得GolukApplication对象
-		mApplication = (GolukApplication) getApplication();
 		mApplication.setContext(mContext, "UserLogin");
-		
-		mApplication.mLoginManage.initData();
 		
 		if(null == mCustomProgressDialog){
 			mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
@@ -131,6 +131,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
 			mEditTextPhoneNumber.setText(phone);
 			mEditTextPhoneNumber.setSelection(phone.length());
+		}
+		
+		boolean b = mSharedPreferences.getBoolean("noPwd", false);
+		if(b){
 			mEditTextPwd.setText("");
 		}
 		
@@ -142,9 +146,12 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			mSharedPreferences = getSharedPreferences("setup", Context.MODE_PRIVATE);
 			mEditor = mSharedPreferences.edit();
 			mEditor.putString("setupPhone", phone);
+			mEditor.putBoolean("noPwd", false);
 			//提交
 			mEditor.commit();
 		}
+		
+		Log.i("miss", mEditTextPhoneNumber.getText().toString());
 		
 		/**
 		 * 监听绑定
@@ -469,6 +476,11 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			})
 			.create().show();
 			break;
+			//密码错误
+		case 6:
+			closeProgressDialog();
+			mEditTextPwd.setText("");
+			break;
 		default:
 			
 			break;
@@ -504,6 +516,12 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	private void closeProgressDialog(){
 		if(null != mCustomProgressDialog){
 			mCustomProgressDialog.close();
+			mEditTextPhoneNumber.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mTextViewRegist.setEnabled(true);
+			mTextViewForgetPwd.setEnabled(true);
+			mBtnLogin.setEnabled(true);
+			mBackButton.setEnabled(true);
 		}
 	}
 }

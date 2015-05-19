@@ -55,6 +55,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private int enableSecurity=0;
 	private int snapInterval = 0;
 	private CustomLoadingDialog mCustomProgressDialog=null;
+	private boolean getRecordState=false;
+	private boolean getMotionCfg=false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,26 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("settings", this);
 		}
+		
+		boolean record = GolukApplication.getInstance().getIPCControlManager().getRecordState();
+		if(!record){
+			getRecordState=true;
+			checkGetState();
+		}
+		LogUtil.e("xuhw", "YYYYYY=========getRecordState=========" + record);
+		boolean motionCfg = GolukApplication.getInstance().getIPCControlManager().getMotionCfg();
+		if(!motionCfg){
+			getMotionCfg=true;
+			checkGetState();
+		}
+		LogUtil.e("xuhw", "YYYYYY=========getMotionCfg========="+ motionCfg);
+		showLoading();
+	}
+	
+	private void checkGetState(){
+		if(getRecordState && getMotionCfg){
+			closeLoading();
+		}
 	}
 	
 	/**
@@ -77,6 +99,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void initView(){
 		mAutoRecordBtn = (Button)findViewById(R.id.zdxhlx);
 		mAudioBtn = (Button)findViewById(R.id.sylz);
+		
+		mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
 	}
 	
 	/**
@@ -240,26 +265,27 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 		}
 		
-		recordState = GolukApplication.getInstance().getAutoRecordState();
-		if(!GolukApplication.getInstance().getAutoRecordState()){
-			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-		}else{
-			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-		}
 		
-		int[] motioncfg = GolukApplication.getInstance().getMotionCfg();
-		if(null != motioncfg){
-			if(2 == motioncfg.length){
-				enableSecurity = motioncfg[0];
-				snapInterval = motioncfg[1];
-			}
-			
-			if(1 == enableSecurity){
-				findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
-			}else{
-				findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
-			}
-		}
+//		recordState = GolukApplication.getInstance().getAutoRecordState();
+//		if(!GolukApplication.getInstance().getAutoRecordState()){
+//			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+//		}else{
+//			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+//		}
+//		
+//		int[] motioncfg = GolukApplication.getInstance().getMotionCfg();
+//		if(null != motioncfg){
+//			if(2 == motioncfg.length){
+//				enableSecurity = motioncfg[0];
+//				snapInterval = motioncfg[1];
+//			}
+//			
+//			if(1 == enableSecurity){
+//				findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
+//			}else{
+//				findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
+//			}
+//		}
 		
 	}
 	
@@ -272,9 +298,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----44444-----------event:" + event + " msg:" + msg+"==data:"+(String)param2);
-
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
 			if(msg == IPC_VDCP_Msg_GetRecordState){//获取IPC行车影像录制状态
+				getRecordState=true;
+				checkGetState();
 				if(RESULE_SUCESS == param1){
 					recordState = IpcDataParser.getAutoRecordState((String)param2);
 					if(!recordState){
@@ -319,6 +346,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					
 				}
 			}else if(msg == IPC_VDCP_Msg_GetMotionCfg){//读取安防模式和移动侦测参数
+				getMotionCfg=true;
+				checkGetState();
 				if(RESULE_SUCESS == param1){
 					try {
 						JSONObject json = new JSONObject((String)param2);

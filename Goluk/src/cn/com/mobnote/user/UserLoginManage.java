@@ -150,6 +150,9 @@ public class UserLoginManage {
 	public void initData(){
 		Log.i("lily", "------initData()-----UserLoginManage-----");
 		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		if (null == info) {
+			return;
+		}
 		try{
 			JSONObject json = new JSONObject(info);
 			
@@ -165,6 +168,7 @@ public class UserLoginManage {
 			mEditor = mSharedPreferences.edit();
 			Log.i("lily", "------UserLoginManage----"+phone);
 			mEditor.putString("setupPhone", phone);
+			mEditor.putBoolean("noPwd", false);
 			mEditor.commit();
 			
 		}catch(Exception e){

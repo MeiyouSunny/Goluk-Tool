@@ -22,6 +22,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 
 /**
  * 
@@ -46,6 +47,8 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	public  static final int EXIT=-1;
 	private Editor mEditor = null;
 	private Bitmap mBGBitmap=null;
+	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+	private int screenHeight = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_start);
 
-		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.bg);
+		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.bg, screenWidth, screenHeight);
 		RelativeLayout main = (RelativeLayout)findViewById(R.id.main);
 		main.setBackgroundDrawable(new BitmapDrawable(mBGBitmap));
 		

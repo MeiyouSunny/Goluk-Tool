@@ -400,7 +400,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 						if (m_bIsFullScreen) {
 						    setFullScreen(false);
 						}
-
 						return false;
 					}
 

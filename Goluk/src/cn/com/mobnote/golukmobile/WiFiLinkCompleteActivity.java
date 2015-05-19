@@ -11,7 +11,6 @@ import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -77,8 +76,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private String mIpcMac = "";
 	private String mWiFiIp = "";
 
-	public static Handler mPageHandler = null;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -90,6 +87,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, "WiFiLinkComplete");
+		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		mWac = new WifiConnectManager(wm, this);
 		// 页面初始化
 		init();
 		mBaseHandler.sendEmptyMessageDelayed(100, 3 * 1000);
@@ -122,22 +121,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mCompleteBtn.setOnClickListener(this);
 
 		mCreateHotText.setText(Html.fromHtml("手机正在<font color=\"#0587ff\">创建WiFi</font>个人热点...."));
-
-		mPageHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				int what = msg.what;
-				switch (what) {
-				case 1:
-					// 测试热点创建成功
-					// hotWiFiCreateSuccess();
-					break;
-				case 2:
-					// sendLogicLinkIpc("");
-					break;
-				}
-			}
-		};
 	}
 
 	/**
@@ -157,8 +140,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 		// 调用韩峥接口创建手机热点
 		console.log("创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
-		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		mWac = new WifiConnectManager(wm, this);
+
 		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
 
 	}
@@ -192,16 +174,24 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
 
+	boolean isExit = false;
+
 	/**
 	 * 退出页面设置
 	 */
 	private void backSetup() {
+		if (isExit) {
+			return;
+		}
+		isExit = true;
 		if (mIsComplete) {
 			// 如果连接上了 保存标识
-			saveBindMark();
+			bindSucess();
 		} else {
 			// 没连接,关闭热点
-			mWac.closeWifiAP();
+			if (null != mWac) {
+				mWac.closeWifiAP();
+			}
 
 			// 返回关闭全部页面
 			SysApplication.getInstance().exit();
@@ -276,6 +266,16 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		super.onResume();
 	}
 
+	private void bindSucess() {
+		saveBindMark();
+		// 关闭wifi绑定全部页面
+		SysApplication.getInstance().exit();
+
+		// 跳转到ipc预览页面
+		Intent i = new Intent(mContext, CarRecorderActivity.class);
+		startActivity(i);
+	}
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -285,15 +285,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			break;
 		case R.id.complete_btn:
 			if (mIsComplete) {
-				saveBindMark();
-				// 关闭wifi绑定全部页面
-				SysApplication.getInstance().exit();
-
-				// 跳转到ipc预览页面
-				Intent i = new Intent(mContext, CarRecorderActivity.class);
-				startActivity(i);
-			} else {
-				console.toast("IPC连接中....", mContext);
+				bindSucess();
 			}
 			break;
 		}

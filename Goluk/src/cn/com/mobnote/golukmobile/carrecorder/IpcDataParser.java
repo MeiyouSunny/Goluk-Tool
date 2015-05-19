@@ -153,7 +153,7 @@ public class IpcDataParser {
 
 			int period = obj.getInt("period");
 			int type = obj.getInt("type");
-			int size = obj.getInt("size");
+			double size = obj.getDouble("size");
 			String location = obj.getString("location");
 			String resolution = obj.getString("resolution");
 			int withSnapshot = obj.getInt("withSnapshot");
