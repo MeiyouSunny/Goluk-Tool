@@ -282,8 +282,8 @@ public class LocalVideoListManage {
 				for(int j = i + 1; j <= files.size() - 1; j++) {
 					String fileI = files.get(i);
 					String fileJ = files.get(j);
-					long timeI = Long.valueOf(fileI.substring(5, 15));
-					long timeJ = Long.valueOf(fileJ.substring(5, 15));
+					long timeI = Long.valueOf(fileI.substring(5, 17));
+					long timeJ = Long.valueOf(fileJ.substring(5, 17));
 					if(timeI > timeJ){
 						file = files.get(i);
 						files.set(i, files.get(j));
