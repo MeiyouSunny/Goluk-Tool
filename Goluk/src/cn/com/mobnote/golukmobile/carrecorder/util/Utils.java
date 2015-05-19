@@ -14,11 +14,18 @@ public class Utils {
 	 * @author xuhw
 	 * @date 2015年3月25日
 	 */
-	public static String getSizeShow(long fileSize) {
-		System.out.print("文件大小 : "+fileSize);
-		float sizeM = (float)fileSize / 1024 / 1024;
-		DecimalFormat df = new DecimalFormat("#.##");
-		String sizeResult = df.format(sizeM) + "MB";
+	public static String getSizeShow(double fileSize) {
+//		System.out.print("文件大小 : "+fileSize);
+//		float sizeM = (float)fileSize / 1024 / 1024;
+//		DecimalFormat df = new DecimalFormat("#.##");
+		String sizeResult ="";
+		if(fileSize > 1024){
+			double size = fileSize/1024;
+			sizeResult = size + "GB";
+		}else{
+			sizeResult = fileSize + "MB";
+		}
+		
 		return sizeResult;
 	}
 	

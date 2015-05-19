@@ -52,7 +52,7 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 		
 		String videoid = getIntent().getStringExtra("videoid");
 		String image = getIntent().getStringExtra("image");
-		LogUtil.e("xuhw", "YYYYYYY======CCPlayerPage=====videoid="+videoid);
+		LogUtil.e("xuhw", "YYYYYYY======CCPlayerPage=====image="+image);
 		mSurfaceView = (SurfaceView)findViewById(R.id.mSurfaceView);
 		mPreLoading = (ImageView)findViewById(R.id.mPreLoading);
 		mPlayBigBtn = (ImageView)findViewById(R.id.mPlayBigBtn);
@@ -219,11 +219,14 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 			break;
 		}
 	}
-
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		if(null != mDWMediaPlayer){
+			if(mDWMediaPlayer.isPlaying()){
+				mDWMediaPlayer.pause();
+			}
 			mDWMediaPlayer.release();
 			mDWMediaPlayer = null;
 		}

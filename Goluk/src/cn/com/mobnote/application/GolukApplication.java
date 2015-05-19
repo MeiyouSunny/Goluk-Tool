@@ -1007,9 +1007,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						//获取音视频配置信息
 						getVideoEncodeCfg();
 						//发起获取自动循环录制状态
-						updateAutoRecordState();
+//						updateAutoRecordState();
 						//获取停车安防配置信息
-						updateMotionCfg();
+//						updateMotionCfg();
 						isconnection = true;// 连接成功
 						closeConnectionDialog();// 关闭连接的dialog
 						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
@@ -1123,41 +1123,41 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				}
 				break;
 			case IPC_VDCP_Msg_GetRecordState:
-				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_GetRecordState===param1="+param1+"=param2="+param2);
-				if (param1 == RESULE_SUCESS) {
-					autoRecordFlag = IpcDataParser
-							.getAutoRecordState((String) param2);
-				}
+//				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_GetRecordState===param1="+param1+"=param2="+param2);
+//				if (param1 == RESULE_SUCESS) {
+//					autoRecordFlag = IpcDataParser
+//							.getAutoRecordState((String) param2);
+//				}
 				break;
 			case IPC_VDCP_Msg_StartRecord:
-				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_StartRecord===param1="+param1+"=param2="+param2);
-				autoRecordFlag = true;
+//				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_StartRecord===param1="+param1+"=param2="+param2);
+//				autoRecordFlag = true;
 				break;
 			case IPC_VDCP_Msg_StopRecord:
-				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_StopRecord===param1="+param1+"=param2="+param2);
-				autoRecordFlag = false;
+//				LogUtil.e("xuhw", "video===IPC_VDCP_Msg_StopRecord===param1="+param1+"=param2="+param2);
+//				autoRecordFlag = false;
 				break;
 			case IPC_VDCP_Msg_GetMotionCfg:
-				LogUtil.e("xuhw", "YYYYYYYYYYYYYY===IPC_VDCP_Msg_GetMotionCfg===param1="+param1+"=param2="+param2);
-				if (param1 == RESULE_SUCESS) {
-					try {
-						JSONObject json = new JSONObject((String) param2);
-						if (null != json) {
-							int enableSecurity = json.optInt("enableSecurity");
-							int snapInterval = json.optInt("snapInterval");
-
-							motioncfg[0] = enableSecurity;
-							motioncfg[1] = snapInterval;
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				}
+//				LogUtil.e("xuhw", "YYYYYYYYYYYYYY===IPC_VDCP_Msg_GetMotionCfg===param1="+param1+"=param2="+param2);
+//				if (param1 == RESULE_SUCESS) {
+//					try {
+//						JSONObject json = new JSONObject((String) param2);
+//						if (null != json) {
+//							int enableSecurity = json.optInt("enableSecurity");
+//							int snapInterval = json.optInt("snapInterval");
+//
+//							motioncfg[0] = enableSecurity;
+//							motioncfg[1] = snapInterval;
+//						}
+//					} catch (JSONException e) {
+//						e.printStackTrace();
+//					}
+//				}
 				break;
 			case IPC_VDCP_Msg_SetMotionCfg:
-				if (param1 == RESULE_SUCESS) {
-					updateMotionCfg();
-				}
+//				if (param1 == RESULE_SUCESS) {
+//					updateMotionCfg();
+//				}
 				break;
 			case IPC_VDCP_Msg_IPCKit:
 				SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
@@ -1464,7 +1464,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						List<String> order = Utils.bubbleSort(mDownLoadFileList, true);
 						mDownLoadFileList.clear();
 						mDownLoadFileList.addAll(order);
-						autodownloadfile=true;
+						if(mDownLoadFileList.size() > 0){
+							autodownloadfile=true;
+						}
 						for(int i=0;i<mDownLoadFileList.size();i++){
 							String name = mDownLoadFileList.get(i);
 							boolean flag = GolukApplication.getInstance()
