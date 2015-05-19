@@ -21,7 +21,7 @@ void LocationNotify_CallBack(const char *positionJson, Position position, void *
 	jmethodID mId = g_env->GetStaticMethodID(cls, "LocationCallBack", "(Ljava/lang/String;)V");
 	
 	dbgprintf("jyf-----JNI-----goluk-----LocationNotify_CallBack--333");
-	jstring locationStr = g_env->NewStringUTF(positionJson);
+	jstring locationStr = charToJstringUTF(g_env, positionJson);
 	g_env->CallStaticVoidMethod(cls, mId, locationStr);
 	
 	dbgprintf("jyf-----JNI-----goluk-----LocationNotify_CallBack--444");

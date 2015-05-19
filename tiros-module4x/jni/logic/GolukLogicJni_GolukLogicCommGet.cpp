@@ -18,15 +18,16 @@
  */
 JNIEXPORT jstring JNICALL Java_cn_com_mobnote_logic_GolukLogicJni_GolukLogicCommGet
   (JNIEnv *env, jclass cls, jlong pLogic, jint mId, jint cId, jstring param) {
-	  	dbgprintf("%s,%s,%d,cmd:%d",__FILE__,__func__,__LINE__,cId);
-		char * pParam = jstringTochar(env, param);
-		const char * result = ((Goluk_LogicEngine *)pLogic)->CommGet(mId, cId, pParam);
-dbgprintf("%s,%s,%d,result:%s",__FILE__,__func__,__LINE__,result);
-		if (NULL == result) {
-			free(pParam);
-			return NULL;
-		}
+	  
+	dbgprintf("%s,%s,%d,cmd:%d",__FILE__,__func__,__LINE__,cId);
+	char * pParam = jstringTochar(env, param);
+	const char * result = ((Goluk_LogicEngine *)pLogic)->CommGet(mId, cId, pParam);
+	//dbgprintf("%s,%s,%d,result:%s",__FILE__,__func__,__LINE__,result);
+	if (NULL == result) {
 		free(pParam);
-		return env->NewStringUTF(result);
-
+		return NULL;
+	}
+	free(pParam);
+	
+	return charToJstringUTF(env, result);
 }

@@ -20,7 +20,7 @@ void CallBack_Talk(void* pvUser, int dwParam1, const char *dwParam2){
 	jmethodID mId_CallBack = g_env->GetStaticMethodID(cls,"TalkNotifyCallBack","(ILjava/lang/String;)V");
 	jstring data = 0;
 	if(0 != dwParam2){
-		data = (g_env)->NewStringUTF((char *)dwParam2);
+		data = charToJstringUTF(g_env, (char *)dwParam2);
 	}
 	
 	dbgprintf("IPCManager-----JNI------CallBack_ipcManager----22222");
