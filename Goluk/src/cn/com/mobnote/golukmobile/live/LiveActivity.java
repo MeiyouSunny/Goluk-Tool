@@ -1241,20 +1241,33 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			preExit();
 			break;
 		case R.id.live_refirsh_btn:
-			if (isSettingCallBack) {
+			if (this.isShareLive) {
+				if (isSettingCallBack) {
+					showDialog();
+				}
+			} else {
 				showDialog();
 			}
 			break;
 		case R.id.live_oklayout:
-			if (isSettingCallBack) {
+			if (this.isShareLive) {
+				if (isSettingCallBack) {
+					click_OK();
+				}
+			} else {
 				click_OK();
 			}
 
 			break;
 		case R.id.live_sharelayout:
-			if (isSettingCallBack) {
+			if (this.isShareLive) {
+				if (isSettingCallBack) {
+					click_share();
+				}
+			} else {
 				click_share();
 			}
+
 			break;
 		case R.id.live_qiangpai:
 			pre_startTrimVideo();
@@ -2030,9 +2043,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		final int id = v.getId();
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			if (!isSettingCallBack) {
-				return true;
+			if (this.isShareLive) {
+				if (!isSettingCallBack) {
+					return true;
+				}
 			}
+
 			if (id == R.id.live_qiangpai) {
 				if (null != m8sTimer) {
 					// 正在录制
@@ -2046,8 +2062,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			break;
 		case MotionEvent.ACTION_UP:
-			if (!isSettingCallBack) {
-				return true;
+			if (this.isShareLive) {
+				if (!isSettingCallBack) {
+					return true;
+				}
 			}
 			if (id == R.id.live_qiangpai) {
 				pre_startTrimVideo();
