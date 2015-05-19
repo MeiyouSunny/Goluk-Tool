@@ -809,6 +809,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 	// 显示
 	public void showContinuteLive() {
+		if (null == mSharedPreUtil) {
+			return;
+		}
 		if (mSharedPreUtil.getIsLiveNormalExit()) {
 			isCheckContinuteLiveFinish = true;
 			// 不需要续直播
