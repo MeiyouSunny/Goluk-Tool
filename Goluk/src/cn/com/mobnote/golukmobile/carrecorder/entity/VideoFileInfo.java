@@ -30,8 +30,8 @@ public class VideoFileInfo {
 	public int period;
 	/**起因事件类型  */
 	public int type;
-	/**字长(字节)  */
-	public int size;
+	/**字长(MB)  */
+	public double size;
 	/**文件名  */
 	public String location;
 	/**分辨率  1080p 720p*/

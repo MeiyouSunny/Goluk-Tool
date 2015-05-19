@@ -29,14 +29,17 @@ public class SettingUtils {
 	
 	private SharedPreferences.Editor editor=null;
 	private SharedPreferences preferences=null;
-	private static SettingUtils instance=null;
+	private volatile static SettingUtils instance=null;
 	
-	public static synchronized SettingUtils getInstance() { 
-		if (instance==null)
+	public static SettingUtils getInstance() { 
+		if (null == instance){
 			synchronized (SettingUtils.class) { 
-				instance = new SettingUtils();
+				if (null == instance){
+					instance = new SettingUtils();
+				}
 			}
-			return instance;  
+		}
+		return instance;  
 	}
 	
 	public SettingUtils(){

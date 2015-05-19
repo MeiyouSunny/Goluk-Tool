@@ -714,6 +714,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		mEditor = mSharedPreferences.edit();
 		Log.i("lily", "phone=="+phone);
 		mEditor.putString("setupPhone", phone);
+		mEditor.putBoolean("noPwd", true);
 		mEditor.commit();
 	}
 	/**

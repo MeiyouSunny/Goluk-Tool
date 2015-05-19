@@ -133,8 +133,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			mEditTextPhoneNumber.setSelection(phone.length());
 		}
 		
-		/*boolean b = mSharedPreferences.getBoolean("noPwd", false);
-		Log.i("miss", "----"+b);
+		boolean b = mSharedPreferences.getBoolean("noPwd", false);
 		if(b){
 			mEditTextPwd.setText("");
 		}

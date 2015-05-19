@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import com.tencent.bugly.elfparser.Main;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.guide.GolukGuideManage;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,13 +17,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.guide.GolukGuideManage;
@@ -59,24 +66,41 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 	private Context mContext = null;
 	/** 引导页管理类 */
 	private GolukGuideManage mGolukGuideManage = null;
+	private Bitmap mBGBitmap=null;
+	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+	private int screenHeight = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.guide);
+		
+		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.guide_1, screenWidth, screenHeight);
+		RelativeLayout main = (RelativeLayout)findViewById(R.id.main);
+		main.setBackgroundDrawable(new BitmapDrawable(mBGBitmap));
 		
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		((GolukApplication)this.getApplication()).initLogic();
-				
+		
+		mBaseHandler.sendEmptyMessageDelayed(1, 400);
+		
 		//初始化
-		init();
+//		init();
 		//加载引导页
-		initViewPager();
+//		initViewPager();
 		
 		SysApplication.getInstance().addActivity(this);
 		
+	}
+	
+	@Override
+	protected void hMessage(Message msg) {
+		super.hMessage(msg);
+		if(msg.what == 1)
+			init();
 	}
 	
 	/**
@@ -124,6 +148,14 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		
+		if(null != mBGBitmap){
+			if(!mBGBitmap.isRecycled()){
+				mBGBitmap.recycle();
+				mBGBitmap = null;
+			}
+		}
+		
 	}
 	
 	@Override
