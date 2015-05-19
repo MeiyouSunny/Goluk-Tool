@@ -473,7 +473,15 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
-							getPhone();
+//							getPhone();
+							if(mApplication.loginoutStatus = true){
+								String phone = mEditTextPhone.getText().toString();
+								mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+								mEditor = mSharedPreferences.edit();
+								mEditor.putString("setupPhone", phone);
+								mEditor.putBoolean("noPwd", true);
+								mEditor.commit();
+							}
 							finish();
 						}
 					}).create().show();
@@ -761,6 +769,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 			mEditor = mSharedPreferences.edit();
 			mEditor.putString("setupPhone", phone);
+			mEditor.putBoolean("noPwd", false);
 			mEditor.commit();
 		}
 	}
