@@ -185,7 +185,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		for(VideoSquareInfo info : mDataList){
 			String url = info.mVideoEntity.picture;
 			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(url);
-			LogUtil.e("xuhw", "YYYYYY==VideoSquareListView==onDestroy=url="+url);
+//			LogUtil.e("xuhw", "YYYYYY==VideoSquareListView==onDestroy=url="+url);
 		}
 		
 		if (mCustomProgressDialog != null ){
@@ -196,7 +196,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-		LogUtil.e("xuhw","YYYYYYY===hotlist===event="+event+"======msg="+msg+"===param2="+param2);
+//		LogUtil.e("xuhw","YYYYYYY===hotlist===event="+event+"======msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete();

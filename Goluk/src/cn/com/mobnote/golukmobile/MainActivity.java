@@ -881,10 +881,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 			break;
 		case WIFI_STATE_SUCCESS:
-			if(GolukApplication.getInstance().autodownloadfile){
-				Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
-				return;
-			}
+//			if(GolukApplication.getInstance().autodownloadfile){
+//				Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
+//				return;
+//			}
+			GolukApplication.getInstance().stopDownloadList();
 			// 跳转到行车记录仪界面
 			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 			startActivity(i);
@@ -946,6 +947,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	@Override
 	protected void onResume() {
+		GolukApplication.getInstance().queryNewFileList();
 		mApp.setContext(this, "Main");
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
@@ -1370,11 +1372,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			return;
 		}
 		
-		if(GolukApplication.getInstance().autodownloadfile){
-			Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
-			return;
-		}
+//		if(GolukApplication.getInstance().autodownloadfile){
+//			Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
+//			return;
+//		}
 
+		GolukApplication.getInstance().stopDownloadList();
 		// 开启直播
 		Intent intent = new Intent(this, LiveActivity.class);
 		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);

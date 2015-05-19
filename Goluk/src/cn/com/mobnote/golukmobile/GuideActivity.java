@@ -66,9 +66,6 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 	private Context mContext = null;
 	/** 引导页管理类 */
 	private GolukGuideManage mGolukGuideManage = null;
-	private Bitmap mBGBitmap=null;
-	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-	private int screenHeight = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,30 +74,17 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.guide);
 		
-		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.guide_1, screenWidth, screenHeight);
-		RelativeLayout main = (RelativeLayout)findViewById(R.id.main);
-		main.setBackgroundDrawable(new BitmapDrawable(mBGBitmap));
-		
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		((GolukApplication)this.getApplication()).initLogic();
 		
-		mBaseHandler.sendEmptyMessageDelayed(1, 400);
-		
 		//初始化
-//		init();
+		init();
 		//加载引导页
 //		initViewPager();
 		
 		SysApplication.getInstance().addActivity(this);
 		
-	}
-	
-	@Override
-	protected void hMessage(Message msg) {
-		super.hMessage(msg);
-		if(msg.what == 1)
-			init();
 	}
 	
 	/**
@@ -148,13 +132,6 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
-		if(null != mBGBitmap){
-			if(!mBGBitmap.isRecycled()){
-				mBGBitmap.recycle();
-				mBGBitmap = null;
-			}
-		}
 		
 	}
 	

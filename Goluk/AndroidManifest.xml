@@ -12,7 +12,7 @@
 	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
 
 	<application android:name="cn.com.mobnote.application.GolukApplication" android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:hardwareAccelerated="false" >
-		<activity android:theme="@style/Theme.AppStartLoadTranslucent" android:label="@string/app_name" android:name="cn.com.mobnote.golukmobile.GuideActivity" android:screenOrientation="portrait">
+		<activity android:theme="@style/Theme.AppStartLoad" android:label="@string/app_name" android:name="cn.com.mobnote.golukmobile.GuideActivity" android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>

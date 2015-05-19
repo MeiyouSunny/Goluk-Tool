@@ -164,6 +164,9 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_CommCmd_SetGpsInfo = 2;
 	/** 添加IPC下载任务 */
 	public static final int IPC_VDTPCmd_AddDownloadFile = 3;
+	/** 停止IPC下载所有任务 */
+	public static final int IPC_VDTPCmd_StopDownloadFile = 4;
+	
 	/** 多文件目录查询 */
 	public static final int IPC_VDCPCmd_Query = 1000;
 	/** 单文件查询 */

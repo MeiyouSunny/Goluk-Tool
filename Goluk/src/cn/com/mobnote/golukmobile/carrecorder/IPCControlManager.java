@@ -173,6 +173,16 @@ public class IPCControlManager implements IPCManagerFn{
 	}
 	
 	/**
+	 * 停止IPC下载所有任务
+	 * @return
+	 * @author xuhw
+	 * @date 2015年5月19日
+	 */
+	public boolean stopDownloadFile(){
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_StopDownloadFile, "");
+	}
+	
+	/**
 	 * 删除文件
 	 * @param filename 文件名称
 	 * @author xuhw
