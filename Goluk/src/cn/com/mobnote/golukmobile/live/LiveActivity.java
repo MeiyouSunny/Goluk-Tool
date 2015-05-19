@@ -1832,6 +1832,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	private void preExit() {
 		String message = this.isShareLive ? LIVE_EXIT_PROMPT : LIVE_EXIT_PROMPT2;
+		if (isAlreadExit) {
+			return;
+		}
 		LiveDialogManager.getManagerInstance()
 				.showLiveBackDialog(this, LiveDialogManager.DIALOG_TYPE_LIVEBACK, message);
 	}

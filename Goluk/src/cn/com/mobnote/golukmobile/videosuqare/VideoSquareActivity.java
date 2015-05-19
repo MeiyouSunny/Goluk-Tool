@@ -49,6 +49,10 @@ public class VideoSquareActivity implements OnClickListener {
 	Context mContext = null;
 	MainActivity ma = null;
 	
+	public VideoSquareActivity() {
+		
+	}
+	
 	public VideoSquareActivity(RelativeLayout rootlayout,Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
