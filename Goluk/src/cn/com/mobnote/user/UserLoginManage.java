@@ -165,6 +165,7 @@ public class UserLoginManage {
 			mEditor = mSharedPreferences.edit();
 			Log.i("lily", "------UserLoginManage----"+phone);
 			mEditor.putString("setupPhone", phone);
+			mEditor.putBoolean("noPwd", false);
 			mEditor.commit();
 			
 		}catch(Exception e){
