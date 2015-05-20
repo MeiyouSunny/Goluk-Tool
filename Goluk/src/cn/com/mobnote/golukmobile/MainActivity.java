@@ -1430,17 +1430,15 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	public void LocationCallBack(String gpsJson) {
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack------11111: " + gpsJson);
 		if (location == null || mMapView == null) {
 			return;
 		}
-		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack------22222 ");
 		// 此处设置开发者获取到的方向信息，顺时针0-360
 		MyLocationData locData = new MyLocationData.Builder().accuracy((float) location.radius).direction(100)
 				.latitude(location.rawLat).longitude(location.rawLon).build();
 		// 确认地图我的位置点是否更新位置
 		mBaiduMap.setMyLocationData(locData);
-		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack------333333:  " + isFirstLoc);
+
 		// 移动了地图,第一次不改变地图中心点位置
 		if (isFirstLoc) {
 			isFirstLoc = false;

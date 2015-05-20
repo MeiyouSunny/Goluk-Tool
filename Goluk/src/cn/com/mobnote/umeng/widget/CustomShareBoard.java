@@ -16,7 +16,7 @@ import android.widget.Toast;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -127,10 +127,12 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				if (eCode == StatusCode.ST_CODE_SUCCESSED) {
 					if (mActivity instanceof VideoShareActivity) {
 						((VideoShareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-					}else if (mActivity instanceof MainActivity){
+					} else if (mActivity instanceof MainActivity){
 						((MainActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-					} else if(mActivity instanceof VideoSquarePlayActivity){
+					} else if (mActivity instanceof VideoSquarePlayActivity){
 						((VideoSquarePlayActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+					} else if (mActivity instanceof LiveActivity) {
+						((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 					}
 					//showText += "平台分享成功";
 				} else {
