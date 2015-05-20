@@ -42,6 +42,7 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
+import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -196,7 +197,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private String mCurrentVideoId = null;
 
 	/** 标识是否正在获取地址 */
-	private boolean isGetingAddress = false;
+	// private boolean isGetingAddress = false;
 
 	/** -1/0/1 未定位/小蓝点/气泡 */
 	private int mCurrentLocationType = LOCATION_TYPE_UNKNOW;
@@ -336,6 +337,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mliveSettingWindow = new LiveSettingPopWindow(this, mRootLayout);
 		mliveSettingWindow.setCallBackNotify(this);
 
+		GetBaiduAddress.getInstance().setCallBackListener(this);
+
 		if (isShareLive) {
 			if (isContinueLive) {
 				// 续直播
@@ -353,11 +356,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			startLiveLook(currentUserInfo);
 			updateCount(Integer.parseInt(currentUserInfo.zanCount), Integer.parseInt(currentUserInfo.persons));
 			// 获取地址
-			isGetingAddress = true;
+			// isGetingAddress = true;
 			GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
 					Double.parseDouble(currentUserInfo.lon));
 		}
-		GetBaiduAddress.getInstance().setCallBackListener(this);
+
 		// 在没有进入群组时，按钮不可按
 		refreshPPtState(false);
 
@@ -787,8 +790,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(this, "LiveVideo");
+		if (!isSucessBind) {
+			registerReceiver(managerReceiver, new IntentFilter(CarRecorderManager.ACTION_RECORDER_MESSAGE));
+		}
+
 		isSucessBind = true;
-		registerReceiver(managerReceiver, new IntentFilter(CarRecorderManager.ACTION_RECORDER_MESSAGE));
 		mApp.setTalkListener(this);
 		if (!isShowPop) {
 			isShowPop = true;
@@ -2125,7 +2131,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 			isSettingCallBack = true;
 
-			isGetingAddress = true;
+			// isGetingAddress = true;
 			GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(myInfo.lat), Double.parseDouble(myInfo.lon));
 		}
 	}
@@ -2207,12 +2213,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 			if (!isShareLive) {
 				LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type777777:  str：" + str);
-				if (!isGetingAddress) {
-					LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type88888  str：" + str);
-					isGetingAddress = true;
-					GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
-							Double.parseDouble(currentUserInfo.lon));
-				}
+				// if (!isGetingAddress) {
+				LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type88888  str：" + str);
+				// isGetingAddress = true;
+				GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
+						Double.parseDouble(currentUserInfo.lon));
+				// }
 			}
 
 		} catch (Exception e) {
@@ -2391,16 +2397,16 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----565656  : ");
 
-		if (!isGetingAddress) {
-			// 调用百度的反地理编码
-			LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----57575757  : ");
-			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
-		}
+		// if (!isGetingAddress) {
+		// 调用百度的反地理编码
+		LogUtil.e(null, "jyf----20150406----LiveActivity----LocationCallBack----start baidu getAddress : ");
+		GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
+		// }
 	}
 
 	@Override
 	public void CallBack_BaiduGeoCoder(int function, Object obj) {
-		isGetingAddress = false;
+		// isGetingAddress = false;
 		if (null == obj) {
 			LogUtil.e(null, "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
 			return;
@@ -2539,34 +2545,22 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	private void dealSnapCallBack(int param1, Object param2) {
 		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令回调");
-
 		if (0 != param1) {
 			LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令失败-------");
 			return;
 		}
 		// 文件路径格式：fs1:/IPC_Snap_Pic/snapPic.jpg
 		String imageFilePath = (String) param2;
-
 		if (TextUtils.isEmpty(imageFilePath)) {
 			LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片路径为空");
 			return;
 		}
-
-		String uploadJson = JsonUtil.getUploadSnapJson(mCurrentVideoId, imageFilePath);
-		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_LiveUploadPic, uploadJson);
-
-		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----343434 startUpload Img:   " + isSucess);
-
 		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----333 imagePath:   " + imageFilePath);
-
 		String path = FileUtils.libToJavaPath(imageFilePath);
 		if (TextUtils.isEmpty(path)) {
 			return;
 		}
-
 		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----4444 path:   " + path);
-
 		long time = System.currentTimeMillis();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		String timename = format.format(new Date(time));
@@ -2575,20 +2569,34 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
 				+ File.separator + "goluk" + File.separator + "screenshot";
 		GFileUtils.makedir(dirname);
-
 		String picName = dirname + File.separator + timename + ".jpg";
-		// 保存原始图片
-		String orgPicName = dirname + File.separator + "original_" + timename + ".jpg";
-
-		LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----55555 picName:   " + picName);
-
-		GFileUtils.copyFile(path, orgPicName);
 		GFileUtils.compressImageToDisk(path, picName);
-
 		File file = new File(picName);
-		if (file.exists()) {
-			LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令成功------22222");
+		if (!file.exists()) {
+			LogUtil.e(null, "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令失败------22222");
+			return;
 		}
+		String newFilePath = FileUtils.javaToLibPath(picName);
+		String uploadJson = JsonUtil.getUploadSnapJson(mCurrentVideoId, newFilePath);
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_LiveUploadPic, uploadJson);
+
+	}
+
+	// 分享成功后需要调用的接口
+	public void shareSucessDeal(boolean isSucess, String channel) {
+		if (!isSucess) {
+			showToast("第三方分享失败");
+			return;
+		}
+		// Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel,
+		// Toast.LENGTH_SHORT).show();
+
+		// final String json = createShareSucesNotifyJson(mVideoVid, channel);
+		// boolean b =
+		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+		// IPageNotifyFn.PageType_ShareNotify, json);
+
 	}
 
 	@Override
