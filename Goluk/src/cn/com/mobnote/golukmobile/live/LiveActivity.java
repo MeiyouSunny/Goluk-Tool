@@ -352,8 +352,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mHandler.sendEmptyMessageDelayed(MSG_H_UPLOAD_TIMEOUT, DURATION_TIMEOUT);
 			startLiveLook(currentUserInfo);
 			updateCount(Integer.parseInt(currentUserInfo.zanCount), Integer.parseInt(currentUserInfo.persons));
+			// 获取地址
+			isGetingAddress = true;
+			GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
+					Double.parseDouble(currentUserInfo.lon));
 		}
-
+		GetBaiduAddress.getInstance().setCallBackListener(this);
 		// 在没有进入群组时，按钮不可按
 		refreshPPtState(false);
 
@@ -364,7 +368,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		mApp.addLocationListener(TAG, this);
 
-		GetBaiduAddress.getInstance().setCallBackListener(this);
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("live", this);
 
@@ -454,6 +457,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		} else {
 			json = JsonUtil.getStartLiveJson(mCurrentVideoId, mSettingData);
 		}
+		if (null == json) {
+			return;
+		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_LiveStart, json);
 		if (!isSucess) {
@@ -518,7 +524,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mOkLayout = (LinearLayout) findViewById(R.id.live_oklayout);
 		mOkLayout.setOnClickListener(this);
 		mLiveOk = (ImageView) findViewById(R.id.live_ok);
-		// mLiveOk.setOnClickListener(this);
 
 		mHead = (ImageView) findViewById(R.id.live_userhead);
 
@@ -531,7 +536,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mShareLayout = (LinearLayout) findViewById(R.id.live_sharelayout);
 		mShareLayout.setOnClickListener(this);
 		mShareImg = (ImageView) findViewById(R.id.live_share);
-		// mShareImg.setOnClickListener(this);
 
 		mBottomLayout = (RelativeLayout) findViewById(R.id.live_bottomlayout);
 		mLiveLookTalk = (ImageButton) findViewById(R.id.livelook_ppt);
@@ -541,7 +545,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mExitBtn = (ImageView) findViewById(R.id.live_exit_btn);
 		mQiangPaiLayout.setOnClickListener(this);
 		mExitLayout.setOnTouchListener(this);
-		// mLiveLookTalk.setOnTouchListener(this);
 		mLiveTalk.setOnTouchListener(this);
 
 		mAddressTv = (TextView) findViewById(R.id.live_address);
@@ -598,10 +601,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 					// 直播视频上传成功，现在请求服务器
 					// 请求直播
 					startLiveForServer();
-					break;
-				case 102:
-					// 更新时间
-					// updateCountDown((String) msg.obj);
 					break;
 				}
 			}
@@ -803,13 +802,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (isShareLive) {
 			// 直播
 			mBottomLayout.setVisibility(View.VISIBLE);
-			// mLiveLookTalk.setVisibility(View.GONE);
-			// mLiveTalk.setVisibility(View.GONE);
 		} else {
 			// 看别人直播
 			mBottomLayout.setVisibility(View.GONE);
-			// mLiveLookTalk.setVisibility(View.GONE);
-			// mLiveTalk.setVisibility(View.GONE);
 		}
 	}
 
@@ -820,18 +815,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		} else {
 			mLiveTalk.setVisibility(View.GONE);
 		}
-	}
-
-	// 看别人直播的UI更新
-	// 看别人直播，分为　主动直播　与　被动直播
-	// 主动直播，需要根据协议来区分对方是否支持对讲，被动直播不支持对讲
-	private void switchLookShareTalkView(boolean isActiveLive, boolean isSupportTalk) {
-		// if (isActiveLive && isSupportTalk) {
-		// mLiveLookTalk.setVisibility(View.VISIBLE);
-		// } else {
-		// // 　被动直播
-		// mLiveLookTalk.setVisibility(View.GONE);
-		// }
 	}
 
 	private void initMap() {
@@ -860,19 +843,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 * @date Apr 2, 2015
 	 */
 	private void joinAitalkGroup() {
-		// LogUtil.e(null, "jyf-------live------aitalk:join: " +
-		// mJoinGroupJson);
-		// if (null != mJoinGroupJson && !"".equals(mJoinGroupJson)) {
-		// LogUtil.e(null,
-		// "jyf----20150406----LiveActivity----joinAitalkGroup----111 : " +
-		// mJoinGroupJson);
-		//
-		// final int cmd = isShareLive ? ITalkFn.Talk_CommCmd_JoinGroupWithInfo
-		// : ITalkFn.Talk_CommCmd_JoinGroupWithInfo;
-		//
-		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, cmd,
-		// mJoinGroupJson);
-		// }
 
 	}
 
@@ -1028,20 +998,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		startUploadMyPosition();
 
-		// if (null == dataInfo.groupId || "".equals(dataInfo.groupId)) {
-		// // 不支持对讲
-		// switchShareTalkView(false);
-		// return;
-		// }
-		//
-		// mJoinGroupJson = JsonUtil.getJoinGroup(dataInfo.groupType,
-		// dataInfo.membercount, dataInfo.title,
-		// dataInfo.groupId, dataInfo.groupnumber);
-		//
-		// if (null != mJoinGroupJson) {
-		// // 加入群组
-		// this.joinAitalkGroup();
-		// }
 	}
 
 	// 上报位置
@@ -1089,21 +1045,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 开启timer开始计时
 			updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
 			mLiveManager.startTimer(mLiveCountSecond, true);
-
-			// if (null == liveData.groupId || "".equals(liveData.groupId)) {
-			// // 上次的直播不支持加入群組
-			// showToast("成功恢复直播, 不支持加入群组");
-			// mLiveTalk.setVisibility(View.GONE);
-			// } else {
-			// // 调用爱滔客加入群组
-			// mJoinGroupJson = JsonUtil.getJoinGroup(liveData.groupType,
-			// liveData.membercount, liveData.title,
-			// liveData.groupId, liveData.groupnumber);
-			// // 支持加入群组，显示对讲按钮
-			// mLiveTalk.setVisibility(View.VISIBLE);
-			// joinAitalkGroup();
-			// showToast("成功恢复直播, 加入群组");
-			// }
 
 		}
 	}
@@ -1210,7 +1151,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	private void liveCallBackError(boolean isprompt) {
 		if (isprompt) {
-			Toast.makeText(this, "查看别人直播服务器返回数据异常", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "查看直播服务器返回数据异常", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -1226,13 +1167,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	}
 
 	@Override
-	protected void onPause() {
-		console.log("liveplay---onPause");
-		// mPlayLayout.setVisibility(View.VISIBLE);
-		super.onPause();
-	};
-
-	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
@@ -1241,20 +1175,33 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			preExit();
 			break;
 		case R.id.live_refirsh_btn:
-			if (isSettingCallBack) {
+			if (this.isShareLive) {
+				if (isSettingCallBack) {
+					showDialog();
+				}
+			} else {
 				showDialog();
 			}
 			break;
 		case R.id.live_oklayout:
-			if (isSettingCallBack) {
+			if (this.isShareLive) {
+				if (isSettingCallBack) {
+					click_OK();
+				}
+			} else {
 				click_OK();
 			}
 
 			break;
 		case R.id.live_sharelayout:
-			if (isSettingCallBack) {
+			if (this.isShareLive) {
+				if (isSettingCallBack) {
+					click_share();
+				}
+			} else {
 				click_share();
 			}
+
 			break;
 		case R.id.live_qiangpai:
 			pre_startTrimVideo();
@@ -1376,19 +1323,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			public void onClick(View v) {
 
 				boolean isSucess = report("1", getCurrentVideoId(), reporttype);
-
-				// 开启请求服务器举报
-
-				// boolean flog =
-				// GolukApplication.getInstance().getVideoSquareManager().report("1",
-				// mVideoSquareInfo.mVideoEntity.videoid, reporttype);
 				if (isSucess) {
 					showToast("举报成功,我们稍后会进行处理");
 				} else {
 					showToast("举报失败!");
 				}
 				confirmation.dismiss();
-
 			}
 		});
 		confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
@@ -1431,34 +1371,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			return;
 		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 222222");
-		// if (mIsJoinGroupSucess) {
-		// // 加入群组成功
-		// return;
-		// }
-		// // 重新请求服务器，看是否需要加入群組
-		// startLiveLook(currentUserInfo);
-
-		// LogUtil.e(null,
-		// "jyf----20150406----LiveActivity----loginSucess----22 : 3333333");
-		// if (isKaiGeSucess) {
-		// LogUtil.e(null,
-		// "jyf----20150406----LiveActivity----loginSucess----22 : 4444444");
-		// LogUtil.e(null,
-		// "jyf----20150406----LiveActivity----loginSucess----22 : 5555555");
-		// // 支持加入群組
-		// // 支持加入群组，显示对讲按钮
-		// switchLookShareTalkView(true, true);
-		// joinAitalkGroup();
-		//
-		// LogUtil.e(null,
-		// "jyf----20150406----LiveActivity----loginSucess----22 : 6666666");
-		//
-		// } else {
-		// LogUtil.e(null,
-		// "jyf----20150406----LiveActivity----loginSucess----22 : 7777777");
-		// startLiveLook(currentUserInfo);
-		// }
-
 	}
 
 	private void click_login() {
@@ -1923,6 +1835,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	private void preExit() {
 		String message = this.isShareLive ? LIVE_EXIT_PROMPT : LIVE_EXIT_PROMPT2;
+		if (isAlreadExit) {
+			return;
+		}
 		LiveDialogManager.getManagerInstance()
 				.showLiveBackDialog(this, LiveDialogManager.DIALOG_TYPE_LIVEBACK, message);
 	}
@@ -2030,9 +1945,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		final int id = v.getId();
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			if (!isSettingCallBack) {
-				return true;
+			if (this.isShareLive) {
+				if (!isSettingCallBack) {
+					return true;
+				}
 			}
+
 			if (id == R.id.live_qiangpai) {
 				if (null != m8sTimer) {
 					// 正在录制
@@ -2046,8 +1964,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			break;
 		case MotionEvent.ACTION_UP:
-			if (!isSettingCallBack) {
-				return true;
+			if (this.isShareLive) {
+				if (!isSettingCallBack) {
+					return true;
+				}
 			}
 			if (id == R.id.live_qiangpai) {
 				pre_startTrimVideo();
@@ -2204,6 +2124,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mLiveManager.startTimer(mLiveCountSecond, true);
 
 			isSettingCallBack = true;
+
+			isGetingAddress = true;
+			GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(myInfo.lat), Double.parseDouble(myInfo.lon));
 		}
 	}
 
@@ -2261,6 +2184,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			if (null == tempUserInfo) {
 				// showToast("未找到用户信息");
+
+				LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type44444:  str：" + str);
 				return;
 			}
 
@@ -2273,11 +2198,17 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			currentUserInfo.lat = tempUserInfo.lat;
 			currentUserInfo.lon = tempUserInfo.lon;
 
+			LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  str：" + str);
+
 			// 设置“赞”的人数，和观看人数
 			this.updateCount(Integer.parseInt(tempUserInfo.zanCount), Integer.parseInt(tempUserInfo.persons));
 
+			LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type66666:  str：" + str);
+
 			if (!isShareLive) {
+				LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type777777:  str：" + str);
 				if (!isGetingAddress) {
+					LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type88888  str：" + str);
 					isGetingAddress = true;
 					GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
 							Double.parseDouble(currentUserInfo.lon));
@@ -2286,6 +2217,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type999999:  Exception ：");
 		}
 
 	}
@@ -2474,12 +2406,15 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			return;
 		}
 		final String currentAddress = (String) obj;
-		if (this.isShareLive) {
-			// 如果是自己直播，则直接更新地址
-			if (null != mAddressTv) {
-				mAddressTv.setText(currentAddress);
-			}
+		if (null != mAddressTv) {
+			mAddressTv.setText(currentAddress);
 		}
+		// if (this.isShareLive) {
+		// // 如果是自己直播，则直接更新地址
+		// if (null != mAddressTv) {
+		// mAddressTv.setText(currentAddress);
+		// }
+		// }
 		LogUtil.e(null, "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
 	}
 

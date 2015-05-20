@@ -54,6 +54,7 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 		
 		LogUtil.e(null,
 				 "jyf----20150406----LiveActivity----searchAddress----33333  : ");
+		
 	}
 
 	@Override

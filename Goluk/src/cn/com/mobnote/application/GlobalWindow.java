@@ -80,6 +80,10 @@ public class GlobalWindow {
 	public void setApplication(GolukApplication app) {
 		mApplication = app;
 	}
+	
+	public GolukApplication getApplication() {
+		return mApplication;
+	}
 
 	public static GlobalWindow getInstance() {
 		return mInstance;
@@ -91,14 +95,18 @@ public class GlobalWindow {
 		if (null == mApplication) {
 			return;
 		}
+		
+		LogUtil.e("", "jyf----------createVideoUploadWindow:-------2222: ");
 
 		if (isShowGlobalwindow) {
 			dimissGlobalWindow();
 		}
+		
+		LogUtil.e("", "jyf----------createVideoUploadWindow:-------333333: ");
 
 		cancelTimer();
 
-		LogUtil.e("", "jyf----------createVideoUploadWindow:-------2222: ");
+		LogUtil.e("", "jyf----------createVideoUploadWindow:-------444444: ");
 
 		mContext = mApplication.getContext();
 
@@ -137,7 +145,7 @@ public class GlobalWindow {
 		// 显示顶层窗口
 		mWindowManager.addView(mVideoUploadLayout, mWMParams);
 
-		LogUtil.e("", "jyf----------createVideoUploadWindow:-------showTopwindow: ");
+		LogUtil.e("", "jyf----------createVideoUploadWindow:----55555---showTopwindow: ");
 
 		isShowGlobalwindow = true;
 

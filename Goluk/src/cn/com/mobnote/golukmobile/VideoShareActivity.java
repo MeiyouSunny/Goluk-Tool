@@ -178,17 +178,20 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 				videoShareCallBack(1, json.toString());
 			case MSG_H_UPLOAD_PROGRESS:
-				if(!GolukApplication.getInstance().getIsBackgroundState()){
-					if(GlobalWindow.getInstance().isShow()){
+				if (!GolukApplication.getInstance().getIsBackgroundState()) {
+					if (GlobalWindow.getInstance().isShow()) {
 						// 更新进度条
 						int percent = ((Integer) msg.obj).intValue();
 						GlobalWindow.getInstance().refreshPercent(percent);
 						console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
-					}else{
+					} else {
+						if (null == GlobalWindow.getInstance().getApplication()) {
+							GlobalWindow.getInstance().setApplication(mApp);
+						}
 						GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 					}
 				}
-				
+
 				break;
 			case MSG_H_UPLOAD_SUCESS:
 				showToast("上传完成");
@@ -308,7 +311,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		init();
 		// 上传已倒出的本地视频
 		uploadShareVideo();
-
+		if (null == GlobalWindow.getInstance().getApplication()) {
+			GlobalWindow.getInstance().setApplication(mApp);
+		}
 		GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 	}
 
@@ -319,15 +324,16 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 		thumbFile = filePath + File.separator + videoName;
 		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
-		LogUtil.e("xuhw", "BBBBBB======thumbFile="+thumbFile);
-		LogUtil.e("xuhw", "BBBBBB======mVideoPath="+mVideoPath);
+		LogUtil.e("xuhw", "BBBBBB======thumbFile=" + thumbFile);
+		LogUtil.e("xuhw", "BBBBBB======mVideoPath=" + mVideoPath);
 		File image = new File(thumbFile);
 		if (image.exists()) {
 			return;
 		} else {
 			thumbFile = fileFolder + "/thumb11.jpg";
 			mShortBitmap = createVideoThumbnail(mVideoPath);
-//			mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
+			// mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath,
+			// Thumbnails.MINI_KIND);
 			if (mShortBitmap != null) {
 				int width = mShortBitmap.getWidth();
 				int height = mShortBitmap.getHeight();
@@ -365,26 +371,26 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		Log.e("", "VideoShareActivity createThumb: time:" + dur);
 	}
-	
+
 	@SuppressLint("NewApi")
 	private Bitmap createVideoThumbnail(String filePath) {
-        Bitmap bitmap = null;
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        try {
-            retriever.setDataSource(filePath);
-            bitmap = retriever.getFrameAtTime();
-        } catch(IllegalArgumentException ex) {
-            // Assume this is a corrupt video file
-        } catch (RuntimeException ex) {
-            // Assume this is a corrupt video file.
-        } finally {
-            try {
-                retriever.release();
-            } catch (RuntimeException ex) {
-            }
-        }
-        return bitmap;
-    }
+		Bitmap bitmap = null;
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		try {
+			retriever.setDataSource(filePath);
+			bitmap = retriever.getFrameAtTime();
+		} catch (IllegalArgumentException ex) {
+			// Assume this is a corrupt video file
+		} catch (RuntimeException ex) {
+			// Assume this is a corrupt video file.
+		} finally {
+			try {
+				retriever.release();
+			} catch (RuntimeException ex) {
+			}
+		}
+		return bitmap;
+	}
 
 	private void dimissErrorDialog() {
 		if (null != mErrorDialog) {
@@ -443,7 +449,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 						uploadShareVideo();
 						dimissErrorDialog();
 						showToast("重新开始上传");
-
+						if (null == GlobalWindow.getInstance().getApplication()) {
+							GlobalWindow.getInstance().setApplication(mApp);
+						}
 						GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 
 					}
@@ -719,10 +727,19 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		final String json = createShareJson(selectJson, isSeque, "" + type);
 
 		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
+		if (null == mApp) {
+			showToast("mApp==NULL");
+		} else {
+			if (mApp.mGoluk == null) {
+				showToast("mApp.mGoluk == null");
+			}
+		}
+
 		boolean b = false;
-		if( mApp !=null && mApp.mGoluk != null){
-			b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,json);
-		}else{
+		if (mApp != null && mApp.mGoluk != null) {
+			b = mApp.mGoluk
+					.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share, json);
+		} else {
 			LogUtil.e("", "jyf-----VideoShareActivity -----mAPP 为空 或者 mGoluk 为空");
 		}
 
@@ -737,7 +754,8 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 						mPdsave.dismiss();
 						mPdsave = null;
 					}
-					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
+					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
+							JsonUtil.getCancelJson());
 				}
 			});
 		} else {

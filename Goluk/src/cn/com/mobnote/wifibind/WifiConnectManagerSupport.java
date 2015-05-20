@@ -185,10 +185,15 @@ public class WifiConnectManagerSupport {
 			bRet = wifiManager.setWifiEnabled(false);
 		}
 		bRet = wifiManager.isWifiEnabled();
-		while (!bRet){
+		int count=0;
+		while (bRet){
 			try {
+				if(count==5){
+					return false;
+				}
 				Thread.sleep(200);
 				bRet=wifiManager.isWifiEnabled();
+				count++;
 			} catch (Exception e) {
 			}
 			
