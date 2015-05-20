@@ -185,6 +185,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 						GlobalWindow.getInstance().refreshPercent(percent);
 						console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
 					} else {
+						if (null == GlobalWindow.getInstance().getApplication()) {
+							GlobalWindow.getInstance().setApplication(mApp);
+						}
 						GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 					}
 				}
@@ -308,7 +311,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		init();
 		// 上传已倒出的本地视频
 		uploadShareVideo();
-
+		if (null == GlobalWindow.getInstance().getApplication()) {
+			GlobalWindow.getInstance().setApplication(mApp);
+		}
 		GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 	}
 
@@ -444,7 +449,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 						uploadShareVideo();
 						dimissErrorDialog();
 						showToast("重新开始上传");
-
+						if (null == GlobalWindow.getInstance().getApplication()) {
+							GlobalWindow.getInstance().setApplication(mApp);
+						}
 						GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 
 					}

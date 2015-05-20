@@ -457,6 +457,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		} else {
 			json = JsonUtil.getStartLiveJson(mCurrentVideoId, mSettingData);
 		}
+		if (null == json) {
+			return;
+		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_LiveStart, json);
 		if (!isSucess) {

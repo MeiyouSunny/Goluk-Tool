@@ -172,7 +172,7 @@ public class JsonUtil {
 			obj.put("filename", filename);
 			obj.put("tag", tag);
 			obj.put("savepath", savepath);
-			obj.put("filetime", ""+filetime);
+			obj.put("filetime", "" + filetime);
 
 			return obj.toString();
 		} catch (Exception e) {
@@ -246,8 +246,11 @@ public class JsonUtil {
 			String duration = null != beanData ? "" + beanData.duration : "3600";
 			String netCountStr = null != beanData ? "" + beanData.netCountStr : "";
 			String vtypStr = null != beanData ? "" + beanData.vtype : "";
+			String talk = "0";
+			if (beanData != null) {
+				talk = beanData.isCanTalk ? "1" : "0";
+			}
 
-			String talk = beanData.isCanTalk ? "1" : "0";
 			String voice = beanData.isCanVoice ? "1" : "0";
 
 			JSONObject obj = new JSONObject();
