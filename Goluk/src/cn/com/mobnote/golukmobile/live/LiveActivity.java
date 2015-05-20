@@ -81,6 +81,7 @@ import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
 import com.rd.car.player.RtmpPlayerView;
+import com.umeng.socialize.sso.UMSsoHandler;
 
 public class LiveActivity extends BaseActivity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
 		View.OnTouchListener, ITalkFn, IPopwindowFn, ILiveDialogManagerFn, ITimerManagerFn, ILocationFn,
@@ -375,6 +376,16 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (null != mVideoSquareManager) {
 			mVideoSquareManager.addVideoSquareManagerListener("live", this);
 		}
+	}
+	
+	@Override 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    /**使用SSO授权必须添加如下代码 */
+	    UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode) ;
+	    if(ssoHandler != null){
+	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	    }
 	}
 
 	/**
@@ -2609,6 +2620,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				JSONObject data = result.getJSONObject("data");
 				String shareurl = data.getString("shorturl");
 				String coverurl = data.getString("coverurl");
+				System.out.println("zhdata==="+data);
 				String describe = "";
 				if (!data.isNull("describe")) {
 					describe = data.getString("describe");
@@ -2617,8 +2629,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				}
 				// 设置分享内容
 				sharePlatform.setShareContent(shareurl, coverurl, describe);
-				CustomShareBoard shareBoard = new CustomShareBoard(this);
-				shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+				CustomShareBoard sb = new CustomShareBoard(LiveActivity.this);
+				sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

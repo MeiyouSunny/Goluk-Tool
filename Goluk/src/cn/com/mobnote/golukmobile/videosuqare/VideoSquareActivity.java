@@ -62,12 +62,11 @@ public class VideoSquareActivity implements OnClickListener {
 	public void init() {
 		ma = (MainActivity) mContext;
 		mViewPager = (ViewPager) mRootLayout.findViewById(R.id.mViewpager);
-		mVideoSquareAdapter = new VideoSquareAdapter(mContext);
-		mViewPager.setAdapter(mVideoSquareAdapter);
-		mViewPager.setOnPageChangeListener(opcl);
 		sharePlatform = new SharePlatformUtil(mContext);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
-		
+		mVideoSquareAdapter = new VideoSquareAdapter(mContext,sharePlatform);
+		mViewPager.setAdapter(mVideoSquareAdapter);
+		mViewPager.setOnPageChangeListener(opcl);
 		
 		hot = (ImageView) mRootLayout.findViewById(R.id.line_hot);
 		square = (ImageView) mRootLayout.findViewById(R.id.line_square);
@@ -84,15 +83,13 @@ public class VideoSquareActivity implements OnClickListener {
 		setListener();
 	}
 
-	
-	private void onActivityResult(int requestCode, int resultCode, Intent data) {
-		//super.onActivityResult(requestCode, resultCode, data);
-		/** 使用SSO授权必须添加如下代码 */
-		UMSsoHandler ssoHandler = sharePlatform.mController.getConfig()
-				.getSsoHandler(requestCode);
-		if (ssoHandler != null) {
-			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-		}
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    //super.onActivityResult(requestCode, resultCode, data);
+	    /**使用SSO授权必须添加如下代码 */
+	    UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode) ;
+	    if(ssoHandler != null){
+	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	    }
 	}
 
 

@@ -14,6 +14,7 @@ import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.tiros.utils.LogUtil;
@@ -48,14 +49,16 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 	private String curVideoid="";
 	private int index;
 	private ListView mRTPullListView=null;
+	private SharePlatformUtil sharePlatform;
 
-	public VideoSquareListViewAdapter(ListView _mRTPullListView, Context context,int plform) {
+	public VideoSquareListViewAdapter(ListView _mRTPullListView, Context context,int plform,SharePlatformUtil spf) {
 		mContext = context;
 		this.mRTPullListView=_mRTPullListView;
 		mVideoSquareListData = new ArrayList<VideoSquareInfo>();
 		mDWMediaPlayerList = new HashMap<String, DWMediaPlayer>();
 		mHolderList = new HashMap<String, SurfaceHolder>();
 		form = plform;//1:热门页面 2:广场页
+		sharePlatform = spf;
 	}
 
 	public void setData(List<VideoSquareInfo> data) {
@@ -131,7 +134,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.liveicon.setVisibility(View.GONE);
 //			holder.mSurfaceView.setVisibility(View.VISIBLE);
 		}
-		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
+		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform));
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
 			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);//设置点赞背景
 		}else{
@@ -156,8 +159,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
 		}
 		
-		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
-		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form));
+		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform));
+		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);

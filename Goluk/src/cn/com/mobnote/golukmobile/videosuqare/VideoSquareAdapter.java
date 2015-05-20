@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
@@ -9,14 +10,17 @@ public class VideoSquareAdapter extends PagerAdapter{
 	private Context mContext=null;
 	public VideoSquareListView mVideoSquareListView=null;
 	private VideoCategoryView mVideoCategoryView=null;
-	public VideoSquareAdapter(Context c) {
+	SharePlatformUtil sharePlatform;
+	
+	public VideoSquareAdapter(Context c,SharePlatformUtil spf) {
 		this.mContext=c;
+		sharePlatform = spf;
 	}
 	
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		if(0 == position){
-			mVideoSquareListView = new VideoSquareListView(mContext);
+			mVideoSquareListView = new VideoSquareListView(mContext,sharePlatform);
 			container.addView(mVideoSquareListView.getView());
 			return mVideoSquareListView.getView();
 		}else{

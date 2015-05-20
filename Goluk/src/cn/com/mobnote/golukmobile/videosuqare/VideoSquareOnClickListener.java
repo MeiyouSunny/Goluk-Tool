@@ -38,11 +38,11 @@ public class VideoSquareOnClickListener implements OnClickListener,
 
 	public VideoSquareOnClickListener(Context context,
 			List<VideoSquareInfo> videoSquareListData,
-			VideoSquareInfo videoSquareInfo, int plform) {
+			VideoSquareInfo videoSquareInfo, int plform,SharePlatformUtil spf) {
 		mcontext = context;
 		mVideoSquareListData = videoSquareListData;
 		mVideoSquareInfo = videoSquareInfo;
-		sharePlatform = new SharePlatformUtil(mcontext);
+		sharePlatform = spf;
 		// sharePlatform.configPlatforms();//设置分享平台的参数
 		form = plform;
 		GolukApplication.getInstance().getVideoSquareManager()

@@ -167,7 +167,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 	private void init(boolean isloading) {
 
 		if (null == mVideoSquareListViewAdapter) {
-			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mRTPullListView, this,2);
+			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mRTPullListView, this,2,sharePlatform);
 		}
 
 		mVideoSquareListViewAdapter.setData(mDataList);

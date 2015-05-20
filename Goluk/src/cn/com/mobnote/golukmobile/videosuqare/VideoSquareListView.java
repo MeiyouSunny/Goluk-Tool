@@ -9,6 +9,7 @@ import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -42,8 +43,11 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private RelativeLayout mRootLayout=null;
 	private ImageView shareBg = null;
 	
-	public VideoSquareListView(Context context){
+	SharePlatformUtil sharePlatform;
+	
+	public VideoSquareListView(Context context,SharePlatformUtil spf){
 		mContext=context;
+		sharePlatform = spf;
 		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
 		//mRTPullListView.setDividerHeight((int)(22*jj));
@@ -121,7 +125,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private void initLayout(){
 		
 		if(null == mVideoSquareListViewAdapter){
-			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mRTPullListView, mContext,1);
+			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mRTPullListView, mContext,1,sharePlatform);
 		}
 		
 		mVideoSquareListViewAdapter.setData(mDataList);

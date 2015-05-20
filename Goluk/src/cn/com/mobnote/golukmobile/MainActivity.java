@@ -88,6 +88,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.utils.Log;
 
 /**
@@ -223,6 +224,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	/** 热门视频列表默认背景图片 */
 	private ImageView squareDefault;
+	
+	SharePlatformUtil sharePlatform;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -299,7 +302,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mApp.addLocationListener("main", this);
 
 	}
-
+	
+	@Override 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    mVideoSquareActivity.onActivityResult(requestCode, resultCode, data);
+	}
+	
 	private String getIMEI() {
 		try {
 			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
