@@ -112,9 +112,8 @@ import com.umeng.socialize.utils.Log;
  */
 
 @SuppressLint({ "HandlerLeak", "NewApi" })
-
-public class MainActivity extends BaseActivity implements OnClickListener , WifiConnCallBack,OnTouchListener, ILiveDialogManagerFn, 
-			ILocationFn, IBaiduGeoCoderFn ,UserInterface{
+public class MainActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, OnTouchListener,
+		ILiveDialogManagerFn, ILocationFn, IBaiduGeoCoderFn, UserInterface {
 
 	/** application */
 	private GolukApplication mApp = null;
@@ -195,8 +194,8 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private RelativeLayout mRootLayout = null;
 
 	private RelativeLayout indexMapLayout = null;
-	
-	private View videoSquareLayout =null;
+
+	private View videoSquareLayout = null;
 
 	/** 未连接 */
 	private final int WIFI_STATE_FAILED = 0;
@@ -207,7 +206,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
-	
+
 	/** 看天下按钮 */
 	private Button indexLookBtn = null;
 	/** 链接行车记录仪 */
@@ -221,10 +220,10 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	/** 当前连接的Goluk设备 */
 	private String mGolukName = "";
-	
+
 	/** 热门视频列表默认背景图片 */
 	private ImageView squareDefault;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -236,8 +235,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 		((GolukApplication) this.getApplication()).initSharedPreUtil(this);
 
-		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(
-				R.layout.index, null);
+		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 
 		setContentView(mRootLayout);
 
@@ -263,12 +261,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// mApp.mGoluk.GoLuk_WifiStateChanged(true);
 
 		// 页面初始化,获取页面控件
-		
+
 		mApp.startTime = System.currentTimeMillis();
-		
-		//mApp.mGoluk.GoLuk_WifiStateChanged(true);
-		
-		//页面初始化,获取页面控件
+
+		// mApp.mGoluk.GoLuk_WifiStateChanged(true);
+
+		// 页面初始化,获取页面控件
 		init();
 		// 初始化地图
 		initMap();
@@ -279,10 +277,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 加载本地视屏列表
 		// initLocalVideoList();
 
-		
 		// 初始化连接与綁定状态
 		boolean b = this.isBindSucess();
-		Log.i("bind", "======bind====status==="+b);
+		Log.i("bind", "======bind====status===" + b);
 		if (this.isBindSucess()) {
 			startWifi();
 			// 启动创建热点
@@ -301,11 +298,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
 
-}
+	}
+
 	private String getIMEI() {
 		try {
-			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
-					.getDeviceId();
+			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
 			return imei;
 		} catch (Exception e) {
 
@@ -347,11 +344,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 本地视频更多按钮
 		mLocalVideoListBtn = (Button) findViewById(R.id.share_local_video_btn);
 		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
-		
+
 		indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
 		squareDefault = (ImageView) findViewById(R.id.square_default);
-		
+
 		mShareLiveBtn.setOnClickListener(this);
 		indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
@@ -376,7 +373,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
 		msquareBtn.setOnClickListener(this);
-		//msquareBtn.setOnTouchListener(this);
+		// msquareBtn.setOnTouchListener(this);
 		mLocalVideoListBtn.setOnClickListener(this);
 		findViewById(R.id.share_mylive_btn).setOnClickListener(this);
 
@@ -392,8 +389,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 					break;
 				case 2:
 					// 5分钟更新一次大头针数据
-					mApp.mGoluk.GolukLogicCommRequest(
-							GolukModule.Goluk_Module_HttpPage,
+					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_GetPinData, "");
 					break;
 				case 3:
@@ -408,8 +404,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 					// pointDataCallback(1,obj);
 					// 请求在线视频轮播数据
 					console.log("PageType_GetPinData:");
-					mApp.mGoluk.GolukLogicCommRequest(
-							GolukModule.Goluk_Module_HttpPage,
+					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_GetPinData, "");
 					break;
 				case 98:
@@ -439,12 +434,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			return;
 		}
 		if (isConnected) {
-			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk,
-					ITalkFn.Talk_CommCmd_RecoveryNetwork, "");
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_RecoveryNetwork, "");
 		}
 	}
 
 	VideoSquareActivity mVideoSquareActivity;
+
 	private void initVideoSquare() {
 		mVideoSquareActivity = new VideoSquareActivity(mRootLayout, this);
 	}
@@ -464,8 +459,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		options.overlookingGesturesEnabled(false);
 		mMapView = new MapView(this, options);
 
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.MATCH_PARENT,
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		indexMapLayout.addView(mMapView, 0, params);
 
@@ -487,29 +481,28 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			public void onMapLoaded() {
 				// 地图加载完成,请求大头针数据
 				console.log("PageType_GetPinData:地图加载完成,请求大头针数据");
-				mApp.mGoluk.GolukLogicCommRequest(
-						GolukModule.Goluk_Module_HttpPage,
-						IPageNotifyFn.PageType_GetPinData, "");
+				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPinData,
+						"");
 			}
 		});
 
 		mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
-					@Override
-					public void onMapStatusChangeStart(MapStatus arg0) {
-						// 隐藏气泡,大头针
-						mBaiduMapManage.mapStatusChange();
-						// 移动了地图,第一次不改变地图中心点位置
-						isFirstLoc = false;
-					}
+			@Override
+			public void onMapStatusChangeStart(MapStatus arg0) {
+				// 隐藏气泡,大头针
+				mBaiduMapManage.mapStatusChange();
+				// 移动了地图,第一次不改变地图中心点位置
+				isFirstLoc = false;
+			}
 
-					@Override
-					public void onMapStatusChangeFinish(MapStatus arg0) {
-					}
+			@Override
+			public void onMapStatusChangeFinish(MapStatus arg0) {
+			}
 
-					@Override
-					public void onMapStatusChange(MapStatus arg0) {
-					}
-				});
+			@Override
+			public void onMapStatusChange(MapStatus arg0) {
+			}
+		});
 	}
 
 	/**
@@ -520,12 +513,9 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			// 重置mediaPlayer实例，reset之后处于空闲状态
 			mMediaPlayer.reset();
 			// 设置需要播放的音乐文件的路径，只有设置了文件路径之后才能调用prepare
-			AssetFileDescriptor fileDescriptor = this.getAssets().openFd(
-					mVideoDownloadSoundFile);
-			mMediaPlayer
-					.setDataSource(fileDescriptor.getFileDescriptor(),
-							fileDescriptor.getStartOffset(),
-							fileDescriptor.getLength());
+			AssetFileDescriptor fileDescriptor = this.getAssets().openFd(mVideoDownloadSoundFile);
+			mMediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(),
+					fileDescriptor.getLength());
 			// 准备播放，只有调用了prepare之后才能调用start
 			mMediaPlayer.prepare();
 			// 开始播放
@@ -648,7 +638,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
 				time = time > oldtime ? time : oldtime;
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
-				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime="+time);
+				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime=" + time);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -715,11 +705,10 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	@SuppressWarnings("static-access")
 	public void downloadBubbleImg(String url, String aid) {
 		console.log("下载气泡图片downloadBubbleImg:" + url + ",aid" + aid);
-		String json = "{\"purl\":\"" + url + "\",\"aid\":\"" + aid
-				+ "\",\"type\":\"1\"}";
+		String json = "{\"purl\":\"" + url + "\",\"aid\":\"" + aid + "\",\"type\":\"1\"}";
 		console.log("downloadBubbleImg---json" + json);
-		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetPictureByURL, json);
+		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPictureByURL,
+				json);
 	}
 
 	/**
@@ -777,15 +766,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 		mWiFiStatus = WIFI_STATE_CONNING;
 		mWifiStateTv.setText(WIFI_CONNING_STR);
-		/*mWifiState.setBackgroundResource(R.anim.anim_wifi);
-		this.mVolumeImgAnimation = (AnimationDrawable) this.mWifiState
-				.getBackground();
-		this.mVolumeImgAnimation.start();*/
-		
-		PlayVoiceRemote.getInstance().setSpeechEngine("test", 1000,
-				1000, 1000, 1000);
+		/*
+		 * mWifiState.setBackgroundResource(R.anim.anim_wifi);
+		 * this.mVolumeImgAnimation = (AnimationDrawable) this.mWifiState
+		 * .getBackground(); this.mVolumeImgAnimation.start();
+		 */
 
-		anim = AnimationUtils.loadAnimation(mContext,R.anim.ipc_action_loading);
+		PlayVoiceRemote.getInstance().setSpeechEngine("test", 1000, 1000, 1000, 1000);
+
+		anim = AnimationUtils.loadAnimation(mContext, R.anim.ipc_action_loading);
 		LinearInterpolator lir = new LinearInterpolator();
 		anim.setInterpolator(lir);
 		indexCarrecoderBtn.startAnimation(anim);
@@ -822,12 +811,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 	// 是否綁定过 Goluk
 	private boolean isBindSucess() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
-				MODE_PRIVATE);
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
 		return preferences.getBoolean("isbind", false);
 	}
-	
+
 	private void toLogin() {
 		Intent intent = new Intent(this, UserLoginActivity.class);
 		intent.putExtra("isInfo", "back");
@@ -838,22 +826,20 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		mEditor.commit();
 		startActivity(intent);
 	}
-	
-	/*public void setViewListBg(boolean flog){
-		if(flog){
-			squareDefault.setVisibility(View.VISIBLE);
-		}else{
-			squareDefault.setVisibility(View.GONE);
-		}
-		
-	}*/
+
+	/*
+	 * public void setViewListBg(boolean flog){ if(flog){
+	 * squareDefault.setVisibility(View.VISIBLE); }else{
+	 * squareDefault.setVisibility(View.GONE); }
+	 * 
+	 * }
+	 */
 
 	private void click_ConnFailed() {
 		if (!isBindSucess()) {
 			// 跳转到wifi连接首页
 			if (mApp.isUserLoginSucess) {
-				Intent wifiIndex = new Intent(MainActivity.this,
-						WiFiLinkIndexActivity.class);
+				Intent wifiIndex = new Intent(MainActivity.this, WiFiLinkIndexActivity.class);
 				startActivity(wifiIndex);
 			} else {
 				toLogin();
@@ -871,8 +857,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	 * 检测wifi链接状态
 	 */
 	public void checkWiFiStatus() {
-		Log.e("", "wifiCallBack-------------checkWiFiStatus   type:"
-				+ mWiFiStatus);
+		Log.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mWiFiStatus);
 		switch (mWiFiStatus) {
 		case WIFI_STATE_FAILED:
 			click_ConnFailed();
@@ -881,10 +866,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 			break;
 		case WIFI_STATE_SUCCESS:
-//			if(GolukApplication.getInstance().autodownloadfile){
-//				Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
-//				return;
-//			}
+			// if(GolukApplication.getInstance().autodownloadfile){
+			// Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…",
+			// Toast.LENGTH_SHORT).show();
+			// return;
+			// }
 			GolukApplication.getInstance().stopDownloadList();
 			// 跳转到行车记录仪界面
 			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
@@ -956,11 +942,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			mMapView.onResume();
 			mMapView.invalidate();
 		}
-		
-		if(null != mVideoSquareActivity){
+
+		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onDestroy();
 		}
-		
+
 		isCurrent = true;
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 
@@ -991,15 +977,12 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	}
 
 	public void showContinuteLive() {
-		LogUtil.e(null,
-				"jyf----20150406----showContinuteLive----showContinuteLive :");
+		LogUtil.e(null, "jyf----20150406----showContinuteLive----showContinuteLive :");
 		// 标识正常退出
 		mApp.mSharedPreUtil.setIsLiveNormalExit(true);
 		if (mApp.getIpcIsLogin()) {
-			LiveDialogManager.getManagerInstance()
-					.showTwoBtnDialog(this,
-							LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE, "提示",
-							"是否继续直播");
+			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
+					"提示", "是否继续直播");
 		} else {
 
 		}
@@ -1012,11 +995,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		if (null != mMapView) {
 			mMapView.onPause();
 		}
-		
-		if(null != mVideoSquareActivity){
+
+		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onDestroy();
 		}
-		
+
 		// isCurrent = false;
 		// mMainHandler.removeMessages(2);
 
@@ -1030,52 +1013,45 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			exit();
-            return false;
+			return false;
 		}
-        return super.onKeyDown(keyCode, event);
+		return super.onKeyDown(keyCode, event);
 
 	}
 
-	/*// 退出程序
-	private void exit() {
-		// if (mApp.isUserLoginSucess) {
-		SysApplication.getInstance().exit();
-		// }
-		mApp.mIPCControlManager.setIPCWifiState(false, "");
-		mApp.mGoluk.GolukLogicDestroy();
-		if (null != UserStartActivity.mHandler) {
-			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-		}
-		finish();
-		int PID = android.os.Process.myPid();
-		android.os.Process.killProcess(PID);
-	}*/
-	
-	public void exit() {
-		if(mShareLayout!=null && mShareLayout.getVisibility() == View.VISIBLE){
-			mShareLayout.setVisibility(View.GONE);
-		}else{
-			if ((System.currentTimeMillis() - exitTime) > 2000) {
-	            Toast.makeText(getApplicationContext(), "再按一次退出程序",
-	                    Toast.LENGTH_SHORT).show();
-	            exitTime = System.currentTimeMillis();
-	        } else {
-	        	
-	        	SysApplication.getInstance().exit();
-	    		// }
-	    		mApp.mIPCControlManager.setIPCWifiState(false, "");
-	    		mApp.mGoluk.GolukLogicDestroy();
-	    		if (null != UserStartActivity.mHandler) {
-	    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-	    		}
-	    		finish();
-	    		int PID = android.os.Process.myPid();
-	    		android.os.Process.killProcess(PID);
-	            System.exit(0);
-	        }
-		}
-    }
+	/*
+	 * // 退出程序 private void exit() { // if (mApp.isUserLoginSucess) {
+	 * SysApplication.getInstance().exit(); // }
+	 * mApp.mIPCControlManager.setIPCWifiState(false, "");
+	 * mApp.mGoluk.GolukLogicDestroy(); if (null != UserStartActivity.mHandler)
+	 * { UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT); }
+	 * finish(); int PID = android.os.Process.myPid();
+	 * android.os.Process.killProcess(PID); }
+	 */
 
+	public void exit() {
+		if (mShareLayout != null && mShareLayout.getVisibility() == View.VISIBLE) {
+			mShareLayout.setVisibility(View.GONE);
+		} else {
+			if ((System.currentTimeMillis() - exitTime) > 2000) {
+				Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+				exitTime = System.currentTimeMillis();
+			} else {
+
+				SysApplication.getInstance().exit();
+				// }
+				mApp.mIPCControlManager.setIPCWifiState(false, "");
+				mApp.mGoluk.GolukLogicDestroy();
+				if (null != UserStartActivity.mHandler) {
+					UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+				}
+				finish();
+				int PID = android.os.Process.myPid();
+				android.os.Process.killProcess(PID);
+				System.exit(0);
+			}
+		}
+	}
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
@@ -1099,13 +1075,13 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		case R.id.more_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
-				Drawable user_down = this.getResources().getDrawable(R.drawable.home_self_btn_click); 
-				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,user_down,null,null);
+				Drawable user_down = this.getResources().getDrawable(R.drawable.home_self_btn_click);
+				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
 				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
-				Drawable user_up = this.getResources().getDrawable(R.drawable.home_self_btn); 
-				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,user_up,null,null);
+				Drawable user_up = this.getResources().getDrawable(R.drawable.home_self_btn);
+				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_up, null, null);
 				mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
@@ -1123,13 +1099,13 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		case R.id.index_share_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
-				Drawable db_down = this.getResources().getDrawable(R.drawable.home_share_btn_click); 
-				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_down,null,null);
+				Drawable db_down = this.getResources().getDrawable(R.drawable.home_share_btn_click);
+				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, db_down, null, null);
 				mShareBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
-				Drawable db_up = this.getResources().getDrawable(R.drawable.home_share_btn); 
-				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,db_up,null,null);
+				Drawable db_up = this.getResources().getDrawable(R.drawable.home_share_btn);
+				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, db_up, null, null);
 				mShareBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
@@ -1173,8 +1149,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			break;
 		case R.id.video_square_more_btn:
 			// 跳转到视频广场页面
-			Intent videoSquare = new Intent(MainActivity.this,
-					VideoSquareActivity.class);
+			Intent videoSquare = new Intent(MainActivity.this, VideoSquareActivity.class);
 			startActivity(videoSquare);
 			break;
 		case R.id.login_status_btn:
@@ -1207,38 +1182,38 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		 */
 		}
 	}
-	
+
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	public void setBelowItem(int id){
-		Drawable drawable ;
-		if(id == R.id.index_look_btn){
+	public void setBelowItem(int id) {
+		Drawable drawable;
+		if (id == R.id.index_look_btn) {
 			if (null != mMapView) {
 				mMapView.onResume();
 			}
 			indexMapLayout.setVisibility(View.VISIBLE);
 			videoSquareLayout.setVisibility(View.GONE);
 			mVideoSquareActivity.onDestroy();
-			drawable = this.getResources().getDrawable(R.drawable.home_local_btn_click); 
-			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			drawable = this.getResources().getDrawable(R.drawable.home_local_btn_click);
+			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
 			indexLookBtn.setTextColor(Color.rgb(59, 151, 245));
-			
-			drawable = this.getResources().getDrawable(R.drawable.home_find_btn); 
-			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+
+			drawable = this.getResources().getDrawable(R.drawable.home_find_btn);
+			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
 			msquareBtn.setTextColor(Color.rgb(103, 103, 103));
-		}else if (id == R.id.index_square_btn){
+		} else if (id == R.id.index_square_btn) {
 			if (null != mMapView) {
 				mMapView.onPause();
 			}
 			indexMapLayout.setVisibility(View.GONE);
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			mVideoSquareActivity.onResume();
-			drawable = this.getResources().getDrawable(R.drawable.home_local_btn); 
-			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			drawable = this.getResources().getDrawable(R.drawable.home_local_btn);
+			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
 			indexLookBtn.setTextColor(Color.rgb(103, 103, 103));
-			
-			drawable = this.getResources().getDrawable(R.drawable.home_find_btn_click); 
+
+			drawable = this.getResources().getDrawable(R.drawable.home_find_btn_click);
 			msquareBtn.setTextColor(Color.rgb(59, 151, 245));
-			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
 		}
 	}
 
@@ -1249,18 +1224,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			mApp.mUser.setUserInterface(this);
 			if (mApp.autoLoginStatus == 1) {
 				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage("正在为您登录，请稍候……")
-						.setCancelable(false)
-						.setOnKeyListener(new OnKeyListener() {
-							@Override
-							public boolean onKey(DialogInterface dialog,
-									int keyCode, KeyEvent event) {
-								if (keyCode == KeyEvent.KEYCODE_BACK) {
-									return true;
-								}
-								return false;
-							}
-						}).create();
+				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if (keyCode == KeyEvent.KEYCODE_BACK) {
+							return true;
+						}
+						return false;
+					}
+				}).create();
 				dialog.show();
 				return;
 			}
@@ -1285,8 +1257,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	private AlertDialog dialog = null;
 
 	private void click_toLocalVideoShare() {
-		Log.i("lily", "-------isUserLoginSuccess------"
-				+ mApp.isUserLoginSucess + "------autologinStatus-----"
+		Log.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess + "------autologinStatus-----"
 				+ mApp.autoLoginStatus);
 		if (!mApp.isUserLoginSucess) {
 			// TODO 未登录成功
@@ -1294,18 +1265,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			mApp.mUser.setUserInterface(this);
 			if (mApp.autoLoginStatus == 1) {
 				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage("正在为您登录，请稍候……")
-						.setCancelable(false)
-						.setOnKeyListener(new OnKeyListener() {
-							@Override
-							public boolean onKey(DialogInterface dialog,
-									int keyCode, KeyEvent event) {
-								if (keyCode == KeyEvent.KEYCODE_BACK) {
-									return true;
-								}
-								return false;
-							}
-						}).create();
+				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if (keyCode == KeyEvent.KEYCODE_BACK) {
+							return true;
+						}
+						return false;
+					}
+				}).create();
 				dialog.show();
 				return;
 			} else if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
@@ -1319,8 +1287,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		}
 
 		// 跳转到本地视频分享列表
-		Intent localVideoShareList = new Intent(MainActivity.this,
-				LocalVideoShareListActivity.class);
+		Intent localVideoShareList = new Intent(MainActivity.this, LocalVideoShareListActivity.class);
 		startActivity(localVideoShareList);
 		// 关闭视频分享
 		mShareLayout.setVisibility(View.GONE);
@@ -1339,18 +1306,15 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			mApp.mUser.setUserInterface(this);
 			if (mApp.autoLoginStatus == 1) {
 				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage("正在为您登录，请稍候……")
-						.setCancelable(false)
-						.setOnKeyListener(new OnKeyListener() {
-							@Override
-							public boolean onKey(DialogInterface dialog,
-									int keyCode, KeyEvent event) {
-								if (keyCode == KeyEvent.KEYCODE_BACK) {
-									return true;
-								}
-								return false;
-							}
-						}).create();
+				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if (keyCode == KeyEvent.KEYCODE_BACK) {
+							return true;
+						}
+						return false;
+					}
+				}).create();
 				dialog.show();
 				return;
 			} else if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
@@ -1365,17 +1329,16 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 
 		if (!mApp.getIpcIsLogin()) {
 			// Toast.makeText(this, "IPC未登录", Toast.LENGTH_SHORT).show();
-			LiveDialogManager.getManagerInstance()
-					.showSingleBtnDialog(this,
-							LiveDialogManager.DIALOG_TYPE_IPC_LOGINOUT, "提示",
-							"请先连接摄像头");
+			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+					LiveDialogManager.DIALOG_TYPE_IPC_LOGINOUT, "提示", "请先连接摄像头");
 			return;
 		}
-		
-//		if(GolukApplication.getInstance().autodownloadfile){
-//			Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…", Toast.LENGTH_SHORT).show();
-//			return;
-//		}
+
+		// if(GolukApplication.getInstance().autodownloadfile){
+		// Toast.makeText(MainActivity.this, "正在同步摄像头视频文件，请稍候再试…",
+		// Toast.LENGTH_SHORT).show();
+		// return;
+		// }
 
 		GolukApplication.getInstance().stopDownloadList();
 		// 开启直播
@@ -1462,8 +1425,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 			return;
 		}
 		// 此处设置开发者获取到的方向信息，顺时针0-360
-		MyLocationData locData = new MyLocationData.Builder()
-				.accuracy((float) location.radius).direction(100)
+		MyLocationData locData = new MyLocationData.Builder().accuracy((float) location.radius).direction(100)
 				.latitude(location.rawLat).longitude(location.rawLon).build();
 		// 确认地图我的位置点是否更新位置
 		mBaiduMap.setMyLocationData(locData);
@@ -1480,19 +1442,16 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 保存经纬度
 		LngLat.lng = location.rawLon;
 		LngLat.lat = location.rawLat;
-		
+
 		if (!(mApp.getContext() instanceof LiveActivity)) {
-			GetBaiduAddress.getInstance().searchAddress(location.rawLat,
-					location.rawLon);
+			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
 		}
 	}
 
 	@Override
 	public void CallBack_BaiduGeoCoder(int function, Object obj) {
 		if (null == obj) {
-			LogUtil.e(null,
-					"jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : "
-							+ (String) obj);
+			LogUtil.e(null, "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
 			return;
 		}
 
@@ -1500,8 +1459,7 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		if (null != CarRecorderActivity.mHandler) {
-			Message msg = CarRecorderActivity.mHandler
-					.obtainMessage(CarRecorderActivity.ADDR);
+			Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
 			msg.obj = address;
 			CarRecorderActivity.mHandler.sendMessage(msg);
 		}
@@ -1509,10 +1467,8 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 	}
 
 	@Override
-	public void wifiCallBack(int type, int state, int process, String message,
-			Object arrays) {
-		Log.e("", "wifiCallBack-------------type:" + type + "	state :" + state
-				+ "	process:" + process);
+	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
+		Log.e("", "wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
 		switch (type) {
 		case 5:
 			if (state == 0) {
@@ -1525,13 +1481,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 					// ipc成功连接上热点
 					WifiRsBean[] bean = (WifiRsBean[]) arrays;
 					if (null != bean) {
-						console.log("自动wifi链接IPC连接上WIFI热点回调---length---"
-								+ bean.length);
+						console.log("自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
 						if (bean.length > 0) {
 							console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---");
 							mGolukName = bean[0].getIpc_ssid();
-							sendLogicLinkIpc(bean[0].getIpc_ip(),
-									bean[0].getIpc_mac());
+							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 						}
 					}
 					break;
@@ -1572,10 +1526,8 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// Toast.makeText(VideoSquareActivity.this, "开始第三方分享:" +
 		// channel,Toast.LENGTH_SHORT).show();
 
-		System.out.println("shareid-----" + shareVideoId + "   channel-----"
-				+ channel);
-		boolean result = GolukApplication.getInstance().getVideoSquareManager()
-				.shareVideoUp(channel, shareVideoId);
+		System.out.println("shareid-----" + shareVideoId + "   channel-----" + channel);
+		boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 		// System.out.println("shareid"+result);
 	}
 

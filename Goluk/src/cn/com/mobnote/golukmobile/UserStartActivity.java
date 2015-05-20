@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
@@ -54,9 +55,9 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.user_start);
-
-		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.bg, screenWidth, screenHeight);
+		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.guide_1, screenWidth, screenHeight);
 		RelativeLayout main = (RelativeLayout)findViewById(R.id.main);
 		main.setBackgroundDrawable(new BitmapDrawable(mBGBitmap));
 		

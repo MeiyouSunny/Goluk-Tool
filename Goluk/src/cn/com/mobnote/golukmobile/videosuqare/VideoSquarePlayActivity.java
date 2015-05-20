@@ -382,8 +382,10 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 			
 			if(mDataList.size()>0){
 				squareTypeDefault.setVisibility(View.GONE);
+				mRTPullListView.setVisibility(View.VISIBLE);
 			}else{
 				squareTypeDefault.setVisibility(View.VISIBLE);
+				mRTPullListView.setVisibility(View.GONE);
 			}
 		}
 			
