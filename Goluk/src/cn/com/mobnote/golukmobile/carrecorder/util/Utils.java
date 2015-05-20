@@ -18,15 +18,29 @@ public class Utils {
 //		System.out.print("文件大小 : "+fileSize);
 //		float sizeM = (float)fileSize / 1024 / 1024;
 //		DecimalFormat df = new DecimalFormat("#.##");
-		String sizeResult ="";
-		if(fileSize > 1024){
-			double size = fileSize/1024;
-			sizeResult = size + "GB";
-		}else{
-			sizeResult = fileSize + "MB";
-		}
+//		String sizeResult ="";
+//		if(fileSize > 1024){
+//			double size = fileSize/1024;
+//			sizeResult = size + "GB";
+//		}else{
+//			sizeResult = fileSize + "MB";
+//		}
+//		
+//		return sizeResult;
 		
-		return sizeResult;
+		String result="";
+		double totalsize=0;
+		
+		java.text.DecimalFormat   df=new   java.text.DecimalFormat("#.##");
+		if(fileSize >= 1024){
+			totalsize = fileSize/1024;
+			result = df.format(totalsize) + "GB";
+		}else{
+			totalsize = fileSize;
+			result = df.format(totalsize) + "MB";
+		}
+
+		return result;
 	}
 	
 	

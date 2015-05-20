@@ -1357,6 +1357,11 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		if (null != mCustomDialog && mCustomDialog.isShowing()) {
 			return;
 		}
+		
+		if("carrecorder".equals(mPageSource)){
+			return;
+		}
+		
 		LogUtil.e("xuhw", "YYYYYY===@@@@@@=====2222==fileList.size()="+fileList.size());
 		if (mContext instanceof Activity && fileList.size() > 0) {
 			LogUtil.e("xuhw", "YYYYYY===@@@@@@=====33333===");
@@ -1395,6 +1400,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				if(size <= 0){
 					return;
 				}
+				
 //				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666==mDownLoadFileList="+mDownLoadFileList.toString());
 //				long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
 //				GFileUtils.writeIPCLog("YYYYYY===@@@@@@===downloadfiletime="+starttime+"==mDownLoadFileList="+mDownLoadFileList.toString());
@@ -1410,6 +1416,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						if(mDownLoadFileList.size() > 0){
 							autodownloadfile=true;
 						}
+						
 						for(int i=0;i<mDownLoadFileList.size();i++){
 							String name = mDownLoadFileList.get(i);
 							boolean flag = GolukApplication.getInstance()
