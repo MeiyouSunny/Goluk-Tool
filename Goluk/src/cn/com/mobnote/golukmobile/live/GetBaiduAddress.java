@@ -41,9 +41,9 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 
 	public void searchAddress(double lat, double lon) {
 		LogUtil.e(null, "jyf----20150406----LiveActivity----searchAddress----1111111  : ");
-		if (isRequesting) {
-			return;
-		}
+//		if (isRequesting) {
+//			return;
+//		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----searchAddress----22222  : ");
 		isRequesting = true;
 		LatLng ptCenter = new LatLng(lat, lon);
