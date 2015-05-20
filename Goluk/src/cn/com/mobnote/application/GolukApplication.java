@@ -895,7 +895,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		 System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+//		 System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		// IPC控制连接状态 event = 0
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
 			// 如果不是连接成功,都标识为失败
@@ -982,14 +982,14 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 							boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
 							LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
 							//查询新文件列表（最多10条）
-							long time = SettingUtils.getInstance().getLong("querytime", 0);
-							long curtime = System.currentTimeMillis()/1000;
-							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
-							if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
-								SettingUtils.getInstance().putLong("querytime", curtime);
+//							long time = SettingUtils.getInstance().getLong("querytime", 0);
+//							long curtime = System.currentTimeMillis()/1000;
+//							LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
+//							if(Math.abs(curtime - time) > 5*60){//五分钟以内断开重新连接的不做处理
+//								SettingUtils.getInstance().putLong("querytime", curtime);
 								queryNewFileList();
-								LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
-							}
+//								LogUtil.e("xuhw", "YYYYYYY===start==queryNewFileList====");
+//							}
 							if(null != mMainActivity){
 								mMainActivity.wiFiLinkStatus(2);
 							}
@@ -1015,6 +1015,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						}
 						LogUtil.e("xuhw", "YYYYYY===@@@@@@===####==2222===");
 						fileList = IpcDataParser.parseMoreFile((String) param2);
+						LogUtil.e("xuhw", "YYYYYY===@@@@@@===####==333==fileList.size()="+fileList.size());
 						mHandler.removeMessages(1001);
 						mHandler.sendEmptyMessageDelayed(1001, 1000);
 					}
@@ -1069,7 +1070,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			case IPC_VDCP_Msg_SetVedioEncodeCfg:
 				if (param1 == RESULE_SUCESS) {
 					getVideoEncodeCfg();
-					updateAutoRecordState();
 				}
 				break;
 			case IPC_VDCP_Msg_GetRecordState:
@@ -1256,46 +1256,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 	}
 
-	/**
-	 * 发起获取自动循环录制状态
-	 * 
-	 * @author xuhw
-	 * @date 2015年4月10日
-	 */
-	private void updateAutoRecordState() {
-		if (GolukApplication.getInstance().getIpcIsLogin()) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					boolean record = GolukApplication.getInstance()
-							.getIPCControlManager().getRecordState();
-					System.out.println("YYY=========getRecordState========="
-							+ record);
-				}
-			}).start();
-		}
-	}
-
-	/**
-	 * 获取停车安防配置
-	 * 
-	 * @author xuhw
-	 * @date 2015年4月10日
-	 */
-	private void updateMotionCfg() {
-		if (GolukApplication.getInstance().getIpcIsLogin()) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					boolean record = GolukApplication.getInstance()
-							.getIPCControlManager().getMotionCfg();
-					System.out.println("YYY=========getMotionCfg========="
-							+ record);
-				}
-			}).start();
-		}
-	}
-
 	public void addLocationListener(String key, ILocationFn fn) {
 		if (mLocationHashMap.containsValue(key)) {
 			return;
@@ -1330,10 +1290,43 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 * @author xuhw
 	 * @date 2015年4月24日
 	 */
-	private void queryNewFileList() {
+	public void queryNewFileList() {
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+		boolean isbind = preferences.getBoolean("isbind", false);
+		if (!isbind) {
+			return;
+		}
+		
+		if(!isIpcLoginSuccess){
+			return;
+		}
+		
+		if(mDownLoadFileList.size() > 0){
+			return;
+		}
+		
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
 		LogUtil.e("xuhw", "YYYYYY===queryNewFileList====starttime="+starttime);
 		mIPCControlManager.queryFileListInfo(6, 5, starttime, 2147483647);
+	}
+	
+	/**
+	 * 通知IPC同步文件
+	 * @author xuhw
+	 * @date 2015年5月19日
+	 */
+	public void stopDownloadList(){
+		if(autodownloadfile){
+			autodownloadfile=false;
+			if(mDownLoadFileList.size() > 0){
+				mDownLoadFileList.clear();
+				mNoDownLoadFileList.clear();
+				if (GlobalWindow.getInstance().isShow()) {
+					GlobalWindow.getInstance().dimissGlobalWindow();
+				}
+			}
+			mIPCControlManager.stopDownloadFile();
+		}
 	}
 
 	/**
@@ -1364,7 +1357,12 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		if (null != mCustomDialog && mCustomDialog.isShowing()) {
 			return;
 		}
-		LogUtil.e("xuhw", "YYYYYY===@@@@@@=====2222===");
+		
+		if("carrecorder".equals(mPageSource)){
+			return;
+		}
+		
+		LogUtil.e("xuhw", "YYYYYY===@@@@@@=====2222==fileList.size()="+fileList.size());
 		if (mContext instanceof Activity && fileList.size() > 0) {
 			LogUtil.e("xuhw", "YYYYYY===@@@@@@=====33333===");
 			Activity a = (Activity)mContext;
@@ -1402,6 +1400,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				if(size <= 0){
 					return;
 				}
+				
 //				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====6666==mDownLoadFileList="+mDownLoadFileList.toString());
 //				long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
 //				GFileUtils.writeIPCLog("YYYYYY===@@@@@@===downloadfiletime="+starttime+"==mDownLoadFileList="+mDownLoadFileList.toString());
@@ -1417,6 +1416,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						if(mDownLoadFileList.size() > 0){
 							autodownloadfile=true;
 						}
+						
 						for(int i=0;i<mDownLoadFileList.size();i++){
 							String name = mDownLoadFileList.get(i);
 							boolean flag = GolukApplication.getInstance()
