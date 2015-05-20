@@ -1487,9 +1487,11 @@ public class MainActivity extends BaseActivity implements OnClickListener , Wifi
 		// 保存经纬度
 		LngLat.lng = location.rawLon;
 		LngLat.lat = location.rawLat;
-
-		GetBaiduAddress.getInstance().searchAddress(location.rawLat,
-				location.rawLon);
+		
+		if (!(mApp.getContext() instanceof LiveActivity)) {
+			GetBaiduAddress.getInstance().searchAddress(location.rawLat,
+					location.rawLon);
+		}
 	}
 
 	@Override
