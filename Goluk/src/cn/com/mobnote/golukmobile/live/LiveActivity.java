@@ -42,7 +42,6 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
-import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -989,6 +988,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	// 自己开启直播，返回接口
 	public void callBack_LiveLookStart(boolean isLive, int success, Object param1, Object param2) {
+		if (isAlreadExit) {
+			// 界面已经退出
+			return;
+		}
 		if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
 			liveFailedStart(isLive);
 			return;
@@ -1025,6 +1028,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	// 判断自己发起的直播是否有效
 	private void liveCallBack_startLiveIsValid(int success, Object obj) {
+		if (isAlreadExit) {
+			// 界面已经退出
+			return;
+		}
 		// 是自己的直播是否有效
 		LiveDialogManager.getManagerInstance().dismissProgressDialog();
 		if (1 != success) {
@@ -1073,6 +1080,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 */
 	public void LiveVideoDataCallBack(int success, Object obj) {
 		console.log("视频直播数据返回--LiveVideoDataCallBack: success: " + success);
+		if (isAlreadExit) {
+			// 界面已经退出
+			return;
+		}
 
 		LogUtil.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----111 : " + success);
 		if (isShareLive) {
@@ -2631,22 +2642,23 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				String shareurl = data.getString("shorturl");
 				String coverurl = data.getString("coverurl");
 				System.out.println("zhdata===" + data);
-				String describe =data.optString("describe");
+				String describe = data.optString("describe");
 				if (TextUtils.isEmpty(describe)) {
 					describe = "#极路客直播#";
 				}
 				String name = "";
-				if (this.isShareLive){
+				if (this.isShareLive) {
 					name = this.myInfo.nickName;
-				}else{
+				} else {
 					name = this.currentUserInfo.nickName;
 				}
 				String ttl = name + "的直播视频分享";
 				if ("".equals(coverurl)) {
 				}
 				// 设置分享内容
-				//sharePlatform.setShareContent(shareurl, coverurl, describe);
-				CustomShareBoard sb = new CustomShareBoard(LiveActivity.this,sharePlatform,shareurl,coverurl,describe,ttl);
+				// sharePlatform.setShareContent(shareurl, coverurl, describe);
+				CustomShareBoard sb = new CustomShareBoard(LiveActivity.this, sharePlatform, shareurl, coverurl,
+						describe, ttl);
 				sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			} catch (JSONException e) {
 				e.printStackTrace();
