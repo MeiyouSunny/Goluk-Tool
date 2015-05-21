@@ -78,13 +78,14 @@
 		    android:layout_toRightOf="@id/photo_default_img"
 		    android:layout_toLeftOf="@id/right_btn"
 		    android:layout_centerVertical="true"
+		    android:visibility="gone"
 		    >
 		<ImageView 
 		    android:id="@+id/user_sex_image"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_marginLeft="17dp"
-		    android:src="@drawable/more_man"
+		    android:src="@drawable/more_no_log_in_icon"
 		    />
 		
 		<TextView
@@ -105,7 +106,7 @@
 		    android:layout_toRightOf="@id/photo_default_img"
 		    android:layout_toLeftOf="@id/right_btn"
 		    android:layout_centerVertical="true"
-		    android:visibility="gone"
+		    android:visibility="visible"
 		    >
 		    <RelativeLayout 
 		        android:layout_width="wrap_content"

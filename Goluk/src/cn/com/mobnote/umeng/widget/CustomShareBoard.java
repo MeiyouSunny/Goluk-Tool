@@ -15,16 +15,19 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SnsPlatform;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.bean.StatusCode;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
+import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 /**
  * 
@@ -47,9 +50,21 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	/** 保存当前的分享方式 */
 	private String mCurrentShareType = "2";
 
-	public CustomShareBoard(Activity activity) {
+	SharePlatformUtil sharePlatform;
+
+	String shareurl = "";
+	String coverurl = "";
+	String describe = "";
+	String ttl = "";
+
+	public CustomShareBoard(Activity activity, SharePlatformUtil spf, String surl, String curl, String db,String tl) {
 		super(activity);
 		this.mActivity = activity;
+		sharePlatform = spf;
+		shareurl = surl;
+		coverurl = curl;
+		describe = db;
+		ttl = tl;
 		initView(activity);
 	}
 
@@ -60,7 +75,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.wechat_circle).setOnClickListener(this);
 		rootView.findViewById(R.id.qq).setOnClickListener(this);
 		rootView.findViewById(R.id.sms).setOnClickListener(this);
-		//rootView.findViewById(R.id.sina).setOnClickListener(this);
+		// rootView.findViewById(R.id.sina).setOnClickListener(this);
 		rootView.findViewById(R.id.share_cancel).setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
@@ -75,33 +90,37 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		int id = v.getId();
 		switch (id) {
 		case R.id.wechat:
-			
+			System.out.println("zh======wx"+shareurl + coverurl + describe + ttl);
+			sharePlatform.setShareContent(shareurl+"&type=2", coverurl, describe,ttl);
 			mCurrentShareType = TYPE_WEIXIN;
 			performShare(SHARE_MEDIA.WEIXIN);
 			break;
 		case R.id.wechat_circle:
+			sharePlatform.setShareContent(shareurl+"&type=5", coverurl, describe,ttl);
 			mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 			performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
 			break;
 		case R.id.qq:
 			@SuppressWarnings("static-access")
-			Boolean isQQ=mController.getConfig().isSupportQQZoneSSO(mActivity);
+			Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
 			mCurrentShareType = TYPE_QQ;
-			if(isQQ){
+			if (isQQ) {
+				sharePlatform.setShareContent(shareurl+"&type=4", coverurl, describe,ttl);
 				performShare(SHARE_MEDIA.QQ);
-			}else{
-				Toast.makeText(mActivity, "你还没有安装QQ或版本太低",Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(mActivity, "你还没有安装QQ或版本太低", Toast.LENGTH_SHORT).show();
 			}
-			
+
 			break;
 		case R.id.sms:
+			sharePlatform.setShareContent(shareurl+"&type=6", coverurl, describe,ttl);
 			mCurrentShareType = TYPE_SMS;
 			performShare(SHARE_MEDIA.SMS);
 			break;
-//		case R.id.sina:
-//			mCurrentShareType = TYPE_WEIBO_XINLANG;
-//			performShare(SHARE_MEDIA.SINA);
-//			break;
+		// case R.id.sina:
+		// mCurrentShareType = TYPE_WEIBO_XINLANG;
+		// performShare(SHARE_MEDIA.SINA);
+		// break;
 		case R.id.share_cancel:
 			dismiss();
 			break;
@@ -122,27 +141,28 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 			@Override
 			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-				System.out.println("mCurrentShareType------"+mCurrentShareType);
-				//String showText = platform.toString();
+				System.out.println("mCurrentShareType------" + mCurrentShareType);
+				// String showText = platform.toString();
 				if (eCode == StatusCode.ST_CODE_SUCCESSED) {
 					if (mActivity instanceof VideoShareActivity) {
 						((VideoShareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-					} else if (mActivity instanceof MainActivity){
+					} else if (mActivity instanceof MainActivity) {
 						((MainActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-					} else if (mActivity instanceof VideoSquarePlayActivity){
+					} else if (mActivity instanceof VideoSquarePlayActivity) {
 						((VideoSquarePlayActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 					} else if (mActivity instanceof LiveActivity) {
 						((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 					}
-					//showText += "平台分享成功";
+					// showText += "平台分享成功";
 				} else {
-					//showText += "平台分享失败";
+					// showText += "平台分享失败";
 					if (mActivity instanceof VideoShareActivity) {
 						((VideoShareActivity) mActivity).shareSucessDeal(false, null);
 					}
 				}
-				//mCurrentShareType = null;
-				//Toast.makeText(mActivity, showText,Toast.LENGTH_SHORT).show();
+				// mCurrentShareType = null;
+				// Toast.makeText(mActivity,
+				// showText,Toast.LENGTH_SHORT).show();
 				dismiss();
 			}
 		});

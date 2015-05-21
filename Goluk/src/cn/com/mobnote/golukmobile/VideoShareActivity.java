@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,7 +33,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -113,6 +111,8 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	private final int MSG_H_START_UPLOAD = 6;
 
 	private final int MSG_H_COUNT = 7;
+	/** 重新上传 */
+	private final int MSG_H_RETRY_UPLOAD = 8;
 
 	private final UMSocialService mController = UMServiceFactory.getUMSocialService(DESCRIPTOR);
 	/** application */
@@ -161,6 +161,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	private int mVideoType = 0;
 
 	private String videoName;
+	/** 上传失败次数后再提示 */
+	private final int UPLOAD_FAILED_UP = 3;
+	private int uploadCount = 0;
 
 	public Handler mmmHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -196,13 +199,14 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			case MSG_H_UPLOAD_SUCESS:
 				showToast("上传完成");
 				GlobalWindow.getInstance().topWindowSucess("视频上传成功");
-				// mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
 				shareCanEnable();
 				break;
 			case MSG_H_UPLOAD_ERROR:
+				if (isExit) {
+					return;
+				}
 				// 上传失败
 				uploadFailed();
-
 				break;
 			case MSG_H_UPLOAD_CANCEL:
 
@@ -218,6 +222,16 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 					finishShowCount = 0;
 				} else {
 					mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
+				}
+				break;
+			case MSG_H_RETRY_UPLOAD:
+				if (isExit) {
+					return;
+				}
+				showToastMsg("重新上传...");
+				uploadShareVideo();
+				if (null == GlobalWindow.getInstance().getApplication()) {
+					GlobalWindow.getInstance().setApplication(mApp);
 				}
 				break;
 			default:
@@ -255,17 +269,16 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		@Override
 		public void handleProcess(long range, long size, String videoId) {
+			if (isExit) {
+				return;
+			}
 			// 保存上传视频ID
 			mVideoVid = videoId;
-
 			final int percent = (int) (range * 100 / size);
-
 			Message msg = new Message();
 			msg.what = MSG_H_UPLOAD_PROGRESS;
 			msg.obj = percent;
-
 			mmmHandler.sendMessage(msg);
-
 			// 上传进度回调
 			console.log("upload service--VideoShareActivity-handleProcess___range=" + range + ", size=" + size
 					+ ", videoId = " + videoId + " percent:" + percent);
@@ -275,9 +288,17 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		public void handleException(DreamwinException exception, int status) {
 			// 处理上传过程中出现的异常
 			console.log("upload service--VideoShareActivity-handleException----上传失败，" + exception.getMessage());
-			mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
+			if (isExit) {
+				return;
+			}
+			if (uploadCount >= UPLOAD_FAILED_UP) {
+				// 报错
+				mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
+				isUploading = false;
+			} else {
+				mmmHandler.sendEmptyMessageDelayed(MSG_H_RETRY_UPLOAD, 500);
+			}
 
-			isUploading = false;
 		}
 
 		@Override
@@ -535,6 +556,8 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			return;
 		}
 
+		uploadCount++;
+
 		isUploading = true;
 		VideoInfo videoinfo = new VideoInfo();
 		videoinfo.setTitle("标题");
@@ -548,6 +571,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		if (null != mApp.mCCUrl && !"".equals(mApp.mCCUrl)) {
 			uploadURL = mApp.mCCUrl;
 		}
+		// this.showToast(uploadURL);
 		videoinfo.setNotifyUrl(uploadURL);
 		if (mUploader != null) {
 			mUploader = null;
@@ -611,16 +635,20 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				Toast.makeText(VideoShareActivity.this, "获取视频分享地址失败", Toast.LENGTH_SHORT).show();
 				return;
 			}
-
+			
 			JSONObject dataObj = obj.getJSONObject("data");
 			final String shortUrl = dataObj.getString("shorturl");
 			final String coverUrl = dataObj.getString("coverurl");
-
+			String title = "极路客精彩视频分享";
+			String describe = mDesEdit.getText().toString();
+			if(describe == null || "".equals(describe)){
+				describe = "#极路客精彩视频#";
+			}
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 			
 			// 设置分享内容
-			sharePlatform.setShareContent(shortUrl, coverUrl, mDesEdit.getText().toString());
-			CustomShareBoard shareBoard = new CustomShareBoard(this);
+			//sharePlatform.setShareContent(shortUrl, coverUrl, mDesEdit.getText().toString());
+			CustomShareBoard shareBoard = new CustomShareBoard(this,sharePlatform,shortUrl,coverUrl,describe,title);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
 		} catch (JSONException e) {
@@ -677,12 +705,24 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
+	private void cancelLoad() {
+
+		new Thread() {
+			@Override
+			public void run() {
+				mUploader.cancel();
+			}
+		}.start();
+	}
+
 	private void exit(boolean isdestroyTopwindow) {
 		isExit = true;
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
+		mmmHandler.removeMessages(MSG_H_RETRY_UPLOAD);
 		long starTime = System.currentTimeMillis();
-		mUploader.cancel();
+		// mUploader.cancel();
+		cancelLoad();
 		Log.e("", "uploader   cancal time:--------:" + (System.currentTimeMillis() - starTime));
 		if (isdestroyTopwindow) {
 			GlobalWindow.getInstance().dimissGlobalWindow();
@@ -769,22 +809,10 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			Toast.makeText(VideoShareActivity.this, "第三方分享失败", Toast.LENGTH_SHORT).show();
+			Toast.makeText(VideoShareActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		// Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel,
-		// Toast.LENGTH_SHORT).show();
-
-		final String json = createShareSucesNotifyJson(mVideoVid, channel);
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_ShareNotify, json);
-
-		// Toast.makeText(VideoShareActivity.this, "调用Logic分享结果:" + json,
-		// Toast.LENGTH_SHORT).show();
-
-		if (!b) {
-			Toast.makeText(VideoShareActivity.this, "调用Logic分享结果失败:" + channel, Toast.LENGTH_SHORT).show();
-		}
+		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, mVideoVid);
 	}
 
 	public static String createShareSucesNotifyJson(String videoVid, String channel) {
