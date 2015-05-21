@@ -608,16 +608,20 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				Toast.makeText(VideoShareActivity.this, "获取视频分享地址失败", Toast.LENGTH_SHORT).show();
 				return;
 			}
-
+			
 			JSONObject dataObj = obj.getJSONObject("data");
 			final String shortUrl = dataObj.getString("shorturl");
 			final String coverUrl = dataObj.getString("coverurl");
-
+			String title = "极路客精彩视频分享";
+			String describe = mDesEdit.getText().toString();
+			if(describe == null || "".equals(describe)){
+				describe = "#极路客精彩视频#";
+			}
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 
 			// 设置分享内容
-			sharePlatform.setShareContent(shortUrl, coverUrl, mDesEdit.getText().toString());
-			CustomShareBoard shareBoard = new CustomShareBoard(this);
+			//sharePlatform.setShareContent(shortUrl, coverUrl, mDesEdit.getText().toString());
+			CustomShareBoard shareBoard = new CustomShareBoard(this,sharePlatform,shortUrl,coverUrl,describe,title);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
 		} catch (JSONException e) {

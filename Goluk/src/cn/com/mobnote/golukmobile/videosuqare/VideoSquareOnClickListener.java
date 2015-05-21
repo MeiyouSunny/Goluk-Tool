@@ -255,6 +255,8 @@ public class VideoSquareOnClickListener implements OnClickListener,
 						String describe = "";
 						if(!data.isNull("describe")){
 							describe = data.getString("describe");
+						}else{
+							describe = "#极路客精彩视频#";
 						}
 						
 						if ("".equals(coverurl)) {
@@ -262,15 +264,15 @@ public class VideoSquareOnClickListener implements OnClickListener,
 						}
 						System.out.println("YYYY+RESULT11111111");
 						// 设置分享内容
-						sharePlatform.setShareContent(shareurl, coverurl,describe);
+						//sharePlatform.setShareContent(shareurl, coverurl,describe);
 						System.out.println("YYYY+RESULT22222222");
-						
+						String ttl = "极路客精彩视频分享";
 						if (mcontext instanceof VideoSquarePlayActivity) {
 							System.out.println("YYYY+VideoSquarePlayActivity");
 							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
 							if (vspa!=null && !vspa.isFinishing()) {
 								vspa.mCustomProgressDialog.close();
-								CustomShareBoard shareBoard = new CustomShareBoard(vspa);
+								CustomShareBoard shareBoard = new CustomShareBoard(vspa,sharePlatform,shareurl, coverurl,describe,ttl);
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
 
@@ -282,7 +284,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 							}else{
 								if(vsa.mCustomProgressDialog!=null){
 									vsa.mCustomProgressDialog.close();
-									CustomShareBoard shareBoard = new CustomShareBoard(vsa);
+									CustomShareBoard shareBoard = new CustomShareBoard(vsa,sharePlatform,shareurl, coverurl,describe,ttl);
 									shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 								}
 								
