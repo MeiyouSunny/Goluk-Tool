@@ -324,6 +324,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "VideoShare");
+		mApp.initLogic();
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 		// 获取第一帧缩略图
@@ -635,20 +636,21 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				Toast.makeText(VideoShareActivity.this, "获取视频分享地址失败", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			
+
 			JSONObject dataObj = obj.getJSONObject("data");
 			final String shortUrl = dataObj.getString("shorturl");
 			final String coverUrl = dataObj.getString("coverurl");
 			String title = "极路客精彩视频分享";
 			String describe = mDesEdit.getText().toString();
-			if(describe == null || "".equals(describe)){
+			if (describe == null || "".equals(describe)) {
 				describe = "#极路客精彩视频#";
 			}
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 
 			// 设置分享内容
-			//sharePlatform.setShareContent(shortUrl, coverUrl, mDesEdit.getText().toString());
-			CustomShareBoard shareBoard = new CustomShareBoard(this,sharePlatform,shortUrl,coverUrl,describe,title);
+			// sharePlatform.setShareContent(shortUrl, coverUrl,
+			// mDesEdit.getText().toString());
+			CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shortUrl, coverUrl, describe, title);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
 		} catch (JSONException e) {
@@ -755,9 +757,6 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 	private void click_share() {
 		if (!this.mIsUploadSucess) {
-			// Toast.makeText(VideoShareActivity.this, "上传视频成功后才可以分享",
-			// Toast.LENGTH_SHORT).show();
-			Toast.makeText(VideoShareActivity.this, "正在上传视频,请稍等", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
