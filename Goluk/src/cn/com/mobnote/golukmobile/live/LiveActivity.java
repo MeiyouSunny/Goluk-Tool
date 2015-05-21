@@ -2631,10 +2631,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				String shareurl = data.getString("shorturl");
 				String coverurl = data.getString("coverurl");
 				System.out.println("zhdata===" + data);
-				String describe = "";
-				if (!data.isNull("describe")) {
-					describe = data.getString("describe");
-				}else{
+				String describe =data.optString("describe");
+				if (TextUtils.isEmpty(describe)) {
 					describe = "#极路客直播#";
 				}
 				String name = "";
