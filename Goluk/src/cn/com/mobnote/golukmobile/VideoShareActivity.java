@@ -111,6 +111,8 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	private final int MSG_H_START_UPLOAD = 6;
 
 	private final int MSG_H_COUNT = 7;
+	/** 重新上传 */
+	private final int MSG_H_RETRY_UPLOAD = 8;
 
 	private final UMSocialService mController = UMServiceFactory.getUMSocialService(DESCRIPTOR);
 	/** application */
@@ -159,6 +161,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	private int mVideoType = 0;
 
 	private String videoName;
+	/** 上传失败次数后再提示 */
+	private final int UPLOAD_FAILED_UP = 3;
+	private int uploadCount = 0;
 
 	public Handler mmmHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -197,9 +202,11 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				shareCanEnable();
 				break;
 			case MSG_H_UPLOAD_ERROR:
+				if (isExit) {
+					return;
+				}
 				// 上传失败
 				uploadFailed();
-
 				break;
 			case MSG_H_UPLOAD_CANCEL:
 
@@ -215,6 +222,16 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 					finishShowCount = 0;
 				} else {
 					mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
+				}
+				break;
+			case MSG_H_RETRY_UPLOAD:
+				if (isExit) {
+					return;
+				}
+				showToastMsg("重新上传...");
+				uploadShareVideo();
+				if (null == GlobalWindow.getInstance().getApplication()) {
+					GlobalWindow.getInstance().setApplication(mApp);
 				}
 				break;
 			default:
@@ -252,17 +269,16 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		@Override
 		public void handleProcess(long range, long size, String videoId) {
+			if (isExit) {
+				return;
+			}
 			// 保存上传视频ID
 			mVideoVid = videoId;
-
 			final int percent = (int) (range * 100 / size);
-
 			Message msg = new Message();
 			msg.what = MSG_H_UPLOAD_PROGRESS;
 			msg.obj = percent;
-
 			mmmHandler.sendMessage(msg);
-
 			// 上传进度回调
 			console.log("upload service--VideoShareActivity-handleProcess___range=" + range + ", size=" + size
 					+ ", videoId = " + videoId + " percent:" + percent);
@@ -272,9 +288,17 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		public void handleException(DreamwinException exception, int status) {
 			// 处理上传过程中出现的异常
 			console.log("upload service--VideoShareActivity-handleException----上传失败，" + exception.getMessage());
-			mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
+			if (isExit) {
+				return;
+			}
+			if (uploadCount >= UPLOAD_FAILED_UP) {
+				// 报错
+				mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
+				isUploading = false;
+			} else {
+				mmmHandler.sendEmptyMessageDelayed(MSG_H_RETRY_UPLOAD, 500);
+			}
 
-			isUploading = false;
 		}
 
 		@Override
@@ -532,6 +556,8 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			return;
 		}
 
+		uploadCount++;
+
 		isUploading = true;
 		VideoInfo videoinfo = new VideoInfo();
 		videoinfo.setTitle("标题");
@@ -545,7 +571,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		if (null != mApp.mCCUrl && !"".equals(mApp.mCCUrl)) {
 			uploadURL = mApp.mCCUrl;
 		}
-		//this.showToast(uploadURL);
+		// this.showToast(uploadURL);
 		videoinfo.setNotifyUrl(uploadURL);
 		if (mUploader != null) {
 			mUploader = null;
@@ -675,12 +701,24 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
+	private void cancelLoad() {
+
+		new Thread() {
+			@Override
+			public void run() {
+				mUploader.cancel();
+			}
+		}.start();
+	}
+
 	private void exit(boolean isdestroyTopwindow) {
 		isExit = true;
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
+		mmmHandler.removeMessages(MSG_H_RETRY_UPLOAD);
 		long starTime = System.currentTimeMillis();
-		mUploader.cancel();
+		// mUploader.cancel();
+		cancelLoad();
 		Log.e("", "uploader   cancal time:--------:" + (System.currentTimeMillis() - starTime));
 		if (isdestroyTopwindow) {
 			GlobalWindow.getInstance().dimissGlobalWindow();
