@@ -96,7 +96,7 @@ public class SharePlatformUtil{
 	 */
 	public void setShareContent(String videourl,String imageurl,String text,String ttl) {
 		
-		ttl = "极路客分享";
+		//ttl = "极路客分享";
 		if(text == null || "".equals(text)){
 			text = "goluk精彩视频";
 		}

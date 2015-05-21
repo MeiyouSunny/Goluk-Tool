@@ -255,6 +255,9 @@ public class VideoSquareOnClickListener implements OnClickListener,
 						String describe = "";
 						if(!data.isNull("describe")){
 							describe = data.getString("describe");
+							if("".equals(describe)){
+								describe = "#极路客精彩视频#";
+							}
 						}else{
 							describe = "#极路客精彩视频#";
 						}
