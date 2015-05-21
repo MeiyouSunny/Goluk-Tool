@@ -2634,12 +2634,21 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				String describe = "";
 				if (!data.isNull("describe")) {
 					describe = data.getString("describe");
+				}else{
+					describe = "#极路客直播#";
 				}
+				String name = "";
+				if (this.isShareLive){
+					name = this.myInfo.nickName;
+				}else{
+					name = this.currentUserInfo.nickName;
+				}
+				String ttl = name + "的直播视频分享";
 				if ("".equals(coverurl)) {
 				}
 				// 设置分享内容
-				sharePlatform.setShareContent(shareurl, coverurl, describe);
-				CustomShareBoard sb = new CustomShareBoard(LiveActivity.this);
+				//sharePlatform.setShareContent(shareurl, coverurl, describe);
+				CustomShareBoard sb = new CustomShareBoard(LiveActivity.this,sharePlatform,shareurl,coverurl,describe,ttl);
 				sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			} catch (JSONException e) {
 				e.printStackTrace();
