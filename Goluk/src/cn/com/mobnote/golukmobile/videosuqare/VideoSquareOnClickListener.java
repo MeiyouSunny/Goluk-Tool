@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -252,13 +253,8 @@ public class VideoSquareOnClickListener implements OnClickListener,
 						JSONObject data = result.getJSONObject("data");
 						String shareurl = data.getString("shorturl");
 						String coverurl = data.getString("coverurl");
-						String describe = "";
-						if(!data.isNull("describe")){
-							describe = data.getString("describe");
-							if("".equals(describe)){
-								describe = "#极路客精彩视频#";
-							}
-						}else{
+						String describe =data.optString("describe");
+						if (TextUtils.isEmpty(describe)) {
 							describe = "#极路客精彩视频#";
 						}
 						
@@ -270,6 +266,10 @@ public class VideoSquareOnClickListener implements OnClickListener,
 						//sharePlatform.setShareContent(shareurl, coverurl,describe);
 						System.out.println("YYYY+RESULT22222222");
 						String ttl = "极路客精彩视频分享";
+						if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
+							ttl = mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
+						}
+						
 						if (mcontext instanceof VideoSquarePlayActivity) {
 							System.out.println("YYYY+VideoSquarePlayActivity");
 							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
@@ -278,7 +278,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 								CustomShareBoard shareBoard = new CustomShareBoard(vspa,sharePlatform,shareurl, coverurl,describe,ttl);
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
-
+							
 						} else if(mcontext instanceof MainActivity){
 							System.out.println("YYYY+VideoSquareActivity");
 							MainActivity vsa = (MainActivity) mcontext;
