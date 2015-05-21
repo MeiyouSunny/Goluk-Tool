@@ -380,15 +380,15 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mVideoSquareManager.addVideoSquareManagerListener("live", this);
 		}
 	}
-	
-	@Override 
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    /**使用SSO授权必须添加如下代码 */
-	    UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode) ;
-	    if(ssoHandler != null){
-	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-	    }
+		super.onActivityResult(requestCode, resultCode, data);
+		/** 使用SSO授权必须添加如下代码 */
+		UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode);
+		if (ssoHandler != null) {
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
 
 	/**
@@ -1360,10 +1360,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		String vid = null;
 		if (isShareLive) {
 			vid = mCurrentVideoId;
-
 		} else {
 			if (!isKaiGeSucess) {
-
 				return;
 			}
 			vid = liveData.vid;
@@ -2597,17 +2595,21 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			showToast("第三方分享失败");
+			showToast("分享失败");
 			return;
 		}
-		// Toast.makeText(VideoShareActivity.this, "开始第三方分享:" + channel,
-		// Toast.LENGTH_SHORT).show();
 
-		// final String json = createShareSucesNotifyJson(mVideoVid, channel);
-		// boolean b =
-		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-		// IPageNotifyFn.PageType_ShareNotify, json);
+		String vid = null;
+		if (isShareLive) {
+			vid = mCurrentVideoId;
+		} else {
+			if (!isKaiGeSucess) {
+				return;
+			}
+			vid = liveData.vid;
+		}
 
+		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, vid);
 	}
 
 	@Override
@@ -2628,7 +2630,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				JSONObject data = result.getJSONObject("data");
 				String shareurl = data.getString("shorturl");
 				String coverurl = data.getString("coverurl");
-				System.out.println("zhdata==="+data);
+				System.out.println("zhdata===" + data);
 				String describe = "";
 				if (!data.isNull("describe")) {
 					describe = data.getString("describe");

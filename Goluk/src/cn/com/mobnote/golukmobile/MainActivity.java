@@ -16,7 +16,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
@@ -1444,16 +1443,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			// Toast.makeText(VideoSquareActivity.this,
-			// "第三方分享失败",Toast.LENGTH_SHORT).show();
+			 Toast.makeText(this, "分享失败",Toast.LENGTH_SHORT).show();
 			return;
 		}
-		// Toast.makeText(VideoSquareActivity.this, "开始第三方分享:" +
-		// channel,Toast.LENGTH_SHORT).show();
-
 		System.out.println("shareid-----" + shareVideoId + "   channel-----" + channel);
-		boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
-		// System.out.println("shareid"+result);
+		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 	}
 
 }
