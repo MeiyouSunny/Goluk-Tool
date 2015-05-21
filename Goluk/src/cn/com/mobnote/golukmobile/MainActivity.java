@@ -36,10 +36,8 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,7 +86,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.utils.Log;
 
 /**
@@ -120,8 +117,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	/** 地图layout */
-	private LinearLayout mMapLayout = null;
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
 	/** 百度地图 */
@@ -141,8 +136,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private RelativeLayout mShareLayout = null;
 	/** 关闭分享布局 */
 	private ImageButton mCloseShareBtn = null;
-	/** ipc-wifi状态按钮 */
-	private Button mIpcWiFiBtn = null;
 	/** 更多按钮 */
 	private Button mMoreBtn = null;
 	/** 视频广场按钮 */
@@ -247,38 +240,23 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 添加腾讯崩溃统计
 		String appId = "900002451";
 		// true代表App处于调试阶段，false代表App发布阶段
-		boolean isDebug = true;
+		boolean isDebug = false;
 		// 初始化SDK
 		CrashReport.initCrashReport(this, appId, isDebug);
-
 		CrashReport.setUserId(getIMEI());
-
 		mContext = this;
-		// SysApplication.getInstance().addActivity(this);
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "Main");
-
 		mApp.initLogic();
-
-		// mApp.mGoluk.GoLuk_WifiStateChanged(true);
-
 		// 页面初始化,获取页面控件
-
 		mApp.startTime = System.currentTimeMillis();
-
-		// mApp.mGoluk.GoLuk_WifiStateChanged(true);
-
 		// 页面初始化,获取页面控件
 		init();
 		// 初始化地图
 		initMap();
 		// 初始化视频广场
 		initVideoSquare();
-		// 加载在线视频轮播
-		// initViewPager();
-		// 加载本地视屏列表
-		// initLocalVideoList();
 
 		// 初始化连接与綁定状态
 		boolean b = this.isBindSucess();
@@ -337,7 +315,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
 		// 分享按钮
 		mShareBtn = (Button) findViewById(R.id.index_share_btn);
-		// mDrivingShareText = (TextView) findViewById(R.id.driving_share_text);
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
 
@@ -424,10 +401,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				}
 			}
 		};
-
-		// Message msg = new Message();
-		// msg.what = 99;
-		// MainActivity.mMainHandler.sendMessageDelayed(msg,5000);
 	}
 
 	/**
@@ -459,9 +432,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void initMap() {
 
 		indexMapLayout = (RelativeLayout) findViewById(R.id.index_map_layout);
-		mMapLayout = (LinearLayout) findViewById(R.id.map_layout);
-		// 获取地图控件引用
-		// mMapView = (MapView) findViewById(R.id.bmapView);
 
 		BaiduMapOptions options = new BaiduMapOptions();
 		options.rotateGesturesEnabled(false); // 不允许手势
@@ -537,19 +507,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	/**
 	 * 在线视频基础数据回调
 	 * 
-	 * @param obj
-	 *            ={"code":"200","json":[{"vid":"test11","vurl":
-	 *            "http://cdn3.lbs8.com/files/cdcvideo/test11.mp4"
-	 *            ,"purl":"http://img2.3lian.com/img2007/18/18/003.png"
-	 *            ,"desc":"陈真暴揍小日本"
-	 *            ,"comment":"215","ilike":"123"},{"vid":"test12"
-	 *            ,"vurl":"http://cdn3.lbs8.com/files/cdcvideo/test12.mp4"
-	 *            ,"purl"
-	 *            :"http://img.cool80.com/i/png/217/02.png","desc":"轮椅女孩环游世界"
-	 *            ,"comment":"17","ilike":"111"},{"vid":"test13","vurl":
-	 *            "http://cdn3.lbs8.com/files/cdcvideo/test13.mp4","purl":
-	 *            "http://img2.3lian.com/img2007/14/03/20080405141042281.png"
-	 *            ,"desc":"万年不毕业小学生，每次出现引发各种血案","comment":"207","ilike":"90"}]}
 	 */
 	public void onLineVideoCallBack(Object obj) {
 		String videoJson = (String) obj;
@@ -765,9 +722,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private static final String WIFI_CONNING_STR = "正在连接Goluk...";
 	private static final String WIFI_CONNED_STR = "已连接Goluk";
 
-	/** 音量图片动画 */
-	private AnimationDrawable mVolumeImgAnimation = null;
-
 	private void startWifi() {
 		Log.e("", "wifiCallBack-------------startWifi:");
 		if (WIFI_STATE_CONNING == mWiFiStatus) {
@@ -775,11 +729,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		mWiFiStatus = WIFI_STATE_CONNING;
 		mWifiStateTv.setText(WIFI_CONNING_STR);
-		/*
-		 * mWifiState.setBackgroundResource(R.anim.anim_wifi);
-		 * this.mVolumeImgAnimation = (AnimationDrawable) this.mWifiState
-		 * .getBackground(); this.mVolumeImgAnimation.start();
-		 */
 
 		PlayVoiceRemote.getInstance().setSpeechEngine("test", 1000, 1000, 1000, 1000);
 
@@ -835,14 +784,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mEditor.commit();
 		startActivity(intent);
 	}
-
-	/*
-	 * public void setViewListBg(boolean flog){ if(flog){
-	 * squareDefault.setVisibility(View.VISIBLE); }else{
-	 * squareDefault.setVisibility(View.GONE); }
-	 * 
-	 * }
-	 */
 
 	private void click_ConnFailed() {
 		if (!isBindSucess()) {
@@ -1028,16 +969,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	}
 
-	/*
-	 * // 退出程序 private void exit() { // if (mApp.isUserLoginSucess) {
-	 * SysApplication.getInstance().exit(); // }
-	 * mApp.mIPCControlManager.setIPCWifiState(false, "");
-	 * mApp.mGoluk.GolukLogicDestroy(); if (null != UserStartActivity.mHandler)
-	 * { UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT); }
-	 * finish(); int PID = android.os.Process.myPid();
-	 * android.os.Process.killProcess(PID); }
-	 */
-
 	public void exit() {
 		if (mShareLayout != null && mShareLayout.getVisibility() == View.VISIBLE) {
 			mShareLayout.setVisibility(View.GONE);
@@ -1068,19 +999,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		int action = event.getAction();
 		switch (v.getId()) {
-		// case R.id.wifi_status_btn:
-		// //如果已连接,不改变文字颜色
-		// if(mWiFiStatus != 2){
-		// switch (action) {
-		// case MotionEvent.ACTION_DOWN:
-		// mIpcWiFiBtn.setTextColor(Color.rgb(0,197,177));
-		// break;
-		// case MotionEvent.ACTION_UP:
-		// mIpcWiFiBtn.setTextColor(Color.rgb(103,103,103));
-		// break;
-		// }
-		// }
-		// break;
+
 		case R.id.more_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
@@ -1186,9 +1105,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case R.id.index_carrecoder_btn:
 			checkWiFiStatus();
 			break;
-		/*
-		 * case R.id.index_wifi_layout: checkWiFiStatus(); break;
-		 */
 		}
 	}
 

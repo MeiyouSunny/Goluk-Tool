@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,7 +33,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -196,7 +194,6 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			case MSG_H_UPLOAD_SUCESS:
 				showToast("上传完成");
 				GlobalWindow.getInstance().topWindowSucess("视频上传成功");
-				// mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
 				shareCanEnable();
 				break;
 			case MSG_H_UPLOAD_ERROR:
