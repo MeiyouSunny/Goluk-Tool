@@ -617,7 +617,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			final String coverUrl = dataObj.getString("coverurl");
 
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
-
+			
 			// 设置分享内容
 			sharePlatform.setShareContent(shortUrl, coverUrl, mDesEdit.getText().toString());
 			CustomShareBoard shareBoard = new CustomShareBoard(this);

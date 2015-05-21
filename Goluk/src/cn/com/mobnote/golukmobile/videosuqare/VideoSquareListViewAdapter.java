@@ -227,7 +227,13 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		// holder.userhead, options, null);
 //		imageLoader.displayImage(mVideoSquareInfo.mVideoEntity.picture,
 //				holder.mPreLoading, options, null);
-		BitmapManager.getInstance().mBitmapUtils.display(holder.mPreLoading, mVideoSquareInfo.mVideoEntity.picture);
+		BitmapDisplayConfig config = new BitmapDisplayConfig();
+		Bitmap mBitmap = BitmapManager.getInstance().mBitmapUtils.getBitmapFromMemCache(mVideoSquareInfo.mVideoEntity.picture, config);
+		if(null == mBitmap){
+			BitmapManager.getInstance().mBitmapUtils.display(holder.mPreLoading, mVideoSquareInfo.mVideoEntity.picture);
+		}else{
+			holder.mPreLoading.setImageBitmap(mBitmap);
+		}
 		
 		return convertView;
 	}

@@ -10,21 +10,21 @@ public class BitmapManager {
 	public BitmapUtils mBitmapUtils;
 	private static BitmapManager instance=null;
 	
-	public static synchronized BitmapManager getInstance() { 
-		if (instance==null)
+	public static BitmapManager getInstance() { 
+		if (null == instance){
 			synchronized (SettingUtils.class) { 
-				instance = new BitmapManager();
+				if (null == instance){
+					instance = new BitmapManager();
+				}
 			}
-			return instance;  
+		}
+		return instance;  
 	}
 	
 	public BitmapManager(){
-		long max = Runtime.getRuntime().maxMemory();
-		int memoryCacheSize = (int)(max/8);
-		int diskCacheSize = 50*1024*1024;
 		String diskCachePath = Environment.getExternalStorageDirectory()
 				+ File.separator + "tiros-com-cn-ext" + File.separator + "image_cache";
-		mBitmapUtils = new BitmapUtils(GolukApplication.getInstance(), diskCachePath, memoryCacheSize, diskCacheSize);
+		mBitmapUtils = new BitmapUtils(GolukApplication.getInstance(), diskCachePath, 0.5f);
 		mBitmapUtils.configDefaultBitmapConfig(Bitmap.Config.RGB_565);
 		mBitmapUtils.configMemoryCacheEnabled(true);
 		mBitmapUtils.configThreadPoolSize(3);
