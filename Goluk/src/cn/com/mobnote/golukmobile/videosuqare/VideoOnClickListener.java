@@ -53,6 +53,8 @@ public class VideoOnClickListener implements OnClickListener{
 				uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 				a.startActivity(intent);
 			}else{
+				
+				
 				VideoSquarePlayActivity a = (VideoSquarePlayActivity)mContext;
 				Intent intent = new Intent(a, CCPlayerPage.class);
 				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
@@ -120,6 +122,9 @@ public class VideoOnClickListener implements OnClickListener{
 	        
 	        uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 	        mContext.startActivity(intent);
+	        
+	        GolukApplication.getInstance().getVideoSquareManager()
+			.removeVideoSquareManagerListener("videosharehotlist");
 		}
 	}
 	

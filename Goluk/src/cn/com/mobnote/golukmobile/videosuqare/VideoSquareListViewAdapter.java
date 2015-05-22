@@ -17,6 +17,7 @@ import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
@@ -26,6 +27,7 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.tiros.utils.LogUtil;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -258,6 +260,11 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 	public void onBackPressed() {
 		
 	}
+	
+	public void onResume(){
+		GolukApplication.getInstance().getVideoSquareManager()
+		.addVideoSquareManagerListener("videosharehotlist", this);
+	}
 
 	public void onStop() {
 		if (null != mDWMediaPlayerList) {
@@ -392,6 +399,18 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		if (event == SquareCmd_Req_GetShareUrl) {
 			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
 			if (RESULE_SUCESS == msg) {
+				mVideoSquareOnClickListener.closeRqsDialog(mContext);
+				
+//				Activity activity = SysApplication.getInstance().getCurActivity();
+//				if(activity instanceof VideoSquarePlayActivity || activity instanceof MainActivity){
+//				}else{
+//					return;
+//				}
+				
+				if(null == mVideoSquareOnClickListener){
+					return;
+				}
+				
 				try {
 					System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
 					JSONObject result = new JSONObject((String) param2);
@@ -443,7 +462,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 						}
 
 					}else{
-						mVideoSquareOnClickListener.closeRqsDialog(mContext);
+//						mVideoSquareOnClickListener.closeRqsDialog(mContext);
 						Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 					}
 				} catch (JSONException e) {
@@ -451,7 +470,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 					e.printStackTrace();
 				}
 			}else{
-				mVideoSquareOnClickListener.closeRqsDialog(mContext);
+//				mVideoSquareOnClickListener.closeRqsDialog(mContext);
 				Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
 			}
 		}

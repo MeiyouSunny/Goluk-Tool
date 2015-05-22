@@ -7,6 +7,7 @@ import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
@@ -103,7 +104,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		}
 		
 		GolukApplication.getInstance().getVideoSquareManager()
-				.addVideoSquareManagerListener("videocategory", this);
+		.addVideoSquareManagerListener("videocategory", this);
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		squareTypeDefault = (ImageView) findViewById(R.id.square_type_default);
@@ -281,8 +282,21 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		if (null != mVideoSquareListViewAdapter) {
 			mVideoSquareListViewAdapter.onStop();
 		}
+		
+//		GolukApplication.getInstance().getVideoSquareManager()
+//		.removeVideoSquareManagerListener("videosharehotlist");
 	}
-
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (null != mVideoSquareListViewAdapter) {
+			mVideoSquareListViewAdapter.onResume();
+		}
+		
+	}
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -295,8 +309,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(url);
 		}
 		
-		GolukApplication.getInstance().getVideoSquareManager()
-				.removeVideoSquareManagerListener("videocategory");
+		
 	}
 
 	@Override

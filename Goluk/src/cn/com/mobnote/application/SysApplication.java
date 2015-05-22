@@ -31,6 +31,16 @@ public class SysApplication extends Application {
 	public void addActivity(Activity activity) {
 		mList.add(activity);
 	}
+	
+	public void removeActivity(Activity activity) {
+		if(mList.size() > 0){
+			mList.remove(mList.size()-1);
+		}
+	}
+	
+	public Activity getCurActivity(){
+		return mList.remove(mList.size()-1);
+	}
 
 	//关闭每一个list内的activity
 	public void exit() {
