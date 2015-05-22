@@ -12,6 +12,7 @@ import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import cn.com.tiros.utils.LogUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,12 +24,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class VideoSquareOnClickListener implements OnClickListener,
-		VideoSuqareManagerFn {
+public class VideoSquareOnClickListener implements OnClickListener {
 
 	Context mcontext;
 	List<VideoSquareInfo> mVideoSquareListData;
-	VideoSquareInfo mVideoSquareInfo;
+	public VideoSquareInfo mVideoSquareInfo;
 	SharePlatformUtil sharePlatform;
 	int form = 1;
 	AlertDialog dialog;
@@ -36,23 +36,28 @@ public class VideoSquareOnClickListener implements OnClickListener,
 	AlertDialog ad;
 
 	AlertDialog confirmation;
-
+	VideoSquareListViewAdapter mVideoSquareListViewAdapter;
+	
 	public VideoSquareOnClickListener(Context context,
 			List<VideoSquareInfo> videoSquareListData,
-			VideoSquareInfo videoSquareInfo, int plform,SharePlatformUtil spf) {
+			final VideoSquareInfo videoSquareInfo, int plform,SharePlatformUtil spf, VideoSquareListViewAdapter _mVideoSquareListViewAdapter) {
 		mcontext = context;
 		mVideoSquareListData = videoSquareListData;
 		mVideoSquareInfo = videoSquareInfo;
 		sharePlatform = spf;
+		mVideoSquareListViewAdapter=_mVideoSquareListViewAdapter;
 		// sharePlatform.configPlatforms();//设置分享平台的参数
 		form = plform;
-		GolukApplication.getInstance().getVideoSquareManager()
-				.addVideoSquareManagerListener("videosharehotlist", this);
+//		GolukApplication.getInstance().getVideoSquareManager()
+//				.addVideoSquareManagerListener("videosharehotlist"+mVideoSquareInfo.mVideoEntity.videoid, this);
 		
 	}
+	
 
 	@Override
 	public void onClick(View view) {
+		mVideoSquareListViewAdapter.setOnClick(this);
+		LogUtil.e("xuhw", "BBBBBB==11111====nikename="+mVideoSquareInfo.mUserEntity.nickname);
 		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.share_btn:
@@ -234,82 +239,85 @@ public class VideoSquareOnClickListener implements OnClickListener,
 				});
 	}
 
-
-	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1,
-			Object param2) {
-		System.out.println("YYYY==888888==getSquareList8888====form===" + form
-				+ "event=" + event + "===msg=" + msg + "==param2=" + param2);
-
-		System.out.println("YYYY+RESULT-2-2-2-2-2-2-2");
-		if (event == SquareCmd_Req_GetShareUrl) {
-			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
-			if (RESULE_SUCESS == msg) {
-				try {
-					System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
-					JSONObject result = new JSONObject((String) param2);
-					System.out.println("YYYY+RESULT00000000");
-					if (result.getBoolean("success")) {
-						JSONObject data = result.getJSONObject("data");
-						String shareurl = data.getString("shorturl");
-						String coverurl = data.getString("coverurl");
-						String describe =data.optString("describe");
-						if (TextUtils.isEmpty(describe)) {
-							describe = "#极路客精彩视频#";
-						}
-						
-						if ("".equals(coverurl)) {
-
-						}
-						System.out.println("YYYY+RESULT11111111");
-						// 设置分享内容
-						//sharePlatform.setShareContent(shareurl, coverurl,describe);
-						System.out.println("YYYY+RESULT22222222");
-						String ttl = "极路客精彩视频分享";
-						if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
-							ttl = mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
-						}
-						
-						if (mcontext instanceof VideoSquarePlayActivity) {
-							System.out.println("YYYY+VideoSquarePlayActivity");
-							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
-							if (vspa!=null && !vspa.isFinishing()) {
-								vspa.mCustomProgressDialog.close();
-								CustomShareBoard shareBoard = new CustomShareBoard(vspa,sharePlatform,shareurl, coverurl,describe,ttl);
-								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-							}
-							
-						} else if(mcontext instanceof MainActivity){
-							System.out.println("YYYY+VideoSquareActivity");
-							MainActivity vsa = (MainActivity) mcontext;
-							if(vsa == null || vsa.isFinishing()){
-								return ;
-							}else{
-								if(vsa.mCustomProgressDialog!=null){
-									vsa.mCustomProgressDialog.close();
-									CustomShareBoard shareBoard = new CustomShareBoard(vsa,sharePlatform,shareurl, coverurl,describe,ttl);
-									shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-								}
-								
-							}
-
-						}
-
-					}else{
-						this.closeRqsDialog(mcontext);
-						Toast.makeText(mcontext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
-					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}else{
-				this.closeRqsDialog(mcontext);
-				Toast.makeText(mcontext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
-			}
-		}
-
+	String getNikename(){
+		return mVideoSquareInfo.mUserEntity.nickname;
 	}
+	
+//	@Override
+//	public void VideoSuqare_CallBack(int event, int msg, int param1,
+//			Object param2) {
+//		System.out.println("YYYY==888888==getSquareList8888====form===" + form
+//				+ "event=" + event + "===msg=" + msg + "==param2=" + param2);
+//
+//		System.out.println("YYYY+RESULT-2-2-2-2-2-2-2");
+//		if (event == SquareCmd_Req_GetShareUrl) {
+//			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
+//			if (RESULE_SUCESS == msg) {
+//				try {
+//					System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
+//					JSONObject result = new JSONObject((String) param2);
+//					System.out.println("YYYY+RESULT00000000");
+//					if (result.getBoolean("success")) {
+//						JSONObject data = result.getJSONObject("data");
+//						String shareurl = data.getString("shorturl");
+//						String coverurl = data.getString("coverurl");
+//						String describe =data.optString("describe");
+//						if (TextUtils.isEmpty(describe)) {
+//							describe = "#极路客精彩视频#";
+//						}
+//						
+//						if ("".equals(coverurl)) {
+//
+//						}
+//						System.out.println("YYYY+RESULT11111111");
+//						// 设置分享内容
+//						//sharePlatform.setShareContent(shareurl, coverurl,describe);
+//						System.out.println("YYYY+RESULT22222222");
+//						String ttl = "极路客精彩视频分享";
+//						if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
+//							ttl = mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
+//						}
+//						LogUtil.e("xuhw", "BBBBBB==2222====nikename="+getNikename());
+//						if (mcontext instanceof VideoSquarePlayActivity) {
+//							System.out.println("YYYY+VideoSquarePlayActivity");
+//							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
+//							if (vspa!=null && !vspa.isFinishing()) {
+//								vspa.mCustomProgressDialog.close();
+//								CustomShareBoard shareBoard = new CustomShareBoard(vspa,sharePlatform,shareurl, coverurl,describe,ttl);
+//								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+//							}
+//							
+//						} else if(mcontext instanceof MainActivity){
+//							System.out.println("YYYY+VideoSquareActivity");
+//							MainActivity vsa = (MainActivity) mcontext;
+//							if(vsa == null || vsa.isFinishing()){
+//								return ;
+//							}else{
+//								if(vsa.mCustomProgressDialog!=null){
+//									vsa.mCustomProgressDialog.close();
+//									CustomShareBoard shareBoard = new CustomShareBoard(vsa,sharePlatform,shareurl, coverurl,describe,ttl);
+//									shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+//								}
+//								
+//							}
+//
+//						}
+//
+//					}else{
+//						this.closeRqsDialog(mcontext);
+//						Toast.makeText(mcontext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+//					}
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}else{
+//				this.closeRqsDialog(mcontext);
+//				Toast.makeText(mcontext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+//			}
+//		}
+//
+//	}
 	
 	/**
 	 * 关闭之前请求的dialog
@@ -319,7 +327,7 @@ public class VideoSquareOnClickListener implements OnClickListener,
 	  * @author 曾浩 
 	  * @throws
 	 */
-	private void closeRqsDialog(Context context){
+	public void closeRqsDialog(Context context){
 		if (mcontext instanceof VideoSquarePlayActivity) {
 			VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
 			if (vspa!=null && !vspa.isFinishing()) {

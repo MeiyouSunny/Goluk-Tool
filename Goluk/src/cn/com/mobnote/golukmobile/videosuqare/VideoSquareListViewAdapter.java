@@ -8,20 +8,29 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
 import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.tiros.utils.LogUtil;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -34,9 +43,10 @@ import android.widget.RelativeLayout;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("InflateParams")
-public class VideoSquareListViewAdapter extends BaseAdapter {
+public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn{
 	private Context mContext = null;
 	private List<VideoSquareInfo> mVideoSquareListData = null;
 	private HashMap<String, DWMediaPlayer> mDWMediaPlayerList = null;
@@ -59,6 +69,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 		mHolderList = new HashMap<String, SurfaceHolder>();
 		form = plform;//1:热门页面 2:广场页
 		sharePlatform = spf;
+		
+		GolukApplication.getInstance().getVideoSquareManager()
+		.addVideoSquareManagerListener("videosharehotlist", this);
 	}
 
 	public void setData(List<VideoSquareInfo> data) {
@@ -134,7 +147,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.liveicon.setVisibility(View.GONE);
 //			holder.mSurfaceView.setVisibility(View.VISIBLE);
 		}
-		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform));
+		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform, this));
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
 			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);//设置点赞背景
 		}else{
@@ -159,8 +172,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
 		}
 		
-		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform));
-		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform));
+		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform,this));
+		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform,this));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
@@ -364,5 +377,85 @@ public class VideoSquareListViewAdapter extends BaseAdapter {
 //		}
 	}
 	
+	VideoSquareOnClickListener mVideoSquareOnClickListener=null;
+	public void setOnClick(VideoSquareOnClickListener _mVideoSquareOnClickListener){
+		mVideoSquareOnClickListener=_mVideoSquareOnClickListener;
+	}
+	
+	@Override
+	public void VideoSuqare_CallBack(int event, int msg, int param1,
+			Object param2) {
+		System.out.println("YYYY==888888==getSquareList8888====form===" + form
+				+ "event=" + event + "===msg=" + msg + "==param2=" + param2);
+
+		System.out.println("YYYY+RESULT-2-2-2-2-2-2-2");
+		if (event == SquareCmd_Req_GetShareUrl) {
+			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
+			if (RESULE_SUCESS == msg) {
+				try {
+					System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
+					JSONObject result = new JSONObject((String) param2);
+					System.out.println("YYYY+RESULT00000000");
+					if (result.getBoolean("success")) {
+						JSONObject data = result.getJSONObject("data");
+						String shareurl = data.getString("shorturl");
+						String coverurl = data.getString("coverurl");
+						String describe =data.optString("describe");
+						if (TextUtils.isEmpty(describe)) {
+							describe = "#极路客精彩视频#";
+						}
+						
+						if ("".equals(coverurl)) {
+
+						}
+						System.out.println("YYYY+RESULT11111111");
+						// 设置分享内容
+						//sharePlatform.setShareContent(shareurl, coverurl,describe);
+						System.out.println("YYYY+RESULT22222222");
+						String ttl = "极路客精彩视频分享";
+						if ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)) {// 直播
+							ttl =mVideoSquareOnClickListener. mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
+						}
+						LogUtil.e("xuhw", "BBBBBB==2222====nikename="+mVideoSquareOnClickListener. mVideoSquareInfo.mUserEntity.nickname);
+						if (mContext instanceof VideoSquarePlayActivity) {
+							System.out.println("YYYY+VideoSquarePlayActivity");
+							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mContext;
+							if (vspa!=null && !vspa.isFinishing()) {
+								vspa.mCustomProgressDialog.close();
+								CustomShareBoard shareBoard = new CustomShareBoard(vspa,sharePlatform,shareurl, coverurl,describe,ttl);
+								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							}
+							
+						} else if(mContext instanceof MainActivity){
+							System.out.println("YYYY+VideoSquareActivity");
+							MainActivity vsa = (MainActivity) mContext;
+							if(vsa == null || vsa.isFinishing()){
+								return ;
+							}else{
+								if(vsa.mCustomProgressDialog!=null){
+									vsa.mCustomProgressDialog.close();
+									CustomShareBoard shareBoard = new CustomShareBoard(vsa,sharePlatform,shareurl, coverurl,describe,ttl);
+									shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+								}
+								
+							}
+
+						}
+
+					}else{
+						mVideoSquareOnClickListener.closeRqsDialog(mContext);
+						Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else{
+				mVideoSquareOnClickListener.closeRqsDialog(mContext);
+				Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+			}
+		}
+
+	}
 	
 }
