@@ -399,7 +399,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		if (event == SquareCmd_Req_GetShareUrl) {
 			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
 			if (RESULE_SUCESS == msg) {
-				mVideoSquareOnClickListener.closeRqsDialog(mContext);
+				
 				
 //				Activity activity = SysApplication.getInstance().getCurActivity();
 //				if(activity instanceof VideoSquarePlayActivity || activity instanceof MainActivity){
@@ -410,7 +410,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 				if(null == mVideoSquareOnClickListener){
 					return;
 				}
-				
+				mVideoSquareOnClickListener.closeRqsDialog(mContext);
 				try {
 					System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
 					JSONObject result = new JSONObject((String) param2);

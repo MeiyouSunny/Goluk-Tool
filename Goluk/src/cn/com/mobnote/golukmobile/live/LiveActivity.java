@@ -359,8 +359,13 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			updateCount(Integer.parseInt(currentUserInfo.zanCount), Integer.parseInt(currentUserInfo.persons));
 			// 获取地址
 			// isGetingAddress = true;
-			GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
-					Double.parseDouble(currentUserInfo.lon));
+			try {
+				GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
+						Double.parseDouble(currentUserInfo.lon));
+			} catch (Exception e) {
+				
+			}
+			
 		}
 
 		// 在没有进入群组时，按钮不可按
@@ -378,6 +383,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
+	
+			if(mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")){
+				mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
+			}
+			
 			mVideoSquareManager.addVideoSquareManagerListener("live", this);
 		}
 	}
@@ -2155,7 +2165,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			isSettingCallBack = true;
 
 			// isGetingAddress = true;
-			GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(myInfo.lat), Double.parseDouble(myInfo.lon));
+			try {
+				GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(myInfo.lat), Double.parseDouble(myInfo.lon));
+			} catch (Exception e) {
+				
+			}
+			
 		}
 	}
 
@@ -2239,8 +2254,13 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				// if (!isGetingAddress) {
 				LogUtil.e(null, "jyf-------live----LiveActivity--pointDataCallback type88888  str：" + str);
 				// isGetingAddress = true;
-				GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
-						Double.parseDouble(currentUserInfo.lon));
+				try {
+					GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
+							Double.parseDouble(currentUserInfo.lon));
+				} catch (Exception e) {
+					
+				}
+				
 				// }
 			}
 

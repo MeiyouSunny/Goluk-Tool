@@ -263,6 +263,10 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 			VideoSuqareManagerFn fn) {
 		this.mVideoSquareManagerListener.put(from, fn);
 	}
+	
+	public boolean checkVideoSquareManagerListener(String from) {
+		return this.mVideoSquareManagerListener.containsKey(from);
+	}
 
 	/**
 	 * 删除视频广场监听

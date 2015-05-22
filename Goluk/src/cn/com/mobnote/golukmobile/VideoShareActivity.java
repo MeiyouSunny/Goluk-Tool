@@ -42,6 +42,7 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
@@ -164,6 +165,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	/** 上传失败次数后再提示 */
 	private final int UPLOAD_FAILED_UP = 3;
 	private int uploadCount = 0;
+	VideoSquareManager mVideoSquareManager = null;
 
 	public Handler mmmHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -337,6 +339,13 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			GlobalWindow.getInstance().setApplication(mApp);
 		}
 		GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
+		
+		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
+		if (null != mVideoSquareManager) {
+			if (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")) {
+				mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
+			}
+		}
 	}
 
 	private void createThumb() {
@@ -646,7 +655,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				describe = "#极路客精彩视频#";
 			}
 			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
-			
+
 			// 设置分享内容
 			// sharePlatform.setShareContent(shortUrl, coverUrl,
 			// mDesEdit.getText().toString());
