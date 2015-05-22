@@ -176,6 +176,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	
 	public void onResume(){
 		if(null != mVideoSquareListViewAdapter){
+			mVideoSquareListViewAdapter.onResume();
 			mVideoSquareListViewAdapter.notifyDataSetChanged();
 		}
 	}

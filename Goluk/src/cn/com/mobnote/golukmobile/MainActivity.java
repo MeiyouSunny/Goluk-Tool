@@ -891,6 +891,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mMapView.onResume();
 			mMapView.invalidate();
 		}
+		
+		if (null != mVideoSquareActivity) {
+			mVideoSquareActivity.onResume();
+		}
 
 		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onDestroy();
