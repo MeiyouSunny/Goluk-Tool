@@ -674,16 +674,21 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		int action = event.getAction();
 		switch (view.getId()) {
 		case R.id.user_repwd_ok_btn:
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				mBtnOK.setBackgroundResource(R.drawable.icon_login_click);
-				break;
-			case MotionEvent.ACTION_UP:
-				mBtnOK.setBackgroundResource(R.drawable.icon_login);
-				break;
+			String phoneNumber = mEditTextPhone.getText().toString();
+			String pwd = mEditTextPwd.getText().toString();
+			String identify = mEditTextIdentify.getText().toString();
+			if(!"".equals(phoneNumber) && !"".equals(pwd) && !"".equals(identify)){
+				switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					mBtnOK.setBackgroundResource(R.drawable.icon_login_click);
+					break;
+				case MotionEvent.ACTION_UP:
+					mBtnOK.setBackgroundResource(R.drawable.icon_login);
+					break;
 
-			default:
-				break;
+				default:
+					break;
+				}
 			}
 			break;
 		case R.id.user_repwd_identify_btn:
