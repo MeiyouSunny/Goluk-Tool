@@ -1,5 +1,11 @@
 package cn.com.mobnote.golukmobile.live;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Message;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.tiros.utils.LogUtil;
 
 import com.baidu.mapapi.model.LatLng;
@@ -46,16 +52,50 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 //		}
 		LogUtil.e(null, "jyf----20150406----LiveActivity----searchAddress----22222  : ");
 		isRequesting = true;
-		LatLng ptCenter = new LatLng(lat, lon);
+		mHandler.removeMessages(UPDATE);
+		Message msg = mHandler.obtainMessage(UPDATE);
+		msg.obj = new LatLng(lat, lon);
+		mHandler.sendMessageDelayed(msg, 1000);
 		// 反Geo搜索
-		boolean isSucess = mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(ptCenter));
-		if (!isSucess) {
-			isRequesting = false;
-		}
+//		LatLng ptCenter = new LatLng(lat, lon);
+//		boolean isSucess = mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(ptCenter));
+//		if (!isSucess) {
+//			isRequesting = false;
+//		}
 
 		LogUtil.e(null, "jyf----20150406----LiveActivity----searchAddress----33333  : ");
 
 	}
+	
+	private static final int UPDATE=1;
+	Handler mHandler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case UPDATE:
+				removeMessages(UPDATE);
+				if(isNetworkConnected(GolukApplication.getInstance())){
+					LatLng ptCenter = (LatLng)msg.obj;
+					// 反Geo搜索
+					mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(ptCenter));
+					LogUtil.e(null, "jyf----20150406----LiveActivity----searchAddress--reverseGeoCode--4444  : ");
+				}
+				break;
+			default:
+				break;
+			}
+		};
+	};
+	
+	public boolean isNetworkConnected(Context context) {
+		if (context != null) {
+			ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+			if (mNetworkInfo != null) {
+				return mNetworkInfo.isAvailable();
+			}
+		}
+		return false;
+	} 
 
 	@Override
 	public void onGetGeoCodeResult(GeoCodeResult result) {
