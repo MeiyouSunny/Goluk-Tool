@@ -344,6 +344,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				// 续直播
 				startLiveLook(myInfo);
 				LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, LIVE_RETRY_LIVE);
+				isSettingCallBack = true;
 			} else {
 				// 显示设置窗口
 				mLiveVideoHandler.sendEmptyMessageDelayed(100, 600);
@@ -1059,6 +1060,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 上次的视频还有效,开始上传直播，调用上报位置
 			startLive(mCurrentVideoId);
 			startUploadMyPosition();
+			isSettingCallBack = true;
 
 			this.isKaiGeSucess = true;
 			mLiveCountSecond = liveData.restTime;
