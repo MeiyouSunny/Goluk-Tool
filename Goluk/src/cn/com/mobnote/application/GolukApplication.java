@@ -737,6 +737,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 		case PageType_AutoLogin:
 			mUser.initAutoLoginCallback(success, param1, param2);
+			parseLoginData(success, param2);
 			break;
 		// 验证码PageType_GetVCode
 		case PageType_GetVCode:
