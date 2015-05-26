@@ -39,11 +39,11 @@ public class console {
 
 	
 	public static void log(String log){
-		Log.i(TAG, log);
+		//Log.i(TAG, log);
 	}
 	
 	public static void logBytag(String s1, String s2) {
-		Log.i(s1, s2);
+		//Log.i(s1, s2);
 	}
 	
 	public static void toast(String msg,Context mContext){

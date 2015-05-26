@@ -122,6 +122,7 @@
             android:digits="@string/wifi_pwd_digits"
             android:inputType="text"
             android:maxLength="20"
+            android:text="@string/wifibind_defaultpassword"
             android:textColor="#595959"
             android:textCursorDrawable="@null"
             android:textSize="16sp" />

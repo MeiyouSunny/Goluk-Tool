@@ -224,5 +224,6 @@
     <string name="pull_to_refresh">下拉刷新</string>
     <string name="refreshing">正在刷新...</string>
     <string name="updating">最近更新：</string>
+    <string name="wifibind_defaultpassword">123456789</string>
 
 </resources>

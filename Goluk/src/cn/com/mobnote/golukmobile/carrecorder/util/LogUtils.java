@@ -6,7 +6,7 @@ public class LogUtils {
 	private static final String TAG="XUHW";
 	
 	public static void d(String msg){
-		Log.d(TAG, "xuhw==="+msg);
+		//Log.d(TAG, "xuhw==="+msg);
 	}
 
 }

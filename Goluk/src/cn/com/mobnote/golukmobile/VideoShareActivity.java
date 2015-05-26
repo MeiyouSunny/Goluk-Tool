@@ -581,7 +581,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		if (null != mApp.mCCUrl && !"".equals(mApp.mCCUrl)) {
 			uploadURL = mApp.mCCUrl;
 		}
-		// this.showToast(uploadURL);
+		//this.showToast(uploadURL);
 		videoinfo.setNotifyUrl(uploadURL);
 		if (mUploader != null) {
 			mUploader = null;

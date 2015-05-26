@@ -31,7 +31,7 @@ then
 	elif [ $1 = "nvd" ];
 	then
 		echo "build nvd"
-		#cp -f 	git_version/gitversion_nvd $3/assets/gitversion
+		cp -f 	version_nvd/version $3/assets/version
 	else
 		echo "$1 error"
 	fi
