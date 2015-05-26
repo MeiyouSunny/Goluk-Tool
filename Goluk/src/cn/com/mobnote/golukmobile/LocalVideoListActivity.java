@@ -751,6 +751,13 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 					}
 				}
 			}
+			
+			String fileName = filename.replace(".mp4", ".jpg");
+			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+			File file = new File(filePath + File.separator + fileName);
+			if (file.exists()) {
+				file.delete();
+			}
 		}
 		
 		if(1 == mCurrentType){

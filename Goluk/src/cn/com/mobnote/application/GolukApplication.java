@@ -503,6 +503,15 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				// 调用下载视频接口
 				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
 				LogUtil.e("xuhw", "YYYYYY====start==VideoDownLoad===flag="+a+"===data="+data);
+				//下载视频第一帧截图
+				String imgFileName = fileName.replace("mp4", "jpg");
+				String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+				File file = new File(filePath + File.separator + fileName);
+				if (!file.exists()) {
+					boolean img = mIPCControlManager.downloadFile(imgFileName, "imgdownload", FileUtils.javaToLibPath(filePath), time);
+					LogUtil.e("xuhw", "YYYYYY====start==imgdownload===flag="+img+"===imgFileName="+imgFileName);
+				}
+				
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}

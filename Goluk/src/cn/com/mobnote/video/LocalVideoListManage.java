@@ -7,6 +7,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.Message;
 import android.provider.MediaStore.Video.Thumbnails;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import java.io.BufferedReader;
@@ -722,6 +723,10 @@ public class LocalVideoListManage {
 			try {
 				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
 				String str = br.readLine();
+				if(TextUtils.isEmpty(str)){
+					return data;
+				}
+				
 				String[] files = str.split(",");
 				
 				//去重
