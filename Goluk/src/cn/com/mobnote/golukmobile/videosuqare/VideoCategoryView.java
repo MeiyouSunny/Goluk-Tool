@@ -18,6 +18,7 @@ public class VideoCategoryView{
 	private RelativeLayout mRootLayout=null;
 	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	private float density = SoundUtils.getInstance().getDisplayMetrics().density;
+	private boolean onlyOnClick = true;
 	
 	public VideoCategoryView(Context context){
 		mContext=context;
@@ -117,38 +118,103 @@ public class VideoCategoryView{
 			// TODO Auto-generated method stub
 			switch (view.getId()) {
 				case R.id.live_categroy:
-					startActivity("1","0");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("1","0");
+						break;
+					}
+					
 				case R.id.category_btn_one:
-					startActivity("2","1");
-					break;
+					
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","1");
+						break;
+					}
+					
 				case R.id.category_btn_two:
-					startActivity("2","2");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","2");
+						break;
+					}
+					
 				case R.id.category_btn_three:
-					startActivity("2","3");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","3");
+						break;
+					}
+					
 				case R.id.category_btn_four:
-					startActivity("2","4");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","4");
+						break;
+					}
+					
 				case R.id.category_btn_five:
-					startActivity("2","5");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","5");
+						break;
+					}
+					
 				case R.id.category_btn_six:
-					startActivity("2","6");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","6");
+						break;
+					}
+					
 				case R.id.category_btn_seven:
-					startActivity("2","7");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","7");
+						break;
+					}
+					
 				case R.id.category_btn_eight:
-					startActivity("2","8");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","8");
+						break;
+					}
+					
 				case R.id.category_btn_nine:
-					startActivity("2","9");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","9");
+						break;
+					}
 				case R.id.category_btn_ten:
-					startActivity("2","10");
-					break;
+					if(onlyOnClick == false){
+						return;
+					}else{
+						onlyOnClick = false;
+						startActivity("2","10");
+						break;
+					}
 				case R.id.back_btn:
 					VideoSquarePlayActivity vpa = (VideoSquarePlayActivity) mContext;
 					vpa.finish();
@@ -159,7 +225,11 @@ public class VideoCategoryView{
 
 		}
 	}
-
+	
+	public void onResume(){
+		onlyOnClick = true;
+	}
+	
 	public void startActivity(String type,String attribute) {
 		MainActivity play = (MainActivity)mContext;
 		Intent intent = new Intent(); 
