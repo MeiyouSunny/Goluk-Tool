@@ -1,11 +1,15 @@
 package cn.com.mobnote.golukmobile.carrecorder;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.tiros.utils.LogUtil;
 
@@ -48,6 +52,10 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		this.notifyDataSetChanged();
 	}
 	
+	public void recyle(){
+		
+	}
+	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
@@ -88,9 +96,6 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		if(!a.getIsEditState()){
 			holder.mTMLayout1.setVisibility(View.GONE);
 			holder.mTMLayout2.setVisibility(View.GONE);
-		}else{
-			
-			
 		}
 		
 		holder.mVideoLayout2.setVisibility(View.GONE);
@@ -98,10 +103,12 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		VideoInfo mVideoInfo2 = mDataList.get(position).getVideoInfo2();
 		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
 		holder.mTMLayout2.setTag("");
-		if(selectedData.contains(mVideoInfo1.videoPath)){
-			holder.mTMLayout1.setVisibility(View.VISIBLE);
-		}else{
-			holder.mTMLayout1.setVisibility(View.GONE);
+		if(a.getIsEditState()){
+			if(selectedData.contains(mVideoInfo1.videoPath)){
+				holder.mTMLayout1.setVisibility(View.VISIBLE);
+			}else{
+				holder.mTMLayout1.setVisibility(View.GONE);
+			}
 		}
 		
 		if(mVideoInfo1.videoPath.contains("WND3")){
@@ -125,14 +132,23 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		if (null != videoBitmap1) {
 			BitmapDrawable bd = new BitmapDrawable(videoBitmap1);
 			holder.image1.setBackgroundDrawable(bd);
+		}else{
+			String fileName = mVideoInfo1.videoPath;
+			fileName = fileName.substring(0, fileName.length() - 4) + ".jpg";
+			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+			GFileUtils.makedir(filePath);
+			mDataList.get(position).getVideoInfo1().videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 		}
 		
 		if(null != mVideoInfo2){
-			if(selectedData.contains(mVideoInfo2.videoPath)){
-				holder.mTMLayout2.setVisibility(View.VISIBLE);
-			}else{
-				holder.mTMLayout2.setVisibility(View.GONE);
+			if(a.getIsEditState()){
+				if(selectedData.contains(mVideoInfo2.videoPath)){
+					holder.mTMLayout2.setVisibility(View.VISIBLE);
+				}else{
+					holder.mTMLayout2.setVisibility(View.GONE);
+				}
 			}
+			
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
 			
@@ -157,6 +173,12 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 			if (null != videoBitmap2) {
 				BitmapDrawable bd = new BitmapDrawable(videoBitmap2);
 				holder.image2.setBackgroundDrawable(bd);
+			}else{
+				String fileName = mVideoInfo2.videoPath;
+				fileName = fileName.substring(0, fileName.length() - 4) + ".jpg";
+				String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+				GFileUtils.makedir(filePath);
+				mDataList.get(position).getVideoInfo2().videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
 			}
 		}
 

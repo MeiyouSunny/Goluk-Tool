@@ -84,6 +84,7 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 						if(mDWMediaPlayer.isPlaying()){
 							isPlaying=true;
 							hideLoading();
+							mPreLoading.setVisibility(View.GONE);
 						}else{
 							mHandler.sendEmptyMessageDelayed(1, 500);
 						}
@@ -161,10 +162,10 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 		// TODO Auto-generated method stub
 		LogUtil.e("xuhw", "YYYYYYY========onBufferingUpdate==========arg1="+arg1);
 		if(arg1 >= 100){
-			mPreLoading.setVisibility(View.GONE);
+//			mPreLoading.setVisibility(View.GONE);
 			hideLoading();
 		}else{
-			mPreLoading.setVisibility(View.VISIBLE);
+//			mPreLoading.setVisibility(View.VISIBLE);
 		}
 	}
 

@@ -101,7 +101,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mAudioBtn = (Button)findViewById(R.id.sylz);
 		
 		mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
+		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//打开
 	}
 	
 	/**

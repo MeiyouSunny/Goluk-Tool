@@ -58,7 +58,7 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 		mDeviceId = (TextView)findViewById(R.id.mDeviceId);
 		mVersion = (TextView)findViewById(R.id.mVersion);
 		
-		mDeviceId.setText("IPC Camera");
+		mDeviceId.setText("");
 		mVersion.setText("");
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCIdentity();

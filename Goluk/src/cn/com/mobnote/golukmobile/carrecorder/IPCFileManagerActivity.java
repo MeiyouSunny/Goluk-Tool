@@ -1056,6 +1056,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 					
 				}
 				
+				selectedListData.clear();
 				if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 					wonderfulGroupName.clear();
 					for (VideoInfo info : mWonderfulVideoData) {

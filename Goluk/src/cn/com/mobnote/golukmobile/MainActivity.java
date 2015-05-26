@@ -1371,7 +1371,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		LngLat.lng = location.rawLon;
 		LngLat.lat = location.rawLat;
 
-		if (!(mApp.getContext() instanceof LiveActivity)) {
+		if(mApp.getContext() instanceof CarRecorderActivity){
 			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
 		}
 	}
