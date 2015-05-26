@@ -35,6 +35,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.utils.LogUtil;
@@ -138,10 +139,13 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mUnbindItem = (RelativeLayout) findViewById(R.id.unbind_item);
 		//版本号
 		mTextVersionCode = (TextView) findViewById(R.id.user_setup_versioncode);
-		SharedPreferences mPreferencesVersion = getSharedPreferences("version", Context.MODE_PRIVATE);
-		String versionCode = mPreferencesVersion.getString("versionCode", mTextVersionCode.getText().toString());
-		Log.i("lily", "===versionCode===="+versionCode);
-		mTextVersionCode.setText(versionCode);
+		
+		final String verName = GolukUtils.getVersion(this);
+		
+//		SharedPreferences mPreferencesVersion = getSharedPreferences("version", Context.MODE_PRIVATE);
+//		String versionCode = mPreferencesVersion.getString("versionCode", mTextVersionCode.getText().toString());
+//		Log.i("lily", "===versionCode===="+versionCode);
+		mTextVersionCode.setText(verName);
 	}
 	
 	@SuppressLint("HandlerLeak")

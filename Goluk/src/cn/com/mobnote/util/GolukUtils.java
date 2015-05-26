@@ -2,7 +2,10 @@ package cn.com.mobnote.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import cn.com.mobnote.golukmobile.R;
 
 public class GolukUtils {
 
@@ -58,19 +61,43 @@ public class GolukUtils {
 
 		return timeStr;
 	}
-	
+
 	/**
 	 * 默认浏览器打开指定的url
+	 * 
 	 * @param url
 	 * @param mContext
 	 */
-	public static void openUrl(String url,Context mContext){
-		//版本升级---打开浏览器
-		Intent intent = new Intent();       
-	    intent.setAction("android.intent.action.VIEW");   
-	    Uri content_url = Uri.parse(url);  
-	    intent.setData(content_url); 
-	     mContext.startActivity(intent);
+	public static void openUrl(String url, Context mContext) {
+		// 版本升级---打开浏览器
+		Intent intent = new Intent();
+		intent.setAction("android.intent.action.VIEW");
+		Uri content_url = Uri.parse(url);
+		intent.setData(content_url);
+		mContext.startActivity(intent);
+	}
+
+	// 获取版本号
+	public static String getVersion(Context context) {
+		try {
+			PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			return pi.versionName;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	public static int getVersionCode(Context context)// 获取版本号(内部识别号)
+	{
+		try {
+			PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			return pi.versionCode;
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 }
