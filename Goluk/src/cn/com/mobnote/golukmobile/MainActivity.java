@@ -728,9 +728,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		mWiFiStatus = WIFI_STATE_CONNING;
 		mWifiStateTv.setText(WIFI_CONNING_STR);
-
-		PlayVoiceRemote.getInstance().setSpeechEngine("test", 1000, 1000, 1000, 1000);
-
 		anim = AnimationUtils.loadAnimation(mContext, R.anim.ipc_action_loading);
 		LinearInterpolator lir = new LinearInterpolator();
 		anim.setInterpolator(lir);

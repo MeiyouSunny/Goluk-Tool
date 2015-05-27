@@ -17,7 +17,7 @@ public class CustomLoadingDialog{
 	AnimationDrawable ad ;
 	
 	public CustomLoadingDialog(Context context,String txt) {
-		customDialog = new AlertDialog.Builder(context).create();
+		customDialog = new AlertDialog.Builder(context,R.style.CustomDialog).create();
 		if(txt !=null){
 			textTitle = txt;
 		}
