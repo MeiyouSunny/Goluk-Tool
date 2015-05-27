@@ -815,7 +815,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 						Log.e(TAG, "自动连接----------------AP和wifi 都没有开启------------");
 						openTime = vaviAutoWifi(ipc_ssid, outTime);
 						if (openTime == 0) {
-
+							// 扫描超时
+							msg.what = -52;
+							msg.obj = null;
+							handler.sendMessage(msg);
 							return;
 						}
 						// 创建热点
