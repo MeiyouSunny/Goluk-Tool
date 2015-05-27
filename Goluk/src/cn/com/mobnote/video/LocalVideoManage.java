@@ -62,8 +62,8 @@ public class LocalVideoManage {
 	private Context mContext = null;
 	/** 视频存放外卡文件路径 */
 	private static final String APP_FOLDER = android.os.Environment.getExternalStorageDirectory().getPath();
-	private String newImagePath = APP_FOLDER + "/" + "tiros-com-cn-ext/videoLog/videostatus";
-	private String mFilePath = APP_FOLDER + "/" + "tiros-com-cn-ext/video/";
+	private String newImagePath = APP_FOLDER + "/" + "goluk/videoLog/videostatus";
+	private String mFilePath = APP_FOLDER + "/" + "goluk/video/";
 	/** 本地视频数据 */
 	private ArrayList<LocalVideoData> mLocalVideoList = new ArrayList<LocalVideoData>();
 	/** 本地视频列表页面数据 */

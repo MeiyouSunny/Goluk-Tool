@@ -95,7 +95,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	/** 236服务器分享地址 */
 	public static final String NOTIFY_URL2 = "http://svr.xiaocheben.com/navidog4MeetTrans/ccVideoApiCallback.htm";
 
-	public static final String PATH_FS1 = "/tiros-com-cn-ext";
+	public static final String PATH_FS1 = "/goluk";
 
 	final String fileFolder = Environment.getExternalStorageDirectory().getPath() + PATH_FS1 + "/Cache";
 	private String thumbFile = fileFolder + "/thumb11.jpg";

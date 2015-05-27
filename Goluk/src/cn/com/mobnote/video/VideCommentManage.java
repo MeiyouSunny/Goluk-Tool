@@ -76,7 +76,7 @@ public class VideCommentManage {
 
 	private Context mContext = null;
 	/** 视频存放外卡文件路径 */
-	private static final String APP_FOLDER = "tiros-com-cn-ext/video/";
+	private static final String APP_FOLDER = "goluk/video/";
 	private String mFilePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/" + APP_FOLDER;
 	/** 本地视频数据 */
 	private ArrayList<VideoCommentData> mVideoCommentList = new ArrayList<VideoCommentData>();

@@ -2548,7 +2548,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				mIntent.putExtra("filetype", "mounts");
 				mIntent.putExtra("filename", fileInfo.location);
 
-				String path = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+				String path = Environment.getExternalStorageDirectory() + File.separator + "goluk"
 						+ File.separator + "video" + File.separator + "wonderful";
 				wonderfulVideoName = path + File.separator + mRecordVideFileName;
 
@@ -2609,7 +2609,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		String timename = format.format(new Date(time));
 
 		// 创建文件夹
-		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+		String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
 				+ File.separator + "goluk" + File.separator + "screenshot";
 		GFileUtils.makedir(dirname);
 		String picName = dirname + File.separator + timename + ".jpg";

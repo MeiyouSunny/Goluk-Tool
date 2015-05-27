@@ -568,7 +568,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 			
 			if (downloadFinish) {
-				/*String path = Environment.getExternalStorageDirectory().getPath() + "/tiros-com-cn-ext/video/wonderful/"+wonderfulVideoName;
+				/*String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/"+wonderfulVideoName;
 				LogUtils.d("YYY====mShareBtn===path="+path);
 				
 				Intent i = new Intent(CarRecorderActivity.this,
@@ -674,7 +674,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void click_ConnFailed() {
 			// 跳转到wifi连接首页
 			if (mApp.isUserLoginSucess) {
-				String path = Environment.getExternalStorageDirectory().getPath() + "/tiros-com-cn-ext/video/wonderful/"+wonderfulVideoName;
+				String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/"+wonderfulVideoName;
 				LogUtils.d("YYY====mShareBtn===path="+path);
 				
 				Intent i = new Intent(CarRecorderActivity.this,
@@ -1200,7 +1200,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 						String dirname = Environment
 								.getExternalStorageDirectory()
 								+ File.separator
-								+ "tiros-com-cn-ext"
+								+ "goluk"
 								+ File.separator
 								+ "goluk"
 								+ File.separator + "screenshot";
@@ -1300,7 +1300,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							String path = Environment
 									.getExternalStorageDirectory()
 									+ File.separator
-									+ "tiros-com-cn-ext"
+									+ "goluk"
 									+ File.separator
 									+ "video"
 									+ File.separator

@@ -33,7 +33,7 @@ import android.widget.Toast;
 public class console {
 	public static String TAG = "chxy";
 	/** 日志文件路径 */
-	private static final String APP_FOLDER = "tiros-com-cn-ext";
+	private static final String APP_FOLDER = "goluk";
 	private static final String fileName = "/chxy_";
 	private static final String filePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/" + APP_FOLDER;
 

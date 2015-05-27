@@ -266,7 +266,7 @@ public class GFileUtils {
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss"); 
         String timename=format.format(new Date(time));  
 		
-		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+		String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
 	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
@@ -288,7 +288,7 @@ public class GFileUtils {
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss"); 
         String timename=format.format(new Date(time));  
 		
-		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+		String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
 	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
@@ -310,7 +310,7 @@ public class GFileUtils {
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss"); 
         String timename=format.format(new Date(time));  
 		
-		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+		String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
 	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
@@ -332,7 +332,7 @@ public class GFileUtils {
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss"); 
         String timename=format.format(new Date(time));  
 		
-		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+		String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
 	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);
@@ -354,7 +354,7 @@ public class GFileUtils {
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss"); 
         String timename=format.format(new Date(time));  
 		
-		String dirname = Environment.getExternalStorageDirectory() + File.separator + "tiros-com-cn-ext"
+		String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
 	            + File.separator + "goluk_carrecorder";
 		
 		File dir = new File(dirname);

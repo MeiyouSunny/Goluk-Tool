@@ -83,7 +83,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	private String mPageSource = "";
 	/** 主页activity */
 	public static MainActivity mMainActivity = null;
-	/** 视频保存地址 fs1:指向->sd卡/tiros-com-cn-ext目录 */
+	/** 视频保存地址 fs1:指向->sd卡/goluk目录 */
 	private String mVideoSavePath = "fs1:/video/";
 
 	private static GolukApplication instance = null;
@@ -234,7 +234,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 */
 	private void initCachePath() {
 		carrecorderCachePath = Environment.getExternalStorageDirectory()
-				+ File.separator + "tiros-com-cn-ext" + File.separator
+				+ File.separator + "goluk" + File.separator
 				+ "goluk_carrecorder";
 		GFileUtils.makedir(carrecorderCachePath);
 	}

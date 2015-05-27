@@ -102,7 +102,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private String mVideoSavePath = null;
 	/** 视频存放外卡文件路径 */
 	private static final String APP_FOLDER = android.os.Environment.getExternalStorageDirectory().getPath();
-	private String mNewVideoFilePath = APP_FOLDER + "/" + "tiros-com-cn-ext/";
+	private String mNewVideoFilePath = APP_FOLDER + "/" + "goluk/";
 	/** 上传视频时间记录 */
 	private long uploadVideoTime = 0;
 
