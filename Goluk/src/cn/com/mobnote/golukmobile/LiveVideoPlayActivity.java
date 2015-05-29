@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -32,6 +31,7 @@ import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.VideCommentListAdapter;
 import cn.com.mobnote.video.VideCommentManage;
 import cn.com.mobnote.video.VideCommentManage.VideoCommentData;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
@@ -255,14 +255,14 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 		mRPVPalyVideo.setPlayerListener(new RtmpPlayerView.RtmpPlayerViewLisener() {
 			@Override
 			public void onPlayerPrepared(final RtmpPlayerView rpv) {
-				console.log("live---onPlayerPrepared");
+				GolukDebugUtils.e("","live---onPlayerPrepared");
 				rpv.setHideSurfaceWhilePlaying(true);
 			}
 			
 			@Override
 			public boolean onPlayerError(RtmpPlayerView rpv, int arg1, int arg2,String arg3) {
 				//视频播放出错
-				console.log("live---onPlayerError" + arg2 + "," + arg3);
+				GolukDebugUtils.e("","live---onPlayerError" + arg2 + "," + arg3);
 				console.toast("播放器出现错误...", mContext);
 				rpv.removeCallbacks(retryRunnable);
 				// FIXME:5秒后重连
@@ -275,7 +275,7 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 			@Override
 			public void onPlayerCompletion(RtmpPlayerView rpv) {
 				//视频播放完成
-				console.log("live---onPlayerCompletion");
+				GolukDebugUtils.e("","live---onPlayerCompletion");
 				rpv.removeCallbacks(retryRunnable);
 				rpv.postDelayed(retryRunnable, 5000);
 				mPlayLayout.setVisibility(View.VISIBLE);
@@ -283,13 +283,13 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 			
 			@Override
 			public void onPlayerBegin(RtmpPlayerView arg0) {
-				console.log("live---onPlayerBegin");
+				GolukDebugUtils.e("","live---onPlayerBegin");
 				mVideoLoading.setVisibility(View.GONE);
 			}
 			
 			@Override
 			public void onPlayBuffering(RtmpPlayerView arg0, boolean start) {
-				console.log("live---onPlayBuffering---" + "arg1---" + start);
+				GolukDebugUtils.e("","live---onPlayBuffering---" + "arg1---" + start);
 				if (start) {
 					// 缓冲开始
 				} else {
@@ -299,7 +299,7 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 			
 			@Override
 			public void onGetCurrentPosition(RtmpPlayerView arg0, int arg1) {
-				//console.log("onGetCurrentPosition");
+				//GolukDebugUtils.e("","onGetCurrentPosition");
 			}
 		});
 		// 设置缓冲时间，缓冲时间越长，则超时时间也需对应加长
@@ -320,10 +320,10 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 		mTimeOutText.setVisibility(View.GONE);
 		
 		String condi = "{\"uid\":\"" + mUid + "\",\"desAid\":\"" + mAid + "\"}";
-		console.log("PageType_GetVideoDetail---获取直播详情---" + condi);
+		GolukDebugUtils.e("","PageType_GetVideoDetail---获取直播详情---" + condi);
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVideoDetail,condi);
 		if(!b){
-			console.log("PageType_GetVideoDetail---获取直播详情---失败" + b);
+			GolukDebugUtils.e("","PageType_GetVideoDetail---获取直播详情---失败" + b);
 		}
 		else{
 			//5秒未开始直播,显示提示文字
@@ -387,7 +387,7 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 		//String str = "{\"code\":\"200\",\"state\":\"true\",\"vurl\":\"http://cdn3.lbs8.com/files/cdcvideo/test11.mp4\",\"cnt\":\"5\",\"lat\":\"39.93923\",\"lon\":\"116.357428\",\"picurl\":\"http://img.cool80.com/i/png/217/02.png\"}";
 		if(1 == success){
 			String str = (String)obj;
-			console.log("视频直播数据返回--LiveVideoDataCallBack:" + str);
+			GolukDebugUtils.e("","视频直播数据返回--LiveVideoDataCallBack:" + str);
 			try {
 				JSONObject data = new JSONObject(str);
 				int code = data.getInt("code");
@@ -415,7 +415,7 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 			}
 		}
 		else{
-			//console.log("请求直播详情服务错误");
+			//GolukDebugUtils.e("","请求直播详情服务错误");
 			Builder dialog = new AlertDialog.Builder(mContext);
 			dialog.setTitle("提示");
 			dialog.setMessage("请求直播服务超时，请重试.");
@@ -442,7 +442,7 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 
 	@Override
 	protected void onDestroy() {
-		console.log("liveplay---onDestroy");
+		GolukDebugUtils.e("","liveplay---onDestroy");
 		if(null != mRPVPalyVideo){
 			mRPVPalyVideo.removeCallbacks(retryRunnable);
 			mRPVPalyVideo.cleanUp();
@@ -453,7 +453,7 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 	
 	@Override
 	protected void onPause() {
-		console.log("liveplay---onPause");
+		GolukDebugUtils.e("","liveplay---onPause");
 		//mPlayLayout.setVisibility(View.VISIBLE);
 		super.onPause();
 	};

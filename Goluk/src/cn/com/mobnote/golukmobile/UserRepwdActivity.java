@@ -337,7 +337,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		 */
 		if(UserUtils.isMobileNO(phone)){
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"2\"}";
-			console.log(isIdentify);
+			GolukDebugUtils.e("",isIdentify);
 			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
 			if (b) {
 				identifyClick = true;
@@ -345,7 +345,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				mCustomProgressDialogIdentify.show();
 				registerReceiver(smsReceiver, smsFilter);
 				click = 1;
-				console.log(b + "");
+				GolukDebugUtils.e("",b + "");
 				mBtnOK.setEnabled(false);
 				mEditTextPhone.setEnabled(false);
 				mEditTextPwd.setEnabled(false);
@@ -362,7 +362,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 	 * 获取验证码回调
 	 */
 	public void isRepwdCallBack(int success,Object obj){
-		console.log("验证码获取回调---isRepwdCallBack---" + success + "---" + obj);
+		GolukDebugUtils.e("","验证码获取回调---isRepwdCallBack---" + success + "---" + obj);
 		closeProgressDialogIdentify();
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
@@ -374,7 +374,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		if(1 == success){
 			try{
 				String data = (String)obj;
-				console.log(data);
+				GolukDebugUtils.e("",data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				freq = json.getString("freq");
@@ -491,7 +491,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 					} else {
 						// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
-						console.log(isRegist);
+						GolukDebugUtils.e("",isRegist);
 						if(identifyClick){
 							int freqInt = Integer.valueOf(freq);
 							GolukDebugUtils.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
@@ -502,7 +502,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 									UserUtils.showDialog(mContext, "验证码格式输入不正确");
 								}else{
 									boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_ModifyPwd, isRegist);
-									console.log(b + "");
+									GolukDebugUtils.e("",b + "");
 									if (b) {
 										// 隐藏软件盘
 										UserUtils.hideSoftMethod(this);
@@ -534,7 +534,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 	 * 重置密码回调
 	 */
 	public void repwdCallBack(int success,Object outTime,Object obj){
-		console.log("---重置密码回调-----"+success+"----"+obj);
+		GolukDebugUtils.e("","---重置密码回调-----"+success+"----"+obj);
 		closeProgressDialog();
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
@@ -548,7 +548,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				String data = (String) obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				console.log(code+"");
+				GolukDebugUtils.e("",code+"");
 				
 				switch (code) {
 				case 200:
@@ -558,7 +558,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 					it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					it.putExtra("repwdOk", mEditTextPhone.getText().toString());
-					Log.i("lily", "--------密码错误，重置密码成功------"+mEditTextPhone.getText().toString());
+					GolukDebugUtils.i("lily", "--------密码错误，重置密码成功------"+mEditTextPhone.getText().toString());
 					startActivity(it);
 					this.finish();*/
 					putPhone();

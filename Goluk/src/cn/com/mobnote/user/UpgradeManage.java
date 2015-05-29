@@ -56,7 +56,7 @@ public class UpgradeManage {
 	 */
 	@SuppressWarnings("unused")
 	public void upgradeGolukCallback(int success,Object outTime,Object obj){
-		console.log("----------版本更新回调-------upgradeGolukCallback---" + success + "-------" + obj);
+		GolukDebugUtils.e("","----------版本更新回调-------upgradeGolukCallback---" + success + "-------" + obj);
 		int codeOut = (Integer) outTime;
 		if(1 == success){
 			try {

@@ -96,8 +96,8 @@ public class MVListAdapter extends BaseAdapter{
 			holder = (ViewHolder) convertView.getTag();
 		}
 		MVEditData data = (MVEditData)mDataList.get(position);
-		//Log.e("","chxy data" + data.name);
-		//Log.e("","chxy data" + data.src);
+		//GolukDebugUtils.i("","chxy data" + data.name);
+		//GolukDebugUtils.i("","chxy data" + data.src);
 		
 		if(data.display){
 			holder.display.setVisibility(View.VISIBLE);

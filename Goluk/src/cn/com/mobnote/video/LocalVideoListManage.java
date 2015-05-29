@@ -1,15 +1,5 @@
 package cn.com.mobnote.video;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
-import android.os.Message;
-import android.provider.MediaStore.Video.Thumbnails;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +20,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.os.Message;
+import android.provider.MediaStore.Video.Thumbnails;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.LocalVideoListActivity;
 import cn.com.mobnote.golukmobile.LocalVideoShareListActivity;
@@ -38,7 +37,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.util.AssetsFileUtils;
-import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * <pre>
@@ -264,7 +263,7 @@ public class LocalVideoListManage {
 			int width = dm.widthPixels - 22;
 			float density = dm.density;
 			img = ThumbnailUtils.extractThumbnail(bitMap,width / 2,(int)(95 * density));
-			console.log("localvideo---width---" + width + "---density---" + density + "---iheight---" + (int)(95 * density));
+			GolukDebugUtils.e("","localvideo---width---" + width + "---density---" + density + "---iheight---" + (int)(95 * density));
 			//bitmap转换成drawable给页面显示
 			//drawable = new BitmapDrawable(mContext.getResources(),img);
 		}
@@ -321,7 +320,7 @@ public class LocalVideoListManage {
 				String fileName = files.get(i);
 				//文件全路径,判断文件是否存在
 				String videoPath = mFilePath + videoPaths[videoType] + fileName;
-				//console.log("拼接本地视频路径---readLocalVideoConfigFile---" + videoPath);
+				//GolukDebugUtils.e("","拼接本地视频路径---readLocalVideoConfigFile---" + videoPath);
 				File videoFile = new File(videoPath);
 				if(videoFile.exists()){
 					//获取文件大小
@@ -456,7 +455,7 @@ public class LocalVideoListManage {
 								
 								//判断视频类别,WND1_,URG1_文件已这种格式开头为 8s/紧急
 								String[] names = fileName.split("_");
-								console.log("fileName---" + fileName);
+								GolukDebugUtils.e("","fileName---" + fileName);
 								String vt = names[0];
 								int hp = Integer.valueOf(vt.substring(3,4));
 								//视频时长,秒
@@ -905,7 +904,7 @@ public class LocalVideoListManage {
 								
 								//判断视频类别,WND1_,URG1_文件已这种格式开头为 8s/紧急
 								String[] names = fileName.split("_");
-								console.log("fileName---" + fileName);
+								GolukDebugUtils.e("","fileName---" + fileName);
 								String vt = names[0];
 								
 								long date = countFileDate(fileName);
@@ -1000,7 +999,7 @@ public class LocalVideoListManage {
 			int width = dm.widthPixels - 22;
 			float density = dm.density;
 			Bitmap img = ThumbnailUtils.extractThumbnail(bitMap,width / 2,(int)(95 * density));
-			console.log("localvideo---width---" + width + "---density---" + density + "---iheight---" + (int)(95 * density));
+			GolukDebugUtils.e("","localvideo---width---" + width + "---density---" + density + "---iheight---" + (int)(95 * density));
 			//bitmap转换成drawable给页面显示
 			Drawable drawable = new BitmapDrawable(mContext.getResources(),img);
 			//缓存数据
@@ -1223,7 +1222,7 @@ public class LocalVideoListManage {
 //				mLocalVideoList.remove(0);
 //				b = true;
 //				
-//				console.log("wifi---传输中断删除数据---数据恢复---下标---" + mLocalVideoList.size());
+//				GolukDebugUtils.e("","wifi---传输中断删除数据---数据恢复---下标---" + mLocalVideoList.size());
 //				//恢复数据,少于6个,mLastLocalVideoData = null
 //				if(null != mLastLocalVideoData){
 //					mLocalVideoList.add(mLocalVideoList.size(),mLastLocalVideoData);

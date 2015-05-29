@@ -1,13 +1,13 @@
 package cn.com.mobnote.receiver;
 
-import cn.com.mobnote.golukmobile.MainActivity;
-import cn.com.mobnote.util.console;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Message;
+import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -34,20 +34,20 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		console.log("wifi---网络广播........");
+		GolukDebugUtils.e("","wifi---网络广播........");
 		// log.debug("网络状态改变");
 		String action = intent.getAction();
 		Message msg = new Message();
 		msg.what = 3;
 		if(!isNetworkAvailable(context)){
-			console.log("wifi---网络广播....网络不可用...." + action);
+			GolukDebugUtils.e("","wifi---网络广播....网络不可用...." + action);
 			msg.obj = false;
 			if(null != MainActivity.mMainHandler){
 				MainActivity.mMainHandler.sendMessage(msg);
 			}
 		}
 		else{
-			console.log("wifi---网络广播....网络可用...." + action);
+			GolukDebugUtils.e("","wifi---网络广播....网络可用...." + action);
 			msg.obj = true;
 			if(null != MainActivity.mMainHandler){
 				MainActivity.mMainHandler.sendMessage(msg);

@@ -2,12 +2,6 @@ package cn.com.mobnote.golukmobile.carrecorder;
 
 import java.io.IOException;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.tiros.utils.LogUtil;
-import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
@@ -35,6 +29,11 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 1.编辑器必须显示空白处
@@ -117,7 +116,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 			}
 		}
 		
-		LogUtil.e("xuhw", "YYYYYY====playUrl="+playUrl);
+		GolukDebugUtils.e("xuhw", "YYYYYY====playUrl="+playUrl);
 		initView();
 		setListener();
 
@@ -135,7 +134,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 							long curPosition = mMediaPlayer.getCurrentPosition();
 							long duration = mMediaPlayer.getDuration();
 
-							LogUtil.e("xuhw", "TTT========duration==" + duration + "=====curPosition=" + curPosition);
+							GolukDebugUtils.e("xuhw", "TTT========duration==" + duration + "=====curPosition=" + curPosition);
 							mCurTime.setText(long2TimeStr(curPosition));
 							mTotalTime.setText(long2TimeStr(duration));
 							mSeekBar.setMax((int) duration);
@@ -366,7 +365,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
-		LogUtil.e("xuhw", "YYYYYY=======surfaceCreated=======");
+		GolukDebugUtils.e("xuhw", "YYYYYY=======surfaceCreated=======");
 		mSurfaceHolder = arg0;
 		if (null == mMediaPlayer) {
 			playVideo();
@@ -383,7 +382,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		LogUtil.e("xuhw", "YYYYYY=======surfaceDestroyed=======");
+		GolukDebugUtils.e("xuhw", "YYYYYY=======surfaceDestroyed=======");
 		if (null != mMediaPlayer) {
 			if(mMediaPlayer.isPlaying()){
 				mMediaPlayer.pause();
@@ -398,7 +397,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 	 * @date 2015年3月31日
 	 */
 	private void playVideo() {
-		LogUtil.e("xuhw", "YYYYYY=======playVideo=======");
+		GolukDebugUtils.e("xuhw", "YYYYYY=======playVideo=======");
 		try {
 			mMediaPlayer = new MediaPlayer();
 			mMediaPlayer.setDataSource(playUrl);
@@ -430,7 +429,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 		}
 		
 		long duration = mMediaPlayer.getDuration();
-		LogUtil.e("xuhw", "YYYYYY====onCompletion===duration=" + duration);
+		GolukDebugUtils.e("xuhw", "YYYYYY====onCompletion===duration=" + duration);
 		mCurTime.setText(long2TimeStr(0));
 		mTotalTime.setText(long2TimeStr(duration));
 		mSeekBar.setMax((int) duration);
@@ -444,7 +443,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
-		LogUtil.e("xuhw", "YYYYYY=======onSeekComplete=======");
+		GolukDebugUtils.e("xuhw", "YYYYYY=======onSeekComplete=======");
 	}
 
 	@Override
@@ -454,7 +453,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 		}
 		
 		error=true;
-		LogUtil.e("xuhw", "YYYYYY====onError====");
+		GolukDebugUtils.e("xuhw", "YYYYYY====onError====");
 		mHandler.removeMessages(GETPROGRESS);
 		hideLoading();
 		Toast.makeText(LocalVideoPlayerActivity.this, "播放错误", Toast.LENGTH_SHORT).show();
@@ -483,7 +482,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 
 	@Override
 	public void onPrepared(MediaPlayer arg0) {
-		LogUtil.e("xuhw", "YYYYYY=============onPrepared=");
+		GolukDebugUtils.e("xuhw", "YYYYYY=============onPrepared=");
 		mIsVideoReadyToBePlayed = true;
 		if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
 			startVideoPlayback();
@@ -492,7 +491,7 @@ public class LocalVideoPlayerActivity extends BaseActivity implements OnCompleti
 
 	@Override
 	public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
-		LogUtil.e("xuhw", "YYYYYY====onBufferingUpdate===arg1=" + arg1);
+		GolukDebugUtils.e("xuhw", "YYYYYY====onBufferingUpdate===arg1=" + arg1);
 	}
 
 	@Override

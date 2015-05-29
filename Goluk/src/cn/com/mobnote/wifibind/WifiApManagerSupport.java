@@ -124,7 +124,7 @@ public class WifiApManagerSupport {
 		if (!isSupport()) {
 			throw new RuntimeException("Unsupport Ap!");
 		}
-		Log.i(tag, "Build.BRAND -----------> " + Build.BRAND);
+		GolukDebugUtils.i(tag, "Build.BRAND -----------> " + Build.BRAND);
 
 		mWifiManager = manager;
 	}
@@ -164,7 +164,7 @@ public class WifiApManagerSupport {
 			Method method = methodMap.get(getSetWifiApConfigName());
 			Class<?>[] params = method.getParameterTypes();
 			for (Class<?> clazz : params) {
-				Log.i(tag, "param -> " + clazz.getSimpleName());
+				GolukDebugUtils.i(tag, "param -> " + clazz.getSimpleName());
 			}
 
 			result = (Boolean) method.invoke(mWifiManager, netConfig);

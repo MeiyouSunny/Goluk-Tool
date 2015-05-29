@@ -15,7 +15,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 
  /**
@@ -69,7 +69,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年3月21日
 	 */
 	public boolean setIPCWifiState(boolean isConnect,String ip){
-		LogUtil.e("xuhw", "YYYYYYY==============ip="+ip);
+		GolukDebugUtils.e("xuhw", "YYYYYYY==============ip="+ip);
 		SettingUtils.getInstance().putString("IPC_IP", ip);
 		int state = isConnect ? 1 : 0;
 		String json = JsonUtil.getWifiChangeJson(state, ip);
@@ -166,7 +166,7 @@ public class IPCControlManager implements IPCManagerFn{
 		String json = JsonUtil.getDownFileJson(filename, tag, savepath, filetime);
 		if(filename.contains(".mp4")){
 			GFileUtils.writeIPCLog("==downloadFile==json="+json);
-			LogUtil.e("xuhw", "YYYYYY====downloadFile=====json="+json);
+			GolukDebugUtils.e("xuhw", "YYYYYY====downloadFile=====json="+json);
 		}
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDTPCmd_AddDownloadFile,
 				json);
@@ -419,7 +419,7 @@ public class IPCControlManager implements IPCManagerFn{
 	 * @date 2015年4月21日
 	 */
 	public boolean ipcUpgrade(){
-		Log.i("lily", "---------ipcUpgrade------"+IPC_VDCPCmd_IPCUpgrade);
+		GolukDebugUtils.i("lily", "---------ipcUpgrade------"+IPC_VDCPCmd_IPCUpgrade);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_IPCUpgrade, "fs1:/update/ipc_upgrade_2015-04-30-15-58.bin");
 	}
 	

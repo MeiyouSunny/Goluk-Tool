@@ -1,6 +1,5 @@
 package cn.com.mobnote.view;
 
-import cn.com.mobnote.golukmobile.R;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 
 public class PullToRefreshView extends LinearLayout {
@@ -202,7 +203,7 @@ public class PullToRefreshView extends LinearLayout {
 	 */
 	private void initContentAdapterView() {
 		int count = getChildCount();
-		Log.e("", "AAAAAAAAAAAA  count=" + count);
+		GolukDebugUtils.i("", "AAAAAAAAAAAA  count=" + count);
 		if (count < 3) {
 			throw new IllegalArgumentException(
 					"this layout must contain 3 child views,and AdapterView or ScrollView must in the second position!");
@@ -218,8 +219,8 @@ public class PullToRefreshView extends LinearLayout {
 				mScrollView = (ScrollView) view;
 			}
 		}
-		Log.e("", "AAAAAAAAAAAA  mAdapterView=" + mAdapterView);
-		Log.e("", "AAAAAAAAAAAA  mScrollView=" + mScrollView);
+		GolukDebugUtils.i("", "AAAAAAAAAAAA  mAdapterView=" + mAdapterView);
+		GolukDebugUtils.i("", "AAAAAAAAAAAA  mScrollView=" + mScrollView);
 		if (mAdapterView == null && mScrollView == null) {
 			//throw new IllegalArgumentException("must contain a AdapterView or ScrollView in this layout!");
 		}
@@ -295,12 +296,12 @@ public class PullToRefreshView extends LinearLayout {
 			int deltaY = y - mLastMotionY;
 			if (mPullState == PULL_DOWN_STATE) {
 				// PullToRefreshView执行下拉
-				Log.i(TAG, " pull down!parent view move!");
+				GolukDebugUtils.i(TAG, " pull down!parent view move!");
 				//headerPrepareToRefresh(deltaY);
 				// setHeaderPadding(-mHeaderViewHeight);
 			} else if (mPullState == PULL_UP_STATE) {
 				// PullToRefreshView执行上拉
-				Log.i(TAG, "pull up!parent view move!");
+				GolukDebugUtils.i(TAG, "pull up!parent view move!");
 				footerPrepareToRefresh(deltaY);
 			}
 			mLastMotionY = y;

@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 

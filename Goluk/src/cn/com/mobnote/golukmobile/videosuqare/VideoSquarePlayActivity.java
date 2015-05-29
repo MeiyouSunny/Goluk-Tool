@@ -20,7 +20,6 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.tiros.utils.LogUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;

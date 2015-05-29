@@ -1,5 +1,13 @@
 package cn.com.mobnote.video;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -15,21 +23,15 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.OnLineVideoPlayActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.LoadImageManager;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 
 
@@ -224,7 +226,7 @@ public class OnLineVideoManage {
 						
 						//点赞数
 						
-						Log.e("","chxy______vurl" + vurl);
+						GolukDebugUtils.i("","chxy______vurl" + vurl);
 						desc.setText(descStr);
 						//保存图片view
 						this.mVideoImage.put(vid,img);
@@ -261,7 +263,7 @@ public class OnLineVideoManage {
 			Drawable img = LoadImageManager.getLoacalBitmap(localPath,mContext);
 			ImageView view = this.mVideoImage.get(vid);
 			view.setBackgroundDrawable(img);
-			console.log(json);
+			GolukDebugUtils.e("",json);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -272,9 +274,9 @@ public class OnLineVideoManage {
 			String vid = obj.getString("vid");
 			String path = obj.getString("path");
 			String localPath = FileUtils.libToJavaPath(path);
-			Log.e("","chxy______img" + localPath);
+			GolukDebugUtils.i("","chxy______img" + localPath);
 			Drawable img = LoadImageManager.getLoacalBitmap(localPath,mContext);
-			Log.e("","chxy______img" + img);
+			GolukDebugUtils.i("","chxy______img" + img);
 			ImageView view = this.mVideoImage.get(vid);
 			view.setBackgroundDrawable(img);
 		} catch (JSONException e) {
@@ -376,7 +378,7 @@ public class OnLineVideoManage {
 		@Override
 		public void onClick(View v){
 			//String path = mVideoPlayUrl.get(mCurrentItem);
-			console.log("chxy _____ path" + mUrl);
+			GolukDebugUtils.e("","chxy _____ path" + mUrl);
 			//点击视频
 			Intent videoEdit = new Intent(mContext,OnLineVideoPlayActivity.class);
 			videoEdit.putExtra("cn.com.mobnote.video.path",mUrl);

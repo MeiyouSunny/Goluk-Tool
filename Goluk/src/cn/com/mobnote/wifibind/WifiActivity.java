@@ -156,7 +156,7 @@
 //		switch (type) {
 //		case 1:
 //			textView1.setText("Wifilist: \n\n");
-//			Log.e(TAG, "get wifilist ------------- ok--------------");
+//			GolukDebugUtils.i(TAG, "get wifilist ------------- ok--------------");
 //			beans = (WifiRsBean[]) arrays;
 //			if (beans != null) {
 //				for (WifiRsBean temp : beans) {
@@ -171,16 +171,16 @@
 //					temp.getIpc_mac();
 //					temp.isPassnull();
 //					temp.isIsconn();
-//					Log.e(TAG, temp.getPh_ssid() + "--------------"
+//					GolukDebugUtils.i(TAG, temp.getPh_ssid() + "--------------"
 //							+ "isconn-----" + temp.isIsconn());
 //				}
 //			} else {
 //				textView1.append("nulllllllllllll\n");
-//				Log.e(TAG, "get wifilist ------------- empty--------------");
+//				GolukDebugUtils.i(TAG, "get wifilist ------------- empty--------------");
 //			}
 //			break;
 //		case 2:
-//			Log.e(TAG, "connectWifi ------------- "+message+"--------------");
+//			GolukDebugUtils.i(TAG, "connectWifi ------------- "+message+"--------------");
 //			textView1.setText("connectWifi: \n\n");
 //			textView1.append(message);
 //			break;
@@ -188,19 +188,19 @@
 //			bean = (WifiRsBean) arrays;
 //			bean.getIpc_ssid();
 //			// unregisterReceiver(connectManage);
-//			Log.e(TAG, "create ap ------------- "+message+"--------------");
-//			Log.e(TAG, "autoconn------------- "+message+"--------------");
+//			GolukDebugUtils.i(TAG, "create ap ------------- "+message+"--------------");
+//			GolukDebugUtils.i(TAG, "autoconn------------- "+message+"--------------");
 //			textView1.setText("createap: \n\n");
 //			textView1.append(message);
 //			break;
 //
 //		case 4:
-//			Log.e(TAG, "saveConfiguration ------------- "+message+"--------------");
+//			GolukDebugUtils.i(TAG, "saveConfiguration ------------- "+message+"--------------");
 //			textView1.setText("saveConfiguration: \n\n");
 //			textView1.append(message);
 //			break;
 //		case 5:
-//			Log.e(TAG, "autoconn------------- "+message+"--------------");
+//			GolukDebugUtils.i(TAG, "autoconn------------- "+message+"--------------");
 //			textView1.setText("autoconn: \n\n");
 //			textView1.append(message);
 //			break;
