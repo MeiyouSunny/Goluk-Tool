@@ -18,7 +18,6 @@ import cn.com.mobnote.golukmobile.UserStartActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**

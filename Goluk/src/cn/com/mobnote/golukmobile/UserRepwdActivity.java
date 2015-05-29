@@ -10,7 +10,7 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
-import cn.com.mobnote.util.console;
+import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -275,7 +275,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		case R.id.user_repwd_identify_btn:
 			//点击状态:点击后弹出系统短提示:发送中,请稍后;发送后弹出系统短提示:验证码已经发送,请查收短信。
 			if(!UserUtils.isNetDeviceAvailable(mContext)){
-				console.toast("当前网络不可用，请检查网络后重试", mContext);
+				GolukUtils.showToast(mContext, "当前网络不可用，请检查网络后重试");
 			}else{
 				getRepwdIdentify();
 			}
@@ -369,8 +369,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		mEditTextPwd.setEnabled(true);
 		mBtnOK.setEnabled(true);
 		mBtnBack.setEnabled(true);
-//		handler1.removeCallbacks(runnable);
-//		console.toast("发送中，请稍后", mContext);
 		if(1 == success){
 			try{
 				String data = (String)obj;
@@ -383,7 +381,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				
 				switch (code) {
 				case 200:
-					console.toast("验证码已经发送，请查收短信", mContext);
+					GolukUtils.showToast(mContext, "验证码已经发送，请查收短信");
 					//验证码获取成功
 					/**
 					 * 点击获取验证码的时候进行倒计时
@@ -472,7 +470,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			}
 		}
 		else{
-			console.toast("验证码获取失败", mContext);
+			GolukUtils.showToast(mContext, "验证码获取失败");
 		}
 	}
 	/**
@@ -487,7 +485,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				mBtnOK.setFocusable(true);
 				if (password.length() >= 6 && password.length() <= 16) {
 					if (!UserUtils.isNetDeviceAvailable(this)) {
-						console.toast("当前网络不可用，请检查网络后重试", mContext);
+						GolukUtils.showToast(mContext, "当前网络不可用，请检查网络后重试");
 					} else {
 						// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
@@ -517,7 +515,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 								}
 							}
 						}else{
-							console.toast("请先获取验证码", mContext);
+							GolukUtils.showToast(mContext, "请先获取验证码");
 						}
 					}
 				} else {
@@ -553,7 +551,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				switch (code) {
 				case 200:
 					//重置密码成功
-					console.toast("重置密码成功", mContext);
+					GolukUtils.showToast(mContext, "重置密码成功");
 					/*Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
 					it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -593,7 +591,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 					if(identifyClick){
 						UserUtils.showDialog(this, "请输入正确的验证码");
 					}else{
-						console.toast("请先获取验证码", mContext);
+						GolukUtils.showToast(mContext, "请先获取验证码");
 					}
 					break;
 				case 407:
@@ -602,7 +600,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 						if(identifyClick){
 							UserUtils.showDialog(this, "输入验证码超时");
 						}else{
-							console.toast("请先获取验证码", mContext);
+							GolukUtils.showToast(mContext, "请先获取验证码");
 						}
 					}else{
 						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
@@ -612,7 +610,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 					if(identifyClick){
 						UserUtils.showDialog(this, "验证码获取失败");
 					}else{
-						console.toast("请先获取验证码", mContext);
+						GolukUtils.showToast(mContext, "请先获取验证码");
 					}
 					break;
 
@@ -625,7 +623,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		}else{
 			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
 			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---"+codeOut);
-			console.toast("网络连接超时", mContext);
+			GolukUtils.showToast(mContext, "网络连接超时");
 			switch (codeOut) {
 			case 1:
 				
@@ -643,17 +641,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 	}
 	
 	private int click = 0;
-	/*final Handler handler1=new Handler();
-	private Runnable runnable;
-	private void initTimer(){
-		runnable=new Runnable(){
-		@Override
-		public void run() {
-			console.toast("网络链接超时", mContext);
-			mLoading.setVisibility(View.GONE);
-			}
-		};
-	}*/
 	
 	/**
 	 * 销毁广播

@@ -25,7 +25,7 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -442,7 +442,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			}
 			break;
 		case 4:
-			console.toast("网络连接超时", this);
+			GolukUtils.showToast(this, "网络连接超时");
 			mApplication.isUserLoginSucess = false;
 			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
