@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 
@@ -31,15 +32,14 @@ public class SurfaceViewCallback implements Callback{
 		
 		@Override
 		public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-//			LogUtils.d("SSS====surfaceChanged====arg1="+arg1+"===arg2="+arg2+"===arg3="+arg3);
 		}
 
 		@Override
 		public void surfaceCreated(SurfaceHolder arg0) {
-			LogUtils.d("SSS============surfaceCreated=====111====position="+position);
+			GolukDebugUtils.d("","SSS============surfaceCreated=====111====position="+position);
 			if(!mHolderList.containsKey(""+position)){
 				mHolderList.put(""+position, arg0);
-				LogUtils.d("SSS============mHolderList=====position="+position+"===11111===SurfaceHolder===="+arg0);
+				GolukDebugUtils.d("","SSS============mHolderList=====position="+position+"===11111===SurfaceHolder===="+arg0);
 			}
 			
 			if(0 == position){
@@ -53,6 +53,6 @@ public class SurfaceViewCallback implements Callback{
 				mHolderList.remove(""+position);
 			}
 			
-			LogUtils.d("SSS============surfaceDestroyed=========position="+position);
+			GolukDebugUtils.d("","SSS============surfaceDestroyed=========position="+position);
 		}
 }
