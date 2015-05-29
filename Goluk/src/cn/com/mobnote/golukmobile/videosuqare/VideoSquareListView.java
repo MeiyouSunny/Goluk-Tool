@@ -15,6 +15,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -200,7 +201,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mDataList.addAll(list);
 				initLayout();
 			}else{
-				Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 			
 			if(mDataList.size()>0){

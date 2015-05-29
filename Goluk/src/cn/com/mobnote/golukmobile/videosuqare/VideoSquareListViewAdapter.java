@@ -25,6 +25,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -436,8 +437,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 						}
 
 					} else {
-						// mVideoSquareOnClickListener.closeRqsDialog(mContext);
-						Toast.makeText(mContext, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+						GolukUtils.showToast(mContext, "网络异常，请检查网络");
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -445,7 +445,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 				}
 			} else {
 				// mVideoSquareOnClickListener.closeRqsDialog(mContext);
-				Toast.makeText(mContext, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 		}
 
