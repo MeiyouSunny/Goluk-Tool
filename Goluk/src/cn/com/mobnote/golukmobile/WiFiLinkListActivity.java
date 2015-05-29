@@ -2,25 +2,13 @@ package cn.com.mobnote.golukmobile;
 
 import java.util.ArrayList;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.entity.WiFiInfo;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.list.WiFiListAdapter;
-import cn.com.mobnote.list.WiFiListManage;
-import cn.com.mobnote.list.WiFiListManage.WiFiListData;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.wifibind.WifiConnCallBack;
-import cn.com.mobnote.wifibind.WifiConnectManager;
-import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
-import cn.com.mobnote.wifibind.WifiRsBean;
-import android.net.wifi.WifiManager;
-import android.os.Bundle;
-import android.os.Message;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.os.Message;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +19,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.entity.WiFiInfo;
+import cn.com.mobnote.list.WiFiListAdapter;
+import cn.com.mobnote.list.WiFiListManage;
+import cn.com.mobnote.list.WiFiListManage.WiFiListData;
+import cn.com.mobnote.util.console;
+import cn.com.mobnote.wifibind.WifiConnCallBack;
+import cn.com.mobnote.wifibind.WifiConnectManager;
+import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
+import cn.com.mobnote.wifibind.WifiRsBean;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * <pre>
@@ -169,7 +169,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			mLoading.setVisibility(View.VISIBLE);
 		}
 
-		console.log("获取wifi列表---getWiFiList---");
+		GolukDebugUtils.e("","获取wifi列表---getWiFiList---");
 		// 获取文件列表tcay_ap_ipc
 		mWac.scanWifiList("", b);
 	}
@@ -188,7 +188,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		saveConnectWifiMsg(wifiName, pwd, mac);
 		// 连接wifi
 		mWac.connectWifi(wifiName, pwd, WifiCipherType.WIFICIPHER_WPA);
-		console.log("开始连接选定wifi---connectWiFi---" + wifiName + "---" + pwd);
+		GolukDebugUtils.e("","开始连接选定wifi---connectWiFi---" + wifiName + "---" + pwd);
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		saveConnectWifiMsg(wifiName, "", mac);
 		// 连接wifi
 		mWac.connectWifi(wifiName, "", WifiCipherType.WIFICIPHER_NOPASS);
-		console.log("开始连接选定wifi---connectWiFi---" + wifiName + "---pwd---空");
+		GolukDebugUtils.e("","开始连接选定wifi---connectWiFi---" + wifiName + "---pwd---空");
 	}
 
 	private void saveConnectWifiMsg(String wifiName, String pwd, String mac) {
@@ -221,14 +221,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		// 先获取ipc是否已连接
 		mState = STATE_IP_CONNING;
 		boolean isLogin = mApp.getIpcIsLogin();
-		console.log("ipc连接状态---WiFiLinkListActivity---b---" + isLogin);
+		GolukDebugUtils.e("","ipc连接状态---WiFiLinkListActivity---b---" + isLogin);
 		if (!isLogin) {
 			mLoading.setVisibility(View.VISIBLE);
 			// 连接ipc热点wifi---调用ipc接口
-			console.log("通知logic连接ipc---sendLogicLinkIpc---1");
+			GolukDebugUtils.e("","通知logic连接ipc---sendLogicLinkIpc---1");
 			mIsCanAcceptIPC = true;
 			boolean b = mApp.mIPCControlManager.setIPCWifiState(true, "192.168.62.1");
-			console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+			GolukDebugUtils.e("","通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 		} else {
 			mState = STATE_NONE;
 			// ipc已连接
@@ -258,7 +258,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		mIsCanAcceptIPC = false;
 
 		mState = STATE_NONE;
-		console.log("ipc连接成功回调---ipcLinkedCallBack---1");
+		GolukDebugUtils.e("","ipc连接成功回调---ipcLinkedCallBack---1");
 		mLoading.setVisibility(View.GONE);
 		// 标识已连接ipc热点,可以点击下一步
 		this.nextCan();
@@ -329,31 +329,31 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void callBack_ScanWifiList(int state, int process, String message, Object arrays) {
-		console.log("wifi链接接口回调---type---callBack_ScanWifiList---state---" + state + "---process---" + process
+		GolukDebugUtils.e("","wifi链接接口回调---type---callBack_ScanWifiList---state---" + state + "---process---" + process
 				+ "---message---" + message + "---arrays---" + arrays);
 		mState = STATE_NONE;
 		if (state < 0) {
 			mState = STATE_NONE;
 			return;
 		}
-		console.log("wifi链接接口回调---type---callBack_ScanWifiList---state---222222");
+		GolukDebugUtils.e("","wifi链接接口回调---type---callBack_ScanWifiList---state---222222");
 		// 获取wifi列表
 		WifiRsBean[] beans = (WifiRsBean[]) arrays;
 		if (beans == null) {
 			mState = STATE_NONE;
 			return;
 		}
-		console.log("wifi链接接口回调---type---callBack_ScanWifiList---state---33333333");
+		GolukDebugUtils.e("","wifi链接接口回调---type---callBack_ScanWifiList---state---33333333");
 		mWiFiListManage.analyzeWiFiData(beans);
 		mWiFiListAdapter.notifyDataSetChanged();
 		this.nextNotCan();
-		console.log("wifi链接接口回调---type---callBack_ScanWifiList---state---44444");
+		GolukDebugUtils.e("","wifi链接接口回调---type---callBack_ScanWifiList---state---44444");
 
 	}
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		console.log("wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---"
+		GolukDebugUtils.e("","wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---"
 				+ message + "---arrays---" + arrays);
 		mLoading.setVisibility(View.GONE);
 		switch (type) {

@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import cn.com.mobnote.wifibind.WifiRsBean;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class MultiCastUtil {
 
@@ -92,14 +92,14 @@ public class MultiCastUtil {
 	}
 
 	public void findServerIP(int type, final String mac, final String ip, int seconds) {
-		LogUtil.e("", "MultiCastUtil-----findServerIP------ip1111:   " + ip);
+		GolukDebugUtils.e("", "MultiCastUtil-----findServerIP------ip1111:   " + ip);
 		if (isStarting) {
 			return;
 		}
 		if (null == mac || "".equals(mac)) {
 			return;
 		}
-		LogUtil.e("", "MultiCastUtil-----findServerIP------ip2222222:   ");
+		GolukDebugUtils.e("", "MultiCastUtil-----findServerIP------ip2222222:   ");
 		mType = type;
 		isSearchSucess = false;
 		DURATION = seconds;
@@ -131,42 +131,42 @@ public class MultiCastUtil {
 	private String findServerIpAddress() throws IOException {
 		String ip = null;
 
-		LogUtil.e("", "MultiCastUtil-----findServerIpAddress------111111111111:   ");
+		GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------111111111111:   ");
 
 		MulticastSocket multicastSocket = new MulticastSocket(BIND_PORT);
 		multicastSocket.setLoopbackMode(true);
 		InetAddress group = InetAddress.getByName(GROUP_IP);
-		LogUtil.e("", "MultiCastUtil-----findServerIpAddress------232323:   ");
+		GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------232323:   ");
 		multicastSocket.joinGroup(group);
-		LogUtil.e("", "MultiCastUtil-----findServerIpAddress------2424242424:   ");
+		GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------2424242424:   ");
 		// 获取与IPC的交互信息
 		final byte[] sentDataByte = getData();
 
-		LogUtil.e("", "MultiCastUtil-----findServerIpAddress------22222222:   ");
+		GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------22222222:   ");
 
 		DatagramPacket packet = new DatagramPacket(sentDataByte, sentDataByte.length, group, SEND_TO_PORT);
-		LogUtil.e("", "MultiCastUtil-----findServerIpAddress------start muticastSocket  Data:   ");
+		GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------start muticastSocket  Data:   ");
 		// 向外广播发送数据
 		multicastSocket.send(packet);
-		Log.d(TAG, "WifiActivity----------->>>send packet ok");
+		GolukDebugUtils.d(TAG, "WifiActivity----------->>>send packet ok");
 
-		LogUtil.e("", "MultiCastUtil-----findServerIpAddress------send muticastSocket  OK!!:   ");
+		GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------send muticastSocket  OK!!:   ");
 
 		// 接受数据
 		for (;;) {
 
-			LogUtil.e("", "MultiCastUtil-----findServerIpAddress------for-----------11111:   ");
+			GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------for-----------11111:   ");
 
 			// 接受数据的字节数组
 			byte[] receiveData = new byte[256];
 			packet = new DatagramPacket(receiveData, receiveData.length);
 
-			LogUtil.e("", "MultiCastUtil-----findServerIpAddress------for-----------start Accept Data:   ");
+			GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------for-----------start Accept Data:   ");
 
 			// 阻塞接收数据
 			multicastSocket.receive(packet);
 
-			LogUtil.e("", "MultiCastUtil-----findServerIpAddress------for----------- Accept Data:   OKOKOK!!!!");
+			GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------for----------- Accept Data:   OKOKOK!!!!");
 
 			// 读取接收到的数据
 			byte[] result_mac = new byte[6];
@@ -177,7 +177,7 @@ public class MultiCastUtil {
 			final String ipStr = getIP(result_ip);
 			final String macStr = getMacAddress(result_mac);
 
-			LogUtil.e("", "MultiCastUtil-----findServerIpAddress------for----------- 33333:   received IP:" + ipStr
+			GolukDebugUtils.e("", "MultiCastUtil-----findServerIpAddress------for----------- 33333:   received IP:" + ipStr
 					+ "  macStr:" + macStr);
 
 			if (macStr.substring(3).equals(findMAC.substring(3))) {
@@ -241,7 +241,7 @@ public class MultiCastUtil {
 	}
 
 	private void sendData(int sucess, Object obj) {
-		LogUtil.e("", "MultiCastUtil-----sendData------ip2222222:   " + sucess);
+		GolukDebugUtils.e("", "MultiCastUtil-----sendData------ip2222222:   " + sucess);
 		if (null != mFn) {
 			mFn.MultiCaskCallBack(mType, sucess, obj);
 		}

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiRsBean;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * <pre>
@@ -116,7 +117,7 @@ public class WiFiListManage {
 			data.hasPwd = wifi.isPassnull();
 			data.mac = wifi.getIpc_bssid();
 
-			console.log("获取小车本wifi---getwifiList---" + wifiName + "---" + wifiStatus + "---mac---" + data.mac
+			GolukDebugUtils.e("", "获取小车本wifi---getwifiList---" + wifiName + "---" + wifiStatus + "---mac---" + data.mac
 					+ "---pwd---" + data.hasPwd);
 			mWiFiListData.add(data);
 

@@ -8,8 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +18,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -183,7 +184,7 @@ public class WiFiListAdapter extends BaseAdapter{
 				public void onClick(DialogInterface dialog, int which) {
 					String pwd = inputServer.getText().toString();
 					if(!"".equals(pwd)){
-						console.log("wifi---pwd---" + pwd);
+						GolukDebugUtils.e("","wifi---pwd---" + pwd);
 						((WiFiLinkListActivity)mContext).connectWiFi(wifiName,mac,pwd);
 					}
 					else{

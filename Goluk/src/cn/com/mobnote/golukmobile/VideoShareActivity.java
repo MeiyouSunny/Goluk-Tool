@@ -27,7 +27,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.provider.MediaStore.Video.Thumbnails;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -49,7 +48,7 @@ import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.bokecc.sdk.mobile.exception.DreamwinException;
 import com.bokecc.sdk.mobile.upload.UploadListener;
@@ -188,7 +187,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 						// 更新进度条
 						int percent = ((Integer) msg.obj).intValue();
 						GlobalWindow.getInstance().refreshPercent(percent);
-						console.log("upload service--VideoShareActivity-mmmHandler percent:" + percent);
+						GolukDebugUtils.e("", "upload service--VideoShareActivity-mmmHandler percent:" + percent);
 					} else {
 						if (null == GlobalWindow.getInstance().getApplication()) {
 							GlobalWindow.getInstance().setApplication(mApp);
@@ -251,18 +250,18 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			switch (status) {
 			case Uploader.PAUSE:
 				// 暂停上传
-				console.log("upload service--VideoShareActivity-handleStatus---暂停上传---pause...");
+				GolukDebugUtils.e("", "upload service--VideoShareActivity-handleStatus---暂停上传---pause...");
 				break;
 			case Uploader.UPLOAD:
 				// 开始上传
-				console.log("upload service--VideoShareActivity-handleStatus---开始上传---UPLOAD...");
+				GolukDebugUtils.e("", "upload service--VideoShareActivity-handleStatus---开始上传---UPLOAD...");
 				mmmHandler.sendEmptyMessage(MSG_H_START_UPLOAD);
 				break;
 			case Uploader.FINISH:
 				// 上传完成
 				mIsUploadSucess = true;
 				isUploading = false;
-				console.log("upload service--VideoShareActivity-handleStatus---上传完成---FINISH----");
+				GolukDebugUtils.e("", "upload service--VideoShareActivity-handleStatus---上传完成---FINISH----");
 				// 通知上传成功
 				mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_SUCESS);
 				break;
@@ -282,14 +281,14 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			msg.obj = percent;
 			mmmHandler.sendMessage(msg);
 			// 上传进度回调
-			console.log("upload service--VideoShareActivity-handleProcess___range=" + range + ", size=" + size
+			GolukDebugUtils.e("", "upload service--VideoShareActivity-handleProcess___range=" + range + ", size=" + size
 					+ ", videoId = " + videoId + " percent:" + percent);
 		}
 
 		@Override
 		public void handleException(DreamwinException exception, int status) {
 			// 处理上传过程中出现的异常
-			console.log("upload service--VideoShareActivity-handleException----上传失败，" + exception.getMessage());
+			GolukDebugUtils.e("", "upload service--VideoShareActivity-handleException----上传失败，" + exception.getMessage());
 			if (isExit) {
 				return;
 			}
@@ -306,7 +305,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		@Override
 		public void handleCancel(String videoId) {
 			// 处理取消上传的后续操作
-			console.log("upload service--VideoShareActivity-handleCancel----取消上传---------videoId = " + videoId);
+			GolukDebugUtils.e("", "upload service--VideoShareActivity-handleCancel----取消上传---------videoId = " + videoId);
 			isUploading = false;
 		}
 	};
@@ -355,8 +354,8 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 		thumbFile = filePath + File.separator + videoName;
 		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
-		LogUtil.e("xuhw", "BBBBBB======thumbFile=" + thumbFile);
-		LogUtil.e("xuhw", "BBBBBB======mVideoPath=" + mVideoPath);
+		GolukDebugUtils.e("xuhw", "BBBBBB======thumbFile=" + thumbFile);
+		GolukDebugUtils.e("xuhw", "BBBBBB======mVideoPath=" + mVideoPath);
 		File image = new File(thumbFile);
 		if (image.exists()) {
 			return;
@@ -369,9 +368,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				int width = mShortBitmap.getWidth();
 				int height = mShortBitmap.getHeight();
 
-				Log.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
+				GolukDebugUtils.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
 			} else {
-				Log.e("", "VideoShareActivity createThumb: NULL:");
+				GolukDebugUtils.e("", "VideoShareActivity createThumb: NULL:");
 				mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
 			}
 
@@ -391,7 +390,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 				String fsFile = FileUtils.javaToLibPath(thumbFile);
 
-				Log.e("", "VideoShareActivity createThumb: time: " + fsFile);
+				GolukDebugUtils.e("", "VideoShareActivity createThumb: time: " + fsFile);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -400,7 +399,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		long dur = System.currentTimeMillis() - startTime;
 
-		Log.e("", "VideoShareActivity createThumb: time:" + dur);
+		GolukDebugUtils.e("", "VideoShareActivity createThumb: time:" + dur);
 	}
 
 	@SuppressLint("NewApi")
@@ -611,7 +610,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			console.toast("视频上传使用时间：" + (SystemClock.uptimeMillis() - uploadVideoTime) + "ms", mContext);
 			// 保存视频上传ID
 			mVideoVid = vid;
-			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---vid---" + vid);
+			GolukDebugUtils.e("","视频上传返回id--VideoShareActivity-videoUploadCallBack---vid---" + vid);
 		} else {
 			console.toast("视频上传失败", mContext);
 		}
@@ -654,7 +653,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			if (describe == null || "".equals(describe)) {
 				describe = "#极路客精彩视频#";
 			}
-			console.log("视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
+			GolukDebugUtils.e("", "视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 
 			// 设置分享内容
 			// sharePlatform.setShareContent(shortUrl, coverUrl,
@@ -734,7 +733,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		long starTime = System.currentTimeMillis();
 		// mUploader.cancel();
 		cancelLoad();
-		Log.e("", "uploader   cancal time:--------:" + (System.currentTimeMillis() - starTime));
+		GolukDebugUtils.e("", "uploader   cancal time:--------:" + (System.currentTimeMillis() - starTime));
 		if (isdestroyTopwindow) {
 			GlobalWindow.getInstance().dimissGlobalWindow();
 		}
@@ -759,7 +758,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		String type = createType("" + position);
 
-		LogUtil.e("", "spinner select :" + position + " type:" + type);
+		GolukDebugUtils.e("", "spinner select :" + position + " type:" + type);
 
 		return type;
 	}
@@ -774,7 +773,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		int type = mVideoType == 2 ? 2 : 1;
 		final String json = createShareJson(selectJson, isSeque, "" + type);
 
-		LogUtil.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
+		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
 		if (null == mApp) {
 			showToast("mApp==NULL");
 		} else {
@@ -788,7 +787,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			b = mApp.mGoluk
 					.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share, json);
 		} else {
-			LogUtil.e("", "jyf-----VideoShareActivity -----mAPP 为空 或者 mGoluk 为空");
+			GolukDebugUtils.e("", "jyf-----VideoShareActivity -----mAPP 为空 或者 mGoluk 为空");
 		}
 
 		if (b) {
@@ -810,8 +809,8 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			showToast("分享失败");
 		}
 
-		Log.e("", "chxy__b__VideoShareActivity share11" + b);
-		Log.e("", "chxy____VideoShareActivity share11" + json);
+		GolukDebugUtils.e("", "chxy__b__VideoShareActivity share11" + b);
+		GolukDebugUtils.e("", "chxy____VideoShareActivity share11" + json);
 	}
 
 	// 分享成功后需要调用的接口

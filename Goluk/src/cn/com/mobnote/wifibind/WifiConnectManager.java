@@ -6,10 +6,6 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
-import cn.com.mobnote.golukmobile.multicast.NetUtil;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -19,6 +15,10 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
+import cn.com.mobnote.golukmobile.multicast.NetUtil;
+import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
@@ -241,7 +241,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			Message msg = new Message();
 
 			public void run() {
-				console.logBytag(TAG, "加入IPC  wifi....1 关闭热点");
+				GolukDebugUtils.i(TAG, "加入IPC  wifi....1 关闭热点");
 				apManagesupport.closeWifiAP();
 				wifiSupport.closeWifi();
 				// 如果当前网络未开启 连接失败后 需要再关闭网络
@@ -522,7 +522,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 */
 	private int wifiScan(String matching, int outTime) {
 		wifiManager.startScan();
-		console.logBytag(TAG, "扫描wifi....11111");
+		GolukDebugUtils.i(TAG, "扫描wifi....11111");
 		int tempTime = 0;
 		// 先提至500毫秒再进行查询
 		try {
@@ -539,16 +539,16 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				Thread.sleep(temp_1);
 				tempTime += temp_1;
 				if (tempTime > outTime) {
-					console.logBytag(TAG, "扫描wifi....超时");
+					GolukDebugUtils.i(TAG, "扫描wifi....超时");
 					return 0;
 				}
 			} catch (InterruptedException e) {
-				console.logBytag(TAG, "扫描wifi....失败");
+				GolukDebugUtils.i(TAG, "扫描wifi....失败");
 				e.printStackTrace();
 			}
 		}
 		WifiRsBean[] wifiBean = wifiSupport.getScanResult(matching, null);
-		console.logBytag(TAG, "扫描wifi....已经获取列表");
+		GolukDebugUtils.i(TAG, "扫描wifi....已经获取列表");
 		// 将得到的扫描列表返回
 		Message msg = new Message();
 		msg.what = 11;
@@ -566,7 +566,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 */
 	private void createWifiAP(final String type, final String ssid, final String password, final String ipc_ssid,
 			final String ipc_ip, final int outTime) {
-		console.logBytag(TAG, "创建热点开始....11111");
+		GolukDebugUtils.i(TAG, "创建热点开始....11111");
 
 		Runnable runnable = new Runnable() {
 			Message msg = new Message();
@@ -586,7 +586,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				// 如果wifi打开了
 				while (apManagesupport.getWifiApState() != 13) {
 					try {
-						console.logBytag(TAG, "创建热点等待状态变化....22222");
+						GolukDebugUtils.i(TAG, "创建热点等待状态变化....22222");
 						int temp_2 = 200;
 						Thread.sleep(temp_2);
 						tempTime += temp_2;
@@ -603,14 +603,14 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					}
 				}
 
-				console.logBytag(TAG, "创建热成功");
+				GolukDebugUtils.i(TAG, "创建热成功");
 
 				msg.what = Integer.parseInt(type + "1");
 				WifiRsBean rs = wifiSupport.getConnResult();
 				msg.obj = rs;
 				handler.sendMessage(msg);
 
-				console.logBytag(TAG, "创建热点等待ipc接入");
+				GolukDebugUtils.i(TAG, "创建热点等待ipc接入");
 				netUtil.findServerIpAddress(Integer.parseInt(type), ssid, "", 60 * 1000);
 
 				// 获取wifi连接列表
@@ -912,7 +912,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 		int what = 0;
 		if (type == 3) {
-			console.logBytag(TAG, "创建热点ipc接入结果 ：创建热点" + sucess);
+			GolukDebugUtils.i(TAG, "创建热点ipc接入结果 ：创建热点" + sucess);
 			if (sucess == 1) {
 				what = 32;
 			} else if (2 == sucess) {
@@ -923,7 +923,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				what = -32;
 			}
 		} else {
-			console.logBytag(TAG, "创建热点ipc接入结果 ：自动连接热点" + sucess);
+			GolukDebugUtils.i(TAG, "创建热点ipc接入结果 ：自动连接热点" + sucess);
 			if (sucess == 1) {
 				what = 52;
 			} else if (2 == sucess) {

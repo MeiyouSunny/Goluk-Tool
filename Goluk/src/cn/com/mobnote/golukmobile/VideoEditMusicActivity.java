@@ -2,23 +2,14 @@ package cn.com.mobnote.golukmobile;
 
 import java.util.ArrayList;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.MusicListAdapter;
-import cn.com.mobnote.video.MusicManage;
-import cn.com.mobnote.video.MusicManage.MusicData;
-import cn.com.mobnote.view.PullToRefreshView;
-import cn.com.mobnote.view.PullToRefreshView.OnFooterRefreshListener;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -26,6 +17,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.video.MusicListAdapter;
+import cn.com.mobnote.video.MusicManage;
+import cn.com.mobnote.video.MusicManage.MusicData;
+import cn.com.mobnote.view.PullToRefreshView;
+import cn.com.mobnote.view.PullToRefreshView.OnFooterRefreshListener;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * <pre>
@@ -187,7 +185,7 @@ public class VideoEditMusicActivity extends BaseActivity implements OnClickListe
 	 * @param path
 	 */
 	public void playSelectMusicSound(String path) {
-		console.log("music---playSelectMusicSound---" + path);
+		GolukDebugUtils.e("", "music---playSelectMusicSound---" + path);
 		try {
 			if(!"".equals(path)){
 				// 重置mediaPlayer实例，reset之后处于空闲状态

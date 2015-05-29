@@ -45,8 +45,8 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
@@ -60,13 +60,12 @@ import cn.com.mobnote.user.UpgradeManage;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
-import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
@@ -473,7 +472,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				JSONObject json = new JSONObject(data);
 				String fileName = json.getString("location");
 				long time = json.optLong("time");
-				console.log("调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---"
+				GolukDebugUtils.e("","调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---"
 						+ fileName);
 				int type = json.getInt("type");
 				String savePath = "";
@@ -502,32 +501,32 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				
 				// 调用下载视频接口
 				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
-				LogUtil.e("xuhw", "YYYYYY====start==VideoDownLoad===flag="+a+"===data="+data);
+				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===flag="+a+"===data="+data);
 				//下载视频第一帧截图
 				String imgFileName = fileName.replace("mp4", "jpg");
 				String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 				File file = new File(filePath + File.separator + fileName);
 				if (!file.exists()) {
 					boolean img = mIPCControlManager.downloadFile(imgFileName, "imgdownload", FileUtils.javaToLibPath(filePath), time);
-					LogUtil.e("xuhw", "YYYYYY====start==imgdownload===flag="+img+"===imgFileName="+imgFileName);
+					GolukDebugUtils.e("xuhw", "YYYYYY====start==imgdownload===flag="+img+"===imgFileName="+imgFileName);
 				}
 				
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}
 				if (!GlobalWindow.getInstance().isShow()) {
-					LogUtil.e("xuhw", "YYYYYY======1111111111=========");
+					GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
 					GlobalWindow.getInstance().createVideoUploadWindow(
 							"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
 									+ "/" + mDownLoadFileList.size());
 				} else {
-					LogUtil.e("xuhw", "YYYYYY======22222=========");
+					GolukDebugUtils.e("xuhw", "YYYYYY======22222=========");
 					GlobalWindow.getInstance().updateText(
 							"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size()
 									+ "/" + mDownLoadFileList.size());
 				}
 			} catch (Exception e) {
-				console.log("解析视频下载JSON数据错误");
+				GolukDebugUtils.e("","解析视频下载JSON数据错误");
 				e.printStackTrace();
 			}
 		}
@@ -585,8 +584,8 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						// {"filename":"WND1_150402183837_0012.mp4",
 						// "tag":"videodownload"}
 						// 地图大头针图片
-						console.log("视频下载完成---ipcVideoDownLoadCallBack---"+ data);
-						LogUtil.e("xuhw", "YYYYYY======VideoDownLoad=====data="+data);
+						GolukDebugUtils.e("","视频下载完成---ipcVideoDownLoadCallBack---"+ data);
+						GolukDebugUtils.e("xuhw", "YYYYYY======VideoDownLoad=====data="+data);
 						mMainActivity.videoAnalyzeComplete(data);
 					}
 
@@ -599,7 +598,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 
 					
 				} else {
-					LogUtil.e("xuhw", "YYYYYY=＠＠＠＠===download==fail===success="+success+"==data="+data);
+					GolukDebugUtils.e("xuhw", "YYYYYY=＠＠＠＠===download==fail===success="+success+"==data="+data);
 					JSONObject json = new JSONObject(data);
 					String filename = json.optString("filename");
 					
@@ -653,7 +652,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	@Override
 	public void pageNotifyCallBack(int type, int success, Object param1,
 			Object param2) {
-		console.log("chxy send pageNotifyCallBack--" + "type:" + type
+		GolukDebugUtils.e("","chxy send pageNotifyCallBack--" + "type:" + type
 				+ ",success:" + success + ",param1:" + param1 + ",param2:"
 				+ param2);
 		// null{"code":"200","json":[{"vid":"test11","vurl":"http://cdn3.lbs8.com/files/cdcvideo/test11.mp4","purl":"http://img2.3lian.com/img2007/18/18/003.png","desc":"陈真暴揍小日本","comment":"215","ilike":"123"},{"vid":"test12","vurl":"http://cdn3.lbs8.com/files/cdcvideo/test12.mp4","purl":"http://img.cool80.com/i/png/217/02.png","desc":"轮椅女孩环游世界","comment":"17","ilike":"111"},{"vid":"test13","vurl":"http://cdn3.lbs8.com/files/cdcvideo/test13.mp4","purl":"http://img2.3lian.com/img2007/14/03/20080405141042281.png","desc":"万年不毕业小学生，每次出现引发各种血案","comment":"207","ilike":"90"}]}
@@ -678,13 +677,13 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		case 7:
 			if (null != mMainActivity) {
 				// 地图大头针图片
-				console.log("pageNotifyCallBack---地图大头针数据---"
+				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针数据---"
 						+ String.valueOf(param2));
 				// 地图大头针
 				mMainActivity.pointDataCallback(success, param2);
 			}
 			if (mPageSource == "LiveVideoList") {
-				console.log("pageNotifyCallBack---直播列表数据---"
+				GolukDebugUtils.e("", "pageNotifyCallBack---直播列表数据---"
 						+ String.valueOf(param2));
 				((LiveVideoListActivity) mContext).LiveListDataCallback(
 						success, param2);
@@ -698,24 +697,24 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		case 8:
 			if (mPageSource == "Main") {
 				// 地图大头针图片
-				console.log("pageNotifyCallBack---地图大头针图片---"
+				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针图片---"
 						+ String.valueOf(param2));
 				((MainActivity) mContext).downloadBubbleImageCallBack(success,
 						param2);
 			}
 			if (mPageSource == "LiveVideoList") {
 				// 地图大头针图片
-				console.log("pageNotifyCallBack---直播列表图片---"
+				GolukDebugUtils.e("", "pageNotifyCallBack---直播列表图片---"
 						+ String.valueOf(param2));
 				((LiveVideoListActivity) mContext).downloadVideoImageCallBack(
 						success, param2);
 			}
 			break;
 		case 9:
-			LogUtil.e(null,
+			GolukDebugUtils.e(null,
 					"jyf----20150406----application----999999999999---- : ");
 			if (mPageSource == "LiveVideo") {
-				console.log("pageNotifyCallBack---直播视频数据--"
+				GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--"
 						+ String.valueOf(param2));
 				if (mContext instanceof LiveVideoPlayActivity) {
 					((LiveVideoPlayActivity) mContext).LiveVideoDataCallBack(
@@ -730,7 +729,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		case PageType_Login:
 			if (null != mMainActivity) {
 				// 地图大头针图片
-				console.log("pageNotifyCallBack---登录---"+ String.valueOf(param2));
+				GolukDebugUtils.e("", "pageNotifyCallBack---登录---"+ String.valueOf(param2));
 //				mMainActivity.loginCallBack(success, param2);
 			}
 			// 登录
@@ -844,15 +843,15 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			return;
 		}
 		isCallContinue = true;
-		LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
+		GolukDebugUtils.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
 		
 		if (mContext instanceof MainActivity) {
-			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp2222 :");
+			GolukDebugUtils.e(null, "jyf----20150406----showContinuteLive----mApp2222 :");
 			isNeedCheckLive = false;
 			isCheckContinuteLiveFinish = true;
 			((MainActivity) mContext).showContinuteLive();
 		} else {
-			LogUtil.e(null, "jyf----20150406----showContinuteLive----mApp33333 :");
+			GolukDebugUtils.e(null, "jyf----20150406----showContinuteLive----mApp33333 :");
 			isNeedCheckLive = true;
 		}
 		
@@ -889,7 +888,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			isUserLoginSucess = true;
 
 			this.showContinuteLive();
-			LogUtil.e(null, "jyf---------GolukApplication---------mCCurl:"
+			GolukDebugUtils.e(null, "jyf---------GolukApplication---------mCCurl:"
 					+ mCCUrl + " uid:" + mCurrentUId + " aid:" + mCurrentAid);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -990,7 +989,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 							isconnection = true;// 连接成功
 							closeConnectionDialog();// 关闭连接的dialog
 							boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
-							LogUtil.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
+							GolukDebugUtils.e("xuhw","YYYYYYY========getIPCSystemTime=======a="+a);
 							//查询新文件列表（最多10条）
 //							long time = SettingUtils.getInstance().getLong("querytime", 0);
 //							long curtime = System.currentTimeMillis()/1000;
@@ -1005,7 +1004,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 							}
 						}
 						
-						console.log("IPC_TTTTTT=================Login Success===============");
+						GolukDebugUtils.e("", "IPC_TTTTTT=================Login Success===============");
 						
 					} else {
 						setIpcLoginState(false);
@@ -1015,17 +1014,17 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			case IPC_VDCP_Msg_Query:
 					//msg = 1000 多文件目录查询
 					if(RESULE_SUCESS == param1){
-						LogUtil.e("xuhw", "YYYYYY=====IPC_VDCP_Msg_Query==mPageSource="+mPageSource+"=param2="+param2);
+						GolukDebugUtils.e("xuhw", "YYYYYY=====IPC_VDCP_Msg_Query==mPageSource="+mPageSource+"=param2="+param2);
 						if("ipcfilemanager".equals(mPageSource)){
 							return;
 						}
-						LogUtil.e("xuhw", "YYYYYY===@@@@@@=###====11111===");
+						GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=###====11111===");
 						if(TextUtils.isEmpty((String)param2)){
 							return;
 						}
-						LogUtil.e("xuhw", "YYYYYY===@@@@@@===####==2222===");
+						GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@===####==2222===");
 						fileList = IpcDataParser.parseMoreFile((String) param2);
-						LogUtil.e("xuhw", "YYYYYY===@@@@@@===####==333==fileList.size()="+fileList.size());
+						GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@===####==333==fileList.size()="+fileList.size());
 						mHandler.removeMessages(1001);
 						mHandler.sendEmptyMessageDelayed(1001, 1000);
 					}
@@ -1037,7 +1036,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				// 845., "period": 8, "resolution": 14, "type": 4, "size":
 				// 5865250., "location": "WND1_100101001032_0008.mp4",
 				// "withSnapshot": 1, "withGps": 0}
-				LogUtil.e("xuhw", "YYYYYY==@@@@==IPC_VDCP_Msg_SingleQuery==param1="+param1+"==param2="+param2);
+				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@==IPC_VDCP_Msg_SingleQuery==param1="+param1+"==param2="+param2);
 				GFileUtils.writeIPCLog("YYYYYY====IPC_VDCP_Msg_SingleQuery==param1="+param1+"==param2="+param2);
 				
 				ipcVideoSingleQueryCallBack(param1, (String) param2);
@@ -1125,7 +1124,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				if (!isbind) {
 					return;
 				}
-				LogUtil.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="
+				GolukDebugUtils.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="
 						+ param1 + "===param2=" + param2);
 				GFileUtils.writeIPCLog("YYYYYY======IPC_VDCP_Msg_IPCKit=====param1="
 						+ param1 + "===param2=" + param2);
@@ -1142,7 +1141,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 								boolean flag = GolukApplication.getInstance()
 										.getIPCControlManager()
 										.querySingleFile(info.location);
-								LogUtil.e("xuhw",
+								GolukDebugUtils.e("xuhw",
 										"YYYYYY=====querySingleFile=====type="
 												+ info.type + "==flag=" + flag);
 							}
@@ -1162,11 +1161,11 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 						//自动同步系统时间
 						if(SettingUtils.getInstance().getBoolean("systemtime", true)){
 							long time = SettingUtils.getInstance().getLong("cursystemtime");
-							LogUtil.e("xuhw", "YYYYYY===getIPCSystemTime==time="+time+"=curtime="+curtime);
+							GolukDebugUtils.e("xuhw", "YYYYYY===getIPCSystemTime==time="+time+"=curtime="+curtime);
 							if(Math.abs(curtime - time) > 60){//60秒内不自动同步
 								SettingUtils.getInstance().putLong("cursystemtime", curtime);
 								boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(System.currentTimeMillis()/1000);
-								LogUtil.e("xuhw", "YYYYYY===========setIPCSystemTime===============a="+a);
+								GolukDebugUtils.e("xuhw", "YYYYYY===========setIPCSystemTime===============a="+a);
 							}
 						}
 					}
@@ -1188,7 +1187,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				// 文件传输中消息 msg = 0
 				// param1 = 0,下载完成
 				// param1 = 1,下载中
-				LogUtil.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1="+param1);
+				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1="+param1);
 				if(((String)param2).equals(".mp4"))
 					GFileUtils.writeIPCLog("===IPC_VDTP_Msg_File===param1="+param1+"=param2="+param2);
 				
@@ -1280,7 +1279,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	@Override
 	public void LocationCallBack(String locationJson) {
 		// TODO 定位回调
-		LogUtil.e("", "jyf-------Application   LocationCallBack: "
+		GolukDebugUtils.e("", "jyf-------Application   LocationCallBack: "
 				+ locationJson);
 		if (null == mLocationHashMap) {
 			return;
@@ -1316,7 +1315,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		}
 		
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
-		LogUtil.e("xuhw", "YYYYYY===queryNewFileList====starttime="+starttime);
+		GolukDebugUtils.e("xuhw", "YYYYYY===queryNewFileList====starttime="+starttime);
 		mIPCControlManager.queryFileListInfo(6, 5, starttime, 2147483647);
 	}
 	
@@ -1363,7 +1362,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	CustomDialog mCustomDialog = null;
 
 	private void tips() {
-		LogUtil.e("xuhw", "YYYYYY===@@@@@@=====11111===");
+		GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====11111===");
 		if (null != mCustomDialog && mCustomDialog.isShowing()) {
 			return;
 		}
@@ -1372,12 +1371,12 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 			return;
 		}
 		
-		LogUtil.e("xuhw", "YYYYYY===@@@@@@=====2222==fileList.size()="+fileList.size());
+		GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====2222==fileList.size()="+fileList.size());
 		if (mContext instanceof Activity && fileList.size() > 0) {
-			LogUtil.e("xuhw", "YYYYYY===@@@@@@=====33333===");
+			GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====33333===");
 			Activity a = (Activity)mContext;
 			if(!a.isFinishing()){
-				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====44444===");
+				GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====44444===");
 				int size = fileList.size();
 				for (int i = 0; i < fileList.size(); i++) {
 					VideoFileInfo info = fileList.get(i);
@@ -1406,7 +1405,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					}
 					
 				}
-				LogUtil.e("xuhw", "YYYYYY===@@@@@@=====5555===");
+				GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====5555===");
 				if(size <= 0){
 					return;
 				}
@@ -1432,7 +1431,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 							boolean flag = GolukApplication.getInstance()
 									.getIPCControlManager()
 									.querySingleFile(name);
-							LogUtil.e("xuhw",
+							GolukDebugUtils.e("xuhw",
 									"YYYYYY=====querySingleFile=====name="+name+"==flag=" + flag);
 						}
 //					}

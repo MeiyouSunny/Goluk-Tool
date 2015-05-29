@@ -10,8 +10,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.com.mobnote.util.console;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiConfiguration;
@@ -19,6 +17,8 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiApManagerSupport {
 	private static final String tag = "WifiApManager";
@@ -261,7 +261,7 @@ public class WifiApManagerSupport {
 						boolean.class);
 				method1.invoke(mWifiManager, null, false); // true
 				int tag = getWifiApState();
-				console.logBytag(TAG, "热点关闭成功....stateaaaa====="+tag);
+				GolukDebugUtils.i(TAG, "热点关闭成功....stateaaaa====="+tag);
 				int count = 0;
 				//循环等待关闭信息  11成功 其他失败
 				while (tag != 11) {
@@ -274,13 +274,13 @@ public class WifiApManagerSupport {
 					}
 					tag = getWifiApState();
 					count++;
-					console.logBytag(TAG, "热点关闭成功....statebbbbbb====="+tag);
+					GolukDebugUtils.i(TAG, "热点关闭成功....statebbbbbb====="+tag);
 				}
 			}
-			console.logBytag(TAG, "热点关闭成功....");
+			GolukDebugUtils.i(TAG, "热点关闭成功....");
 		} catch (Exception e) {
 
-			console.logBytag(TAG, "热点关闭失败....");
+			GolukDebugUtils.i(TAG, "热点关闭失败....");
 			return false;
 		}
 		return true;

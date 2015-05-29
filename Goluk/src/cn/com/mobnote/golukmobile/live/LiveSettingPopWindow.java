@@ -19,7 +19,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeListener {
 
@@ -124,7 +124,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 
 				@Override
 				public void onDismiss() {
-					LogUtil.e(null, "jyf----20150406----LiveActivity----mPopWindow-----dimiss:");
+					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----mPopWindow-----dimiss:");
 
 					isShow = false;
 					if (!isUserDimiss) {
@@ -212,7 +212,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		LogUtil.e(null, "LiveSetting-------onProgressChanged : " + progress + "	fromUser:" + fromUser);
+		GolukDebugUtils.e("", "LiveSetting-------onProgressChanged : " + progress + "	fromUser:" + fromUser);
 		if (progress < 180) {
 			progress = 180;
 		}
