@@ -12,6 +12,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
   * 1.编辑器必须显示空白处
@@ -58,7 +59,7 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 		initView();
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean flag = GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
-			System.out.println("YYY======queryRecordStorageStatus=====flag="+flag);
+			GolukDebugUtils.e("xuhw", "YYY======queryRecordStorageStatus=====flag="+flag);
 			if(!flag){
 				
 			}
@@ -98,7 +99,7 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
 			if(msg == IPC_VDCP_Msg_RecPicUsage){
-				System.out.println("YYY===========11111111========param1="+param1+"====param2=="+param2);
+				GolukDebugUtils.e("xuhw", "YYY===========11111111========param1="+param1+"====param2=="+param2);
 				if(param1 == RESULE_SUCESS){
 					RecordStorgeState mRecordStorgeState = IpcDataParser.parseRecordStorageStatus((String)param2);
 					if(null != mRecordStorgeState){
@@ -115,11 +116,11 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 						mEmergencySize.setText(getSize(emergencysize));
 						mOtherSize.setText(getSize(picsize));
 						
-						System.out.println("YYY===========２２２２２=========normalRecQuota="+mRecordStorgeState.normalRecQuota+"=====normalRecSize="+mRecordStorgeState.normalRecSize);
+						GolukDebugUtils.e("xuhw", "YYY===========２２２２２=========normalRecQuota="+mRecordStorgeState.normalRecQuota+"=====normalRecSize="+mRecordStorgeState.normalRecSize);
 					}
 					
 				}else{
-					System.out.println("YYY===========３３３３３===============");
+					GolukDebugUtils.e("xuhw", "YYY===========３３３３３===============");
 				}
 			}
 		}
