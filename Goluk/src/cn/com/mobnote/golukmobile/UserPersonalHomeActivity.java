@@ -5,15 +5,13 @@ import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.user.UserUtils;
-import android.app.Activity;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -112,14 +110,14 @@ public class UserPersonalHomeActivity extends BaseActivity implements OnClickLis
 	 * 个人资料信息
 	 */
 	public void initData(){
-		Log.i("home", mApplication.mGoluk+"===");
+		GolukDebugUtils.i("lily", mApplication.mGoluk+"===");
 		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
 		try{
 			JSONObject json = new JSONObject(info);
 			head = json.getString("head");
 			String name = json.getString("nickname");
 			String sex = json.getString("sex");
-			Log.i("lily", "-----UserPersonalHomeActivity-----"+json.toString());
+			GolukDebugUtils.i("lily", "-----UserPersonalHomeActivity-----"+json.toString());
 	
 			mTextName.setText(name);
 			UserUtils.focusHead(head, mImageHead);

@@ -10,11 +10,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 自动登录
@@ -63,7 +63,7 @@ public class User {
 	 * ——判断用户是否在自动登录，若是，则客户端使用系统 loading 提示：正在为您登录，请稍后…
 	 */
 	public void initAutoLogin(){
-		Log.i("setauto", "-----initAtuoLogin ---------");
+		GolukDebugUtils.i("lily", "-----initAtuoLogin ---------");
 		//网络判断
 		if(!UserUtils.isNetDeviceAvailable(mContext)){
 //			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
@@ -76,11 +76,11 @@ public class User {
 			}else{//不是第一次登录
 				//{tag:”android/ios/pad/pc”}
 				String autoLogin = "{\"tag\":\"android\"}";
-				Log.i("setauto", "------自动登录-------");
+				GolukDebugUtils.i("setauto", "------自动登录-------");
 				boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_AutoLogin, autoLogin);
 				if(b){
 					StatusChange(1);//自动登录中
-					Log.i("setauto", "------自动登录-------"+b+"------自动登录的状态值-----"+mApp.autoLoginStatus);
+					GolukDebugUtils.i("setauto", "------自动登录-------"+b+"------自动登录的状态值-----"+mApp.autoLoginStatus);
 				}else{
 					StatusChange(3);//自动登录失败
 //					console.toast("自动登录失败", mContext);
@@ -111,14 +111,14 @@ public class User {
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				console.log(data);
-				Log.i("lily", "----User-----"+data);
+				GolukDebugUtils.i("lily", "----User-----"+data);
 				switch (code) {
 				case 200:
 					//自动登录成功无提示
 //					console.toast("自动登录成功", mContext);
-					Log.i("lily", "--------User-----自动登录个人中心页变化--------"+mApp.autoLoginStatus);
+					GolukDebugUtils.i("lily", "--------User-----自动登录个人中心页变化--------"+mApp.autoLoginStatus);
 					StatusChange(2);//自动登录成功
-					Log.i("setauto", "----ok---"+mApp.autoLoginStatus);
+					GolukDebugUtils.i("lily", "----ok---"+mApp.autoLoginStatus);
 					mApp.loginoutStatus = false;
 					mApp.isUserLoginSucess = true;
 					mApp.showContinuteLive();
@@ -145,7 +145,7 @@ public class User {
 			}
 		}else{
 			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
-			android.util.Log.i("setauto", "-----自动登录网络链接超时-----"+codeOut);
+			GolukDebugUtils.i("lily", "-----自动登录网络链接超时-----"+codeOut);
 			switch (codeOut) {
 			case 1://没有网络
 				timerTask();
@@ -171,7 +171,7 @@ public class User {
 	 * 1000x60x5=300000
 	 */
 	public void timerTask(){
-		Log.i("setauto", "------timerTask()-----");
+		GolukDebugUtils.i("lily", "------timerTask()-----");
 		timerCancel();
 		mTimer = new Timer();
 		mTimer.schedule(new TimerTask() {

@@ -1,30 +1,9 @@
 package cn.com.mobnote.user;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Handler;
-import android.os.Message;
-import android.telephony.SmsMessage;
-import android.util.Log;
-import android.view.View;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
-import cn.com.mobnote.golukmobile.UserLoginActivity;
-import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.util.console;
 
 /**
@@ -110,7 +89,6 @@ public class UserRegistManage {
 					mCountDownhelper.setOnFinishListener(new OnFinishListener() {
 						@Override
 						public void finish() {
-							// TODO Auto-generated method stub
 							mBtnIdentify.setText("再次发送");
 							//倒计时结束后手机号、密码可以更改
 							mEditTextPhone.setEnabled(true);
@@ -136,7 +114,6 @@ public class UserRegistManage {
 					.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
-							// TODO Auto-generated method stub
 							Intent itRegist = new Intent(UserRegistActivity.this,UserLoginActivity.class);
 							itRegist.putExtra("intentRegist", mEditTextPhone.getText().toString());
 							startActivity(itRegist);
@@ -166,7 +143,7 @@ public class UserRegistManage {
 			console.toast("验证码获取失败", mApp.getContext());
 			identifyStatusChange(2);
 			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-			android.util.Log.i("outtime", "-----网络链接超时超时超时"+codeOut);
+			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---"+codeOut);
 			switch (codeOut) {
 			case 700:
 				loginStatusChange(4);
@@ -200,7 +177,7 @@ public class UserRegistManage {
 					//初始化定时器
 				initTimer();
 				handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.
-				//{PNumber：“13054875692”，Password：“XXX”，VCode：“1234”}
+				//{PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 				console.log(isRegist);
 				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);

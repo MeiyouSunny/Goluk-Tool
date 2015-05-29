@@ -10,7 +10,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +26,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 
@@ -112,7 +112,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		Intent itentGetRegist = getIntent();
 		if(null !=  itentGetRegist.getStringExtra("intentRegist")){
 			String phoneNumber = itentGetRegist.getStringExtra("intentRegist").toString();
-			Log.i("lily", "----------intentRegist--------phoneNumber =   "+phoneNumber);
+			GolukDebugUtils.i("lily", "----------intentRegist--------phoneNumber =   "+phoneNumber);
 			mEditTextPhoneNumber.setText(phoneNumber);
 		}
 		
@@ -128,7 +128,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 		if(!"".equals(mSharedPreferences.getString("setupPhone", ""))){
 			String phone = mSharedPreferences.getString("setupPhone", "");
-			Log.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
+			GolukDebugUtils.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
 			mEditTextPhoneNumber.setText(phone);
 			mEditTextPhoneNumber.setSelection(phone.length());
 		}
@@ -150,8 +150,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			//提交
 			mEditor.commit();
 		}
-		
-		Log.i("miss", mEditTextPhoneNumber.getText().toString());
+		GolukDebugUtils.i("lily", mEditTextPhoneNumber.getText().toString());
 		
 		/**
 		 * 监听绑定
@@ -389,7 +388,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			if(justLogin.equals("main")){
 				mApplication.mLoginManage.setUserLoginInterface(null);
 				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
-				Log.i("main", "======MainActivity==UserLoginActivity====");
+				GolukDebugUtils.i("main", "======MainActivity==UserLoginActivity====");
 				startActivity(login);
 			}
 			this.finish();

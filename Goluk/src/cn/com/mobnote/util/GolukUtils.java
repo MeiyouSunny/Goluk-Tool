@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
-import cn.com.mobnote.golukmobile.R;
 
 public class GolukUtils {
 

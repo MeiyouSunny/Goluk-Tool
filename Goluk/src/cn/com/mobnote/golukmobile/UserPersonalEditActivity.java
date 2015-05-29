@@ -10,13 +10,12 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -133,7 +132,7 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 			intentSign = it.getStringExtra("infoSign").toString();
 			mTextSign.setText(intentSign);
 		}
-		Log.i("lily", "------head--------"+intentHead+"-----name---"+intentName+"----sex----"+intentSex+"-----sign----"+intentSign);
+		GolukDebugUtils.i("lily", "------head--------"+intentHead+"-----name---"+intentName+"----sex----"+intentSex+"-----sign----"+intentSign);
 		if(head == null || name == null || sex == null || sign == null){
 			head = intentHead;
 			name = intentName;

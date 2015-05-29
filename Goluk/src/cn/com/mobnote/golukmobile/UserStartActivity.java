@@ -1,8 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
-import com.lidroid.xutils.BitmapUtils;
-
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -21,9 +18,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 
@@ -51,6 +48,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	private int screenHeight = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
 
+	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -125,7 +123,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		case R.id.user_start_look:
 			//随便看看
 			Intent it2 = new Intent(UserStartActivity.this,MainActivity.class);
-			Log.i("main", "======MainActivity==UserStartActivity====");
+			GolukDebugUtils.i("lily", "======MainActivity==UserStartActivity====");
 			startActivity(it2);
 			this.finish();
 			break;

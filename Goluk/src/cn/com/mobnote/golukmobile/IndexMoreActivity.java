@@ -6,12 +6,10 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -20,7 +18,6 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.UserInterface;
+import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -146,10 +144,9 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 		//头部有无信息的布局替换
 		mLayoutHasInfo = (LinearLayout) findViewById(R.id.index_more_hasinfo);
 		mLayoutNoInfo = (LinearLayout) findViewById(R.id.index_more_noinfo);
-		Log.i("testtest", "----------"+mApp.autoLoginStatus+mApp.isUserLoginSucess);
-		Log.i("illness", "=====mApp.registStatus ======="+mApp.registStatus);
+		GolukDebugUtils.i("lily", "--------"+mApp.autoLoginStatus+mApp.isUserLoginSucess+"=====mApp.registStatus ===="+mApp.registStatus);
 		if(!isFirstLogin || mApp.isUserLoginSucess == true || mApp.registStatus ==2){//登录过
-			Log.i("testtest", "---------------"+mApp.autoLoginStatus+"------loginStatus------"+mApp.loginStatus);
+			GolukDebugUtils.i("lily", "---------------"+mApp.autoLoginStatus+"------loginStatus------"+mApp.loginStatus);
 			//更多页面
 			personalChanged();
 	}else{
@@ -195,14 +192,14 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 			break;
 			case R.id.setup_item:
 				//跳转到设置页面
-				console.log("onclick---setup--item");
+				GolukDebugUtils.i("lily", "onclick---setup--item");
 				intent = new Intent(IndexMoreActivity.this,UserSetupActivity.class);
 				startActivity(intent);
 			break;
 			//点击跳转到我的主页
 			case R.id.head_layout:
 				//自动登录中，成功，失败，超时、密码错误
-				Log.i("autostatus", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
+				GolukDebugUtils.i("lily", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
 				if(isHasInfo && mApp.loginoutStatus == false){
 //					mApp.mUser.setUserInterface(this);
 					if(mApp.autoLoginStatus == 1 ||mApp.autoLoginStatus == 4){
@@ -220,12 +217,12 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 						}).create();
 						dialog	.show();
 					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess ){
-						Log.i("userinterface", "--------更多页面-------");
+						GolukDebugUtils.i("lily", "--------更多页面------");
 						intent = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
 						startActivity(intent);
 					}
 				}else{
-					Log.i("lily", "-------用户登出成功,跳转登录页------"+mApp.autoLoginStatus);
+					GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------"+mApp.autoLoginStatus);
 					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
 					//登录页回调判断
 					itNo.putExtra("isInfo", "indexmore");
@@ -261,7 +258,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 			String sex = json.getString("sex");
 	
 			mTextName.setText(name);
-			Log.i("more", head);
+			GolukDebugUtils.i("lily", head);
 			UserUtils.focusHead(head, mImageHead);
 			if(sex.equals("1")){
 				mImageSex.setImageResource(R.drawable.more_man);
@@ -282,14 +279,13 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 	 */
 	@Override
 	public void statusChange() {
-		Log.i("lily", "-------IndexMoreActivity-----自动登录个人中心变化----statusChange()-----mApp.autoLoginStatus-----"+mApp.autoLoginStatus);
+		GolukDebugUtils.i("lily", "----IndexMoreActivity---自动登录个人中心变化---statusChange()-----mApp.autoLoginStatus-----"+mApp.autoLoginStatus);
 		if(mApp.autoLoginStatus == 2){
 			dismissDialog();
-			Log.i("lily", "-------IndexMoreActivity-----自动登录个人中心变化--------当autoLoginStatus==2时----");
+			GolukDebugUtils.i("lily", "-------IndexMoreActivity-----自动登录个人中心变化--------当autoLoginStatus==2时----");
 			personalChanged();
 		}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4 || mApp.isUserLoginSucess == false){
 			dismissDialog();
-//			console.toast("自动登录失败", mContext);
 			personalChanged();
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
@@ -303,8 +299,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 	 * 自动登录失败后个人中心状态的变化
 	 */
 	public void personalChanged(){
-		Log.i("illness", "======registStatus===="+mApp.registStatus);
-//		console.toast("-----mApp.loginStatus-------"+mApp.loginStatus+"------mApp.autoLoginStatus-------"+mApp.autoLoginStatus, mContext);
+		GolukDebugUtils.i("lily", "======registStatus===="+mApp.registStatus);
 		if(mApp.loginStatus == 1 || mApp.autoLoginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
 			mLayoutHasInfo.setVisibility(View.VISIBLE);
 			mLayoutNoInfo.setVisibility(View.GONE);

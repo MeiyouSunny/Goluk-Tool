@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,6 +37,7 @@ import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
+import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.LogUtil;
 /**
  * 1.类命名首字母大写
@@ -166,7 +166,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				if(msg.what == 0){
-					Log.i("lily", "已清除过缓存");
+					GolukDebugUtils.i("lily", "已清除过缓存");
 				}
 			}
 		};
@@ -200,14 +200,14 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 					mPrepareDialog = UserUtils.showDialogUpdate(mContext, "正在为您准备传输文件，请稍候……");
 					break;
 				case UPDATE_TRANSFER_FILE:
-					Log.i("update", "-------正在传输文件------");
+					GolukDebugUtils.i("lily", "-------正在传输文件------");
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
 					mPrepareDialog = null;
 					if(mSendDialog == null){
-						Log.i("update", "-------正在传输文件   dialog = null  ------");
+						GolukDebugUtils.i("lily", "-------正在传输文件   dialog = null  ------");
 						mSendDialog = UserUtils.showDialogUpdate(mContext, "正在传输文件，请稍候……"+percent+"%");
 					}else{
-						Log.i("update", "-------正在传输文件   dialog != null  ------");
+						GolukDebugUtils.i("lily", "-------正在传输文件   dialog != null  ------");
 						mSendDialog.setMessage("正在传输文件，请稍候……"+percent+"%");
 					}
 					break;
@@ -265,7 +265,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		try {
 			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
 			mTextCacheSize.setText(cacheSize);
-			Log.i("lily", "------cacheSize-------"+cacheSize);
+			GolukDebugUtils.i("lily", "------cacheSize-------"+cacheSize);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -273,9 +273,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		//没有登录过的状态
 		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-		Log.i("lily", "----------UserSetupActivity11111-------"+mApp.registStatus);
+		GolukDebugUtils.i("lily", "----------UserSetupActivity11111-------"+mApp.registStatus);
 		if(!isFirstLogin ){//登录过
-			Log.i("lily", "----------UserSetupActivity-------"+mApp.registStatus);
+			GolukDebugUtils.i("lily", "----------UserSetupActivity-------"+mApp.registStatus);
 			if(mApp.loginStatus == 1 || mApp.registStatus == 2 || mApp.autoLoginStatus == 2 ||mApp.isUserLoginSucess == true){//上次登录成功
 				btnLoginout.setText("退出登录");
 			}else{
@@ -350,7 +350,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				break;
 				//清除缓存
 			case R.id.remove_cache_item:
-				Log.i("lily", "----清除缓存-----"+Const.getAppContext().getCacheDir().getPath());
+				GolukDebugUtils.i("lily","----清除缓存-----"+Const.getAppContext().getCacheDir().getPath());
 				if(mTextCacheSize.getText().toString().equals("0M")){
 					UserUtils.showDialog(mContext, "没有缓存数据");
 				}else{
@@ -461,7 +461,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		try{
 			JSONObject json = new JSONObject(info);
 			
-			Log.i("info", "====json()===="+json);
+			GolukDebugUtils.i("lily", "====json()===="+json);
 			phone = json.getString("phone");
 			//退出登录后，将信息存储
 			mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
@@ -532,7 +532,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				LogUtil.e("lily", "---------连接ipc-------");
 				if(param1 == RESULE_SUCESS){
 					String str = (String)param2;
-					Log.i("lily", "--str----"+str);
+					GolukDebugUtils.i("lily", "--str----"+str);
 					if(TextUtils.isEmpty(str)){
 						return ;
 					}
@@ -540,7 +540,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 						JSONObject json = new JSONObject(str);
 						stage = json.getString("stage");
 						percent = json.getString("percent");
-						Log.i("lily", "---------stage-----"+stage+"-------percent----"+percent);
+						GolukDebugUtils.i("lily", "---------stage-----"+stage+"-------percent----"+percent);
 						if(stage.equals("1")){
 							//正在传输文件，请稍候……
 							mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
