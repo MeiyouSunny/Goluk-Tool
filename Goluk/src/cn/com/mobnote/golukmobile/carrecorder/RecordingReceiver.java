@@ -49,7 +49,7 @@ public class RecordingReceiver extends RecorderMsgReceiverBase {
     @Override
     public void onNewSplitVideo(Context context, String strResultInfo,
 	    String strVideoPath) {
-	Toast.makeText(context, strResultInfo, Toast.LENGTH_SHORT).show();
+//	Toast.makeText(context, strResultInfo, Toast.LENGTH_SHORT).show();
     }
 
     /*
@@ -62,7 +62,7 @@ public class RecordingReceiver extends RecorderMsgReceiverBase {
     @Override
     public void onTimeRangeRecordBegin(Context context, int nResult,
 	    String strResultInfo, String strVideoPath) {
-	Toast.makeText(context, strResultInfo, Toast.LENGTH_SHORT).show();
+//	Toast.makeText(context, strResultInfo, Toast.LENGTH_SHORT).show();
     }
 
     /*
@@ -89,6 +89,6 @@ public class RecordingReceiver extends RecorderMsgReceiverBase {
     @Override
     public void onTimeRangeRecordFinish(Context context, int nResult,
 	    String strResultInfo, String strVideoPath) {
-	Toast.makeText(context, strResultInfo, Toast.LENGTH_SHORT).show();
+//	Toast.makeText(context, strResultInfo, Toast.LENGTH_SHORT).show();
     }
 }

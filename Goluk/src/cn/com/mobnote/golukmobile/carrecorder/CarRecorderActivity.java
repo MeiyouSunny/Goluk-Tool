@@ -53,6 +53,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SensorDetector.AccelerometerL
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomWifiDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -1529,7 +1530,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      */
     public void setFullScreen(boolean bFull) {
 		if (bFull == m_bIsFullScreen) {
-		    Toast.makeText(this, "已处于全屏状态.", Toast.LENGTH_SHORT).show();
+			GolukUtils.showToast(this, "已处于全屏状态.");
 		    return;
 		}
 		if (bFull) {

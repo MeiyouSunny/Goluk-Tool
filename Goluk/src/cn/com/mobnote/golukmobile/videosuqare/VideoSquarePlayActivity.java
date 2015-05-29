@@ -20,6 +20,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -242,7 +243,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 			if (!isSucess) {
-				Toast.makeText(VideoSquarePlayActivity.this, "第三方分享失败", Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(VideoSquarePlayActivity.this, "第三方分享失败");
 				return;
 			}
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
@@ -379,7 +380,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 				} else if (2 == uptype){
 					mRTPullListView.onRefreshComplete();
 				}
-				Toast.makeText(VideoSquarePlayActivity.this, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(VideoSquarePlayActivity.this, "网络异常，请检查网络");
 			}
 			
 			if(mDataList.size()>0){
