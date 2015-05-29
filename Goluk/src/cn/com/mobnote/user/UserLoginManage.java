@@ -75,7 +75,7 @@ public class UserLoginManage {
 		if(1 == success){
 			try{
 				String data = (String)obj;
-				GolukDebugUtils.i("lily", data);
+				GolukDebugUtils.i("lily", "-----UserLoginManage-----"+data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				switch (code) {

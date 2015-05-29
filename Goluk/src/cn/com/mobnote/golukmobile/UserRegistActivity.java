@@ -599,21 +599,14 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					//注册成功
 					console.toast("注册成功", mContext);
 					mApplication.registStatus = 2;//注册成功的状态
-					
-					//注册成功后再次调用登录的接口
-					registLogin();
-					
-					/*//登录成功后，存储用户的登录信息
-					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-					mEditor = mSharedPreferences.edit();
-					mEditor.putBoolean("FirstLogin", false);
-					//提交修改
-					mEditor.commit();*/
 					//登录成功跳转
 					mApplication.loginStatus=1;//登录成功
 					mApplication.isUserLoginSucess = true;
 					
-					Intent it = null;
+					//注册成功后再次调用登录的接口
+					registLogin();
+					
+					/*Intent it = null;
 					if(registOk.equals("fromStart")){
 						GolukDebugUtils.i("lily", "========用户未注册2222======");
 						it = new Intent(UserRegistActivity.this,MainActivity.class);
@@ -631,7 +624,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
 					}
-					finish();
+					finish();*/
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
@@ -740,6 +733,27 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					//登录成功跳转
 					mApplication.loginStatus=1;//登录成功
 					mApplication.isUserLoginSucess = true;
+					mApplication.registStatus = 2;//注册成功的状态
+					
+					Intent it = null;
+					if(registOk.equals("fromStart")){
+						GolukDebugUtils.i("lily", "========用户未注册2222======");
+						it = new Intent(UserRegistActivity.this,MainActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					}else if(registOk.equals("fromIndexMore")){
+						it = new Intent(UserRegistActivity.this,IndexMoreActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					}else if(registOk.equals("fromSetup")){
+						it = new Intent(UserRegistActivity.this,UserSetupActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					}
+					finish();
 					break;
 					
 					default :

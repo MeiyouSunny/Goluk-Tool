@@ -200,7 +200,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 			case R.id.head_layout:
 				//自动登录中，成功，失败，超时、密码错误
 				GolukDebugUtils.i("lily", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
-				if(isHasInfo && mApp.loginoutStatus == false){
+				if(isHasInfo && (mApp.loginoutStatus == false || mApp.registStatus == 2)){
 //					mApp.mUser.setUserInterface(this);
 					if(mApp.autoLoginStatus == 1 ||mApp.autoLoginStatus == 4){
 						mBuilder = new AlertDialog.Builder(mContext);
@@ -251,6 +251,7 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 	 */
 	public void initData(){
 		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		GolukDebugUtils.i("lily", "---IndexMore--------"+info);
 		try{
 			JSONObject json = new JSONObject(info);
 			String head = json.getString("head");
