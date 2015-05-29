@@ -27,7 +27,7 @@ import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
@@ -166,7 +166,7 @@ public class BaiduMapManage {
 		if (null == json) {
 			return;
 		}
-		LogUtil.e("", "jyf------AddMapPoint----11111");
+		GolukDebugUtils.e("", "jyf------AddMapPoint----11111");
 		// 清楚历史marker
 		mBaiduMap.clear();
 		mMarkerData.clear();
@@ -176,7 +176,7 @@ public class BaiduMapManage {
 		for (int i = 0, len = json.length(); i < len; i++) {
 			try {
 				data = json.getJSONObject(i);
-				LogUtil.e("", "jyf------AddMapPoint----array[i]: " + data);
+				GolukDebugUtils.e("", "jyf------AddMapPoint----array[i]: " + data);
 				String lon = data.getString("lon");
 				String lat = data.getString("lat");
 				if (!"".equals(lon) && !"".equals(lat)) {
@@ -200,15 +200,15 @@ public class BaiduMapManage {
 
 					mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
 
-					LogUtil.e("", "jyf------AddMapPoint----array[2]: ");
+					GolukDebugUtils.e("", "jyf------AddMapPoint----array[2]: ");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				LogUtil.e("", "jyf------AddMapPoint----array Exception: ");
+				GolukDebugUtils.e("", "jyf------AddMapPoint----array Exception: ");
 			}
 		}
 
-		LogUtil.e("", "jyf------AddMapPoint----array : 333333");
+		GolukDebugUtils.e("", "jyf------AddMapPoint----array : 333333");
 	}
 
 	// 添加单个点,不清除数据
@@ -338,9 +338,9 @@ public class BaiduMapManage {
 		mBubbleView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				LogUtil.e(null, "jyf-----click------1111");
+				GolukDebugUtils.e("", "jyf-----click------1111");
 				if (mPageSource == "Main") {
-					LogUtil.e(null, "jyf-----click------2222");
+					GolukDebugUtils.e("", "jyf-----click------2222");
 					lookOtherLive();
 				}
 			}
@@ -366,14 +366,14 @@ public class BaiduMapManage {
 		// bubble.putExtra("cn.com.mobnote.map.imageurl", mBubbleImageUrl);
 		// mContext.startActivity(bubble);
 
-		LogUtil.e(null, "jyf-----click------3333");
+		GolukDebugUtils.e("", "jyf-----click------3333");
 
 		// 通知主界面要观看别人的视频
 		if (mContext instanceof MainActivity) {
-			LogUtil.e(null, "jyf-----click------4444");
+			GolukDebugUtils.e("", "jyf-----click------4444");
 			((MainActivity) mContext).startLiveLook(mCurrentUserInfo);
 
-			LogUtil.e(null, "jyf-----click------55555");
+			GolukDebugUtils.e("", "jyf-----click------55555");
 		}
 	}
 
@@ -455,7 +455,7 @@ public class BaiduMapManage {
 				String zan = data.getString("zan");
 				String persons = data.getString("persons");
 
-				LogUtil.e(null, "jyf-----click------AAAAA:" + data);
+				GolukDebugUtils.e("", "jyf-----click------AAAAA:" + data);
 
 				// 解析获取用户信息
 				mCurrentUserInfo = JsonUtil.parseSingleUserInfoJson(data);

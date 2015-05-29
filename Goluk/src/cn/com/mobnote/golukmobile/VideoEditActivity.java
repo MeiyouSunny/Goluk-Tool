@@ -2,8 +2,8 @@ package cn.com.mobnote.golukmobile;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -34,6 +34,8 @@ import cn.com.mobnote.video.MVListAdapter;
 import cn.com.mobnote.video.MVManage;
 import cn.com.mobnote.video.MVManage.MVEditData;
 import cn.com.mobnote.view.MyGridView;
+import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.EditorParam;
 import com.rd.car.editor.FilterPlaybackView;
@@ -209,7 +211,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 					String path = (String) msg.obj;
 					// 保存数据
 					mStrMusicFilePath = path;
-					console.log("select music---" + path);
+					GolukDebugUtils.e("", "select music---" + path);
 					addMusicToVideo(path);
 					break;
 				}
@@ -267,7 +269,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
-				console.log("onPrepared---video---加载完成");
+				GolukDebugUtils.e("", "onPrepared---video---加载完成");
 				updateVideoProgress();
 				// 删除背景图片
 				// mVVPlayVideo.setBackgroundDrawable(null);
@@ -412,9 +414,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void setMixAudioFilePath(String path, boolean isSoundTrack) {
 		// /mnt/sdcard/Android/data/com.rd.car.demo/files/assets/1.mp3
-		console.log("music---setMixAudioFilePath---1---" + path);
+		GolukDebugUtils.e("", "music---setMixAudioFilePath---1---" + path);
 		String mixAudioPath = addAssets(path);
-		console.log("music---setMixAudioFilePath---2---" + mixAudioPath);
+		GolukDebugUtils.e("", "music---setMixAudioFilePath---2---" + mixAudioPath);
 		if (TextUtils.isEmpty(mixAudioPath)) {
 			console.toast("不支持该" + (isSoundTrack ? "音乐！" : "录音！"), mContext);
 			return;
@@ -433,13 +435,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		 * mixAudioPath); if (mVVPlayVideo.isPausing() ||
 		 * mVVPlayVideo.isPlaying()) { mVVPlayVideo.stop(); }
 		 */
-		console.log("music---555---" + mixAudioPath);
+		GolukDebugUtils.e("", "music---555---" + mixAudioPath);
 		try {
 			if (!TextUtils.isEmpty(mixAudioPath)) {
 				// from to 设置为0代表配乐在视频全时间线循环
 				mVVPlayVideo.addMixAudio(mixAudioPath, 0, 0, 1.0f);
 			}
-			console.log("music---666---" + mixAudioPath);
+			GolukDebugUtils.e("", "music---666---" + mixAudioPath);
 			/*
 			 * for (MixAudioInfo info : audioInfos) { // 设置添加配音在一个指定时间段播放
 			 * mVVPlayVideo

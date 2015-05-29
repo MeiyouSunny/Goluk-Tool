@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.console;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GlobalWindow {
 
@@ -91,22 +91,22 @@ public class GlobalWindow {
 
 	@SuppressLint("InflateParams")
 	public void createVideoUploadWindow(String promptText) {
-		LogUtil.e("", "jyf----------createVideoUploadWindow:-------111: " + promptText);
+		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------111: " + promptText);
 		if (null == mApplication) {
 			return;
 		}
 		
-		LogUtil.e("", "jyf----------createVideoUploadWindow:-------2222: ");
+		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------2222: ");
 
 		if (isShowGlobalwindow) {
 			dimissGlobalWindow();
 		}
 		
-		LogUtil.e("", "jyf----------createVideoUploadWindow:-------333333: ");
+		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------333333: ");
 
 		cancelTimer();
 
-		LogUtil.e("", "jyf----------createVideoUploadWindow:-------444444: ");
+		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------444444: ");
 
 		mContext = mApplication.getContext();
 
@@ -145,7 +145,7 @@ public class GlobalWindow {
 		// 显示顶层窗口
 		mWindowManager.addView(mVideoUploadLayout, mWMParams);
 
-		LogUtil.e("", "jyf----------createVideoUploadWindow:----55555---showTopwindow: ");
+		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:----55555---showTopwindow: ");
 
 		isShowGlobalwindow = true;
 
@@ -190,7 +190,7 @@ public class GlobalWindow {
 	 * @date Apr 17, 2015
 	 */
 	public void refreshPercent(int percent) {
-		LogUtil.e("", "jyf----------createVideoUploadWindow:-------refreshPercent: " + percent);
+		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------refreshPercent: " + percent);
 		if (!isShowGlobalwindow) {
 			// 窗口未显示
 			return;
@@ -198,9 +198,9 @@ public class GlobalWindow {
 		if (null != mProgressBar) {
 			mProgressBar.setProgress(percent);
 		}
-		console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent: " + percent);
+		GolukDebugUtils.e("","upload service--VideoShareActivity-handleCancel----Application---refreshPercent: " + percent);
 		if (null != mPrecentTv) {
-			console.log("upload service--VideoShareActivity-handleCancel----Application---refreshPercent3333: ");
+			GolukDebugUtils.e("","upload service--VideoShareActivity-handleCancel----Application---refreshPercent3333: ");
 			mPrecentTv.setText("" + percent + "%");
 		}
 	}
@@ -255,7 +255,7 @@ public class GlobalWindow {
 	 * @date Apr 17, 2015
 	 */
 	public void topWindowSucess(String message) {
-		LogUtil.e("", "jyf----------topWindowSucess:-------refreshPercent: ");
+		GolukDebugUtils.e("", "jyf----------topWindowSucess:-------refreshPercent: ");
 		if (!isShowGlobalwindow) {
 			// 窗口未显示
 			return;
@@ -284,7 +284,7 @@ public class GlobalWindow {
 	 * @date Apr 17, 2015
 	 */
 	public void dimissGlobalWindow() {
-		LogUtil.e("", "jyf----------createVideoUploadWindow:-------dimissGlobalWindow: ");
+		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------dimissGlobalWindow: ");
 		if (!isShowGlobalwindow) {
 			return;
 		}

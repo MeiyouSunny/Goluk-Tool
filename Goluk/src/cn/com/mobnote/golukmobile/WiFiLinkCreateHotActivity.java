@@ -5,6 +5,7 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -135,7 +136,7 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 												// ".103";
 					String way = "192.168.1.103";// WiFiInfo.GolukMAC;
 					// 连接ipc热点wifi---调用ipc接口
-					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---1");
+					GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
 					String appwd = WiFiInfo.AP_PWD;
 					String json = "";
 					if (null != appwd && !"".equals(appwd)) {
@@ -146,13 +147,13 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 						json = "{\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip
 								+ "\",\"GolukGateway\":\"" + way + "\" }";
 					}
-					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
+					GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
 					boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 					if (!b) {
 						console.toast("调用设置IPC连接热点失败", mContext);
 						mLoading.setVisibility(View.GONE);
 					}
-					console.log("通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
+					GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
 				} else {
 					console.toast("WiFi热点密码长度必须大于等于8位", mContext);
 				}
@@ -176,9 +177,9 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 			Intent complete = new Intent(WiFiLinkCreateHotActivity.this, WiFiLinkCompleteActivity.class);
 			startActivity(complete);
 
-			console.log("WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
+			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
 		} else {
-			console.log("WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
+			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
 
 			if (connectCount > 3) {
 				showToastMsg("綁定失败");

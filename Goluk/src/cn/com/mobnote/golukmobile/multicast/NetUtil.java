@@ -3,12 +3,10 @@ package cn.com.mobnote.golukmobile.multicast;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-
-import cn.com.mobnote.wifibind.WifiRsBean;
-import cn.com.tiros.utils.LogUtil;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import cn.com.mobnote.wifibind.WifiRsBean;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class NetUtil {
 
@@ -51,7 +49,7 @@ public class NetUtil {
 				break;
 			case 6:
 				sendData(ERROR, null);
-				Log.e("", "Error!!!!!!!");
+				GolukDebugUtils.e("", "Error!!!!!!!");
 				cancel();
 				break;
 			}
@@ -64,7 +62,7 @@ public class NetUtil {
 	}
 
 	private void sendData(int sucess, Object obj) {
-		LogUtil.e("", "MultiCastUtil-----sendData------ip2222222:   " + sucess);
+		GolukDebugUtils.e("", "MultiCastUtil-----sendData------ip2222222:   " + sucess);
 		if (null != mFn) {
 			mFn.MultiCaskCallBack(mType, sucess, obj);
 		}
@@ -87,13 +85,13 @@ public class NetUtil {
 			return;
 		}
 		mType = type;
-		Log.e("", "TestUDP--------findServerIpAddress-----1");
+		GolukDebugUtils.e("", "TestUDP--------findServerIpAddress-----1");
 		try {
 			mUdpSocket = new DatagramSocket(GRAM_PORT);
-			Log.e("", "TestUDP--------findServerIpAddress-----2");
+			GolukDebugUtils.e("", "TestUDP--------findServerIpAddress-----2");
 		} catch (SocketException e) {
 			mHandler.sendEmptyMessage(6);
-			Log.e("", "TestUDP--------findServerIpAddress-----Exception");
+			GolukDebugUtils.e("", "TestUDP--------findServerIpAddress-----Exception");
 			return;
 		}
 
@@ -102,39 +100,41 @@ public class NetUtil {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Log.e("", "+TestUDP--------findServerIpAddress-----4-");
+				GolukDebugUtils.e("", "+TestUDP--------findServerIpAddress-----4-");
 				while (isCanScan) {
 					try {
 						mPacket = new DatagramPacket(recvbuf, 256);
-						Log.e("", "++TestUDP--------findServerIpAddress-----accept socket Data");
+						GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress-----accept socket Data");
 						mUdpSocket.receive(mPacket);
-						Log.e("", "++TestUDP--------findServerIpAddress----accept Sucess!!!!!!!!");
+						GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress----accept Sucess!!!!!!!!");
 						int length = mPacket.getLength();
 						byte[] data = mPacket.getData();
 						String s = new String(data, 0, length - 1, "GBK");
 						if (s.equals("Goluk,good luck!")) {
 							String address2 = mPacket.getAddress().toString();
-							receiveSucess(ssid,address2);
+							receiveSucess(ssid, address2);
 							break;
 						} else {
-							Log.e("", "+++TestUDP--------findServerIpAddress-----77777 recvbuf1=" + s);
+							GolukDebugUtils.e("", "+++TestUDP--------findServerIpAddress-----77777 recvbuf1=" + s);
 						}
 					} catch (Exception e) {
-						Log.e("", "++TestUDP--------findServerIpAddress-------8888888888-ip=  Accept Data Exception ");
+						GolukDebugUtils.e("",
+								"++TestUDP--------findServerIpAddress-------8888888888-ip=  Accept Data Exception ");
 						e.printStackTrace();
 						mHandler.sendEmptyMessage(6);
 						isCanScan = false;
 						return;
 					}
-					Log.e("", "++TestUDP--------findServerIpAddress-------99999999999--ip=" + mPacket.getAddress());
+					GolukDebugUtils.e("",
+							"++TestUDP--------findServerIpAddress-------99999999999--ip=" + mPacket.getAddress());
 				}
 			}
 		}).start();
 
 	}
 
-	private void receiveSucess(String ssid,String ip) {
-		Log.e("", "+++TestUDP--------receiveSucess-----1111111 recvbuf1=: " + ip);
+	private void receiveSucess(String ssid, String ip) {
+		GolukDebugUtils.e("", "+++TestUDP--------receiveSucess-----1111111 recvbuf1=: " + ip);
 		if (ip.contains("/")) {
 			ip = ip.replace("/", "");
 		}

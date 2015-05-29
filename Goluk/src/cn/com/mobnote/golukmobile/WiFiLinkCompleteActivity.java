@@ -9,6 +9,7 @@ import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
@@ -139,7 +140,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mApp.setIpcLoginOut();
 
 		// 调用韩峥接口创建手机热点
-		console.log("创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
+		GolukDebugUtils.e("", "创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
 
 		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
 
@@ -165,13 +166,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	 */
 	private void sendLogicLinkIpc(String ip, String ipcmac) {
 		// 连接ipc热点wifi---调用ipc接口
-		console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
+		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
 		mApp.mIpcIp = ip;
 		mIpcMac = ipcmac;
 		mWiFiIp = ip;
 
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
-		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
 
 	boolean isExit = false;
@@ -245,7 +246,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			console.log("按下系统返回键---WiFiLinkCompleteActivity---1");
+			GolukDebugUtils.e("", "按下系统返回键---WiFiLinkCompleteActivity---1");
 			// 返回关闭全部页面
 			backSetup();
 			return true;
@@ -256,7 +257,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		console.log("通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
+		GolukDebugUtils.e("", "通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
 		// mApp.mIPCControlManager.setIPCWifiState(false,null);
 	}
 
@@ -293,7 +294,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		console.log("wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---"
+		GolukDebugUtils.e("", "wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---"
 				+ message + "---arrays---" + arrays);
 		switch (type) {
 		case 3:
@@ -308,7 +309,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 					try {
 						WifiRsBean[] bean = (WifiRsBean[]) arrays;
 						if (null != bean) {
-							console.log("IPC连接上WIFI热点回调---length---" + bean.length);
+							GolukDebugUtils.e("", "IPC连接上WIFI热点回调---length---" + bean.length);
 							if (bean.length > 0) {
 								sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 							}

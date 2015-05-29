@@ -1,8 +1,5 @@
 package cn.com.mobnote.module.ipcmanager;
 
-import cn.com.tiros.utils.LogUtil;
-
-
 public class IPCManagerAdapter {
 
 	/** 回调接口实例 */

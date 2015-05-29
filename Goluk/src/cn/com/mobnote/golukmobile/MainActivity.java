@@ -30,10 +30,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -69,8 +69,7 @@ import cn.com.mobnote.video.OnLineVideoManage;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
-import cn.com.tiros.utils.LogUtil;
-import cn.com.tiros.voiceservice.PlayVoiceRemote;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
@@ -300,7 +299,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 启动软件创建wifi热点
 	 */
 	private void createWiFiHot() {
-		console.log("自动连接小车本wifi---linkMobnoteWiFi---1");
+		GolukDebugUtils.e("", "自动连接小车本wifi---linkMobnoteWiFi---1");
 		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(wm, this);
 		mWac.autoWifiManage();
@@ -388,7 +387,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					// Object obj = new Object();
 					// pointDataCallback(1,obj);
 					// 请求在线视频轮播数据
-					console.log("PageType_GetPinData:");
+					GolukDebugUtils.e("", "PageType_GetPinData:");
 					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_GetPinData, "");
 					break;
@@ -458,7 +457,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			@Override
 			public void onMapLoaded() {
 				// 地图加载完成,请求大头针数据
-				console.log("PageType_GetPinData:地图加载完成,请求大头针数据");
+				GolukDebugUtils.e("", "PageType_GetPinData:地图加载完成,请求大头针数据");
 				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPinData,
 						"");
 			}
@@ -633,7 +632,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void pointDataCallback(int success, Object obj) {
 		if (1 == success) {
 			String str = (String) obj;
-			console.log("大头针数据返回---" + str);
+			GolukDebugUtils.e("", "大头针数据返回---" + str);
 			// 记录大头针日志
 			// console.print("mapmarker", str);
 			// String str =
@@ -647,7 +646,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 			}
 		} else {
-			console.log("请求大头针数据错误");
+			GolukDebugUtils.e("", "请求大头针数据错误");
 		}
 
 		if (isCurrent) {
@@ -669,9 +668,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	@SuppressWarnings("static-access")
 	public void downloadBubbleImg(String url, String aid) {
-		console.log("下载气泡图片downloadBubbleImg:" + url + ",aid" + aid);
+		GolukDebugUtils.e("", "下载气泡图片downloadBubbleImg:" + url + ",aid" + aid);
 		String json = "{\"purl\":\"" + url + "\",\"aid\":\"" + aid + "\",\"type\":\"1\"}";
-		console.log("downloadBubbleImg---json" + json);
+		GolukDebugUtils.e("", "downloadBubbleImg---json" + json);
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPictureByURL,
 				json);
 	}
@@ -686,7 +685,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// 更新在线视频图片
 			String imgJson = (String) obj;
 			// String imgJson = "{\"path\":\"fs1:/Cache/test11.png\"}";
-			console.log("下载气泡图片完成downloadBubbleImageCallBack:" + imgJson);
+			GolukDebugUtils.e("", "下载气泡图片完成downloadBubbleImageCallBack:" + imgJson);
 			mBaiduMapManage.bubbleImageDownload(imgJson);
 		} else {
 			Toast.makeText(mContext, "气泡图片下载失败", Toast.LENGTH_SHORT).show();
@@ -697,7 +696,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 链接中断更新页面
 	 */
 	public void wiFiLinkStatus(int status) {
-		Log.e("", "wifiCallBack-------------wiFiLinkStatus:" + status);
+		GolukDebugUtils.e("", "wifiCallBack-------------wiFiLinkStatus:" + status);
 		mWiFiStatus = 0;
 		switch (status) {
 		case 1:
@@ -722,7 +721,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private static final String WIFI_CONNED_STR = "已连接Goluk";
 
 	private void startWifi() {
-		Log.e("", "wifiCallBack-------------startWifi:");
+		GolukDebugUtils.e("", "wifiCallBack-------------startWifi:");
 		if (WIFI_STATE_CONNING == mWiFiStatus) {
 			return;
 		}
@@ -833,7 +832,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * @param obj
 	 */
 	public void loginCallBack(int success, Object obj) {
-		console.log("登录回调---loginCallBack---" + success + "---" + obj);
+		GolukDebugUtils.e("", "登录回调---loginCallBack---" + success + "---" + obj);
 		if (1 == success) {
 			try {
 				String data = (String) obj;
@@ -927,7 +926,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void showContinuteLive() {
-		LogUtil.e(null, "jyf----20150406----showContinuteLive----showContinuteLive :");
+		GolukDebugUtils.e("", "jyf----20150406----showContinuteLive----showContinuteLive :");
 		// 标识正常退出
 		mApp.mSharedPreUtil.setIsLiveNormalExit(true);
 		if (mApp.getIpcIsLogin()) {
@@ -1143,7 +1142,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void click_share() {
-		LogUtil.e("lily", "----------click------");
+		GolukDebugUtils.e("lily", "----------click------");
 		if (!mApp.isUserLoginSucess) {
 			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
@@ -1279,7 +1278,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	// 查看他人的直播
 	public void startLiveLook(UserInfo userInfo) {
-		LogUtil.e(null, "jyf-----click------666666");
+		GolukDebugUtils.e("", "jyf-----click------666666");
 		if (null == userInfo) {
 			return;
 		}
@@ -1293,7 +1292,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
 
 		startActivity(intent);
-		LogUtil.e(null, "jyf----20150406----MainActivity----startLiveLook");
+		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
 	}
 
 	public void dismissAutoDialog() {
@@ -1376,7 +1375,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	public void CallBack_BaiduGeoCoder(int function, Object obj) {
 		if (null == obj) {
-			LogUtil.e(null, "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
+			GolukDebugUtils.e("", "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
 			return;
 		}
 
@@ -1406,9 +1405,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					// ipc成功连接上热点
 					WifiRsBean[] bean = (WifiRsBean[]) arrays;
 					if (null != bean) {
-						console.log("自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
+						GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
 						if (bean.length > 0) {
-							console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---");
+							GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
 							mGolukName = bean[0].getIpc_ssid();
 							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 						}
@@ -1435,10 +1434,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	private void sendLogicLinkIpc(String ip, String ipcmac) {
 		// 连接ipc热点wifi---调用ipc接口
-		console.log("通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
+		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
 		mApp.mIpcIp = ip;
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
-		console.log("通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
 
 	// 分享成功后需要调用的接口
