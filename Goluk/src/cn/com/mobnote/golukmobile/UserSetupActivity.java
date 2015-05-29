@@ -35,7 +35,6 @@ import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
 /**
@@ -418,7 +417,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	 */
 	public void getLoginout(){
 		if(!UserUtils.isNetDeviceAvailable(mContext)){
-			console.toast("当前网络不可用，请检查网络后重试", mContext);
+			GolukUtils.showToast(mContext, "当前网络不可用，请检查网络后重试");
 		}else{
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
 			GolukDebugUtils.e("",b+"");
@@ -434,7 +433,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				//提交修改
 				mEditor.commit();
 				
-				console.toast("退出登录成功", mContext);
+				GolukUtils.showToast(mContext, "退出登录成功");
 				btnLoginout.setText("登录");
 				
 			}else{
