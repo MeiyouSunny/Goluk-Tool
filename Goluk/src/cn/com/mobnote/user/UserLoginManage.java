@@ -69,7 +69,7 @@ public class UserLoginManage {
 	 * @param obj
 	 */
 	public void loginCallBack(int success,Object outTime,Object obj){
-		console.log("登录回调---loginCallBack---" + success + "---" + obj);
+		GolukDebugUtils.e("","登录回调---loginCallBack---" + success + "---" + obj);
 		//--------------------------登录中的状态  0-----------------------------
 		int codeOut = (Integer) outTime;
 		if(1 == success){

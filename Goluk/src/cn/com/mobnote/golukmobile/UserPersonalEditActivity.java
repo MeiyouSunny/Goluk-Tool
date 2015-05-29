@@ -242,7 +242,7 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 	 */
 	
 	public void saveInfoCallBack(int success,Object obj){
-		console.log("修改用户信息回调---saveInfoCallBack---" + success + "---" + obj);
+		GolukDebugUtils.e("","修改用户信息回调---saveInfoCallBack---" + success + "---" + obj);
 		if(1 == success){
 			try{
 				String data = (String)obj;

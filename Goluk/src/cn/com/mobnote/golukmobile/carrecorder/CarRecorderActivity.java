@@ -55,7 +55,6 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomWifiDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-import cn.com.tiros.utils.LogUtil;
 
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
@@ -544,7 +543,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			String backUrl = getResources().getString(R.string.default_rtsp_back);
 			String url = preUrl + mApp.mIpcIp + backUrl;
 			
-			LogUtil.e("", "CarRecorset Datasource URL:" + url);
+			GolukDebugUtils.e("", "CarRecorset Datasource URL:" + url);
 			
 			mRtmpPlayerView.setDataSource(url);
 

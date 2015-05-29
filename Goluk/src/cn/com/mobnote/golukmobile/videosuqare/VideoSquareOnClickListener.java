@@ -12,7 +12,6 @@ import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
-import cn.com.tiros.utils.LogUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;

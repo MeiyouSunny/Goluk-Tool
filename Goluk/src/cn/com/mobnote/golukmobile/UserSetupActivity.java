@@ -38,7 +38,6 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
-import cn.com.tiros.utils.LogUtil;
 /**
  * 1.类命名首字母大写
  * 2.公共函数驼峰式命名
@@ -144,7 +143,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		
 //		SharedPreferences mPreferencesVersion = getSharedPreferences("version", Context.MODE_PRIVATE);
 //		String versionCode = mPreferencesVersion.getString("versionCode", mTextVersionCode.getText().toString());
-//		Log.i("lily", "===versionCode===="+versionCode);
+//		GolukDebugUtils.i("lily", "===versionCode===="+versionCode);
 		mTextVersionCode.setText(verName);
 	}
 	
@@ -311,7 +310,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			break;
 			case R.id.setup_item:
 				//跳转到设置页面
-				console.log("onclick---setup--item");
+				GolukDebugUtils.e("","onclick---setup--item");
 			break;
 		//退出按钮
 			case R.id.loginout_btn:
@@ -377,7 +376,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				*//**
 				 * 固件升级
 				 *//*
-				Log.i("lily", "------------isConnect-----------"+mApp.isIpcLoginSuccess);
+				GolukDebugUtils.i("lily", "------------isConnect-----------"+mApp.isIpcLoginSuccess);
 				if(!mApp.isIpcLoginSuccess){
 					//true   ipc未连接
 					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_UNUNITED);
@@ -422,7 +421,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			console.toast("当前网络不可用，请检查网络后重试", mContext);
 		}else{
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut, "");
-			console.log(b+"");
+			GolukDebugUtils.e("",b+"");
 			if(b){
 				//注销成功
 				mApp.isUserLoginSucess = false;
@@ -451,7 +450,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	 * 退出登录的回调
 	 */
 	public void getLogintoutCallback(int success,Object obj){
-		console.log("-----------------退出登录回调--------------------");
+		GolukDebugUtils.e("","-----------------退出登录回调--------------------");
 	}
 	/**
 	 * 同步获取用户信息
@@ -526,10 +525,10 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	 */
     @Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-    	LogUtil.e("lily", "YYYYYY====IPC_VDCP_Msg_IPCUpgrade====msg="+msg+"===param1="+param1+"==param2="+param2+"--------event-----"+event);
+    	GolukDebugUtils.e("lily", "YYYYYY====IPC_VDCP_Msg_IPCUpgrade====msg="+msg+"===param1="+param1+"==param2="+param2+"--------event-----"+event);
 		if(event == ENetTransEvent_IPC_UpGrade_Resp){
 			if(IPC_VDCP_Msg_IPCUpgrade == msg){
-				LogUtil.e("lily", "---------连接ipc-------");
+				GolukDebugUtils.e("lily", "---------连接ipc-------");
 				if(param1 == RESULE_SUCESS){
 					String str = (String)param2;
 					GolukDebugUtils.i("lily", "--str----"+str);

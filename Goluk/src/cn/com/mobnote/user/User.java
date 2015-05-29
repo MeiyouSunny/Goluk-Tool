@@ -103,14 +103,14 @@ public class User {
 	 * 
 	 */
 	public void initAutoLoginCallback(int success,Object outTime,Object obj){
-		console.log("---------------自动登录回调---------------");
+		GolukDebugUtils.e("","---------------自动登录回调---------------");
 		int codeOut = (Integer) outTime;
 		if(1 == success){
 			try{
 				String data = (String)obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				console.log(data);
+				GolukDebugUtils.e("",data);
 				GolukDebugUtils.i("lily", "----User-----"+data);
 				switch (code) {
 				case 200:

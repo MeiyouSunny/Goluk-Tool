@@ -47,7 +47,6 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-import cn.com.tiros.utils.LogUtil;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
@@ -794,7 +793,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 		isGetFileListDataing=true;
 		mOprateType = type;
 		updateButtonState(type);
-		LogUtil.e("xuhw", "YYYYYY=====queryFileListInfo===timeend="+timeend);
+		GolukDebugUtils.e("xuhw", "YYYYYY=====queryFileListInfo===timeend="+timeend);
 		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(type, pageCount, 0, timeend);
 		if(!isSucess){
 			isGetFileListDataing=false;
@@ -991,7 +990,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 //						GolukApplication.getInstance().getIPCControlManager().downloadFile(filename, "videodownload", videoSavePath, findtime(filename));
 						boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
 						GFileUtils.writeIPCLog("YYYYYY===a="+a+"==querySingleFile======filename="+filename);
-						LogUtil.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
+						GolukDebugUtils.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
 					}else{
 							
 					}
@@ -1281,7 +1280,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 					mCustomProgressDialog.close();
 				}
 				isGetFileListDataing=false;
-				LogUtil.e("xuhw","YYYYYY=======获取文件列表===@@@======param1="+ param1 + "=====param2=" + param2);
+				GolukDebugUtils.e("xuhw","YYYYYY=======获取文件列表===@@@======param1="+ param1 + "=====param2=" + param2);
 //				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					if(TextUtils.isEmpty((String)param2)){

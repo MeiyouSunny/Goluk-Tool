@@ -4,12 +4,8 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.tiros.debug.GolukDebugUtils;
-import cn.com.tiros.utils.LogUtil;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
-
-import android.app.Activity;
-import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;

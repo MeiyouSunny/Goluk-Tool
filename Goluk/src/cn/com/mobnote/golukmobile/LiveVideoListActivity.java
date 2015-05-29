@@ -27,6 +27,7 @@ import cn.com.mobnote.video.LiveVideoListManage;
 import cn.com.mobnote.video.LiveVideoListManage.LiveVideoListData;
 import cn.com.mobnote.view.PullToRefreshView;
 import cn.com.mobnote.view.PullToRefreshView.OnFooterRefreshListener;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * <pre>
@@ -141,7 +142,7 @@ public class LiveVideoListActivity extends Activity implements OnClickListener ,
 	private void getLiveVideoList(){
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPinData,"");
 		if(!b){
-			console.log("调用直播列表数据接口失败---b---" + b);
+			GolukDebugUtils.e("","调用直播列表数据接口失败---b---" + b);
 		}
 		else{
 			mLoading.setVisibility(View.VISIBLE);
@@ -152,7 +153,7 @@ public class LiveVideoListActivity extends Activity implements OnClickListener ,
 	public void LiveListDataCallback(int success,Object obj){
 		if(1 == success){
 			String str = (String)obj;
-			console.log("直播数据返回---liveListDataCallback---" + str);
+			GolukDebugUtils.e("","直播数据返回---liveListDataCallback---" + str);
 			//String str = "{\"code\":\"200\",\"state\":\"true\",\"info\":[{\"utype\":\"1\",\"aid\":\"1\",\"nickname\":\"张三\",\"lon\":\"116.357428\",\"lat\":\"39.93923\",\"picurl\":\"http://img2.3lian.com/img2007/18/18/003.png\",\"speed\":\"34公里/小时\"},{\"aid\":\"2\",\"utype\":\"2\",\"nickname\":\"李四\",\"lon\":\"116.327428\",\"lat\":\"39.91923\",\"picurl\":\"http://img.cool80.com/i/png/217/02.png\",\"speed\":\"342公里/小时\"}]}";
 			try {
 				JSONObject json = new JSONObject(str);
@@ -168,7 +169,7 @@ public class LiveVideoListActivity extends Activity implements OnClickListener ,
 			}
 		}
 		else{
-			console.log("请求大头针数据错误");
+			GolukDebugUtils.e("","请求大头针数据错误");
 		}
 	}
 	
@@ -181,7 +182,7 @@ public class LiveVideoListActivity extends Activity implements OnClickListener ,
 			//更新在线视频图片
 			String imgJson = (String)obj;
 			//String imgJson = "{\"path\":\"fs1:/Cache/test11.png\"}";
-			console.log("下载直播图片完成---downloadVideoImageCallBack:" +imgJson);
+			GolukDebugUtils.e("","下载直播图片完成---downloadVideoImageCallBack:" +imgJson);
 			try {
 				JSONObject json = new JSONObject(imgJson);
 				mLiveVideoListManage.updateHeadImg(json);
