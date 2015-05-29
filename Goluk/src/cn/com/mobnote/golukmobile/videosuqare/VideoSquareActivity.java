@@ -3,28 +3,20 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class VideoSquareActivity implements OnClickListener {
 	private VideoSquareAdapter mVideoSquareAdapter = null;
@@ -102,7 +94,7 @@ public class VideoSquareActivity implements OnClickListener {
 			return;
 		}
 		
-		boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
+		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
 	}
 
 	private OnPageChangeListener opcl = new OnPageChangeListener() {

@@ -1,28 +1,17 @@
 package cn.com.mobnote.golukmobile.videosuqare;
-
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Message;
-import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class VideoSquareOnClickListener implements OnClickListener {
 
@@ -100,7 +89,7 @@ public class VideoSquareOnClickListener implements OnClickListener {
 					}
 				}
 
-				boolean flog = GolukApplication.getInstance().getVideoSquareManager()
+				GolukApplication.getInstance().getVideoSquareManager()
 						.clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
 
 				if (null != VideoSquareListView.mHandler) {

@@ -3,38 +3,28 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
 public class VideoSquarePlayActivity extends BaseActivity implements
@@ -167,7 +157,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 	private void init(boolean isloading) {
 
 		if (null == mVideoSquareListViewAdapter) {
-			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mRTPullListView, this,2,sharePlatform);
+			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(this,2,sharePlatform);
 		}
 
 		mVideoSquareListViewAdapter.setData(mDataList);
@@ -246,7 +236,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 				GolukUtils.showToast(VideoSquarePlayActivity.this, "第三方分享失败");
 				return;
 			}
-			boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
+			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
 		}
 
 	/**

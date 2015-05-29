@@ -6,6 +6,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
+import android.annotation.SuppressLint;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -20,10 +21,10 @@ import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+@SuppressLint("HandlerLeak")
 public class CCPlayerPage extends BaseActivity implements OnPreparedListener, OnBufferingUpdateListener
 	,OnErrorListener, OnCompletionListener, Callback, OnClickListener{
 	private SurfaceView mSurfaceView=null;

@@ -4,10 +4,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;
 
 public class VideoOnErrorListener implements OnErrorListener{
-private VideoSquareInfo mVideoSquareInfo=null;
-	
-	public VideoOnErrorListener(VideoSquareInfo _mVideoSquareInfo){
-		this.mVideoSquareInfo=_mVideoSquareInfo;
+public VideoOnErrorListener(VideoSquareInfo _mVideoSquareInfo){
 	}
 
 	@Override
