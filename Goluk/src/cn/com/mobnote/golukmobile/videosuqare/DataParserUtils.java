@@ -27,7 +27,6 @@ public class DataParserUtils {
 					if(null != data){
 						String result = data.getString("result");
 						if("0".equals(result)){
-							String videocount = data.getString("videocount");
 							JSONArray videolist = data.getJSONArray("videolist");
 							if(null != videolist){
 								long time = System.currentTimeMillis();

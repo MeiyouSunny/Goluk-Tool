@@ -3,18 +3,16 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lidroid.xutils.BitmapUtils;
-import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GolukUtils;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -23,8 +21,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.Toast;
 
+@SuppressLint("HandlerLeak")
 public class VideoSquareListView implements VideoSuqareManagerFn{
 	private Context mContext=null;
 	//private ListView mRTPullListView=null;
@@ -32,11 +30,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter=null;
 	public List<VideoSquareInfo> mDataList=null;
 	private CustomLoadingDialog mCustomProgressDialog=null;
-	private Float jj= SoundUtils.getInstance().getDisplayMetrics().density;
-	/** 保存列表一个显示项索引 */
-	private int wonderfulFirstVisible;
-	/** 保存列表显示item个数 */
-	private int wonderfulVisibleCount;
 	public  static Handler mHandler=null;
 	private RelativeLayout mRootLayout=null;
 	private ImageView shareBg = null;
@@ -48,7 +41,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		sharePlatform = spf;
 		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
-		//mRTPullListView.setDividerHeight((int)(22*jj));
 		mDataList = new ArrayList<VideoSquareInfo>();
 		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
 		shareBg.setOnClickListener(new OnClickListener() {
@@ -118,7 +110,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	private void initLayout(){
 		
 		if(null == mVideoSquareListViewAdapter){
-			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mRTPullListView, mContext,1,sharePlatform);
+			mVideoSquareListViewAdapter = new VideoSquareListViewAdapter(mContext,1,sharePlatform);
 		}
 		
 		mVideoSquareListViewAdapter.setData(mDataList);
@@ -200,7 +192,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mDataList.addAll(list);
 				initLayout();
 			}else{
-				Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 			
 			if(mDataList.size()>0){

@@ -63,7 +63,6 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoManage;
 import cn.com.mobnote.video.OnLineVideoManage;

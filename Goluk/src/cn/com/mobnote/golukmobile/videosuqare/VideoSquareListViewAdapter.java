@@ -12,12 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
-import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
-import com.lidroid.xutils.bitmap.callback.BitmapLoadCallBack;
-import com.lidroid.xutils.bitmap.callback.BitmapLoadFrom;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
@@ -25,26 +21,21 @@ import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 @SuppressLint("InflateParams")
 public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn {
@@ -52,22 +43,14 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 	private List<VideoSquareInfo> mVideoSquareListData = null;
 	private HashMap<String, DWMediaPlayer> mDWMediaPlayerList = null;
 	private int count = 0;
-	private final String USERID = "77D36B9636FF19CF";
-	private final String API_KEY = "O8g0bf8kqiWroHuJaRmihZfEmj7VWImF";
 	private int form = 1;
 	private DWMediaPlayer mDWMediaPlayer = null;
-	private HashMap<String, SurfaceHolder> mHolderList = null;
-	private String curVideoid = "";
-	private int index;
-	private ListView mRTPullListView = null;
 	private SharePlatformUtil sharePlatform;
 
-	public VideoSquareListViewAdapter(ListView _mRTPullListView, Context context, int plform, SharePlatformUtil spf) {
+	public VideoSquareListViewAdapter(Context context, int plform, SharePlatformUtil spf) {
 		mContext = context;
-		this.mRTPullListView = _mRTPullListView;
 		mVideoSquareListData = new ArrayList<VideoSquareInfo>();
 		mDWMediaPlayerList = new HashMap<String, DWMediaPlayer>();
-		mHolderList = new HashMap<String, SurfaceHolder>();
 		form = plform;// 1:热门页面 2:广场页
 		sharePlatform = spf;
 
@@ -176,70 +159,15 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(mVideoSquareListData, holder,
 				mDWMediaPlayerList, mVideoSquareInfo, mContext, form));
 
-		// holder.mPreLoading.setVisibility(View.GONE);
-		// String videoid = mVideoSquareInfo.mVideoEntity.videoid;
-		// if ("2".equals(mVideoSquareInfo.mVideoEntity.type)) {
-		// if (!TextUtils.isEmpty(videoid)) {
-		// if (!mDWMediaPlayerList.containsKey(mVideoSquareInfo.id)) {
-		// holder.mPreLoading.setVisibility(View.VISIBLE);
-		// DWMediaPlayer mDWMediaPlayer = new DWMediaPlayer();
-		// mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY,
-		// mContext);
-		// mDWMediaPlayer.setOnErrorListener(new VideoOnErrorListener(
-		// mVideoSquareInfo));
-		// mDWMediaPlayer
-		// .setOnPreparedListener(new VideoOnPreparedListener(
-		// mVideoSquareListData, mDWMediaPlayerList,
-		// mVideoSquareInfo));
-		// mDWMediaPlayer
-		// .setOnBufferingUpdateListener(new VideoOnBufferingUpdateListener(
-		// mVideoSquareListData, mDWMediaPlayerList,
-		// holder, mVideoSquareInfo));
-		// mDWMediaPlayerList.put(mVideoSquareInfo.id, mDWMediaPlayer);
-		// } else {
-		// DWMediaPlayer mDWMediaPlayer = mDWMediaPlayerList
-		// .get(mVideoSquareInfo.id);
-		// if (null != mDWMediaPlayer) {
-		// if (mDWMediaPlayer.isPlaying()) {
-		// LogUtils.d("SSS=======222===GONE======");
-		//
-		// } else {
-		//
-		// }
-		// }
-		// }
-		// }
-		// }else{
-		// holder.mPreLoading.setVisibility(View.VISIBLE);
-		// }
 
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);
 
-		// holder.mSurfaceView.setZOrderMediaOverlay(true);
-		// SurfaceHolder mSurfaceHolder = holder.mSurfaceView.getHolder();
-		// // mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(width, height);
 		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
 		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 		holder.mPreLoading.setLayoutParams(mPreLoadingParams);
-		// mSurfaceHolder.addCallback(new SurfaceViewCallback(this, arg0,
-		// mHolderList,
-		// mVideoSquareListData, mDWMediaPlayerList, mVideoSquareInfo));
-
-		// imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait,
-		// holder.userhead, options, null);
-		// imageLoader.displayImage(mVideoSquareInfo.mVideoEntity.picture,
-		// holder.mPreLoading, options, null);
-		// BitmapDisplayConfig config = new BitmapDisplayConfig();
-		// Bitmap mBitmap =
-		// BitmapManager.getInstance().mBitmapUtils.getBitmapFromMemCache(mVideoSquareInfo.mVideoEntity.picture,
-		// config);
-		// if(null == mBitmap){
 		BitmapManager.getInstance().mBitmapUtils.display(holder.mPreLoading, mVideoSquareInfo.mVideoEntity.picture);
-		// }else{
-		// holder.mPreLoading.setImageBitmap(mBitmap);
-		// }
 
 		return convertView;
 	}
@@ -311,71 +239,15 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		TextView videotitle;
 		TextView sharetime;
 		RelativeLayout mPlayerLayout;
-		// SurfaceView mSurfaceView;
 		ImageView liveicon;
 		ImageButton reporticon;
 		ImageView mPreLoading;
 		ImageButton sharebtn;
 		Button likebtn;
 		RingView mRingView;
-		// TextureView mTextureView;
 	}
 
-	public void pausePlayer() {
-		// if(mDWMediaPlayer.isPlaying()){
-		// mDWMediaPlayer.pause();
-		// }
-	}
 
-	public void startPlayer() {
-		// if(!mDWMediaPlayer.isPlaying()){
-		// mDWMediaPlayer.start();
-		// }
-	}
-
-	public void updatePlayerState(int _index) {
-		// String vid = mVideoSquareListData.get(_index).mVideoEntity.videoid;
-		// // LogUtils.d("SSS===updatePlayerState==vid==="+vid);
-		// if(!curVideoid.equals(vid)){
-		// //
-		// LogUtils.d("SSS===updatePlayerState==index==="+_index+"==vid="+vid);
-		// //
-		// LogUtils.d("SSS===updatePlayerState==mHolderList==="+mHolderList.size());
-		//
-		// View view = mRTPullListView.getChildAt(index);
-		// if(null != view){
-		// RingView ring = (RingView)view.findViewById(R.id.mRingView);
-		// ImageView image = (ImageView)view.findViewById(R.id.mPreLoading);
-		// if(null != ring){
-		// ring.setProcess(0);
-		// ring.setVisibility(View.GONE);
-		// }
-		// if(null != image){
-		// image.setVisibility(View.VISIBLE);
-		// }
-		// }
-		//
-		// mDWMediaPlayer.reset();
-		// int first = mRTPullListView.getFirstVisiblePosition();
-		// int position = _index - first;
-		// SurfaceHolder mSurfaceHolder=null;
-		// if(position <= 0)
-		// position = 0;
-		// if(position >= mHolderList.size())
-		// position = mHolderList.size() - 1;
-		// mSurfaceHolder = mHolderList.get(""+_index);
-		//
-		// LogUtils.d("SSS===updatePlayerState==_index==="+_index+"===2222===mSurfaceHolder==="+mSurfaceHolder);
-		//
-		// index = _index;
-		// curVideoid = vid;
-		// String videoid =
-		// mVideoSquareListData.get(_index).mVideoEntity.videoid;
-		// mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY, mContext);
-		// mDWMediaPlayer.setDisplay(mSurfaceHolder);
-		// mDWMediaPlayer.prepareAsync();
-		// }
-	}
 
 	VideoSquareOnClickListener mVideoSquareOnClickListener = null;
 
@@ -436,8 +308,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 						}
 
 					} else {
-						// mVideoSquareOnClickListener.closeRqsDialog(mContext);
-						Toast.makeText(mContext, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+						GolukUtils.showToast(mContext, "网络异常，请检查网络");
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -445,7 +316,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 				}
 			} else {
 				// mVideoSquareOnClickListener.closeRqsDialog(mContext);
-				Toast.makeText(mContext, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 		}
 

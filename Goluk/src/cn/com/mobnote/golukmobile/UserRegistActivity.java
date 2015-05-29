@@ -40,7 +40,7 @@ import cn.com.mobnote.user.UserIdentifyInterface;
 import cn.com.mobnote.user.UserRegistInterface;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * 注册 
@@ -327,7 +327,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		// 获取验证码按钮
 		case R.id.user_regist_identify_btn:
 			if(!UserUtils.isNetDeviceAvailable(mContext)){
-				console.toast("当前网络不可用，请检查网络后重试", mContext);
+				GolukUtils.showToast(mContext, "当前网络不可用，请检查网络后重试");
 			}else{	
 				getIdentify();
 			}
@@ -428,7 +428,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				GolukDebugUtils.i("lily", "------freq------"+freq);
 				switch (code) {
 				case 200:
-					console.toast("验证码已经发送，请查收短信", mContext);
+					GolukUtils.showToast(mContext, "验证码已经发送，请查收短信");
 					
 					if(freq.equals("2")){//第二次获取验证码
 						new AlertDialog.Builder(mContext)
@@ -507,7 +507,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			}
 		}
 		else{
-			console.toast("验证码获取失败", mContext);
+			GolukUtils.showToast(mContext, "验证码获取失败");
 //			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 			mBtnIdentify.setText("重新获取");
 		}
@@ -526,7 +526,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				mBtnRegist.setEnabled(true);
 				if(password.length()>=6 && password.length()<=16){
 					if(!UserUtils.isNetDeviceAvailable(mContext)){
-						console.toast("当前网络不可用，请检查网络后重试", mContext);
+						GolukUtils.showToast(mContext, "当前网络不可用，请检查网络后重试");
 					}else{
 					//{PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
@@ -558,7 +558,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 							}
 						}
 					}else{
-						console.toast("请先获取验证码", mContext);
+						GolukUtils.showToast(mContext, "请先获取验证码");
 					}
 				}
 				}else{
@@ -597,7 +597,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				switch (code) {
 				case 200:
 					//注册成功
-					console.toast("注册成功", mContext);
+					GolukUtils.showToast(mContext, "注册成功");
 					mApplication.registStatus = 2;//注册成功的状态
 					//登录成功跳转
 					mApplication.loginStatus=1;//登录成功
@@ -636,7 +636,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					if(identifyClick){
 						UserUtils.showDialog(this, "请输入正确的验证码");
 					}else{
-						console.toast("请先获取验证码", mContext);
+						GolukUtils.showToast(mContext, "请先获取验证码");
 					}
 					break;
 				case 407:
@@ -645,7 +645,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 						if(identifyClick){
 							UserUtils.showDialog(this, "输入验证码超时");
 						}else{
-							console.toast("请先获取验证码", mContext);
+							GolukUtils.showToast(mContext, "请先获取验证码");
 						}
 					}else{
 						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
@@ -655,7 +655,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					if(identifyClick){
 						UserUtils.showDialog(this, "验证码获取失败");
 					}else{
-						console.toast("请先获取验证码", mContext);
+						GolukUtils.showToast(mContext, "请先获取验证码");
 					}
 					break;
 
@@ -668,7 +668,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		}else{
 			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
 			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时" + codeOut);
-			console.toast("网络连接超时", mContext);
+			GolukUtils.showToast(mContext, "网络连接超时");
 			switch (codeOut) {
 			case 1:
 				mApplication.registStatus = 3;

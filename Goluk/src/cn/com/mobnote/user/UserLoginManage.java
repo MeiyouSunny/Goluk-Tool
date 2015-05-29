@@ -8,7 +8,7 @@ import android.content.SharedPreferences.Editor;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.util.console;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -55,7 +55,7 @@ public class UserLoginManage {
 		boolean b = false;
 		// 网络判断
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			console.toast("当前网络不可用，请检查网络后重试", mApp.getContext());
+			GolukUtils.showToast(mApp.getContext(), "当前网络不可用，请检查网络后重试");
 			loginStatusChange(2);// 登录失败
 		} else {
 			String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+ pwd + "\",\"tag\":\"android\"}";
@@ -88,8 +88,8 @@ public class UserLoginManage {
 					mEditor.commit();
 					//---------------------------登录成功的状态  1------------------------------
 					//登录成功跳转
-					if(mApp.registStatus !=2){						
-						console.toast("登录成功", mApp.getContext());
+					if(mApp.registStatus !=2){
+						GolukUtils.showToast(mApp.getContext(), "登录成功");
 					}
 					loginStatusChange(1);//登录成功
 					mApp.isUserLoginSucess = true;
@@ -103,7 +103,7 @@ public class UserLoginManage {
 					loginStatusChange(3);//手机号未注册
 					break;
 				case 402:
-					console.toast("密码错误,请重试", mApp.getContext());
+					GolukUtils.showToast(mApp.getContext(), "密码错误,请重试");
 					loginStatusChange(2);
 					countErrorPassword++;
 					break;

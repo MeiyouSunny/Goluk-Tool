@@ -1,11 +1,8 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -17,26 +14,16 @@ import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 
 import android.content.Context;
 import android.content.Intent;
-import android.sax.StartElementListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 
 public class VideoOnClickListener implements OnClickListener{
 	private VideoSquareInfo mVideoSquareInfo=null;
-	private HashMap<String, DWMediaPlayer> mDWMediaPlayerList=null;
-	private ViewHolder mViewHolder=null;
-	private ImageView mPreLoading=null;
-	private List<VideoSquareInfo> mVideoSquareListData=null;
 	private Context mContext = null;
 	private int form ;
 	
 	public VideoOnClickListener(List<VideoSquareInfo> _mVideoSquareListData, ViewHolder _mViewHolder, HashMap<String, DWMediaPlayer> _mDWMediaPlayerList, VideoSquareInfo _mVideoSquareInfo,Context context,int platform){
-		this.mViewHolder = _mViewHolder;
 		this.mVideoSquareInfo=_mVideoSquareInfo;
-		this.mDWMediaPlayerList = _mDWMediaPlayerList;
-		this.mPreLoading = mViewHolder.mPreLoading;
-		this.mVideoSquareListData = _mVideoSquareListData;
 		this.mContext = context;
 		this.form = platform;
 	}
@@ -145,18 +132,7 @@ public class VideoOnClickListener implements OnClickListener{
 		vsi.mVideoEntity = ve;
 		List<VideoSquareInfo> list = new ArrayList<VideoSquareInfo>() ;
 		list.add(vsi);
-		boolean result = GolukApplication.getInstance().getVideoSquareManager().clickNumberUpload(channel, list);
-	}
-	
-	private void updatePlayerState(PlayerState mPlayerState){
-		mVideoSquareInfo.mPlayerState=mPlayerState;
-		for(int i=0; i<mVideoSquareListData.size(); i++){
-			String id = mVideoSquareListData.get(i).id;
-			if(id.equals(mVideoSquareInfo.id)){
-				mVideoSquareListData.get(i).mPlayerState = mPlayerState;
-				break;
-			}
-		}
+		GolukApplication.getInstance().getVideoSquareManager().clickNumberUpload(channel, list);
 	}
 	
 }

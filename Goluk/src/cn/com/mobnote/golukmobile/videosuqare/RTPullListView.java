@@ -8,6 +8,7 @@ import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.tiros.debug.GolukDebugUtils;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -67,6 +68,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	private int visibleLastIndex;
 	private int visibleItemCount;
 	
+	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
 	public RTPullListView(Context context) {
@@ -362,7 +364,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	private void measureView(View child) {
 		ViewGroup.LayoutParams p = child.getLayoutParams();
 		if (p == null) {
-			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 					ViewGroup.LayoutParams.WRAP_CONTENT);
 		}
 		int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);

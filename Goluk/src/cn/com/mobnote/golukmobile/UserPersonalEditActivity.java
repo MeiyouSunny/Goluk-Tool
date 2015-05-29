@@ -9,7 +9,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -258,11 +258,11 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 				closeProgressDialog();
 				switch (code) {
 				case 200:
-					console.toast("数据修改成功", mContext);
+					GolukUtils.showToast(mContext, "数据修改成功");
 					this.finish();
 					break;
 				case 405:
-					console.toast("该用户未注册", mContext);
+					GolukUtils.showToast(mContext, "该用户未注册");
 					closeProgressDialog();
 					btnBack.setEnabled(true);
 					btnRight.setEnabled(true);
@@ -272,7 +272,7 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 					break;
 
 				case 500:
-					console.toast("服务器异常", mContext);
+					GolukUtils.showToast(mContext, "服务器异常");
 					closeProgressDialog();
 					btnBack.setEnabled(true);
 					btnRight.setEnabled(true);
@@ -289,7 +289,7 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 			}
 		}else{
 			//success不等于1
-			console.toast("数据修改失败,请重试", mContext);
+			GolukUtils.showToast(mContext, "数据修改失败,请重试");
 			closeProgressDialog();
 			btnBack.setEnabled(true);
 			btnRight.setEnabled(true);

@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
@@ -14,7 +13,6 @@ import com.umeng.socialize.media.UMVideo;
 import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.SmsHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
-import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
