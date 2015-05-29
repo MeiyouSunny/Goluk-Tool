@@ -14,7 +14,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
   * 1.编辑器必须显示空白处
@@ -68,7 +68,7 @@ public class FormatSDCardActivity extends CarRecordBaseActivity implements OnCli
 					public void onClickListener() {
 						if(GolukApplication.getInstance().getIpcIsLogin()){
 							boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
-							LogUtil.e("xuhw", "YYYYYY=====formatDisk===flag="+flag);
+							GolukDebugUtils.e("xuhw", "YYYYYY=====formatDisk===flag="+flag);
 							if(flag){
 //								if(null == mCustomFormatDialog){
 									mCustomFormatDialog = new CustomFormatDialog(FormatSDCardActivity.this);
@@ -108,7 +108,7 @@ public class FormatSDCardActivity extends CarRecordBaseActivity implements OnCli
 				if(null != mCustomFormatDialog && mCustomFormatDialog.isShowing()){
 					mCustomFormatDialog.dismiss();
 				}
-				LogUtil.e("xuhw", "YYYYYY====IPC_VDCP_Msg_FormatDisk====msg="+msg+"===param1="+param1+"==param2="+param2);
+				GolukDebugUtils.e("xuhw", "YYYYYY====IPC_VDCP_Msg_FormatDisk====msg="+msg+"===param1="+param1+"==param2="+param2);
 				String message="";
 				if(param1 == RESULE_SUCESS){
 					message = "SD卡格式化成功";

@@ -22,7 +22,6 @@ public class VideoOnPreparedListener implements OnPreparedListener{
 	public void onPrepared(MediaPlayer arg0) {
 		DWMediaPlayer player = mDWMediaPlayerList.get(mVideoSquareInfo.id);
 		if(null !=player){
-			LogUtils.d("SSS==============player.start=========id="+mVideoSquareInfo.id);
 			player.start();
 			updatePlayerState(PlayerState.playing);
 		}

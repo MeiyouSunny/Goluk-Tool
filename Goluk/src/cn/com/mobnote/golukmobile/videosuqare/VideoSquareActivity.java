@@ -78,13 +78,10 @@ public class VideoSquareActivity implements OnClickListener {
 		
 		squareImage = (ImageView) mRootLayout.findViewById(R.id.square_image);
 		hotImage = (ImageView) mRootLayout.findViewById(R.id.hot_image);
-		// 获取页面元素
-		//mBackBtn = (ImageButton) mRootLayout.findViewById(R.id.back_btn);
 		setListener();
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    //super.onActivityResult(requestCode, resultCode, data);
 	    /**使用SSO授权必须添加如下代码 */
 	    UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode) ;
 	    if(ssoHandler != null){
@@ -96,21 +93,16 @@ public class VideoSquareActivity implements OnClickListener {
 	private void setListener() {
 		mVideoList.setOnClickListener(this);
 		mTypeList.setOnClickListener(this);
-		//mBackBtn.setOnClickListener(this);
 
 	}
 
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			//Toast.makeText(VideoSquareActivity.this, "第三方分享失败",Toast.LENGTH_SHORT).show();
 			return;
 		}
-		//Toast.makeText(VideoSquareActivity.this, "开始第三方分享:" + channel,Toast.LENGTH_SHORT).show();
 		
-		System.out.println("shareid-----"+shareVideoId +"   channel-----"+channel);
 		boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
-		//System.out.println("shareid"+result);
 	}
 
 	private OnPageChangeListener opcl = new OnPageChangeListener() {
@@ -137,11 +129,6 @@ public class VideoSquareActivity implements OnClickListener {
 	private void updateState(int type) {
 
 		if (0 == type) {
-			/*if(mVideoSquareAdapter.mVideoSquareListView.mDataList.size()>0){
-				mVideoSquareAdapter.mVideoSquareListView.setViewListBg(false);
-			}else{
-				mVideoSquareAdapter.mVideoSquareListView.setViewListBg(true);
-			}*/
 			hot.setVisibility(View.VISIBLE);
 			square.setVisibility(View.INVISIBLE);
 			
@@ -151,9 +138,6 @@ public class VideoSquareActivity implements OnClickListener {
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 		} else {
-			//
-			
-			//mVideoSquareAdapter.mVideoSquareListView.setViewListBg(false);
 				
 			hot.setVisibility(View.INVISIBLE);
 			square.setVisibility(View.VISIBLE);
@@ -217,15 +201,5 @@ public class VideoSquareActivity implements OnClickListener {
 			mVideoSquareAdapter.onDestroy();
 		}
 	}
-	
-	/*public boolean onKeyDown(int keyCode, KeyEvent event) {
-    	if(keyCode==KeyEvent.KEYCODE_BACK){
-    		exit(); 
-        	return true;
-        }else{
-        	return super.onKeyDown(keyCode, event); 
-        }
-	}*/
-	
 
 }

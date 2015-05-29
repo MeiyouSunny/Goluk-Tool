@@ -10,6 +10,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
   * 1.编辑器必须显示空白处
@@ -47,7 +48,7 @@ public class WatermarkSettingActivity extends CarRecordBaseActivity implements O
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("watermark", this);
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getWatermarkShowState();
-			System.out.println("YYY=================getWatermarkShowState============a="+a);
+			GolukDebugUtils.e("xuhw", "YYY=================getWatermarkShowState============a="+a);
 		}
 	}
 	
@@ -80,9 +81,9 @@ public class WatermarkSettingActivity extends CarRecordBaseActivity implements O
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(msg == IPC_VDCP_Msg_GetImprintShow){
-				System.out.println("YYY====IPC_VDCP_Msg_GetImprintShow====msg="+msg+"===param1="+param1+"==param2="+param2);
+				GolukDebugUtils.e("xuhw", "YYY====IPC_VDCP_Msg_GetImprintShow====msg="+msg+"===param1="+param1+"==param2="+param2);
 				if(param1 == RESULE_SUCESS){
-					System.out.println("YYY=====IPC_VDCP_Msg_GetImprintShow============OK=============");
+					GolukDebugUtils.e("xuhw", "YYY=====IPC_VDCP_Msg_GetImprintShow============OK=============");
 					
 					
 				}

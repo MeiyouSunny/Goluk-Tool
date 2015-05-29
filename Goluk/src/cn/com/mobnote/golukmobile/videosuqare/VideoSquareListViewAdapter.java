@@ -48,7 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("InflateParams")
-public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn{
+public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn {
 	private Context mContext = null;
 	private List<VideoSquareInfo> mVideoSquareListData = null;
 	private HashMap<String, DWMediaPlayer> mDWMediaPlayerList = null;
@@ -56,24 +56,23 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 	private final String USERID = "77D36B9636FF19CF";
 	private final String API_KEY = "O8g0bf8kqiWroHuJaRmihZfEmj7VWImF";
 	private int form = 1;
-	private DWMediaPlayer mDWMediaPlayer=null;
-	private HashMap<String, SurfaceHolder> mHolderList=null;
-	private String curVideoid="";
+	private DWMediaPlayer mDWMediaPlayer = null;
+	private HashMap<String, SurfaceHolder> mHolderList = null;
+	private String curVideoid = "";
 	private int index;
-	private ListView mRTPullListView=null;
+	private ListView mRTPullListView = null;
 	private SharePlatformUtil sharePlatform;
 
-	public VideoSquareListViewAdapter(ListView _mRTPullListView, Context context,int plform,SharePlatformUtil spf) {
+	public VideoSquareListViewAdapter(ListView _mRTPullListView, Context context, int plform, SharePlatformUtil spf) {
 		mContext = context;
-		this.mRTPullListView=_mRTPullListView;
+		this.mRTPullListView = _mRTPullListView;
 		mVideoSquareListData = new ArrayList<VideoSquareInfo>();
 		mDWMediaPlayerList = new HashMap<String, DWMediaPlayer>();
 		mHolderList = new HashMap<String, SurfaceHolder>();
-		form = plform;//1:热门页面 2:广场页
+		form = plform;// 1:热门页面 2:广场页
 		sharePlatform = spf;
-		
-		GolukApplication.getInstance().getVideoSquareManager()
-		.addVideoSquareManagerListener("videosharehotlist", this);
+
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
 	}
 
 	public void setData(List<VideoSquareInfo> data) {
@@ -104,37 +103,27 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		VideoSquareInfo mVideoSquareInfo = mVideoSquareListData.get(arg0);
 		if (convertView == null) {
-			convertView = LayoutInflater.from(mContext).inflate(
-					R.layout.video_square_list_item, null);
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.video_square_list_item, null);
 			holder = new ViewHolder();
-			holder.username = (TextView) convertView
-					.findViewById(R.id.username);
-			holder.looknumber = (TextView) convertView
-					.findViewById(R.id.looknumber_text);
-			holder.userhead = (ImageView) convertView
-					.findViewById(R.id.user_head);
-			holder.likenumber = (Button) convertView
-					.findViewById(R.id.like_btn);
-			holder.videotitle = (TextView) convertView
-					.findViewById(R.id.video_title);
+			holder.username = (TextView) convertView.findViewById(R.id.username);
+			holder.looknumber = (TextView) convertView.findViewById(R.id.looknumber_text);
+			holder.userhead = (ImageView) convertView.findViewById(R.id.user_head);
+			holder.likenumber = (Button) convertView.findViewById(R.id.like_btn);
+			holder.videotitle = (TextView) convertView.findViewById(R.id.video_title);
 			holder.sharetime = (TextView) convertView.findViewById(R.id.time);
-			holder.mPlayerLayout = (RelativeLayout) convertView
-					.findViewById(R.id.mPlayerLayout);
-//			holder.mSurfaceView = (SurfaceView) convertView
-//					.findViewById(R.id.mSurfaceView);
-//			holder.mSurfaceView.setZOrderMediaOverlay(true);
-			holder.reporticon = (ImageButton) convertView
-					.findViewById(R.id.report_icon);
-			holder.liveicon = (ImageView) convertView
-					.findViewById(R.id.live_icon);
-			holder.mPreLoading = (ImageView) convertView
-					.findViewById(R.id.mPreLoading);
+			holder.mPlayerLayout = (RelativeLayout) convertView.findViewById(R.id.mPlayerLayout);
+			// holder.mSurfaceView = (SurfaceView) convertView
+			// .findViewById(R.id.mSurfaceView);
+			// holder.mSurfaceView.setZOrderMediaOverlay(true);
+			holder.reporticon = (ImageButton) convertView.findViewById(R.id.report_icon);
+			holder.liveicon = (ImageView) convertView.findViewById(R.id.live_icon);
+			holder.mPreLoading = (ImageView) convertView.findViewById(R.id.mPreLoading);
 			holder.likebtn = (Button) convertView.findViewById(R.id.like_btn);
 			holder.sharebtn = (ImageButton) convertView.findViewById(R.id.share_btn);
 
-			holder.mRingView = (RingView) convertView
-					.findViewById(R.id.mRingView);
-//			holder.mTextureView = (TextureView)convertView.findViewById(R.id.mTextureView);
+			holder.mRingView = (RingView) convertView.findViewById(R.id.mRingView);
+			// holder.mTextureView =
+			// (TextureView)convertView.findViewById(R.id.mTextureView);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -143,113 +132,116 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
 			holder.reporticon.setVisibility(View.GONE);
 			holder.liveicon.setVisibility(View.VISIBLE);
-//			holder.mSurfaceView.setVisibility(View.GONE);
+			// holder.mSurfaceView.setVisibility(View.GONE);
 		} else {// 点播
 			holder.reporticon.setVisibility(View.VISIBLE);
 			holder.liveicon.setVisibility(View.GONE);
-//			holder.mSurfaceView.setVisibility(View.VISIBLE);
+			// holder.mSurfaceView.setVisibility(View.VISIBLE);
 		}
-		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform, this));
-		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)){// 点赞过
-			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);//设置点赞背景
-		}else{
-			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn);//设置默认点赞背景
+		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
+				mVideoSquareInfo, form, sharePlatform, this));
+		if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {// 点赞过
+			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);// 设置点赞背景
+		} else {
+			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn);// 设置默认点赞背景
 		}
-		
-		if("1".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+
+		if ("1".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_one);
-		}else if("2".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+		} else if ("2".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_two);
-		}else if("3".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+		} else if ("3".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_three);
-		}else if("4".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+		} else if ("4".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_one);
-		}else if("5".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+		} else if ("5".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_two);
-		}else if("6".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+		} else if ("6".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_three);
-		}else if("7".equals(mVideoSquareInfo.mUserEntity.headportrait)){
+		} else if ("7".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
-		}else {
+		} else {
 			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
 		}
-		
-		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform,this));
-		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext,mVideoSquareListData,mVideoSquareInfo,form,sharePlatform,this));
+
+		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
+				mVideoSquareInfo, form, sharePlatform, this));
+		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
+				mVideoSquareInfo, form, sharePlatform, this));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
 		holder.sharetime.setText(this.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
-		
-		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(
-				mVideoSquareListData, holder, mDWMediaPlayerList,
-				mVideoSquareInfo,mContext,form));
 
-//		holder.mPreLoading.setVisibility(View.GONE);
-//		String videoid = mVideoSquareInfo.mVideoEntity.videoid;
-//		if ("2".equals(mVideoSquareInfo.mVideoEntity.type)) {
-//			if (!TextUtils.isEmpty(videoid)) {
-//				if (!mDWMediaPlayerList.containsKey(mVideoSquareInfo.id)) {
-//					holder.mPreLoading.setVisibility(View.VISIBLE);
-//					DWMediaPlayer mDWMediaPlayer = new DWMediaPlayer();
-//					mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY,
-//							mContext);
-//					mDWMediaPlayer.setOnErrorListener(new VideoOnErrorListener(
-//							mVideoSquareInfo));
-//					mDWMediaPlayer
-//							.setOnPreparedListener(new VideoOnPreparedListener(
-//									mVideoSquareListData, mDWMediaPlayerList,
-//									mVideoSquareInfo));
-//					mDWMediaPlayer
-//							.setOnBufferingUpdateListener(new VideoOnBufferingUpdateListener(
-//									mVideoSquareListData, mDWMediaPlayerList,
-//									holder, mVideoSquareInfo));
-//					mDWMediaPlayerList.put(mVideoSquareInfo.id, mDWMediaPlayer);
-//				} else {
-//					DWMediaPlayer mDWMediaPlayer = mDWMediaPlayerList
-//							.get(mVideoSquareInfo.id);
-//					if (null != mDWMediaPlayer) {
-//						if (mDWMediaPlayer.isPlaying()) {
-//							LogUtils.d("SSS=======222===GONE======");
-//							
-//						} else {
-//							
-//						}
-//					}
-//				}
-//			}
-//		}else{
-//			holder.mPreLoading.setVisibility(View.VISIBLE);
-//		}
+		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(mVideoSquareListData, holder,
+				mDWMediaPlayerList, mVideoSquareInfo, mContext, form));
+
+		// holder.mPreLoading.setVisibility(View.GONE);
+		// String videoid = mVideoSquareInfo.mVideoEntity.videoid;
+		// if ("2".equals(mVideoSquareInfo.mVideoEntity.type)) {
+		// if (!TextUtils.isEmpty(videoid)) {
+		// if (!mDWMediaPlayerList.containsKey(mVideoSquareInfo.id)) {
+		// holder.mPreLoading.setVisibility(View.VISIBLE);
+		// DWMediaPlayer mDWMediaPlayer = new DWMediaPlayer();
+		// mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY,
+		// mContext);
+		// mDWMediaPlayer.setOnErrorListener(new VideoOnErrorListener(
+		// mVideoSquareInfo));
+		// mDWMediaPlayer
+		// .setOnPreparedListener(new VideoOnPreparedListener(
+		// mVideoSquareListData, mDWMediaPlayerList,
+		// mVideoSquareInfo));
+		// mDWMediaPlayer
+		// .setOnBufferingUpdateListener(new VideoOnBufferingUpdateListener(
+		// mVideoSquareListData, mDWMediaPlayerList,
+		// holder, mVideoSquareInfo));
+		// mDWMediaPlayerList.put(mVideoSquareInfo.id, mDWMediaPlayer);
+		// } else {
+		// DWMediaPlayer mDWMediaPlayer = mDWMediaPlayerList
+		// .get(mVideoSquareInfo.id);
+		// if (null != mDWMediaPlayer) {
+		// if (mDWMediaPlayer.isPlaying()) {
+		// LogUtils.d("SSS=======222===GONE======");
+		//
+		// } else {
+		//
+		// }
+		// }
+		// }
+		// }
+		// }else{
+		// holder.mPreLoading.setVisibility(View.VISIBLE);
+		// }
 
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);
 
-//		holder.mSurfaceView.setZOrderMediaOverlay(true);
-//		SurfaceHolder mSurfaceHolder = holder.mSurfaceView.getHolder();
-////		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(
-				width, height);
+		// holder.mSurfaceView.setZOrderMediaOverlay(true);
+		// SurfaceHolder mSurfaceHolder = holder.mSurfaceView.getHolder();
+		// // mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		LinearLayout.LayoutParams mPlayerLayoutParams = new LinearLayout.LayoutParams(width, height);
 		holder.mPlayerLayout.setLayoutParams(mPlayerLayoutParams);
-		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
-				width, height);
+		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 		holder.mPreLoading.setLayoutParams(mPreLoadingParams);
-//		mSurfaceHolder.addCallback(new SurfaceViewCallback(this, arg0, mHolderList,
-//				mVideoSquareListData, mDWMediaPlayerList, mVideoSquareInfo));
+		// mSurfaceHolder.addCallback(new SurfaceViewCallback(this, arg0,
+		// mHolderList,
+		// mVideoSquareListData, mDWMediaPlayerList, mVideoSquareInfo));
 
 		// imageLoader.displayImage(mVideoSquareInfo.mUserEntity.headportrait,
 		// holder.userhead, options, null);
-//		imageLoader.displayImage(mVideoSquareInfo.mVideoEntity.picture,
-//				holder.mPreLoading, options, null);
-//		BitmapDisplayConfig config = new BitmapDisplayConfig();
-//		Bitmap mBitmap = BitmapManager.getInstance().mBitmapUtils.getBitmapFromMemCache(mVideoSquareInfo.mVideoEntity.picture, config);
-//		if(null == mBitmap){
-			BitmapManager.getInstance().mBitmapUtils.display(holder.mPreLoading, mVideoSquareInfo.mVideoEntity.picture);
-//		}else{
-//			holder.mPreLoading.setImageBitmap(mBitmap);
-//		}
-		
+		// imageLoader.displayImage(mVideoSquareInfo.mVideoEntity.picture,
+		// holder.mPreLoading, options, null);
+		// BitmapDisplayConfig config = new BitmapDisplayConfig();
+		// Bitmap mBitmap =
+		// BitmapManager.getInstance().mBitmapUtils.getBitmapFromMemCache(mVideoSquareInfo.mVideoEntity.picture,
+		// config);
+		// if(null == mBitmap){
+		BitmapManager.getInstance().mBitmapUtils.display(holder.mPreLoading, mVideoSquareInfo.mVideoEntity.picture);
+		// }else{
+		// holder.mPreLoading.setImageBitmap(mBitmap);
+		// }
+
 		return convertView;
 	}
 
@@ -258,12 +250,11 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 	}
 
 	public void onBackPressed() {
-		
+
 	}
-	
-	public void onResume(){
-		GolukApplication.getInstance().getVideoSquareManager()
-		.addVideoSquareManagerListener("videosharehotlist", this);
+
+	public void onResume() {
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
 	}
 
 	public void onStop() {
@@ -283,33 +274,33 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		}
 	}
 
-	public void onDestroy() {	
-		if(null != mDWMediaPlayer){
+	public void onDestroy() {
+		if (null != mDWMediaPlayer) {
 			mDWMediaPlayer.release();
 		}
 	}
 
 	@SuppressLint("SimpleDateFormat")
 	public String formatTime(String date) {
-		String time="";
-		if(null != date){
+		String time = "";
+		if (null != date) {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-			
+
 			try {
 				Date strtodate = formatter.parse(date);
-				if(null != strtodate){
+				if (null != strtodate) {
 					formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
-					if(null != formatter){
-						time =  formatter.format(strtodate);
+					if (null != formatter) {
+						time = formatter.format(strtodate);
 					}
 				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		return time;
 	}
 
@@ -321,160 +312,144 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		TextView videotitle;
 		TextView sharetime;
 		RelativeLayout mPlayerLayout;
-//		SurfaceView mSurfaceView;
+		// SurfaceView mSurfaceView;
 		ImageView liveicon;
 		ImageButton reporticon;
 		ImageView mPreLoading;
 		ImageButton sharebtn;
 		Button likebtn;
 		RingView mRingView;
-//		TextureView mTextureView;
+		// TextureView mTextureView;
 	}
-	
-	public void pausePlayer(){
-//		if(mDWMediaPlayer.isPlaying()){
-//			mDWMediaPlayer.pause();
-//		}
-	}
-	
-	public void startPlayer(){
-//		if(!mDWMediaPlayer.isPlaying()){
-//			mDWMediaPlayer.start();
-//		}
-	}
-	
-	public void updatePlayerState(int _index){
-//		String vid = mVideoSquareListData.get(_index).mVideoEntity.videoid;
-////		LogUtils.d("SSS===updatePlayerState==vid==="+vid);
-//		if(!curVideoid.equals(vid)){
-////			LogUtils.d("SSS===updatePlayerState==index==="+_index+"==vid="+vid);
-////			LogUtils.d("SSS===updatePlayerState==mHolderList==="+mHolderList.size());
-//			
-//			View view = mRTPullListView.getChildAt(index);
-//			if(null != view){
-//				RingView ring = (RingView)view.findViewById(R.id.mRingView);
-//				ImageView image = (ImageView)view.findViewById(R.id.mPreLoading);
-//				if(null != ring){
-//					ring.setProcess(0);
-//					ring.setVisibility(View.GONE);
-//				}
-//				if(null != image){
-//					image.setVisibility(View.VISIBLE);
-//				}
-//			}
-//				
-//			mDWMediaPlayer.reset();
-//			int first = mRTPullListView.getFirstVisiblePosition();
-//			int position = _index - first;
-//			SurfaceHolder mSurfaceHolder=null;
-//			if(position <= 0)
-//				position = 0;
-//			if(position >= mHolderList.size())
-//				position = mHolderList.size() - 1;
-//			mSurfaceHolder = mHolderList.get(""+_index);
-//			
-//			LogUtils.d("SSS===updatePlayerState==_index==="+_index+"===2222===mSurfaceHolder==="+mSurfaceHolder);
-//			
-//			index = _index;
-//			curVideoid = vid;
-//			String videoid = mVideoSquareListData.get(_index).mVideoEntity.videoid;
-//			mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY, mContext);
-//			mDWMediaPlayer.setDisplay(mSurfaceHolder);
-//			mDWMediaPlayer.prepareAsync();
-//		}
-	}
-	
-	VideoSquareOnClickListener mVideoSquareOnClickListener=null;
-	public void setOnClick(VideoSquareOnClickListener _mVideoSquareOnClickListener){
-		mVideoSquareOnClickListener=_mVideoSquareOnClickListener;
-	}
-	
-	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1,
-			Object param2) {
-		System.out.println("YYYY==888888==getSquareList8888====form===" + form
-				+ "event=" + event + "===msg=" + msg + "==param2=" + param2);
 
-		System.out.println("YYYY+RESULT-2-2-2-2-2-2-2");
+	public void pausePlayer() {
+		// if(mDWMediaPlayer.isPlaying()){
+		// mDWMediaPlayer.pause();
+		// }
+	}
+
+	public void startPlayer() {
+		// if(!mDWMediaPlayer.isPlaying()){
+		// mDWMediaPlayer.start();
+		// }
+	}
+
+	public void updatePlayerState(int _index) {
+		// String vid = mVideoSquareListData.get(_index).mVideoEntity.videoid;
+		// // LogUtils.d("SSS===updatePlayerState==vid==="+vid);
+		// if(!curVideoid.equals(vid)){
+		// //
+		// LogUtils.d("SSS===updatePlayerState==index==="+_index+"==vid="+vid);
+		// //
+		// LogUtils.d("SSS===updatePlayerState==mHolderList==="+mHolderList.size());
+		//
+		// View view = mRTPullListView.getChildAt(index);
+		// if(null != view){
+		// RingView ring = (RingView)view.findViewById(R.id.mRingView);
+		// ImageView image = (ImageView)view.findViewById(R.id.mPreLoading);
+		// if(null != ring){
+		// ring.setProcess(0);
+		// ring.setVisibility(View.GONE);
+		// }
+		// if(null != image){
+		// image.setVisibility(View.VISIBLE);
+		// }
+		// }
+		//
+		// mDWMediaPlayer.reset();
+		// int first = mRTPullListView.getFirstVisiblePosition();
+		// int position = _index - first;
+		// SurfaceHolder mSurfaceHolder=null;
+		// if(position <= 0)
+		// position = 0;
+		// if(position >= mHolderList.size())
+		// position = mHolderList.size() - 1;
+		// mSurfaceHolder = mHolderList.get(""+_index);
+		//
+		// LogUtils.d("SSS===updatePlayerState==_index==="+_index+"===2222===mSurfaceHolder==="+mSurfaceHolder);
+		//
+		// index = _index;
+		// curVideoid = vid;
+		// String videoid =
+		// mVideoSquareListData.get(_index).mVideoEntity.videoid;
+		// mDWMediaPlayer.setVideoPlayInfo(videoid, USERID, API_KEY, mContext);
+		// mDWMediaPlayer.setDisplay(mSurfaceHolder);
+		// mDWMediaPlayer.prepareAsync();
+		// }
+	}
+
+	VideoSquareOnClickListener mVideoSquareOnClickListener = null;
+
+	public void setOnClick(VideoSquareOnClickListener _mVideoSquareOnClickListener) {
+		mVideoSquareOnClickListener = _mVideoSquareOnClickListener;
+	}
+
+	@Override
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == SquareCmd_Req_GetShareUrl) {
-			System.out.println("YYYY+RESULT-3-3-3-3-3-3-3");
 			if (RESULE_SUCESS == msg) {
-				
-				
-//				Activity activity = SysApplication.getInstance().getCurActivity();
-//				if(activity instanceof VideoSquarePlayActivity || activity instanceof MainActivity){
-//				}else{
-//					return;
-//				}
-				
-				if(null == mVideoSquareOnClickListener){
+
+				if (null == mVideoSquareOnClickListener) {
 					return;
 				}
 				mVideoSquareOnClickListener.closeRqsDialog(mContext);
 				try {
-					System.out.println("YYYY+RESULT-1-1-1-1-1-1-1");
 					JSONObject result = new JSONObject((String) param2);
-					System.out.println("YYYY+RESULT00000000");
 					if (result.getBoolean("success")) {
 						JSONObject data = result.getJSONObject("data");
 						String shareurl = data.getString("shorturl");
 						String coverurl = data.getString("coverurl");
-						String describe =data.optString("describe");
+						String describe = data.optString("describe");
 						if (TextUtils.isEmpty(describe)) {
 							describe = "#极路客精彩视频#";
 						}
-						
+
 						if ("".equals(coverurl)) {
 
 						}
-						System.out.println("YYYY+RESULT11111111");
-						// 设置分享内容
-						//sharePlatform.setShareContent(shareurl, coverurl,describe);
-						System.out.println("YYYY+RESULT22222222");
 						String ttl = "极路客精彩视频分享";
 						if ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)) {// 直播
-							ttl =mVideoSquareOnClickListener. mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
+							ttl = mVideoSquareOnClickListener.mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
 						}
-						LogUtil.e("xuhw", "BBBBBB==2222====nikename="+mVideoSquareOnClickListener. mVideoSquareInfo.mUserEntity.nickname);
 						if (mContext instanceof VideoSquarePlayActivity) {
-							System.out.println("YYYY+VideoSquarePlayActivity");
 							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mContext;
-							if (vspa!=null && !vspa.isFinishing()) {
+							if (vspa != null && !vspa.isFinishing()) {
 								vspa.mCustomProgressDialog.close();
-								CustomShareBoard shareBoard = new CustomShareBoard(vspa,sharePlatform,shareurl, coverurl,describe,ttl);
+								CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl,
+										coverurl, describe, ttl);
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
-							
-						} else if(mContext instanceof MainActivity){
-							System.out.println("YYYY+VideoSquareActivity");
+
+						} else if (mContext instanceof MainActivity) {
 							MainActivity vsa = (MainActivity) mContext;
-							if(vsa == null || vsa.isFinishing()){
-								return ;
-							}else{
-								if(vsa.mCustomProgressDialog!=null){
+							if (vsa == null || vsa.isFinishing()) {
+								return;
+							} else {
+								if (vsa.mCustomProgressDialog != null) {
 									vsa.mCustomProgressDialog.close();
-									CustomShareBoard shareBoard = new CustomShareBoard(vsa,sharePlatform,shareurl, coverurl,describe,ttl);
+									CustomShareBoard shareBoard = new CustomShareBoard(vsa, sharePlatform, shareurl,
+											coverurl, describe, ttl);
 									shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 								}
-								
+
 							}
 
 						}
 
-					}else{
-//						mVideoSquareOnClickListener.closeRqsDialog(mContext);
-						Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+					} else {
+						// mVideoSquareOnClickListener.closeRqsDialog(mContext);
+						Toast.makeText(mContext, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}else{
-//				mVideoSquareOnClickListener.closeRqsDialog(mContext);
-				Toast.makeText(mContext, "网络异常，请检查网络",Toast.LENGTH_SHORT).show();
+			} else {
+				// mVideoSquareOnClickListener.closeRqsDialog(mContext);
+				Toast.makeText(mContext, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
 			}
 		}
 
 	}
-	
+
 }

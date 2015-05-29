@@ -12,7 +12,7 @@ import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
   * 1.编辑器必须显示空白处
@@ -62,7 +62,7 @@ public class RestoreFactorySettingsActivity extends CarRecordBaseActivity implem
 						public void onClickListener() {
 							if(GolukApplication.getInstance().getIpcIsLogin()){
 								boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
-								LogUtil.e("xuhw", "YYYYYY=================restoreIPC============a="+a);
+								GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a="+a);
 							}
 						}
 					});

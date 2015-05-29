@@ -12,23 +12,23 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 
 /**
  * 1.编辑器必须显示空白处
- *
+ * 
  * 2.所有代码必须使用TAB键缩进
- *
+ * 
  * 3.类首字母大写,函数、变量使用驼峰式命名,常量所有字母大写
- *
+ * 
  * 4.注释必须在行首写.(枚举除外)
- *
+ * 
  * 5.函数使用块注释,代码逻辑使用行注释
- *
+ * 
  * 6.文件头部必须写功能说明
- *
+ * 
  * 7.所有代码文件头部必须包含规则说明
- *
+ * 
  * 视频广场接口管理类
- *
+ * 
  * 2015年4月17日
- *
+ * 
  * @author xuhw
  */
 public class VideoSquareManager implements VideoSuqareManagerFn {
@@ -40,8 +40,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	public VideoSquareManager(GolukApplication application) {
 		mApplication = application;
 		mVideoSquareManagerListener = new HashMap<String, VideoSuqareManagerFn>();
-		mApplication.mGoluk.GolukLogicRegisterNotify(
-				GolukModule.Goluk_Module_Square, this);
+		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Square, this);
 	}
 
 	/**
@@ -62,14 +61,10 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月17日
 	 */
-	public boolean getSquareList(String channel, String type,
-			List<String> attribute, String operation, String timestamp) {
-		String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
-				attribute, operation, timestamp);
-		LogUtils.d("YYY=========getSquareList==========json==" + json);
-		return mApplication.mGoluk
-				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-						SquareCmd_Req_SquareList, json);
+	public boolean getSquareList(String channel, String type, List<String> attribute, String operation, String timestamp) {
+		String json = JsonCreateUtils.getSquareListRequestJson(channel, type, attribute, operation, timestamp);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_SquareList,
+				json);
 	}
 
 	/**
@@ -90,18 +85,12 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月17日
 	 */
-	public boolean getSquareList(String channel, String type, String attribute,
-			String operation, String timestamp) {
+	public boolean getSquareList(String channel, String type, String attribute, String operation, String timestamp) {
 		List<String> arr = new ArrayList<String>();
 		arr.add(attribute);
-		String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
-				arr, operation, timestamp);
-		// String json = JsonCreateUtils.getSquareListRequestJson(channel, type,
-		// attribute, operation, timestamp);
-		LogUtils.d("YYY=========getSquareList==========json==" + json);
-		return mApplication.mGoluk
-				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-						SquareCmd_Req_SquareList, json);
+		String json = JsonCreateUtils.getSquareListRequestJson(channel, type, arr, operation, timestamp);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_SquareList,
+				json);
 	}
 
 	/**
@@ -117,8 +106,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public boolean getHotList(String channel, String operation) {
 		String json = JsonCreateUtils.getHotListRequestJson(channel, operation);
-		return mApplication.mGoluk.GolukLogicCommRequest(
-				GolukModule.Goluk_Module_Square, SquareCmd_Req_HotList, json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_HotList, json);
 	}
 
 	/**
@@ -132,12 +120,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月17日
 	 */
-	public boolean clickNumberUpload(String channel,
-			List<VideoSquareInfo> mDataList) {
-		String json = JsonCreateUtils.getClickVideoUploadRequestJson(channel,
-				mDataList);
-		return mApplication.mGoluk.GolukLogicCommRequest(
-				GolukModule.Goluk_Module_Square, SquareCmd_Req_ClickUp, json);
+	public boolean clickNumberUpload(String channel, List<VideoSquareInfo> mDataList) {
+		String json = JsonCreateUtils.getClickVideoUploadRequestJson(channel, mDataList);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_ClickUp, json);
 	}
 
 	/**
@@ -154,10 +139,8 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @date 2015年4月17日
 	 */
 	public boolean clickPraise(String channel, String videoid, String type) {
-		String json = JsonCreateUtils.getClickPraiseRequestJson(channel,
-				videoid, type);
-		return mApplication.mGoluk.GolukLogicCommRequest(
-				GolukModule.Goluk_Module_Square, SquareCmd_Req_Praise, json);
+		String json = JsonCreateUtils.getClickPraiseRequestJson(channel, videoid, type);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_Praise, json);
 	}
 
 	/**
@@ -174,10 +157,8 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @date 2015年4月17日
 	 */
 	public boolean report(String channel, String videoid, String reporttype) {
-		String json = JsonCreateUtils.getReportRequestJson(channel, videoid,
-				reporttype);
-		return mApplication.mGoluk.GolukLogicCommRequest(
-				GolukModule.Goluk_Module_Square, SquareCmd_Req_ReportUp, json);
+		String json = JsonCreateUtils.getReportRequestJson(channel, videoid, reporttype);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_ReportUp, json);
 	}
 
 	/**
@@ -193,8 +174,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public boolean getShareUrl(String videoid, String type) {
 		String json = JsonCreateUtils.getShareUrlRequestJson(videoid, type);
-		return mApplication.mGoluk.GolukLogicCommRequest(
-				GolukModule.Goluk_Module_Square, SquareCmd_Req_GetShareUrl,
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_GetShareUrl,
 				json);
 	}
 
@@ -210,15 +190,14 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @date 2015年4月17日
 	 */
 	public boolean shareVideoUp(String channel, String videoid) {
-		String json = JsonCreateUtils.getShareVideoUpRequestJson(channel,
-				videoid);
-		return mApplication.mGoluk
-				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-						SquareCmd_Req_ShareVideo, json);
+		String json = JsonCreateUtils.getShareVideoUpRequestJson(channel, videoid);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_ShareVideo,
+				json);
 	}
 
 	/**
 	 * 同步获取视频广场列表数据
+	 * 
 	 * @param attribute
 	 *            属性标签： 0.全部 1.碰瓷达人 2.奇葩演技 3.路上风景 4.随手拍 5.事故大爆料 6.堵车预警 7.惊险十分
 	 *            8.疯狂超车 9.感人瞬间 10.传递正能量
@@ -234,8 +213,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 			e.printStackTrace();
 		}
 
-		return mApplication.mGoluk.GolukLogicCommGet(
-				GolukModule.Goluk_Module_Square, SquareCmd_Get_SquareCache,
+		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square, SquareCmd_Get_SquareCache,
 				json.toString());
 	}
 
@@ -247,8 +225,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @date 2015年4月24日
 	 */
 	public String getHotList() {
-		return mApplication.mGoluk.GolukLogicCommGet(
-				GolukModule.Goluk_Module_Square, SquareCmd_Get_HotCache, "");
+		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square, SquareCmd_Get_HotCache, "");
 	}
 
 	/**
@@ -259,11 +236,10 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月14日
 	 */
-	public void addVideoSquareManagerListener(String from,
-			VideoSuqareManagerFn fn) {
+	public void addVideoSquareManagerListener(String from, VideoSuqareManagerFn fn) {
 		this.mVideoSquareManagerListener.put(from, fn);
 	}
-	
+
 	public boolean checkVideoSquareManagerListener(String from) {
 		return this.mVideoSquareManagerListener.containsKey(from);
 	}
@@ -280,8 +256,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	}
 
 	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1,
-			Object param2) {
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 
 		Iterator<String> iter = mVideoSquareManagerListener.keySet().iterator();
 		while (iter.hasNext()) {

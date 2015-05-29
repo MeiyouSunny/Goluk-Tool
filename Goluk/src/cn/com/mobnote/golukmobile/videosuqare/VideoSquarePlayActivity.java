@@ -162,7 +162,6 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		if (!result) {
 			closeProgressDialog();
 		}
-		System.out.println("YYYY==22222==getSquareList======result=" + result);
 	}
 
 	private void init(boolean isloading) {
@@ -178,7 +177,6 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 			public void onRefresh() {
 				if(begantime !=null){
 					uptype = 2;
-					System.out.println("下拉刷新时间="+begantime.mVideoEntity.sharingtime);
 					httpPost(true, type, "1", begantime.mVideoEntity.sharingtime);
 				}else{
 					mRTPullListView.postDelayed(new Runnable() {
@@ -195,13 +193,11 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				LogUtil.e("", "slslslslslsls=22222222222222222222222");
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 					
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
 						if (isHaveData) {
 							uptype = 1;
-							System.out.println("上拉刷新时间="+endtime.mVideoEntity.sharingtime);
 							httpPost(true, type, "2", endtime.mVideoEntity.sharingtime);
 						}
 					}
@@ -250,10 +246,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 				Toast.makeText(VideoSquarePlayActivity.this, "第三方分享失败", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			//Toast.makeText(VideoSquarePlayActivity.this, "开始第三方分享:" + channel, Toast.LENGTH_SHORT).show();
-			System.out.println("shareid======"+shareVideoId + "channel======="+channel);
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
-			//System.out.println("shareid"+result);
 		}
 
 	/**
@@ -315,15 +308,12 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
 			Object param2) {
-		System.out.println("YYYY==333==getSquareList====event=" + event
-				+ "===msg=" + msg + "==param2=" + param2);
 		if (event == SquareCmd_Req_SquareList) {
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				
 				List<VideoSquareInfo> list = DataParserUtils
 						.parserVideoSquareListData((String) param2);
-				System.out.println("ZZZZ===="+list.size());
 				
 				//说明有数据
 				if(list.size()>0){
