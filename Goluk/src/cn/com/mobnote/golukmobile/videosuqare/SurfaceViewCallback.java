@@ -7,7 +7,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;

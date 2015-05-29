@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**

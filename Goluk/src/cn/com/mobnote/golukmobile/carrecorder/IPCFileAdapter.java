@@ -11,7 +11,6 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.tiros.utils.LogUtil;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 

@@ -1,6 +1,5 @@
 package cn.com.mobnote.view;
 
-import cn.com.mobnote.util.console;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,6 +9,7 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -52,7 +52,7 @@ public class LoadingView extends View {
 	 */
 	public void setCurrentProgress(int p) {
 		if(p >= 0){
-			console.log("onDraw-------0------" + p);
+			GolukDebugUtils.e("","onDraw-------0------" + p);
 			mProgress = p;
 			this.invalidate();
 			//this.postInvalidate();

@@ -1,37 +1,18 @@
 package cn.com.mobnote.golukmobile;
 
 import java.io.File;
-import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
-import cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity;
-import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
-import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
-import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.LocalVideoListAdapter;
-import cn.com.mobnote.video.LocalVideoListManage;
-import cn.com.mobnote.video.LocalVideoListManage.DoubleVideoData;
-import cn.com.mobnote.video.LocalVideoListManage.LocalVideoData;
-import cn.com.tiros.api.FileUtils;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,15 +21,29 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
+import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.video.LocalVideoListAdapter;
+import cn.com.mobnote.video.LocalVideoListManage;
+import cn.com.mobnote.video.LocalVideoListManage.DoubleVideoData;
+import cn.com.mobnote.video.LocalVideoListManage.LocalVideoData;
+import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 /**
  * <pre>
@@ -454,7 +449,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mLoopVideoList.getAdapter().getCount() == (loopFirstVisible + loopVisibleCount)){
-						console.log("循环视频列表---mLoopVideoList---滑动到最后了");
+						GolukDebugUtils.e("","循环视频列表---mLoopVideoList---滑动到最后了");
 					}
 				}
 			}

@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +16,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.video.LocalVideoManage.LocalVideoData;
 import cn.com.mobnote.video.VideCommentManage.VideoCommentData;
+import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -122,7 +122,7 @@ public class VideCommentListAdapter extends BaseAdapter{
 		@Override
 		public void onClick(View v) {
 			LocalVideoData data = (LocalVideoData)getItem(index);
-			Log.e("","chxy_____path" + data.filePath);
+			GolukDebugUtils.i("","chxy_____path" + data.filePath);
 			
 			//跳转到视频编辑页面
 			Intent videoEdit = new Intent(mContext,VideoEditActivity.class);

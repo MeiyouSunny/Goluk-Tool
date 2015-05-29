@@ -9,8 +9,8 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,8 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LiveVideoListManage.LiveVideoListData;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * <pre>
@@ -133,7 +133,7 @@ public class LiveVideoListAdapter extends BaseAdapter{
 		@Override
 		public void onClick(View v) {
 			LiveVideoListData data = (LiveVideoListData)getItem(index);
-			console.log("点击直播列表item---aid---" + data.aid);
+			GolukDebugUtils.e("","点击直播列表item---aid---" + data.aid);
 			
 			//首页地图气泡跳转到直播详情页
 			Intent live = new Intent(mContext,LiveVideoPlayActivity.class);

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 注册管理类
@@ -54,7 +54,7 @@ public class UserRegistManage {
 		//获取验证码
 		boolean bIndentify = false;
 		String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
-		console.log(isIdentify);
+		GolukDebugUtils.e("",isIdentify);
 		bIndentify = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
 		return bIndentify;
 	}
@@ -63,7 +63,7 @@ public class UserRegistManage {
 	 * 验证码回调
 	 */
 	/*public void identifyCallback(int success,Object obj){
-		console.log("验证码获取回调---identifyCallBack---" + success + "---" + obj);
+		GolukDebugUtils.e("","验证码获取回调---identifyCallBack---" + success + "---" + obj);
 		//点击验证码按钮手机号、密码不可被修改
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
@@ -73,7 +73,7 @@ public class UserRegistManage {
 		if(1 == success){
 			try{
 				String data = (String)obj;
-				console.log(data);
+				GolukDebugUtils.e("",data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				switch (code) {
@@ -179,10 +179,10 @@ public class UserRegistManage {
 				handler1.postDelayed(runnable, 3000);//三秒执行一次runnable.
 				//{PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 				String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
-				console.log(isRegist);
+				GolukDebugUtils.e("",isRegist);
 				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
 				
-				console.log(b+"");
+				GolukDebugUtils.e("",b+"");
 				if(b){
 					//隐藏软件盘
 					UserUtils.hideSoftMethod(this);
@@ -206,14 +206,14 @@ public class UserRegistManage {
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
 		mEditTextPwd.setEnabled(true);
-		console.log("注册回调---registCallback---"+success+"---"+obj);
+		GolukDebugUtils.e("","注册回调---registCallback---"+success+"---"+obj);
 		mApplication.registStatus = 1;//注册中……
 		if(1 == success){
 			try{
 				String data = (String) obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				console.log(code+"");
+				GolukDebugUtils.e("",code+"");
 				
 				mLoading.setVisibility(View.GONE);
 				switch (code) {
@@ -222,7 +222,7 @@ public class UserRegistManage {
 					SysApplication.getInstance().exit();//杀死之前的所有activity，实现一键退出
 					console.toast("注册成功", mContext);
 					mApplication.registStatus = 2;//注册成功的状态
-					Log.i("registLogin", "-------"+mApplication.registStatus);
+					GolukDebugUtils.i("registLogin", "-------"+mApplication.registStatus);
 					//注册成功后再次调用登录的接口
 					registLogin();
 					Intent it = new Intent(UserRegistActivity.this,MainActivity.class);
@@ -269,7 +269,7 @@ public class UserRegistManage {
 				e.printStackTrace();
 			}
 		}else{
-			console.log("注册失败");
+			GolukDebugUtils.e("","注册失败");
 			mApp.registStatus = 3;//注册失败的状态
 		}
 	}*/

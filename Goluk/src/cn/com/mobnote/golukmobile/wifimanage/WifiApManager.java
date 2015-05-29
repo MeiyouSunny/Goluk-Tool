@@ -1,16 +1,14 @@
 package cn.com.mobnote.golukmobile.wifimanage;
-import java.lang.reflect.Field;  
-import java.lang.reflect.Method;  
-import java.util.HashMap;  
-import java.util.Map;  
-  
-import android.net.wifi.WifiConfiguration;  
-import android.net.wifi.WifiManager;  
-import android.os.Build; 
-import android.util.Log;
-
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.util.Log;
+import cn.com.tiros.debug.GolukDebugUtils;
  
 
 class WifiApManager {
@@ -113,7 +111,7 @@ WifiApManager(WifiManager manager) {
     if (!isSupport()) {  
         throw new RuntimeException("Unsupport Ap!");  
     }  
-    Log.i(tag, "Build.BRAND -----------> " + Build.BRAND);  
+    GolukDebugUtils.i(tag, "Build.BRAND -----------> " + Build.BRAND);  
       
     mWifiManager = manager;  
 }  
@@ -156,7 +154,7 @@ public boolean setWifiApConfiguration(WifiConfiguration netConfig) {
         Method method = methodMap.get(getSetWifiApConfigName());  
         Class<?>[] params = method.getParameterTypes();  
         for (Class<?> clazz : params) {  
-            Log.i(tag, "param -> " + clazz.getSimpleName());  
+            GolukDebugUtils.i(tag, "param -> " + clazz.getSimpleName());  
         }  
 
     

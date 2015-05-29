@@ -381,7 +381,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		 */
 		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
-			console.log(isIdentify);
+			GolukDebugUtils.e("",isIdentify);
 			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
 			if(b){
 				identifyClick = true;
@@ -389,7 +389,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				mCustomProgressDialogIdentify.show();
 				registerReceiver(smsReceiver, smsFilter);
 				click = 1;
-				console.log(b + "");
+				GolukDebugUtils.e("",b + "");
 				mBtnRegist.setEnabled(false);
 				mEditTextPhone.setEnabled(false);
 				mEditTextPwd.setEnabled(false);
@@ -409,7 +409,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	 * 验证码回调
 	 */
 	public void identifyCallback(int success,Object obj){
-		console.log("验证码获取回调---identifyCallBack---" + success + "---" + obj);
+		GolukDebugUtils.e("","验证码获取回调---identifyCallBack---" + success + "---" + obj);
 		closeProgressDialogIdentify();
 		//点击验证码按钮手机号、密码不可被修改
 		mEditTextPhone.setEnabled(true);
@@ -421,7 +421,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		if(1 == success){
 			try{
 				String data = (String)obj;
-				console.log(data);
+				GolukDebugUtils.e("",data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				freq = json.getString("freq");
@@ -530,7 +530,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					}else{
 					//{PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
-					console.log(isRegist);
+					GolukDebugUtils.e("",isRegist);
 					GolukDebugUtils.i("lily", "------UserRegistActivity---不点击获取验证码---111------"+freq);
 					if(identifyClick){
 						int freqInt = Integer.parseInt(freq);
@@ -578,7 +578,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	 */
 	public void registCallback(int success,Object outTime,Object obj){
 		int codeOut = (Integer) outTime;
-		console.log("注册回调---registCallback---"+success+"---"+obj);
+		GolukDebugUtils.e("","注册回调---registCallback---"+success+"---"+obj);
 		closeProgressDialog();
 		mEditTextPhone.setEnabled(true);
 		mEditTextIdentify.setEnabled(true);
@@ -592,7 +592,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String data = (String) obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				console.log(code+"");
+				GolukDebugUtils.e("",code+"");
 				
 				switch (code) {
 				case 200:
@@ -706,7 +706,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	 * 注册完成后自动调一次登录的接口，以存储用户信息
 	 */
 	public void registLogin(){
-		console.log("---------registLogin()----------");
+		GolukDebugUtils.e("","---------registLogin()----------");
 		String phone = mEditTextPhone.getText().toString();
 		String pwd = mEditTextPwd.getText().toString();
 		String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
@@ -722,7 +722,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	 * 登录的回调
 	 */
 	public void registLoginCallBack(int success,Object obj){
-		console.log("---------------registLoginCallBack()-------------------");
+		GolukDebugUtils.e("","---------------registLoginCallBack()-------------------");
 		mApplication.loginStatus=0;//登录中
 		if(1 == success){
 			try{

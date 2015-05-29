@@ -5,7 +5,7 @@ import java.util.TimerTask;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class TimerManager {
 
@@ -74,7 +74,7 @@ public class TimerManager {
 		mCount = time;
 		mCurrent = time;
 
-		Log.e("", "Timer-------time:" + time + "  countdown:" + countdown);
+		GolukDebugUtils.i("", "Timer-------time:" + time + "  countdown:" + countdown);
 
 		isRunning = true;
 		mRecordTimer = new Timer();

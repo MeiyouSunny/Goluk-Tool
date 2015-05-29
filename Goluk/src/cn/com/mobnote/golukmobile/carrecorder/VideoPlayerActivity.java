@@ -12,12 +12,6 @@ import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 
 import java.io.IOException;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.tiros.utils.LogUtil;
-import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
@@ -37,6 +31,11 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
   * 1.编辑器必须显示空白处
@@ -120,7 +119,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 			}
 		}
 
-		LogUtil.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl="+playUrl);
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl="+playUrl);
 		initView();
 		setListener();
 		
@@ -138,7 +137,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 								long curPosition = mMediaPlayer.getCurrentPosition();
 								long duration = mMediaPlayer.getDuration();
 								
-								LogUtil.e("xuhw", "TTT========duration=="+duration+"=====curPosition="+curPosition);
+								GolukDebugUtils.e("xuhw", "TTT========duration=="+duration+"=====curPosition="+curPosition);
 								mCurTime.setText(long2TimeStr(curPosition));
 								mTotalTime.setText(long2TimeStr(duration));
 								mSeekBar.setMax((int)duration);
@@ -449,7 +448,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		}
 		
 		long duration = mMediaPlayer.getDuration();
-		LogUtil.e("xuhw", "YYYY====onCompletion===duration="+duration);
+		GolukDebugUtils.e("xuhw", "YYYY====onCompletion===duration="+duration);
 		mCurTime.setText(long2TimeStr(0));
 		mTotalTime.setText(long2TimeStr(duration));
 		mSeekBar.setMax((int)duration);
@@ -473,9 +472,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		}
 		
 		error=true;
-		LogUtil.e("xuhw", "YYYY====onError====");
+		GolukDebugUtils.e("xuhw", "YYYY====onError====");
 		mHandler.removeMessages(GETPROGRESS);
-		LogUtil.e("xuhw", "TTT=============onError=");
+		GolukDebugUtils.e("xuhw", "TTT=============onError=");
 		hideLoading();
 		Toast.makeText(VideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
 		mCurTime.setText("00:00");
@@ -502,7 +501,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 
 	@Override
 	public void onPrepared(MediaPlayer arg0) {
-		LogUtil.e("xuhw", "TTT=============onPrepared=");
+		GolukDebugUtils.e("xuhw", "TTT=============onPrepared=");
 		mIsVideoReadyToBePlayed = true;
 		if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
 			startVideoPlayback();
@@ -511,7 +510,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 
 	@Override
 	public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
-		LogUtil.e("xuhw", "YYYY====onBufferingUpdate===arg1="+arg1);
+		GolukDebugUtils.e("xuhw", "YYYY====onBufferingUpdate===arg1="+arg1);
 	}
 
 	@Override

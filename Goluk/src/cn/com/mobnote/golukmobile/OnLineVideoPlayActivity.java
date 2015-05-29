@@ -2,28 +2,17 @@ package cn.com.mobnote.golukmobile;
 
 
 import java.util.ArrayList;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.util.console;
-import cn.com.mobnote.video.MVListAdapter;
-import cn.com.mobnote.video.MVManage;
-import cn.com.mobnote.video.MVManage.MVEditData;
-import cn.com.mobnote.video.VideCommentManage.VideoCommentData;
-import cn.com.mobnote.video.VideCommentListAdapter;
-import cn.com.mobnote.video.VideCommentManage;
-import cn.com.mobnote.view.MyGridView;
-import cn.com.mobnote.view.PullToRefreshView;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnPreparedListener;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -33,10 +22,18 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.LinearLayout.LayoutParams;
+import cn.com.mobnote.video.MVListAdapter;
+import cn.com.mobnote.video.MVManage;
+import cn.com.mobnote.video.MVManage.MVEditData;
+import cn.com.mobnote.video.VideCommentListAdapter;
+import cn.com.mobnote.video.VideCommentManage;
+import cn.com.mobnote.video.VideCommentManage.VideoCommentData;
+import cn.com.mobnote.view.MyGridView;
+import cn.com.mobnote.view.PullToRefreshView;
+import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -130,7 +127,7 @@ public class OnLineVideoPlayActivity extends BaseActivity implements SurfaceHold
 			player.stop();
 		}});
 		*/
-		console.log("onCreate");
+		GolukDebugUtils.e("","onCreate");
 	}
 	
 	/**
@@ -180,7 +177,7 @@ public class OnLineVideoPlayActivity extends BaseActivity implements SurfaceHold
 				int what = msg.what;
 				switch(what){
 					case 1:
-						console.log("mOnLineVideoPlayHandler---1");
+						GolukDebugUtils.e("","mOnLineVideoPlayHandler---1");
 						addVideoData();
 					break;
 				}
@@ -276,7 +273,7 @@ public class OnLineVideoPlayActivity extends BaseActivity implements SurfaceHold
 	 */
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
-		console.log("chxy_____surfaceCreated");
+		GolukDebugUtils.e("","chxy_____surfaceCreated");
 		mOnLineVideoPlayHandler.sendEmptyMessageDelayed(1,50);
 	}
 	
@@ -285,7 +282,7 @@ public class OnLineVideoPlayActivity extends BaseActivity implements SurfaceHold
 	 */
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		console.log("chxy_____surfaceDestroyed" );
+		GolukDebugUtils.e("","chxy_____surfaceDestroyed" );
 		if(mMedioPlayer.isPlaying()){
 			//position = mMedioPlayer.getCurrentPosition();
 			mMedioPlayer.stop();
@@ -294,7 +291,7 @@ public class OnLineVideoPlayActivity extends BaseActivity implements SurfaceHold
 
 	@Override
 	protected void onDestroy() {
-		console.log("chxy_____onDestroy" );
+		GolukDebugUtils.e("","chxy_____onDestroy" );
 		super.onDestroy();
 		//Activity销毁时停止播放，释放资源。不做这个操作，即使退出还是能听到视频播放的声音
 	}
@@ -306,13 +303,13 @@ public class OnLineVideoPlayActivity extends BaseActivity implements SurfaceHold
 	
 	@Override
 	protected void onStart(){
-		console.log("chxy_____onStart" );
+		GolukDebugUtils.e("","chxy_____onStart" );
 		super.onStart();
 	}
 	
 	@Override
 	protected void onStop() {
-		console.log("chxy_____onStop" );
+		GolukDebugUtils.e("","chxy_____onStop" );
 		super.onStop();
 	}
 	

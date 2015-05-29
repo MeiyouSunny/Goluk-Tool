@@ -1,13 +1,12 @@
 package cn.com.mobnote.video;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import cn.com.mobnote.util.console;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 
 /**
@@ -73,7 +72,7 @@ public class MusicManage {
 						if(fileSuffix.toLowerCase().equals(".mp3")){
 							//音频全路径
 							String path = mFilePath + "/" + fileName;
-							console.log("music---" + path);
+							GolukDebugUtils.e("","music---" + path);
 							//保存数据
 							MusicData data = new MusicData();
 							data.filePath = path;

@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.view.View;
 import android.widget.ImageView;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListViewAdapter.ViewHolder;
 
 public class VideoOnBufferingUpdateListener implements OnBufferingUpdateListener{

@@ -37,15 +37,7 @@ public class console {
 	private static final String fileName = "/chxy_";
 	private static final String filePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/" + APP_FOLDER;
 
-	
-	public static void log(String log){
-		//Log.i(TAG, log);
-	}
-	
-	public static void logBytag(String s1, String s2) {
-		//Log.i(s1, s2);
-	}
-	
+
 	public static void toast(String msg,Context mContext){
 		Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 	}

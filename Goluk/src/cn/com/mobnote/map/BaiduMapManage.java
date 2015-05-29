@@ -477,7 +477,7 @@ public class BaiduMapManage {
 				// 保存aid,跳转到
 				mCurrentAid = aid;
 
-				console.log("下载气泡图片---onMarkerClick---" + picUrl);
+				GolukDebugUtils.e("","下载气泡图片---onMarkerClick---" + picUrl);
 
 				if (mPageSource == "Main") {
 					((MainActivity) mContext).downloadBubbleImg(picUrl, aid);

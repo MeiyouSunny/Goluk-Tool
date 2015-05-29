@@ -25,7 +25,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
-import cn.com.tiros.utils.LogUtil;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
