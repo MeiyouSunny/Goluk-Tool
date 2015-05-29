@@ -35,6 +35,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
@@ -476,7 +477,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mHandler.removeMessages(GETPROGRESS);
 		GolukDebugUtils.e("xuhw", "TTT=============onError=");
 		hideLoading();
-		Toast.makeText(VideoPlayerActivity.this, "播放错误", Toast.LENGTH_LONG).show();
+		GolukUtils.showToast(this, "播放错误");
 		mCurTime.setText("00:00");
 		mTotalTime.setText("00:00");
 		return false;
