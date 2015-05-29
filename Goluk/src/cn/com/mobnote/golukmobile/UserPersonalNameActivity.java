@@ -1,13 +1,11 @@
 package cn.com.mobnote.golukmobile;
 
-import android.app.Activity;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -55,7 +53,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		if(null!=it.getStringExtra("intentNameText")){
 			Bundle bundle = it.getExtras();
 			nameText = bundle.getString("intentNameText");
-			Log.i("lily", "----------UserPersonalNameActivity---------name====="+nameText);
+			GolukDebugUtils.i("lily", "----------UserPersonalNameActivity---------name====="+nameText);
 		}
 		mEditName.setText(nameText);
 		
@@ -76,7 +74,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		//que认
 		case R.id.user_title_right:
 			String name = mEditName.getText().toString();
-			Log.i("lily", "------UserPersonalNameActivity--修改昵称------"+name);
+			GolukDebugUtils.i("lily", "------UserPersonalNameActivity--修改昵称------"+name);
 			Intent it = new Intent(UserPersonalNameActivity.this,UserPersonalEditActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putString("itName", name);

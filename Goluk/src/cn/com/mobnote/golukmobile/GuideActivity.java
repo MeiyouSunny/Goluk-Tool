@@ -22,7 +22,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,7 +34,7 @@ import cn.com.mobnote.guide.GolukGuideManage;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * <pre>
@@ -106,7 +105,7 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 			if(!isFirstLogin){
 				//登录过，跳转到地图首页进行自动登录
 				Intent it = new Intent(this,MainActivity.class);
-				Log.i("main", "======MainActivity==GuideActivity====");
+				GolukDebugUtils.i("lily", "======MainActivity==GuideActivity====");
 				startActivity(it);
 			}else{
 				//是第一次登录(没有登录过)

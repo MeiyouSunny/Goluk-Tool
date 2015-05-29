@@ -10,19 +10,16 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences.Editor;
-import android.os.Message;
 import android.view.KeyEvent;
-
-import com.umeng.socialize.utils.Log;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserStartActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 软件升级
@@ -32,7 +29,6 @@ import cn.com.mobnote.util.console;
 public class UpgradeManage {
 
 	private GolukApplication mApp = null;
-	private static final String TAG="lily";
 
 	public UpgradeManage(GolukApplication mApp) {
 		super();
@@ -48,7 +44,7 @@ public class UpgradeManage {
 			//没有网络
 		}else{
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_CheckUpgrade, "fs6:/version");
-			Log.i(TAG, "------upgradeGoluk()------"+b);
+			GolukDebugUtils.i("lily", "------upgradeGoluk()------"+b);
 			if(b){
 				//
 			}
@@ -66,13 +62,13 @@ public class UpgradeManage {
 			try {
 				String dataObj = (String) obj;
 				JSONObject json = new JSONObject(dataObj);
-				Log.i(TAG, "------upgradeGoluk---"+json);
+				GolukDebugUtils.i("lily", "------upgradeGoluk---"+json);
 				String data = json.getString("data");
 				JSONObject jsonData = new JSONObject(data);
 				String goluk = jsonData.getString("goluk");
-				Log.i(TAG, "-------goluk-----"+goluk);
+				GolukDebugUtils.i("lily", "-------goluk-----"+goluk);
 				if(goluk.equals("{}")){
-					Log.i(TAG, "------goluk为空，不用进行升级------");
+					GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
 				}else{
 					JSONObject jsonGoluk = new JSONObject(goluk);
 					String appcontent = jsonGoluk.getString("appcontent");
@@ -83,7 +79,7 @@ public class UpgradeManage {
 					String releasetime = jsonGoluk.getString("releasetime");
 					String url = jsonGoluk.getString("url");
 					String version = jsonGoluk.getString("version");
-					Log.i(TAG, "version="+version);
+					GolukDebugUtils.i("lily", "version="+version);
 					showUpgradeGoluk(mApp.getContext(),appcontent, url);
 				
 					SharedPreferences mPreferencesVersion = mApp.getContext().getSharedPreferences("version", Context.MODE_PRIVATE);
@@ -96,7 +92,7 @@ public class UpgradeManage {
 				e.printStackTrace();
 			}
 		}else{
-			android.util.Log.i(TAG, "-----网络链接超时---------"+codeOut);
+			GolukDebugUtils.i("lily", "-----网络链接超时---------"+codeOut);
 			switch (codeOut) {
 			case 1:
 				break;

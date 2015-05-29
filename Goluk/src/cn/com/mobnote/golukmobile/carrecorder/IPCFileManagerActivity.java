@@ -39,7 +39,6 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
@@ -47,6 +46,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomProgressDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.LogUtil;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
@@ -297,12 +297,12 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mWonderfulVideoList.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
-						LogUtils.d("fuckingAction===="+marvellousListTime);
+						GolukDebugUtils.e("xuhw", "fuckingAction===="+marvellousListTime);
 						if(mWonderfulVideoData.size() > 0 &&(mWonderfulVideoData.size()%pageCount) == 0){
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_SHORTCUT,marvellousListTime);//初始化
 						}
 //						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
-						System.out.println("TTTTT=====滑动到最后了222 最后时间"+marvellousListTime);
+						GolukDebugUtils.e("xuhw", "TTTTT=====滑动到最后了222 最后时间"+marvellousListTime);
 					}
 				}
 			}
@@ -517,7 +517,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_URGENT,emergencyListTime);//初始化
 						}
 //						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
-						System.out.println("TTTTT=====滑动到最后了222 最后时间"+emergencyListTime);
+						GolukDebugUtils.e("xuhw", "TTTTT=====滑动到最后了222 最后时间"+emergencyListTime);
 					}
 				}
 			}
@@ -664,7 +664,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_CIRCULATE,cycleListTime);//初始化
 						}
 //						Toast.makeText(IPCFileManagerActivity.this, "循环视频　滑动到最后了222", 1000).show();
-						System.out.println("TTTTT=====滑动到最后了222 endtime="+cycleListTime);
+						GolukDebugUtils.e("xuhw", "TTTTT=====滑动到最后了222 endtime="+cycleListTime);
 					}
 				}
 			}
@@ -861,7 +861,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 	@Override
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		screenX = arg1.getX();
-		System.out.println("QQQ===============screenX="+screenX);
+		GolukDebugUtils.e("xuhw", "QQQ===============screenX="+screenX);
 		return false;
 	}
 	
@@ -966,7 +966,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 				mEditBtn.setText("编辑");
 				mFunctionLayout.setVisibility(View.GONE);
 				for(String filename : selectedListData){
-					System.out.println("TTT======1111=filename="+filename);
+					GolukDebugUtils.e("xuhw", "TTT======1111=filename="+filename);
 					String videoSavePath="fs1:/video/";
 					if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
 						videoSavePath="fs1:/video/wonderful/";
@@ -1265,7 +1265,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 		} else {
 			 if(1 == mVideoFileInfo.withSnapshot){
 				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath), mVideoFileInfo.time);
-				 System.out.println("TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
+				 GolukDebugUtils.e("xuhw", "TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
 			 }
 		}
 		
@@ -1336,7 +1336,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 //				.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==========222222222222222222 =========");
 			//文件删除
 			}else if(IPC_VDCPCmd_Erase == msg){
-				System.out.println("QQQ==========param1="+param1+"===param2="+param2);
+				GolukDebugUtils.e("xuhw", "QQQ==========param1="+param1+"===param2="+param2);
 			}
 			break;
 		// IPC下载结果应答
@@ -1357,14 +1357,14 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 							String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 							String filename = json.optString("filename");
 							String tag = json.optString("tag");
-							System.out.println("TTT=======1111111==================tag="+tag);
+							GolukDebugUtils.e("xuhw", "TTT=======1111111==================tag="+tag);
 							if(tag.contains("IPC_IMAGE")){
 							if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){//精彩视频
 								if (null != mWonderfulVideoAdapter) {
 									for(int i=0; i<wonderfulVideoData.size(); i++){
 										DoubleVideoInfo info =  wonderfulVideoData.get(i);
 										String id1 = "IPC_IMAGE"+info.getVideoInfo1().id;
-										System.out.println("TTT=======222222==================id1="+id1);
+										GolukDebugUtils.e("xuhw", "TTT=======222222==================id1="+id1);
 										if (tag.equals(id1)) {
 											wonderfulVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
 													.getBitmapFromCache(filePath
@@ -1376,7 +1376,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 											String id2 = "IPC_IMAGE"+info.getVideoInfo2().id;
 											if(!TextUtils.isEmpty(id2)){
 												if(tag.equals(id2)){
-													System.out.println("TTT===wonderful=4444=====filename="+filename+"===tag="+tag);
+													GolukDebugUtils.e("xuhw", "TTT===wonderful=4444=====filename="+filename+"===tag="+tag);
 													wonderfulVideoData.get(i).getVideoInfo2().videoBitmap = ImageManager
 															.getBitmapFromCache(filePath
 																	+ File.separator
@@ -1395,7 +1395,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 										DoubleVideoInfo info =  emergencyVideoData.get(i);
 										String id1 = "IPC_IMAGE"+info.getVideoInfo1().id;
 										if (tag.equals(id1)) {
-											System.out.println("TTT==emergency==3333=====filename="+filename+"===tag="+tag);
+											GolukDebugUtils.e("xuhw", "TTT==emergency==3333=====filename="+filename+"===tag="+tag);
 											emergencyVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
 													.getBitmapFromCache(filePath
 															+ File.separator
@@ -1406,7 +1406,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 											String id2 = "IPC_IMAGE"+info.getVideoInfo2().id;
 											if(!TextUtils.isEmpty(id2)){
 												if(tag.equals(id2)){
-													System.out.println("TTT==emergency==4444=====filename="+filename+"===tag="+tag);
+													GolukDebugUtils.e("xuhw", "TTT==emergency==4444=====filename="+filename+"===tag="+tag);
 													emergencyVideoData.get(i).getVideoInfo2().videoBitmap = ImageManager
 															.getBitmapFromCache(filePath
 																	+ File.separator
@@ -1425,7 +1425,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 										DoubleVideoInfo info =  loopVideoData.get(i);
 										String id1 = "IPC_IMAGE"+info.getVideoInfo1().id;
 										if (tag.equals(id1)) {
-											System.out.println("TTT==loop==3333=====filename="+filename+"===tag="+tag);
+											GolukDebugUtils.e("xuhw", "TTT==loop==3333=====filename="+filename+"===tag="+tag);
 											loopVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
 													.getBitmapFromCache(filePath
 															+ File.separator
@@ -1436,7 +1436,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 											String id2 = "IPC_IMAGE"+info.getVideoInfo2().id;
 											if(!TextUtils.isEmpty(id2)){
 												if(tag.equals(id2)){
-													System.out.println("TTT===loop=4444=====filename="+filename+"===tag="+tag);
+													GolukDebugUtils.e("xuhw", "TTT===loop=4444=====filename="+filename+"===tag="+tag);
 													loopVideoData.get(i).getVideoInfo2().videoBitmap = ImageManager
 															.getBitmapFromCache(filePath
 																	+ File.separator
@@ -1451,7 +1451,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 								}
 							}
 							}else{
-								System.out.println("TTT======no filelist  file======filename="+filename);
+								GolukDebugUtils.e("xuhw", "TTT======no filelist  file======filename="+filename);
 							}
 							
 						}

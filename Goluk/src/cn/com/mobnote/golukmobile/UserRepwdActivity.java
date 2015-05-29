@@ -26,7 +26,6 @@ import android.os.Message;
 import android.telephony.SmsMessage;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,6 +39,7 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 重置密码
@@ -424,7 +424,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 					
 					mSharedPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 					final String just = mSharedPreferences.getString("toRepwd", "");
-					Log.i("illness", "======just====SharedPreferences===="+just);
+					GolukDebugUtils.i("lily", "======just====SharedPreferences===="+just);
 					
 					if(UserUtils.isMobileNO(phone)){
 						new AlertDialog.Builder(this)
@@ -494,7 +494,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 						console.log(isRegist);
 						if(identifyClick){
 							int freqInt = Integer.valueOf(freq);
-							Log.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
+							GolukDebugUtils.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
 							if(freqInt>3){
 								UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
 							}else{
@@ -585,7 +585,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 							}
 						}).create().show();
 					}else{
-						Log.i("lily", "------538行------");
 						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 					}
 					
@@ -606,7 +605,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 							console.toast("请先获取验证码", mContext);
 						}
 					}else{
-						Log.i("lily", "------564行-------");
 						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
 					}
 					break;
@@ -626,7 +624,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			}
 		}else{
 			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-			android.util.Log.i("outtime", "-----网络链接超时超时超时-------xxxx---"+codeOut);
+			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---"+codeOut);
 			console.toast("网络连接超时", mContext);
 			switch (codeOut) {
 			case 1:
@@ -717,7 +715,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 		String phone = mEditTextPhone.getText().toString();
 		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 		mEditor = mSharedPreferences.edit();
-		Log.i("lily", "phone=="+phone);
+		GolukDebugUtils.i("lily", "phone=="+phone);
 		mEditor.putString("setupPhone", phone);
 		mEditor.putBoolean("noPwd", true);
 		mEditor.commit();

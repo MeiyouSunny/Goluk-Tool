@@ -70,7 +70,6 @@ import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -258,7 +257,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		// 初始化连接与綁定状态
 		boolean b = this.isBindSucess();
-		Log.i("bind", "======bind====status===" + b);
+		GolukDebugUtils.i("lily","======bind====status===" + b);
 		if (this.isBindSucess()) {
 			startWifi();
 			// 启动创建热点
@@ -826,41 +825,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	/**
-	 * 登录回调
-	 * 
-	 * @param obj
-	 */
-	public void loginCallBack(int success, Object obj) {
-		GolukDebugUtils.e("", "登录回调---loginCallBack---" + success + "---" + obj);
-		if (1 == success) {
-			try {
-				String data = (String) obj;
-				Log.i("eee", data);
-				JSONObject json = new JSONObject(data);
-				// JSONObject userJson = json.getJSONObject("data");
-				int code = Integer.valueOf(json.getString("code"));
-				String msg = json.getString("msg");
-				switch (code) {
-				case 200:
-					// 登录成功跳转到个人中心页面
-					// Intent login = new
-					// Intent(MainActivity.this,UserCenterActivity.class);
-					// startActivity(login);
-					mLoginDialog.hide();
-					break;
-				/*
-				 * default: //登录失败 console.toast("登录失败:"+ msg + code, mContext);
-				 * break;
-				 */
-				}
-			} catch (Exception ex) {
-			}
-		} else {
-			// console.toast("登录失败", mContext);
-		}
-	}
-
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -1142,7 +1106,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void click_share() {
-		GolukDebugUtils.e("lily", "----------click------");
+		GolukDebugUtils.i("lily", "----------click------");
 		if (!mApp.isUserLoginSucess) {
 			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
@@ -1181,7 +1145,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private AlertDialog dialog = null;
 
 	private void click_toLocalVideoShare() {
-		Log.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess + "------autologinStatus-----"
+		GolukDebugUtils.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess + "------autologinStatus-----"
 				+ mApp.autoLoginStatus);
 		if (!mApp.isUserLoginSucess) {
 			// TODO 未登录成功

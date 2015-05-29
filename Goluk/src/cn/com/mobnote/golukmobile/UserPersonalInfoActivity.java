@@ -5,13 +5,12 @@ import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -135,7 +134,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				itEdit.putExtra("infoName", name);
 				itEdit.putExtra("infoSex", sex);
 				itEdit.putExtra("infoSign", sign);
-				Log.i("info", head+name+sex+sign);
+				GolukDebugUtils.i("lily", head+name+sex+sign);
 				startActivity(itEdit);
 //				this.finish();
 				break;
@@ -151,7 +150,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		try{
 			JSONObject json = new JSONObject(info);
 			
-			Log.i("info", "====json===="+json);
+			GolukDebugUtils.i("lily", "====json===="+json);
 			head = json.getString("head");
 			name = json.getString("nickname");
 			String id = json.getString("key");

@@ -5,11 +5,11 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 登录管理类
@@ -24,11 +24,6 @@ public class UserLoginManage {
 	private UserLoginInterface mLoginInterface = null;
 	
 	/**用户信息**/
-	private String head = null;
-	private String id = null;//key
-	private String name = null;//nickname
-	private String sex = null;
-	private String sign = null;//desc
 	private String phone = null;
 	/**输入密码错误限制*/
 	public int countErrorPassword = 1;
@@ -80,7 +75,7 @@ public class UserLoginManage {
 		if(1 == success){
 			try{
 				String data = (String)obj;
-				Log.i("test", data);
+				GolukDebugUtils.i("lily", data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				switch (code) {
@@ -127,7 +122,7 @@ public class UserLoginManage {
 		}
 		else{
 			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-			android.util.Log.i("outtime", "-----网络链接超时超时超时-------xxxx---"+codeOut);
+			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---"+codeOut);
 			switch (codeOut) {
 			case 1:
 				loginStatusChange(4);
@@ -147,8 +142,9 @@ public class UserLoginManage {
 	/**
 	 * 同步获取用户信息
 	 */
+	@SuppressWarnings("unused")
 	public void initData(){
-		Log.i("lily", "------initData()-----UserLoginManage-----");
+		GolukDebugUtils.i("lily", "------initData()-----UserLoginManage-----");
 		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
 		if (null == info) {
 			return;
@@ -156,17 +152,17 @@ public class UserLoginManage {
 		try{
 			JSONObject json = new JSONObject(info);
 			
-			Log.i("info", "====json()===="+json);
-			head = json.getString("head");
-			name = json.getString("nickname");
-			id = json.getString("key");
-			sex = json.getString("sex");
-			sign = json.getString("desc");
+			GolukDebugUtils.i("info", "====json()===="+json);
+			String head = json.getString("head");
+			String name = json.getString("nickname");
+			String id = json.getString("key");
+			String sex = json.getString("sex");
+			String sign = json.getString("desc");
 			phone = json.getString("phone");
 			//退出登录后，将信息存储
 			mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
 			mEditor = mSharedPreferences.edit();
-			Log.i("lily", "------UserLoginManage----"+phone);
+			GolukDebugUtils.i("lily", "------UserLoginManage----"+phone);
 			mEditor.putString("setupPhone", phone);
 			mEditor.putBoolean("noPwd", false);
 			mEditor.commit();

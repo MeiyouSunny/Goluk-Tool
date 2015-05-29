@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import io.vov.vitamio.utils.Log;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class UnbindActivity extends Activity implements OnClickListener{
 
@@ -33,7 +33,6 @@ public class UnbindActivity extends Activity implements OnClickListener{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.unbind_layout);
@@ -73,7 +72,7 @@ public class UnbindActivity extends Activity implements OnClickListener{
 		 * false  未绑定  显示未绑定UI
 		 */
 		boolean b = this.isBindSucess();
-		Log.e("bind", "====isBindSuccess===="+b);
+		GolukDebugUtils.e("bind", "====isBindSuccess===="+b);
 		if(b){
 			mHaveipcLayout.setVisibility(View.VISIBLE);
 			mNoipcLayout.setVisibility(View.GONE);

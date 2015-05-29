@@ -7,9 +7,9 @@ import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -150,7 +150,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 					isRecored = true;
 					isPush = true;
 					startY = (int) event.getY();
-					Log.v(TAG, "在down时候记录当前位置‘");
+					GolukDebugUtils.d(TAG, "在down时候记录当前位置‘");
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -162,14 +162,14 @@ public class RTPullListView extends ListView implements OnScrollListener {
 						state = DONE;
 						changeHeaderViewByState();
 
-						Log.v(TAG, "由下拉刷新状态，到done状态");
+						GolukDebugUtils.d(TAG, "由下拉刷新状态，到done状态");
 					}
 					if (state == RELEASE_To_REFRESH) {
 						state = REFRESHING;
 						changeHeaderViewByState();
 						onRefresh();
 
-						Log.v(TAG, "由松开刷新状态，到done状态");
+						GolukDebugUtils.d(TAG, "由松开刷新状态，到done状态");
 					}
 				}
 
@@ -182,7 +182,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 				int tempY = (int) event.getY();
 
 				if (!isRecored && firstItemIndex == 0) {
-					Log.v(TAG, "在move时候记录下位置");
+					GolukDebugUtils.d(TAG, "在move时候记录下位置");
 					isRecored = true;
 					startY = tempY;
 				}
@@ -202,14 +202,14 @@ public class RTPullListView extends ListView implements OnScrollListener {
 							state = PULL_To_REFRESH;
 							changeHeaderViewByState();
 
-							Log.v(TAG, "由松开刷新状态转变到下拉刷新状态");
+							GolukDebugUtils.d(TAG, "由松开刷新状态转变到下拉刷新状态");
 						}
 						// 一下子推到顶了
 						else if (tempY - startY <= 0) {
 							state = DONE;
 							changeHeaderViewByState();
 
-							Log.v(TAG, "由松开刷新状态转变到done状态");
+							GolukDebugUtils.d(TAG, "由松开刷新状态转变到done状态");
 						}
 						// 往下拉了，或者还没有上推到屏幕顶部掩盖head的地步
 						else {
@@ -226,14 +226,14 @@ public class RTPullListView extends ListView implements OnScrollListener {
 							state = RELEASE_To_REFRESH;
 							isBack = true;
 							changeHeaderViewByState();
-							Log.v(TAG, "由done或者下拉刷新状态转变到松开刷新");
+							GolukDebugUtils.d(TAG, "由done或者下拉刷新状态转变到松开刷新");
 						}
 						// 上推到顶了
 						else if (tempY - startY <= 0) {
 							state = DONE;
 							changeHeaderViewByState();
 							isPush = false;
-							Log.v(TAG, "由DOne或者下拉刷新状态转变到done状态");
+							GolukDebugUtils.d(TAG, "由DOne或者下拉刷新状态转变到done状态");
 						}
 					}
 
@@ -283,7 +283,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 			tipsTextview.setText(getResources().getString(R.string.release_to_refresh));
 
-			Log.v(TAG, "当前状态，松开刷新");
+			GolukDebugUtils.d(TAG, "当前状态，松开刷新");
 			break;
 		case PULL_To_REFRESH:
 			progressBar.setVisibility(View.GONE);
@@ -301,7 +301,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 			} else {
 				tipsTextview.setText(getResources().getString(R.string.pull_to_refresh));
 			}
-			Log.v(TAG, "当前状态，下拉刷新");
+			GolukDebugUtils.d(TAG, "当前状态，下拉刷新");
 			break;
 
 		case REFRESHING:
@@ -314,7 +314,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 			tipsTextview.setText(getResources().getString(R.string.refreshing));
 			lastUpdatedTextView.setVisibility(View.VISIBLE);
 
-			Log.v(TAG, "当前状态,正在刷新...");
+			GolukDebugUtils.d(TAG, "当前状态,正在刷新...");
 			break;
 		case DONE:
 			headView.setPadding(0, -1 * headContentHeight, 0, 0);
@@ -325,7 +325,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 			tipsTextview.setText(getResources().getString(R.string.pull_to_refresh));
 			lastUpdatedTextView.setVisibility(View.VISIBLE);
 
-			Log.v(TAG, "当前状态，done");
+			GolukDebugUtils.d(TAG, "当前状态，done");
 			break;
 		}
 	}

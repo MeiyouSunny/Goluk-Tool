@@ -5,19 +5,14 @@ import java.math.BigDecimal;
 
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.tiros.api.Const;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
 
 public class DataCleanManage {
 
 	public static String getTotalCacheSize(Context context) throws Exception {
 		long cacheSize = getFolderSize(Const.getAppContext().getCacheDir());
-		Log.i("lily", "===cacheDir====="+Const.getAppContext().getCacheDir());
-		/*if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			cacheSize += getFolderSize(Const.getAppContext().getCacheDir());
-		}*/
-		Log.i("lily", "===="+cacheSize);
+		GolukDebugUtils.i("lily", "===cacheDir====="+Const.getAppContext().getCacheDir()+"==cacheSize=="+cacheSize);
 		return getFormatSize(cacheSize);
 	}
 

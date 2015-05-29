@@ -29,7 +29,6 @@ public class VideoOnBufferingUpdateListener implements OnBufferingUpdateListener
 
 	@Override
 	public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
-		LogUtils.d("SSS=====onBufferingUpdate====arg1="+arg1+"======id="+mVideoSquareInfo.id);
 		mRingView.setProcess(arg1);
 		if(arg1 >= 100){
 			mRingView.setVisibility(View.GONE);
@@ -37,7 +36,6 @@ public class VideoOnBufferingUpdateListener implements OnBufferingUpdateListener
 			if(null !=player){
 				if(!player.isPlaying()){
 					updatePlayerState(PlayerState.bufferend);
-					LogUtils.d("SSS============onBufferingUpdate=========View.GONE=");
 				}else{
 					mPreLoading.setVisibility(View.GONE);
 				}

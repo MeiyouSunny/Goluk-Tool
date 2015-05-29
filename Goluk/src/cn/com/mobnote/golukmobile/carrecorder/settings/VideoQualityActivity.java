@@ -14,6 +14,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
   * 1.编辑器必须显示空白处
@@ -188,10 +189,10 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 			//获取IPC系统音视频编码配置
 			if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){
 				if(param1 == RESULE_SUCESS){
-					System.out.println("YYY================1111==================param2="+param2);
+					GolukDebugUtils.e("xuhw", "YYY================1111==================param2="+param2);
 					VideoConfigState mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
 					if(null != mVideoConfigState){
-						System.out.println("YYY================22222==============resolution====="+mVideoConfigState.resolution);
+						GolukDebugUtils.e("xuhw", "YYY================22222==============resolution====="+mVideoConfigState.resolution);
 						if("1080P".equals(mVideoConfigState.resolution)){
 							//bitrate数据返回的不对
 							if(8192 == mVideoConfigState.bitrate){
@@ -207,7 +208,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 							}
 						}
 					}else{
-						System.out.println("YYY================33333==============");
+						GolukDebugUtils.e("xuhw", "YYY================33333==============");
 					}
 					
 				}else{
@@ -219,7 +220,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 				if(param1 == RESULE_SUCESS){
 					GolukApplication.getInstance().setVideoConfigState(mVideoConfigState);
 				}
-				System.out.println("YYY================IPC_VDCP_Msg_SetVedioEncodeCfg=============param1="+param1);
+				GolukDebugUtils.e("xuhw", "YYY================IPC_VDCP_Msg_SetVedioEncodeCfg=============param1="+param1);
 			}
 		}
 	}
@@ -243,7 +244,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 						mVideoConfigState.bitrate=3072;
 					}
 					boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);
-					System.out.println("YYY==========curType=========flag="+flag);
+					GolukDebugUtils.e("xuhw", "YYY==========curType=========flag="+flag);
 				}
 			}
 		}).start();

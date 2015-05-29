@@ -63,7 +63,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			}
 		});
 		
-		LogUtils.d("YYYYYYYY=================111111111===================");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if(null != mVideoSquareManager){
 			mVideoSquareManager.addVideoSquareManagerListener("hotlist", this);
@@ -106,9 +105,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 				mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
 				mCustomProgressDialog.show();
 			}
-//			AlertDialog dialog = new AlertDialog.Builder(mContext).create();
-//			dialog.show();
-//			dialog.getWindow().setContentView(R.layout.video_square_loading);
 		}
 		
 		if(null != GolukApplication.getInstance().getVideoSquareManager()){
@@ -116,9 +112,8 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 			if(!result){
 				closeProgressDialog();
 			}
-			System.out.println("YYYY==22222==getHotList======result="+result);
 		}else{
-			System.out.println("YYYY==22222==getHotList======error=");
+			closeProgressDialog();
 		}
 	}
 	
@@ -133,8 +128,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-//				mRTPullListView.onRefreshComplete();
-				//Toast.makeText(mContext, "下拉刷新", Toast.LENGTH_SHORT).show();
 				httpPost(true);
 			}
 		});
@@ -182,7 +175,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	}
 	
 	public void onDestroy(){
-//		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("hotlist");
 		if(null != mVideoSquareListViewAdapter){
 			mVideoSquareListViewAdapter.onDestroy();
 		}
@@ -190,7 +182,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		for(VideoSquareInfo info : mDataList){
 			String url = info.mVideoEntity.picture;
 			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(url);
-//			LogUtil.e("xuhw", "YYYYYY==VideoSquareListView==onDestroy=url="+url);
 		}
 		
 		if (mCustomProgressDialog != null ){
@@ -201,7 +192,6 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-//		LogUtil.e("xuhw","YYYYYYY===hotlist===event="+event+"======msg="+msg+"===param2="+param2);
 		if(event == SquareCmd_Req_HotList){
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete();

@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.LogUtil;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
@@ -52,7 +53,7 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 		
 		String videoid = getIntent().getStringExtra("videoid");
 		String image = getIntent().getStringExtra("image");
-		LogUtil.e("xuhw", "YYYYYYY======CCPlayerPage=====image="+image);
+		GolukDebugUtils.d("xuhw", "YYYYYYY======CCPlayerPage=====image="+image);
 		mSurfaceView = (SurfaceView)findViewById(R.id.mSurfaceView);
 		mPreLoading = (ImageView)findViewById(R.id.mPreLoading);
 		mPlayBigBtn = (ImageView)findViewById(R.id.mPlayBigBtn);
@@ -135,7 +136,7 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 
 	@Override
 	public void onPrepared(MediaPlayer arg0) {
-		LogUtil.e("xuhw", "YYYYYYY========onPrepared===========");
+		GolukDebugUtils.e("xuhw", "YYYYYYY========onPrepared===========");
 		arg0.start();		
 	}
 
@@ -148,19 +149,19 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 //			mDWMediaPlayer.prepareAsync();
 //		}
 		
-		LogUtil.e("xuhw", "YYYYYYY========onCompletion===========");
+		GolukDebugUtils.e("xuhw", "YYYYYYY========onCompletion===========");
 	}
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
-		LogUtil.e("xuhw", "YYYYYYY========onError===========");
+		GolukDebugUtils.e("xuhw", "YYYYYYY========onError===========");
 		return false;
 	}
 
 	@Override
 	public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
 		// TODO Auto-generated method stub
-		LogUtil.e("xuhw", "YYYYYYY========onBufferingUpdate==========arg1="+arg1);
+		GolukDebugUtils.e("xuhw", "YYYYYYY========onBufferingUpdate==========arg1="+arg1);
 		if(arg1 >= 100){
 //			mPreLoading.setVisibility(View.GONE);
 			hideLoading();
@@ -182,7 +183,7 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 		mDWMediaPlayer.setDisplay(mSurfaceHolder);
 		mDWMediaPlayer.prepareAsync();
 		mHandler.sendEmptyMessage(1);
-		LogUtil.e("xuhw", "YYYYYYY========surfaceCreated===========");
+		GolukDebugUtils.e("xuhw", "YYYYYYY========surfaceCreated===========");
 	}
 
 	@Override
@@ -195,7 +196,7 @@ public class CCPlayerPage extends BaseActivity implements OnPreparedListener, On
 			}
 		}
 		
-		LogUtil.e("xuhw", "YYYYYYY========surfaceDestroyed===========");
+		GolukDebugUtils.e("xuhw", "YYYYYYY========surfaceDestroyed===========");
 	}
 
 	@Override

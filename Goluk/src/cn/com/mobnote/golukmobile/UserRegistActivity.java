@@ -20,7 +20,6 @@ import android.os.Message;
 import android.telephony.SmsMessage;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,6 +41,7 @@ import cn.com.mobnote.user.UserRegistInterface;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.console;
+import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * 注册 
  * 
@@ -131,7 +131,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		Intent itLoginPhone = getIntent();
 		if(null != itLoginPhone.getStringExtra("intentLogin")){
 			String number = itLoginPhone.getStringExtra("intentLogin").toString();
-			Log.i("user", number);
+			GolukDebugUtils.i("user", number);
 			mEditTextPhone.setText(number);
 			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 		}
@@ -425,7 +425,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				freq = json.getString("freq");
-				Log.i("lily", "------freq------"+freq);
+				GolukDebugUtils.i("lily", "------freq------"+freq);
 				switch (code) {
 				case 200:
 					console.toast("验证码已经发送，请查收短信", mContext);
@@ -531,10 +531,10 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					//{PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 					console.log(isRegist);
-					Log.i("lily", "------UserRegistActivity---不点击获取验证码---111------"+freq);
+					GolukDebugUtils.i("lily", "------UserRegistActivity---不点击获取验证码---111------"+freq);
 					if(identifyClick){
 						int freqInt = Integer.parseInt(freq);
-						Log.i("lily", "------UserRegistActivity---不点击获取验证码---------"+freq);
+						GolukDebugUtils.i("lily", "------UserRegistActivity---不点击获取验证码---------"+freq);
 						if(freqInt>3){
 							UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
 						}else{
@@ -615,7 +615,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					
 					Intent it = null;
 					if(registOk.equals("fromStart")){
-						Log.i("iiii", "========用户未注册2222======");
+						GolukDebugUtils.i("lily", "========用户未注册2222======");
 						it = new Intent(UserRegistActivity.this,MainActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -674,7 +674,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			}
 		}else{
 			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-			android.util.Log.i("outtime", "-----网络链接超时超时超时" + codeOut);
+			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时" + codeOut);
 			console.toast("网络连接超时", mContext);
 			switch (codeOut) {
 			case 1:
@@ -712,7 +712,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 		if(b){
-			Log.i("yyy", "=======UserRegistActivity====="+b);
+			GolukDebugUtils.i("lily", "=======UserRegistActivity====="+b);
 			//---------------------------登录成功的状态  1-------------------------
 			//登录成功跳转
 			mApplication.loginStatus=0;//登录中

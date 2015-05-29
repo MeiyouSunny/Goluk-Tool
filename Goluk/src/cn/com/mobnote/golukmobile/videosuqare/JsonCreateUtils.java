@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 1.编辑器必须显示空白处
@@ -67,7 +68,7 @@ public class JsonCreateUtils {
 				arr.put(attribute.get(i));
 			}
 			
-			LogUtils.d("SSS=====$$$$$$$$$$$$=========arr.toString()=="+arr.toString());
+			GolukDebugUtils.d("","SSS=====$$$$$$$$$$$$=========arr.toString()=="+arr.toString());
 			String attributestr = URLEncoder.encode(arr.toString(), "UTF-8");
 			obj.put("attribute", attributestr);
 

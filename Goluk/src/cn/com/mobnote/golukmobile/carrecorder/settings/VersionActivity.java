@@ -16,7 +16,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
   * 1.编辑器必须显示空白处
@@ -62,10 +62,10 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 		mVersion.setText("");
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCIdentity();
-			LogUtil.e("xuhw","YYYYYY=======getIPCIdentity============a="+a);
+			GolukDebugUtils.e("xuhw","YYYYYY=======getIPCIdentity============a="+a);
 			
 			boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
-			LogUtil.e("xuhw","YYYYYY=======getVersion============v="+v);
+			GolukDebugUtils.e("xuhw","YYYYYY=======getVersion============v="+v);
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		LogUtil.e("xuhw", "YYYYYY====IPC_VDCP_Msg_GetIdentity====msg="+msg+"===param1="+param1+"==param2="+param2);
+		GolukDebugUtils.e("xuhw", "YYYYYY====IPC_VDCP_Msg_GetIdentity====msg="+msg+"===param1="+param1+"==param2="+param2);
 		
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(msg == IPC_VDCP_Msg_GetIdentity){
