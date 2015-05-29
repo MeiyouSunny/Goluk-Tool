@@ -109,7 +109,7 @@ public class GolukUtils {
 	 * @author xuhw
 	 * @date 2015年5月29日
 	 */
-	public void showToast(Context context, String text){
+	public static void showToast(Context context, String text){
 		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 	}
 	
@@ -121,7 +121,7 @@ public class GolukUtils {
 	 * @author xuhw
 	 * @date 2015年5月29日
 	 */
-	public void showToast(Context context, String text, int duration){
+	public static void showToast(Context context, String text, int duration){
 		Toast.makeText(context, text, duration).show();
 	}
 	
