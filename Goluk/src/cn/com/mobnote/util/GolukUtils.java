@@ -1,10 +1,13 @@
 package cn.com.mobnote.util;
 
+import java.io.FileOutputStream;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.widget.Toast;
 
 public class GolukUtils {
 
@@ -97,6 +100,47 @@ public class GolukUtils {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	/**
+	 * 显示短提示
+	 * @param context
+	 * @param text 需要显示的文本信息
+	 * @author xuhw
+	 * @date 2015年5月29日
+	 */
+	public void showToast(Context context, String text){
+		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * 显示短提示
+	 * @param context 上下文
+	 * @param text 需要显示的文本信息
+	 * @param duration 信息显示持续时间
+	 * @author xuhw
+	 * @date 2015年5月29日
+	 */
+	public void showToast(Context context, String text, int duration){
+		Toast.makeText(context, text, duration).show();
+	}
+	
+	/**
+	 * 写文件
+	 * @param filename 文件绝对路径
+	 * @param msg 写入文件的信息
+	 * @param append ture:追加方式写入文件 flase:覆盖的方式写入文件
+	 * @author xuhw
+	 * @date 2015年5月29日
+	 */
+	public static void writeFile(String filename, String msg, boolean append){
+        try{
+        	FileOutputStream fos = new FileOutputStream(filename, append);
+        	fos.write(msg.getBytes());
+        	fos.close();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
 	}
 
 }
