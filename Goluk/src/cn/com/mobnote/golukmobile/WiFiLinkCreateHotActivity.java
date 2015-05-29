@@ -4,6 +4,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.os.Bundle;
@@ -182,9 +183,9 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
 
 			if (connectCount > 3) {
-				showToastMsg("綁定失败");
+				GolukUtils.showToast(this, "绑定失败");
 			} else {
-				showToastMsg("綁定失败, 重新连接 ");
+				GolukUtils.showToast(this, "绑定失败, 重新连接 ");
 				setIpcLinkPhoneHot();
 			}
 

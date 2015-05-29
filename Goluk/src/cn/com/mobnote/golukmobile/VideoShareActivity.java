@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
@@ -198,7 +199,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 				break;
 			case MSG_H_UPLOAD_SUCESS:
-				showToast("上传完成");
+				GolukUtils.showToast(VideoShareActivity.this, "上传完成");
 				GlobalWindow.getInstance().topWindowSucess("视频上传成功");
 				shareCanEnable();
 				break;
@@ -229,7 +230,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				if (isExit) {
 					return;
 				}
-				showToastMsg("重新上传...");
+				GolukUtils.showToast(VideoShareActivity.this, "重新上传...");
 				uploadShareVideo();
 				if (null == GlobalWindow.getInstance().getApplication()) {
 					GlobalWindow.getInstance().setApplication(mApp);
@@ -478,7 +479,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 					public void onClick(DialogInterface dialog, int which) {
 						uploadShareVideo();
 						dimissErrorDialog();
-						showToast("重新开始上传");
+						GolukUtils.showToast(VideoShareActivity.this,"重新开始上传");
 						if (null == GlobalWindow.getInstance().getApplication()) {
 							GlobalWindow.getInstance().setApplication(mApp);
 						}
@@ -501,9 +502,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		mErrorDialog.show();
 	}
 
-	private void showToast(String msg) {
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-	}
+	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -545,17 +544,6 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		mBackBtn.setOnClickListener(this);
 		mShareLayout.setOnClickListener(this);
 	}
-
-	/**
-	 * 上传要分享的视频 private void uploadShareVideo(){ //将本地视频地址,转成logic可读路径fs1://
-	 * if(!"".equals(mVideoPath) && null != mVideoPath){ String localPath =
-	 * FileUtils.javaToLibPath(mVideoPath); uploadVideoTime =
-	 * SystemClock.uptimeMillis(); boolean b =
-	 * mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-	 * IPageNotifyFn.PageType_UploadVideo,localPath); if(!b){
-	 * Toast.makeText(mContext,"调用视频上传接口失败",Toast.LENGTH_SHORT).show(); } else{
-	 * //显示全局上传进度条 //重置滤镜标识 //mMVListAdapter.setResChange(false); } } }
-	 */
 
 	/**
 	 * 调用CC接口上传视频
@@ -632,7 +620,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	public void videoShareCallBack(int success, String json) {
 		mPdsave.dismiss();
 		if (1 != success) {
-			Toast.makeText(VideoShareActivity.this, "获取视频分享地址失败", Toast.LENGTH_SHORT).show();
+			GolukUtils.showToast(VideoShareActivity.this, "获取视频分享地址失败");
 			return;
 		}
 		JSONObject obj;
@@ -641,7 +629,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			System.out.println("分享地址回调:" + json.toString());
 			boolean isSucess = obj.getBoolean("success");
 			if (!isSucess) {
-				Toast.makeText(VideoShareActivity.this, "获取视频分享地址失败", Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(VideoShareActivity.this, "获取视频分享地址失败");
 				return;
 			}
 
@@ -775,10 +763,10 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
 		if (null == mApp) {
-			showToast("mApp==NULL");
+			GolukUtils.showToast(VideoShareActivity.this,"mApp==NULL");
 		} else {
 			if (mApp.mGoluk == null) {
-				showToast("mApp.mGoluk == null");
+				GolukUtils.showToast(VideoShareActivity.this,"mApp.mGoluk == null");
 			}
 		}
 
@@ -806,7 +794,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				}
 			});
 		} else {
-			showToast("分享失败");
+			GolukUtils.showToast(VideoShareActivity.this,"分享失败");
 		}
 
 		GolukDebugUtils.e("", "chxy__b__VideoShareActivity share11" + b);
@@ -816,7 +804,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			Toast.makeText(VideoShareActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
+			GolukUtils.showToast(VideoShareActivity.this, "分享失败");
 			return;
 		}
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, mVideoVid);

@@ -61,6 +61,7 @@ import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.UserInterface;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LocalVideoListAdapter;
@@ -70,6 +71,7 @@ import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -687,7 +689,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			GolukDebugUtils.e("", "下载气泡图片完成downloadBubbleImageCallBack:" + imgJson);
 			mBaiduMapManage.bubbleImageDownload(imgJson);
 		} else {
-			Toast.makeText(mContext, "气泡图片下载失败", Toast.LENGTH_SHORT).show();
+			GolukUtils.showToast(mContext, "气泡图片下载失败");
 		}
 	}
 
@@ -937,7 +939,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mShareLayout.setVisibility(View.GONE);
 		} else {
 			if ((System.currentTimeMillis() - exitTime) > 2000) {
-				Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 				exitTime = System.currentTimeMillis();
 			} else {
 
@@ -1407,7 +1409,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			 Toast.makeText(this, "分享失败",Toast.LENGTH_SHORT).show();
+			 GolukUtils.showToast(this, "分享失败");
 			return;
 		}
 		System.out.println("shareid-----" + shareVideoId + "   channel-----" + channel);

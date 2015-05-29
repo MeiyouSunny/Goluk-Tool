@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.util.AssetsFileUtils;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.MVListAdapter;
 import cn.com.mobnote.video.MVManage;
@@ -280,8 +281,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public boolean onError(MediaPlayerControl mpc, int nErrorNo, String strErrInfo) {
 				// 视频播放出错
-				Toast.makeText(VideoEditActivity.this, "视频播放出错,errorNo: " + nErrorNo + ",info: " + strErrInfo,
-						Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(VideoEditActivity.this, "视频播放出错,errorNo: " + nErrorNo + ",info: " + strErrInfo);
 				return false;
 			}
 
@@ -303,7 +303,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 		} catch (FilterVideoEditorException e) {
 			e.printStackTrace();
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+			GolukUtils.showToast(this, e.getMessage());
 		}
 	}
 
@@ -383,24 +383,22 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 						try {
 							mVVPlayVideo.reload();
 						} catch (FilterVideoEditorException e) {
-							Toast.makeText(VideoEditActivity.this, "重加载视频失败，" + e.getMessage(), Toast.LENGTH_SHORT)
-									.show();
+							GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
 						}
 					}
 					
 					
-					Toast.makeText(VideoEditActivity.this,
-							"视频编辑保存使用时间：" + (SystemClock.uptimeMillis() - m_lUseTimeChecker) + "ms", Toast.LENGTH_SHORT)
-							.show();
+					GolukUtils.showToast(VideoEditActivity.this,
+							"视频编辑保存使用时间：" + (SystemClock.uptimeMillis() - m_lUseTimeChecker) + "ms");
 				}
 
 				@Override
 				public void onFilterVideoSaveError(int nErrorType, int nErrorNo, String strErrorInfo) {
-					Toast.makeText(VideoEditActivity.this, "保存视频失败，" + strErrorInfo, Toast.LENGTH_SHORT).show();
+					GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + strErrorInfo);
 				}
 			});
 		} catch (FilterVideoEditorException e) {
-			Toast.makeText(this, "保存视频失败，" + e.getMessage(), Toast.LENGTH_SHORT).show();
+			GolukUtils.showToast(this, "保存视频失败，" + e.getMessage());
 		}
 	}
 

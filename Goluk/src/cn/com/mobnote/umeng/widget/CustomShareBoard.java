@@ -19,6 +19,7 @@ import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
+import cn.com.mobnote.util.GolukUtils;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SnsPlatform;
@@ -108,7 +109,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				sharePlatform.setShareContent(shareurl+"&type=4", coverurl, describe,ttl);
 				performShare(SHARE_MEDIA.QQ);
 			} else {
-				Toast.makeText(mActivity, "你还没有安装QQ或版本太低", Toast.LENGTH_SHORT).show();
+				GolukUtils.showToast(mActivity, "你还没有安装QQ或版本太低"); 
 			}
 
 			break;
@@ -160,9 +161,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 						((VideoShareActivity) mActivity).shareSucessDeal(false, null);
 					}
 				}
-				// mCurrentShareType = null;
-				// Toast.makeText(mActivity,
-				// showText,Toast.LENGTH_SHORT).show();
 				dismiss();
 			}
 		});

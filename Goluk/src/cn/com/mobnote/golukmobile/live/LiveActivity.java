@@ -789,10 +789,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 	};
 
-	private void showToast(String msg) {
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-	}
-
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -962,11 +958,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 					}
 
 				} else {
-					showToast("无法获取我的位置信息");
+					GolukUtils.showToast(this, "无法获取我的位置信息");
 					GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head8888888888: ");
 				}
 			} else {
-				showToast("无法获取我的位置信息");
+				GolukUtils.showToast(this, "无法获取我的位置信息");
 			}
 			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----999999999999: ");
 			if (isShareLive) {
@@ -974,7 +970,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				return;
 			}
 			if (null == currentUserInfo) {
-				showToast("无法获取看直播人的经纬度");
+				GolukUtils.showToast(this,"无法获取看直播人的经纬度");
 				return;
 			}
 			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----AAAAAAAAAA  : "
@@ -1190,7 +1186,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	private void liveCallBackError(boolean isprompt) {
 		if (isprompt) {
-			Toast.makeText(this, "查看直播服务器返回数据异常", Toast.LENGTH_LONG).show();
+			GolukUtils.showToast(this, "查看直播服务器返回数据异常");
 		}
 	}
 
@@ -1363,9 +1359,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 				boolean isSucess = report("1", getCurrentVideoId(), reporttype);
 				if (isSucess) {
-					showToast("举报成功,我们稍后会进行处理");
+					GolukUtils.showToast(LiveActivity.this, "举报成功,我们稍后会进行处理");
 				} else {
-					showToast("举报失败!");
+					GolukUtils.showToast(LiveActivity.this, "举报失败!");
 				}
 				confirmation.dismiss();
 			}
@@ -1391,7 +1387,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		boolean isSucess = mVideoSquareManager.getShareUrl(vid, "1");
 		if (!isSucess) {
-			showToast("分享失败");
+			GolukUtils.showToast(this, "分享失败");
 		} else {
 			LiveDialogManager.getManagerInstance().showShareProgressDialog(this,
 					LiveDialogManager.DIALOG_TYPE_LIVE_SHARE, "提示", "正在请求分享地址");
@@ -1434,7 +1430,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// showToast("不能重复点赞");
 			return;
 		}
-		Toast.makeText(this, "点赞", Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, "点赞", Toast.LENGTH_LONG).show();
 		isAlreadClickOK = true;
 		mLiveOk.setBackgroundResource(R.drawable.live_icon_heart);
 		mCurrentOKCount++;
@@ -2137,7 +2133,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				mliveSettingWindow.close();
 			}
 			if (null == data) {
-				showToast("用户设置出错");
+				GolukUtils.showToast(this, "用户设置出错");
 				return;
 			}
 			mSettingData = (LiveSettingBean) data;
@@ -2627,7 +2623,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			showToast("分享失败");
+			GolukUtils.showToast(this, "分享失败");
 			return;
 		}
 
@@ -2650,7 +2646,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 销毁对话框
 			LiveDialogManager.getManagerInstance().dismissShareProgressDialog();
 			if (1 != msg) {
-				showToast("分享失败");
+				GolukUtils.showToast(this, "分享失败");
 				return;
 			}
 			try {

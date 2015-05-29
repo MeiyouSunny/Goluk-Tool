@@ -10,7 +10,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 
@@ -84,10 +83,6 @@ public class BaseActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 
-	}
-
-	public void showToastMsg(String msg) {
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
