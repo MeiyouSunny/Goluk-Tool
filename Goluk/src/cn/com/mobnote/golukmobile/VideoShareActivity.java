@@ -595,12 +595,12 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		// 隐藏loading布局
 		// mVideoLoadingLayout.setVisibility(View.GONE);
 		if (1 == success) {
-			console.toast("视频上传使用时间：" + (SystemClock.uptimeMillis() - uploadVideoTime) + "ms", mContext);
+			GolukUtils.showToast(mContext, "视频上传使用时间：" + (SystemClock.uptimeMillis() - uploadVideoTime) + "ms");
 			// 保存视频上传ID
 			mVideoVid = vid;
 			GolukDebugUtils.e("","视频上传返回id--VideoShareActivity-videoUploadCallBack---vid---" + vid);
 		} else {
-			console.toast("视频上传失败", mContext);
+			GolukUtils.showToast(mContext, "视频上传失败");
 		}
 	}
 

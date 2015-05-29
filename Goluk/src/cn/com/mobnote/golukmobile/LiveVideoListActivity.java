@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.LiveVideoListAdapter;
 import cn.com.mobnote.video.LiveVideoListManage;
@@ -192,7 +193,7 @@ public class LiveVideoListActivity extends Activity implements OnClickListener ,
 			}
 		}
 		else{
-			console.toast("直播图片下载失败", mContext);
+			GolukUtils.showToast(mContext, "直播图片下载失败");
 		}
 	}
 	

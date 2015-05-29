@@ -151,18 +151,18 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 					GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
 					boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 					if (!b) {
-						console.toast("调用设置IPC连接热点失败", mContext);
+						GolukUtils.showToast(mContext, "调用设置IPC连接热点失败");
 						mLoading.setVisibility(View.GONE);
 					}
 					GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
 				} else {
-					console.toast("WiFi热点密码长度必须大于等于8位", mContext);
+					GolukUtils.showToast(mContext, "WiFi热点密码长度必须大于等于8位");
 				}
 			} else {
-				console.toast("WiFi热点密码不能为空", mContext);
+				GolukUtils.showToast(mContext, "WiFi热点密码不能为空");
 			}
 		} else {
-			console.toast("WiFi热点名称不能为空", mContext);
+			GolukUtils.showToast(mContext, "WiFi热点名称不能为空");
 		}
 	}
 

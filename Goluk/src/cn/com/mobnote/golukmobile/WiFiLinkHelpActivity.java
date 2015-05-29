@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -92,7 +93,7 @@ public class WiFiLinkHelpActivity extends BaseActivity implements OnClickListene
 				finish();
 			break;
 			case R.id.more_btn:
-				console.toast("更多帮助", mContext);
+				GolukUtils.showToast(mContext, "更多帮助");
 			break;
 		}
 	}

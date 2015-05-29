@@ -5,6 +5,7 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
@@ -315,15 +316,15 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 							}
 						}
 					} catch (Exception e) {
-						console.toast("IPC连接热点返回信息不是数组", mContext);
+						GolukUtils.showToast(mContext, "IPC连接热点返回信息不是数组");
 					}
 					break;
 				default:
-					console.toast(message, mContext);
+					GolukUtils.showToast(mContext, message);
 					break;
 				}
 			} else {
-				console.toast(message, mContext);
+				GolukUtils.showToast(mContext, message);
 			}
 			break;
 		}

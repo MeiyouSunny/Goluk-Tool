@@ -35,23 +35,19 @@ public class console {
 	/** 日志文件路径 */
 	private static final String APP_FOLDER = "goluk";
 	private static final String fileName = "/chxy_";
-	private static final String filePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/" + APP_FOLDER;
+	private static final String filePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/"
+			+ APP_FOLDER;
 
-
-	public static void toast(String msg,Context mContext){
-		Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-	}
-	
 	@SuppressLint("SimpleDateFormat")
-	public static void print(String name,String msg) {
+	public static void print(String name, String msg) {
 		FileOutputStream outputStream = null;
-		try{
+		try {
 			File file = new File(filePath + fileName + name + ".txt");
-			if(!file.exists()){
+			if (!file.exists()) {
 				file.createNewFile();
 			}
-			outputStream = new FileOutputStream(file,true);
-			
+			outputStream = new FileOutputStream(file, true);
+
 			String timeFormat = "yyyy-MM-dd HH:mm:ss";
 			SimpleDateFormat df = new SimpleDateFormat(timeFormat);
 			String time = df.format(new Date());
@@ -59,14 +55,12 @@ public class console {
 			outputStream.write(info.getBytes());
 			outputStream.flush();
 			outputStream.close();
-		}
-		catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
-			try{
+			try {
 				outputStream.flush();
 				outputStream.close();
-			}
-			catch(Exception ex){
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}

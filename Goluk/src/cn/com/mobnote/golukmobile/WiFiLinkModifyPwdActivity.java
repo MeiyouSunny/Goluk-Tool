@@ -4,6 +4,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -126,7 +127,7 @@ public class WiFiLinkModifyPwdActivity extends BaseActivity implements OnClickLi
 			Intent hot = new Intent(WiFiLinkModifyPwdActivity.this, WiFiLinkCreateHotActivity.class);
 			startActivity(hot);
 		} else {
-			console.toast("密码至少需要8位", mContext);
+			GolukUtils.showToast(mContext, "密码至少需要8位");
 		}
 	}
 

@@ -416,7 +416,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		String mixAudioPath = addAssets(path);
 		GolukDebugUtils.e("", "music---setMixAudioFilePath---2---" + mixAudioPath);
 		if (TextUtils.isEmpty(mixAudioPath)) {
-			console.toast("不支持该" + (isSoundTrack ? "音乐！" : "录音！"), mContext);
+			GolukUtils.showToast(mContext, "不支持该" + (isSoundTrack ? "音乐！" : "录音！"));
 			return;
 		}
 
@@ -447,7 +447,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			 * info.getRecordEnd(),info.getFactor()); } videoPlaystate();
 			 */
 		} catch (Exception e) {
-			console.toast("添加" + (isSoundTrack ? "音乐！" : "配音！") + "失败，" + e.getMessage(), mContext);
+			GolukUtils.showToast(mContext, "添加" + (isSoundTrack ? "音乐！" : "配音！") + "失败，" + e.getMessage() );
 		}
 	}
 

@@ -25,6 +25,7 @@ import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.list.WiFiListAdapter;
 import cn.com.mobnote.list.WiFiListManage;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
@@ -299,7 +300,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 				startActivity(modifyPwd);
 			} else {
 				// 灰色按钮不能点击
-				console.toast("请先连接IPC-WIFI", mContext);
+				GolukUtils.showToast(mContext, "请先连接IPC-WIFI");
 			}
 			break;
 		}
@@ -324,7 +325,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		} else {
 			this.nextNotCan();
 			mState = STATE_NONE;
-			console.toast(message, mContext);
+			GolukUtils.showToast(mContext, message);
 		}
 	}
 
@@ -366,7 +367,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			callBack_IPCConnect(state, process, message, arrays);
 			break;
 		default:
-			console.toast(message, mContext);
+			GolukUtils.showToast(mContext, message);
 			break;
 		}
 	}

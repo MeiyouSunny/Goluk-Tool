@@ -17,6 +17,7 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.tiros.debug.GolukDebugUtils;
 /**
@@ -188,7 +189,7 @@ public class WiFiListAdapter extends BaseAdapter{
 						((WiFiLinkListActivity)mContext).connectWiFi(wifiName,mac,pwd);
 					}
 					else{
-						console.toast("请输入WiFi密码", mContext);
+						GolukUtils.showToast(mContext, "请输入WiFi密码");
 					}
 				}
 			});
@@ -220,7 +221,7 @@ public class WiFiListAdapter extends BaseAdapter{
 				}
 			}
 			else{
-				console.toast("已连接" + data.wifiName + "....", mContext);
+				GolukUtils.showToast(mContext, "已连接" + data.wifiName + "....");
 				//((WiFiLinkListActivity)mContext).sendLogicLinkIpc();
 			}
 //			((VideoEditMusicActivity)mContext).mMusicListAdapter.notifyDataSetChanged();

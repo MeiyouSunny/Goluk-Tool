@@ -27,6 +27,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.VideCommentListAdapter;
 import cn.com.mobnote.video.VideCommentManage;
@@ -263,7 +264,7 @@ public class LiveVideoPlayActivity extends BaseActivity implements OnClickListen
 			public boolean onPlayerError(RtmpPlayerView rpv, int arg1, int arg2,String arg3) {
 				//视频播放出错
 				GolukDebugUtils.e("","live---onPlayerError" + arg2 + "," + arg3);
-				console.toast("播放器出现错误...", mContext);
+				GolukUtils.showToast(mContext, "播放器出现错误...");
 				rpv.removeCallbacks(retryRunnable);
 				// FIXME:5秒后重连
 				rpv.postDelayed(retryRunnable, 5000);
