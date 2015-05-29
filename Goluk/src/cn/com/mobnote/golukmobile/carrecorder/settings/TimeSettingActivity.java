@@ -25,9 +25,9 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
-import cn.com.mobnote.golukmobile.carrecorder.util.LogUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
   * 1.编辑器必须显示空白处
@@ -103,7 +103,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 			@Override
 			public void run() {
 				boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
-				LogUtils.d("YYY========getIPCSystemTime=======a="+a);
+				GolukDebugUtils.e("xuhw", "YYY========getIPCSystemTime=======a="+a);
 			}
 		}).start();
 		
@@ -144,7 +144,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 							if(GolukApplication.getInstance().getIpcIsLogin()){
 								long time  = System.currentTimeMillis()/1000;
 								boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
-								System.out.println("YYY============setIPCSystemTime===============a="+a);
+								GolukDebugUtils.e("xuhw", "YYY============setIPCSystemTime===============a="+a);
 							}
 						}
 					}).start();
@@ -202,7 +202,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 			//获取IPC系统时间
 			if(msg == IPC_VDCP_Msg_GetTime){
 				if(param1 == RESULE_SUCESS){
-					LogUtils.d("YYY=====IPC_VDCP_Msg_GetTime=====param2="+param2);
+					GolukDebugUtils.e("xuhw", "YYY=====IPC_VDCP_Msg_GetTime=====param2="+param2);
 					getTimeing=true;
 					long time = IpcDataParser.parseIPCTime((String)param2)*1000;
 					Calendar calendar = Calendar.getInstance();  
@@ -224,13 +224,13 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 					}
 				}
 			}else if(msg == IPC_VDCP_Msg_SetTime){
-				LogUtils.d("YYY========IPC_VDCP_Msg_SetTime=======param1="+param1+"==param2="+param2);
+				GolukDebugUtils.e("xuhw", "YYY========IPC_VDCP_Msg_SetTime=======param1="+param1+"==param2="+param2);
 				if(param1 == RESULE_SUCESS){
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
 							boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
-							LogUtils.d("YYY========getIPCSystemTime=======a="+a);
+							GolukDebugUtils.e("xuhw", "YYY========getIPCSystemTime=======a="+a);
 						}
 					}).start();
 				}
@@ -264,12 +264,12 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 					date = sdf.parse(timestr);
 					time = date.getTime()/1000;
 				} catch (ParseException e) {
-					System.out.println("YYY====str to time fail======22222222222222==");  
+					GolukDebugUtils.e("xuhw", "YYY====str to time fail======22222222222222==");  
 				}
 			}
 			
 			
-			System.out.println("YYY=============time=="+time);
+			GolukDebugUtils.e("xuhw", "YYY=============time=="+time);
 			if(0 != time){
 			
 				final long times = time;
@@ -278,7 +278,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 					public void run() {
 						if(GolukApplication.getInstance().getIpcIsLogin()){
 							boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(times);
-							System.out.println("YYY============setIPCSystemTime===============a="+a);
+							GolukDebugUtils.e("xuhw", "YYY============setIPCSystemTime===============a="+a);
 						}
 					}
 				}).start();

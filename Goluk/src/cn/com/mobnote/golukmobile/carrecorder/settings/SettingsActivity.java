@@ -13,9 +13,8 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.utils.LogUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.View;
@@ -75,13 +74,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			getRecordState=true;
 			checkGetState();
 		}
-		LogUtil.e("xuhw", "YYYYYY=========getRecordState=========" + record);
+		GolukDebugUtils.e("xuhw", "YYYYYY=========getRecordState=========" + record);
 		boolean motionCfg = GolukApplication.getInstance().getIPCControlManager().getMotionCfg();
 		if(!motionCfg){
 			getMotionCfg=true;
 			checkGetState();
 		}
-		LogUtil.e("xuhw", "YYYYYY=========getMotionCfg========="+ motionCfg);
+		GolukDebugUtils.e("xuhw", "YYYYYY=========getMotionCfg========="+ motionCfg);
 		showLoading();
 	}
 	
@@ -160,10 +159,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					showLoading();
 					if(recordState){
 						boolean a = GolukApplication.getInstance().getIPCControlManager().stopRecord();
-						LogUtil.e("xuhw", "video===========stopRecord=============a="+a);
+						GolukDebugUtils.e("xuhw", "video===========stopRecord=============a="+a);
 					}else{
 						boolean b = GolukApplication.getInstance().getIPCControlManager().startRecord();
-						LogUtil.e("xuhw", "video===========startRecord=============b="+b);
+						GolukDebugUtils.e("xuhw", "video===========startRecord=============b="+b);
 					}
 					break;
 				case R.id.tcaf://停车安防
@@ -174,7 +173,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						enableSecurity = 1;
 					}
 					boolean c = GolukApplication.getInstance().getIPCControlManager().setMotionCfg(enableSecurity, snapInterval);
-					LogUtil.e("xuhw", "YYYYYY===========setMotionCfg==========a="+c);
+					GolukDebugUtils.e("xuhw", "YYYYYY===========setMotionCfg==========a="+c);
 					break;
 				case R.id.sylz://声音录制
 					showLoading();
@@ -182,11 +181,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						if(1 == mVideoConfigState.AudioEnabled){
 							mVideoConfigState.AudioEnabled=0;
 							boolean a = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
-							LogUtil.e("xuhw", "YYYYYY===========setAudioCfg=======close=======a="+a);
+							GolukDebugUtils.e("xuhw", "YYYYYY===========setAudioCfg=======close=======a="+a);
 						}else{
 							mVideoConfigState.AudioEnabled=1;
 							boolean a = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
-							LogUtil.e("xuhw", "YYYYYY===========setAudioCfg=======open=======a="+a);
+							GolukDebugUtils.e("xuhw", "YYYYYY===========setAudioCfg=======open=======a="+a);
 						}
 					}
 					break;
@@ -297,7 +296,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		LogUtil.e("jyf", "YYYYYYY----IPCManage_CallBack-----44444-----------event:" + event + " msg:" + msg+"==data:"+(String)param2);
+		GolukDebugUtils.e("jyf", "YYYYYYY----IPCManage_CallBack-----44444-----------event:" + event + " msg:" + msg+"==data:"+(String)param2);
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
 			if(msg == IPC_VDCP_Msg_GetRecordState){//获取IPC行车影像录制状态
 				getRecordState=true;
