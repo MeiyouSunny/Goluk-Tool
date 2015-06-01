@@ -28,6 +28,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class UpgradeManage {
 
 	private GolukApplication mApp = null;
+	private SharedPreferences mPreferences = null;
+	private Editor mEditor = null;
 
 	public UpgradeManage(GolukApplication mApp) {
 		super();
@@ -67,7 +69,19 @@ public class UpgradeManage {
 				String goluk = jsonData.getString("goluk");
 				GolukDebugUtils.i("lily", "-------goluk-----"+goluk);
 				if(goluk.equals("{}")){
-					GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
+					mPreferences = mApp.getContext().getSharedPreferences("setupUpdate", Context.MODE_PRIVATE);
+					boolean flag = mPreferences.getBoolean("update", false);
+					if(flag){
+						//设置页版本检测需要提示
+						GolukUtils.showToast(mApp.getContext(), "当前已是最新版本");
+						mPreferences = mApp.getContext().getSharedPreferences("setupUpdate", Context.MODE_PRIVATE);
+						mEditor = mPreferences.edit();
+						mEditor.putBoolean("update", false);
+						mEditor.commit();
+					}else{
+						//启动APP进行升级时不需要提示
+						GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
+					}
 				}else{
 					JSONObject jsonGoluk = new JSONObject(goluk);
 					String appcontent = jsonGoluk.getString("appcontent");
@@ -79,7 +93,12 @@ public class UpgradeManage {
 					String url = jsonGoluk.getString("url");
 					String version = jsonGoluk.getString("version");
 					GolukDebugUtils.i("lily", "version="+version);
-					showUpgradeGoluk(mApp.getContext(),appcontent, url);
+					//0非强制升级   1强制升级
+					if(isupdate.equals("1")){
+						showUpgradeGoluk(mApp.getContext(),appcontent, url);
+					}else if(isupdate.equals("0")){
+						showUpgradeGoluk2(mApp.getContext(), appcontent, url);
+					}
 				
 					SharedPreferences mPreferencesVersion = mApp.getContext().getSharedPreferences("version", Context.MODE_PRIVATE);
 					Editor mEditor = mPreferencesVersion.edit();
@@ -108,7 +127,7 @@ public class UpgradeManage {
 	
 	
 	/**
-	 * 升级提示
+	 * 强制升级提示
 	 * @param mContext
 	 * @param message1
 	 * @param message2
@@ -118,6 +137,55 @@ public class UpgradeManage {
 		AlertDialog dialog = mBuilder.setTitle("发现新版本")
 				.setMessage(message)
 				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						//浏览器打开url
+						GolukUtils.openUrl(url, mContext);
+						
+						if(GolukApplication.mMainActivity != null){
+							GolukApplication.mMainActivity.finish();
+							GolukApplication.mMainActivity = null;
+						}
+						SysApplication.getInstance().exit();
+						
+						mApp.mIPCControlManager.setIPCWifiState(false, "");
+			    		mApp.mGoluk.GolukLogicDestroy();
+			    		if (null != UserStartActivity.mHandler) {
+			    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+			    		}
+			    		int PID = android.os.Process.myPid();
+			    		android.os.Process.killProcess(PID);
+			            System.exit(0);
+			            
+					}
+				})
+				.setCancelable(false)
+				.setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							return true;
+						}
+						return false;
+					}
+				})
+				.create();
+		dialog.show();
+	}
+	
+	/**
+	 * 非强制升级提示
+	 * @param mContext
+	 * @param message1
+	 * @param message2
+	 */
+	public void showUpgradeGoluk2(final Context mContext,String message, final String url){
+		Builder mBuilder = new AlertDialog.Builder(mContext);
+		AlertDialog dialog = mBuilder.setTitle("发现新版本")
+				.setMessage(message)
+				.setPositiveButton("稍后再说", null)
+				.setNegativeButton("马上升级", new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {

@@ -222,7 +222,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		mNoDownLoadFileList = new ArrayList<String>();
 		
 		//版本升级
+		GolukDebugUtils.i("fuck", "-------调用升级接口-----");
 		mUpgrade.upgradeGoluk();
+		GolukDebugUtils.i("fuck", "-------调用完成-----");
 	}
 
 	/**

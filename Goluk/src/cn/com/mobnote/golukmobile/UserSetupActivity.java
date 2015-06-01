@@ -85,10 +85,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	/**清除缓存**/
 	private RelativeLayout mClearCache = null;
 	public static Handler mHandler = null;
-	/**固件升级*/
-//	private RelativeLayout mUpdateItem = null;
 	/**解除绑定**/
 	private RelativeLayout mUnbindItem = null;
+	/**版本检测**/
+	private RelativeLayout mAppUpdate = null;
+	/**固件升级*/
+//	private RelativeLayout mUpdateItem = null;
 	/**传输文件*/
 	private AlertDialog mSendDialog = null;
 	/**传输文件成功**/
@@ -137,6 +139,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mUnbindItem = (RelativeLayout) findViewById(R.id.unbind_item);
 		//版本号
 		mTextVersionCode = (TextView) findViewById(R.id.user_setup_versioncode);
+		//版本检测
+		mAppUpdate = (RelativeLayout) findViewById(R.id.app_update_item);
 		
 		final String verName = GolukUtils.getVersion(this);
 		
@@ -294,6 +298,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mClearCache.setOnClickListener(this);
 		/**解除绑定**/
 		mUnbindItem.setOnClickListener(this);
+		/**版本检测**/
+		mAppUpdate.setOnClickListener(this);
 		/**固件升级*/
 //		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
 //		mUpdateItem.setOnClickListener(this);
@@ -369,6 +375,21 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			case R.id.unbind_item:
 				Intent itUnbind = new Intent(UserSetupActivity.this,UnbindActivity.class);
 				startActivity(itUnbind);
+				break;
+			//版本检测
+			case R.id.app_update_item:
+				GolukDebugUtils.i("lily", "---------点击了版本检测------");
+				/**
+				 * 1、判断是否需要升级————设置页有“当前已是最新版本提示”
+				 * 2、判断是否是强制升级
+				 */
+				//点击设置页中版本检测无最新版本提示标识
+				mPreferences = getSharedPreferences("setupUpdate", Context.MODE_PRIVATE);
+				mEditor = mPreferences.edit();
+				mEditor.putBoolean("update", true);
+				mEditor.commit();
+				//APP升级
+				mApp.mUpgrade.upgradeGoluk();
 				break;
 				//固件升级
 			/*case R.id.update_item:
