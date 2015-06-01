@@ -6,7 +6,6 @@ import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -78,6 +77,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private String mIpcMac = "";
 	private String mWiFiIp = "";
 
+	private boolean isExit = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -93,6 +94,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mWac = new WifiConnectManager(wm, this);
 		// 页面初始化
 		init();
+		// 延时创建手机热点
 		mBaseHandler.sendEmptyMessageDelayed(100, 3 * 1000);
 	}
 
@@ -117,11 +119,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mLinkAnim = (AnimationDrawable) mLinkImage.getBackground();
 		mLinkAnim.start();
 		mCompleteBtn = (Button) findViewById(R.id.complete_btn);
-
 		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		mCompleteBtn.setOnClickListener(this);
-
 		mCreateHotText.setText(Html.fromHtml("手机正在<font color=\"#0587ff\">创建WiFi</font>个人热点...."));
 	}
 
@@ -129,22 +129,18 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	 * 创建手机热点
 	 */
 	private void createPhoneHot() {
-
 		String wifiName = WiFiInfo.GolukSSID;
 		String pwd = WiFiInfo.GolukPWD;
 		String ipcssid = WiFiInfo.AP_SSID;
 		String ipcmac = WiFiInfo.AP_MAC;
-
 		// 创建热点之前先断开ipc连接
 		mApp.mIPCControlManager.setIPCWifiState(false, null);
 		// 改变Application-IPC退出登录
 		mApp.setIpcLoginOut();
-
 		// 调用韩峥接口创建手机热点
-		GolukDebugUtils.e("", "创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
-
+		GolukDebugUtils
+				.e("", "创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
 		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
-
 	}
 
 	/**
@@ -153,13 +149,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private void hotWiFiCreateSuccess() {
 		mLinkedLayout.setVisibility(View.GONE);
 		mCreateHotText.setText(Html.fromHtml("等待Goluk<font color=\"#0587ff\">连接</font>到手机...."));
-
 		// 停止动画
 		mLinkAnim.stop();
-
 		// 更换背景图片
 		mLinkImage.setBackgroundResource(R.drawable.connect_gif_line);
-
 	}
 
 	/**
@@ -168,15 +161,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private void sendLogicLinkIpc(String ip, String ipcmac) {
 		// 连接ipc热点wifi---调用ipc接口
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
-		mApp.mIpcIp = ip;
+		GolukApplication.mIpcIp = ip;
 		mIpcMac = ipcmac;
 		mWiFiIp = ip;
-
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
-
-	boolean isExit = false;
 
 	/**
 	 * 退出页面设置
@@ -194,7 +184,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			if (null != mWac) {
 				mWac.closeWifiAP();
 			}
-
 			// 返回关闭全部页面
 			SysApplication.getInstance().exit();
 		}
@@ -259,7 +248,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	protected void onDestroy() {
 		super.onDestroy();
 		GolukDebugUtils.e("", "通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
-		// mApp.mIPCControlManager.setIPCWifiState(false,null);
 	}
 
 	@Override
@@ -295,8 +283,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		GolukDebugUtils.e("", "wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---"
-				+ message + "---arrays---" + arrays);
+		GolukDebugUtils.e("", "wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process
+				+ "---message---" + message + "---arrays---" + arrays);
 		switch (type) {
 		case 3:
 			if (state == 0) {

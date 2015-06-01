@@ -26,7 +26,6 @@ import cn.com.mobnote.list.WiFiListAdapter;
 import cn.com.mobnote.list.WiFiListManage;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
@@ -116,10 +115,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		// 页面初始化
 		init();
 		mLoading.setVisibility(View.VISIBLE);
-		// getWiFiList(true);
 		mBaseHandler.sendEmptyMessageDelayed(100, 1000);
 	}
-
+	
+	@Override
 	protected void hMessage(Message msg) {
 		if (100 == msg.what) {
 			getWiFiList(true, true);
@@ -275,11 +274,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
@@ -371,5 +365,4 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			break;
 		}
 	}
-
 }

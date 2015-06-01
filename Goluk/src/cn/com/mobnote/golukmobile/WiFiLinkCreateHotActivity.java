@@ -5,7 +5,6 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -65,18 +64,18 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 	/** loading */
 	private RelativeLayout mLoading = null;
 
+	private int connectCount = 0;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_create_hot);
 		mContext = this;
-
 		SysApplication.getInstance().addActivity(this);
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, "WiFiLinkCreateHot");
-
 		// 页面初始化
 		init();
 	}
@@ -95,11 +94,9 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 		mPhoneWiFiImage = (ImageView) findViewById(R.id.imageView2);
 		mPhoneWiFiAnim = (AnimationDrawable) mPhoneWiFiImage.getBackground();
 		mNextBtn = (Button) findViewById(R.id.next_btn);
-
 		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
-
 		// 启动动画
 		mPhoneWiFiAnim.start();
 		mDescTitleText.setText(Html.fromHtml("3.修改与<font color=\"#0587ff\">Goluk 相连手机</font>的 WiFi 热点信息"));
@@ -111,62 +108,71 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 		}
 	}
 
+	private boolean checkValid(String wifiName, String pwd) {
+		if (null == wifiName || "".equals(wifiName)) {
+			GolukUtils.showToast(mContext, "WiFi热点名称不能为空");
+			return false;
+		}
+
+		if (null == pwd || "".equals(pwd)) {
+			GolukUtils.showToast(mContext, "WiFi热点密码不能为空");
+			return false;
+		}
+		if (pwd.length() < 8) {
+			GolukUtils.showToast(mContext, "WiFi热点密码长度必须大于等于8位");
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * 设置ipc连接手机热点
 	 */
 	private void setIpcLinkPhoneHot() {
 		connectCount++;
 		// 获取wifi名字
-		String wifiName = mWiFiName.getText().toString().trim();
-		if (null != wifiName && !"".equals(wifiName)) {
-			// 获取pwd
-			String pwd = mWiFiPwd.getText().toString().trim();
-			if (null != pwd && !"".equals(pwd)) {
-				if (pwd.length() > 7) {
-					// 显示loading
-					mLoading.setVisibility(View.VISIBLE);
+		final String wifiName = mWiFiName.getText().toString().trim();
+		// 获取pwd
+		final String pwd = mWiFiPwd.getText().toString().trim();
 
-					// 保存wifi账户密码
-					WiFiInfo.GolukSSID = wifiName;
-					WiFiInfo.GolukPWD = pwd;
-
-					// String golukMac = WiFiInfo.GolukMAC.toString();
-					// 写死ip,网关
-					String ip = "192.168.1.103";// golukMac.substring(0,
-												// golukMac.lastIndexOf(".")) +
-												// ".103";
-					String way = "192.168.1.103";// WiFiInfo.GolukMAC;
-					// 连接ipc热点wifi---调用ipc接口
-					GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
-					String appwd = WiFiInfo.AP_PWD;
-					String json = "";
-					if (null != appwd && !"".equals(appwd)) {
-						json = "{\"AP_SSID\":\"" + WiFiInfo.AP_SSID + "\",\"AP_PWD\":\"" + WiFiInfo.AP_PWD
-								+ "\",\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\""
-								+ ip + "\",\"GolukGateway\":\"" + way + "\" }";
-					} else {
-						json = "{\"GolukSSID\":\"" + wifiName + "\",\"GolukPWD\":\"" + pwd + "\",\"GolukIP\":\"" + ip
-								+ "\",\"GolukGateway\":\"" + way + "\" }";
-					}
-					GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
-					boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
-					if (!b) {
-						GolukUtils.showToast(mContext, "调用设置IPC连接热点失败");
-						mLoading.setVisibility(View.GONE);
-					}
-					GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
-				} else {
-					GolukUtils.showToast(mContext, "WiFi热点密码长度必须大于等于8位");
-				}
-			} else {
-				GolukUtils.showToast(mContext, "WiFi热点密码不能为空");
-			}
-		} else {
-			GolukUtils.showToast(mContext, "WiFi热点名称不能为空");
+		if (!checkValid(wifiName, pwd)) {
+			return;
 		}
+		// 显示loading
+		mLoading.setVisibility(View.VISIBLE);
+		// 保存将要设置的手机wifi热点的账户密码
+		WiFiInfo.GolukSSID = wifiName;
+		WiFiInfo.GolukPWD = pwd;
+		// 连接ipc热点wifi---调用ipc接口
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
+		final String json = getSetIPCJson();
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
+		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
+		if (!b) {
+			GolukUtils.showToast(mContext, "调用设置IPC连接热点失败");
+			mLoading.setVisibility(View.GONE);
+		}
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
 	}
 
-	private int connectCount = 0;
+	private String getSetIPCJson() {
+		// 写死ip,网关
+		final String ip = "192.168.1.103";
+		final String way = "192.168.1.103";
+		// 连接ipc热点wifi---调用ipc接口
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
+		String json = "";
+		if (null != WiFiInfo.AP_PWD && !"".equals(WiFiInfo.AP_PWD)) {
+			json = "{\"AP_SSID\":\"" + WiFiInfo.AP_SSID + "\",\"AP_PWD\":\"" + WiFiInfo.AP_PWD + "\",\"GolukSSID\":\""
+					+ WiFiInfo.GolukSSID + "\",\"GolukPWD\":\"" + WiFiInfo.GolukPWD + "\",\"GolukIP\":\"" + ip
+					+ "\",\"GolukGateway\":\"" + way + "\" }";
+		} else {
+			json = "{\"GolukSSID\":\"" + WiFiInfo.GolukSSID + "\",\"GolukPWD\":\"" + WiFiInfo.GolukPWD
+					+ "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
+		}
+		return json;
+	}
 
 	/**
 	 * 设置热点信息成功回调
@@ -177,20 +183,17 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 			mLoading.setVisibility(View.GONE);
 			Intent complete = new Intent(WiFiLinkCreateHotActivity.this, WiFiLinkCompleteActivity.class);
 			startActivity(complete);
-
-			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
+			GolukDebugUtils.e("",
+					"WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
 		} else {
 			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
-
 			if (connectCount > 3) {
 				GolukUtils.showToast(this, "绑定失败");
 			} else {
 				GolukUtils.showToast(this, "绑定失败, 重新连接 ");
 				setIpcLinkPhoneHot();
 			}
-
 		}
-
 	}
 
 	@Override

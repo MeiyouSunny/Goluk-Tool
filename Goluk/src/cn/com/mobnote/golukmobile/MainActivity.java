@@ -734,7 +734,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			click_ConnFailed();
 			break;
 		case WIFI_STATE_CONNING:
-
 			break;
 		case WIFI_STATE_SUCCESS:
 			GolukApplication.getInstance().stopDownloadList();
@@ -1236,7 +1235,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			msg.obj = address;
 			CarRecorderActivity.mHandler.sendMessage(msg);
 		}
-
 	}
 
 	@Override
