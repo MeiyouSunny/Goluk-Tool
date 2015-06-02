@@ -98,6 +98,17 @@
 				android:background="@drawable/show_local_video_icon_share"
 				android:contentDescription="@string/imgdes"/>
 		</RelativeLayout>
+		
+		<ImageView 
+		    android:id="@+id/mNew1"
+		    android:visibility="gone"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentTop="true"    
+		    android:layout_width="17.33dp"
+			android:layout_height="17.33dp"
+			android:background="@drawable/share_tag_new"	
+		    />
+		
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -194,6 +205,17 @@
 				android:background="@drawable/show_local_video_icon_share"
 				android:contentDescription="@string/imgdes"/>
 		</RelativeLayout>
+		
+		<ImageView 
+		    android:id="@+id/mNew2"
+			android:visibility="gone"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentTop="true"    
+		    android:layout_width="17.33dp"
+			android:layout_height="17.33dp"
+			android:background="@drawable/share_tag_new"	
+		    />
+		
 	</RelativeLayout>
 </RelativeLayout>
 
