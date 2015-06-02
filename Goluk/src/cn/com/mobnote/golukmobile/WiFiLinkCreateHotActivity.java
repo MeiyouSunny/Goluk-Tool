@@ -135,7 +135,6 @@ public class WiFiLinkCreateHotActivity extends BaseActivity implements OnClickLi
 		final String wifiName = mWiFiName.getText().toString().trim();
 		// 获取pwd
 		final String pwd = mWiFiPwd.getText().toString().trim();
-
 		if (!checkValid(wifiName, pwd)) {
 			return;
 		}
