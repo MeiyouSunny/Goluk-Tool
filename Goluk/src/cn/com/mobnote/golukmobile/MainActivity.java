@@ -45,6 +45,7 @@ import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -203,6 +204,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private ImageView squareDefault;
 	
 	SharePlatformUtil sharePlatform;
+	
+	private ImageView mHotPoint = null;
+	private ImageView mHotBigPoint = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -307,6 +311,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
 		squareDefault = (ImageView) findViewById(R.id.square_default);
+		
+		mHotPoint = (ImageView)findViewById(R.id.mHotPoint);
+		mHotBigPoint = (ImageView)findViewById(R.id.mHotBigPoint);
 
 		mShareLiveBtn.setOnClickListener(this);
 		indexLookBtn.setOnClickListener(this);
@@ -321,7 +328,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		msquareBtn.setOnClickListener(this);
 		mLocalVideoListBtn.setOnClickListener(this);
 		findViewById(R.id.share_mylive_btn).setOnClickListener(this);
-
+		
+		boolean hotPointState = SettingUtils.getInstance().getBoolean("HotPointState", false);
+		updateHotPointState(hotPointState);
+		
 		// 更新UI handler
 		mMainHandler = new Handler() {
 			@Override
@@ -530,6 +540,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
 				time = time > oldtime ? time : oldtime;
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
+				updateHotPointState(true);
+				
 				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime=" + time);
 			}
 		} catch (JSONException e) {
@@ -734,7 +746,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			click_ConnFailed();
 			break;
 		case WIFI_STATE_CONNING:
-
 			break;
 		case WIFI_STATE_SUCCESS:
 			GolukApplication.getInstance().stopDownloadList();
@@ -1070,11 +1081,30 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			return;
 		}
 
+		
 		// 跳转到本地视频分享列表
 		Intent localVideoShareList = new Intent(MainActivity.this, LocalVideoShareListActivity.class);
 		startActivity(localVideoShareList);
+		updateHotPointState(false);
 		// 关闭视频分享
 		mShareLayout.setVisibility(View.GONE);
+	}
+	
+	/**
+	 * 重置红点显示状态
+	 * @param isShow true:显示　false:隐藏
+	 * @author xuhw
+	 * @date 2015年6月2日
+	 */
+	private void updateHotPointState(boolean isShow){
+		SettingUtils.getInstance().putBoolean("HotPointState", isShow);
+		if(isShow){
+			mHotPoint.setVisibility(View.VISIBLE);
+			mHotBigPoint.setVisibility(View.VISIBLE);
+		}else{
+			mHotPoint.setVisibility(View.GONE);
+			mHotBigPoint.setVisibility(View.GONE);
+		}
 	}
 
 	/**
@@ -1236,7 +1266,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			msg.obj = address;
 			CarRecorderActivity.mHandler.sendMessage(msg);
 		}
-
 	}
 
 	@Override

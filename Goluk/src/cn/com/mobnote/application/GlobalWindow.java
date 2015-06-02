@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GlobalWindow {
