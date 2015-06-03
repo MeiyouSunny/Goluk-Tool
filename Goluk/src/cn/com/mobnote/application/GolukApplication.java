@@ -62,7 +62,6 @@ import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;

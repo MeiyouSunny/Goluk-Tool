@@ -1,4 +1,5 @@
 package cn.com.mobnote.entity;
+
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -20,13 +21,12 @@ package cn.com.mobnote.entity;
  * 
  */
 public class WiFiInfo {
-	/** 连接的Wifi的用户名与密码(手机连接其它Wifi)*/
+	/** 连接的Wifi的用户名与密码(手机连接IPC Wifi的信息, 在Wifi列表中的名称) */
 	public static String AP_SSID;
 	public static String AP_PWD;
 	public static String AP_MAC;
-	
-	/**手机热点的信息 (IPC连接到手机的wifi信息)*/
+
+	/** 手机热点的信息 (创建手机Wifi热点使用) */
 	public static String GolukSSID;
 	public static String GolukPWD;
-	public static String GolukMAC;
 }

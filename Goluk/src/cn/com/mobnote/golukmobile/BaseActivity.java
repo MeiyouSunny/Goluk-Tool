@@ -35,6 +35,10 @@ import cn.com.mobnote.application.GolukApplication;
  * @author xuhw
  */
 public class BaseActivity extends Activity {
+	/** IPC默认要修改的密码 */
+	public static final String IPC_PWD_DEFAULT = "123456789";
+	/** 手机创建热点默认密码 */
+	public static final String MOBILE_HOT_PWD_DEFAULT = "123456789";
 
 	public Handler mBaseHandler = new Handler() {
 

@@ -5,7 +5,6 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
@@ -48,68 +47,63 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 	private TextView mDescTitleText = null;
 	/** 继续按钮 */
 	private Button mKeepBtn = null;
-	/** 更多帮助 */
-	//private TextView mMoreHelpText = null;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_index);
 		mContext = this;
-		
+
 		SysApplication.getInstance().addActivity(this);
-		//获得GolukApplication对象
-		mApp = (GolukApplication)getApplication();
-		mApp.setContext(mContext,"WiFiLinkIndex");
-		//断开连接
-		mApp.mIPCControlManager.setIPCWifiState(false,null);
-		//改变Application-IPC退出登录
+		// 获得GolukApplication对象
+		mApp = (GolukApplication) getApplication();
+		mApp.setContext(mContext, "WiFiLinkIndex");
+		// 断开连接
+		mApp.mIPCControlManager.setIPCWifiState(false, null);
+		// 改变Application-IPC退出登录
 		mApp.setIpcLoginOut();
-		//页面初始化
+		// 页面初始化
 		init();
 	}
-	
+
 	/**
 	 * 页面初始化
 	 */
 	@SuppressLint("HandlerLeak")
-	private void init(){
-		//获取页面元素
-		mBackBtn = (ImageButton)findViewById(R.id.back_btn);
-		mDescTitleText = (TextView)findViewById(R.id.textView1);
-		mKeepBtn = (Button)findViewById(R.id.keep_btn);
-		//mMoreHelpText = (TextView) findViewById(R.id.more_help_text);
-		//注册事件
+	private void init() {
+		// 获取页面元素
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+		mDescTitleText = (TextView) findViewById(R.id.textView1);
+		mKeepBtn = (Button) findViewById(R.id.keep_btn);
+		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		mKeepBtn.setOnClickListener(this);
-		//mMoreHelpText.setOnClickListener(this);
-		
-		//修改title说明文字颜色
-		mDescTitleText.setText(Html.fromHtml("请让<font color=\"#0587ff\">Goluk</font>与<font color=\"#0587ff\">手机</font>连接"));
+		// 修改title说明文字颜色
+		mDescTitleText.setText(Html
+				.fromHtml("请让<font color=\"#0587ff\">Goluk</font>与<font color=\"#0587ff\">手机</font>连接"));
 	}
-	
-	
+
 	@Override
-	protected void onResume(){
-		mApp.setContext(this,"WiFiLinkIndex");
+	protected void onResume() {
+		mApp.setContext(this, "WiFiLinkIndex");
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		switch(id){
-			case R.id.back_btn:
-				//返回
-				finish();
+		switch (id) {
+		case R.id.back_btn:
+			// 返回
+			finish();
 			break;
-			case R.id.keep_btn:
-				//新版需求,直接跳转到wifi列表页面
-				Intent list = new Intent(WiFiLinkIndexActivity.this,WiFiLinkListActivity.class);
-				startActivity(list);
+		case R.id.keep_btn:
+			// 新版需求,直接跳转到wifi列表页面
+			Intent list = new Intent(WiFiLinkIndexActivity.this, WiFiLinkListActivity.class);
+			startActivity(list);
 			break;
 		}
 	}
-	
+
 }

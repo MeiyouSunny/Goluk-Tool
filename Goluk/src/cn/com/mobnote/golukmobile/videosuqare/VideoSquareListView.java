@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
@@ -12,6 +11,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
@@ -183,6 +183,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
 		if(event == SquareCmd_Req_HotList){
+//			GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete();
 			if(RESULE_SUCESS == msg){

@@ -95,7 +95,7 @@ public class GolukGuideManage {
 	/**
 	 * 获取本地缓存在线视频列表
 	 * @return
-	 */
+	 */	
 	@SuppressLint("InflateParams")
 	public void getLocalOnLineVideoList(){
 		mListViews = new ArrayList<View>();
@@ -127,8 +127,8 @@ public class GolukGuideManage {
 			view.setLayoutParams(params);
 			
 			mListViews.add(view);
-//			ImageView img = (ImageView)view.findViewById(R.id.guide_img);
-//			img.setBackgroundResource(imgId[i]);
+			ImageView img = (ImageView)view.findViewById(R.id.guide_img);
+			img.setBackgroundResource(imgId[i]);
 			
 			//添加圆点图标
 			addImageCursor();

@@ -38,14 +38,13 @@
 			android:drawableTop="@drawable/share_icon2_btn"
 			android:background="#00000000"
 			android:textSize="12sp"
-			android:textColor="#63625e"
-			android:text="@string/share_live_text"/>
+			android:textColor="#63625e"/>
 	</RelativeLayout>
 	
 	<RelativeLayout
 		android:id="@+id/share_local_video_layout"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="114dp"
+		android:layout_height="114dp"
 		android:layout_marginBottom="50dp"
 		android:layout_above="@id/share_mylive_layout"
 		android:layout_centerHorizontal="true">
@@ -57,8 +56,15 @@
 			android:drawableTop="@drawable/share_icon1_btn"
 			android:background="#00000000"
 			android:textSize="12sp"
-			android:textColor="#63625e"
-			android:text="@string/share_local_video_text"/>
+			android:textColor="#63625e"/>
+		
+		<ImageView 
+      	   	android:id="@+id/mHotBigPoint"
+      	   	android:layout_width="14dp"
+            android:layout_height="14dp"     
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+      	    android:background="@drawable/home_red_point_big"/>
 	</RelativeLayout>
 </RelativeLayout>
 

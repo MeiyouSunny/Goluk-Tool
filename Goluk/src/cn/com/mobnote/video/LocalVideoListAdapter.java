@@ -115,6 +115,8 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 			holder.mVideoCreateTime2 = (TextView)convertView.findViewById(R.id.video_createtime2);
 			holder.mVideoSize1 = (TextView)convertView.findViewById(R.id.video_size1);
 			holder.mVideoSize2 = (TextView)convertView.findViewById(R.id.video_size2);
+			holder.mNew1 = (ImageView)convertView.findViewById(R.id.mNew1);
+			holder.mNew2 = (ImageView)convertView.findViewById(R.id.mNew2);
 			
 			int width = (int)(screenWidth-24*density)/2;
 			int height = (int)((float)width/1.77f);
@@ -131,24 +133,39 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
+		LocalVideoData mVideoInfo1 = mDataList.get(position).getVideoInfo1();
+		LocalVideoData mVideoInfo2 = mDataList.get(position).getVideoInfo2();
 		List<String> selectedData = null;
-		if(mPageSource.equals("LocalVideoList")){
+		if(mPageSource.equals("LocalVideoList")) {
 			LocalVideoListActivity a = (LocalVideoListActivity)mContext;
 			selectedData = a.getSelectedListData();
 			if(a.getIsEditState()){
 				holder.mTMLayout1.setVisibility(View.GONE);
 				holder.mTMLayout2.setVisibility(View.GONE);
 			}
+			
 		}
 		else{
 			LocalVideoShareListActivity a = (LocalVideoShareListActivity)mContext;
 			selectedData = a.getSelectedListData();
 		}
+
+		if(mVideoInfo1.isNew){
+			holder.mNew1.setVisibility(View.VISIBLE);
+		}else{
+			holder.mNew1.setVisibility(View.GONE);
+		}
+		
+		if(null != mVideoInfo2){
+			if(mVideoInfo2.isNew){
+				holder.mNew2.setVisibility(View.VISIBLE);
+			}else{
+				holder.mNew2.setVisibility(View.GONE);
+			}
+		}
 		
 		
 		holder.mVideoLayout2.setVisibility(View.GONE);
-		LocalVideoData mVideoInfo1 = mDataList.get(position).getVideoInfo1();
-		LocalVideoData mVideoInfo2 = mDataList.get(position).getVideoInfo2();
 		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
 		holder.mTMLayout2.setTag("");
 		if(selectedData.contains(mVideoInfo1.videoPath)){
@@ -248,6 +265,8 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 		TextView mVideoCreateTime2;
 		TextView mVideoSize1;
 		TextView mVideoSize2;
+		ImageView mNew1;
+		ImageView mNew2;
 	}
 	
 	public int getCount() {

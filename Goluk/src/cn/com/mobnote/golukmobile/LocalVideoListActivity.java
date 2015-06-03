@@ -35,6 +35,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.video.LocalVideoListAdapter;
@@ -557,14 +558,30 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 						}
 					}
 					else{
+						DoubleVideoData d = mDoubleWonderfulVideoData.get(arg2);
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							//点击列表左边项,跳转到视频播放页面
 							gotoVideoPlayPage(tag1);
+							String filename = d.getVideoInfo1().filename;
+							updateNewState(filename, mLocalWonderfulVideoListManage.mLocalVideoListData);
+							
+							mDoubleWonderfulVideoData.get(arg2).getVideoInfo1().isNew = false;
+							mLocalWonderfulVideoListManage.mDoubleLocalVideoListData.get(arg2).getVideoInfo1().isNew = false;
+							mWonderfulVideoAdapter.notifyDataSetChanged();
 						}
 						else{
 							//点击列表右边项,跳转到视频播放页面
 							gotoVideoPlayPage(tag2);
+							LocalVideoData info2 = d.getVideoInfo2();
+							if(null == info2)
+								return;
+							String filename = info2.filename;
+							updateNewState(filename, mLocalWonderfulVideoListManage.mLocalVideoListData);
+							
+							mDoubleWonderfulVideoData.get(arg2).getVideoInfo2().isNew = false;
+							mLocalWonderfulVideoListManage.mDoubleLocalVideoListData.get(arg2).getVideoInfo2().isNew = false;
+							mWonderfulVideoAdapter.notifyDataSetChanged();
 						}
 					}
 				}
@@ -572,6 +589,16 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		});
 	}
 	
+	private void updateNewState(String filename, ArrayList<LocalVideoData> mLocalVideoListData){
+		SettingUtils.getInstance().putBoolean(filename, false);
+		for (int i=0; i < mLocalVideoListData.size(); i++) {
+			LocalVideoData info = mLocalVideoListData.get(i);
+			if (info.filename.equals(filename)) {
+				mLocalVideoListData.get(i).isNew = false;
+				break;
+			}
+		}
+	}
 	
 	/**
 	 * 初始化紧急视频列表
@@ -639,14 +666,32 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 							selectedVideoItem(tag2,mTMLayout2);
 						}
 					}else{
+						DoubleVideoData d = mDoubleEmergencyVideoData.get(arg2);
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							//点击列表左边项,跳转到视频播放页面
 							gotoVideoPlayPage(tag1);
+							
+							String filename = d.getVideoInfo1().filename;
+							updateNewState(filename, mLocalEmergencyVideoListManage.mLocalVideoListData);
+							
+							mDoubleEmergencyVideoData.get(arg2).getVideoInfo1().isNew = false;
+							mLocalEmergencyVideoListManage.mDoubleLocalVideoListData.get(arg2).getVideoInfo1().isNew = false;
+							mEmergencyVideoAdapter.notifyDataSetChanged();
 						}
 						else{
 							//点击列表右边项,跳转到视频播放页面
 							gotoVideoPlayPage(tag2);
+							
+							LocalVideoData info2 = d.getVideoInfo2();
+							if(null == info2)
+								return;
+							String filename = d.getVideoInfo2().filename;
+							updateNewState(filename, mLocalEmergencyVideoListManage.mLocalVideoListData);
+							
+							mDoubleEmergencyVideoData.get(arg2).getVideoInfo1().isNew = false;
+							mLocalEmergencyVideoListManage.mDoubleLocalVideoListData.get(arg2).getVideoInfo1().isNew = false;
+							mEmergencyVideoAdapter.notifyDataSetChanged();
 						}
 					}
 				}

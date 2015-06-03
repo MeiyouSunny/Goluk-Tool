@@ -35,6 +35,7 @@ import cn.com.mobnote.golukmobile.LocalVideoShareListActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -368,6 +369,8 @@ public class LocalVideoListManage {
 					//时间显示需求
 					data.videoCreateDate = time;
 					data.videoPath = videoPath;
+					data.filename = fileName;
+					data.isNew = SettingUtils.getInstance().getBoolean(fileName, true);
 					
 					//判断缓存有没有下载图片
 					String imgName = fileName.substring(0, fileName.length() - 4) + ".jpg";
@@ -1345,6 +1348,7 @@ public class LocalVideoListManage {
 		public boolean isNew = false;
 		/** 传输中 */
 		public boolean isUpload = false;
+		public String filename;
 	}
 	
 	public class DoubleVideoData {

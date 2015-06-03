@@ -5,7 +5,6 @@ import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.console;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.content.Context;
