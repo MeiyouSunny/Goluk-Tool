@@ -434,9 +434,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	 * @param vid
 	 *            ,视频ID
 	 */
-	public void localVideoUpLoadCallBack(int success, String vid) {
+	public void localVideoUpLoadCallBack(int success, Object param1, Object param2) {
 		if (mPageSource == "VideoShare") {
-			((VideoShareActivity) mContext).videoUploadCallBack(success, vid);
+			((VideoShareActivity) mContext).videoUploadCallBack(success, param1, param2);
 		}
 	}
 
@@ -654,10 +654,6 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 		GolukDebugUtils.e("","chxy send pageNotifyCallBack--" + "type:" + type
 				+ ",success:" + success + ",param1:" + param1 + ",param2:"
 				+ param2);
-		// null{"code":"200","json":[{"vid":"test11","vurl":"http://cdn3.lbs8.com/files/cdcvideo/test11.mp4","purl":"http://img2.3lian.com/img2007/18/18/003.png","desc":"陈真暴揍小日本","comment":"215","ilike":"123"},{"vid":"test12","vurl":"http://cdn3.lbs8.com/files/cdcvideo/test12.mp4","purl":"http://img.cool80.com/i/png/217/02.png","desc":"轮椅女孩环游世界","comment":"17","ilike":"111"},{"vid":"test13","vurl":"http://cdn3.lbs8.com/files/cdcvideo/test13.mp4","purl":"http://img2.3lian.com/img2007/14/03/20080405141042281.png","desc":"万年不毕业小学生，每次出现引发各种血案","comment":"207","ilike":"90"}]}
-		// null{'vid':'test11','path':'fs1:/Cache/test11.png'}
-		// null{'vid':'test12','path':'fs1:/Cache/test12.png'}
-		// null{'vid':'test13','path':'fs1:/Cache/test13.png'}
 		switch (type) {
 		case 0:
 			if (success == 1) {
@@ -665,9 +661,9 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 				onLineVideoCallBack((Integer) param1, param2);
 			}
 			break;
-		case 1:
+		case PageType_UploadVideo:
 			// 本地视频编辑页面,点击下一步,在上传页面上传本地视频回调
-			localVideoUpLoadCallBack(success, String.valueOf(param2));
+			localVideoUpLoadCallBack(success, param1, param2);
 			break;
 		case 2:
 			// 本地视频分享链接请求回调
