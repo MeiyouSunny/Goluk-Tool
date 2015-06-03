@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
@@ -34,11 +36,11 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	/** Application实例,用于调用JNI的对象 */
 	private GolukApplication mApplication = null;
 	/** IPC回调监听列表 */
-	private HashMap<String, VideoSuqareManagerFn> mVideoSquareManagerListener = null;
+	private ConcurrentHashMap<String, VideoSuqareManagerFn> mVideoSquareManagerListener = null;
 
 	public VideoSquareManager(GolukApplication application) {
 		mApplication = application;
-		mVideoSquareManagerListener = new HashMap<String, VideoSuqareManagerFn>();
+		mVideoSquareManagerListener = new ConcurrentHashMap<String, VideoSuqareManagerFn>();
 		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_Square, this);
 	}
 

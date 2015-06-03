@@ -23,9 +23,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -37,7 +35,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
@@ -47,14 +44,8 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.bokecc.sdk.mobile.exception.DreamwinException;
-import com.bokecc.sdk.mobile.upload.UploadListener;
-import com.bokecc.sdk.mobile.upload.Uploader;
-import com.bokecc.sdk.mobile.upload.VideoInfo;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.sso.UMSsoHandler;
@@ -106,11 +97,6 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	private final int MSG_H_UPLOAD_SUCESS = 3;
 	/** 上传视频失败 */
 	private final int MSG_H_UPLOAD_ERROR = 4;
-	/** 取消上传 */
-	private final int MSG_H_UPLOAD_CANCEL = 5;
-
-	private final int MSG_H_START_UPLOAD = 6;
-
 	private final int MSG_H_COUNT = 7;
 	/** 重新上传 */
 	private final int MSG_H_RETRY_UPLOAD = 8;
@@ -136,180 +122,104 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	private String mVideoVid = "";
 	/** 视频路径 */
 	private String mVideoPath = "";
-	/** 上传视频时间记录 */
-	private long uploadVideoTime = 0;
-
-	/** cc视频上传对象 */
-	private VideoInfo mVideoinfo = null;
-	private Uploader mUploader = null;
 	/** 上传视频是否完成 */
 	private boolean mIsUploadSucess = false;
-
 	/** 统计 */
 	private int finishShowCount = 0;
-
 	/** 是否正在上传视频 */
 	private boolean isUploading = false;
 	private boolean mIsCheck = true;
-
 	private AlertDialog mErrorDialog = null;
 	/** 退出提示框 */
 	private AlertDialog mExitPromptDialog = null;
 	private Bitmap mShortBitmap = null;
-
-	SharePlatformUtil sharePlatform;
+	private SharePlatformUtil sharePlatform;
 	/** 2/3 紧急/精彩 */
 	private int mVideoType = 0;
-
 	private String videoName;
 	/** 上传失败次数后再提示 */
 	private final int UPLOAD_FAILED_UP = 3;
 	private int uploadCount = 0;
-	VideoSquareManager mVideoSquareManager = null;
+	private VideoSquareManager mVideoSquareManager = null;
+	private boolean isExit = false;
 
-	public Handler mmmHandler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-			case 1:// 延迟让server返回的文字内容显示
-				JSONObject json = new JSONObject();
-				try {
-					json.put("code", 200);
-					json.put("videourl", "http://cdn2.xiaocheben.com/files/cdcvideo/test1111.mp4");
-					json.put("imageurl", "http://cdn2.xiaocheben.com/files/cdcpic/test1111.png");
-					json.put("text", "骚年赶紧戳进来吧");
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-
-				videoShareCallBack(1, json.toString());
-			case MSG_H_UPLOAD_PROGRESS:
-				if (!GolukApplication.getInstance().getIsBackgroundState()) {
-					if (GlobalWindow.getInstance().isShow()) {
-						// 更新进度条
-						int percent = ((Integer) msg.obj).intValue();
-						GlobalWindow.getInstance().refreshPercent(percent);
-						GolukDebugUtils.e("", "upload service--VideoShareActivity-mmmHandler percent:" + percent);
-					} else {
-						if (null == GlobalWindow.getInstance().getApplication()) {
-							GlobalWindow.getInstance().setApplication(mApp);
-						}
-						GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
-					}
-				}
-
-				break;
-			case MSG_H_UPLOAD_SUCESS:
-				GolukUtils.showToast(VideoShareActivity.this, "上传完成");
-				GlobalWindow.getInstance().topWindowSucess("视频上传成功");
-				shareCanEnable();
-				break;
-			case MSG_H_UPLOAD_ERROR:
-				if (isExit) {
-					return;
-				}
-				// 上传失败
-				uploadFailed();
-				break;
-			case MSG_H_UPLOAD_CANCEL:
-
-				break;
-			case MSG_H_START_UPLOAD:
-				break;
-			case MSG_H_COUNT:
-
-				finishShowCount++;
-				if (finishShowCount >= 3) {
-					GlobalWindow.getInstance().dimissGlobalWindow();
-					mmmHandler.removeMessages(MSG_H_COUNT);
-					finishShowCount = 0;
+	@Override
+	protected void hMessage(Message msg) {
+		switch (msg.what) {
+		case MSG_H_UPLOAD_PROGRESS:
+			if (!GolukApplication.getInstance().getIsBackgroundState()) {
+				if (GlobalWindow.getInstance().isShow()) {
+					// 更新进度条
+					int percent = ((Integer) msg.obj).intValue();
+					GlobalWindow.getInstance().refreshPercent(percent);
+					GolukDebugUtils.e("", "upload service--VideoShareActivity-mmmHandler percent:" + percent);
 				} else {
-					mmmHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
+					if (null == GlobalWindow.getInstance().getApplication()) {
+						GlobalWindow.getInstance().setApplication(mApp);
+					}
+					GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
 				}
-				break;
-			case MSG_H_RETRY_UPLOAD:
-				if (isExit) {
-					return;
-				}
-				GolukUtils.showToast(VideoShareActivity.this, "重新上传...");
-				uploadShareVideo();
-				if (null == GlobalWindow.getInstance().getApplication()) {
-					GlobalWindow.getInstance().setApplication(mApp);
-				}
-				break;
-			default:
-				break;
 			}
-		};
-	};
-
-	/** cc视频上传回调事件 */
-	private UploadListener uploadListenner = new UploadListener() {
-		@Override
-		public void handleStatus(VideoInfo v, int status) {
-			// 处理上传回调的视频信息及上传状态
-			mVideoinfo = v;
-			switch (status) {
-			case Uploader.PAUSE:
-				// 暂停上传
-				GolukDebugUtils.e("", "upload service--VideoShareActivity-handleStatus---暂停上传---pause...");
-				break;
-			case Uploader.UPLOAD:
-				// 开始上传
-				GolukDebugUtils.e("", "upload service--VideoShareActivity-handleStatus---开始上传---UPLOAD...");
-				mmmHandler.sendEmptyMessage(MSG_H_START_UPLOAD);
-				break;
-			case Uploader.FINISH:
-				// 上传完成
-				mIsUploadSucess = true;
-				isUploading = false;
-				GolukDebugUtils.e("", "upload service--VideoShareActivity-handleStatus---上传完成---FINISH----");
-				// 通知上传成功
-				mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_SUCESS);
-				break;
-			}
-		}
-
-		@Override
-		public void handleProcess(long range, long size, String videoId) {
+			break;
+		case MSG_H_UPLOAD_SUCESS:
+			GolukUtils.showToast(VideoShareActivity.this, "上传完成");
+			GlobalWindow.getInstance().topWindowSucess("视频上传成功");
+			shareCanEnable();
+			break;
+		case MSG_H_UPLOAD_ERROR:
 			if (isExit) {
 				return;
 			}
-			// 保存上传视频ID
-			mVideoVid = videoId;
-			final int percent = (int) (range * 100 / size);
-			Message msg = new Message();
-			msg.what = MSG_H_UPLOAD_PROGRESS;
-			msg.obj = percent;
-			mmmHandler.sendMessage(msg);
-			// 上传进度回调
-			GolukDebugUtils.e("", "upload service--VideoShareActivity-handleProcess___range=" + range + ", size=" + size
-					+ ", videoId = " + videoId + " percent:" + percent);
-		}
-
-		@Override
-		public void handleException(DreamwinException exception, int status) {
-			// 处理上传过程中出现的异常
-			GolukDebugUtils.e("", "upload service--VideoShareActivity-handleException----上传失败，" + exception.getMessage());
-			if (isExit) {
-				return;
-			}
-			if (uploadCount >= UPLOAD_FAILED_UP) {
-				// 报错
-				mmmHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
-				isUploading = false;
+			// 上传失败
+			uploadFailed();
+			break;
+		case MSG_H_COUNT:
+			finishShowCount++;
+			if (finishShowCount >= 3) {
+				GlobalWindow.getInstance().dimissGlobalWindow();
+				mBaseHandler.removeMessages(MSG_H_COUNT);
+				finishShowCount = 0;
 			} else {
-				mmmHandler.sendEmptyMessageDelayed(MSG_H_RETRY_UPLOAD, 500);
+				mBaseHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
 			}
-
+			break;
+		case MSG_H_RETRY_UPLOAD:
+			if (isExit) {
+				return;
+			}
+			GolukUtils.showToast(VideoShareActivity.this, "重新上传...");
+			uploadVideoFile();
+			if (null == GlobalWindow.getInstance().getApplication()) {
+				GlobalWindow.getInstance().setApplication(mApp);
+			}
+			break;
+		default:
+			break;
 		}
+	}
 
-		@Override
-		public void handleCancel(String videoId) {
-			// 处理取消上传的后续操作
-			GolukDebugUtils.e("", "upload service--VideoShareActivity-handleCancel----取消上传---------videoId = " + videoId);
+	// 上传视频失败
+	private void uploadError() {
+		if (isExit) {
+			return;
+		}
+		if (uploadCount >= UPLOAD_FAILED_UP) {
+			// 报错
+			mBaseHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
 			isUploading = false;
+		} else {
+			mBaseHandler.sendEmptyMessageDelayed(MSG_H_RETRY_UPLOAD, 500);
 		}
-	};
+	}
+
+	// 上传视频成功
+	private void uploadSucess() {
+		mIsUploadSucess = true;
+		isUploading = false;
+		GolukDebugUtils.e("", "upload service--VideoShareActivity-handleStatus---上传完成---FINISH----");
+		// 通知上传成功
+		mBaseHandler.sendEmptyMessage(MSG_H_UPLOAD_SUCESS);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -334,12 +244,12 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		// 初始化
 		init();
 		// 上传已倒出的本地视频
-		uploadShareVideo();
+		uploadVideoFile();
 		if (null == GlobalWindow.getInstance().getApplication()) {
 			GlobalWindow.getInstance().setApplication(mApp);
 		}
 		GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
-		
+
 		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
 			if (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")) {
@@ -350,8 +260,6 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 	private void createThumb() {
 		long startTime = System.currentTimeMillis();
-		// mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath,
-		// Thumbnails.MINI_KIND);
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 		thumbFile = filePath + File.separator + videoName;
 		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
@@ -363,43 +271,31 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		} else {
 			thumbFile = fileFolder + "/thumb11.jpg";
 			mShortBitmap = createVideoThumbnail(mVideoPath);
-			// mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath,
-			// Thumbnails.MINI_KIND);
 			if (mShortBitmap != null) {
 				int width = mShortBitmap.getWidth();
 				int height = mShortBitmap.getHeight();
-
 				GolukDebugUtils.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
 			} else {
 				GolukDebugUtils.e("", "VideoShareActivity createThumb: NULL:");
 				mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
 			}
-
 			try {
-
 				File file = new File(fileFolder);
 				file.mkdirs();
 				file = new File(thumbFile);
 				if (file.exists()) {
 					file.delete();
 				}
-
 				file.createNewFile();
-
 				FileOutputStream fos = new FileOutputStream(file);
 				mShortBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-
 				String fsFile = FileUtils.javaToLibPath(thumbFile);
-
 				GolukDebugUtils.e("", "VideoShareActivity createThumb: time: " + fsFile);
-
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
 		long dur = System.currentTimeMillis() - startTime;
-
 		GolukDebugUtils.e("", "VideoShareActivity createThumb: time:" + dur);
 	}
 
@@ -411,9 +307,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			retriever.setDataSource(filePath);
 			bitmap = retriever.getFrameAtTime();
 		} catch (IllegalArgumentException ex) {
-			// Assume this is a corrupt video file
 		} catch (RuntimeException ex) {
-			// Assume this is a corrupt video file.
 		} finally {
 			try {
 				retriever.release();
@@ -465,7 +359,6 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 	// CC上传失败，提示用户重试或退出
 	private void uploadFailed() {
-
 		dimissErrorDialog();
 		if (isExit) {
 			return;
@@ -477,9 +370,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						uploadShareVideo();
+						uploadVideoFile();
 						dimissErrorDialog();
-						GolukUtils.showToast(VideoShareActivity.this,"重新开始上传");
+						GolukUtils.showToast(VideoShareActivity.this, "重新开始上传");
 						if (null == GlobalWindow.getInstance().getApplication()) {
 							GlobalWindow.getInstance().setApplication(mApp);
 						}
@@ -501,8 +394,6 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		mErrorDialog.show();
 	}
-
-	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -545,39 +436,17 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		mShareLayout.setOnClickListener(this);
 	}
 
-	/**
-	 * 调用CC接口上传视频
-	 */
-	private void uploadShareVideo() {
+	private void uploadVideoFile() {
 		if (null == mVideoPath || "".equals(mVideoPath)) {
 			return;
 		}
-
 		uploadCount++;
-
 		isUploading = true;
-		VideoInfo videoinfo = new VideoInfo();
-		videoinfo.setTitle("标题");
-		videoinfo.setTags("标签");
-		// TODO 登录成功后的UID
-		videoinfo.setDescription(mApp.mCurrentUId);
-		videoinfo.setFilePath(mVideoPath);
-		videoinfo.setUserId(USERID);
-		// TODO 登录成功后的回调接口url
-		String uploadURL = NOTIFY_URL2;
-		if (null != mApp.mCCUrl && !"".equals(mApp.mCCUrl)) {
-			uploadURL = mApp.mCCUrl;
-		}
-		//this.showToast(uploadURL);
-		videoinfo.setNotifyUrl(uploadURL);
-		if (mUploader != null) {
-			mUploader = null;
-		}
-		mUploader = new Uploader(videoinfo, API_KEY);
-		mUploader.setUploadListener(uploadListenner);
-		mUploader.start();
-		// 显示上传进度条
+		final String filePath = FileUtils.javaToLibPath(mVideoPath);
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_UploadVideo, filePath);
 
+		GolukDebugUtils.e("", "Request---------:" + isSucess);
 	}
 
 	/**
@@ -586,22 +455,30 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	 * @param vid
 	 *            ,视频ID
 	 */
-	public void videoUploadCallBack(int success, String vid) {
-		// 视频上传成功,回调,跳转到视频分享页面
-		// 隐藏loading
-		// mLoadingAnimation.stop();
-		// 显示播放图片
-		// mPlayStatusImage.setVisibility(View.VISIBLE);
-		// 隐藏loading布局
-		// mVideoLoadingLayout.setVisibility(View.GONE);
+	public void videoUploadCallBack(int success, Object param1, Object param2) {
 		if (1 == success) {
-			GolukUtils.showToast(mContext, "视频上传使用时间：" + (SystemClock.uptimeMillis() - uploadVideoTime) + "ms");
 			// 保存视频上传ID
-			mVideoVid = vid;
-			GolukDebugUtils.e("","视频上传返回id--VideoShareActivity-videoUploadCallBack---vid---" + vid);
+			mVideoVid = (String) param2;
+			uploadSucess();
+			GolukDebugUtils.e("", "视频上传返回id--VideoShareActivity-videoUploadCallBack---vid---" + mVideoVid);
+		} else if (2 == success) {
+			// 上传进度
+			final int per = (Integer) param1;
+			updateFreshProgress(per);
 		} else {
 			GolukUtils.showToast(mContext, "视频上传失败");
+			uploadError();
 		}
+	}
+
+	private void updateFreshProgress(int per) {
+		if (isExit) {
+			return;
+		}
+		Message msg = new Message();
+		msg.what = MSG_H_UPLOAD_PROGRESS;
+		msg.obj = per;
+		mBaseHandler.sendMessage(msg);
 	}
 
 	private void shareCanEnable() {
@@ -704,22 +581,15 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void cancelLoad() {
-
-		new Thread() {
-			@Override
-			public void run() {
-				mUploader.cancel();
-			}
-		}.start();
+		// TODO 取消上传
 	}
 
 	private void exit(boolean isdestroyTopwindow) {
 		isExit = true;
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
-		mmmHandler.removeMessages(MSG_H_RETRY_UPLOAD);
+		mBaseHandler.removeMessages(MSG_H_RETRY_UPLOAD);
 		long starTime = System.currentTimeMillis();
-		// mUploader.cancel();
 		cancelLoad();
 		GolukDebugUtils.e("", "uploader   cancal time:--------:" + (System.currentTimeMillis() - starTime));
 		if (isdestroyTopwindow) {
@@ -727,8 +597,6 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		}
 		VideoShareActivity.this.finish();
 	}
-
-	boolean isExit = false;
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -763,10 +631,10 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares json:" + json);
 		if (null == mApp) {
-			GolukUtils.showToast(VideoShareActivity.this,"mApp==NULL");
+			GolukUtils.showToast(VideoShareActivity.this, "mApp==NULL");
 		} else {
 			if (mApp.mGoluk == null) {
-				GolukUtils.showToast(VideoShareActivity.this,"mApp.mGoluk == null");
+				GolukUtils.showToast(VideoShareActivity.this, "mApp.mGoluk == null");
 			}
 		}
 
@@ -794,7 +662,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 				}
 			});
 		} else {
-			GolukUtils.showToast(VideoShareActivity.this,"分享失败");
+			GolukUtils.showToast(VideoShareActivity.this, "分享失败");
 		}
 
 		GolukDebugUtils.e("", "chxy__b__VideoShareActivity share11" + b);
