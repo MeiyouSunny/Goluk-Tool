@@ -53,18 +53,20 @@
     <string name="wifi_link_15_text">请重新安装Goluk App</string>
     <string name="wifi_link_16_text">更多帮助</string>
     <string name="wifi_link_17_text">1.确认WiFi指示灯闪烁,连接名称为Goluk xxx的WiFi</string>
-	<string name="wifi_link_18_text">2.</string>
-	<string name="wifi_link_19_text">跳过</string>
-	<string name="wifi_link_20_text">2.修改Goluk WiFi热点信息</string>
-	<string name="wifi_link_21_text">WiFi名称</string>
-	<string name="wifi_link_22_text">goluk123456</string>
-	<string name="wifi_link_23_text">3.修改与Goluk相连手机的WiFi热点信息</string>
-	<string name="wifi_link_24_text">正常使用中,在手机客户端内将自动连接Goluk建立的WiFi热点.</string>
-	<string name="wifi_link_25_text">手机正在创建WiFi个人热点....</string>
-	<string name="wifi_link_26_text">恭喜你</string>
-	<string name="wifi_link_27_text">你的Goluk已成功连接到手机</string>
-	<string name="wifi_link_28_text">开始使用</string>
-	<string name="wifi_link_29_text">Goluk WiFi</string>
+    <string name="wifi_link_18_text">2.</string>
+    <string name="wifi_link_19_text">跳过</string>
+    <string name="wifi_link_20_text">2.修改Goluk WiFi热点信息</string>
+    <string name="wifi_link_21_text">WiFi名称</string>
+    <string name="wifi_link_22_text">goluk123456</string>
+    <string name="wifi_link_23_text">3.修改与Goluk相连手机的WiFi热点信息</string>
+    <string name="wifi_link_24_text">正常使用中,在手机客户端内将自动连接Goluk建立的WiFi热点.</string>
+    <string name="wifi_link_25_text">手机正在创建WiFi个人热点....</string>
+    <string name="wifi_link_26_text">恭喜你</string>
+    <string name="wifi_link_27_text">你的Goluk已成功连接到手机</string>
+    <string name="wifi_link_28_text">开始使用</string>
+    <string name="wifi_link_29_text">Goluk WiFi</string>
+    <string name="wifi_link_30_text">正常使用中，手机客户端启动后将自动建立WiFi热点，极路客自行连接其热点。在手机客户内可以享受极路客</string>
+    <string name="wifi_link_31_text">正在为你配置极路客Wifi</string>
     <string name="video_live_title_text">详情</string>
     <string name="video_live_username_text">用户名称</string>
     <string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>
@@ -122,10 +124,9 @@
         <item>传递正能量</item>
     </string-array>
 
-	<string name="pwd_text">密码</string>
-	<string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
-	<string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
-	
+    <string name="pwd_text">密码</string>
+    <string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
+    <string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
     <string name="bubble_count">2000</string>
 
     <!-- 行车记录仪 		START -->
@@ -135,7 +136,7 @@
     <string name="default_live_url">rtmp://211.103.234.234/live/test100</string>
     <!-- 自己看 -->
     <string name="default_rtsp_url">rtsp://admin:123456@192.168.43.234/sub</string>
-    <string name ="default_rtsp_pre">rtsp://admin:123456@</string>
+    <string name="default_rtsp_pre">rtsp://admin:123456@</string>
     <string name="default_rtsp_back">/sub</string>
     <string name="def">默认</string>
     <string name="setting_title_text">设置</string>
@@ -205,10 +206,9 @@
     <!-- 直播界面 -->
 
 
-	<!-- 个人中心 -->
+    <!-- 个人中心 -->
 
-	<string name="user_personal_autoloading_progress">正在为您登录，请稍候……</string>
-	
+    <string name="user_personal_autoloading_progress">正在为您登录，请稍候……</string>
     <string name="live_title">网络直播</string>
     <string name="live_pause">暂停</string>
     <string name="live_exit">结束直播</string>
@@ -217,8 +217,8 @@
     <string name="live_login_prompt">登录后就可以和直播用户实时对讲了</string>
 
     <!-- 行车记录仪  	END -->
-    
-    
+
+
     <!-- 视频广场 -->
     <string name="release_to_refresh">松开刷新</string>
     <string name="pull_to_refresh">下拉刷新</string>
