@@ -40,6 +40,9 @@ public class UpgradeManage {
 	public void upgradeGoluk(){
 		if(!UserUtils.isNetDeviceAvailable(mApp.getContext())){
 			//没有网络
+			if(mApp.flag){
+				GolukUtils.showToast(mApp.getContext(), "网络连接异常，请检查网络后重试");
+			}
 		}else{
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_CheckUpgrade, "fs6:/version");
 			GolukDebugUtils.i("lily", "------upgradeGoluk()------"+b);
@@ -117,12 +120,13 @@ public class UpgradeManage {
 			GolukDebugUtils.i("lily", "-----网络链接超时---------"+codeOut);
 			switch (codeOut) {
 			case 1:
-				break;
 			case 2:
-				break;
 			case 3:
-				break;
 			default:
+				if(mApp.flag){
+					closeProgressDialog();
+					GolukUtils.showToast(mApp.getContext(), "网络连接超时，请检查网络后重试");
+				}
 				break;
 			}
 		}

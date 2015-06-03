@@ -156,7 +156,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 	public boolean autodownloadfile=false;
 	/**点击设置页版本检测标识**/
 	public boolean flag = false;
-
+	
 	static {
 		System.loadLibrary("golukmobile");
 	}
