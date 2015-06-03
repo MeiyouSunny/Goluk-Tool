@@ -6,6 +6,7 @@ import java.util.List;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListViewAdapter.ViewHolder;
@@ -33,49 +34,20 @@ public class VideoOnClickListener implements OnClickListener{
 		if("2".equals(mVideoSquareInfo.mVideoEntity.type)){
 			if(1 == form){
 				MainActivity a = (MainActivity)mContext;
-				Intent intent = new Intent(a, CCPlayerPage.class);
-				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
-				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+				Intent intent = new Intent(a, VideoPlayerActivity.class);
+				intent.putExtra("from", "local");
+				intent.putExtra("path", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
 				uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 				a.startActivity(intent);
 			}else{
-				
-				
 				VideoSquarePlayActivity a = (VideoSquarePlayActivity)mContext;
-				Intent intent = new Intent(a, CCPlayerPage.class);
-				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
-				intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+				Intent intent = new Intent(a, VideoPlayerActivity.class);
+				intent.putExtra("from", "local");
+				intent.putExtra("path", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
 				uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 				a.startActivity(intent);
 			}
 			
-//			PlayerState mPlayerState = mVideoSquareInfo.mPlayerState;
-//			DWMediaPlayer player = mDWMediaPlayerList.get(mVideoSquareInfo.id);
-//			if(null !=player){
-//				if(PlayerState.allowbuffer == mPlayerState){
-//					player.prepareAsync();
-//					updatePlayerState(PlayerState.buffing);
-//					LogUtils.d("SSS=========buffing====1111====");
-//				}else if(PlayerState.buffing == mPlayerState){
-//					LogUtils.d("SSS=========buffing===2222=====");
-//				}else if(PlayerState.bufferend == mPlayerState){
-//					player.start();
-//					updatePlayerState(PlayerState.playing);
-//					LogUtils.d("SSS=========playing========");
-//				}else if(PlayerState.playing == mPlayerState){
-//					if(player.isPlaying()){
-//						player.pause();
-//						updatePlayerState(PlayerState.pause);
-//						LogUtils.d("SSS=========pause========");
-//					}
-//				}else if(PlayerState.pause == mPlayerState){
-//					player.start();
-//					updatePlayerState(PlayerState.playing);
-//					LogUtils.d("SSS=========playing========");
-//				}else {
-//					LogUtils.d("SSS=========noallow========");
-//				}
-//			}
 		}else{
 			//直播点击跳转
 			 // 开启直播
