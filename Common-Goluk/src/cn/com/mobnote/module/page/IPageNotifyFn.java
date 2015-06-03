@@ -67,6 +67,7 @@ public interface IPageNotifyFn extends IGolukCommFn {
 
 	/** 同步获取登录用户信息命令 */
 	public static final int PageType_GetUserInfo_Get = 0;
+	public static final int PageType_GetVersion = 1;
 
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2);
 

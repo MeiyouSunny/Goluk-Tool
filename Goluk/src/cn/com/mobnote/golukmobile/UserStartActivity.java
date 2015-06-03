@@ -66,7 +66,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		SysApplication.getInstance().addActivity(this);
 		
 		//版本升级
-		mApp.mUpgrade.upgradeGoluk();
+//		mApp.mUpgrade.upgradeGoluk();
 		
 		initView();
 		
