@@ -455,7 +455,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 					UserUtils.showDialog(this, "输入手机号异常");
 					break;
 				case 480:
-					UserUtils.showDialog(this, "验证码获取失败");
+					UserUtils.showDialog(this, "验证码发送失败，请重新发送");
 					break;
 				case 470:
 					UserUtils.showDialog(mContext, "获取验证码已达上限");

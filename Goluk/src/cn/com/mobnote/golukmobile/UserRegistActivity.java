@@ -491,7 +491,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					UserUtils.showDialog(this, "输入手机号异常");
 					break;
 				case 480:
-					UserUtils.showDialog(this, "验证码获取失败");
+					UserUtils.showDialog(this, "验证码发送失败，请重新发送");
 					GolukDebugUtils.i("lily", "-------identifyCallback-----480----");
 					break;
 				case 470:
