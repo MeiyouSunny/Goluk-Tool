@@ -1,6 +1,6 @@
 {"GetMainPage":"http://%s/navidog4MeetTrans/mainpage.htm",
 "ShareVideo":"http://%s/navidog4MeetTrans/shareVideo.htm",
-"UploadVideo":"http://%s/navidog4MeetTrans/uploadvideo.htm",
+"UploadVideo":"http://%s/fileService/FileMultiServlet",
 "GetPin":"http://%s/navidog4MeetTrans/getNils.htm",
 "GetVideoDetail":"http://%s/navidog4MeetTrans/reqPlay.htm",
 "GetVideoDetail2":"http://%s/navidog4MeetTrans/mgetView.htm",
