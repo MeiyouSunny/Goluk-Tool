@@ -224,7 +224,7 @@
 		        android:textColor="@color/user_personal_black"
 		        android:layout_centerVertical="true"
 		        android:maxLines="2"
-		        android:ellipsize="marquee"
+		        android:ellipsize="end"
 		        android:hint="介绍一下自己吧！"
 		        />
 	</RelativeLayout>
