@@ -50,6 +50,13 @@ public class BaseActivity extends Activity {
 
 	};
 
+	/**
+	 * 处理Handler消息，子类需要复写此方法
+	 * 
+	 * @param msg
+	 * @author jyf
+	 * @date 2015年6月2日
+	 */
 	protected void hMessage(Message msg) {
 
 	}

@@ -689,8 +689,8 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 							String filename = d.getVideoInfo2().filename;
 							updateNewState(filename, mLocalEmergencyVideoListManage.mLocalVideoListData);
 							
-							mDoubleEmergencyVideoData.get(arg2).getVideoInfo1().isNew = false;
-							mLocalEmergencyVideoListManage.mDoubleLocalVideoListData.get(arg2).getVideoInfo1().isNew = false;
+							mDoubleEmergencyVideoData.get(arg2).getVideoInfo2().isNew = false;
+							mLocalEmergencyVideoListManage.mDoubleLocalVideoListData.get(arg2).getVideoInfo2().isNew = false;
 							mEmergencyVideoAdapter.notifyDataSetChanged();
 						}
 					}

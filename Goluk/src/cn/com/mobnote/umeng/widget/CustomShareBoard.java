@@ -94,17 +94,20 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			System.out.println("zh======wx"+shareurl + coverurl + describe + ttl);
 			sharePlatform.setShareContent(shareurl+"&type=2", coverurl, describe,ttl);
 			mCurrentShareType = TYPE_WEIXIN;
+			this.shareUp();//上报分享统计
 			performShare(SHARE_MEDIA.WEIXIN);
 			break;
 		case R.id.wechat_circle:
 			sharePlatform.setShareContent(shareurl+"&type=5", coverurl, describe,ttl);
 			mCurrentShareType = TYPE_WEIXIN_CIRCLE;
+			this.shareUp();//上报分享统计
 			performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
 			break;
 		case R.id.qq:
 			@SuppressWarnings("static-access")
 			Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
 			mCurrentShareType = TYPE_QQ;
+			this.shareUp();//上报分享统计
 			if (isQQ) {
 				sharePlatform.setShareContent(shareurl+"&type=4", coverurl, describe,ttl);
 				performShare(SHARE_MEDIA.QQ);
@@ -116,6 +119,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		case R.id.sms:
 			sharePlatform.setShareContent(shareurl+"&type=6", coverurl, describe,ttl);
 			mCurrentShareType = TYPE_SMS;
+			this.shareUp();//上报分享统计
 			performShare(SHARE_MEDIA.SMS);
 			break;
 		// case R.id.sina:
@@ -127,6 +131,18 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			break;
 		default:
 			break;
+		}
+	}
+	
+	public void shareUp(){
+		if (mActivity instanceof VideoShareActivity) {
+			((VideoShareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+		} else if (mActivity instanceof MainActivity) {
+			((MainActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+		} else if (mActivity instanceof VideoSquarePlayActivity) {
+			((VideoSquarePlayActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+		} else if (mActivity instanceof LiveActivity) {
+			((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 		}
 	}
 
@@ -144,7 +160,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
 				System.out.println("mCurrentShareType------" + mCurrentShareType);
 				// String showText = platform.toString();
-				if (eCode == StatusCode.ST_CODE_SUCCESSED) {
+				/*if (eCode == StatusCode.ST_CODE_SUCCESSED) {
 					if (mActivity instanceof VideoShareActivity) {
 						((VideoShareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 					} else if (mActivity instanceof MainActivity) {
@@ -160,7 +176,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 					if (mActivity instanceof VideoShareActivity) {
 						((VideoShareActivity) mActivity).shareSucessDeal(false, null);
 					}
-				}
+				}*/
 				dismiss();
 			}
 		});

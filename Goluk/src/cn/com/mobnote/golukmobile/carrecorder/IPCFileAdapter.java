@@ -8,11 +8,15 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.core.BitmapSize;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,6 +37,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 	private int count=0;
 	private int screenWidth=0;
 	private float density;
+	private String filePath="";
 	
 	public IPCFileAdapter(Context c){
 		mContext=c;
@@ -41,6 +46,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		mGroupNameList = new ArrayList<String>();
 		screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
+		filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 	}
 	
 	public void setData(List<String> groupname, List<DoubleVideoInfo> data){
@@ -51,11 +57,47 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		this.notifyDataSetChanged();
 	}
 	
-	public void recyle(){
+	private void recyle(int index){
+		final int cacheRange = 10;
+		int firstIndex = index - cacheRange;
+		int lastIndex = index + cacheRange;
+		if (firstIndex > 0){
+			for (int i = 0; i < firstIndex; i++) {
+				checkBitmap(i);
+			}
+		}
+		
+		if (lastIndex < mDataList.size()) {
+			for (int i = lastIndex; i < mDataList.size(); i++) {
+				checkBitmap(i);
+			}
+		}
+		
+	}
+	
+	private void checkBitmap(int index){
+		Bitmap videoBitmap1 = mDataList.get(index).getVideoInfo1().videoBitmap;
+		if (null != videoBitmap1) {
+			if (!videoBitmap1.isRecycled()) {
+				videoBitmap1.recycle();
+				videoBitmap1 = null;
+			}
+		}
+		
+		if(null != mDataList.get(index).getVideoInfo2()) {
+			Bitmap videoBitmap2 = mDataList.get(index).getVideoInfo2().videoBitmap;
+			if (null != videoBitmap2) {
+				if (!videoBitmap2.isRecycled()) {
+					videoBitmap2.recycle();
+					videoBitmap2 = null;
+				}
+			}
+		}
 		
 	}
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
+//		recyle(position);
 		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -127,6 +169,15 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 		
 		holder.image1.setBackgroundResource(R.drawable.carrecorder_xcjlybj);
+//		loadImage(mVideoInfo1.videoPath, holder.image1);
+//		String filename = mVideoInfo1.videoPath;
+//		filename = filename.replace(".mp4", ".jpg");
+//		String jpgname = filePath + File.separator + filename;
+//		BitmapDisplayConfig cfg = new BitmapDisplayConfig();
+//		cfg.setBitmapMaxSize(new BitmapSize(194, 109));
+//		GolukDebugUtils.e("xuhw", "BBBBBBB=="+jpgname);
+//		BitmapManager.getInstance().mBitmapUtils.display(holder.image1, jpgname, cfg);
+		
 		Bitmap videoBitmap1 = mDataList.get(position).getVideoInfo1().videoBitmap;
 		if (null != videoBitmap1) {
 			BitmapDrawable bd = new BitmapDrawable(videoBitmap1);
@@ -182,6 +233,14 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		}
 
 		return convertView;
+	}
+	
+	private void loadImage(String filename, ImageView image){
+		filename = filename.replace(".mp4", ".jpg");
+		String jpgname = filePath + File.separator + filename;
+		BitmapDisplayConfig cfg = new BitmapDisplayConfig();
+		cfg.setBitmapMaxSize(new BitmapSize(194, 109));
+		BitmapManager.getInstance().mBitmapUtils.display(image, jpgname, cfg);
 	}
 
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
