@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.com.mobnote.golukmobile"
     android:versionCode="101"
-    android:versionName="V1.0.1" >
+    android:versionName="V1.0.1_dev" >
     
 	<uses-sdk
 	    android:minSdkVersion="14"

@@ -135,6 +135,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 						
 						if(null != mMediaPlayer){
 							if(mMediaPlayer.isPlaying()){
+								hideLoading();
 								long curPosition = mMediaPlayer.getCurrentPosition();
 								long duration = mMediaPlayer.getDuration();
 								
@@ -188,11 +189,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mPlayBigBtn = (ImageButton) findViewById(R.id.mPlayBigBtn);
 		mSeekBar = (SeekBar) findViewById(R.id.mSeekBar);
 		  
-		if(from.equals("ipc")){
-			showLoading();
-		}else{
-			hideLoading();
-		}
+		showLoading();
 	}
 	
 	/**
@@ -457,7 +454,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		
 		if(null != mMediaPlayer){
 			mMediaPlayer.seekTo(0);
-			mMediaPlayer.start();
+//			mMediaPlayer.start();
 		}
 	}
 
