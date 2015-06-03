@@ -144,24 +144,24 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 				holder.mTMLayout2.setVisibility(View.GONE);
 			}
 			
-			if(mVideoInfo1.isNew){
-				holder.mNew1.setVisibility(View.VISIBLE);
-			}else{
-				holder.mNew1.setVisibility(View.GONE);
-			}
-			
-			if(null != mVideoInfo2){
-				if(mVideoInfo2.isNew){
-					holder.mNew2.setVisibility(View.VISIBLE);
-				}else{
-					holder.mNew2.setVisibility(View.GONE);
-				}
-			}
-			
 		}
 		else{
 			LocalVideoShareListActivity a = (LocalVideoShareListActivity)mContext;
 			selectedData = a.getSelectedListData();
+		}
+
+		if(mVideoInfo1.isNew){
+			holder.mNew1.setVisibility(View.VISIBLE);
+		}else{
+			holder.mNew1.setVisibility(View.GONE);
+		}
+		
+		if(null != mVideoInfo2){
+			if(mVideoInfo2.isNew){
+				holder.mNew2.setVisibility(View.VISIBLE);
+			}else{
+				holder.mNew2.setVisibility(View.GONE);
+			}
 		}
 		
 		
