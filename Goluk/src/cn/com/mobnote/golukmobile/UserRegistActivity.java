@@ -492,6 +492,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					break;
 				case 480:
 					UserUtils.showDialog(this, "验证码获取失败");
+					GolukDebugUtils.i("lily", "-------identifyCallback-----480----");
 					break;
 				case 470:
 					UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限");
