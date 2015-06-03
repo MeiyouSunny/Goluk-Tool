@@ -7,14 +7,12 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnKeyListener;
-import android.content.SharedPreferences.Editor;
 import android.view.KeyEvent;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.UserStartActivity;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -28,8 +26,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class UpgradeManage {
 
 	private GolukApplication mApp = null;
-	private SharedPreferences mPreferences = null;
-	private Editor mEditor = null;
+	private CustomLoadingDialog mCustomLoadingDialog = null;
 
 	public UpgradeManage(GolukApplication mApp) {
 		super();
@@ -48,6 +45,17 @@ public class UpgradeManage {
 			GolukDebugUtils.i("lily", "------upgradeGoluk()------"+b);
 			if(b){
 				//
+				GolukDebugUtils.i("lily", "------CustomLoadingDialog-----show()-----before----"+mApp.flag);
+				if(mApp.flag){
+					GolukDebugUtils.i("upgrade", "--------CustomDialog-----111-----");
+					if(null == mCustomLoadingDialog){
+						GolukDebugUtils.i("upgrade", "--------CustomDialog-----222-----");
+						mCustomLoadingDialog = new CustomLoadingDialog(this.mApp.getContext(), "检测中，请稍候……");
+						GolukDebugUtils.i("upgrade", "--------CustomDialog-----333-----");
+					}
+					mCustomLoadingDialog.show();
+					GolukDebugUtils.i("lily", "------CustomLoadingDialog-----show()-----after----");
+				}
 			}
 		}
 	}
@@ -60,6 +68,11 @@ public class UpgradeManage {
 		GolukDebugUtils.e("","----------版本更新回调-------upgradeGolukCallback---" + success + "-------" + obj);
 		int codeOut = (Integer) outTime;
 		if(1 == success){
+			GolukDebugUtils.i("lily", "------CustomLoadingDialog-----close()-----before----");
+			if(mApp.flag){
+				closeProgressDialog();
+			}
+			GolukDebugUtils.i("lily", "------CustomLoadingDialog-----close()-----after----");
 			try {
 				String dataObj = (String) obj;
 				JSONObject json = new JSONObject(dataObj);
@@ -69,15 +82,9 @@ public class UpgradeManage {
 				String goluk = jsonData.getString("goluk");
 				GolukDebugUtils.i("lily", "-------goluk-----"+goluk);
 				if(goluk.equals("{}")){
-					mPreferences = mApp.getContext().getSharedPreferences("setupUpdate", Context.MODE_PRIVATE);
-					boolean flag = mPreferences.getBoolean("update", false);
-					if(flag){
+					if(mApp.flag){
 						//设置页版本检测需要提示
 						GolukUtils.showToast(mApp.getContext(), "当前已是最新版本");
-						mPreferences = mApp.getContext().getSharedPreferences("setupUpdate", Context.MODE_PRIVATE);
-						mEditor = mPreferences.edit();
-						mEditor.putBoolean("update", false);
-						mEditor.commit();
 					}else{
 						//启动APP进行升级时不需要提示
 						GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
@@ -93,18 +100,15 @@ public class UpgradeManage {
 					String url = jsonGoluk.getString("url");
 					String version = jsonGoluk.getString("version");
 					GolukDebugUtils.i("lily", "version="+version);
-					//0非强制升级   1强制升级
+					/**
+					 * 0非强制升级   1强制升级
+					 * 非强制升级不退出程序，强制升级退出程序
+					 */
 					if(isupdate.equals("1")){
 						showUpgradeGoluk(mApp.getContext(),appcontent, url);
 					}else if(isupdate.equals("0")){
 						showUpgradeGoluk2(mApp.getContext(), appcontent, url);
 					}
-				
-					SharedPreferences mPreferencesVersion = mApp.getContext().getSharedPreferences("version", Context.MODE_PRIVATE);
-					Editor mEditor = mPreferencesVersion.edit();
-					mEditor.putString("versionCode", version);
-					mEditor.commit();
-					
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -122,6 +126,8 @@ public class UpgradeManage {
 				break;
 			}
 		}
+		
+		mApp.flag = false;
 		
 	}
 	
@@ -192,7 +198,7 @@ public class UpgradeManage {
 						//浏览器打开url
 						GolukUtils.openUrl(url, mContext);
 						
-						if(GolukApplication.mMainActivity != null){
+						/*if(GolukApplication.mMainActivity != null){
 							GolukApplication.mMainActivity.finish();
 							GolukApplication.mMainActivity = null;
 						}
@@ -205,8 +211,7 @@ public class UpgradeManage {
 			    		}
 			    		int PID = android.os.Process.myPid();
 			    		android.os.Process.killProcess(PID);
-			            System.exit(0);
-			            
+			            System.exit(0);*/
 					}
 				})
 				.setCancelable(false)
@@ -221,6 +226,16 @@ public class UpgradeManage {
 				})
 				.create();
 		dialog.show();
+	}
+	
+	/**
+	 * 关闭加载中对话框
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomLoadingDialog){
+			mCustomLoadingDialog.close();
+			mCustomLoadingDialog = null;
+		}
 	}
 }
 

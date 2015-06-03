@@ -142,12 +142,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		//版本检测
 		mAppUpdate = (RelativeLayout) findViewById(R.id.app_update_item);
 		
-		final String verName = GolukUtils.getVersion(this);
+//		final String verName = GolukUtils.getVersion(this);
 		
-//		SharedPreferences mPreferencesVersion = getSharedPreferences("version", Context.MODE_PRIVATE);
-//		String versionCode = mPreferencesVersion.getString("versionCode", mTextVersionCode.getText().toString());
-//		GolukDebugUtils.i("lily", "===versionCode===="+versionCode);
-		mTextVersionCode.setText(verName);
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -159,6 +155,11 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(mContext,"UserSetup");
+		
+		//调用同步接口，在设置页显示版本号
+		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVersion, "fs6:/version");
+		GolukDebugUtils.i("upgrade", "=======+version+====="+verName);
+		mTextVersionCode.setText(verName);
 		
 		//页面初始化
 		init();
@@ -378,16 +379,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				break;
 			//版本检测
 			case R.id.app_update_item:
-				GolukDebugUtils.i("lily", "---------点击了版本检测------");
 				/**
 				 * 1、判断是否需要升级————设置页有“当前已是最新版本提示”
 				 * 2、判断是否是强制升级
 				 */
 				//点击设置页中版本检测无最新版本提示标识
-				mPreferences = getSharedPreferences("setupUpdate", Context.MODE_PRIVATE);
-				mEditor = mPreferences.edit();
-				mEditor.putBoolean("update", true);
-				mEditor.commit();
+				mApp.flag=true;
 				//APP升级
 				mApp.mUpgrade.upgradeGoluk();
 				break;
