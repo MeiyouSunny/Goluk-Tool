@@ -69,16 +69,14 @@
 				android:background="#00000000"
 				android:text="@string/videolist_xhyx"
 				android:textColor="@color/carrecorder_text_sel_color"
-				android:textSize="16sp"
-				android:visibility="gone"/>
+				android:textSize="16sp"/>
 
 			<ImageView
 				android:layout_width="wrap_content"
 				android:layout_height="24dp"
 				android:layout_gravity="center_vertical"
 				android:background="@drawable/carrecorder_flle_tit_line"
-				android:contentDescription="@string/def"
-				android:visibility="gone"/>
+				android:contentDescription="@string/def"/>
 
 			<Button
 				android:id="@+id/video_jcsp"
@@ -89,7 +87,7 @@
 				android:gravity="center"
 				android:background="#00000000"
 				android:text="@string/videolist_jcsp"
-				android:textColor="@color/carrecorder_text_sel_color"
+				android:textColor="@color/carrecorder_tab_nor_color"
 				android:textSize="16sp" />
 
 			<ImageView
@@ -108,7 +106,7 @@
 				android:gravity="center"
 				android:background="#00000000"
 				android:text="@string/videolist_jjyx"
-				android:textColor="#999999"
+				android:textColor="@color/carrecorder_tab_nor_color"
 				android:textSize="16sp" />
 		</LinearLayout>
 
@@ -127,7 +125,7 @@
 				android:layout_weight="1"
 				android:background="@color/carrecorder_text_sel_color"
 				android:contentDescription="@string/def"
-				android:visibility="gone" />
+				android:visibility="visible" />
 
 			<ImageView
 				android:id="@+id/line_jcsp"
@@ -138,7 +136,7 @@
 				android:layout_weight="1"
 				android:background="@color/carrecorder_text_sel_color"
 				android:contentDescription="@string/def"
-				android:visibility="visible" />
+				android:visibility="invisible" />
 
 			<ImageView
 				android:id="@+id/line_jjyx"
@@ -172,7 +170,7 @@
 			android:cacheColorHint="#00000000"
 			android:scrollbarStyle="outsideOverlay"
 			tools:listitem="@layout/test_list_item_layout"
-			android:visibility="gone" />
+			android:visibility="visible" />
 		
 		<com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
 			android:id="@+id/mWonderfulVideoList"
@@ -187,7 +185,7 @@
 			android:cacheColorHint="#00000000"
 			android:scrollbarStyle="outsideOverlay"
 			tools:listitem="@layout/test_list_item_layout"
-			android:visibility="visible" />
+			android:visibility="gone" />
 		
 		<com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
 			android:id="@+id/mEmergencyVideoList"

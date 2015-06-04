@@ -67,17 +67,13 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
  * 
  */
 @SuppressLint("HandlerLeak")
-public class LocalVideoListActivity extends BaseActivity implements  OnClickListener, IPCManagerFn, OnTouchListener {
+public class LocalVideoListActivity extends BaseActivity implements  OnClickListener, OnTouchListener {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
 	/** 保存屏幕点击横坐标点 */
 	private float screenX = 0;
-	
-	
-	
-	
 	
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
@@ -88,13 +84,6 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	private int emergencyVisibleCount;
 	private int loopVisibleCount;
 	
-	
-	
-	
-	
-	
-	
-	
 	/** 保存列表总条数 */
 	private int wonderfulTotalCount=0;
 	private int emergencyTotalCount=0;
@@ -104,19 +93,11 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	/** 获取文件列表中标识 */
 	private boolean isGetFileListDataing=false;
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	/** 返回按钮 */
 	private ImageButton mBackBtn=null;
 	/** 当前在那个界面，包括循环影像(1) 紧急录像(2) 一键抢拍(3) 三个界面 */
-	private int mOprateType = 2;
-	private int mCurrentType = 2;
+	private int mOprateType = 1;
+	private int mCurrentType = 1;
 	/** 精彩视频切换按钮 */
 	private Button mWonderfulVideoBtn = null;
 	/** 紧急视频切换按钮 */
@@ -139,9 +120,6 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	private List<String> selectedListData = null;
 	/** 获取当前屏幕宽度 */
 	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-	
-	
-	
 	
 	/** 添加页脚标识,为了解决编辑最后一栏显示一半问题 */
 	private boolean addLoopFooter = false;
@@ -174,7 +152,6 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	/** 视频列表handler用来接收消息,更新UI*/
 	public static Handler mVideoListHandler = null;
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -191,7 +168,6 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		initSetListener();
 		initListManage();
 	}
-	
 	
 	/**
 	 * 获取编辑文件列表数据
@@ -212,46 +188,6 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	public boolean getIsEditState(){
 		return mIsEditState;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * 初始化控件
@@ -349,8 +285,8 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	 * 初始化视频列表管理类
 	 */
 	private void initListManage(){
-//		mLocalLoopVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
-//		mLocalLoopVideoListManage.getLocalVideoList(0);
+		mLocalLoopVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
+		mLocalLoopVideoListManage.getLocalVideoList(0);
 		
 		mLocalWonderfulVideoListManage = new LocalVideoListManage(mContext,"LocalVideoList");
 		mLocalWonderfulVideoListManage.getLocalVideoList(1);
@@ -390,7 +326,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		mWonderfulVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		mEmergencyVideoBtn.setTextColor(getResources().getColor(R.color.carrecorder_tab_nor_color));
 		
-		mLoopVideoLine.setVisibility(View.GONE);
+		mLoopVideoLine.setVisibility(View.INVISIBLE);
 		mWonderfulVideoLine.setVisibility(View.INVISIBLE);
 		mEmergencyVideoLine.setVisibility(View.INVISIBLE);
 		
@@ -420,13 +356,6 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	 */
 	@SuppressLint("InflateParams")
 	private void initLoopLayout(){
-		//mWonderfulVideoList.setVisibility(View.GONE);
-		//mEmergencyVideoList.setVisibility(View.GONE);
-		//mLoopVideoList.setVisibility(View.VISIBLE);
-		
-		//loopGroupName.clear();
-		//mDoubleLoopVideoData.clear();
-		
 		//列表tab数据
 		mLoopGroupName = mLocalLoopVideoListManage.mTabGroupName;
 		//获取视频数据
@@ -478,13 +407,29 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 							selectedVideoItem(tag2,mTMLayout2);
 						}
 					}else{
+						DoubleVideoData d = mDoubleLoopVideoData.get(arg2);
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							//点击列表左边项,跳转到视频播放页面
 							gotoVideoPlayPage(tag1);
+							String filename = d.getVideoInfo1().filename;
+							updateNewState(filename, mLocalLoopVideoListManage.mLocalVideoListData);
+							
+							mDoubleLoopVideoData.get(arg2).getVideoInfo1().isNew = false;
+							mLocalLoopVideoListManage.mDoubleLocalVideoListData.get(arg2).getVideoInfo1().isNew = false;
+							mLoopVideoAdapter.notifyDataSetChanged();
 						}else{
 							//点击列表右边项,跳转到视频播放页面
 							gotoVideoPlayPage(tag2);
+							LocalVideoData info2 = d.getVideoInfo2();
+							if(null == info2)
+								return;
+							String filename = info2.filename;
+							updateNewState(filename, mLocalLoopVideoListManage.mLocalVideoListData);
+							
+							mDoubleLoopVideoData.get(arg2).getVideoInfo2().isNew = false;
+							mLocalLoopVideoListManage.mDoubleLocalVideoListData.get(arg2).getVideoInfo2().isNew = false;
+							mLoopVideoAdapter.notifyDataSetChanged();
 						}
 					}
 				}
@@ -499,16 +444,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	 * @date 2015年4月2日
 	 */
 	@SuppressLint("InflateParams")
-	private void initWonderfulLayout(){
-//		mWonderfulVideoList.setVisibility(View.VISIBLE);
-//		mEmergencyVideoList.setVisibility(View.GONE);
-//		mLoopVideoList.setVisibility(View.GONE);
-		
-//		mWonderfulGroupName.clear();
-//		wonderfulVideoData.clear();
-		
-//		getGormattedData(fileList);
-		
+	private void initWonderfulLayout(){	
 		//列表tab数据
 		mWonderfulGroupName = mLocalWonderfulVideoListManage.mTabGroupName;
 		//精彩视频数据
@@ -532,7 +468,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
 					if(mWonderfulVideoList.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
-//						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
+						
 					}
 				}
 			}
@@ -915,7 +851,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 					mEditBtn.setText("编辑");
 					mIsEditState = false;
 					selectedListData.clear();
-					//把下载和删除按钮的北京颜色还原回去
+					//把下载和删除按钮的背景颜色还原回去
 					updateDelandEditBg(false);
 					mFunctionLayout.setVisibility(View.GONE);
 				}
@@ -983,177 +919,94 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 
 
 	
-	@Override
-	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		switch (event) {
-		case ENetTransEvent_IPC_VDCP_CommandResp:
-			if (IPC_VDCP_Msg_Query == msg) {
-				isGetFileListDataing=false;
-				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
-				if (RESULE_SUCESS == param1) {
-					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
-					int total = IpcDataParser.getFileListCount((String) param2);
-					if (null != fileList) {
-						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
-						mCurrentType = mOprateType;
-						updateButtonState(mCurrentType);
-						if(TYPE_SHORTCUT == mOprateType){//精彩视频
-							wonderfulTotalCount = total;
-//							initWonderfulLayout(fileList);
-						}else if(TYPE_URGENT == mOprateType){//紧急视频
-							emergencyTotalCount = total;
-//							initEmergencyLayout(fileList);
-						}else{//循环视频
-							loopVisibleCount = total;
-//							initLoopLayout(fileList);
-						}
-					} else {
-						// 列表数据空
-						GFileUtils
-								.writeIPCLog("===========获取文件列表===5555============ data null=========");
-					}
-				} else {
-					// 命令发送失败
-					GFileUtils
-							.writeIPCLog("===========获取文件列表===6666============  not success =========");
-				}
-			}else if(IPC_VDCPCmd_TriggerRecord == msg){
-				GFileUtils
-				.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==========222222222222222222 =========");
-			//文件删除
-			}else if(IPC_VDCPCmd_Erase == msg){
-				System.out.println("QQQ==========param1="+param1+"===param2="+param2);
-			}
-			break;
-		// IPC下载结果应答
-		case ENetTransEvent_IPC_VDTP_Resp:
-			GFileUtils
-					.writeIPCLog("===========下载文件===2222222=============param1="
-							+ param1 + "=====param2=" + param2);
-			// 文件传输消息
-			if (IPC_VDTP_Msg_File == msg) {
-				// 文件下载成功
-				if (RESULE_SUCESS == param1) {
-					try {
-						JSONObject json = new JSONObject((String) param2);
-						if (null != json) {
-							String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-							String filename = json.optString("filename");
-							if(filename.contains(".jpg")){
-							String tag = json.optString("tag");
-		System.out.println("TTT=====22222====filename="+filename+"===tag="+tag);
-							if(TYPE_SHORTCUT == mCurrentType){//精彩视频
-								if (null != mWonderfulVideoAdapter) {
-//									for(int i=0; i<mWonderfulVideoData.size(); i++){
-//										DoubleVideoInfo info =  wonderfulVideoData.get(i);
-//										String id1 = info.getVideoInfo1().id + "";
-//										if (tag.equals(id1)) {
-//											System.out.println("TTT===wonderful=3333=====filename="+filename+"===tag="+tag);
-//											wonderfulVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
-//													.getBitmapFromCache(filePath
-//															+ File.separator
-//															+ filename, 194, 109);
-//										}
-//										
-//										if(null != info.getVideoInfo2()){
-//											String id2 = info.getVideoInfo2().id + "";
-//											if(!TextUtils.isEmpty(id2)){
-//												if(tag.equals(id2)){
-//													System.out.println("TTT===wonderful=4444=====filename="+filename+"===tag="+tag);
-//													wonderfulVideoData.get(i).getVideoInfo2().videoBitmap = ImageManager
-//															.getBitmapFromCache(filePath
-//																	+ File.separator
-//																	+ filename, 194, 109);
-//												}
-//											}
-//										}
-										
-//									}
-									
-									mWonderfulVideoAdapter.notifyDataSetChanged();
-								}
-							}else if(TYPE_URGENT == mCurrentType){//紧急视频
-								if (null != mEmergencyVideoAdapter) {
-									for(int i=0; i<mDoubleEmergencyVideoData.size(); i++){
-//										DoubleVideoInfo info =  emergencyVideoData.get(i);
-//										String id1 = info.getVideoInfo1().id + "";
-//										if (tag.equals(id1)) {
-//											System.out.println("TTT==emergency==3333=====filename="+filename+"===tag="+tag);
-//											emergencyVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
-//													.getBitmapFromCache(filePath
-//															+ File.separator
-//															+ filename, 194, 109);
-//										}
-//										
-//										if(null != info.getVideoInfo2()){
-//											String id2 = info.getVideoInfo2().id + "";
-//											if(!TextUtils.isEmpty(id2)){
-//												if(tag.equals(id2)){
-//													System.out.println("TTT==emergency==4444=====filename="+filename+"===tag="+tag);
-//													emergencyVideoData.get(i).getVideoInfo2().videoBitmap = ImageManager
-//															.getBitmapFromCache(filePath
-//																	+ File.separator
-//																	+ filename, 194, 109);
-//												}
-//											}
-//										}
-										
-									}
-									
-									mEmergencyVideoAdapter.notifyDataSetChanged();
-								}
-							}else{//循环视频
-								if (null != mLoopVideoAdapter) {
-									for(int i=0; i<mDoubleLoopVideoData.size(); i++){
-//										DoubleVideoInfo info =  loopVideoData.get(i);
-//										String id1 = info.getVideoInfo1().id + "";
-//										if (tag.equals(id1)) {
-//											System.out.println("TTT==loop==3333=====filename="+filename+"===tag="+tag);
-//											loopVideoData.get(i).getVideoInfo1().videoBitmap = ImageManager
-//													.getBitmapFromCache(filePath
-//															+ File.separator
-//															+ filename, 194, 109);
-//										}
-										
-//										if(null != info.getVideoInfo2()){
-//											String id2 = info.getVideoInfo2().id + "";
-//											if(!TextUtils.isEmpty(id2)){
-//												if(tag.equals(id2)){
-//													System.out.println("TTT===loop=4444=====filename="+filename+"===tag="+tag);
-//													loopVideoData.get(i).getVideoInfo2().videoBitmap = ImageManager
-//															.getBitmapFromCache(filePath
-//																	+ File.separator
-//																	+ filename, 194, 109);
-//												}
-//											}
-//										}
-//										
-									}
-									
-									mLoopVideoAdapter.notifyDataSetChanged();
-								}
-							}
-							}else{
-								System.out.println("TTT======2222=filename="+filename);
-							}
-							
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					// 文件下载中进度
-				} else if (1 == param1) {
-					// param1为文件下载进度
-				} else {
-					// 其他下载失败
-				}
-			}
-			break;
-			
-		default:
-			break;
-		}
-
-	}
+//	@Override
+//	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+//		switch (event) {
+//		case ENetTransEvent_IPC_VDCP_CommandResp:
+//			if (IPC_VDCP_Msg_Query == msg) {
+//				isGetFileListDataing=false;
+//				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
+//				if (RESULE_SUCESS == param1) {
+//					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
+//					int total = IpcDataParser.getFileListCount((String) param2);
+//					if (null != fileList) {
+//						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
+//						mCurrentType = mOprateType;
+//						updateButtonState(mCurrentType);
+//						if(TYPE_SHORTCUT == mOprateType){//精彩视频
+//							wonderfulTotalCount = total;
+////							initWonderfulLayout(fileList);
+//						}else if(TYPE_URGENT == mOprateType){//紧急视频
+//							emergencyTotalCount = total;
+////							initEmergencyLayout(fileList);
+//						}else{//循环视频
+//							loopVisibleCount = total;
+////							initLoopLayout(fileList);
+//						}
+//					} else {
+//						// 列表数据空
+//						GFileUtils
+//								.writeIPCLog("===========获取文件列表===5555============ data null=========");
+//					}
+//				} else {
+//					// 命令发送失败
+//					GFileUtils
+//							.writeIPCLog("===========获取文件列表===6666============  not success =========");
+//				}
+//			}else if(IPC_VDCPCmd_TriggerRecord == msg){
+//				GFileUtils
+//				.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==========222222222222222222 =========");
+//			//文件删除
+//			}else if(IPC_VDCPCmd_Erase == msg){
+//				System.out.println("QQQ==========param1="+param1+"===param2="+param2);
+//			}
+//			break;
+//		// IPC下载结果应答
+//		case ENetTransEvent_IPC_VDTP_Resp:
+//			// 文件传输消息
+//			if (IPC_VDTP_Msg_File == msg) {
+//				// 文件下载成功
+//				if (RESULE_SUCESS == param1) {
+//					try {
+//						JSONObject json = new JSONObject((String) param2);
+//						if (null != json) {
+//							String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+//							String filename = json.optString("filename");
+//							if(filename.contains(".jpg")){
+//							String tag = json.optString("tag");
+//							if(TYPE_SHORTCUT == mCurrentType){//精彩视频
+//								if (null != mWonderfulVideoAdapter) {
+//									mWonderfulVideoAdapter.notifyDataSetChanged();
+//								}
+//							}else if(TYPE_URGENT == mCurrentType){//紧急视频
+//								if (null != mEmergencyVideoAdapter) {						
+//									mEmergencyVideoAdapter.notifyDataSetChanged();
+//								}
+//							}else{//循环视频
+//								if (null != mLoopVideoAdapter) {
+//									mLoopVideoAdapter.notifyDataSetChanged();
+//								}
+//							}
+//							}else{
+//								
+//							}
+//						}
+//					} catch (JSONException e) {
+//						e.printStackTrace();
+//					}
+//					// 文件下载中进度
+//				} else if (1 == param1) {
+//					// param1为文件下载进度
+//				} else {
+//					// 其他下载失败
+//				}
+//			}
+//			break;
+//			
+//		default:
+//			break;
+//		}
+//
+//	}
 
 }
