@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -68,6 +69,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private ImageButton mBackBtn = null;
 	/** 说明文字 */
 	private TextView mDescTitleText = null;
+	private TextView mDescTitleText2 = null;
 	/** IPC信号动画 */
 	private ImageView mIpcSignalImage = null;
 	private AnimationDrawable mIpcSignalAnim = null;
@@ -97,6 +99,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private int mState = STATE_NONE;
 
 	private boolean mIsCanAcceptIPC = false;
+	private TextView mHelpTv = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -117,7 +120,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		mLoading.setVisibility(View.VISIBLE);
 		mBaseHandler.sendEmptyMessageDelayed(100, 1000);
 	}
-	
+
 	@Override
 	protected void hMessage(Message msg) {
 		if (100 == msg.what) {
@@ -136,9 +139,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		mIpcSignalImage = (ImageView) findViewById(R.id.imageView2);
 		mIpcSignalAnim = (AnimationDrawable) mIpcSignalImage.getBackground();
 
-		mDescTitleText = (TextView) findViewById(R.id.textView1);
+		mDescTitleText = (TextView) findViewById(R.id.wifilist_textView1);
+		mDescTitleText2 = (TextView) findViewById(R.id.wifilist_textView2);
 		mRefreshHelpBtn = (ImageButton) findViewById(R.id.refresh_help_btn);
 		mNextBtn = (Button) findViewById(R.id.next_btn);
+
+		mHelpTv = (TextView) findViewById(R.id.wifi_link_list_help);
+		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); // 下划线
+		mHelpTv.setOnClickListener(this);
 
 		mWiFiList = (ListView) findViewById(R.id.wifi_list_listview);
 
@@ -155,9 +163,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		// 启动动画
 		mIpcSignalAnim.start();
 		// 修改title说明文字颜色
-		mDescTitleText
-				.setText(Html
-						.fromHtml("1.确认<font color=\"#0587ff\"> WiFi指示灯 </font>闪烁,连接名称为<font color=\"#0587ff\"> Goluk xxxxx </font>的WiFi"));
+		final String connStr1 = "确认<font color=\"#0587ff\"> WiFi指示灯 </font>闪烁";
+		mDescTitleText.setText(Html.fromHtml(connStr1));
+		final String connStr2 = "连接名称为<font color=\"#0587ff\"> Goluk xxxxx </font>的WiFi";
+		mDescTitleText2.setText(Html.fromHtml(connStr2));
 	}
 
 	/**
@@ -169,7 +178,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			mLoading.setVisibility(View.VISIBLE);
 		}
 
-		GolukDebugUtils.e("","获取wifi列表---getWiFiList---");
+		GolukDebugUtils.e("", "获取wifi列表---getWiFiList---");
 		// 获取文件列表tcay_ap_ipc
 		mWac.scanWifiList("", b);
 	}
@@ -188,7 +197,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		saveConnectWifiMsg(wifiName, pwd, mac);
 		// 连接wifi
 		mWac.connectWifi(wifiName, pwd, WifiCipherType.WIFICIPHER_WPA);
-		GolukDebugUtils.e("","开始连接选定wifi---connectWiFi---" + wifiName + "---" + pwd);
+		GolukDebugUtils.e("", "开始连接选定wifi---connectWiFi---" + wifiName + "---" + pwd);
 	}
 
 	/**
@@ -204,7 +213,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		saveConnectWifiMsg(wifiName, "", mac);
 		// 连接wifi
 		mWac.connectWifi(wifiName, "", WifiCipherType.WIFICIPHER_NOPASS);
-		GolukDebugUtils.e("","开始连接选定wifi---connectWiFi---" + wifiName + "---pwd---空");
+		GolukDebugUtils.e("", "开始连接选定wifi---connectWiFi---" + wifiName + "---pwd---空");
 	}
 
 	private void saveConnectWifiMsg(String wifiName, String pwd, String mac) {
@@ -221,14 +230,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		// 先获取ipc是否已连接
 		mState = STATE_IP_CONNING;
 		boolean isLogin = mApp.getIpcIsLogin();
-		GolukDebugUtils.e("","ipc连接状态---WiFiLinkListActivity---b---" + isLogin);
+		GolukDebugUtils.e("", "ipc连接状态---WiFiLinkListActivity---b---" + isLogin);
 		if (!isLogin) {
 			mLoading.setVisibility(View.VISIBLE);
 			// 连接ipc热点wifi---调用ipc接口
-			GolukDebugUtils.e("","通知logic连接ipc---sendLogicLinkIpc---1");
+			GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1");
 			mIsCanAcceptIPC = true;
 			boolean b = mApp.mIPCControlManager.setIPCWifiState(true, "192.168.62.1");
-			GolukDebugUtils.e("","通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+			GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 		} else {
 			mState = STATE_NONE;
 			// ipc已连接
@@ -258,7 +267,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		mIsCanAcceptIPC = false;
 
 		mState = STATE_NONE;
-		GolukDebugUtils.e("","ipc连接成功回调---ipcLinkedCallBack---1");
+		GolukDebugUtils.e("", "ipc连接成功回调---ipcLinkedCallBack---1");
 		mLoading.setVisibility(View.GONE);
 		// 标识已连接ipc热点,可以点击下一步
 		this.nextCan();
@@ -288,16 +297,34 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		case R.id.next_btn:
 			// 已连接ipc热点,可以跳转到修改密码页面
 			if (mHasLinked) {
-				// 跳转到修改热点密码页面
-				Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkModifyPwdActivity.class);
-				modifyPwd.putExtra("cn.com.mobnote.golukmobile.wifiname", mLinkWiFiName);
-				startActivity(modifyPwd);
+				toNextView();
 			} else {
 				// 灰色按钮不能点击
 				GolukUtils.showToast(mContext, "请先连接IPC-WIFI");
 			}
 			break;
+		case R.id.wifi_link_list_help:
+			GolukUtils.showToast(this, "连接帮助");
+			break;
 		}
+	}
+
+	private void setDefaultInfo() {
+		// 保存默认的信息
+		WiFiInfo.AP_PWD = IPC_PWD_DEFAULT;
+		String wifiName = WiFiInfo.AP_SSID;
+		String name = wifiName.replace("Goluk", "GOLUK");
+		WiFiInfo.GolukSSID = name;
+		WiFiInfo.GolukPWD = MOBILE_HOT_PWD_DEFAULT;
+	}
+
+	private void toNextView() {
+		setDefaultInfo();
+
+		// 跳转到修改热点密码页面
+		Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity2.class);
+		modifyPwd.putExtra("cn.com.mobnote.golukmobile.wifiname", mLinkWiFiName);
+		startActivity(modifyPwd);
 	}
 
 	private void nextCan() {
@@ -324,32 +351,32 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void callBack_ScanWifiList(int state, int process, String message, Object arrays) {
-		GolukDebugUtils.e("","wifi链接接口回调---type---callBack_ScanWifiList---state---" + state + "---process---" + process
-				+ "---message---" + message + "---arrays---" + arrays);
+		GolukDebugUtils.e("", "wifi链接接口回调---type---callBack_ScanWifiList---state---" + state + "---process---"
+				+ process + "---message---" + message + "---arrays---" + arrays);
 		mState = STATE_NONE;
 		if (state < 0) {
 			mState = STATE_NONE;
 			return;
 		}
-		GolukDebugUtils.e("","wifi链接接口回调---type---callBack_ScanWifiList---state---222222");
+		GolukDebugUtils.e("", "wifi链接接口回调---type---callBack_ScanWifiList---state---222222");
 		// 获取wifi列表
 		WifiRsBean[] beans = (WifiRsBean[]) arrays;
 		if (beans == null) {
 			mState = STATE_NONE;
 			return;
 		}
-		GolukDebugUtils.e("","wifi链接接口回调---type---callBack_ScanWifiList---state---33333333");
+		GolukDebugUtils.e("", "wifi链接接口回调---type---callBack_ScanWifiList---state---33333333");
 		mWiFiListManage.analyzeWiFiData(beans);
 		mWiFiListAdapter.notifyDataSetChanged();
 		this.nextNotCan();
-		GolukDebugUtils.e("","wifi链接接口回调---type---callBack_ScanWifiList---state---44444");
+		GolukDebugUtils.e("", "wifi链接接口回调---type---callBack_ScanWifiList---state---44444");
 
 	}
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		GolukDebugUtils.e("","wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process + "---message---"
-				+ message + "---arrays---" + arrays);
+		GolukDebugUtils.e("", "wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process
+				+ "---message---" + message + "---arrays---" + arrays);
 		mLoading.setVisibility(View.GONE);
 		switch (type) {
 		case 1:

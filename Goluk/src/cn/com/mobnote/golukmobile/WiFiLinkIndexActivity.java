@@ -1,12 +1,10 @@
 package cn.com.mobnote.golukmobile;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.golukmobile.R;
-import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +12,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.util.GolukUtils;
 
 /**
  * <pre>
@@ -44,9 +45,11 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
 	/** 说明文字 */
-	private TextView mDescTitleText = null;
+	private TextView mDescTitleText1 = null;
+	private TextView mDescTitleText2 = null;
 	/** 继续按钮 */
 	private Button mKeepBtn = null;
+	private TextView mHelpTv = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,14 +77,19 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 	private void init() {
 		// 获取页面元素
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
-		mDescTitleText = (TextView) findViewById(R.id.textView1);
+		mDescTitleText1 = (TextView) findViewById(R.id.textView1);
+		mDescTitleText2 = (TextView) findViewById(R.id.textView2);
 		mKeepBtn = (Button) findViewById(R.id.keep_btn);
 		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		mKeepBtn.setOnClickListener(this);
 		// 修改title说明文字颜色
-		mDescTitleText.setText(Html
-				.fromHtml("请让<font color=\"#0587ff\">Goluk</font>与<font color=\"#0587ff\">手机</font>连接"));
+		final String showTxt = "需要<font color=\"#0587ff\"> 手机 </font>与<font color=\"#0587ff\"> 极路客 </font>建立WiFi连接";
+		mDescTitleText2.setText(Html.fromHtml(showTxt));
+
+		mHelpTv = (TextView) findViewById(R.id.wifi_link_index_help);
+		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); // 下划线
+		mHelpTv.setOnClickListener(this);
 	}
 
 	@Override
@@ -102,6 +110,9 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 			// 新版需求,直接跳转到wifi列表页面
 			Intent list = new Intent(WiFiLinkIndexActivity.this, WiFiLinkListActivity.class);
 			startActivity(list);
+			break;
+		case R.id.wifi_link_index_help:
+			GolukUtils.showToast(this, "帮助");
 			break;
 		}
 	}
