@@ -183,6 +183,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}else{
+//						mBtnIdentify.setEnabled(false);
 						UserUtils.showDialog(UserRegistActivity.this, "手机号不能为空");
 					}
 				}else{
@@ -262,7 +263,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String pwd = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
 				if(!"".equals(phone)){
-					if(phone.length() == 11 && phone.startsWith("1") && UserUtils.isMobileNO(phone)){
+					if(phone.length() == 11){
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 						mBtnIdentify.setEnabled(true);
 					}else{
@@ -412,7 +413,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		/**
 		 * 对获取验证码进行判断
 		 */
-		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
+		if(UserUtils.isMobileNO(phone)){
 			String isIdentify = "{\"PNumber\":\"" + phone + "\",\"type\":\"1\"}";
 			GolukDebugUtils.e("",isIdentify);
 			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVCode, isIdentify);
@@ -433,7 +434,11 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 
 			}
 		}else{
-			mBtnIdentify.setEnabled(false);
+			if(!phone.equals("")){
+				UserUtils.showDialog(mContext, "手机号输入格式错误，请重新输入");
+			}else{
+				mBtnIdentify.setEnabled(false);
+			}
 		}
 		
 	}
@@ -847,7 +852,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			break;
 		case R.id.user_regist_identify_btn:
 			String phone = mEditTextPhone.getText().toString();
-			if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
+			if(!"".equals(phone) && phone.length() == 11){
 				switch (action) {
 				case MotionEvent.ACTION_DOWN:
 					mBtnIdentify.setBackgroundResource(R.drawable.icon_login_click);
