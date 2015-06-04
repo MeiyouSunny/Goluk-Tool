@@ -57,6 +57,50 @@
 			android:background="@drawable/solid"
 			android:layout_below="@id/unbind_layout_camera"/>
 		
+		<!-- 极路客WiFi密码 -->
+		<View
+			android:id="@+id/solid_3"
+			android:layout_width="wrap_content"
+			android:layout_height="1dp"
+			android:background="@drawable/solid"
+			android:layout_below="@id/unbind_layout_camera"
+			android:layout_marginTop="10dp"/>
+		<RelativeLayout
+			android:id="@+id/unbind_layout_password"
+			android:layout_width="match_parent"
+			android:layout_height="47dp"
+			android:background="#f4f4f4"
+			android:layout_below="@id/solid_3">
+		
+		<TextView
+			android:id="@+id/unbind_password_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="21dp"
+			android:text="@string/unbind_password"
+			android:textSize="16sp"
+			android:textColor="#3f3f3f"
+			android:layout_centerVertical="true"/>
+		
+		<TextView
+		    android:id="@+id/unbind_password_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="19dp"
+			android:layout_centerVertical="true"
+			android:textSize="18sp"
+			android:contentDescription="@string/imgdes"
+			android:textColor="#3f3f3f"/>
+		
+		</RelativeLayout>
+		<View
+			android:id="@+id/solid_4"
+			android:layout_width="wrap_content"
+			android:layout_height="1dp"
+			android:background="@drawable/solid"
+			android:layout_below="@id/unbind_layout_password"/>
+		
 		<!-- 解绑按钮 -->
 		<Button
 		android:id="@+id/unbind_layout_btn"

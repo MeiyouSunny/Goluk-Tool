@@ -92,6 +92,9 @@
     <string name="remove_cache_text">清除缓存</string>
     <string name="unbind_text">摄像头管理</string>
     <string name="unbind_camera">摄像头名称</string>
+    <string name="unbind_password">极路客WiFi密码</string>
+    <string name="change_wifi_name">密码</string>
+    <string name="change_wifi_password_hint">密码必须包含至少8个字符。更改密码将在30秒之后生效。</string>
     <string name="loginout_text">退出</string>
     <string name="pull_to_refresh_pull_label">下拉刷新</string>
     <string name="pull_to_refresh_release_label">松开后刷新</string>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ public class UnbindActivity extends Activity implements OnClickListener{
 	//body
 	private RelativeLayout mHaveipcLayout = null;
 	private RelativeLayout mNoipcLayout = null;
+	private RelativeLayout mPwdLayout = null;
+	private TextView mTextPasswordName = null;
 	private TextView mTextCameraName = null;
 	private Button mUnbindBtn = null;
 	
@@ -62,6 +65,8 @@ public class UnbindActivity extends Activity implements OnClickListener{
 		mNoipcLayout = (RelativeLayout) findViewById(R.id.unbind_layout_noipc);
 		mTextCameraName = (TextView) findViewById(R.id.unbind_camera_name);
 		mUnbindBtn = (Button) findViewById(R.id.unbind_layout_btn);
+		mPwdLayout = (RelativeLayout) findViewById(R.id.unbind_layout_password);
+		mTextPasswordName = (TextView) findViewById(R.id.unbind_password_name);
 		
 		mTextTitle.setText("摄像头管理");
 		mUnbindBtn.setText("解除摄像头绑定连接");
@@ -88,6 +93,7 @@ public class UnbindActivity extends Activity implements OnClickListener{
 		 */
 		mBackBtn.setOnClickListener(this);
 		mUnbindBtn.setOnClickListener(this);
+		mPwdLayout.setOnClickListener(this);
 		
 	}
 
@@ -114,7 +120,12 @@ public class UnbindActivity extends Activity implements OnClickListener{
 				}
 			}).create().show();
 			break;
-
+		case R.id.unbind_layout_password:
+			String password = mTextPasswordName.getText().toString();
+			Intent it = new Intent(UnbindActivity.this,UserSetupChangeWifiActivity.class);
+			it.putExtra("wifiPwd", password);
+			startActivity(it);
+			break;
 		default:
 			break;
 		}
