@@ -215,13 +215,13 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					}
 				}else{
 					//注册按钮
-					if(!"".equals(phone) && !"".equals(password) && !"".equals(identify)){
+					/*if(!"".equals(phone) && !"".equals(password) && !"".equals(identify)){
 						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 						mBtnRegist.setEnabled(true);
 					}else{
 						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
 						mBtnRegist.setEnabled(false);
-					}
+					}*/
 				}
 			}
 		});
@@ -244,13 +244,13 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					}
 				}else{
 					//注册按钮
-					if(!"".equals(phone) && !"".equals(pwd) && !"".equals(identify)){
+					/*if(!"".equals(phone) && !"".equals(pwd) && !"".equals(identify)){
 						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 						mBtnRegist.setEnabled(true);
 					}else{
 						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
 						mBtnRegist.setEnabled(false);
-					}
+					}*/
 				}
 			}
 		});

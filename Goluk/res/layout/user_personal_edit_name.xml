@@ -44,6 +44,7 @@
 		        android:textColor="@color/user_personal_black"
 		        android:paddingLeft="20dp"
 		        android:maxLength="10"
+		        android:singleLine="true"
 		        />
 
 	    </RelativeLayout>
