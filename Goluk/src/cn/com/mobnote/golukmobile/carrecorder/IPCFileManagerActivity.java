@@ -440,10 +440,10 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 			deltv = (TextView) findViewById(R.id.video_delete_txt);
 			deltv.setTextColor(this.getResources().getColor(R.color.carrecorder_del_def_bg));
 			
-			if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
-				findViewById(R.id.video_download_img).setBackgroundResource(R.drawable.carrecorder_icon_download_grey);
-				return;
-			}
+//			if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
+//				findViewById(R.id.video_download_img).setBackgroundResource(R.drawable.carrecorder_icon_download_grey);
+//				return;
+//			}
 			findViewById(R.id.video_download_img).setBackgroundResource(R.drawable.carrecorder_icon_download);
 			downloadtv = (TextView) findViewById(R.id.video_download_txt);
 			downloadtv.setTextColor(this.getResources().getColor(R.color.carrecorder_del_def_bg));
@@ -957,9 +957,9 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 				}
 				break;
 			case R.id.mDownloadBtn:
-				if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
-					return;
-				}
+//				if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
+//					return;
+//				}
 				
 				isEditState=false;
 				mEditBtn.setText("编辑");
