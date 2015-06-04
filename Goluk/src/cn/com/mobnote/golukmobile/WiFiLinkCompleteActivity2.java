@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
-import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,12 +16,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.wifibind.ViewFrame;
+import cn.com.mobnote.golukmobile.wifibind.WifiLinkSetIpcLayout;
+import cn.com.mobnote.golukmobile.wifibind.WifiLinkSucessLayout;
+import cn.com.mobnote.golukmobile.wifibind.WifiLinkWaitConnLayout;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
@@ -31,33 +31,44 @@ import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickListener, WifiConnCallBack {
+
+	private static final String TAG = "WiFiLinkBindAll";
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
-	/** 创建热点描述title */
-	private TextView mCreateHotText = null;
-	/** 连接成功描述title layout */
-	private RelativeLayout mLinkedLayout = null;
-	private TextView mLinkedDesc = null;
 
 	private WifiConnectManager mWac = null;
-	/** 连接图片 */
-	private ImageView mLinkImage = null;
-	private AnimationDrawable mLinkAnim = null;
-	/** 完成按钮 */
-	private Button mCompleteBtn = null;
-	/** 开始使用状态 */
-	private boolean mIsComplete = false;
-	/** ipc连接mac地址 */
-	private String mIpcMac = "";
-	private String mWiFiIp = "";
 
 	private boolean isExit = false;
 	/** 中间的根布局 */
 	private FrameLayout mMiddleLayout = null;
+
+	private WifiLinkSetIpcLayout layout1 = null;
+	private WifiLinkWaitConnLayout layout2 = null;
+	private WifiLinkSucessLayout layout3 = null;
+	/** 当前正在显示的布局 */
+	private ViewFrame mCurrentLayout = null;
+
+	private Button mCompleteBtn = null;
+	private ImageView mProgressImg = null;
+
+	private int connectCount = 0;
+
+	/** ipc连接mac地址 */
+	private String mIpcMac = "";
+	private String mWiFiIp = "";
+
+	/** 开始使用状态 */
+	private boolean mIsComplete = false;
+
+	private final int STATE_SET_IPC_INFO = 0;
+	private final int STATE_WAIT_CONN = 1;
+	private final int STATE_SUCESS = 2;
+
+	private int mState = STATE_SET_IPC_INFO;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,19 +76,27 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_complete2);
 		mContext = this;
-
+		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		mWac = new WifiConnectManager(wm, this);
+		initChildView();
 		mMiddleLayout = (FrameLayout) findViewById(R.id.wifi_link_complete_frmelayout);
-
+		mCompleteBtn = (Button) findViewById(R.id.complete_btn);
+		mCompleteBtn.setOnClickListener(this);
+		mProgressImg = (ImageView) findViewById(R.id.wifilink_progress);
+		init();
+		toSetIPCInfoView();
 		SysApplication.getInstance().addActivity(this);
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
-		mApp.setContext(mContext, "WiFiLinkComplete");
-		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		mWac = new WifiConnectManager(wm, this);
-		// 页面初始化
-		init();
-		// 延时创建手机热点
-		mBaseHandler.sendEmptyMessageDelayed(100, 3 * 1000);
+		mApp.setContext(mContext, TAG);
+
+		setIpcLinkInfo();
+	}
+
+	private void initChildView() {
+		layout1 = new WifiLinkSetIpcLayout(this);
+		layout2 = new WifiLinkWaitConnLayout(this);
+		layout3 = new WifiLinkSucessLayout(this);
 	}
 
 	@Override
@@ -94,17 +113,64 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 	private void init() {
 		// 获取页面元素
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
-		mCreateHotText = (TextView) findViewById(R.id.textView1);
-		mLinkedLayout = (RelativeLayout) findViewById(R.id.linked_layout);
-		mLinkedDesc = (TextView) findViewById(R.id.linked_desc);
-		mLinkImage = (ImageView) findViewById(R.id.imageView2);
-		mLinkAnim = (AnimationDrawable) mLinkImage.getBackground();
-		mLinkAnim.start();
-		mCompleteBtn = (Button) findViewById(R.id.complete_btn);
 		// 注册事件
 		mBackBtn.setOnClickListener(this);
-		mCompleteBtn.setOnClickListener(this);
-		mCreateHotText.setText(Html.fromHtml("手机正在<font color=\"#0587ff\">创建WiFi</font>个人热点...."));
+	}
+
+	/**
+	 * 设置ipc信息，包括修改IPC的密码，IPC连接手机的热点信息
+	 */
+	private void setIpcLinkInfo() {
+		connectCount++;
+		// 连接ipc热点wifi---调用ipc接口
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
+		final String json = getSetIPCJson();
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
+		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
+		if (!b) {
+			GolukUtils.showToast(mContext, "调用设置IPC连接热点失败");
+		}
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
+	}
+
+	private String getSetIPCJson() {
+		// 写死ip,网关
+		final String ip = "192.168.1.103";
+		final String way = "192.168.1.103";
+		// 连接ipc热点wifi---调用ipc接口
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
+		String json = "";
+		if (null != WiFiInfo.AP_PWD && !"".equals(WiFiInfo.AP_PWD)) {
+			json = "{\"AP_SSID\":\"" + WiFiInfo.AP_SSID + "\",\"AP_PWD\":\"" + WiFiInfo.AP_PWD + "\",\"GolukSSID\":\""
+					+ WiFiInfo.GolukSSID + "\",\"GolukPWD\":\"" + WiFiInfo.GolukPWD + "\",\"GolukIP\":\"" + ip
+					+ "\",\"GolukGateway\":\"" + way + "\" }";
+		} else {
+			json = "{\"GolukSSID\":\"" + WiFiInfo.GolukSSID + "\",\"GolukPWD\":\"" + WiFiInfo.GolukPWD
+					+ "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
+		}
+		return json;
+	}
+
+	/**
+	 * 设置IPC信息成功回调
+	 */
+	public void setIpcLinkWiFiCallBack(int state) {
+		if (0 == state) {
+			// 隐藏loading
+			toWaitConnView();
+			// 开始创建手机热点
+			mBaseHandler.sendEmptyMessageDelayed(100, 3 * 1000);
+			GolukDebugUtils.e("",
+					"WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
+		} else {
+			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
+			if (connectCount > 3) {
+				GolukUtils.showToast(this, "绑定失败");
+			} else {
+				GolukUtils.showToast(this, "绑定失败, 重新连接 ");
+				setIpcLinkInfo();
+			}
+		}
 	}
 
 	/**
@@ -129,12 +195,7 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 	 * wifi热点创建成功
 	 */
 	private void hotWiFiCreateSuccess() {
-		mLinkedLayout.setVisibility(View.GONE);
-		mCreateHotText.setText(Html.fromHtml("等待Goluk<font color=\"#0587ff\">连接</font>到手机...."));
-		// 停止动画
-		mLinkAnim.stop();
-		// 更换背景图片
-		mLinkImage.setBackgroundResource(R.drawable.connect_gif_line);
+
 	}
 
 	/**
@@ -148,27 +209,6 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 		mWiFiIp = ip;
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
-	}
-
-	/**
-	 * 退出页面设置
-	 */
-	private void backSetup() {
-		if (isExit) {
-			return;
-		}
-		isExit = true;
-		if (mIsComplete) {
-			// 如果连接上了 保存标识
-			bindSucess();
-		} else {
-			// 没连接,关闭热点
-			if (null != mWac) {
-				mWac.closeWifiAP();
-			}
-			// 返回关闭全部页面
-			SysApplication.getInstance().exit();
-		}
 	}
 
 	/**
@@ -194,10 +234,12 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 	 * ipc连接成功回调
 	 */
 	public void ipcLinkWiFiCallBack() {
-		mCreateHotText.setVisibility(View.GONE);
-		mLinkedLayout.setVisibility(View.VISIBLE);
-		mLinkedDesc.setText(Html.fromHtml("你的Goluk已<font color=\"#0587ff\">成功连接</font>到手机"));
-		mCompleteBtn.setBackgroundResource(R.drawable.connect_mianbtn);
+		this.toSucessView();
+
+		// mCreateHotText.setVisibility(View.GONE);
+		// mLinkedLayout.setVisibility(View.VISIBLE);
+		// mLinkedDesc.setText(Html.fromHtml("你的Goluk已<font color=\"#0587ff\">成功连接</font>到手机"));
+		// mCompleteBtn.setBackgroundResource(R.drawable.connect_mianbtn);
 		mIsComplete = true;
 
 		// 保存连接数据
@@ -208,11 +250,30 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 		beans.setPh_pass(WiFiInfo.GolukPWD);
 		beans.setIpc_ip(mWiFiIp);
 		mWac.saveConfiguration(beans);
-
 		saveBind(WiFiInfo.AP_SSID);
-
 		// 保存绑定标识
 		saveBindMark();
+	}
+
+	/**
+	 * 退出页面设置
+	 */
+	private void backSetup() {
+		if (isExit) {
+			return;
+		}
+		isExit = true;
+		if (this.STATE_SET_IPC_INFO == mState) {
+			// 不支持返回
+		} else if (this.STATE_WAIT_CONN == mState) {
+			this.finish();
+			// 没连接,关闭热点
+			if (null != mWac) {
+				mWac.closeWifiAP();
+			}
+		} else if (this.STATE_SUCESS == mState) {
+			// 不支持返回
+		}
 	}
 
 	@Override
@@ -234,7 +295,7 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 
 	@Override
 	protected void onResume() {
-		mApp.setContext(this, "WiFiLinkComplete");
+		mApp.setContext(this, TAG);
 		super.onResume();
 	}
 
@@ -248,6 +309,8 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 		startActivity(i);
 	}
 
+	boolean isSucess = false;
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -256,11 +319,54 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 			backSetup();
 			break;
 		case R.id.complete_btn:
-			if (mIsComplete) {
-				bindSucess();
+			if (this.STATE_SUCESS == mState) {
+				// 綁定成功后，可以进入行车记录仪
+				// 关闭wifi绑定全部页面
+				SysApplication.getInstance().exit();
+				// 跳转到ipc预览页面
+				Intent i = new Intent(mContext, CarRecorderActivity.class);
+				startActivity(i);
 			}
 			break;
 		}
+	}
+
+	private void toSetIPCInfoView() {
+		mBackBtn.setVisibility(View.GONE);
+		this.mState = STATE_SET_IPC_INFO;
+		mMiddleLayout.removeAllViews();
+		freeLayout();
+		mMiddleLayout.addView(layout1.getRootLayout());
+		mCurrentLayout = layout1;
+		layout1.start();
+	}
+
+	private void toWaitConnView() {
+		mBackBtn.setVisibility(View.VISIBLE);
+		this.mState = STATE_WAIT_CONN;
+		mMiddleLayout.removeAllViews();
+		freeLayout();
+		mMiddleLayout.addView(layout2.getRootLayout());
+		mCurrentLayout = layout2;
+		layout2.start();
+	}
+
+	private void freeLayout() {
+		if (null != mCurrentLayout) {
+			mCurrentLayout.free();
+		}
+	}
+
+	private void toSucessView() {
+		mBackBtn.setVisibility(View.GONE);
+		this.mState = STATE_SUCESS;
+		mMiddleLayout.removeAllViews();
+		freeLayout();
+		mMiddleLayout.addView(layout3.getRootLayout());
+		mCurrentLayout = layout3;
+		layout3.start();
+		mCompleteBtn.setBackgroundResource(R.drawable.connect_mianbtn);
+		mProgressImg.setBackgroundResource(R.drawable.setp_4);
 	}
 
 	@Override

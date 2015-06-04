@@ -66,6 +66,8 @@
 		<activity android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkIndexActivity" android:screenOrientation="portrait"/>
 		
+		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2" android:screenOrientation="portrait"/>
+		
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkModifyPwdActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity" android:screenOrientation="portrait"/>

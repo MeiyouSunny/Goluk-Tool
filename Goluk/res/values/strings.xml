@@ -36,7 +36,7 @@
     <string name="video_share_topic_text">#话题#</string>
     <string name="video_export_text">视频生成中0%</string>
     <string name="keep_on_text">继续</string>
-    <string name="wifi_link_1_text">请让小车本与Goluk连接</string>
+    <string name="wifi_link_1_text">第一次使用</string>
     <string name="wifi_link_2_text">您第一次使用Goluk需要确认您的WiFi是否是开启状态,并设置WiFi连接.</string>
     <string name="wifi_link_3_text">怎么设置小车本与Goluk连接?</string>
     <string name="wifi_link_4_text">使用步骤</string>
@@ -52,7 +52,8 @@
     <string name="wifi_link_14_text">请将手机尽可能的靠近小车本设备,并重新连接Wi-Fi</string>
     <string name="wifi_link_15_text">请重新安装Goluk App</string>
     <string name="wifi_link_16_text">更多帮助</string>
-    <string name="wifi_link_17_text">1.确认WiFi指示灯闪烁,连接名称为Goluk xxx的WiFi</string>
+    <string name="wifi_link_17_text">确认WiFi指示灯闪烁</string>
+    <string name="wifi_link_17_2_text">连接名称为Goluk xxx的WiFi</string>
     <string name="wifi_link_18_text">2.</string>
     <string name="wifi_link_19_text">跳过</string>
     <string name="wifi_link_20_text">2.修改Goluk WiFi热点信息</string>
@@ -61,12 +62,15 @@
     <string name="wifi_link_23_text">3.修改与Goluk相连手机的WiFi热点信息</string>
     <string name="wifi_link_24_text">正常使用中,在手机客户端内将自动连接Goluk建立的WiFi热点.</string>
     <string name="wifi_link_25_text">手机正在创建WiFi个人热点....</string>
-    <string name="wifi_link_26_text">恭喜你</string>
+    <string name="wifi_link_26_text">恭喜</string>
     <string name="wifi_link_27_text">你的Goluk已成功连接到手机</string>
     <string name="wifi_link_28_text">开始使用</string>
     <string name="wifi_link_29_text">Goluk WiFi</string>
-    <string name="wifi_link_30_text">正常使用中，手机客户端启动后将自动建立WiFi热点，极路客自行连接其热点。在手机客户内可以享受极路客</string>
+    <string name="wifi_link_30_text">正常使用中，手机客户端启动后将自动建立WiFi热点，极路客自行连接其热点。在手机客户内可以享受极路客提供的视频预览、精彩分享、网络直播等体验。</string>
     <string name="wifi_link_31_text">正在为你配置极路客Wifi</string>
+    <string name="wifi_link_32_text">等待极路客连接到手机</string>
+    <string name="wifi_link_33_text">连接出现问题怎么办</string>
+    <string name="wifi_link_34_text">极路客视频安装帮助</string>
     <string name="video_live_title_text">详情</string>
     <string name="video_live_username_text">用户名称</string>
     <string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>

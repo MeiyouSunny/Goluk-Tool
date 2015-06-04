@@ -22,12 +22,13 @@
             android:contentDescription="@string/imgdes" />
 
         <ImageView
+            android:id="@+id/wifilink_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/imgdes"
-            android:src="@drawable/setp_3" />
+            android:background="@drawable/setp_3"
+            android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
     <!-- 开始使用按钮 -->

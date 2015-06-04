@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/wifi_link_setipc_txt"
+        android:id="@+id/wifi_link_setipc_txt1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -16,10 +16,21 @@
         android:id="@+id/wifi_link_setipc_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wifi_link_setipc_txt"
+        android:layout_below="@id/wifilist_textView2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="96dp"
-        android:src="@drawable/connect_banner_2" />
+        android:contentDescription="@string/imgdes"
+        android:src="@drawable/connect_gif_ipc_bluelight" />
+
+    <ImageView
+        android:id="@+id/wifi_link_setipc_img2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wifilist_textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="96dp"
+        android:background="@anim/goluk_wifi"
+        android:contentDescription="@string/imgdes" />
 
     <TextView
         android:layout_width="wrap_content"
