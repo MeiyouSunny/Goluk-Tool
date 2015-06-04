@@ -119,10 +119,10 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	public void setIpcLinkWiFiCallBack(int state) {
 		if (0 == state) {
 			GolukUtils.showToast(this, "修改成功");
-			
+
 			this.setResult(10);
 			this.finish();
-			
+
 			// 隐藏loading
 			// toWaitConnView();
 			// // 开始创建手机热点
@@ -143,7 +143,13 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	}
 
 	private void savePassword() {
+		final String newPwd = mEditText.getText().toString();
+		if (newPwd.length() < 8 || newPwd.length() > 15) {
+			GolukUtils.showToast(this, "极路客密码必须为8-15个字符");
+			return;
+		}
 		String json = getSetIPCJson();
+
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 		if (!b) {
 			GolukUtils.showToast(this, "调用设置IPC连接热点失败");
