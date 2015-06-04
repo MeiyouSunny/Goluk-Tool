@@ -143,6 +143,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}else{
+//						mBtnIdentity.setEnabled(false);
 						UserUtils.showDialog(UserRepwdActivity.this, "手机号不能为空");
 					}
 				}
@@ -355,7 +356,11 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 
 			}
 		} else {
-			mBtnIdentity.setEnabled(false);
+			if(!phone.equals("")){
+				UserUtils.showDialog(mContext, "手机号输入格式错误，请重新输入");
+			}else{
+				mBtnIdentity.setEnabled(false);
+			}
 		}
 	}
 	/**
@@ -678,7 +683,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			break;
 		case R.id.user_repwd_identify_btn:
 			String phone = mEditTextPhone.getText().toString();
-			if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
+			if(!"".equals(phone)  && UserUtils.isMobileNO(phone)){
 				switch (action) {
 				case MotionEvent.ACTION_DOWN:
 					mBtnIdentity.setBackgroundResource(R.drawable.icon_login_click);
