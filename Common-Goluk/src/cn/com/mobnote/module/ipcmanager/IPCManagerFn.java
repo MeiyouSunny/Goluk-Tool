@@ -29,7 +29,7 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int ENetTransEvent_IPC_VDTP_ConnectState = 2;
 	/** IPC下载结果应答 */
 	public static final int ENetTransEvent_IPC_VDTP_Resp = 3;
-	
+
 	public static final int ENetTransEvent_IPC_UpGrade_Resp = 4;
 	/** Mobnote连接状态 */
 	public static final int ENetTransEvent_Mobnote_ConnectState = 5;
@@ -129,8 +129,11 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_RecPicEraseMulti = 1030;
 	/** 按条件删除图片 */
 	public static final int IPC_VDCP_Msg_PicErase = 1031;
-	
-	
+	/** 按条件删除录像 */
+	public static final int IPC_VDCP_Msg_RecErase = 1032;
+	/** 获取IPC系统WIFI配置 */
+	public static final int IPC_VDCP_Msg_GetWifiCfg = 1033;
+
 	/**
 	 * 
 	 * 文件数据传输事件下消息ID (用于手机与平板之间发送消息回调)
@@ -166,7 +169,7 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDTPCmd_AddDownloadFile = 3;
 	/** 停止IPC下载所有任务 */
 	public static final int IPC_VDTPCmd_StopDownloadFile = 4;
-	
+
 	/** 多文件目录查询 */
 	public static final int IPC_VDCPCmd_Query = 1000;
 	/** 单文件查询 */
@@ -231,6 +234,8 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_RecErase = 1030;
 	/** 按条件删除图片 */
 	public static final int IPC_VDCPCmd_PicErase = 1031;
-	
+	/** 获取IPC系统WIFI配置 */
+	public static final int IPC_VDCPCmd_GetWifiCfg = 1032;
+
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }

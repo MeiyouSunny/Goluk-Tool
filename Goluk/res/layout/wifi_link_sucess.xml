@@ -29,6 +29,16 @@
         android:layout_below="@id/wifi_link_sucess_txt2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="96dp"
+        android:contentDescription="@string/imgdes"
         android:src="@drawable/connect_banner_4" />
+
+    <TextView
+        android:id="@+id/wifi_link_sucess_modify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:text="@string/wifi_link_35_text" />
 
 </RelativeLayout>

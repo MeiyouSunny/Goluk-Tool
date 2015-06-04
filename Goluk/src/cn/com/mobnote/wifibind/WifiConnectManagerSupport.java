@@ -401,9 +401,8 @@ public class WifiConnectManagerSupport {
 	 */
 	private boolean ispassnullType(String value) {
 
-		if (value.indexOf("[ESS]") == 0 && value.length() == 5) {
+		if ((value.indexOf("[ESS]") == 0 && value.length() == 5 )||(value.indexOf("[WPS][ESS]") == 0 && value.length() == 10)) {
 			// 只有一种类型 并且是ESS类型 认为是无密码
-
 			return true;
 		}
 		return false;

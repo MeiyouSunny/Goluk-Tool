@@ -30,6 +30,7 @@ import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
 import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2;
@@ -1053,6 +1054,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					((WiFiLinkCreateHotActivity) mContext).setIpcLinkWiFiCallBack(param1);
 				} else if (mPageSource == "WiFiLinkBindAll") {
 					((WiFiLinkCompleteActivity2) mContext).setIpcLinkWiFiCallBack(param1);
+				} else if (mPageSource .equals("changePassword")) {
+					((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
 				}
 				break;
 			case IPC_VDCP_Msg_GetVedioEncodeCfg:
