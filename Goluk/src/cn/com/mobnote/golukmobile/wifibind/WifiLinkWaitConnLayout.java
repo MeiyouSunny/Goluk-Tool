@@ -31,6 +31,7 @@ public class WifiLinkWaitConnLayout extends ViewFrame {
 		final String text = "等待极路客<font color=\"#0587ff\"> 连接 </font>到手机...";
 		mInfoTv = (TextView) mRootLayout.findViewById(R.id.wifi_link_waitconn_txt);
 		mInfoTv.setText(Html.fromHtml(text));
+		mInfoTv.getPaint().setFakeBoldText(true);
 
 		mHelpTv = (TextView) mRootLayout.findViewById(R.id.wifi_link_waitconn_help);
 		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);

@@ -165,8 +165,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		// 修改title说明文字颜色
 		final String connStr1 = "确认<font color=\"#0587ff\"> WiFi指示灯 </font>闪烁";
 		mDescTitleText.setText(Html.fromHtml(connStr1));
+		mDescTitleText.getPaint().setFakeBoldText(true);
 		final String connStr2 = "连接名称为<font color=\"#0587ff\"> Goluk xxxxx </font>的WiFi";
 		mDescTitleText2.setText(Html.fromHtml(connStr2));
+		mDescTitleText2.getPaint().setFakeBoldText(true);
 	}
 
 	/**

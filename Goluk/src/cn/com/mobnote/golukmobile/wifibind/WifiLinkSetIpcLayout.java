@@ -28,6 +28,7 @@ public class WifiLinkSetIpcLayout extends ViewFrame {
 		mInfoTv = (TextView) mRootLayout.findViewById(R.id.wifi_link_setipc_txt1);
 		final String text = "正在为你<font color=\"#0587ff\"> 配置 </font>极路客Wifi";
 		mInfoTv.setText(Html.fromHtml(text));
+		mInfoTv.getPaint().setFakeBoldText(true);
 
 		mLoadingImg = (ImageView) mRootLayout.findViewById(R.id.wifi_link_setipc_img2);
 		mAnimationDrawable = (AnimationDrawable) mLoadingImg.getBackground();

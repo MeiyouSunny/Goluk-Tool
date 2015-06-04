@@ -90,6 +90,9 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		mHelpTv = (TextView) findViewById(R.id.wifi_link_index_help);
 		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); // 下划线
 		mHelpTv.setOnClickListener(this);
+
+		mDescTitleText1.getPaint().setFakeBoldText(true);
+		mDescTitleText2.getPaint().setFakeBoldText(true);
 	}
 
 	@Override
