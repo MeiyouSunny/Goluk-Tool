@@ -131,7 +131,7 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+		mGolukGuideManage.destoryImage();
 	}
 	
 	@Override

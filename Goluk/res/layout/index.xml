@@ -202,5 +202,11 @@
         android:layout_height="match_parent"
         layout="@layout/index_share"
         android:visibility="gone" />
-
+    
+	<View 
+	    android:id="@+id/index_div"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:background="@drawable/guide_one"
+	    android:visibility="gone"/>
 </RelativeLayout>
