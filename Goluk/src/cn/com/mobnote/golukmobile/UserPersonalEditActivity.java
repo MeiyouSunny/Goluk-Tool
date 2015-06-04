@@ -218,8 +218,6 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 		}
 		if(newName.trim().isEmpty() || name.trim().isEmpty()){
 			UserUtils.showDialog(mContext, "数据修改失败，昵称不能为空");
-		}else if(newName.contains("\r\n") || newName.contains("\n") || name.contains("\r\n") || name.contains("\n")){
-			UserUtils.showDialog(mContext, "数据修改失败，昵称不能包含换行");
 		}else{
 			if(intentName.equals(name) && intentHead.equals(head) && intentSign.equals(sign)){
 				this.finish();
