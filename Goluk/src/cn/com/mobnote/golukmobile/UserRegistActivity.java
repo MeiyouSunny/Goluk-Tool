@@ -263,7 +263,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String pwd = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
 				if(!"".equals(phone)){
-					if(phone.length() == 11){
+					if(phone.length() == 11 && phone.startsWith("1") && UserUtils.isMobileNO(phone)){
 						mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 						mBtnIdentify.setEnabled(true);
 					}else{
@@ -852,7 +852,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			break;
 		case R.id.user_regist_identify_btn:
 			String phone = mEditTextPhone.getText().toString();
-			if(!"".equals(phone) && phone.length() == 11){
+			if(!"".equals(phone)  && UserUtils.isMobileNO(phone)){
 				switch (action) {
 				case MotionEvent.ACTION_DOWN:
 					mBtnIdentify.setBackgroundResource(R.drawable.icon_login_click);

@@ -189,7 +189,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				String pwd = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
 				if(!"".equals(phone)){
-					if(phone.length() == 11){
+					if(phone.length() == 11 && phone.startsWith("1") && UserUtils.isMobileNO(phone)){
 						mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
 						mBtnIdentity.setEnabled(true);
 					}else{
@@ -683,7 +683,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			break;
 		case R.id.user_repwd_identify_btn:
 			String phone = mEditTextPhone.getText().toString();
-			if(!"".equals(phone) && phone.length() == 11){
+			if(!"".equals(phone)  && UserUtils.isMobileNO(phone)){
 				switch (action) {
 				case MotionEvent.ACTION_DOWN:
 					mBtnIdentity.setBackgroundResource(R.drawable.icon_login_click);
