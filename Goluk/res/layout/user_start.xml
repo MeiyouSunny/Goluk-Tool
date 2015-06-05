@@ -23,8 +23,8 @@
 		        android:layout_height="wrap_content"
 		        android:id="@+id/user_start_look"
 		        android:background="@drawable/icon_look"
-		        android:layout_marginTop="44dp"
-		        android:layout_marginBottom="60dp"
+		        android:layout_marginTop="20dp"
+		        android:layout_marginBottom="94dp"
 		        />
 		</LinearLayout>
 </RelativeLayout>
