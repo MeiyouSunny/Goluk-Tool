@@ -35,15 +35,17 @@ public class VideoOnClickListener implements OnClickListener{
 			if(1 == form){
 				MainActivity a = (MainActivity)mContext;
 				Intent intent = new Intent(a, VideoPlayerActivity.class);
-				intent.putExtra("from", "local");
-				intent.putExtra("path", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
+				intent.putExtra("from", "suqare");
+				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
+				intent.putExtra("playUrl", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
 				uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 				a.startActivity(intent);
 			}else{
 				VideoSquarePlayActivity a = (VideoSquarePlayActivity)mContext;
 				Intent intent = new Intent(a, VideoPlayerActivity.class);
-				intent.putExtra("from", "local");
-				intent.putExtra("path", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
+				intent.putExtra("from", "suqare");
+				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
+				intent.putExtra("playUrl", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
 				uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 				a.startActivity(intent);
 			}

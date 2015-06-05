@@ -299,7 +299,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mRtmpPlayerLayout.setLayoutParams(lp);
 
 		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
-		mConnectTip.setText("摄像头未连接");
+		mConnectTip.setText("预览影像未启用");
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
 		}
@@ -965,9 +965,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 */
 	private void updateVideoState() {
 		if (rtmpIsOk == true){
-			mConnectTip.setText("摄像头影像正常");
+			mConnectTip.setText("预览影像正常");
 		}else{
-			mConnectTip.setText("摄像头影像加载中…");
+			mConnectTip.setText("预览影像加载中…");
 		}
 	}
 
