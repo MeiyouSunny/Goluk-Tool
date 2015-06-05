@@ -246,6 +246,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		boolean isFirstIn = preferences.getBoolean("isfirst", true);
 		if(isFirstIn){//如果是第一次启动
 			indexDiv.setVisibility(View.VISIBLE);
+			Editor editor = preferences.edit();
+			editor.putBoolean("isfirst", false);
+			// 提交修改 
+			editor.commit();
 		}
 		// 初始化地图
 		initMap();
@@ -1010,11 +1014,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				divIndex++;
 			}else {
 				indexDiv.setVisibility(View.GONE);
-				SharedPreferences preferences = mContext.getSharedPreferences("golukmark", Context.MODE_PRIVATE);
-				Editor editor = preferences.edit();
-				editor.putBoolean("isfirst", false);
-				// 提交修改
-				editor.commit();
 			}
 			break;
 		}

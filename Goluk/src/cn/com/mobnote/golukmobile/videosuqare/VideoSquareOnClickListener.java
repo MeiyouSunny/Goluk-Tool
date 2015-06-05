@@ -178,9 +178,9 @@ public class VideoSquareOnClickListener implements OnClickListener {
 			public void onClick(View v) {
 				boolean flog = GolukApplication.getInstance().getVideoSquareManager()
 						.report("1", mVideoSquareInfo.mVideoEntity.videoid, reporttype);
-				if (flog) {
+				/*if (flog) {
 					GolukUtils.showToast(mcontext, "举报成功，我们稍后会进行处理");
-				}
+				}*/
 				confirmation.dismiss();
 			}
 		});
