@@ -45,7 +45,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
@@ -73,9 +72,9 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class VideoPlayerActivity extends BaseActivity implements OnCompletionListener, OnBufferingUpdateListener, OnSeekCompleteListener
 ,OnErrorListener, OnInfoListener, OnPreparedListener, OnClickListener, SurfaceHolder.Callback, OnVideoSizeChangedListener{
 	/** 视频播放器 */
-	private MediaPlayer mMediaPlayer=null;
-	private SurfaceHolder mSurfaceHolder=null;
-	private SurfaceView mSurfaceView=null;
+	private MediaPlayer mMediaPlayer = null;
+	private SurfaceHolder mSurfaceHolder = null;
+	private SurfaceView mSurfaceView = null;
 	/** 播放地址 */
 	private String playUrl=null;
 	/** 加载中布局 */
@@ -86,16 +85,27 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	private AnimationDrawable mAnimationDrawable = null;
 	/** 文件名字 */
 	private String filename="";
+	/** 原始视频宽度 */
 	private int mVideoWidth;
+	/** 原始视频高度 */
 	private int mVideoHeight;
+	/** 播放器尺寸变化标识 */
 	private boolean mIsVideoSizeKnown = false;
+	/** 播放器准备就绪标识 */
 	private boolean mIsVideoReadyToBePlayed = false;
+	/** 显示当前播放时间 */
 	private TextView mCurTime=null;
+	/** 显示视频总时间 */
 	private TextView mTotalTime=null;
+	/** 播放按钮 */
 	private ImageButton mPlayBtn=null;
+	/** 居中播放大按钮 */
 	private ImageButton mPlayBigBtn=null;
+	/** 播放器进度显示 */
 	private SeekBar mSeekBar=null;
+	/** 顶部布局 */
 	private RelativeLayout mTitleLayout=null;
+	/** 底部布局 */
 	private RelativeLayout mBottomLayout=null;
 	public  static Handler mHandler=null;
 	private final int GETPROGRESS=1;
@@ -118,42 +128,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		super.onCreate(savedInstanceState);
 		if (!LibsChecker.checkVitamioLibs(this))
 			return;
-		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==111111111=");
+		
 		setContentView(R.layout.carrecorder_videoplayer);
-		from = getIntent().getStringExtra("from");
-		image = getIntent().getStringExtra("image");
-		filename = getIntent().getStringExtra("filename");
-		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==2222===filename="+filename+"===from="+from);
-		String ip = SettingUtils.getInstance().getString("IPC_IP");
-		if(!TextUtils.isEmpty(from)){
-			String path = Environment.getExternalStorageDirectory()+ File.separator + "goluk" + File.separator + "goluk_carrecorder";
-			GFileUtils.makedir(path);
-			String filePath = path + File.separator + "image";
-			GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==filePath="+filePath);
-			if(from.equals("local")){
-				playUrl=getIntent().getStringExtra("path");
-				String fileName = playUrl.substring(playUrl.lastIndexOf("/")+1);
-				fileName = fileName.replace(".mp4", ".jpg");
-				image = filePath + File.separator + fileName;
-				GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==image="+image);
-			}else if(from.equals("suqare")){
-				playUrl=getIntent().getStringExtra("playUrl");
-			}else if(from.equals("ipc")){
-				String fileName = filename;
-				fileName = fileName.replace(".mp4", ".jpg");
-				image = filePath + File.separator + fileName;
-				int type = getIntent().getIntExtra("type", -1);
-				if(4 == type){
-					playUrl="http://"+ ip + ":5080/rec/wonderful/"+filename;
-				}else if(2 == type){
-					playUrl="http://" + ip + ":5080/rec/urgent/"+filename;
-				}else{
-					playUrl="http://" + ip + ":5080/rec/normal/"+filename;
-				}
-			}
-		}
-
-		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl="+playUrl);
+		getPlayAddr();
 		initView();
 		setListener();
 		
@@ -166,47 +143,113 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 							return;
 						}
 						
-						if (!isNetworkConnected()) {
-							networkConnectTimeOut++;
-							if (networkConnectTimeOut > 100) {
-								if (!reset) {
-									hideLoading();
-									dialog("网络访问异常，请重试！");
-									return;
-								}
-							}
-						}else{
-							networkConnectTimeOut = 0;
-						}
-						
-						if(null != mMediaPlayer){
-							if(mMediaPlayer.isPlaying()){
-								hideLoading();
-								mPreLoading.setVisibility(View.GONE);
-								long curPosition = mMediaPlayer.getCurrentPosition();
-								long duration = mMediaPlayer.getDuration();
-								
-								GolukDebugUtils.e("xuhw", "TTT========duration=="+duration+"=====curPosition="+curPosition);
-								mCurTime.setText(long2TimeStr(curPosition));
-								mTotalTime.setText(long2TimeStr(duration));
-								mSeekBar.setMax((int)duration);
-								mSeekBar.setProgress((int)curPosition);
-								mPlayBigBtn.setVisibility(View.GONE);
-								mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
-							}else{
-//								mPlayBigBtn.setVisibility(View.VISIBLE);
-								mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
-							}
-						}
-						
+						netWorkTimeoutCheck();
+						updatePlayerProcess();
 						mHandler.sendEmptyMessageDelayed(GETPROGRESS, 100);
 						break;
-		
+						
 					default:
 						break;
 				}
 			};
 		};
+	}
+	
+	/**
+	 * 获取播放地址
+	 * @author xuhw
+	 * @date 2015年6月5日
+	 */
+	private void getPlayAddr(){
+		from = getIntent().getStringExtra("from");
+		image = getIntent().getStringExtra("image");
+		filename = getIntent().getStringExtra("filename");
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==2222===filename="+filename+"===from="+from);
+		String ip = SettingUtils.getInstance().getString("IPC_IP");
+		if (TextUtils.isEmpty(from)) {
+			return;
+		}
+		
+		String path = Environment.getExternalStorageDirectory()+ File.separator + "goluk" + File.separator + "goluk_carrecorder";
+		GFileUtils.makedir(path);
+		String filePath = path + File.separator + "image";
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==filePath="+filePath);
+		if(from.equals("local")){
+			playUrl=getIntent().getStringExtra("path");
+			String fileName = playUrl.substring(playUrl.lastIndexOf("/")+1);
+			fileName = fileName.replace(".mp4", ".jpg");
+			image = filePath + File.separator + fileName;
+			GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==image="+image);
+		}else if(from.equals("suqare")){
+			playUrl=getIntent().getStringExtra("playUrl");
+		}else if(from.equals("ipc")){
+			String fileName = filename;
+			fileName = fileName.replace(".mp4", ".jpg");
+			image = filePath + File.separator + fileName;
+			int type = getIntent().getIntExtra("type", -1);
+			if(4 == type){
+				playUrl="http://"+ ip + ":5080/rec/wonderful/"+filename;
+			}else if(2 == type){
+				playUrl="http://" + ip + ":5080/rec/urgent/"+filename;
+			}else{
+				playUrl="http://" + ip + ":5080/rec/normal/"+filename;
+			}
+		}
+		
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl="+playUrl);
+	}
+	
+	/**
+	 * 无网络超时检查
+	 * @author xuhw
+	 * @date 2015年6月5日
+	 */
+	private void netWorkTimeoutCheck() {
+		if (!from.equals("suqare")) {
+			return;
+		}
+		
+		if (!isNetworkConnected()) {
+			networkConnectTimeOut++;
+			if (networkConnectTimeOut > 100) {
+				if (!reset) {
+					hideLoading();
+					dialog("网络访问异常，请重试！");
+					return;
+				}
+			}
+		}else{
+			networkConnectTimeOut = 0;
+		}
+	}
+	
+	/**
+	 * 更新播放器显示进度
+	 * @author xuhw
+	 * @date 2015年6月5日
+	 */
+	private void updatePlayerProcess() {
+		if (null == mMediaPlayer) {
+			return;
+		}
+		
+		if(mMediaPlayer.isPlaying()){
+			hideLoading();
+			mPreLoading.setVisibility(View.GONE);
+			long curPosition = mMediaPlayer.getCurrentPosition();
+			long duration = mMediaPlayer.getDuration();
+			
+			GolukDebugUtils.e("xuhw", "TTT========duration=="+duration+"=====curPosition="+curPosition);
+			mCurTime.setText(long2TimeStr(curPosition));
+			mTotalTime.setText(long2TimeStr(duration));
+			mSeekBar.setMax((int)duration);
+			mSeekBar.setProgress((int)curPosition);
+			mPlayBigBtn.setVisibility(View.GONE);
+			mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
+		}else{
+//			mPlayBigBtn.setVisibility(View.VISIBLE);
+			mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+		}
 	}
 	
 	/**
@@ -478,10 +521,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		System.out.println("TTT=============playVideo=");
 		try {
 			mMediaPlayer = new MediaPlayer(this);
-			 if(getIntent().getStringExtra("from").equals("ipc")){
-				 mMediaPlayer.setBufferSize(100*1024);
-			 }else{
+			 if(from.equals("local")){
 				 mMediaPlayer.setBufferSize(0);
+			 }else{
+				 mMediaPlayer.setBufferSize(100*1024);
 			 }
 //			mMediaPlayer.setLooping(true);
 			mMediaPlayer.setDataSource(playUrl);
@@ -639,6 +682,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 			return;
 		}
 		
+		GolukDebugUtils.e("xuhw", "YYYY====onVideoSizeChanged===width="+width+"=height="+height);
 		mIsVideoSizeKnown = true;
 		mVideoWidth = width;
 		mVideoHeight = height;
