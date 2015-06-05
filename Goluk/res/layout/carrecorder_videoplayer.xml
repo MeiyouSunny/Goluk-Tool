@@ -8,6 +8,12 @@
     	android:layout_height="match_parent"
         />
     
+    <ImageView
+            android:id="@+id/mPreLoading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+    
     <LinearLayout
         android:visibility="gone"
 		            android:id="@+id/mLoadingLayout"
@@ -129,7 +135,6 @@
     </RelativeLayout>
     </RelativeLayout>
     
-    
     <ImageButton 
         android:id="@+id/mPlayBigBtn"
         android:layout_width="76dp"
@@ -139,6 +144,6 @@
 		android:background="@drawable/btn_player_play"
         />
     
- 
+
 
 </RelativeLayout>
