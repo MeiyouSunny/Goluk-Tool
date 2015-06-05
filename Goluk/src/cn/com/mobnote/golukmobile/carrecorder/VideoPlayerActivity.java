@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
@@ -109,6 +110,8 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	private String image = "";
 	/** 播放重置标识 */
 	private boolean reset = false;
+	/** 网络连接超时 */
+	private int networkConnectTimeOut = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +164,19 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 						mHandler.removeMessages(GETPROGRESS);
 						if(error){
 							return;
+						}
+						
+						if (!isNetworkConnected()) {
+							networkConnectTimeOut++;
+							if (networkConnectTimeOut > 100) {
+								if (!reset) {
+									hideLoading();
+									dialog("网络访问异常，请重试！");
+									return;
+								}
+							}
+						}else{
+							networkConnectTimeOut = 0;
 						}
 						
 						if(null != mMediaPlayer){
