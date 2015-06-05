@@ -187,7 +187,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			if (isExit) {
 				return;
 			}
-			GolukUtils.showToast(VideoShareActivity.this, "重新上传...");
+			// GolukUtils.showToast(VideoShareActivity.this, "重新上传...");
 			uploadVideoFile();
 			if (null == GlobalWindow.getInstance().getApplication()) {
 				GlobalWindow.getInstance().setApplication(mApp);
@@ -203,6 +203,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		if (isExit) {
 			return;
 		}
+		GolukDebugUtils.e("", "jyf-----VideoShareActivity-------------uploadError :uploadCount:  " + uploadCount);
 		if (uploadCount >= UPLOAD_FAILED_UP) {
 			// 报错
 			mBaseHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
@@ -440,7 +441,9 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		if (null == mVideoPath || "".equals(mVideoPath)) {
 			return;
 		}
+
 		uploadCount++;
+		GolukDebugUtils.e("", "jyf-----VideoShareActivity-------------uploadVideoFile :" + uploadCount);
 		isUploading = true;
 		final String filePath = FileUtils.javaToLibPath(mVideoPath);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
@@ -456,6 +459,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	 *            ,视频ID
 	 */
 	public void videoUploadCallBack(int success, Object param1, Object param2) {
+		GolukDebugUtils.e("", "jyf-----VideoShareActivity-------------videoUploadCallBack :success:  " + success);
 		if (1 == success) {
 			// 保存视频上传ID
 			mVideoVid = (String) param2;
@@ -466,7 +470,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			final int per = (Integer) param1;
 			updateFreshProgress(per);
 		} else {
-			GolukUtils.showToast(mContext, "视频上传失败");
+			// GolukUtils.showToast(mContext, "视频上传失败");
 			uploadError();
 		}
 	}
@@ -586,6 +590,11 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 
 	private void exit(boolean isdestroyTopwindow) {
 		isExit = true;
+		// 取消上传
+		if (!mIsUploadSucess) {
+			boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+					IPageNotifyFn.PageType_UploadVideo, JsonUtil.getCancelJson());
+		}
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
 		mBaseHandler.removeMessages(MSG_H_RETRY_UPLOAD);
