@@ -55,7 +55,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.user_start);
-		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.guide_1, screenWidth, screenHeight);
+		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.guide_page, screenWidth, screenHeight);
 		RelativeLayout main = (RelativeLayout)findViewById(R.id.main);
 		main.setBackgroundDrawable(new BitmapDrawable(mBGBitmap));
 		
@@ -66,7 +66,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		SysApplication.getInstance().addActivity(this);
 		
 		//版本升级
-		mApp.mUpgrade.upgradeGoluk();
+//		mApp.mUpgrade.upgradeGoluk();
 		
 		initView();
 		

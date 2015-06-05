@@ -102,6 +102,7 @@
     <string name="unbind_password">极路客WiFi密码</string>
     <string name="change_wifi_name">密码</string>
     <string name="change_wifi_password_hint">密码必须为8&#8211;15个字符。更改密码将在30秒之后生效。</string>
+    <string name="app_update_text">版本检测</string>
     <string name="loginout_text">退出</string>
     <string name="pull_to_refresh_pull_label">下拉刷新</string>
     <string name="pull_to_refresh_release_label">松开后刷新</string>

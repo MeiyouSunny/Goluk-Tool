@@ -50,7 +50,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
-@SuppressLint("ClickableViewAccessibility")
+@SuppressLint({ "ClickableViewAccessibility", "HandlerLeak" })
 public class IPCFileManagerActivity extends BaseActivity implements OnClickListener, IPCManagerFn, OnTouchListener{
 	private StickyListHeadersListView mWonderfulVideoList=null;
 	private StickyListHeadersListView mEmergencyVideoList=null;
@@ -300,7 +300,6 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 						if(mWonderfulVideoData.size() > 0 &&(mWonderfulVideoData.size()%pageCount) == 0){
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_SHORTCUT,marvellousListTime);//初始化
 						}
-//						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
 						GolukDebugUtils.e("xuhw", "TTTTT=====滑动到最后了222 最后时间"+marvellousListTime);
 					}
 				}
@@ -440,10 +439,10 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 			deltv = (TextView) findViewById(R.id.video_delete_txt);
 			deltv.setTextColor(this.getResources().getColor(R.color.carrecorder_del_def_bg));
 			
-			if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
-				findViewById(R.id.video_download_img).setBackgroundResource(R.drawable.carrecorder_icon_download_grey);
-				return;
-			}
+//			if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
+//				findViewById(R.id.video_download_img).setBackgroundResource(R.drawable.carrecorder_icon_download_grey);
+//				return;
+//			}
 			findViewById(R.id.video_download_img).setBackgroundResource(R.drawable.carrecorder_icon_download);
 			downloadtv = (TextView) findViewById(R.id.video_download_txt);
 			downloadtv.setTextColor(this.getResources().getColor(R.color.carrecorder_del_def_bg));
@@ -957,9 +956,9 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 				}
 				break;
 			case R.id.mDownloadBtn:
-				if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
-					return;
-				}
+//				if(IPCManagerFn.TYPE_CIRCULATE == mCurrentType){
+//					return;
+//				}
 				
 				isEditState=false;
 				mEditBtn.setText("编辑");

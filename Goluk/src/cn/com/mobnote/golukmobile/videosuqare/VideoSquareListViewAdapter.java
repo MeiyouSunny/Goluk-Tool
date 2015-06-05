@@ -272,7 +272,11 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 						String coverurl = data.getString("coverurl");
 						String describe = data.optString("describe");
 						if (TextUtils.isEmpty(describe)) {
-							describe = "#极路客精彩视频#";
+							if("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)){
+								describe = "#极路客直播#";
+							}else{
+								describe = "#极路客精彩视频#";
+							}
 						}
 
 						if ("".equals(coverurl)) {
@@ -281,6 +285,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 						String ttl = "极路客精彩视频分享";
 						if ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)) {// 直播
 							ttl = mVideoSquareOnClickListener.mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
+							
 						}
 						if (mContext instanceof VideoSquarePlayActivity) {
 							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mContext;
@@ -315,7 +320,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 					e.printStackTrace();
 				}
 			} else {
-				// mVideoSquareOnClickListener.closeRqsDialog(mContext);
+				mVideoSquareOnClickListener.closeRqsDialog(mContext);
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 		}

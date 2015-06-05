@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
@@ -10,9 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.os.SystemClock;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,11 +22,8 @@ import android.widget.MediaController.MediaPlayerControl;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.console;
 import cn.com.mobnote.video.MVListAdapter;
 import cn.com.mobnote.video.MVManage;
 import cn.com.mobnote.video.MVManage.MVEditData;
@@ -92,9 +85,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private ImageView mLoadingImage = null;
 	/** loading文本 */
 	private TextView mLoadingText = null;
-
-	/** 音乐按钮 */
-	private ImageButton mMusicBtn = null;
 	/** 进度条 */
 	private ProgressBar mVideoProgressBar = null;
 	/** mv列表layout */
@@ -106,11 +96,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	/** 视频存放外卡文件路径 */
 	private static final String APP_FOLDER = android.os.Environment.getExternalStorageDirectory().getPath();
 	private String mNewVideoFilePath = APP_FOLDER + "/" + "goluk/";
-	/** 上传视频时间记录 */
-	private long uploadVideoTime = 0;
-
-	/** 当前选择的配乐文件路径 */
-	private String mStrMusicFilePath = "";
 	/** 进度条线程 */
 	private Thread mProgressThread = null;
 	/** 当前编辑的视频类型 */
@@ -118,20 +103,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 	/** 分享的视频名称 */
 	private String videoName = "";
-
-	/** 当前重叠配音路径列表 */
-	// private ArrayList<MixAudioInfo> audioInfos = new
-	// ArrayList<MixAudioInfo>();
-	/** 当前选择的配音文件路径 */
-	// private String m_strRecorderingFilePath;
-	/** 控制视频是配乐操作 */
-	// private boolean isSoundTrack;
-	/** 当前选择的配乐文件路径 */
-	// private String m_strMusicFilePath;
-	/** 配音录制时记录开始位置和结束位置 的范围 */
-	// private int startTime, endTime;
-	/** 内置音乐路径列表 */
-	// private List<String> assetsMusicPaths = new ArrayList<String>() ;
+	private boolean isExit = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -163,7 +135,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * 
 	 * @Title: interceptVideoName
-	 * @Description: TODO
+	 * @Description:
 	 * @param videopath
 	 *            void
 	 * @author 曾浩
@@ -193,31 +165,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		mLoadingAnimation = (AnimationDrawable) mLoadingImage.getBackground();
 
 		mVideoProgressBar = (ProgressBar) findViewById(R.id.video_progress_bar);
-		// mMusicBtn = (ImageButton) findViewById(R.id.music_btn);
 
 		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
 		mPlayLayout.setOnClickListener(this);
-		// mMusicBtn.setOnClickListener(this);
 
-		// 更新UI handler
-		mVideoEditHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				int what = msg.what;
-				switch (what) {
-				case 1:
-					// 选择音频回调
-					String path = (String) msg.obj;
-					// 保存数据
-					mStrMusicFilePath = path;
-					GolukDebugUtils.e("", "select music---" + path);
-					addMusicToVideo(path);
-					break;
-				}
-			}
-		};
 	}
 
 	/**
@@ -242,7 +195,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		gridLayout.setLayoutParams(lp);
 		gridLayout.setBackgroundColor(Color.rgb(237, 237, 237));
-		// gridLayout.setBackgroundColor(Color.rgb(204,102,153));
 		gridLayout.setNumColumns(4);
 		gridLayout.setPadding(16, 30, 16, 30);
 		gridLayout.setVerticalSpacing(30);
@@ -272,10 +224,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 				// 视频播放已就绪
 				GolukDebugUtils.e("", "onPrepared---video---加载完成");
 				updateVideoProgress();
-				// 删除背景图片
-				// mVVPlayVideo.setBackgroundDrawable(null);
-				// Toast.makeText(VideoEditActivity.this,
-				// "视频播放已就绪！",Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -288,10 +236,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onCompletion(MediaPlayerControl mpc) {
 				// 视频播放完成
-				// Toast.makeText(VideoEditActivity.this,
-				// "视频播放完毕！",Toast.LENGTH_SHORT).show();
 				mVideoProgressBar.setProgress(mVVPlayVideo.getDuration());
-				// String strDuration = updateTime(mVVPlayVideo.getDuration());
 			}
 		});
 
@@ -338,8 +283,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
 			mVVPlayVideo.saveVideo(mVideoSavePath, editorParam, new FilterPlaybackView.FilterVideoEditorListener() {
-				// ProgressDialog m_pdSave;
-				long m_lUseTimeChecker;
 
 				@Override
 				public void onFilterVideoSaveStart() {
@@ -347,12 +290,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 					mVideoLoadingLayout.setVisibility(View.VISIBLE);
 					// 启动loading动画
 					mLoadingAnimation.start();
-					m_lUseTimeChecker = SystemClock.uptimeMillis();
 				}
 
 				@Override
 				public boolean onFilterVideoSaving(int nProgress, int nMax) {
-					if(nProgress > 0){
+					if (nProgress > 0) {
 						mLoadingText.setText("视频生成中" + nProgress + "%");
 					}
 					// 返回false代表取消保存。。。
@@ -365,12 +307,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 					mVideoLoadingLayout.setVisibility(View.GONE);
 					// 停止loading动画
 					mLoadingAnimation.stop();
-					System.out.println("chenxy==========bCancel:"+bCancel);
-					System.out.println("chenxy==========bSuccess:"+bSuccess);
+					GolukDebugUtils.e("", "VideoEditActivity---------onFilterVideoEnd- sucess:" + bSuccess
+							+ "  cancel:" + bCancel);
 					if (bCancel) {
 						// strInfo = "已取消视频保存！";
 					} else if (bSuccess) {
-
 						// 视频保存成功,跳转到分享页面
 						Intent videoShare = new Intent(mContext, VideoShareActivity.class);
 						videoShare.putExtra("cn.com.mobnote.golukmobile.videopath", mVideoSavePath);
@@ -386,10 +327,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 							GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
 						}
 					}
-					
-					
-					GolukUtils.showToast(VideoEditActivity.this,
-							"视频编辑保存使用时间：" + (SystemClock.uptimeMillis() - m_lUseTimeChecker) + "ms");
 				}
 
 				@Override
@@ -399,99 +336,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			});
 		} catch (FilterVideoEditorException e) {
 			GolukUtils.showToast(this, "保存视频失败，" + e.getMessage());
-		}
-	}
-
-	/**
-	 * 设置配制音频路径
-	 * 
-	 * @param mixAudioPath
-	 *            配乐或配音路径
-	 * @param isSoundTrack
-	 *            是否配乐
-	 */
-	private void setMixAudioFilePath(String path, boolean isSoundTrack) {
-		// /mnt/sdcard/Android/data/com.rd.car.demo/files/assets/1.mp3
-		GolukDebugUtils.e("", "music---setMixAudioFilePath---1---" + path);
-		String mixAudioPath = addAssets(path);
-		GolukDebugUtils.e("", "music---setMixAudioFilePath---2---" + mixAudioPath);
-		if (TextUtils.isEmpty(mixAudioPath)) {
-			GolukUtils.showToast(mContext, "不支持该" + (isSoundTrack ? "音乐！" : "录音！"));
-			return;
-		}
-
-		/*
-		 * setSoundTrack(isSoundTrack); if (isSoundTrack) { m_strMusicFilePath =
-		 * mixAudioPath; } else { // 添加一组配音信息对象当配音信息集合中去
-		 * m_strRecorderingFilePath = mixAudioPath; MixAudioInfo audioInfo = new
-		 * MixAudioInfo(0, 0, startTime, endTime,0,
-		 * m_strRecorderingFilePath,1.0f); // 屏蔽当前添加的配音路径是否与最近添加的路径相同，不相同则添加 if
-		 * (audioInfos.size() == 0 || !audioInfos.get(audioInfos.size() -
-		 * 1).getRecordFiePath().equals(m_strRecorderingFilePath)) {
-		 * audioInfos.add(audioInfo); } } console.log("选择播放" + (isSoundTrack ?
-		 * "配乐：" : "配音：") + mixAudioPath); console.log("music---444---" +
-		 * mixAudioPath); if (mVVPlayVideo.isPausing() ||
-		 * mVVPlayVideo.isPlaying()) { mVVPlayVideo.stop(); }
-		 */
-		GolukDebugUtils.e("", "music---555---" + mixAudioPath);
-		try {
-			if (!TextUtils.isEmpty(mixAudioPath)) {
-				// from to 设置为0代表配乐在视频全时间线循环
-				mVVPlayVideo.addMixAudio(mixAudioPath, 0, 0, 1.0f);
-			}
-			GolukDebugUtils.e("", "music---666---" + mixAudioPath);
-			/*
-			 * for (MixAudioInfo info : audioInfos) { // 设置添加配音在一个指定时间段播放
-			 * mVVPlayVideo
-			 * .addMixAudio(info.getRecordFiePath(),info.getRecordStart(),
-			 * info.getRecordEnd(),info.getFactor()); } videoPlaystate();
-			 */
-		} catch (Exception e) {
-			GolukUtils.showToast(mContext, "添加" + (isSoundTrack ? "音乐！" : "配音！") + "失败，" + e.getMessage() );
-		}
-	}
-
-	/**
-	 * 添加资源到配置目录
-	 * 
-	 * @param strAssetFile
-	 * @return 导出内置音乐文件信息后返回一个数据对象
-	 */
-	private String addAssets(String strAssetFile) {
-		String path = AssetsFileUtils.getAssetFileNameForSdcard(this, strAssetFile);
-		File file = new File(path);
-		if (!file.exists()) {
-			AssetsFileUtils.CopyAssets(this.getResources().getAssets(), strAssetFile, file.getAbsolutePath());
-		}
-		return file.getAbsolutePath();
-	}
-
-	/**
-	 * 添加音频到视频
-	 * 
-	 * @param path
-	 */
-	private void addMusicToVideo(String path) {
-		try {
-			if (!"".equals(path) && null != path) {
-				// setMuteVideo(false);
-				mVVPlayVideo.clearAllMixAudio();
-				mVVPlayVideo.muteMainVideo(false);
-				// 选择音频试听,循环播放,视频重新播放
-				setMixAudioFilePath(path, true);
-
-				// 启动进度条线程
-				updateVideoProgress();
-				mVVPlayVideo.start();
-				// 隐藏图片
-				mPlayStatusImage.setVisibility(View.GONE);
-
-				mMusicBtn.setBackgroundResource(R.drawable.music_btn);
-			} else {
-				mMusicBtn.setBackgroundResource(R.drawable.music_no_btn);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -552,19 +396,17 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	boolean isExit = false;
-
 	private void exit() {
 		isExit = true;
-		if(null != mVideoLoadingLayout){
+		if (null != mVideoLoadingLayout) {
 			// 判断是否正在上传
 			int t = mVideoLoadingLayout.getVisibility();
 			if (t == 0) {
 				// 正在上传
 				mVideoLoadingLayout.setVisibility(View.GONE);
-				
-				//为了修复上传的是时返回几率崩溃控制针问题.
-				//感觉可能崩溃到这里了,chenxy 5.11
+
+				// 为了修复上传的是时返回几率崩溃控制针问题.
+				// 感觉可能崩溃到这里了,chenxy 5.11
 				if (null != mVVPlayVideo) {
 					mVVPlayVideo.cancelSave();
 				}
@@ -597,11 +439,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		if (mVVPlayVideo != null) {
 			mVVPlayVideo.onResume();
 		}
-		if(mLoadingText != null){
+		if (mLoadingText != null) {
 			mLoadingText.setText("视频生成中0%");
 		}
 		mApp.setContext(this, "VideoEdit");
-		
+
 		super.onResume();
 	}
 
@@ -612,7 +454,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
 		case R.id.back_btn:
@@ -644,11 +485,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 				mPlayStatusImage.setVisibility(View.GONE);
 			}
 			break;
-		// case R.id.music_btn:
-		// Intent music = new Intent(mContext,VideoEditMusicActivity.class);
-		// music.putExtra("cn.com.mobnote.golukmobile.musicfilepath",mStrMusicFilePath);
-		// startActivity(music);
-		// break;
 		}
 	}
 }

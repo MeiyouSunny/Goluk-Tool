@@ -85,6 +85,7 @@
              	</RelativeLayout>
 	            
 	            <LinearLayout
+	                android:visibility="gone"
 		            android:id="@+id/mLoadingLayout"
 		            android:layout_width="fill_parent"
 		            android:layout_height="wrap_content"
@@ -108,9 +109,22 @@
 		                android:textColor="#ffffff"
 		                android:textSize="18sp" /> 
 		        </LinearLayout>
+		        
+	            <RelativeLayout 
+	            	android:id="@+id/mPalyerLayout"
+	            	android:layout_width="match_parent"
+	               	android:layout_height="match_parent"
+	               	android:background="@drawable/default_pic" >
+	                <ImageButton
+	                    android:id="@+id/mPlayBtn"
+	                    android:layout_width="70dp"
+	               		android:layout_height="70dp" 
+	               		android:layout_centerInParent="true"
+	                    android:background="@drawable/carrecorder_play_btn"/>
+	            </RelativeLayout>
 		         
-         </RelativeLayout>
-
+        </RelativeLayout>
+		
         <ImageButton
             android:id="@+id/mFullScreen"
             android:layout_width="wrap_content"
@@ -263,13 +277,5 @@
   	  	android:layout_height="48dp"
   	  	android:layout_marginBottom="15dp"
   	  	android:layout_centerHorizontal="true" />
-     
-    <Button 
-        android:visibility="gone"
-		android:id="@+id/wifi"
-   		android:layout_width="100dp"
-  	  	android:layout_height="100dp"
-  	  	android:layout_alignParentRight="true"
-		android:background="#00000000"
-        />
+
 </RelativeLayout>

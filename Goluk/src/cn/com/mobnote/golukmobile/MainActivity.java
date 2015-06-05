@@ -207,6 +207,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	
 	private ImageView mHotPoint = null;
 	private ImageView mHotBigPoint = null;
+	
+	/** 首次进入的引导div */
+	private View indexDiv = null;
+	private int divIndex = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +223,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
-
+		
+		
 		// 添加umeng错误统计
 		MobclickAgent.setCatchUncaughtExceptions(true);
 		// 添加腾讯崩溃统计 初始化SDK
@@ -234,6 +239,18 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mApp.startTime = System.currentTimeMillis();
 		// 页面初始化,获取页面控件
 		init();
+		
+		//读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
+		SharedPreferences preferences = getSharedPreferences("golukmark",MODE_PRIVATE);
+		//取得相应的值,如果没有该值,说明还未写入,用true作为默认值
+		boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
+		if(isFirstIndex){//如果是第一次启动
+			indexDiv.setVisibility(View.VISIBLE);
+			Editor editor = preferences.edit();
+			editor.putBoolean("isFirstIndex", false);
+			// 提交修改 
+			editor.commit();
+		}
 		// 初始化地图
 		initMap();
 		// 初始化视频广场
@@ -298,6 +315,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mShareBtn = (Button) findViewById(R.id.index_share_btn);
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
+		
+		indexDiv = findViewById(R.id.index_div);
 
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		msquareBtn = (Button) findViewById(R.id.index_square_btn);
@@ -318,6 +337,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mShareLiveBtn.setOnClickListener(this);
 		indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
+		indexDiv.setOnClickListener(this);
 		// 注册事件
 		mMapLocationBtn.setOnClickListener(this);
 		mShareBtn.setOnClickListener(this);
@@ -636,7 +656,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 链接中断更新页面
 	 */
 	public void wiFiLinkStatus(int status) {
-		GolukDebugUtils.e("", "wifiCallBack-------------wiFiLinkStatus:" + status);
+		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wiFiLinkStatus-------------wiFiLinkStatus:" + status);
 		mWiFiStatus = 0;
 		switch (status) {
 		case 1:
@@ -729,6 +749,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 		} else {
 			// 已经绑定
+			mApp.mIPCControlManager.setIPCWifiState(false, "");
 			startWifi();
 			if (null != mWac) {
 				mWac.autoWifiManageReset();
@@ -991,6 +1012,17 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case R.id.index_carrecoder_btn:
 			checkWiFiStatus();
+			break;
+		case R.id.index_div:
+			if(divIndex == 0){
+				indexDiv.setBackgroundResource(R.drawable.guide_two);
+				divIndex++;
+			}else if (divIndex == 1){
+				indexDiv.setBackgroundResource(R.drawable.guide_three);
+				divIndex++;
+			}else {
+				indexDiv.setVisibility(View.GONE);
+			}
 			break;
 		}
 	}
@@ -1277,7 +1309,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		GolukDebugUtils.e("", "wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
+		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
 		switch (type) {
 		case 5:
 			if (state == 0) {

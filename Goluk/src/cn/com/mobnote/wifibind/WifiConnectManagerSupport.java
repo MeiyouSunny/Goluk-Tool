@@ -39,8 +39,7 @@ public class WifiConnectManagerSupport {
 
 	// private static final String FILEPATH = Environment
 	// .getExternalStorageDirectory().getPath() + "/wificonfig/"; // 配置文件存储路径
-	private static final String FILEPATH =  Const.getAppContext().getFilesDir().getPath()
-			+ "/wificonfig/";
+	private static final String FILEPATH = Const.getAppContext().getFilesDir().getPath() + "/wificonfig/";
 
 	private static final int BUF_SIZE = 1024;
 	private static final String TAG = "WifiConnectManagerSupport";
@@ -57,8 +56,7 @@ public class WifiConnectManagerSupport {
 
 	// 查看以前是否也配置过这个网络
 	WifiConfiguration isExsits(String SSID) {
-		List<WifiConfiguration> existingConfigs = wifiManager
-				.getConfiguredNetworks();
+		List<WifiConfiguration> existingConfigs = wifiManager.getConfiguredNetworks();
 		if (existingConfigs == null) {
 			return null;
 		}
@@ -70,8 +68,7 @@ public class WifiConnectManagerSupport {
 		return null;
 	}
 
-	public boolean joinWifiInfo(String SSID, String Password,
-			WifiCipherType Type) {
+	public boolean joinWifiInfo(String SSID, String Password, WifiCipherType Type) {
 		WifiConfiguration wifiConfig = this.setWifiInfo(SSID, Password, Type);
 		if (wifiConfig == null) {
 			return false;
@@ -106,8 +103,7 @@ public class WifiConnectManagerSupport {
 		return bRet;
 	}
 
-	WifiConfiguration setWifiInfo(String SSID, String Password,
-			WifiCipherType Type) {
+	WifiConfiguration setWifiInfo(String SSID, String Password, WifiCipherType Type) {
 		WifiConfiguration config = new WifiConfiguration();
 		config.allowedAuthAlgorithms.clear();
 		config.allowedGroupCiphers.clear();
@@ -140,17 +136,14 @@ public class WifiConnectManagerSupport {
 		if (Type == WifiCipherType.WIFICIPHER_WPA) {
 			config.preSharedKey = "\"" + Password + "\"";
 			config.hiddenSSID = true;
-			config.allowedAuthAlgorithms
-					.set(WifiConfiguration.AuthAlgorithm.OPEN);
+			config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
 			config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
 			config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-			config.allowedPairwiseCiphers
-					.set(WifiConfiguration.PairwiseCipher.TKIP);
+			config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
 			// 此处需要修改否则不能自动重联
 			// config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
 			config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-			config.allowedPairwiseCiphers
-					.set(WifiConfiguration.PairwiseCipher.CCMP);
+			config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
 			config.status = WifiConfiguration.Status.ENABLED;
 		}
 
@@ -185,18 +178,18 @@ public class WifiConnectManagerSupport {
 			bRet = wifiManager.setWifiEnabled(false);
 		}
 		bRet = wifiManager.isWifiEnabled();
-		int count=0;
-		while (bRet){
+		int count = 0;
+		while (bRet) {
 			try {
-				if(count==5){
+				if (count == 5) {
 					return false;
 				}
 				Thread.sleep(200);
-				bRet=wifiManager.isWifiEnabled();
+				bRet = wifiManager.isWifiEnabled();
 				count++;
 			} catch (Exception e) {
 			}
-			
+
 		}
 		return bRet;
 	}
@@ -215,8 +208,7 @@ public class WifiConnectManagerSupport {
 	private static boolean isHex(String key) {
 		for (int i = key.length() - 1; i >= 0; i--) {
 			final char c = key.charAt(i);
-			if (!(c >= '0' && c <= '9' || c >= 'A' && c <= 'F' || c >= 'a'
-					&& c <= 'f')) {
+			if (!(c >= '0' && c <= '9' || c >= 'A' && c <= 'F' || c >= 'a' && c <= 'f')) {
 				return false;
 			}
 		}
@@ -238,16 +230,14 @@ public class WifiConnectManagerSupport {
 		// 开始扫描网络
 		wifiManager.startScan();
 		List<ScanResult> scanResult = wifiManager.getScanResults();
-		Log.e(TAG, "sanrs-----------------" + (scanResult == null)
-				+ "------------");
+		Log.e(TAG, "sanrs-----------------" + (scanResult == null) + "------------");
 
 		if (scanResult != null) {
 			for (ScanResult tempResult : scanResult) {
-				//判断是相等还是模糊匹配
+				// 判断是相等还是模糊匹配
 				if (type == null) {
-					
-					result = Pattern.compile(regEx).matcher(tempResult.SSID)
-							.find();
+
+					result = Pattern.compile(regEx).matcher(tempResult.SSID).find();
 				} else {
 					result = title.equals(tempResult.SSID);
 				}
@@ -256,8 +246,7 @@ public class WifiConnectManagerSupport {
 					bean = new WifiRsBean();
 					bean.setIpc_mac(tempResult.BSSID); // ssid
 					bean.setIpc_ssid(tempResult.SSID); // ssid
-					bean.setWifiSignal(WifiManager.calculateSignalLevel(
-							tempResult.level, 4)); // 信号等级
+					bean.setWifiSignal(WifiManager.calculateSignalLevel(tempResult.level, 4)); // 信号等级
 					bean.setIpc_bssid(tempResult.BSSID); // 设置mac地址
 					bean.setPassnull(ispassnullType(tempResult.capabilities)); // 是否是无密码类型
 					if (conSSid != null && !"".equals(conSSid)) {
@@ -326,8 +315,7 @@ public class WifiConnectManagerSupport {
 		if (context != null) {
 			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo mWiFiNetworkInfo = mConnectivityManager
-					.getNetworkInfo(type_wifi);
+			NetworkInfo mWiFiNetworkInfo = mConnectivityManager.getNetworkInfo(type_wifi);
 			if (mWiFiNetworkInfo != null) {
 				// Log.d(TAG,
 				// "mWiFiNetworkInfo----------------"+mWiFiNetworkInfo.getState());
@@ -373,10 +361,6 @@ public class WifiConnectManagerSupport {
 		return 0;
 	}
 
- 
-
-	
-
 	public boolean isWifiApEnabled(WifiManager wifiManager) {
 		try {
 			Method method = wifiManager.getClass().getMethod("isWifiApEnabled");
@@ -400,8 +384,9 @@ public class WifiConnectManagerSupport {
 	 * @return
 	 */
 	private boolean ispassnullType(String value) {
+		if ((value.indexOf("[ESS]") == 0 && value.length() == 5)
+				|| (value.indexOf("[WPS][ESS]") == 0 && value.length() == 10)) {
 
-		if ((value.indexOf("[ESS]") == 0 && value.length() == 5 )||(value.indexOf("[WPS][ESS]") == 0 && value.length() == 10)) {
 			// 只有一种类型 并且是ESS类型 认为是无密码
 			return true;
 		}
@@ -506,15 +491,14 @@ public class WifiConnectManagerSupport {
 		}
 	}
 
-	public boolean setWifiApEnabled(WifiConfiguration wifiConfig,
-			boolean enabled) {
+	public boolean setWifiApEnabled(WifiConfiguration wifiConfig, boolean enabled) {
 		try {
 			if (enabled) { // disable WiFi in any case
 				wifiManager.setWifiEnabled(false);
 			}
 
-			Method method = wifiManager.getClass().getMethod(
-					"setWifiApEnabled", WifiConfiguration.class, boolean.class);
+			Method method = wifiManager.getClass()
+					.getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
 			return (Boolean) method.invoke(wifiManager, wifiConfig, enabled);
 		} catch (Exception e) {
 			Log.e(this.getClass().toString(), "", e);
@@ -532,8 +516,7 @@ public class WifiConnectManagerSupport {
 
 	public WifiConfiguration getWifiApConfiguration() {
 		try {
-			Method method = wifiManager.getClass().getMethod(
-					"getWifiApConfiguration");
+			Method method = wifiManager.getClass().getMethod("getWifiApConfiguration");
 			return (WifiConfiguration) method.invoke(wifiManager);
 		} catch (Exception e) {
 			Log.e(this.getClass().toString(), "", e);

@@ -51,8 +51,16 @@
 		
 		<activity android:name="cn.com.mobnote.golukmobile.LocalVideoListActivity" android:screenOrientation="portrait" android:configChanges="screenSize|keyboardHidden|orientation" />
 		<activity android:name="cn.com.mobnote.golukmobile.LocalVideoShareListActivity" android:screenOrientation="portrait" android:configChanges="screenSize|keyboardHidden|orientation" />
-		<activity android:name="cn.com.mobnote.golukmobile.VideoEditActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.VideoShareActivity" android:screenOrientation="portrait"/>
+		<activity
+		    android:name="cn.com.mobnote.golukmobile.VideoEditActivity"
+		    android:configChanges="screenSize|keyboardHidden|orientation"
+		    android:screenOrientation="portrait" />
+
+		<activity
+		    android:name="cn.com.mobnote.golukmobile.VideoShareActivity"
+		    android:configChanges="screenSize|keyboardHidden|orientation"
+		    android:screenOrientation="portrait" />
+
 		<activity android:name="cn.com.mobnote.golukmobile.OnLineVideoPlayActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity" android:screenOrientation="portrait"/>
 		<activity
@@ -64,16 +72,41 @@
 		<activity android:name="cn.com.mobnote.golukmobile.UserCenterActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserSetupActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoListActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkIndexActivity" android:screenOrientation="portrait"/>
 		
+
 		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2" android:screenOrientation="portrait"/>
+
+
+	 <activity
+	    android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity"
+	    android:configChanges="screenSize|keyboardHidden|orientation"
+	    android:screenOrientation="portrait" />
 		
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkModifyPwdActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity" android:screenOrientation="portrait"/>
+		<activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkIndexActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkModifyPwdActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
 		
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="keyboardHidden|orientation|screenSize"/>
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
@@ -82,7 +115,8 @@
 
 		<activity
 		    android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
-		    android:screenOrientation="portrait" />
+		    android:screenOrientation="portrait"   
+		    android:configChanges="screenSize|keyboardHidden|orientation"/>
 
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity> 
 		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity"  android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>

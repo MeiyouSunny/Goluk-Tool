@@ -119,13 +119,64 @@
 		android:layout_height="1dp"
 		android:layout_below="@id/unbind_item"
 		android:background="@drawable/solid"/>
+	<View
+		android:id="@+id/solid_5"
+		android:layout_width="wrap_content"
+		android:layout_height="1dp"
+		android:layout_below="@id/unbind_item"
+		android:background="@drawable/solid"
+		android:layout_marginTop="5dp"/>
+	
+	<RelativeLayout
+		android:id="@+id/app_update_item"
+		android:layout_width="match_parent"
+		android:layout_height="47dp"
+		android:layout_below="@id/solid_5"
+		android:background="#f4f4f4"
+		>
+		
+		<TextView
+			android:id="@+id/app_update_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="21dp"
+			android:text="@string/app_update_text"
+			android:textSize="16sp"
+			android:textColor="#3f3f3f"
+			android:layout_centerVertical="true"/>
+		<TextView
+		    android:id="@+id/app_update_text_version"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="19dp"
+			android:layout_centerVertical="true"
+			android:textSize="18sp"
+			android:contentDescription="@string/imgdes"
+			android:textColor="#3f3f3f"/>
+		
+	</RelativeLayout>
+	<View
+		android:id="@+id/solid_6"
+		android:layout_width="wrap_content"
+		android:layout_height="1dp"
+		android:layout_below="@id/app_update_item"
+		android:background="@drawable/solid"/>
 	
 	<!-- Goluk固件升级 -->
-	<!-- <RelativeLayout
+	<!--<View
+		android:id="@+id/solid_7"
+		android:layout_width="wrap_content"
+		android:layout_height="1dp"
+		android:layout_below="@id/app_update_item"
+		android:background="@drawable/solid"
+		android:layout_marginTop="5dp"/>
+		 
+	<RelativeLayout
 		android:id="@+id/update_item"
 		android:layout_width="match_parent"
 		android:layout_height="47dp"
-		android:layout_below="@id/solid_2"
+		android:layout_below="@id/solid_7"
 		android:background="#f4f4f4">
 		
 		<TextView
@@ -138,7 +189,14 @@
 			android:textColor="#3f3f3f"
 			android:layout_centerVertical="true"/>
 		
-	</RelativeLayout> -->
+	</RelativeLayout>
+	<View
+		android:id="@+id/solid_8"
+		android:layout_width="wrap_content"
+		android:layout_height="1dp"
+		android:layout_below="@id/update_item"
+		android:background="@drawable/solid"/>
+	 -->
 
 	<RelativeLayout 
 	    android:layout_width="match_parent"
