@@ -162,7 +162,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			}
 			break;
 		case MSG_H_UPLOAD_SUCESS:
-			GolukUtils.showToast(VideoShareActivity.this, "上传完成");
+			// GolukUtils.showToast(VideoShareActivity.this, "上传完成");
 			GlobalWindow.getInstance().topWindowSucess("视频上传成功");
 			shareCanEnable();
 			break;
@@ -203,6 +203,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		if (isExit) {
 			return;
 		}
+		mCurrentPercent = 0;
 		GolukDebugUtils.e("", "jyf-----VideoShareActivity-------------uploadError :uploadCount:  " + uploadCount);
 		if (uploadCount >= UPLOAD_FAILED_UP) {
 			// 报错
@@ -475,10 +476,13 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
+	private int mCurrentPercent = 0;
+
 	private void updateFreshProgress(int per) {
 		if (isExit) {
 			return;
 		}
+		mCurrentPercent = per;
 		Message msg = new Message();
 		msg.what = MSG_H_UPLOAD_PROGRESS;
 		msg.obj = per;
@@ -546,6 +550,20 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 	protected void onResume() {
 		mApp.setContext(this, "VideoShare");
 		super.onResume();
+		if (isUploading) {
+			if (!mIsUploadSucess) {
+				if (GlobalWindow.getInstance().isShow()) {
+					// 更新进度条
+					GlobalWindow.getInstance().refreshPercent(mCurrentPercent);
+				} else {
+					if (null == GlobalWindow.getInstance().getApplication()) {
+						GlobalWindow.getInstance().setApplication(mApp);
+					}
+					GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
+					GlobalWindow.getInstance().refreshPercent(mCurrentPercent);
+				}
+			}
+		}
 	}
 
 	@Override
