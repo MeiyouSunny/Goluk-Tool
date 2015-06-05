@@ -30,7 +30,9 @@ public class GolukModule {
 	public static final int Goluk_Module_Location = 3;
 	/** 视频广场管理模块 */
 	public static final int Goluk_Module_Square = 4;
+	/** 服务地址管理模块 */
+	public static final int Goluk_Module_GetServerAddress = 5;
 
-	public static final int Goluk_Module_MaxID = 5;
+	public static final int Goluk_Module_MaxID = 6;
 
 }
