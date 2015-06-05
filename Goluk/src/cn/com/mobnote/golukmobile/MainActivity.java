@@ -248,7 +248,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			indexDiv.setVisibility(View.VISIBLE);
 			Editor editor = preferences.edit();
 			editor.putBoolean("isfirst", false);
-			// 提交修改
+			// 提交修改 
 			editor.commit();
 		}
 		// 初始化地图
