@@ -12,12 +12,16 @@ import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 
 import java.io.IOException;
 
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -35,6 +39,8 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -453,7 +459,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mSeekBar.setProgress(0);
 		
 		if(null != mMediaPlayer){
-			mMediaPlayer.seekTo(0);
+			mMediaPlayer.seekTo(1);
 //			mMediaPlayer.start();
 		}
 	}
@@ -469,16 +475,61 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 			return false;
 		}
 		
+		String msg = "播放错误";
+		switch (arg1) {
+			case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+			case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+				msg = "视频出错，请重试！";
+				break;
+			case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+				msg = "网络访问异常，请重试！";
+				break;
+				
+			default:
+				break;
+		}
+		
+		if (!isNetworkConnected()) {
+			msg = "网络访问异常，请重试！";
+		}
+		
 		error=true;
-		GolukDebugUtils.e("xuhw", "YYYY====onError====");
 		mHandler.removeMessages(GETPROGRESS);
-		GolukDebugUtils.e("xuhw", "TTT=============onError=");
+		GolukDebugUtils.e("xuhw", "BBBBBB=====onError==arg1="+arg1+"==arg2="+arg2);
 		hideLoading();
-		GolukUtils.showToast(this, "播放错误");
 		mCurTime.setText("00:00");
 		mTotalTime.setText("00:00");
+		dialog(msg);
 		return false;
 	}
+	
+	private void dialog(String msg) {
+		CustomDialog d = new CustomDialog(this);
+		d.setCancelable(false);
+		d.setMessage(msg, Gravity.CENTER);
+		d.setLeftButton("确定", new OnLeftClickListener() {
+			@Override
+			public void onClickListener() {
+				exit();
+			}
+		});
+		d.show();
+	}
+	
+	/**
+	 * 检查是否有可用网络
+	 * @return
+	 * @author xuhw
+	 * @date 2015年6月5日
+	 */
+	public boolean isNetworkConnected() {
+		ConnectivityManager mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		if (mNetworkInfo != null) {
+			return mNetworkInfo.isAvailable();
+		}
+		return false;
+	} 
 
 	boolean isGet=false;
 	@Override
