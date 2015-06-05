@@ -928,7 +928,7 @@ public class GolukApplication extends Application implements IPageNotifyFn,
 					connectionDialog();
 				}
 				if (null != mMainActivity) {
-					mMainActivity.wiFiLinkStatus(3);
+//					mMainActivity.wiFiLinkStatus(1);
 				}
 				break;
 			case ConnectionStateMsg_Connected:

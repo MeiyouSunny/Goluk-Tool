@@ -656,7 +656,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 链接中断更新页面
 	 */
 	public void wiFiLinkStatus(int status) {
-		GolukDebugUtils.e("", "wifiCallBack-------------wiFiLinkStatus:" + status);
+		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wiFiLinkStatus-------------wiFiLinkStatus:" + status);
 		mWiFiStatus = 0;
 		switch (status) {
 		case 1:
@@ -749,6 +749,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 		} else {
 			// 已经绑定
+			mApp.mIPCControlManager.setIPCWifiState(false, "");
 			startWifi();
 			if (null != mWac) {
 				mWac.autoWifiManageReset();
@@ -1301,7 +1302,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		GolukDebugUtils.e("", "wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
+		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
 		switch (type) {
 		case 5:
 			if (state == 0) {
