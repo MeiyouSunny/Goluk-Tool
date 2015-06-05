@@ -229,8 +229,8 @@ public class GolukGuideManage {
 			}
 		}
 	}
-	
-	public void destoryImage(){
+
+	public void destoryImage() {
 		if (mBGBitmap2 != null) {
 			if (!mBGBitmap2.isRecycled()) {
 				mBGBitmap2.recycle();
@@ -270,7 +270,6 @@ public class GolukGuideManage {
 			editor.putBoolean("isfirst", false);
 			// 提交修改 
 			editor.commit();
-			
 			// 启动个人中心的起始页
 			Intent userStart = new Intent(mContext, UserStartActivity.class);
 			mContext.startActivity(userStart);

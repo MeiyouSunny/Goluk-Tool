@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.guide.GolukGuideManage;
 import android.annotation.SuppressLint;
@@ -7,8 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import cn.com.mobnote.application.GolukApplication;
@@ -36,69 +35,59 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * 
  */
 @SuppressLint("HandlerLeak")
-public class GuideActivity extends BaseActivity implements OnClickListener {
-	/** application */
-	//private GolukApplication mApp = null;
-	//private LayoutInflater mLayoutInflater = null;
+public class GuideActivity extends BaseActivity {
 	/** 上下文 */
 	private Context mContext = null;
 	/** 引导页管理类 */
 	private GolukGuideManage mGolukGuideManage = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.guide);
-		
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
-		((GolukApplication)this.getApplication()).initLogic();
-		
-		//初始化
+		((GolukApplication) this.getApplication()).initLogic();
+		// 初始化
 		init();
-		//加载引导页
-		initViewPager();
-		
 		SysApplication.getInstance().addActivity(this);
-		
 	}
-	
+
+	private boolean isFirstStart() {
+		// 读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
+		SharedPreferences preferences = getSharedPreferences("golukmark", MODE_PRIVATE);
+		// 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
+		return preferences.getBoolean("isfirst", true);
+	}
+
 	/**
 	 * 页面初始化,获取页面元素,注册事件
 	 */
-	private void init(){
-		//mLayoutInflater = LayoutInflater.from(mContext);
-		
-		//读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
-		SharedPreferences preferences = getSharedPreferences("golukmark",MODE_PRIVATE);
-		//取得相应的值,如果没有该值,说明还未写入,用true作为默认值
-		boolean isFirstIn = preferences.getBoolean("isfirst", true);
-		//判断程序第几次启动
-		if (!isFirstIn) {//启动过
-			//读取SharedPreference中用户的信息
+	private void init() {
+		// 判断程序是否第一次启动
+		if (!isFirstStart()) {// 启动过
+			// 读取SharedPreference中用户的信息
 			SharedPreferences mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
 			boolean isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-			//判断是否是第一次登录
-			if(!isFirstLogin){
-				//登录过，跳转到地图首页进行自动登录
-				Intent it = new Intent(this,MainActivity.class);
+			// 判断是否是第一次登录
+			if (!isFirstLogin) {
+				// 登录过，跳转到地图首页进行自动登录
+				Intent it = new Intent(this, MainActivity.class);
 				GolukDebugUtils.i("lily", "======MainActivity==GuideActivity====");
 				startActivity(it);
-			}else{
-				//是第一次登录(没有登录过)
+			} else {
+				// 是第一次登录(没有登录过)
 				Intent intent = new Intent(this, UserStartActivity.class);
 				startActivity(intent);
 			}
 			this.finish();
-		} else {//没有启动过
-//			Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
-//			SplashActivity.this.startActivity(intent);
-//			SplashActivity.this.finish();
+		} else {// 没有启动过
+			initViewPager();
 		}
 	}
-	
+
 	/**
 	 * 初始化ViewPager
 	 */
@@ -106,34 +95,19 @@ public class GuideActivity extends BaseActivity implements OnClickListener {
 		this.mGolukGuideManage = new GolukGuideManage(mContext);
 		this.mGolukGuideManage.initGolukGuide();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mGolukGuideManage.destoryImage();
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
+		if (null != mGolukGuideManage) {
+			mGolukGuideManage.destoryImage();
+		}
 	}
 
 	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-	}
-	
-@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if (keyCode == KeyEvent.KEYCODE_BACK )
-		{
-			//退出对话框
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			// 退出对话框
 			int PID = android.os.Process.myPid();
 			android.os.Process.killProcess(PID);
 			android.os.Process.sendSignal(PID, 9);

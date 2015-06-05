@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
@@ -85,12 +86,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	private AnimationDrawable mAnimationDrawable = null;
 	/** 文件名字 */
 	private String filename="";
-	
 	private int mVideoWidth;
 	private int mVideoHeight;
 	private boolean mIsVideoSizeKnown = false;
 	private boolean mIsVideoReadyToBePlayed = false;
-	
 	private TextView mCurTime=null;
 	private TextView mTotalTime=null;
 	private ImageButton mPlayBtn=null;
@@ -100,12 +99,19 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	private RelativeLayout mBottomLayout=null;
 	public  static Handler mHandler=null;
 	private final int GETPROGRESS=1;
+	/** 来源标志 */
 	private String from;
-	private boolean isShow=false;
-	private boolean error=false;
+	private boolean isShow = false;
+	/** 播放器报错标识 */
+	private boolean error = false;
+	/** 预加载图片 */
 	private ImageView mPreLoading = null;
 	/** 视频第一帧图片地址 */
 	private String image = "";
+	/** 播放重置标识 */
+	private boolean reset = false;
+	/** 网络连接超时 */
+	private int networkConnectTimeOut = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +164,19 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 						mHandler.removeMessages(GETPROGRESS);
 						if(error){
 							return;
+						}
+						
+						if (!isNetworkConnected()) {
+							networkConnectTimeOut++;
+							if (networkConnectTimeOut > 100) {
+								if (!reset) {
+									hideLoading();
+									dialog("网络访问异常，请重试！");
+									return;
+								}
+							}
+						}else{
+							networkConnectTimeOut = 0;
 						}
 						
 						if(null != mMediaPlayer){
@@ -311,7 +330,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	 */
 	private void showLoading() {
 		if(!isShow){
-			
 			mLoadingLayout.setVisibility(View.VISIBLE);
 			mLoading.setVisibility(View.VISIBLE);
 			mLoading.postDelayed(new Runnable() {
@@ -361,9 +379,15 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 						mPlayBtn.setBackgroundResource(R.drawable.player_pause_btn);
 						
 					}else{
-						mMediaPlayer.start();
-						mPlayBigBtn.setVisibility(View.GONE);
-						mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+						if (reset) {
+							reset = false;
+							showLoading();
+							playVideo();
+						}else{
+							mMediaPlayer.start();
+							mPlayBigBtn.setVisibility(View.GONE);
+							mPlayBtn.setBackgroundResource(R.drawable.player_play_btn);
+						}
 					}
 				}else{
 					playVideo();
@@ -450,7 +474,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	 * @author xuhw
 	 * @date 2015年3月31日
 	 */
-	private void playVideo(){
+	private void playVideo() {
 		System.out.println("TTT=============playVideo=");
 		try {
 			mMediaPlayer = new MediaPlayer(this);
@@ -496,8 +520,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mSeekBar.setProgress(0);
 		
 		if(null != mMediaPlayer){
-			mMediaPlayer.seekTo(1);
-//			mMediaPlayer.start();
+			reset = true;
+			isShow = false;
+			mMediaPlayer.reset();
+			mPreLoading.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -526,8 +552,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 				break;
 		}
 		
-		if (!isNetworkConnected()) {
-			msg = "网络访问异常，请重试！";
+		if (!from.equals("local")) {
+			if (!isNetworkConnected()) {
+				msg = "网络访问异常，请重试！";
+			}
 		}
 		
 		error=true;
@@ -540,17 +568,23 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		return false;
 	}
 	
+	/**
+	 * 提示对话框
+	 * @param msg 提示信息
+	 * @author xuhw
+	 * @date 2015年6月5日
+	 */
 	private void dialog(String msg) {
-		CustomDialog d = new CustomDialog(this);
-		d.setCancelable(false);
-		d.setMessage(msg, Gravity.CENTER);
-		d.setLeftButton("确定", new OnLeftClickListener() {
+		CustomDialog mCustomDialog = new CustomDialog(this);
+		mCustomDialog.setCancelable(false);
+		mCustomDialog.setMessage(msg, Gravity.CENTER);
+		mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
 				exit();
 			}
 		});
-		d.show();
+		mCustomDialog.show();
 	}
 	
 	/**
@@ -628,6 +662,8 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	}
 
 	private void startVideoPlayback() {
+		reset = false;
+//		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		mSurfaceHolder.setFixedSize(mVideoWidth, mVideoHeight);
 		mMediaPlayer.start();
 	}
