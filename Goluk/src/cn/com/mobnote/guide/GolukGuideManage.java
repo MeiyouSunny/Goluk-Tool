@@ -265,6 +265,11 @@ public class GolukGuideManage {
 	protected class StartGolukBtnClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
+			SharedPreferences preferences = mContext.getSharedPreferences("golukmark",Context.MODE_PRIVATE);
+			Editor editor = preferences.edit();
+			editor.putBoolean("isfirst", false);
+			// 提交修改 
+			editor.commit();
 			// 启动个人中心的起始页
 			Intent userStart = new Intent(mContext, UserStartActivity.class);
 			mContext.startActivity(userStart);
