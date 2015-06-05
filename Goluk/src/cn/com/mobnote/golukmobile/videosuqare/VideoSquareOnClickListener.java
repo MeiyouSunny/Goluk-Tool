@@ -69,6 +69,7 @@ public class VideoSquareOnClickListener implements OnClickListener {
 					vspa.mCustomProgressDialog.close();
 				}
 			}
+			
 
 			break;
 		case R.id.like_btn:
