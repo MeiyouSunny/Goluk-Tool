@@ -243,11 +243,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		//读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
 		SharedPreferences preferences = getSharedPreferences("golukmark",MODE_PRIVATE);
 		//取得相应的值,如果没有该值,说明还未写入,用true作为默认值
-		boolean isFirstIn = preferences.getBoolean("isfirst", true);
-		if(isFirstIn){//如果是第一次启动
+		boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
+		if(isFirstIndex){//如果是第一次启动
 			indexDiv.setVisibility(View.VISIBLE);
 			Editor editor = preferences.edit();
-			editor.putBoolean("isfirst", false);
+			editor.putBoolean("isFirstIndex", false);
 			// 提交修改 
 			editor.commit();
 		}
