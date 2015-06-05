@@ -10,8 +10,10 @@ import io.vov.vitamio.MediaPlayer.OnPreparedListener;
 import io.vov.vitamio.MediaPlayer.OnSeekCompleteListener;
 import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 
+import java.io.File;
 import java.io.IOException;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
@@ -19,6 +21,7 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -34,14 +37,14 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
  /**
@@ -65,6 +68,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
   *
   * @author xuhw
   */
+@SuppressLint("HandlerLeak")
 public class VideoPlayerActivity extends BaseActivity implements OnCompletionListener, OnBufferingUpdateListener, OnSeekCompleteListener
 ,OnErrorListener, OnInfoListener, OnPreparedListener, OnClickListener, SurfaceHolder.Callback, OnVideoSizeChangedListener{
 	/** 视频播放器 */
@@ -97,24 +101,41 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	public  static Handler mHandler=null;
 	private final int GETPROGRESS=1;
 	private String from;
-	private GolukApplication mApp = null;
 	private boolean isShow=false;
 	private boolean error=false;
+	private ImageView mPreLoading = null;
+	/** 视频第一帧图片地址 */
+	private String image = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (!LibsChecker.checkVitamioLibs(this))
 			return;
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==111111111=");
 		setContentView(R.layout.carrecorder_videoplayer);
-		mApp = (GolukApplication)getApplication();
 		from = getIntent().getStringExtra("from");
+		image = getIntent().getStringExtra("image");
 		filename = getIntent().getStringExtra("filename");
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==2222===filename="+filename+"===from="+from);
 		String ip = SettingUtils.getInstance().getString("IPC_IP");
 		if(!TextUtils.isEmpty(from)){
+			String path = Environment.getExternalStorageDirectory()+ File.separator + "goluk" + File.separator + "goluk_carrecorder";
+			GFileUtils.makedir(path);
+			String filePath = path + File.separator + "image";
+			GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==filePath="+filePath);
 			if(from.equals("local")){
 				playUrl=getIntent().getStringExtra("path");
+				String fileName = playUrl.substring(playUrl.lastIndexOf("/")+1);
+				fileName = fileName.replace(".mp4", ".jpg");
+				image = filePath + File.separator + fileName;
+				GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==image="+image);
+			}else if(from.equals("suqare")){
+				playUrl=getIntent().getStringExtra("playUrl");
 			}else if(from.equals("ipc")){
+				String fileName = filename;
+				fileName = fileName.replace(".mp4", ".jpg");
+				image = filePath + File.separator + fileName;
 				int type = getIntent().getIntExtra("type", -1);
 				if(4 == type){
 					playUrl="http://"+ ip + ":5080/rec/wonderful/"+filename;
@@ -142,6 +163,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 						if(null != mMediaPlayer){
 							if(mMediaPlayer.isPlaying()){
 								hideLoading();
+								mPreLoading.setVisibility(View.GONE);
 								long curPosition = mMediaPlayer.getCurrentPosition();
 								long duration = mMediaPlayer.getDuration();
 								
@@ -182,6 +204,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mSurfaceHolder.setFormat(PixelFormat.RGBA_8888); 
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
+		mPreLoading = (ImageView)findViewById(R.id.mPreLoading);
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 		findViewById(R.id.back_btn).setOnClickListener(this);
@@ -194,7 +217,18 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mPlayBtn = (ImageButton) findViewById(R.id.mPlayBtn);
 		mPlayBigBtn = (ImageButton) findViewById(R.id.mPlayBigBtn);
 		mSeekBar = (SeekBar) findViewById(R.id.mSeekBar);
-		  
+		
+		if (from.equals("suqare")) {
+			mPreLoading.setBackgroundResource(R.drawable.tacitly_pic);
+		}else {
+			mPreLoading.setBackgroundResource(R.drawable.carrecorder_xcjlybj);
+		}
+		mPreLoading.setVisibility(View.VISIBLE);
+		
+		if (!TextUtils.isEmpty(image)) {
+			BitmapManager.getInstance().mBitmapUtils.display(mPreLoading, image);
+		}
+		
 		showLoading();
 	}
 	
@@ -376,6 +410,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if (!TextUtils.isEmpty(image)) {
+			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(image);
+		}
 		releaseMediaPlayer();
 		doCleanUp();
 	}
@@ -559,7 +596,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 
 	@Override
 	public void onBufferingUpdate(MediaPlayer arg0, int arg1) {
-		GolukDebugUtils.e("xuhw", "YYYY====onBufferingUpdate===arg1="+arg1);
+//		GolukDebugUtils.e("xuhw", "YYYY====onBufferingUpdate===arg1="+arg1);
 	}
 
 	@Override

@@ -50,7 +50,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
-@SuppressLint("ClickableViewAccessibility")
+@SuppressLint({ "ClickableViewAccessibility", "HandlerLeak" })
 public class IPCFileManagerActivity extends BaseActivity implements OnClickListener, IPCManagerFn, OnTouchListener{
 	private StickyListHeadersListView mWonderfulVideoList=null;
 	private StickyListHeadersListView mEmergencyVideoList=null;
@@ -300,7 +300,6 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 						if(mWonderfulVideoData.size() > 0 &&(mWonderfulVideoData.size()%pageCount) == 0){
 							getRecorderFileFromLocal(false, IPCManagerFn.TYPE_SHORTCUT,marvellousListTime);//初始化
 						}
-//						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
 						GolukDebugUtils.e("xuhw", "TTTTT=====滑动到最后了222 最后时间"+marvellousListTime);
 					}
 				}
