@@ -338,7 +338,9 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 						} else {//数据没有30条
 							isHaveData = false;
 						}
-						mDataList.addAll(list);
+						
+						list.addAll(mDataList);
+						mDataList = list;
 						mRTPullListView.onRefreshComplete();
 						flush();
 					}
