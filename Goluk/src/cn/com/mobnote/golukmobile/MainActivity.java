@@ -970,9 +970,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		switch (id) {
 		case R.id.map_location_btn:
 			// 回到我的位置
-//			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
-//			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-//			mBaiduMap.animateMapStatus(u);
+			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
+			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+			mBaiduMap.animateMapStatus(u);
 			
 //			test();
 			break;
