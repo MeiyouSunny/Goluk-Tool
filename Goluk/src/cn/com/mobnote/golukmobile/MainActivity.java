@@ -974,7 +974,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 //			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 //			mBaiduMap.animateMapStatus(u);
 			
-			test();
+//			test();
 			break;
 		case R.id.index_share_btn:
 			click_share();
