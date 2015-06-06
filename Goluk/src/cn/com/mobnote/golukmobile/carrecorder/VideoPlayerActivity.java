@@ -284,7 +284,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		if (from.equals("suqare")) {
 			mPreLoading.setBackgroundResource(R.drawable.tacitly_pic);
 		}else {
-			mPreLoading.setBackgroundResource(R.drawable.carrecorder_xcjlybj);
+			mPreLoading.setBackgroundResource(R.drawable.tacitly_pic);
 		}
 		mPreLoading.setVisibility(View.VISIBLE);
 		
