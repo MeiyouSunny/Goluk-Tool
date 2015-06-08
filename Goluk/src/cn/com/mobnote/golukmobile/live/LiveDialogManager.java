@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 
 public class LiveDialogManager {
 	/** 单例实例 */
@@ -17,6 +18,9 @@ public class LiveDialogManager {
 
 	private AlertDialog mSingleButtonDialog = null;
 	private AlertDialog mTwoButtonDialog = null;
+	private CustomLoadingDialog mCustomLoadingDialog = null;
+	private ProgressDialog mProgressDialog = null;
+	private ProgressDialog mShareDialog = null;
 
 	/** 对话框回调方法 */
 	private ILiveDialogManagerFn dialogManagerFn = null;
@@ -91,9 +95,6 @@ public class LiveDialogManager {
 		public void dialogManagerCallBack(int dialogType, int function, String data);
 	}
 
-	ProgressDialog mProgressDialog = null;
-	ProgressDialog mShareDialog = null;
-
 	public void showShareProgressDialog(Context context, int type, String title, String message) {
 		dismissShareProgressDialog();
 		mCurrentDialogType = type;
@@ -112,6 +113,34 @@ public class LiveDialogManager {
 		if (null != mShareDialog) {
 			mShareDialog.dismiss();
 			mShareDialog = null;
+		}
+	}
+
+	/**
+	 * 显示定制化的对话框
+	 * 
+	 * @param context
+	 * @param msg
+	 *            显示信息
+	 * @author jyf
+	 * @date 2015年6月8日
+	 */
+	public void showCustomDialog(Context context, String msg) {
+		dissmissCustomDialog();
+		mCustomLoadingDialog = new CustomLoadingDialog(context, msg);
+		mCustomLoadingDialog.show();
+	}
+
+	/**
+	 * 取消对话框
+	 * 
+	 * @author jyf
+	 * @date 2015年6月8日
+	 */
+	public void dissmissCustomDialog() {
+		if (null != mCustomLoadingDialog) {
+			mCustomLoadingDialog.close();
+			mCustomLoadingDialog = null;
 		}
 	}
 
