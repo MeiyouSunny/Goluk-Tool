@@ -1,9 +1,3 @@
-/*
-  @AppName: FeiMaoBiJia
-  @Version: 3.00
-  @Date: 2013-07-18
-  @Author: Beijing MoZhi ShiJi Information Technology Co., Ltd.
-*/
 package cn.com.mobnote.golukmobile.carrecorder.util;
 
 import java.io.File;
@@ -15,12 +9,22 @@ import android.graphics.BitmapFactory;
 public class ImageManager {
 	
 	public static Bitmap getBitmapFromCache(String fileName){ 
-		return BitmapFactory.decodeFile(fileName); 
+		try {
+			return BitmapFactory.decodeFile(fileName); 
+		} catch (OutOfMemoryError p) {
+			p.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	public static Bitmap getBitmapFromCache(String filename, int width, int height){
-		File file = new File(filename);
-		if(file.exists()){
+		try {
+			File file = new File(filename);
+			if (!file.exists()) {
+				return null;
+			}
+			
 			BitmapFactory.Options opts = new BitmapFactory.Options();
 	        opts.inJustDecodeBounds = true;
 	        BitmapFactory .decodeFile(filename, opts); 
@@ -34,20 +38,26 @@ public class ImageManager {
 		        return BitmapFactory.decodeFile(filename, opts); 
 	        }else{
 	        	return BitmapFactory.decodeFile(filename); 
-	        } 
-		}else{
-			return null;
-		}  
+	        }
+		} catch (OutOfMemoryError p) {
+			p.printStackTrace();
+		}
+		
+		return null;
 	} 
 	
 	public static Bitmap getBitmapFromResource(int id){ 
-		return BitmapFactory.decodeResource(GolukApplication.getInstance().getResources(), id); 
+		try {
+			return BitmapFactory.decodeResource(GolukApplication.getInstance().getResources(), id);
+		} catch (OutOfMemoryError p) {
+			p.printStackTrace();
+		}
+		 
+		return null;
 	}
 	
 	public static Bitmap getBitmapFromResource(int id, int width, int height){
-//		if(opts.outWidth*opts.outHeight*4 > ){ //��������ڴ����޼���ж�
-//			return null;
-//		}else{
+		try {
 			BitmapFactory.Options opts = new BitmapFactory.Options();
 	        opts.inJustDecodeBounds = true;
 	        BitmapFactory.decodeResource(GolukApplication.getInstance().getResources(), id, opts); 
@@ -61,8 +71,12 @@ public class ImageManager {
 		        return BitmapFactory .decodeResource(GolukApplication.getInstance().getResources(), id, opts); 
 	        }else{
 	        	return BitmapFactory .decodeResource(GolukApplication.getInstance().getResources(), id); 
-	        }   
-//		} 
+	        } 
+		} catch (OutOfMemoryError p) {
+			p.printStackTrace();
+		}
+		 
+		return null;
 	}
 //	
 //	public static Bitmap createReflectedImage(Bitmap originalImage) {  

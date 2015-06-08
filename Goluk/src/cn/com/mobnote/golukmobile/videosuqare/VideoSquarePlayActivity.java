@@ -167,7 +167,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 			public void onRefresh() {
 				if(begantime !=null){
 					uptype = 2;
-					if(!"1".equals(type)){//直播
+					if("1".equals(type)){//直播
 						httpPost(true, type, "0", "");
 					}else{
 						httpPost(true, type, "1", begantime.mVideoEntity.sharingtime);
@@ -345,7 +345,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 						}
 						
 						
-						if(!"1".equals(type)){//直播
+						if("1".equals(type)){//直播
 							mDataList = list;
 						}else{
 							list.addAll(mDataList);
@@ -366,6 +366,9 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 							}
 						}
 					}else if(uptype == 2){//下拉刷新
+						if("1".equals(type)){//直播
+							mDataList.clear();
+						}
 						mRTPullListView.onRefreshComplete();
 					}
 				}
