@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -105,7 +106,6 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		case R.id.user_title_right:
 			// 点击保存按钮隐藏软件盘
 			UserUtils.hideSoftMethod(UserSetupChangeWifiActivity.this);
-
 			savePassword();
 			break;
 		default:
@@ -117,28 +117,13 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	 * 设置IPC信息成功回调
 	 */
 	public void setIpcLinkWiFiCallBack(int state) {
+		LiveDialogManager.getManagerInstance().dissmissCustomDialog();
 		if (0 == state) {
-			GolukUtils.showToast(this, "修改成功");
-
+			GolukUtils.showToast(this, "修改密码成功");
 			this.setResult(10);
 			this.finish();
-
-			// 隐藏loading
-			// toWaitConnView();
-			// // 开始创建手机热点
-			// mBaseHandler.sendEmptyMessageDelayed(100, 3 * 1000);
-			// GolukDebugUtils.e("",
-			// "");
 		} else {
-			GolukUtils.showToast(this, "失败");
-			// GolukDebugUtils.e("",
-			// "WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
-			// if (connectCount > 3) {
-			// GolukUtils.showToast(this, "绑定失败");
-			// } else {
-			// GolukUtils.showToast(this, "绑定失败, 重新连接 ");
-			// setIpcLinkInfo();
-			// }
+			GolukUtils.showToast(this, "修改密码失败");
 		}
 	}
 
@@ -148,11 +133,13 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 			GolukUtils.showToast(this, "极路客密码必须为8-15个字符");
 			return;
 		}
-		String json = getSetIPCJson();
 
+		String json = getSetIPCJson();
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 		if (!b) {
 			GolukUtils.showToast(this, "调用设置IPC连接热点失败");
+		} else {
+			LiveDialogManager.getManagerInstance().showCustomDialog(this, "请稍候...");
 		}
 	}
 

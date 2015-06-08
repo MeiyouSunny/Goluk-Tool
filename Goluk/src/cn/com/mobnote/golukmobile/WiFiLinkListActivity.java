@@ -306,7 +306,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			}
 			break;
 		case R.id.wifi_link_list_help:
-			GolukUtils.showToast(this, "连接帮助");
+			GolukUtils.openUrl(GolukUtils.URL_BIND_CONN_PROBLEM, this);
 			break;
 		}
 	}

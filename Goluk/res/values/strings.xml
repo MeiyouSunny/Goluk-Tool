@@ -71,7 +71,7 @@
     <string name="wifi_link_32_text">等待极路客连接到手机</string>
     <string name="wifi_link_33_text">连接出现问题怎么办</string>
     <string name="wifi_link_34_text">极路客视频安装帮助</string>
-    <string name="wifi_link_35_text">立即重置你的极路客WiFi热点密码(强烈推荐)</string>
+    <string name="wifi_link_35_text">重置你的极路客WiFi热点密码</string>
     <string name="video_live_title_text">详情</string>
     <string name="video_live_username_text">用户名称</string>
     <string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>

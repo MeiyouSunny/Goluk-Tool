@@ -17,7 +17,9 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class UnbindActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
@@ -36,6 +38,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 	private GolukApplication mApplication = null;
 	private Context mContext = null;
 	private boolean isGetIPCSucess = false;
+	private boolean isCallBackSucess = true;
 
 	private String mGolukSSID = "";
 	private String mGolukPWD = "";
@@ -55,6 +58,10 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		mApplication.getIPCControlManager().addIPCManagerListener("Unbind", this);
 		if (isBindSucess()) {
 			boolean isSucess = mApplication.getIPCControlManager().getIpcWifiConfig();
+			if (isSucess) {
+				// LiveDialogManager.getManagerInstance().showCustomDialog(this,
+				// "正在获取信息");
+			}
 		}
 
 	}
@@ -188,6 +195,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 				// event:1 msg:1033 param1:0 param2:{"GolukPWD": "123456789",
 				// "AP_SSID": "Golukd6e16e", "AP_PWD": "123456789", "GolukSSID":
 				// "GOLUKd6e16e"}
+				//LiveDialogManager.getManagerInstance().dissmissCustomDialog();
 				if (0 == param1) {
 					// 获取成功
 					try {
@@ -202,10 +210,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 						}
 						isGetIPCSucess = true;
 					} catch (Exception e) {
-
+						GolukUtils.showToast(this, "获取失败");
 					}
 				} else {
 					// 获取失败
+					GolukUtils.showToast(this, "获取失败");
 				}
 
 				break;

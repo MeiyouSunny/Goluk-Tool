@@ -3,86 +3,137 @@
     package="cn.com.mobnote.golukmobile"
     android:versionCode="101"
     android:versionName="V1.0.1_dev" >
-    
-	<uses-sdk
-	    android:minSdkVersion="14"
-	    android:targetSdkVersion="19" />
 
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-	<!-- 自动获取验证码 -->
-	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
-	<uses-permission android:name="android.permission.RECEIVE_SMS" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
 
-	<application android:name="cn.com.mobnote.application.GolukApplication" android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:hardwareAccelerated="false" >
-		<activity android:theme="@style/Theme.AppStartLoad" android:label="@string/app_name" android:name="cn.com.mobnote.golukmobile.GuideActivity" android:screenOrientation="portrait">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
-		</activity>
-		
-		<!-- 个人中心模块 -->
-		<activity android:name="cn.com.mobnote.golukmobile.UserStartActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserLoginActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserRegistActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserRepwdActivity" android:screenOrientation="portrait"/>
-												<!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
-		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalHomeActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalInfoActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalEditActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalSignActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalNameActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserPersonalHeadActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UnbindActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity" android:screenOrientation="portrait"/>
-		
-		<!-- 网络变化广播监听 -->
-		<receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver">
-			<intent-filter>
-				<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</receiver>
-		
-		<service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"></service>
-		
-		<activity android:name="cn.com.mobnote.golukmobile.LocalVideoListActivity" android:screenOrientation="portrait" android:configChanges="screenSize|keyboardHidden|orientation" />
-		<activity android:name="cn.com.mobnote.golukmobile.LocalVideoShareListActivity" android:screenOrientation="portrait" android:configChanges="screenSize|keyboardHidden|orientation" />
-		<activity
-		    android:name="cn.com.mobnote.golukmobile.VideoEditActivity"
-		    android:configChanges="screenSize|keyboardHidden|orientation"
-		    android:screenOrientation="portrait" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- 自动获取验证码 -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
-		<activity
-		    android:name="cn.com.mobnote.golukmobile.VideoShareActivity"
-		    android:configChanges="screenSize|keyboardHidden|orientation"
-		    android:screenOrientation="portrait" />
+    <application
+        android:name="cn.com.mobnote.application.GolukApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:name="cn.com.mobnote.golukmobile.GuideActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppStartLoad" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-		<activity android:name="cn.com.mobnote.golukmobile.OnLineVideoPlayActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity" android:screenOrientation="portrait"/>
-		<activity
-		    android:name="cn.com.mobnote.golukmobile.MainActivity"
-		    android:configChanges="screenSize|keyboardHidden|orientation"
-		    android:screenOrientation="portrait" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-		<activity android:name="cn.com.mobnote.golukmobile.IndexMoreActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserCenterActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserSetupActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoListActivity" android:screenOrientation="portrait"/>
-		
+        <!-- 个人中心模块 -->
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserStartActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserRegistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserRepwdActivity"
+            android:screenOrientation="portrait" />
+        <!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserPersonalHomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserPersonalInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserPersonalEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserPersonalSignActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserPersonalNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserPersonalHeadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UnbindActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity"
+            android:screenOrientation="portrait" />
 
-		<activity android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2" android:screenOrientation="portrait"/>
+        <!-- 网络变化广播监听 -->
+        <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
-	 <activity
-	    android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity"
-	    android:configChanges="screenSize|keyboardHidden|orientation"
-	    android:screenOrientation="portrait" />
-		
-		<activity
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
+
+        <activity
+            android:name="cn.com.mobnote.golukmobile.LocalVideoListActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.LocalVideoShareListActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoEditActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoShareActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.OnLineVideoPlayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.MainActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.IndexMoreActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserCenterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserSetupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.LiveVideoListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="cn.com.mobnote.golukmobile.WiFiLinkIndexActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
@@ -106,34 +157,109 @@
             android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:process=":vitamio"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VersionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.RestoreFactorySettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.ImpactSensitivityActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.StorageCpacityQueryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.WatermarkSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.TimeSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.videosuqare.CCPlayerPage"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
 
-		
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="keyboardHidden|orientation|screenSize"/>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-
-		<activity
-		    android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
-		    android:screenOrientation="portrait"   
-		    android:configChanges="screenSize|keyboardHidden|orientation"/>
-
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity" android:process=":vitamio" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity> 
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity"  android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VersionActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.FormatSDCardActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.RestoreFactorySettingsActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.ImpactSensitivityActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.StorageCpacityQueryActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.WatermarkSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.carrecorder.settings.TimeSettingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="screenSize|keyboardHidden|orientation"></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Translucent.NoTitleBar"  android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
-		<activity android:name="cn.com.mobnote.golukmobile.videosuqare.CCPlayerPage" android:screenOrientation="landscape" android:theme="@android:style/Theme.Translucent.NoTitleBar"  android:configChanges="screenSize|keyboardHidden|orientation" ></activity>
-		
-		  <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
+        <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -152,14 +278,13 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        
         <activity
             android:name="cn.com.mobnote.golukmobile.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-		
+
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -190,8 +315,7 @@
                 <action android:name="com.rd.car.RECORDER_MESSAGE" />
             </intent-filter>
         </receiver>
-
-    </application><!-- baidu地图权限 -->
+    </application> <!-- baidu地图权限 -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
