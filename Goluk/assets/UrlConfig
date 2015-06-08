@@ -1,8 +1,8 @@
 {"GetMainPage":"http://%s/navidog4MeetTrans/mainpage.htm",
 "ShareVideo":"http://%s/navidog4MeetTrans/shareVideo.htm",
-"UploadVideo":"http://%s/navidog4MeetTrans/uploadvideo.htm",
-"GetPin":"http://%s/navidog4MeetTrans/getNil.htm",
-"GetVideoDetail":"http://%s/navidog4MeetTrans/reqView.htm",
+"UploadVideo":"http://%s/fileService/FileMultiServlet",
+"GetPin":"http://%s/navidog4MeetTrans/getNils.htm",
+"GetVideoDetail":"http://%s/navidog4MeetTrans/reqPlay.htm",
 "GetVideoDetail2":"http://%s/navidog4MeetTrans/mgetView.htm",
 "Upgrade":"http://%s/cdcAdmin/upgradeGoluk.htm?method=upgradeGoluk&xieyi=100",
 "VideoComment":"http://%s/navidog4MeetTrans/comment.htm",
@@ -20,3 +20,4 @@
 "ModifyInfo":"http://%s/cdcRegister/modifyInfo.htm",
 "UploadVedioPre":"rtmp://%s/live/"
 }
+
