@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.Toast;
 
@@ -154,6 +157,18 @@ public class GolukUtils {
 			fos.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static void freeBitmap(Drawable drawable) {
+		if (null == drawable) {
+			return;
+		}
+		BitmapDrawable bd = (BitmapDrawable) drawable;
+		Bitmap bitmap = bd.getBitmap();
+		if (null != bitmap && !bitmap.isRecycled()) {
+			bitmap.recycle();
+			bitmap = null;
 		}
 	}
 
