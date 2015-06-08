@@ -345,7 +345,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 						}
 						
 						
-						if(!"1".equals(type)){//直播
+						if("1".equals(type)){//直播
 							mDataList = list;
 						}else{
 							list.addAll(mDataList);
