@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
@@ -43,6 +44,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -283,7 +285,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		if (from.equals("suqare")) {
 			mPreLoading.setBackgroundResource(R.drawable.tacitly_pic);
 		}else {
-			mPreLoading.setBackgroundResource(R.drawable.carrecorder_xcjlybj);
+			mPreLoading.setBackgroundResource(R.drawable.tacitly_pic);
 		}
 		mPreLoading.setVisibility(View.VISIBLE);
 		

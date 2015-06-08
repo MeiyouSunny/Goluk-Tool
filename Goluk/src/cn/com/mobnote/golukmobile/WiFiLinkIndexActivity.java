@@ -115,7 +115,7 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 			startActivity(list);
 			break;
 		case R.id.wifi_link_index_help:
-			GolukUtils.showToast(this, "帮助");
+			GolukUtils.openUrl(GolukUtils.URL_BIND_HELP, this);
 			break;
 		}
 	}
