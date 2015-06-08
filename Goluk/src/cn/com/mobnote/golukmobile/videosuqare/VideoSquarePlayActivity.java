@@ -167,7 +167,12 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 			public void onRefresh() {
 				if(begantime !=null){
 					uptype = 2;
-					httpPost(true, type, "1", begantime.mVideoEntity.sharingtime);
+					if(!"1".equals(type)){//直播
+						httpPost(true, type, "0", "");
+					}else{
+						httpPost(true, type, "1", begantime.mVideoEntity.sharingtime);
+					}
+					
 				}else{
 					mRTPullListView.postDelayed(new Runnable() {
 						@Override
@@ -339,8 +344,14 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 							isHaveData = false;
 						}
 						
-						list.addAll(mDataList);
-						mDataList = list;
+						
+						if(!"1".equals(type)){//直播
+							mDataList = list;
+						}else{
+							list.addAll(mDataList);
+							mDataList = list;
+						}
+						
 						mRTPullListView.onRefreshComplete();
 						flush();
 					}
