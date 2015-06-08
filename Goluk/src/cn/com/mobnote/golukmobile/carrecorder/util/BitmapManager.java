@@ -8,7 +8,7 @@ import com.lidroid.xutils.BitmapUtils;
 
 public class BitmapManager {
 	public BitmapUtils mBitmapUtils;
-	private static BitmapManager instance=null;
+	private volatile static BitmapManager instance=null;
 	
 	public static BitmapManager getInstance() { 
 		if (null == instance){
