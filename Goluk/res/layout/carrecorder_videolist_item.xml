@@ -13,11 +13,10 @@
 
     <ImageView
         android:id="@+id/video_first_needle1"
+        android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/tacitly_pic"
-        android:contentDescription="@string/def"
-        android:paddingLeft="8dp" />
+        android:contentDescription="@string/def" />
 
     <TextView
         android:id="@+id/video_countTime1"
@@ -95,11 +94,10 @@
 
     <ImageView
         android:id="@+id/video_first_needle2"
+        android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/tacitly_pic"
-        android:contentDescription="@string/def"
-        android:paddingLeft="8dp" />
+        android:contentDescription="@string/def"/>
 
     <TextView
         android:id="@+id/video_countTime2"
