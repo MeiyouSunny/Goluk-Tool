@@ -164,6 +164,7 @@ public class UserLoginManage {
 			mEditor = mSharedPreferences.edit();
 			GolukDebugUtils.i("lily", "------UserLoginManage----"+phone);
 			mEditor.putString("setupPhone", phone);
+			GolukDebugUtils.i("logintest", phone+"======1111====");
 			mEditor.putBoolean("noPwd", false);
 			mEditor.commit();
 			

@@ -132,6 +132,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
 		}
 		
+		putPhone();
+		
 		//手机号输入后，离开立即判断
 		mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override

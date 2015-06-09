@@ -183,14 +183,17 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 		Intent intent = null;
 		switch(id){
 			case R.id.back_btn:
+				mApp.mUser.setUserInterface(null);
 				//返回
 				this.finish();
 			break;
 			case R.id.local_video_item:
+				mApp.mUser.setUserInterface(null);
 				intent = new Intent(IndexMoreActivity.this,LocalVideoListActivity.class);
 				startActivity(intent);
 			break;
 			case R.id.setup_item:
+				mApp.mUser.setUserInterface(null);
 				//跳转到设置页面
 				GolukDebugUtils.i("lily", "onclick---setup--item");
 				intent = new Intent(IndexMoreActivity.this,UserSetupActivity.class);

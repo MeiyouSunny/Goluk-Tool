@@ -161,6 +161,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		GolukDebugUtils.i("upgrade", "=======+version+====="+verName);
 		mTextVersionCode.setText(verName);
 		
+		mApp.mUser.setUserInterface(this);
+		
 		//页面初始化
 		init();
 		
@@ -311,6 +313,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		int id = v.getId();
 		switch(id){
 			case R.id.back_btn:
+				mApp.mUser.setUserInterface(null);
 				//返回
 				this.finish();
 			break;
@@ -321,7 +324,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		//退出按钮
 			case R.id.loginout_btn:
 				if(btnLoginout.getText().toString().equals("登录")){
-					mApp.mUser.setUserInterface(this);
+//					mApp.mUser.setUserInterface(this);
 					if(mApp.autoLoginStatus == 1){
 						mBuilder = new AlertDialog.Builder(mContext);
 						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
@@ -355,6 +358,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				break;
 				//清除缓存
 			case R.id.remove_cache_item:
+				mApp.mUser.setUserInterface(null);
 				GolukDebugUtils.i("lily","----清除缓存-----"+Const.getAppContext().getCacheDir().getPath());
 				if(mTextCacheSize.getText().toString().equals("0M")){
 					UserUtils.showDialog(mContext, "没有缓存数据");
@@ -374,11 +378,13 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				break;
 			//解除绑定
 			case R.id.unbind_item:
+				mApp.mUser.setUserInterface(null);
 				Intent itUnbind = new Intent(UserSetupActivity.this,UnbindActivity.class);
 				startActivity(itUnbind);
 				break;
 			//版本检测
 			case R.id.app_update_item:
+				mApp.mUser.setUserInterface(null);
 				/**
 				 * 1、判断是否需要升级————设置页有“当前已是最新版本提示”
 				 * 2、判断是否是强制升级

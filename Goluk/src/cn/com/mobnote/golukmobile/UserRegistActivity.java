@@ -203,9 +203,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		mEditTextPwd.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View arg0, boolean arg1) {
-				String phone = mEditTextPwd.getText().toString();
 				String password = mEditTextPwd.getText().toString();
-				String identify = mEditTextIdentify.getText().toString();
 				if (!arg1) {
 					if (!password.equals("")) {
 						if (password.length() < 6 || password.length() > 16) {
@@ -232,8 +230,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			
 			@Override
 			public void onFocusChange(View arg0, boolean arg1) {
-				String phone = mEditTextPhone.getText().toString();
-				String pwd = mEditTextPwd.getText().toString();
 				String identify = mEditTextIdentify.getText().toString();
 				if(!arg1){
 					if(!"".equals(identify)){
