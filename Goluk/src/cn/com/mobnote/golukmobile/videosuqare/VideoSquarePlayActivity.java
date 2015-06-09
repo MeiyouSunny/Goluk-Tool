@@ -366,6 +366,9 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 							}
 						}
 					}else if(uptype == 2){//下拉刷新
+						if("1".equals(type)){//直播
+							mDataList.clear();
+						}
 						mRTPullListView.onRefreshComplete();
 					}
 				}

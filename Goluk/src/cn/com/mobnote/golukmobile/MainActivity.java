@@ -45,7 +45,6 @@ import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -495,9 +494,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 
 	 */
 	public void onLineVideoCallBack(Object obj) {
-		String videoJson = (String) obj;
-		// 更新在线视频
-		// mOnLineVideoManage.onLineVideoDataCallback(videoJson);
+
 	}
 
 	/**
@@ -507,9 +504,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 *            ={'vid':'test11','path':'fs1:/Cache/test11.png'}
 	 */
 	public void onLineVideoImageCallBack(Object obj) {
-		// 更新在线视频图片
-		String imgJson = (String) obj;
-		// mOnLineVideoManage.onLineVideoImgCallback(imgJson);
+
 	}
 
 	/**
@@ -521,14 +516,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 *            ;
 	 */
 	public void videoFileCallBack(Object obj) {
-		// 接收到本地视频文件目录
-		String str = (String) obj;
-		// mLocalVideoManage.analyzeVideoFile(str);
 
-		// 隐藏默认提示
-		if (null != mDefaultTipLayout) {
-			// mDefaultTipLayout.setVisibility(View.GONE);
-		}
 	}
 
 	/**
@@ -573,17 +561,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 更新视频view
 	 */
 	public void videoDataUpdate() {
-		// mLocalVideoListAdapter.notifyDataSetChanged();
 	}
 
 	/**
 	 * 链接中断更新页面
 	 */
 	public void socketLinkOff() {
-		// boolean b = mLocalVideoManage.removeVideoListByLinkOff();
-		// if(b){
-		// mLocalVideoListAdapter.notifyDataSetChanged();
-		// }
+
 	}
 
 	/**
@@ -835,12 +819,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			showContinuteLive();
 		}
 
-		/*
-		 * //回到页面重新检测wifi状态,只有未连接的情况下才重新检测 if(mWiFiStatus == 0){
-		 * mApp.VerifyWiFiConnect(); }
-		 */
 		super.onResume();
-
 	}
 
 	public void showContinuteLive() {
@@ -931,16 +910,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				break;
 			}
 			break;
-		case R.id.share_btn:
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				// mDrivingShareText.setTextColor(Color.rgb(0,197,177));
-				break;
-			case MotionEvent.ACTION_UP:
-				// mDrivingShareText.setTextColor(Color.rgb(103,103,103));
-				break;
-			}
-			break;
 		case R.id.index_share_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
@@ -958,11 +927,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		return false;
 	}
-	
-	private void test() {
-		Intent intent = new Intent(this, WiFiLinkCompleteActivity2.class);
-		startActivity(intent);
-	}
+
 
 	@Override
 	public void onClick(View v) {
@@ -973,8 +938,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
 			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 			mBaiduMap.animateMapStatus(u);
-			
-//			test();
 			break;
 		case R.id.index_share_btn:
 			click_share();
@@ -1015,18 +978,21 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case R.id.index_div:
 			if(divIndex == 0){
+				GolukUtils.freeBitmap(indexDiv.getBackground());
 				indexDiv.setBackgroundResource(R.drawable.guide_two);
 				divIndex++;
 			}else if (divIndex == 1){
+				GolukUtils.freeBitmap(indexDiv.getBackground());
 				indexDiv.setBackgroundResource(R.drawable.guide_three);
 				divIndex++;
 			}else {
 				indexDiv.setVisibility(View.GONE);
+				GolukUtils.freeBitmap(indexDiv.getBackground());
 			}
 			break;
 		}
 	}
-
+	
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public void setBelowItem(int id) {
 		Drawable drawable;

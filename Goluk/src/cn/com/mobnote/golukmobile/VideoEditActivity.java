@@ -278,8 +278,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			// editorParam.nVideoWidth = 854;
 			// editorParam.nVideoHeight = 480;
 			// //分辨率 帧率 码率 480*270 30fps 1400kbps
-			editorParam.nVideoBitrate = 768 * 1024;
-			editorParam.nFps = 20;
+			editorParam.nVideoBitrate = 1500 * 1024;
+			editorParam.nFps = 15;
 
 			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
 			mVVPlayVideo.saveVideo(mVideoSavePath, editorParam, new FilterPlaybackView.FilterVideoEditorListener() {
