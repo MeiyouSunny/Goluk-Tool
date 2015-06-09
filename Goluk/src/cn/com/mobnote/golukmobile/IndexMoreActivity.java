@@ -62,13 +62,6 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 	
 	/** 本地视频item */
 	private RelativeLayout mLocalVideoItem = null;
-	/** 视频广场item */
-	/**草稿箱item */
-//	private RelativeLayout mDraftItem = null;
-	/** 去商店item */
-//	private RelativeLayout mShoppingItem = null;
-	/** Goluk学堂item */
-//	private RelativeLayout mGolukSchoolItem = null;
 	/** 设置item */
 	private RelativeLayout mSetupItem = null;
 	
@@ -129,11 +122,6 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 		
 		mLocalVideoItem = (RelativeLayout) findViewById(R.id.local_video_item);
 
-//		mVideoSquareItem = (RelativeLayout) findViewById(R.id.video_square_item);
-//		mDraftItem = (RelativeLayout) findViewById(R.id.draft_item);
-//		mShoppingItem = (RelativeLayout) findViewById(R.id.shopping_item);
-//		mGolukSchoolItem = (RelativeLayout) findViewById(R.id.goluk_item);
-
 		mSetupItem = (RelativeLayout) findViewById(R.id.setup_item);
 		//进入我的主页
 		mLayoutHome = (RelativeLayout) findViewById(R.id.head_layout);		
@@ -160,10 +148,6 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 		//注册事件
 		mLayoutBack.setOnClickListener(this);
 		mLocalVideoItem.setOnClickListener(this);
-//		mVideoSquareItem.setOnClickListener(this);
-//		mDraftItem.setOnClickListener(this);
-//		mShoppingItem.setOnClickListener(this);
-//		mGolukSchoolItem.setOnClickListener(this);
 		mSetupItem.setOnClickListener(this);
 		
 		mLayoutHome.setOnClickListener(this);
@@ -204,7 +188,6 @@ public class IndexMoreActivity extends BaseActivity implements OnClickListener,U
 				//自动登录中，成功，失败，超时、密码错误
 				GolukDebugUtils.i("lily", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
 				if(isHasInfo && (mApp.loginoutStatus == false || mApp.registStatus == 2)){
-//					mApp.mUser.setUserInterface(this);
 					if(mApp.autoLoginStatus == 1 ||mApp.autoLoginStatus == 4){
 						mBuilder = new AlertDialog.Builder(mContext);
 						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")

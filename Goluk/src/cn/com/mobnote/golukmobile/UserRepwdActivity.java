@@ -145,7 +145,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}else{
-//						mBtnIdentity.setEnabled(false);
 						UserUtils.showDialog(UserRepwdActivity.this, "手机号不能为空");
 					}
 				}
@@ -330,7 +329,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				}
 			}
 		};
-//		registerReceiver(smsReceiver, smsFilter);
 		
 		/**
 		 * 对手机号、密码进行判断
@@ -383,8 +381,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				freq = json.getString("freq");
-				/*unregisterReceiver(smsReceiver);
-				flag = false;*/
 				
 				switch (code) {
 				case 200:
@@ -559,13 +555,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				case 200:
 					//重置密码成功
 					GolukUtils.showToast(mContext, "重置密码成功");
-					/*Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
-					it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					it.putExtra("repwdOk", mEditTextPhone.getText().toString());
-					GolukDebugUtils.i("lily", "--------密码错误，重置密码成功------"+mEditTextPhone.getText().toString());
-					startActivity(it);
-					this.finish();*/
 					putPhone();
 					this.finish();
 					break;

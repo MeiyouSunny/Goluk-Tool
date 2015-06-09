@@ -65,9 +65,6 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		
 		SysApplication.getInstance().addActivity(this);
 		
-		//版本升级
-//		mApp.mUpgrade.upgradeGoluk();
-		
 		initView();
 		
 		mHandler = new Handler(){
@@ -117,7 +114,6 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 			}else{
 				startActivity(it);
 			}
-//			this.finish();
 			break;
 
 		case R.id.user_start_look:

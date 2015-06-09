@@ -150,16 +150,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			registOk = itRegist.getStringExtra("fromRegist").toString();
 		}
 		
-		/**
-		 * 注册  --->  退出 --->  再次进入  ----->  登录页面获得注册传来的phone
-		 */
-		/*if(mApplication.loginoutStatus = true){
-			String phone = mEditTextPhone.getText().toString();
-			mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-			mEditor = mSharedPreferences.edit();
-			mEditor.putString("setupPhone", phone);
-			mEditor.commit();
-		}*/
 		getPhone();
 		
 		/**
@@ -183,7 +173,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 							UserUtils.showDialog(UserRegistActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}else{
-//						mBtnIdentify.setEnabled(false);
 						UserUtils.showDialog(UserRegistActivity.this, "手机号不能为空");
 					}
 				}else{
@@ -213,14 +202,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 						UserUtils.showDialog(UserRegistActivity.this, "密码不能为空");
 					}
 				}else{
-					//注册按钮
-					/*if(!"".equals(phone) && !"".equals(password) && !"".equals(identify)){
-						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
-						mBtnRegist.setEnabled(true);
-					}else{
-						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
-						mBtnRegist.setEnabled(false);
-					}*/
 				}
 			}
 		});
@@ -240,14 +221,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 						UserUtils.showDialog(mContext, "验证码不能为空");
 					}
 				}else{
-					//注册按钮
-					/*if(!"".equals(phone) && !"".equals(pwd) && !"".equals(identify)){
-						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
-						mBtnRegist.setEnabled(true);
-					}else{
-						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
-						mBtnRegist.setEnabled(false);
-					}*/
 				}
 			}
 		});
@@ -534,8 +507,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				default:
 					break;
 				}
-				/*unregisterReceiver(smsReceiver);
-				click = 2;*/
 			}
 			catch(Exception ex){
 				ex.printStackTrace();
@@ -543,7 +514,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		}
 		else{
 			GolukUtils.showToast(mContext, "验证码获取失败");
-//			mBtnIdentify.setBackgroundResource(R.drawable.icon_login);
 			mBtnIdentify.setText("重新获取");
 		}
 	}
@@ -603,7 +573,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		}
 		}else{
 			UserUtils.showDialog(mContext, "手机号格式错误,请重新输入");
-//			mBtnRegist.setEnabled(false);
 		}
 		
 }
@@ -640,26 +609,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					
 					//注册成功后再次调用登录的接口
 					registLogin();
-					
-					/*Intent it = null;
-					if(registOk.equals("fromStart")){
-						GolukDebugUtils.i("lily", "========用户未注册2222======");
-						it = new Intent(UserRegistActivity.this,MainActivity.class);
-						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(it);
-					}else if(registOk.equals("fromIndexMore")){
-						it = new Intent(UserRegistActivity.this,IndexMoreActivity.class);
-						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(it);
-					}else if(registOk.equals("fromSetup")){
-						it = new Intent(UserRegistActivity.this,UserSetupActivity.class);
-						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(it);
-					}
-					finish();*/
 					break;
 				case 500:
 					UserUtils.showDialog(this, "服务端程序异常");
@@ -741,7 +690,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 		if(b){
 			GolukDebugUtils.i("lily", "=======UserRegistActivity====="+b);
-			//---------------------------登录成功的状态  1-------------------------
 			//登录成功跳转
 			mApplication.loginStatus=0;//登录中
 		}

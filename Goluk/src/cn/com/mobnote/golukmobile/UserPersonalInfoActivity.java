@@ -136,7 +136,6 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				itEdit.putExtra("infoSign", sign);
 				GolukDebugUtils.i("lily", head+name+sex+sign);
 				startActivity(itEdit);
-//				this.finish();
 				break;
 			default:
 				break;

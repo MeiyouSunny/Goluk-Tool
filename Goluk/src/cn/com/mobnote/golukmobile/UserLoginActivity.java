@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -68,6 +67,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	//判断登录
 	private String justLogin = "";
 	private CustomLoadingDialog mCustomProgressDialog=null;
+	
+	private boolean flag = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +103,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		boolean isCurrentRunningForeground = prefs.getBoolean("isCurrentRunningForeground", false);
-		if (!isCurrentRunningForeground) {
+		if (!flag) {
 			mSharedPreferences = getSharedPreferences("setup", Context.MODE_PRIVATE);
 			GolukDebugUtils.i("logintest", mSharedPreferences.getString("setupPhone", "")+"=======保存phone1111");
 			if(null != mEditTextPhoneNumber.getText().toString() && mEditTextPhoneNumber.length() == 11){
@@ -119,7 +118,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		}
 	}
 	
-//	private boolean mDelAllNum = false;
 	public void initView() {
 		// 登录title
 		mBackButton = (ImageButton) findViewById(R.id.back_btn);
@@ -131,31 +129,12 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		// 快速注册
 		mTextViewRegist = (TextView) findViewById(R.id.user_login_phoneRegist);
 		mTextViewForgetPwd = (TextView) findViewById(R.id.user_login_forgetpwd);
-		// 第三方登录
-//		mImageViewWeichat = (ImageView) findViewById(R.id.user_login_weichat);
-//		mImageViewSina = (ImageView) findViewById(R.id.user_login_sina);
-//		mImageViewQQ = (ImageView) findViewById(R.id.user_login_qq);
 		
 		Intent intentStart = getIntent();
 		//登录页面返回
 		if(null != intentStart.getStringExtra("isInfo")){
 			justLogin = intentStart.getStringExtra("isInfo").toString();
 		}
-		
-		/**
-		 *	如果填写手机号的EditText中有手机号，就保存 
-		 */
-		/*mSharedPreferences = getSharedPreferences("setup", Context.MODE_PRIVATE);
-		GolukDebugUtils.i("logintest", mSharedPreferences.getString("setupPhone", "")+"=======保存phone1111");
-		if(null != mEditTextPhoneNumber.getText().toString() && mEditTextPhoneNumber.length() == 11){
-			String phone = mEditTextPhoneNumber.getText().toString();
-			mEditor = mSharedPreferences.edit();
-			mEditor.putString("setupPhone", phone);
-			mEditor.putBoolean("noPwd", false);
-			//提交
-			mEditor.commit();
-			GolukDebugUtils.i("logintest", mSharedPreferences.getString("setupPhone", "")+"=======保存phone2222"+phone);
-		}*/
 		
 		/**
 		 * 填写手机号
@@ -293,10 +272,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		// 快速注册
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
-//		// 第三方登录
-//		mImageViewWeichat.setOnClickListener(this);
-//		mImageViewSina.setOnClickListener(this);
-//		mImageViewQQ.setOnClickListener(this);
 		
 	}
 
@@ -331,18 +306,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			Intent itForget = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
 			startActivity(itForget);
 			break;
-//		// 第三方——微信
-//		case R.id.user_login_weichat:
-//
-//			break;
-//		// 第三方——新浪
-//		case R.id.user_login_sina:
-//			
-//			break;
-//		// 第三方——QQ
-//		case R.id.user_login_qq:
-//			
-//			break;
 		}
 	}
 	
@@ -456,7 +419,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 						}
 						
 						startActivity(it);
-//						finish();
 					}
 				}).create().show();
 			}else{
@@ -549,20 +511,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	@Override
 	protected void onStop() {
 		super.onStop();
-		try {
-			Thread.sleep(1000);
-			new Thread(){
-				public void run() {
-					boolean isCurrentRunningForeground=isRunningForeground();
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-					Editor editor=prefs.edit();  
-					editor.putBoolean("isCurrentRunningForeground", isCurrentRunningForeground);
-					editor.commit(); 
-				};
-			}.start();
-		} catch (Exception e) {
-			
-		}
+		boolean isCurrentRunningForeground=isRunningForeground();
+		flag = isCurrentRunningForeground;
 	}
 	
 	public boolean isRunningForeground(){
@@ -584,7 +534,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		 ActivityManager activityManager =
 		(ActivityManager)(context.getSystemService(android.content.Context.ACTIVITY_SERVICE )) ;
 		 //android.app.ActivityManager.getRunningTasks(int maxNum) 
-		 //int maxNum--->The maximum number of entries to return in the list
 		 //即最多取得的运行中的任务信息(RunningTaskInfo)数量
 	     List<RunningTaskInfo> runningTaskInfos = activityManager.getRunningTasks(1) ;
 	     if(runningTaskInfos != null){
@@ -592,7 +541,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	    	 topActivityClassName=f.getClassName();
 	    	
 	     }
-	     //按下Home键盘后 topActivityClassName=com.android.launcher2.Launcher
+	     //按下Home键盘后 topActivityClassName
 	     return topActivityClassName;
 	}
 	
