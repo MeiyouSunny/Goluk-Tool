@@ -132,7 +132,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
 		}
 		
-		putPhone();
+		putPhones();
 		
 		//手机号输入后，离开立即判断
 		mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -703,6 +703,16 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			break;
 		}
 		return false;
+	}
+	
+	public void putPhones(){
+		String phone = mEditTextPhone.getText().toString();
+		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+		mEditor = mSharedPreferences.edit();
+		GolukDebugUtils.i("lily", "phone=="+phone);
+		mEditor.putString("setupPhone", phone);
+		mEditor.putBoolean("noPwd", false);
+		mEditor.commit();
 	}
 	
 	public void putPhone(){
