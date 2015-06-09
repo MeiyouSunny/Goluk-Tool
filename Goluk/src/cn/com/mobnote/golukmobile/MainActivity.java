@@ -223,9 +223,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 		
-		
-		// 添加umeng错误统计
-		MobclickAgent.setCatchUncaughtExceptions(true);
+		// 关闭umeng错误统计(只使用友盟的行为分析，不使用错误统计)
+		MobclickAgent.setDebugMode(false);
+		MobclickAgent.setCatchUncaughtExceptions(false);
 		// 添加腾讯崩溃统计 初始化SDK
 		CrashReport.initCrashReport(this, CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
 		CrashReport.setUserId(getIMEI());
@@ -881,6 +881,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				if (null != UserStartActivity.mHandler) {
 					UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
 				}
+				MobclickAgent.onKillProcess(this);
 				finish();
 				int PID = android.os.Process.myPid();
 				android.os.Process.killProcess(PID);
@@ -927,7 +928,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		return false;
 	}
-
 
 	@Override
 	public void onClick(View v) {

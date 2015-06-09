@@ -13,6 +13,8 @@ import android.os.Message;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 
+import com.umeng.analytics.MobclickAgent;
+
 /**
  * 1.编辑器必须显示空白处
  *
@@ -70,12 +72,14 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		MobclickAgent.onResume(this);
 		GolukApplication.getInstance().setIsBackgroundState(false);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		MobclickAgent.onPause(this);
 
 	}
 
