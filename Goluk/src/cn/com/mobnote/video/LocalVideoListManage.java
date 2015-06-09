@@ -381,7 +381,7 @@ public class LocalVideoListManage {
 					File imgFile = new File(videoImagePath);
 					if (imgFile.exists()) {
 						data.videoImagePath = videoImagePath;
-						data.videoBitmap = ImageManager.getBitmapFromCache(videoImagePath,194, 109);
+//						data.videoBitmap = ImageManager.getBitmapFromCache(videoImagePath,194, 109);
 					}
 					else {
 						//以后下载视频的时候会同时下载图片,没有图片就显示默认

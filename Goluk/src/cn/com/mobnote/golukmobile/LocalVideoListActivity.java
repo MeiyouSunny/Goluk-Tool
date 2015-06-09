@@ -3,10 +3,6 @@ package cn.com.mobnote.golukmobile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -31,19 +27,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
-import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
-import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoListManage;
 import cn.com.mobnote.video.LocalVideoListManage.DoubleVideoData;
 import cn.com.mobnote.video.LocalVideoListManage.LocalVideoData;
-import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -377,11 +367,21 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		mLoopVideoList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-					if(mLoopVideoList.getAdapter().getCount() == (loopFirstVisible + loopVisibleCount)){
-						GolukDebugUtils.e("","循环视频列表---mLoopVideoList---滑动到最后了");
-					}
+				switch (scrollState) {
+					case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+						mLoopVideoAdapter.lock();
+						break;
+					case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+						mLoopVideoAdapter.unlock();
+						break;
+					case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+						mLoopVideoAdapter.lock();
+						break;
+						
+					default:
+						break;
 				}
+				
 			}
 			@Override
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
@@ -466,11 +466,21 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		mWonderfulVideoList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-					if(mWonderfulVideoList.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
-						
-					}
+				switch (scrollState) {
+				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+					mWonderfulVideoAdapter.lock();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+					mWonderfulVideoAdapter.unlock();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					mWonderfulVideoAdapter.lock();
+					break;
+					
+				default:
+					break;
 				}
+				
 			}
 			@Override
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
@@ -543,16 +553,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	 * @date 2015年4月3日
 	 */
 	@SuppressLint("InflateParams")
-	private void initEmergencyLayout(){
-//		mWonderfulVideoList.setVisibility(View.GONE);
-//		mEmergencyVideoList.setVisibility(View.VISIBLE);
-//		mLoopVideoList.setVisibility(View.GONE);
-//		
-//		mEmergencyGroupName.clear();
-//		emergencyVideoData.clear();
-		
-//		getGormattedData(fileList);
-		
+	private void initEmergencyLayout(){		
 		//列表tab数据
 		mEmergencyGroupName = mLocalEmergencyVideoListManage.mTabGroupName;
 		//紧急列表数据
@@ -575,11 +576,22 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		mEmergencyVideoList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-					if(mEmergencyVideoList.getAdapter().getCount() == (emergencyFirstVisible + emergencyVisibleCount)){
-						System.out.println("TTTTT=====滑动到最后了222");
-					}
+				switch (scrollState) {
+				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+					mEmergencyVideoAdapter.lock();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+					mEmergencyVideoAdapter.unlock();
+					
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					mEmergencyVideoAdapter.lock();
+					break;
+					
+				default:
+					break;
 				}
+				
 			}
 			@Override
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
@@ -769,32 +781,6 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		}
 	}
 	
-	/**
-	 * 释放bitmap
-	 * @param list
-	 */
-	private void destroyVideoBitMap(List<DoubleVideoData> list){
-		for(int i = 0; i < list.size(); i++){
-			DoubleVideoData info = list.get(i);
-			LocalVideoData info1 = info.getVideoInfo1();
-			LocalVideoData info2 = info.getVideoInfo2();
-			if(null != info1.videoBitmap){
-				if(!info1.videoBitmap.isRecycled()){
-					info1.videoBitmap.recycle();
-					info1.videoBitmap=null;
-				}
-			}
-			if(null != info2){
-				if(null != info2.videoBitmap){
-					if(!info2.videoBitmap.isRecycled()){
-						info2.videoBitmap.recycle();
-						info2.videoBitmap=null;
-					}
-				}
-			}
-		}
-	}
-	
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -905,108 +891,17 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		//释放bitmap
-		if(null != mDoubleLoopVideoData){
-			destroyVideoBitMap(mDoubleLoopVideoData);
+		if(null != mLoopVideoAdapter){
+			mLoopVideoAdapter.recycle();
 		}
-		if(null != mDoubleWonderfulVideoData){
-			destroyVideoBitMap(mDoubleWonderfulVideoData);
+		
+		if(null != mWonderfulVideoAdapter){
+			mWonderfulVideoAdapter.recycle();
 		}
-		if(null != mDoubleEmergencyVideoData){
-			destroyVideoBitMap(mDoubleEmergencyVideoData);
+		
+		if(null != mEmergencyVideoAdapter){
+			mEmergencyVideoAdapter.recycle();
 		}
 	}
-
-
-	
-//	@Override
-//	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-//		switch (event) {
-//		case ENetTransEvent_IPC_VDCP_CommandResp:
-//			if (IPC_VDCP_Msg_Query == msg) {
-//				isGetFileListDataing=false;
-//				GFileUtils.writeIPCLog("===========获取文件列表===3333=============param1="+ param1 + "=====param2=" + param2);
-//				if (RESULE_SUCESS == param1) {
-//					ArrayList<VideoFileInfo> fileList = IpcDataParser.parseMoreFile((String) param2);
-//					int total = IpcDataParser.getFileListCount((String) param2);
-//					if (null != fileList) {
-//						GFileUtils.writeIPCLog("===========获取文件列表===44444============get data success=========");
-//						mCurrentType = mOprateType;
-//						updateButtonState(mCurrentType);
-//						if(TYPE_SHORTCUT == mOprateType){//精彩视频
-//							wonderfulTotalCount = total;
-////							initWonderfulLayout(fileList);
-//						}else if(TYPE_URGENT == mOprateType){//紧急视频
-//							emergencyTotalCount = total;
-////							initEmergencyLayout(fileList);
-//						}else{//循环视频
-//							loopVisibleCount = total;
-////							initLoopLayout(fileList);
-//						}
-//					} else {
-//						// 列表数据空
-//						GFileUtils
-//								.writeIPCLog("===========获取文件列表===5555============ data null=========");
-//					}
-//				} else {
-//					// 命令发送失败
-//					GFileUtils
-//							.writeIPCLog("===========获取文件列表===6666============  not success =========");
-//				}
-//			}else if(IPC_VDCPCmd_TriggerRecord == msg){
-//				GFileUtils
-//				.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==========222222222222222222 =========");
-//			//文件删除
-//			}else if(IPC_VDCPCmd_Erase == msg){
-//				System.out.println("QQQ==========param1="+param1+"===param2="+param2);
-//			}
-//			break;
-//		// IPC下载结果应答
-//		case ENetTransEvent_IPC_VDTP_Resp:
-//			// 文件传输消息
-//			if (IPC_VDTP_Msg_File == msg) {
-//				// 文件下载成功
-//				if (RESULE_SUCESS == param1) {
-//					try {
-//						JSONObject json = new JSONObject((String) param2);
-//						if (null != json) {
-//							String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-//							String filename = json.optString("filename");
-//							if(filename.contains(".jpg")){
-//							String tag = json.optString("tag");
-//							if(TYPE_SHORTCUT == mCurrentType){//精彩视频
-//								if (null != mWonderfulVideoAdapter) {
-//									mWonderfulVideoAdapter.notifyDataSetChanged();
-//								}
-//							}else if(TYPE_URGENT == mCurrentType){//紧急视频
-//								if (null != mEmergencyVideoAdapter) {						
-//									mEmergencyVideoAdapter.notifyDataSetChanged();
-//								}
-//							}else{//循环视频
-//								if (null != mLoopVideoAdapter) {
-//									mLoopVideoAdapter.notifyDataSetChanged();
-//								}
-//							}
-//							}else{
-//								
-//							}
-//						}
-//					} catch (JSONException e) {
-//						e.printStackTrace();
-//					}
-//					// 文件下载中进度
-//				} else if (1 == param1) {
-//					// param1为文件下载进度
-//				} else {
-//					// 其他下载失败
-//				}
-//			}
-//			break;
-//			
-//		default:
-//			break;
-//		}
-//
-//	}
 
 }
