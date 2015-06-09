@@ -11,6 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:text="@string/wifi_link_31_text"
+        android:textColor="#595959"
         android:textSize="18sp" />
 
     <ImageView
@@ -41,6 +42,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="72dp"
         android:text="@string/wifi_link_30_text"
+        android:textColor="#828282"
         android:textSize="14sp" />
 
 </RelativeLayout>

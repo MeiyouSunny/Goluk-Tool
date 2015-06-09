@@ -42,6 +42,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:text="@string/wifi_link_35_text" />
+        android:text="@string/wifi_link_35_text"
+        android:textColor="#828282" />
 
 </RelativeLayout>

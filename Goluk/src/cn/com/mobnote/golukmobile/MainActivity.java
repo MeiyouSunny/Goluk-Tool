@@ -67,6 +67,8 @@ import cn.com.mobnote.video.LocalVideoManage;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
 
@@ -228,7 +230,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		MobclickAgent.setCatchUncaughtExceptions(false);
 		// 添加腾讯崩溃统计 初始化SDK
 		CrashReport.initCrashReport(this, CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
-		CrashReport.setUserId(getIMEI());
+		final String mobileId = Tapi.getMobileId();
+		CrashReport.setUserId(mobileId);
+		GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -243,7 +247,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		SharedPreferences preferences = getSharedPreferences("golukmark",MODE_PRIVATE);
 		//取得相应的值,如果没有该值,说明还未写入,用true作为默认值
 		boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
-		if(isFirstIndex){//如果是第一次启动
+		if(isFirstIndex){ //如果是第一次启动
 			indexDiv.setVisibility(View.VISIBLE);
 			Editor editor = preferences.edit();
 			editor.putBoolean("isFirstIndex", false);
@@ -275,24 +279,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
-
 	}
-	
+
 	@Override 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
 	    mVideoSquareActivity.onActivityResult(requestCode, resultCode, data);
 	}
-	
-	private String getIMEI() {
-		try {
-			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
-			return imei;
-		} catch (Exception e) {
 
-		}
-		return "";
-	}
 
 	/**
 	 * 启动软件创建wifi热点
