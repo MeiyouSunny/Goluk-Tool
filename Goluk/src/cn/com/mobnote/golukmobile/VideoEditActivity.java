@@ -63,7 +63,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	public MVListAdapter mMVListAdapter = null;
 	/** 自定义播放器支持特效 */
 	public FilterPlaybackView mVVPlayVideo = null;
-
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -74,7 +73,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private Button mNextBtn = null;
 	/** 视频路径 */
 	private String mFilePath = "";
-
 	/** 播放按钮 */
 	private RelativeLayout mPlayLayout = null;
 	/** 播放状态图片 */
@@ -98,9 +96,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private String mNewVideoFilePath = APP_FOLDER + "/" + "goluk/";
 	/** 进度条线程 */
 	private Thread mProgressThread = null;
-	/** 当前编辑的视频类型 */
+	/** 当前编辑的视频类型 3 紧急 2 精彩 */
 	private int mCurrentVideoType = 0;
-
 	/** 分享的视频名称 */
 	private String videoName = "";
 	private boolean isExit = false;
@@ -147,7 +144,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			videoName = strs[strs.length - 1];
 			videoName = videoName.replace("mp4", "jpg");
 		}
-
 	}
 
 	/**
@@ -199,8 +195,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		gridLayout.setPadding(16, 30, 16, 30);
 		gridLayout.setVerticalSpacing(30);
 		gridLayout.setHorizontalSpacing(16);
-		// 设置grid item点击效果为透明
-		// gridLayout.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		return gridLayout;
 	}
 
@@ -274,9 +268,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			// 高清
 			editorParam.nVideoWidth = 854;
 			editorParam.nVideoHeight = 480;
-			// 标清
-			// editorParam.nVideoWidth = 854;
-			// editorParam.nVideoHeight = 480;
 			// //分辨率 帧率 码率 480*270 30fps 1400kbps
 			editorParam.nVideoBitrate = 1500 * 1024;
 			editorParam.nFps = 15;
@@ -313,11 +304,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 						// strInfo = "已取消视频保存！";
 					} else if (bSuccess) {
 						// 视频保存成功,跳转到分享页面
-						Intent videoShare = new Intent(mContext, VideoShareActivity.class);
-						videoShare.putExtra("cn.com.mobnote.golukmobile.videopath", mVideoSavePath);
-						videoShare.putExtra("type", mCurrentVideoType);
-						videoShare.putExtra("videoName", videoName);
-						startActivity(videoShare);
+						toShareActivity(mVideoSavePath);
 					}
 
 					if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
@@ -443,47 +430,83 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			mLoadingText.setText("视频生成中0%");
 		}
 		mApp.setContext(this, "VideoEdit");
-
 		super.onResume();
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	/**
+	 * 跳转到分享界面
+	 * 
+	 * @param filePath
+	 *            文件路径，有可能为原始路径，有可能有添加滤镜后的路径
+	 * @author jyf
+	 * @date 2015年6月10日
+	 */
+	private void toShareActivity(String filePath) {
+		Intent videoShare = new Intent(mContext, VideoShareActivity.class);
+		videoShare.putExtra("cn.com.mobnote.golukmobile.videopath", filePath);
+		videoShare.putExtra("type", mCurrentVideoType);
+		videoShare.putExtra("videoName", videoName);
+		startActivity(videoShare);
+	}
+
+	/**
+	 * 点击“下一步”
+	 * 
+	 * @author jyf
+	 * @date 2015年6月10日
+	 */
+	private void click_next() {
+		// 下一步,导出视频编码
+		// 停止进度条线程
+		stopProgressThread();
+		// 暂停播放器
+		changeVideoPlayState();
+		// 如果是精彩视频，并且不添加滤镜，則直接跳转
+		if (2 == mCurrentVideoType && 0 == mMVListAdapter.getCurrentResIndex()) {
+			// 直接跳转，不需要加滤镜
+			toShareActivity(mFilePath);
+			return;
+		}
+		// 保存编辑视频到本地
+		onSaveVideo();
+	}
+
+	/**
+	 * 点击“播放” 或 “暂停”
+	 * 
+	 * @author jyf
+	 * @date 2015年6月10日
+	 */
+	private void click_play() {
+		// 暂停/播放
+		if (mVVPlayVideo.isPlaying()) {
+			// 停止进度条线程
+			stopProgressThread();
+			mVVPlayVideo.pause();
+			// 显示图片
+			mPlayStatusImage.setVisibility(View.VISIBLE);
+		} else {
+			// 启动进度条线程
+			updateVideoProgress();
+			mVVPlayVideo.start();
+			// 隐藏图片
+			mPlayStatusImage.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
 	public void onClick(View v) {
-		int id = v.getId();
+		final int id = v.getId();
 		switch (id) {
 		case R.id.back_btn:
 			// 返回
 			exit();
 			break;
 		case R.id.next_btn:
-			// 下一步,导出视频编码
-			// 停止进度条线程
-			stopProgressThread();
-			// 暂停播放器
-			changeVideoPlayState();
-			// 保存编辑视频到本地
-			onSaveVideo();
+			click_next();
 			break;
 		case R.id.play_layout:
-			// 暂停/播放
-			if (mVVPlayVideo.isPlaying()) {
-				// 停止进度条线程
-				stopProgressThread();
-				mVVPlayVideo.pause();
-				// 显示图片
-				mPlayStatusImage.setVisibility(View.VISIBLE);
-			} else {
-				// 启动进度条线程
-				updateVideoProgress();
-				mVVPlayVideo.start();
-				// 隐藏图片
-				mPlayStatusImage.setVisibility(View.GONE);
-			}
+			click_play();
 			break;
 		}
 	}

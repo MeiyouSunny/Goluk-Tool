@@ -30,10 +30,6 @@ public class UserPersonalHomeActivity extends BaseActivity implements OnClickLis
 	//个人信息
 	private ImageView mImageHead,mImageSex,mImageArrow;
 	private TextView mTextName;
-//	private TextView mTextShare;
-	//适配器
-//	private UserPersonalHomeAdapter adapter;
-//	private ListView lv;
 	private RelativeLayout mLayoutInto;
 	
 	//application
@@ -63,9 +59,6 @@ public class UserPersonalHomeActivity extends BaseActivity implements OnClickLis
 		initView();
 		//title
 		mTextTitle.setText("我的主页");
-		//需要解析出来的数据
-//		adapter = new UserPersonalHomeAdapter(this, list);
-//		lv.setAdapter(adapter);
 		
 		initData();
 	}
@@ -77,8 +70,6 @@ public class UserPersonalHomeActivity extends BaseActivity implements OnClickLis
 		mImageSex = (ImageView) findViewById(R.id.user_personal_homepage_sex);
 		mImageArrow = (ImageView) findViewById(R.id.user_personal_homepage_arrow);
 		mTextName = (TextView) findViewById(R.id.user_personal_homepage_name);
-//		mTextShare = (TextView) findViewById(R.id.user_personal_homepage_share);
-//		lv = (ListView) findViewById(R.id.user_personal_homepage_listview);
 		mLayoutInto = (RelativeLayout) findViewById(R.id.user_personal_homepage_detail_layout);
 		/**
 		 * 监听

@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -38,7 +37,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 	private GolukApplication mApplication = null;
 	private Context mContext = null;
 	private boolean isGetIPCSucess = false;
-	private boolean isCallBackSucess = true;
 
 	private String mGolukSSID = "";
 	private String mGolukPWD = "";

@@ -209,5 +209,4 @@ public class UserUtils {
 		dialog.show();
 	}
     
-	
 }
