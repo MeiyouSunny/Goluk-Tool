@@ -33,6 +33,13 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickListener, WifiConnCallBack {
 
 	private static final String TAG = "WiFiLinkBindAll";
+	/** 创建手机热点消息 */
+	private static final int MSG_H_CREATE_HOT = 100;
+	/** 计时时间到，跳转到“等待”界面 */
+	private static final int MSG_H_TO_WAITING_VIEW = 101;
+
+	/** 设置IPC配置消息超时时间 */
+	private static final int TIMEOUT_SETIPC = 6 * 1000;
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -91,6 +98,8 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 		mApp.setContext(mContext, TAG);
 
 		setIpcLinkInfo();
+		// 6秒后，没有配置成功，直接跳转“等待连接”界面
+		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_WAITING_VIEW, TIMEOUT_SETIPC);
 	}
 
 	private void initChildView() {
@@ -101,8 +110,15 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 
 	@Override
 	protected void hMessage(Message msg) {
-		if (msg.what == 100) {
+		if (MSG_H_CREATE_HOT == msg.what) {
 			createPhoneHot();
+		} else if (MSG_H_TO_WAITING_VIEW == msg.what) {
+			if (STATE_SET_IPC_INFO == mState) {
+				// 直接跳转下个界面
+				toWaitConnView();
+				// 开始创建手机热点
+				mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
+			}
 		}
 	}
 
@@ -128,7 +144,7 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 		if (!b) {
-			GolukUtils.showToast(mContext, "调用设置IPC连接热点失败");
+			// GolukUtils.showToast(mContext, "调用设置IPC连接热点失败");
 		}
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
 	}
@@ -155,11 +171,15 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 	 * 设置IPC信息成功回调
 	 */
 	public void setIpcLinkWiFiCallBack(int state) {
+		if (STATE_SET_IPC_INFO != mState) {
+			return;
+		}
 		if (0 == state) {
+			mBaseHandler.removeMessages(MSG_H_TO_WAITING_VIEW);
 			// 隐藏loading
 			toWaitConnView();
 			// 开始创建手机热点
-			mBaseHandler.sendEmptyMessageDelayed(100, 3 * 1000);
+			mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
 			GolukDebugUtils.e("",
 					"WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
 		} else {
