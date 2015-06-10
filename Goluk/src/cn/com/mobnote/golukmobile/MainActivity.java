@@ -495,9 +495,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 
 	 */
 	public void onLineVideoCallBack(Object obj) {
-		String videoJson = (String) obj;
 		// 更新在线视频
-		// mOnLineVideoManage.onLineVideoDataCallback(videoJson);
 	}
 
 	/**
@@ -508,8 +506,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	public void onLineVideoImageCallBack(Object obj) {
 		// 更新在线视频图片
-		String imgJson = (String) obj;
-		// mOnLineVideoManage.onLineVideoImgCallback(imgJson);
 	}
 
 	/**

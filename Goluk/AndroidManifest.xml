@@ -109,9 +109,6 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.OnLineVideoPlayActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -155,10 +152,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="cn.com.mobnote.golukmobile.WiFiLinkHelpActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity

@@ -40,7 +40,6 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.LocalVideoListActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
-import cn.com.mobnote.golukmobile.OnLineVideoPlayActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.util.LoadImageManager;
