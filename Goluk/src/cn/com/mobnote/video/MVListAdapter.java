@@ -13,6 +13,7 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.video.MVManage.MVEditData;
+
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -35,7 +36,7 @@ import cn.com.mobnote.video.MVManage.MVEditData;
  */
 
 @SuppressLint("InflateParams")
-public class MVListAdapter extends BaseAdapter{
+public class MVListAdapter extends BaseAdapter {
 	private Context mContext = null;
 	private ArrayList<MVEditData> mDataList = null;
 	private LayoutInflater mLayoutInflater = null;
@@ -43,29 +44,35 @@ public class MVListAdapter extends BaseAdapter{
 	private int resIndex = 0;
 	/** 记录是否改变了滤镜 默认true */
 	private boolean mResChange = true;
-	
+
 	public MVListAdapter(Context context, ArrayList<MVEditData> data) {
 		mContext = context;
 		mDataList = data;
 		mLayoutInflater = LayoutInflater.from(context);
 	}
-	
+
+	public int getCurrentResIndex() {
+		return resIndex;
+	}
+
 	/**
 	 * 返回当前是否改变了滤镜
+	 * 
 	 * @return
 	 */
-	public boolean getResChange(){
+	public boolean getResChange() {
 		return mResChange;
 	}
-	
+
 	/**
 	 * 改变滤镜标识
+	 * 
 	 * @param b
 	 */
-	public void setResChange(boolean b){
+	public void setResChange(boolean b) {
 		mResChange = b;
 	}
-	
+
 	@Override
 	public int getCount() {
 		return mDataList == null ? 0 : mDataList.size();
@@ -87,29 +94,21 @@ public class MVListAdapter extends BaseAdapter{
 		if (null == convertView) {
 			holder = new ViewHolder();
 			convertView = mLayoutInflater.inflate(R.layout.video_edit_mv_item, null);
-			//convertView.setLayoutParams(new GridView.LayoutParams(224,224));
 			holder.img = (ImageView) convertView.findViewById(R.id.mv_img);
 			holder.name = (TextView) convertView.findViewById(R.id.mv_name);
 			holder.display = (ImageView) convertView.findViewById(R.id.display_img);
 			convertView.setTag(holder);
-		}else {
+		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		MVEditData data = (MVEditData)mDataList.get(position);
-		//GolukDebugUtils.i("","chxy data" + data.name);
-		//GolukDebugUtils.i("","chxy data" + data.src);
-		
-		if(data.display){
+		MVEditData data = (MVEditData) mDataList.get(position);
+		if (data.display) {
 			holder.display.setVisibility(View.VISIBLE);
-		}else{
+		} else {
 			holder.display.setVisibility(View.GONE);
 		}
 		holder.img.setBackgroundResource(data.src);
 		holder.name.setText(data.name);
-		//holder.img.setBackgroundDrawable(data.img);
-		//holder.time.setText(data.changeTime);
-		//holder.size.setText(data.fileSize);
-		
 		convertView.setOnClickListener(new onclick(position));
 		return convertView;
 	}
@@ -119,32 +118,31 @@ public class MVListAdapter extends BaseAdapter{
 		TextView name = null;
 		ImageView display = null;
 	}
-	
-	class onclick implements OnClickListener{
+
+	class onclick implements OnClickListener {
 		private int index;
 		/** 滤镜对应值 */
-		private int[] mFilter = {0,7,1,6,2,4,5,3};
-		
-		public onclick(int index){
+		private int[] mFilter = { 0, 7, 1, 6, 2, 4, 5, 3 };
+
+		public onclick(int index) {
 			this.index = index;
 		}
-		
+
 		/**
 		 * 滤镜列表类别点击事件
 		 */
 		@Override
 		public void onClick(View v) {
-			MVEditData data = (MVEditData)getItem(index);
-			if(index != resIndex){
-				MVEditData resData = (MVEditData)getItem(resIndex);
+			MVEditData data = (MVEditData) getItem(index);
+			if (index != resIndex) {
+				MVEditData resData = (MVEditData) getItem(resIndex);
 				resData.display = false;
 				resIndex = index;
 				mResChange = true;
-				((VideoEditActivity)mContext).mVVPlayVideo.switchFilterId(mFilter[index]);
+				((VideoEditActivity) mContext).mVVPlayVideo.switchFilterId(mFilter[index]);
 			}
 			data.display = true;
-			((VideoEditActivity)mContext).mMVListAdapter.notifyDataSetChanged();
+			((VideoEditActivity) mContext).mMVListAdapter.notifyDataSetChanged();
 		}
 	}
 }
-
