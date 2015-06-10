@@ -63,6 +63,7 @@ import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.AssetsFileUtils;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
@@ -156,6 +157,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean autodownloadfile=false;
 	/**点击设置页版本检测标识**/
 	public boolean flag = false;
+	/** SD卡无容量标识 */
+	private boolean isSDCardFull = false;
+	/** 文件下载中标识 */
+	private boolean isDownloading = false;
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -177,6 +182,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				break;
 			case 1002:
 				backHomeDialog();// 弹出dialog 回到首页
+				break;
+			case 1003:
+				isSDCardFull = false;
 				break;
 			default:
 				break;
@@ -471,17 +479,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				JSONObject json = new JSONObject(data);
 				String fileName = json.getString("location");
 				long time = json.optLong("time");
+				double filesize = json.optDouble("size");
 				GolukDebugUtils.e("", "调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---" + fileName);
 				int type = json.getInt("type");
 				String savePath = "";
 				String configPath = "";
-				// if (type == 2) {a
-				// // 紧急视频
-				// savePath = mVideoSavePath + "urgent/";
-				// } else {
-				// // 精彩视频
-				// savePath = mVideoSavePath + "wonderful/";
-				// }
+
 				if (IPCManagerFn.TYPE_SHORTCUT == type) {
 					savePath = mVideoSavePath + "wonderful/";
 					configPath = savePath + "wonderful.txt";
@@ -492,10 +495,25 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					savePath = mVideoSavePath + "loop/";
 					configPath = savePath + "loop.txt";
 				}
-
-				// console.log("下载视频保存配置---ipcVideoSingleQueryCallBack---" +
-				// fileName + ",");
-				// 写入本地视频配置文件信息chenxy 5.11
+				
+				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===isSDCardFull=" + isSDCardFull);
+				if (isSDCardFull) {					
+					return;
+				}
+				
+				if (!GolukUtils.checkSDStorageCapacity(filesize)) {
+					isSDCardFull = true;
+					if(!isDownloading) {
+						sdCardFull();
+					}else{
+						mHandler.sendEmptyMessageDelayed(1003, 2000);
+					}
+										
+					GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad=@@@@==isSDCardFull=" + isSDCardFull);
+					
+					return;
+				}
+				
 				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath), fileName + ",");
 
 				// 调用下载视频接口
@@ -530,6 +548,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 		}
 	}
+	
+	private void sdCardFull() {
+		if (mDownLoadFileList.size() > 0) {
+			mDownLoadFileList.clear();
+			mNoDownLoadFileList.clear();
+		}
+		mIPCControlManager.stopDownloadFile();
+		if (!GlobalWindow.getInstance().isShow()) {
+			GlobalWindow.getInstance().createVideoUploadWindow("存储容量不足");
+		}
+		GlobalWindow.getInstance().toFailed("存储容量不足");		
+	}
 
 	/**
 	 * ipc视频下载回调函数
@@ -556,6 +586,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					long filesize = json.optLong("filesize");
 					long filerecvsize = json.optLong("filerecvsize");
 					percent = (int) ((filerecvsize * 100) / filesize);
+					isDownloading = true;
 
 					if (!mNoDownLoadFileList.contains(filename)) {
 						mNoDownLoadFileList.add(filename);
@@ -592,8 +623,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						mNoDownLoadFileList.clear();
 						GlobalWindow.getInstance().topWindowSucess("视频传输完成");
 					}
+					
+					if (isSDCardFull) {
+						sdCardFull();
+						isSDCardFull = false;
+						isDownloading = false;
+					}
 
 				} else {
+					isDownloading = false;
 					GolukDebugUtils.e("xuhw", "YYYYYY=＠＠＠＠===download==fail===success=" + success + "==data=" + data);
 					JSONObject json = new JSONObject(data);
 					String filename = json.optString("filename");
