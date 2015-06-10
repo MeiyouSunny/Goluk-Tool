@@ -809,6 +809,11 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 				mCustomProgressDialog.show();
 			}
 		}
+		
+		if (isGetFileListDataing) {
+			return;
+		}
+		
 		isGetFileListDataing=true;
 		mOprateType = type;
 		updateButtonState(type);
@@ -875,7 +880,6 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 	@Override
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		screenX = arg1.getX();
-		GolukDebugUtils.e("xuhw", "QQQ===============screenX="+screenX);
 		return false;
 	}
 	
