@@ -13,7 +13,6 @@
         android:layout_height="42dp"
         android:background="@color/bg" >
 
-        
         <ImageButton
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
@@ -101,11 +100,11 @@
 
         <EditText
             android:id="@+id/share_desc"
-            android:layout_width="match_parent"
+            android:layout_width="318dp"
             android:layout_height="60dp"
             android:background="#FFFFFF"
             android:hint="@string/video_share_desc_title"
-            android:inputType="text"
+            android:maxLength="50"
             android:maxLines="3"
             android:textColor="#000000" />
     </RelativeLayout>

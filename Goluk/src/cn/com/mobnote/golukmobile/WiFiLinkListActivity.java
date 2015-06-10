@@ -302,7 +302,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 				toNextView();
 			} else {
 				// 灰色按钮不能点击
-				GolukUtils.showToast(mContext, "请先连接IPC-WIFI");
+				// GolukUtils.showToast(mContext, "请先连接IPC-WIFI");
 			}
 			break;
 		case R.id.wifi_link_list_help:

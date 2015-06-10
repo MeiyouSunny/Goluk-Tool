@@ -1,36 +1,31 @@
 package cn.com.mobnote.video;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.DisplayMetrics;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.LocalVideoListActivity;
 import cn.com.mobnote.golukmobile.LocalVideoShareListActivity;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.VideoEditActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.video.LocalVideoListManage.DoubleVideoData;
 import cn.com.mobnote.video.LocalVideoListManage.LocalVideoData;
-import cn.com.mobnote.view.LoadingView;
-import cn.com.mobnote.view.MyGridView;
+import cn.com.tiros.debug.GolukDebugUtils;
+
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -51,20 +46,7 @@ import cn.com.mobnote.view.MyGridView;
  * @author 陈宣宇
  * 
  */
-
 public class LocalVideoListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-//	private Context mContext = null;
-//	private ArrayList<LocalVideoData> mDataList = null;
-//	private LayoutInflater mLayoutInflater = null;
-//	/** 来源标示,用来处理点击事件 */
-//	private String mPageSource = "";
-	
-//	public LocalVideoListAdapter(Context context, ArrayList<LocalVideoData> data,String source) {
-//		mContext = context;
-//		mPageSource = source;
-//		mDataList = data;
-//		mLayoutInflater = LayoutInflater.from(context);
-//	}
 	private Context mContext = null;
 	private String mPageSource = "";
 	private LayoutInflater inflater;
@@ -73,6 +55,10 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 	private int count = 0;
 	private int screenWidth = 0;
 	private float density;
+	/** 图片缓存cache */
+	private LruCache<String, Bitmap> mLruCache = null;
+	/** 滚动中锁标识 */
+	private boolean lock = false;
 	
 	public LocalVideoListAdapter(Context c,String source){
 		mContext = c;
@@ -82,6 +68,27 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 		mGroupNameList = new ArrayList<String>();
 		screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
+		int maxSize = (int)(Runtime.getRuntime().maxMemory()/10);
+		mLruCache = new LruCache<String, Bitmap>(maxSize){  
+		    @Override  
+		    protected int sizeOf(String key, Bitmap bitmap) {  
+		    	if (bitmap == null) {
+		    		return 0;
+		    	}
+		    	return bitmap.getRowBytes() * bitmap.getHeight();
+		    }  
+		};  
+	}
+	
+	/**
+	 * 释放图片缓冲
+	 * @author xuhw
+	 * @date 2015年6月8日
+	 */
+	public void recycle() {
+		if (null != mLruCache) {
+			mLruCache.evictAll();
+		}
 	}
 	
 	public void setData(List<String> groupname, List<DoubleVideoData> data){
@@ -95,10 +102,9 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			if(mPageSource.equals("LocalVideoList")){
+			if (mPageSource.equals("LocalVideoList")) {
 				convertView = inflater.inflate(R.layout.local_video_list_item, parent, false);
-			}
-			else{
+			} else {
 				convertView = inflater.inflate(R.layout.local_video_share_list_item, parent, false);
 			}
 			holder.mVideoLayout1 = (RelativeLayout)convertView.findViewById(R.id.mVideoLayout1);
@@ -135,93 +141,148 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 		
 		LocalVideoData mVideoInfo1 = mDataList.get(position).getVideoInfo1();
 		LocalVideoData mVideoInfo2 = mDataList.get(position).getVideoInfo2();
+		holder.mVideoLayout2.setVisibility(View.GONE);
+		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
+		holder.mTMLayout2.setTag("");
+		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
+		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate);
+		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
+		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
+		loadImage(mVideoInfo1.filename, holder.image1);
+		
+		if(null != mVideoInfo2){
+			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
+			holder.mVideoLayout2.setVisibility(View.VISIBLE);
+			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
+			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate);
+			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
+			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
+			loadImage(mVideoInfo2.filename, holder.image2);
+		}
+
+		updateNewState(mDataList.get(position), holder.mNew1, holder.mNew2);
+		updateEditState(mDataList.get(position), holder.mTMLayout1, holder.mTMLayout2);
+		
+		return convertView;
+	}
+	
+	/**
+	 * 更新new标识
+	 * @param mDoubleVideoInfo
+	 * @param mNew1
+	 * @param mNew2
+	 * @author xuhw
+	 * @date 2015年6月9日
+	 */
+	private void updateNewState(DoubleVideoData mDoubleVideoInfo, ImageView mNew1, ImageView mNew2) {
+		LocalVideoData mVideoInfo1 = mDoubleVideoInfo.getVideoInfo1();
+		LocalVideoData mVideoInfo2 = mDoubleVideoInfo.getVideoInfo2();
+		
+		if(mVideoInfo1.isNew){
+			mNew1.setVisibility(View.VISIBLE);
+		}else{
+			mNew1.setVisibility(View.GONE);
+		}
+		
+		if (null == mVideoInfo2) {
+			return;
+		}
+		
+		if(mVideoInfo2.isNew){
+			mNew2.setVisibility(View.VISIBLE);
+		}else{
+			mNew2.setVisibility(View.GONE);
+		}
+		
+	}
+	
+	/**
+	 * 更新编辑状态
+	 * @param mDoubleVideoInfo 视频数据信息
+	 * @param mTMLayout1 列表左侧编辑布局
+	 * @param mTMLayout2 列表右侧编辑布局
+	 * @author xuhw
+	 * @date 2015年6月8日
+	 */
+	private void updateEditState(DoubleVideoData mDoubleVideoInfo, RelativeLayout mTMLayout1, RelativeLayout mTMLayout2) {
+		LocalVideoData mVideoInfo1 = mDoubleVideoInfo.getVideoInfo1();
+		LocalVideoData mVideoInfo2 = mDoubleVideoInfo.getVideoInfo2();
 		List<String> selectedData = null;
 		if(mPageSource.equals("LocalVideoList")) {
 			LocalVideoListActivity a = (LocalVideoListActivity)mContext;
 			selectedData = a.getSelectedListData();
 			if(a.getIsEditState()){
-				holder.mTMLayout1.setVisibility(View.GONE);
-				holder.mTMLayout2.setVisibility(View.GONE);
+				mTMLayout1.setVisibility(View.GONE);
+				mTMLayout2.setVisibility(View.GONE);
 			}
 			
-		}
-		else{
+		}else{
 			LocalVideoShareListActivity a = (LocalVideoShareListActivity)mContext;
 			selectedData = a.getSelectedListData();
 		}
-
-		if(mVideoInfo1.isNew){
-			holder.mNew1.setVisibility(View.VISIBLE);
-		}else{
-			holder.mNew1.setVisibility(View.GONE);
-		}
 		
-		if(null != mVideoInfo2){
-			if(mVideoInfo2.isNew){
-				holder.mNew2.setVisibility(View.VISIBLE);
-			}else{
-				holder.mNew2.setVisibility(View.GONE);
-			}
-		}
-		
-		
-		holder.mVideoLayout2.setVisibility(View.GONE);
-		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
-		holder.mTMLayout2.setTag("");
 		if(selectedData.contains(mVideoInfo1.videoPath)){
-			holder.mTMLayout1.setVisibility(View.VISIBLE);
+			mTMLayout1.setVisibility(View.VISIBLE);
 		}else{
-			holder.mTMLayout1.setVisibility(View.GONE);
-		}
-		if(1 == mVideoInfo1.videoHP){
-			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_1080);
-		}else if(2 == mVideoInfo1.videoHP){
-			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_720);
-		}else if(3 == mVideoInfo1.videoHP){
-			holder.mVideoQuality1.setBackgroundResource(R.drawable.carrecorder_icon_480);
-		}
-		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
-		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate);
-		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
-		
-		holder.image1.setBackgroundResource(R.drawable.tacitly_pic);
-		Bitmap videoBitmap1 = mDataList.get(position).getVideoInfo1().videoBitmap;
-		if (null != videoBitmap1) {
-			BitmapDrawable bd = new BitmapDrawable(videoBitmap1);
-			holder.image1.setBackgroundDrawable(bd);
+			mTMLayout1.setVisibility(View.GONE);
 		}
 		
-		if(null != mVideoInfo2){
-			if(selectedData.contains(mVideoInfo2.videoPath)){
-				holder.mTMLayout2.setVisibility(View.VISIBLE);
-			}else{
-				holder.mTMLayout2.setVisibility(View.GONE);
-			}
-			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
-			holder.mVideoLayout2.setVisibility(View.VISIBLE);
-			if(1 == mVideoInfo2.videoHP){
-				holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_1080);
-			}else if(2 == mVideoInfo2.videoHP){
-				holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_720);
-			}else if(3 == mVideoInfo2.videoHP){
-				holder.mVideoQuality2.setBackgroundResource(R.drawable.carrecorder_icon_480);
-			}
-			
-			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
-			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate);
-			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
-		
-			holder.image2.setBackgroundResource(R.drawable.tacitly_pic);
-			Bitmap videoBitmap2 = mDataList.get(position).getVideoInfo2().videoBitmap;
-			if (null != videoBitmap2) {
-				BitmapDrawable bd = new BitmapDrawable(videoBitmap2);
-				holder.image2.setBackgroundDrawable(bd);
-			}
+		if (null == mVideoInfo2) {
+			return;
 		}
 		
+		if (selectedData.contains(mVideoInfo2.videoPath)) {
+			mTMLayout2.setVisibility(View.VISIBLE);
+		}else {
+			mTMLayout2.setVisibility(View.GONE);
+		}
 
+	}
+	
+	/**
+	 * 显示视频质量
+	 * @param videoName 视频名称
+	 * @param videoHP 视频分辨率
+	 * @param image 显示控件
+	 * @author xuhw
+	 * @date 2015年6月8日
+	 */
+	private void displayVideoQuality(int videoHP, ImageView image) {
+		if(1 == videoHP){
+			image.setBackgroundResource(R.drawable.carrecorder_icon_1080);
+		}else if(2 == videoHP){
+			image.setBackgroundResource(R.drawable.carrecorder_icon_720);
+		}else if(3 == videoHP){
+			image.setBackgroundResource(R.drawable.carrecorder_icon_480);
+		}
+	}
+	
+	/**
+	 * 加载并显示预览图片
+	 * @param filename 图片名称
+	 * @param image 显示控件
+	 * @author xuhw
+	 * @date 2015年6月8日
+	 */
+	private void loadImage(String filename, ImageView image) {
+		filename = filename.replace(".mp4", ".jpg");
+		Bitmap mBitmap = mLruCache.get(filename);
+		if (null != mBitmap) {
+			image.setImageBitmap(mBitmap);
+		}else {
+			image.setImageResource(R.drawable.tacitly_pic);
+			if (lock) {
+				return;
+			}
 
-		return convertView;
+			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+			Bitmap b = ImageManager.getBitmapFromCache(filePath + File.separator + filename, 194, 109);
+			if (null != b) {
+				mLruCache.put(filename, b);
+				image.setImageBitmap(b);
+				GolukDebugUtils.e("xuhw", "BBBBBB==####===filename="+filename);
+			}
+		}
 	}
 
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
@@ -295,5 +356,25 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 		
 		return id;
 	}
+	
+	/**
+	 * 锁住后滚动时禁止下载图片
+	 * @author xuhw
+	 * @date 2015年6月8日
+	 */
+	public void lock() {
+		lock = true;
+	}
+	
+	/**
+	 * 解锁后恢复下载图片功能
+	 * @author xuhw
+	 * @date 2015年6月8日
+	 */
+	public void unlock() {
+		lock = false;
+		this.notifyDataSetChanged();
+	}
+	
 }
 

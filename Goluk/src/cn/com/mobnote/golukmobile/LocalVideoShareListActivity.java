@@ -65,8 +65,6 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 	private int wonderfulVisibleCount;
 	private int emergencyVisibleCount;
 	
-	
-	
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -108,10 +106,8 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 	/** 视频列表数据适配器 */
 	public LocalVideoListAdapter mWonderfulVideoAdapter = null;
 	public LocalVideoListAdapter mEmergencyVideoAdapter = null;
-	
 	/** 视频列表handler用来接收消息,更新UI*/
 	public static Handler mVideoShareListHandler = null;
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +126,6 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 		initListManage();
 	}
 	
-	
 	/**
 	 * 获取编辑文件列表数据
 	 * @return
@@ -140,7 +135,6 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 	public List<String> getSelectedListData(){
 		return selectedListData;
 	}
-	
 	
 	/**
 	 * 初始化控件
@@ -170,7 +164,6 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 		mEmergencyGroupName = new ArrayList<String>();
 		
 		selectedListData = new ArrayList<String>();
-		
 		
 		mVideoShareListHandler = new Handler(){
 			@Override
@@ -252,15 +245,6 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 	 */
 	@SuppressLint("InflateParams")
 	private void initWonderfulLayout(){
-//		mWonderfulVideoList.setVisibility(View.VISIBLE);
-//		mEmergencyVideoList.setVisibility(View.GONE);
-//		mLoopVideoList.setVisibility(View.GONE);
-		
-//		mWonderfulGroupName.clear();
-//		wonderfulVideoData.clear();
-		
-//		getGormattedData(fileList);
-		
 		//列表tab数据
 		mWonderfulGroupName = mLocalWonderfulVideoListManage.mTabGroupName;
 		//精彩视频数据
@@ -282,11 +266,21 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 		mWonderfulVideoList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-					if(mWonderfulVideoList.getAdapter().getCount() == (wonderfulFirstVisible+wonderfulVisibleCount)){
-//						Toast.makeText(IPCFileManagerActivity.this, "滑动到最后了222", 1000).show();
-					}
+				switch (scrollState) {
+				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+					mWonderfulVideoAdapter.lock();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+					mWonderfulVideoAdapter.unlock();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					mWonderfulVideoAdapter.lock();
+					break;
+					
+				default:
+					break;
 				}
+				
 			}
 			@Override
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
@@ -352,15 +346,6 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 	 */
 	@SuppressLint("InflateParams")
 	private void initEmergencyLayout(){
-//		mWonderfulVideoList.setVisibility(View.GONE);
-//		mEmergencyVideoList.setVisibility(View.VISIBLE);
-//		mLoopVideoList.setVisibility(View.GONE);
-//		
-//		mEmergencyGroupName.clear();
-//		emergencyVideoData.clear();
-		
-//		getGormattedData(fileList);
-		
 		//列表tab数据
 		mEmergencyGroupName = mLocalEmergencyVideoListManage.mTabGroupName;
 		//紧急列表数据
@@ -383,11 +368,22 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 		mEmergencyVideoList.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-					if(mEmergencyVideoList.getAdapter().getCount() == (emergencyFirstVisible + emergencyVisibleCount)){
-						System.out.println("TTTTT=====滑动到最后了222");
-					}
+				switch (scrollState) {
+				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+					mEmergencyVideoAdapter.lock();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+					mEmergencyVideoAdapter.unlock();
+					
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					mEmergencyVideoAdapter.lock();
+					break;
+					
+				default:
+					break;
 				}
+				
 			}
 			@Override
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
@@ -450,32 +446,6 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 		}
 	}
 	
-	/**
-	 * 释放bitmap
-	 * @param list
-	 */
-	private void destroyVideoBitMap(List<DoubleVideoData> list){
-		for(int i = 0; i < list.size(); i++){
-			DoubleVideoData info = list.get(i);
-			LocalVideoData info1 = info.getVideoInfo1();
-			LocalVideoData info2 = info.getVideoInfo2();
-			if(null != info1.videoBitmap){
-				if(!info1.videoBitmap.isRecycled()){
-					info1.videoBitmap.recycle();
-					info1.videoBitmap=null;
-				}
-			}
-			if(null != info2){
-				if(null != info2.videoBitmap){
-					if(!info2.videoBitmap.isRecycled()){
-						info2.videoBitmap.recycle();
-						info2.videoBitmap=null;
-					}
-				}
-			}
-		}
-	}
-	
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -523,12 +493,13 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		//释放bitmap
-		if(null != mDoubleWonderfulVideoData){
-			destroyVideoBitMap(mDoubleWonderfulVideoData);
+		
+		if(null != mWonderfulVideoAdapter){
+			mWonderfulVideoAdapter.recycle();
 		}
-		if(null != mDoubleEmergencyVideoData){
-			destroyVideoBitMap(mDoubleEmergencyVideoData);
+		
+		if(null != mEmergencyVideoAdapter){
+			mEmergencyVideoAdapter.recycle();
 		}
 	}
 }

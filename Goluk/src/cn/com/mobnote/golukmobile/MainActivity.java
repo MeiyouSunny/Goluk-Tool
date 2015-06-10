@@ -45,7 +45,6 @@ import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -68,6 +67,8 @@ import cn.com.mobnote.video.LocalVideoManage;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
 
@@ -224,12 +225,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 		
-		
-		// 添加umeng错误统计
-		MobclickAgent.setCatchUncaughtExceptions(true);
+		// 关闭umeng错误统计(只使用友盟的行为分析，不使用错误统计)
+		MobclickAgent.setDebugMode(false);
+		MobclickAgent.setCatchUncaughtExceptions(false);
 		// 添加腾讯崩溃统计 初始化SDK
 		CrashReport.initCrashReport(this, CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
-		CrashReport.setUserId(getIMEI());
+		final String mobileId = Tapi.getMobileId();
+		CrashReport.setUserId(mobileId);
+		GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -244,7 +247,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		SharedPreferences preferences = getSharedPreferences("golukmark",MODE_PRIVATE);
 		//取得相应的值,如果没有该值,说明还未写入,用true作为默认值
 		boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
-		if(isFirstIndex){//如果是第一次启动
+		if(isFirstIndex){ //如果是第一次启动
 			indexDiv.setVisibility(View.VISIBLE);
 			Editor editor = preferences.edit();
 			editor.putBoolean("isFirstIndex", false);
@@ -276,24 +279,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
-
 	}
-	
+
 	@Override 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
 	    mVideoSquareActivity.onActivityResult(requestCode, resultCode, data);
 	}
-	
-	private String getIMEI() {
-		try {
-			String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
-			return imei;
-		} catch (Exception e) {
 
-		}
-		return "";
-	}
 
 	/**
 	 * 启动软件创建wifi热点
@@ -495,7 +488,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 
 	 */
 	public void onLineVideoCallBack(Object obj) {
-		// 更新在线视频
+
 	}
 
 	/**
@@ -505,7 +498,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 *            ={'vid':'test11','path':'fs1:/Cache/test11.png'}
 	 */
 	public void onLineVideoImageCallBack(Object obj) {
-		// 更新在线视频图片
+
 	}
 
 	/**
@@ -517,14 +510,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 *            ;
 	 */
 	public void videoFileCallBack(Object obj) {
-		// 接收到本地视频文件目录
-		String str = (String) obj;
-		// mLocalVideoManage.analyzeVideoFile(str);
 
-		// 隐藏默认提示
-		if (null != mDefaultTipLayout) {
-			// mDefaultTipLayout.setVisibility(View.GONE);
-		}
 	}
 
 	/**
@@ -569,17 +555,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 更新视频view
 	 */
 	public void videoDataUpdate() {
-		// mLocalVideoListAdapter.notifyDataSetChanged();
 	}
 
 	/**
 	 * 链接中断更新页面
 	 */
 	public void socketLinkOff() {
-		// boolean b = mLocalVideoManage.removeVideoListByLinkOff();
-		// if(b){
-		// mLocalVideoListAdapter.notifyDataSetChanged();
-		// }
+
 	}
 
 	/**
@@ -831,12 +813,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			showContinuteLive();
 		}
 
-		/*
-		 * //回到页面重新检测wifi状态,只有未连接的情况下才重新检测 if(mWiFiStatus == 0){
-		 * mApp.VerifyWiFiConnect(); }
-		 */
 		super.onResume();
-
 	}
 
 	public void showContinuteLive() {
@@ -898,6 +875,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				if (null != UserStartActivity.mHandler) {
 					UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
 				}
+				MobclickAgent.onKillProcess(this);
 				finish();
 				int PID = android.os.Process.myPid();
 				android.os.Process.killProcess(PID);
@@ -927,16 +905,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				break;
 			}
 			break;
-		case R.id.share_btn:
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				// mDrivingShareText.setTextColor(Color.rgb(0,197,177));
-				break;
-			case MotionEvent.ACTION_UP:
-				// mDrivingShareText.setTextColor(Color.rgb(103,103,103));
-				break;
-			}
-			break;
 		case R.id.index_share_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
@@ -954,11 +922,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		return false;
 	}
-	
-	private void test() {
-		Intent intent = new Intent(this, WiFiLinkCompleteActivity2.class);
-		startActivity(intent);
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -969,8 +932,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
 			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 			mBaiduMap.animateMapStatus(u);
-			
-//			test();
 			break;
 		case R.id.index_share_btn:
 			click_share();
@@ -1011,18 +972,21 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case R.id.index_div:
 			if(divIndex == 0){
+				GolukUtils.freeBitmap(indexDiv.getBackground());
 				indexDiv.setBackgroundResource(R.drawable.guide_two);
 				divIndex++;
 			}else if (divIndex == 1){
+				GolukUtils.freeBitmap(indexDiv.getBackground());
 				indexDiv.setBackgroundResource(R.drawable.guide_three);
 				divIndex++;
 			}else {
 				indexDiv.setVisibility(View.GONE);
+				GolukUtils.freeBitmap(indexDiv.getBackground());
 			}
 			break;
 		}
 	}
-
+	
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public void setBelowItem(int id) {
 		Drawable drawable;
