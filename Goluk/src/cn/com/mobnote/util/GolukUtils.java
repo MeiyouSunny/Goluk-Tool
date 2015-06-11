@@ -188,7 +188,7 @@ public class GolukUtils {
         long blockSize = stat.getBlockSize();  
         long availableBlocks = stat.getAvailableBlocks();  
         availableSize = (float)(blockSize * availableBlocks / 1024)/1024;
-        if (availableSize >= filesize) {
+        if ((availableSize - 10) >= filesize) {
         	return true;
         }else{
         	return false;
