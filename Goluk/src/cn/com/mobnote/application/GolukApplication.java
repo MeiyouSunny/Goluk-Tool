@@ -161,6 +161,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean isSDCardFull = false;
 	/** 文件下载中标识 */
 	private boolean isDownloading = false;
+	/** 下载列表个数 */
+	private int downloadCount = 0;
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -185,6 +187,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				break;
 			case 1003:
 				isSDCardFull = false;
+				isDownloading = false;
+				downloadCount = 0;
 				break;
 			default:
 				break;
@@ -496,27 +500,39 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					configPath = savePath + "loop.txt";
 				}
 				
-				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===isSDCardFull=" + isSDCardFull);
-				if (isSDCardFull) {					
+				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===isSDCardFull=" + isSDCardFull+
+						"==isDownloading="+isDownloading);
+				if (isSDCardFull && !isDownloading) {					
 					return;
 				}
 				
 				if (!GolukUtils.checkSDStorageCapacity(filesize)) {
 					isSDCardFull = true;
-					if(!isDownloading) {
-						sdCardFull();
-					}else{
-						mHandler.sendEmptyMessageDelayed(1003, 2000);
+					
+					if (!mDownLoadFileList.contains(fileName)) {
+						mDownLoadFileList.add(fileName);
 					}
-										
+
+					if (GlobalWindow.getInstance().isShow()) {
+						GlobalWindow.getInstance().updateText(
+								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+					}
+					
+					if (!isDownloading) {
+						sdCardFull();
+						mHandler.sendEmptyMessageDelayed(1003, 1000);
+					}
+					
 					GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad=@@@@==isSDCardFull=" + isSDCardFull);
 					
 					return;
 				}
 				
+				isDownloading = true;
 				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath), fileName + ",");
 
 				// 调用下载视频接口
+				downloadCount++;
 				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
 				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===flag=" + a + "===data=" + data);
 				// 下载视频第一帧截图
@@ -549,18 +565,51 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 	}
 	
+	/**
+	 * sd卡满后停止下载并显示提示
+	 * @author xuhw
+	 * @date 2015年6月11日
+	 */
 	private void sdCardFull() {
 		if (mDownLoadFileList.size() > 0) {
 			mDownLoadFileList.clear();
 			mNoDownLoadFileList.clear();
 		}
+		
 		mIPCControlManager.stopDownloadFile();
+		
 		if (!GlobalWindow.getInstance().isShow()) {
-			GlobalWindow.getInstance().createVideoUploadWindow("存储容量不足");
+			GlobalWindow.getInstance().createVideoUploadWindow("视频传输取消");
 		}
-		GlobalWindow.getInstance().toFailed("存储容量不足");		
+		GlobalWindow.getInstance().toFailed("视频传输取消");		
+		GolukUtils.showToast(mContext, "剩余空间不足");
 	}
-
+	
+	/**
+	 * 重置sd卡存储容量检查状态
+	 * @author xuhw
+	 * @date 2015年6月11日
+	 */
+	private void resetSDCheckState(){
+		downloadCount--;
+		if (downloadCount <= 0) {
+			downloadCount = 0;
+		}
+		
+		GolukDebugUtils.e("xuhw", "YYYYYYY===resetSDCheckState==downloadCount="+downloadCount);
+		
+		if(downloadCount > 0) {
+			return;
+		}
+		
+		if (isSDCardFull) {
+			sdCardFull();
+			isSDCardFull = false;
+			isDownloading = false;
+			downloadCount = 0;
+		}
+	}
+	
 	/**
 	 * ipc视频下载回调函数
 	 * 
@@ -624,14 +673,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						GlobalWindow.getInstance().topWindowSucess("视频传输完成");
 					}
 					
-					if (isSDCardFull) {
-						sdCardFull();
-						isSDCardFull = false;
-						isDownloading = false;
-					}
-
+					resetSDCheckState();
 				} else {
-					isDownloading = false;
+					resetSDCheckState();
 					GolukDebugUtils.e("xuhw", "YYYYYY=＠＠＠＠===download==fail===success=" + success + "==data=" + data);
 					JSONObject json = new JSONObject(data);
 					String filename = json.optString("filename");
