@@ -955,11 +955,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			isClickShareVideo = true;
 			toShareLive();
 			break;
-		case R.id.video_square_more_btn:
+		/*case R.id.video_square_more_btn:
 			// 跳转到视频广场页面
 			Intent videoSquare = new Intent(MainActivity.this, VideoSquareActivity.class);
 			startActivity(videoSquare);
-			break;
+			break;*/
 		case R.id.index_square_btn:
 			// 视频广场
 			setBelowItem(R.id.index_square_btn);
