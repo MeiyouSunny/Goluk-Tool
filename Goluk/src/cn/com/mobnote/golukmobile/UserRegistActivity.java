@@ -537,13 +537,20 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+password+"\",\"VCode\":\""+identify+ "\",\"tag\":\"android\"}";
 					GolukDebugUtils.e("",isRegist);
 					GolukDebugUtils.i("lily", "------UserRegistActivity---不点击获取验证码---111------"+freq);
+					int freqInt = 0;
 					if(identifyClick){
-						int freqInt = Integer.parseInt(freq);
+						try{
+							freqInt = Integer.parseInt(freq);
+						}catch(Exception e){
+							GolukUtils.showToast(mContext, "请重新获取验证码");
+							return ;
+						}
+						
 						GolukDebugUtils.i("lily", "------UserRegistActivity---不点击获取验证码---------"+freq);
-						if(freqInt>3){
+						if(freqInt > 3){
 							UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
 						}else{
-							if(identify.length()<6){
+							if(identify.length() < 6){
 								UserUtils.showDialog(mContext, "验证码格式输入不正确");
 							}else{
 								boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_Register, isRegist);
