@@ -25,6 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+         <activity
+            android:name="cn.com.mobnote.golukmobile.TestActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 个人中心模块 -->
         <activity

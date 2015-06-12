@@ -920,6 +920,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		return false;
 	}
+	
+	private void test() {
+		Intent intent = new Intent(this, TestActivity.class);
+		startActivity(intent);
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -930,6 +935,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
 			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 			mBaiduMap.animateMapStatus(u);
+			
+			test();
 			break;
 		case R.id.index_share_btn:
 			click_share();
@@ -1272,7 +1279,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// 判断，是否设置过IPC地址
 			if (null == GolukApplication.mIpcIp) {
 				// 连接失败
-				wifiConnectFailed();
+//				wifiConnectFailed();
 			} else {
 				mApp.mIPCControlManager.setIPCWifiState(false, "");
 				mApp.mIPCControlManager.setIPCWifiState(true, GolukApplication.mIpcIp);
