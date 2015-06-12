@@ -16,12 +16,11 @@
 
     <ImageView
         android:id="@+id/wifi_link_waitconn_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="245dp"
+        android:layout_height="190dp"
         android:layout_below="@id/wifi_link_waitconn_txt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="104dp"
-        android:background="@drawable/finish_pic_8"
         android:contentDescription="@string/imgdes" />
 
     <TextView

@@ -162,6 +162,13 @@ public class GolukUtils {
 		}
 	}
 
+	public static void freeBitmap(Bitmap bitmap) {
+		if (null != bitmap && !bitmap.isRecycled()) {
+			bitmap.recycle();
+			bitmap = null;
+		}
+	}
+
 	public static void freeBitmap(Drawable drawable) {
 		if (null == drawable) {
 			return;
@@ -174,25 +181,27 @@ public class GolukUtils {
 		}
 	}
 
-    /**
-     *  检查sd卡剩余容量是否可用 
-     * @param filesize 文件大小 MB
-     * @return
-     * @author xuhw
-     * @date 2015年6月10日
-     */
-    public static boolean checkSDStorageCapacity(double filesize) {  
-        float availableSize = 0;
-    	File path = Environment.getExternalStorageDirectory();  
-        StatFs stat = new StatFs(path.getPath());  
-        long blockSize = stat.getBlockSize();  
-        long availableBlocks = stat.getAvailableBlocks();  
-        availableSize = (float)(blockSize * availableBlocks / 1024)/1024;
-        if ((availableSize - 10) >= filesize) {
-        	return true;
-        }else{
-        	return false;
-        }
-    }  
-	
+	/**
+	 * 检查sd卡剩余容量是否可用
+	 * 
+	 * @param filesize
+	 *            文件大小 MB
+	 * @return
+	 * @author xuhw
+	 * @date 2015年6月10日
+	 */
+	public static boolean checkSDStorageCapacity(double filesize) {
+		float availableSize = 0;
+		File path = Environment.getExternalStorageDirectory();
+		StatFs stat = new StatFs(path.getPath());
+		long blockSize = stat.getBlockSize();
+		long availableBlocks = stat.getAvailableBlocks();
+		availableSize = (float) (blockSize * availableBlocks / 1024) / 1024;
+		if ((availableSize - 10) >= filesize) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

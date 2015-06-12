@@ -31,7 +31,6 @@
         android:layout_below="@id/wifilist_textView2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="96dp"
-        android:background="@anim/goluk_wifi"
         android:contentDescription="@string/imgdes" />
 
     <TextView

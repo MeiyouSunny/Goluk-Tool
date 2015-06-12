@@ -102,6 +102,10 @@ public class WiFiListManage {
 		}
 		return ssid.contains(GOLUK_PRE);
 	}
+	
+	public void clear() {
+		mWiFiListData.clear();
+	}
 
 	/**
 	 * 解析wifi列表数据

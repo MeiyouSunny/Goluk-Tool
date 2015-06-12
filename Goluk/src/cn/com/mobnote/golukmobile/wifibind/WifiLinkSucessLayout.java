@@ -2,16 +2,21 @@ package cn.com.mobnote.golukmobile.wifibind;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UnbindActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 	private Context mContext = null;
@@ -20,10 +25,18 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 	private TextView mModifyPwdTv = null;
 	private TextView mWifi_link_sucess_txt1 = null;
 
+	private ImageView mMiddleImg = null;
+	private Bitmap mMiddleBitmap = null;
+
 	public WifiLinkSucessLayout(Context context) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
+		initBitmap();
 		init();
+	}
+
+	private void initBitmap() {
+		mMiddleBitmap = ImageManager.getBitmapFromResource(R.drawable.connect_banner_4);
 	}
 
 	private void init() {
@@ -41,6 +54,17 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 		// 设置下画线
 		mModifyPwdTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 		mModifyPwdTv.setOnClickListener(this);
+
+		mMiddleImg = (ImageView) mRootLayout.findViewById(R.id.wifi_link_sucess_img);
+		mMiddleImg.setImageBitmap(mMiddleBitmap);
+	}
+
+	@Override
+	public void free() {
+		if (null != mMiddleBitmap) {
+			GolukDebugUtils.e("", "jyf-----WifiBind-----layout3-----recyle----");
+			GolukUtils.freeBitmap(mMiddleBitmap);
+		}
 	}
 
 	@Override

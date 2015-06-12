@@ -311,6 +311,20 @@ public class WiFiLinkCompleteActivity2 extends BaseActivity implements OnClickLi
 	protected void onDestroy() {
 		super.onDestroy();
 		GolukDebugUtils.e("", "通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
+
+		GolukDebugUtils.e("", "jyf-----WifiBind-----WifiCompelete-----onDestroy----");
+		if (null != layout1) {
+			layout1.free();
+		}
+
+		if (null != layout2) {
+			layout2.free();
+		}
+
+		if (null != layout3) {
+			layout3.free();
+		}
+
 	}
 
 	@Override

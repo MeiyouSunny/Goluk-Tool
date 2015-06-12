@@ -375,6 +375,19 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 	}
 
+	private void free() {
+		if (null != mWiFiListManage) {
+			mWiFiListManage.clear();
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		GolukDebugUtils.e("", "jyf-----WifiBind-----List-----onDestroy----");
+		free();
+	}
+
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		GolukDebugUtils.e("", "wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process
