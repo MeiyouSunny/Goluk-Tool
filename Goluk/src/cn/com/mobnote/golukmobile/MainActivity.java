@@ -921,11 +921,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		return false;
 	}
 	
-	private void test() {
-		Intent intent = new Intent(this, TestActivity.class);
-		startActivity(intent);
-	}
-
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -935,8 +930,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
 			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 			mBaiduMap.animateMapStatus(u);
-			
-			test();
 			break;
 		case R.id.index_share_btn:
 			click_share();
