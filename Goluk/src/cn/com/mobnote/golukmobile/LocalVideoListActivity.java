@@ -353,7 +353,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		mLoopVideoData = mLocalLoopVideoListManage.mLocalVideoListData;
 		
 		if(null == mLoopVideoAdapter){
-			mLoopVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList");
+			mLoopVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList", mLoopVideoList);
 		}
 		mLoopVideoAdapter.setData(mLoopGroupName,mDoubleLoopVideoData);
 		//给类标底部添加一条透明区域,解决编辑看不到最后
@@ -452,7 +452,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		mWonderfulVideoData = mLocalWonderfulVideoListManage.mLocalVideoListData;
 		
 		if(null == mWonderfulVideoAdapter){
-			mWonderfulVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList");
+			mWonderfulVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList", mWonderfulVideoList);
 		}
 		mWonderfulVideoAdapter.setData(mWonderfulGroupName, mDoubleWonderfulVideoData);
 		//给类标底部添加一条透明区域,解决编辑看不到最后
@@ -561,7 +561,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 		mEmergencyVideoData = mLocalEmergencyVideoListManage.mLocalVideoListData;
 		
 		if(null == mEmergencyVideoAdapter){
-			mEmergencyVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList");
+			mEmergencyVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoList", mEmergencyVideoList);
 		}
 		mEmergencyVideoAdapter.setData(mEmergencyGroupName, mDoubleEmergencyVideoData);
 		

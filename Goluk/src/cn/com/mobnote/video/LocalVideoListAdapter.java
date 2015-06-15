@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,6 +21,8 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.LocalVideoListActivity;
 import cn.com.mobnote.golukmobile.LocalVideoShareListActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.video.LocalVideoListManage.DoubleVideoData;
@@ -59,9 +62,11 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 	private LruCache<String, Bitmap> mLruCache = null;
 	/** 滚动中锁标识 */
 	private boolean lock = false;
+	private StickyListHeadersListView mListView = null;
 	
-	public LocalVideoListAdapter(Context c,String source){
+	public LocalVideoListAdapter(Context c, String source, StickyListHeadersListView listview){
 		mContext = c;
+		this.mListView = listview;
 		mPageSource = source;
 		inflater = LayoutInflater.from(c);
 		mDataList=new ArrayList<DoubleVideoData>();
@@ -147,6 +152,7 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate);
 		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
+		holder.image1.setTag("image:"+mVideoInfo1.filename);
 		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
 		
@@ -156,6 +162,7 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate);
 			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
+			holder.image2.setTag("image:"+mVideoInfo2.filename);
 			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 		}
@@ -274,17 +281,48 @@ public class LocalVideoListAdapter extends BaseAdapter implements StickyListHead
 			if (lock) {
 				return;
 			}
-
+			
 			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-			Bitmap b = ImageManager.getBitmapFromCache(filePath + File.separator + filename, 194, 109);
-			if (null != b) {
-				mLruCache.put(filename, b);
-				image.setImageBitmap(b);
-				GolukDebugUtils.e("xuhw", "BBBBBB==####===filename="+filename);
-			}
+			
+//			Bitmap b = ImageManager.getBitmapFromCache(filePath + File.separator + filename, 194, 109);
+//			if (null != b) {
+//				mLruCache.put(filename, b);
+//				image.setImageBitmap(b);
+//				GolukDebugUtils.e("xuhw", "BBBBBB==####===filename="+filename);
+//			}
+			
+			ImageAsyncTask.getBitmapForCache(filePath + File.separator + filename, new ICallBack(){
+				@Override
+				public void SuccessCallback(String url, Bitmap mBitmap) {
+					String filename = url.substring(url.lastIndexOf("/")+1);
+					
+					if (null == mBitmap) {
+						return;
+					}
+					
+					Bitmap b = mLruCache.get(filename);
+					if (null == b) {
+						b = mBitmap;
+						mLruCache.put(filename, mBitmap);
+					}else{
+						if (null != mBitmap) {
+							if (!mBitmap.isRecycled()) {
+								mBitmap.recycle();
+								mBitmap = null;
+							}
+						}
+					}
+				
+					String imagefilename = filename.replace(".jpg", ".mp4");
+					ImageView image = (ImageView)mListView.findViewWithTag("image:"+imagefilename);
+					if (null != image) {
+						image.setImageBitmap(b);
+					}
+				}
+			});
 		}
 	}
-
+	
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
 		HeaderViewHolder holder;
 		if (convertView == null) {

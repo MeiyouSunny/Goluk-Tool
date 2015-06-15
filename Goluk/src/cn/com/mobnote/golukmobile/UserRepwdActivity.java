@@ -493,8 +493,14 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 						// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
 						GolukDebugUtils.e("",isRegist);
+						int freqInt = 0;
 						if(identifyClick){
-							int freqInt = Integer.valueOf(freq);
+								try{
+									freqInt = Integer.parseInt(freq);
+								}catch(Exception e){
+									GolukUtils.showToast(mContext, "请重新获取验证码");
+									return ;
+								}
 							GolukDebugUtils.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
 							if(freqInt>3){
 								UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");

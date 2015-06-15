@@ -45,9 +45,6 @@
             android:screenOrientation="portrait" />
         <!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
         <activity
-            android:name="cn.com.mobnote.golukmobile.UserPersonalHomeActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="cn.com.mobnote.golukmobile.UserPersonalInfoActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -71,7 +68,6 @@
 
 		<activity android:name="cn.com.mobnote.golukmobile.IndexMoreActivity" android:screenOrientation="portrait"/>
 		<activity android:name="cn.com.mobnote.golukmobile.UserSetupActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.LiveVideoListActivity" android:screenOrientation="portrait"/>
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >
@@ -105,17 +101,9 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.LiveVideoPlayActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="cn.com.mobnote.golukmobile.MainActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
-
-        <activity
-            android:name="cn.com.mobnote.golukmobile.UserCenterActivity"
-            android:screenOrientation="portrait" />
-
 
         <activity
             android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2"

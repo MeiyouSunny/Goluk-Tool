@@ -3,14 +3,19 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
+import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.LruCache;
@@ -39,9 +44,11 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 	private LruCache<String, Bitmap> mLruCache = null;
 	/** 滚动中锁标识 */
 	private boolean lock = false;
+	private StickyListHeadersListView mListView = null;
 	
-	public IPCFileAdapter(Context c) {
-		mContext=c;
+	public IPCFileAdapter(Context c, StickyListHeadersListView listview) {
+		mContext = c;
+		this.mListView = listview;
 		inflater = LayoutInflater.from(c);
 		mDataList=new ArrayList<DoubleVideoInfo>();
 		mGroupNameList = new ArrayList<String>();
@@ -57,6 +64,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 		    	return bitmap.getRowBytes() * bitmap.getHeight();
 		    }  
 		};  
+		GolukDebugUtils.e("", "BBBBBB=====mLruCache======create====");
 	}
 	
 	/**
@@ -220,11 +228,36 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 			}
 
 			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-			Bitmap b = ImageManager.getBitmapFromCache(filePath + File.separator + filename, 194, 109);
-			if (null != b) {
-				mLruCache.put(filename, b);
-				image.setImageBitmap(b);
-			}
+			
+			ImageAsyncTask.getBitmapForCache(filePath + File.separator + filename, new ICallBack(){
+				@Override
+				public void SuccessCallback(String url, Bitmap mBitmap) {
+					String filename = url.substring(url.lastIndexOf("/")+1);
+					
+					if (null == mBitmap) {
+						return;
+					}
+					
+					Bitmap b = mLruCache.get(filename);
+					if (null == b) {
+						b = mBitmap;
+						mLruCache.put(filename, mBitmap);
+					}else{
+						if (null != mBitmap) {
+							if (!mBitmap.isRecycled()) {
+								mBitmap.recycle();
+								mBitmap = null;
+							}
+						}
+					}
+				
+					String imagefilename = filename.replace(".jpg", ".mp4");
+					ImageView image = (ImageView)mListView.findViewWithTag("image:"+imagefilename);
+					if (null != image) {
+						image.setImageBitmap(b);
+					}
+				}
+			});
 		}
 	}
 
@@ -324,7 +357,7 @@ public class IPCFileAdapter extends BaseAdapter implements StickyListHeadersAdap
 	 * @author xuhw
 	 * @date 2015年6月8日
 	 */
-	public void updateImage(String filename, StickyListHeadersListView mListView) {
+	public void updateImage(String filename) {
 		filename = filename.replace(".jpg", ".mp4");
 		ImageView image = (ImageView)mListView.findViewWithTag("image:"+filename);
 		if (null != image) {

@@ -23,8 +23,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import cn.com.mobnote.golukmobile.LiveVideoListActivity;
-import cn.com.mobnote.golukmobile.LiveVideoPlayActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
 import cn.com.mobnote.golukmobile.UserRegistActivity;
@@ -757,10 +755,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// 地图大头针
 				mMainActivity.pointDataCallback(success, param2);
 			}
-			if (mPageSource == "LiveVideoList") {
+			/*if (mPageSource == "LiveVideoList") {
 				GolukDebugUtils.e("", "pageNotifyCallBack---直播列表数据---" + String.valueOf(param2));
 				((LiveVideoListActivity) mContext).LiveListDataCallback(success, param2);
-			}
+			}*/
 
 			// 为了更新直播界面的别人的位置信息
 			if (null != mContext && mContext instanceof LiveActivity) {
@@ -773,19 +771,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针图片---" + String.valueOf(param2));
 				((MainActivity) mContext).downloadBubbleImageCallBack(success, param2);
 			}
-			if (mPageSource == "LiveVideoList") {
+			/*if (mPageSource == "LiveVideoList") {
 				// 地图大头针图片
 				GolukDebugUtils.e("", "pageNotifyCallBack---直播列表图片---" + String.valueOf(param2));
 				((LiveVideoListActivity) mContext).downloadVideoImageCallBack(success, param2);
-			}
+			}*/
 			break;
 		case 9:
 			GolukDebugUtils.e(null, "jyf----20150406----application----999999999999---- : ");
 			if (mPageSource == "LiveVideo") {
 				GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
-				if (mContext instanceof LiveVideoPlayActivity) {
+				/*if (mContext instanceof LiveVideoPlayActivity) {
 					((LiveVideoPlayActivity) mContext).LiveVideoDataCallBack(success, param2);
-				} else if (mContext instanceof LiveActivity) {
+				} else */
+					if (mContext instanceof LiveActivity) {
 					((LiveActivity) mContext).LiveVideoDataCallBack(success, param2);
 				}
 			}
