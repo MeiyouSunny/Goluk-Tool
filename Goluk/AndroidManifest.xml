@@ -104,7 +104,8 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2"
+            android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
             android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity"
@@ -116,18 +117,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="cn.com.mobnote.golukmobile.WiFiLinkModifyPwdActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity

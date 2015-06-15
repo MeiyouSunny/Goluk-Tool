@@ -324,7 +324,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		setDefaultInfo();
 
 		// 跳转到修改热点密码页面
-		Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity2.class);
+		Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
 		modifyPwd.putExtra("cn.com.mobnote.golukmobile.wifiname", mLinkWiFiName);
 		startActivity(modifyPwd);
 	}

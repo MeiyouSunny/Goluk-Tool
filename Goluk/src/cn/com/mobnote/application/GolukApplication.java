@@ -31,8 +31,6 @@ import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity;
-import cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2;
-import cn.com.mobnote.golukmobile.WiFiLinkCreateHotActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
@@ -1032,9 +1030,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 					// 如果在wifi连接页面,通知连接成功
 					if (mPageSource.equals("WiFiLinkComplete") ) {
-						((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
+						
 					} else if (mPageSource.equals("WiFiLinkBindAll")) {
-						((WiFiLinkCompleteActivity2) mContext).ipcLinkWiFiCallBack();
+						((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
 					}
 
 					SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
@@ -1134,9 +1132,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// param1 = 0 成功 | 失败
 				// 如果在wifi连接页面,通知设置成功
 				if (mPageSource == "WiFiLinkCreateHot") {
-					((WiFiLinkCreateHotActivity) mContext).setIpcLinkWiFiCallBack(param1);
+					
 				} else if (mPageSource == "WiFiLinkBindAll") {
-					((WiFiLinkCompleteActivity2) mContext).setIpcLinkWiFiCallBack(param1);
+					((WiFiLinkCompleteActivity) mContext).setIpcLinkWiFiCallBack(param1);
 				} else if (mPageSource .equals("changePassword")) {
 					((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
 				}
