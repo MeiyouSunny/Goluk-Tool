@@ -141,6 +141,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 		setListener();
 		
 		getRecorderFileFromLocal(true, IPCManagerFn.TYPE_CIRCULATE, timeend);//初始化
+		GolukDebugUtils.e("", "BBBBBB=====IPCFileManagerActivity======create====");
 	}
 	
 	/**
@@ -278,7 +279,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 		
 		
 		if(null == mWonderfulVideoAdapter){
-			mWonderfulVideoAdapter = new IPCFileAdapter(this);
+			mWonderfulVideoAdapter = new IPCFileAdapter(this, mWonderfulVideoList);
 		}
 		mWonderfulVideoAdapter.setData(wonderfulGroupName, wonderfulVideoData);
 		
@@ -499,7 +500,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 		emergencyVideoData = videoInfo2Double(mEmergencyVideoData);
 		
 		if(null == mEmergencyVideoAdapter){
-			mEmergencyVideoAdapter = new IPCFileAdapter(this);
+			mEmergencyVideoAdapter = new IPCFileAdapter(this, mEmergencyVideoList);
 		}
 		mEmergencyVideoAdapter.setData(emergencyGroupName, emergencyVideoData);
 		
@@ -652,7 +653,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 		loopVideoData = videoInfo2Double(mLoopVideoData);
 		
 		if(null == mLoopVideoAdapter){
-			mLoopVideoAdapter = new IPCFileAdapter(this);
+			mLoopVideoAdapter = new IPCFileAdapter(this, mLoopVideoList);
 		}
 		mLoopVideoAdapter.setData(loopGroupName, loopVideoData);
 		
@@ -1302,15 +1303,15 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 							if(tag.contains("IPC_IMAGE")) {
 								if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType) {//精彩视频
 									if (null != mWonderfulVideoAdapter) {
-										mWonderfulVideoAdapter.updateImage(filename, mWonderfulVideoList);
+										mWonderfulVideoAdapter.updateImage(filename);
 									}
 								}else if(IPCManagerFn.TYPE_URGENT == mCurrentType) {//紧急视频
 									if (null != mEmergencyVideoAdapter) {		
-										mEmergencyVideoAdapter.updateImage(filename, mEmergencyVideoList);
+										mEmergencyVideoAdapter.updateImage(filename);
 									}
 								}else{//循环视频
 									if (null != mLoopVideoAdapter) {
-										mLoopVideoAdapter.updateImage(filename, mLoopVideoList);
+										mLoopVideoAdapter.updateImage(filename);
 									}
 								}
 							}else{

@@ -277,10 +277,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 				@Override
 				public void onFilterVideoSaveStart() {
-					// 显示视频导出loading
-					mVideoLoadingLayout.setVisibility(View.VISIBLE);
-					// 启动loading动画
-					mLoadingAnimation.start();
+					showLoadingView();
 				}
 
 				@Override
@@ -294,12 +291,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 				@Override
 				public void onFilterVideoEnd(boolean bSuccess, boolean bCancel) {
-					// 隐藏视频导出loading
-					mVideoLoadingLayout.setVisibility(View.GONE);
-					// 停止loading动画
-					mLoadingAnimation.stop();
+
 					GolukDebugUtils.e("", "VideoEditActivity---------onFilterVideoEnd- sucess:" + bSuccess
 							+ "  cancel:" + bCancel);
+
+					hideLoadingView();
 					if (bCancel) {
 						// strInfo = "已取消视频保存！";
 					} else if (bSuccess) {
@@ -319,11 +315,27 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 				@Override
 				public void onFilterVideoSaveError(int nErrorType, int nErrorNo, String strErrorInfo) {
 					GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + strErrorInfo);
+					hideLoadingView();
 				}
 			});
 		} catch (FilterVideoEditorException e) {
 			GolukUtils.showToast(this, "保存视频失败，" + e.getMessage());
+			hideLoadingView();
 		}
+	}
+
+	private void showLoadingView() {
+		// 显示视频导出loading
+		mVideoLoadingLayout.setVisibility(View.VISIBLE);
+		// 启动loading动画
+		mLoadingAnimation.start();
+	}
+
+	private void hideLoadingView() {
+		mVideoLoadingLayout.setVisibility(View.GONE);
+		mLoadingText.setText("视频生成中" + 0 + "%");
+		// 停止loading动画
+		mLoadingAnimation.stop();
 	}
 
 	/**

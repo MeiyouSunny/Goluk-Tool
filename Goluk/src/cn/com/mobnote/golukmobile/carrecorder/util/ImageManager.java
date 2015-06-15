@@ -12,7 +12,7 @@ public class ImageManager {
 		try {
 			return BitmapFactory.decodeFile(fileName); 
 		} catch (OutOfMemoryError p) {
-			p.printStackTrace();
+			gc(p);
 		}
 		
 		return null;
@@ -40,7 +40,7 @@ public class ImageManager {
 	        	return BitmapFactory.decodeFile(filename); 
 	        }
 		} catch (OutOfMemoryError p) {
-			p.printStackTrace();
+			gc(p);
 		}
 		
 		return null;
@@ -50,7 +50,7 @@ public class ImageManager {
 		try {
 			return BitmapFactory.decodeResource(GolukApplication.getInstance().getResources(), id);
 		} catch (OutOfMemoryError p) {
-			p.printStackTrace();
+			gc(p);
 		}
 		 
 		return null;
@@ -73,11 +73,18 @@ public class ImageManager {
 	        	return BitmapFactory .decodeResource(GolukApplication.getInstance().getResources(), id); 
 	        } 
 		} catch (OutOfMemoryError p) {
-			p.printStackTrace();
+			gc(p);
 		}
 		 
 		return null;
 	}
+	
+	private static void gc(OutOfMemoryError mOutOfMemoryError) {
+		System.gc();
+		System.runFinalization();
+		mOutOfMemoryError.printStackTrace();
+	}
+	
 //	
 //	public static Bitmap createReflectedImage(Bitmap originalImage) {  
 //		if(originalImage != null){ 

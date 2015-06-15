@@ -132,6 +132,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			mBtnIdentity.setBackgroundResource(R.drawable.icon_login);
 		}
 		
+		putPhones();
+		
 		//手机号输入后，离开立即判断
 		mEditTextPhone.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
@@ -143,7 +145,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 							UserUtils.showDialog(UserRepwdActivity.this, "手机格式输入错误,请重新输入");
 						}
 					}else{
-//						mBtnIdentity.setEnabled(false);
 						UserUtils.showDialog(UserRepwdActivity.this, "手机号不能为空");
 					}
 				}
@@ -328,7 +329,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				}
 			}
 		};
-//		registerReceiver(smsReceiver, smsFilter);
 		
 		/**
 		 * 对手机号、密码进行判断
@@ -381,8 +381,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
 				freq = json.getString("freq");
-				/*unregisterReceiver(smsReceiver);
-				flag = false;*/
 				
 				switch (code) {
 				case 200:
@@ -495,8 +493,14 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 						// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
 						GolukDebugUtils.e("",isRegist);
+						int freqInt = 0;
 						if(identifyClick){
-							int freqInt = Integer.valueOf(freq);
+								try{
+									freqInt = Integer.parseInt(freq);
+								}catch(Exception e){
+									GolukUtils.showToast(mContext, "请重新获取验证码");
+									return ;
+								}
 							GolukDebugUtils.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
 							if(freqInt>3){
 								UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
@@ -557,13 +561,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 				case 200:
 					//重置密码成功
 					GolukUtils.showToast(mContext, "重置密码成功");
-					/*Intent it = new Intent(UserRepwdActivity.this,UserLoginActivity.class);
-					it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					it.putExtra("repwdOk", mEditTextPhone.getText().toString());
-					GolukDebugUtils.i("lily", "--------密码错误，重置密码成功------"+mEditTextPhone.getText().toString());
-					startActivity(it);
-					this.finish();*/
 					putPhone();
 					this.finish();
 					break;
@@ -701,6 +698,16 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener,O
 			break;
 		}
 		return false;
+	}
+	
+	public void putPhones(){
+		String phone = mEditTextPhone.getText().toString();
+		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+		mEditor = mSharedPreferences.edit();
+		GolukDebugUtils.i("lily", "phone=="+phone);
+		mEditor.putString("setupPhone", phone);
+		mEditor.putBoolean("noPwd", false);
+		mEditor.commit();
 	}
 	
 	public void putPhone(){

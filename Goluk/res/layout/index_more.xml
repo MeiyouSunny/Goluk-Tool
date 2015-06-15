@@ -174,18 +174,6 @@
 			android:textColor="#333333"
 			android:layout_centerVertical="true"/>
 		
-		<!--
-		<ImageView
-			android:id="@+id/share_new_img"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="11dp"
-			android:layout_toRightOf="@id/local_video_text"
-			android:background="@drawable/local_new"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/imgdes"/>
-		-->
-		
 		<ImageView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -241,7 +229,6 @@
 			android:contentDescription="@string/imgdes"/>
 		
 	</RelativeLayout>
-	<!-- android:background="@drawable/share_bg_repeat" -->
 	<RelativeLayout
 	    android:layout_width="170dp"
 	    android:layout_height="170dp"

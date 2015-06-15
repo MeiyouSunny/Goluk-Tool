@@ -201,21 +201,6 @@ public class UpgradeManage {
 					public void onClick(DialogInterface arg0, int arg1) {
 						//浏览器打开url
 						GolukUtils.openUrl(url, mContext);
-						
-						/*if(GolukApplication.mMainActivity != null){
-							GolukApplication.mMainActivity.finish();
-							GolukApplication.mMainActivity = null;
-						}
-						SysApplication.getInstance().exit();
-						
-						mApp.mIPCControlManager.setIPCWifiState(false, "");
-			    		mApp.mGoluk.GolukLogicDestroy();
-			    		if (null != UserStartActivity.mHandler) {
-			    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-			    		}
-			    		int PID = android.os.Process.myPid();
-			    		android.os.Process.killProcess(PID);
-			            System.exit(0);*/
 					}
 				})
 				.setCancelable(false)

@@ -23,7 +23,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -67,7 +66,6 @@ import cn.com.mobnote.video.LocalVideoManage;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
-import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
@@ -1267,6 +1265,33 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	private void wifiCallBack_sameHot(){
+		if (mApp.getIpcIsLogin()) {
+			wifiConnectedSucess();
+		} else {
+			// 判断，是否设置过IPC地址
+			if (null == GolukApplication.mIpcIp) {
+				// 连接失败
+				wifiConnectFailed();
+			} else {
+				mApp.mIPCControlManager.setIPCWifiState(false, "");
+				mApp.mIPCControlManager.setIPCWifiState(true, GolukApplication.mIpcIp);
+			}
+		}
+	}
+	
+	private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
+		WifiRsBean[] bean = (WifiRsBean[]) arrays;
+		if (null != bean) {
+			GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
+			if (bean.length > 0) {
+				GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
+				mGolukName = bean[0].getIpc_ssid();
+				sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
+			}
+		}
+	}
+	
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
@@ -1279,15 +1304,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					break;
 				case 1:
 					// ipc成功连接上热点
-					WifiRsBean[] bean = (WifiRsBean[]) arrays;
-					if (null != bean) {
-						GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
-						if (bean.length > 0) {
-							GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
-							mGolukName = bean[0].getIpc_ssid();
-							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
-						}
-					}
+					wifiCallBack_ipcConnHotSucess(message, arrays);
+					break;
+				case 2:
+					// 用户已经创建与配置文件相同的热点，
+					wifiCallBack_sameHot();
 					break;
 				case 3:
 					// 用户已经连接到其它wifi，按连接失败处理

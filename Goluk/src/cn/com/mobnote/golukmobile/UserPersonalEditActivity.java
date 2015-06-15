@@ -110,7 +110,6 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 		//点击每一项
 		mLayoutHead = (RelativeLayout) findViewById(R.id.user_personal_edit_layout1);
 		mLayoutName = (RelativeLayout) findViewById(R.id.user_personal_edit_layout2);
-//		mLayoutSex = (RelativeLayout) findViewById(R.id.user_personal_edit_layout3);
 		mLayoutSign = (RelativeLayout) findViewById(R.id.user_personal_edit_layout4);
 			
 		/**
@@ -151,8 +150,6 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 		mLayoutHead.setOnClickListener(this);
 		//昵称
 		mLayoutName.setOnClickListener(this);
-		//性别
-//		mLayoutSex.setOnClickListener(this);
 		//个性签名
 		mLayoutSign.setOnClickListener(this);
 		
@@ -248,12 +245,6 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 				String data = (String)obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				
-				//回调返回的结果
-				/*JSONObject json2 = json.getJSONObject("data");
-				String json2Sign = json2.getString("desc");
-				String json2Name = json2.getString("nickname");
-				String json2Head = json2.getString("head");*/
 				
 				closeProgressDialog();
 				switch (code) {
