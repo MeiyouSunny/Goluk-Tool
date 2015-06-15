@@ -489,7 +489,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			String backUrl = getResources().getString(R.string.default_rtsp_back);
 			String url = preUrl + mApp.mIpcIp + backUrl;
 			
-			GolukDebugUtils.e("", "CarRecorset Datasource URL:" + url);
+			GolukDebugUtils.e("xuhw", "YYYYYY======url=="+url);
 			
 			mRtmpPlayerView.setDataSource(url);
 
@@ -708,6 +708,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		super.onResume();
 		
 		if(isShowPlayer){
+			GolukDebugUtils.e("xuhw", "YYYYYY======isConnecting=="+isConnecting);
 			if (!isConnecting) {
 				isConnecting = true;
 				start();
@@ -759,16 +760,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
 		if(isShowPlayer){
 			if (null != mRtmpPlayerView) {
-				if (null != mRtmpPlayerView) {
-					rtmpIsOk = false;
-					updateVideoState();
-					mFullScreen.setVisibility(View.GONE);
-					mRtmpPlayerView.removeCallbacks(retryRunnable);
-					if(mRtmpPlayerView.isPlaying()) {
-						mRtmpPlayerView.stopPlayback();
-					}
-					hidePlayer();
+				rtmpIsOk = false;
+				updateVideoState();
+				mFullScreen.setVisibility(View.GONE);
+				mRtmpPlayerView.removeCallbacks(retryRunnable);
+				if(mRtmpPlayerView.isPlaying()) {
+					isConnecting = false;
+					mRtmpPlayerView.stopPlayback();
+					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback======");
 				}
+				hidePlayer();
 			}
 		}
 	};
