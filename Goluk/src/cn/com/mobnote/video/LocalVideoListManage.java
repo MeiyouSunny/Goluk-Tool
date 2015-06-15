@@ -1063,14 +1063,7 @@ public class LocalVideoListManage {
 				mLocalVideoList.remove(mListCount - 1);
 			}
 			mLocalVideoList.add(0,data);
-			
-			if(null != mMainActivity){
-				//刷新首页视频数据
-				mMainActivity.videoDataUpdate();
-			}
-			//if(mPageSource == "LocalVideoList"){
-			//	((LocalVideoListActivity)mContext).videoDataUpdate();
-			//}
+
 		}
 	}
 	

@@ -108,7 +108,9 @@ import com.umeng.analytics.MobclickAgent;
 @SuppressLint({ "HandlerLeak", "NewApi" })
 public class MainActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, OnTouchListener,
 		ILiveDialogManagerFn, ILocationFn, IBaiduGeoCoderFn, UserInterface {
-
+	
+	/** 程序启动需要20秒的时间用来等待IPC连接 */
+	private final int MSG_H_WIFICONN_TIME = 100;
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -150,8 +152,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	/** 本地视频列表数据适配器 */
 	public LocalVideoListAdapter mLocalVideoListAdapter = null;
 
-	/** 本地视频无数据显示提示 */
-	private RelativeLayout mDefaultTipLayout = null;
 	/** wifi列表manage */
 	private WifiConnectManager mWac = null;
 	/** 定时请求直播点时间 */
@@ -166,8 +166,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	/** 记录登录状态 **/
 	public SharedPreferences mPreferencesAuto;
 	public boolean isFirstLogin;
-	/** 记录行车分享 分享精彩视频为false 点击分享网络直播为true */
-	private boolean isClickShareVideo = false;
 
 	private RelativeLayout mRootLayout = null;
 
@@ -267,6 +265,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		} else {
 			wifiConnectFailed();
 		}
+		
+		// 等待IPC连接时间
+		mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 20 * 1000);
 
 		// 不是第一次登录，并且上次登录成功过，进行自动登录
 		mPreferencesAuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
@@ -378,6 +379,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				}
 			}
 		};
+	}
+	
+	@Override
+	protected void hMessage(Message msg) {
+		switch(msg.what) {
+		case MSG_H_WIFICONN_TIME:
+			// 设置未连接状态
+			this.wifiConnectFailed();
+			break;
+		}
 	}
 
 	/**
@@ -500,18 +511,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	/**
-	 * 本地视频需要同步目录
-	 * 
-	 * @param str
-	 *            =
-	 *            "{\"filepath\":[\"test1111.mp4\",\"test1112.mp4\",\"test1113.mp4\"]}"
-	 *            ;
-	 */
-	public void videoFileCallBack(Object obj) {
-
-	}
-
-	/**
 	 * 视频同步完成
 	 */
 	public void videoAnalyzeComplete(String str) {
@@ -547,19 +546,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * 更新视频view
-	 */
-	public void videoDataUpdate() {
-	}
-
-	/**
-	 * 链接中断更新页面
-	 */
-	public void socketLinkOff() {
-
 	}
 
 	/**
@@ -673,6 +659,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	// 连接成功
 	private void wifiConnectedSucess() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectedSucess:");
+		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
+		
 		mWiFiStatus = WIFI_STATE_SUCCESS;
 		if (null != anim) {
 			anim.cancel();
@@ -833,14 +821,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null != mMapView) {
 			mMapView.onPause();
 		}
-
 		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onDestroy();
 		}
-
-		// isCurrent = false;
-		// mMainHandler.removeMessages(2);
-
 		// 离开页面停止定位
 		if (null != mLocClient) {
 			mLocClient.stop();
@@ -945,19 +928,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case R.id.share_local_video_btn:
 			// 点击精彩视频
-			isClickShareVideo = false;
 			click_toLocalVideoShare();
 			break;
 		case R.id.share_mylive_btn:
 			// 点击视频直播
-			isClickShareVideo = true;
 			toShareLive();
 			break;
-		/*case R.id.video_square_more_btn:
-			// 跳转到视频广场页面
-			Intent videoSquare = new Intent(MainActivity.this, VideoSquareActivity.class);
-			startActivity(videoSquare);
-			break;*/
 		case R.id.index_square_btn:
 			// 视频广场
 			setBelowItem(R.id.index_square_btn);
@@ -1272,7 +1248,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// 判断，是否设置过IPC地址
 			if (null == GolukApplication.mIpcIp) {
 				// 连接失败
-//				wifiConnectFailed();
+				// wifiConnectFailed();
 			} else {
 				mApp.mIPCControlManager.setIPCWifiState(false, "");
 				mApp.mIPCControlManager.setIPCWifiState(true, GolukApplication.mIpcIp);

@@ -564,13 +564,6 @@ public class LocalVideoManage {
 			}
 			mLocalVideoList.add(0,data);
 			
-			if(null != mMainActivity){
-				//刷新首页视频数据
-				mMainActivity.videoDataUpdate();
-			}
-			//if(mPageSource == "LocalVideoList"){
-			//	((LocalVideoListActivity)mContext).videoDataUpdate();
-			//}
 		}
 	}
 	
