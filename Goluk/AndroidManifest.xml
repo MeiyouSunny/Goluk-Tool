@@ -25,10 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-         <activity
-            android:name="cn.com.mobnote.golukmobile.TestActivity"
-            android:screenOrientation="portrait" />
 
         <!-- 个人中心模块 -->
         <activity
@@ -65,9 +61,12 @@
         <activity
             android:name="cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity"
             android:screenOrientation="portrait" />
-
-		<activity android:name="cn.com.mobnote.golukmobile.IndexMoreActivity" android:screenOrientation="portrait"/>
-		<activity android:name="cn.com.mobnote.golukmobile.UserSetupActivity" android:screenOrientation="portrait"/>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.IndexMoreActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.UserSetupActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >
@@ -104,7 +103,6 @@
             android:name="cn.com.mobnote.golukmobile.MainActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity2"
             android:screenOrientation="portrait" />
