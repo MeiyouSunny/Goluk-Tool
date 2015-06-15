@@ -252,7 +252,7 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 		mWonderfulVideoData = mLocalWonderfulVideoListManage.mLocalVideoListData;
 		
 		if(null == mWonderfulVideoAdapter){
-			mWonderfulVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoShareList");
+			mWonderfulVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoShareList", mWonderfulVideoList);
 		}
 		mWonderfulVideoAdapter.setData(mWonderfulGroupName, mDoubleWonderfulVideoData);
 		//给类标底部添加一条透明区域,解决编辑看不到最后
@@ -353,7 +353,7 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 		mEmergencyVideoData = mLocalEmergencyVideoListManage.mLocalVideoListData;
 		
 		if(null == mEmergencyVideoAdapter){
-			mEmergencyVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoShareList");
+			mEmergencyVideoAdapter = new LocalVideoListAdapter(this,"LocalVideoShareList", mEmergencyVideoList);
 		}
 		mEmergencyVideoAdapter.setData(mEmergencyGroupName, mDoubleEmergencyVideoData);
 		
