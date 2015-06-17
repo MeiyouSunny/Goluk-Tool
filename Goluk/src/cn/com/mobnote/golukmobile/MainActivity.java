@@ -62,7 +62,6 @@ import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.video.LocalVideoListAdapter;
-import cn.com.mobnote.video.LocalVideoManage;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -147,8 +146,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	private TextView mWifiStateTv = null;
 	private int mWiFiStatus = 0;
-	/** 本地视频管理类 */
-	public LocalVideoManage mLocalVideoManage = null;
 	/** 本地视频列表数据适配器 */
 	public LocalVideoListAdapter mLocalVideoListAdapter = null;
 
@@ -208,6 +205,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	/** 首次进入的引导div */
 	private View indexDiv = null;
 	private int divIndex = 0;
+	
+	private VideoSquareActivity mVideoSquareActivity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -221,14 +220,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 		
-		// 关闭umeng错误统计(只使用友盟的行为分析，不使用错误统计)
-		MobclickAgent.setDebugMode(false);
-		MobclickAgent.setCatchUncaughtExceptions(false);
-		// 添加腾讯崩溃统计 初始化SDK
-		CrashReport.initCrashReport(this, CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
-		final String mobileId = Tapi.getMobileId();
-		CrashReport.setUserId(mobileId);
-		GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
+		initThirdSDK();
+		
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -278,6 +271,23 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		mApp.addLocationListener("main", this);
+	}
+	
+	/**
+	 * 初始化第三方SDK
+	 * 
+	 * @author jyf
+	 * @date 2015年6月17日
+	 */
+	private void initThirdSDK() {
+		// 关闭umeng错误统计(只使用友盟的行为分析，不使用错误统计)
+		MobclickAgent.setDebugMode(false);
+		MobclickAgent.setCatchUncaughtExceptions(false);
+		// 添加腾讯崩溃统计 初始化SDK
+		CrashReport.initCrashReport(this, CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
+		final String mobileId = Tapi.getMobileId();
+		CrashReport.setUserId(mobileId);
+		GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
 	}
 
 	@Override 
@@ -408,7 +418,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	VideoSquareActivity mVideoSquareActivity;
+
 
 	private void initVideoSquare() {
 		mVideoSquareActivity = new VideoSquareActivity(mRootLayout, this);
@@ -492,23 +502,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	/**
-	 * 在线视频基础数据回调
-	 * 
-	 */
-	public void onLineVideoCallBack(Object obj) {
-
-	}
-
-	/**
-	 * 在线视频图片下载
-	 * 
-	 * @param obj
-	 *            ={'vid':'test11','path':'fs1:/Cache/test11.png'}
-	 */
-	public void onLineVideoImageCallBack(Object obj) {
-
-	}
 
 	/**
 	 * 视频同步完成
@@ -637,10 +630,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		}
 	}
-
-	private static final String WIFI_CONNING_FAILED_STR = "未连接Goluk";
-	private static final String WIFI_CONNING_STR = "正在连接Goluk...";
-	private static final String WIFI_CONNED_STR = "已连接Goluk";
 
 	private void startWifi() {
 		GolukDebugUtils.e("", "wifiCallBack-------------startWifi:");

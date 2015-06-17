@@ -2,6 +2,8 @@ package cn.com.mobnote.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -12,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 public class GolukUtils {
@@ -19,6 +22,15 @@ public class GolukUtils {
 	public static final String URL_BIND_HELP = "http://surl.goluk.cn/faq/video.html";
 	/** Goluk绑定连接出现问题URL */
 	public static final String URL_BIND_CONN_PROBLEM = "http://surl.goluk.cn/faq/link.html";
+
+	public static void getMobileInfo(Activity activity) {
+		DisplayMetrics metric = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+		int width = metric.widthPixels; // 屏幕宽度（像素）
+		int height = metric.heightPixels; // 屏幕高度（像素）
+		float density = metric.density; // 屏幕密度（0.75 / 1.0 / 1.5）
+		int densityDpi = metric.densityDpi; // 屏幕密度DPI（120 / 160 / 240）
+	}
 
 	/**
 	 * 秒转换为 时：分：秒

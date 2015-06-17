@@ -42,6 +42,10 @@ public class BaseActivity extends Activity {
 	/** 手机创建热点默认密码 */
 	public static final String MOBILE_HOT_PWD_DEFAULT = "123456789";
 
+	public static final String WIFI_CONNING_FAILED_STR = "未连接Goluk";
+	public static final String WIFI_CONNING_STR = "正在连接Goluk...";
+	public static final String WIFI_CONNED_STR = "已连接Goluk";
+
 	public Handler mBaseHandler = new Handler() {
 
 		@Override
