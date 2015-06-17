@@ -41,25 +41,20 @@
 
             <!-- 描述 -->
 
-            <RelativeLayout
+            <EditText
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/carrecorder_setup_option_bg"
+                android:focusable="true"
+                android:hint="@string/description"
+                android:inputType="text"
+                android:maxLength="50"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
-
-                <EditText
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:focusable="true"
-                    android:hint="@string/description"
-                    android:inputType="text"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-            </RelativeLayout>
+                android:paddingRight="14dp"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
 
             <!-- 视频类型 -->
 
