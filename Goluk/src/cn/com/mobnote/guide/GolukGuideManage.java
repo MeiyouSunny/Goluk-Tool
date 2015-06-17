@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -136,6 +137,7 @@ public class GolukGuideManage {
 
 			mListViews.add(view);
 			ImageView img = (ImageView) view.findViewById(R.id.guide_img);
+			img.setScaleType(ScaleType.FIT_XY);
 			img.setImageBitmap(imgId[i]);
 
 			// 添加圆点图标
