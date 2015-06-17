@@ -422,18 +422,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @param data
 	 */
 	public void onLineVideoCallBack(int status, Object data) {
-		if (null != mMainActivity) {
-			switch (status) {
-			case 0:
-				// 在线视频基础数据回调
-				mMainActivity.onLineVideoCallBack(data);
-				break;
-			case 1:
-				// 在线视频图片下载完成回调
-				mMainActivity.onLineVideoImageCallBack(data);
-				break;
-			}
-		}
+		
 	}
 
 	/**
