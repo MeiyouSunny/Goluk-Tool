@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile.videosuqare;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -6,6 +7,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.util.GolukUtils;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Message;
@@ -26,6 +28,9 @@ public class VideoSquareOnClickListener implements OnClickListener {
 
 	AlertDialog confirmation;
 	VideoSquareListViewAdapter mVideoSquareListViewAdapter;
+	
+	@SuppressLint("SimpleDateFormat")
+	private SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
 	public VideoSquareOnClickListener(Context context, List<VideoSquareInfo> videoSquareListData,
 			final VideoSquareInfo videoSquareInfo, int plform, SharePlatformUtil spf,

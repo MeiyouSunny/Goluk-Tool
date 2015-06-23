@@ -1,6 +1,8 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.umeng.socialize.sso.UMSsoHandler;
@@ -10,11 +12,13 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -61,6 +65,11 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 	
 	SharePlatformUtil sharePlatform;
 	
+	private String historyDate;
+	
+	@SuppressLint("SimpleDateFormat")
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,6 +78,9 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		title = (TextView) findViewById(R.id.title);
 		type = intent.getStringExtra("type");// 视频广场类型
 		attribute = intent.getStringExtra("attribute");//点播类型
+		historyDate = SettingUtils.getInstance().getString("gcHistoryDate", sdf.format(new Date()));
+		
+		SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
 		if("1".equals(attribute)){
 			title.setText("曝光台");
 		}else if("2".equals(attribute)){
@@ -161,10 +173,12 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		}
 
 		mVideoSquareListViewAdapter.setData(mDataList);
-		mRTPullListView.setAdapter(mVideoSquareListViewAdapter);
+		mRTPullListView.setAdapter(mVideoSquareListViewAdapter,historyDate);
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
+				historyDate = SettingUtils.getInstance().getString("gcHistoryDate", sdf.format(new Date()));
+				SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
 				if(begantime !=null){
 					uptype = 2;
 					if("1".equals(type)){//直播
@@ -177,7 +191,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 					mRTPullListView.postDelayed(new Runnable() {
 						@Override
 						public void run() {
-							mRTPullListView.onRefreshComplete();
+							mRTPullListView.onRefreshComplete(historyDate);
 						}
 					}, 1500);
 				}
@@ -352,7 +366,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 							mDataList = list;
 						}
 						
-						mRTPullListView.onRefreshComplete();
+						mRTPullListView.onRefreshComplete(historyDate);
 						flush();
 					}
 					
@@ -369,7 +383,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 						if("1".equals(type)){//直播
 							mDataList.clear();
 						}
-						mRTPullListView.onRefreshComplete();
+						mRTPullListView.onRefreshComplete(historyDate);
 					}
 				}
 				
@@ -384,7 +398,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 						loading = null;
 					}
 				} else if (2 == uptype){
-					mRTPullListView.onRefreshComplete();
+					mRTPullListView.onRefreshComplete(historyDate);
 				}
 				GolukUtils.showToast(VideoSquarePlayActivity.this, "网络异常，请检查网络");
 			}

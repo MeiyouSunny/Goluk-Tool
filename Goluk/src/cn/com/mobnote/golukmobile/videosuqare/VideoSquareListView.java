@@ -1,12 +1,15 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
@@ -36,6 +39,11 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 	
 	SharePlatformUtil sharePlatform;
 	
+	private String historyDate;
+	
+	@SuppressLint("SimpleDateFormat")
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	
 	public VideoSquareListView(Context context,SharePlatformUtil spf){
 		mContext=context;
 		sharePlatform = spf;
@@ -43,6 +51,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		mRTPullListView.setDivider(mContext.getResources().getDrawable(R.color.video_square_list_frame));
 		mDataList = new ArrayList<VideoSquareInfo>();
 		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
+		
+		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
+		if("".equals(historyDate)){
+			historyDate = sdf.format(new Date());
+		}
+		SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
 		shareBg.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -114,10 +128,12 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		}
 		
 		mVideoSquareListViewAdapter.setData(mDataList);
-		mRTPullListView.setAdapter(mVideoSquareListViewAdapter);
+		mRTPullListView.setAdapter(mVideoSquareListViewAdapter,historyDate);
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
+				historyDate = SettingUtils.getInstance().getString("hotHistoryDate", sdf.format(new Date()));
+				SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
 				httpPost(true);
 			}
 		});
@@ -185,7 +201,7 @@ public class VideoSquareListView implements VideoSuqareManagerFn{
 		if(event == SquareCmd_Req_HotList){
 //			GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
 			closeProgressDialog();
-			mRTPullListView.onRefreshComplete();
+			mRTPullListView.onRefreshComplete(historyDate);
 			if(RESULE_SUCESS == msg){
 				List<VideoSquareInfo> list = DataParserUtils.parserVideoSquareListData((String)param2);
 				
