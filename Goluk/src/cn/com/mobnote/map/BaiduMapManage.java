@@ -25,7 +25,6 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 

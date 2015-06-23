@@ -18,7 +18,6 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * <pre>

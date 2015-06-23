@@ -1,24 +1,18 @@
 package cn.com.mobnote.wifibind;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import cn.com.mobnote.util.console;
 import cn.com.tiros.api.Const;
 
 import android.content.Context;
