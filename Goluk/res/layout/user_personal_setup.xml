@@ -164,11 +164,11 @@
 		android:background="@drawable/solid"/>
 	
 	<!-- Goluk固件升级 -->
-	<!--<View
+	<View
 		android:id="@+id/solid_7"
 		android:layout_width="wrap_content"
 		android:layout_height="1dp"
-		android:layout_below="@id/app_update_item"
+		android:layout_below="@id/solid_6"
 		android:background="@drawable/solid"
 		android:layout_marginTop="5dp"/>
 		 
@@ -196,7 +196,6 @@
 		android:layout_height="1dp"
 		android:layout_below="@id/update_item"
 		android:background="@drawable/solid"/>
-	 -->
 
 	<RelativeLayout 
 	    android:layout_width="match_parent"

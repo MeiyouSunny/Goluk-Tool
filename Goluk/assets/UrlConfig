@@ -4,7 +4,7 @@
 "GetPin":"http://%s/navidog4MeetTrans/getNils.htm",
 "GetVideoDetail":"http://%s/navidog4MeetTrans/reqPlay.htm",
 "GetVideoDetail2":"http://%s/navidog4MeetTrans/mgetView.htm",
-"Upgrade":"http://%s/cdcAdmin/upgradeGoluk.htm?method=upgradeGoluk&xieyi=100",
+"Upgrade":"http://%s/cdcAdmin/upgradeGoluk.htm?method=upgradeIPC",
 "VideoComment":"http://%s/navidog4MeetTrans/comment.htm",
 "GetVideoComment":"http://%s/navidog4MeetTrans/comlist.htm",
 "Login":"http://%s/cdcRegister/getLogin.htm",

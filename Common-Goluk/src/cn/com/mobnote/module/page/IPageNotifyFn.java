@@ -59,6 +59,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static int PageType_ModifyUserInfo = 24;
 	/** 上传视频第一帧图片 */
 	public static final int PageType_LiveUploadPic = 26;
+	/**下载ipc文件**/
+	public static final int PageType_CommDownloadFile = 27;
 
 	/**
 	 * 

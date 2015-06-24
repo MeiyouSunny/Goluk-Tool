@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,12 +55,15 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.user.IPCInfo;
+import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UpgradeManage;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
@@ -136,6 +140,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public UserRegistManage mRegistManage = null;
 	/** 版本升级管理类 **/
 	public UpgradeManage mUpgrade = null;
+	/**升级管理类**/
+	public IpcUpdateManage mIpcUpdateManage = null;
 
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String, ILocationFn>();
 	/** 未下载文件列表 */
@@ -215,6 +221,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mLoginManage = new UserLoginManage(this);
 		mRegistManage = new UserRegistManage(this);
 		mUpgrade = new UpgradeManage(this);
+		mIpcUpdateManage = new IpcUpdateManage(this);
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
@@ -231,8 +238,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
 
-		// 版本升级
-		mUpgrade.upgradeGoluk();
+		// APP版本升级
+//		mUpgrade.upgradeGoluk();
+		
+		//app升级+ipc升级
+		String vIpc = mSharedPreUtil.getIPCVersion();
+		GolukDebugUtils.i("lily", "=====获取当前的vIpc====="+vIpc);
+		mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_AUTO,vIpc);
+		
 	}
 
 	/**
@@ -850,9 +863,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((UserSetupActivity) mContext).getLogintoutCallback(success, param2);
 			}
 			break;
-		// 版本升级
+		// APP升级
 		case PageType_CheckUpgrade:
-			mUpgrade.upgradeGolukCallback(success, param1, param2);
+//			mUpgrade.upgradeGolukCallback(success, param1, param2);
+			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
+			break;
+		//版本升级
+		case PageType_CommDownloadFile:
+			mIpcUpdateManage.downloadCallback(success, param1, param2);
 			break;
 		}
 	}
@@ -1040,6 +1058,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						closeConnectionDialog();// 关闭连接的dialog
 						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
 						GolukDebugUtils.e("xuhw", "YYYYYYY========getIPCSystemTime=======a=" + a);
+						
+						//获取ipc版本号
+						boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
+						GolukDebugUtils.i("lily", v+"========getIPCControlManager=====getIPCVersion");
+						
 						// 查询新文件列表（最多10条）
 						// long time =
 						// SettingUtils.getInstance().getLong("querytime", 0);
@@ -1213,6 +1236,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case IPC_VDCP_Msg_GetVersion:
 				// {"product": 67698688, "model": "", "macid": "", "serial": "",
 				// "version": "V1.4.21_tzz_vb_rootfs"}
+				if(event == ENetTransEvent_IPC_VDCP_CommandResp){
+					if(IPC_VDCP_Msg_GetVersion == msg){
+						if(param1 == RESULE_SUCESS){
+							ipcConnect(param2);
+						}
+					}
+				}
 				break;
 			case IPC_VDCP_Msg_GetTime:
 				if (param1 == RESULE_SUCESS) {
@@ -1635,6 +1665,54 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public boolean getIsBackgroundState() {
 		return isBackground;
+	}
+	
+	/**
+	 * ipc自动连接后
+	 * @param param2
+	 */
+	public void ipcConnect(Object param2){
+		String appcontent = "";
+		String str = (String)param2;
+		if(TextUtils.isEmpty(str)){
+			return;
+		}
+		try {
+			JSONObject json = new JSONObject(str);
+			String ipcVersion = json.optString("version");
+			GolukDebugUtils.i("lily", "=====保存当前的ipcVersion====="+ipcVersion);
+			//保存ipc版本号
+			mSharedPreUtil.saveIPCVersion(ipcVersion);
+			
+			String matchInfo = mSharedPreUtil.getIPCMatchInfo();
+			JSONArray jsonArray = new JSONArray(matchInfo);
+			
+			boolean isMatch = false;
+			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
+			final int length = upgradeArray.length;
+			for(int i=0;i<length;i++){
+				appcontent = upgradeArray[i].getAppcontent();
+				String version = upgradeArray[i].getVersion();
+				if(ipcVersion.equals(version)){
+					//匹配
+					isMatch = true;
+					break;
+				}
+			}
+			if(!isMatch){
+				//  -1下载中
+				int function = mIpcUpdateManage.connectIpc();
+				if(function != -1){
+					mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_CheckUpgrade, JsonUtil.getCancelJson());
+					mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_CONNECTIPC, ipcVersion);
+				}else{
+					//判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击穹顶，请求数据
+					mIpcUpdateManage.showUnMatchDialog(this.getContext(), "当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。", ipcVersion);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

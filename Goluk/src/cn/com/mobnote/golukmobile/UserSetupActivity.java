@@ -32,6 +32,7 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.DataCleanManage;
+import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -90,7 +91,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	/**版本检测**/
 	private RelativeLayout mAppUpdate = null;
 	/**固件升级*/
-//	private RelativeLayout mUpdateItem = null;
+	private RelativeLayout mUpdateItem = null;
 	/**传输文件*/
 	private AlertDialog mSendDialog = null;
 	/**传输文件成功**/
@@ -105,20 +106,22 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private AlertDialog mPrepareDialog = null;
 	
 	/**固件升级Handler更新UI显示**/
-	private Handler mUpdateHandler = null;
+	public static Handler mUpdateHandler = null;
 	private String stage = "";
 	private String percent = "";
 	private Timer mTimer = null;
-	private static final int UPDATE_FILE_NOT_EXISTS = 10;//文件不存在
-	private static final int UPDATE_PREPARE_FILE = 11;//准备文件
-	private static final int UPDATE_TRANSFER_FILE = 12;//传输文件
-	private static final int UPDATE_TRANSFER_OK = 13;//文件传输成功
-	private static final int UPDATE_UPGRADEING = 14;//正在升级
-	private static final int UPDATE_UPGRADE_OK = 15;//升级成功
-	private static final int UPDATE_UPGRADE_FAIL = 16;//升级失败
-	private static final int UPDATE_UPGRADE_CHECK = 17;//校验不通过
-	private static final int UPDATE_IPC_UNUNITED = 18;//ipc未连接
-	private static final int UPDATE_IPC_DISCONNECT = 19;//ipc连接断开
+	public static final int UPDATE_FILE_NOT_EXISTS = 10;//文件不存在
+	public static final int UPDATE_PREPARE_FILE = 11;//准备文件
+	public static final int UPDATE_TRANSFER_FILE = 12;//传输文件
+	public static final int UPDATE_TRANSFER_OK = 13;//文件传输成功
+	public static final int UPDATE_UPGRADEING = 14;//正在升级
+	public static final int UPDATE_UPGRADE_OK = 15;//升级成功
+	public static final int UPDATE_UPGRADE_FAIL = 16;//升级失败
+	public static final int UPDATE_UPGRADE_CHECK = 17;//校验不通过
+	public static final int UPDATE_IPC_UNUNITED = 18;//ipc未连接
+	public static final int UPDATE_IPC_DISCONNECT = 19;//ipc连接断开
+	
+	private String vIpc = "";
 	
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -142,8 +145,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		//版本检测
 		mAppUpdate = (RelativeLayout) findViewById(R.id.app_update_item);
 		
-//		final String verName = GolukUtils.getVersion(this);
-		
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -155,6 +156,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		//获得GolukApplication对象
 		mApp = (GolukApplication)getApplication();
 		mApp.setContext(mContext,"UserSetup");
+		
+		mApp.initSharedPreUtil(this);
+		vIpc = mApp.mSharedPreUtil.getIPCVersion();
 		
 		//调用同步接口，在设置页显示版本号
 		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_GetVersion, "fs6:/version");
@@ -304,8 +308,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		/**版本检测**/
 		mAppUpdate.setOnClickListener(this);
 		/**固件升级*/
-//		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
-//		mUpdateItem.setOnClickListener(this);
+		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
+		mUpdateItem.setOnClickListener(this);
 	}
 		
 	@Override
@@ -324,7 +328,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		//退出按钮
 			case R.id.loginout_btn:
 				if(btnLoginout.getText().toString().equals("登录")){
-//					mApp.mUser.setUserInterface(this);
 					if(mApp.autoLoginStatus == 1){
 						mBuilder = new AlertDialog.Builder(mContext);
 						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
@@ -385,55 +388,18 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			//版本检测
 			case R.id.app_update_item:
 				mApp.mUser.setUserInterface(null);
-				/**
-				 * 1、判断是否需要升级————设置页有“当前已是最新版本提示”
-				 * 2、判断是否是强制升级
-				 */
 				//点击设置页中版本检测无最新版本提示标识
 				mApp.flag=true;
-				//APP升级
-				mApp.mUpgrade.upgradeGoluk();
+//				mApp.mUpgrade.upgradeGoluk();
+				GolukDebugUtils.i("lily", vIpc+"========UserSetupActivity==点击版本检测===中ipcVersion=====");
+				mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_APP, vIpc);
 				break;
 				//固件升级
-			/*case R.id.update_item:
-				*//**
-				 * 固件升级
-				 *//*
-				GolukDebugUtils.i("lily", "------------isConnect-----------"+mApp.isIpcLoginSuccess);
-				if(!mApp.isIpcLoginSuccess){
-					//true   ipc未连接
-					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_UNUNITED);
-				}else{
-					//false   ipc已连接
-					new AlertDialog.Builder(mContext)
-					.setMessage("是否给您的摄像头进行固件升级？")
-					.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							//判断是否有升级文件
-							boolean isHasFile = UserUtils.fileIsExists();
-							if(isHasFile){
-								if(GolukApplication.getInstance().getIpcIsLogin()){
-									boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade();
-									LogUtil.e("lily","YYYYYY=======ipcUpgrade()============u="+u);
-									if(u){
-										//正在准备文件，请稍候……
-										mUpdateHandler.sendEmptyMessage(UPDATE_PREPARE_FILE);//正在准备文件，请稍候……
-									}
-								}
-							}else{
-								//文件不存在
-								mUpdateHandler.sendEmptyMessage(UPDATE_FILE_NOT_EXISTS);//文件不存在
-							}
-							
-						}
-					})
-					.setNegativeButton("取消", null)
-					.create().show();
-				}
-				
-				break;*/
+			case R.id.update_item:
+//				mApp.mIpcUpdateManage.ipcUpgrade();
+				GolukDebugUtils.i("lily", vIpc+"========UserSetupActivity===点击固件升级==中ipcVersion=====");
+				mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+				break;
 		}
 	}
 	/**

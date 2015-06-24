@@ -11,6 +11,8 @@ import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.user.APPInfo;
+import cn.com.mobnote.user.IPCInfo;
 
 public class JsonUtil {
 
@@ -601,5 +603,98 @@ public class JsonUtil {
 			return "";
 		}
 	}
+	
+	/**
+	 * 升级传服务器的参数
+	 * @param ipcVersion
+	 * @return
+	 */
+	public static String putIPC(String appVersion,String ipcVersion) {
+		try {
+			//{“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
+			JSONObject obj = new JSONObject();
+			obj.put("AppVersionFilePath", appVersion);
+			obj.put("IpcVersion", ipcVersion);
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * ipc升级下载文件
+	 * @param url
+	 * @param savePath
+	 * @return
+	 */
+	public static String ipcDownLoad(String url,String savePath){
+		//{“url”:”http://www.baidu.com”, “savePath”:”fs1:/update/ipc_upgrade_2015-04-30-15-58.bin”}
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("url", url);
+			obj.put("savePath", savePath);
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
+	/**
+	 * 解析ipc返回数据
+	 * @param jsonData
+	 * @return
+	 */
+	public static IPCInfo[] upgradeJson(JSONArray jsonData) {
+		if (null == jsonData || "".equals(jsonData) || 0 >= jsonData.length()) {
+			return null;
+		}
+		try {
+			final int length = jsonData.length();
+			IPCInfo[] infoArray = new IPCInfo[length];
+			for(int i = 0;i<length;i++){
+				IPCInfo upgradeInfo = new IPCInfo();
+				JSONObject json = jsonData.getJSONObject(i);
+				upgradeInfo.version = getJsonStringValue(json, "version", "");
+				upgradeInfo.path = getJsonStringValue(json, "path", "");
+				upgradeInfo.url = getJsonStringValue(json, "url", "");
+				upgradeInfo.md5 = getJsonStringValue(json, "md5", "");
+				upgradeInfo.filesize = getJsonStringValue(json, "filesize", "");
+				upgradeInfo.releasetime = getJsonStringValue(json, "releasetime", "");
+				upgradeInfo.appcontent = getJsonStringValue(json, "appcontent", "");
+				upgradeInfo.isnew = getJsonStringValue(json, "isnew", "");
+				infoArray[i] = upgradeInfo;
+			}
+			return infoArray;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * APP升级
+	 * @param rootObj
+	 * @return
+	 */
+	public static APPInfo appUpgradeJson(JSONObject jsonObject) {
+		try {
+			APPInfo appinfo = new APPInfo();
+			appinfo.appcontent = getJsonStringValue(jsonObject, "appcontent", "");
+			appinfo.filesize = getJsonStringValue(jsonObject, "filesize", "");
+			appinfo.isupdate = getJsonStringValue(jsonObject, "isupdate", "");
+			appinfo.md5 = getJsonStringValue(jsonObject, "md5", "");
+			appinfo.path = getJsonStringValue(jsonObject, "path", "");
+			appinfo.releasetime = getJsonStringValue(jsonObject, "releasetime", "");
+			appinfo.url = getJsonStringValue(jsonObject, "url", "");
+			appinfo.version = getJsonStringValue(jsonObject, "version", "");
+			appinfo.ipcVersion = getJsonStringValue(jsonObject, "ipcversion", "");
+
+			return appinfo;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

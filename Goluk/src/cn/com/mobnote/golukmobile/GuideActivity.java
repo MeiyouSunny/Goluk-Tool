@@ -49,6 +49,7 @@ public class GuideActivity extends BaseActivity {
 		setContentView(R.layout.guide);
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
+		GolukApplication.getInstance().initSharedPreUtil(this);
 		((GolukApplication) this.getApplication()).initLogic();
 		// 初始化
 		init();

@@ -1,5 +1,7 @@
 package cn.com.mobnote.util;
 
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -37,6 +39,12 @@ public class SharedPrefUtil {
 
 	/** 直播是否正常退出 */
 	public static final String PROPERTY_LIVE_NORMAL_EXIT = "property_is_normal_exit";
+	
+	/**保存ipc版本号**/
+	public static final String PROPERTY_SAVE_IPCVERSION = "property_save_ipcversion";
+	
+	/**保存ipc匹配信息**/
+	public static final String PROPERTY_SAVE_IPCMATCH_INFO = "property_save_ipcmatch_info";
 
 	private SharedPreferences preference = null;
 
@@ -277,4 +285,33 @@ public class SharedPrefUtil {
 	public boolean getIsShowNewUserGuide() {
 		return preference.getBoolean(PROPERTY_IS_SHOWNEWUSERGUIDE, true);
 	}
+	
+	/**
+	 * 保存ipc版本号
+	 * @param ipcVersion
+	 */
+	public void saveIPCVersion(String ipcVersion){
+		preference.edit().putString(PROPERTY_SAVE_IPCVERSION, ipcVersion).commit();
+	}
+	
+	/**
+	 * 获取保存的版本号
+	 * @return
+	 */
+	public String getIPCVersion(){
+		return preference.getString(PROPERTY_SAVE_IPCVERSION, "");
+	}
+	
+	/**
+	 * 保存ipc匹配信息
+	 * @param jsonArray
+	 */
+	public void saveIPCMatchInfo(String jsonArray){
+		preference.edit().putString(PROPERTY_SAVE_IPCMATCH_INFO, jsonArray).commit();
+	}
+	
+	public String getIPCMatchInfo(){
+		return preference.getString(PROPERTY_SAVE_IPCMATCH_INFO, "");
+	}
+	
 }
