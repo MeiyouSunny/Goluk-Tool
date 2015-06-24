@@ -119,6 +119,8 @@
     <string name="setup_text">设置</string>
     <string name="ipc_update_text">极路客固件升级</string>
     <string name="ipc_update_layout_text">极路客固件</string>
+    <string name="ipc_update_info_title">更新说明</string>
+    <string name="ipc_download_text">已下载</string>
     <string name="shopping_text">去商店</string>
     <string name="cache_size_text">3.15M</string>
 

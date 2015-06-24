@@ -29,13 +29,13 @@ public class IpcUpdateManage {
 	private GolukApplication mApp = null;
 	private static final String BIN_PATH = "fs1:/update/ipc_upgrade_2015-04-30-15-58.bin";
 	
-	//启动APP
+	/**启动APP**/
 	public static final int FUNCTION_AUTO = 0;
-	//连接ipc
+	/**连接ipc**/
 	public static final int FUNCTION_CONNECTIPC = 1;
-	//设置中点击版本检测
+	/**设置中点击版本检测**/
 	public static final int FUNCTION_SETTING_APP = 2;
-	//设置中点击ipc升级
+	/**设置中点击ipc升级**/
 	public static final int FUNCTION_SETTING_IPC = 3;
 	
 	private int mFunction = -1;
@@ -255,6 +255,13 @@ public class IpcUpdateManage {
 		IPCInfo[] upgradeArray = JsonUtil.upgradeJson(ipc);
 		final int length = upgradeArray.length;
 		for(int i=0;i<length;i++){
+			String ipc_filesize = upgradeArray[i].getFilesize();
+			String ipc_content = upgradeArray[i].getAppcontent();
+			//保存ipc文件大小
+			mApp.mSharedPreUtil.saveIpcFileSize(ipc_filesize);
+			//保存ipc更新信息
+			mApp.mSharedPreUtil.saveIpcContent(ipc_content);
+			
 			String ipc_isnew = upgradeArray[i].getIsnew();
 			if("0".equals(ipc_isnew)){
 				GolukDebugUtils.i(TAG, "ipc当前已是最新版本，不需要升级");
