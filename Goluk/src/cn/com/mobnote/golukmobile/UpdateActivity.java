@@ -110,6 +110,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 		if (mSign == 0) {
 			boolean b = mApp.mIpcUpdateManage.download(mIpcInfo.url, mIpcInfo.path);
 			if(b){
+				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 				mTextDowload.setText("下载中");
 				mBtnDownload.setText("下载中…0%");
 				downloadStatus = DOWNLOAD_STATUS;
@@ -163,6 +164,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 			// 下载 / 升级
 			if (mSign == 0) {
 				if(DOWNLOAD_STATUS_FAIL == downloadStatus){
+					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
 					mBtnDownload.setText("下载中…0%");
 					mApp.mIpcUpdateManage.download(mIpcInfo.url, mIpcInfo.path);

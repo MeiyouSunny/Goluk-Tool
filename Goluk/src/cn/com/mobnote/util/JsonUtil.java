@@ -603,15 +603,16 @@ public class JsonUtil {
 			return "";
 		}
 	}
-	
+
 	/**
 	 * 升级传服务器的参数
+	 * 
 	 * @param ipcVersion
 	 * @return
 	 */
-	public static String putIPC(String appVersion,String ipcVersion) {
+	public static String putIPC(String appVersion, String ipcVersion) {
 		try {
-			//{“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
+			// {“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
 			JSONObject obj = new JSONObject();
 			obj.put("AppVersionFilePath", appVersion);
 			obj.put("IpcVersion", ipcVersion);
@@ -621,15 +622,17 @@ public class JsonUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * ipc升级下载文件
+	 * 
 	 * @param url
 	 * @param savePath
 	 * @return
 	 */
-	public static String ipcDownLoad(String url,String savePath){
-		//{“url”:”http://www.baidu.com”, “savePath”:”fs1:/update/ipc_upgrade_2015-04-30-15-58.bin”}
+	public static String ipcDownLoad(String url, String savePath) {
+		// {“url”:”http://www.baidu.com”,
+		// “savePath”:”fs1:/update/ipc_upgrade_2015-04-30-15-58.bin”}
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("url", url);
@@ -641,8 +644,52 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static String getSingleIPCInfoJson(IPCInfo ipcInfo) {
+		if (null == ipcInfo) {
+			return null;
+		}
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("version", ipcInfo.version);
+			obj.put("path", ipcInfo.path);
+			obj.put("url", ipcInfo.url);
+			obj.put("md5", ipcInfo.md5);
+			obj.put("filesize", ipcInfo.filesize);
+			obj.put("releasetime", ipcInfo.releasetime);
+			obj.put("appcontent", ipcInfo.appcontent);
+			obj.put("isnew", ipcInfo.isnew);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static IPCInfo getSingleIPCInfo(String infoStr) {
+		try {
+			IPCInfo upgradeInfo = new IPCInfo();
+			JSONObject json = new JSONObject(infoStr);
+			upgradeInfo.version = getJsonStringValue(json, "version", "");
+			upgradeInfo.path = getJsonStringValue(json, "path", "");
+			upgradeInfo.url = getJsonStringValue(json, "url", "");
+			upgradeInfo.md5 = getJsonStringValue(json, "md5", "");
+			upgradeInfo.filesize = getJsonStringValue(json, "filesize", "");
+			upgradeInfo.releasetime = getJsonStringValue(json, "releasetime", "");
+			upgradeInfo.appcontent = getJsonStringValue(json, "appcontent", "");
+			upgradeInfo.isnew = getJsonStringValue(json, "isnew", "");
+
+			return upgradeInfo;
+		} catch (Exception e) {
+
+		}
+		return null;
+	}
+
 	/**
 	 * 解析ipc返回数据
+	 * 
 	 * @param jsonData
 	 * @return
 	 */
@@ -653,7 +700,7 @@ public class JsonUtil {
 		try {
 			final int length = jsonData.length();
 			IPCInfo[] infoArray = new IPCInfo[length];
-			for(int i = 0;i<length;i++){
+			for (int i = 0; i < length; i++) {
 				IPCInfo upgradeInfo = new IPCInfo();
 				JSONObject json = jsonData.getJSONObject(i);
 				upgradeInfo.version = getJsonStringValue(json, "version", "");
@@ -672,9 +719,10 @@ public class JsonUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * APP升级
+	 * 
 	 * @param rootObj
 	 * @return
 	 */
