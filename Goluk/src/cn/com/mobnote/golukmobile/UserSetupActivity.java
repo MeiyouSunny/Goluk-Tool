@@ -392,19 +392,13 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				mApp.flag=true;
 //				mApp.mUpgrade.upgradeGoluk();
 				GolukDebugUtils.i("lily", vIpc+"========UserSetupActivity==点击版本检测===中ipcVersion=====");
-				boolean appB = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_APP, vIpc);
-				if (appB) {
-					this.showAppLoadingDialog();
-				}
+				mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_APP, vIpc);
 				break;
 				//固件升级
 			case R.id.update_item:
 //				mApp.mIpcUpdateManage.ipcUpgrade();
 				GolukDebugUtils.i("lily", vIpc+"========UserSetupActivity===点击固件升级==中ipcVersion=====");
-				boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-				if (b) {
-					this.showIpcLoadingDialog();
-				}
+				mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 				break;
 		}
 	}
@@ -572,48 +566,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		}
 	} 
     
-    
-    private void showAppLoadingDialog() {
-    	
-    }
-    
-    private void dismissAppLoadingDialog() {
-    	
-    }
-    
-    private void showIpcLoadingDialog() {
-    	
-    }
-    
-    private void dismissIpcLoadingDialog() {
-    	
-    }
- 
-    
-	/**
-	 * App升级与IPC升级回调方法
-	 * 
-	 * @param function
-	 *            App升级/IPC升级 2/ 3
-	 * @param data
-	 *            交互数据
-	 * @author jyf
-	 * @date 2015年6月24日
-	 */
-	public void updateCallBack(int function, Object data) {
-		switch(function) {
-		case IpcUpdateManage.FUNCTION_SETTING_APP:
-			dismissAppLoadingDialog();
-			// show dialog
-			break;
-		case IpcUpdateManage.FUNCTION_SETTING_IPC:
-			dismissIpcLoadingDialog();
-			break;
-		default:
-				break;
-		}
-	}
-    
     @Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -645,6 +597,5 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			mTimer = null;
 		}
 	}
-	
 
 }
