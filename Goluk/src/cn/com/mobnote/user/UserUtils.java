@@ -157,9 +157,9 @@ public class UserUtils {
 	/**
 	 * 判断文件是否存在
 	 */
-	public static boolean fileIsExists(){
+	public static boolean fileIsExists(String path){
 		try {
-			String filePath = FileUtils.libToJavaPath("fs1:/update/ipc_upgrade_2015-04-30-15-58.bin");
+			String filePath = FileUtils.libToJavaPath(path);
 			File f = new File(filePath);
 			if (!f.exists()) {
 				return false;

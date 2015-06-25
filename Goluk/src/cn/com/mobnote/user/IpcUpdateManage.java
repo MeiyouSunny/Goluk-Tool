@@ -35,7 +35,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 
 	private static final String TAG = "lily";
 	private GolukApplication mApp = null;
-	private static final String BIN_PATH = "fs1:/update/ipc_upgrade_2015-04-30-15-58.bin";
 
 	/** BIN文件下载目录 */
 	private static final String BIN_PATH_PRE = "fs1:/update";
@@ -291,8 +290,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * 下载ipc文件
 	 */
 	public boolean download(String url, String path) {
-		// {“url”:”http://www.baidu.com”,
-		// “savePath”:”fs1:/update/ipc_upgrade_2015-04-30-15-58.bin”}
 		String str = JsonUtil.ipcDownLoad(url, path);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_CommDownloadFile, str);
@@ -509,12 +506,12 @@ public class IpcUpdateManage implements IPCManagerFn {
 	/**
 	 * ipc安装升级
 	 */
-	public void ipcInstall() {
+	public void ipcInstall(String filePath) {
 		// 判断是否有升级文件
-		boolean isHasFile = UserUtils.fileIsExists();
+		boolean isHasFile = UserUtils.fileIsExists(filePath);
 		if (isHasFile) {
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
-				boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(BIN_PATH);
+				boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(filePath);
 				if (u) {
 					// 正在准备文件，请稍候……
 					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);

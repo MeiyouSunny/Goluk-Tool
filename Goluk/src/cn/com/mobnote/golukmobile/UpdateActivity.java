@@ -9,11 +9,14 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IPCInfo;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,7 +33,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UpdateActivity extends BaseActivity implements OnClickListener,IPCManagerFn,OnTouchListener {
+public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn, OnTouchListener {
 
 	/** 返回按钮 **/
 	private ImageButton mBtnBack = null;
@@ -44,7 +47,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 	private TextView mTextUpdateContent = null;
 	/** 未下载 / 下载中 / 已下载 **/
 	private TextView mTextDowload = null;
-	/**GolukApplication**/
+	/** GolukApplication **/
 	private GolukApplication mApp = null;
 
 	/** 0 下载 1安装 **/
@@ -56,51 +59,65 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 	private int mSign = 0;
 	/** 数据 **/
 	private IPCInfo mIpcInfo = null;
-	
-	/**ipc安装升级中更新UI显示**/
+
+	/** ipc安装升级中更新UI显示 **/
 	private String stage = "";
 	private String percent = "";
 	public static Handler mUpdateHandler = null;
 	private Timer mTimer = null;
-	
-	/**文件不存在**/
-	public static final int UPDATE_FILE_NOT_EXISTS = 10;
-	/**准备文件**/
-	public static final int UPDATE_PREPARE_FILE = 11;
-	/**传输文件**/
-	public static final int UPDATE_TRANSFER_FILE = 12;
-	/**文件传输成功**/
-	public static final int UPDATE_TRANSFER_OK = 13;
-	/**正在升级**/
-	public static final int UPDATE_UPGRADEING = 14;
-	/**升级成功**/
-	public static final int UPDATE_UPGRADE_OK = 15;
-	/**升级失败**/
-	public static final int UPDATE_UPGRADE_FAIL = 16;
-	/**校验不通过**/
-	public static final int UPDATE_UPGRADE_CHECK = 17;
-	/**ipc未连接**/
-	public static final int UPDATE_IPC_UNUNITED = 18;
-	/**ipc连接断开**/
-	public static final int UPDATE_IPC_DISCONNECT = 19;
-	
-	/**下载状态**/
-	private int downloadStatus = 0;
-	
-	/**下载失败**/
-	private static final int DOWNLOAD_STATUS_FAIL = 0;
-	/**下载成功**/
-	private static final int DOWNLOAD_STATUS_SUCCESS = 1;
-	/**下载中**/
-	private static final int DOWNLOAD_STATUS = 2;
 
+	/** 文件不存在 **/
+	public static final int UPDATE_FILE_NOT_EXISTS = 10;
+	/** 准备文件 **/
+	public static final int UPDATE_PREPARE_FILE = 11;
+	/** 传输文件 **/
+	public static final int UPDATE_TRANSFER_FILE = 12;
+	/** 文件传输成功 **/
+	public static final int UPDATE_TRANSFER_OK = 13;
+	/** 正在升级 **/
+	public static final int UPDATE_UPGRADEING = 14;
+	/** 升级成功 **/
+	public static final int UPDATE_UPGRADE_OK = 15;
+	/** 升级失败 **/
+	public static final int UPDATE_UPGRADE_FAIL = 16;
+	/** 校验不通过 **/
+	public static final int UPDATE_UPGRADE_CHECK = 17;
+	/** ipc未连接 **/
+	public static final int UPDATE_IPC_UNUNITED = 18;
+	/** ipc连接断开 **/
+	public static final int UPDATE_IPC_DISCONNECT = 19;
+
+	/** 下载状态 **/
+	private int downloadStatus = 0;
+
+	/** 下载失败 **/
+	private static final int DOWNLOAD_STATUS_FAIL = 0;
+	/** 下载成功 **/
+	private static final int DOWNLOAD_STATUS_SUCCESS = 1;
+	/** 下载中 **/
+	private static final int DOWNLOAD_STATUS = 2;
+	
+	/**传输文件*/
+	private AlertDialog mSendDialog = null;
+	/**传输文件成功**/
+	private AlertDialog mSendOk  = null;
+	/**正在升级中*/
+	private AlertDialog mUpdateDialog = null;
+	/**升级成功**/
+	private AlertDialog mUpdateDialogSuccess = null;
+	/**升级失败**/
+	private AlertDialog mUpdateDialogFail = null;
+	/**升级准备中**/
+	private AlertDialog mPrepareDialog = null;
+
+	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.upgrade_layout);
 
-		mApp = (GolukApplication)getApplication();
+		mApp = (GolukApplication) getApplication();
 		initView();
 
 		Intent it = getIntent();
@@ -113,15 +130,16 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 		mTextUpdateContent.setText(mIpcInfo.appcontent);
 
 		if (mSign == 0) {
-			boolean b = mApp.mIpcUpdateManage.download(mIpcInfo.url, mIpcInfo.path);
-			if(b){
+			boolean b = mApp.mIpcUpdateManage.download(mIpcInfo.url,
+					mApp.mIpcUpdateManage.getBinFilePath(mIpcInfo.version));
+			if (b) {
 				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 				mTextDowload.setText("下载中");
 				mBtnDownload.setText("下载中…0%");
 				downloadStatus = DOWNLOAD_STATUS;
 				mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 				mBtnDownload.setEnabled(false);
-			}else{
+			} else {
 				mTextDowload.setText("未下载");
 				mBtnDownload.setText("下载新极路客固件程序");
 				downloadStatus = DOWNLOAD_STATUS_FAIL;
@@ -134,13 +152,81 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 		}
+		
+		mUpdateHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case UPDATE_FILE_NOT_EXISTS:
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "升级文件不存在，请检查后重试");
+					break;
+				case UPDATE_PREPARE_FILE:
+					mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在为您准备传输文件，请稍候……");
+					break;
+				case UPDATE_TRANSFER_FILE:
+					GolukDebugUtils.i("lily", "-------正在传输文件------");
+					UserUtils.dismissUpdateDialog(mPrepareDialog);
+					mPrepareDialog = null;
+					if(mSendDialog == null){
+						GolukDebugUtils.i("lily", "-------正在传输文件   dialog = null  ------");
+						mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在传输文件，请稍候……"+percent+"%");
+					}else{
+						GolukDebugUtils.i("lily", "-------正在传输文件   dialog != null  ------");
+						mSendDialog.setMessage("正在传输文件，请稍候……"+percent+"%");
+					}
+					break;
+				case UPDATE_TRANSFER_OK:
+					UserUtils.dismissUpdateDialog(mSendDialog);
+					mSendDialog = null;
+					mSendOk = UserUtils.showDialogUpdate(UpdateActivity.this, "文件传输成功，正在为您准备升级");
+					break;
+				case UPDATE_UPGRADEING:
+					UserUtils.dismissUpdateDialog(mSendOk);
+					mSendOk = null;
+					if(mUpdateDialog == null){
+						mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
+					}else{
+						mUpdateDialog.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
+					}
+					break;
+				case UPDATE_UPGRADE_OK:
+					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mUpdateDialog = null;
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "升级成功");
+					break;
+				case UPDATE_UPGRADE_FAIL:
+					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mUpdateDialog = null;
+					UserUtils.showUpdateSuccess(mUpdateDialogFail, UpdateActivity.this, "升级失败");
+					break;
+				case UPDATE_UPGRADE_CHECK:
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "校验不通过");
+					break;
+				case UPDATE_IPC_UNUNITED:
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "摄像头未连接");
+					break;
+				case UPDATE_IPC_DISCONNECT:
+					timerCancel();
+					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mUpdateDialog = null;
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "摄像头断开连接，请检查后重试");
+					break;
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+		
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
+		mApp.setContext(this, "Update");
+
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carupgrade", this);
 		}
 	}
@@ -169,7 +255,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 		case R.id.update_btn:
 			// 下载 / 升级
 			if (mSign == 0) {
-				if(DOWNLOAD_STATUS_FAIL == downloadStatus){
+				if (DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
 					mBtnDownload.setText("下载中…0%");
@@ -180,7 +266,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 				mBtnDownload.setText("安装此极路客固件程序");
 				mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 				mBtnDownload.setEnabled(true);
-				mApp.mIpcUpdateManage.ipcInstall();
+				mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(mIpcInfo.version));
 			}
 			break;
 		default:
@@ -207,17 +293,20 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 			mBtnDownload.setText("正在下载…" + progress + "%");
 		} else if (state == DOWNLOAD_STATUS_SUCCESS) {
 			// 下载成功
+			mTextDowload.setText("已下载");
 			mBtnDownload.setText("安装此极路客固件程序");
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 			mSign = 1;
+			// 下载成功删除文件
+			mApp.mIpcUpdateManage.downIpcSucess();
 		} else if (state == DOWNLOAD_STATUS_FAIL) {
 			// 下载失败
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 		}
 	}
-	
+
 	/**
 	 * ipc安装升级回调
 	 * 
@@ -228,76 +317,75 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 	 */
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("lily", "YYYYYY====IPC_VDCP_Msg_IPCUpgrade====msg="+msg+"===param1="+param1+"==param2="+param2+"--------event-----"+event);
-		if(event == ENetTransEvent_IPC_UpGrade_Resp){
-			if(IPC_VDCP_Msg_IPCUpgrade == msg){
+		GolukDebugUtils.e("lily", "YYYYYY====IPC_VDCP_Msg_IPCUpgrade====msg=" + msg + "===param1=" + param1
+				+ "==param2=" + param2 + "--------event-----" + event);
+		if (event == ENetTransEvent_IPC_UpGrade_Resp) {
+			if (IPC_VDCP_Msg_IPCUpgrade == msg) {
 				GolukDebugUtils.e("lily", "---------连接ipc-------");
-				if(param1 == RESULE_SUCESS){
-					String str = (String)param2;
-					GolukDebugUtils.i("lily", "--str----"+str);
-					if(TextUtils.isEmpty(str)){
-						return ;
+				if (param1 == RESULE_SUCESS) {
+					String str = (String) param2;
+					GolukDebugUtils.i("lily", "--str----" + str);
+					if (TextUtils.isEmpty(str)) {
+						return;
 					}
-					try{
+					try {
 						JSONObject json = new JSONObject(str);
 						stage = json.getString("stage");
 						percent = json.getString("percent");
-						GolukDebugUtils.i("lily", "---------stage-----"+stage+"-------percent----"+percent);
-						if(stage.equals("1")){
-							//正在传输文件，请稍候……
+						GolukDebugUtils.i("lily", "---------stage-----" + stage + "-------percent----" + percent);
+						if (stage.equals("1")) {
+							// 正在传输文件，请稍候……
 							mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
-						}
-						if(stage.equals("1") && percent.equals("100")){
-							//传输文件成功
-							mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
-						}
-						if(stage.equals("2")){
-							//开始升级，可能需要几分钟，请不要给摄像头断电。
-							mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADEING);
-							if(!percent.equals("100")){
-								timerTask();
+							if(percent.equals("100")){
+								// 传输文件成功
+								mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
 							}
-							timerCancel();
 						}
-						if(stage.equals("2") && percent.equals("100")){
-							//升级成功
-							mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_OK);
+						if (stage.equals("2")) {
+							// 开始升级，可能需要几分钟，请不要给摄像头断电。
+							mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADEING);
+							if (!percent.equals("100")) {
+								timerTask();
+							}else{
+								timerCancel();
+								// 升级成功
+								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_OK);
+							}
 						}
-						if(stage.equals("3")){
-							if(percent.equals("-1")){
+						if (stage.equals("3")) {
+							if (percent.equals("-1")) {
 								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_CHECK);
 							}
 						}
-					}catch(Exception e){
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				}else{
-					//升级失败
+				} else {
+					// 升级失败
 					mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
 				}
 			}
 		}
 	}
-	
+
 	/**
-	 * 固件升级过程中超时
-	 * 1000x60=6000
+	 * 固件升级过程中超时 1000x60=6000
 	 */
-	public void timerTask(){
+	public void timerTask() {
 		timerCancel();
 		mTimer = new Timer();
 		mTimer.schedule(new TimerTask() {
-			
+
 			@Override
 			public void run() {
-				//ipc断开
+				// ipc断开
 				mUpdateHandler.sendEmptyMessage(UPDATE_IPC_DISCONNECT);
 			}
 		}, 6000);
 	}
-	
-	public void timerCancel(){
-		if(mTimer !=null){
+
+	public void timerCancel() {
+		if (mTimer != null) {
 			mTimer.cancel();
 			mTimer = null;
 		}
@@ -306,11 +394,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
 		}
 	}
-	
+
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
@@ -334,5 +422,5 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 		}
 		return false;
 	}
-	
+
 }

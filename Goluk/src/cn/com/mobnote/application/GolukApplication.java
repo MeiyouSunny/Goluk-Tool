@@ -166,6 +166,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	/** 下载列表个数 */
 	private int downloadCount = 0;
 	
+	/**测试ipc升级版本号**/
+//	private static final String TEST_IPC_VERSION = "1.0.1.8";
+	
 	static {
 		System.loadLibrary("golukmobile");
 	}
@@ -237,9 +240,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		motioncfg = new int[2];
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
-
-		// APP版本升级
-//		mUpgrade.upgradeGoluk();
 		
 		//app升级+ipc升级
 		String vIpc = mSharedPreUtil.getIPCVersion();
