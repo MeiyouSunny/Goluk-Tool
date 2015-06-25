@@ -11,8 +11,11 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.UpdateActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
@@ -24,7 +27,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  *
  */
-public class IpcUpdateManage {
+public class IpcUpdateManage implements IPCManagerFn{
 
 	private static final String TAG = "lily";
 	private GolukApplication mApp = null;
@@ -41,6 +44,9 @@ public class IpcUpdateManage {
 
 	/** version文件的路径 */
 	public static final String VERSION_PATH = "fs6:/version";
+	
+	/**设置中点击版本检测 / 固件升级中loading**/
+	private CustomLoadingDialog mCustomLoadingDialog = null;
 
 	private int mFunction = -1;
 
@@ -68,6 +74,12 @@ public class IpcUpdateManage {
 
 			if (b) {
 				mFunction = function;
+				if (mFunction == FUNCTION_SETTING_APP || mFunction == FUNCTION_SETTING_IPC) {
+					if (null == mCustomLoadingDialog) {
+						mCustomLoadingDialog = new CustomLoadingDialog(this.mApp.getContext(), "检测中，请稍候……");
+					}
+					mCustomLoadingDialog.show();
+				}
 			}
 
 			return b;
@@ -113,6 +125,8 @@ public class IpcUpdateManage {
 	 */
 	public void requestInfoCallback(int success, Object outTime, Object obj) {
 		GolukDebugUtils.i(TAG, "=======requestInfoCallback=======");
+		//取消loading显示
+		closeProgressDialog();
 		int codeOut = (Integer) outTime;
 		if (1 == success) {
 			try {
@@ -225,61 +239,31 @@ public class IpcUpdateManage {
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
 		GolukDebugUtils.i(TAG, "------------downloadCallback-----------");
-		if (state == 2) {
-			// 下载中
-			int progress = (Integer) param1;
-		} else if (state == 1) {
-			// 下载成功
-		} else if (state == 0) {
-			// 下载失败
+		if(mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity){
+			((UpdateActivity)mApp.getContext()).downloadCallback(state, param1, param2);
 		}
 	}
 
 	/**
-	 * ipc升级
-	 * 
+	 * ipc下载文件
+	 * @param ipcInfo
 	 */
 	public void ipcUpgrade(final IPCInfo ipcInfo) {
 		GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
-		if (!mApp.isIpcLoginSuccess) {
-			// true ipc未连接
-			UserSetupActivity.mUpdateHandler.sendEmptyMessage(UserSetupActivity.UPDATE_IPC_UNUNITED);
-		} else {
-			// false ipc已连接
-			new AlertDialog.Builder(mApp.getContext()).setMessage("是否下载固件升级文件？")
-					.setPositiveButton("", new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(mApp.getContext()).setMessage("是否下载固件升级文件？")
+				.setPositiveButton("", new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							boolean b = download(ipcInfo.url, BIN_PATH);
-							if (b) {
-
-							}
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						boolean b = download(ipcInfo.url, BIN_PATH);
+						if (b) {
+							
 						}
-					})
-					/*
-					 * .setMessage("是否给您的摄像头进行固件升级？") .setPositiveButton("确认",
-					 * new DialogInterface.OnClickListener() {
-					 * 
-					 * @Override public void onClick(DialogInterface arg0, int
-					 * arg1) { //判断是否有升级文件 boolean isHasFile =
-					 * UserUtils.fileIsExists(); if(isHasFile){
-					 * if(GolukApplication.getInstance().getIpcIsLogin()){
-					 * boolean u =
-					 * GolukApplication.getInstance().getIPCControlManager
-					 * ().ipcUpgrade(ipcInfo.getUrl()); GolukDebugUtils.e(TAG,
-					 * "YYYYYY=======ipcUpgrade()============u="+u); if(u){
-					 * //正在准备文件，请稍候……
-					 * UserSetupActivity.mUpdateHandler.sendEmptyMessage
-					 * (UserSetupActivity.UPDATE_PREPARE_FILE);//正在准备文件，请稍候…… }
-					 * } }else{ //文件不存在
-					 * UserSetupActivity.mUpdateHandler.sendEmptyMessage
-					 * (UserSetupActivity.UPDATE_FILE_NOT_EXISTS);//文件不存在 } } })
-					 */
-					.setNegativeButton("取消", null).create().show();
-		}
+					}
+				})
+				.setNegativeButton("取消", null).create().show();
 	}
-
+	
 	/**
 	 * ipc升级解析
 	 * 
@@ -326,7 +310,7 @@ public class IpcUpdateManage {
 	}
 
 	/**
-	 * 
+	 * app升级解析
 	 * @param goluk
 	 */
 	public void appUpgradeUtils(String goluk) {
@@ -377,4 +361,62 @@ public class IpcUpdateManage {
 				}).create();
 		dialog.show();
 	}
+	
+	/**
+	 * ipc安装升级
+	 */
+	public void ipcInstall(){
+		new AlertDialog.Builder(mApp.getContext())
+		.setTitle("固件升级提示")
+		.setMessage("")
+		.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				//判断是否有升级文件
+				boolean isHasFile = UserUtils.fileIsExists();
+				if(isHasFile){
+					if(GolukApplication.getInstance().getIpcIsLogin()){
+						boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(BIN_PATH);
+						if(u){
+							//正在准备文件，请稍候……
+							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+						}
+					}else{
+						//ipc未连接
+						UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+					}
+				}else{
+					//提示没有升级文件
+					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+				}
+			}
+		})
+		.setNegativeButton("取消", null).show();
+	}
+	
+	/**
+	 * ipc安装升级回调
+	 * @param success
+	 * @param param1
+	 * @param param2
+	 */
+	@Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.i(TAG, "=========ipcInstallCallback===========");
+		if(mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity){
+			((UpdateActivity)mApp.getContext()).IPCManage_CallBack(event, msg, param1, param2);
+		}
+	}
+	
+	/**
+	 * 关闭加载中对话框
+	 */
+	private void closeProgressDialog(){
+		if(null != mCustomLoadingDialog){
+			mCustomLoadingDialog.close();
+			mCustomLoadingDialog = null;
+		}
+	}
+
 }

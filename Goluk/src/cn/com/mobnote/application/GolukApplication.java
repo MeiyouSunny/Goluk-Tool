@@ -863,12 +863,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((UserSetupActivity) mContext).getLogintoutCallback(success, param2);
 			}
 			break;
-		// APP升级
+		// APP升级+IPC升级检测
 		case PageType_CheckUpgrade:
 //			mUpgrade.upgradeGolukCallback(success, param1, param2);
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
-		//版本升级
+		//ipc升级文件下载
 		case PageType_CommDownloadFile:
 			mIpcUpdateManage.downloadCallback(success, param1, param2);
 			break;
