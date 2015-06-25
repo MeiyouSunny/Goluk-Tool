@@ -86,21 +86,23 @@ public class IpcUpdateManage implements IPCManagerFn {
 				// 上次检查结果的Dialog还存在，不进行下次操作
 				return false;
 			}
+			this.cancelHttpRequest();
 			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc);
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_CheckUpgrade, ipcString);
 			GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");
 			if (b) {
 				mFunction = function;
-
 				if (mFunction == FUNCTION_SETTING_APP || mFunction == FUNCTION_SETTING_IPC) {
 					showLoadingDialog();
 				}
+			} else {
+				mFunction = -1;
 			}
 			return b;
 		}
 	}
-
+	
 	private void showLoadingDialog() {
 		if (null == mCustomLoadingDialog) {
 			mCustomLoadingDialog = new CustomLoadingDialog(this.mApp.getContext(), "检测中，请稍候……");
