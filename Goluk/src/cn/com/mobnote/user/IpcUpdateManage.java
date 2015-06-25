@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
@@ -71,9 +70,16 @@ public class IpcUpdateManage {
 			return false;
 		} else {
 			// {“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
+
+			if (isHasUpdateDialogShow()) {
+				// 上次检查结果的Dialog还存在，不进行下次操作
+				return false;
+			}
+
 			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc);
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_CheckUpgrade, ipcString);
+
 			GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");
 
 			if (b) {
