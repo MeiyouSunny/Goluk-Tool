@@ -45,6 +45,12 @@ public class SharedPrefUtil {
 	
 	/**保存ipc匹配信息**/
 	public static final String PROPERTY_SAVE_IPCMATCH_INFO = "property_save_ipcmatch_info";
+	
+	/**保存ipc文件大小**/
+	public static final String PROPERTY_SAVE_IPC_FILESIZE = "property_save_ipc_filesize";
+	
+	/**保存ipc更新信息**/
+	public static final String PROPERTY_SAVE_IPC_CONTENT = "property_save_ipc_content";
 
 	private SharedPreferences preference = null;
 
@@ -312,6 +318,30 @@ public class SharedPrefUtil {
 	
 	public String getIPCMatchInfo(){
 		return preference.getString(PROPERTY_SAVE_IPCMATCH_INFO, "");
+	}
+	
+	/**
+	 * 保存ipc文件大小
+	 * @param filesize
+	 */
+	public void saveIpcFileSize(String filesize){
+		preference.edit().putString(PROPERTY_SAVE_IPC_FILESIZE, filesize).commit();
+	}
+	
+	public String getIPCFileSize(){
+		return preference.getString(PROPERTY_SAVE_IPC_FILESIZE, "");
+	}
+	
+	/**
+	 * 保存ipc更新描述
+	 * @param appcontent
+	 */
+	public void saveIpcContent(String appcontent){
+		preference.edit().putString(PROPERTY_SAVE_IPC_CONTENT, appcontent).commit();
+	}
+	
+	public String getIPCContent(){
+		return preference.getString(PROPERTY_SAVE_IPC_CONTENT, "");
 	}
 	
 }

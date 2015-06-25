@@ -39,19 +39,20 @@
 	<RelativeLayout
 		android:id="@+id/remove_cache_item"
 		android:layout_width="match_parent"
-		android:layout_height="50dp"
+		android:layout_height="wrap_content"
 		android:layout_below="@id/solid_1"
 		android:background="#f4f4f4">
-		
 		
 		<LinearLayout 
 		    android:id="@+id/upgrade_layout_name"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_marginLeft="21dp"
+		    android:layout_marginTop="14dp"
 		    android:layout_centerVertical="true"
 		    android:orientation="vertical"
 		    android:gravity="center"
+		    android:layout_marginBottom="14dp"
 		    >
 		    <TextView
 		        android:id="@+id/upgrade_ipc_text"
@@ -66,10 +67,11 @@
 		        android:layout_height="wrap_content"
 		        android:text="V1.1.1"
 		        android:textColor="#3f3f3f"
-		        android:textSize="16sp" />
+		        android:textSize="16sp"
+		        android:layout_marginTop="8dp" />
 		</LinearLayout>
 		
-		<LinearLayout 
+		<RelativeLayout 
 		    android:id="@+id/upgrade_ipc_size"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
@@ -77,6 +79,8 @@
 			android:layout_marginRight="19dp"
 			android:layout_centerVertical="true"
 		    android:orientation="vertical"
+		    android:layout_marginTop="14dp"
+		    android:layout_marginBottom="14dp"
 		    >
 		    <TextView
 		        android:id="@+id/upgrade_ipc_size_text"
@@ -89,10 +93,13 @@
 		        android:id="@+id/upgrade_ipc_size_download"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="已下载"
+		        android:layout_below="@id/upgrade_ipc_size_text"
+		        android:text="@string/ipc_download_text"
 		        android:textColor="#3b97f5"
-		        android:textSize="16sp" />
-		</LinearLayout>
+		        android:textSize="12sp" 
+		        android:layout_marginTop="8dp"
+		        />
+		</RelativeLayout>
 		
 	</RelativeLayout>
 	<View
@@ -108,31 +115,64 @@
 		android:layout_height="1dp"
 		android:layout_below="@id/solid_2"
 		android:background="@drawable/solid"
-		android:layout_marginTop="5dp"/>
+		android:layout_marginTop="6dp"/>
 	
 	<RelativeLayout
-		android:id="@+id/unbind_item"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/solid_3"
-		android:background="#f4f4f4"
-		>
+	    android:id="@+id/update_info"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/solid_3"
+	    android:background="#f4f4f4"
+	    android:paddingLeft="21dp"
+	    android:paddingRight="21dp" 
+	    >
 		
-		<TextView
-			android:id="@+id/unbind_item_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:text="@string/unbind_text"
-			android:textSize="16sp"
-			android:textColor="#3f3f3f"
-			android:layout_centerVertical="true"/>
-		
+	    <TextView
+	        android:id="@+id/upgrade_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="12sp"
+	        android:text="@string/ipc_update_info_title"
+	        android:textColor="#3f3f3f"
+	        android:layout_marginTop="14dp"
+	         />
+	    <TextView 
+	        android:id="@+id/update_info_content"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/upgrade_title"
+	        android:layout_marginTop="12dp"
+	        android:textColor="#3f3f3f"
+	        android:layout_marginBottom="14dp"
+	        />
 	</RelativeLayout>
+
 	<View
 		android:id="@+id/solid_4"
 		android:layout_width="wrap_content"
 		android:layout_height="1dp"
-		android:layout_below="@id/unbind_item"
+		android:layout_below="@id/update_info"
 		android:background="@drawable/solid"/>
+	
+	<TextView 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/solid_4"
+	    android:layout_marginTop="14dp"
+	    android:paddingLeft="21dp"
+	    android:paddingRight="21dp"
+	    android:text="sssssssssss"
+	    />
+	
+	<Button
+		android:id="@+id/update_btn"
+		android:layout_width="312dp"
+		android:layout_height="54dp"
+		android:layout_centerHorizontal="true"
+		android:background="@drawable/btn_share_cancel_bg"
+		android:layout_alignParentBottom="true"
+		android:layout_marginBottom="20dp"
+		android:gravity="center"
+		android:textSize="18sp"
+		android:textColor="#f0fefc"/>
 </RelativeLayout>

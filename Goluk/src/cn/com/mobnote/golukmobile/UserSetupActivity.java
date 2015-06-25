@@ -604,6 +604,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		switch(function) {
 		case IpcUpdateManage.FUNCTION_SETTING_APP:
 			dismissAppLoadingDialog();
+			// show dialog
 			break;
 		case IpcUpdateManage.FUNCTION_SETTING_IPC:
 			dismissIpcLoadingDialog();
