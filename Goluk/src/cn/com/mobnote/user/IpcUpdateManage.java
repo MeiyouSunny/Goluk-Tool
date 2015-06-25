@@ -1,5 +1,7 @@
 package cn.com.mobnote.user;
 
+import java.io.File;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +22,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -33,6 +36,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 	private static final String TAG = "lily";
 	private GolukApplication mApp = null;
 	private static final String BIN_PATH = "fs1:/update/ipc_upgrade_2015-04-30-15-58.bin";
+
+	/** BIN文件下载目录 */
+	private static final String BIN_PATH_PRE = "fs1:/update";
 
 	/** 启动APP **/
 	public static final int FUNCTION_AUTO = 0;
@@ -57,6 +63,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 	private int mFunction = -1;
 	/** 下载提示框 */
 	private AlertDialog mDownloadDialog = null;
+	/** 保存当前正在下载的BIN文件版本信息 */
+	public IPCInfo mDownLoadIpcInfo = null;
 
 	public IpcUpdateManage(GolukApplication mApp) {
 		super();
@@ -134,8 +142,39 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @date 2015年6月24日
 	 */
 	public String getLocalFile(String ipcVersion) {
-		//
+		String fileInfo = mApp.mSharedPreUtil.getIpcLocalFileInfo();
+		if (null == fileInfo || "".equals(fileInfo)) {
+			return null;
+		}
+		IPCInfo ipcInfo = JsonUtil.getSingleIPCInfo(fileInfo);
+		if (null == ipcInfo) {
+			return null;
+		}
+		if (ipcVersion.equals(ipcInfo.version)) {
+			try {
+				final String filePath = BIN_PATH_PRE + "/" + ipcInfo.version + ".bin";
+				final String abFilePath = FileUtils.libToJavaPath(filePath);
+				File file = new File(abFilePath);
+				if (file.exists()) {
+					return filePath;
+				}
+			} catch (Exception e) {
+
+			}
+		}
 		return null;
+	}
+
+	/**
+	 * 获取下载的文件路径 (下载前获取一次，升级安装时获取一次)
+	 * 
+	 * @param filename
+	 * @return
+	 * @author jyf
+	 * @date 2015年6月25日
+	 */
+	public String getBinFilePath(String filename) {
+		return BIN_PATH_PRE + "/" + filename + ".bin";
 	}
 
 	/**
@@ -217,10 +256,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 
 							final String localBinPath = this.getLocalFile(ipcInfo.version);
 							if (null == localBinPath) {
-								// TODO 提示用户下载文件Dialog
+								// 提示用户下载文件Dialog
 								ipcUpgrade(TYPE_DOWNLOAD, ipcInfo);
 							} else {
-								// TODO 弹框提示用户安装本地的文件 (Dialog)
+								// 弹框提示用户安装本地的文件 (Dialog)
 								ipcUpgrade(TYPE_INSTALL, ipcInfo);
 							}
 
@@ -366,6 +405,50 @@ public class IpcUpdateManage implements IPCManagerFn {
 
 		}
 		return ipcInfo;
+	}
+
+	/**
+	 * 下载BIN文件成功
+	 * 
+	 * @author jyf
+	 * @date 2015年6月25日
+	 */
+	public void downIpcSucess() {
+		final String path = FileUtils.libToJavaPath(BIN_PATH_PRE);
+		// 遍历文件夹，删除其它安装包
+		try {
+			if (null == mDownLoadIpcInfo) {
+				return;
+			}
+			File fileDir = new File(path);
+			if (!fileDir.isDirectory()) {
+				return;
+			}
+			File[] allFile = fileDir.listFiles();
+			if (null != allFile && 0 < allFile.length) {
+				for (int i = 0; i < allFile.length; i++) {
+					if (!allFile[i].getName().contains(mDownLoadIpcInfo.version)) {
+						// 需要把文件删除
+						allFile[i].delete();
+					}
+				}
+			}
+			if (null == mDownLoadIpcInfo) {
+				return;
+			}
+			// 更新当前信息
+			final String downInfo = JsonUtil.getSingleIPCInfoJson(mDownLoadIpcInfo);
+			if (null != downInfo) {
+				mApp.mSharedPreUtil.setIpcLocalFileInfo(downInfo);
+			}
+			// 当前文件
+
+			mDownLoadIpcInfo = null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
