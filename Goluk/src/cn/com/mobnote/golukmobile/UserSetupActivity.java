@@ -80,6 +80,11 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	/** 固件升级 */
 	private RelativeLayout mUpdateItem = null;
 
+	/** APP版本号显示 **/
+	private TextView mTextAppVersion = null;
+	/** IPC固件版本号显示 **/
+	private TextView mTextIPCVersion = null;
+
 	private String vIpc = "";
 
 	@SuppressLint("HandlerLeak")
@@ -103,6 +108,18 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mTextVersionCode = (TextView) findViewById(R.id.user_setup_versioncode);
 		// 版本检测
 		mAppUpdate = (RelativeLayout) findViewById(R.id.app_update_item);
+		// APP版本号
+		mTextAppVersion = (TextView) findViewById(R.id.app_update_text_version);
+		// IPC版本号
+		mTextIPCVersion = (TextView) findViewById(R.id.ipc_update_text_version);
+
+		// 调用同步接口，在设置页显示版本号
+		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
+		GolukDebugUtils.i("upgrade", "=======+version+=====" + verName);
+		mTextVersionCode.setText(verName);
+		mTextAppVersion.setText(verName);
+		
 
 	}
 
@@ -118,12 +135,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 
 		mApp.initSharedPreUtil(this);
 		vIpc = mApp.mSharedPreUtil.getIPCVersion();
-
-		// 调用同步接口，在设置页显示版本号
-		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-		GolukDebugUtils.i("upgrade", "=======+version+=====" + verName);
-		mTextVersionCode.setText(verName);
 
 		mApp.mUser.setUserInterface(this);
 
@@ -380,7 +391,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			}
 		}
 	}
-
 
 	/**
 	 * App升级与IPC升级回调方法

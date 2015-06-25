@@ -2,256 +2,255 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed">
-    
-    <!-- title -->
-	<RelativeLayout
-		android:id="@+id/title_layout"
-		android:layout_width="match_parent"
-		android:layout_height="42dp"
-		android:background="@color/bg">
-		
-		<!-- <Button
-			android:id="@+id/back_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10dp"
-			android:gravity="center|left"
-			android:drawableLeft="@drawable/icon_back_btn"
-			android:drawablePadding="8dp"
-			android:background="@color/bg"
-			android:textColor="@color/white"
-			android:textSize="16sp"
-			/> -->
-		
-		
-		<ImageButton
-            	android:id="@+id/back_btn"
-            	android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-           	 	android:layout_centerVertical="true"
-           		android:background="@drawable/live_btn_back" />
-		
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:textSize="18sp"
-			android:textColor="@color/white"
-			android:text="@string/setup_text"/>
-		
-	</RelativeLayout>
-	<!-- body -->
-	<View
-		android:id="@+id/solid_1"
-		android:layout_width="wrap_content"
-		android:layout_height="1dp"
-		android:layout_marginTop="15dp"
-		android:layout_below="@id/title_layout"
-		android:background="@drawable/solid"/>
-	
-	<RelativeLayout
-		android:id="@+id/remove_cache_item"
-		android:layout_width="match_parent"
-		android:layout_height="47dp"
-		android:layout_below="@id/solid_1"
-		android:background="#f4f4f4">
-		
-		<TextView
-			android:id="@+id/remove_cache_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:text="@string/remove_cache_text"
-			android:textSize="16sp"
-			android:textColor="#3f3f3f"
-			android:layout_centerVertical="true"/>
-		
-		<TextView
-		    android:id="@+id/user_personal_setup_cache_size"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="19dp"
-			android:layout_centerVertical="true"
-			android:textSize="18sp"
-			android:contentDescription="@string/imgdes"
-			android:textColor="#3f3f3f"/>
-		
-	</RelativeLayout>
-	<View
-		android:id="@+id/solid_2"
-		android:layout_width="wrap_content"
-		android:layout_height="1dp"
-		android:layout_below="@id/remove_cache_item"
-		android:background="@drawable/solid"/>
-	
-	<View
-		android:id="@+id/solid_3"
-		android:layout_width="wrap_content"
-		android:layout_height="1dp"
-		android:layout_below="@id/solid_2"
-		android:background="@drawable/solid"
-		android:layout_marginTop="5dp"/>
-	
-	<RelativeLayout
-		android:id="@+id/unbind_item"
-		android:layout_width="match_parent"
-		android:layout_height="47dp"
-		android:layout_below="@id/solid_3"
-		android:background="#f4f4f4"
-		>
-		
-		<TextView
-			android:id="@+id/unbind_item_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:text="@string/unbind_text"
-			android:textSize="16sp"
-			android:textColor="#3f3f3f"
-			android:layout_centerVertical="true"/>
-		
-	</RelativeLayout>
-	<View
-		android:id="@+id/solid_4"
-		android:layout_width="wrap_content"
-		android:layout_height="1dp"
-		android:layout_below="@id/unbind_item"
-		android:background="@drawable/solid"/>
-	<View
-		android:id="@+id/solid_5"
-		android:layout_width="wrap_content"
-		android:layout_height="1dp"
-		android:layout_below="@id/unbind_item"
-		android:background="@drawable/solid"
-		android:layout_marginTop="5dp"/>
-	
-	<RelativeLayout
-		android:id="@+id/app_update_item"
-		android:layout_width="match_parent"
-		android:layout_height="47dp"
-		android:layout_below="@id/solid_5"
-		android:background="#f4f4f4"
-		>
-		
-		<TextView
-			android:id="@+id/app_update_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:text="@string/app_update_text"
-			android:textSize="16sp"
-			android:textColor="#3f3f3f"
-			android:layout_centerVertical="true"/>
-		<TextView
-		    android:id="@+id/app_update_text_version"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="19dp"
-			android:layout_centerVertical="true"
-			android:textSize="18sp"
-			android:contentDescription="@string/imgdes"
-			android:textColor="#3f3f3f"/>
-		
-	</RelativeLayout>
-	<View
-		android:id="@+id/solid_6"
-		android:layout_width="wrap_content"
-		android:layout_height="1dp"
-		android:layout_below="@id/app_update_item"
-		android:background="@drawable/solid"/>
-	
-	<!-- Goluk固件升级 -->
-	<View
-		android:id="@+id/solid_7"
-		android:layout_width="wrap_content"
-		android:layout_height="1dp"
-		android:layout_below="@id/solid_6"
-		android:background="@drawable/solid"
-		android:layout_marginTop="5dp"/>
-		 
-	<RelativeLayout
-		android:id="@+id/update_item"
-		android:layout_width="match_parent"
-		android:layout_height="47dp"
-		android:layout_below="@id/solid_7"
-		android:background="#f4f4f4">
-		
-		<TextView
-			android:id="@+id/shopping_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="21dp"
-			android:text="@string/user_personal_setup_update"
-			android:textSize="16sp"
-			android:textColor="#3f3f3f"
-			android:layout_centerVertical="true"/>
-		
-	</RelativeLayout>
-	<View
-		android:id="@+id/solid_8"
-		android:layout_width="wrap_content"
-		android:layout_height="1dp"
-		android:layout_below="@id/update_item"
-		android:background="@drawable/solid"/>
+    android:background="#ededed" >
 
-	<RelativeLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    >
-	    <!-- 登录/退出登录按钮 -->
-	<Button
-		android:id="@+id/loginout_btn"
-		android:layout_width="312dp"
-		android:layout_height="54dp"
-		android:layout_centerHorizontal="true"
-		android:background="@drawable/btn_share_cancel_bg"
-		android:gravity="center"
-		android:textSize="18sp"
-		android:textColor="#f0fefc"/>
-	
-	<!-- 底部提示信息 -->
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:layout_below="@id/loginout_btn"
-	    android:paddingBottom="20dp"
-	    android:paddingTop="20dp"
-	    android:gravity="center"
-	    >
-	    <LinearLayout 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        >
-	        <TextView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text="@string/user_personal_setup_update_bottom_text1"
-		        android:textSize="14sp"
-		        android:textColor="@color/user_home_nologin"
-		        />
-	        <TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:id="@+id/user_setup_versioncode"
-	            android:textSize="14sp"
-	            android:textColor="@color/user_home_nologin"
-	            android:text=" 1.0.0"
-	            />
-	    </LinearLayout>
-	    <TextView 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="10dp"
-	        android:text="\@2015 Mobnote,Inc."
-	        android:textSize="14sp"
-	        android:textColor="@color/user_home_nologin"
-	        />
-	</LinearLayout>
-	</RelativeLayout>
-	
+    <!-- title -->
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@color/bg" >
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/live_btn_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/setup_text"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+    <!-- body -->
+
+    <View
+        android:id="@+id/solid_1"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@id/title_layout"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/solid" />
+
+    <RelativeLayout
+        android:id="@+id/remove_cache_item"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_below="@id/solid_1"
+        android:background="#f4f4f4" >
+
+        <TextView
+            android:id="@+id/remove_cache_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="21dp"
+            android:text="@string/remove_cache_text"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/user_personal_setup_cache_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="19dp"
+            android:contentDescription="@string/imgdes"
+            android:textColor="#3f3f3f"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/solid_2"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@id/remove_cache_item"
+        android:background="@drawable/solid" />
+
+    <View
+        android:id="@+id/solid_3"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@id/solid_2"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/solid" />
+
+    <RelativeLayout
+        android:id="@+id/unbind_item"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_below="@id/solid_3"
+        android:background="#f4f4f4" >
+
+        <TextView
+            android:id="@+id/unbind_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="21dp"
+            android:text="@string/unbind_text"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/solid_4"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@id/unbind_item"
+        android:background="@drawable/solid" />
+
+    <View
+        android:id="@+id/solid_5"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@id/unbind_item"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/solid" />
+
+    <RelativeLayout
+        android:id="@+id/app_update_item"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_below="@id/solid_5"
+        android:background="#f4f4f4" >
+
+        <TextView
+            android:id="@+id/app_update_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="21dp"
+            android:text="@string/app_update_text"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/app_update_text_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="19dp"
+            android:contentDescription="@string/imgdes"
+            android:textColor="#3f3f3f"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/solid_6"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@id/app_update_item"
+        android:background="@drawable/solid" />
+
+    <!-- Goluk固件升级 -->
+
+    <View
+        android:id="@+id/solid_7"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@id/solid_6"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/solid" />
+
+    <RelativeLayout
+        android:id="@+id/update_item"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_below="@id/solid_7"
+        android:background="#f4f4f4" >
+
+        <TextView
+            android:id="@+id/shopping_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="21dp"
+            android:text="@string/user_personal_setup_update"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/ipc_update_text_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="19dp"
+            android:contentDescription="@string/imgdes"
+            android:textColor="#3f3f3f"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/solid_8"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@id/update_item"
+        android:background="@drawable/solid" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <!-- 登录/退出登录按钮 -->
+
+        <Button
+            android:id="@+id/loginout_btn"
+            android:layout_width="312dp"
+            android:layout_height="54dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_share_cancel_bg"
+            android:gravity="center"
+            android:textColor="#f0fefc"
+            android:textSize="18sp" />
+
+        <!-- 底部提示信息 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loginout_btn"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_personal_setup_update_bottom_text1"
+                    android:textColor="@color/user_home_nologin"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/user_setup_versioncode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 1.0.0"
+                    android:textColor="@color/user_home_nologin"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="\@2015 Mobnote,Inc."
+                android:textColor="@color/user_home_nologin"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
 </RelativeLayout>
