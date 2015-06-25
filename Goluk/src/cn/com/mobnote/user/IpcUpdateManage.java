@@ -305,15 +305,15 @@ public class IpcUpdateManage implements IPCManagerFn {
 		GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
 		final String msg = TYPE_DOWNLOAD == type ? "是否下载固件升级文件？" : "是否安装固件升级文件？";
 		mDownloadDialog = new AlertDialog.Builder(mApp.getContext()).setMessage(msg)
-				.setPositiveButton("", new DialogInterface.OnClickListener() {
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						// 跳转升级界面
 						dimissDownLoadDialog();
 						Intent intent = new Intent(mApp.getContext(), UpdateActivity.class);
-						intent.putExtra("update_sign", type);
-						intent.putExtra("update_data", ipcInfo);
+						intent.putExtra(UpdateActivity.UPDATE_SIGN, type);
+						intent.putExtra(UpdateActivity.UPDATE_DATA, ipcInfo);
 						mApp.getContext().startActivity(intent);
 					}
 				}).setNegativeButton("取消", null).setCancelable(false).create();
@@ -424,30 +424,23 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * ipc安装升级
 	 */
 	public void ipcInstall() {
-		new AlertDialog.Builder(mApp.getContext()).setTitle("固件升级提示").setMessage("")
-				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						// 判断是否有升级文件
-						boolean isHasFile = UserUtils.fileIsExists();
-						if (isHasFile) {
-							if (GolukApplication.getInstance().getIpcIsLogin()) {
-								boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(BIN_PATH);
-								if (u) {
-									// 正在准备文件，请稍候……
-									UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
-								}
-							} else {
-								// ipc未连接
-								UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
-							}
-						} else {
-							// 提示没有升级文件
-							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
-						}
-					}
-				}).setNegativeButton("取消", null).show();
+		// 判断是否有升级文件
+		boolean isHasFile = UserUtils.fileIsExists();
+		if (isHasFile) {
+			if (GolukApplication.getInstance().getIpcIsLogin()) {
+				boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(BIN_PATH);
+				if (u) {
+					// 正在准备文件，请稍候……
+					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+				}
+			} else {
+				// ipc未连接
+				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+			}
+		} else {
+			// 提示没有升级文件
+			UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+		}
 	}
 
 	/**
