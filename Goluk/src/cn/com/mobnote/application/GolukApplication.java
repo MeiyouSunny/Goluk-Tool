@@ -164,7 +164,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private int downloadCount = 0;
 	
 	/**测试ipc升级版本号**/
-	private static final String TEST_IPC_VERSION = "1.0.1.8";
+//	private static final String TEST_IPC_VERSION = "1.0.1.8";
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -240,7 +240,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		//app升级+ipc升级
 		String vIpc = mSharedPreUtil.getIPCVersion();
 		GolukDebugUtils.i("lily", "=====获取当前的vIpc====="+vIpc);
-		mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_AUTO, TEST_IPC_VERSION);
+		mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_AUTO, vIpc);
 		
 	}
 
@@ -1701,11 +1701,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if (function != -1) {
 					mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_CheckUpgrade, JsonUtil.getCancelJson());
-					mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_CONNECTIPC, TEST_IPC_VERSION);
+					mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_CONNECTIPC, ipcVersion);
 				} else {
 					// 判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击穹顶，请求数据
 					mIpcUpdateManage.showUnMatchDialog(this.getContext(), "当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。",
-							TEST_IPC_VERSION);
+							ipcVersion);
 				}
 			}
 		} catch (JSONException e) {
