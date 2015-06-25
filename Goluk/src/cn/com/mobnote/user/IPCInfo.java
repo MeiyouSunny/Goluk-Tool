@@ -9,6 +9,10 @@ import java.io.Serializable;
  */
 public class IPCInfo implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String version;
 	public String path;
 	public String url;

@@ -14,7 +14,9 @@ import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.UpdateActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
@@ -26,7 +28,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  *
  */
-public class IpcUpdateManage {
+public class IpcUpdateManage implements IPCManagerFn {
 
 	private static final String TAG = "lily";
 	private GolukApplication mApp = null;
@@ -43,6 +45,9 @@ public class IpcUpdateManage {
 
 	/** version文件的路径 */
 	public static final String VERSION_PATH = "fs6:/version";
+
+	/** 设置中点击版本检测 / 固件升级中loading **/
+	private CustomLoadingDialog mCustomLoadingDialog = null;
 
 	/** 下载类型 */
 	public static final int TYPE_DOWNLOAD = 0;
@@ -70,34 +75,24 @@ public class IpcUpdateManage {
 			return false;
 		} else {
 			// {“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
-
 			if (isHasUpdateDialogShow()) {
 				// 上次检查结果的Dialog还存在，不进行下次操作
 				return false;
 			}
-
 			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc);
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_CheckUpgrade, ipcString);
-
 			GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");
-
 			if (b) {
 				mFunction = function;
-				switch (mFunction) {
-				case FUNCTION_SETTING_APP:
-					GolukUtils.showToast(mApp.getContext(), "正在请求App升级...");
-					showLoadingDialog();
-					break;
-				case FUNCTION_SETTING_IPC:
-					GolukUtils.showToast(mApp.getContext(), "正在请求固件升级...");
-					showLoadingDialog();
-					break;
-				default:
-					break;
+
+				if (mFunction == FUNCTION_SETTING_APP || mFunction == FUNCTION_SETTING_IPC) {
+					if (null == mCustomLoadingDialog) {
+						mCustomLoadingDialog = new CustomLoadingDialog(this.mApp.getContext(), "检测中，请稍候……");
+					}
+					mCustomLoadingDialog.show();
 				}
 			}
-
 			return b;
 		}
 	}
@@ -149,6 +144,8 @@ public class IpcUpdateManage {
 	 */
 	public void requestInfoCallback(int success, Object outTime, Object obj) {
 		GolukDebugUtils.i(TAG, "=======requestInfoCallback=======");
+		// 取消loading显示
+		closeProgressDialog();
 		int codeOut = (Integer) outTime;
 		dimissLoadingDialog();
 		if (1 == success) {
@@ -270,13 +267,8 @@ public class IpcUpdateManage {
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
 		GolukDebugUtils.i(TAG, "------------downloadCallback-----------");
-		if (state == 2) {
-			// 下载中
-			int progress = (Integer) param1;
-		} else if (state == 1) {
-			// 下载成功
-		} else if (state == 0) {
-			// 下载失败
+		if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
+			((UpdateActivity) mApp.getContext()).downloadCallback(state, param1, param2);
 		}
 	}
 
@@ -304,17 +296,14 @@ public class IpcUpdateManage {
 	/**
 	 * type: 0/1 下载／安装 ipc升级
 	 * 
+	 * ipc下载文件
+	 * 
+	 * @param ipcInfo
+	 * 
 	 */
 	public void ipcUpgrade(final int type, final IPCInfo ipcInfo) {
 		GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
 		final String msg = TYPE_DOWNLOAD == type ? "是否下载固件升级文件？" : "是否安装固件升级文件？";
-
-		// if (!mApp.isIpcLoginSuccess) {
-		// // true ipc未连接
-		// UserSetupActivity.mUpdateHandler.sendEmptyMessage(UserSetupActivity.UPDATE_IPC_UNUNITED);
-		// } else {
-		// false ipc已连接
-
 		mDownloadDialog = new AlertDialog.Builder(mApp.getContext()).setMessage(msg)
 				.setPositiveButton("", new DialogInterface.OnClickListener() {
 
@@ -330,7 +319,6 @@ public class IpcUpdateManage {
 				}).setNegativeButton("取消", null).setCancelable(false).create();
 
 		mDownloadDialog.show();
-		// }
 	}
 
 	/**
@@ -379,6 +367,7 @@ public class IpcUpdateManage {
 	}
 
 	/**
+	 * app升级解析
 	 * 
 	 * @param goluk
 	 */
@@ -430,4 +419,60 @@ public class IpcUpdateManage {
 				}).create();
 		dialog.show();
 	}
+
+	/**
+	 * ipc安装升级
+	 */
+	public void ipcInstall() {
+		new AlertDialog.Builder(mApp.getContext()).setTitle("固件升级提示").setMessage("")
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// 判断是否有升级文件
+						boolean isHasFile = UserUtils.fileIsExists();
+						if (isHasFile) {
+							if (GolukApplication.getInstance().getIpcIsLogin()) {
+								boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(BIN_PATH);
+								if (u) {
+									// 正在准备文件，请稍候……
+									UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+								}
+							} else {
+								// ipc未连接
+								UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+							}
+						} else {
+							// 提示没有升级文件
+							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+						}
+					}
+				}).setNegativeButton("取消", null).show();
+	}
+
+	/**
+	 * ipc安装升级回调
+	 * 
+	 * @param success
+	 * @param param1
+	 * @param param2
+	 */
+	@Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.i(TAG, "=========ipcInstallCallback===========");
+		if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
+			((UpdateActivity) mApp.getContext()).IPCManage_CallBack(event, msg, param1, param2);
+		}
+	}
+
+	/**
+	 * 关闭加载中对话框
+	 */
+	private void closeProgressDialog() {
+		if (null != mCustomLoadingDialog) {
+			mCustomLoadingDialog.close();
+			mCustomLoadingDialog = null;
+		}
+	}
+
 }
