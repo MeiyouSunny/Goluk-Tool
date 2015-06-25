@@ -1691,8 +1691,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
 			final int length = upgradeArray.length;
 			for(int i=0;i<length;i++){
-				appcontent = upgradeArray[i].getAppcontent();
-				String version = upgradeArray[i].getVersion();
+				appcontent = upgradeArray[i].appcontent;
+				String version = upgradeArray[i].version;
 				if(ipcVersion.equals(version)){
 					//匹配
 					isMatch = true;

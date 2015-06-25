@@ -31,6 +31,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener{
 	/**GolukApplication**/
 	private GolukApplication mApp = null;
 	
+	/**0 下载  1安装**/
+	public final static String UPDATE_SIGN ="update_sign" ;
+	/**数据展示**/
+	public final static String UPDATE_DATA ="update_data" ;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

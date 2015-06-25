@@ -251,7 +251,7 @@ public class IpcUpdateManage {
 
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
-							boolean b = download(ipcInfo.getUrl(), BIN_PATH);
+							boolean b = download(ipcInfo.url, BIN_PATH);
 							if (b) {
 
 							}
@@ -294,15 +294,15 @@ public class IpcUpdateManage {
 		IPCInfo[] upgradeArray = JsonUtil.upgradeJson(ipc);
 		final int length = upgradeArray.length;
 		for(int i=0;i<length;i++){
-			String ipc_filesize = upgradeArray[i].getFilesize();
-			String ipc_content = upgradeArray[i].getAppcontent();
+			String ipc_filesize = upgradeArray[i].filesize;
+			String ipc_content = upgradeArray[i].appcontent;
 			//保存ipc文件大小
 			mApp.mSharedPreUtil.saveIpcFileSize(ipc_filesize);
 			//保存ipc更新信息
 			mApp.mSharedPreUtil.saveIpcContent(ipc_content);
 			
 
-			String ipc_isnew = upgradeArray[i].getIsnew();
+			String ipc_isnew = upgradeArray[i].isnew;
 			if ("0".equals(ipc_isnew)) {
 				GolukDebugUtils.i(TAG, "ipc当前已是最新版本，不需要升级");
 			} else if ("1".equals(ipc_isnew)) {
@@ -313,7 +313,7 @@ public class IpcUpdateManage {
 
 		if (null != ipcInfo) {
 			// IPC需要升级
-			final String localBinPath = this.getLocalFile(ipcInfo.getVersion());
+			final String localBinPath = this.getLocalFile(ipcInfo.version);
 			if (null == localBinPath) {
 				// TODO 提示用户下载文件
 				ipcUpgrade(ipcInfo);
@@ -333,9 +333,9 @@ public class IpcUpdateManage {
 		try {
 			JSONObject jsonGoluk = new JSONObject(goluk);
 			APPInfo appInfo = JsonUtil.appUpgradeJson(jsonGoluk);
-			String appcontent = appInfo.getAppcontent();
-			String url = appInfo.getUrl();
-			String isUpdate = appInfo.getIsupdate();
+			String appcontent = appInfo.appcontent;
+			String url = appInfo.url;
+			String isUpdate = appInfo.isupdate;
 			/**
 			 * APP升级 0非强制升级 1强制升级 非强制升级不退出程序，强制升级退出程序
 			 */
