@@ -94,6 +94,10 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_personal_setup);
 
+		mContext = this;
+		// 获得GolukApplication对象
+		mApp = (GolukApplication) getApplication();
+		
 		/** 清除缓存 */
 		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
 		// 获取页面元素
@@ -119,7 +123,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		GolukDebugUtils.i("upgrade", "=======+version+=====" + verName);
 		mTextVersionCode.setText(verName);
 		mTextAppVersion.setText(verName);
-		
+		String vIpc = mApp.mSharedPreUtil.getIPCVersion();
+		GolukDebugUtils.i("lily", vIpc+"===UserSetupActivity----vipc------"+verName);
+		mTextIPCVersion.setText(vIpc);
 
 	}
 
@@ -128,9 +134,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	protected void onResume() {
 		super.onResume();
 
-		mContext = this;
-		// 获得GolukApplication对象
-		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, "UserSetup");
 
 		mApp.initSharedPreUtil(this);

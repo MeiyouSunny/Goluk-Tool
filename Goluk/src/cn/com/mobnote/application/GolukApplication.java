@@ -57,7 +57,6 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.IPCInfo;
 import cn.com.mobnote.user.IpcUpdateManage;
-import cn.com.mobnote.user.UpgradeManage;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
@@ -138,8 +137,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public UserLoginManage mLoginManage = null;
 	/** 注册管理类 **/
 	public UserRegistManage mRegistManage = null;
-	/** 版本升级管理类 **/
-	public UpgradeManage mUpgrade = null;
 	/**升级管理类**/
 	public IpcUpdateManage mIpcUpdateManage = null;
 
@@ -167,7 +164,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private int downloadCount = 0;
 	
 	/**测试ipc升级版本号**/
-//	private static final String TEST_IPC_VERSION = "1.0.1.8";
+	private static final String TEST_IPC_VERSION = "1.0.1.8";
 	
 	static {
 		System.loadLibrary("golukmobile");
@@ -223,7 +220,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mUser = new User(this);
 		mLoginManage = new UserLoginManage(this);
 		mRegistManage = new UserRegistManage(this);
-		mUpgrade = new UpgradeManage(this);
 		mIpcUpdateManage = new IpcUpdateManage(this);
 
 		mIPCControlManager = new IPCControlManager(this);
@@ -244,7 +240,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		//app升级+ipc升级
 		String vIpc = mSharedPreUtil.getIPCVersion();
 		GolukDebugUtils.i("lily", "=====获取当前的vIpc====="+vIpc);
-		mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_AUTO,vIpc);
+		mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_AUTO, TEST_IPC_VERSION);
 		
 	}
 
@@ -1671,43 +1667,45 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * ipc自动连接后
 	 * @param param2
 	 */
-	public void ipcConnect(Object param2){
+	public void ipcConnect(Object param2) {
 		String appcontent = "";
-		String str = (String)param2;
-		if(TextUtils.isEmpty(str)){
+		String str = (String) param2;
+		if (TextUtils.isEmpty(str)) {
 			return;
 		}
 		try {
 			JSONObject json = new JSONObject(str);
 			String ipcVersion = json.optString("version");
-			GolukDebugUtils.i("lily", "=====保存当前的ipcVersion====="+ipcVersion);
-			//保存ipc版本号
+			GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
+			// 保存ipc版本号
 			mSharedPreUtil.saveIPCVersion(ipcVersion);
-			
+
 			String matchInfo = mSharedPreUtil.getIPCMatchInfo();
 			JSONArray jsonArray = new JSONArray(matchInfo);
-			
+
 			boolean isMatch = false;
 			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
 			final int length = upgradeArray.length;
-			for(int i=0;i<length;i++){
+			for (int i = 0; i < length; i++) {
 				appcontent = upgradeArray[i].appcontent;
 				String version = upgradeArray[i].version;
-				if(ipcVersion.equals(version)){
-					//匹配
+				if (ipcVersion.equals(version)) {
+					// 匹配
 					isMatch = true;
 					break;
 				}
 			}
-			if(!isMatch){
-				//  -1下载中
+			if (!isMatch) {
+				// -1下载中
 				int function = mIpcUpdateManage.connectIpc();
-				if(function != -1){
-					mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_CheckUpgrade, JsonUtil.getCancelJson());
-					mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_CONNECTIPC, ipcVersion);
-				}else{
-					//判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击穹顶，请求数据
-					mIpcUpdateManage.showUnMatchDialog(this.getContext(), "当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。", ipcVersion);
+				if (function != -1) {
+					mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+							IPageNotifyFn.PageType_CheckUpgrade, JsonUtil.getCancelJson());
+					mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_CONNECTIPC, TEST_IPC_VERSION);
+				} else {
+					// 判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击穹顶，请求数据
+					mIpcUpdateManage.showUnMatchDialog(this.getContext(), "当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。",
+							TEST_IPC_VERSION);
 				}
 			}
 		} catch (JSONException e) {

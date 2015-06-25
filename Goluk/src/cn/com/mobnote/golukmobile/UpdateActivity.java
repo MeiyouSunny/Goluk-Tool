@@ -158,10 +158,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case UPDATE_FILE_NOT_EXISTS:
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "升级文件不存在，请检查后重试");
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "没有找到升级文件。");
 					break;
 				case UPDATE_PREPARE_FILE:
-					mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在为您准备传输文件，请稍候……");
+					mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在为您准备升级，请稍候……");
 					break;
 				case UPDATE_TRANSFER_FILE:
 					GolukDebugUtils.i("lily", "-------正在传输文件------");
@@ -169,10 +169,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mPrepareDialog = null;
 					if(mSendDialog == null){
 						GolukDebugUtils.i("lily", "-------正在传输文件   dialog = null  ------");
-						mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在传输文件，请稍候……"+percent+"%");
+						mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，过程可能需要几分钟，"+"\n"+"请不要关闭摄像头电源……"+"\n"+"升级1阶段："+percent+"%");
 					}else{
 						GolukDebugUtils.i("lily", "-------正在传输文件   dialog != null  ------");
-						mSendDialog.setMessage("正在传输文件，请稍候……"+percent+"%");
+						mSendDialog.setMessage("开始升级，过程可能需要几分钟，"+"\n"+"请不要关闭摄像头电源……"+"\n"+"升级1阶段："+percent+"%");
 					}
 					break;
 				case UPDATE_TRANSFER_OK:
@@ -184,26 +184,26 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					UserUtils.dismissUpdateDialog(mSendOk);
 					mSendOk = null;
 					if(mUpdateDialog == null){
-						mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
+						mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，过程可能需要几分钟，"+"\n"+"请不要关闭摄像头电源……"+"\n"+"升级2阶段："+percent+"%");
 					}else{
-						mUpdateDialog.setMessage("开始升级，可能需要几分钟，请不要给摄像头断电。"+percent+"%");
+						mUpdateDialog.setMessage("开始升级，过程可能需要几分钟，"+"\n"+"请不要关闭摄像头电源……"+"\n"+"升级2阶段："+percent+"%");
 					}
 					break;
 				case UPDATE_UPGRADE_OK:
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "升级成功");
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "恭喜您，摄像头升级成功。");
 					break;
 				case UPDATE_UPGRADE_FAIL:
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
-					UserUtils.showUpdateSuccess(mUpdateDialogFail, UpdateActivity.this, "升级失败");
+					UserUtils.showUpdateSuccess(mUpdateDialogFail, UpdateActivity.this, "很抱歉，升级失败。请您重试。");
 					break;
 				case UPDATE_UPGRADE_CHECK:
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "校验不通过");
 					break;
 				case UPDATE_IPC_UNUNITED:
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "摄像头未连接");
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "您好像没有连接摄像头哦。");
 					break;
 				case UPDATE_IPC_DISCONNECT:
 					timerCancel();

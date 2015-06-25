@@ -14,8 +14,10 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.UpdateActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.mobnote.golukmobile.UserStartActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -64,6 +66,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 	private AlertDialog mDownloadDialog = null;
 	/** 保存当前正在下载的BIN文件版本信息 */
 	public IPCInfo mDownLoadIpcInfo = null;
+	private Builder mBuilder;
+	private AlertDialog mAppUpdateDialog;
 
 	public IpcUpdateManage(GolukApplication mApp) {
 		super();
@@ -323,6 +327,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 		if (null != mDownloadDialog && mDownloadDialog.isShowing()) {
 			return true;
 		}
+		if(null != mAppUpdateDialog && mAppUpdateDialog.isShowing()){
+			return true;
+		}
 		return false;
 	}
 
@@ -330,6 +337,13 @@ public class IpcUpdateManage implements IPCManagerFn {
 		if (null != mDownloadDialog) {
 			mDownloadDialog.dismiss();
 			mDownloadDialog = null;
+		}
+	}
+	
+	private void dimissAppDialog() {
+		if (null != mAppUpdateDialog) {
+			mAppUpdateDialog.dismiss();
+			mAppUpdateDialog = null;
 		}
 	}
 
@@ -466,9 +480,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 			 * APP升级 0非强制升级 1强制升级 非强制升级不退出程序，强制升级退出程序
 			 */
 			if (isUpdate.equals("1")) {
-				mApp.mUpgrade.showUpgradeGoluk(mApp.getContext(), appcontent, url);
+				showUpgradeGoluk(mApp.getContext(), appcontent, url);
 			} else if (isUpdate.equals("0")) {
-				mApp.mUpgrade.showUpgradeGoluk2(mApp.getContext(), appcontent, url);
+				showUpgradeGoluk2(mApp.getContext(), appcontent, url);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -541,6 +555,95 @@ public class IpcUpdateManage implements IPCManagerFn {
 		if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
 			((UpdateActivity) mApp.getContext()).IPCManage_CallBack(event, msg, param1, param2);
 		}
+	}
+	
+	/**
+	 * 强制升级提示
+	 * @param mContext
+	 * @param message1
+	 * @param message2
+	 */
+	public void showUpgradeGoluk(final Context mContext,String message, final String url){
+		mBuilder = new AlertDialog.Builder(mContext);
+		mAppUpdateDialog = mBuilder.setTitle("发现新版本")
+				.setMessage(message)
+				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						dimissAppDialog();
+						//浏览器打开url
+						GolukUtils.openUrl(url, mContext);
+						
+						if(GolukApplication.mMainActivity != null){
+							GolukApplication.mMainActivity.finish();
+							GolukApplication.mMainActivity = null;
+						}
+						SysApplication.getInstance().exit();
+						
+						mApp.mIPCControlManager.setIPCWifiState(false, "");
+			    		mApp.mGoluk.GolukLogicDestroy();
+			    		if (null != UserStartActivity.mHandler) {
+			    			UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
+			    		}
+			    		int PID = android.os.Process.myPid();
+			    		android.os.Process.killProcess(PID);
+			            System.exit(0);
+			            
+					}
+				})
+				.setCancelable(false)
+				.setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							return true;
+						}
+						return false;
+					}
+				})
+				.create();
+		mAppUpdateDialog.show();
+	}
+	
+	/**
+	 * 非强制升级提示
+	 * @param mContext
+	 * @param message1
+	 * @param message2
+	 */
+	public void showUpgradeGoluk2(final Context mContext,String message, final String url){
+		mBuilder = new AlertDialog.Builder(mContext);
+		mAppUpdateDialog = mBuilder.setTitle("发现新版本")
+				.setMessage(message)
+				.setPositiveButton("稍后再说", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						dimissAppDialog();
+					}
+				})
+				.setNegativeButton("马上升级", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						dimissAppDialog();
+						//浏览器打开url
+						GolukUtils.openUrl(url, mContext);
+					}
+				})
+				.setCancelable(false)
+				.setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							return true;
+						}
+						return false;
+					}
+				})
+				.create();
+		mAppUpdateDialog.show();
 	}
 
 }
