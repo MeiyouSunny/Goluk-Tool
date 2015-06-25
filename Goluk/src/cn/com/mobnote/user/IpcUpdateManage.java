@@ -87,10 +87,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 				mFunction = function;
 
 				if (mFunction == FUNCTION_SETTING_APP || mFunction == FUNCTION_SETTING_IPC) {
-					if (null == mCustomLoadingDialog) {
-						mCustomLoadingDialog = new CustomLoadingDialog(this.mApp.getContext(), "检测中，请稍候……");
-					}
-					mCustomLoadingDialog.show();
+					showLoadingDialog();
 				}
 			}
 			return b;
@@ -98,11 +95,17 @@ public class IpcUpdateManage implements IPCManagerFn {
 	}
 
 	private void showLoadingDialog() {
-		// TODO 弹出Loading对话框
+		if (null == mCustomLoadingDialog) {
+			mCustomLoadingDialog = new CustomLoadingDialog(this.mApp.getContext(), "检测中，请稍候……");
+		}
+		mCustomLoadingDialog.show();
 	}
 
 	private void dimissLoadingDialog() {
-		// TODO 隐藏Loading对话框
+		if (null != mCustomLoadingDialog) {
+			mCustomLoadingDialog.close();
+			mCustomLoadingDialog = null;
+		}
 	}
 
 	/**
@@ -145,7 +148,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public void requestInfoCallback(int success, Object outTime, Object obj) {
 		GolukDebugUtils.i(TAG, "=======requestInfoCallback=======");
 		// 取消loading显示
-		closeProgressDialog();
 		int codeOut = (Integer) outTime;
 		dimissLoadingDialog();
 		if (1 == success) {
@@ -406,6 +408,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						// TODO 弹Loading框,提示正在检测
+						showLoadingDialog();
 						requestInfo(FUNCTION_CONNECTIPC, vIpc);
 					}
 				}).setCancelable(false).setOnKeyListener(new OnKeyListener() {
@@ -455,16 +458,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 		GolukDebugUtils.i(TAG, "=========ipcInstallCallback===========");
 		if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
 			((UpdateActivity) mApp.getContext()).IPCManage_CallBack(event, msg, param1, param2);
-		}
-	}
-
-	/**
-	 * 关闭加载中对话框
-	 */
-	private void closeProgressDialog() {
-		if (null != mCustomLoadingDialog) {
-			mCustomLoadingDialog.close();
-			mCustomLoadingDialog = null;
 		}
 	}
 

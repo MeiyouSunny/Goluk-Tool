@@ -169,7 +169,7 @@
 		android:layout_width="312dp"
 		android:layout_height="54dp"
 		android:layout_centerHorizontal="true"
-		android:background="@drawable/btn_share_cancel_bg"
+		android:background="@drawable/icon_more"
 		android:layout_alignParentBottom="true"
 		android:layout_marginBottom="20dp"
 		android:gravity="center"

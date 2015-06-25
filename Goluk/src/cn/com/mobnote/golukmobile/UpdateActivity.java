@@ -10,11 +10,15 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IPCInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -26,7 +30,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UpdateActivity extends BaseActivity implements OnClickListener,IPCManagerFn {
+public class UpdateActivity extends BaseActivity implements OnClickListener,IPCManagerFn,OnTouchListener {
 
 	/** 返回按钮 **/
 	private ImageButton mBtnBack = null;
@@ -93,6 +97,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.upgrade_layout);
 
 		mApp = (GolukApplication)getApplication();
@@ -119,13 +124,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 				mTextDowload.setText("未下载");
 				mBtnDownload.setText("下载新极路客固件程序");
 				downloadStatus = DOWNLOAD_STATUS_FAIL;
-				mBtnDownload.setBackgroundResource(R.drawable.center_setup_button);
+				mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 				mBtnDownload.setEnabled(true);
 			}
 		} else if (mSign == 1) {
 			mTextDowload.setText("已下载");
 			mBtnDownload.setText("安装此极路客固件程序");
-			mBtnDownload.setBackgroundResource(R.drawable.center_setup_button);
+			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 		}
 	}
@@ -151,6 +156,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 		// 监听
 		mBtnBack.setOnClickListener(this);
 		mBtnDownload.setOnClickListener(this);
+		mBtnDownload.setOnTouchListener(this);
 	}
 
 	@Override
@@ -170,7 +176,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 			} else if (mSign == 1) {
 				mTextDowload.setText("已下载");
 				mBtnDownload.setText("安装此极路客固件程序");
-				mBtnDownload.setBackgroundResource(R.drawable.center_setup_button);
+				mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 				mBtnDownload.setEnabled(true);
 				mApp.mIpcUpdateManage.ipcInstall();
 			}
@@ -200,12 +206,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 		} else if (state == DOWNLOAD_STATUS_SUCCESS) {
 			// 下载成功
 			mBtnDownload.setText("安装此极路客固件程序");
-			mBtnDownload.setBackgroundResource(R.drawable.center_setup_button);
+			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 			mSign = 1;
 		} else if (state == DOWNLOAD_STATUS_FAIL) {
 			// 下载失败
-			mBtnDownload.setBackgroundResource(R.drawable.center_setup_button);
+			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 		}
 	}
@@ -301,6 +307,30 @@ public class UpdateActivity extends BaseActivity implements OnClickListener,IPCM
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
 		}
+	}
+	
+	@SuppressLint("ClickableViewAccessibility")
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		int action = event.getAction();
+		switch (view.getId()) {
+		case R.id.update_btn:
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				mBtnDownload.setBackgroundResource(R.drawable.icon_login_click);
+				break;
+			case MotionEvent.ACTION_UP:
+				mBtnDownload.setBackgroundResource(R.drawable.icon_login);
+				break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+		return false;
 	}
 	
 }
