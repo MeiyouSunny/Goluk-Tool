@@ -50,6 +50,8 @@ public class GuideActivity extends BaseActivity {
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		((GolukApplication) this.getApplication()).initLogic();
+		// 调用程序升级
+		((GolukApplication) this.getApplication()).startUpgrade();
 		// 初始化
 		init();
 		SysApplication.getInstance().addActivity(this);

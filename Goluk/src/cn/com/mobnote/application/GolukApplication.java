@@ -229,8 +229,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		GlobalWindow.getInstance().setApplication(this);
 		motioncfg = new int[2];
 		mDownLoadFileList = new ArrayList<String>();
-		mNoDownLoadFileList = new ArrayList<String>();
-
+		mNoDownLoadFileList = new ArrayList<String>();	
+	}
+	
+	public void startUpgrade() {
 		// 版本升级
 		mUpgrade.upgradeGoluk();
 	}
