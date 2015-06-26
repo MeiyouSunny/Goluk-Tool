@@ -448,7 +448,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					}
 					int count = IDENTIFY_COUNT - freqInt;
 					GolukDebugUtils.i("lily", freqInt+"====freqInt===="+count);
-					if (count != 0) {
+					if (count > 0) {
 						if (count < IDENTIFY_COUNT - 1) {
 							UserUtils
 									.showDialog(mContext, this.getResources().getString(R.string.count_identify_first) + count + this.getResources().getString(R.string.count_identify_second));
