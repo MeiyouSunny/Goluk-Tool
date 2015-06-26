@@ -87,6 +87,8 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private String registOk = null;
 	/**获取验证码的次数**/
 	private String freq = "";
+	/**6次获取验证码**/
+	private static final int IDENTIFY_COUNT = 6;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -437,16 +439,22 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				case 200:
 					GolukUtils.showToast(mContext, "验证码已经发送，请查收短信");
 					
-					if(freq.equals("2")){//第二次获取验证码
-						new AlertDialog.Builder(mContext)
-						.setMessage("此手机号还有 1 次获取验证码的机会,请确保手机号码正确和手机号所在的设备有信号")
-						.setPositiveButton("确定", null)
-						.create().show();
-					}else if(freq.equals("3")){//第三次获取验证码
-						new AlertDialog.Builder(mContext)
-						.setMessage("此手机号之后已经不能再获取验证码,请确保手机号码正确和手机号所在的设备有信号")
-						.setPositiveButton("确定", null)
-						.create().show();
+					int freqInt = 0;
+					try {
+						freqInt = Integer.parseInt(freq);
+					} catch (Exception e) {
+						GolukUtils.showToast(mContext, "请重新获取验证码");
+						return;
+					}
+					int count = IDENTIFY_COUNT - freqInt;
+					GolukDebugUtils.i("lily", freqInt+"====freqInt===="+count);
+					if (count != 0) {
+						if (count < IDENTIFY_COUNT - 1) {
+							UserUtils
+									.showDialog(mContext, this.getResources().getString(R.string.count_identify_first) + count + this.getResources().getString(R.string.count_identify_second));
+						}
+					} else {
+						UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_identify_six));
 					}
 					//验证码获取成功
 					/**
@@ -547,8 +555,8 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 						}
 						
 						GolukDebugUtils.i("lily", "------UserRegistActivity---不点击获取验证码---------"+freq);
-						if(freqInt > 3){
-							UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限(每天 3 次)");
+						if(freqInt > IDENTIFY_COUNT){
+							UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_identify_limit)+IDENTIFY_COUNT+"次)");
 						}else{
 							if(identify.length() < 6){
 								UserUtils.showDialog(mContext, "验证码格式输入不正确");
