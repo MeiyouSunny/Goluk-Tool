@@ -10,6 +10,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IPCInfo;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -192,9 +193,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				case UPDATE_UPGRADE_OK:
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "恭喜您，摄像头升级成功。");
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "恭喜您，极路客固件升级成功，正在重新启动，请稍候……");
+					mBtnDownload.setText("已安装");
+					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
+					mBtnDownload.setEnabled(false);
 					break;
 				case UPDATE_UPGRADE_FAIL:
+					UserUtils.dismissUpdateDialog(mPrepareDialog);
+					UserUtils.dismissUpdateDialog(mSendDialog);
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
 					UserUtils.showUpdateSuccess(mUpdateDialogFail, UpdateActivity.this, "很抱歉，升级失败。请您重试。");
@@ -207,6 +213,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					break;
 				case UPDATE_IPC_DISCONNECT:
 					timerCancel();
+					UserUtils.dismissUpdateDialog(mPrepareDialog);
+					UserUtils.dismissUpdateDialog(mSendDialog);
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "摄像头断开连接，请检查后重试");
@@ -258,7 +266,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				if (DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
-					mBtnDownload.setText("下载中…0%");
+//					mBtnDownload.setText("下载中…0%");
 					mApp.mIpcUpdateManage.download(mIpcInfo.url, mIpcInfo.path);
 				}
 			} else if (mSign == 1) {
@@ -283,11 +291,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 * @param param2
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
-		GolukDebugUtils.i("lily", "------------downloadCallback-----------");
+		GolukDebugUtils.i("lily", "------------downloadCallback-----------"+state);
 		downloadStatus = state;
 		if (state == DOWNLOAD_STATUS) {
 			// 下载中
 			int progress = (Integer) param1;
+			GolukDebugUtils.i("lily", "======下载文件progress====="+progress);
 			mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 			mBtnDownload.setEnabled(false);
 			mBtnDownload.setText("正在下载…" + progress + "%");
@@ -302,6 +311,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mApp.mIpcUpdateManage.downIpcSucess();
 		} else if (state == DOWNLOAD_STATUS_FAIL) {
 			// 下载失败
+			GolukUtils.showToast(mApp.getContext(), "很抱歉，新极路客固件下载失败，请检查网络后重试");
+			mTextDowload.setText("未下载");
+			mBtnDownload.setText("下载新极路客固件程序");
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 		}
@@ -337,8 +349,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							// 正在传输文件，请稍候……
 							mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
 							if(percent.equals("100")){
+								timerCancel();
 								// 传输文件成功
 								mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
+							}else{
+								timerTask();
 							}
 						}
 						if (stage.equals("2")) {

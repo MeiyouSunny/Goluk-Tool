@@ -82,7 +82,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean requestInfo(int function, String vipc) {
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			GolukDebugUtils.i(TAG, "网络连接异常，请检查网络后重试");
+			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
 			return false;
 		} else {
 			// {“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
@@ -248,7 +248,11 @@ public class IpcUpdateManage implements IPCManagerFn {
 					IPCInfo ipcInfo = ipcUpdateUtils(ipc);
 					if (ipcInfo == null) {
 						// ipc不需要升级 ----> 提示 ------> 结束
-						GolukUtils.showToast(mApp.getContext(), "极路客固件当前已是最新版本");
+						if(!mApp.isIpcLoginSuccess){
+							GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
+						}else{
+							GolukUtils.showToast(mApp.getContext(), "极路客固件当前已是最新版本");
+						}
 					} else {
 						/**
 						 * ipc需要升级，前提是判断app是否需要升级 app不需要升级，直接下载并升级ipc
@@ -276,6 +280,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 				}
 
 			} catch (Exception e) {
+				GolukUtils.showToast(mApp.getContext(), "没有ipc匹配列表");
 				e.printStackTrace();
 			}
 		} else {
@@ -323,7 +328,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @author jyf
 	 * @date 2015年6月25日
 	 */
-	private boolean isHasUpdateDialogShow() {
+	public boolean isHasUpdateDialogShow() {
 		if (null != mDownloadDialog && mDownloadDialog.isShowing()) {
 			return true;
 		}
@@ -357,7 +362,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public void ipcUpgrade(final int type, final IPCInfo ipcInfo) {
 		GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
-		final String msg = TYPE_DOWNLOAD == type ? "是否下载固件升级文件？" : "是否安装固件升级文件？";
+		final String msg = TYPE_DOWNLOAD == type ? "发现新极路客固件版本，是否下载升级？" : "发现新极路客固件版本，是否现在安装升级？";
 		mDownloadDialog = new AlertDialog.Builder(mApp.getContext()).setMessage(msg)
 				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
@@ -523,22 +528,27 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * ipc安装升级
 	 */
 	public void ipcInstall(String filePath) {
-		// 判断是否有升级文件
-		boolean isHasFile = UserUtils.fileIsExists(filePath);
-		if (isHasFile) {
-			if (GolukApplication.getInstance().getIpcIsLogin()) {
-				boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(filePath);
-				if (u) {
-					// 正在准备文件，请稍候……
-					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+		//判断网络是否连接
+		if(!UserUtils.isNetDeviceAvailable(mApp.getContext())){
+			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
+		}else{
+			//判断摄像头是否连接
+			if(GolukApplication.getInstance().getIpcIsLogin()){
+				// 判断是否有升级文件
+				boolean isHasFile = UserUtils.fileIsExists(filePath);
+				if (isHasFile) {
+					boolean u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(filePath);
+					if (u) {
+						// 正在准备文件，请稍候……
+						UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+					}
+				} else {
+					// 提示没有升级文件
+					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
 				}
-			} else {
-				// ipc未连接
-				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+			}else{
+				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_DISCONNECT);
 			}
-		} else {
-			// 提示没有升级文件
-			UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
 		}
 	}
 

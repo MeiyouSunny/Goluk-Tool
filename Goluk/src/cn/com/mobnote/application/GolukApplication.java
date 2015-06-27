@@ -237,11 +237,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
 		
-		//app升级+ipc升级
+	}
+	
+	/**
+	 * 升级
+	 */
+	public void startUpgrade(){
+		// app升级+ipc升级
 		String vIpc = mSharedPreUtil.getIPCVersion();
-		GolukDebugUtils.i("lily", "=====获取当前的vIpc====="+vIpc);
+		GolukDebugUtils.i("lily", "=====获取当前的vIpc=====" + vIpc);
 		mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_AUTO, vIpc);
-		
 	}
 
 	/**
@@ -1685,7 +1690,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 			boolean isMatch = false;
 			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
-			final int length = upgradeArray.length;
+			int length = 0 ;
+			if(null == upgradeArray){
+				length = 0;
+			}else{
+				length = upgradeArray.length;
+			}
 			for (int i = 0; i < length; i++) {
 				appcontent = upgradeArray[i].appcontent;
 				String version = upgradeArray[i].version;
@@ -1703,9 +1713,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 							IPageNotifyFn.PageType_CheckUpgrade, JsonUtil.getCancelJson());
 					mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_CONNECTIPC, ipcVersion);
 				} else {
-					// 判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击穹顶，请求数据
-					mIpcUpdateManage.showUnMatchDialog(this.getContext(), "当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。",
-							ipcVersion);
+					// 判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击确定，请求数据
+					if(mIpcUpdateManage.isHasUpdateDialogShow()){
+						
+					}else{
+						mIpcUpdateManage.showUnMatchDialog(this.getContext(), "当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。",
+								ipcVersion);
+					}
 				}
 			}
 		} catch (JSONException e) {

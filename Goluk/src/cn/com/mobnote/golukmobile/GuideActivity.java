@@ -51,6 +51,9 @@ public class GuideActivity extends BaseActivity {
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		GolukApplication.getInstance().initSharedPreUtil(this);
 		((GolukApplication) this.getApplication()).initLogic();
+		
+		((GolukApplication) this.getApplication()).startUpgrade();
+		
 		// 初始化
 		init();
 		SysApplication.getInstance().addActivity(this);
