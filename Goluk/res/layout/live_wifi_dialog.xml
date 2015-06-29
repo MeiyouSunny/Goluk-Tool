@@ -14,9 +14,9 @@
         <TextView
             android:id="@+id/wifiname"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:gravity="center"
             android:textColor="#333333"
             android:ellipsize="end" 

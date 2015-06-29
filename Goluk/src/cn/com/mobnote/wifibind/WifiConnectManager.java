@@ -47,9 +47,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		netUtil.setMultiCastListener(this);
 	}
 
-	public void createWifiAPFirst() {
-		createWifiAPFirst("6", "icp1", "123456789", 20000);
-	}
 
 	/**
 	 * 通过用户名，密码连接ipc
@@ -242,7 +239,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 			public void run() {
 				GolukDebugUtils.i(TAG, "加入IPC  wifi....1 关闭热点");
+				// 关闭热点
 				apManagesupport.closeWifiAP();
+				// 关闭WiFi
 				wifiSupport.closeWifi();
 				// 如果当前网络未开启 连接失败后 需要再关闭网络
 				boolean doClose = false;
