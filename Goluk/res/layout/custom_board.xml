@@ -105,21 +105,21 @@
                     android:background="@drawable/live_share_btn_bg" />
 
                 <ImageButton
-                    android:id="@+id/sms"
+                    android:id="@+id/qqZone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_messge" />
+                    android:background="@drawable/live_share_qqspace" />
             </RelativeLayout>
 
-            <!-- <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="26dp" >
 
                 <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/live_share_btn_bg" />
 
@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:background="@drawable/live_share_weibo" />
-            </RelativeLayout> -->
+            </RelativeLayout> 
         </LinearLayout>
     </HorizontalScrollView>
 

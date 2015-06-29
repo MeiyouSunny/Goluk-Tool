@@ -41,6 +41,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	public final String TYPE_WEIBO_XINLANG = "3";
 	/** QQ */
 	public final String TYPE_QQ = "4";
+	/** QQ空间 **/
+	public final String TYPE_QQ_ZONE = "7";
 	/** 微信朋友圈 */
 	public final String TYPE_WEIXIN_CIRCLE = "5";
 	/** 短信 */
@@ -75,8 +77,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.wechat).setOnClickListener(this);
 		rootView.findViewById(R.id.wechat_circle).setOnClickListener(this);
 		rootView.findViewById(R.id.qq).setOnClickListener(this);
-		rootView.findViewById(R.id.sms).setOnClickListener(this);
-		// rootView.findViewById(R.id.sina).setOnClickListener(this);
+		rootView.findViewById(R.id.qqZone).setOnClickListener(this);
+		rootView.findViewById(R.id.sina).setOnClickListener(this);
 		rootView.findViewById(R.id.share_cancel).setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
@@ -116,16 +118,17 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			}
 
 			break;
-		case R.id.sms:
-			sharePlatform.setShareContent(shareurl+"&type=6", coverurl, describe,ttl);
+		case R.id.qqZone:
+			sharePlatform.setShareContent(shareurl+"&type=7", coverurl, describe,ttl);
 			mCurrentShareType = TYPE_SMS;
 			this.shareUp();//上报分享统计
-			performShare(SHARE_MEDIA.SMS);
+			performShare(SHARE_MEDIA.QZONE);
 			break;
-		// case R.id.sina:
-		// mCurrentShareType = TYPE_WEIBO_XINLANG;
-		// performShare(SHARE_MEDIA.SINA);
-		// break;
+		 case R.id.sina:
+			 sharePlatform.setShareContent(shareurl+"&type=3", coverurl, describe,ttl);
+			 mCurrentShareType = TYPE_WEIBO_XINLANG;
+			 performShare(SHARE_MEDIA.SINA);
+			 break;
 		case R.id.share_cancel:
 			dismiss();
 			break;
@@ -159,24 +162,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			@Override
 			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
 				System.out.println("mCurrentShareType------" + mCurrentShareType);
-				// String showText = platform.toString();
-				/*if (eCode == StatusCode.ST_CODE_SUCCESSED) {
-					if (mActivity instanceof VideoShareActivity) {
-						((VideoShareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-					} else if (mActivity instanceof MainActivity) {
-						((MainActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-					} else if (mActivity instanceof VideoSquarePlayActivity) {
-						((VideoSquarePlayActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-					} else if (mActivity instanceof LiveActivity) {
-						((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-					}
-					// showText += "平台分享成功";
-				} else {
-					// showText += "平台分享失败";
-					if (mActivity instanceof VideoShareActivity) {
-						((VideoShareActivity) mActivity).shareSucessDeal(false, null);
-					}
-				}*/
 				dismiss();
 			}
 		});
