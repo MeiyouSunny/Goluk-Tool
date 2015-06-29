@@ -120,13 +120,14 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			break;
 		case R.id.qqZone:
 			sharePlatform.setShareContent(shareurl+"&type=7", coverurl, describe,ttl);
-			mCurrentShareType = TYPE_SMS;
+			mCurrentShareType = TYPE_QQ_ZONE;
 			this.shareUp();//上报分享统计
 			performShare(SHARE_MEDIA.QZONE);
 			break;
 		 case R.id.sina:
 			 sharePlatform.setShareContent(shareurl+"&type=3", coverurl, describe,ttl);
 			 mCurrentShareType = TYPE_WEIBO_XINLANG;
+			 this.shareUp();//上报分享统计
 			 performShare(SHARE_MEDIA.SINA);
 			 break;
 		case R.id.share_cancel:
