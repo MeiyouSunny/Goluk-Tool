@@ -14,6 +14,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,6 +56,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public final static String UPDATE_SIGN = "update_sign";
 	/** 数据展示 **/
 	public final static String UPDATE_DATA = "update_data";
+	/**升级文件下载中**/
+	public final static String UPDATE_PROGRESS = "update_progress";
 
 	/** 0下载 / 1安装的标志 **/
 	private int mSign = 0;
@@ -87,7 +90,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public static final int UPDATE_IPC_UNUNITED = 18;
 	/** ipc连接断开 **/
 	public static final int UPDATE_IPC_DISCONNECT = 19;
-
+	/** 升级1阶段摄像头断开连接 **/
+	public static final int UPDATE_IPC_FIRST_DISCONNECT = 20;
+	/** 升级2阶段摄像头断开连接 **/
+	public static final int UPDATE_IPC_SECOND_DISCONNECT = 21;
 	/** 下载状态 **/
 	private int downloadStatus = 0;
 
@@ -97,19 +103,23 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private static final int DOWNLOAD_STATUS_SUCCESS = 1;
 	/** 下载中 **/
 	private static final int DOWNLOAD_STATUS = 2;
-	
-	/**传输文件*/
+
+	/** 传输文件 */
 	private AlertDialog mSendDialog = null;
-	/**传输文件成功**/
-	private AlertDialog mSendOk  = null;
-	/**正在升级中*/
+	/** 传输文件成功 **/
+	private AlertDialog mSendOk = null;
+	/** 正在升级中 */
 	private AlertDialog mUpdateDialog = null;
-	/**升级成功**/
+	/** 升级成功 **/
 	private AlertDialog mUpdateDialogSuccess = null;
-	/**升级失败**/
+	/** 升级失败 **/
 	private AlertDialog mUpdateDialogFail = null;
-	/**升级准备中**/
+	/** 升级准备中 **/
 	private AlertDialog mPrepareDialog = null;
+	/** 升级1阶段摄像头断开 **/
+	private AlertDialog mFirstDialog = null;
+	/** 升级2阶段摄像头断开 **/
+	private AlertDialog mSecondDialog = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -153,8 +163,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 		}
-		
-		mUpdateHandler = new Handler(){
+
+		mUpdateHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
@@ -168,12 +178,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					GolukDebugUtils.i("lily", "-------正在传输文件------");
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
 					mPrepareDialog = null;
-					if(mSendDialog == null){
-						GolukDebugUtils.i("lily", "-------正在传输文件   dialog = null  ------");
-						mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，过程可能需要几分钟，"+"\n"+"请不要关闭摄像头电源……"+"\n"+"升级1阶段："+percent+"%");
-					}else{
-						GolukDebugUtils.i("lily", "-------正在传输文件   dialog != null  ------");
-						mSendDialog.setMessage("开始升级，过程可能需要几分钟，"+"\n"+"请不要关闭摄像头电源……"+"\n"+"升级1阶段："+percent+"%");
+					if (mSendDialog == null) {
+						mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，过程可能需要几分钟，" + "\n"
+								+ "请不要关闭摄像头电源……" + "\n" + "升级1阶段：" + percent + "%");
+					} else {
+						mSendDialog.setMessage("开始升级，过程可能需要几分钟，" + "\n" + "请不要关闭摄像头电源……" + "\n" + "升级1阶段：" + percent
+								+ "%");
 					}
 					break;
 				case UPDATE_TRANSFER_OK:
@@ -184,16 +194,19 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				case UPDATE_UPGRADEING:
 					UserUtils.dismissUpdateDialog(mSendOk);
 					mSendOk = null;
-					if(mUpdateDialog == null){
-						mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，过程可能需要几分钟，"+"\n"+"请不要关闭摄像头电源……"+"\n"+"升级2阶段："+percent+"%");
-					}else{
-						mUpdateDialog.setMessage("开始升级，过程可能需要几分钟，"+"\n"+"请不要关闭摄像头电源……"+"\n"+"升级2阶段："+percent+"%");
+					if (mUpdateDialog == null) {
+						mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，过程可能需要几分钟，" + "\n"
+								+ "请不要关闭摄像头电源……" + "\n" + "升级2阶段：" + percent + "%");
+					} else {
+						mUpdateDialog.setMessage("开始升级，过程可能需要几分钟，" + "\n" + "请不要关闭摄像头电源……" + "\n" + "升级2阶段：" + percent
+								+ "%");
 					}
 					break;
 				case UPDATE_UPGRADE_OK:
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "恭喜您，极路客固件升级成功，正在重新启动，请稍候……");
+					UserUtils
+							.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "恭喜您，极路客固件升级成功，正在重新启动，请稍候……");
 					mBtnDownload.setText("已安装");
 					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 					mBtnDownload.setEnabled(false);
@@ -202,7 +215,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
 					UserUtils.dismissUpdateDialog(mSendDialog);
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mPrepareDialog = null;
+					mSendDialog = null;
 					mUpdateDialog = null;
+					mFirstDialog = null;
+					mSecondDialog = null;
 					UserUtils.showUpdateSuccess(mUpdateDialogFail, UpdateActivity.this, "很抱歉，升级失败。请您重试。");
 					break;
 				case UPDATE_UPGRADE_CHECK:
@@ -215,9 +232,24 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					timerCancel();
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
 					UserUtils.dismissUpdateDialog(mSendDialog);
-					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mPrepareDialog = null;
 					mUpdateDialog = null;
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "摄像头断开连接，请检查后重试");
+					break;
+				case UPDATE_IPC_FIRST_DISCONNECT:
+					timerCancel();
+					UserUtils.dismissUpdateDialog(mPrepareDialog);
+					UserUtils.dismissUpdateDialog(mSendDialog);
+					mPrepareDialog = null;
+					mSendDialog = null;
+					showUpdateFirstDisconnect("很抱歉，升级失败，请先不要关闭摄像头电源，等待摄像头重新启动后再试。");
+					timerFive();
+					break;
+				case UPDATE_IPC_SECOND_DISCONNECT:
+					timerCancel();
+					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					mUpdateDialog = null;
+					showUpdateSecondDisconnect("很抱歉，摄像头连接异常中断，但它可能仍在升级中。请先不要关闭摄像头电源，等待摄像头升级成功。");
 					break;
 				default:
 					break;
@@ -225,7 +257,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				super.handleMessage(msg);
 			}
 		};
-		
+
 	}
 
 	@Override
@@ -266,7 +298,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				if (DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
-//					mBtnDownload.setText("下载中…0%");
+					// mBtnDownload.setText("下载中…0%");
 					mApp.mIpcUpdateManage.download(mIpcInfo.url, mIpcInfo.path);
 				}
 			} else if (mSign == 1) {
@@ -291,12 +323,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 * @param param2
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
-		GolukDebugUtils.i("lily", "------------downloadCallback-----------"+state);
+		GolukDebugUtils.i("lily", "------------downloadCallback-----------" + state);
 		downloadStatus = state;
 		if (state == DOWNLOAD_STATUS) {
 			// 下载中
 			int progress = (Integer) param1;
-			GolukDebugUtils.i("lily", "======下载文件progress====="+progress);
+			GolukDebugUtils.i("lily", "======下载文件progress=====" + progress);
 			mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 			mBtnDownload.setEnabled(false);
 			mBtnDownload.setText("正在下载…" + progress + "%");
@@ -348,11 +380,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						if (stage.equals("1")) {
 							// 正在传输文件，请稍候……
 							mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
-							if(percent.equals("100")){
+							if (percent.equals("100")) {
 								timerCancel();
 								// 传输文件成功
 								mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
-							}else{
+								timerTask();
+							} else {
 								timerTask();
 							}
 						}
@@ -361,7 +394,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADEING);
 							if (!percent.equals("100")) {
 								timerTask();
-							}else{
+							} else {
 								timerCancel();
 								// 升级成功
 								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_OK);
@@ -376,8 +409,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						e.printStackTrace();
 					}
 				} else {
-					// 升级失败
-					mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+					if (!(null != mFirstDialog && mFirstDialog.isShowing())|| !(null != mSecondDialog && mSecondDialog.isShowing())) {
+						// 升级失败
+						mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+					}
 				}
 			}
 		}
@@ -394,9 +429,28 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			@Override
 			public void run() {
 				// ipc断开
-				mUpdateHandler.sendEmptyMessage(UPDATE_IPC_DISCONNECT);
+				if (stage.equals("1")) {
+					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
+				} else if (stage.equals("2")) {
+					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
+				}
 			}
 		}, 6000);
+	}
+
+	/**
+	 * ipc断开连接后，5秒自动关闭当前页面
+	 */
+	public void timerFive() {
+		timerCancel();
+		mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				finish();
+			}
+		}, 5000);
 	}
 
 	public void timerCancel() {
@@ -438,4 +492,30 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		return false;
 	}
 
+	/**
+	 * 升级1阶段
+	 */
+	public void showUpdateFirstDisconnect(String message) {
+		if (null == mFirstDialog) {
+			mFirstDialog = new AlertDialog.Builder(UpdateActivity.this).setMessage(message)
+					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							finish();
+						}
+					})
+					.show();
+		}
+	}
+
+	/**
+	 * 升级2阶段
+	 */
+	public void showUpdateSecondDisconnect(String message) {
+		if (null == mSecondDialog) {
+			mSecondDialog = new AlertDialog.Builder(UpdateActivity.this).setMessage(message)
+					.setPositiveButton("确定", null).show();
+		}
+	}
 }

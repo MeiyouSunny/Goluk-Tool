@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -85,7 +87,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
 			return false;
 		} else {
-			// {“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
 			if (isHasUpdateDialogShow()) {
 				// 上次检查结果的Dialog还存在，不进行下次操作
 				return false;
@@ -108,6 +109,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	}
 	
 	private void showLoadingDialog() {
+		dimissLoadingDialog();
 		if (null == mCustomLoadingDialog) {
 			mCustomLoadingDialog = new CustomLoadingDialog(this.mApp.getContext(), "检测中，请稍候……");
 		}
@@ -262,7 +264,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 							// APP不需要升级
 							GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
 							// 提示下载并升级ipc
-
 							final String localBinPath = this.getLocalFile(ipcInfo.version);
 							if (null == localBinPath) {
 								// 提示用户下载文件Dialog
@@ -271,7 +272,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 								// 弹框提示用户安装本地的文件 (Dialog)
 								ipcUpgrade(TYPE_INSTALL, ipcInfo);
 							}
-
 						} else {
 							appUpgradeUtils(goluk);
 						}
@@ -280,7 +280,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 				}
 
 			} catch (Exception e) {
-				GolukUtils.showToast(mApp.getContext(), "没有ipc匹配列表");
+				if(FUNCTION_AUTO != mFunction){
+					GolukUtils.showToast(mApp.getContext(), "没有ipc匹配列表");
+				}
 				e.printStackTrace();
 			}
 		} else {
@@ -547,7 +549,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
 				}
 			}else{
-				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_DISCONNECT);
+				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
 			}
 		}
 	}
