@@ -837,7 +837,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 				exitTime = System.currentTimeMillis();
 			} else {
-
+				if (null != mWac) {
+					mWac.closeAp();
+				}
 				SysApplication.getInstance().exit();
 				// }
 				mApp.mIPCControlManager.setIPCWifiState(false, "");

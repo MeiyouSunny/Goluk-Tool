@@ -278,15 +278,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				// return;
 				// }
 
-				// 超时 报错返回
-				if (openTime == 0) {
-					if (doClose) {
-						wifiSupport.closeWifi();
-					}
-					msg.what = -21;
-					handler.sendMessage(msg);
-					return;
-				}
 				//
 				// //
 				// 如果要连接的用户不在列表中或者mac地址匹配错误--------------------------------------
@@ -622,61 +613,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		mythread.start();
 	}
 
-	/**
-	 * 创建热点并返回连接列表
-	 * 
-	 * @param ssid
-	 * @param password
-	 * @param outTime
-	 */
-	private void createWifiAPFirst(final String type, final String ssid, final String password, final int outTime) {
-
-		Runnable runnable = new Runnable() {
-			Message msg = new Message();
-
-			public void run() {
-				int tempTime = 0;
-				wifiSupport.closeWifi();
-				apManagesupport.closeWifiAP();
-				try {
-					apManagesupport.createWifiHot(ssid, password);
-				} catch (Exception e) {
-					// TODO Auto-gsenerated catch block
-					e.printStackTrace();
-				}
-
-				// 如果wifi打开了 并且获得ip后
-				while (apManagesupport.getWifiApState() != 13
-						|| "".equals(apManagesupport.getNetworkIpAddress(apManagesupport.getApName(context)))) {
-					try {
-						int temp_2 = 200;
-						Thread.sleep(temp_2);
-						tempTime += temp_2;
-						// 如果超时了 直接返回
-						if (tempTime > outTime) {
-							wifiSupport.closeWifi();
-							msg.what = Integer.parseInt("-" + type + "1");
-							msg.obj = null;
-							return;
-						}
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-
-				msg.what = Integer.parseInt(type + "1");
-				WifiRsBean rs = wifiSupport.getConnResult();
-				rs.setPh_ip(apManagesupport.getNetworkIpAddress(apManagesupport.getApName(context)));
-
-				msg.obj = rs;
-				handler.sendMessage(msg);
-
-			};
-
-		};
-		Thread mythread = new Thread(runnable);
-		mythread.start();
-	}
 
 	/**
 	 * 保存配置文件
@@ -954,5 +890,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		wifiSupport.closeWifi();
 		apManagesupport.closeWifiAP();
 		return true;
+	}
+	
+	public void closeAp() {
+		apManagesupport.closeWifiAP();
 	}
 }
