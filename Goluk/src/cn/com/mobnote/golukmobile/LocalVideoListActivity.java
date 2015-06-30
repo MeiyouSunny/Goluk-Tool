@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -27,13 +28,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoListManage;
 import cn.com.mobnote.video.LocalVideoListManage.DoubleVideoData;
 import cn.com.mobnote.video.LocalVideoListManage.LocalVideoData;
+
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -653,7 +655,9 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	 */
 	private void gotoVideoPlayPage(String path){
 		if(!TextUtils.isEmpty(path)){
-			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+//			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+//			Intent intent = new Intent(mContext, VideoPlayer.class);
+			Intent intent = new Intent(mContext, VideoPlayerView.class);
 			intent.putExtra("from", "local");
 			//intent.putExtra("type", mCurrentType);
 			intent.putExtra("path", path);

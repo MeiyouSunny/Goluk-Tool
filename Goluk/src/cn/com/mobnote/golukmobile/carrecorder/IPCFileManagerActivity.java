@@ -3,8 +3,10 @@ package cn.com.mobnote.golukmobile.carrecorder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,9 +41,11 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint({ "ClickableViewAccessibility", "InflateParams", "HandlerLeak" })
@@ -420,7 +424,8 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 		if(!isShowPlayer){
 			isShowPlayer=true;
 			if(null == VideoPlayerActivity.mHandler){
-				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
+//				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
+				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerView.class);
 				intent.putExtra("from", "ipc");
 				intent.putExtra("type", mCurrentType);
 				intent.putExtra("filename", filename);
