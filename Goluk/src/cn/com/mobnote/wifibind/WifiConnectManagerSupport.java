@@ -275,6 +275,25 @@ public class WifiConnectManagerSupport {
 
 		return bean;
 	}
+	/**
+	 * 获得匹配连接wifi的信息
+	 */
+	public WifiRsBean getConnResult(String title) {
+		String regEx = "^" + title;
+		WifiInfo info = wifiManager.getConnectionInfo();
+		WifiRsBean bean = null;
+		if( Pattern.compile(regEx).matcher(info.getSSID()).find()){
+			bean = new WifiRsBean();
+			bean.setPh_ssid(info.getSSID());
+			bean.setPh_bssid(info.getBSSID());
+			bean.setPh_mac(info.getMacAddress());
+			bean.setWifiSignal(getWifiLevel(info.getRssi()));
+			bean.setPh_ip(int2ip(info.getIpAddress()));
+		}
+
+
+		return bean;
+	}
 
 	/**
 	 * 判断ipc是否在列表中
