@@ -21,7 +21,7 @@ import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
-
+	public static final String TITLE = "Goluk";
 	private static final String TAG = "testhan";
 	private static final String WIFICONFIG = "wifi.config";
 	private WifiConnCallBack callback = null;
@@ -56,7 +56,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @param type
 	 */
 	public void connectWifi(String ssid, String password, WifiCipherType type) {
-		connectWifi(ssid, password, "", type, 20 * 1000);
+		connectWifi(ssid, password, "", type, 40 * 1000);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 *            关键字
 	 */
 	public void scanWifiList(String matching, boolean reset) {
-		scanWifiList(matching, reset, 40 * 1000);
+		scanWifiList(TITLE, reset, 40 * 1000);
 	}
 
 	/**
@@ -112,6 +112,14 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		autoWifiManage(40 * 1000);
 	}
 
+	/**
+	 * 获取当前连接是否是GOLUK
+	 * @return
+	 */
+	public WifiRsBean getConnResult(){
+		return wifiSupport.getConnResult(TITLE);
+	}
+	
 	// -------------------------------以上为封装后的对外接口----------------------------------------//
 	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler() {
@@ -347,7 +355,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 			Log.e(TAG, "crssssssssss----------------" + state + "");
 			try {
-				int temp_2 = 200;
+				int temp_2 = 500;
 				Thread.sleep(temp_2);
 				tempTime += temp_2;
 				if (tempTime > outTime) {
@@ -522,22 +530,25 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			e1.printStackTrace();
 		}
 		// 扫描了表不为null
-		
-		while (wifiManager.getScanResults() == null || wifiManager.getScanResults().size() == 0) {
+		WifiRsBean[] wifiBean = wifiSupport.getScanResult(matching, null);
+		while (wifiBean== null) {
 			try {
-				int temp_1 = 500;
+				int temp_1 = 800;
 				Thread.sleep(temp_1);
 				tempTime += temp_1;
 				if (tempTime > outTime) {
 					GolukDebugUtils.i(TAG, "扫描wifi....超时");
 					return 0;
 				}
+				wifiBean = wifiSupport.getScanResult(matching, null);
 			} catch (InterruptedException e) {
 				GolukDebugUtils.i(TAG, "扫描wifi....失败");
 				e.printStackTrace();
+				return 0;
 			}
 		}
-		WifiRsBean[] wifiBean = wifiSupport.getScanResult(matching, null);
+		//需要进行模糊扫描
+		 
 		GolukDebugUtils.i(TAG, "扫描wifi....已经获取列表");
 		// 将得到的扫描列表返回
 		Message msg = new Message();
