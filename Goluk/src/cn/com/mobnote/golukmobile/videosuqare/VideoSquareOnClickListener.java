@@ -10,10 +10,13 @@ import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class VideoSquareOnClickListener implements OnClickListener {
 
@@ -81,15 +84,20 @@ public class VideoSquareOnClickListener implements OnClickListener {
 
 			if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {// 没有点过赞
 				Button dz = (Button) view;
-				int likenumber = Integer.parseInt(dz.getText().toString());
-				dz.setText((likenumber + 1) + "");
-				dz.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);
+				int likenumber = Integer.parseInt(dz.getText().toString())+1;
+				dz.setText(likenumber+"");
+				
+				Drawable drawable= mcontext.getResources().getDrawable(R.drawable.like_btn_press);  
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
+				dz.setCompoundDrawables(drawable,null,null,null);  
+				
 				String videoid = mVideoSquareInfo.mVideoEntity.videoid;
+				
 				for (int i = 0; i < mVideoSquareListData.size(); i++) {
 					VideoSquareInfo vsi = mVideoSquareListData.get(i);
 					if (vsi.mVideoEntity.videoid.equals(videoid)) {
-						mVideoSquareInfo.mVideoEntity.praisenumber = (likenumber + 1) + "";
-						mVideoSquareListData.get(i).mVideoEntity.praisenumber = (likenumber + 1) + "";
+						mVideoSquareInfo.mVideoEntity.praisenumber = likenumber + "";
+						mVideoSquareListData.get(i).mVideoEntity.praisenumber = likenumber + "";
 						mVideoSquareListData.get(i).mVideoEntity.ispraise = "1";
 						break;
 					}

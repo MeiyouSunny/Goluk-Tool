@@ -24,6 +24,7 @@ import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -90,7 +91,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			holder.username = (TextView) convertView.findViewById(R.id.username);
 			holder.looknumber = (TextView) convertView.findViewById(R.id.looknumber_text);
 			holder.userhead = (ImageView) convertView.findViewById(R.id.user_head);
-			holder.likenumber = (Button) convertView.findViewById(R.id.like_btn);
 			holder.videotitle = (TextView) convertView.findViewById(R.id.video_title);
 			holder.sharetime = (TextView) convertView.findViewById(R.id.time);
 			holder.mPlayerLayout = (RelativeLayout) convertView.findViewById(R.id.mPlayerLayout);
@@ -101,7 +101,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			holder.liveicon = (ImageView) convertView.findViewById(R.id.live_icon);
 			holder.mPreLoading = (ImageView) convertView.findViewById(R.id.mPreLoading);
 			holder.likebtn = (Button) convertView.findViewById(R.id.like_btn);
-			holder.sharebtn = (ImageButton) convertView.findViewById(R.id.share_btn);
+			holder.sharebtn = (Button) convertView.findViewById(R.id.share_btn);
 
 			holder.mRingView = (RingView) convertView.findViewById(R.id.mRingView);
 			// holder.mTextureView =
@@ -123,9 +123,14 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
 				mVideoSquareInfo, form, sharePlatform, this));
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {// 点赞过
-			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn_down);// 设置点赞背景
+			Drawable drawable= mContext.getResources().getDrawable(R.drawable.like_btn_press);  
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
+			holder.likebtn.setCompoundDrawables(drawable,null,null,null);  // 设置点赞背景
 		} else {
-			holder.likebtn.setBackgroundResource(R.drawable.livestreaming_heart_btn);// 设置默认点赞背景
+
+			Drawable drawable= mContext.getResources().getDrawable(R.drawable.like_btn);  
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
+			holder.likebtn.setCompoundDrawables(drawable,null,null,null);// 设置默认点赞背景
 		}
 
 		if ("1".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
@@ -152,10 +157,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 				mVideoSquareInfo, form, sharePlatform, this));
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
-		holder.likenumber.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
 		holder.sharetime.setText(this.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
-
+		holder.likebtn.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
 		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(mVideoSquareListData, holder,
 				mDWMediaPlayerList, mVideoSquareInfo, mContext, form));
 
@@ -235,14 +239,13 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		TextView username;
 		TextView looknumber;
 		ImageView userhead;
-		Button likenumber;
 		TextView videotitle;
 		TextView sharetime;
 		RelativeLayout mPlayerLayout;
 		ImageView liveicon;
 		ImageButton reporticon;
 		ImageView mPreLoading;
-		ImageButton sharebtn;
+		Button sharebtn;
 		Button likebtn;
 		RingView mRingView;
 	}

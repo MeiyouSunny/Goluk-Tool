@@ -8,191 +8,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <RelativeLayout
-                android:id="@+id/live_categroy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/livestreaming_square_bg" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/live_text"
-                    android:background="@drawable/livestreaming_square_icon" />
-
-                <ImageView
-                    android:id="@+id/live_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/livestreaming_square_hot_live_icon"
-                    android:gravity="center"
-                    android:text="热门直播" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/livestreaming_square_live_icon" />
-            </RelativeLayout>
-
             <LinearLayout
                 android:id="@+id/categroy_one"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/live_categroy"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal" >
+                android:orientation="vertical" >
 
                 <ImageButton
                     android:id="@+id/category_btn_one"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_one" />
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/exposure_table_icon" 
+                    android:contentDescription="@string/hello_world"/>
 
                 <ImageButton
                     android:id="@+id/category_btn_two"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_two" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/category_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/categroy_one"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal" >
+                    android:background="@drawable/big_bang_icon" 
+                    android:layout_marginTop="10dp"
+                    android:contentDescription="@string/hello_world"/>
 
                 <ImageButton
                     android:id="@+id/category_btn_three"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_three" />
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/beautiful_scenery_icon" 
+                    android:contentDescription="@string/hello_world"/>
 
                 <ImageButton
                     android:id="@+id/category_btn_four"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_four" />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/readily_take_icon" 
+                    android:contentDescription="@string/hello_world"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/category_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/category_two"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal" >
-
-                <ImageButton
-                    android:id="@+id/category_btn_five"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_five" />
-
-                <ImageButton
-                    android:id="@+id/category_btn_six"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_six" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/category_four"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/category_three"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal" >
-
-                <ImageButton
-                    android:id="@+id/category_btn_seven"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_seven" />
-
-                <ImageButton
-                    android:id="@+id/category_btn_eight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_eight" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/category_five"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/category_four"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal" >
-
-                <ImageButton
-                    android:id="@+id/category_btn_nine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_nine" />
-
-                <ImageButton
-                    android:id="@+id/category_btn_ten"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/livestreaming_square_ten" />
-            </LinearLayout>
-            
-            <LinearLayout
-                android:id="@+id/category_six"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_below="@+id/category_five"
-                android:orientation="horizontal" >
-                <View 
-             	android:layout_width="match_parent"
-             	android:layout_height="match_parent"
-             	android:background="#ffffff"/>
-                </LinearLayout>
-            
-        </RelativeLayout>
     </ScrollView>
 	
 </RelativeLayout>
