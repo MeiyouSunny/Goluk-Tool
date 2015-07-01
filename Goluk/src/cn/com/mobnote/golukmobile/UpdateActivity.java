@@ -443,7 +443,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						if (stage.equals("2")) {
 							// 开始升级，可能需要几分钟，请不要给摄像头断电。
 							mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADEING);
-							if (!percent.equals("100")) {
+							if (!percent.equals("95")) {
 								timerTask();
 							} else {
 								timerCancel();
