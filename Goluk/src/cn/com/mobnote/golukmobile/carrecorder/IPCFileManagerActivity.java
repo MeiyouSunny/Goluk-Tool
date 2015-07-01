@@ -381,12 +381,14 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							if(!TextUtils.isEmpty(tag1)){
 								msg.obj = tag1;
+								msg.arg1 = 2;
 								mHandler.removeMessages(1);
 								mHandler.sendMessage(msg);
 							}
 						}else{
 							if(!TextUtils.isEmpty(tag2)){
 								msg.obj = tag2;
+								msg.arg1 = 2;
 								mHandler.removeMessages(1);
 								mHandler.sendMessage(msg);
 							}
@@ -405,7 +407,7 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 			switch (msg.what) {
 			case 1:
 				mHandler.removeMessages(1);
-				playerVideo((String)msg.obj);
+				playerVideo(msg.arg1, (String)msg.obj);
 				break;
 
 			default:
@@ -420,12 +422,18 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 	 * @author xuhw
 	 * @date 2015年4月30日
 	 */
-	private void playerVideo(String filename){
+	private void playerVideo(int from, String filename){
 		if(!isShowPlayer){
 			isShowPlayer=true;
 			if(null == VideoPlayerActivity.mHandler){
+				Intent intent = null;
+				if(1 == from) {
+					intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
+				}else {
+					intent = new Intent(IPCFileManagerActivity.this, VideoPlayerView.class);
+				}
 //				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerActivity.class);
-				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerView.class);
+//				Intent intent = new Intent(IPCFileManagerActivity.this, VideoPlayerView.class);
 				intent.putExtra("from", "ipc");
 				intent.putExtra("type", mCurrentType);
 				intent.putExtra("filename", filename);
@@ -599,12 +607,14 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							if(!TextUtils.isEmpty(tag1)){
 								msg.obj = tag1;
+								msg.arg1 = 3;
 								mHandler.removeMessages(1);
 								mHandler.sendMessage(msg);
 							}
 						}else{
 							if(!TextUtils.isEmpty(tag2)){
 								msg.obj = tag2;
+								msg.arg1 = 3;
 								mHandler.removeMessages(1);
 								mHandler.sendMessage(msg);
 							}
@@ -753,12 +763,14 @@ public class IPCFileManagerActivity extends BaseActivity implements OnClickListe
 					if((screenX > 0) && (screenX < (screenWidth/2))){
 						if(!TextUtils.isEmpty(tag1)){
 							msg.obj = tag1;
+							msg.arg1 = 1;
 							mHandler.removeMessages(1);
 							mHandler.sendMessage(msg);
 						}
 					}else{
 						if(!TextUtils.isEmpty(tag2)){
 							msg.obj = tag2;
+							msg.arg1 = 1;
 							mHandler.removeMessages(1);
 							mHandler.sendMessage(msg);
 						}
