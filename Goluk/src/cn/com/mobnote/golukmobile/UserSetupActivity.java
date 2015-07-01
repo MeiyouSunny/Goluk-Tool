@@ -281,7 +281,21 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 固件升级
 		case R.id.update_item:
 			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity===点击固件升级==中ipcVersion=====");
-			boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+			if(mApp.mLoadStatus && mApp.mLoadProgress != 100){
+				new AlertDialog.Builder(mApp.getContext())
+				.setMessage("新极路客固件升级文件正在下载……")
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
+						it.putExtra(UpdateActivity.UPDATE_PROGRESS, mApp.mLoadProgress);
+						startActivity(it);
+					}
+				}).show();
+			}else{
+				boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+			}
 			break;
 		}
 	}

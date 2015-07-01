@@ -49,11 +49,22 @@ public class SharedPrefUtil {
 
 	/** 保存ipc更新信息 **/
 	public static final String PROPERTY_SAVE_IPC_CONTENT = "property_save_ipc_content";
+	
+	/** 保存ipc更新信息 **/
+	public static final String PROPERTY_SAVE_IPC_URL = "property_save_ipc_url";
+	
+	/** 保存ipc更新信息 **/
+	public static final String PROPERTY_SAVE_IPC_PATH = "property_save_ipc_path";
 
 	/** 保存下载本地的IPC升级BIN文件信息 */
 	public static final String PROPERTY_IPC_UPGRADE_LOCALFILE_INFO = "property_ipc_upgrade_localfileInfo";
-
+	
+	/**下载ipc升级文件时保存version**/
+	public static final String PROPERTY_SAVE_IPC_DOWN_VERSION = "property_ipc_down_version";
+	
 	private SharedPreferences preference = null;
+	
+	private Editor mEditor = null;
 
 	public SharedPrefUtil(Activity activity) {
 		preference = activity.getPreferences(Activity.MODE_PRIVATE);
@@ -371,5 +382,54 @@ public class SharedPrefUtil {
 	public String getIPCContent() {
 		return preference.getString(PROPERTY_SAVE_IPC_CONTENT, "");
 	}
+	
+	/**
+	 * 保存ipc  url
+	 * 
+	 * @param ipcVersion
+	 */
+	public void saveIPCURL(String ipcUrl) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_URL, ipcUrl).commit();
+	}
 
+	public String getIPCURL() {
+		return preference.getString(PROPERTY_SAVE_IPC_URL, "");
+	}
+	/**
+	 * 保存ipc  的Path
+	 * 
+	 * @param ipcVersion
+	 */
+	public void saveIPCPath(String ipcPath) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_PATH ,ipcPath).commit();
+	}
+
+	public String getIPCPath() {
+		return preference.getString(PROPERTY_SAVE_IPC_PATH, "");
+	}
+	
+	/**
+	 * 下载时保存ipcVersion
+	 */
+	public void saveIPCDownVersion(String ipcVersion) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_DOWN_VERSION ,ipcVersion).commit();
+	}
+
+	public String getIPCDownVersion() {
+		return preference.getString(PROPERTY_SAVE_IPC_DOWN_VERSION, "");
+	}
+	
+	/**
+	 * 清除数据
+	 */
+	public void removeIPC(){
+		mEditor = preference.edit();
+		mEditor.remove(PROPERTY_SAVE_IPCVERSION);
+		mEditor.remove(PROPERTY_SAVE_IPC_FILESIZE);
+		mEditor.remove(PROPERTY_SAVE_IPC_CONTENT);
+		mEditor.remove(PROPERTY_SAVE_IPC_URL);
+		mEditor.remove(PROPERTY_SAVE_IPC_PATH);
+		mEditor.commit();
+	}
+	
 }

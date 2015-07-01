@@ -12,8 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -108,7 +106,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 		}
 	}
 	
-	private void showLoadingDialog() {
+	public void showLoadingDialog() {
 		dimissLoadingDialog();
 		if (null == mCustomLoadingDialog) {
 			mCustomLoadingDialog = new CustomLoadingDialog(this.mApp.getContext(), "检测中，请稍候……");
@@ -116,7 +114,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 		mCustomLoadingDialog.show();
 	}
 
-	private void dimissLoadingDialog() {
+	public void dimissLoadingDialog() {
 		if (null != mCustomLoadingDialog) {
 			mCustomLoadingDialog.close();
 			mCustomLoadingDialog = null;
@@ -217,6 +215,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 						GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
 						// APP不需要升级，判断ipc是否需要升级
 						IPCInfo ipcInfo = ipcUpdateUtils(ipc);
+						ipcUpgradeNext(ipcInfo);
 					} else {
 						appUpgradeUtils(goluk);
 					}
@@ -227,6 +226,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 						GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
 						// APP不需要升级，判断ipc是否需要升级
 						IPCInfo ipcInfo = ipcUpdateUtils(ipc);
+						ipcUpgradeNext(ipcInfo);
 					} else {
 						appUpgradeUtils(goluk);
 					}
@@ -243,13 +243,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 						appUpgradeUtils(goluk);
 					}
 				} else if (FUNCTION_SETTING_IPC == mFunction) {
-					final Context tempContext = mApp.getContext();
-					if (tempContext != null && tempContext instanceof UserSetupActivity) {
-						((UserSetupActivity) tempContext).updateCallBack(FUNCTION_SETTING_IPC, json);
-					}
 					IPCInfo ipcInfo = ipcUpdateUtils(ipc);
 					if (ipcInfo == null) {
-						// ipc不需要升级 ----> 提示 ------> 结束
+						// ipc不需要升级
 						if(!mApp.isIpcLoginSuccess){
 							GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
 						}else{
@@ -262,7 +258,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 						 */
 						if (goluk.equals("{}")) {
 							// APP不需要升级
-							GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
 							// 提示下载并升级ipc
 							final String localBinPath = this.getLocalFile(ipcInfo.version);
 							if (null == localBinPath) {
@@ -412,6 +407,14 @@ public class IpcUpdateManage implements IPCManagerFn {
 			}
 		}
 
+		return ipcInfo;
+	}
+	
+	/**
+	 * 检测ipc需要升级后，进行升级
+	 * @param ipcInfo
+	 */
+	public void ipcUpgradeNext(IPCInfo ipcInfo){
 		if (null != ipcInfo) {
 			// IPC需要升级
 			final String localBinPath = this.getLocalFile(ipcInfo.version);
@@ -424,7 +427,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 			}
 
 		}
-		return ipcInfo;
 	}
 
 	/**
@@ -529,10 +531,11 @@ public class IpcUpdateManage implements IPCManagerFn {
 	/**
 	 * ipc安装升级
 	 */
-	public void ipcInstall(String filePath) {
+	public boolean ipcInstall(String filePath) {
 		//判断网络是否连接
 		if(!UserUtils.isNetDeviceAvailable(mApp.getContext())){
 			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
+			return false;
 		}else{
 			//判断摄像头是否连接
 			if(GolukApplication.getInstance().getIpcIsLogin()){
@@ -544,12 +547,15 @@ public class IpcUpdateManage implements IPCManagerFn {
 						// 正在准备文件，请稍候……
 						UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
 					}
+					return u;
 				} else {
 					// 提示没有升级文件
 					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+					return false;
 				}
 			}else{
 				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+				return false;
 			}
 		}
 	}
@@ -657,5 +663,12 @@ public class IpcUpdateManage implements IPCManagerFn {
 				.create();
 		mAppUpdateDialog.show();
 	}
-
+	
+	/**
+	 * 升级停止
+	 */
+	public boolean stopIpcUpgrade() {
+		GolukDebugUtils.i("lily", "---------stopIpcUpgrade()------" + IPC_VDCPCmd_StopIPCUpgrade);
+		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_StopIPCUpgrade, "");
+	}
 }

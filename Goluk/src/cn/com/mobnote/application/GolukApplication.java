@@ -166,6 +166,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	/**测试ipc升级版本号**/
 //	private static final String TEST_IPC_VERSION = "1.0.1.8";
 	
+	/**极路客固件升级文件下载中的状态**/
+	public boolean mLoadStatus = false;
+	/**极路客固件升级文件下载中的进度**/
+	public int mLoadProgress = 0;
+	
 	static {
 		System.loadLibrary("golukmobile");
 	}
