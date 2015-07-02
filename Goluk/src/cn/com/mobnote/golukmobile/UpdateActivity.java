@@ -246,6 +246,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mBtnDownload.setEnabled(false);
 					break;
 				case UPDATE_UPGRADE_FAIL:
+					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
 					UserUtils.dismissUpdateDialog(mSendDialog);
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
@@ -271,7 +272,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "摄像头断开连接，请检查后重试");
 					break;
 				case UPDATE_IPC_FIRST_DISCONNECT:
-					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					timerCancel();
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
 					UserUtils.dismissUpdateDialog(mSendDialog);
@@ -281,7 +281,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					timerFive();
 					break;
 				case UPDATE_IPC_SECOND_DISCONNECT:
-					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					timerCancel();
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
