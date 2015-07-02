@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -31,7 +32,6 @@ public class UserLoginManage {
 	public UserLoginManage(GolukApplication mApp) {
 		super();
 		this.mApp = mApp;
-//		mApp.initLogic();
 	}
 
 	public void setUserLoginInterface(UserLoginInterface mInterface){
@@ -55,7 +55,7 @@ public class UserLoginManage {
 		boolean b = false;
 		// 网络判断
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			GolukUtils.showToast(mApp.getContext(), "当前网络不可用，请检查网络后重试");
+			GolukUtils.showToast(mApp.getContext(), mApp.getContext().getResources().getString(R.string.user_net_unavailable));
 			loginStatusChange(2);// 登录失败
 		} else {
 			String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\""+ pwd + "\",\"tag\":\"android\"}";
@@ -103,7 +103,7 @@ public class UserLoginManage {
 					loginStatusChange(3);//手机号未注册
 					break;
 				case 402:
-					GolukUtils.showToast(mApp.getContext(), "密码错误,请重试");
+					GolukUtils.showToast(mApp.getContext(), "密码错误，请重试");
 					loginStatusChange(2);
 					countErrorPassword++;
 					break;
@@ -163,7 +163,7 @@ public class UserLoginManage {
 			mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
 			mEditor = mSharedPreferences.edit();
 			GolukDebugUtils.i("lily", "------UserLoginManage----"+phone);
-			mEditor.putString("setupPhone", phone);
+			mEditor.putString("setupPhone", UserUtils.formatSavePhone(phone));
 			GolukDebugUtils.i("logintest", phone+"======1111====");
 			mEditor.putBoolean("noPwd", false);
 			mEditor.commit();

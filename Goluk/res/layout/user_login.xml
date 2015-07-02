@@ -28,24 +28,25 @@
                 android:layout_height="38dp"
                 android:gravity="center" >
 
-                <ImageView
+                <!-- <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="34dp"
-                    android:src="@drawable/icon_user" />
+                    android:src="@drawable/icon_user" /> -->
 
                 <EditText
                     android:id="@+id/user_login_phonenumber"
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
-                    android:hint="请输入手机号码，暂时只支持中国大陆"
+                    android:hint="@string/user_login_phone_hint"
                     android:numeric="integer"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
                     android:background="@null"
-                    android:maxLength="11"
+                    android:maxLength="13"
                     android:singleLine="true"
                     android:textColorHint="@color/user_hint_text_color"
+                    android:gravity="center"
                    />
             </LinearLayout>
 			<ImageView 
@@ -58,17 +59,17 @@
                 android:layout_height="38dp"
                 android:gravity="center" >
 
-                <ImageView
+                <!-- <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="34dp"
-                    android:src="@drawable/icon_password" />
+                    android:src="@drawable/icon_password" /> -->
 
                 <EditText
                     android:id="@+id/user_login_pwd"
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
-                    android:hint="请输入密码"
+                    android:hint="@string/user_login_password_hint"
                     android:password="true"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
@@ -77,28 +78,10 @@
                     android:singleLine="true"
                     android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:textColorHint="@color/user_hint_text_color"
+                    android:gravity="center"
                     />
             </LinearLayout>
         </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="46dp" >
-
-            <Button
-                android:layout_width="328dp"
-                android:layout_height="34dp"
-                android:id="@+id/user_login_btn"
-                android:background="@drawable/icon_more"
-                android:gravity="center"
-                android:enabled="false"
-                android:text="@string/user_login_title_text"
-                android:textSize="15sp"
-                android:textColor="@color/white" />
-        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -125,5 +108,25 @@
                 android:id="@+id/user_login_forgetpwd"
                 android:padding="10dp"/>
         </RelativeLayout>
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="20dp" >
+
+            <Button
+                android:layout_width="328dp"
+                android:layout_height="34dp"
+                android:id="@+id/user_login_btn"
+                android:background="@drawable/icon_more"
+                android:gravity="center"
+                android:enabled="false"
+                android:text="@string/user_login_title_text"
+                android:textSize="15sp"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
         </LinearLayout>
 </RelativeLayout>

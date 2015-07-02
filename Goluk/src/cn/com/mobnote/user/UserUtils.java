@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -208,5 +209,49 @@ public class UserUtils {
 				.create();
 		dialog.show();
 	}
-    
+    /**
+     * 手机号格式化显示  3-4-4
+     * @param s
+     * @param cursorPosition
+     * @param before
+     * @param count
+     * @param mEditPhone
+     * @param mTextWatcher
+     */
+	public static void formatPhone(CharSequence s,EditText mEditPhone){
+		String contents = s.toString();
+		int length = contents.length();
+		if (length == 4) {
+			if (contents.substring(3).equals(new String("-"))) { // -
+				contents = contents.substring(0, 3);
+				mEditPhone.setText(contents);
+				mEditPhone.setSelection(contents.length());
+			} else {
+				contents = contents.substring(0, 3) + "-" + contents.substring(3);
+				mEditPhone.setText(contents);
+				mEditPhone.setSelection(contents.length());
+			}
+		} else if (length == 9) {
+			if (contents.substring(8).equals(new String("-"))) { // -
+				contents = contents.substring(0, 8);
+				mEditPhone.setText(contents);
+				mEditPhone.setSelection(contents.length());
+			} else {
+				contents = contents.substring(0, 8) + "-" + contents.substring(8);
+				mEditPhone.setText(contents);
+				mEditPhone.setSelection(contents.length());
+			}
+		}
+	}
+	/**
+	 * 手机号格式化后保存
+	 * @param phone
+	 */
+	public static String formatSavePhone(String phone){
+		String a = phone.substring(0, 3);
+		String b = phone.substring(3,7);
+		String c = phone.substring(7,phone.length());
+		return a+"-"+b+"-"+c;
+	}
+	
 }

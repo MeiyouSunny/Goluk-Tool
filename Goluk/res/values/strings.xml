@@ -216,6 +216,13 @@
     <string name="user_personal_home_nologin_name">未登录</string>
     <string name="user_personal_setup_update">Goluk固件升级</string>
     <string name="user_personal_setup_update_bottom_text1">当前版本 </string>
+    
+    <string name="user_net_unavailable">当前网络不可用，请检查网络后重试</string>
+    <string name="user_login_phone_hint">输入手机号码</string>
+    <string name="user_login_password_hint">请填写密码，6-16位字符</string>
+    <string name="user_login_phone_show_error">手机号格式错误，请重新输入</string>
+    <string name="user_login_password_show_error">密码格式输入不正确，请输入 6-16 位数字、字母,字母区分大小写</string>
+    <string name="user_login_password_limit_top_hint">登录密码出错已经达到 5 次上限，账户被锁定 2 小时，请重置密码后登录</string>
     <!-- 直播界面 -->
 
 

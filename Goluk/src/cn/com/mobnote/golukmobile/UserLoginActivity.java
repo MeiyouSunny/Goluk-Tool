@@ -15,10 +15,11 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
+import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
@@ -42,29 +43,29 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  */
 public class UserLoginActivity extends BaseActivity implements OnClickListener,UserLoginInterface ,OnTouchListener{
-	//判断是否能点击提交按钮
+	
+	private static final String TAG = "lily";
+	/**判断是否能点击提交按钮**/
 	private boolean isOnClick=false;
-	// 登陆title
+	/**登陆title**/
 	private ImageButton mBackButton;
 	private TextView mTextViewTitle;
-	// 手机号和密码
+	/**手机号和密码**/
 	private EditText mEditTextPhoneNumber, mEditTextPwd;
 	private Button mBtnLogin;
-	// 快速注册
+	/**快速注册**/
 	private TextView mTextViewRegist, mTextViewForgetPwd;
-	// 第三方登陆
-//	private ImageView mImageViewWeichat, mImageViewSina, mImageViewQQ;
-	//application
+	/**application**/
 	private GolukApplication mApplication = null;
-	//context
+	/**context**/
 	private Context mContext = null;
 	private String phone = null;
 	private String pwd = null;
-	//将用户的手机号和密码保存到本地
+	/**将用户的手机号和密码保存到本地**/
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
 	
-	//判断登录
+	/**判断登录**/
 	private String justLogin = "";
 	private CustomLoadingDialog mCustomProgressDialog=null;
 	
@@ -82,6 +83,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		
 		SysApplication.getInstance().addActivity(this);
 		
+		initView();
+		
 		mApplication.mLoginManage.initData();
 	}
 	@Override
@@ -93,8 +96,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		if(null == mCustomProgressDialog){
 			mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
 		}
+		getInfo();
 		
-		initView();
 		// 设置title
   		mTextViewTitle.setText("登录");
 		
@@ -105,15 +108,15 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		super.onRestart();
 		if (!flag) {
 			mSharedPreferences = getSharedPreferences("setup", Context.MODE_PRIVATE);
-			GolukDebugUtils.i("logintest", mSharedPreferences.getString("setupPhone", "")+"=======保存phone1111");
-			if(null != mEditTextPhoneNumber.getText().toString() && mEditTextPhoneNumber.length() == 11){
+			GolukDebugUtils.i(TAG, mSharedPreferences.getString("setupPhone", "")+"=======保存phone1111");
+			if(null != mEditTextPhoneNumber.getText().toString() && mEditTextPhoneNumber.getText().toString().replace("-", "").length() == 11){
 				String phone = mEditTextPhoneNumber.getText().toString();
 				mEditor = mSharedPreferences.edit();
 				mEditor.putString("setupPhone", phone);
 				mEditor.putBoolean("noPwd", false);
 				//提交
 				mEditor.commit();
-				GolukDebugUtils.i("logintest", mSharedPreferences.getString("setupPhone", "")+"=======保存phone2222"+phone);
+				GolukDebugUtils.i(TAG, mSharedPreferences.getString("setupPhone", "")+"=======保存phone2222"+phone);
 			}
 		}
 	}
@@ -130,6 +133,18 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		mTextViewRegist = (TextView) findViewById(R.id.user_login_phoneRegist);
 		mTextViewForgetPwd = (TextView) findViewById(R.id.user_login_forgetpwd);
 		
+		// title返回按钮
+		mBackButton.setOnClickListener(this);
+		//登录按钮
+		mBtnLogin.setOnClickListener(this);
+		mBtnLogin.setOnTouchListener(this);
+		// 快速注册
+		mTextViewRegist.setOnClickListener(this);
+		mTextViewForgetPwd.setOnClickListener(this);
+		
+	}
+	
+	public void getInfo(){
 		Intent intentStart = getIntent();
 		//登录页面返回
 		if(null != intentStart.getStringExtra("isInfo")){
@@ -142,7 +157,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 		if(!"".equals(mSharedPreferences.getString("setupPhone", ""))){
 			String phone = mSharedPreferences.getString("setupPhone", "");
-			GolukDebugUtils.i("lily", "----UserLoginActivity---获取手机号-----"+phone);
+			GolukDebugUtils.i(TAG, "----UserLoginActivity---获取手机号-----"+phone);
 			mEditTextPhoneNumber.setText(phone);
 			mEditTextPhoneNumber.setSelection(phone.length());
 		}
@@ -151,54 +166,18 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		if(b){
 			mEditTextPwd.setText("");
 		}
-		GolukDebugUtils.i("lily", mEditTextPhoneNumber.getText().toString());
+		GolukDebugUtils.i(TAG, mEditTextPhoneNumber.getText().toString());
 		
 		/**
 		 * 监听绑定
 		 */
-		// title返回按钮
-		mBackButton.setOnClickListener(this);
-		mEditTextPhoneNumber.setOnFocusChangeListener(new OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View arg0, boolean arg1) {
-				String Phonenum=mEditTextPhoneNumber.getText().toString();
-				String psw=mEditTextPwd.getText().toString();
-				if(arg1){
-					
-				}else{
-					if(!Phonenum.equals("")){
-						if(Phonenum.length()==11){
-							if(UserUtils.isMobileNO(Phonenum)){
-								isOnClick=true;
-							}else{
-								isOnClick=false;
-								UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
-							}
-						}else{
-							isOnClick=false;
-							UserUtils.showDialog(UserLoginActivity.this, "手机格式输入错误,请重新输入");
-						}
-					}else{
-						isOnClick=false;
-						UserUtils.showDialog(UserLoginActivity.this, "手机号不能为空");
-					}
-				if(isOnClick&&!psw.equals("")){
-					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
-					mBtnLogin.setEnabled(true);
-				}else{
-					mBtnLogin.setBackgroundResource(R.drawable.icon_more);
-					mBtnLogin.setEnabled(false);
-				}
-				}
-			}
-		});
 
 		//手机号、密码文本框
 		mEditTextPhoneNumber.addTextChangedListener(new TextWatcher() {
+			private boolean isDelete = false;
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				String Phonenum=mEditTextPhoneNumber.getText().toString();
+				String Phonenum=mEditTextPhoneNumber.getText().toString().replace("-", "");
 				String psw=mEditTextPwd.getText().toString();
 				if(Phonenum.equals("")){
 					isOnClick=false;
@@ -210,6 +189,18 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 					mBtnLogin.setBackgroundResource(R.drawable.icon_more);
 					mBtnLogin.setEnabled(false);
 				}
+				//格式化显示手机号
+				mEditTextPhoneNumber.setOnKeyListener(new OnKeyListener() {
+					
+					@Override
+					public boolean onKey(View arg0, int keyCode, KeyEvent arg2) {
+						if (keyCode == KeyEvent.KEYCODE_DEL) {
+		                    isDelete = true;
+		              }
+						return false;
+					}
+				});
+				UserUtils.formatPhone(arg0, mEditTextPhoneNumber);
 			}
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
@@ -220,24 +211,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			}
 		} );
 		//密码监听
-		mEditTextPwd.setOnFocusChangeListener(new OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View arg0, boolean arg1) {
-				String pwd=mEditTextPwd.getText().toString();
-				if(arg1){
-					
-				}else{
-					if(pwd.equals("") || pwd.length()<6 || pwd.length()>16){
-						UserUtils.showDialog(UserLoginActivity.this, "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
-					}
-				}
-			}
-		});
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				String number = mEditTextPhoneNumber.getText().toString();
+				String number = mEditTextPhoneNumber.getText().toString().replace("-", "");
 				String psw=mEditTextPwd.getText().toString();
 				if(isOnClick){
 					if(!psw.equals("")){
@@ -266,13 +243,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 				
 			}
 		});
-		//登录按钮
-		mBtnLogin.setOnClickListener(this);
-		mBtnLogin.setOnTouchListener(this);
-		// 快速注册
-		mTextViewRegist.setOnClickListener(this);
-		mTextViewForgetPwd.setOnClickListener(this);
-		
 	}
 
 	@Override
@@ -314,7 +284,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	 * 
 	 */
 	public void loginManage(){
-		phone = mEditTextPhoneNumber.getText().toString();
+		phone = mEditTextPhoneNumber.getText().toString().replace("-", "");
 		pwd = mEditTextPwd.getText().toString();
 		if(!"".equals(phone) ){
 			if(UserUtils.isMobileNO(phone)){
@@ -337,11 +307,11 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 							mApplication.loginStatus = 2;
 						}
 					}else{
-						UserUtils.showDialog(mApplication.getContext(), "密码格式输入不正确,请输入 6-16 位数字、字母,字母区分大小写");
+						UserUtils.showDialog(mApplication.getContext(), this.getResources().getString(R.string.user_login_password_show_error));
 					}
 				}
 			}else{
-					UserUtils.showDialog(mApplication.getContext(), "手机号格式错误,请重新输入");
+					UserUtils.showDialog(mApplication.getContext(), this.getResources().getString(R.string.user_login_phone_show_error));
 			}
 		}
 	}
@@ -373,7 +343,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			if(justLogin.equals("main")){
 				mApplication.mLoginManage.setUserLoginInterface(null);
 				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
-				GolukDebugUtils.i("main", "======MainActivity==UserLoginActivity====");
+				GolukDebugUtils.i(TAG, "======MainActivity==UserLoginActivity====");
 				startActivity(login);
 			}
 			this.finish();
@@ -407,7 +377,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 					public void onClick(DialogInterface arg0, int arg1) {
 						mApplication.mLoginManage.setUserLoginInterface(null);
 						Intent it = new Intent(UserLoginActivity.this,UserRegistActivity.class);
-						it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
+						it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString().replace("-", ""));
 						it.putExtra("fromRegist", "fromStart");
 						
 						if(justLogin.equals("main") || justLogin.equals("back")){//从起始页注册
@@ -422,7 +392,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 					}
 				}).create().show();
 			}else{
-				UserUtils.showDialog(this, "手机号格式错误,请重新输入");
+				UserUtils.showDialog(this, this.getResources().getString(R.string.user_login_phone_show_error));
 			}
 			break;
 		case 4:
@@ -446,14 +416,14 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			mBtnLogin.setEnabled(true);
 			mBackButton.setEnabled(true);
 			new AlertDialog.Builder(mContext)
-			.setMessage("登录密码出错已经达到 5 次上限,账户被锁定 2 小时,请重置密码后登录")
-			.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			.setMessage(this.getResources().getString(R.string.user_login_password_limit_top_hint))
+			.setPositiveButton(this.getResources().getString(R.string.user_repwd_ok), new DialogInterface.OnClickListener() {
 					
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					mApplication.mLoginManage.setUserLoginInterface(null);
 					Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
-					it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
+					it.putExtra(TAG, mEditTextPhoneNumber.getText().toString().replace("-", ""));
 					startActivity(it);
 				}
 			})
@@ -518,12 +488,12 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	public boolean isRunningForeground(){
 		String packageName=getPackageName(this);
 		String topActivityClassName=getTopActivityName(this);
-		GolukDebugUtils.i("lily", "packageName="+packageName+",topActivityClassName="+topActivityClassName);
+		GolukDebugUtils.i(TAG, "packageName="+packageName+",topActivityClassName="+topActivityClassName);
 		if (packageName!=null&&topActivityClassName!=null&&topActivityClassName.startsWith(packageName)) {
-			GolukDebugUtils.i("lily", "---> isRunningForeGround");
+			GolukDebugUtils.i(TAG, "---> isRunningForeGround");
 			return true;
 		} else {
-			GolukDebugUtils.i("lily", "---> isRunningBackGround");
+			GolukDebugUtils.i(TAG, "---> isRunningBackGround");
 			return false;
 		}
 	}
