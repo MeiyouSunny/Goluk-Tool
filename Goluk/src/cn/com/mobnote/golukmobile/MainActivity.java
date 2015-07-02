@@ -106,12 +106,12 @@ import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint({ "HandlerLeak", "NewApi" })
 public class MainActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, OnTouchListener,
-		ILiveDialogManagerFn, ILocationFn, IBaiduGeoCoderFn, UserInterface {
+		ILiveDialogManagerFn, IBaiduGeoCoderFn, UserInterface {
 	
 	/** 程序启动需要20秒的时间用来等待IPC连接 */
 	private final int MSG_H_WIFICONN_TIME = 100;
 	/** application */
-	private GolukApplication mApp = null;
+	public GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
 	/** 我的位置按钮 */
@@ -142,9 +142,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	/** 分享网络直播 */
 	private Button mShareLiveBtn = null;
 	/** wifi连接状态 */
-	private ImageView mWifiState = null;
+	//private ImageView mWifiState = null;
 
-	private TextView mWifiStateTv = null;
+	//private TextView mWifiStateTv = null;
+	
 	private int mWiFiStatus = 0;
 	/** 本地视频列表数据适配器 */
 	public LocalVideoListAdapter mLocalVideoListAdapter = null;
@@ -244,7 +245,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			editor.commit();
 		}
 		// 初始化地图
-		initMap();
+		//initMap();
 		// 初始化视频广场
 		initVideoSquare();
 
@@ -270,7 +271,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
-		mApp.addLocationListener("main", this);
+		
 	}
 	
 	/**
@@ -322,8 +323,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		msquareBtn = (Button) findViewById(R.id.index_square_btn);
-		mWifiState = (ImageView) findViewById(R.id.index_wiifstate);
-		mWifiStateTv = (TextView) findViewById(R.id.wifi_conn_txt);
+		//mWifiState = (ImageView) findViewById(R.id.index_wiifstate);
+		//mWifiStateTv = (TextView) findViewById(R.id.wifi_conn_txt);
 		videoSquareLayout = findViewById(R.id.video_square_layout);
 		// 本地视频更多按钮
 		mLocalVideoListBtn = (Button) findViewById(R.id.share_local_video_btn);
@@ -637,7 +638,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			return;
 		}
 		mWiFiStatus = WIFI_STATE_CONNING;
-		mWifiStateTv.setText(WIFI_CONNING_STR);
+		//mWifiStateTv.setText(WIFI_CONNING_STR);
 		anim = AnimationUtils.loadAnimation(mContext, R.anim.ipc_action_loading);
 		LinearInterpolator lir = new LinearInterpolator();
 		anim.setInterpolator(lir);
@@ -656,8 +657,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			indexCarrecoderBtn.clearAnimation();
 			anim = null;
 		}
-		mWifiStateTv.setText(WIFI_CONNED_STR);
-		mWifiState.setBackgroundResource(R.drawable.home_wifi_link_four);
+		//mWifiStateTv.setText(WIFI_CONNED_STR);
+		//mWifiState.setBackgroundResource(R.drawable.home_wifi_link_four);
 	}
 
 	// 连接失败
@@ -669,8 +670,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			indexCarrecoderBtn.clearAnimation();
 			anim = null;
 		}
-		mWifiState.setBackgroundResource(R.drawable.home_wifi_no_link);
-		mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
+		//mWifiState.setBackgroundResource(R.drawable.home_wifi_no_link);
+		//mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
 	}
 
 	// 是否綁定过 Goluk
@@ -753,11 +754,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mApp.setContext(this, "Main");
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
-		// 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
+		/*// 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		if (null != mMapView) {
 			mMapView.onResume();
 			mMapView.invalidate();
-		}
+		}*/
 		
 		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onResume();
@@ -777,10 +778,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			MainActivity.mMainHandler.sendMessageDelayed(msg, mTiming);
 		}
 
-		// 回到页面启动定位
+		/*// 回到页面启动定位
 		if (null != mLocClient) {
 			mLocClient.start();
-		}
+		}*/
 
 		if (mApp.isNeedCheckLive) {
 			mApp.isNeedCheckLive = false;
@@ -1183,35 +1184,35 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	}
 
-	@Override
-	public void LocationCallBack(String gpsJson) {
-		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		if (location == null || mMapView == null) {
-			return;
-		}
-		// 此处设置开发者获取到的方向信息，顺时针0-360
-		MyLocationData locData = new MyLocationData.Builder().accuracy((float) location.radius).direction(100)
-				.latitude(location.rawLat).longitude(location.rawLon).build();
-		// 确认地图我的位置点是否更新位置
-		mBaiduMap.setMyLocationData(locData);
-
-		// 移动了地图,第一次不改变地图中心点位置
-		if (isFirstLoc) {
-			isFirstLoc = false;
-			// 移动地图中心点
-			LatLng ll = new LatLng(location.rawLat, location.rawLon);
-			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-			mBaiduMap.animateMapStatus(u);
-		}
-
-		// 保存经纬度
-		LngLat.lng = location.rawLon;
-		LngLat.lat = location.rawLat;
-
-		if(mApp.getContext() instanceof CarRecorderActivity){
-			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
-		}
-	}
+//	@Override
+//	public void LocationCallBack(String gpsJson) {
+//		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+//		if (location == null || mMapView == null) {
+//			return;
+//		}
+//		// 此处设置开发者获取到的方向信息，顺时针0-360
+//		MyLocationData locData = new MyLocationData.Builder().accuracy((float) location.radius).direction(100)
+//				.latitude(location.rawLat).longitude(location.rawLon).build();
+//		// 确认地图我的位置点是否更新位置
+//		mBaiduMap.setMyLocationData(locData);
+//
+//		// 移动了地图,第一次不改变地图中心点位置
+//		if (isFirstLoc) {
+//			isFirstLoc = false;
+//			// 移动地图中心点
+//			LatLng ll = new LatLng(location.rawLat, location.rawLon);
+//			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+//			mBaiduMap.animateMapStatus(u);
+//		}
+//
+//		// 保存经纬度
+//		LngLat.lng = location.rawLon;
+//		LngLat.lat = location.rawLat;
+//
+//		if(mApp.getContext() instanceof CarRecorderActivity){
+//			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
+//		}
+//	}
 
 	@Override
 	public void CallBack_BaiduGeoCoder(int function, Object obj) {

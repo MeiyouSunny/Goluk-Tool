@@ -25,10 +25,11 @@ public class VideoSquareActivity implements OnClickListener {
 	private ImageView square = null;
 	private LinearLayout mVideoList = null;
 	private LinearLayout mTypeList = null;
+	private LinearLayout lookworld = null;
 	private TextView hotTitle = null;
 	private TextView squareTitle = null; 
-	private ImageView hotImage = null;
-	private ImageView squareImage = null;
+	//private ImageView hotImage = null;
+	//private ImageView squareImage = null;
 	
 	/** 返回按钮 */
 	//private ImageButton mBackBtn = null;
@@ -41,10 +42,6 @@ public class VideoSquareActivity implements OnClickListener {
 	Context mContext = null;
 	MainActivity ma = null;
 	
-	public VideoSquareActivity() {
-		
-	}
-	
 	public VideoSquareActivity(RelativeLayout rootlayout,Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
@@ -54,6 +51,7 @@ public class VideoSquareActivity implements OnClickListener {
 	public void init() {
 		ma = (MainActivity) mContext;
 		mViewPager = (ViewPager) mRootLayout.findViewById(R.id.mViewpager);
+		mViewPager.setOffscreenPageLimit(3);
 		sharePlatform = new SharePlatformUtil(mContext);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 		mVideoSquareAdapter = new VideoSquareAdapter(mContext,sharePlatform);
@@ -64,12 +62,13 @@ public class VideoSquareActivity implements OnClickListener {
 		square = (ImageView) mRootLayout.findViewById(R.id.line_square);
 		mVideoList = (LinearLayout) mRootLayout.findViewById(R.id.mVideoList);
 		mTypeList = (LinearLayout) mRootLayout.findViewById(R.id.mTypeList);
+		lookworld = (LinearLayout) mRootLayout.findViewById(R.id.lookworld);
 		
 		hotTitle = (TextView) mRootLayout.findViewById(R.id.hot_title);
 		squareTitle = (TextView) mRootLayout.findViewById(R.id.square_title);
 		
-		squareImage = (ImageView) mRootLayout.findViewById(R.id.square_image);
-		hotImage = (ImageView) mRootLayout.findViewById(R.id.hot_image);
+		//squareImage = (ImageView) mRootLayout.findViewById(R.id.square_image);
+		//hotImage = (ImageView) mRootLayout.findViewById(R.id.hot_image);
 		setListener();
 	}
 
@@ -85,7 +84,7 @@ public class VideoSquareActivity implements OnClickListener {
 	private void setListener() {
 		mVideoList.setOnClickListener(this);
 		mTypeList.setOnClickListener(this);
-
+		lookworld.setOnClickListener(this);
 	}
 
 	// 分享成功后需要调用的接口
@@ -124,12 +123,12 @@ public class VideoSquareActivity implements OnClickListener {
 			hot.setVisibility(View.VISIBLE);
 			square.setVisibility(View.INVISIBLE);
 			
-			hotImage.setBackgroundResource(R.drawable.home_hot_btn_click);
-			squareImage.setBackgroundResource(R.drawable.home_video_btn);
+			//hotImage.setBackgroundResource(R.drawable.home_hot_btn_click);
+			//squareImage.setBackgroundResource(R.drawable.home_video_btn);
 			
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
-		} else {
+		} else if (1 == type){
 				
 			hot.setVisibility(View.INVISIBLE);
 			square.setVisibility(View.VISIBLE);
@@ -139,8 +138,16 @@ public class VideoSquareActivity implements OnClickListener {
 			squareTitle.setTextColor(mContext.getResources().getColor(
 					R.color.textcolor_select));
 			
-			squareImage.setBackgroundResource(R.drawable.home_video_btn_click);
-			hotImage.setBackgroundResource(R.drawable.home_hot_btn);
+			//squareImage.setBackgroundResource(R.drawable.home_video_btn_click);
+			//hotImage.setBackgroundResource(R.drawable.home_hot_btn);
+		}else{
+			hot.setVisibility(View.INVISIBLE);
+			square.setVisibility(View.VISIBLE);
+			
+			hotTitle.setTextColor(mContext.getResources().getColor(
+					R.color.textcolor_qx));
+			squareTitle.setTextColor(mContext.getResources().getColor(
+					R.color.textcolor_select));
 		}
 	}
 
@@ -154,6 +161,10 @@ public class VideoSquareActivity implements OnClickListener {
 		case R.id.mTypeList:
 			mViewPager.setCurrentItem(1);
 			this.updateState(1);
+			break;
+		case R.id.look_world:
+			mViewPager.setCurrentItem(2);
+			this.updateState(2);
 			break;
 		case R.id.back_btn:
 			exit();

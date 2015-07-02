@@ -31,7 +31,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="叽里咕噜"
+                android:ellipsize="end"
+                android:maxEms="10"
+                android:singleLine="true"
+                android:text="极路客"
                 android:textColor="#1163a2"
                 android:textSize="14sp" />
 
@@ -102,7 +105,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp" >
+        android:layout_height="30dp" >
 
         <TextView
             android:id="@+id/video_title"
@@ -115,7 +118,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="该死的碰瓷党，还好我有goluk的三十六计三闾大夫框架思路的福建省来对付"
-            android:textColor="#333333"
+            android:textColor="#4c4c4c"
             android:textSize="14sp" />
 
         <ImageButton
@@ -130,8 +133,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/livestreaming_like_line_bg"
+        android:layout_height="30dp"
+        android:background="#ffffff"
         android:orientation="horizontal" >
 
         <LinearLayout
@@ -147,23 +150,25 @@
                 android:background="#00000000"
                 android:drawableLeft="@drawable/like_btn"
                 android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="10dp"
                 android:paddingTop="5dp"
+                android:textSize="12sp"
                 android:text="0"
-                android:textColor="#000000" />
+                android:textColor="#888888" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="个赞"
-                android:textColor="#333333"
-                android:textSize="14sp" />
+                android:textColor="#888888"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/index_solid" />
 
         <LinearLayout
@@ -176,15 +181,20 @@
                 android:id="@+id/share_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="#00000000"
                 android:drawableLeft="@drawable/share_btn"
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
                 android:text="分享"
-                android:textColor="#333333"
-                android:textSize="14sp"
-                android:background="#00000000" />
+                android:textColor="#888888"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#e3e4e6" />
 
 </LinearLayout>

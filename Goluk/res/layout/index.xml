@@ -99,7 +99,7 @@
     </RelativeLayout>
 
    
-    <RelativeLayout
+    <!-- <RelativeLayout
         android:id="@+id/index_top_layout"
         android:layout_width="match_parent"
         android:layout_height="42dp"
@@ -138,7 +138,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/home_wifi_no_link" />
         </LinearLayout>
-    </RelativeLayout>
+    </RelativeLayout> -->
 
     <!-- 定位与直播列表按钮 -->
 
@@ -147,7 +147,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:layout_above="@+id/status_layout"
-        android:layout_below="@+id/index_top_layout"
         android:visibility="gone">
 
         <LinearLayout
@@ -174,7 +173,6 @@
     <include
         android:id="@+id/video_square_layout"
         android:layout_above="@+id/status_layout"
-        android:layout_below="@+id/index_top_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         layout="@layout/video_square_main"
