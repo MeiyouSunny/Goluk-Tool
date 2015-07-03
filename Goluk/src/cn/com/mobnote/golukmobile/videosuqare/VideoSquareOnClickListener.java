@@ -123,14 +123,14 @@ public class VideoSquareOnClickListener implements OnClickListener {
 	 * @throws
 	 */
 	public void showDialog() {
-		dialog = new AlertDialog.Builder(mcontext).create();
+		dialog = new AlertDialog.Builder(mcontext,R.style.CustomDialog).create();
 		dialog.show();
 		dialog.getWindow().setContentView(R.layout.video_square_dialog_main);
 		dialog.getWindow().findViewById(R.id.report).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dialog.dismiss();
-				ad = new AlertDialog.Builder(mcontext).create();
+				ad = new AlertDialog.Builder(mcontext,R.style.CustomDialog).create();
 				ad.show();
 				ad.getWindow().setContentView(R.layout.video_square_dialog_selected);
 				ad.getWindow().findViewById(R.id.sqds).setOnClickListener(new View.OnClickListener() {
@@ -176,7 +176,7 @@ public class VideoSquareOnClickListener implements OnClickListener {
 
 	public void confirmation(final String reporttype) {
 		ad.dismiss();
-		confirmation = new AlertDialog.Builder(mcontext).create();
+		confirmation = new AlertDialog.Builder(mcontext,R.style.CustomDialog).create();
 		confirmation.show();
 		confirmation.getWindow().setContentView(R.layout.video_square_dialog_confirmation);
 		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {

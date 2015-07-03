@@ -42,7 +42,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 	private ImageButton mBackBtn = null;
 	private RelativeLayout loading = null;
 	
-	public String shareVideoId; 
+	public String shareVideoId;
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
