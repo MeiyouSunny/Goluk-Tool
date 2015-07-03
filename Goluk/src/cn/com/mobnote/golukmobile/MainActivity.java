@@ -41,6 +41,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.LngLat;
+import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
@@ -221,6 +222,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		setContentView(mRootLayout);
 		
 		initThirdSDK();
+		
+		
 		
 		mContext = this;
 		// 获得GolukApplication对象
@@ -895,6 +898,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		return false;
 	}
 	
+	private void test() {
+		modifyApNotifyIPc("987654321");
+	}
+	
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -904,6 +911,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
 			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 			mBaiduMap.animateMapStatus(u);
+			
+			test();
 			break;
 		case R.id.index_share_btn:
 			click_share();
@@ -1259,37 +1268,157 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 	
+	/** 保存要修改的手机热点密码*/
+	private String mNewMobilePWD = null;
+	
+	private void modifyApNotifyIPc(final String newMobilePWD) {
+		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		mWac = new WifiConnectManager(wm, this);
+		
+		WifiRsBean  oldBean = mWac.readConfig();
+		if (null == oldBean) {
+			return;
+		}
+		
+		mNewMobilePWD = newMobilePWD;
+		
+		final String ipc_ssid = oldBean.getIpc_ssid();
+		final String ipc_pass = oldBean.getIpc_pass();
+		final String ipc_mac = oldBean.getIpc_mac();
+		final String ipc_ip = oldBean.getIpc_ip();
+		
+		
+		final String ph_ssid = oldBean.getPh_ssid();
+		final String ph_pwd = newMobilePWD;
+		
+	    boolean isHasPwd = true;
+	    if (null == ipc_pass || "".equals(ipc_pass)) {
+	    	isHasPwd = false;
+	    }
+		final String json = JsonUtil.getIPcJson(ipc_ssid, ipc_pass, ph_ssid, ph_pwd, DEFAULT_IP, DEFAULT_WAY, isHasPwd);
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
+		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
+	}
+	
+	// 修改热点的密码
+	// newMobilePWD 为新密码
+	private void editMobileWifiPwd(final String newMobilePWD) {
+		if (null == mWac) {
+			return;
+		}
+		
+		WifiRsBean  oldBean = mWac.readConfig();
+		if (null == oldBean) {
+			return;
+		}
+		final String ipc_ssid = oldBean.getIpc_ssid();
+		final String ipc_ip = oldBean.getIpc_ip();
+		final String ipc_mac = oldBean.getIpc_mac();
+
+		final String ph_ssid = oldBean.getPh_ssid();
+		final String ph_pwd = newMobilePWD;
+		
+		// 保存连接数据
+		WifiRsBean beans = new WifiRsBean();
+		beans.setIpc_mac(ipc_mac);
+		beans.setIpc_ssid(ipc_ssid);
+		beans.setIpc_ip(ipc_ip);
+		beans.setPh_ssid(ph_ssid);
+		beans.setPh_pass(ph_pwd);
+				
+		mWac.saveConfiguration(beans);
+		
+		// 创建热点之前先断开ipc连接
+		mApp.mIPCControlManager.setIPCWifiState(false, null);
+		// 改变Application-IPC退出登录
+		mApp.setIpcLoginOut();
+		// 创建热点
+		mWac.createWifiAP(ph_ssid, ph_pwd, ipc_ssid, ipc_mac);
+	}
+	
+	/**
+	 * 设置IPC信息成功回调
+	 */
+	public void setIpcLinkWiFiCallBack(int state) {
+		if (0 == state) {
+			// sucess 
+			if (null != mNewMobilePWD) {
+				editMobileWifiPwd(mNewMobilePWD);
+			}
+		} else {
+			GolukUtils.showToast(this, "修改密码失败");
+		}
+	}
+	
+	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
+		if (state == 0) {
+			switch (process) {
+			case 0:
+				// 创建热点成功
+				break;
+			case 1:
+				// ipc成功连接上热点
+				try {
+					WifiRsBean[] bean = (WifiRsBean[]) arrays;
+					if (null != bean) {
+						GolukDebugUtils.e("", "IPC连接上WIFI热点回调---length---" + bean.length);
+						if (bean.length > 0) {
+							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
+						}
+					}
+				} catch (Exception e) {
+					GolukUtils.showToast(mContext, "IPC连接热点返回信息不是数组");
+				}
+				break;
+			default:
+				GolukUtils.showToast(mContext, message);
+				break;
+			}
+		} else {
+			GolukUtils.showToast(mContext, message);
+		}
+	}
+	
+	private void wifiCallBack_5(int state, int process, String message, Object arrays) {
+		if (state == 0) {
+			switch (process) {
+			case 0:
+				// 创建热点成功
+				break;
+			case 1:
+				// ipc成功连接上热点
+				wifiCallBack_ipcConnHotSucess(message, arrays);
+				break;
+			case 2:
+				// 用户已经创建与配置文件相同的热点，
+				wifiCallBack_sameHot();
+				break;
+			case 3:
+				// 用户已经连接到其它wifi，按连接失败处理
+				wifiConnectFailed();
+				break;
+			default:
+				break;
+			}
+		} else {
+			// 未连接
+			wifiConnectFailed();
+		}
+	}
+	
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
 		switch (type) {
-		case 5:
-			if (state == 0) {
-				switch (process) {
-				case 0:
-					// 创建热点成功
-					break;
-				case 1:
-					// ipc成功连接上热点
-					wifiCallBack_ipcConnHotSucess(message, arrays);
-					break;
-				case 2:
-					// 用户已经创建与配置文件相同的热点，
-					wifiCallBack_sameHot();
-					break;
-				case 3:
-					// 用户已经连接到其它wifi，按连接失败处理
-					wifiConnectFailed();
-					break;
-				default:
-					break;
-				}
-			} else {
-				// 未连接
-				wifiConnectFailed();
-			}
-
+		case 3:
+			wifiCallBack_3( state,  process,  message,  arrays);
 			break;
+		case 5:
+			wifiCallBack_5(state,  process,  message,  arrays);
+			break;
+		default:
+			break;
+		
 		}
 	}
 

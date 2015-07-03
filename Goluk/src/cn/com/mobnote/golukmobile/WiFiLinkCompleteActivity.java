@@ -68,9 +68,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private String mIpcMac = "";
 	private String mWiFiIp = "";
 
-	/** 开始使用状态 */
-	private boolean mIsComplete = false;
-
 	private final int STATE_SET_IPC_INFO = 0;
 	private final int STATE_WAIT_CONN = 1;
 	private final int STATE_SUCESS = 2;
@@ -150,19 +147,17 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	}
 
 	private String getSetIPCJson() {
-		// 写死ip,网关
-		final String ip = "192.168.1.103";
-		final String way = "192.168.1.103";
+	
 		// 连接ipc热点wifi---调用ipc接口
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
 		String json = "";
-		if (null != WiFiInfo.AP_PWD && !"".equals(WiFiInfo.AP_PWD)) {
-			json = "{\"AP_SSID\":\"" + WiFiInfo.AP_SSID + "\",\"AP_PWD\":\"" + WiFiInfo.AP_PWD + "\",\"GolukSSID\":\""
-					+ WiFiInfo.GolukSSID + "\",\"GolukPWD\":\"" + WiFiInfo.GolukPWD + "\",\"GolukIP\":\"" + ip
-					+ "\",\"GolukGateway\":\"" + way + "\" }";
+		if (null != WiFiInfo.IPC_PWD && !"".equals(WiFiInfo.IPC_PWD)) {
+			json = "{\"AP_SSID\":\"" + WiFiInfo.IPC_SSID + "\",\"AP_PWD\":\"" + WiFiInfo.IPC_PWD
+					+ "\",\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID + "\",\"GolukPWD\":\"" + WiFiInfo.MOBILE_PWD
+					+ "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" + DEFAULT_WAY + "\" }";
 		} else {
-			json = "{\"GolukSSID\":\"" + WiFiInfo.GolukSSID + "\",\"GolukPWD\":\"" + WiFiInfo.GolukPWD
-					+ "\",\"GolukIP\":\"" + ip + "\",\"GolukGateway\":\"" + way + "\" }";
+			json = "{\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID + "\",\"GolukPWD\":\"" + WiFiInfo.MOBILE_PWD
+					+ "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" + DEFAULT_WAY + "\" }";
 		}
 		return json;
 	}
@@ -197,10 +192,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	 * 创建手机热点
 	 */
 	private void createPhoneHot() {
-		String wifiName = WiFiInfo.GolukSSID;
-		String pwd = WiFiInfo.GolukPWD;
-		String ipcssid = WiFiInfo.AP_SSID;
-		String ipcmac = WiFiInfo.AP_MAC;
+		String wifiName = WiFiInfo.MOBILE_SSID;
+		String pwd = WiFiInfo.MOBILE_PWD;
+		String ipcssid = WiFiInfo.IPC_SSID;
+		String ipcmac = WiFiInfo.IPC_MAC;
 		// 创建热点之前先断开ipc连接
 		mApp.mIPCControlManager.setIPCWifiState(false, null);
 		// 改变Application-IPC退出登录
@@ -255,22 +250,18 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	 */
 	public void ipcLinkWiFiCallBack() {
 		this.toSucessView();
-
-		// mCreateHotText.setVisibility(View.GONE);
-		// mLinkedLayout.setVisibility(View.VISIBLE);
-		// mLinkedDesc.setText(Html.fromHtml("你的Goluk已<font color=\"#0587ff\">成功连接</font>到手机"));
-		// mCompleteBtn.setBackgroundResource(R.drawable.connect_mianbtn);
-		mIsComplete = true;
-
 		// 保存连接数据
 		WifiRsBean beans = new WifiRsBean();
 		beans.setIpc_mac(mIpcMac);
-		beans.setIpc_ssid(WiFiInfo.AP_SSID);
-		beans.setPh_ssid(WiFiInfo.GolukSSID);
-		beans.setPh_pass(WiFiInfo.GolukPWD);
+		beans.setIpc_ssid(WiFiInfo.IPC_SSID);
 		beans.setIpc_ip(mWiFiIp);
+		beans.setIpc_pass(WiFiInfo.IPC_PWD);
+		
+		beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
+		beans.setPh_pass(WiFiInfo.MOBILE_PWD);
+		
 		mWac.saveConfiguration(beans);
-		saveBind(WiFiInfo.AP_SSID);
+		saveBind(WiFiInfo.IPC_SSID);
 		// 保存绑定标识
 		saveBindMark();
 	}
@@ -332,18 +323,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mApp.setContext(this, TAG);
 		super.onResume();
 	}
-
-	private void bindSucess() {
-		saveBindMark();
-		// 关闭wifi绑定全部页面
-		SysApplication.getInstance().exit();
-
-		// 跳转到ipc预览页面
-		Intent i = new Intent(mContext, CarRecorderActivity.class);
-		startActivity(i);
-	}
-
-	boolean isSucess = false;
 
 	@Override
 	public void onClick(View v) {

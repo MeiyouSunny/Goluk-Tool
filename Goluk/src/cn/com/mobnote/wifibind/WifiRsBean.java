@@ -6,10 +6,18 @@ public class WifiRsBean {
 	 String ipc_ssid="";   // IPC的ssid
 	 String ipc_mac="";   // IPC的mac地址
 	 String ipc_ip="";   // IPC的IP地址
-	 String ph_ssid="";   // 手机的ssid
+	 String ipc_pass="";   // IPC PASS
+	 public void setIpc_pass(String ipc_pass) {
+		this.ipc_pass = ipc_pass;
+	}
+	String ph_ssid="";   // 手机的ssid
 	 String ph_mac="";   // 手机的mac地址
-	 String ph_pass="";   // 手机的mac地址
-	 public String getPh_pass() {
+	 String ph_pass="";   // 手机的pass
+	 
+	 public String getIpc_pass() {
+		return ipc_pass;
+	}
+	public String getPh_pass() {
 		return ph_pass;
 	}
 	public void setPh_pass(String ph_pass) {
@@ -98,4 +106,5 @@ public class WifiRsBean {
 	public WifiRsBean(){
 		
 	}
+ 
 }

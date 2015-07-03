@@ -94,8 +94,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	public void saveConfiguration(WifiRsBean beans) {
 		saveConfiguration(beans, 40 * 1000);
 	}
-
- 
+	public WifiRsBean readConfig()  {
+	return wifiSupport.readConfig(WIFICONFIG);
+	}
 
 	public void isConnectIPC() {
 		isConnectIPC(30000);
@@ -643,6 +644,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					config.put("ph_ssid", beans.getPh_ssid());
 					config.put("ph_pass", beans.getPh_pass());
 					config.put("ipc_ip", beans.getIpc_ip());
+					config.put("ipc_pass", beans.getIpc_pass());
 					config.toString();
 					try {
 						wifiSupport.writePassFile(WIFICONFIG, config.toString());

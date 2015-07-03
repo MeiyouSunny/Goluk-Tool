@@ -602,4 +602,25 @@ public class JsonUtil {
 		}
 	}
 
+	public static String getIPcJson(String ipc_ssid, String ipc_pwd, String mobile_ssid, String mobile_pwd, String ip,
+			String way, boolean isHasPassword) {
+		try {
+			JSONObject obj = new JSONObject();
+			if (isHasPassword) {
+				obj.put("AP_SSID", ipc_ssid);
+				obj.put("AP_PWD", ipc_pwd);
+			}
+			obj.put("GolukSSID", mobile_ssid);
+			obj.put("GolukPWD", mobile_pwd);
+
+			obj.put("GolukIP", ip);
+			obj.put("GolukGateway", way);
+
+			return obj.toString();
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
+
 }

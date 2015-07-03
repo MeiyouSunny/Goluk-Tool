@@ -1122,12 +1122,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// msg = 1012 设置IPC系统WIFI配置
 				// param1 = 0 成功 | 失败
 				// 如果在wifi连接页面,通知设置成功
-				if (mPageSource == "WiFiLinkCreateHot") {
-					
-				} else if (mPageSource == "WiFiLinkBindAll") {
+				if (mPageSource.equals("WiFiLinkBindAll")) {
 					((WiFiLinkCompleteActivity) mContext).setIpcLinkWiFiCallBack(param1);
 				} else if (mPageSource .equals("changePassword")) {
 					((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
+				} else if ("Main".equals(mPageSource)) {
+					((MainActivity) mContext).setIpcLinkWiFiCallBack(param1);
 				}
 				break;
 			case IPC_VDCP_Msg_GetVedioEncodeCfg:
