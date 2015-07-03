@@ -30,6 +30,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -52,253 +53,254 @@ import cn.com.tiros.debug.GolukDebugUtils;
  */
 
 @SuppressLint("HandlerLeak")
-public class IndexMoreActivity extends BaseActivity implements OnClickListener,UserInterface {
+public class IndexMoreActivity implements OnClickListener, UserInterface {
 	/** application */
-	private GolukApplication mApp = null;
+	//private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
 	/** 返回按钮 */
-	private ImageButton mLayoutBack =  null;
-	
+	//private ImageButton mLayoutBack = null;
+
 	/** 本地视频item */
 	private RelativeLayout mLocalVideoItem = null;
 	/** 设置item */
 	private RelativeLayout mSetupItem = null;
-	
-	/** 个人中心页面handler用来接收消息,更新UI*/
+
+	/** 个人中心页面handler用来接收消息,更新UI */
 	public static Handler mUserCenterHandler = null;
-	
-	/**个人中心点击进入我的主页*/
+
+	/** 个人中心点击进入我的主页 */
 	private RelativeLayout mLayoutHome;
-	
-	/**个人中心的头像、性别、昵称*/
-	private ImageView mImageHead,mImageSex;
+
+	/** 个人中心的头像、性别、昵称 */
+	private ImageView mImageHead, mImageSex;
 	private TextView mTextName;
-	
-	/**自动登录中的loading提示框**/
+
+	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
 	private SharedPreferences mPreferences = null;
-	private boolean isFirstLogin ;
-	/**头部有无信息替换**/
+	private boolean isFirstLogin;
+	/** 头部有无信息替换 **/
 	private LinearLayout mLayoutHasInfo = null;
 	private LinearLayout mLayoutNoInfo = null;
 	private boolean isHasInfo = false;
 	private Editor mEditor = null;
+	RelativeLayout mRootLayout = null;
+	private MainActivity ma;
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.index_more);
-		
-	}
-	
-	@Override
-	protected void onResume(){
-		super.onResume();
-		mPreferences= getSharedPreferences("firstLogin", MODE_PRIVATE);
-		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-		
-		mContext = this;
-		SysApplication.getInstance().addActivity(this);
-		//获得GolukApplication对象
-		mApp = (GolukApplication)getApplication();
-		mApp.setContext(mContext,"IndexMore");
-		
-		mApp.mUser.setUserInterface(this);
-		
-		//页面初始化
+	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
+		mRootLayout = rootlayout;
+		mContext = context;
+		ma = (MainActivity) mContext;
 		init();
-		
 	}
 
 	/**
 	 * 页面初始化
 	 */
-	@SuppressLint("HandlerLeak")
-	private void init(){
-		//获取页面元素
-		mLayoutBack = (ImageButton) findViewById(R.id.back_btn);
-		
-		mLocalVideoItem = (RelativeLayout) findViewById(R.id.local_video_item);
+	private void init() {
+		// 获取页面元素
+		//mLayoutBack = (ImageButton) mRootLayout.findViewById(R.id.back_btn);
 
-		mSetupItem = (RelativeLayout) findViewById(R.id.setup_item);
-		//进入我的主页
-		mLayoutHome = (RelativeLayout) findViewById(R.id.head_layout);		
-		//头像、性别、昵称
-		mImageHead = (ImageView) findViewById(R.id.photo_img);
-		mImageSex = (ImageView) findViewById(R.id.user_sex_image);
-		mTextName = (TextView) findViewById(R.id.user_name_text);
-		//头部有无信息的布局替换
-		mLayoutHasInfo = (LinearLayout) findViewById(R.id.index_more_hasinfo);
-		mLayoutNoInfo = (LinearLayout) findViewById(R.id.index_more_noinfo);
-		GolukDebugUtils.i("lily", "--------"+mApp.autoLoginStatus+mApp.isUserLoginSucess+"=====mApp.registStatus ===="+mApp.registStatus);
-		if(!isFirstLogin || mApp.isUserLoginSucess == true || mApp.registStatus ==2){//登录过
-			GolukDebugUtils.i("lily", "---------------"+mApp.autoLoginStatus+"------loginStatus------"+mApp.loginStatus);
-			//更多页面
+		mLocalVideoItem = (RelativeLayout) mRootLayout.findViewById(R.id.local_video_item);
+
+		mSetupItem = (RelativeLayout) mRootLayout.findViewById(R.id.setup_item);
+		// 进入我的主页
+		mLayoutHome = (RelativeLayout) mRootLayout.findViewById(R.id.head_layout);
+		// 头像、性别、昵称
+		mImageHead = (ImageView) mRootLayout.findViewById(R.id.photo_img);
+		mImageSex = (ImageView) mRootLayout.findViewById(R.id.user_sex_image);
+		mTextName = (TextView) mRootLayout.findViewById(R.id.user_name_text);
+		// 头部有无信息的布局替换
+		mLayoutHasInfo = (LinearLayout) mRootLayout.findViewById(R.id.index_more_hasinfo);
+		mLayoutNoInfo = (LinearLayout) mRootLayout.findViewById(R.id.index_more_noinfo);
+		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
+				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
+		if (!isFirstLogin || ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
+			GolukDebugUtils.i("lily", "---------------" + ma.mApp.autoLoginStatus + "------loginStatus------"
+					+ ma.mApp.loginStatus);
+			// 更多页面
 			personalChanged();
-	}else{
-		//未登录
-		isHasInfo = false;
-		mLayoutHasInfo.setVisibility(View.GONE);
-		mLayoutNoInfo.setVisibility(View.VISIBLE);
-		mImageHead.setImageResource(R.drawable.more_head_no_log_in);
-	}
-		
-		//注册事件
-		mLayoutBack.setOnClickListener(this);
+		} else {
+			// 未登录
+			isHasInfo = false;
+			mLayoutHasInfo.setVisibility(View.GONE);
+			mLayoutNoInfo.setVisibility(View.VISIBLE);
+			mImageHead.setImageResource(R.drawable.more_head_no_log_in);
+		}
+
+		// 注册事件
+		//mLayoutBack.setOnClickListener(this);
 		mLocalVideoItem.setOnClickListener(this);
 		mSetupItem.setOnClickListener(this);
-		
+
 		mLayoutHome.setOnClickListener(this);
-		
-		//更新UI handler
-		mUserCenterHandler = new Handler(){
+
+		// 更新UI handler
+		mUserCenterHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 			}
 		};
 	}
-	
-	AlertDialog 	dialog = null;
+
+
+	protected void onResume() {
+		mPreferences = mContext.getSharedPreferences("firstLogin",mContext. MODE_PRIVATE);
+		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+
+		//SysApplication.getInstance().addActivity(this);
+		// 获得GolukApplication对象
+		//mApp = (GolukApplication) getApplication();
+		//mApp.setContext(mContext, "IndexMore");
+
+		ma.mApp.mUser.setUserInterface(this);
+
+		// 页面初始化
+		init();
+
+	}
+
+	AlertDialog dialog = null;
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		Intent intent = null;
-		switch(id){
-			case R.id.back_btn:
-				mApp.mUser.setUserInterface(null);
-				//返回
-				this.finish();
+		switch (id) {
+		case R.id.back_btn:
+			ma.mApp.mUser.setUserInterface(null);
+			// 返回
+			//this.finish();
 			break;
-			case R.id.local_video_item:
-				mApp.mUser.setUserInterface(null);
-				intent = new Intent(IndexMoreActivity.this,LocalVideoListActivity.class);
-				startActivity(intent);
+		case R.id.local_video_item:
+			ma.mApp.mUser.setUserInterface(null);
+			intent = new Intent(mContext, LocalVideoListActivity.class);
+			mContext.startActivity(intent);
 			break;
-			case R.id.setup_item:
-				mApp.mUser.setUserInterface(null);
-				//跳转到设置页面
-				GolukDebugUtils.i("lily", "onclick---setup--item");
-				intent = new Intent(IndexMoreActivity.this,UserSetupActivity.class);
-				startActivity(intent);
+		case R.id.setup_item:
+			ma.mApp.mUser.setUserInterface(null);
+			// 跳转到设置页面
+			GolukDebugUtils.i("lily", "onclick---setup--item");
+			intent = new Intent(mContext, UserSetupActivity.class);
+			mContext.startActivity(intent);
 			break;
-			//点击跳转到我的主页
-			case R.id.head_layout:
-				//自动登录中，成功，失败，超时、密码错误
-				GolukDebugUtils.i("lily", "-----autoLoginStatus-----"+mApp.autoLoginStatus+"------isUserLoginSuccess------"+mApp.isUserLoginSucess);
-				if(isHasInfo && (mApp.loginoutStatus == false || mApp.registStatus == 2)){
-					if(mApp.autoLoginStatus == 1 ||mApp.autoLoginStatus == 4){
-						mBuilder = new AlertDialog.Builder(mContext);
-						 dialog = mBuilder.setMessage("正在为您登录，请稍候……")
-						.setCancelable(false)
-						.setOnKeyListener(new OnKeyListener() {
-							@Override
-							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-								if(keyCode == KeyEvent.KEYCODE_BACK){
-									return true;
+		// 点击跳转到我的主页
+		case R.id.head_layout:
+			// 自动登录中，成功，失败，超时、密码错误
+			GolukDebugUtils.i("lily", "-----autoLoginStatus-----" + ma.mApp.autoLoginStatus
+					+ "------isUserLoginSuccess------" + ma.mApp.isUserLoginSucess);
+			if (isHasInfo && (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2)) {
+				if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
+					mBuilder = new AlertDialog.Builder(mContext);
+					dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false)
+							.setOnKeyListener(new OnKeyListener() {
+								@Override
+								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+									if (keyCode == KeyEvent.KEYCODE_BACK) {
+										return true;
+									}
+									return false;
 								}
-								return false;
-							}
-						}).create();
-						dialog	.show();
-					}else if(mApp.autoLoginStatus == 2 || mApp.isUserLoginSucess ){
-						GolukDebugUtils.i("lily", "--------更多页面------");
-						intent = new Intent(IndexMoreActivity.this,UserPersonalInfoActivity.class);
-						startActivity(intent);
-					}
-				}else{
-					GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------"+mApp.autoLoginStatus);
-					Intent itNo = new Intent(IndexMoreActivity.this,UserLoginActivity.class);
-					//登录页回调判断
-					itNo.putExtra("isInfo", "indexmore");
-					
-					mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-					mEditor = mPreferences.edit();
-					mEditor.putString("toRepwd", "more");
-					mEditor.commit();
-					
-					startActivity(itNo);
-					isHasInfo = true;
+							}).create();
+					dialog.show();
+				} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
+					GolukDebugUtils.i("lily", "--------更多页面------");
+					intent = new Intent(mContext, UserPersonalInfoActivity.class);
+					mContext.startActivity(intent);
 				}
-				break;
+			} else {
+				GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------" + ma.mApp.autoLoginStatus);
+				Intent itNo = new Intent(mContext, UserLoginActivity.class);
+				// 登录页回调判断
+				itNo.putExtra("isInfo", "indexmore");
+
+				mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+				mEditor = mPreferences.edit();
+				mEditor.putString("toRepwd", "more");
+				mEditor.commit();
+
+				mContext.startActivity(itNo);
+				isHasInfo = true;
+			}
+			break;
 		}
 	}
-	
+
 	private void dismissDialog() {
-		if (null != dialog){
+		if (null != dialog) {
 			dialog.dismiss();
 			dialog = null;
 		}
 	}
-	
+
 	/**
 	 * 个人资料信息
 	 */
-	public void initData(){
-		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
-		GolukDebugUtils.i("lily", "---IndexMore--------"+info);
-		try{
+	public void initData() {
+		String info = ma.mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		GolukDebugUtils.i("lily", "---IndexMore--------" + info);
+		try {
 			JSONObject json = new JSONObject(info);
 			String head = json.getString("head");
 			String name = json.getString("nickname");
 			String sex = json.getString("sex");
-	
+
 			mTextName.setText(name);
 			GolukDebugUtils.i("lily", head);
 			UserUtils.focusHead(head, mImageHead);
-			if(sex.equals("1")){
+			if (sex.equals("1")) {
 				mImageSex.setImageResource(R.drawable.more_man);
-			}else if(sex.equals("2")){
+			} else if (sex.equals("2")) {
 				mImageSex.setImageResource(R.drawable.more_girl);
-			}else if(sex.equals("0")){
+			} else if (sex.equals("0")) {
 				mImageSex.setImageResource(R.drawable.more_no_log_in_icon);
 			}
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * 自动登录状态变化     
-	 * 对话框消失
+	 * 自动登录状态变化 对话框消失
 	 */
 	@Override
 	public void statusChange() {
-		GolukDebugUtils.i("lily", "----IndexMoreActivity---自动登录个人中心变化---statusChange()-----mApp.autoLoginStatus-----"+mApp.autoLoginStatus);
-		if(mApp.autoLoginStatus == 2){
+		GolukDebugUtils.i("lily", "----IndexMoreActivity---自动登录个人中心变化---statusChange()-----mApp.autoLoginStatus-----"
+				+ ma.mApp.autoLoginStatus);
+		if (ma.mApp.autoLoginStatus == 2) {
 			dismissDialog();
 			GolukDebugUtils.i("lily", "-------IndexMoreActivity-----自动登录个人中心变化--------当autoLoginStatus==2时----");
 			personalChanged();
-		}else if(mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4 || mApp.isUserLoginSucess == false){
+		} else if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4 || ma.mApp.isUserLoginSucess == false) {
 			dismissDialog();
 			personalChanged();
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
-		}else if(mApp.autoLoginStatus == 5){
+		} else if (ma.mApp.autoLoginStatus == 5) {
 			mLayoutHasInfo.setVisibility(View.VISIBLE);
 			mLayoutNoInfo.setVisibility(View.GONE);
 		}
 	}
-	
+
 	/**
 	 * 自动登录失败后个人中心状态的变化
 	 */
-	public void personalChanged(){
-		GolukDebugUtils.i("lily", "======registStatus===="+mApp.registStatus);
-		if(mApp.loginStatus == 1 || mApp.autoLoginStatus == 1 || mApp.autoLoginStatus ==2 ){//登录成功、自动登录中、自动登录成功
+	public void personalChanged() {
+		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
+		if (ma.mApp.loginStatus == 1 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录成功、自动登录中、自动登录成功
 			mLayoutHasInfo.setVisibility(View.VISIBLE);
 			mLayoutNoInfo.setVisibility(View.GONE);
 			mImageHead.setImageResource(R.drawable.individual_center_head_moren);
 			initData();
 			isHasInfo = true;
-		}else {//没有用户信息
+		} else {// 没有用户信息
 			mLayoutHasInfo.setVisibility(View.GONE);
 			mLayoutNoInfo.setVisibility(View.VISIBLE);
 			mImageHead.setImageResource(R.drawable.more_head_no_log_in);
 			isHasInfo = false;
 		}
 	}
-	
+
 }

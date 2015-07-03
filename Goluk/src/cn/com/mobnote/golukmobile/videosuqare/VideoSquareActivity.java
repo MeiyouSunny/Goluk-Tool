@@ -23,11 +23,13 @@ public class VideoSquareActivity implements OnClickListener {
 	private ViewPager mViewPager = null;
 	private ImageView hot = null;
 	private ImageView square = null;
+	private ImageView look = null;
 	private LinearLayout mVideoList = null;
 	private LinearLayout mTypeList = null;
 	private LinearLayout lookworld = null;
 	private TextView hotTitle = null;
 	private TextView squareTitle = null; 
+	private TextView lookTitle = null;
 	//private ImageView hotImage = null;
 	//private ImageView squareImage = null;
 	
@@ -60,12 +62,15 @@ public class VideoSquareActivity implements OnClickListener {
 		
 		hot = (ImageView) mRootLayout.findViewById(R.id.line_hot);
 		square = (ImageView) mRootLayout.findViewById(R.id.line_square);
+		look = (ImageView) mRootLayout.findViewById(R.id.line_look);
+		
 		mVideoList = (LinearLayout) mRootLayout.findViewById(R.id.mVideoList);
 		mTypeList = (LinearLayout) mRootLayout.findViewById(R.id.mTypeList);
 		lookworld = (LinearLayout) mRootLayout.findViewById(R.id.lookworld);
 		
 		hotTitle = (TextView) mRootLayout.findViewById(R.id.hot_title);
 		squareTitle = (TextView) mRootLayout.findViewById(R.id.square_title);
+		lookTitle = (TextView) mRootLayout.findViewById(R.id.look_title);
 		
 		//squareImage = (ImageView) mRootLayout.findViewById(R.id.square_image);
 		//hotImage = (ImageView) mRootLayout.findViewById(R.id.hot_image);
@@ -122,18 +127,20 @@ public class VideoSquareActivity implements OnClickListener {
 		if (0 == type) {
 			hot.setVisibility(View.VISIBLE);
 			square.setVisibility(View.INVISIBLE);
-			
-			//hotImage.setBackgroundResource(R.drawable.home_hot_btn_click);
-			//squareImage.setBackgroundResource(R.drawable.home_video_btn);
+			look.setVisibility(View.INVISIBLE);
 			
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
+			lookTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 		} else if (1 == type){
-				
-			hot.setVisibility(View.INVISIBLE);
+			
 			square.setVisibility(View.VISIBLE);
+			hot.setVisibility(View.INVISIBLE);
+			look.setVisibility(View.INVISIBLE);
 			
 			hotTitle.setTextColor(mContext.getResources().getColor(
+					R.color.textcolor_qx));
+			lookTitle.setTextColor(mContext.getResources().getColor(
 					R.color.textcolor_qx));
 			squareTitle.setTextColor(mContext.getResources().getColor(
 					R.color.textcolor_select));
@@ -141,12 +148,15 @@ public class VideoSquareActivity implements OnClickListener {
 			//squareImage.setBackgroundResource(R.drawable.home_video_btn_click);
 			//hotImage.setBackgroundResource(R.drawable.home_hot_btn);
 		}else{
+			look.setVisibility(View.VISIBLE);
 			hot.setVisibility(View.INVISIBLE);
-			square.setVisibility(View.VISIBLE);
+			square.setVisibility(View.INVISIBLE);
 			
 			hotTitle.setTextColor(mContext.getResources().getColor(
 					R.color.textcolor_qx));
 			squareTitle.setTextColor(mContext.getResources().getColor(
+					R.color.textcolor_qx));
+			lookTitle.setTextColor(mContext.getResources().getColor(
 					R.color.textcolor_select));
 		}
 	}
@@ -162,7 +172,7 @@ public class VideoSquareActivity implements OnClickListener {
 			mViewPager.setCurrentItem(1);
 			this.updateState(1);
 			break;
-		case R.id.look_world:
+		case R.id.lookworld:
 			mViewPager.setCurrentItem(2);
 			this.updateState(2);
 			break;
