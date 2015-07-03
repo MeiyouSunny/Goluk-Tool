@@ -17,7 +17,7 @@
     <!-- 评论文字颜色 -->
     <color name="font_text">#A6A6A6</color>
     <!-- 背景颜色 -->
-    <color name="bg">#3b97f5</color>
+    <color name="bg">#000</color>
     <!-- tab背景颜色 -->
     <color name="tab_bg">#131313</color>
     <!-- 背景颜色 -->
@@ -42,7 +42,7 @@
     <color name="user_login_text">#333333</color>
     <color name="user_regist_bottom_login">#737373</color>
     <color name="user_regist_bottom_login_btn">#333333</color>
-    <color name="user_hint_text_color">#CECECE</color>
+    <color name="user_hint_text_color">#b2b2b2</color>
     <color name="user_identify_btn">#00C5A7</color>
     <color name="user_personal_black">#323232</color>
     <color name="user_personal_gray">#AFAFAF</color>
@@ -52,6 +52,7 @@
     <color name="dialog_bg">#00000000</color>
     <color name="setting_text_color_nor">#333333</color>
     <color name="setting_text_color_sel">#3b97f5</color>
+    <color name="user_identify_count_color">#0080ff</color>
 
     <!-- user部分颜色 -->
     <color name="user_home_nologin">#999999</color>

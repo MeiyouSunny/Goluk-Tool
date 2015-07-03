@@ -1,99 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-    <!-- 注册title -->
-
-    <include layout="@layout/user_title"/>
+    android:layout_height="match_parent" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/user_login_bg"
         android:orientation="vertical" >
 
-        <!-- 手机号/重置密码 -->
+        <!-- 注册title -->
+
+        <include layout="@layout/user_title" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="94dp"
-            android:layout_marginTop="18dp"
-            android:background="@color/white"
-            android:gravity="center"
+            android:layout_height="match_parent"
+            android:background="@color/user_login_bg"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:gravity="center" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="34dp"
-                    android:src="@drawable/icon_mobile" />
-
-                <EditText
-                    android:id="@+id/user_regist_phonenumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:background="@null"
-                    android:hint="请输入手机号码，暂时只支持中国大陆"
-                    android:textColor="@color/user_login_text"
-                    android:textSize="14sp" 
-                    android:numeric="integer"
-                    android:singleLine="true"
-                    android:maxLength="11"
-                    android:textColorHint="@color/user_hint_text_color"/>
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/solid" />
+            <!-- 手机号/重置密码 -->
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:gravity="center" >
+                android:layout_height="94dp"
+                android:layout_marginTop="80dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical" >
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="34dp"
-                    android:src="@drawable/icon_lock" />
-
-                <EditText
-                    android:id="@+id/user_regist_pwd"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
-                    android:background="@null"
-                    android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:hint="设置密码（6-16位数字或英文）"
-                    android:password="true"
-                    android:singleLine="true"
-                    android:textColor="@color/user_login_text"
-                    android:textSize="14sp" 
-                    android:maxLength="16"
-                     android:textColorHint="@color/user_hint_text_color"/>
-            </LinearLayout>
-        </LinearLayout>
+                    android:gravity="center" >
 
-        <!-- 验证码 -->
+                    <EditText
+                        android:id="@+id/user_regist_phonenumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:background="@null"
+                        android:gravity="center"
+                        android:hint="@string/user_regist_phone_hint"
+                        android:maxLength="13"
+                        android:numeric="integer"
+                        android:singleLine="true"
+                        android:textColor="@color/user_login_text"
+                        android:textColorHint="@color/user_hint_text_color"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/solid" 
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:gravity="center" >
+
+                    <EditText
+                        android:id="@+id/user_regist_pwd"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:background="@null"
+                        android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        android:gravity="center"
+                        android:hint="设置密码（6-16位数字或英文）"
+                        android:maxLength="16"
+                        android:password="true"
+                        android:singleLine="true"
+                        android:textColor="@color/user_login_text"
+                        android:textColorHint="@color/user_hint_text_color"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 验证码 -->
+            <!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_marginTop="28dp"
             android:orientation="horizontal" >
 
-            <!--  110dp -->
+             110dp
             <Button
                 android:layout_width="110dp"
                 android:layout_height="42dp"
@@ -116,22 +108,32 @@
                 android:paddingLeft="20dp"
                 android:textSize="14sp"/>
         </LinearLayout>
+            -->
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="34dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="72dp" >
 
-            <Button
-                android:layout_width="328dp"
-                android:layout_height="38dp"
-                android:id="@+id/user_regist_btn"
-                android:background="@drawable/icon_more"
-                android:text="@string/user_regist_btn" 
-                android:textColor="#fff"/>
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/user_regist_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/user_regist_below_hint" />
+
+                <Button
+                    android:id="@+id/user_regist_btn"
+                    android:layout_width="320dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/user_regist_hint"
+                    android:background="@drawable/icon_more"
+                    android:text="@string/user_regist_btn"
+                    android:textColor="#fff"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+            <!--
         <LinearLayout 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -157,8 +159,8 @@
                 android:paddingRight="10dp"
                 />
         </LinearLayout>
+            -->
+        </LinearLayout>
     </LinearLayout>
-    
-</LinearLayout>
 
 </RelativeLayout>

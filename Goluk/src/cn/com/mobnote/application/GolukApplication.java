@@ -804,11 +804,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_GetVCode:
 			// 注册获取验证码
 			if (mPageSource == "UserRegist") {
-				((UserRegistActivity) mContext).identifyCallback(success, param2);
+//				((UserRegistActivity) mContext).identifyCallback(success, param2);
 			}
 			// 重置密码获取验证码
 			if (mPageSource == "UserRepwd") {
-				((UserRepwdActivity) mContext).isRepwdCallBack(success, param2);
+//				((UserRepwdActivity) mContext).isRepwdCallBack(success, param2);
 			}
 			break;
 		// 注册PageType_Register

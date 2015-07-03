@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" 
-        android:background="#EDEDED"
+        android:background="@color/user_login_bg"
         >
 
         <!-- 登陆title -->
@@ -27,12 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:gravity="center" >
-
-                <!-- <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="34dp"
-                    android:src="@drawable/icon_user" /> -->
 
                 <EditText
                     android:id="@+id/user_login_phonenumber"
@@ -58,12 +52,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:gravity="center" >
-
-                <!-- <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="34dp"
-                    android:src="@drawable/icon_password" /> -->
 
                 <EditText
                     android:id="@+id/user_login_pwd"

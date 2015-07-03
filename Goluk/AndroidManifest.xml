@@ -39,6 +39,9 @@
         <activity
             android:name="cn.com.mobnote.golukmobile.UserRepwdActivity"
             android:screenOrientation="portrait" />
+        <activity 
+            android:name="cn.com.mobnote.golukmobile.UserIdentifyActivity"
+            android:screenOrientation="portrait" />
         <!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
         <activity
             android:name="cn.com.mobnote.golukmobile.UserPersonalInfoActivity"

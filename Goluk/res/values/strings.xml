@@ -195,7 +195,7 @@
     <string name="user_repwd_identify">获取验证码</string>
     <string name="user_repwd_ok">确定</string>
     <string name="user_regist_title">手机号注册</string>
-    <string name="user_regist_btn">注册</string>
+    <string name="user_regist_btn">下一步</string>
     <string name="user_regist_bottom_login">已注册过Goluk？点此</string>
     <string name="user_regist_bottom_login_btn">登录</string>
     <string name="user_personal_title_right">保存</string>
@@ -223,6 +223,11 @@
     <string name="user_login_phone_show_error">手机号格式错误，请重新输入</string>
     <string name="user_login_password_show_error">密码格式输入不正确，请输入 6-16 位数字、字母,字母区分大小写</string>
     <string name="user_login_password_limit_top_hint">登录密码出错已经达到 5 次上限，账户被锁定 2 小时，请重置密码后登录</string>
+    <string name="user_regist_phone_hint">输入手机号码（暂时只支持中国大陆地区）</string>
+    <string name="user_regist_below_hint">请放心，我们不会将您的手机号码用于其他用途</string>
+    <string name="user_identify_code">输入6位验证码</string>
+    <string name="user_identify_count">重新发送（</string>
+    
     <!-- 直播界面 -->
 
 
