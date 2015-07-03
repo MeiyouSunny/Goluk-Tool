@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -54,10 +55,12 @@ import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.user.IPCInfo;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
@@ -107,7 +110,7 @@ import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint({ "HandlerLeak", "NewApi" })
 public class MainActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, OnTouchListener,
-		ILiveDialogManagerFn, ILocationFn, IBaiduGeoCoderFn, UserInterface {
+		ILiveDialogManagerFn, ILocationFn, IBaiduGeoCoderFn, UserInterface,IPCManagerFn {
 	
 	/** 程序启动需要20秒的时间用来等待IPC连接 */
 	private final int MSG_H_WIFICONN_TIME = 100;
@@ -208,6 +211,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private int divIndex = 0;
 	
 	private VideoSquareActivity mVideoSquareActivity;
+	
+	/**点击行车记录仪和直播   1点击行车记录仪    2点击视频直播**/
+	private int clickIsMatch = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -724,9 +730,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case WIFI_STATE_SUCCESS:
 			GolukApplication.getInstance().stopDownloadList();
-			// 跳转到行车记录仪界面
+			
+			//获取ipc版本号判断是否匹配
+			boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
+			
+			/*// 跳转到行车记录仪界面
 			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-			startActivity(i);
+			startActivity(i);*/
 			break;
 		default:
 			break;
@@ -736,6 +746,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
+		}
+		
 		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
 		if (null != mMapView) {
 			mMapView.onDestroy();
@@ -789,6 +804,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			showContinuteLive();
 		}
 
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
+		}
+		
 		super.onResume();
 	}
 
@@ -922,6 +941,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case R.id.share_mylive_btn:
 			// 点击视频直播
+			clickIsMatch = 2;
 			toShareLive();
 			break;
 		case R.id.index_square_btn:
@@ -932,6 +952,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			setBelowItem(R.id.index_look_btn);
 			break;
 		case R.id.index_carrecoder_btn:
+			clickIsMatch = 1;
 			checkWiFiStatus();
 			break;
 		case R.id.index_div:
@@ -1110,14 +1131,18 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		GolukApplication.getInstance().stopDownloadList();
+		
+		//获取IPC版本号，判断ipc和app是否匹配
+		boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
+		
 		// 开启直播
-		Intent intent = new Intent(this, LiveActivity.class);
+		/*Intent intent = new Intent(this, LiveActivity.class);
 		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
 		intent.putExtra(LiveActivity.KEY_GROUPID, "");
 		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
 		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 		startActivity(intent);
-		mShareLayout.setVisibility(View.GONE);
+		mShareLayout.setVisibility(View.GONE);*/
 	}
 
 	// 查看他人的直播
@@ -1312,4 +1337,95 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "shareid-----" + shareVideoId + "   channel-----" + channel);
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 	}
+
+	/**
+	 * 在连接ipc的前提下
+	 * 点击行车记录仪或者分享中发起视频直播，进行不匹配校验
+	 */
+	@Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.i("lily", "-------------IPCManage_CallBack--------行车记录仪和直播判断是否匹配---" + event + "----msg---"
+				+ msg + "----param1--" + param1 + "----param2---" + param2);
+		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
+			if(IPC_VDCP_Msg_GetVersion == msg){
+				if(param1 == RESULE_SUCESS){
+					ipcConnect(param2);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * ipc自动连接后
+	 * @param param2
+	 */
+	public void ipcConnect(Object param2) {
+		String appcontent = "";
+		String str = (String) param2;
+		if (TextUtils.isEmpty(str)) {
+			return;
+		}
+		try {
+			JSONObject json = new JSONObject(str);
+			String ipcVersion = json.optString("version");
+			GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
+			// 保存ipc版本号
+			mApp.mSharedPreUtil.saveIPCVersion(ipcVersion);
+
+			String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
+			JSONArray jsonArray = new JSONArray(matchInfo);
+
+			boolean isMatch = false;
+			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
+			int length = 0 ;
+			if(null == upgradeArray){
+				length = 0;
+			}else{
+				length = upgradeArray.length;
+			}
+			for (int i = 0; i < length; i++) {
+				appcontent = upgradeArray[i].appcontent;
+				String version = upgradeArray[i].version;
+				if (ipcVersion.equals(version)) {
+					// 匹配
+					isMatch = true;
+					break;
+				}
+			}
+			if (!isMatch) {
+				// -1下载中
+				int function = mApp.mIpcUpdateManage.connectIpc();
+				if (function != -1) {
+					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+							IPageNotifyFn.PageType_CheckUpgrade, JsonUtil.getCancelJson());
+					mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_CONNECTIPC, ipcVersion);
+				} else {
+					// 判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击确定，请求数据
+					if(mApp.mIpcUpdateManage.isHasUpdateDialogShow()){
+						
+					}else{
+						mApp.mIpcUpdateManage.showUnMatchDialog(mApp.getContext(), "当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。",
+								ipcVersion);
+					}
+				}
+			}else{
+				if(clickIsMatch == 1){
+					// 跳转到行车记录仪界面
+					Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+					startActivity(i);
+				}else if(clickIsMatch == 2){
+					Intent intent = new Intent(this, LiveActivity.class);
+					intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+					intent.putExtra(LiveActivity.KEY_GROUPID, "");
+					intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+					intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+					startActivity(intent);
+					mShareLayout.setVisibility(View.GONE);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
