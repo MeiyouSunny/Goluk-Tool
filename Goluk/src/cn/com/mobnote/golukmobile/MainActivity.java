@@ -898,12 +898,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		return false;
 	}
 	
-	private void test() {
-//		modifyApNotifyIPc("987654321");
-		
-//		GolukUtils.showSystemWifiList(this);
-	}
-	
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -913,8 +907,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
 			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 			mBaiduMap.animateMapStatus(u);
-			
-			test();
 			break;
 		case R.id.index_share_btn:
 			click_share();
@@ -1342,14 +1334,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 设置IPC信息成功回调
 	 */
 	public void setIpcLinkWiFiCallBack(int state) {
-		if (0 == state) {
-			// sucess 
-			if (null != mNewMobilePWD) {
-				editMobileWifiPwd(mNewMobilePWD);
-			}
-		} else {
-			GolukUtils.showToast(this, "修改密码失败");
-		}
+//		if (0 == state) {
+//			// sucess 
+//			if (null != mNewMobilePWD) {
+//				editMobileWifiPwd(mNewMobilePWD);
+//			}
+//		} else {
+//			GolukUtils.showToast(this, "修改密码失败");
+//		}
 	}
 	
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
@@ -1413,7 +1405,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :" + state + "	process:" + process);
 		switch (type) {
 		case 3:
-			wifiCallBack_3( state,  process,  message,  arrays);
+			// wifiCallBack_3( state,  process,  message,  arrays);
 			break;
 		case 5:
 			wifiCallBack_5(state,  process,  message,  arrays);

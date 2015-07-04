@@ -988,58 +988,58 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	@Override
 	public void MultiCaskCallBack(int type, int sucess, Object obj) {
 		
-		GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---1111-type:  " + type + "  sucess:" + sucess);
+//		GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---1111-type:  " + type + "  sucess:" + sucess);
 
 		int what = 0;
 		if (type == 3) {
 			GolukDebugUtils.i(TAG, "创建热点ipc接入结果 ：创建热点" + sucess);
 			if (sucess == 1) {
 				what = 32;
-				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 222222 sucess ");
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 222222 sucess ");
 			} else if (2 == sucess) {
 				netUtil.findServerIpAddress(type, "", "", WAITTIME);
 				// TODO request
 				return;
 			} else {
-				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 44444  failed ");
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 44444  failed ");
 				what = -32;
 			}
 		} else {
 			GolukDebugUtils.i(TAG, "创建热点ipc接入结果 ：自动连接热点" + sucess);
 			if (sucess == 1) {
 				what = 52;
-				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 3333  sucess ");
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 3333  sucess ");
 			} else if (2 == sucess) {
 				netUtil.findServerIpAddress(type, "", "", WAITTIME);
 				return;
 			} else {
-				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 5555  failed ");
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 5555  failed ");
 				what = -52;
 			}
 		}
 		
-		GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 66666");
+//		GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 66666");
 		Message msg = new Message();
 	
 		WifiRsBean[] beans =null;
 		if (obj != null) {
-			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 7777  NULL");
+//			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 7777  NULL");
 		 beans = new WifiRsBean[1];
 			beans[0] = (WifiRsBean) obj;
 			msg.obj = beans;
 		} else {
-			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 88888");
+//			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 88888");
 			beans=apManagesupport.getJoinApList(false,300);
-			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 99999");
+//			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 99999");
 			if(beans!=null){
-				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- AAAAA");
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- AAAAA");
 				beans[0] = (WifiRsBean) obj;
 				msg.obj = beans;	
 				if (type == 3) {
-					GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- BBBB  sucess");
+//					GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- BBBB  sucess");
 					what = 32;
 				}else{
-					GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- CCCCC  sucess");
+//					GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- CCCCC  sucess");
 					what = 52;
 				}
 				
