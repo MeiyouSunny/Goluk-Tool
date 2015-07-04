@@ -281,7 +281,7 @@ public class WifiConnectManagerSupport {
 		String regEx = "^\"" + title;
 		WifiInfo info = wifiManager.getConnectionInfo();
 		WifiRsBean bean = null;
-		if( Pattern.compile(regEx).matcher(info.getSSID()).find()){
+		if(info!=null && Pattern.compile(regEx).matcher(info.getSSID()).find()){
 			bean = new WifiRsBean();
 			bean.setIpc_ssid(info.getSSID().replace("\"", ""));
 			bean.setIpc_bssid(info.getMacAddress());
