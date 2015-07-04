@@ -262,19 +262,19 @@ public class GFileUtils {
 	 * @date 2015年2月3日
 	 */
 	public static void writeLiveLog(String message){
-//		long time=System.currentTimeMillis();
-//        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss"); 
-//        String timename=format.format(new Date(time));  
-//		
-//		String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
-//	            + File.separator + "goluk_carrecorder";
-//		
-//		File dir = new File(dirname);
-//        if(!dir.exists()){
-//        	dir.mkdirs();
-//        }
-//		
-//		writeFile(dirname + File.separator +"liveVideoLog.txt",timename+"==>>>"+message+"\r\n");
+		long time=System.currentTimeMillis();
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss"); 
+        String timename=format.format(new Date(time));  
+		
+		String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
+	            + File.separator + "log";
+		
+		File dir = new File(dirname);
+        if(!dir.exists()){
+        	dir.mkdirs();
+        }
+		
+		writeFile(dirname + File.separator +"wifibindlog.txt",timename+"==>>>"+message+"\r\n");
 	}
 	
 	/**

@@ -23,6 +23,9 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.list.WiFiListAdapter;
 import cn.com.mobnote.list.WiFiListManage;
 import cn.com.mobnote.list.WiFiListManage.WiFiListData;
@@ -37,7 +40,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * Wifi扫描列表
  *
  */
-public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack {
+public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack,
+		ILiveDialogManagerFn {
 
 	public static String willConnName2 = null;
 	public static String willConnMac2 = null;
@@ -82,6 +86,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private boolean mIsFirst = true;
 	/** 区分是自动连接　还是用户手动点击连接 */
 	private boolean isAutoConn = false;
+	/** 连接失败次数 */
+	private final int SHOW_SETTING_COUNT = 3;
+	/** 绑定失败次数，超过3次，提示用户去系统WIFI列表綁定 */
+	private int mFailedCount = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +97,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_list);
 		mContext = this;
+
+		GFileUtils.writeLiveLog("WifiLinkListActivity-----------------onCreate--------1111");
 
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(mWifiManager, this);
@@ -111,6 +121,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		}
 		WifiRsBean bean = mWac.getConnResult();
 		if (null == bean) {
+			GFileUtils.writeLiveLog("WiFiLinkListActivity-------dealAutoConn   : NULL");
 			GolukDebugUtils.e("", "WiFiLinkListActivity 通知logic连接ipc---dealAutoConn--------NULL---没有连接上WIFI");
 			// 未连接Goluk,直接扫描列表
 			mLoading.setVisibility(View.VISIBLE);
@@ -124,6 +135,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			mWiFiListManage.analyzeWiFiData(beanArray);
 			mWiFiListAdapter.notifyDataSetChanged();
 			saveConnectWifiMsg(willConnName2, "", willConnMac2);
+			
+			GFileUtils.writeLiveLog("WiFiLinkListActivity-------dealAutoConn   : willConnName2:" + willConnName2 + "  willConnMac2:" + willConnMac2);
 
 			GolukDebugUtils.e("", "WiFiLinkListActivity 通知logic连接ipc---dealAutoConn--------连接上了：" + willConnName2);
 			if (mApp.isIpcLoginSuccess) {
@@ -134,6 +147,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 				}
 			} else {
 				// 去连接IPC
+				GFileUtils.writeLiveLog("WiFiLinkListActivity-------dealAutoConn   : sendLogicLinkIpc-------:");
 				isAutoConn = true;
 				sendLogicLinkIpc();
 				mLoading.setVisibility(View.VISIBLE);
@@ -198,6 +212,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		if (!isFrist) {
 			mLoading.setVisibility(View.VISIBLE);
 		}
+
+		GFileUtils.writeLiveLog("WiFiLinkListActivity-------getWiFiList-------isFrist:" + isFrist + "  b:" + b);
+
 		GolukDebugUtils.e("", "获取wifi列表---getWiFiList---");
 		// 获取文件列表tcay_ap_ipc
 		mWac.scanWifiList("", b);
@@ -210,6 +227,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	 * @param pwd
 	 */
 	public void connectWiFi(String wifiName, String mac, String pwd) {
+		GFileUtils.writeLiveLog("WiFiLinkListActivity-------connectWiFi-------has Password wifiName:" + wifiName
+				+ "  mac:" + mac + "  pwd:" + pwd);
 		isAutoConn = false;
 		willConnName2 = wifiName;
 		willConnMac2 = mac;
@@ -226,6 +245,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	 * @param wifiName
 	 */
 	public void connectWiFi(String wifiName, String mac) {
+		GFileUtils.writeLiveLog("WiFiLinkListActivity-------connectWiFi-------no Password wifiName:" + wifiName
+				+ " mac:" + mac);
 		isAutoConn = false;
 		willConnName2 = wifiName;
 		willConnMac2 = mac;
@@ -247,6 +268,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	 * 通知logic连接ipc
 	 */
 	public void sendLogicLinkIpc() {
+		GFileUtils.writeLiveLog("WiFiLinkListActivity-------sendLogicLinkIpc-------");
 		// 先获取ipc是否已连接
 		boolean isLogin = mApp.getIpcIsLogin();
 		GolukDebugUtils.e("", "WiFiLinkListActivity ipc连接状态---WiFiLinkListActivity---b---" + isLogin);
@@ -306,11 +328,13 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	protected void onResume() {
 		mApp.setContext(this, "WiFiLinkList");
 		super.onResume();
+		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
 		if (mIsFirst) {
 			mIsFirst = false;
 		} else {
 			if (!mHasLinked) {
+				GFileUtils.writeLiveLog("WiFiLinkListActivity-------onResume----------auto Conn");
 				this.dealAutoConn();
 			}
 		}
@@ -324,6 +348,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		case R.id.back_btn:
 			// 返回
 			finish();
+			LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
 			break;
 		case R.id.refresh_help_btn:
 			// 获取wifi列表
@@ -377,6 +402,15 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		} else {
 			this.nextNotCan();
 			GolukUtils.showToast(mContext, message);
+			showSettingDialog();
+		}
+	}
+
+	private void showSettingDialog() {
+		mFailedCount++;
+		if (mFailedCount > SHOW_SETTING_COUNT) {
+			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
+					LiveDialogManager.DIALOG_TYPE_WIFIBIND_SHOWSETTING, "提示", "请去系统WIFI连接设置");
 		}
 	}
 
@@ -417,6 +451,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		GolukDebugUtils.e("", "wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process
 				+ "---message---" + message + "---arrays---" + arrays);
+
+		final String log = "wifi链接接口回调---type---" + type + "---state---" + state + "---process---" + process
+				+ "---message---" + message + "---arrays---" + arrays;
+
+		GFileUtils.writeLiveLog(log);
+
 		mLoading.setVisibility(View.GONE);
 		switch (type) {
 		case 1:
@@ -431,5 +471,23 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			GolukUtils.showToast(mContext, message);
 			break;
 		}
+	}
+
+	@Override
+	public void dialogManagerCallBack(int dialogType, int function, String data) {
+		if (LiveDialogManager.DIALOG_TYPE_WIFIBIND_SHOWSETTING == dialogType) {
+			switch (function) {
+			case LiveDialogManager.FUNCTION_DIALOG_OK:
+				// 跳转系统WIFI列表
+				GFileUtils.writeLiveLog("WiFiLinkListActivity-------Jump----System WifiLIst-------");
+				Intent intent = new Intent();
+				intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+				startActivity(intent);
+				break;
+			default:
+				break;
+			}
+		}
+
 	}
 }

@@ -899,7 +899,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 	
 	private void test() {
-		modifyApNotifyIPc("987654321");
+//		modifyApNotifyIPc("987654321");
+		
+//		GolukUtils.showSystemWifiList(this);
 	}
 	
 	@Override

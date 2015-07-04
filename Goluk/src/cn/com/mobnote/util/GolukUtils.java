@@ -216,4 +216,17 @@ public class GolukUtils {
 		}
 	}
 
+	/**
+	 * 打开手机系统WIFI列表
+	 * 
+	 * @param context
+	 * @author jyf
+	 * @date 2015年7月3日
+	 */
+	public static void showSystemWifiList(Context context) {
+		Intent intent = new Intent();
+		intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+		context.startActivity(intent);
+	}
+
 }
