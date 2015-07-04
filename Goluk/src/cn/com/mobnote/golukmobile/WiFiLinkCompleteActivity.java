@@ -20,7 +20,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.wifibind.ViewFrame;

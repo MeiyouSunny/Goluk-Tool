@@ -135,7 +135,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 		@Override
 		public void dispatchMessage(Message msg) {
-
+                 if(callback==null){
+                	 return ;
+                 }
 			switch (msg.what) {
 			// 扫描列表成功
 			case 11: {
