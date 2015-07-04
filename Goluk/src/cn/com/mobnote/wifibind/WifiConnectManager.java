@@ -26,7 +26,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	private static final String TAG = "testhan";
 	private static final String WIFICONFIG = "wifi.config";
 	private WifiConnCallBack callback = null;
-
+	private  static final int WAITTIME=90 * 1000;
 	private WifiManager wifiManager = null;
 	private WifiConnectManagerSupport wifiSupport = null;
 	private Context context = null;
@@ -624,7 +624,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				handler.sendMessage(msg);
 
 				GolukDebugUtils.i(TAG, "创建热点等待ipc接入");
-				netUtil.findServerIpAddress(Integer.parseInt(type), ssid, "", 70 * 1000);
+				netUtil.findServerIpAddress(Integer.parseInt(type), ssid, "", WAITTIME);
 
 				// 获取wifi连接列表
 				// getClientList(ipc_ssid, ipc_mac, ipc_ip, type, 40000);
@@ -754,7 +754,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 							handler.sendMessage(msg);
 
 							//
-							netUtil.findServerIpAddress(5, "", "",70 * 1000);
+							netUtil.findServerIpAddress(5, "", "",WAITTIME);
 							return;
 						} else {
 							apManagesupport.closeWifiAP();
@@ -869,7 +869,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 							handler.sendMessage(msg);
 
 							//
-							netUtil.findServerIpAddress(5, "", "", 70 * 1000);
+							netUtil.findServerIpAddress(5, "", "", WAITTIME);
 							return;
 						} else {
 							apManagesupport.closeWifiAP();
@@ -997,7 +997,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				what = 32;
 				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 222222 sucess ");
 			} else if (2 == sucess) {
-				netUtil.findServerIpAddress(type, "", "", 70 * 1000);
+				netUtil.findServerIpAddress(type, "", "", WAITTIME);
 				// TODO request
 				return;
 			} else {
@@ -1010,7 +1010,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				what = 52;
 				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 3333  sucess ");
 			} else if (2 == sucess) {
-				netUtil.findServerIpAddress(type, "", "", 70 * 1000);
+				netUtil.findServerIpAddress(type, "", "", WAITTIME);
 				return;
 			} else {
 				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 5555  failed ");
