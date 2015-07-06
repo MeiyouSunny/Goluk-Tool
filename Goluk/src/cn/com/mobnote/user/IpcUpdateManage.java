@@ -202,7 +202,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 				String data = json.getString("data");
 				JSONObject jsonData = new JSONObject(data);
 
-				String goluk = jsonData.getString("goluk");
+				final String goluk = jsonData.getString("goluk");
 				JSONArray ipc = jsonData.getJSONArray("ipc");
 				// 保存ipc匹配信息
 				mApp.mSharedPreUtil.saveIPCMatchInfo(ipc.toString());
@@ -212,7 +212,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 				if (FUNCTION_AUTO == mFunction) {
 
 					if (goluk.equals("{}")) {
-						GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
 						// APP不需要升级，判断ipc是否需要升级
 						IPCInfo ipcInfo = ipcUpdateUtils(ipc);
 						ipcUpgradeNext(ipcInfo);
@@ -223,7 +222,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 				} else if (FUNCTION_CONNECTIPC == mFunction) {
 					// ipc连接后不匹配
 					if (goluk.equals("{}")) {
-						GolukDebugUtils.i("lily", "------goluk为空，不用进行升级------");
 						// APP不需要升级，判断ipc是否需要升级
 						IPCInfo ipcInfo = ipcUpdateUtils(ipc);
 						ipcUpgradeNext(ipcInfo);
@@ -249,7 +247,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 						if(!mApp.isIpcLoginSuccess){
 							GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
 						}else{
-							GolukUtils.showToast(mApp.getContext(), "极路客固件当前已是最新版本");
+							String version_new = jsonData.getString("version");
+							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号"+version_new+"，当前已是最新版本");
 						}
 					} else {
 						/**
@@ -268,7 +267,29 @@ public class IpcUpdateManage implements IPCManagerFn {
 								ipcUpgrade(TYPE_INSTALL, ipcInfo);
 							}
 						} else {
-							appUpgradeUtils(goluk);
+							String clcik_version = "";
+							String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
+							JSONArray jsonArray = new JSONArray(matchInfo);
+
+							IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
+							int length = 0 ;
+							if(null == upgradeArray){
+								length = 0;
+							}else{
+								length = upgradeArray.length;
+							}
+							for (int i = 0; i < length; i++) {
+								clcik_version = upgradeArray[i].version;
+							}
+							new AlertDialog.Builder(mApp.getContext())
+							.setMessage("发现新极路客固件版本"+clcik_version+"，为了正常升级新固件，请先下载最新的APP后再试。")
+							.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+								
+								@Override
+								public void onClick(DialogInterface arg0, int arg1) {
+									appUpgradeUtils(goluk);
+								}
+							}).show();
 						}
 					}
 
@@ -360,7 +381,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public void ipcUpgrade(final int type, final IPCInfo ipcInfo) {
 		GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
 		final String msg = TYPE_DOWNLOAD == type ? "发现新极路客固件版本，是否下载升级？" : "发现新极路客固件版本，是否现在安装升级？";
-		mDownloadDialog = new AlertDialog.Builder(mApp.getContext()).setMessage(msg)
+		mDownloadDialog = new AlertDialog.Builder(mApp.getContext()).setTitle("固件升级提示").setMessage(msg)
 				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 					@Override
@@ -583,9 +604,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public void showUpgradeGoluk(final Context mContext,String message, final String url){
 		mBuilder = new AlertDialog.Builder(mContext);
-		mAppUpdateDialog = mBuilder.setTitle("发现新版本")
+		mAppUpdateDialog = mBuilder.setTitle("APP升级提示")
 				.setMessage(message)
-				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+				.setPositiveButton("马上下载", new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -632,7 +653,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public void showUpgradeGoluk2(final Context mContext,String message, final String url){
 		mBuilder = new AlertDialog.Builder(mContext);
-		mAppUpdateDialog = mBuilder.setTitle("发现新版本")
+		mAppUpdateDialog = mBuilder.setTitle("APP升级提示")
 				.setMessage(message)
 				.setPositiveButton("稍后再说", new DialogInterface.OnClickListener() {
 					
@@ -641,7 +662,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 						dimissAppDialog();
 					}
 				})
-				.setNegativeButton("马上升级", new DialogInterface.OnClickListener() {
+				.setNegativeButton("马上下载", new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -671,4 +692,5 @@ public class IpcUpdateManage implements IPCManagerFn {
 		GolukDebugUtils.i("lily", "---------stopIpcUpgrade()------" + IPC_VDCPCmd_StopIPCUpgrade);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_StopIPCUpgrade, "");
 	}
+	
 }

@@ -734,9 +734,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			//获取ipc版本号判断是否匹配
 			boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
 			
-			/*// 跳转到行车记录仪界面
+			// 跳转到行车记录仪界面
 			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-			startActivity(i);*/
+			startActivity(i);
 			break;
 		default:
 			break;
@@ -1136,13 +1136,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
 		
 		// 开启直播
-		/*Intent intent = new Intent(this, LiveActivity.class);
+		Intent intent = new Intent(this, LiveActivity.class);
 		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
 		intent.putExtra(LiveActivity.KEY_GROUPID, "");
 		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
 		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 		startActivity(intent);
-		mShareLayout.setVisibility(View.GONE);*/
+		mShareLayout.setVisibility(View.GONE);
 	}
 
 	// 查看他人的直播
@@ -1349,7 +1349,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 			if(IPC_VDCP_Msg_GetVersion == msg){
 				if(param1 == RESULE_SUCESS){
-					ipcConnect(param2);
+//					ipcConnect(param2);
 				}
 			}
 		}

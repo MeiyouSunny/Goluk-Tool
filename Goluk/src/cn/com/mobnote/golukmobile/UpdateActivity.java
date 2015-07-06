@@ -168,11 +168,20 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		if (mSign == 0) {
 			if(mApp.mLoadStatus){
 				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
-				mTextDowload.setText("下载中");
-				mBtnDownload.setText("下载中…"+progressSetup+"%");
-				downloadStatus = DOWNLOAD_STATUS;
-				mBtnDownload.setBackgroundResource(R.drawable.icon_more);
-				mBtnDownload.setEnabled(false);
+				if(!UserUtils.isNetDeviceAvailable(this)){
+					GolukUtils.showToast(mApp.getContext(), "很抱歉，新极路客固件下载失败，请检查网络后重试");
+					mTextDowload.setText("未下载");
+					mBtnDownload.setText("下载新极路客固件程序");
+					downloadStatus = DOWNLOAD_STATUS_FAIL;
+					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
+					mBtnDownload.setEnabled(true);
+				}else{
+					mTextDowload.setText("下载中");
+					mBtnDownload.setText("下载中…"+progressSetup+"%");
+					downloadStatus = DOWNLOAD_STATUS;
+					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
+					mBtnDownload.setEnabled(false);
+				}
 				return ;
 			}
 			boolean b = mApp.mIpcUpdateManage.download(ipc_url,
@@ -203,9 +212,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case UPDATE_FILE_NOT_EXISTS:
+					mApp.mIpcUpdateManage.showLoadingDialog();
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "没有找到升级文件。");
 					break;
 				case UPDATE_PREPARE_FILE:
+					mApp.mIpcUpdateManage.dimissLoadingDialog();
 					mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在为您准备升级，请稍候……");
 					break;
 				case UPDATE_TRANSFER_FILE:
@@ -261,6 +272,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "校验不通过");
 					break;
 				case UPDATE_IPC_UNUNITED:
+					mApp.mIpcUpdateManage.showLoadingDialog();
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "您好像没有连接摄像头哦。");
 					break;
 				case UPDATE_IPC_DISCONNECT:
@@ -481,7 +493,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				// ipc断开
 				if (stage.equals("1")) {
 					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
-				} else if (stage.equals("2")) {
+				} else if (stage.equals("2") && !percent.equals("100")) {
 					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
 				}
 			}
