@@ -72,7 +72,7 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, "WiFiLinkIndex");
 		// 断开连接
-		mApp.mIPCControlManager.setIPCWifiState(false, null);
+		mApp.mIPCControlManager.setIPCWifiState(false, "");
 		// 改变Application-IPC退出登录
 		mApp.setIpcLoginOut();
 		// 页面初始化

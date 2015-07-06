@@ -20,6 +20,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.wifibind.ViewFrame;
@@ -86,7 +87,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_complete2);
-//		GFileUtils.writeLiveLog("WiFiLinkCompleteActivity------------onCreate-------:");
+		GFileUtils.writeLiveLog("WiFiLinkCompleteActivity------------onCreate-------:");
 		mContext = this;
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(mWifiManager, this);
@@ -205,7 +206,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		String ipcssid = WiFiInfo.IPC_SSID;
 		String ipcmac = WiFiInfo.IPC_MAC;
 		// 创建热点之前先断开ipc连接
-		mApp.mIPCControlManager.setIPCWifiState(false, null);
+		mApp.mIPCControlManager.setIPCWifiState(false, "");
 		// 改变Application-IPC退出登录
 		mApp.setIpcLoginOut();
 		// 调用韩峥接口创建手机热点
@@ -250,8 +251,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	 * ipc连接成功回调
 	 */
 	public void ipcLinkWiFiCallBack() {
-//		GFileUtils
-//				.writeLiveLog("WifiLinkCompleteActivity-----------ipcLinkWiFiCallBack    Bind Sucess ! Bind Sucess ! Bind Sucess! (重要事情说三遍) ");
+		GFileUtils
+				.writeLiveLog("WifiLinkCompleteActivity-----------ipcLinkWiFiCallBack    Bind Sucess ! Bind Sucess ! Bind Sucess! (重要事情说三遍) ");
 		this.toSucessView();
 		// 保存连接数据
 		WifiRsBean beans = new WifiRsBean();
@@ -352,7 +353,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 				Intent i = new Intent(mContext, CarRecorderActivity.class);
 				startActivity(i);
 
-//				GFileUtils.writeLiveLog("WifiLinkCompleteActivity---------- Jump CarRecorderActivity----- ");
+				GFileUtils.writeLiveLog("WifiLinkCompleteActivity---------- Jump CarRecorderActivity----- ");
 			}
 			break;
 		}
@@ -474,16 +475,16 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	}
 
 	private void connFailed() {
-//		GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed : " + mStep);
+		GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed : " + mStep);
 		if (0 == mStep) {
-//			GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed show Dialog 请先将极路客断电5~10秒");
+			GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed show Dialog 请先将极路客断电5~10秒");
 			// 弹框提示用户重启GoLUK
 			LiveDialogManager.getManagerInstance()
 					.showSingleBtnDialog(this, LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC, "提示",
 							"请先将极路客断电5~10秒，然后上电重新启动，点确认按钮，等待极路客连接到手机");
 			mStep++;
 		} else {
-//			GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed show Dialog 极路客绑定失败");
+			GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed show Dialog 极路客绑定失败");
 			// 提示用户绑定失败，重新退出程序绑定
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
 					LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED, "提示", "极路客绑定失败，请您重试");
@@ -497,7 +498,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 		GolukDebugUtils.e("", log);
 
-//		GFileUtils.writeLiveLog(log);
+		GFileUtils.writeLiveLog(log);
 
 		switch (type) {
 		case 3:
@@ -515,15 +516,15 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC == dialogType) {
 			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
-//				GFileUtils
-//						.writeLiveLog("WifiLinkCompleteActivity-----------dialogManagerCallBack DIALOG_TYPE_WIFIBIND_RESTART_IPC");
+				GFileUtils
+						.writeLiveLog("WifiLinkCompleteActivity-----------dialogManagerCallBack DIALOG_TYPE_WIFIBIND_RESTART_IPC");
 				mWac = new WifiConnectManager(mWifiManager, this);
 				mWac.autoWifiManage(WiFiInfo.IPC_SSID, WiFiInfo.IPC_PWD, WiFiInfo.MOBILE_SSID, WiFiInfo.MOBILE_PWD);
 				mStep++;
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED == dialogType) {
-//			GFileUtils
-//					.writeLiveLog("WifiLinkCompleteActivity-----------dialogManagerCallBack DIALOG_TYPE_WIFIBIND_FAILED");
+			GFileUtils
+					.writeLiveLog("WifiLinkCompleteActivity-----------dialogManagerCallBack DIALOG_TYPE_WIFIBIND_FAILED");
 			LiveDialogManager.getManagerInstance().dismissSingleBtnDialog();
 			SysApplication.getInstance().exit();
 			if (null != mWac) {

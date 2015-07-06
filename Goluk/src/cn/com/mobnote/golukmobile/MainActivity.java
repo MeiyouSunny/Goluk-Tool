@@ -1318,7 +1318,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mWac.saveConfiguration(beans);
 
 		// 创建热点之前先断开ipc连接
-		mApp.mIPCControlManager.setIPCWifiState(false, null);
+		mApp.mIPCControlManager.setIPCWifiState(false, "");
 		// 改变Application-IPC退出登录
 		mApp.setIpcLoginOut();
 		// 创建热点

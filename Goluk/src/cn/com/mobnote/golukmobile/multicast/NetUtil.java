@@ -3,8 +3,10 @@ package cn.com.mobnote.golukmobile.multicast;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+
 import android.os.Handler;
 import android.os.Message;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -50,6 +52,7 @@ public class NetUtil {
 				cancel();
 				break;
 			case MSG_H_TIMEOUT:
+				GFileUtils.writeLiveLog("---Netutil-------handler ------timeout -------------: ");
 				cancelTimer();
 				cancel();
 				sendData(TIMEOUT, null);
@@ -104,7 +107,6 @@ public class NetUtil {
 		if (null != mUdpSocket) {
 			return;
 		}
-		// seconds = seconds / 1000;
 		mIsCancel = false;
 		mType = type;
 		GolukDebugUtils.e("", "TestUDP--------findServerIpAddress-----1");
@@ -163,6 +165,7 @@ public class NetUtil {
 	}
 
 	private void receiveSucess(String ssid, String ip) {
+		GFileUtils.writeLiveLog("---Netutil-------receiveSucess-----ssid: " + ssid + "  ip:" + ip);
 		GolukDebugUtils.e("", "+++TestUDP--------receiveSucess-----1111111 recvbuf1=: " + ip);
 		if (ip.contains("/")) {
 			ip = ip.replace("/", "");
