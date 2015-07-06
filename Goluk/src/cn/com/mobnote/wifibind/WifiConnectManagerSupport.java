@@ -275,8 +275,9 @@ public class WifiConnectManagerSupport {
 
 		return bean;
 	}
+	
 	/**
-	 * 获得匹配连接wifi的信息
+	 * 获得匹配连接wifi的信息是否有效
 	 */
 	public WifiRsBean getConnResult(String title) {
 		String regEx = "^\"" + title;
@@ -297,7 +298,6 @@ public class WifiConnectManagerSupport {
 
 		return bean;
 	}
-
 	/**
 	 * 判断ipc是否在列表中
 	 * 
