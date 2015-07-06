@@ -15,6 +15,7 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
 import cn.com.mobnote.golukmobile.multicast.NetUtil;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
@@ -25,7 +26,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	private static final String TAG = "testhan";
 	private static final String WIFICONFIG = "wifi.config";
 	private WifiConnCallBack callback = null;
-
+	private  static final int WAITTIME=90 * 1000;
 	private WifiManager wifiManager = null;
 	private WifiConnectManagerSupport wifiSupport = null;
 	private Context context = null;
@@ -67,6 +68,13 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	}
 
 	/**
+	 * 
+	 */
+	public void unbind() {
+		this.callback = null;
+		this.context = null;
+	}
+	/**
 	 * 通过用户名密码创建wifi热点
 	 * 
 	 * @param ssid
@@ -94,8 +102,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	public void saveConfiguration(WifiRsBean beans) {
 		saveConfiguration(beans, 40 * 1000);
 	}
-
- 
+	public WifiRsBean readConfig()  {
+	return wifiSupport.readConfig(WIFICONFIG);
+	}
 
 	public void isConnectIPC() {
 		isConnectIPC(30000);
@@ -126,7 +135,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 		@Override
 		public void dispatchMessage(Message msg) {
-
+                 if(callback==null){
+                	 return ;
+                 }
 			switch (msg.what) {
 			// 扫描列表成功
 			case 11: {
@@ -196,10 +207,13 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				break;
 			}
 			case -24: {
-				callback.wifiCallBack(2, -1, msg.what, "连接wifi失败", null);
+				callback.wifiCallBack(2, -1, msg.what, "连接wifi失败,请重试", null);
 				break;
 			}
-
+			case -32: {
+				callback.wifiCallBack(5, -1, msg.what, "附近没有可连接的ipc", msg.obj);
+				break;
+			}
 			case -41: {
 				callback.wifiCallBack(4, -1, 0, "保存wifi配置失败", msg.obj);
 				break;
@@ -612,7 +626,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				handler.sendMessage(msg);
 
 				GolukDebugUtils.i(TAG, "创建热点等待ipc接入");
-				netUtil.findServerIpAddress(Integer.parseInt(type), ssid, "", 60 * 1000);
+				netUtil.findServerIpAddress(Integer.parseInt(type), ssid, "", WAITTIME);
 
 				// 获取wifi连接列表
 				// getClientList(ipc_ssid, ipc_mac, ipc_ip, type, 40000);
@@ -643,6 +657,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 					config.put("ph_ssid", beans.getPh_ssid());
 					config.put("ph_pass", beans.getPh_pass());
 					config.put("ipc_ip", beans.getIpc_ip());
+					config.put("ipc_pass", beans.getIpc_pass());
 					config.toString();
 					try {
 						wifiSupport.writePassFile(WIFICONFIG, config.toString());
@@ -741,7 +756,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 							handler.sendMessage(msg);
 
 							//
-							netUtil.findServerIpAddress(5, "", "", 60 * 1000);
+							netUtil.findServerIpAddress(5, "", "",WAITTIME);
 							return;
 						} else {
 							apManagesupport.closeWifiAP();
@@ -802,6 +817,125 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		mythread.start();
 	}
 
+	
+	/**
+	 * 自动管理wifi
+	 * 
+	 * @param outTime
+	 */
+	public void autoWifiManage( final String ipc_ssid, final String ipc_ip,final String ph_ssid,final String ph_pass) {
+		final int outTime=40*1000;
+		Runnable runnable = new Runnable() {
+			public void run() {
+				try {
+					int openTime = 0;
+					Message msg = new Message();
+			
+
+//					String ipc_ssid = config.getString("ipc_ssid");
+//					String ipc_ip = config.getString("ipc_ip");
+//					String ph_ssid = config.getString("ph_ssid");
+//					String ph_pass = config.getString("ph_pass");
+					// wifiSupport.
+					ConnectivityManager cm = (ConnectivityManager) context
+							.getSystemService(Context.CONNECTIVITY_SERVICE);
+					NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+					// -----------------------------------------如果 wifi
+					// 打开了-------------------------------//
+					if (mWifi != null && mWifi.isConnected()) {
+						msg.what = 54;
+						msg.obj = null;
+						handler.sendMessage(msg);
+						// Log.e(TAG, "自动连接----------------开启wifi------------");
+						// openTime = vaviAutoWifi(ipc_ssid, outTime);
+						// if (openTime == 0) {
+						//
+						// return;
+						// }
+						//
+						// wifiSupport.closeWifi();
+						// // 创建热点
+						// createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip,
+						// openTime);
+						return;
+					}
+					// -----------------------------------------如果 ap打开了
+					// -------------------------------//
+					if (apManagesupport.getWifiApState() == 13) {
+						// 当前已经有IPC热点
+						WifiRsBean bb = wifiSupport.getNetworkSSID(context);
+						Log.e(TAG, "自动连接----------------开启热点------------");
+						if (bb.getPh_ssid().equals(ph_ssid)) {
+							msg.what = 53;
+							msg.obj = bb;
+							handler.sendMessage(msg);
+
+							//
+							netUtil.findServerIpAddress(5, "", "", WAITTIME);
+							return;
+						} else {
+							apManagesupport.closeWifiAP();
+							// 创建热点
+							autoWifiManage();
+							return;
+						}
+					}
+
+					// -----------------------------------------ap wifi
+					// 都没有打开-------------------------------//
+					if ((mWifi == null || !mWifi.isConnected())) {
+						// 关闭所有的网络
+						wifiSupport.closeWifi();
+						apManagesupport.closeWifiAP();
+
+						Log.e(TAG, "自动连接----------------AP和wifi 都没有开启------------");
+						openTime = vaviAutoWifi(ipc_ssid, outTime);
+						if (openTime == 0) {
+							// 扫描超时
+							msg.what = -52;
+							msg.obj = null;
+							handler.sendMessage(msg);
+							return;
+						}
+						// 创建热点
+						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
+						return;
+					}
+
+					else
+
+					{ // 不是wifi 和热点 关了直接连
+						Log.e(TAG, "autoconnn----------------networkINfo nostate------------");
+						openTime = vaviAutoWifi(ipc_ssid, outTime);
+						if (openTime == 0) {
+							// 扫描超时
+							msg.what = -52;
+							msg.obj = null;
+							handler.sendMessage(msg);
+							return;
+						}
+						// 不管开着什么 都关掉
+						wifiSupport.closeWifi();
+						apManagesupport.closeWifiAP();
+						// 创建热点
+						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			};
+
+		};
+
+		Thread mythread = new Thread(runnable);
+		mythread.start();
+	}
+	
+	
+	
+	
+	
 	private void isConnectIPC(int outTime) {
 		// TODO Auto-generated method stub
 
@@ -855,40 +989,68 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 	@Override
 	public void MultiCaskCallBack(int type, int sucess, Object obj) {
+		
+//		GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---1111-type:  " + type + "  sucess:" + sucess);
 
 		int what = 0;
 		if (type == 3) {
 			GolukDebugUtils.i(TAG, "创建热点ipc接入结果 ：创建热点" + sucess);
 			if (sucess == 1) {
 				what = 32;
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 222222 sucess ");
 			} else if (2 == sucess) {
-				netUtil.findServerIpAddress(type, "", "", 60 * 1000);
+				netUtil.findServerIpAddress(type, "", "", WAITTIME);
 				// TODO request
 				return;
 			} else {
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 44444  failed ");
 				what = -32;
 			}
 		} else {
 			GolukDebugUtils.i(TAG, "创建热点ipc接入结果 ：自动连接热点" + sucess);
 			if (sucess == 1) {
 				what = 52;
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 3333  sucess ");
 			} else if (2 == sucess) {
-				netUtil.findServerIpAddress(type, "", "", 60 * 1000);
+				netUtil.findServerIpAddress(type, "", "", WAITTIME);
 				return;
 			} else {
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 5555  failed ");
 				what = -52;
 			}
 		}
+		
+//		GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 66666");
 		Message msg = new Message();
-		msg.what = what;
+	
+		WifiRsBean[] beans =null;
 		if (obj != null) {
-			WifiRsBean[] beans = new WifiRsBean[1];
+//			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 7777  NULL");
+		 beans = new WifiRsBean[1];
 			beans[0] = (WifiRsBean) obj;
 			msg.obj = beans;
 		} else {
-			msg.obj = null;
+//			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 88888");
+			beans=apManagesupport.getJoinApList(false,300);
+//			GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- 99999");
+			if(beans!=null){
+//				GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- AAAAA");
+				beans[0] = (WifiRsBean) obj;
+				msg.obj = beans;	
+				if (type == 3) {
+//					GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- BBBB  sucess");
+					what = 32;
+				}else{
+//					GFileUtils.writeLiveLog("WifiConnectManager---------- MultiCaskCallBack---- CCCCC  sucess");
+					what = 52;
+				}
+				
+			}else{
+				msg.obj = null;
+			}
+		
 		}
-
+		msg.what = what;
 		handler.sendMessage(msg);
 
 	}
@@ -900,6 +1062,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	public boolean closeWifiAP() {
 		wifiSupport.closeWifi();
 		apManagesupport.closeWifiAP();
+		this.unbind();
 		return true;
 	}
 	
