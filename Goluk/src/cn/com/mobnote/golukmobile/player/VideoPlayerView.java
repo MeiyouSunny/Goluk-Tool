@@ -6,12 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -165,7 +167,10 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
 		mVideo.setOnPreparedListener(this);
 		mVideo.setOnErrorListener(this);
-		mVideo.setOnInfoListener(this);
+		if (GolukUtils.getSystemSDK() >= 17) {
+			mVideo.setOnInfoListener(this);
+		}
+		
 		mVideo.setOnCompletionListener(this);
 		mVideo.setOnTouchListener(mTouchListener);
 	}

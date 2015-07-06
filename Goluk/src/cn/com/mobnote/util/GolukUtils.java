@@ -229,4 +229,14 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
+	public static int getSystemSDK() {
+		try {
+			return Integer.parseInt(android.os.Build.VERSION.SDK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+
 }
