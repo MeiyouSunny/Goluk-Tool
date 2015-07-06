@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.json.JSONObject;
@@ -281,13 +282,17 @@ public class WifiConnectManagerSupport {
 		String regEx = "^\"" + title;
 		WifiInfo info = wifiManager.getConnectionInfo();
 		WifiRsBean bean = null;
-		if(info!=null && Pattern.compile(regEx).matcher(info.getSSID()).find()){
-			bean = new WifiRsBean();
-			bean.setIpc_ssid(info.getSSID().replace("\"", ""));
-			bean.setIpc_bssid(info.getMacAddress());
-			bean.setWifiSignal(getWifiLevel(info.getRssi()));
-			bean.setIpc_ip(int2ip(info.getIpAddress()));
+		if(info!=null &&info.getSSID()!=null){
+			Matcher  matcher=Pattern.compile(regEx).matcher(info.getSSID());
+			if(  matcher!=null && matcher.find()){
+				bean = new WifiRsBean();
+				bean.setIpc_ssid(info.getSSID().replace("\"", ""));
+				bean.setIpc_bssid(info.getMacAddress());
+				bean.setWifiSignal(getWifiLevel(info.getRssi()));
+				bean.setIpc_ip(int2ip(info.getIpAddress()));
+			}
 		}
+		
 
 
 		return bean;
