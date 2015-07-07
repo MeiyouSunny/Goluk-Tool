@@ -191,7 +191,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @param obj
 	 */
 	public void requestInfoCallback(int success, Object outTime, Object obj) {
-		GolukDebugUtils.i(TAG, "=======requestInfoCallback=======");
+		GolukDebugUtils.i(TAG, "=======requestInfoCallback======="+success+"---success");
 		// 取消loading显示
 		int codeOut = (Integer) outTime;
 		dimissLoadingDialog();
@@ -302,7 +302,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 			case 2:
 			case 3:
 			default:
-				GolukDebugUtils.i(TAG, "网络连接超时，请检查后重试");
+				GolukUtils.showToast(mApp.getContext(), "网络连接超时，请检查后重试");
 				break;
 			}
 		}
