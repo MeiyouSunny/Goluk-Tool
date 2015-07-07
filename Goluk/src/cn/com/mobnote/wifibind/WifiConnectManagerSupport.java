@@ -275,29 +275,30 @@ public class WifiConnectManagerSupport {
 
 		return bean;
 	}
-	
+
 	/**
 	 * 获得匹配连接wifi的信息是否有效
 	 */
 	public WifiRsBean getConnResult(String title) {
-		String regEx = "^\"" + title;
+		String regEx = "^" + title;
+
 		WifiInfo info = wifiManager.getConnectionInfo();
 		WifiRsBean bean = null;
-		if(info!=null &&info.getSSID()!=null){
-			Matcher  matcher=Pattern.compile(regEx).matcher(info.getSSID());
-			if(  matcher!=null && matcher.find()){
+		if (info != null && info.getSSID() != null) {
+			String tmpSsid = info.getSSID().replace("\"", "");
+			Matcher matcher = Pattern.compile(regEx).matcher(tmpSsid);
+			if (matcher != null && matcher.find()) {
 				bean = new WifiRsBean();
-				bean.setIpc_ssid(info.getSSID().replace("\"", ""));
+				bean.setIpc_ssid(tmpSsid);
 				bean.setIpc_bssid(info.getMacAddress());
 				bean.setWifiSignal(getWifiLevel(info.getRssi()));
 				bean.setIpc_ip(int2ip(info.getIpAddress()));
 			}
 		}
-		
-
 
 		return bean;
 	}
+
 	/**
 	 * 判断ipc是否在列表中
 	 * 
@@ -448,13 +449,14 @@ public class WifiConnectManagerSupport {
 		}
 
 	}
+
 	/**
 	 * 从文件
 	 * 
 	 * @param fileName
 	 * @return
 	 */
-	public WifiRsBean readConfig(String fileName)  {
+	public WifiRsBean readConfig(String fileName) {
 		String configString;
 		try {
 			configString = readPassFile(fileName);
@@ -462,11 +464,11 @@ public class WifiConnectManagerSupport {
 				return null;
 			}
 			JSONObject config = new JSONObject(configString);
-			WifiRsBean rs=new WifiRsBean();
-			 rs.setIpc_ssid( config.getString("ipc_ssid"));
-			 rs.setIpc_ip(config.getString("ipc_ip"));
-			 rs.setIpc_mac(config.getString("ipc_mac"));
-			 rs.setPh_ssid(config.getString("ph_ssid"));
+			WifiRsBean rs = new WifiRsBean();
+			rs.setIpc_ssid(config.getString("ipc_ssid"));
+			rs.setIpc_ip(config.getString("ipc_ip"));
+			rs.setIpc_mac(config.getString("ipc_mac"));
+			rs.setPh_ssid(config.getString("ph_ssid"));
 			rs.setPh_pass(config.getString("ph_pass"));
 			rs.setIpc_pass(config.getString("ipc_pass"));
 			return rs;
@@ -474,8 +476,9 @@ public class WifiConnectManagerSupport {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	}
+
 	/**
 	 * 从文件中读取
 	 * 
