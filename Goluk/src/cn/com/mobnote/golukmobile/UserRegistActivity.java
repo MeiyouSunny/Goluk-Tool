@@ -249,6 +249,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		case R.id.user_regist_btn:
 			//点按钮后,弹出登录中的提示,样式使用系统 loading 样式,文字描述:注册中
 			//注册成功:弹出系统短提示:注册成功,以登录状态进入 Goluk 首页
+			mApplication.registOrRepwd = true;
 			regist();
 			break;
 		}

@@ -160,6 +160,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	/** 下载列表个数 */
 	private int downloadCount = 0;
 	
+	/**判断注册(true) / 重置密码(false) **/
+	public boolean registOrRepwd = false;
+	
 	static {
 		System.loadLibrary("golukmobile");
 	}

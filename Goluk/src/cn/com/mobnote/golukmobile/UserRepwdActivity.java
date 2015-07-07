@@ -208,6 +208,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		case R.id.user_repwd_ok_btn:
 			// 点按钮后,弹出重置密码中的提示,样式使用系统 loading 样式,文字描述:正在重置
 			// 重置密码成功,弹出系统短提示:重置密码成功。同时跳转至登录页面。
+			mApplication.registOrRepwd = false;
 			repwd();
 			break;
 		}
