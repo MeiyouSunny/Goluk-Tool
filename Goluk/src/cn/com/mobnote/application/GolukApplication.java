@@ -164,7 +164,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private int downloadCount = 0;
 	
 	/**测试ipc升级版本号**/
-//	private static final String TEST_IPC_VERSION = "1.0.1.8";
+//	public static final String TEST_IPC_VERSION = "1.0.1.8";
 	
 	/**极路客固件升级文件下载中的状态**/
 	public boolean mLoadStatus = false;
@@ -1245,7 +1245,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if(event == ENetTransEvent_IPC_VDCP_CommandResp){
 					if(IPC_VDCP_Msg_GetVersion == msg){
 						if(param1 == RESULE_SUCESS){
-							ipcConnect(param2);
+//							ipcConnect(param2);
+							String str = (String) param2;
+							if (TextUtils.isEmpty(str)) {
+								return;
+							}
+							try {
+								JSONObject json = new JSONObject(str);
+								String ipcVersion = json.optString("version");
+								GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
+								// 保存ipc版本号
+								mSharedPreUtil.saveIPCVersion(ipcVersion);
+							}catch(Exception e){
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -1671,65 +1684,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public boolean getIsBackgroundState() {
 		return isBackground;
-	}
-	
-	/**
-	 * ipc自动连接后
-	 * @param param2
-	 */
-	public void ipcConnect(Object param2) {
-		String appcontent = "";
-		String str = (String) param2;
-		if (TextUtils.isEmpty(str)) {
-			return;
-		}
-		try {
-			JSONObject json = new JSONObject(str);
-			String ipcVersion = json.optString("version");
-			GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
-			// 保存ipc版本号
-			mSharedPreUtil.saveIPCVersion(ipcVersion);
-
-			String matchInfo = mSharedPreUtil.getIPCMatchInfo();
-			JSONArray jsonArray = new JSONArray(matchInfo);
-
-			boolean isMatch = false;
-			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
-			int length = 0 ;
-			if(null == upgradeArray){
-				length = 0;
-			}else{
-				length = upgradeArray.length;
-			}
-			for (int i = 0; i < length; i++) {
-				appcontent = upgradeArray[i].appcontent;
-				String version = upgradeArray[i].version;
-				if (ipcVersion.equals(version)) {
-					// 匹配
-					isMatch = true;
-					break;
-				}
-			}
-			if (!isMatch) {
-				// -1下载中
-				int function = mIpcUpdateManage.connectIpc();
-				if (function != -1) {
-					mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-							IPageNotifyFn.PageType_CheckUpgrade, JsonUtil.getCancelJson());
-					mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_CONNECTIPC, ipcVersion);
-				} else {
-					// 判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击确定，请求数据
-					if(mIpcUpdateManage.isHasUpdateDialogShow()){
-						
-					}else{
-						mIpcUpdateManage.showUnMatchDialog(this.getContext(), "当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。",
-								ipcVersion);
-					}
-				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

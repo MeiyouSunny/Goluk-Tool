@@ -59,9 +59,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 
 	/** 下载类型 */
 	public static final int TYPE_DOWNLOAD = 0;
-	/** 安装 */
+	/** 安装 **/
 	public static final int TYPE_INSTALL = 1;
-
+	/** 没有升级请求（没有任何操作） **/
 	private int mFunction = -1;
 	/** 下载提示框 */
 	private AlertDialog mDownloadDialog = null;
@@ -728,6 +728,52 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public boolean stopIpcUpgrade() {
 		GolukDebugUtils.i("lily", "---------stopIpcUpgrade()------" + IPC_VDCPCmd_StopIPCUpgrade);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_StopIPCUpgrade, "");
+	}
+
+	/**
+	 * ipc自动连接后
+	 * 
+	 * @param param2
+	 */
+	public boolean ipcConnect() {
+		try {
+			String ipcVersion = mApp.mSharedPreUtil.getIPCVersion();
+			GolukDebugUtils.i(TAG, "-----------match-----111-------"+ipcVersion);
+			String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
+			GolukDebugUtils.i(TAG, "----matchInfo----"+matchInfo);
+			JSONArray jsonArray = new JSONArray(matchInfo);
+
+			boolean isMatch = false;
+			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
+			int length = 0;
+			if (null == upgradeArray) {
+				length = 0;
+			} else {
+				length = upgradeArray.length;
+			}
+			for (int i = 0; i < length; i++) {
+				String version = upgradeArray[i].version;
+				GolukDebugUtils.i(TAG, "--------match--222-------"+version);
+				if (ipcVersion.equals(version)) {
+					// 匹配
+					isMatch = true;
+					break;
+				}
+			}
+			if (!isMatch) {
+				// 判断app升级和ipc升级框是否弹出，如果都没有弹，弹不匹配的框，点击确定，请求数据
+				if (mApp.mIpcUpdateManage.isHasUpdateDialogShow()) {
+
+				} else {
+					mApp.mIpcUpdateManage.showUnMatchDialog(mApp.getContext(),
+							"当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。", ipcVersion);
+				}
+			}
+			return isMatch;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 
 }
