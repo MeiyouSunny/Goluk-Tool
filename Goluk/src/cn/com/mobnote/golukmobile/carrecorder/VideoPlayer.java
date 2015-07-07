@@ -532,11 +532,11 @@ public class VideoPlayer extends Activity implements OnClickListener, OnInfoList
 		
 		String msg = "播放错误";
 		switch (arg1) {
-			case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-			case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+			case 1:
+			case -1010:
 				msg = "视频出错，请重试！";
 				break;
-			case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+			case -110:
 				msg = "网络访问异常，请重试！";
 				break;
 				

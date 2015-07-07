@@ -863,12 +863,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				Drawable user_down = this.getResources().getDrawable(R.drawable.home_self_btn_click);
-				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
+				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
 				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable user_up = this.getResources().getDrawable(R.drawable.home_self_btn);
-				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_up, null, null);
+				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_up, null, null);
 				mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
@@ -877,12 +877,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				Drawable db_down = this.getResources().getDrawable(R.drawable.home_share_btn_click);
-				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, db_down, null, null);
+				mShareBtn.setCompoundDrawablesWithIntrinsicBounds(null, db_down, null, null);
 				mShareBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable db_up = this.getResources().getDrawable(R.drawable.home_share_btn);
-				mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, db_up, null, null);
+				mShareBtn.setCompoundDrawablesWithIntrinsicBounds(null, db_up, null, null);
 				mShareBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
@@ -948,7 +948,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public void setBelowItem(int id) {
 		Drawable drawable;
 		if (id == R.id.index_look_btn) {
@@ -959,11 +958,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.GONE);
 			mVideoSquareActivity.onDestroy();
 			drawable = this.getResources().getDrawable(R.drawable.home_local_btn_click);
-			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
+			indexLookBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
 			indexLookBtn.setTextColor(Color.rgb(59, 151, 245));
 
 			drawable = this.getResources().getDrawable(R.drawable.home_find_btn);
-			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
+			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
 			msquareBtn.setTextColor(Color.rgb(103, 103, 103));
 		} else if (id == R.id.index_square_btn) {
 			if (null != mMapView) {
@@ -973,12 +972,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			mVideoSquareActivity.onResume();
 			drawable = this.getResources().getDrawable(R.drawable.home_local_btn);
-			indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
+			indexLookBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
 			indexLookBtn.setTextColor(Color.rgb(103, 103, 103));
 
 			drawable = this.getResources().getDrawable(R.drawable.home_find_btn_click);
 			msquareBtn.setTextColor(Color.rgb(59, 151, 245));
-			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
+			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
 		}
 	}
 

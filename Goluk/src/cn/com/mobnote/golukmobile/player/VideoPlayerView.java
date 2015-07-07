@@ -7,14 +7,6 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
-import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
-import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -46,6 +38,14 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("NewApi")
 public class VideoPlayerView extends Activity implements OnClickListener , OnInfoListener, OnErrorListener, 
@@ -648,11 +648,11 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		
 		String msg = "播放错误";
 		switch (arg1) {
-			case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-			case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
+			case 1:
+			case -1010:
 				msg = "视频出错，请重试！";
 				break;
-			case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
+			case -110:
 				msg = "网络访问异常，请重试！";
 				break;
 				
