@@ -255,7 +255,15 @@ public class VideoPlayer extends Activity implements OnClickListener, OnInfoList
 
 		
 		mVideoView.setOnErrorListener(this);
-		mVideoView.setOnInfoListener(this);
+		if (GolukUtils.getSystemSDK() >= 17) {
+			try {
+				mVideoView.setOnInfoListener(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
 		mVideoView.setOnCompletionListener(this);
 		mVideoView.setZOrderMediaOverlay(true);
 		

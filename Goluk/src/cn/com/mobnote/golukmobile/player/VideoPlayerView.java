@@ -168,7 +168,11 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		mVideo.setOnPreparedListener(this);
 		mVideo.setOnErrorListener(this);
 		if (GolukUtils.getSystemSDK() >= 17) {
-			mVideo.setOnInfoListener(this);
+			try {
+				mVideo.setOnInfoListener(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		mVideo.setOnCompletionListener(this);
