@@ -212,13 +212,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case UPDATE_FILE_NOT_EXISTS:
-					mApp.mIpcUpdateManage.showLoadingDialog();
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "没有找到升级文件。");
 					break;
 				case UPDATE_PREPARE_FILE:
-					GolukDebugUtils.i("lily", "------------install-------333333");
-					mApp.mIpcUpdateManage.dimissLoadingDialog();
-					GolukDebugUtils.i("lily", "------------install------4444444");
 					mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在为您准备升级，请稍候……");
 					break;
 				case UPDATE_TRANSFER_FILE:
@@ -274,7 +270,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "校验不通过");
 					break;
 				case UPDATE_IPC_UNUNITED:
-					mApp.mIpcUpdateManage.showLoadingDialog();
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "您好像没有连接摄像头哦。");
 					break;
 				case UPDATE_IPC_DISCONNECT:
@@ -358,11 +353,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			} else if (mSign == 1) {
 				GolukDebugUtils.i("lily", "------------install-------111111");
 				boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
-				if(b){
-					mApp.mIpcUpdateManage.showLoadingDialog();
-				}else{
-					mApp.mIpcUpdateManage.dimissLoadingDialog();
-				}
 			}
 			break;
 		default:
@@ -380,8 +370,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
 		GolukDebugUtils.i("lily", "------------downloadCallback-----------" + state);
-		downloadStatus = state;
 		mApp.mIpcUpdateManage.dimissLoadingDialog();
+		downloadStatus = state;
 		if (state == DOWNLOAD_STATUS) {
 			// 下载中
 			mApp.mLoadStatus = true;
@@ -426,7 +416,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("lily", "YYYYYY====IPC_VDCP_Msg_IPCUpgrade====msg=" + msg + "===param1=" + param1
 				+ "==param2=" + param2 + "--------event-----" + event);
-		mApp.mIpcUpdateManage.dimissLoadingDialog();
 		GolukDebugUtils.i("lily", "------------install-------22222");
 		if (event == ENetTransEvent_IPC_UpGrade_Resp) {
 			if (IPC_VDCP_Msg_IPCUpgrade == msg) {

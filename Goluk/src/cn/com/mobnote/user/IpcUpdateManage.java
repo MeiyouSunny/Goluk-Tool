@@ -566,21 +566,12 @@ public class IpcUpdateManage implements IPCManagerFn {
 			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
 			return false;
 		} else {
-			// 判断是否绑定
-			@SuppressWarnings("static-access")
-			SharedPreferences preferences = mApp.getContext().getSharedPreferences("ipc_wifi_bind",
-					mApp.getContext().MODE_PRIVATE);
-			boolean isbind = preferences.getBoolean("isbind", false);
-			if (isbind) {
+			// 判断摄像头是否连接
+			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				return update(filePath);
 			} else {
-				// 判断摄像头是否连接
-				if (GolukApplication.getInstance().getIpcIsLogin()) {
-					return update(filePath);
-				} else {
-					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
-					return false;
-				}
+				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+				return false;
 			}
 
 		}

@@ -48,11 +48,11 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_marginLeft="21dp"
-		    android:layout_marginTop="14dp"
+		    android:layout_marginTop="10dp"
 		    android:layout_centerVertical="true"
 		    android:orientation="vertical"
 		    android:gravity="center"
-		    android:layout_marginBottom="14dp"
+		    android:layout_marginBottom="10dp"
 		    >
 		    <TextView
 		        android:id="@+id/upgrade_ipc_text"
@@ -79,8 +79,8 @@
 			android:layout_marginRight="19dp"
 			android:layout_centerVertical="true"
 		    android:orientation="vertical"
-		    android:layout_marginTop="14dp"
-		    android:layout_marginBottom="14dp"
+		    android:layout_marginTop="10dp"
+		    android:layout_marginBottom="10dp"
 		    >
 		    <TextView
 		        android:id="@+id/upgrade_ipc_size_text"
@@ -115,7 +115,7 @@
 		android:layout_height="1dp"
 		android:layout_below="@id/solid_2"
 		android:background="@drawable/solid"
-		android:layout_marginTop="6dp"/>
+		android:layout_marginTop="5dp"/>
 	
 	<RelativeLayout
 	    android:id="@+id/update_info"
@@ -134,14 +134,14 @@
 	        android:textSize="12sp"
 	        android:text="@string/ipc_update_info_title"
 	        android:textColor="#3f3f3f"
-	        android:layout_marginTop="14dp"
+	        android:layout_marginTop="12dp"
 	         />
 	    <TextView 
 	        android:id="@+id/update_info_content"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_below="@id/upgrade_title"
-	        android:layout_marginTop="12dp"
+	        android:layout_marginTop="10dp"
 	        android:textColor="#3f3f3f"
 	        android:layout_marginBottom="14dp"
 	        />
@@ -158,10 +158,11 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_below="@+id/solid_4"
-	    android:layout_marginTop="14dp"
+	    android:layout_marginTop="12dp"
 	    android:paddingLeft="21dp"
 	    android:paddingRight="21dp"
 	    android:text="@string/ipc_hint_text"
+	    android:textColor="@color/user_hint_text_color"
 	    />
 	
 	<Button
@@ -171,7 +172,7 @@
 		android:layout_centerHorizontal="true"
 		android:background="@drawable/icon_more"
 		android:layout_alignParentBottom="true"
-		android:layout_marginBottom="20dp"
+		android:layout_marginBottom="15dp"
 		android:gravity="center"
 		android:textSize="18sp"
 		android:textColor="#f0fefc"/>

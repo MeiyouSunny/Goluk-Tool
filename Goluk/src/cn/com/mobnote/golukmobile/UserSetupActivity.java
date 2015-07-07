@@ -97,7 +97,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
-		
+
 		/** 清除缓存 */
 		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
 		// 获取页面元素
@@ -117,16 +117,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// IPC版本号
 		mTextIPCVersion = (TextView) findViewById(R.id.ipc_update_text_version);
 
-		// 调用同步接口，在设置页显示版本号
-		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-		GolukDebugUtils.i("upgrade", "=======+version+=====" + verName);
-		mTextVersionCode.setText(verName);
-		mTextAppVersion.setText(verName);
-		String vIpc = mApp.mSharedPreUtil.getIPCVersion();
-		GolukDebugUtils.i("lily", vIpc+"===UserSetupActivity----vipc------"+verName);
-		mTextIPCVersion.setText(vIpc);
-
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -143,6 +133,16 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 
 		// 页面初始化
 		init();
+
+		// 调用同步接口，在设置页显示版本号
+		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
+		GolukDebugUtils.i("upgrade", "=======+version+=====" + verName);
+		mTextVersionCode.setText(verName);
+		mTextAppVersion.setText(verName);
+		String vIpc = mApp.mSharedPreUtil.getIPCVersion();
+		GolukDebugUtils.i("lily", vIpc + "===UserSetupActivity----vipc------" + verName);
+		mTextIPCVersion.setText(vIpc);
 
 		mHandler = new Handler() {
 			@Override
@@ -281,20 +281,18 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 固件升级
 		case R.id.update_item:
 			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity===点击固件升级==中ipcVersion=====");
-			if(mApp.mLoadStatus && mApp.mLoadProgress != 100){
-				new AlertDialog.Builder(mApp.getContext())
-				.setTitle("提示")
-				.setMessage("新极路客固件升级文件正在下载……")
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
-						it.putExtra(UpdateActivity.UPDATE_PROGRESS, mApp.mLoadProgress);
-						startActivity(it);
-					}
-				}).show();
-			}else{
+			if (mApp.mLoadStatus && mApp.mLoadProgress != 100) {
+				new AlertDialog.Builder(mApp.getContext()).setTitle("提示").setMessage("新极路客固件升级文件正在下载……")
+						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
+								it.putExtra(UpdateActivity.UPDATE_PROGRESS, mApp.mLoadProgress);
+								startActivity(it);
+							}
+						}).show();
+			} else {
 				boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 			}
 			break;
