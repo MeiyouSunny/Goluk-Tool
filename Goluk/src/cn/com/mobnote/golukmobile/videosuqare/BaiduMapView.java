@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
@@ -28,6 +31,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -36,13 +41,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 @SuppressLint("InflateParams")
-public class BaiduMapView implements ILocationFn{
+public class BaiduMapView implements ILocationFn {
 	private Context mContext = null;
 	private RelativeLayout mRootLayout = null;
 	private RelativeLayout indexMapLayout = null;
 	/** 百度地图 */
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
+	
+	/** 定时请求直播点时间 */
+	private int mTiming = 1 * 60 * 1000;
 	/** 是否首次定位 */
 	private boolean isFirstLoc = true;
 	private BaiduMapManage mBaiduMapManage = null;
@@ -52,31 +60,45 @@ public class BaiduMapView implements ILocationFn{
 
 	/** 定位相关 */
 	private LocationClient mLocClient;
-	
+
 	private MainActivity ma;
 	
+	/** 控制离开页面不自动请求大头针数据 */
+	private boolean isCurrent = true;
+
+	/** 首页handler用来接收消息,更新UI */
+	public static Handler mBaiduHandler = null;
+
 	public BaiduMapView(Context context) {
 		mContext = context;
 		mRootLayout = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.baidu_map, null);
-		
+
 		ma = (MainActivity) mContext;
 		ma.mApp.addLocationListener("main", this);
-		
+
 		initMap();
 	}
 
 	public void onResume() {
+		isCurrent = true;
+		
+		boolean b = mBaiduHandler.hasMessages(2);
+		if (!b) {
+			Message msg = new Message();
+			msg.what = 2;
+			mBaiduHandler.sendMessageDelayed(msg, mTiming);
+		}
 		// 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		if (null != mMapView) {
 			mMapView.onResume();
 			mMapView.invalidate();
 		}
-		
+
 		// 回到页面启动定位
 		if (null != mLocClient) {
 			mLocClient.start();
 		}
-		
+
 	}
 
 	/**
@@ -118,7 +140,7 @@ public class BaiduMapView implements ILocationFn{
 			public void onMapLoaded() {
 				// 地图加载完成,请求大头针数据
 				GolukDebugUtils.e("", "PageType_GetPinData:地图加载完成,请求大头针数据");
-				
+
 				ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 						IPageNotifyFn.PageType_GetPinData, "");
 			}
@@ -141,9 +163,28 @@ public class BaiduMapView implements ILocationFn{
 			public void onMapStatusChange(MapStatus arg0) {
 			}
 		});
+
+		// 更新UI handler
+		mBaiduHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				int what = msg.what;
+				switch (what) {
+				case 2:
+					// 5分钟更新一次大头针数据
+					ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+							IPageNotifyFn.PageType_GetPinData, "");
+					break;
+				case 98:
+					// 测试,气泡图片下载完成
+					Object obj2 = new Object();
+					downloadBubbleImageCallBack(1, obj2);
+					break;
+				}
+			}
+		};
 	}
-	
-	
+
 	@Override
 	public void LocationCallBack(String gpsJson) {
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
@@ -170,9 +211,60 @@ public class BaiduMapView implements ILocationFn{
 		LngLat.lat = location.rawLat;
 
 	}
-	
+
+	/**
+	 * 首页大头针数据返回
+	 */
+	public void pointDataCallback(int success, Object obj) {
+		if (1 == success) {
+			String str = (String) obj;
+			GolukDebugUtils.e("", "大头针数据返回---" + str);
+			// 记录大头针日志
+			// console.print("mapmarker", str);
+			// String str =
+			// "{\"code\":\"200\",\"state\":\"true\",\"info\":[{\"utype\":\"1\",\"aid\":\"1\",\"nickname\":\"张三\",\"lon\":\"116.357428\",\"lat\":\"39.93923\",\"picurl\":\"http://img2.3lian.com/img2007/18/18/003.png\",\"speed\":\"34公里/小时\"},{\"aid\":\"2\",\"utype\":\"2\",\"nickname\":\"李四\",\"lon\":\"116.327428\",\"lat\":\"39.91923\",\"picurl\":\"http://img.cool80.com/i/png/217/02.png\",\"speed\":\"342公里/小时\"}]}";
+			try {
+				JSONObject json = new JSONObject(str);
+				// 请求成功
+				JSONArray list = json.getJSONArray("info");
+				mBaiduMapManage.AddMapPoint(list);
+			} catch (Exception e) {
+
+			}
+		} else {
+			GolukDebugUtils.e("", "请求大头针数据错误");
+		}
+
+		if (isCurrent) {
+			// 不管大头针数据请求成功/失败,都需要定时5分钟请求下一次数据
+			boolean b = mBaiduHandler.hasMessages(2);
+			if (!b) {
+				Message msg = new Message();
+				msg.what = 2;
+				MainActivity.mMainHandler.sendMessageDelayed(msg, mTiming);
+			}
+		}
+	}
+
 	public View getView() {
 		return mRootLayout;
+	}
+
+	/**
+	 * 下载气泡图片完成
+	 * 
+	 * @param obj
+	 */
+	public void downloadBubbleImageCallBack(int success, Object obj) {
+		if (1 == success) {
+			// 更新在线视频图片
+			String imgJson = (String) obj;
+			// String imgJson = "{\"path\":\"fs1:/Cache/test11.png\"}";
+			GolukDebugUtils.e("", "下载气泡图片完成downloadBubbleImageCallBack:" + imgJson);
+			mBaiduMapManage.bubbleImageDownload(imgJson);
+		} else {
+			GolukUtils.showToast(mContext, "气泡图片下载失败");
+		}
 	}
 
 	private class click implements View.OnClickListener {

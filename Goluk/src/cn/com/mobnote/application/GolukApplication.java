@@ -742,7 +742,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// 地图大头针图片
 				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针数据---" + String.valueOf(param2));
 				// 地图大头针
-				mMainActivity.pointDataCallback(success, param2);
+				mMainActivity.mVideoSquareActivity.mVideoSquareAdapter.baidumap.pointDataCallback(success, param2);
 			}
 			/*if (mPageSource == "LiveVideoList") {
 				GolukDebugUtils.e("", "pageNotifyCallBack---直播列表数据---" + String.valueOf(param2));
@@ -758,7 +758,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (mPageSource == "Main") {
 				// 地图大头针图片
 				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针图片---" + String.valueOf(param2));
-				((MainActivity) mContext).downloadBubbleImageCallBack(success, param2);
+				((MainActivity) mContext).mVideoSquareActivity.mVideoSquareAdapter.baidumap.downloadBubbleImageCallBack(success, param2);
 			}
 			/*if (mPageSource == "LiveVideoList") {
 				// 地图大头针图片

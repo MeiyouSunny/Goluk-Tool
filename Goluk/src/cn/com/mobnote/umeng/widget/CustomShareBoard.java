@@ -79,7 +79,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.qq).setOnClickListener(this);
 		rootView.findViewById(R.id.qqZone).setOnClickListener(this);
 		rootView.findViewById(R.id.sina).setOnClickListener(this);
-		rootView.findViewById(R.id.share_cancel).setOnClickListener(this);
+		//rootView.findViewById(R.id.share_cancel).setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
 		setHeight(LayoutParams.WRAP_CONTENT);
@@ -130,9 +130,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			 this.shareUp();//上报分享统计
 			 performShare(SHARE_MEDIA.SINA);
 			 break;
-		case R.id.share_cancel:
-			dismiss();
-			break;
 		default:
 			break;
 		}

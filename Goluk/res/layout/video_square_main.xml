@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="热门"
-                    android:textColor="#ffffff"
+                    android:textColor="#0b59be"
                     android:textSize="16sp" />
 
                 <ImageView

@@ -6,13 +6,12 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class VideoSquareAdapter extends PagerAdapter{
 	private Context mContext=null;
 	public VideoSquareListView mVideoSquareListView=null;
 	private VideoCategoryView mVideoCategoryView=null;
-	private BaiduMapView baidumap = null;
+	public BaiduMapView baidumap = null;
 	SharePlatformUtil sharePlatform;
 	
 	public VideoSquareAdapter(Context c,SharePlatformUtil spf) {
@@ -34,8 +33,6 @@ public class VideoSquareAdapter extends PagerAdapter{
 		}else {		
 			baidumap = new BaiduMapView(mContext);
 			container.addView(baidumap.getView());
-			
-			baidumap.onResume();
 			return baidumap.getView();
 		}
 	}
@@ -52,12 +49,12 @@ public class VideoSquareAdapter extends PagerAdapter{
 	}
 	
 	public void onDestroy(){
-//		if(null != mVideoSquareListView){
-//			mVideoSquareListView.onDestroy();
-//		}
-//		if(null != mVideoCategoryView){
-//			mVideoCategoryView.onDestroy();
-//		}
+		if(null != mVideoSquareListView){
+			mVideoSquareListView.onDestroy();
+		}
+		if(null != mVideoCategoryView){
+			mVideoCategoryView.onDestroy();
+		}
 		
 		/*if(null != baidumap){
 			baidumap.onDestroy();
@@ -74,6 +71,7 @@ public class VideoSquareAdapter extends PagerAdapter{
 		if(null != mVideoSquareListView){
 			mVideoSquareListView.onResume();
 			mVideoCategoryView.onResume();
+			baidumap.onResume();
 		}
 	}
 	

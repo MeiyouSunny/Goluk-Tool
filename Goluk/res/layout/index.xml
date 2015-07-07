@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/status_layout"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="#344450"
         android:orientation="horizontal" >
@@ -16,7 +16,8 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="center" >
 
@@ -27,7 +28,7 @@
                 android:background="#00000000"
                 android:drawableTop="@drawable/index_find_btn_press"
                 android:text="@string/index_square"
-                android:textColor="#cccccc"
+                android:textColor="#0b59be"
                 android:textSize="12sp" />
         </RelativeLayout>
         <!-- 广场 -->
@@ -50,7 +51,8 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="center" >
 

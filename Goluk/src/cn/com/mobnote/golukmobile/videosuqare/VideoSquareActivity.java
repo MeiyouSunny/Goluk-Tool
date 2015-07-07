@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class VideoSquareActivity implements OnClickListener {
-	private VideoSquareAdapter mVideoSquareAdapter = null;
+	public VideoSquareAdapter mVideoSquareAdapter = null;
 	private ViewPager mViewPager = null;
 	private ImageView hot = null;
 	private ImageView square = null;
@@ -148,6 +148,8 @@ public class VideoSquareActivity implements OnClickListener {
 			//squareImage.setBackgroundResource(R.drawable.home_video_btn_click);
 			//hotImage.setBackgroundResource(R.drawable.home_hot_btn);
 		}else{
+			
+			
 			look.setVisibility(View.VISIBLE);
 			hot.setVisibility(View.INVISIBLE);
 			square.setVisibility(View.INVISIBLE);
