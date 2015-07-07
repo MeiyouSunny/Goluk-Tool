@@ -147,7 +147,7 @@ public class UserUtils {
 	 */
 	public static void showUpdateSuccess(AlertDialog showUpdateDialog,Context context,String message){
 		if(showUpdateDialog == null){
-			showUpdateDialog = new AlertDialog.Builder(context)
+			showUpdateDialog = new AlertDialog.Builder(context).setTitle("提示")
 				.setMessage(message)
 				.setPositiveButton("确定", null)
 				.show();

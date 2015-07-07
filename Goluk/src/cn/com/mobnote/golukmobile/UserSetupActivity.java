@@ -237,7 +237,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				}
 				initIntent(UserLoginActivity.class);
 			} else if (btnLoginout.getText().toString().equals("退出登录")) {
-				new AlertDialog.Builder(mContext).setMessage("是否确认退出？")
+				new AlertDialog.Builder(mContext).setTitle("提示").setMessage("是否确认退出？")
 						.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
 							@Override
@@ -254,7 +254,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			if (mTextCacheSize.getText().toString().equals("0M")) {
 				UserUtils.showDialog(mContext, "没有缓存数据");
 			} else {
-				new AlertDialog.Builder(mContext).setMessage("确定清除缓存？").setNegativeButton("取消", null)
+				new AlertDialog.Builder(mContext).setTitle("提示").setMessage("确定清除缓存？").setNegativeButton("取消", null)
 						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 							@Override
@@ -283,6 +283,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity===点击固件升级==中ipcVersion=====");
 			if(mApp.mLoadStatus && mApp.mLoadProgress != 100){
 				new AlertDialog.Builder(mApp.getContext())
+				.setTitle("提示")
 				.setMessage("新极路客固件升级文件正在下载……")
 				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					

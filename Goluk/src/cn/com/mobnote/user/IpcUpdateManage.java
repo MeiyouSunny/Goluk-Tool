@@ -286,7 +286,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 							for (int i = 0; i < length; i++) {
 								clcik_version = upgradeArray[i].version;
 							}
-							new AlertDialog.Builder(mApp.getContext())
+							new AlertDialog.Builder(mApp.getContext()).setTitle("升级提示")
 									.setMessage("发现新极路客固件版本" + clcik_version + "，为了正常升级新固件，请先下载最新的APP后再试。")
 									.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
@@ -536,7 +536,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public void showUnMatchDialog(final Context mContext, String message, final String vIpc) {
 		Builder mBuilder = new AlertDialog.Builder(mContext);
-		AlertDialog dialog = mBuilder.setTitle("发现新版本").setMessage(message).setPositiveButton("稍后再说", null)
+		AlertDialog dialog = mBuilder.setTitle("升级提示").setMessage(message).setPositiveButton("稍后再说", null)
 				.setNegativeButton("马上升级", new DialogInterface.OnClickListener() {
 
 					@Override
