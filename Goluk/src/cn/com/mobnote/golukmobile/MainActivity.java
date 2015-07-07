@@ -255,12 +255,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			startWifi();
 			// 启动创建热点
 			createWiFiHot();
+			// 等待IPC连接时间
+			mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
 		} else {
 			wifiConnectFailed();
 		}
-
-		// 等待IPC连接时间
-		mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 20 * 1000);
 
 		// 不是第一次登录，并且上次登录成功过，进行自动登录
 		mPreferencesAuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
@@ -834,9 +833,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 				exitTime = System.currentTimeMillis();
 			} else {
-				if (null != mWac) {
-					mWac.closeAp();
-				}
+				// if (null != mWac) {
+				// mWac.closeAp();
+				// }
 				SysApplication.getInstance().exit();
 				// }
 				mApp.mIPCControlManager.setIPCWifiState(false, "");
