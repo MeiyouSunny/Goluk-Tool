@@ -2,22 +2,18 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 @SuppressLint("InflateParams")
 public class VideoCategoryView{
 	private Context mContext=null;
 	private RelativeLayout mRootLayout=null;
-	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-	private float density = SoundUtils.getInstance().getDisplayMetrics().density;
 	private boolean onlyOnClick = true;
 	
 	public VideoCategoryView(Context context){
