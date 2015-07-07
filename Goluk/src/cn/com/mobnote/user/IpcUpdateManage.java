@@ -272,22 +272,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 								ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
 							}
 						} else {
-							String clcik_version = "";
-							String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
-							JSONArray jsonArray = new JSONArray(matchInfo);
-
-							IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
-							int length = 0;
-							if (null == upgradeArray) {
-								length = 0;
-							} else {
-								length = upgradeArray.length;
-							}
-							for (int i = 0; i < length; i++) {
-								clcik_version = upgradeArray[i].version;
-							}
+							GolukDebugUtils.i(TAG, "--------ipcInfo.version-----" + ipcInfo.version);
 							new AlertDialog.Builder(mApp.getContext()).setTitle("升级提示")
-									.setMessage("发现新极路客固件版本" + clcik_version + "，为了正常升级新固件，请先下载最新的APP后再试。")
+									.setMessage("发现新极路客固件版本" + ipcInfo.version + "，为了正常升级新固件，请先下载最新的APP后再试。")
 									.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 										@Override
@@ -738,9 +725,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public boolean ipcConnect() {
 		try {
 			String ipcVersion = mApp.mSharedPreUtil.getIPCVersion();
-			GolukDebugUtils.i(TAG, "-----------match-----111-------"+ipcVersion);
+			GolukDebugUtils.i(TAG, "-----------match-----111-------" + ipcVersion);
 			String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
-			GolukDebugUtils.i(TAG, "----matchInfo----"+matchInfo);
+			GolukDebugUtils.i(TAG, "----matchInfo----" + matchInfo);
 			JSONArray jsonArray = new JSONArray(matchInfo);
 
 			boolean isMatch = false;
@@ -753,7 +740,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 			}
 			for (int i = 0; i < length; i++) {
 				String version = upgradeArray[i].version;
-				GolukDebugUtils.i(TAG, "--------match--222-------"+version);
+				GolukDebugUtils.i(TAG, "--------match--222-------" + version);
 				if (ipcVersion.equals(version)) {
 					// 匹配
 					isMatch = true;
