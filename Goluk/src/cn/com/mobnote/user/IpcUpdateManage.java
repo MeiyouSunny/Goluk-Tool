@@ -387,9 +387,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public void ipcUpgrade(final int type, final IPCInfo ipcInfo, String message) {
 		GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
-		final String msg = TYPE_DOWNLOAD == type ? "发现新极路客固件版本，是否下载升级？" : message;
+		final String msg = TYPE_DOWNLOAD == type ? message : message;
 		mDownloadDialog = new AlertDialog.Builder(mApp.getContext()).setTitle("固件升级提示").setMessage(msg)
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -400,7 +400,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 						intent.putExtra(UpdateActivity.UPDATE_DATA, ipcInfo);
 						mApp.getContext().startActivity(intent);
 					}
-				}).setNegativeButton("取消", null).setCancelable(false).create();
+				}).setNegativeButton("稍后再说", null).setCancelable(false).create();
 
 		mDownloadDialog.show();
 	}
