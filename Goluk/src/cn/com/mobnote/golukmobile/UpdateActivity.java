@@ -165,6 +165,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		Intent itClick = getIntent();
 		int progressSetup = itClick.getIntExtra(UPDATE_PROGRESS, 0);
 
+		GolukDebugUtils.i("lily", "--------mSign-----"+mSign);
 		if (mSign == 0) {
 			if(mApp.mLoadStatus){
 				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
@@ -352,7 +353,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				}
 			} else if (mSign == 1) {
 				GolukDebugUtils.i("lily", "------------install-------111111");
-				boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+				if(mApp.updateSuccess){
+					GolukUtils.showToast(mApp.getContext(), "极路客摄像头已安装升级成功，请等待连接后重新检测");
+				}else{
+					boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+				}
 			}
 			break;
 		default:
@@ -453,6 +458,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							} else {
 								GolukDebugUtils.i("lily", "------------percent-------33333");
 								timerCancel();
+								mApp.updateSuccess = true;
 								// 升级成功
 								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_OK);
 							}
@@ -467,6 +473,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					}
 				} else {
 					if (!(null != mFirstDialog && mFirstDialog.isShowing())|| !(null != mSecondDialog && mSecondDialog.isShowing())) {
+						mApp.updateSuccess = false;
 						// 升级失败
 						mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
 					}

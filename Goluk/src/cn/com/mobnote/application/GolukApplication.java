@@ -170,6 +170,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean mLoadStatus = false;
 	/**极路客固件升级文件下载中的进度**/
 	public int mLoadProgress = 0;
+	/**极路客升级成功的状态**/
+	public boolean updateSuccess = false;
 	
 	static {
 		System.loadLibrary("golukmobile");
