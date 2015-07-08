@@ -57,7 +57,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public final static String UPDATE_SIGN = "update_sign";
 	/** 数据展示 **/
 	public final static String UPDATE_DATA = "update_data";
-	/**升级文件下载中**/
+	/** 升级文件下载中 **/
 	public final static String UPDATE_PROGRESS = "update_progress";
 
 	/** 0下载 / 1安装的标志 **/
@@ -114,13 +114,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private AlertDialog mFirstDialog = null;
 	/** 升级2阶段摄像头断开 **/
 	private AlertDialog mSecondDialog = null;
-	
+
 	private String ipc_version = "";
 	private String ipc_size = "";
 	private String ipc_content = "";
 	private String ipc_url = "";
 	private String ipc_path = "";
-	
+
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -134,52 +134,51 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		Intent it = getIntent();
 		mSign = it.getIntExtra(UPDATE_SIGN, 0);
 		mIpcInfo = (IPCInfo) it.getSerializableExtra(UPDATE_DATA);
-		
-		GolukDebugUtils.e("aaa", "=====mApp.mIpcInfo====="+mIpcInfo);
-		
-		if(null != mIpcInfo){
+
+		GolukDebugUtils.e("aaa", "=====mApp.mIpcInfo=====" + mIpcInfo);
+
+		if (null != mIpcInfo) {
 			mApp.mSharedPreUtil.saveIPCDownVersion(mIpcInfo.version);
 			mApp.mSharedPreUtil.saveIpcFileSize(mIpcInfo.filesize);
 			mApp.mSharedPreUtil.saveIpcContent(mIpcInfo.appcontent);
 			mApp.mSharedPreUtil.saveIPCURL(mIpcInfo.url);
 			mApp.mSharedPreUtil.saveIPCPath(mIpcInfo.path);
 		}
-		
+
 		ipc_version = mApp.mSharedPreUtil.getIPCDownVersion();
 		ipc_size = mApp.mSharedPreUtil.getIPCFileSize();
 		ipc_content = mApp.mSharedPreUtil.getIPCContent();
 		ipc_url = mApp.mSharedPreUtil.getIPCURL();
 		ipc_path = mApp.mSharedPreUtil.getIPCPath();
-		
+
 		mTextIpcVersion.setText(ipc_version);
 		String size = DataCleanManage.getFormatSize(Double.parseDouble(ipc_size));
 		mTextIpcSize.setText(size);
 		mTextUpdateContent.setText(ipc_content);
-		
+
 		Intent itClick = getIntent();
 		int progressSetup = itClick.getIntExtra(UPDATE_PROGRESS, 0);
 
-		GolukDebugUtils.i("lily", "--------mSign-----"+mSign);
+		GolukDebugUtils.i("lily", "--------mSign-----" + mSign);
 		if (mSign == 0) {
-			if(mApp.mLoadStatus){
+			if (mApp.mLoadStatus) {
 				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
-				if(!UserUtils.isNetDeviceAvailable(this)){
+				if (!UserUtils.isNetDeviceAvailable(this)) {
 					GolukUtils.showToast(mApp.getContext(), "很抱歉，新极路客固件下载失败，请检查网络后重试");
 					mTextDowload.setText("未下载");
 					mBtnDownload.setText("下载新极路客固件程序");
 					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
 					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 					mBtnDownload.setEnabled(true);
-				}else{
+				} else {
 					mTextDowload.setText("下载中");
-					mBtnDownload.setText("下载中…"+progressSetup+"%");
+					mBtnDownload.setText("下载中…" + progressSetup + "%");
 					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
 					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 					mBtnDownload.setEnabled(false);
 				}
-			}else{
-				boolean b = mApp.mIpcUpdateManage.download(ipc_url,
-						mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+			} else {
+				boolean b = mApp.mIpcUpdateManage.download(ipc_url, mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
 				if (b) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
@@ -338,24 +337,26 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				if (IpcUpdateManage.DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
-					boolean b = mApp.mIpcUpdateManage.download(ipc_url, IpcUpdateManage.BIN_PATH_PRE+"/"+ipc_version+".bin");
-					GolukDebugUtils.i("qqq", "----path------"+IpcUpdateManage.BIN_PATH_PRE+"/"+ipc_version+".bin");
-					if(b){
+					boolean b = mApp.mIpcUpdateManage.download(ipc_url, IpcUpdateManage.BIN_PATH_PRE + "/"
+							+ ipc_version + ".bin");
+					GolukDebugUtils.i("qqq", "----path------" + IpcUpdateManage.BIN_PATH_PRE + "/" + ipc_version
+							+ ".bin");
+					if (b) {
 						mApp.mIpcUpdateManage.showLoadingDialog();
-					}else{
+					} else {
 						mApp.mIpcUpdateManage.dimissLoadingDialog();
 					}
 				}
 			} else if (mSign == 1) {
-				//TODO 判断摄像头是否连接   判断是否是最新版本
-				if(!mApp.getIpcIsLogin()){
+				// TODO 判断摄像头是否连接 判断是否是最新版本
+				if (!mApp.getIpcIsLogin()) {
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "您好像没有连接摄像头哦。");
-				}else{
+				} else {
 					String version = mApp.mSharedPreUtil.getIPCVersion();
-					GolukDebugUtils.i("lily", "-------version-----"+version+"------ipc_version-----"+ipc_version);
-					if(version.equals(ipc_version)){
+					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
+					if (version.equals(ipc_version)) {
 						GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
-					}else{
+					} else {
 						boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
 					}
 				}
@@ -386,7 +387,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 			mBtnDownload.setEnabled(false);
 			mBtnDownload.setText("正在下载…" + progress + "%");
-			//保存进度
+			// 保存进度
 			mApp.mLoadProgress = progress;
 		} else if (state == IpcUpdateManage.DOWNLOAD_STATUS_SUCCESS) {
 			// 下载成功
@@ -474,7 +475,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						e.printStackTrace();
 					}
 				} else {
-					if (!(null != mFirstDialog && mFirstDialog.isShowing())|| !(null != mSecondDialog && mSecondDialog.isShowing())) {
+					if (!(null != mFirstDialog && mFirstDialog.isShowing())
+							|| !(null != mSecondDialog && mSecondDialog.isShowing())) {
 						mApp.updateSuccess = false;
 						// 升级失败
 						mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
@@ -496,9 +498,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			public void run() {
 				// ipc断开
 				if (stage.equals("1")) {
-					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
+					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
+						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
+					}
 				} else if (stage.equals("2") && !percent.equals("100")) {
-					mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
+					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
+						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
+					}
 				}
 			}
 		}, 6000);
@@ -570,8 +576,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						public void onClick(DialogInterface arg0, int arg1) {
 							finish();
 						}
-					})
-					.show();
+					}).show();
 		}
 	}
 
