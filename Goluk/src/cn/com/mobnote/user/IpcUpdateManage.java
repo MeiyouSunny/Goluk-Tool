@@ -42,7 +42,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	private GolukApplication mApp = null;
 
 	/** BIN文件下载目录 */
-	private static final String BIN_PATH_PRE = "fs1:/update";
+	public static final String BIN_PATH_PRE = "fs1:/update";
 
 	/** 启动APP **/
 	public static final int FUNCTION_AUTO = 0;
@@ -484,6 +484,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 			if (null != allFile && 0 < allFile.length) {
 				for (int i = 0; i < allFile.length; i++) {
 					if (!allFile[i].getName().contains(mDownLoadIpcInfo.version)) {
+						GolukDebugUtils.i(TAG, "-------删除文件------"+allFile[i].getName());
+						GolukDebugUtils.i(TAG, "-----下载的文件名------"+mDownLoadIpcInfo.version);
 						// 需要把文件删除
 						allFile[i].delete();
 					}

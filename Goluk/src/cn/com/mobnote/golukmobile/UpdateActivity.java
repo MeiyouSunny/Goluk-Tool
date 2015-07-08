@@ -9,6 +9,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IPCInfo;
+import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -344,7 +345,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				if (DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
-					boolean b = mApp.mIpcUpdateManage.download(ipc_url, ipc_path);
+					boolean b = mApp.mIpcUpdateManage.download(ipc_url, IpcUpdateManage.BIN_PATH_PRE+"/"+ipc_version+".bin");
+					GolukDebugUtils.i("qqq", "----path------"+IpcUpdateManage.BIN_PATH_PRE+"/"+ipc_version+".bin");
 					if(b){
 						mApp.mIpcUpdateManage.showLoadingDialog();
 					}else{
