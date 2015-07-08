@@ -125,7 +125,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public int autoLoginStatus;
 	/** 注销状态 **/
 	public boolean loginoutStatus = false;
-	/** 获取验证码的四个状态 0 获取中 1获取成功 2获取失败 3手机号未注册 **/
+	/**
+	 * 获取验证码的四个状态 0----获取中 1----获取成功 2----获取失败 3---code=201 4----code=500 5----code=405    6----code=440
+	 * 7----code=480   8----code=470
+	 **/
 	public int identifyStatus;
 
 	/** User管理类 **/
