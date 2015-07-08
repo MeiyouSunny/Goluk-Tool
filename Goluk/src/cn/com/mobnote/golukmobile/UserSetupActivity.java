@@ -281,19 +281,41 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 固件升级
 		case R.id.update_item:
 			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity===点击固件升级==中ipcVersion=====");
-			if (mApp.mLoadStatus && mApp.mLoadProgress != 100) {
+			if (mApp.mLoadStatus) {// 下载中
 				new AlertDialog.Builder(mApp.getContext()).setTitle("提示").setMessage("新极路客固件升级文件正在下载……")
 						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
-								Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
-								it.putExtra(UpdateActivity.UPDATE_PROGRESS, mApp.mLoadProgress);
-								startActivity(it);
+								if((Integer) (mApp.mIpcUpdateManage.mParam1) == 100){
+									String localFile = mApp.mIpcUpdateManage.getLocalFile(vIpc);
+									if (null == localFile || "".equals(localFile)) {
+										boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+									} else {
+										Intent itent = new Intent(UserSetupActivity.this, UpdateActivity.class);
+										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
+										startActivity(itent);
+									}
+								}else{
+									Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
+									it.putExtra(UpdateActivity.UPDATE_PROGRESS, (Integer) (mApp.mIpcUpdateManage.mParam1));
+									startActivity(it);
+								}
 							}
 						}).show();
 			} else {
-				boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+				if ((Integer) (mApp.mIpcUpdateManage.mParam1) == -1) {// 下载失败/程序刚进来
+					boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+				} else {// 下载成功
+					String localFile = mApp.mIpcUpdateManage.getLocalFile(vIpc);
+					if (null == localFile || "".equals(localFile)) {
+						boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+					} else {
+						Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
+						it.putExtra(UpdateActivity.UPDATE_SIGN, 1);
+						startActivity(it);
+					}
+				}
 			}
 			break;
 		}

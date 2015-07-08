@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UpdateActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserStartActivity;
@@ -75,6 +76,17 @@ public class IpcUpdateManage implements IPCManagerFn {
 	private static final String ASSETS_IPC_FILE = "ipc_update.txt";
 
 	private JSONArray jsonArray = null;
+	/** int state, Object param1, Object param2 **/
+	public int mState = -1;
+	public Object mParam1 = -1;
+	private Object mParam2 = null;
+
+	/** 下载失败 **/
+	public static final int DOWNLOAD_STATUS_FAIL = 0;
+	/** 下载成功 **/
+	public static final int DOWNLOAD_STATUS_SUCCESS = 1;
+	/** 下载中 **/
+	public static final int DOWNLOAD_STATUS = 2;
 
 	public IpcUpdateManage(GolukApplication mApp) {
 		super();
@@ -230,7 +242,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 					// ipc连接后不匹配
 					if (goluk.equals("{}")) {
 						// APP不需要升级，判断ipc是否需要升级
-						GolukDebugUtils.i("aaa", "--------ipc匹配列表------"+ipc);
+						GolukDebugUtils.i("aaa", "--------ipc匹配列表------" + ipc);
 						if (0 == ipc.length()) {
 							// TODO 读取本地匹配列表
 							String assetsMatchInfo = getMatchInfoFromAssets(ASSETS_IPC_FILE);
@@ -345,6 +357,24 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @param param2
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
+		GolukDebugUtils.i("update", "--------IpcUpdateManage------state------" + state + "--------param1-----" + param1
+				+ "------param2------" + param2);
+		mState = state;
+		mParam2 = param2;
+		if (state == DOWNLOAD_STATUS) {
+			// 下载中
+			mApp.mLoadStatus = true;
+			mParam1 = param1;
+		} else if (state == DOWNLOAD_STATUS_SUCCESS) {
+			// 下载成功
+			mApp.mLoadStatus = false;
+			// 下载成功删除文件
+			downIpcSucess();
+		} else if (state == DOWNLOAD_STATUS_FAIL) {
+			// 下载失败
+			mApp.mLoadStatus = false;
+			mParam1 = -1;
+		}
 		if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
 			((UpdateActivity) mApp.getContext()).downloadCallback(state, param1, param2);
 		}
@@ -483,8 +513,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 			if (null != allFile && 0 < allFile.length) {
 				for (int i = 0; i < allFile.length; i++) {
 					if (!allFile[i].getName().contains(mDownLoadIpcInfo.version)) {
-						GolukDebugUtils.i(TAG, "-------删除文件------"+allFile[i].getName());
-						GolukDebugUtils.i(TAG, "-----下载的文件名------"+mDownLoadIpcInfo.version);
 						// 需要把文件删除
 						allFile[i].delete();
 					}
@@ -746,7 +774,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 			String ipcVersion = mApp.mSharedPreUtil.getIPCVersion();
 			GolukDebugUtils.i(TAG, "-----------match-----111-------" + ipcVersion);
 			String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
-			GolukDebugUtils.i("aaa", "------ipc匹配列表-----"+matchInfo);
+			GolukDebugUtils.i("aaa", "------ipc匹配列表-----" + matchInfo);
 			// 读取本地匹配列表
 			if ("".equals(matchInfo) || null == matchInfo) {
 				String assetsMatchInfo = getMatchInfoFromAssets(ASSETS_IPC_FILE);

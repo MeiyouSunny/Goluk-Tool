@@ -98,13 +98,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	/** 下载状态 **/
 	private int downloadStatus = 0;
 
-	/** 下载失败 **/
-	private static final int DOWNLOAD_STATUS_FAIL = 0;
-	/** 下载成功 **/
-	private static final int DOWNLOAD_STATUS_SUCCESS = 1;
-	/** 下载中 **/
-	private static final int DOWNLOAD_STATUS = 2;
-
 	/** 传输文件 */
 	private AlertDialog mSendDialog = null;
 	/** 传输文件成功 **/
@@ -174,13 +167,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					GolukUtils.showToast(mApp.getContext(), "很抱歉，新极路客固件下载失败，请检查网络后重试");
 					mTextDowload.setText("未下载");
 					mBtnDownload.setText("下载新极路客固件程序");
-					downloadStatus = DOWNLOAD_STATUS_FAIL;
+					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
 					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 					mBtnDownload.setEnabled(true);
 				}else{
 					mTextDowload.setText("下载中");
 					mBtnDownload.setText("下载中…"+progressSetup+"%");
-					downloadStatus = DOWNLOAD_STATUS;
+					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
 					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 					mBtnDownload.setEnabled(false);
 				}
@@ -191,13 +184,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
 					mBtnDownload.setText("下载中…0%");
-					downloadStatus = DOWNLOAD_STATUS;
+					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
 					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 					mBtnDownload.setEnabled(false);
 				} else {
 					mTextDowload.setText("未下载");
 					mBtnDownload.setText("下载新极路客固件程序");
-					downloadStatus = DOWNLOAD_STATUS_FAIL;
+					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
 					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 					mBtnDownload.setEnabled(true);
 				}
@@ -342,7 +335,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		case R.id.update_btn:
 			// 下载 / 升级
 			if (mSign == 0) {
-				if (DOWNLOAD_STATUS_FAIL == downloadStatus) {
+				if (IpcUpdateManage.DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
 					boolean b = mApp.mIpcUpdateManage.download(ipc_url, IpcUpdateManage.BIN_PATH_PRE+"/"+ipc_version+".bin");
@@ -366,11 +359,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
 					}
 				}
-				/*if(mApp.updateSuccess){
-					GolukUtils.showToast(mApp.getContext(), "极路客摄像头已安装升级成功，请等待连接后重新检测");
-				}else{
-					boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
-				}*/
 			}
 			break;
 		default:
@@ -390,7 +378,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		GolukDebugUtils.i("lily", "------------downloadCallback-----------" + state);
 		mApp.mIpcUpdateManage.dimissLoadingDialog();
 		downloadStatus = state;
-		if (state == DOWNLOAD_STATUS) {
+		if (state == IpcUpdateManage.DOWNLOAD_STATUS) {
 			// 下载中
 			mApp.mLoadStatus = true;
 			int progress = (Integer) param1;
@@ -400,7 +388,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setText("正在下载…" + progress + "%");
 			//保存进度
 			mApp.mLoadProgress = progress;
-		} else if (state == DOWNLOAD_STATUS_SUCCESS) {
+		} else if (state == IpcUpdateManage.DOWNLOAD_STATUS_SUCCESS) {
 			// 下载成功
 			mApp.mLoadStatus = false;
 			mTextDowload.setText("已下载");
@@ -410,7 +398,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mSign = 1;
 			// 下载成功删除文件
 			mApp.mIpcUpdateManage.downIpcSucess();
-		} else if (state == DOWNLOAD_STATUS_FAIL) {
+		} else if (state == IpcUpdateManage.DOWNLOAD_STATUS_FAIL) {
 			// 下载失败
 			mApp.mLoadStatus = false;
 			GolukUtils.showToast(mApp.getContext(), "很抱歉，新极路客固件下载失败，请检查网络后重试");
@@ -474,6 +462,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 								mApp.updateSuccess = true;
 								// 升级成功
 								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_OK);
+								mApp.mIpcUpdateManage.mParam1 = -1;
 							}
 						}
 						if (stage.equals("3")) {
