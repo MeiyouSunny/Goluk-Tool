@@ -269,7 +269,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 						if (!mApp.isIpcLoginSuccess && !isbind) {
 							GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
 						} else {
-							String version_new = jsonData.getString("version");
+							String version_new = mApp.mSharedPreUtil.getIPCVersion();
 							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version_new + "，当前已是最新版本");
 						}
 					} else {
@@ -345,7 +345,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @param param2
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
-		GolukDebugUtils.i(TAG, "------------downloadCallback-----------");
 		if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
 			((UpdateActivity) mApp.getContext()).downloadCallback(state, param1, param2);
 		}
