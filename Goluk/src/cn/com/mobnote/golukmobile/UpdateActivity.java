@@ -184,23 +184,23 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 					mBtnDownload.setEnabled(false);
 				}
-				return ;
-			}
-			boolean b = mApp.mIpcUpdateManage.download(ipc_url,
-					mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
-			if (b) {
-				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
-				mTextDowload.setText("下载中");
-				mBtnDownload.setText("下载中…0%");
-				downloadStatus = DOWNLOAD_STATUS;
-				mBtnDownload.setBackgroundResource(R.drawable.icon_more);
-				mBtnDownload.setEnabled(false);
-			} else {
-				mTextDowload.setText("未下载");
-				mBtnDownload.setText("下载新极路客固件程序");
-				downloadStatus = DOWNLOAD_STATUS_FAIL;
-				mBtnDownload.setBackgroundResource(R.drawable.icon_login);
-				mBtnDownload.setEnabled(true);
+			}else{
+				boolean b = mApp.mIpcUpdateManage.download(ipc_url,
+						mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+				if (b) {
+					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
+					mTextDowload.setText("下载中");
+					mBtnDownload.setText("下载中…0%");
+					downloadStatus = DOWNLOAD_STATUS;
+					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
+					mBtnDownload.setEnabled(false);
+				} else {
+					mTextDowload.setText("未下载");
+					mBtnDownload.setText("下载新极路客固件程序");
+					downloadStatus = DOWNLOAD_STATUS_FAIL;
+					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
+					mBtnDownload.setEnabled(true);
+				}
 			}
 		} else if (mSign == 1) {
 			mTextDowload.setText("已下载");
@@ -354,12 +354,23 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					}
 				}
 			} else if (mSign == 1) {
-				GolukDebugUtils.i("lily", "------------install-------111111");
-				if(mApp.updateSuccess){
+				//TODO 判断摄像头是否连接   判断是否是最新版本
+				if(!mApp.getIpcIsLogin()){
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "您好像没有连接摄像头哦。");
+				}else{
+					String version = mApp.mSharedPreUtil.getIPCVersion();
+					GolukDebugUtils.i("lily", "-------version-----"+version+"------ipc_version-----"+ipc_version);
+					if(version.equals(ipc_version)){
+						GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
+					}else{
+						boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+					}
+				}
+				/*if(mApp.updateSuccess){
 					GolukUtils.showToast(mApp.getContext(), "极路客摄像头已安装升级成功，请等待连接后重新检测");
 				}else{
 					boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
-				}
+				}*/
 			}
 			break;
 		default:
