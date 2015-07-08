@@ -1,6 +1,8 @@
 package cn.com.mobnote.user;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +71,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public IPCInfo mDownLoadIpcInfo = null;
 	private Builder mBuilder;
 	private AlertDialog mAppUpdateDialog;
+	/** 读取本地ipc匹配列表 **/
+	private static final String ASSETS_IPC_FILE = "ipc_update.txt";
+
+	private JSONArray jsonArray = null;
 
 	public IpcUpdateManage(GolukApplication mApp) {
 		super();
@@ -191,7 +197,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @param obj
 	 */
 	public void requestInfoCallback(int success, Object outTime, Object obj) {
-		GolukDebugUtils.i(TAG, "=======requestInfoCallback======="+success+"---success");
+		GolukDebugUtils.i(TAG, "=======requestInfoCallback=======" + success + "---success");
 		// 取消loading显示
 		int codeOut = (Integer) outTime;
 		dimissLoadingDialog();
@@ -224,8 +230,19 @@ public class IpcUpdateManage implements IPCManagerFn {
 					// ipc连接后不匹配
 					if (goluk.equals("{}")) {
 						// APP不需要升级，判断ipc是否需要升级
-						IPCInfo ipcInfo = ipcUpdateUtils(ipc);
-						ipcUpgradeNext(ipcInfo);
+						GolukDebugUtils.i("aaa", "--------ipc匹配列表------"+ipc);
+						if (0 == ipc.length()) {
+							// TODO 读取本地匹配列表
+							String assetsMatchInfo = getMatchInfoFromAssets(ASSETS_IPC_FILE);
+							GolukDebugUtils.i("aaa", "----assets------" + assetsMatchInfo);
+							JSONArray jsonArray = new JSONArray(assetsMatchInfo);
+							IPCInfo ipcInfo = ipcUpdateUtils(jsonArray);
+							ipcUpgradeNext(ipcInfo);
+						} else {
+							IPCInfo ipcInfo = ipcUpdateUtils(ipc);
+							ipcUpgradeNext(ipcInfo);
+						}
+
 					} else {
 						appUpgradeUtils(goluk);
 					}
@@ -289,9 +306,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 
 			} catch (Exception e) {
 				if (FUNCTION_AUTO != mFunction) {
-					// GolukUtils.showToast(mApp.getContext(), "没有ipc匹配列表");
-					GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + mApp.mSharedPreUtil.getIPCVersion()
-							+ "，当前已是最新版本");
+					GolukDebugUtils.i(TAG, "ipc匹配列表为空");
+					// GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" +
+					// mApp.mSharedPreUtil.getIPCVersion()
+					// + "，当前已是最新版本");
 				}
 				e.printStackTrace();
 			}
@@ -727,8 +745,16 @@ public class IpcUpdateManage implements IPCManagerFn {
 			String ipcVersion = mApp.mSharedPreUtil.getIPCVersion();
 			GolukDebugUtils.i(TAG, "-----------match-----111-------" + ipcVersion);
 			String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
-			GolukDebugUtils.i(TAG, "----matchInfo----" + matchInfo);
-			JSONArray jsonArray = new JSONArray(matchInfo);
+			GolukDebugUtils.i("aaa", "------ipc匹配列表-----"+matchInfo);
+			// 读取本地匹配列表
+			if ("".equals(matchInfo) || null == matchInfo) {
+				String assetsMatchInfo = getMatchInfoFromAssets(ASSETS_IPC_FILE);
+				GolukDebugUtils.i("aaa", "----assets------" + assetsMatchInfo);
+				jsonArray = new JSONArray(assetsMatchInfo);
+			} else {
+				GolukDebugUtils.i(TAG, "----matchInfo----" + matchInfo);
+				jsonArray = new JSONArray(matchInfo);
+			}
 
 			boolean isMatch = false;
 			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
@@ -761,6 +787,29 @@ public class IpcUpdateManage implements IPCManagerFn {
 			e.printStackTrace();
 		}
 		return true;
+	}
+
+	/**
+	 * 读取本地匹配列表
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	public String getMatchInfoFromAssets(String fileName) {
+		try {
+			InputStreamReader inputReader = new InputStreamReader(mApp.getContext().getResources().getAssets()
+					.open(fileName));
+			BufferedReader bufReader = new BufferedReader(inputReader);
+			String line = "";
+			String result = "";
+			while ((line = bufReader.readLine()) != null) {
+				result += line;
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
