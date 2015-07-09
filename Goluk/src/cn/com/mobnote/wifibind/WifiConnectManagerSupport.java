@@ -6,15 +6,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.com.tiros.api.Const;
+import org.json.JSONObject;
 
+import cn.com.tiros.api.Const;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,7 +26,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
-
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -277,6 +277,29 @@ public class WifiConnectManagerSupport {
 	}
 
 	/**
+	 * 获得匹配连接wifi的信息是否有效
+	 */
+	public WifiRsBean getConnResult(String title) {
+		String regEx = "^" + title;
+
+		WifiInfo info = wifiManager.getConnectionInfo();
+		WifiRsBean bean = null;
+		if (info != null && info.getSSID() != null) {
+			String tmpSsid = info.getSSID().replace("\"", "");
+			Matcher matcher = Pattern.compile(regEx).matcher(tmpSsid);
+			if (matcher != null && matcher.find()) {
+				bean = new WifiRsBean();
+				bean.setIpc_ssid(tmpSsid);
+				bean.setIpc_bssid(info.getMacAddress());
+				bean.setWifiSignal(getWifiLevel(info.getRssi()));
+				bean.setIpc_ip(int2ip(info.getIpAddress()));
+			}
+		}
+
+		return bean;
+	}
+
+	/**
 	 * 判断ipc是否在列表中
 	 * 
 	 * @param ssid
@@ -423,6 +446,35 @@ public class WifiConnectManagerSupport {
 				}
 			}
 
+		}
+
+	}
+
+	/**
+	 * 从文件
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	public WifiRsBean readConfig(String fileName) {
+		String configString;
+		try {
+			configString = readPassFile(fileName);
+			if (configString == null) {
+				return null;
+			}
+			JSONObject config = new JSONObject(configString);
+			WifiRsBean rs = new WifiRsBean();
+			rs.setIpc_ssid(config.getString("ipc_ssid"));
+			rs.setIpc_ip(config.getString("ipc_ip"));
+			rs.setIpc_mac(config.getString("ipc_mac"));
+			rs.setPh_ssid(config.getString("ph_ssid"));
+			rs.setPh_pass(config.getString("ph_pass"));
+			rs.setIpc_pass(config.getString("ipc_pass"));
+			return rs;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 
 	}

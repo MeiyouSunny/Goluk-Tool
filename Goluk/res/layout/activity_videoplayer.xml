@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black" >
+
+    <cn.com.mobnote.golukmobile.player.FullScreenVideoView
+        android:id="@+id/videoview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+    
+    <ImageView
+            android:id="@+id/mPreLoading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+    
+    <LinearLayout
+        android:visibility="gone"
+		            android:id="@+id/mLoadingLayout"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center"
+		            android:layout_centerInParent="true"
+		            android:orientation="vertical" >
+		
+		            <ImageView
+		                android:id="@+id/mLoading"
+		                android:layout_width="133.33dp"
+		                android:layout_height="146.66dp"
+		                android:layout_gravity="center"/>
+		
+		            <TextView
+		                android:id="@+id/mLoadingText"
+		                android:layout_width="fill_parent"
+		                android:layout_height="wrap_content"
+		                android:gravity="center"
+		                android:paddingTop="37.33dp"
+		                android:text="视频加载中，请稍候..."
+		                android:textColor="#ffffff"
+		                android:textSize="24sp" /> 
+		        </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/upper_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:id="@+id/top_layout"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="102.66dp"
+            android:background="@drawable/player_top_bg" >
+            
+            <RelativeLayout 
+			android:layout_marginTop="8dp"
+			android:layout_marginLeft="8dp"
+			android:layout_width="match_parent"
+        	android:layout_height="wrap_content"   >
+				<ImageButton
+	            android:id="@+id/back_btn"
+	            android:layout_width="36.66dp"
+	            android:layout_height="36.66dp"
+	            android:layout_centerVertical="true"
+	            android:background="@drawable/player_back_btn" />
+	
+	        	<TextView
+	            android:id="@+id/title"
+	            android:layout_toRightOf="@+id/back_btn"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:textColor="#e0e0e0"
+	            android:textSize="18sp" />	     
+		 </RelativeLayout>
+            
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:padding="20dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/player_bottom_bg" >
+        <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageView 
+            android:id="@+id/play_btn"
+            android:layout_width="46dp"
+        	android:layout_height="46dp"
+        	android:layout_centerVertical="true"
+        	android:src="@drawable/player_pause_btn"
+            />
+
+        <TextView
+            android:id="@+id/play_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/play_btn"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+        
+        <SeekBar
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@+id/total_time"
+            android:layout_toRightOf="@+id/play_time"
+       	    android:id="@+id/seekbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:max="100"
+            android:progress="0"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:background="@drawable/player_time_bg"
+            android:progressDrawable="@drawable/player_seekbar_style"
+            android:thumb="@drawable/player_time_control_btn" />
+	
+            </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

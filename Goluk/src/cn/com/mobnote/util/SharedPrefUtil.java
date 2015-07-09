@@ -38,7 +38,33 @@ public class SharedPrefUtil {
 	/** 直播是否正常退出 */
 	public static final String PROPERTY_LIVE_NORMAL_EXIT = "property_is_normal_exit";
 
+	/** 保存ipc版本号 **/
+	public static final String PROPERTY_SAVE_IPCVERSION = "property_save_ipcversion";
+
+	/** 保存ipc匹配信息 **/
+	public static final String PROPERTY_SAVE_IPCMATCH_INFO = "property_save_ipcmatch_info";
+
+	/** 保存ipc文件大小 **/
+	public static final String PROPERTY_SAVE_IPC_FILESIZE = "property_save_ipc_filesize";
+
+	/** 保存ipc更新信息 **/
+	public static final String PROPERTY_SAVE_IPC_CONTENT = "property_save_ipc_content";
+	
+	/** 保存ipc更新信息 **/
+	public static final String PROPERTY_SAVE_IPC_URL = "property_save_ipc_url";
+	
+	/** 保存ipc更新信息 **/
+	public static final String PROPERTY_SAVE_IPC_PATH = "property_save_ipc_path";
+
+	/** 保存下载本地的IPC升级BIN文件信息 */
+	public static final String PROPERTY_IPC_UPGRADE_LOCALFILE_INFO = "property_ipc_upgrade_localfileInfo";
+	
+	/**下载ipc升级文件时保存version**/
+	public static final String PROPERTY_SAVE_IPC_DOWN_VERSION = "property_ipc_down_version";
+	
 	private SharedPreferences preference = null;
+	
+	private Editor mEditor = null;
 
 	public SharedPrefUtil(Activity activity) {
 		preference = activity.getPreferences(Activity.MODE_PRIVATE);
@@ -50,6 +76,28 @@ public class SharedPrefUtil {
 
 	public boolean getIsLiveNormalExit() {
 		return preference.getBoolean(PROPERTY_LIVE_NORMAL_EXIT, true);
+	}
+
+	/**
+	 * 保存下载成功的BIN文件信息
+	 * 
+	 * @param ipcInfo
+	 * @author jyf
+	 * @date 2015年6月25日
+	 */
+	public void setIpcLocalFileInfo(String ipcInfo) {
+		preference.edit().putString(PROPERTY_IPC_UPGRADE_LOCALFILE_INFO, ipcInfo).commit();
+	}
+
+	/**
+	 * 获取本地升级文件信息
+	 * 
+	 * @return
+	 * @author jyf
+	 * @date 2015年6月25日
+	 */
+	public String getIpcLocalFileInfo() {
+		return preference.getString(PROPERTY_IPC_UPGRADE_LOCALFILE_INFO, "");
 	}
 
 	/**
@@ -277,4 +325,111 @@ public class SharedPrefUtil {
 	public boolean getIsShowNewUserGuide() {
 		return preference.getBoolean(PROPERTY_IS_SHOWNEWUSERGUIDE, true);
 	}
+
+	/**
+	 * 保存ipc版本号
+	 * 
+	 * @param ipcVersion
+	 */
+	public void saveIPCVersion(String ipcVersion) {
+		preference.edit().putString(PROPERTY_SAVE_IPCVERSION, ipcVersion).commit();
+	}
+
+	/**
+	 * 获取保存的版本号
+	 * 
+	 * @return
+	 */
+	public String getIPCVersion() {
+		return preference.getString(PROPERTY_SAVE_IPCVERSION, "");
+	}
+
+	/**
+	 * 保存ipc匹配信息
+	 * 
+	 * @param jsonArray
+	 */
+	public void saveIPCMatchInfo(String jsonArray) {
+		preference.edit().putString(PROPERTY_SAVE_IPCMATCH_INFO, jsonArray).commit();
+	}
+
+	public String getIPCMatchInfo() {
+		return preference.getString(PROPERTY_SAVE_IPCMATCH_INFO, "");
+	}
+
+	/**
+	 * 保存ipc文件大小
+	 * 
+	 * @param filesize
+	 */
+	public void saveIpcFileSize(String filesize) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_FILESIZE, filesize).commit();
+	}
+
+	public String getIPCFileSize() {
+		return preference.getString(PROPERTY_SAVE_IPC_FILESIZE, "");
+	}
+
+	/**
+	 * 保存ipc更新描述
+	 * 
+	 * @param appcontent
+	 */
+	public void saveIpcContent(String appcontent) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_CONTENT, appcontent).commit();
+	}
+
+	public String getIPCContent() {
+		return preference.getString(PROPERTY_SAVE_IPC_CONTENT, "");
+	}
+	
+	/**
+	 * 保存ipc  url
+	 * 
+	 * @param ipcVersion
+	 */
+	public void saveIPCURL(String ipcUrl) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_URL, ipcUrl).commit();
+	}
+
+	public String getIPCURL() {
+		return preference.getString(PROPERTY_SAVE_IPC_URL, "");
+	}
+	/**
+	 * 保存ipc  的Path
+	 * 
+	 * @param ipcVersion
+	 */
+	public void saveIPCPath(String ipcPath) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_PATH ,ipcPath).commit();
+	}
+
+	public String getIPCPath() {
+		return preference.getString(PROPERTY_SAVE_IPC_PATH, "");
+	}
+	
+	/**
+	 * 下载时保存ipcVersion
+	 */
+	public void saveIPCDownVersion(String ipcVersion) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_DOWN_VERSION ,ipcVersion).commit();
+	}
+
+	public String getIPCDownVersion() {
+		return preference.getString(PROPERTY_SAVE_IPC_DOWN_VERSION, "");
+	}
+	
+	/**
+	 * 清除数据
+	 */
+	public void removeIPC(){
+		mEditor = preference.edit();
+		mEditor.remove(PROPERTY_SAVE_IPCVERSION);
+		mEditor.remove(PROPERTY_SAVE_IPC_FILESIZE);
+		mEditor.remove(PROPERTY_SAVE_IPC_CONTENT);
+		mEditor.remove(PROPERTY_SAVE_IPC_URL);
+		mEditor.remove(PROPERTY_SAVE_IPC_PATH);
+		mEditor.commit();
+	}
+	
 }

@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,11 +51,11 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.map.BaiduMapManage;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
@@ -65,7 +64,6 @@ import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
 
-import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
@@ -184,7 +182,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	SharePlatformUtil sharePlatform;
 
-	// private ImageView mHotPoint = null;
 	private ImageView mHotBigPoint = null;
 
 	/** 首次进入的引导div */
@@ -203,7 +200,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 注意该方法要再setContentView方法之前实现
 		SDKInitializer.initialize(getApplicationContext());
 		((GolukApplication) this.getApplication()).initSharedPreUtil(this);
-
+		
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 
@@ -243,12 +240,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			startWifi();
 			// 启动创建热点
 			createWiFiHot();
+			// 等待IPC连接时间
+			mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
 		} else {
 			wifiConnectFailed();
 		}
-
-		// 等待IPC连接时间
-		mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 20 * 1000);
 
 		// 不是第一次登录，并且上次登录成功过，进行自动登录
 		mPreferencesAuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
@@ -319,8 +315,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
 		squareDefault = (ImageView) findViewById(R.id.square_default);
+
 		userInfoLayout = findViewById(R.id.user_info);
-		// mHotPoint = (ImageView)findViewById(R.id.mHotPoint);
+
 		mHotBigPoint = (ImageView) findViewById(R.id.mHotBigPoint);
 
 		mShareLiveBtn.setOnClickListener(this);
@@ -597,9 +594,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case WIFI_STATE_SUCCESS:
 			GolukApplication.getInstance().stopDownloadList();
-			// 跳转到行车记录仪界面
-			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-			startActivity(i);
+			
+			boolean b = mApp.mIpcUpdateManage.ipcConnect();
+			if(b){
+				// 跳转到行车记录仪界面
+				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+				startActivity(i);
+			}
 			break;
 		default:
 			break;
@@ -609,6 +610,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
+		}
+		
 		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
 		if (null != mMapView) {
 			mMapView.onDestroy();
@@ -626,11 +632,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukApplication.getInstance().queryNewFileList();
 		mApp.setContext(this, "Main");
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
-
-		/*
-		 * // 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理 if (null !=
-		 * mMapView) { mMapView.onResume(); mMapView.invalidate(); }
-		 */
 
 		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onResume();
@@ -652,6 +653,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			showContinuteLive();
 		}
 
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
+		}
+		
 		super.onResume();
 	}
 
@@ -697,7 +702,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 				exitTime = System.currentTimeMillis();
 			} else {
-
+				// if (null != mWac) {
+				// mWac.closeAp();
+				// }
 				SysApplication.getInstance().exit();
 				// }
 				mApp.mIPCControlManager.setIPCWifiState(false, "");
@@ -725,28 +732,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
-				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
+				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
 				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable user_up = this.getResources().getDrawable(R.drawable.index_user_btn);
-				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_up, null, null);
+				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_up, null, null);
 				mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
 				break;
 			}
 			break;
-		/*
-		 * case R.id.index_share_btn: switch (action) { case
-		 * MotionEvent.ACTION_DOWN: Drawable db_down =
-		 * this.getResources().getDrawable(R.drawable.home_share_btn_click);
-		 * mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,
-		 * db_down, null, null); mShareBtn.setTextColor(Color.rgb(59, 151,
-		 * 245)); break; case MotionEvent.ACTION_UP: Drawable db_up =
-		 * this.getResources().getDrawable(R.drawable.home_share_btn);
-		 * mShareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,
-		 * db_up, null, null); mShareBtn.setTextColor(Color.rgb(204, 204, 204));
-		 * break; } break;
-		 */
 		}
 		return false;
 	}
@@ -827,41 +822,20 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public void setBelowItem(int id) {
 		Drawable drawable;
-		// if (id == R.id.index_look_btn) {
-		// if (null != mMapView) {
-		// mMapView.onResume();
-		// }
-		// indexMapLayout.setVisibility(View.VISIBLE);
-		// videoSquareLayout.setVisibility(View.GONE);
-		// mVideoSquareActivity.onDestroy();
-		// drawable =
-		// this.getResources().getDrawable(R.drawable.home_local_btn_click);
-		// indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,
-		// drawable, null, null);
-		// indexLookBtn.setTextColor(Color.rgb(59, 151, 245));
-		//
-		// drawable = this.getResources().getDrawable(R.drawable.home_find_btn);
-		// msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,
-		// drawable, null, null);
-		// msquareBtn.setTextColor(Color.rgb(103, 103, 103));
-		// } else
+		
 		if (id == R.id.index_square_btn) {
 			if (null != mMapView) {
 				mMapView.onPause();
 			}
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			mVideoSquareActivity.onResume();
-			drawable = this.getResources().getDrawable(R.drawable.home_local_btn);
-			// indexLookBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null,
-			// drawable, null, null);
-			// indexLookBtn.setTextColor(Color.rgb(103, 103, 103));
-
 			drawable = this.getResources().getDrawable(R.drawable.index_find_btn_press);
 			msquareBtn.setTextColor(Color.rgb(59, 151, 245));
-			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
+			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
 		}
 	}
 
@@ -991,14 +965,20 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		GolukApplication.getInstance().stopDownloadList();
-		// 开启直播
-		Intent intent = new Intent(this, LiveActivity.class);
-		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-		intent.putExtra(LiveActivity.KEY_GROUPID, "");
-		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-		startActivity(intent);
-		mShareLayout.setVisibility(View.GONE);
+		
+		boolean b = mApp.mIpcUpdateManage.ipcConnect();
+		//匹配
+		if(b){
+			// 开启直播
+			Intent intent = new Intent(this, LiveActivity.class);
+			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+			intent.putExtra(LiveActivity.KEY_GROUPID, "");
+			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+			startActivity(intent);
+			mShareLayout.setVisibility(View.GONE);
+		}
+		
 	}
 
 	// 查看他人的直播
@@ -1065,38 +1045,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	}
 
-	// @Override
-	// public void LocationCallBack(String gpsJson) {
-	// BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-	// if (location == null || mMapView == null) {
-	// return;
-	// }
-	// // 此处设置开发者获取到的方向信息，顺时针0-360
-	// MyLocationData locData = new MyLocationData.Builder().accuracy((float)
-	// location.radius).direction(100)
-	// .latitude(location.rawLat).longitude(location.rawLon).build();
-	// // 确认地图我的位置点是否更新位置
-	// mBaiduMap.setMyLocationData(locData);
-	//
-	// // 移动了地图,第一次不改变地图中心点位置
-	// if (isFirstLoc) {
-	// isFirstLoc = false;
-	// // 移动地图中心点
-	// LatLng ll = new LatLng(location.rawLat, location.rawLon);
-	// MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-	// mBaiduMap.animateMapStatus(u);
-	// }
-	//
-	// // 保存经纬度
-	// LngLat.lng = location.rawLon;
-	// LngLat.lat = location.rawLat;
-	//
-	// if(mApp.getContext() instanceof CarRecorderActivity){
-	// GetBaiduAddress.getInstance().searchAddress(location.rawLat,
-	// location.rawLon);
-	// }
-	// }
-
 	@Override
 	public void CallBack_BaiduGeoCoder(int function, Object obj) {
 		if (null == obj) {
@@ -1142,38 +1090,158 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	/** 保存要修改的手机热点密码 */
+	private String mNewMobilePWD = null;
+
+	private void modifyApNotifyIPc(final String newMobilePWD) {
+		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		mWac = new WifiConnectManager(wm, this);
+
+		WifiRsBean oldBean = mWac.readConfig();
+		if (null == oldBean) {
+			return;
+		}
+
+		mNewMobilePWD = newMobilePWD;
+
+		final String ipc_ssid = oldBean.getIpc_ssid();
+		final String ipc_pass = oldBean.getIpc_pass();
+		final String ipc_mac = oldBean.getIpc_mac();
+		final String ipc_ip = oldBean.getIpc_ip();
+
+		final String ph_ssid = oldBean.getPh_ssid();
+		final String ph_pwd = newMobilePWD;
+
+		boolean isHasPwd = true;
+		if (null == ipc_pass || "".equals(ipc_pass)) {
+			isHasPwd = false;
+		}
+		final String json = JsonUtil.getIPcJson(ipc_ssid, ipc_pass, ph_ssid, ph_pwd, DEFAULT_IP, DEFAULT_WAY, isHasPwd);
+		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
+		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
+	}
+
+	// 修改热点的密码
+	// newMobilePWD 为新密码
+	private void editMobileWifiPwd(final String newMobilePWD) {
+		if (null == mWac) {
+			return;
+		}
+
+		WifiRsBean oldBean = mWac.readConfig();
+		if (null == oldBean) {
+			return;
+		}
+		final String ipc_ssid = oldBean.getIpc_ssid();
+		final String ipc_ip = oldBean.getIpc_ip();
+		final String ipc_mac = oldBean.getIpc_mac();
+
+		final String ph_ssid = oldBean.getPh_ssid();
+		final String ph_pwd = newMobilePWD;
+
+		// 保存连接数据
+		WifiRsBean beans = new WifiRsBean();
+		beans.setIpc_mac(ipc_mac);
+		beans.setIpc_ssid(ipc_ssid);
+		beans.setIpc_ip(ipc_ip);
+		beans.setPh_ssid(ph_ssid);
+		beans.setPh_pass(ph_pwd);
+
+		mWac.saveConfiguration(beans);
+
+		// 创建热点之前先断开ipc连接
+		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		// 改变Application-IPC退出登录
+		mApp.setIpcLoginOut();
+		// 创建热点
+		mWac.createWifiAP(ph_ssid, ph_pwd, ipc_ssid, ipc_mac);
+	}
+
+	/**
+	 * 设置IPC信息成功回调
+	 */
+	public void setIpcLinkWiFiCallBack(int state) {
+		// if (0 == state) {
+		// // sucess
+		// if (null != mNewMobilePWD) {
+		// editMobileWifiPwd(mNewMobilePWD);
+		// }
+		// } else {
+		// GolukUtils.showToast(this, "修改密码失败");
+		// }
+	}
+
+	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
+		if (state == 0) {
+			switch (process) {
+			case 0:
+				// 创建热点成功
+				break;
+			case 1:
+				// ipc成功连接上热点
+				try {
+					WifiRsBean[] bean = (WifiRsBean[]) arrays;
+					if (null != bean) {
+						GolukDebugUtils.e("", "IPC连接上WIFI热点回调---length---" + bean.length);
+						if (bean.length > 0) {
+							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
+						}
+					}
+				} catch (Exception e) {
+					GolukUtils.showToast(mContext, "IPC连接热点返回信息不是数组");
+
+				}
+				break;
+			default:
+				GolukUtils.showToast(mContext, message);
+				break;
+			}
+		} else {
+			GolukUtils.showToast(mContext, message);
+		}
+	}
+
+	private void wifiCallBack_5(int state, int process, String message, Object arrays) {
+		if (state == 0) {
+			switch (process) {
+			case 0:
+				// 创建热点成功
+				break;
+			case 1:
+				// ipc成功连接上热点
+				wifiCallBack_ipcConnHotSucess(message, arrays);
+				break;
+			case 2:
+				// 用户已经创建与配置文件相同的热点，
+				wifiCallBack_sameHot();
+				break;
+			case 3:
+				// 用户已经连接到其它wifi，按连接失败处理
+				wifiConnectFailed();
+				break;
+			default:
+				break;
+			}
+		} else {
+			// 未连接
+			wifiConnectFailed();
+		}
+	}
+
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :"
 				+ state + "	process:" + process);
 		switch (type) {
-		case 5:
-			if (state == 0) {
-				switch (process) {
-				case 0:
-					// 创建热点成功
-					break;
-				case 1:
-					// ipc成功连接上热点
-					wifiCallBack_ipcConnHotSucess(message, arrays);
-					break;
-				case 2:
-					// 用户已经创建与配置文件相同的热点，
-					wifiCallBack_sameHot();
-					break;
-				case 3:
-					// 用户已经连接到其它wifi，按连接失败处理
-					wifiConnectFailed();
-					break;
-				default:
-					break;
-				}
-			} else {
-				// 未连接
-				wifiConnectFailed();
-			}
-
+		case 3:
+			// wifiCallBack_3( state, process, message, arrays);
 			break;
+		case 5:
+			wifiCallBack_5(state, process, message, arrays);
+			break;
+		default:
+			break;
+
 		}
 	}
 
@@ -1197,4 +1265,5 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "shareid-----" + shareVideoId + "   channel-----" + channel);
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 	}
+	
 }

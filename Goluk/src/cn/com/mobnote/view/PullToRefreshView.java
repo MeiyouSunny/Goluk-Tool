@@ -436,14 +436,14 @@ public class PullToRefreshView extends LinearLayout {
 		// 如果header view topMargin 的绝对值大于或等于header + footer 的高度
 		// 说明footer view 完全显示出来了，修改footer view 的提示状态
 		if (Math.abs(newTopMargin) >= (mHeaderViewHeight + mFooterViewHeight) && mFooterState != RELEASE_TO_REFRESH) {
-			mFooterTextView.setText(R.string.pull_to_refresh_footer_release_label);
+			mFooterTextView.setText(R.string.goluk_pull_to_refresh_footer_release_label);
 			mFooterImageView.clearAnimation();
 			mFooterImageView.startAnimation(mFlipAnimation);
 			mFooterState = RELEASE_TO_REFRESH;
 		} else if (Math.abs(newTopMargin) < (mHeaderViewHeight + mFooterViewHeight)) {
 			mFooterImageView.clearAnimation();
 			mFooterImageView.startAnimation(mFlipAnimation);
-			mFooterTextView.setText(R.string.pull_to_refresh_footer_pull_label);
+			mFooterTextView.setText(R.string.goluk_pull_to_refresh_footer_pull_label);
 			mFooterState = PULL_TO_REFRESH;
 		}
 	}
@@ -504,7 +504,7 @@ public class PullToRefreshView extends LinearLayout {
 		mFooterImageView.clearAnimation();
 		mFooterImageView.setImageDrawable(null);
 		mFooterProgressBar.setVisibility(View.VISIBLE);
-		mFooterTextView.setText(R.string.pull_to_refresh_footer_refreshing_label);
+		mFooterTextView.setText(R.string.goluk_pull_to_refresh_footer_refreshing_label);
 		if (mOnFooterRefreshListener != null) {
 			mOnFooterRefreshListener.onFooterRefresh(this);
 		}
@@ -557,7 +557,7 @@ public class PullToRefreshView extends LinearLayout {
 		setHeaderTopMargin(-mHeaderViewHeight);
 		mFooterImageView.setVisibility(View.VISIBLE);
 		mFooterImageView.setImageResource(R.drawable.ic_pulltorefresh_arrow_up);
-		mFooterTextView.setText(R.string.pull_to_refresh_footer_pull_label);
+		mFooterTextView.setText(R.string.goluk_pull_to_refresh_footer_pull_label);
 		mFooterProgressBar.setVisibility(View.GONE);
 		mFooterState = PULL_TO_REFRESH;
 	}

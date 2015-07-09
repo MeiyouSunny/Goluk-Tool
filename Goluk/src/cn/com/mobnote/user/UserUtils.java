@@ -148,7 +148,7 @@ public class UserUtils {
 	 */
 	public static void showUpdateSuccess(AlertDialog showUpdateDialog,Context context,String message){
 		if(showUpdateDialog == null){
-			showUpdateDialog = new AlertDialog.Builder(context)
+			showUpdateDialog = new AlertDialog.Builder(context).setTitle("提示")
 				.setMessage(message)
 				.setPositiveButton("确定", null)
 				.show();
@@ -158,9 +158,9 @@ public class UserUtils {
 	/**
 	 * 判断文件是否存在
 	 */
-	public static boolean fileIsExists(){
+	public static boolean fileIsExists(String path){
 		try {
-			String filePath = FileUtils.libToJavaPath("fs1:/update/ipc_upgrade_2015-04-30-15-58.bin");
+			String filePath = FileUtils.libToJavaPath(path);
 			File f = new File(filePath);
 			if (!f.exists()) {
 				return false;

@@ -104,12 +104,12 @@
     <string name="change_wifi_password_hint">密码必须为8&#8211;15个字符。更改密码将在30秒之后生效。</string>
     <string name="app_update_text">版本检测</string>
     <string name="loginout_text">退出</string>
-    <string name="pull_to_refresh_pull_label">下拉刷新</string>
-    <string name="pull_to_refresh_release_label">松开后刷新</string>
-    <string name="pull_to_refresh_refreshing_label">刷新\u2026</string>
-    <string name="pull_to_refresh_footer_release_label">松开后加载</string>
-    <string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
-    <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
+    <string name="goluk_pull_to_refresh_pull_label">下拉刷新</string>
+    <string name="goluk_pull_to_refresh_release_label">松开后刷新</string>
+    <string name="goluk_pull_to_refresh_refreshing_label">刷新\u2026</string>
+    <string name="goluk_pull_to_refresh_footer_release_label">松开后加载</string>
+    <string name="goluk_pull_to_refresh_footer_pull_label">上拉加载更多</string>
+    <string name="goluk_pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
     <string name="bubble_username">龙王三太子</string>
     <string name="bubble_speed">50公里/小时</string>
     <string name="username_text">BG1TTR</string>
@@ -117,6 +117,12 @@
     <string name="speed_text">50公里/小时</string>
     <string name="local_video_text">本地视频</string>
     <string name="setup_text">设置</string>
+    <string name="ipc_update_text">极路客固件升级</string>
+    <string name="ipc_update_layout_text">极路客固件</string>
+    <string name="ipc_update_info_title">更新说明</string>
+    <string name="ipc_download_text">已下载</string>
+    <string name="ipc_hint_text">下载升级固件前，请确认网络环境正常，下载时请不要切出本页面。
+        \n安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。</string>
     <string name="shopping_text">去商店</string>
     <string name="cache_size_text">3.15M</string>
     <string name="count_identify_first">此手机号还有</string>
@@ -157,7 +163,7 @@
     <string name="spzl_title">视频质量</string>
     <string name="spzl_text">极路客提供四种视频质量，1080P高、1080P中、720P高、720P中。</string>
     <string name="zdxhlx_title">自动循环录像</string>
-    <string name="zdxhlx_text">启动此项后，极路客将每隔5分钟自动保存一段行车影像。当存储空间不足时，将自动覆盖早期循环录制的文件。</string>
+    <string name="zdxhlx_text">启动此项后，极路客将每隔3分钟自动保存一段行车影像。当存储空间不足时，将自动覆盖早期循环录制的文件。</string>
     <string name="sylz_title">声音录制开关</string>
     <string name="pzgy_title">碰撞感应灵敏度</string>
     <string name="pzgy_text">启动此项后，车辆在行驶中如遭受异常的碰撞，极路客会自动保存16秒（前8秒+后8秒）紧急视频影像。当存储空间不足时，将自动覆盖早期录制的文件。碰撞灵敏度有低、中、高三档自行选择。</string>

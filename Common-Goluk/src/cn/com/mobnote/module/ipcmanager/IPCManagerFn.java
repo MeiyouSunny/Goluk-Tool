@@ -236,6 +236,8 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_PicErase = 1031;
 	/** 获取IPC系统WIFI配置 */
 	public static final int IPC_VDCPCmd_GetWifiCfg = 1032;
+	/**IPC设备升级停止**/
+	public static final int IPC_VDCPCmd_StopIPCUpgrade = 1033;
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }
