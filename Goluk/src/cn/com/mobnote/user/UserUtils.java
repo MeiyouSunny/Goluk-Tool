@@ -30,7 +30,7 @@ public class UserUtils {
 	 */
 	public static void showDialog(Context context,String message){
 		Builder builder = new AlertDialog.Builder(context);
-		AlertDialog dialog = builder.setMessage(message)
+		AlertDialog dialog = builder.setTitle("提示").setMessage(message)
 		.setPositiveButton("确定", null)
 		.create();
 		dialog.show();

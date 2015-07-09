@@ -22,58 +22,56 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="94dp"
-                android:layout_marginTop="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="vertical" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center" >
 
                     <EditText
                         android:id="@+id/user_regist_phonenumber"
                         android:layout_width="match_parent"
-                        android:layout_height="38dp"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:gravity="center"
                         android:hint="@string/user_regist_phone_hint"
                         android:maxLength="13"
                         android:numeric="integer"
                         android:singleLine="true"
                         android:textColor="@color/user_login_text"
                         android:textColorHint="@color/user_hint_text_color"
-                        android:textSize="14sp" />
+                        android:textSize="14sp" 
+                        android:paddingLeft="10dp"/>
                 </LinearLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/solid" 
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:src="@drawable/solid" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center" >
 
                     <EditText
                         android:id="@+id/user_regist_pwd"
                         android:layout_width="match_parent"
-                        android:layout_height="38dp"
+                        android:layout_height="40dp"
                         android:background="@null"
                         android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                        android:gravity="center"
                         android:hint="设置密码（6-16位数字或英文）"
                         android:maxLength="16"
                         android:password="true"
                         android:singleLine="true"
                         android:textColor="@color/user_login_text"
                         android:textColorHint="@color/user_hint_text_color"
-                        android:textSize="14sp" />
+                        android:textSize="14sp" 
+                        android:paddingLeft="10dp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -113,19 +111,20 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="72dp" >
+                android:layout_marginTop="66dp" >
 
                 <TextView
                     android:id="@+id/user_regist_hint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/user_regist_below_hint" />
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/user_regist_below_hint"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/user_regist_btn"
-                    android:layout_width="320dp"
+                    android:layout_width="316dp"
                     android:layout_height="42dp"
                     android:layout_below="@id/user_regist_hint"
                     android:background="@drawable/icon_more"

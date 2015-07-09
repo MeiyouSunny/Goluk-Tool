@@ -22,21 +22,21 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="94dp"
-            android:layout_marginTop="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
             android:background="@color/white"
             android:gravity="center"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="wrap_content"
                 android:gravity="center" >
 
                 <EditText
                     android:id="@+id/user_repwd_phonenumber"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="40dp"
                     android:background="@null"
                     android:hint="@string/user_login_phone_hint"
                     android:numeric="integer"
@@ -45,7 +45,7 @@
                     android:maxLength="13"
                     android:singleLine="true"
                     android:textColorHint="@color/user_hint_text_color"
-                    android:gravity="center"
+                    android:paddingLeft="10dp"
                     />
             </LinearLayout>
 
@@ -56,13 +56,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="wrap_content"
                 android:gravity="center" >
 
                 <EditText
                     android:id="@+id/user_repwd_pwd"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="40dp"
                     android:background="@null"
                     android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:hint="@string/user_login_password_hint"
@@ -72,7 +72,7 @@
                     android:textSize="14sp" 
                     android:maxLength="16"
                     android:textColorHint="@color/user_hint_text_color"
-                    android:gravity="center"/>
+                    android:paddingLeft="10dp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -111,7 +111,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="72dp">
+            android:layout_marginTop="66dp">
             
             <TextView 
                 android:layout_width="wrap_content"
@@ -119,11 +119,12 @@
                 android:id="@+id/user_repwd_hint"
                 android:text="@string/user_regist_below_hint"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="12sp"
                 />
 
             <Button
-                android:layout_width="320dp"
+                android:layout_width="316dp"
                 android:layout_height="42dp"
                 android:layout_below="@id/user_repwd_hint"
                 android:enabled="false"

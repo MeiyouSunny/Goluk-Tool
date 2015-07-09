@@ -52,7 +52,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	private TextView mTextViewTitle;
 	/**手机号和密码**/
 	private EditText mEditTextPhoneNumber, mEditTextPwd;
-	private Button mBtnLogin;
+	private Button mBtnLogin ;
 	/**快速注册**/
 	private TextView mTextViewRegist, mTextViewForgetPwd;
 	/**application**/
@@ -128,7 +128,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		// 手机号和密码、登录按钮
 		mEditTextPhoneNumber = (EditText) findViewById(R.id.user_login_phonenumber);
 		mEditTextPwd = (EditText) findViewById(R.id.user_login_pwd);
-		mBtnLogin = (Button) findViewById(R.id.user_login_btn);
+		mBtnLogin = (Button) findViewById(R.id.user_login_layout_btn);
 		// 快速注册
 		mTextViewRegist = (TextView) findViewById(R.id.user_login_phoneRegist);
 		mTextViewForgetPwd = (TextView) findViewById(R.id.user_login_forgetpwd);
@@ -254,7 +254,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			finish();
 			break;
 		// 登陆按钮
-		case R.id.user_login_btn:
+		case R.id.user_login_layout_btn:
 			loginManage();
 			break;
 		// 手机快速注册
@@ -343,7 +343,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			if(justLogin.equals("main")){
 				mApplication.mLoginManage.setUserLoginInterface(null);
 				Intent login = new Intent(UserLoginActivity.this,MainActivity.class);
-				GolukDebugUtils.i(TAG, "======MainActivity==UserLoginActivity====");
 				startActivity(login);
 			}
 			this.finish();
@@ -444,7 +443,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 	public boolean onTouch(View view, MotionEvent event) {
 		int action = event.getAction();
 		switch (view.getId()) {
-		case R.id.user_login_btn:
+		case R.id.user_login_layout_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				mBtnLogin.setBackgroundResource(R.drawable.icon_login_click);
