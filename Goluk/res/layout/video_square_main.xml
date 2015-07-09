@@ -3,120 +3,110 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff" >
-	
-    
-    <!-- 视频广场title -->
-	<!-- <RelativeLayout
-		android:id="@+id/title_layout"
-		android:layout_width="match_parent"
-		android:layout_height="42dp"
-		android:background="@color/bg">
-		
-		
-		
-		<ImageButton
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:background="@drawable/live_btn_back" />
-		
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:textSize="18sp"
-			android:textColor="@color/white"
-			android:text="@string/square_title_text"/>
-	</RelativeLayout> -->
-    
+
+
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_below="@+id/title_layout"
-        android:layout_height="46dp">
+        android:layout_height="46dp" >
 
         <LinearLayout
             android:id="@+id/topLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/flle_tit_bg"
+            android:layout_height="match_parent"
+            android:background="#313131"
             android:gravity="center" >
-			
-            
-            <LinearLayout 
-                android:orientation="horizontal"
-                android:id="@+id/mVideoList"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center|center_vertical"
-                android:background="@drawable/home_bg"
-                android:layout_weight="1">
-                <ImageView
-                    android:id="@+id/hot_image"
-                    android:layout_width="wrap_content"
-               	 	android:layout_height="wrap_content"
-               	 	android:layout_marginRight="6dp"
-               	 	android:background="@drawable/home_hot_btn_click"/>
-                <TextView
-                    android:id="@+id/hot_title" 
-                    android:layout_width="wrap_content"
-               	 	android:layout_height="wrap_content"
-               	 	android:text="热门"
-                	android:textColor="#dde6f5"
-                	android:textSize="18sp"/>
-                
-            </LinearLayout>
-            
-             <LinearLayout 
-               	android:id="@+id/mTypeList"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center|center_vertical"
-                android:background="@drawable/home_bg"
-                android:layout_weight="1">
-                <ImageView
-                    android:id="@+id/square_image"
-                    android:layout_width="wrap_content"
-               	 	android:layout_height="wrap_content"
-               	 	android:layout_marginRight="6dp"
-               	 	android:background="@drawable/home_video_btn"/>
-                <TextView 
-                    android:id="@+id/square_title" 
-                    android:layout_width="wrap_content"
-               	 	android:layout_height="wrap_content"
-               	 	android:text="广场"
-                	android:textColor="#0b59be"
-                	android:textSize="18sp"/>
-                
-            </LinearLayout>
-            <!-- <Button
-                android:id="@+id/mVideoList"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center|center_vertical"
-                android:layout_weight="1"
-                android:drawablePadding="1dp"
-                android:drawableLeft="@drawable/home_hot_btn"
-                android:background="@drawable/home_bg"
-                android:text="热门"
-                android:textColor="#dde6f5"
-                android:textSize="18sp" /> -->
 
-            <!-- <Button
-                 /> -->
+            <LinearLayout
+                android:id="@+id/mVideoList"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#313131"
+                android:gravity="center|center_vertical"
+                android:orientation="vertical" >
+                
+                <TextView
+                    android:id="@+id/hot_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="热门"
+                    android:textColor="#0b59be"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/line_hot"
+                    android:layout_width="50dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#0b59be"
+                    android:contentDescription="@string/def" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mTypeList"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#313131"
+                android:orientation="vertical"
+                android:gravity="center|center_vertical" >
+
+                <TextView
+                    android:id="@+id/square_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="广场"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
+                
+                <ImageView
+                    android:id="@+id/line_square"
+                    android:layout_width="50dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#0b59be"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/def" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lookworld"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#313131"
+                android:orientation="vertical"
+                android:gravity="center|center_vertical" >
+
+                <TextView
+                    android:id="@+id/look_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="看天下"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
+                <ImageView
+                    android:id="@+id/line_look"
+                    android:layout_width="50dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#0b59be"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/def" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+       <!--  <LinearLayout
             android:id="@+id/title_select_line"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            
             android:layout_alignParentBottom="true" >
 
             <ImageView
                 android:id="@+id/line_hot"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="1dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -126,15 +116,26 @@
 
             <ImageView
                 android:id="@+id/line_square"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="1dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="#0b59be"
-                android:visibility="invisible"
-                android:contentDescription="@string/def" />
-        </LinearLayout>
+                android:contentDescription="@string/def"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/line_look"
+                android:layout_width="50dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="#0b59be"
+                android:contentDescription="@string/def"
+                android:visibility="invisible" />
+        </LinearLayout> -->
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager
@@ -144,5 +145,5 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/title" >
     </android.support.v4.view.ViewPager>
-	
+
 </RelativeLayout>

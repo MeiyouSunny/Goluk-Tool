@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#d3d3d3" >
+    android:background="#f4f6f6" >
 
     <TextView
         android:id="@+id/share_text"
@@ -10,132 +10,148 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="6dp"
-        android:layout_marginTop="16dp"
-        android:textColor="#333333"
-        android:text="分享到..."
+        android:layout_marginTop="6dp"
+        android:textColor="#999999"
+        android:text="视频分享到..."
         android:textSize="18sp" />
 
-    <View
+ <!--    <View
         android:id="@+id/divider_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/share_text"
-        android:background="@drawable/share_custom_divider" />
+        android:background="@drawable/share_custom_divider" /> -->
 
-    <HorizontalScrollView
+   <!--  <HorizontalScrollView
         android:id="@+id/shares"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/divider_line"
-        android:scrollbars="none">
+        android:scrollbars="none"> -->
 
         <LinearLayout
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="6dp"
+            android:layout_below="@id/share_text"
             android:layoutAnimation="@anim/layout_animation"
             android:orientation="horizontal" >
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="28dp" >
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_btn_bg" />
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1">
 
                 <ImageButton
                     android:id="@+id/wechat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_weixin" />
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/share_wechat_icon" />
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/wechat"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="10sp"
+                    android:textColor="#666666"
+                    android:text="微信好友"/>
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="23dp" >
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_btn_bg" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
 
                 <ImageButton
                     android:id="@+id/wechat_circle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_pengyouquan" />
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/share_wechat_friend_icon" />
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/wechat_circle"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="10sp"
+                    android:textColor="#666666"
+                    android:text="朋友圈"/>
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="23dp" >
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_btn_bg" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <ImageButton
                     android:id="@+id/qq"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_qq" />
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/share_qq_friend_icon" />
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/qq"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="10sp"
+                    android:textColor="#666666"
+                    android:text="QQ好友"/>
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="23dp" >
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_btn_bg" />
-
-                <ImageButton
-                    android:id="@+id/sms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_messge" />
-            </RelativeLayout>
-
-            <!-- <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="26dp" >
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_btn_bg" />
+                <ImageButton
+                    android:id="@+id/qqZone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/share_qq_zone_icon" />
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/qqZone"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="10sp"
+                    android:textColor="#666666"
+                    android:text="QQ空间"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <ImageButton
                     android:id="@+id/sina"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/live_share_weibo" />
-            </RelativeLayout> -->
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/share_weibo_icon" />
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sina"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="10sp"
+                    android:textColor="#666666"
+                    android:text="微博"/>
+            </RelativeLayout> 
         </LinearLayout>
-    </HorizontalScrollView>
+    <!-- </HorizontalScrollView> -->
 
    
 
-    <LinearLayout
+    <!-- <LinearLayout
         android:id="@+id/share_cancel_line"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -155,12 +171,5 @@
             android:textSize="18sp"
             android:background="@drawable/btn_share_cancel_bg"
             android:text="取消" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="18dp"
-        android:layout_below="@+id/share_cancel_line"
-        android:background="#00000000" />
-
+    </LinearLayout> -->
 </RelativeLayout>

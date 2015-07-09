@@ -4,160 +4,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/status_layout"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="#313131" >
+        android:background="#344450"
+        android:orientation="horizontal" >
 
         <!-- 更多 -->
 
-        <Button
-            android:id="@+id/more_btn"
-            android:layout_width="34dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="27dp"
-            android:layout_marginTop="1dp"
-            android:layout_toRightOf="@+id/shareLayout"
-            android:background="#00000000"
-            android:drawableTop="@drawable/home_self_btn"
-            android:text="我"
-            android:textColor="#cccccc"
-            android:textSize="12sp" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:gravity="center" >
 
-      	<RelativeLayout 
-      	    android:id="@+id/shareLayout"
-      	    android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="27dp"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="1dp"
-            android:layout_toRightOf="@+id/index_carrecoder_btn"
-      	    >
-      	   
-      	    <Button
-            android:id="@+id/index_share_btn"
-            android:layout_width="34dp"
-            android:layout_height="50dp"
-            
-            android:background="#00000000"
-            android:drawableTop="@drawable/home_share_btn"
-            android:text="分享"
-            android:textColor="#cccccc"
-            android:textSize="12sp" />
-      	    
-      	    <ImageView 
-      	   	android:id="@+id/mHotPoint"
-      	   	android:layout_width="11dp"
-            android:layout_height="11dp"     
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-      	    android:background="@drawable/home_red_point_little"/>
-      	    
-      	</RelativeLayout>
-        
-
+            <Button
+                android:id="@+id/index_square_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:drawableTop="@drawable/index_find_btn_press"
+                android:text="@string/index_square"
+                android:textColor="#0b59be"
+                android:textSize="12sp" />
+        </RelativeLayout>
         <!-- 广场 -->
 
-        <Button
-            android:id="@+id/index_square_btn"
-            android:layout_width="34dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="27dp"
-            android:layout_toLeftOf="@+id/index_look_btn"
-            android:background="#00000000"
-            android:drawableTop="@drawable/home_find_btn_click"
-            android:text="@string/index_square"
-            android:textColor="#cccccc"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/index_look_btn"
-            android:layout_width="36dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="27dp"
-            android:layout_marginTop="1dp"
-            android:layout_toLeftOf="@+id/index_carrecoder_btn"
-            android:background="#00000000"
-            android:drawableTop="@drawable/home_local_btn"
-            android:text="看天下"
-            android:textColor="#cccccc"
-            android:textSize="12sp" />
-
-        <ImageButton
-            android:id="@+id/index_carrecoder_btn"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/home_tab_icon"
-            android:contentDescription="@string/imgdes" />
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:background="#0b59be"
+            android:gravity="center" >
 
-   
-    <RelativeLayout
-        android:id="@+id/index_top_layout"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:layout_alignParentTop="true"
-        android:background="#2790fc" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/home_logo" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/wifi_conn_txt"
+            <ImageButton
+                android:id="@+id/index_carrecoder_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="去连接Goluk"
-                android:textColor="#ffffff" />
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/index_video_icon"
+                android:contentDescription="@string/imgdes" />
+        </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/index_wiifstate"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/more_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/home_wifi_no_link" />
-        </LinearLayout>
-    </RelativeLayout>
+                android:background="#00000000"
+                android:drawableTop="@drawable/index_user_btn"
+                android:text="我"
+                android:textColor="#cccccc"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <!-- 定位与直播列表按钮 -->
 
     <RelativeLayout
         android:id="@+id/index_map_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
+        android:layout_height="match_parent"
         android:layout_above="@+id/status_layout"
-        android:layout_below="@+id/index_top_layout"
-        android:visibility="gone">
+        android:visibility="gone" >
 
         <LinearLayout
             android:id="@+id/map_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="40dp"
             android:layout_marginRight="14dp"
-            android:layout_alignParentBottom="true"
             android:orientation="vertical"
             android:visibility="visible" >
 
@@ -173,25 +100,11 @@
 
     <include
         android:id="@+id/video_square_layout"
-        android:layout_above="@+id/status_layout"
-        android:layout_below="@+id/index_top_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/status_layout"
         layout="@layout/video_square_main"
         android:visibility="visible" />
-
-    <!--
-         <TextView
-        android:id="@+id/driving_share_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="3dp"
-        android:text="@string/driving_share_text"
-        android:textColor="#676767"
-        android:textSize="12sp" />
-    -->
 
 
     <!-- 分享布局 -->
@@ -203,10 +116,22 @@
         layout="@layout/index_share"
         android:visibility="gone" />
     
-	<View 
-	    android:id="@+id/index_div"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:background="@drawable/guide_one"
-	    android:visibility="gone"/>
+     <!-- 用户中心布局 -->
+
+    <include
+        android:id="@+id/user_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/status_layout"
+        layout="@layout/index_more"
+        android:visibility="gone" />
+    
+
+    <View
+        android:id="@+id/index_div"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/guide_one"
+        android:visibility="gone" />
+
 </RelativeLayout>
