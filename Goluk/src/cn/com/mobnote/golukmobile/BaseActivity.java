@@ -41,6 +41,10 @@ public class BaseActivity extends Activity {
 	public static final String IPC_PWD_DEFAULT = "123456789";
 	/** 手机创建热点默认密码 */
 	public static final String MOBILE_HOT_PWD_DEFAULT = "123456789";
+	
+	// 写死ip,网关
+	public static final String DEFAULT_IP = "192.168.1.103";
+	public static final String DEFAULT_WAY = "192.168.1.103";
 
 	public static final String WIFI_CONNING_FAILED_STR = "未连接Goluk";
 	public static final String WIFI_CONNING_STR = "正在连接Goluk...";

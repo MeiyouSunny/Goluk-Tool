@@ -238,7 +238,11 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "VideoShare");
+		// 作初始化工作，防止程序崩溃出现为NULL的情况
 		mApp.initLogic();
+		if (!mApp.isUserLoginSucess) {
+			mApp.mUser.initAutoLogin();
+		}
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 		// 获取第一帧缩略图

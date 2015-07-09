@@ -53,7 +53,6 @@ public class GuideActivity extends BaseActivity {
 		((GolukApplication) this.getApplication()).initLogic();
 		
 		((GolukApplication) this.getApplication()).startUpgrade();
-		
 		// 初始化
 		init();
 		SysApplication.getInstance().addActivity(this);

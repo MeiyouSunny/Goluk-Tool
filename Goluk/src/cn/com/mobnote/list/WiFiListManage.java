@@ -6,7 +6,6 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
-import cn.com.mobnote.util.console;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 

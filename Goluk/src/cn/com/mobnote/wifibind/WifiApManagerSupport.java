@@ -1,11 +1,15 @@
 package cn.com.mobnote.wifibind;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +21,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
-import cn.com.mobnote.util.console;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiApManagerSupport {
@@ -341,6 +344,60 @@ public class WifiApManagerSupport {
 		} catch (InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 获取加入wifiAP列表
+	 *
+	 * @param onlyReachables
+	 * @param reachableTimeout
+	 * @return
+	 */
+	public WifiRsBean[] getJoinApList(boolean onlyReachables,
+			int reachableTimeout) {
+		BufferedReader br = null;
+		final ArrayList<WifiRsBean> result = new ArrayList<WifiRsBean>();
+
+		try {
+			br = new BufferedReader(new FileReader("/proc/net/arp"));
+
+			String line="";
+			while ((line =  br.readLine()) != null) {
+				String[] splitted = line.split(" +");
+
+				if ((splitted != null) && (splitted.length >= 4)) {
+					// Basic sanity check
+					String mac = splitted[3];
+
+					if (mac.matches("..:..:..:..:..:..")) {
+						boolean isReachable = InetAddress
+								.getByName(splitted[0]).isReachable(
+										reachableTimeout);
+
+						if (!onlyReachables || isReachable) {
+							// splitted[5] 连接方式 wlan0
+							result.add(new WifiRsBean(splitted[0], splitted[3],
+									isReachable));
+						}
+					}
+				}
+			}
+			if (result.size() > 0) {
+				return (WifiRsBean[]) result.toArray(new WifiRsBean[0]);
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			Log.e(this.getClass().toString(), e.toString());
+			return null;
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+				Log.e(this.getClass().toString(), e.getMessage());
+			}
 		}
 	}
 }

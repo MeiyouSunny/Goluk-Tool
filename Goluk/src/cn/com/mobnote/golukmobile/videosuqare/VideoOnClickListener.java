@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
-import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
-import cn.com.mobnote.golukmobile.live.LiveActivity;
-import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListViewAdapter.ViewHolder;
-
-import com.bokecc.sdk.mobile.play.DWMediaPlayer;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListViewAdapter.ViewHolder;
+
+import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 
 public class VideoOnClickListener implements OnClickListener{
 	private VideoSquareInfo mVideoSquareInfo=null;
@@ -34,7 +33,8 @@ public class VideoOnClickListener implements OnClickListener{
 		if("2".equals(mVideoSquareInfo.mVideoEntity.type)){
 			if(1 == form){
 				MainActivity a = (MainActivity)mContext;
-				Intent intent = new Intent(a, VideoPlayerActivity.class);
+//				Intent intent = new Intent(a, VideoPlayerActivity.class);
+				Intent intent = new Intent(a, VideoPlayerView.class);
 				intent.putExtra("from", "suqare");
 				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
 				intent.putExtra("playUrl", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
@@ -42,7 +42,8 @@ public class VideoOnClickListener implements OnClickListener{
 				a.startActivity(intent);
 			}else{
 				VideoSquarePlayActivity a = (VideoSquarePlayActivity)mContext;
-				Intent intent = new Intent(a, VideoPlayerActivity.class);
+//				Intent intent = new Intent(a, VideoPlayerActivity.class);
+				Intent intent = new Intent(a, VideoPlayerView.class);
 				intent.putExtra("from", "suqare");
 				intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
 				intent.putExtra("playUrl", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);

@@ -56,6 +56,12 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_LIVE_REQUEST_SERVER = 11;
 	/** 直播分享 */
 	public static final int DIALOG_TYPE_LIVE_SHARE = 12;
+	/** WIFI连接提示用户去系统设置连接WIFI */
+	public static final int DIALOG_TYPE_WIFIBIND_SHOWSETTING = 13;
+	/** 提示用户重新启动IPC */
+	public static final int DIALOG_TYPE_WIFIBIND_RESTART_IPC = 14;
+	/** 綁定失败提示框 */
+	public static final int DIALOG_TYPE_WIFIBIND_FAILED = 15;
 
 	private int mCurrentDialogType = 0;
 
@@ -103,7 +109,6 @@ public class LiveDialogManager {
 
 			@Override
 			public void onCancel(DialogInterface arg0) {
-				// TODO Auto-generated method stub
 				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
 			}
 		});
@@ -223,7 +228,7 @@ public class LiveDialogManager {
 
 	}
 
-	private void dismissTwoButtonDialog() {
+	public void dismissTwoButtonDialog() {
 		if (null != mTwoButtonDialog) {
 			mTwoButtonDialog.dismiss();
 			mTwoButtonDialog = null;

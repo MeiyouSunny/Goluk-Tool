@@ -1312,14 +1312,14 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 * @throws
 	 */
 	public void showDialog() {
-		dialog = new AlertDialog.Builder(LiveActivity.this).create();
+		dialog = new AlertDialog.Builder(LiveActivity.this,R.style.CustomDialog).create();
 		dialog.show();
 		dialog.getWindow().setContentView(R.layout.video_square_dialog_main);
 		dialog.getWindow().findViewById(R.id.report).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dialog.dismiss();
-				ad = new AlertDialog.Builder(LiveActivity.this).create();
+				ad = new AlertDialog.Builder(LiveActivity.this,R.style.CustomDialog).create();
 				ad.show();
 				ad.getWindow().setContentView(R.layout.video_square_dialog_selected);
 				ad.getWindow().findViewById(R.id.sqds).setOnClickListener(new View.OnClickListener() {
@@ -1365,7 +1365,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	public void confirmation(final String reporttype) {
 		ad.dismiss();
-		confirmation = new AlertDialog.Builder(LiveActivity.this).create();
+		confirmation = new AlertDialog.Builder(LiveActivity.this,R.style.CustomDialog).create();
 		confirmation.show();
 		confirmation.getWindow().setContentView(R.layout.video_square_dialog_confirmation);
 		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {

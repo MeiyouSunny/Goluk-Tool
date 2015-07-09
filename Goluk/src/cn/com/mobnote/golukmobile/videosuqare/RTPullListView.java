@@ -341,9 +341,9 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		public void onRefresh();
 	}
 
-	public void onRefreshComplete() {
+	public void onRefreshComplete(String history) {
 		state = DONE;
-		lastUpdatedTextView.setText(getResources().getString(R.string.updating) +formatter.format(new Date()) );
+		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + history );
 		changeHeaderViewByState();
 		invalidateViews();
 		setSelection(0);
@@ -380,8 +380,8 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		child.measure(childWidthSpec, childHeightSpec);
 	}
 
-	public void setAdapter(BaseAdapter adapter) {
-		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + formatter.format(new Date()));
+	public void setAdapter(BaseAdapter adapter,String history) {
+		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + history);
 		super.setAdapter(adapter);
 	}
 	

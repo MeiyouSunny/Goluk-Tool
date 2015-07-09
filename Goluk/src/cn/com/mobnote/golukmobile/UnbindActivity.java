@@ -124,7 +124,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 							toUnbind();
 							mHaveipcLayout.setVisibility(View.GONE);
 							mNoipcLayout.setVisibility(View.VISIBLE);
-							mApplication.mIPCControlManager.setIPCWifiState(false, null);
+							mApplication.mIPCControlManager.setIPCWifiState(false, "");
 							mApplication.setIpcLoginOut();
 
 						}

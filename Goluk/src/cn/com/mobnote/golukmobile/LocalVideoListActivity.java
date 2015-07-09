@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -30,10 +31,12 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.video.LocalVideoListManage;
 import cn.com.mobnote.video.LocalVideoListManage.DoubleVideoData;
 import cn.com.mobnote.video.LocalVideoListManage.LocalVideoData;
+
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -411,7 +414,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							//点击列表左边项,跳转到视频播放页面
-							gotoVideoPlayPage(tag1);
+							gotoVideoPlayPage(1, tag1);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename, mLocalLoopVideoListManage.mLocalVideoListData);
 							
@@ -420,7 +423,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 							mLoopVideoAdapter.notifyDataSetChanged();
 						}else{
 							//点击列表右边项,跳转到视频播放页面
-							gotoVideoPlayPage(tag2);
+							gotoVideoPlayPage(1, tag2);
 							LocalVideoData info2 = d.getVideoInfo2();
 							if(null == info2)
 								return;
@@ -508,7 +511,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							//点击列表左边项,跳转到视频播放页面
-							gotoVideoPlayPage(tag1);
+							gotoVideoPlayPage(2, tag1);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename, mLocalWonderfulVideoListManage.mLocalVideoListData);
 							
@@ -518,7 +521,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 						}
 						else{
 							//点击列表右边项,跳转到视频播放页面
-							gotoVideoPlayPage(tag2);
+							gotoVideoPlayPage(2, tag2);
 							LocalVideoData info2 = d.getVideoInfo2();
 							if(null == info2)
 								return;
@@ -618,7 +621,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 						//点击播放
 						if((screenX > 0) && (screenX < (screenWidth/2))){
 							//点击列表左边项,跳转到视频播放页面
-							gotoVideoPlayPage(tag1);
+							gotoVideoPlayPage(2, tag1);
 							
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename, mLocalEmergencyVideoListManage.mLocalVideoListData);
@@ -629,7 +632,7 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 						}
 						else{
 							//点击列表右边项,跳转到视频播放页面
-							gotoVideoPlayPage(tag2);
+							gotoVideoPlayPage(2, tag2);
 							
 							LocalVideoData info2 = d.getVideoInfo2();
 							if(null == info2)
@@ -651,9 +654,17 @@ public class LocalVideoListActivity extends BaseActivity implements  OnClickList
 	 * 跳转到本地视频播放页面
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(String path){
+	private void gotoVideoPlayPage(int from, String path){
 		if(!TextUtils.isEmpty(path)){
-			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+			Intent intent = null;
+			if(1 == from) {
+				intent = new Intent(mContext, VideoPlayerActivity.class);
+			}else {
+				intent = new Intent(mContext, VideoPlayerView.class);
+			}
+//			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+//			Intent intent = new Intent(mContext, VideoPlayer.class);
+//			Intent intent = new Intent(mContext, VideoPlayerView.class);
 			intent.putExtra("from", "local");
 			//intent.putExtra("type", mCurrentType);
 			intent.putExtra("path", path);
