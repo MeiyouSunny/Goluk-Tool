@@ -58,6 +58,7 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.IPCInfo;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.User;
+import cn.com.mobnote.user.UserIdentifyManage;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistManage;
 import cn.com.mobnote.util.AssetsFileUtils;
@@ -142,6 +143,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public UserRegistManage mRegistManage = null;
 	/**升级管理类**/
 	public IpcUpdateManage mIpcUpdateManage = null;
+	/**获取验证码管理类**/
+	public UserIdentifyManage mIdentifyManage = null;
 
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String, ILocationFn>();
 	/** 未下载文件列表 */
@@ -233,6 +236,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mLoginManage = new UserLoginManage(this);
 		mRegistManage = new UserRegistManage(this);
 		mIpcUpdateManage = new IpcUpdateManage(this);
+		mIdentifyManage = new UserIdentifyManage(this);
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
@@ -834,6 +838,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (mPageSource == "UserRepwd") {
 //				((UserRepwdActivity) mContext).isRepwdCallBack(success, param2);
 			}
+			mIdentifyManage.getIdentifyCallback(success, param1, param2);
 			break;
 		// 注册PageType_Register
 		case PageType_Register:

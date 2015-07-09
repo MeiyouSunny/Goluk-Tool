@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -13,6 +16,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.telephony.SmsMessage;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -64,7 +69,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	/**自动获取验证码**/
 	private BroadcastReceiver smsReceiver;
 	private IntentFilter smsFilter;
-	private Handler handler;
+	private Handler mSendMesageHandler;
 	private String strBody;
 	/**注册**/
 	private CustomLoadingDialog mCustomProgressDialog=null;
@@ -94,7 +99,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		
 		initView();
 		// title
-		mTextViewTitle.setText("设置帐号和密码");
+		mTextViewTitle.setText("注册");
 	}
 	@Override
 	protected void onResume() {
@@ -444,7 +449,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	public void regist(){
 		String phone = mEditTextPhone.getText().toString().replace("-", "");
 		String password = mEditTextPwd.getText().toString();
-//		String identify = mEditTextIdentify.getText().toString();
 		
 		if (!"".equals(phone) && UserUtils.isMobileNO(phone)) {
 			if (!"".equals(password)) {
@@ -453,12 +457,24 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					if (!UserUtils.isNetDeviceAvailable(mContext)) {
 						GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 					} else {
-						GolukUtils.showToast(mContext, "点击注册按钮。。。");
-						
-						Intent getIdentify = new Intent(UserRegistActivity.this,UserIdentifyActivity.class);
-						getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_DIFFERENT, "user_regist");
-						getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PHONE, phone);
-						startActivity(getIdentify);
+						mApplication.mIdentifyManage.setUserIdentifyInterface(this);
+						boolean b = mApplication.mIdentifyManage.getIdentify(true,phone);
+						if(b){
+							click = 1;
+							UserUtils.hideSoftMethod(this);
+							mCustomProgressDialogIdentify.show();
+							mBtnRegist.setEnabled(false);
+							mEditTextPhone.setEnabled(false);
+							mEditTextPwd.setEnabled(false);
+							mBackButton.setEnabled(false);
+						}else{
+							closeProgressDialogIdentify();
+							mBtnRegist.setEnabled(true);
+							mEditTextPhone.setEnabled(true);
+							mEditTextPwd.setEnabled(true);
+							mBackButton.setEnabled(true);
+							GolukUtils.showToast(mContext, "验证码获取失败");
+						}
 						
 						// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 						/*String isRegist = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + password
@@ -611,9 +627,9 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(click == 1&&smsReceiver.isInitialStickyBroadcast()){
+		/*if(click == 1&&smsReceiver.isInitialStickyBroadcast()){
 			unregisterReceiver(smsReceiver);
-		}
+		}*/
 	}
 	/**
 	 * 注册完成后自动调一次登录的接口，以存储用户信息
@@ -688,6 +704,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	@Override
 	public void identifyCallbackInterface() {
 		switch (mApplication.identifyStatus) {
+		//验证码获取中
 		case 0:
 			UserUtils.hideSoftMethod(this);
 			mCustomProgressDialogIdentify.show();
@@ -696,52 +713,44 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			mEditTextPwd.setEnabled(false);
 			mBackButton.setEnabled(false);
 			break;
+			//获取验证码成功
 		case 1:
 			closeProgressDialogIdentify();
-			mBtnRegist.setEnabled(true);
-			mEditTextPhone.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mBackButton.setEnabled(true);
+			GolukUtils.showToast(this, "验证码发送成功");
 			
+			String phone = mEditTextPhone.getText().toString();
+			Intent getIdentify = new Intent(UserRegistActivity.this,UserIdentifyActivity.class);
+			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_DIFFERENT, true);
+			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PHONE, phone);
+			startActivity(getIdentify);
 			break;
+			//获取验证码失败
 		case 2:
 			closeProgressDialogIdentify();
-			mBtnRegist.setEnabled(true);
-			mEditTextPhone.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mBackButton.setEnabled(true);
 			GolukUtils.showToast(mContext, "验证码获取失败");
 			break;
+			//code=201
 		case 3:
 			closeProgressDialogIdentify();
-			mBtnRegist.setEnabled(true);
-			mEditTextPhone.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mBackButton.setEnabled(true);
-			UserUtils.showDialog(this, "该手机号1小时内下发5次以上验证码");
+			UserUtils.showDialog(this, "该手机号1小时内下发6次以上验证码");
 			break;
+			//code=500
 		case 4:
 			closeProgressDialogIdentify();
-			mBtnRegist.setEnabled(true);
-			mEditTextPhone.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mBackButton.setEnabled(true);
 			UserUtils.showDialog(this, "服务端程序异常");
 			break;
+			//code=405
 		case 5:
 			closeProgressDialogIdentify();
-			mBtnRegist.setEnabled(true);
-			mEditTextPhone.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mBackButton.setEnabled(true);
 			new AlertDialog.Builder(this)
+			.setTitle("提示")
 			.setMessage("此手机号已经被注册")
 			.setNegativeButton("取消", null)
 			.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					if(mApplication.loginoutStatus = true){
-						String phone = mEditTextPhone.getText().toString();
+						String phone = mEditTextPhone.getText().toString().replace("-", "");
 						mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 						mEditor = mSharedPreferences.edit();
 						mEditor.putString("setupPhone", phone);
@@ -752,28 +761,19 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				}
 			}).create().show();
 			break;
+			//code=440
 		case 6:
 			closeProgressDialogIdentify();
-			mBtnRegist.setEnabled(true);
-			mEditTextPhone.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mBackButton.setEnabled(true);
 			UserUtils.showDialog(this, "输入手机号异常");
 			break;
+			//code=480
 		case 7:
 			closeProgressDialogIdentify();
-			mBtnRegist.setEnabled(true);
-			mEditTextPhone.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mBackButton.setEnabled(true);
 			UserUtils.showDialog(this, "验证码发送失败，请重新发送");
 			break;
+			//code=470
 		case 8:
 			closeProgressDialogIdentify();
-			mBtnRegist.setEnabled(true);
-			mEditTextPhone.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mBackButton.setEnabled(true);
 			UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限");
 			break;
 		default:
@@ -835,6 +835,10 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private void closeProgressDialogIdentify(){
 		if(null != mCustomProgressDialogIdentify){
 			mCustomProgressDialogIdentify.close();
+			mBtnRegist.setEnabled(true);
+			mEditTextPhone.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mBackButton.setEnabled(true);
 		}
 	}
 	

@@ -3,6 +3,7 @@ package cn.com.mobnote.user;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -15,6 +16,8 @@ public class UserIdentifyManage {
 	private UserIdentifyInterface mIdentifyInterface = null;
 	/** 获取验证码json串 **/
 	private String isIdentify = "";
+	/**6次获取验证码**/
+	private static final int IDENTIFY_COUNT = 6;
 
 	public UserIdentifyManage(GolukApplication mApp) {
 		super();
@@ -37,19 +40,14 @@ public class UserIdentifyManage {
 	 * 
 	 * @param phoneNumber
 	 */
-	public void getIdentify(String phoneNumber) {
-		if (mApp.registOrRepwd) {
+	public boolean getIdentify(boolean b,String phoneNumber) {
+		if (b) {
 			isIdentify = "{\"PNumber\":\"" + phoneNumber + "\",\"type\":\"1\"}";
 		} else {
 			isIdentify = "{\"PNumber\":\"" + phoneNumber + "\",\"type\":\"2\"}";
 		}
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetVCode, isIdentify);
-		if (b) {
-			identifyStatusChange(0);
-		} else {
-			identifyStatusChange(2);
-		}
+		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVCode,
+				isIdentify);
 	}
 
 	/**
@@ -70,7 +68,13 @@ public class UserIdentifyManage {
 				int freq = json.getInt("freq");
 				switch (code) {
 				case 200:
-					identifyStatusChange(1);
+					int count = IDENTIFY_COUNT - freq;
+					GolukDebugUtils.i("lily", freq+"====freqInt===="+count);
+					if(count < 0){
+						UserUtils.showDialog(mApp, mApp.getContext().getResources().getString(R.string.count_identify_six));
+					}else{
+						identifyStatusChange(1);
+					}
 					break;
 				case 201:
 					identifyStatusChange(3);

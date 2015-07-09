@@ -232,7 +232,7 @@
     <string name="user_regist_phone_hint">输入手机号码（暂时只支持中国大陆地区）</string>
     <string name="user_regist_below_hint">请放心，我们不会将您的手机号码用于其他用途</string>
     <string name="user_identify_code">输入6位验证码</string>
-    <string name="user_identify_count">重新发送（</string>
+    <string name="user_identify_count">重新发送</string>
     
     <!-- 直播界面 -->
 

@@ -37,7 +37,7 @@
     <include layout="@layout/user_identify_item"/>
     
     <!-- 倒计时 -->
-    <LinearLayout 
+   <!--  <LinearLayout 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -48,27 +48,37 @@
             android:layout_height="wrap_content"
             android:text="@string/user_identify_count"
             android:textSize="14sp"
-            android:textColor="@color/user_identify_count_color"/>
+            android:textColor="@color/user_identify_count_color"
+            android:layout_marginRight="5dp"/>
         <TextView 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/user_identify_count_time"
             android:textSize="14sp"
             android:textColor="@color/user_identify_count_color"
-            android:text="60s"/>
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/user_identify_count_color"
-            android:text="）"/>
+            />
         <ImageView 
             android:id="@+id/user_identify_count_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/log_in_arrow"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"/>
+    </LinearLayout> -->
+    
+   	<Button 
+        android:id="@+id/user_identify_layout_getidentify_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="重新获取"
+        android:drawableRight="@drawable/log_in_arrow"
+        android:drawablePadding="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/user_identify_count_color"
+        android:background="@null"
+        />
     
     <!-- 下一步Button -->
 
