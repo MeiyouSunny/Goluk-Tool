@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,9 +24,8 @@ import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
-import cn.com.mobnote.golukmobile.UserRegistActivity;
-import cn.com.mobnote.golukmobile.UserRepwdActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
@@ -55,15 +53,13 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.mobnote.user.IPCInfo;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserIdentifyManage;
 import cn.com.mobnote.user.UserLoginManage;
-import cn.com.mobnote.user.UserRegistManage;
+import cn.com.mobnote.user.UserRegistAndRepwdManage;
 import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
@@ -123,7 +119,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	/** 登录的五个状态 0登录中 1 登录成功 2登录失败 3手机号未注册，跳转注册页面 4超时 5密码错误达上限去重置密码 **/
 	public int loginStatus;
-	/** 注册的三个状态 1注册中 2注册成功 3注册失败 **/
+	/**
+	 * 注册的三个状态 1----注册/重置 中 2----注册/重置 成功 3---注册/重置 失败 4---code=500 5---code=405
+	 * 6----code=406 7----code=407 8---code=480  9---超时
+	 **/
 	public int registStatus;
 	/** 自动登录的四个状态 1自动登录中 2自动登录成功 3自动登录失败 4自动登录超时 5密码错误 **/
 	public int autoLoginStatus;
@@ -139,12 +138,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public User mUser = null;
 	/** 登录管理类 **/
 	public UserLoginManage mLoginManage = null;
-	/** 注册管理类 **/
-	public UserRegistManage mRegistManage = null;
 	/**升级管理类**/
 	public IpcUpdateManage mIpcUpdateManage = null;
 	/**获取验证码管理类**/
 	public UserIdentifyManage mIdentifyManage = null;
+	/**注册/重置密码管理类**/
+	public UserRegistAndRepwdManage mRegistAndRepwdManage = null;
 
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String, ILocationFn>();
 	/** 未下载文件列表 */
@@ -168,9 +167,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean isDownloading = false;
 	/** 下载列表个数 */
 	private int downloadCount = 0;
-	
-	/**判断注册(true) / 重置密码(false) **/
-	public boolean registOrRepwd = false;
+
 	/**测试ipc升级版本号**/
 //	public static final String TEST_IPC_VERSION = "1.0.1.8";
 	
@@ -234,9 +231,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		 */
 		mUser = new User(this);
 		mLoginManage = new UserLoginManage(this);
-		mRegistManage = new UserRegistManage(this);
 		mIpcUpdateManage = new IpcUpdateManage(this);
 		mIdentifyManage = new UserIdentifyManage(this);
+		mRegistAndRepwdManage = new UserRegistAndRepwdManage(this);
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);
@@ -814,10 +811,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// mMainActivity.loginCallBack(success, param2);
 			}
 			// 登录
-			if (mPageSource != "UserRegist") {
+			if (mPageSource != "UserIdentify") {
 				mLoginManage.loginCallBack(success, param1, param2);
 			} else {
-				((UserRegistActivity) mContext).registLoginCallBack(success, param2);
+				((UserIdentifyActivity) mContext).registLoginCallBack(success, param2);
 			}
 
 			parseLoginData(success, param2);
@@ -831,26 +828,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		// 验证码PageType_GetVCode
 		case PageType_GetVCode:
 			// 注册获取验证码
-			if (mPageSource == "UserRegist") {
-//				((UserRegistActivity) mContext).identifyCallback(success, param2);
-			}
-			// 重置密码获取验证码
-			if (mPageSource == "UserRepwd") {
-//				((UserRepwdActivity) mContext).isRepwdCallBack(success, param2);
-			}
 			mIdentifyManage.getIdentifyCallback(success, param1, param2);
 			break;
 		// 注册PageType_Register
 		case PageType_Register:
-			if (mPageSource == "UserRegist") {
-				((UserRegistActivity) mContext).registCallback(success, param1, param2);
-			}
+			mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
 			break;
 		// 重置密码PageType_ModifyPwd
 		case PageType_ModifyPwd:
-			if (mPageSource == "UserRepwd") {
-				((UserRepwdActivity) mContext).repwdCallBack(success, param1, param2);
-			}
+			mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
 			break;
 		case IPageNotifyFn.PageType_ModifyUserInfo:
 			if (mPageSource == "UserPersonalEdit") {

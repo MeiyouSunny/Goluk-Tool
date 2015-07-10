@@ -1,20 +1,18 @@
 package cn.com.mobnote.user;
 
-import cn.com.mobnote.golukmobile.R;
 import android.os.CountDownTimer;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class CountDownButtonHelper {
 
 	/**
 	 * 获取验证码的帮助类 btn 获取验证码按钮 maxTime 获取验证码的最大时间 interval 最大时间间隔
 	 */
-	// 倒计时的timer
-	private CountDownTimer timer;
-	// 倒计时回调时的接口
+	/** 倒计时的timer**/
+	public CountDownTimer timer;
+	/**倒计时回调时的接口**/
 	private OnFinishListener listener;
-	// 点击按钮倒计时
+	/**点击按钮倒计时**/
 	private Button btn;
 
 	public CountDownButtonHelper(final Button btn, final String defaultString, int maxTime, int interval) {
@@ -42,7 +40,6 @@ public class CountDownButtonHelper {
 			@Override
 			public void onFinish() {
 				btn.setEnabled(true);
-				// btn.setBackgroundResource(R.drawable.icon_login);
 				if (listener != null) {
 					listener.finish();
 				}

@@ -1,10 +1,15 @@
 package cn.com.mobnote.golukmobile;
 
+import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import cn.com.mobnote.user.UserIdentifyInterface;
+import cn.com.mobnote.user.UserRegistAndRepwdInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -17,8 +22,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -32,7 +35,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -42,10 +44,12 @@ import android.widget.TextView;
  *
  */
 public class UserIdentifyActivity extends BaseActivity implements OnClickListener, OnTouchListener,
-		UserIdentifyInterface {
+		UserIdentifyInterface, UserRegistAndRepwdInterface {
 
 	public static final String IDENTIFY_DIFFERENT = "identify_different";
 	public static final String IDENTIFY_PHONE = "identify_phone";
+	public static final String IDENTIFY_PASSWORD = "identify_password";
+	public static final String IDENTIFY_INTER_REGIST = "identify_inter_regist";
 	private static final String TAG = "lily";
 	/** Application & Context **/
 	private GolukApplication mApp = null;
@@ -62,13 +66,21 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	private AnimationDrawable mAnimation = null;
 	/** 发送验证码手机号 **/
 	private String title_phone = "";
+	/** 密码 **/
+	private String intentPassword = "";
+	/** 跳转注册页标识 **/
+	private String intentRegistInter = "";
 	/** 获取验证码 **/
 	private CustomLoadingDialog mCustomDialogIdentify = null;
+	/** 注册 **/
+	private CustomLoadingDialog mCustomDialogRegist = null;
+	/** 重置密码 **/
+	private CustomLoadingDialog mCustomDialogRepwd = null;
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
 	/** 倒计时帮助类 **/
 	private CountDownButtonHelper mCountDownhelper = null;
-	
+	/** 注册/重置密码标识 **/
 	private boolean justDifferent = false;
 
 	@SuppressLint("HandlerLeak")
@@ -83,7 +95,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 		initView();
 		getInfo();
-		
+
 		countTime();
 
 	}
@@ -110,16 +122,23 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		mBtnCount = (Button) findViewById(R.id.user_identify_layout_getidentify_btn);
 		mBtnNext = (Button) findViewById(R.id.user_identify_btn);
 
+		// 手机动画
 		mAnimation = (AnimationDrawable) mImageAnim.getBackground();
-
 		if (null != mAnimation) {
 			mAnimation.start();
 		}
-
+		// 获取验证码
 		if (null == mCustomDialogIdentify) {
 			mCustomDialogIdentify = new CustomLoadingDialog(mContext, "验证码获取中……");
 		}
-
+		// 注册
+		if (null == mCustomDialogRegist) {
+			mCustomDialogRegist = new CustomLoadingDialog(mContext, "注册中，请稍后……");
+		}
+		// 重置密码
+		if (null == mCustomDialogRepwd) {
+			mCustomDialogRepwd = new CustomLoadingDialog(mContext, "重置中，请稍候……");
+		}
 		// 监听
 		mBtnBack.setOnClickListener(this);
 		mBtnCount.setOnClickListener(this);
@@ -143,16 +162,21 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			mTextTitle.setText("正在发送短信到+86" + title_phone);
 		}
 
-		if (null != it.getStringExtra(IDENTIFY_DIFFERENT)) {
-			justDifferent = it.getBooleanExtra(IDENTIFY_DIFFERENT, false);
-//			String identify_different = it.getStringExtra(IDENTIFY_DIFFERENT).toString();
-			/*if ("user_regist".equals(identify_different)) {
-				// TODO 注册逻辑
-			} else if ("user_repwd".equals(identify_different)) {
-				// TODO 重置密码逻辑
-			}*/
+		// if (null != it.getBooleanExtra(IDENTIFY_DIFFERENT, false)) {
+		justDifferent = it.getBooleanExtra(IDENTIFY_DIFFERENT, false);
+		GolukDebugUtils.i(TAG, "-------justDifferent-------" + justDifferent);
+		// }
 
+		if (null != it.getStringExtra(IDENTIFY_PASSWORD)) {
+			intentPassword = it.getStringExtra(IDENTIFY_PASSWORD).toString();
 		}
+
+		if (null != it.getStringExtra(IDENTIFY_INTER_REGIST)) {
+			intentRegistInter = it.getStringExtra(IDENTIFY_INTER_REGIST).toString();
+		}
+
+		GolukDebugUtils.i("final", "-------UserIdentifyActivity--------getInfo()--------intentRegistInter------"
+				+ intentRegistInter);
 
 	}
 
@@ -160,13 +184,19 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.back_btn:
+			mCountDownhelper.timer.cancel();
 			finish();
 			break;
 		case R.id.user_identify_layout_getidentify_btn:
-			getIdentify(justDifferent,title_phone);
+			GolukDebugUtils.i(TAG, "-----saveDifferent----" + justDifferent);
+			getUserIdentify(justDifferent, title_phone.replace("-", ""));
 			break;
 		case R.id.user_identify_btn:
-
+			String vCode = mEditTextOne.getText().toString() + mEditTextTwo.getText().toString()
+					+ mEditTextThree.getText().toString() + mEditTextFour.getText().toString()
+					+ mEditTextFive.getText().toString() + mEditTextSix.getText().toString();
+			GolukDebugUtils.i(TAG, "-----UserIdentifyActivity------vCode-------" + vCode);
+			toRegistAndRepwd(justDifferent, title_phone.replace("-", ""), intentPassword, vCode);
 			break;
 		default:
 			break;
@@ -178,9 +208,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 * 
 	 * @param phone
 	 */
-	public void getIdentify(boolean flag,String phone) {
+	public void getUserIdentify(boolean flag, String phone) {
 		mApp.mIdentifyManage.setUserIdentifyInterface(this);
-		boolean b = mApp.mIdentifyManage.getIdentify(justDifferent,phone);
+		boolean b = mApp.mIdentifyManage.getIdentify(flag, phone);
 		if (b) {
 			mCustomDialogIdentify.show();
 			mBtnBack.setEnabled(false);
@@ -193,7 +223,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	}
 
 	/**
-	 * 获取验证码
+	 * 获取验证码接口回调
 	 */
 	@Override
 	public void identifyCallbackInterface() {
@@ -210,9 +240,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		case 1:
 			closeDialogIdentify();
 			GolukUtils.showToast(this, "验证码发送成功");
-			//倒计时
+			// 倒计时
 			countTime();
-			
+
 			break;
 		// 获取验证码失败
 		case 2:
@@ -232,20 +262,45 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		// code=405
 		case 5:
 			closeDialogIdentify();
-			new AlertDialog.Builder(this).setTitle("提示").setMessage("此手机号已经被注册").setNegativeButton("取消", null)
-					.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							if (mApp.loginoutStatus = true) {
-								mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-								mEditor = mSharedPreferences.edit();
-								mEditor.putString("setupPhone", title_phone.replace("-", ""));
-								mEditor.putBoolean("noPwd", true);
-								mEditor.commit();
+			if (justDifferent) {
+				new AlertDialog.Builder(this).setTitle("提示").setMessage("此手机号已经被注册").setNegativeButton("取消", null)
+						.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								if (mApp.loginoutStatus = true) {
+									mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+									mEditor = mSharedPreferences.edit();
+									mEditor.putString("setupPhone", title_phone);
+									mEditor.putBoolean("noPwd", true);
+									mEditor.commit();
+								}
+								mCountDownhelper.timer.cancel();
+								finish();
 							}
-							finish();
-						}
-					}).create().show();
+						}).create().show();
+			} else {
+				mSharedPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+				final String just = mSharedPreferences.getString("toRepwd", "");
+				new AlertDialog.Builder(this).setTitle("提示").setMessage("此手机号还未被注册").setNegativeButton("取消", null)
+						.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								Intent intentRepwd = new Intent(UserIdentifyActivity.this, UserRegistActivity.class);
+								intentRepwd.putExtra("intentRepassword", title_phone);
+								if (just.equals("start") || just.equals("mainActivity")) {
+									intentRepwd.putExtra("fromRegist", "fromStart");
+								} else if (just.equals("more")) {
+									intentRepwd.putExtra("fromRegist", "fromIndexMore");
+								} else if (just.equals("set")) {
+									intentRepwd.putExtra("fromRegist", "fromSetup");
+								}
+								startActivity(intentRepwd);
+								mCountDownhelper.timer.cancel();
+								finish();
+							}
+						}).create().show();
+			}
 			break;
 		// code=440
 		case 6:
@@ -260,7 +315,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		// code=470
 		case 8:
 			closeDialogIdentify();
-			UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限");
+			UserUtils.showDialog(mContext, "获取验证码失败，此手机号已经达到获取验证码上限");
 			break;
 		default:
 			break;
@@ -319,8 +374,6 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 				} else if (mEditTextSix.isFocused()) {
 					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(mEditTextSix.getWindowToken(), 0);
-					mBtnNext.setBackgroundResource(R.drawable.icon_login);
-					mBtnNext.setEnabled(true);
 				}
 			}
 		}
@@ -370,6 +423,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		}
 
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			mCountDownhelper.timer.cancel();
 			this.finish();
 		}
 		return false;
@@ -382,30 +436,23 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		int action = event.getAction();
 		switch (view.getId()) {
 		case R.id.user_identify_btn:
-			String identify_one = mEditTextOne.getText().toString();
-			String identify_two = mEditTextTwo.getText().toString();
-			String identify_three = mEditTextThree.getText().toString();
-			String identify_four = mEditTextFour.getText().toString();
-			String identify_five = mEditTextFive.getText().toString();
-			String identify_six = mEditTextSix.getText().toString();
-			if (!"".equals(identify_one) && !"".equals(identify_two) && !"".equals(identify_three)
-					&& !"".equals(identify_four) && !"".equals(identify_five) && !"".equals(identify_six)) {
-				switch (action) {
-				case MotionEvent.ACTION_DOWN:
-					mBtnNext.setBackgroundResource(R.drawable.icon_login_click);
-					break;
-				case MotionEvent.ACTION_UP:
-					mBtnNext.setBackgroundResource(R.drawable.icon_login);
-					break;
-				default:
-					break;
-				}
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				mBtnNext.setBackgroundResource(R.drawable.icon_login_click);
+				break;
+			case MotionEvent.ACTION_UP:
+				mBtnNext.setBackgroundResource(R.drawable.icon_login);
+				break;
+			default:
+				break;
 			}
-			break;
 		}
 		return false;
 	}
 
+	/**
+	 * 关闭获取验证码的loading
+	 */
 	private void closeDialogIdentify() {
 		if (null != mCustomDialogIdentify) {
 			mCustomDialogIdentify.close();
@@ -415,8 +462,50 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			mBtnNext.setEnabled(true);
 		}
 	}
-	
-	public void countTime(){
+
+	/**
+	 * 关闭注册loading
+	 */
+	private void closeDialogRegist() {
+		if (null != mCustomDialogRegist) {
+			mCustomDialogRegist.close();
+			mBtnBack.setEnabled(true);
+			mEditTextOne.setEnabled(true);
+			mBtnCount.setEnabled(true);
+			mBtnNext.setEnabled(true);
+		}
+	}
+
+	/**
+	 * 关闭重置密码loading
+	 */
+	private void closeDialogRepwd() {
+		if (null != mCustomDialogRepwd) {
+			mCustomDialogRepwd.close();
+			mBtnBack.setEnabled(true);
+			mEditTextOne.setEnabled(true);
+			mBtnCount.setEnabled(true);
+			mBtnNext.setEnabled(true);
+		}
+	}
+
+	/**
+	 * 判断关闭哪个对话框
+	 * 
+	 * @param b
+	 */
+	public void justCloseDialog(boolean b) {
+		if (b) {
+			closeDialogRegist();
+		} else {
+			closeDialogRepwd();
+		}
+	}
+
+	/**
+	 * 倒计时
+	 */
+	public void countTime() {
 		mCountDownhelper = new CountDownButtonHelper(mBtnCount, "重新获取", 60, 1);
 		mCountDownhelper.setOnFinishListener(new OnFinishListener() {
 
@@ -428,6 +517,225 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			}
 		});
 		mCountDownhelper.start();
+	}
+
+	/**
+	 * 注册/重置密码
+	 * 
+	 * @param flag
+	 * @param phone
+	 * @param password
+	 * @param vCode
+	 */
+	public void toRegistAndRepwd(boolean flag, String phone, String password, String vCode) {
+		// TODO 需要判断获取验证码次数
+		if ("".equals(vCode) || null == vCode) {
+			GolukUtils.showToast(mApp.getContext(), "请输入验证码");
+		} else {
+			if (vCode.length() < 6) {
+				GolukUtils.showToast(mApp.getContext(), "验证码格式输入不正确");
+			} else {
+				mApp.mRegistAndRepwdManage.setUserRegistAndRepwd(this);
+				boolean b = mApp.mRegistAndRepwdManage.registAndRepwd(flag, phone, password, vCode);
+				if (b) {
+					if (flag) {
+						mCustomDialogRegist.show();
+					} else {
+						mCustomDialogRepwd.show();
+					}
+					mBtnBack.setEnabled(false);
+					mEditTextOne.setEnabled(false);
+					mBtnCount.setEnabled(false);
+					mBtnNext.setEnabled(false);
+				} else {
+					justCloseDialog(flag);
+					if (flag) {
+						GolukUtils.showToast(mContext, "注册失败");
+					} else {
+						GolukUtils.showToast(mContext, "重置密码失败");
+					}
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * 注册/重置密码接口回调
+	 */
+	@Override
+	public void registAndRepwdInterface() {
+		switch (mApp.registStatus) {
+		// 注册/重置密码 中
+		case 1:
+			justCloseDialog(justDifferent);
+			mBtnBack.setEnabled(false);
+			mEditTextOne.setEnabled(false);
+			mBtnCount.setEnabled(false);
+			mBtnNext.setEnabled(false);
+			break;
+		// 注册/重置密码成功
+		case 2:
+			justCloseDialog(justDifferent);
+			if (justDifferent) {
+				GolukUtils.showToast(this, "注册成功");
+				mApp.registStatus = 2;// 注册成功的状态
+				// 登录成功跳转
+				mApp.loginStatus = 1;// 登录成功
+				mApp.isUserLoginSucess = true;
+
+				registLogin();
+			} else {
+				GolukUtils.showToast(this, "重置密码成功");
+				putPhone();
+				Intent it = new Intent(UserIdentifyActivity.this, UserLoginActivity.class);
+				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				startActivity(it);
+				this.finish();
+			}
+			break;
+		// 注册/重置失败
+		case 3:
+			justCloseDialog(justDifferent);
+			if (justDifferent) {
+				GolukUtils.showToast(mContext, "注册失败");
+			} else {
+				GolukUtils.showToast(mContext, "重置密码失败");
+			}
+			break;
+		// code = 500
+		case 4:
+			justCloseDialog(justDifferent);
+			UserUtils.showDialog(this, "服务端程序异常");
+			break;
+		// code = 405
+		case 5:
+			justCloseDialog(justDifferent);
+			if (justDifferent) {
+				UserUtils.showDialog(this, "用户已注册");
+			} else {
+				new AlertDialog.Builder(this).setTitle("提示").setMessage("此手机号还未被注册").setNegativeButton("取消", null)
+						.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								Intent intentRepwd = new Intent(UserIdentifyActivity.this, UserRegistActivity.class);
+								intentRepwd.putExtra("intentRepassword", title_phone);
+								startActivity(intentRepwd);
+								finish();
+							}
+						}).create().show();
+			}
+			break;
+		// code = 406
+		case 6:
+			justCloseDialog(justDifferent);
+			UserUtils.showDialog(this, "请输入正确的验证码");
+			break;
+		// code = 407
+		case 7:
+			justCloseDialog(justDifferent);
+			UserUtils.showDialog(this, "输入验证码超时");
+			break;
+		// code = 480
+		case 8:
+			justCloseDialog(justDifferent);
+			UserUtils.showDialog(this, "验证码获取失败");
+			break;
+		// 超时
+		case 9:
+			justCloseDialog(justDifferent);
+			GolukUtils.showToast(mContext, "网络连接超时");
+			break;
+		default:
+			break;
+		}
+	}
+
+	/**
+	 * 注册完成后自动调一次登录的接口，以存储用户信息
+	 */
+	public void registLogin() {
+		GolukDebugUtils.i("", "---------registLogin()----------");
+		String condi = "{\"PNumber\":\"" + title_phone.replace("-", "") + "\",\"Password\":\"" + intentPassword
+				+ "\",\"tag\":\"android\"}";
+		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login,
+				condi);
+		GolukDebugUtils.i("final", "--------UserIdentifyActivity--------registLogin()-------b-------"+b);
+		if (b) {
+			// 登录成功跳转
+			mApp.loginStatus = 0;// 登录中
+		}
+	}
+
+	/**
+	 * 登录的回调
+	 */
+	public void registLoginCallBack(int success, Object obj) {
+		GolukDebugUtils.e("", "---------------registLoginCallBack()-------------------");
+		mApp.loginStatus = 0;// 登录中
+		if (1 == success) {
+			try {
+				String data = (String) obj;
+				JSONObject json = new JSONObject(data);
+				int code = Integer.valueOf(json.getString("code"));
+				switch (code) {
+				case 200:
+					// 登录成功后，存储用户的登录信息
+					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+					mEditor = mSharedPreferences.edit();
+					mEditor.putBoolean("FirstLogin", false);
+					// 提交修改
+					mEditor.commit();
+					// 登录成功跳转
+					mApp.loginStatus = 1;// 登录成功
+					mApp.isUserLoginSucess = true;
+					mApp.registStatus = 2;// 注册成功的状态
+
+					GolukDebugUtils.i("final", "------UserIdentifyActivity------registLoginCallBack-------intentRegistInter------"+intentRegistInter);
+					Intent it = null;
+					if ("fromStart".equals(intentRegistInter)) {
+						GolukDebugUtils.i("lily", "========用户未注册2222======");
+						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					} else if ("fromIndexMore".equals(intentRegistInter)) {
+						it = new Intent(UserIdentifyActivity.this, IndexMoreActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					} else if ("fromSetup".equals(intentRegistInter)) {
+						it = new Intent(UserIdentifyActivity.this, UserSetupActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					}
+					finish();
+					break;
+
+				default:
+					break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			// 回调执行失败
+		}
+	}
+
+	/**
+	 * 保存手机号
+	 */
+	public void putPhone() {
+		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+		mEditor = mSharedPreferences.edit();
+		GolukDebugUtils.i(TAG, "phone==" + title_phone);
+		mEditor.putString("setupPhone", title_phone);
+		mEditor.putBoolean("noPwd", true);
+		mEditor.commit();
 	}
 
 }

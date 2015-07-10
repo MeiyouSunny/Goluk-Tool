@@ -766,5 +766,21 @@ public class JsonUtil {
 		}
 
 	}
+	
+	public static String registAndRepwdJson(String phoneNumber, String password,String vCode) {
+		try {
+			// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
+			JSONObject obj = new JSONObject();
+			obj.put("PNumber", phoneNumber);
+			obj.put("Password", password);
+			obj.put("VCode", vCode);
+			obj.put("tag", "android");
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 }

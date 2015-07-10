@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.CountDownButtonHelper;
+import cn.com.mobnote.user.UserIdentifyInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
@@ -44,7 +45,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  *
  */
-public class UserRepwdActivity extends BaseActivity implements OnClickListener, OnTouchListener {
+public class UserRepwdActivity extends BaseActivity implements OnClickListener, OnTouchListener,UserIdentifyInterface {
 
 	/** title **/
 	private ImageButton mBtnBack;
@@ -208,7 +209,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		case R.id.user_repwd_ok_btn:
 			// 点按钮后,弹出重置密码中的提示,样式使用系统 loading 样式,文字描述:正在重置
 			// 重置密码成功,弹出系统短提示:重置密码成功。同时跳转至登录页面。
-			mApplication.registOrRepwd = false;
 			repwd();
 			break;
 		}
@@ -411,7 +411,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 	public void repwd(){
 		String phone = mEditTextPhone.getText().toString().replace("-", "");
 		String password = mEditTextPwd.getText().toString();
-//		String identify = mEditTextIdentify.getText().toString();
 		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
 			if (!"".equals(password)) {
 				mBtnOK.setFocusable(true);
@@ -419,13 +418,20 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 					if (!UserUtils.isNetDeviceAvailable(this)) {
 						GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 					} else {
-						// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
-						GolukUtils.showToast(mContext, "点击下一步。。。");
-						
-						Intent getIdentify = new Intent(UserRepwdActivity.this,UserIdentifyActivity.class);
-						getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_DIFFERENT, "user_repwd");
-						getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PHONE, phone);
-						startActivity(getIdentify);
+						mApplication.mIdentifyManage.setUserIdentifyInterface(this);
+						boolean b = mApplication.mIdentifyManage.getIdentify(false,phone);
+						if(b){
+							click = 1;
+							UserUtils.hideSoftMethod(this);
+							mCustomProgressDialogIdentify.show();
+							mBtnOK.setEnabled(false);
+							mEditTextPhone.setEnabled(false);
+							mEditTextPwd.setEnabled(false);
+							mBtnBack.setEnabled(false);
+						}else{
+							closeProgressDialogIdentify();
+							GolukUtils.showToast(mContext, "验证码获取失败");
+						}
 						
 //						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
 //						GolukDebugUtils.e("",isRegist);
@@ -474,107 +480,201 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		}
 
 	}
+	
+	@Override
+	public void identifyCallbackInterface() {
+		switch (mApplication.identifyStatus) {
+		//验证码获取中
+		case 0:
+			UserUtils.hideSoftMethod(this);
+			mCustomProgressDialogIdentify.show();
+			mBtnOK.setEnabled(false);
+			mEditTextPhone.setEnabled(false);
+			mEditTextPwd.setEnabled(false);
+			mBtnBack.setEnabled(false);
+			break;
+			//验证码获取成功
+		case 1:
+			closeProgressDialogIdentify();
+			GolukUtils.showToast(this, "验证码发送成功");
+			
+			String phone = mEditTextPhone.getText().toString();
+			String password = mEditTextPwd.getText().toString();
+			Intent getIdentify = new Intent(UserRepwdActivity.this,UserIdentifyActivity.class);
+			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_DIFFERENT, false);
+			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PHONE, phone);
+			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PASSWORD, password);
+			startActivity(getIdentify);
+			break;
+			//验证码获取失败
+		case 2:
+			closeProgressDialogIdentify();
+			GolukUtils.showToast(mContext, "验证码获取失败");
+			break;
+			//code = 201
+		case 3:
+			closeProgressDialogIdentify();
+			UserUtils.showDialog(this, "该手机号1小时内下发6次以上验证码");
+			break;
+			//code = 500
+		case 4:
+			closeProgressDialogIdentify();
+			UserUtils.showDialog(this, "服务端程序异常");
+			break;
+			//code = 405
+		case 5:
+			closeProgressDialogIdentify();
+			mSharedPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+			final String just = mSharedPreferences.getString("toRepwd", "");
+				new AlertDialog.Builder(this)
+				.setTitle("提示")
+		        .setMessage("此手机号还未被注册")
+				.setNegativeButton("取消", null)
+				.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						String phone = mEditTextPhone.getText().toString();
+						Intent intentRepwd = new Intent(UserRepwdActivity.this,UserRegistActivity.class);
+						intentRepwd.putExtra("intentRepassword", phone);
+						if(just.equals("start") || just.equals("mainActivity")){
+							intentRepwd.putExtra("fromRegist", "fromStart");
+						}else if(just.equals("more")){
+							intentRepwd.putExtra("fromRegist", "fromIndexMore");
+						}else if(just.equals("set")){
+							intentRepwd.putExtra("fromRegist", "fromSetup");
+						}
+						startActivity(intentRepwd);
+						finish();
+					}
+				}).create().show();
+			break;
+			//code = 440
+		case 6:
+			closeProgressDialogIdentify();
+			UserUtils.showDialog(this, "输入手机号异常");
+			break;
+			//code = 480
+		case 7:
+			closeProgressDialogIdentify();
+			UserUtils.showDialog(this, "验证码发送失败，请重新发送");
+			break;
+			//code = 470
+		case 8:
+			closeProgressDialogIdentify();
+			UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限");
+			break;
+			//超时
+		case 9:
+			closeProgressDialogIdentify();
+			GolukUtils.showToast(this, "网络连接超时");
+			break;
+		default:
+			break;
+		}
+	}
+	
+	
 	/**
 	 * 重置密码回调
 	 */
-	public void repwdCallBack(int success, Object outTime, Object obj) {
-		GolukDebugUtils.e("", "---重置密码回调-----" + success + "----" + obj);
-		closeProgressDialog();
-		mEditTextPhone.setEnabled(true);
-		mEditTextPwd.setEnabled(true);
-		mBtnBack.setEnabled(true);
-		mBtnOK.setEnabled(true);
-		int codeOut = (Integer) outTime;
-		if (1 == success) {
-			try {
-				String data = (String) obj;
-				JSONObject json = new JSONObject(data);
-				int code = Integer.valueOf(json.getString("code"));
-				GolukDebugUtils.e("", code + "");
-
-				switch (code) {
-				case 200:
-					// 重置密码成功
-					GolukUtils.showToast(mContext, "重置密码成功");
-					putPhone();
-					this.finish();
-					break;
-				case 500:
-					UserUtils.showDialog(this, "服务端程序异常");
-					break;
-				case 405:
-					String phone = mEditTextPhone.getText().toString().replace("-", "");
-
-					if (UserUtils.isMobileNO(phone)) {
-						new AlertDialog.Builder(this).setMessage("此手机号还未被注册").setNegativeButton("取消", null)
-								.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface arg0, int arg1) {
-										Intent intentRepwd = new Intent(UserRepwdActivity.this,
-												UserRegistActivity.class);
-										intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
-										startActivity(intentRepwd);
-										finish();
-									}
-								}).create().show();
-					} else {
-						UserUtils.showDialog(this, this.getResources().getString(R.string.user_login_phone_show_error));
-					}
-
-					break;
-				case 406:
-					if (identifyClick) {
-						UserUtils.showDialog(this, "请输入正确的验证码");
-					} else {
-						GolukUtils.showToast(mContext, "请先获取验证码");
-					}
-					break;
-				case 407:
-					String phones = mEditTextPhone.getText().toString().replace("-", "");
-					if (UserUtils.isMobileNO(phones)) {
-						if (identifyClick) {
-							UserUtils.showDialog(this, "输入验证码超时");
-						} else {
-							GolukUtils.showToast(mContext, "请先获取验证码");
-						}
-					} else {
-						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
-					}
-					break;
-				case 480:
-					if (identifyClick) {
-						UserUtils.showDialog(this, "验证码获取失败");
-					} else {
-						GolukUtils.showToast(mContext, "请先获取验证码");
-					}
-					break;
-
-				default:
-					break;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---" + codeOut);
-			GolukUtils.showToast(mContext, "网络连接超时");
-			switch (codeOut) {
-			case 1:
-
-				break;
-			case 2:
-
-				break;
-			case 3:
-
-				break;
-			default:
-				break;
-			}
-		}
-	}
+//	public void repwdCallBack(int success, Object outTime, Object obj) {
+//		GolukDebugUtils.e("", "---重置密码回调-----" + success + "----" + obj);
+//		closeProgressDialog();
+//		mEditTextPhone.setEnabled(true);
+//		mEditTextPwd.setEnabled(true);
+//		mBtnBack.setEnabled(true);
+//		mBtnOK.setEnabled(true);
+//		int codeOut = (Integer) outTime;
+//		if (1 == success) {
+//			try {
+//				String data = (String) obj;
+//				JSONObject json = new JSONObject(data);
+//				int code = Integer.valueOf(json.getString("code"));
+//				GolukDebugUtils.e("", code + "");
+//
+//				switch (code) {
+//				case 200:
+//					// 重置密码成功
+//					GolukUtils.showToast(mContext, "重置密码成功");
+//					putPhone();
+//					this.finish();
+//					break;
+//				case 500:
+//					UserUtils.showDialog(this, "服务端程序异常");
+//					break;
+//				case 405:
+//					String phone = mEditTextPhone.getText().toString().replace("-", "");
+//					if (UserUtils.isMobileNO(phone)) {
+//						new AlertDialog.Builder(this).setMessage("此手机号还未被注册").setNegativeButton("取消", null)
+//								.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+//
+//									@Override
+//									public void onClick(DialogInterface arg0, int arg1) {
+//										Intent intentRepwd = new Intent(UserRepwdActivity.this,
+//												UserRegistActivity.class);
+//										intentRepwd.putExtra("intentRepassword", mEditTextPhone.getText().toString());
+//										startActivity(intentRepwd);
+//										finish();
+//									}
+//								}).create().show();
+//					} else {
+//						UserUtils.showDialog(this, this.getResources().getString(R.string.user_login_phone_show_error));
+//					}
+//
+//					break;
+//				case 406:
+//					if (identifyClick) {
+//						UserUtils.showDialog(this, "请输入正确的验证码");
+//					} else {
+//						GolukUtils.showToast(mContext, "请先获取验证码");
+//					}
+//					break;
+//				case 407:
+//					String phones = mEditTextPhone.getText().toString().replace("-", "");
+//					if (UserUtils.isMobileNO(phones)) {
+//						if (identifyClick) {
+//							UserUtils.showDialog(this, "输入验证码超时");
+//						} else {
+//							GolukUtils.showToast(mContext, "请先获取验证码");
+//						}
+//					} else {
+//						UserUtils.showDialog(this, "手机格式输入错误,请重新输入");
+//					}
+//					break;
+//				case 480:
+//					if (identifyClick) {
+//						UserUtils.showDialog(this, "验证码获取失败");
+//					} else {
+//						GolukUtils.showToast(mContext, "请先获取验证码");
+//					}
+//					break;
+//
+//				default:
+//					break;
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		} else {
+//			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
+//			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---" + codeOut);
+//			GolukUtils.showToast(mContext, "网络连接超时");
+//			switch (codeOut) {
+//			case 1:
+//
+//				break;
+//			case 2:
+//
+//				break;
+//			case 3:
+//
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//	}
 
 	private int click = 0;
 
@@ -584,9 +684,9 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (click == 1 && smsReceiver.isInitialStickyBroadcast()) {
+		/*if (click == 1 && smsReceiver.isInitialStickyBroadcast()) {
 			unregisterReceiver(smsReceiver);
-		}
+		}*/
 	}
 
 	@SuppressLint("ClickableViewAccessibility")
@@ -650,6 +750,10 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 	private void closeProgressDialogIdentify() {
 		if (null != mCustomProgressDialogIdentify) {
 			mCustomProgressDialogIdentify.close();
+			mBtnOK.setEnabled(true);
+			mEditTextPhone.setEnabled(true);
+			mEditTextPwd.setEnabled(true);
+			mBtnBack.setEnabled(true);
 		}
 	}
 

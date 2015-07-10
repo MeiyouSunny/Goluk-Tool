@@ -6,7 +6,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class UserIdentifyManage {
@@ -109,7 +108,7 @@ public class UserIdentifyManage {
 			case 2:
 			case 3:
 			default:
-				GolukUtils.showToast(mApp.getContext(), "网络连接超时");
+				identifyStatusChange(9);
 				break;
 			}
 		}

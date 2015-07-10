@@ -158,8 +158,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		if(!"".equals(mSharedPreferences.getString("setupPhone", ""))){
 			String phone = mSharedPreferences.getString("setupPhone", "");
 			GolukDebugUtils.i(TAG, "----UserLoginActivity---获取手机号-----"+phone);
+//			String formatPhone = UserUtils.formatSavePhone(phone);
 			mEditTextPhoneNumber.setText(phone);
-			mEditTextPhoneNumber.setSelection(phone.length());
 		}
 		
 		boolean b = mSharedPreferences.getBoolean("noPwd", false);
@@ -261,6 +261,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		case R.id.user_login_phoneRegist:
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			Intent itRegist = new Intent(UserLoginActivity.this,UserRegistActivity.class);
+			GolukDebugUtils.i("final", "-----------UserLoginActivity-----------"+justLogin);
 			if(justLogin.equals("main") || justLogin.equals("back")){//从起始页注册
 				itRegist.putExtra("fromRegist", "fromStart");
 			}else if(justLogin.equals("indexmore")){//从更多页个人中心注册
