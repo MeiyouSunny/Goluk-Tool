@@ -8,6 +8,7 @@
     <color name="white">#FFFFFF</color>
     <!-- 黑色 -->
     <color name="black">#000000</color>
+    <color name="red">#FF0000</color>
     <!-- 字体颜色 -->
     <color name="font_gray">#E3E3E3</color>
     <!-- 点赞颜色 -->
@@ -57,7 +58,6 @@
     <color name="user_home_nologin">#999999</color>
     <!-- 直接界面 -->
     <color name="live_color_time1">#b8b8b8</color>
-    
     <color name="textcolor_select">#0b59be</color>
     <color name="textcolor_qx">#dde6f5</color>
     <color name="video_square_list_frame">#ededed</color>
