@@ -266,6 +266,12 @@ public class BaiduMapView implements ILocationFn {
 			GolukUtils.showToast(mContext, "气泡图片下载失败");
 		}
 	}
+	
+	private void test() {
+		if (null != mContext && mContext instanceof MainActivity) {
+			((MainActivity)mContext).click_toLocalVideoShare();
+		}
+	}
 
 	private class click implements View.OnClickListener {
 		@Override
@@ -277,6 +283,8 @@ public class BaiduMapView implements ILocationFn {
 				LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(u);
+				
+				test();
 				break;
 			}
 		}

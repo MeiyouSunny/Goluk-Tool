@@ -1,33 +1,35 @@
 package cn.com.mobnote.golukmobile;
 
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.MediaController.MediaPlayerControl;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.startshare.ShareFilterLayout;
+import cn.com.mobnote.golukmobile.startshare.ShareTypeLayout;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.video.MVListAdapter;
-import cn.com.mobnote.video.MVManage;
-import cn.com.mobnote.video.MVManage.MVEditData;
-import cn.com.mobnote.view.MyGridView;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.rd.car.editor.Constants;
@@ -35,26 +37,6 @@ import com.rd.car.editor.EditorParam;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
 
-/**
- * <pre>
- * 1.类命名首字母大写
- * 2.公共函数驼峰式命名
- * 3.属性函数驼峰式命名
- * 4.变量/参数驼峰式命名
- * 5.操作符之间必须加空格
- * 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处
- * 8.所有代码必须使用TAB键缩进
- * 9.函数使用块注释,代码逻辑使用行注释
- * 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致
- * </pre>
- * 
- * @ 功能描述:Goluk视频编辑页面
- * 
- * @author 陈宣宇
- * 
- */
 @SuppressLint("HandlerLeak")
 public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	/** 视频编辑页面handler用来接收消息,更新UI */
@@ -86,7 +68,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	/** 进度条 */
 	private ProgressBar mVideoProgressBar = null;
 	/** mv列表layout */
-	private LinearLayout mMVListLayout = null;
+
 	/** loading动画 */
 	private AnimationDrawable mLoadingAnimation = null;
 	/** 滤镜保存视频路径 */
@@ -102,12 +84,25 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private String videoName = "";
 	private boolean isExit = false;
 
+	private FrameLayout mMiddleLayout = null;
+	private ShareFilterLayout mFilterLayout = null;
+	private ShareTypeLayout mTypeLayout = null;
+
+	private boolean misCurrentType = true;
+
+	private LinearLayout mShareTypeLayout = null;
+	private ImageView mShareTypeImg = null;
+	private TextView mShareSwitchTypeTv = null;
+
+	private LinearLayout mShareFilterLayout = null;
+	private ImageView mShareFilterImg = null;
+	private TextView mShareSwitchFilterTv = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.video_edit);
-
 		mContext = this;
 		// 获取视频路径
 		Intent intent = getIntent();
@@ -115,18 +110,95 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		interceptVideoName(mFilePath);// 拿到视频名称
 		mCurrentVideoType = intent.getIntExtra("type", 2);
 
-		mMVListLayout = (LinearLayout) findViewById(R.id.mvlistlayout);
-
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "VideoEdit");
 
+		mFilterLayout = new ShareFilterLayout(this);
+		mTypeLayout = new ShareTypeLayout(this);
+
+		loadRes();
 		// 页面初始化
 		init();
 		// 视频初始化
 		videoInit();
-		// 编辑选项表格
-		initVideoEditList();
+		mBaseHandler.sendEmptyMessageDelayed(100, 100);
+	}
+
+	Bitmap typeNoSelectBitmap = null;
+	Drawable typeNoSelectDraw = null;
+
+	Bitmap typeSelectBitmap = null;
+	Drawable typeSelectDraw = null;
+
+	Bitmap filterNoSelectBitmap = null;
+	Drawable filterNoSelectDraw = null;
+
+	Bitmap filterSelectBitmap = null;
+	Drawable filterSelectDraw = null;
+
+	private void loadRes() {
+		typeNoSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_type_icon);
+		typeNoSelectDraw = new BitmapDrawable(typeNoSelectBitmap);
+
+		typeSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_type_press_icon);
+		typeSelectDraw = new BitmapDrawable(typeSelectBitmap);
+
+		filterNoSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_filter_icon);
+		filterNoSelectDraw = new BitmapDrawable(filterNoSelectBitmap);
+
+		filterSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_filter_press_icon);
+		filterSelectDraw = new BitmapDrawable(filterSelectBitmap);
+	}
+
+	@Override
+	protected void hMessage(Message msg) {
+		if (null == msg) {
+			return;
+		}
+		final int what = msg.what;
+		switch (what) {
+		case 100:
+			switchMiddleLayout(true, true);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void switchTypeUI(boolean isType) {
+		if (isType) {
+			mShareSwitchTypeTv.setTextColor(Color.BLUE);
+			mShareSwitchFilterTv.setTextColor(Color.WHITE);
+			mShareTypeImg.setBackgroundResource(R.drawable.share_type_press_icon);
+			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_icon);
+		} else {
+			mShareSwitchTypeTv.setTextColor(Color.WHITE);
+			mShareSwitchFilterTv.setTextColor(Color.BLUE);
+			mShareTypeImg.setBackgroundResource(R.drawable.share_type_icon);
+			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_press_icon);
+		}
+	}
+
+	private void switchMiddleLayout(final boolean isFirst, final boolean isType) {
+		if (!isFirst) {
+			if (misCurrentType == isType) {
+				return;
+			}
+		}
+		
+		switchTypeUI(isType);
+		
+		misCurrentType = isType;
+		mMiddleLayout.removeAllViews();
+		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+				FrameLayout.LayoutParams.MATCH_PARENT);
+		if (isType) {
+			mMiddleLayout.addView(mTypeLayout.getRootLayout(), lp);
+			mTypeLayout.show();
+		} else {
+			mMiddleLayout.addView(mFilterLayout.getRootLayout(), lp);
+		}
 	}
 
 	/**
@@ -167,35 +239,19 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		mNextBtn.setOnClickListener(this);
 		mPlayLayout.setOnClickListener(this);
 
-	}
+		mMiddleLayout = (FrameLayout) findViewById(R.id.shortshare_operateroot);
 
-	/**
-	 * 初始化滤镜布局
-	 */
-	private void initVideoEditList() {
-		MyGridView gridView = createMVGridView();
-		MVManage mvManage = new MVManage(mContext);
-		ArrayList<MVEditData> list = mvManage.getLocalVideoList();
-		mMVListAdapter = new MVListAdapter(mContext, list);
-		gridView.setAdapter(mMVListAdapter);
-		mMVListLayout.addView(gridView);
-	}
+		mShareTypeLayout = (LinearLayout) findViewById(R.id.share_type_layout);
+		mShareTypeImg = (ImageView) findViewById(R.id.share_type_img);
+		mShareSwitchTypeTv = (TextView) findViewById(R.id.share_switch_type);
 
-	/**
-	 * 创建本地滤镜列表布局
-	 * 
-	 * @return
-	 */
-	private MyGridView createMVGridView() {
-		MyGridView gridLayout = new MyGridView(mContext, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		gridLayout.setLayoutParams(lp);
-		gridLayout.setBackgroundColor(Color.rgb(237, 237, 237));
-		gridLayout.setNumColumns(4);
-		gridLayout.setPadding(16, 30, 16, 30);
-		gridLayout.setVerticalSpacing(30);
-		gridLayout.setHorizontalSpacing(16);
-		return gridLayout;
+		mShareFilterLayout = (LinearLayout) findViewById(R.id.share_filter_layout);
+		mShareFilterImg = (ImageView) findViewById(R.id.share_filter_img);
+		mShareSwitchFilterTv = (TextView) findViewById(R.id.share_switch_filter);
+
+		mShareTypeLayout.setOnClickListener(this);
+		mShareFilterLayout.setOnClickListener(this);
+
 	}
 
 	/**
@@ -514,11 +570,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			// 返回
 			exit();
 			break;
-		case R.id.next_btn:
-			click_next();
-			break;
 		case R.id.play_layout:
 			click_play();
+			break;
+		case R.id.share_type_layout:
+			switchMiddleLayout(false, true);
+			break;
+		case R.id.share_filter_layout:
+			switchMiddleLayout(false, false);
 			break;
 		}
 	}

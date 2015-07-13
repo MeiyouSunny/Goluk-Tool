@@ -17,6 +17,15 @@
     <string name="edit_text">编辑</string>
     <string name="share_text">分享</string>
     <string name="next_text">下一步</string>
+    <string name="share_title2">即刻分享</string>
+    <string name="share_type">类型</string>
+    <string name="share_filter">滤镜</string>
+    <string name="share_str_open">公开</string>
+    <string name="share_str_sayother">说点其它的!</string>
+    <string name="share_str_type_bg">曝光台</string>
+    <string name="share_str_type_sg">事故大爆料</string>
+    <string name="share_str_type_ml">美丽风景</string>
+    <string name="share_str_type_ssp">随手拍</string>
     <string name="filter_text">添加滤镜</string>
     <string name="mv_text">MV</string>
     <string name="draft_text">草稿箱</string>

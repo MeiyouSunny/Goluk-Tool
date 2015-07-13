@@ -868,35 +868,35 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private Builder mBuilder = null;
 	private AlertDialog dialog = null;
 
-	private void click_toLocalVideoShare() {
-		GolukDebugUtils.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess
-				+ "------autologinStatus-----" + mApp.autoLoginStatus);
-		if (!mApp.isUserLoginSucess) {
-			// 未登录成功
-			mShareLayout.setVisibility(View.GONE);
-			mApp.mUser.setUserInterface(this);
-			if (mApp.autoLoginStatus == 1) {
-				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							return true;
-						}
-						return false;
-					}
-				}).create();
-				dialog.show();
-				return;
-			} else if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
-				// console.toast("网络连接异常，请重试", mContext);
-				return;
-			}
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
-			return;
-		}
+	public void click_toLocalVideoShare() {
+//		GolukDebugUtils.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess
+//				+ "------autologinStatus-----" + mApp.autoLoginStatus);
+//		if (!mApp.isUserLoginSucess) {
+//			// 未登录成功
+//			mShareLayout.setVisibility(View.GONE);
+//			mApp.mUser.setUserInterface(this);
+//			if (mApp.autoLoginStatus == 1) {
+//				mBuilder = new AlertDialog.Builder(mContext);
+//				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
+//					@Override
+//					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+//						if (keyCode == KeyEvent.KEYCODE_BACK) {
+//							return true;
+//						}
+//						return false;
+//					}
+//				}).create();
+//				dialog.show();
+//				return;
+//			} else if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
+//				// console.toast("网络连接异常，请重试", mContext);
+//				return;
+//			}
+//			Intent intent = new Intent(this, UserLoginActivity.class);
+//			intent.putExtra("isInfo", "back");
+//			startActivity(intent);
+//			return;
+//		}
 
 		// 跳转到本地视频分享列表
 		Intent localVideoShareList = new Intent(MainActivity.this, LocalVideoShareListActivity.class);
