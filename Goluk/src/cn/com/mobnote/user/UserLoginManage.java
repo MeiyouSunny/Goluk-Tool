@@ -91,21 +91,21 @@ public class UserLoginManage {
 					// 1------------------------------
 					// 登录成功跳转
 					if (mApp.registStatus != 2) {
-						GolukUtils.showToast(mApp.getContext(), "登录成功");
+						GolukUtils.showToast(mApp.getContext(), mApp.getResources().getString(R.string.user_login_success));
 					}
 					loginStatusChange(1);// 登录成功
 					mApp.isUserLoginSucess = true;
 					mApp.loginoutStatus = false;
 					break;
 				case 500:
-					UserUtils.showDialog(mApp.getContext(), "服务端程序异常");
+					UserUtils.showDialog(mApp.getContext(), mApp.getResources().getString(R.string.user_background_error));
 					loginStatusChange(2);
 					break;
 				case 405:
 					loginStatusChange(3);// 手机号未注册
 					break;
 				case 402:
-					GolukUtils.showToast(mApp.getContext(), "密码错误，请重试");
+					GolukUtils.showToast(mApp.getContext(), mApp.getResources().getString(R.string.user_password_error));
 					loginStatusChange(2);
 					countErrorPassword++;
 					break;

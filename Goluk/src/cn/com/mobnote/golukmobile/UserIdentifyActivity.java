@@ -209,17 +209,22 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 * @param phone
 	 */
 	public void getUserIdentify(boolean flag, String phone) {
-		mApp.mIdentifyManage.setUserIdentifyInterface(this);
-		boolean b = mApp.mIdentifyManage.getIdentify(flag, phone);
-		if (b) {
-			mCustomDialogIdentify.show();
-			mBtnBack.setEnabled(false);
-			mEditTextOne.setEnabled(false);
-			mBtnCount.setEnabled(false);
-			mBtnNext.setEnabled(false);
-		} else {
-			closeDialogIdentify();
+		if(!UserUtils.isNetDeviceAvailable(this)){
+			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
+		}else{
+			mApp.mIdentifyManage.setUserIdentifyInterface(this);
+			boolean b = mApp.mIdentifyManage.getIdentify(flag, phone);
+			if (b) {
+				mCustomDialogIdentify.show();
+				mBtnBack.setEnabled(false);
+				mEditTextOne.setEnabled(false);
+				mBtnCount.setEnabled(false);
+				mBtnNext.setEnabled(false);
+			} else {
+				closeDialogIdentify();
+			}
 		}
+		
 	}
 
 	/**
@@ -239,7 +244,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		// 获取验证码成功
 		case 1:
 			closeDialogIdentify();
-			GolukUtils.showToast(this, "验证码发送成功");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.user_getidentify_success));
 			// 倒计时
 			countTime();
 
@@ -247,24 +252,24 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		// 获取验证码失败
 		case 2:
 			closeDialogIdentify();
-			GolukUtils.showToast(mContext, "验证码获取失败");
+			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_getidentify_fail));
 			break;
 		// code=201
 		case 3:
 			closeDialogIdentify();
-			UserUtils.showDialog(this, "该手机号1小时内下发6次以上验证码");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_getidentify_limit));
 			break;
 		// code=500
 		case 4:
 			closeDialogIdentify();
-			UserUtils.showDialog(this, "服务端程序异常");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_background_error));
 			break;
 		// code=405
 		case 5:
 			closeDialogIdentify();
 			if (justDifferent) {
-				new AlertDialog.Builder(this).setTitle("提示").setMessage("此手机号已经被注册").setNegativeButton("取消", null)
-						.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(this).setTitle(this.getResources().getString(R.string.user_dialog_hint_title)).setMessage(this.getResources().getString(R.string.user_already_regist)).setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+						.setPositiveButton(this.getResources().getString(R.string.user_immediately_ok), new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
 								if (mApp.loginoutStatus = true) {
@@ -281,8 +286,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			} else {
 				mSharedPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 				final String just = mSharedPreferences.getString("toRepwd", "");
-				new AlertDialog.Builder(this).setTitle("提示").setMessage("此手机号还未被注册").setNegativeButton("取消", null)
-						.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(this).setTitle(this.getResources().getString(R.string.user_dialog_hint_title)).setMessage(this.getResources().getString(R.string.user_no_regist)).setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+						.setPositiveButton(this.getResources().getString(R.string.user_immediately_regist), new DialogInterface.OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
@@ -305,17 +310,17 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		// code=440
 		case 6:
 			closeDialogIdentify();
-			UserUtils.showDialog(this, "输入手机号异常");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_phone_input_error));
 			break;
 		// code=480
 		case 7:
 			closeDialogIdentify();
-			UserUtils.showDialog(this, "验证码发送失败，请重新发送");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_send_identify_fail));
 			break;
 		// code=470
 		case 8:
 			closeDialogIdentify();
-			UserUtils.showDialog(mContext, "获取验证码失败，此手机号已经达到获取验证码上限");
+			UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_background_identify_count));
 			break;
 		default:
 			break;
@@ -506,12 +511,12 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 * 倒计时
 	 */
 	public void countTime() {
-		mCountDownhelper = new CountDownButtonHelper(mBtnCount, "重新获取", 60, 1);
+		mCountDownhelper = new CountDownButtonHelper(mBtnCount, this.getResources().getString(R.string.user_identify_btn_afresh), 60, 1);
 		mCountDownhelper.setOnFinishListener(new OnFinishListener() {
 
 			@Override
 			public void finish() {
-				mBtnCount.setText("重新获取");
+				mBtnCount.setText(mContext.getResources().getString(R.string.user_identify_btn_afresh));
 				// 倒计时结束后手机号、密码可以更改
 				mBtnCount.setEnabled(true);
 			}
@@ -527,33 +532,44 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 * @param password
 	 * @param vCode
 	 */
+	@SuppressWarnings("static-access")
 	public void toRegistAndRepwd(boolean flag, String phone, String password, String vCode) {
-		// TODO 需要判断获取验证码次数
-		if ("".equals(vCode) || null == vCode) {
-			GolukUtils.showToast(mApp.getContext(), "请输入验证码");
-		} else {
-			if (vCode.length() < 6) {
-				GolukUtils.showToast(mApp.getContext(), "验证码格式输入不正确");
+		if(!UserUtils.isNetDeviceAvailable(this)){
+			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
+		}else{
+			// TODO 需要判断获取验证码次数
+			if ("".equals(vCode) || null == vCode) {
+				GolukUtils.showToast(mApp.getContext(), this.getResources().getString(R.string.user_no_getidentify));
 			} else {
-				mApp.mRegistAndRepwdManage.setUserRegistAndRepwd(this);
-				boolean b = mApp.mRegistAndRepwdManage.registAndRepwd(flag, phone, password, vCode);
-				if (b) {
-					if (flag) {
-						mCustomDialogRegist.show();
-					} else {
-						mCustomDialogRepwd.show();
-					}
-					mBtnBack.setEnabled(false);
-					mEditTextOne.setEnabled(false);
-					mBtnCount.setEnabled(false);
-					mBtnNext.setEnabled(false);
+				if (vCode.length() < 6) {
+					GolukUtils.showToast(mApp.getContext(), this.getResources().getString(R.string.user_identify_format));
 				} else {
-					justCloseDialog(flag);
-					if (flag) {
-						GolukUtils.showToast(mContext, "注册失败");
-					} else {
-						GolukUtils.showToast(mContext, "重置密码失败");
+					GolukDebugUtils.i(TAG, "---------useridentifymanage_count------"+mApp.mIdentifyManage.useridentifymanage_count);
+					if(mApp.mIdentifyManage.useridentifymanage_count >mApp.mIdentifyManage.IDENTIFY_COUNT){
+						UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_identify_count_six_limit));
+					}else{
+						mApp.mRegistAndRepwdManage.setUserRegistAndRepwd(this);
+						boolean b = mApp.mRegistAndRepwdManage.registAndRepwd(flag, phone, password, vCode);
+						if (b) {
+							if (flag) {
+								mCustomDialogRegist.show();
+							} else {
+								mCustomDialogRepwd.show();
+							}
+							mBtnBack.setEnabled(false);
+							mEditTextOne.setEnabled(false);
+							mBtnCount.setEnabled(false);
+							mBtnNext.setEnabled(false);
+						} else {
+							justCloseDialog(flag);
+							if (flag) {
+								GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_regist_fail));
+							} else {
+								GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_repwd_fail));
+							}
+						}
 					}
+					
 				}
 			}
 		}
@@ -578,7 +594,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		case 2:
 			justCloseDialog(justDifferent);
 			if (justDifferent) {
-				GolukUtils.showToast(this, "注册成功");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
 				mApp.registStatus = 2;// 注册成功的状态
 				// 登录成功跳转
 				mApp.loginStatus = 1;// 登录成功
@@ -586,7 +602,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 				registLogin();
 			} else {
-				GolukUtils.showToast(this, "重置密码成功");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.user_repwd_success));
 				putPhone();
 				Intent it = new Intent(UserIdentifyActivity.this, UserLoginActivity.class);
 				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -599,24 +615,24 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		case 3:
 			justCloseDialog(justDifferent);
 			if (justDifferent) {
-				GolukUtils.showToast(mContext, "注册失败");
+				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_regist_fail));
 			} else {
-				GolukUtils.showToast(mContext, "重置密码失败");
+				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_repwd_fail));
 			}
 			break;
 		// code = 500
 		case 4:
 			justCloseDialog(justDifferent);
-			UserUtils.showDialog(this, "服务端程序异常");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_background_error));
 			break;
 		// code = 405
 		case 5:
 			justCloseDialog(justDifferent);
 			if (justDifferent) {
-				UserUtils.showDialog(this, "用户已注册");
+				UserUtils.showDialog(this, this.getResources().getString(R.string.user_already_regist));
 			} else {
-				new AlertDialog.Builder(this).setTitle("提示").setMessage("此手机号还未被注册").setNegativeButton("取消", null)
-						.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(this).setTitle(this.getResources().getString(R.string.user_dialog_hint_title)).setMessage(this.getResources().getString(R.string.user_no_regist)).setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+						.setPositiveButton(this.getResources().getString(R.string.user_immediately_regist), new DialogInterface.OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
@@ -631,22 +647,22 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		// code = 406
 		case 6:
 			justCloseDialog(justDifferent);
-			UserUtils.showDialog(this, "请输入正确的验证码");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_identify_right_hint));
 			break;
 		// code = 407
 		case 7:
 			justCloseDialog(justDifferent);
-			UserUtils.showDialog(this, "输入验证码超时");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_identify_outtime));
 			break;
 		// code = 480
 		case 8:
 			justCloseDialog(justDifferent);
-			UserUtils.showDialog(this, "验证码获取失败");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_getidentify_fail));
 			break;
 		// 超时
 		case 9:
 			justCloseDialog(justDifferent);
-			GolukUtils.showToast(mContext, "网络连接超时");
+			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_netword_outtime));
 			break;
 		default:
 			break;

@@ -15,8 +15,10 @@ public class UserIdentifyManage {
 	private UserIdentifyInterface mIdentifyInterface = null;
 	/** 获取验证码json串 **/
 	private String isIdentify = "";
-	/**6次获取验证码**/
-	private static final int IDENTIFY_COUNT = 6;
+	/** 6次获取验证码 **/
+	public static final int IDENTIFY_COUNT = 6;
+	/** 保存获取验证码的次数 **/
+	public int useridentifymanage_count = 0;
 
 	public UserIdentifyManage(GolukApplication mApp) {
 		super();
@@ -39,7 +41,7 @@ public class UserIdentifyManage {
 	 * 
 	 * @param phoneNumber
 	 */
-	public boolean getIdentify(boolean b,String phoneNumber) {
+	public boolean getIdentify(boolean b, String phoneNumber) {
 		if (b) {
 			isIdentify = "{\"PNumber\":\"" + phoneNumber + "\",\"type\":\"1\"}";
 		} else {
@@ -65,13 +67,15 @@ public class UserIdentifyManage {
 				JSONObject json = new JSONObject(data);
 				int code = json.getInt("code");
 				int freq = json.getInt("freq");
+				useridentifymanage_count = freq;
 				switch (code) {
 				case 200:
 					int count = IDENTIFY_COUNT - freq;
-					GolukDebugUtils.i("lily", freq+"====freqInt===="+count);
-					if(count < 0){
-						UserUtils.showDialog(mApp, mApp.getContext().getResources().getString(R.string.count_identify_six));
-					}else{
+					GolukDebugUtils.i("lily", freq + "====freqInt====" + count);
+					if (count < 0) {
+						UserUtils.showDialog(mApp,
+								mApp.getContext().getResources().getString(R.string.count_identify_six));
+					} else {
 						identifyStatusChange(1);
 					}
 					break;

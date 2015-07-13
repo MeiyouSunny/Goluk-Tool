@@ -84,6 +84,12 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		SysApplication.getInstance().addActivity(this);
 		
 		initView();
+		if(null == mCustomProgressDialog){
+			mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
+		}
+		
+		// 设置title
+  		mTextViewTitle.setText(this.getResources().getString(R.string.user_login_title_text));
 		
 		mApplication.mLoginManage.initData();
 	}
@@ -93,14 +99,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		
 		mApplication.setContext(mContext, "UserLogin");
 		
-		if(null == mCustomProgressDialog){
-			mCustomProgressDialog = new CustomLoadingDialog(mContext,"登录中，请稍候……");
-		}
 		getInfo();
-		
-		// 设置title
-  		mTextViewTitle.setText("登录");
-		
 	}
 	
 	@Override
@@ -158,7 +157,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		if(!"".equals(mSharedPreferences.getString("setupPhone", ""))){
 			String phone = mSharedPreferences.getString("setupPhone", "");
 			GolukDebugUtils.i(TAG, "----UserLoginActivity---获取手机号-----"+phone);
-//			String formatPhone = UserUtils.formatSavePhone(phone);
 			mEditTextPhoneNumber.setText(phone);
 		}
 		
@@ -166,7 +164,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 		if(b){
 			mEditTextPwd.setText("");
 		}
-		GolukDebugUtils.i(TAG, mEditTextPhoneNumber.getText().toString());
+		GolukDebugUtils.i(TAG, mEditTextPhoneNumber.getText().toString()+"------------------");
 		
 		/**
 		 * 监听绑定
@@ -369,9 +367,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			mBackButton.setEnabled(true);
 			if(UserUtils.isMobileNO(phone)){
 				new AlertDialog.Builder(this)
-				.setMessage("此手机号码还没有被注册")
-				.setNegativeButton("取消", null)
-				.setPositiveButton("注册", new DialogInterface.OnClickListener() {
+				.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+				.setMessage(this.getResources().getString(R.string.user_no_regist))
+				.setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+				.setPositiveButton(this.getResources().getString(R.string.user_regist), new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -396,7 +395,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			}
 			break;
 		case 4:
-			GolukUtils.showToast(this, "网络连接超时");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.user_netword_outtime));
 			mApplication.isUserLoginSucess = false;
 			closeProgressDialog();
 			mEditTextPhoneNumber.setEnabled(true);
@@ -416,6 +415,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 			mBtnLogin.setEnabled(true);
 			mBackButton.setEnabled(true);
 			new AlertDialog.Builder(mContext)
+			.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
 			.setMessage(this.getResources().getString(R.string.user_login_password_limit_top_hint))
 			.setPositiveButton(this.getResources().getString(R.string.user_repwd_ok), new DialogInterface.OnClickListener() {
 					
@@ -423,7 +423,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener,U
 				public void onClick(DialogInterface arg0, int arg1) {
 					mApplication.mLoginManage.setUserLoginInterface(null);
 					Intent it = new Intent(UserLoginActivity.this,UserRepwdActivity.class);
-					it.putExtra(TAG, mEditTextPhoneNumber.getText().toString().replace("-", ""));
+					it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString().replace("-", ""));
 					startActivity(it);
 				}
 			})

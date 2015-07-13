@@ -30,8 +30,8 @@ public class UserUtils {
 	 */
 	public static void showDialog(Context context,String message){
 		Builder builder = new AlertDialog.Builder(context);
-		AlertDialog dialog = builder.setTitle("提示").setMessage(message)
-		.setPositiveButton("确定", null)
+		AlertDialog dialog = builder.setTitle(context.getResources().getString(R.string.user_dialog_hint_title)).setMessage(message)
+		.setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null)
 		.create();
 		dialog.show();
 	}
@@ -148,9 +148,9 @@ public class UserUtils {
 	 */
 	public static void showUpdateSuccess(AlertDialog showUpdateDialog,Context context,String message){
 		if(showUpdateDialog == null){
-			showUpdateDialog = new AlertDialog.Builder(context).setTitle("提示")
+			showUpdateDialog = new AlertDialog.Builder(context).setTitle(context.getResources().getString(R.string.user_dialog_hint_title))
 				.setMessage(message)
-				.setPositiveButton("确定", null)
+				.setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null)
 				.show();
 		}
 	}

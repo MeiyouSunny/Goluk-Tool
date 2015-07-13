@@ -103,7 +103,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 	protected void onResume() {
 		super.onResume();
 		mApplication.setContext(mContext, "UserRepwd");
-
 		getInfo();
 	}
 
@@ -132,7 +131,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		Intent it = getIntent();
 		if (null != it.getStringExtra("errorPwdOver")) {
 			String phone = it.getStringExtra("errorPwdOver").toString();
-			mEditTextPhone.setText(phone);
+			mEditTextPhone.setText(UserUtils.formatSavePhone(phone));
 		}
 
 		putPhones();
@@ -430,7 +429,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 							mBtnBack.setEnabled(false);
 						}else{
 							closeProgressDialogIdentify();
-							GolukUtils.showToast(mContext, "验证码获取失败");
+							GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_getidentify_fail));
 						}
 						
 //						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
@@ -496,7 +495,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			//验证码获取成功
 		case 1:
 			closeProgressDialogIdentify();
-			GolukUtils.showToast(this, "验证码发送成功");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.user_getidentify_success));
 			
 			String phone = mEditTextPhone.getText().toString();
 			String password = mEditTextPwd.getText().toString();
@@ -509,17 +508,17 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			//验证码获取失败
 		case 2:
 			closeProgressDialogIdentify();
-			GolukUtils.showToast(mContext, "验证码获取失败");
+			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_getidentify_fail));
 			break;
 			//code = 201
 		case 3:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(this, "该手机号1小时内下发6次以上验证码");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_getidentify_limit));
 			break;
 			//code = 500
 		case 4:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(this, "服务端程序异常");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_background_error));
 			break;
 			//code = 405
 		case 5:
@@ -527,10 +526,10 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			mSharedPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 			final String just = mSharedPreferences.getString("toRepwd", "");
 				new AlertDialog.Builder(this)
-				.setTitle("提示")
-		        .setMessage("此手机号还未被注册")
-				.setNegativeButton("取消", null)
-				.setPositiveButton("马上注册", new DialogInterface.OnClickListener() {
+				.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+		        .setMessage(this.getResources().getString(R.string.user_no_regist))
+				.setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+				.setPositiveButton(this.getResources().getString(R.string.user_immediately_regist), new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -552,22 +551,22 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			//code = 440
 		case 6:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(this, "输入手机号异常");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_phone_input_error));
 			break;
 			//code = 480
 		case 7:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(this, "验证码发送失败，请重新发送");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_send_identify_fail));
 			break;
 			//code = 470
 		case 8:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限");
+			UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_background_identify_count));
 			break;
 			//超时
 		case 9:
 			closeProgressDialogIdentify();
-			GolukUtils.showToast(this, "网络连接超时");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.user_netword_outtime));
 			break;
 		default:
 			break;

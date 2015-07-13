@@ -100,12 +100,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		initView();
 		// title
 		mTextViewTitle.setText("注册");
-	}
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		mApplication.setContext(mContext, "UserRegist");
 		
 		if(null == mCustomProgressDialog){
 			mCustomProgressDialog = new CustomLoadingDialog(mContext,"注册中，请稍候……");
@@ -114,6 +108,12 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, "验证码获取中……");
 		}
 		
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		mApplication.setContext(mContext, "UserRegist");
 		getInfo();
 	}
 	
@@ -142,12 +142,12 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		if (null != itLoginPhone.getStringExtra("intentLogin")) {
 			String number = itLoginPhone.getStringExtra("intentLogin").toString();
 			GolukDebugUtils.i("user", number);
-			mEditTextPhone.setText(number);
+			mEditTextPhone.setText(UserUtils.formatSavePhone(number));
 		}
 		Intent itRepassword = getIntent();
 		if (null != itRepassword.getStringExtra("intentRepassword")) {
 			String repwdNum = itRepassword.getStringExtra("intentRepassword").toString();
-			mEditTextPhone.setText(repwdNum);
+			mEditTextPhone.setText(UserUtils.formatSavePhone(repwdNum));
 		}
 
 		/**
@@ -357,7 +357,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 							mBackButton.setEnabled(false);
 						}else{
 							closeProgressDialogIdentify();
-							GolukUtils.showToast(mContext, "验证码获取失败");
+							GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_getidentify_fail));
 						}
 						
 						// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
@@ -531,7 +531,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			//获取验证码成功
 		case 1:
 			closeProgressDialogIdentify();
-			GolukUtils.showToast(this, "验证码发送成功");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.user_getidentify_success));
 			
 			String phone = mEditTextPhone.getText().toString();
 			String password = mEditTextPwd.getText().toString();
@@ -546,26 +546,26 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			//获取验证码失败
 		case 2:
 			closeProgressDialogIdentify();
-			GolukUtils.showToast(mContext, "验证码获取失败");
+			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_getidentify_fail));
 			break;
 			//code=201
 		case 3:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(this, "该手机号1小时内下发6次以上验证码");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_getidentify_limit));
 			break;
 			//code=500
 		case 4:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(this, "服务端程序异常");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_background_error));
 			break;
 			//code=405
 		case 5:
 			closeProgressDialogIdentify();
 			new AlertDialog.Builder(this)
-			.setTitle("提示")
-			.setMessage("此手机号已经被注册")
-			.setNegativeButton("取消", null)
-			.setPositiveButton("立即登录", new DialogInterface.OnClickListener() {
+			.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+			.setMessage(this.getResources().getString(R.string.user_already_regist))
+			.setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+			.setPositiveButton(this.getResources().getString(R.string.user_immediately_ok), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					if(mApplication.loginoutStatus = true){
@@ -583,22 +583,22 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			//code=440
 		case 6:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(this, "输入手机号异常");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_phone_input_error));
 			break;
 			//code=480
 		case 7:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(this, "验证码发送失败，请重新发送");
+			UserUtils.showDialog(this, this.getResources().getString(R.string.user_send_identify_fail));
 			break;
 			//code=470
 		case 8:
 			closeProgressDialogIdentify();
-			UserUtils.showDialog(mContext, "获取验证码失败,此手机号已经达到获取验证码上限");
+			UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_background_identify_count));
 			break;
 			//超时
 		case 9:
 			closeProgressDialogIdentify();
-			GolukUtils.showToast(this, "网络连接超时");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.user_netword_outtime));
 			break;
 		default:
 			break;
