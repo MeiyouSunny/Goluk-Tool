@@ -1,24 +1,18 @@
 package cn.com.mobnote.golukmobile;
 
-import org.json.JSONObject;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.UserIdentifyInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -53,13 +47,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 	/** 手机号、密码、验证码 **/
 	private EditText mEditTextPhone, mEditTextPwd;
 	private Button mBtnOK;
-	/** 倒计时的帮助类 **/
-	private CountDownButtonHelper mCountDownHelper;
-	/** 自动获取验证码 **/
-	private BroadcastReceiver smsReceiver = null;
-	private IntentFilter smsFilter;
-	private Handler smsHandler;
-	private String smsCode;
 
 	private Context mContext = null;
 	private GolukApplication mApplication = null;
@@ -67,12 +54,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	/** 验证码获取显示进度条 **/
 	private CustomLoadingDialog mCustomProgressDialogIdentify = null;
-	/** 判断获取验证码按钮是否已经被点击 **/
-	private boolean identifyClick = false;
-	/** 重置密码获取验证码后台返回的次数 **/
-	private String freq = "";
-	/** 6次获取验证码 **/
-	private static final int IDENTIFY_COUNT = 6;
 
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
@@ -410,6 +391,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 	public void repwd(){
 		String phone = mEditTextPhone.getText().toString().replace("-", "");
 		String password = mEditTextPwd.getText().toString();
+		
 		if(!"".equals(phone) && UserUtils.isMobileNO(phone)){
 			if (!"".equals(password)) {
 				mBtnOK.setFocusable(true);
@@ -420,7 +402,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 						mApplication.mIdentifyManage.setUserIdentifyInterface(this);
 						boolean b = mApplication.mIdentifyManage.getIdentify(false,phone);
 						if(b){
-							click = 1;
 							UserUtils.hideSoftMethod(this);
 							mCustomProgressDialogIdentify.show();
 							mBtnOK.setEnabled(false);
@@ -432,41 +413,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 							GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_getidentify_fail));
 						}
 						
-//						String isRegist = "{\"PNumber\":\"" + phone+ "\",\"Password\":\"" + password+ "\",\"VCode\":\"" + identify+ "\",\"tag\":\"android\"}";
-//						GolukDebugUtils.e("",isRegist);
-//						int freqInt = 0;
-//						if(identifyClick){
-//								try{
-//									freqInt = Integer.parseInt(freq);
-//								}catch(Exception e){
-//									GolukUtils.showToast(mContext, "请重新获取验证码");
-//									return ;
-//								}
-//							GolukDebugUtils.i("lily", "---------重置密码获取验证码的次数----"+freqInt);
-//							if(freqInt>IDENTIFY_COUNT){
-//								UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_identify_limit)+IDENTIFY_COUNT+"次)");
-//							}else{
-//								if(identify.length()<6){
-//									UserUtils.showDialog(mContext, "验证码格式输入不正确");
-//								}else{
-//									boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_ModifyPwd, isRegist);
-//									GolukDebugUtils.e("",b + "");
-//									if (b) {
-//										// 隐藏软件盘
-//										UserUtils.hideSoftMethod(this);
-//										mCustomProgressDialog.show();
-//										mEditTextPhone.setEnabled(false);
-//										mEditTextIdentify.setEnabled(false);
-//										mEditTextPwd.setEnabled(false);
-//										mBtnIdentity.setEnabled(false);
-//										mBtnBack.setEnabled(false);
-//										mBtnOK.setEnabled(false);
-//									}
-//								}
-//							}
-//						}else{
-//							GolukUtils.showToast(mContext, "请先获取验证码");
-//						}
 					}
 				} else {
 					mBtnOK.setFocusable(true);
@@ -675,19 +621,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 //		}
 //	}
 
-	private int click = 0;
-
-	/**
-	 * 销毁广播
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		/*if (click == 1 && smsReceiver.isInitialStickyBroadcast()) {
-			unregisterReceiver(smsReceiver);
-		}*/
-	}
-
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
@@ -734,17 +667,9 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		mEditor.commit();
 	}
 
-	/**
-	 * 关闭注册中的对话框
-	 */
-	private void closeProgressDialog() {
-		if (null != mCustomProgressDialog) {
-			mCustomProgressDialog.close();
-		}
-	}
 
 	/**
-	 * 关闭注册中的对话框
+	 * 关闭重置中获取验证码的对话框
 	 */
 	private void closeProgressDialogIdentify() {
 		if (null != mCustomProgressDialogIdentify) {

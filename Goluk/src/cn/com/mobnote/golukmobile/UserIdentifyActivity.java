@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -15,13 +18,16 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.telephony.SmsMessage;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -82,8 +88,13 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	private CountDownButtonHelper mCountDownhelper = null;
 	/** 注册/重置密码标识 **/
 	private boolean justDifferent = false;
+	/** 自动获取验证码 **/
+	private BroadcastReceiver smsReceiver;
+	private IntentFilter smsFilter;
+	private String strBody = "";
+	/** 销毁广播标识 **/
+	private int click = 0;
 
-	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,6 +109,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 		countTime();
 
+		// 自动获取验证码
+		getSmsMessage();
 	}
 
 	@Override
@@ -162,10 +175,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			mTextTitle.setText("正在发送短信到+86" + title_phone);
 		}
 
-		// if (null != it.getBooleanExtra(IDENTIFY_DIFFERENT, false)) {
 		justDifferent = it.getBooleanExtra(IDENTIFY_DIFFERENT, false);
 		GolukDebugUtils.i(TAG, "-------justDifferent-------" + justDifferent);
-		// }
 
 		if (null != it.getStringExtra(IDENTIFY_PASSWORD)) {
 			intentPassword = it.getStringExtra(IDENTIFY_PASSWORD).toString();
@@ -209,9 +220,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 * @param phone
 	 */
 	public void getUserIdentify(boolean flag, String phone) {
-		if(!UserUtils.isNetDeviceAvailable(this)){
+		if (!UserUtils.isNetDeviceAvailable(this)) {
 			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
-		}else{
+		} else {
 			mApp.mIdentifyManage.setUserIdentifyInterface(this);
 			boolean b = mApp.mIdentifyManage.getIdentify(flag, phone);
 			if (b) {
@@ -224,7 +235,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 				closeDialogIdentify();
 			}
 		}
-		
+
 	}
 
 	/**
@@ -268,43 +279,52 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		case 5:
 			closeDialogIdentify();
 			if (justDifferent) {
-				new AlertDialog.Builder(this).setTitle(this.getResources().getString(R.string.user_dialog_hint_title)).setMessage(this.getResources().getString(R.string.user_already_regist)).setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
-						.setPositiveButton(this.getResources().getString(R.string.user_immediately_ok), new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								if (mApp.loginoutStatus = true) {
-									mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-									mEditor = mSharedPreferences.edit();
-									mEditor.putString("setupPhone", title_phone);
-									mEditor.putBoolean("noPwd", true);
-									mEditor.commit();
-								}
-								mCountDownhelper.timer.cancel();
-								finish();
-							}
-						}).create().show();
+				new AlertDialog.Builder(this)
+						.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+						.setMessage(this.getResources().getString(R.string.user_already_regist))
+						.setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+						.setPositiveButton(this.getResources().getString(R.string.user_immediately_ok),
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										if (mApp.loginoutStatus = true) {
+											mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+											mEditor = mSharedPreferences.edit();
+											mEditor.putString("setupPhone", title_phone);
+											mEditor.putBoolean("noPwd", true);
+											mEditor.commit();
+										}
+										mCountDownhelper.timer.cancel();
+										finish();
+									}
+								}).create().show();
 			} else {
 				mSharedPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 				final String just = mSharedPreferences.getString("toRepwd", "");
-				new AlertDialog.Builder(this).setTitle(this.getResources().getString(R.string.user_dialog_hint_title)).setMessage(this.getResources().getString(R.string.user_no_regist)).setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
-						.setPositiveButton(this.getResources().getString(R.string.user_immediately_regist), new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(this)
+						.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+						.setMessage(this.getResources().getString(R.string.user_no_regist))
+						.setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+						.setPositiveButton(this.getResources().getString(R.string.user_immediately_regist),
+								new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								Intent intentRepwd = new Intent(UserIdentifyActivity.this, UserRegistActivity.class);
-								intentRepwd.putExtra("intentRepassword", title_phone);
-								if (just.equals("start") || just.equals("mainActivity")) {
-									intentRepwd.putExtra("fromRegist", "fromStart");
-								} else if (just.equals("more")) {
-									intentRepwd.putExtra("fromRegist", "fromIndexMore");
-								} else if (just.equals("set")) {
-									intentRepwd.putExtra("fromRegist", "fromSetup");
-								}
-								startActivity(intentRepwd);
-								mCountDownhelper.timer.cancel();
-								finish();
-							}
-						}).create().show();
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										Intent intentRepwd = new Intent(UserIdentifyActivity.this,
+												UserRegistActivity.class);
+										intentRepwd.putExtra("intentRepassword", title_phone);
+										if (just.equals("start") || just.equals("mainActivity")) {
+											intentRepwd.putExtra("fromRegist", "fromStart");
+										} else if (just.equals("more")) {
+											intentRepwd.putExtra("fromRegist", "fromIndexMore");
+										} else if (just.equals("set")) {
+											intentRepwd.putExtra("fromRegist", "fromSetup");
+										}
+										startActivity(intentRepwd);
+										mCountDownhelper.timer.cancel();
+										finish();
+									}
+								}).create().show();
 			}
 			break;
 		// code=440
@@ -511,7 +531,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 * 倒计时
 	 */
 	public void countTime() {
-		mCountDownhelper = new CountDownButtonHelper(mBtnCount, this.getResources().getString(R.string.user_identify_btn_afresh), 60, 1);
+		mCountDownhelper = new CountDownButtonHelper(mBtnCount, this.getResources().getString(
+				R.string.user_identify_btn_afresh), 60, 1);
 		mCountDownhelper.setOnFinishListener(new OnFinishListener() {
 
 			@Override
@@ -534,20 +555,23 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 */
 	@SuppressWarnings("static-access")
 	public void toRegistAndRepwd(boolean flag, String phone, String password, String vCode) {
-		if(!UserUtils.isNetDeviceAvailable(this)){
+		if (!UserUtils.isNetDeviceAvailable(this)) {
 			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
-		}else{
+		} else {
 			// TODO 需要判断获取验证码次数
 			if ("".equals(vCode) || null == vCode) {
 				GolukUtils.showToast(mApp.getContext(), this.getResources().getString(R.string.user_no_getidentify));
 			} else {
 				if (vCode.length() < 6) {
-					GolukUtils.showToast(mApp.getContext(), this.getResources().getString(R.string.user_identify_format));
+					GolukUtils.showToast(mApp.getContext(), this.getResources()
+							.getString(R.string.user_identify_format));
 				} else {
-					GolukDebugUtils.i(TAG, "---------useridentifymanage_count------"+mApp.mIdentifyManage.useridentifymanage_count);
-					if(mApp.mIdentifyManage.useridentifymanage_count >mApp.mIdentifyManage.IDENTIFY_COUNT){
-						UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_identify_count_six_limit));
-					}else{
+					GolukDebugUtils.i(TAG, "---------useridentifymanage_count------"
+							+ mApp.mIdentifyManage.useridentifymanage_count);
+					if (mApp.mIdentifyManage.useridentifymanage_count > mApp.mIdentifyManage.IDENTIFY_COUNT) {
+						UserUtils.showDialog(mContext,
+								this.getResources().getString(R.string.count_identify_count_six_limit));
+					} else {
 						mApp.mRegistAndRepwdManage.setUserRegistAndRepwd(this);
 						boolean b = mApp.mRegistAndRepwdManage.registAndRepwd(flag, phone, password, vCode);
 						if (b) {
@@ -563,13 +587,14 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 						} else {
 							justCloseDialog(flag);
 							if (flag) {
-								GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_regist_fail));
+								GolukUtils
+										.showToast(mContext, this.getResources().getString(R.string.user_regist_fail));
 							} else {
 								GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_repwd_fail));
 							}
 						}
 					}
-					
+
 				}
 			}
 		}
@@ -631,17 +656,22 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			if (justDifferent) {
 				UserUtils.showDialog(this, this.getResources().getString(R.string.user_already_regist));
 			} else {
-				new AlertDialog.Builder(this).setTitle(this.getResources().getString(R.string.user_dialog_hint_title)).setMessage(this.getResources().getString(R.string.user_no_regist)).setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
-						.setPositiveButton(this.getResources().getString(R.string.user_immediately_regist), new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(this)
+						.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+						.setMessage(this.getResources().getString(R.string.user_no_regist))
+						.setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
+						.setPositiveButton(this.getResources().getString(R.string.user_immediately_regist),
+								new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								Intent intentRepwd = new Intent(UserIdentifyActivity.this, UserRegistActivity.class);
-								intentRepwd.putExtra("intentRepassword", title_phone);
-								startActivity(intentRepwd);
-								finish();
-							}
-						}).create().show();
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										Intent intentRepwd = new Intent(UserIdentifyActivity.this,
+												UserRegistActivity.class);
+										intentRepwd.putExtra("intentRepassword", title_phone);
+										startActivity(intentRepwd);
+										finish();
+									}
+								}).create().show();
 			}
 			break;
 		// code = 406
@@ -678,7 +708,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 				+ "\",\"tag\":\"android\"}";
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login,
 				condi);
-		GolukDebugUtils.i("final", "--------UserIdentifyActivity--------registLogin()-------b-------"+b);
+		GolukDebugUtils.i("final", "--------UserIdentifyActivity--------registLogin()-------b-------" + b);
 		if (b) {
 			// 登录成功跳转
 			mApp.loginStatus = 0;// 登录中
@@ -709,7 +739,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					mApp.isUserLoginSucess = true;
 					mApp.registStatus = 2;// 注册成功的状态
 
-					GolukDebugUtils.i("final", "------UserIdentifyActivity------registLoginCallBack-------intentRegistInter------"+intentRegistInter);
+					GolukDebugUtils.i("final",
+							"------UserIdentifyActivity------registLoginCallBack-------intentRegistInter------"
+									+ intentRegistInter);
 					Intent it = null;
 					if ("fromStart".equals(intentRegistInter)) {
 						GolukDebugUtils.i("lily", "========用户未注册2222======");
@@ -754,4 +786,58 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		mEditor.commit();
 	}
 
+	/**
+	 * 获取短信
+	 */
+	public void getSmsMessage() {
+		// 自动获取验证码请求
+		smsFilter = new IntentFilter();
+		smsFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+		smsFilter.setPriority(Integer.MAX_VALUE);
+		smsReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				Object[] objs = (Object[]) intent.getExtras().get("pdus");
+				for (Object obj : objs) {
+					byte[] pdu = (byte[]) obj;
+					SmsMessage sms = SmsMessage.createFromPdu(pdu);
+					// 短信的内容
+					String message = sms.getMessageBody();
+					String regEx = "[^0-9]";
+					Pattern p = Pattern.compile(regEx);
+					Matcher m = p.matcher(message);
+					strBody = m.replaceAll("").trim();
+				}
+				String one = strBody.substring(0, 1);
+				String two = strBody.substring(1, 2);
+				String three = strBody.substring(2, 3);
+				String four = strBody.substring(3, 4);
+				String five = strBody.substring(4, 5);
+				String six = strBody.substring(strBody.length() - 1);
+				GolukDebugUtils.i("kkk", "----one----" + one + "----two---" + two + "----three----" + three
+						+ "---four----" + four + "-----five---" + five + "----six-----" + six);
+				mEditTextOne.setText(one);
+				mEditTextTwo.setText(two);
+				mEditTextThree.setText(three);
+				mEditTextFour.setText(four);
+				mEditTextFive.setText(five);
+				mEditTextSix.setText(six);
+			}
+		};
+		//注册读取短信内容
+		registerReceiver(smsReceiver, smsFilter);
+		click = 1;
+
+	}
+
+	/**
+	 * 销毁广播
+	 */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (click == 1 && smsReceiver.isInitialStickyBroadcast()) {
+			unregisterReceiver(smsReceiver);
+		}
+	}
 }

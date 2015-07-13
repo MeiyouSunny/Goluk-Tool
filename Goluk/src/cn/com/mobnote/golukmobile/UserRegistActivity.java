@@ -1,23 +1,13 @@
 package cn.com.mobnote.golukmobile;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.telephony.SmsMessage;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -35,9 +25,6 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.user.CountDownButtonHelper;
 import cn.com.mobnote.user.UserIdentifyInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -64,28 +51,15 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private Context mContext = null;
 	private GolukApplication mApplication = null;
 	
-	/**倒计时帮助类**/
-	private CountDownButtonHelper mCountDownhelper;
-	/**自动获取验证码**/
-	private BroadcastReceiver smsReceiver;
-	private IntentFilter smsFilter;
-	private Handler mSendMesageHandler;
-	private String strBody;
 	/**注册**/
 	private CustomLoadingDialog mCustomProgressDialog=null;
 	/**获取验证码**/
 	private CustomLoadingDialog mCustomProgressDialogIdentify = null;
-	/**判断获取验证码按钮是否被点击过**/
-	private boolean identifyClick = false;
 	/**记录注册成功的状态**/
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
 	/**注册成功跳转页面的判断标志*/
 	private String registOk = null;
-	/**获取验证码的次数**/
-	private String freq = "";
-	/**6次获取验证码**/
-	private static final int IDENTIFY_COUNT = 6;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -348,7 +322,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 						mApplication.mIdentifyManage.setUserIdentifyInterface(this);
 						boolean b = mApplication.mIdentifyManage.getIdentify(true,phone);
 						if(b){
-							click = 1;
 							UserUtils.hideSoftMethod(this);
 							mCustomProgressDialogIdentify.show();
 							mBtnRegist.setEnabled(false);
@@ -504,17 +477,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 //			}
 //		}
 //	}
-	/**
-	 * 销毁广播
-	 */
-	private int click = 0;
-	@Override
-	protected void onPause() {
-		super.onPause();
-		/*if(click == 1&&smsReceiver.isInitialStickyBroadcast()){
-			unregisterReceiver(smsReceiver);
-		}*/
-	}
 	
 	@Override
 	public void identifyCallbackInterface() {
@@ -646,7 +608,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	}
 	
 	/**
-	 * 关闭注册中的对话框
+	 * 关闭注册中获取验证码的对话框
 	 */
 	private void closeProgressDialogIdentify(){
 		if(null != mCustomProgressDialogIdentify){
