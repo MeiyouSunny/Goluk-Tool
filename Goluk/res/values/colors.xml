@@ -68,5 +68,9 @@
     <color name="live_address_color">#8e8e8e</color>
     <color name="live_loginlayout_color">#7F151515</color>
     <color name="carrecord_text_color">#3b97f5</color>
-
+    
+    
+    <!-- 行车记录仪2.0 -->
+	<color name="text_select_color">#e13737</color>
+	<color name="text_diff_color">#808181</color>
 </resources>

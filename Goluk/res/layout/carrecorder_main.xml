@@ -1,20 +1,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#242424">
-    
+    android:background="#242424" >
+
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:background="@color/carrecorder_text_sel_color" >
+        android:layout_height="40dp"
+        android:background="#242629" >
 
         <ImageButton
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/live_btn_back" />
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/index_close_btn" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -22,33 +23,43 @@
             android:layout_centerInParent="true"
             android:text="@string/car_recorder_title"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/mSettingLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/carrecorder_setting" />
     </RelativeLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_layout"
-        android:layout_marginTop="58dp" >
-
-        <ImageView
-            android:id="@+id/mIPCConnectState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
-            android:background="@drawable/carrecorder_icon_ipc"
-            android:contentDescription="@string/def" />
-
+        android:layout_marginTop="18dp" >
+		
         <TextView
             android:id="@+id/mConnectTip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="6dp"
-            android:text="@string/ipcconnecting"
+            android:text="Goluk000001"
             android:textColor="@color/carrecorder_text_nor_color"
             android:textSize="12sp" />
+        
+        <ImageView
+            android:id="@+id/mIPCConnectState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/index_wifi"
+            android:contentDescription="@string/def" />
+
     </LinearLayout>
 
     <ImageView
@@ -58,86 +69,87 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/title_layout"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="18dp"
         android:background="@drawable/carrecorder_liveindex_icon_1080"
         android:contentDescription="@string/def" />
-    
+
     <RelativeLayout
         android:id="@+id/ipclive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title_layout" >
+        android:layout_below="@+id/mVideoResolutions"
+        android:layout_marginTop="10dp" >
 
-        <RelativeLayout 
+        <RelativeLayout
             android:id="@+id/mRtmpPlayerLayout"
-            android:layout_marginTop="76dp"   
             android:layout_width="match_parent"
-	   		android:layout_height="wrap_content" >
-	            	            
-             	<RelativeLayout 
-             	   android:id="@+id/vLayout"
-	               android:layout_width="match_parent"
-	               android:layout_height="match_parent">
-             	   <com.rd.car.player.RtmpPlayerView 
-	                android:id="@+id/mRtmpPlayerView"
-	                android:layout_width="match_parent"
-	                android:layout_height="match_parent" />
-             	</RelativeLayout>
-	            
-	            <LinearLayout
-	                android:visibility="gone"
-		            android:id="@+id/mLoadingLayout"
-		            android:layout_width="fill_parent"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="center"
-		            android:layout_centerInParent="true"
-		            android:orientation="vertical" >
-		
-		            <ImageView
-		                android:id="@+id/mLoading"
-		                android:layout_width="93.33dp"
-		                android:layout_height="102.66dp"
-		                android:layout_gravity="center"/>
-		
-		            <TextView
-		                android:id="@+id/mLoadingText"
-		                android:layout_width="fill_parent"
-		                android:layout_height="wrap_content"
-		                android:gravity="center"
-		                android:paddingTop="20dp"
-		                android:text="无码的视频也是高潮迭起"
-		                android:textColor="#ffffff"
-		                android:textSize="18sp" /> 
-		        </LinearLayout>
-		        
-	            <RelativeLayout 
-	            	android:id="@+id/mPalyerLayout"
-	            	android:layout_width="match_parent"
-	               	android:layout_height="match_parent"
-	               	android:background="@drawable/default_pic" >
-	                <ImageButton
-	                    android:id="@+id/mPlayBtn"
-	                    android:layout_width="70dp"
-	               		android:layout_height="70dp" 
-	               		android:layout_centerInParent="true"
-	                    android:background="@drawable/carrecorder_play_btn"/>
-	            </RelativeLayout>
-		         
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:id="@+id/vLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+               <com.rd.car.player.RtmpPlayerView
+                    android:id="@+id/mRtmpPlayerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/mLoadingLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/mLoading"
+                    android:layout_width="93.33dp"
+                    android:layout_height="102.66dp"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/mLoadingText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="20dp"
+                    android:text="无码的视频也是高潮迭起"
+                    android:textColor="#ffffff"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/mPalyerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/default_pic" >
+
+                <ImageButton
+                    android:id="@+id/mPlayBtn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/carrecorder_play_btn" />
+            </RelativeLayout>
         </RelativeLayout>
-		
+
         <ImageButton
             android:id="@+id/mFullScreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="76dp"
             android:layout_alignBottom="@+id/mRtmpPlayerLayout"
             android:layout_alignRight="@+id/mRtmpPlayerLayout"
-            android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="76dp"
             android:background="@drawable/carrecorder_full_btn"
             android:contentDescription="@string/def" />
     </RelativeLayout>
-    
+
     <ImageView
         android:id="@+id/position"
         android:layout_width="wrap_content"
@@ -158,16 +170,201 @@
         android:layout_toRightOf="@+id/position"
         android:text=""
         android:textColor="@color/carrecorder_text_nor_color"
-        android:textSize="12sp"  />
+        android:textSize="12sp" />
+
+    <RelativeLayout
+        android:id="@+id/fqzb_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mAddr" >
+
+        <EditText
+            android:id="@+id/assess"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#17191a"
+            android:hint="描述下这个视频吧..."
+            android:textColor="#808181"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:id="@+id/live_tab"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@+id/assess"
+            android:background="#17191a" >
+
+            <!-- android:layout_below="@+id/assess" -->
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp" >
+
+                <ImageView
+                    android:id="@+id/driving_car_time_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/driving_car_time_icon" />
+
+                <TextView
+                    android:id="@+id/live_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/driving_car_time_icon"
+                    android:text="00:12:00"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" >
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:id="@+id/live_video"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/driving_voice_icon" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/driving_car_loca_btn" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/driving_car_phone_btn" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/driving_car_local_btn" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/car_recorder"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:drawableRight="@drawable/driving_car_next_btn"
+                android:text="更多"
+                android:textColor="#808181"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
     
+    <RelativeLayout 
+        android:id="@+id/jcqp_info"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/mAddr"
+        android:background="#17191a"
+        android:visibility="invisible"
+        android:layout_height="115dp">
+        
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/share_video_no_pic"/>
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/share_video_no_pic"/>
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/share_video_pic"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/red_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fqzb_info"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/driving_car_red_point" />
+
+    <RelativeLayout
+        android:id="@+id/txt_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/red_room"
+        android:layout_marginTop="9dp" >
+
+        <TextView
+            android:id="@+id/jcqp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:layout_toLeftOf="@+id/fqzb"
+            android:text="精彩抢拍"
+            android:textColor="#808181"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/fqzb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="发起直播"
+            android:textColor="#e13737"
+            android:textSize="13sp" />
+    </RelativeLayout>
+
     <LinearLayout
-    	android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/ipclive"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="6dp" >
+        android:layout_marginTop="6dp"
+        android:visibility="gone" >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -179,103 +376,115 @@
 
         <TextView
             android:id="@+id/mTime"
-            android:text="00:00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="6dp"
+            android:text="00:00"
             android:textColor="@color/carrecorder_text_nor_color"
             android:textSize="12sp" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical|center"
-         >
+        android:visibility="invisible" >
 
         <LinearLayout
             android:id="@+id/mFileLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center|center_horizontal"
+            android:orientation="vertical"
             android:paddingBottom="14dp"
             android:paddingTop="14dp"
-            android:gravity="center|center_horizontal"
-            android:orientation="vertical" >
+            android:visibility="invisible" >
 
             <ImageView
                 android:id="@+id/mFileBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:duplicateParentState="true"
                 android:background="@drawable/carrecorder_filecontorl_btn"
-                android:contentDescription="@string/def" />
+                android:contentDescription="@string/def"
+                android:duplicateParentState="true" />
 
             <TextView
                 android:id="@+id/mFileText"
-                android:textSize="12sp"
-                android:duplicateParentState="true"
-                android:textColor="@color/text_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="文件管理" />
+                android:duplicateParentState="true"
+                android:text="文件管理"
+                android:textColor="@color/text_color"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <ImageButton
-			android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_ipc_8s" />
+            android:background="@drawable/btn_ipc_8s"
+            android:visibility="invisible" />
 
         <LinearLayout
             android:id="@+id/mSettingLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center|center_horizontal"
+            android:orientation="vertical"
             android:paddingBottom="14dp"
             android:paddingTop="14dp"
-            android:gravity="center|center_horizontal"
-            android:orientation="vertical" >
+            android:visibility="invisible" >
 
             <ImageView
                 android:id="@+id/mSettingBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:duplicateParentState="true"
                 android:background="@drawable/carrecorder_setup_btn"
-                android:contentDescription="@string/def" />
+                android:contentDescription="@string/def"
+                android:duplicateParentState="true" />
 
             <TextView
                 android:id="@+id/mSettingText"
-                android:textSize="12sp"
-                android:duplicateParentState="true"
-                android:textColor="@color/text_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="记录仪设置" />
+                android:duplicateParentState="true"
+                android:text="记录仪设置"
+                android:textColor="@color/text_color"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/m8sBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_tab"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:visibility="invisible"
+        android:background="@drawable/btn_ipc_8s" />
     
     <ImageButton
-            android:id="@+id/m8sBtn"
-            android:layout_marginBottom="14dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" 
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/btn_ipc_8s" />
-    
-    <Button 
-		android:id="@+id/mShareBtn"
-		android:visibility="gone"
-		android:layout_above="@+id/m8sBtn"
-   		android:layout_width="113.33dp"
-  	  	android:layout_height="48dp"
-  	  	android:layout_marginBottom="15dp"
-  	  	android:layout_centerHorizontal="true" />
+        android:id="@+id/liveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_tab"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/driving_car_living_icon" />
+
+    <Button
+        android:id="@+id/mShareBtn"
+        android:layout_width="113.33dp"
+        android:layout_height="48dp"
+        android:layout_above="@+id/m8sBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:visibility="gone" />
 
 </RelativeLayout>

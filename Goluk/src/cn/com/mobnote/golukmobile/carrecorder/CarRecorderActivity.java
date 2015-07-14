@@ -17,10 +17,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -41,6 +45,11 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomWifiDialog;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
+import cn.com.mobnote.golukmobile.live.LiveSettingBean;
+import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow;
+import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
@@ -70,8 +79,7 @@ import com.rd.car.player.RtmpPlayerView;
  * 
  * @author xuhw
  */
-public class CarRecorderActivity extends BaseActivity implements OnClickListener,
-		IPCManagerFn {
+public class CarRecorderActivity extends BaseActivity implements OnClickListener, IPCManagerFn, IPopwindowFn {
 	public static Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -104,6 +112,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private int mShootTime = 0;
 	/** 一键抢拍按钮 */
 	private ImageButton m8sBtn = null;
+	/** 发起直播 **/
+	private ImageButton liveBtn = null;
 	/** 文件管理按钮 */
 	private ImageView mFileBtn = null;
 	/** 设置按钮 */
@@ -157,36 +167,59 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	/** 精彩视频下载文件个数 */
 	private int downloadFileNumber = 0;
 	/** 音视频信息 */
-	private VideoConfigState mVideoConfigState=null;
+	private VideoConfigState mVideoConfigState = null;
 	/** 视频分辨率显示 */
-	private ImageView mVideoResolutions=null;
-	
+	private ImageView mVideoResolutions = null;
+
 	private GolukApplication mApp = null;
-	private boolean m_bIsFullScreen=false;
+	private boolean m_bIsFullScreen = false;
 	private ViewGroup m_vgNormalParent;
-	private ImageButton mFullScreen=null;
-	private RelativeLayout mPlayerLayout=null;
-	private Button mNormalScreen=null;
-	private final int BTN_NORMALSCREEN=231;
-	
+	private ImageButton mFullScreen = null;
+	private RelativeLayout mPlayerLayout = null;
+	private Button mNormalScreen = null;
+	private final int BTN_NORMALSCREEN = 231;
+
 	private RelativeLayout mPalyerLayout = null;
+
+	private TextView jcqp = null;
+
+	private TextView fqzb = null;
+
 	private boolean isShowPlayer = false;
+
+	private LiveSettingPopWindow lsp;
+
+	private RelativeLayout mRootLayout = null;
+
+	private LayoutInflater mLayoutFlater = null;
 	
+	private TextView liveTime = null;
 	
+	/** 用户设置数据 */
+	LiveSettingBean mSettingData = null;
+	
+	/** 更多 **/
+	private Button more = null;
+
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mLayoutFlater = LayoutInflater.from(this);
+		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.carrecorder_main, null);
+
 		setContentView(R.layout.carrecorder_main);
 		mApp = (GolukApplication) getApplication();
-		
+
 		mPlayerLayout = new RelativeLayout(this);
 		mNormalScreen = new Button(this);
 		mNormalScreen.setId(BTN_NORMALSCREEN);
 		mNormalScreen.setBackgroundResource(R.drawable.btn_player_normal);
 		mNormalScreen.setOnClickListener(this);
-		
-		
+
+		lsp = new LiveSettingPopWindow(this, mRootLayout);
+		lsp.setCallBackNotify(this);
+
 		mHandler = new Handler() {
 			public void handleMessage(final android.os.Message msg) {
 				switch (msg.what) {
@@ -198,7 +231,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					break;
 				case ADDR:
 					String addr = (String) msg.obj;
-					if(!TextUtils.isEmpty(addr)){
+					if (!TextUtils.isEmpty(addr)) {
 						mAddr.setText(addr);
 					}
 					break;
@@ -218,15 +251,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		// 获取是否是后台启动
 		Intent receiveIntent = getIntent();
-		isBackGroundStart = receiveIntent.getBooleanExtra("isBackGroundStart",
-				false);
+		isBackGroundStart = receiveIntent.getBooleanExtra("isBackGroundStart", false);
 
 		// 注册回调监听
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager()
-			.addIPCManagerListener("main", this);
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("main", this);
 		}
-		
+
 	}
 
 	/**
@@ -236,7 +267,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年4月8日
 	 */
 	private void wonderfulVideoDownloadShow() {
-		if(!TextUtils.isEmpty(wonderfulVideoName)){
+		if (!TextUtils.isEmpty(wonderfulVideoName)) {
 			downloadNumber++;
 			mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
 			mShareBtn.setVisibility(View.VISIBLE);
@@ -250,7 +281,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					downloadNumber = 0;
 					mShareBtn.setBackgroundResource(R.drawable.screen_loading_3);
 				}
-				
+
 				mHandler.sendEmptyMessageDelayed(DOWNLOADWONDERFULVIDEO, 600);
 			}
 		}
@@ -264,10 +295,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月9日
 	 */
 	private void initView() {
-		mPalyerLayout = (RelativeLayout)findViewById(R.id.mPalyerLayout);
-		mFullScreen = (ImageButton)findViewById(R.id.mFullScreen);
+		mPalyerLayout = (RelativeLayout) findViewById(R.id.mPalyerLayout);
+		mFullScreen = (ImageButton) findViewById(R.id.mFullScreen);
 		mFullScreen.setVisibility(View.GONE);
-		mVideoResolutions = (ImageView)findViewById(R.id.mVideoResolutions);
+		mVideoResolutions = (ImageView) findViewById(R.id.mVideoResolutions);
 		mShareBtn = (Button) findViewById(R.id.mShareBtn);
 		mShareBtn.setVisibility(View.GONE);
 		mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
@@ -283,6 +314,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 		mLoadingText = (TextView) findViewById(R.id.mLoadingText);
+		jcqp = (TextView) findViewById(R.id.jcqp);
+		fqzb = (TextView) findViewById(R.id.fqzb);
+		liveTime = (TextView) findViewById(R.id.live_time);
+		more = (Button) findViewById(R.id.car_recorder);
+		liveBtn = (ImageButton) findViewById(R.id.liveBtn);
 		mRtmpPlayerView = (RtmpPlayerView) findViewById(R.id.mRtmpPlayerView);
 		mRtmpPlayerView.setAudioMute(true);
 		mRtmpPlayerView.setZOrderMediaOverlay(true);
@@ -291,25 +327,24 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mRtmpPlayerView.setConnectionTimeout(30000);
 		mRtmpPlayerView.setVisibility(View.VISIBLE);
 
-		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRtmpPlayerLayout
-				.getLayoutParams();
+		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRtmpPlayerLayout.getLayoutParams();
 		lp.width = screenWidth;
 		lp.height = (int) (screenWidth / 1.7833);
 		lp.leftMargin = 0;
 		mRtmpPlayerLayout.setLayoutParams(lp);
 
-		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
+		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 		mConnectTip.setText("预览影像未启用");
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
 		}
 
 		String addr = GolukApplication.getInstance().mCurAddr;
-		if(!TextUtils.isEmpty(addr)){
+		if (!TextUtils.isEmpty(addr)) {
 			mAddr.setText(addr);
 		}
 	}
-	
+
 	/**
 	 * 设置监听事件
 	 * 
@@ -322,74 +357,75 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mFullScreen.setOnClickListener(this);
 		mShareBtn.setOnClickListener(this);
 		m8sBtn.setOnClickListener(this);
+		jcqp.setOnClickListener(this);
+		fqzb.setOnClickListener(this);
+		more.setOnClickListener(this);
+		liveBtn.setOnClickListener(this);
+		
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingLayout).setOnClickListener(this);
-		mRtmpPlayerView
-				.setPlayerListener(new RtmpPlayerView.RtmpPlayerViewLisener() {
+		mRtmpPlayerView.setPlayerListener(new RtmpPlayerView.RtmpPlayerViewLisener() {
 
-					@Override
-					public void onPlayerPrepared(RtmpPlayerView rpv) {
-						mRtmpPlayerView.setHideSurfaceWhilePlaying(true);
-					}
+			@Override
+			public void onPlayerPrepared(RtmpPlayerView rpv) {
+				mRtmpPlayerView.setHideSurfaceWhilePlaying(true);
+			}
 
-					@Override
-					public boolean onPlayerError(RtmpPlayerView rpv, int what,
-							int extra, String strErrorInfo) {
-						hidePlayer();
-						rtmpIsOk = false;
-						updateVideoState();
-						rpv.removeCallbacks(retryRunnable);
-						showLoading();
-						rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
-						if (m_bIsFullScreen) {
-						    setFullScreen(false);
-						}
-						return false;
-					}
+			@Override
+			public boolean onPlayerError(RtmpPlayerView rpv, int what, int extra, String strErrorInfo) {
+				hidePlayer();
+				rtmpIsOk = false;
+				updateVideoState();
+				rpv.removeCallbacks(retryRunnable);
+				showLoading();
+				rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
+				if (m_bIsFullScreen) {
+					setFullScreen(false);
+				}
+				return false;
+			}
 
-					@Override
-					public void onPlayerCompletion(RtmpPlayerView rpv) {
-						hidePlayer();
-						rtmpIsOk = false;
-						updateVideoState();
-						rpv.removeCallbacks(retryRunnable);
-						showLoading();
-						rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
-						if (m_bIsFullScreen) {
-						    setFullScreen(false);
-						}
-					}
+			@Override
+			public void onPlayerCompletion(RtmpPlayerView rpv) {
+				hidePlayer();
+				rtmpIsOk = false;
+				updateVideoState();
+				rpv.removeCallbacks(retryRunnable);
+				showLoading();
+				rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
+				if (m_bIsFullScreen) {
+					setFullScreen(false);
+				}
+			}
 
-					@Override
-					public void onPlayBuffering(RtmpPlayerView rpv,
-							boolean start) {
-						if (start) {
-							// 缓冲开始
-							showLoading();
-						} else {
-							// 缓冲结束
-							hideLoading();
-						}
-					}
+			@Override
+			public void onPlayBuffering(RtmpPlayerView rpv, boolean start) {
+				if (start) {
+					// 缓冲开始
+					showLoading();
+				} else {
+					// 缓冲结束
+					hideLoading();
+				}
+			}
 
-					@Override
-					public void onGetCurrentPosition(RtmpPlayerView rpv,
-							int nPosition) {
-						// TODO Auto-generated method stub
+			@Override
+			public void onGetCurrentPosition(RtmpPlayerView rpv, int nPosition) {
+				// TODO Auto-generated method stub
 
-					}
+			}
 
-					@Override
-					public void onPlayerBegin(RtmpPlayerView arg0) {
-						hideLoading();
-						rtmpIsOk = true;
-						updateVideoState();
-						showPlayer();
-						mFullScreen.setVisibility(View.VISIBLE);
-						isShowPlayer = true;
-					}
-				});
+			@Override
+			public void onPlayerBegin(RtmpPlayerView arg0) {
+				hideLoading();
+				rtmpIsOk = true;
+				updateVideoState();
+				showPlayer();
+				mFullScreen.setVisibility(View.VISIBLE);
+				isShowPlayer = true;
+			}
+		});
 	}
 
 	/**
@@ -399,8 +435,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月21日
 	 */
 	private void hidePlayer() {
-		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout
-				.getLayoutParams();
+		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout.getLayoutParams();
 		lp.width = lp.height = 1;
 		lp.leftMargin = 2000;
 		mVLayout.setLayoutParams(lp);
@@ -414,8 +449,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 */
 	private void showPlayer() {
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout
-				.getLayoutParams();
+		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout.getLayoutParams();
 		lp.width = width;
 		lp.height = (int) (width / 1.777);
 		lp.leftMargin = 0;
@@ -488,9 +522,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			String preUrl = getResources().getString(R.string.default_rtsp_pre);
 			String backUrl = getResources().getString(R.string.default_rtsp_back);
 			String url = preUrl + mApp.mIpcIp + backUrl;
-			
-			GolukDebugUtils.e("xuhw", "YYYYYY======url=="+url);
-			
+
+			GolukDebugUtils.e("xuhw", "YYYYYY======url==" + url);
+
 			mRtmpPlayerView.setDataSource(url);
 
 			mRtmpPlayerView.start();
@@ -501,21 +535,21 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 		case R.id.back_btn:
-			if(m_bIsFullScreen){
+			if (m_bIsFullScreen) {
 				return;
 			}
-			
+
 			exit();
 			break;
 		case R.id.mShareBtn:
-			if(m_bIsFullScreen){
+			if (m_bIsFullScreen) {
 				return;
 			}
-			
+
 			if (downloadFinish) {
-				
+
 				click_ConnFailed();
-				
+
 				mShareBtn.postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -523,52 +557,46 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 						mShareBtn.setVisibility(View.GONE);
 					}
 				}, 1000);
-				
+
 			}
 			break;
 		case R.id.m8sBtn:
-			if(m_bIsFullScreen){
+			if (m_bIsFullScreen) {
 				return;
 			}
-			
+
 			GolukDebugUtils.e("xuhw", "m8sBtn========================11111======");
-			GFileUtils
-					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
+			GFileUtils.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (!isRecording) {
-					m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
+					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 					isRecording = true;
 					mCurVideoType = VideoType.mounts;
 					GolukDebugUtils.e("xuhw", "m8sBtn========================2222======");
-					GFileUtils
-							.writeIPCLog("=============================发起精彩视频命令================queryParam=");
-					boolean isSucess = GolukApplication.getInstance()
-							.getIPCControlManager().startWonderfulVideo();
+					GFileUtils.writeIPCLog("=============================发起精彩视频命令================queryParam=");
+					boolean isSucess = GolukApplication.getInstance().getIPCControlManager().startWonderfulVideo();
 
-					GolukDebugUtils.e("xuhw", "m8sBtn========================333===isSucess==="+isSucess);
+					GolukDebugUtils.e("xuhw", "m8sBtn========================333===isSucess===" + isSucess);
 					if (!isSucess) {
 						videoTriggerFail();
-						GFileUtils
-								.writeIPCLog("=============================发起精彩视频命令============fail===============");
+						GFileUtils.writeIPCLog("=============================发起精彩视频命令============fail===============");
 					}
 				}
 			} else {
 				dialog();
 				// 未登录
-				GFileUtils
-						.writeIPCLog("=============================发起精彩视频命令===========未登录=============");
+				GFileUtils.writeIPCLog("=============================发起精彩视频命令===========未登录=============");
 			}
 			break;
 		case R.id.mFileBtn:
 		case R.id.mFileText:
 		case R.id.mFileLayout:
-			if(m_bIsFullScreen){
+			if (m_bIsFullScreen) {
 				return;
 			}
-			
+
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
-				Intent intent = new Intent(CarRecorderActivity.this,
-						IPCFileManagerActivity.class);
+				Intent intent = new Intent(CarRecorderActivity.this, IPCFileManagerActivity.class);
 				startActivity(intent);
 			} else {
 				// 未登录
@@ -578,13 +606,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.mSettingBtn:
 		case R.id.mSettingText:
 		case R.id.mSettingLayout:
-			if(m_bIsFullScreen){
+			if (m_bIsFullScreen) {
 				return;
 			}
-			
+
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
-				Intent setting = new Intent(CarRecorderActivity.this,
-						SettingsActivity.class);
+				Intent setting = new Intent(CarRecorderActivity.this, SettingsActivity.class);
 				startActivity(setting);
 			} else {
 				dialog();
@@ -596,46 +623,83 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case BTN_NORMALSCREEN:
 			setFullScreen(false);
 			break;
+		case R.id.jcqp:
+			jcqp.setTextColor(getResources().getColor(R.color.text_select_color));
+			fqzb.setTextColor(getResources().getColor(R.color.text_diff_color));
+			liveBtn.setVisibility(View.INVISIBLE);
+			m8sBtn.setVisibility(View.VISIBLE);
+			System.out.println("zh===x:" + fqzb.getTranslationX() + "y:" + fqzb.getTranslationY());
+			int[] location = new int[2];
+			fqzb.getLocationInWindow(location);
+			int[] lct = new int[2];
+			jcqp.getLocationInWindow(lct);
+
+			this.slideview(lct[0], location[0], jcqp, 0);
+			this.slideview(lct[0], location[0], fqzb, 0);
+
+			findViewById(R.id.fqzb_info).setVisibility(View.INVISIBLE);
+			findViewById(R.id.jcqp_info).setVisibility(View.VISIBLE);
+			break;
+		case R.id.fqzb:
+			jcqp.setTextColor(getResources().getColor(R.color.text_diff_color));
+			fqzb.setTextColor(getResources().getColor(R.color.text_select_color));
+			liveBtn.setVisibility(View.VISIBLE);
+			m8sBtn.setVisibility(View.INVISIBLE);
+			
+			findViewById(R.id.fqzb_info).setVisibility(View.VISIBLE);
+			findViewById(R.id.jcqp_info).setVisibility(View.INVISIBLE);
+			int[] l = new int[2];
+			fqzb.getLocationInWindow(l);
+			int[] c = new int[2];
+			jcqp.getLocationInWindow(c);
+
+			this.slideview(l[0], c[0], jcqp, 1);
+			this.slideview(l[0], c[0], fqzb, 1);
+
+			break;
 		case R.id.mPlayBtn:
-			if(!isShowPlayer){
+			if (!isShowPlayer) {
 				if (!isConnecting) {
 					isConnecting = true;
 					start();
 				}
-				
+
 				showLoading();
 				hidePlayer();
 				mPalyerLayout.setVisibility(View.GONE);
 			}
 			break;
-
+		case R.id.car_recorder:
+			lsp.show();
+			break;
 		default:
 			break;
 		}
 	}
-	
+
 	/**
 	 * 验证当前是否是登陆状态，如果没登陆跳转到登陆页面
-	  * @Title: click_ConnFailed 
-	  * @Description: TODO void 
-	  * @author 曾浩 
-	  * @throws
+	 * 
+	 * @Title: click_ConnFailed
+	 * @Description: TODO void
+	 * @author 曾浩
+	 * @throws
 	 */
 	private void click_ConnFailed() {
-			// 跳转到wifi连接首页
-			if (mApp.isUserLoginSucess) {
-				String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/"+wonderfulVideoName;
-				GolukDebugUtils.e("xuhw", "YYY====mShareBtn===path="+path);
-				
-				Intent i = new Intent(CarRecorderActivity.this,
-						VideoEditActivity.class);
-				i.putExtra("cn.com.mobnote.video.path", path);
-				startActivity(i);
-			} else {
-				Intent intent = new Intent(this, UserLoginActivity.class);
-				intent.putExtra("isInfo", "back");
-				startActivity(intent);
-			}
+		// 跳转到wifi连接首页
+		if (mApp.isUserLoginSucess) {
+			String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/"
+					+ wonderfulVideoName;
+			GolukDebugUtils.e("xuhw", "YYY====mShareBtn===path=" + path);
+
+			Intent i = new Intent(CarRecorderActivity.this, VideoEditActivity.class);
+			i.putExtra("cn.com.mobnote.video.path", path);
+			startActivity(i);
+		} else {
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
+		}
 	}
 
 	/**
@@ -706,30 +770,29 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		if(isShowPlayer){
-			GolukDebugUtils.e("xuhw", "YYYYYY======isConnecting=="+isConnecting);
+
+		if (isShowPlayer) {
+			GolukDebugUtils.e("xuhw", "YYYYYY======isConnecting==" + isConnecting);
 			if (!isConnecting) {
 				isConnecting = true;
 				start();
 			}
-			
+
 			showLoading();
 			hidePlayer();
 		}
-		
+
 		GolukApplication.getInstance().setContext(this, "carrecorder");
 		if (isBackGroundStart) {
 			this.moveTaskToBack(true);
 			isBackGroundStart = false;
 		}
-		
-		if(!downloadFinish){
+
+		if (!downloadFinish) {
 			if (downloadFileNumber <= 0) {
 				downloadFileNumber = 0;
 				downloadFinish = false;
-				mShareBtn
-						.setVisibility(View.GONE);
+				mShareBtn.setVisibility(View.GONE);
 			} else {
 				GolukDebugUtils.e("xuhw", "KKKK=================================");
 				downloadFinish = false;
@@ -737,12 +800,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				mHandler.sendEmptyMessage(DOWNLOADWONDERFULVIDEO);
 			}
 		}
-		
+
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
-		if(null != mVideoConfigState){
-			if("1080P".equals(mVideoConfigState.resolution)){
+		if (null != mVideoConfigState) {
+			if ("1080P".equals(mVideoConfigState.resolution)) {
 				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd1080);
-			}else{
+			} else {
 				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
 			}
 		}
@@ -758,13 +821,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	protected void onStop() {
 		super.onStop();
 		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
-		if(isShowPlayer){
+		if (isShowPlayer) {
 			if (null != mRtmpPlayerView) {
 				rtmpIsOk = false;
 				updateVideoState();
 				mFullScreen.setVisibility(View.GONE);
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
-				if(mRtmpPlayerView.isPlaying()) {
+				if (mRtmpPlayerView.isPlaying()) {
 					isConnecting = false;
 					mRtmpPlayerView.stopPlayback();
 					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback======");
@@ -783,11 +846,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mRtmpPlayerView.cleanUp();
 		}
 
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager()
-			.removeIPCManagerListener("main");
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("main");
 		}
-		
+
 	};
 
 	/**
@@ -809,42 +871,42 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							switch (mShootTime) {
 							case 1:
 
-								m8sBtn.setBackgroundResource(R.drawable.btn_6s);
+								m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 								break;
 							case 2:
 
 								break;
 							case 3:
 
-								m8sBtn.setBackgroundResource(R.drawable.btn_5s);
+								m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon5);
 								break;
 							case 4:
 
 								break;
 							case 5:
 
-								m8sBtn.setBackgroundResource(R.drawable.btn_4s);
+								m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon4);
 								break;
 							case 6:
 
 								break;
 							case 7:
 
-								m8sBtn.setBackgroundResource(R.drawable.btn_3s);
+								m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon3);
 								break;
 							case 8:
 
 								break;
 							case 9:
 
-								m8sBtn.setBackgroundResource(R.drawable.btn_2s);
+								m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon2);
 								break;
 							case 10:
 
 								break;
 							case 11:
 
-								m8sBtn.setBackgroundResource(R.drawable.btn_1s);
+								m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon1);
 								break;
 							case 13:
 
@@ -876,10 +938,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void stopTrimVideo() {
-		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT,
-				CarRecorderActivity.QUERYFILETIME);
+		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
 		mShootTime = 0;
-		m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
+		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
 			m8sTimer.purge();
@@ -899,12 +960,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (!TextUtils.isEmpty(mRecordVideFileName)) {
 			if (videoFileQueryTime <= 15) {
 				if (GolukApplication.getInstance().getIpcIsLogin()) {
-					boolean isSucess = GolukApplication.getInstance()
-							.getIPCControlManager()
+					boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
 							.querySingleFile(mRecordVideFileName);
-					GFileUtils
-							.writeIPCLog("===============queryFileExit==================videoFileQueryTime="
-									+ videoFileQueryTime);
+					GFileUtils.writeIPCLog("===============queryFileExit==================videoFileQueryTime="
+							+ videoFileQueryTime);
 					if (!isSucess) {
 						GFileUtils
 								.writeIPCLog("===============queryFileExit=============isSucess  fail======================");
@@ -917,8 +976,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				videoFileQueryTime = 0;
 				videoTriggerFail();
 
-				GFileUtils
-						.writeIPCLog("============queryFileExit=====111111111111111文件查询超时========================");
+				GFileUtils.writeIPCLog("============queryFileExit=====111111111111111文件查询超时========================");
 
 			}
 		} else {
@@ -965,9 +1023,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月10日
 	 */
 	private void updateVideoState() {
-		if (rtmpIsOk == true){
+		if (rtmpIsOk == true) {
 			mConnectTip.setText("预览影像正常");
-		}else{
+		} else {
 			mConnectTip.setText("预览影像加载中…");
 		}
 	}
@@ -980,7 +1038,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					@Override
 					public void run() {
 						mShareBtn.setVisibility(View.GONE);
-						m8sBtn.setBackgroundResource(R.drawable.screen_btn_6s_grey);
+						m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 
 						downloadFileNumber = 0;
 						mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
@@ -992,17 +1050,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 		}
 
-		if (ENetTransEvent_IPC_VDCP_CommandResp == event
-				&& IPC_VDCP_Msg_Init == msg && 0 == param1) {
+		if (ENetTransEvent_IPC_VDCP_CommandResp == event && IPC_VDCP_Msg_Init == msg && 0 == param1) {
 			if (!ipcFirstLogin) {
 				ipcFirstLogin = true;
-				if(isShowPlayer){
+				if (isShowPlayer) {
 					if (!isConnecting) {
 						isConnecting = true;
 						start();
 					}
 				}
-				
+
 			}
 			runOnUiThread(new Runnable() {
 				@Override
@@ -1036,9 +1093,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		switch (msg) {
 		// 实时抓图
 		case IPC_VDCPCmd_SnapPic:
-			GFileUtils
-					.writeIPCLog("============行车记录仪=======接收截图命令成功========222222=====param1="
-							+ param1 + "=====param2=" + param2);
+			GFileUtils.writeIPCLog("============行车记录仪=======接收截图命令成功========222222=====param1=" + param1
+					+ "=====param2=" + param2);
 			if (RESULE_SUCESS == param1) {
 				// 文件路径格式：fs1:/IPC_Snap_Pic/snapPic.jpg
 				String imageFilePath = (String) param2;
@@ -1046,24 +1102,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					String path = FileUtils.libToJavaPath(imageFilePath);
 					if (!TextUtils.isEmpty(path)) {
 						long time = System.currentTimeMillis();
-						SimpleDateFormat format = new SimpleDateFormat(
-								"yyyy-MM-dd_HH-mm-ss");
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 						String timename = format.format(new Date(time));
 
-						String dirname = Environment
-								.getExternalStorageDirectory()
-								+ File.separator
-								+ "goluk"
-								+ File.separator
-								+ "goluk"
-								+ File.separator + "screenshot";
+						String dirname = Environment.getExternalStorageDirectory() + File.separator + "goluk"
+								+ File.separator + "goluk" + File.separator + "screenshot";
 						GFileUtils.makedir(dirname);
 
-						String picName = dirname + File.separator + timename
-								+ ".jpg";
+						String picName = dirname + File.separator + timename + ".jpg";
 						// 保存原始图片
-						String orgPicName = dirname + File.separator
-								+ "original_" + timename + ".jpg";
+						String orgPicName = dirname + File.separator + "original_" + timename + ".jpg";
 
 						GFileUtils.copyFile(path, orgPicName);
 						GFileUtils.compressImageToDisk(path, picName);
@@ -1087,29 +1135,25 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							.writeIPCLog("===========IPC_VDCPCmd_SnapPic=============fs1  null===333333======333333=====");
 				}
 			} else {
-				GFileUtils
-						.writeIPCLog("===========IPC_VDCPCmd_SnapPic=============fail=======333333===2222====");
+				GFileUtils.writeIPCLog("===========IPC_VDCPCmd_SnapPic=============fail=======333333===2222====");
 			}
 			break;
 		// 请求紧急、精彩视频录制
 		case IPC_VDCPCmd_TriggerRecord:
-			GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===4444=====param1="+param1+"==param2="+param2);
-			GFileUtils
-					.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====1111111========param1="
-							+ param1 + "=====param2=" + param2);
-			TriggerRecord record = IpcDataParser
-					.parseTriggerRecordResult((String) param2);
+			GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===4444=====param1=" + param1 + "==param2="
+					+ param2);
+			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====1111111========param1=" + param1
+					+ "=====param2=" + param2);
+			TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
 			if (null != record) {
 				if (RESULE_SUCESS == param1) {
 					mRecordVideFileName = record.fileName;
-					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type="+record.type);
-					GFileUtils
-							.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
-									+ mRecordVideFileName);
+					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type=" + record.type);
+					GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
+							+ mRecordVideFileName);
 					// 精彩视频
 					if (TYPE_SHORTCUT == record.type) {
-						GFileUtils
-								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
+						GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
 						mHandler.sendEmptyMessage(MOUNTS);
 					} else {
 						GFileUtils
@@ -1123,8 +1167,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				}
 			} else {
 				GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
-				GFileUtils
-						.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
+				GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
 				videoTriggerFail();
 			}
 
@@ -1132,8 +1175,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		// 单文件查询
 		case IPC_VDCPCmd_SingleQuery:
 			if (RESULE_SUCESS == param1) {
-				VideoFileInfo fileInfo = IpcDataParser
-						.parseSingleFileResult((String) param2);
+				VideoFileInfo fileInfo = IpcDataParser.parseSingleFileResult((String) param2);
 				if (null != fileInfo) {
 					if (!TextUtils.isEmpty(fileInfo.location)) {
 						Intent mIntent = new Intent("sendfile");
@@ -1142,20 +1184,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							mIntent.putExtra("filename", fileInfo.location);
 
 							downloadFileNumber++;
-							String path = Environment
-									.getExternalStorageDirectory()
-									+ File.separator
-									+ "goluk"
-									+ File.separator
-									+ "video"
-									+ File.separator
-									+ "wonderful";
-							wonderfulVideoName = path + File.separator
-									+ mRecordVideFileName;
+							String path = Environment.getExternalStorageDirectory() + File.separator + "goluk"
+									+ File.separator + "video" + File.separator + "wonderful";
+							wonderfulVideoName = path + File.separator + mRecordVideFileName;
 
-							System.out
-									.println("YYY========Finish=======1111======="
-											+ downloadFileNumber);
+							System.out.println("YYY========Finish=======1111=======" + downloadFileNumber);
 							if (downloadFileNumber <= 1)
 								mHandler.sendEmptyMessage(DOWNLOADWONDERFULVIDEO);
 						} else if (TYPE_URGENT == fileInfo.type) {// 紧急
@@ -1183,23 +1216,23 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				mHandler.sendEmptyMessageDelayed(QUERYFILEEXIT, 1000);
 			}
 			break;
-		//获取IPC系统音视频编码配置
+		// 获取IPC系统音视频编码配置
 		case IPC_VDCP_Msg_GetVedioEncodeCfg:
-			if(param1 == RESULE_SUCESS){
-				final VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String)param2);
-				if(null != videocfg){
+			if (param1 == RESULE_SUCESS) {
+				final VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String) param2);
+				if (null != videocfg) {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							if("1080P".equals(videocfg.resolution)){
+							if ("1080P".equals(videocfg.resolution)) {
 								mVideoResolutions.setBackgroundResource(R.drawable.icon_hd1080);
-							}else{
+							} else {
 								mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
 							}
 						}
 					});
-				}else{
-					//获取失败
+				} else {
+					// 获取失败
 				}
 			}
 			break;
@@ -1231,25 +1264,23 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
 						String filename = json.optString("filename");
-						GolukDebugUtils.e("xuhw", "YYY====IPC_VDTP_Msg_File===="+filename);
+						GolukDebugUtils.e("xuhw", "YYY====IPC_VDTP_Msg_File====" + filename);
 						String tag = json.optString("tag");
-						GolukDebugUtils.e("xuhw", "YYY==111===wonderfulVideoName="
-								+ wonderfulVideoName);
+						GolukDebugUtils.e("xuhw", "YYY==111===wonderfulVideoName=" + wonderfulVideoName);
 						if (tag.equals("videodownload") && filename.contains("WND")) {
-							wonderfulVideoName=filename;
+							wonderfulVideoName = filename;
 							downloadFinish = true;
 							downloadFileNumber--;
-							
+
 							downloadNumber = 0;
 
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
 									mShareBtn.setVisibility(View.VISIBLE);
-									mShareBtn
-											.setBackgroundResource(R.drawable.screen_share);
+									mShareBtn.setBackgroundResource(R.drawable.screen_share);
 									mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
-									
+
 									mShareBtn.removeCallbacks(mRunnable);
 									mShareBtn.postDelayed(mRunnable, 12000);
 								}
@@ -1262,7 +1293,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				}
 			} else {
 				// 下载失败
-				
+
 			}
 			break;
 
@@ -1270,15 +1301,14 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		}
 	}
-	
+
 	Runnable mRunnable = new Runnable() {
 		@Override
 		public void run() {
 			if (downloadFileNumber <= 0) {
 				downloadFileNumber = 0;
 				downloadFinish = false;
-				mShareBtn
-						.setVisibility(View.GONE);
+				mShareBtn.setVisibility(View.GONE);
 			} else {
 				GolukDebugUtils.e("xuhw", "KKKK=================================");
 				downloadFinish = false;
@@ -1287,65 +1317,128 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 		}
 	};
-	
-    /**
-     * 设置播放器全屏
-     * @param bFull true:全屏　false:普通
-     * @author xuhw
-     * @date 2015年5月12日
-     */
-    public void setFullScreen(boolean bFull) {
+
+	/**
+	 * 设置播放器全屏
+	 * 
+	 * @param bFull
+	 *            true:全屏　false:普通
+	 * @author xuhw
+	 * @date 2015年5月12日
+	 */
+	public void setFullScreen(boolean bFull) {
 		if (bFull == m_bIsFullScreen) {
 			GolukUtils.showToast(this, "已处于全屏状态.");
-		    return;
+			return;
 		}
 		if (bFull) {
-		    if (!mRtmpPlayerView.isPlaying()) {
-			return;
-		    }
-		    m_vgNormalParent = (ViewGroup) mRtmpPlayerView.getParent();
-		    if (null == m_vgNormalParent) {
-			return;
-		    }
-		    ViewGroup vgRoot = (ViewGroup) mRtmpPlayerView.getRootView(); // 获取根布局
-		    m_vgNormalParent.removeView(mRtmpPlayerView);
-		    mPlayerLayout.addView(mRtmpPlayerView);
-		    RelativeLayout.LayoutParams norParams = new RelativeLayout.LayoutParams((int)(38.66*density), (int)(30*density));
-		    norParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		    norParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		    norParams.setMargins(0, 0, (int)(10*density), (int)(10*density));
-		    mPlayerLayout.addView(mNormalScreen, norParams);
-		    vgRoot.addView(mPlayerLayout);
-		    
-		    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		    this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			if (!mRtmpPlayerView.isPlaying()) {
+				return;
+			}
+			m_vgNormalParent = (ViewGroup) mRtmpPlayerView.getParent();
+			if (null == m_vgNormalParent) {
+				return;
+			}
+			ViewGroup vgRoot = (ViewGroup) mRtmpPlayerView.getRootView(); // 获取根布局
+			m_vgNormalParent.removeView(mRtmpPlayerView);
+			mPlayerLayout.addView(mRtmpPlayerView);
+			RelativeLayout.LayoutParams norParams = new RelativeLayout.LayoutParams((int) (38.66 * density),
+					(int) (30 * density));
+			norParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+			norParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			norParams.setMargins(0, 0, (int) (10 * density), (int) (10 * density));
+			mPlayerLayout.addView(mNormalScreen, norParams);
+			vgRoot.addView(mPlayerLayout);
+
+			getWindow()
+					.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 		} else if (m_vgNormalParent != null) {
-		    ViewGroup vgRoot = (ViewGroup) mRtmpPlayerView.getRootView();
-		    vgRoot.removeView(mPlayerLayout);
-		    mPlayerLayout.removeView(mRtmpPlayerView);
-		    mPlayerLayout.removeView(mNormalScreen);
-		    m_vgNormalParent.addView(mRtmpPlayerView);
-		    
-		    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		    this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			ViewGroup vgRoot = (ViewGroup) mRtmpPlayerView.getRootView();
+			vgRoot.removeView(mPlayerLayout);
+			mPlayerLayout.removeView(mRtmpPlayerView);
+			mPlayerLayout.removeView(mNormalScreen);
+			m_vgNormalParent.addView(mRtmpPlayerView);
+
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 		m_bIsFullScreen = bFull;
-    }
-    
-    @Override
-    public void onBackPressed() {
-    	GolukDebugUtils.e("xuhw", "YYYYYY======onBackPressed=====m_bIsFullScreen="+m_bIsFullScreen);
+	}
+
+	@Override
+	public void onBackPressed() {
+		GolukDebugUtils.e("xuhw", "YYYYYY======onBackPressed=====m_bIsFullScreen=" + m_bIsFullScreen);
 		if (m_bIsFullScreen) {
-		    // 全屏时，退出全屏
-		    setFullScreen(false);
+			// 全屏时，退出全屏
+			setFullScreen(false);
 		} else {
-		    super.onBackPressed();
+			super.onBackPressed();
 		}
-    }
-    
-	public void exit(){
-		
+	}
+
+	public void exit() {
+
 		finish();
 	}
-	
+
+	public void slideview(final float p1, final float p2, final View view, final int type) {
+
+		TranslateAnimation animation = null;
+		if (type == 1) {
+			animation = new TranslateAnimation(p1, 0, 0, 0);
+			// animation.setRepeatMode(Animation.REVERSE);
+		} else {
+			animation = new TranslateAnimation(p1, p2 - p1, 0, 0);
+		}
+		animation.setInterpolator(new OvershootInterpolator());
+		animation.setDuration(1000);
+		animation.setFillAfter(true);
+		// animation.setStartOffset(150);
+		animation.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				int left = 0;
+				/*
+				 * if(type == 1){ left = view.getLeft()-(int)(p2-p1); }else{
+				 */
+				left = view.getLeft() + (int) (p2 - p1);
+				// }
+
+				int top = view.getTop();
+				int width = view.getWidth();
+				int height = view.getHeight();
+				view.clearAnimation();
+				view.layout(left, top, left + width, top + height);
+
+			}
+		});
+		view.startAnimation(animation);
+	}
+
+	// POPWindow回调操作
+	@Override
+	public void callBackPopWindow(int event, Object data) {
+		if (LiveSettingPopWindow.EVENT_ENTER == event) {
+			if (null != lsp) {
+				lsp.close();
+			}
+			if (null == data) {
+				GolukUtils.showToast(this, "用户设置出错");
+				return;
+			}
+			mSettingData = (LiveSettingBean) data;
+			
+			liveTime.setText(GolukUtils.secondToString(mSettingData.duration));
+		}
+	}
+
 }
