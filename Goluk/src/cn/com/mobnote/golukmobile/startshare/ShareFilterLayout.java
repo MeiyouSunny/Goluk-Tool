@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile.startshare;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -44,7 +43,7 @@ public class ShareFilterLayout {
 		MyGridView gridView = createMVGridView();
 		MVManage mvManage = new MVManage(mContext);
 		ArrayList<MVEditData> list = mvManage.getLocalVideoList();
-		mMVListAdapter = new MVListAdapter(mContext, list);
+		mMVListAdapter = new MVListAdapter(mContext, list, this);
 		gridView.setAdapter(mMVListAdapter);
 		mMVListLayout.addView(gridView);
 	}
@@ -58,10 +57,10 @@ public class ShareFilterLayout {
 		MyGridView gridLayout = new MyGridView(mContext, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		gridLayout.setLayoutParams(lp);
-		gridLayout.setBackgroundColor(Color.rgb(237, 237, 237));
+		gridLayout.setBackgroundResource(R.color.color_bg_comm);
 		gridLayout.setNumColumns(4);
 		gridLayout.setPadding(16, 30, 16, 30);
-		gridLayout.setVerticalSpacing(30);
+		gridLayout.setVerticalSpacing(22);
 		gridLayout.setHorizontalSpacing(16);
 		return gridLayout;
 	}

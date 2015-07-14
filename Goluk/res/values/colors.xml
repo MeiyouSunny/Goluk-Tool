@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="color_bg_comm">#242629</color>
     <color name="share_bg">#eeeeee</color>
     <!-- 按钮的背景颜色 -->
     <color name="share_btn_disenable_bg">#9c9c9c</color>
@@ -68,5 +69,14 @@
     <color name="live_address_color">#8e8e8e</color>
     <color name="live_loginlayout_color">#7F151515</color>
     <color name="carrecord_text_color">#3b97f5</color>
+    <color name="share_list_select">#3eaf2c</color>
+    <color name="share_list_unselect">#aaaaaa</color>
+    <color name="share_type_select">#0080ff</color>
+    <color name="share_type_unselect">#a5a7aa</color>
+    <color name="share_title_color">#d7d7d7</color>
+    
+    <color name="share_type_shigu_select">#0080ff</color>
+    <color name="share_type_shigu_unselect">#d7d7d7</color>
+    <color name="share_filter_grid_txt">#d7d7d7</color>
 
 </resources>

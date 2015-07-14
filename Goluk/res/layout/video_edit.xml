@@ -3,51 +3,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed" >
+    android:background="@color/color_bg_comm" >
 
     <!-- 视频编辑title -->
 
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:background="@color/bg" >
+        android:layout_height="40dp"
+        android:background="#606166" >
 
         <ImageButton
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:background="@drawable/live_btn_back" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/edit_text"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/next_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:background="@color/bg"
-            android:drawablePadding="8dp"
-            android:drawableRight="@drawable/icon_next_btn"
-            android:gravity="center|right"
-            android:text="@string/next_text"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/share_arrow"
+            android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/startshare_prompt"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_below="@id/title_layout" >
 
         <TextView
@@ -55,8 +34,9 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/share_title2" />
+            android:layout_marginTop="16dp"
+            android:text="@string/share_title2"
+            android:textColor="@color/share_title_color" />
     </RelativeLayout>
 
     <!-- 视频播放 -->
@@ -107,14 +87,20 @@
     <include
         android:id="@+id/shortshare_typelayout"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/video_play_layout"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="14dp"
         layout="@layout/shortshare_selecttype" />
 
-    <!-- 分享布局 -->
+    <!-- 友盟分享布局 -->
 
+    <include
+        android:id="@+id/shortshare_youmeng_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        layout="@layout/custom_board" />
+    <!--
     <RelativeLayout
         android:id="@+id/shortshare_youmeng_layout"
         android:layout_width="match_parent"
@@ -122,7 +108,7 @@
         android:layout_alignParentBottom="true"
         android:background="#FF0000" >
     </RelativeLayout>
-
+    -->
     <!-- 中间的操作区域 -->
 
     <FrameLayout

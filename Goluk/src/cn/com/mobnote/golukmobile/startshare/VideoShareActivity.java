@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile;
+package cn.com.mobnote.golukmobile.startshare;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,6 +37,12 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.R.drawable;
+import cn.com.mobnote.golukmobile.R.id;
+import cn.com.mobnote.golukmobile.R.layout;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
@@ -46,6 +52,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.sso.UMSsoHandler;

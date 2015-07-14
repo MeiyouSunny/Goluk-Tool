@@ -1,11 +1,10 @@
-package cn.com.mobnote.golukmobile;
+package cn.com.mobnote.golukmobile.startshare;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -13,10 +12,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,8 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.startshare.ShareFilterLayout;
-import cn.com.mobnote.golukmobile.startshare.ShareTypeLayout;
+import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.video.MVListAdapter;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -51,8 +50,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private Context mContext = null;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
-	/** 下一步按钮 */
-	private Button mNextBtn = null;
 	/** 视频路径 */
 	private String mFilePath = "";
 	/** 播放按钮 */
@@ -86,7 +83,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 	private FrameLayout mMiddleLayout = null;
 	private ShareFilterLayout mFilterLayout = null;
-	private ShareTypeLayout mTypeLayout = null;
+	public ShareTypeLayout mTypeLayout = null;
+	public InputLayout mInputLayout = null;
 
 	private boolean misCurrentType = true;
 
@@ -97,12 +95,17 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private LinearLayout mShareFilterLayout = null;
 	private ImageView mShareFilterImg = null;
 	private TextView mShareSwitchFilterTv = null;
+	
+	private RelativeLayout mRootLayout = null;
+	private LayoutInflater mLayoutFlater = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.video_edit);
+		mLayoutFlater = LayoutInflater.from(this);
+		mRootLayout =(RelativeLayout) mLayoutFlater.inflate(R.layout.video_edit, null);
+		setContentView(mRootLayout);
 		mContext = this;
 		// 获取视频路径
 		Intent intent = getIntent();
@@ -116,6 +119,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 		mFilterLayout = new ShareFilterLayout(this);
 		mTypeLayout = new ShareTypeLayout(this);
+		mInputLayout = new InputLayout(this,mRootLayout);
 
 		loadRes();
 		// 页面初始化
@@ -137,6 +141,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	Bitmap filterSelectBitmap = null;
 	Drawable filterSelectDraw = null;
 
+	private int resTypeSelectColor = 0;
+	private int resTypeUnSelectColor = 0;
+
 	private void loadRes() {
 		typeNoSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_type_icon);
 		typeNoSelectDraw = new BitmapDrawable(typeNoSelectBitmap);
@@ -149,6 +156,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 		filterSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_filter_press_icon);
 		filterSelectDraw = new BitmapDrawable(filterSelectBitmap);
+
+		resTypeSelectColor = this.getResources().getColor(R.color.share_type_select);
+		resTypeUnSelectColor = this.getResources().getColor(R.color.share_type_unselect);
+		;
 	}
 
 	@Override
@@ -168,13 +179,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 	private void switchTypeUI(boolean isType) {
 		if (isType) {
-			mShareSwitchTypeTv.setTextColor(Color.BLUE);
-			mShareSwitchFilterTv.setTextColor(Color.WHITE);
+			mShareSwitchTypeTv.setTextColor(resTypeSelectColor);
+			mShareSwitchFilterTv.setTextColor(resTypeUnSelectColor);
 			mShareTypeImg.setBackgroundResource(R.drawable.share_type_press_icon);
 			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_icon);
 		} else {
-			mShareSwitchTypeTv.setTextColor(Color.WHITE);
-			mShareSwitchFilterTv.setTextColor(Color.BLUE);
+			mShareSwitchTypeTv.setTextColor(resTypeUnSelectColor);
+			mShareSwitchFilterTv.setTextColor(resTypeSelectColor);
 			mShareTypeImg.setBackgroundResource(R.drawable.share_type_icon);
 			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_press_icon);
 		}
@@ -186,9 +197,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 				return;
 			}
 		}
-		
+
 		switchTypeUI(isType);
-		
+
 		misCurrentType = isType;
 		mMiddleLayout.removeAllViews();
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
@@ -224,7 +235,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private void init() {
 		// 获取页面元素
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
-		mNextBtn = (Button) findViewById(R.id.next_btn);
 		mPlayLayout = (RelativeLayout) findViewById(R.id.play_layout);
 		mPlayStatusImage = (ImageView) findViewById(R.id.play_image);
 		mVideoLoadingLayout = (RelativeLayout) findViewById(R.id.video_loading_layout);
@@ -236,7 +246,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 		// 注册事件
 		mBackBtn.setOnClickListener(this);
-		mNextBtn.setOnClickListener(this);
 		mPlayLayout.setOnClickListener(this);
 
 		mMiddleLayout = (FrameLayout) findViewById(R.id.shortshare_operateroot);

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#c8000000" >
+
+    <Button
+        android:id="@+id/share_input_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="取消" />
+
+    <Button
+        android:id="@+id/share_input_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="确定" />
+
+    <EditText
+        android:id="@+id/share_input_edit"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/share_input_cancel" />
+
+</RelativeLayout>

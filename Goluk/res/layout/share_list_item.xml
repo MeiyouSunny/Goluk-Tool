@@ -9,10 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="14dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/black"
-        android:textSize="12sp" />
+        android:textSize="13sp" />
 
     <ImageView
         android:id="@+id/list_item_select"

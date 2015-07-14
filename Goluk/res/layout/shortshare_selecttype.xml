@@ -30,7 +30,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
-                android:text="@string/share_type" />
+                android:text="@string/share_type"
+                android:textSize="13sp" />
         </LinearLayout>
 
         <!-- 滤镜 -->
@@ -55,7 +56,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
-                android:text="@string/share_filter" />
+                android:text="@string/share_filter"
+                android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
 
