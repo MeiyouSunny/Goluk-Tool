@@ -98,9 +98,11 @@
     <string name="update_text">检查更新</string>
     <string name="remove_cache_text">清除缓存</string>
     <string name="unbind_text">摄像头管理</string>
-    <string name="unbind_camera">摄像头名称</string>
-    <string name="unbind_password">极路客WiFi密码</string>
+    <string name="unbind_camera">名称</string>
+    <string name="unbind_camera_wifi_hint_text">极路客WIFI信息</string>
+    <string name="unbind_camera_change_wifi_pwd_hint">当手机与极路客成功连接可修改密码</string>
     <string name="change_wifi_name">密码</string>
+    <string name="unbind_camera_update_text">固件升级</string>
     <string name="change_wifi_password_hint">密码必须为8&#8211;15个字符。更改密码将在30秒之后生效。</string>
     <string name="app_update_text">版本检测</string>
     <string name="loginout_text">退出</string>

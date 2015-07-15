@@ -222,7 +222,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			break;
 			//摄像头管理
 		case R.id.camera_item:
-			
+			Intent itCamera = new Intent(mContext,UnbindActivity.class);
+			mContext.startActivity(itCamera);
 			break;
 			//通用设置
 		case R.id.set_item:

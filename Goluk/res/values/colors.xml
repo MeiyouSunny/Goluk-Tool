@@ -54,6 +54,7 @@
     <color name="setting_text_color_sel">#3b97f5</color>
     <color name="user_identify_count_color">#0080ff</color>
     <color name="user_personal_color">#000000</color>
+    <color name="unbind_camera_wifi_hint_text_color">#666666</color>
 
     <!-- user部分颜色 -->
     <color name="user_home_nologin">#999999</color>
