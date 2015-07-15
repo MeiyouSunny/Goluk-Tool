@@ -26,7 +26,7 @@
             android:textSize="16sp" />
 
         <ImageButton
-            android:id="@+id/mSettingLayout"
+            android:id="@+id/mSettingBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_layout"
-        android:layout_marginTop="18dp" >
+        android:layout_marginTop="10dp" >
 		
         <TextView
             android:id="@+id/mConnectTip"
@@ -69,7 +69,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/title_layout"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/carrecorder_liveindex_icon_1080"
         android:contentDescription="@string/def" />
 
@@ -126,6 +126,7 @@
                 android:id="@+id/mPalyerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:background="@drawable/default_pic" >
 
                 <ImageButton
@@ -135,6 +136,19 @@
                     android:layout_centerInParent="true"
                     android:background="@drawable/carrecorder_play_btn" />
             </RelativeLayout>
+            
+            <RelativeLayout
+                android:id="@+id/mConncetLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/video_linking_pic" />
+            
+            <RelativeLayout
+                android:id="@+id/mNotconnected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:background="@drawable/video_no_link_pic" />
         </RelativeLayout>
 
         <ImageButton
@@ -428,7 +442,7 @@
             android:background="@drawable/btn_ipc_8s"
             android:visibility="invisible" />
 
-        <LinearLayout
+       <!--  <LinearLayout
             android:id="@+id/mSettingLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -456,7 +470,7 @@
                 android:text="记录仪设置"
                 android:textColor="@color/text_color"
                 android:textSize="12sp" />
-        </LinearLayout>
+        </LinearLayout> -->
     </LinearLayout>
 
     <ImageButton

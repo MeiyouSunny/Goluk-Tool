@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -33,9 +34,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.VideoEditActivity;
+import cn.com.mobnote.golukmobile.WiFiLinkIndexActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DeviceState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
@@ -192,15 +195,28 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private RelativeLayout mRootLayout = null;
 
 	private LayoutInflater mLayoutFlater = null;
-	
+
 	private TextView liveTime = null;
-	
+
 	/** 用户设置数据 */
 	LiveSettingBean mSettingData = null;
-	
+
 	/** 更多 **/
 	private Button more = null;
 
+	private int ipcState = 0;
+
+	/** 未连接 */
+	private final int WIFI_STATE_FAILED = 0;
+	/** 连接中 */
+	private final int WIFI_STATE_CONNING = 1;
+	/** 连接 */
+	private final int WIFI_STATE_SUCCESS = 2;
+
+	private View mNotconnected = null;
+
+	private View mConncetLayout = null;
+	
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -216,7 +232,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mNormalScreen.setId(BTN_NORMALSCREEN);
 		mNormalScreen.setBackgroundResource(R.drawable.btn_player_normal);
 		mNormalScreen.setOnClickListener(this);
-
+		ipcState = getIntent().getIntExtra("ipcState", 0);
 		lsp = new LiveSettingPopWindow(this, mRootLayout);
 		lsp.setCallBackNotify(this);
 
@@ -241,14 +257,19 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				case DOWNLOADWONDERFULVIDEO:
 					wonderfulVideoDownloadShow();
 					break;
-
+				case 11:
+					//ipc链接成功
+					mPalyerLayout.setVisibility(View.VISIBLE);
+					mNotconnected.setVisibility(View.GONE);
+					mConncetLayout.setVisibility(View.GONE);
+					break;
 				}
 			};
 		};
 
 		initView();
 		setListener();
-
+		initIpcState(ipcState);// 初始化ipc的连接状态
 		// 获取是否是后台启动
 		Intent receiveIntent = getIntent();
 		isBackGroundStart = receiveIntent.getBooleanExtra("isBackGroundStart", false);
@@ -260,6 +281,69 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	}
 
+	// 是否綁定过 Goluk
+	private boolean isBindSucess() {
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+		return preferences.getBoolean("isbind", false);
+	}
+
+	/**
+	 * 验证ipc连接情况
+	 * 
+	 * @Title: setInitIpc
+	 * @Description: TODO
+	 * @param ipcS
+	 *            void
+	 * @author 曾浩
+	 * @throws
+	 */
+	private void initIpcState(int ipcS) {
+		switch (ipcS) {
+		case WIFI_STATE_FAILED:
+			mPalyerLayout.setVisibility(View.GONE);
+			mNotconnected.setVisibility(View.VISIBLE);
+			mConncetLayout.setVisibility(View.GONE);
+
+			break;
+		case WIFI_STATE_CONNING:
+			mPalyerLayout.setVisibility(View.GONE);
+			mNotconnected.setVisibility(View.GONE);
+			mConncetLayout.setVisibility(View.VISIBLE);
+			break;
+		case WIFI_STATE_SUCCESS:
+			GolukApplication.getInstance().stopDownloadList();
+
+			boolean b = mApp.mIpcUpdateManage.ipcConnect();
+			if (b) {
+				mPalyerLayout.setVisibility(View.VISIBLE);
+				mNotconnected.setVisibility(View.GONE);
+				mConncetLayout.setVisibility(View.GONE);
+				// 跳转到行车记录仪界面
+				// Intent i = new Intent(MainActivity.this,
+				// CarRecorderActivity.class);
+				// startActivity(i);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
+	
+	private void click_ConnFailed() {
+		
+		if (!isBindSucess()) {
+				Intent wifiIndex = new Intent(CarRecorderActivity.this, WiFiLinkIndexActivity.class);
+				startActivity(wifiIndex);
+		} else {
+			mNotconnected.setVisibility(View.GONE);
+			mConncetLayout.setVisibility(View.VISIBLE);
+			mPalyerLayout.setVisibility(View.GONE);
+			MainActivity.mMainHandler.sendEmptyMessage(400);
+		}
+	}
+	
 	/**
 	 * 精彩视频下载显示
 	 * 
@@ -326,6 +410,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mRtmpPlayerView.setBufferTime(1000);
 		mRtmpPlayerView.setConnectionTimeout(30000);
 		mRtmpPlayerView.setVisibility(View.VISIBLE);
+		mConncetLayout = findViewById(R.id.mConncetLayout);
+		mNotconnected = findViewById(R.id.mNotconnected);
 
 		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRtmpPlayerLayout.getLayoutParams();
 		lp.width = screenWidth;
@@ -361,10 +447,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		fqzb.setOnClickListener(this);
 		more.setOnClickListener(this);
 		liveBtn.setOnClickListener(this);
-		
+		mNotconnected.setOnClickListener(this);
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		findViewById(R.id.mFileLayout).setOnClickListener(this);
-		findViewById(R.id.mSettingLayout).setOnClickListener(this);
+		findViewById(R.id.mSettingBtn).setOnClickListener(this);
 		mRtmpPlayerView.setPlayerListener(new RtmpPlayerView.RtmpPlayerViewLisener() {
 
 			@Override
@@ -548,7 +634,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 			if (downloadFinish) {
 
-				click_ConnFailed();
+				//click_ConnFailed();
 
 				mShareBtn.postDelayed(new Runnable() {
 					@Override
@@ -604,8 +690,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.mSettingBtn:
-		case R.id.mSettingText:
-		case R.id.mSettingLayout:
 			if (m_bIsFullScreen) {
 				return;
 			}
@@ -645,7 +729,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			fqzb.setTextColor(getResources().getColor(R.color.text_select_color));
 			liveBtn.setVisibility(View.VISIBLE);
 			m8sBtn.setVisibility(View.INVISIBLE);
-			
+
 			findViewById(R.id.fqzb_info).setVisibility(View.VISIBLE);
 			findViewById(R.id.jcqp_info).setVisibility(View.INVISIBLE);
 			int[] l = new int[2];
@@ -672,33 +756,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.car_recorder:
 			lsp.show();
 			break;
+		case R.id.mNotconnected:
+			click_ConnFailed();
+			break;
 		default:
 			break;
-		}
-	}
-
-	/**
-	 * 验证当前是否是登陆状态，如果没登陆跳转到登陆页面
-	 * 
-	 * @Title: click_ConnFailed
-	 * @Description: TODO void
-	 * @author 曾浩
-	 * @throws
-	 */
-	private void click_ConnFailed() {
-		// 跳转到wifi连接首页
-		if (mApp.isUserLoginSucess) {
-			String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/"
-					+ wonderfulVideoName;
-			GolukDebugUtils.e("xuhw", "YYY====mShareBtn===path=" + path);
-
-			Intent i = new Intent(CarRecorderActivity.this, VideoEditActivity.class);
-			i.putExtra("cn.com.mobnote.video.path", path);
-			startActivity(i);
-		} else {
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
 		}
 	}
 
@@ -1436,7 +1498,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				return;
 			}
 			mSettingData = (LiveSettingBean) data;
-			
+
 			liveTime.setText(GolukUtils.secondToString(mSettingData.duration));
 		}
 	}
