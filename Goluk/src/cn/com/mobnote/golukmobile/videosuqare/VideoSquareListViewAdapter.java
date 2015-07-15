@@ -134,21 +134,21 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		}
 
 		if ("1".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_one);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_boy1);
 		} else if ("2".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_two);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_boy2);
 		} else if ("3".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_three);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_boy3);
 		} else if ("4".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_one);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_girl4);
 		} else if ("5".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_two);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_girl5);
 		} else if ("6".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_three);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_girl6);
 		} else if ("7".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_feault7);
 		} else {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_feault7);
 		}
 
 		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,

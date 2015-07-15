@@ -71,47 +71,72 @@ public class UserUtils {
 	  */
 	 public static void userHeadChange(ImageView headImage,String headString,TextView textSex){
 		if(headString.equals("1")){
-			headImage.setImageResource(R.drawable.individual_center_head_boy_one);
+			headImage.setImageResource(R.drawable.my_head_boy1);
 			textSex.setText("男");
 		}else if(headString.equals("2")){
-			headImage.setImageResource(R.drawable.individual_center_head_boy_two);
+			headImage.setImageResource(R.drawable.my_head_boy2);
 			textSex.setText("男");
 		}else if(headString.equals("3")){
-			headImage.setImageResource(R.drawable.individual_center_head_boy_three);
+			headImage.setImageResource(R.drawable.my_head_boy3);
 			textSex.setText("男");
 		}else if(headString.equals("4")){
-			headImage.setImageResource(R.drawable.individual_center_head_girl_one);
+			headImage.setImageResource(R.drawable.my_head_girl4);
 			textSex.setText("女");
 		}else if(headString.equals("5")){
-			headImage.setImageResource(R.drawable.individual_center_head_girl_two);
+			headImage.setImageResource(R.drawable.my_head_girl5);
 			textSex.setText("女");
 		}else if(headString.equals("6")){
-			headImage.setImageResource(R.drawable.individual_center_head_girl_three);
+			headImage.setImageResource(R.drawable.my_head_girl6);
 			textSex.setText("女");
 		}else if(headString.equals("7")){
-			headImage.setImageResource(R.drawable.individual_center_head_moren);
+			headImage.setImageResource(R.drawable.my_head_moren7);
 			textSex.setText("未知");
 		}
 	 }
+	 
+	 public static void userHeadChanged(ImageView headImage,String headString,String textSex){
+			if(headString.equals("1")){
+				headImage.setImageResource(R.drawable.my_head_boy1);
+				textSex = "1";
+			}else if(headString.equals("2")){
+				headImage.setImageResource(R.drawable.my_head_boy2);
+				textSex = "1";
+			}else if(headString.equals("3")){
+				headImage.setImageResource(R.drawable.my_head_boy3);
+				textSex = "1";
+			}else if(headString.equals("4")){
+				headImage.setImageResource(R.drawable.my_head_girl4);
+				textSex = "2";
+			}else if(headString.equals("5")){
+				headImage.setImageResource(R.drawable.my_head_girl5);
+				textSex = "2";
+			}else if(headString.equals("6")){
+				headImage.setImageResource(R.drawable.my_head_girl6);
+				textSex = "2";
+			}else if(headString.equals("7")){
+				headImage.setImageResource(R.drawable.my_head_moren7);
+				textSex = "0";
+			}
+		 }
 	 
 	 /**
 	  * UserPersonalHeadActivity默认选中的head
 	  */
 	 public static void focusHead(String headString,ImageView headImage){
 		 if(headString.equals("1")){
-				headImage.setImageResource(R.drawable.individual_center_head_boy_one);
+				headImage.setImageResource(R.drawable.my_head_boy1);
 			}else if(headString.equals("2")){
-				headImage.setImageResource(R.drawable.individual_center_head_boy_two);
+				headImage.setImageResource(R.drawable.my_head_boy2);
 			}else if(headString.equals("3")){
-				headImage.setImageResource(R.drawable.individual_center_head_boy_three);
+				headImage.setImageResource(R.drawable.my_head_boy3);
 			}else if(headString.equals("4")){
-				headImage.setImageResource(R.drawable.individual_center_head_girl_one);
+				headImage.setImageResource(R.drawable.my_head_girl4);
 			}else if(headString.equals("5")){
-				headImage.setImageResource(R.drawable.individual_center_head_girl_two);
+				headImage.setImageResource(R.drawable.my_head_girl5);
 			}else if(headString.equals("6")){
-				headImage.setImageResource(R.drawable.individual_center_head_girl_three);
+				headImage.setImageResource(R.drawable.my_head_girl6);
 			}else if(headString.equals("7")){
-				headImage.setImageResource(R.drawable.individual_center_head_moren);
+				headImage.setImageResource(R.drawable.my_head_moren7);
 			}
 	 }
 	 

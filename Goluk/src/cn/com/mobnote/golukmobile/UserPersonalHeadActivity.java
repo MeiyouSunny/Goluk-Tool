@@ -36,7 +36,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 			setContentView(R.layout.user_personal_edit_head);
 			
 			initView();
-			mTextTitle.setText("编辑头像");
+			mTextTitle.setText("选择头像");
 		}
 		
 		public void initView(){
@@ -189,7 +189,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 				break;
 		// 右边保存
 		case R.id.user_title_right:
-			Intent itHead = new Intent(UserPersonalHeadActivity.this,UserPersonalEditActivity.class);
+			Intent itHead = new Intent(UserPersonalHeadActivity.this,UserPersonalInfoActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putString("intentSevenHead", imageIndex);
 			itHead.putExtras(bundle);

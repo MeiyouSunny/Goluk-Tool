@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserPersonalEditActivity;
+import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
 import cn.com.mobnote.golukmobile.VideoShareActivity;
@@ -839,8 +840,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
 			break;
 		case IPageNotifyFn.PageType_ModifyUserInfo:
-			if (mPageSource == "UserPersonalEdit") {
-				((UserPersonalEditActivity) mContext).saveInfoCallBack(success, param2);
+			if (mPageSource == "UserPersonalInfo") {
+				((UserPersonalInfoActivity) mContext).saveInfoCallBack(success, param2);
 			}
 		case PageType_LiveStart:
 			// 获取直播信息成功

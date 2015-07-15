@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -16,12 +18,15 @@ import android.widget.TextView;
  */
 public class UserPersonalSignActivity extends BaseActivity implements OnClickListener{
 
-	//title
+	/**itle**/
 	private ImageButton btnBack;
 	private TextView mTextTitle,mTextOk;
-	//body
+	/**body**/
 	private EditText mEditBody;
 	private String signText;
+	/**最大字数限制**/
+	private TextView mTextCount = null;
+	private static final int MAX_COUNT = 50;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,9 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		//title
 		mTextTitle.setText("编辑签名");
 		mTextOk.setText("确认");
+		//
+		int count = mEditBody.getText().toString().length();
+		mTextCount.setText("（"+(MAX_COUNT-count)+"/"+MAX_COUNT+"）");
 		
 	}
 	//初始化控件
@@ -41,6 +49,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		mTextOk = (TextView) findViewById(R.id.user_title_right);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditBody = (EditText) findViewById(R.id.user_personal_edit_sign_body);
+		mTextCount = (TextView) findViewById(R.id.number_count);
 		
 		/**
 		 * 获取从编辑界面传来的信息
@@ -58,6 +67,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		 */
 		btnBack.setOnClickListener(this);
 		mTextOk.setOnClickListener(this);
+		mEditBody.addTextChangedListener(mTextWatcher);
 	}
 	@Override
 	public void onClick(View arg0) {
@@ -69,7 +79,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		//que认
 		case R.id.user_title_right:
 			String body = mEditBody.getText().toString();
-			Intent it = new Intent(UserPersonalSignActivity.this,UserPersonalEditActivity.class);
+			Intent it = new Intent(UserPersonalSignActivity.this,UserPersonalInfoActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putString("itSign", body);
 			it.putExtras(bundle);
@@ -81,4 +91,23 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			break;
 		}
 	}
+	
+TextWatcher mTextWatcher = new TextWatcher() {
+		
+		@Override
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		}
+		@Override
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		}
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			int num = arg0.length();
+			int number = MAX_COUNT - num;
+			if(number < 0){
+				number = 0;
+			}
+			mTextCount.setText("（"+number + "/"+MAX_COUNT+"）");
+		}
+	};
 }

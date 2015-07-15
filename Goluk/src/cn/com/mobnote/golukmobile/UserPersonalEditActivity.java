@@ -77,7 +77,7 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 		mContext = this;
 		//获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
-		mApplication.setContext(mContext, "UserPersonalEdit");
+//		mApplication.setContext(mContext, "UserPersonalEdit");
 		
 		if(null == mCustomProgressDialog){
 			mCustomProgressDialog = new CustomLoadingDialog(mContext,"保存中，请稍候……");
@@ -346,7 +346,6 @@ public class UserPersonalEditActivity extends BaseActivity implements OnClickLis
 	
 	/**
 	 * 关闭加载中对话框
-	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
 	private void closeProgressDialog(){

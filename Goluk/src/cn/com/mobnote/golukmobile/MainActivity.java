@@ -319,7 +319,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		userInfoLayout = findViewById(R.id.user_info);
 
 		mHotBigPoint = (ImageView) findViewById(R.id.mHotBigPoint);
-
+		
 		mShareLiveBtn.setOnClickListener(this);
 		// indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);

@@ -213,10 +213,10 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			// 返回
 			this.finish();
 			break;
-		case R.id.setup_item:
+		/*case R.id.setup_item:
 			// 跳转到设置页面
 			GolukDebugUtils.e("", "onclick---setup--item");
-			break;
+			break;*/
 		// 退出按钮
 		case R.id.loginout_btn:
 			if (btnLoginout.getText().toString().equals("登录")) {

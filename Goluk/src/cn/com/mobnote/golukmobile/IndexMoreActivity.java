@@ -2,11 +2,9 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
-import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.user.UserUtils;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
@@ -21,13 +19,9 @@ import android.content.SharedPreferences.Editor;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -58,31 +52,37 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	//private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	/** 返回按钮 */
-	//private ImageButton mLayoutBack = null;
 
-	/** 本地视频item */
-	private RelativeLayout mLocalVideoItem = null;
-	/** 设置item */
-	private RelativeLayout mSetupItem = null;
+	/**个人中心**/
+	private RelativeLayout mUserCenterItem = null;
+	/**未登录不显示用户id**/
+	private RelativeLayout mUserCenterId = null;
+	/**我的相册**/
+	private RelativeLayout mVideoItem = null;
+	/**摄像头管理**/
+	private RelativeLayout mCameraItem = null;
+	/**通用设置**/
+	private RelativeLayout mSetItem = null;
+	/**极路客小技巧**/
+	private RelativeLayout mSkillItem = null;
+	/**安装指导**/
+	private RelativeLayout mInstallItem = null;
+	/**版本信息**/
+	private RelativeLayout mQuestionItem = null;
+	/**购买极路客**/
+	private RelativeLayout mShoppingItem = null;
 
 	/** 个人中心页面handler用来接收消息,更新UI */
 	public static Handler mUserCenterHandler = null;
 
-	/** 个人中心点击进入我的主页 */
-	private RelativeLayout mLayoutHome;
-
 	/** 个人中心的头像、性别、昵称 */
-	private ImageView mImageHead, mImageSex;
-	private TextView mTextName;
+	private ImageView mImageHead;
+	private TextView mTextName,mTextId;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
 	private SharedPreferences mPreferences = null;
 	private boolean isFirstLogin;
-	/** 头部有无信息替换 **/
-	private LinearLayout mLayoutHasInfo = null;
-	private LinearLayout mLayoutNoInfo = null;
 	private boolean isHasInfo = false;
 	private Editor mEditor = null;
 	RelativeLayout mRootLayout = null;
@@ -100,20 +100,22 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	 */
 	private void init() {
 		// 获取页面元素
-		//mLayoutBack = (ImageButton) mRootLayout.findViewById(R.id.back_btn);
 
-		mLocalVideoItem = (RelativeLayout) mRootLayout.findViewById(R.id.local_video_item);
-
-		mSetupItem = (RelativeLayout) mRootLayout.findViewById(R.id.setup_item);
-		// 进入我的主页
-		mLayoutHome = (RelativeLayout) mRootLayout.findViewById(R.id.head_layout);
-		// 头像、性别、昵称
-		mImageHead = (ImageView) mRootLayout.findViewById(R.id.photo_img);
-		mImageSex = (ImageView) mRootLayout.findViewById(R.id.user_sex_image);
-		mTextName = (TextView) mRootLayout.findViewById(R.id.user_name_text);
-		// 头部有无信息的布局替换
-		mLayoutHasInfo = (LinearLayout) mRootLayout.findViewById(R.id.index_more_hasinfo);
-		mLayoutNoInfo = (LinearLayout) mRootLayout.findViewById(R.id.index_more_noinfo);
+		//个人中心  我的相册  摄像头管理  通用设置  极路客小技巧  安装指导  版本信息  购买极路客
+		mUserCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_item);
+		mUserCenterId = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_id_layout);
+		mVideoItem = (RelativeLayout) mRootLayout.findViewById(R.id.video_item);
+		mCameraItem = (RelativeLayout) mRootLayout.findViewById(R.id.camera_item);
+		mSetItem = (RelativeLayout) mRootLayout.findViewById(R.id.set_item);
+		mSkillItem = (RelativeLayout) mRootLayout.findViewById(R.id.skill_item);
+		mInstallItem = (RelativeLayout) mRootLayout.findViewById(R.id.install_item);
+		mQuestionItem = (RelativeLayout) mRootLayout.findViewById(R.id.question_item);
+		mShoppingItem = (RelativeLayout) mRootLayout.findViewById(R.id.shopping_item);
+		
+		// 头像、昵称、id
+		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
+		mTextName = (TextView) mRootLayout.findViewById(R.id.user_center_name_text);
+		mTextId = (TextView) mRootLayout.findViewById(R.id.user_center_id_text);
 		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
 				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
 		if (!isFirstLogin || ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
@@ -124,17 +126,21 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		} else {
 			// 未登录
 			isHasInfo = false;
-			mLayoutHasInfo.setVisibility(View.GONE);
-			mLayoutNoInfo.setVisibility(View.VISIBLE);
-			mImageHead.setImageResource(R.drawable.more_head_no_log_in);
+			mUserCenterId.setVisibility(View.GONE);
+			mImageHead.setImageResource(R.drawable.editor_head_feault7);
+			mTextName.setText("点击登录");
 		}
 
 		// 注册事件
-		//mLayoutBack.setOnClickListener(this);
-		mLocalVideoItem.setOnClickListener(this);
-		mSetupItem.setOnClickListener(this);
-
-		mLayoutHome.setOnClickListener(this);
+		//个人中心  我的相册  摄像头管理  通用设置  极路客小技巧  安装指导  版本信息  购买极路客
+		mUserCenterItem.setOnClickListener(this);
+		mVideoItem.setOnClickListener(this);
+		mCameraItem.setOnClickListener(this);
+		mSetItem.setOnClickListener(this);
+		mSkillItem.setOnClickListener(this);
+		mInstallItem.setOnClickListener(this);
+		mQuestionItem.setOnClickListener(this);
+		mShoppingItem.setOnClickListener(this);
 
 		// 更新UI handler
 		mUserCenterHandler = new Handler() {
@@ -146,18 +152,14 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 
 
 	protected void onResume() {
-		mPreferences = mContext.getSharedPreferences("firstLogin",mContext. MODE_PRIVATE);
+		mPreferences = mContext.getSharedPreferences("firstLogin",mContext.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
-		//SysApplication.getInstance().addActivity(this);
 		// 获得GolukApplication对象
 		//mApp = (GolukApplication) getApplication();
 		//mApp.setContext(mContext, "IndexMore");
 
 		ma.mApp.mUser.setUserInterface(this);
-
-		// 页面初始化
-		init();
 
 	}
 
@@ -173,20 +175,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			// 返回
 			//this.finish();
 			break;
-		case R.id.local_video_item:
-			ma.mApp.mUser.setUserInterface(null);
-			intent = new Intent(mContext, LocalVideoListActivity.class);
-			mContext.startActivity(intent);
-			break;
-		case R.id.setup_item:
-			ma.mApp.mUser.setUserInterface(null);
-			// 跳转到设置页面
-			GolukDebugUtils.i("lily", "onclick---setup--item");
-			intent = new Intent(mContext, UserSetupActivity.class);
-			mContext.startActivity(intent);
-			break;
 		// 点击跳转到我的主页
-		case R.id.head_layout:
+		case R.id.user_center_item:
 			// 自动登录中，成功，失败，超时、密码错误
 			GolukDebugUtils.i("lily", "-----autoLoginStatus-----" + ma.mApp.autoLoginStatus
 					+ "------isUserLoginSuccess------" + ma.mApp.isUserLoginSucess);
@@ -224,6 +214,36 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 				isHasInfo = true;
 			}
 			break;
+			//我的相册
+		case R.id.video_item:
+			ma.mApp.mUser.setUserInterface(null);
+			intent = new Intent(mContext, LocalVideoListActivity.class);
+			mContext.startActivity(intent);
+			break;
+			//摄像头管理
+		case R.id.camera_item:
+			
+			break;
+			//通用设置
+		case R.id.set_item:
+			
+			break;
+			//极路客小技巧
+		case R.id.skill_item:
+			
+			break;
+			//安装指导
+		case R.id.install_item:
+			
+			break;
+			//版本信息
+		case R.id.question_item:
+			
+			break;
+			//购买极路客
+		case R.id.shopping_item:
+			
+			break;
 		}
 	}
 
@@ -245,18 +265,12 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			String head = json.getString("head");
 			String name = json.getString("nickname");
 			String sex = json.getString("sex");
+			String id = json.getString("key");
 
 			mTextName.setText(name);
 			GolukDebugUtils.i("lily", head);
 			UserUtils.focusHead(head, mImageHead);
-			if (sex.equals("1")) {
-				mImageSex.setImageResource(R.drawable.more_man);
-			} else if (sex.equals("2")) {
-				mImageSex.setImageResource(R.drawable.more_girl);
-			} else if (sex.equals("0")) {
-				mImageSex.setImageResource(R.drawable.more_no_log_in_icon);
-			}
-
+			mTextId.setText(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -276,11 +290,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		} else if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4 || ma.mApp.isUserLoginSucess == false) {
 			dismissDialog();
 			personalChanged();
-			mLayoutHasInfo.setVisibility(View.GONE);
-			mLayoutNoInfo.setVisibility(View.VISIBLE);
+			mUserCenterId.setVisibility(View.GONE);
+			mTextName.setText("点击登录");
 		} else if (ma.mApp.autoLoginStatus == 5) {
-			mLayoutHasInfo.setVisibility(View.VISIBLE);
-			mLayoutNoInfo.setVisibility(View.GONE);
+			mUserCenterId.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -290,15 +303,14 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	public void personalChanged() {
 		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
 		if (ma.mApp.loginStatus == 1 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录成功、自动登录中、自动登录成功
-			mLayoutHasInfo.setVisibility(View.VISIBLE);
-			mLayoutNoInfo.setVisibility(View.GONE);
-			mImageHead.setImageResource(R.drawable.individual_center_head_moren);
+			mUserCenterId.setVisibility(View.VISIBLE);
+			mImageHead.setImageResource(R.drawable.my_head_moren7);
 			initData();
 			isHasInfo = true;
 		} else {// 没有用户信息
-			mLayoutHasInfo.setVisibility(View.GONE);
-			mLayoutNoInfo.setVisibility(View.VISIBLE);
-			mImageHead.setImageResource(R.drawable.more_head_no_log_in);
+			mUserCenterId.setVisibility(View.GONE);
+			mTextName.setText("点击登录");
+			mImageHead.setImageResource(R.drawable.my_head_moren7);
 			isHasInfo = false;
 		}
 	}
