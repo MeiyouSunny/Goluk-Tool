@@ -157,7 +157,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		}
 	}
 
-	private LiveSettingBean getCurrentSetting() {
+	public LiveSettingBean getCurrentSetting() {
 		LiveSettingBean bean = new LiveSettingBean();
 		bean.vtype = mVideoType;
 		// 时长

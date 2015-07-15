@@ -6,6 +6,7 @@
     <color name="share_btn_disenable_bg">#9c9c9c</color>
     <!-- 白色 -->
     <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
     <!-- 黑色 -->
     <color name="black">#000000</color>
     <!-- 字体颜色 -->
