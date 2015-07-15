@@ -256,6 +256,26 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 
 	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		String str = intent.getStringExtra("showMe").toString();
+		if("showMe".equals(str)){
+			Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
+			mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
+			mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
+
+			Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
+			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
+			msquareBtn.setTextColor(Color.rgb(204, 204, 204));
+			
+			userInfoLayout.setVisibility(View.VISIBLE);
+			videoSquareLayout.setVisibility(View.GONE);
+			
+			indexMoreActivity.showView();
+		}
+	}
 
 	/**
 	 * 初始化第三方SDK
@@ -776,6 +796,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			
 			userInfoLayout.setVisibility(View.VISIBLE);
 			videoSquareLayout.setVisibility(View.GONE);
+			
+			indexMoreActivity.showView();
 			break;
 		case R.id.share_local_video_btn:
 			// 点击精彩视频

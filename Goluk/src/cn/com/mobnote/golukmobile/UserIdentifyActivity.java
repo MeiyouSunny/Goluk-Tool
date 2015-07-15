@@ -94,6 +94,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	private String strBody = "";
 	/** 销毁广播标识 **/
 	private int click = 0;
+	boolean b = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -409,16 +410,22 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 		if (keyCode == KeyEvent.KEYCODE_DEL) {
 			if (mEditTextSix.isFocused()) {
-				mEditTextFive.setFocusableInTouchMode(true);
-				if (mEditTextSix.getText().toString().length() == 1) {
+
+				if (!mEditTextSix.getText().toString().equals("")) {
 					mEditTextSix.getText().clear();
 					mEditTextSix.requestFocus();
-					return true;
-				} else {
+					b = false;
+				} else if (!b) {
 					mEditTextSix.clearFocus();
-					mEditTextFive.getText().clear();
 					mEditTextSix.setFocusable(false);
+					mEditTextFive.setFocusableInTouchMode(true);
+					mEditTextFive.getText().clear();
 					mEditTextFive.requestFocus();
+					b = true;
+				} else {
+					mEditTextSix.getText().clear();
+					mEditTextSix.requestFocus();
+					b = false;
 				}
 			} else if (mEditTextFive.isFocused()) {
 				mEditTextFive.clearFocus();
@@ -750,16 +757,17 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
 					} else if ("fromIndexMore".equals(intentRegistInter)) {
-						it = new Intent(UserIdentifyActivity.this, IndexMoreActivity.class);
+						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
+						it.putExtra("showMe", "showMe");
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
-					} else if ("fromSetup".equals(intentRegistInter)) {
+					} /*else if ("fromSetup".equals(intentRegistInter)) {
 						it = new Intent(UserIdentifyActivity.this, UserSetupActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
-					}
+					}*/
 					finish();
 					break;
 
@@ -824,7 +832,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 				mEditTextSix.setText(six);
 			}
 		};
-		//注册读取短信内容
+		// 注册读取短信内容
 		registerReceiver(smsReceiver, smsFilter);
 		click = 1;
 

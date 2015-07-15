@@ -49,27 +49,27 @@ import cn.com.tiros.debug.GolukDebugUtils;
 @SuppressLint("HandlerLeak")
 public class IndexMoreActivity implements OnClickListener, UserInterface {
 	/** application */
-	//private GolukApplication mApp = null;
+	// private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
 
-	/**个人中心**/
+	/** 个人中心 **/
 	private RelativeLayout mUserCenterItem = null;
-	/**未登录不显示用户id**/
+	/** 未登录不显示用户id **/
 	private RelativeLayout mUserCenterId = null;
-	/**我的相册**/
+	/** 我的相册 **/
 	private RelativeLayout mVideoItem = null;
-	/**摄像头管理**/
+	/** 摄像头管理 **/
 	private RelativeLayout mCameraItem = null;
-	/**通用设置**/
+	/** 通用设置 **/
 	private RelativeLayout mSetItem = null;
-	/**极路客小技巧**/
+	/** 极路客小技巧 **/
 	private RelativeLayout mSkillItem = null;
-	/**安装指导**/
+	/** 安装指导 **/
 	private RelativeLayout mInstallItem = null;
-	/**版本信息**/
+	/** 版本信息 **/
 	private RelativeLayout mQuestionItem = null;
-	/**购买极路客**/
+	/** 购买极路客 **/
 	private RelativeLayout mShoppingItem = null;
 
 	/** 个人中心页面handler用来接收消息,更新UI */
@@ -77,7 +77,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 
 	/** 个人中心的头像、性别、昵称 */
 	private ImageView mImageHead;
-	private TextView mTextName,mTextId;
+	private TextView mTextName, mTextId;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
@@ -87,11 +87,24 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	private Editor mEditor = null;
 	RelativeLayout mRootLayout = null;
 	private MainActivity ma;
-	
+
 	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
 		ma = (MainActivity) mContext;
+
+		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
+		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+
+		ma.mApp.mUser.setUserInterface(this);
+		init();
+	}
+
+	public void showView() {
+		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
+		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+
+		ma.mApp.mUser.setUserInterface(this);
 		init();
 	}
 
@@ -101,7 +114,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	private void init() {
 		// 获取页面元素
 
-		//个人中心  我的相册  摄像头管理  通用设置  极路客小技巧  安装指导  版本信息  购买极路客
+		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
 		mUserCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_item);
 		mUserCenterId = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_id_layout);
 		mVideoItem = (RelativeLayout) mRootLayout.findViewById(R.id.video_item);
@@ -111,7 +124,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		mInstallItem = (RelativeLayout) mRootLayout.findViewById(R.id.install_item);
 		mQuestionItem = (RelativeLayout) mRootLayout.findViewById(R.id.question_item);
 		mShoppingItem = (RelativeLayout) mRootLayout.findViewById(R.id.shopping_item);
-		
+
 		// 头像、昵称、id
 		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
 		mTextName = (TextView) mRootLayout.findViewById(R.id.user_center_name_text);
@@ -132,7 +145,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		}
 
 		// 注册事件
-		//个人中心  我的相册  摄像头管理  通用设置  极路客小技巧  安装指导  版本信息  购买极路客
+		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
 		mUserCenterItem.setOnClickListener(this);
 		mVideoItem.setOnClickListener(this);
 		mCameraItem.setOnClickListener(this);
@@ -150,14 +163,13 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		};
 	}
 
-
 	protected void onResume() {
-		mPreferences = mContext.getSharedPreferences("firstLogin",mContext.MODE_PRIVATE);
+		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		// 获得GolukApplication对象
-		//mApp = (GolukApplication) getApplication();
-		//mApp.setContext(mContext, "IndexMore");
+		// mApp = (GolukApplication) getApplication();
+		// mApp.setContext(mContext, "IndexMore");
 
 		ma.mApp.mUser.setUserInterface(this);
 
@@ -173,7 +185,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		case R.id.back_btn:
 			ma.mApp.mUser.setUserInterface(null);
 			// 返回
-			//this.finish();
+			// this.finish();
 			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
@@ -214,36 +226,36 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 				isHasInfo = true;
 			}
 			break;
-			//我的相册
+		// 我的相册
 		case R.id.video_item:
 			ma.mApp.mUser.setUserInterface(null);
 			intent = new Intent(mContext, LocalVideoListActivity.class);
 			mContext.startActivity(intent);
 			break;
-			//摄像头管理
+		// 摄像头管理
 		case R.id.camera_item:
-			Intent itCamera = new Intent(mContext,UnbindActivity.class);
+			Intent itCamera = new Intent(mContext, UnbindActivity.class);
 			mContext.startActivity(itCamera);
 			break;
-			//通用设置
+		// 通用设置
 		case R.id.set_item:
-			
+
 			break;
-			//极路客小技巧
+		// 极路客小技巧
 		case R.id.skill_item:
-			
+
 			break;
-			//安装指导
+		// 安装指导
 		case R.id.install_item:
-			
+
 			break;
-			//版本信息
+		// 版本信息
 		case R.id.question_item:
-			
+
 			break;
-			//购买极路客
+		// 购买极路客
 		case R.id.shopping_item:
-			
+
 			break;
 		}
 	}
@@ -265,7 +277,6 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			JSONObject json = new JSONObject(info);
 			String head = json.getString("head");
 			String name = json.getString("nickname");
-			String sex = json.getString("sex");
 			String id = json.getString("key");
 
 			mTextName.setText(name);
@@ -299,7 +310,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	}
 
 	/**
-	 * 自动登录失败后个人中心状态的变化
+	 * 个人中心状态的变化
 	 */
 	public void personalChanged() {
 		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
