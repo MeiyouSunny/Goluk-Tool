@@ -388,7 +388,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
 		mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
 		m8sBtn = (ImageButton) findViewById(R.id.m8sBtn);
-		mFileBtn = (ImageView) findViewById(R.id.mFileBtn);
+		//mFileBtn = (ImageView) findViewById(R.id.mFileBtn);
 		mSettingBtn = (ImageView) findViewById(R.id.mSettingBtn);
 		mTime = (TextView) findViewById(R.id.mTime);
 		mAddr = (TextView) findViewById(R.id.mAddr);
@@ -449,7 +449,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		liveBtn.setOnClickListener(this);
 		mNotconnected.setOnClickListener(this);
 		findViewById(R.id.back_btn).setOnClickListener(this);
-		findViewById(R.id.mFileLayout).setOnClickListener(this);
+		//findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
 		mRtmpPlayerView.setPlayerListener(new RtmpPlayerView.RtmpPlayerViewLisener() {
 
@@ -674,21 +674,21 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				GFileUtils.writeIPCLog("=============================发起精彩视频命令===========未登录=============");
 			}
 			break;
-		case R.id.mFileBtn:
-		case R.id.mFileText:
-		case R.id.mFileLayout:
-			if (m_bIsFullScreen) {
-				return;
-			}
-
-			if (GolukApplication.getInstance().getIpcIsLogin()) {
-				Intent intent = new Intent(CarRecorderActivity.this, IPCFileManagerActivity.class);
-				startActivity(intent);
-			} else {
-				// 未登录
-				dialog();
-			}
-			break;
+//		case R.id.mFileBtn:
+//		case R.id.mFileText:
+//		case R.id.mFileLayout:
+//			if (m_bIsFullScreen) {
+//				return;
+//			}
+//
+//			if (GolukApplication.getInstance().getIpcIsLogin()) {
+//				Intent intent = new Intent(CarRecorderActivity.this, IPCFileManagerActivity.class);
+//				startActivity(intent);
+//			} else {
+//				// 未登录
+//				dialog();
+//			}
+//			break;
 		case R.id.mSettingBtn:
 			if (m_bIsFullScreen) {
 				return;
