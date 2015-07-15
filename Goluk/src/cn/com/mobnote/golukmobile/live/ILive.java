@@ -21,7 +21,7 @@ public interface ILive {
 	public static final String LIVE_EXIT_PROMPT = "您当前正在直播中，是否退出直播？";
 
 	public static final String LIVE_EXIT_PROMPT2 = "是否退出观看直播？";
-	
+
 	public static final String LIVE_UPLOAD_FIRST_ERROR = "很抱歉，直播创建不成功，再试一次吧。";
 
 	public static final int LOCATION_TYPE_UNKNOW = -1;
@@ -48,6 +48,7 @@ public interface ILive {
 	public static final String KEY_USERINFO = "key_userinfo";
 	public static final String KEY_LIVE_DATA = "key_livedata";
 	public static final String KEY_LIVE_CONTINUE = "key_live_continue";
+	public static final String KEY_LIVE_SETTING_DATA = "key_live_setting_data";
 
 	public static final int[] shootImg = { R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
 			R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,

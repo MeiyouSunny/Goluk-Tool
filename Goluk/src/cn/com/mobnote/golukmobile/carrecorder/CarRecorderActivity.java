@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,6 +51,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomWifiDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow;
@@ -57,6 +60,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtmpPlayerView;
@@ -235,6 +239,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		ipcState = getIntent().getIntExtra("ipcState", 0);
 		lsp = new LiveSettingPopWindow(this, mRootLayout);
 		lsp.setCallBackNotify(this);
+		
+		mSettingData = lsp.getCurrentSetting();
 
 		mHandler = new Handler() {
 			public void handleMessage(final android.os.Message msg) {
@@ -758,6 +764,15 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.mNotconnected:
 			click_ConnFailed();
+			break;
+		case R.id.liveBtn:
+			Intent intent = new Intent(this, LiveActivity.class);
+			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+			intent.putExtra(LiveActivity.KEY_GROUPID, "");
+			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+			intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
+			startActivity(intent);
 			break;
 		default:
 			break;
