@@ -160,6 +160,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private final int WIFI_STATE_CONNING = 1;
 	/** 连接 */
 	private final int WIFI_STATE_SUCCESS = 2;
+	
+	private final int WIFI_STATE_RESULT = 11;
 
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
@@ -527,7 +529,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mWiFiStatus = WIFI_STATE_SUCCESS;
 		if (CarRecorderActivity.mHandler != null) {
-			CarRecorderActivity.mHandler.sendEmptyMessage(11);
+			Message message = new Message();
+			message.obj = mGolukName;
+			message.what = WIFI_STATE_RESULT;
+			CarRecorderActivity.mHandler.sendMessage(message);
 		}
 		// if (null != anim) {
 		// anim.cancel();
@@ -585,6 +590,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// 跳转到行车记录仪界面
 			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 			i.putExtra("ipcState", mWiFiStatus);
+			i.putExtra("wifiname", mGolukName);
 			startActivity(i);
 		}
 		

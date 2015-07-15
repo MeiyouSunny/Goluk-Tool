@@ -27,7 +27,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	/** 进入直播间 */
 	public static final int EVENT_ENTER = 1;
 	/** 默认直播时长 */
-	private final int DEFAULT_SECOND = 60 * 60;
+	private final int DEFAULT_SECOND = 30 * 60;
 
 	private Context mContext = null;
 	private PopupWindow mPopWindow = null;

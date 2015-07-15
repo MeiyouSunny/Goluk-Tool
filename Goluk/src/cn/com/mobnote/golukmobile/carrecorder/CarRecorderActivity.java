@@ -29,6 +29,7 @@ import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -221,6 +222,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private View mConncetLayout = null;
 	
+	private EditText et = null;
+	
+	private String wifiname = "未连接到极路客"; 
+	
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -237,6 +242,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mNormalScreen.setBackgroundResource(R.drawable.btn_player_normal);
 		mNormalScreen.setOnClickListener(this);
 		ipcState = getIntent().getIntExtra("ipcState", 0);
+		if(getIntent().getStringExtra("wifiname") != null && !"".equals(getIntent().getStringExtra("wifiname"))){
+			wifiname = getIntent().getStringExtra("wifiname");
+		}
 		lsp = new LiveSettingPopWindow(this, mRootLayout);
 		lsp.setCallBackNotify(this);
 		
@@ -265,6 +273,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					break;
 				case 11:
 					//ipc链接成功
+					String message = (String)msg.obj;
+					mConnectTip.setText(message);
 					mPalyerLayout.setVisibility(View.VISIBLE);
 					mNotconnected.setVisibility(View.GONE);
 					mConncetLayout.setVisibility(View.GONE);
@@ -418,15 +428,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mRtmpPlayerView.setVisibility(View.VISIBLE);
 		mConncetLayout = findViewById(R.id.mConncetLayout);
 		mNotconnected = findViewById(R.id.mNotconnected);
-
+		et = (EditText) findViewById(R.id.assess);
+		liveTime.setText(GolukUtils.secondToString(mSettingData.duration));
 		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRtmpPlayerLayout.getLayoutParams();
 		lp.width = screenWidth;
 		lp.height = (int) (screenWidth / 1.7833);
 		lp.leftMargin = 0;
 		mRtmpPlayerLayout.setLayoutParams(lp);
-
+		
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
-		mConnectTip.setText("预览影像未启用");
+		mConnectTip.setText(wifiname);
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
 		}
@@ -767,6 +778,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.liveBtn:
 			Intent intent = new Intent(this, LiveActivity.class);
+			mSettingData.desc = et.getText().toString();
 			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
 			intent.putExtra(LiveActivity.KEY_GROUPID, "");
 			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
