@@ -97,6 +97,8 @@
     <string name="synchronous_desc_text">与小车本连接后自动</string>
     <string name="update_text">检查更新</string>
     <string name="remove_cache_text">清除缓存</string>
+    <string name="set_ipc_item_text">连接极路客后自动同步开关</string>
+    <string name="set_ipc_item_hint_text">手机与极路客连接成功后自动同步最近录制的5条精彩和紧急视频</string>
     <string name="unbind_text">摄像头管理</string>
     <string name="unbind_camera">名称</string>
     <string name="unbind_camera_wifi_hint_text">极路客WIFI信息</string>
@@ -118,7 +120,7 @@
     <string name="like_num_text">56</string>
     <string name="speed_text">50公里/小时</string>
     <string name="local_video_text">本地视频</string>
-    <string name="setup_text">设置</string>
+    <string name="setup_text">通用设置</string>
     <string name="ipc_update_text">极路客固件升级</string>
     <string name="ipc_update_layout_text">极路客固件</string>
     <string name="ipc_update_info_title">更新说明</string>

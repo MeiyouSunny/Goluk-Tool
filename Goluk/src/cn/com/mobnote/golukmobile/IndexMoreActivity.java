@@ -239,7 +239,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			break;
 		// 通用设置
 		case R.id.set_item:
-
+			Intent itSet = new Intent(mContext, UserSetupActivity.class);
+			mContext.startActivity(itSet);
 			break;
 		// 极路客小技巧
 		case R.id.skill_item:
