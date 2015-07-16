@@ -131,6 +131,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		videoInit();
 
 		mCreateNewVideo = new CreateNewVideo(this, mVVPlayVideo, this);
+		mUploadVideo = new UploadVideo(this, mApp);
 		mBaseHandler.sendEmptyMessageDelayed(100, 100);
 	}
 
@@ -667,7 +668,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	public void CallBack_UploadVideo(int event, Object obj) {
 		switch (event) {
 		case EVENT_EXIT:
-			exit(false);
+			this.finish();
 			break;
 		}
 

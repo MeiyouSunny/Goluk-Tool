@@ -10,6 +10,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -41,6 +42,9 @@ public class UploadVideo {
 	private AlertDialog mErrorDialog = null;
 
 	private IUploadVideoFn mFn = null;
+
+	/** 退出提示框 */
+	private AlertDialog mExitPromptDialog = null;
 
 	public Handler mBaseHandler = new Handler() {
 
@@ -104,6 +108,10 @@ public class UploadVideo {
 		mContext = context;
 		mApp = application;
 	}
+	
+	public boolean isUploading() {
+		return isUploading;
+	}
 
 	// CC上传失败，提示用户重试或退出
 	private void uploadFailed() {
@@ -134,8 +142,7 @@ public class UploadVideo {
 					public void onClick(DialogInterface dialog, int which) {
 						dimissErrorDialog();
 						GlobalWindow.getInstance().toFailed("视频上传取消");
-						// exit(false);
-
+						exit(false);
 						sendData(IUploadVideoFn.EVENT_EXIT, false);
 
 					}
@@ -211,6 +218,61 @@ public class UploadVideo {
 		msg.what = MSG_H_UPLOAD_PROGRESS;
 		msg.obj = per;
 		mBaseHandler.sendMessage(msg);
+	}
+
+	private void cancelLoad() {
+		// TODO 取消上传
+	}
+
+	private void dimissExitDialog() {
+		if (null != mExitPromptDialog) {
+			mExitPromptDialog.dismiss();
+			mExitPromptDialog = null;
+		}
+	}
+
+	// CC上传失败，提示用户重试或退出
+	private void showExitDialog() {
+		dimissErrorDialog();
+
+		mExitPromptDialog = new AlertDialog.Builder(mContext).setTitle("提示").setMessage("正在上传视频，是否中断？")
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dimissExitDialog();
+						GlobalWindow.getInstance().toFailed("视频上传取消");
+						exit(false);
+
+					}
+
+				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dimissExitDialog();
+					}
+
+				}).create();
+		mExitPromptDialog.show();
+	}
+
+	private void exit(boolean isdestroyTopwindow) {
+		mIsExit = true;
+		// 取消上传
+		if (!mIsUploadSucess) {
+			boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+					IPageNotifyFn.PageType_UploadVideo, JsonUtil.getCancelJson());
+		}
+		this.dimissErrorDialog();
+		this.dimissExitDialog();
+		mBaseHandler.removeMessages(MSG_H_RETRY_UPLOAD);
+		long starTime = System.currentTimeMillis();
+		cancelLoad();
+		GolukDebugUtils.e("", "uploader   cancal time:--------:" + (System.currentTimeMillis() - starTime));
+		if (isdestroyTopwindow) {
+			GlobalWindow.getInstance().dimissGlobalWindow();
+		}
 	}
 
 	public void videoUploadCallBack(int success, Object param1, Object param2) {
