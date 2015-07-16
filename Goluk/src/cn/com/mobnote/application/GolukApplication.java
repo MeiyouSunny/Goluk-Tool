@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoShareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
@@ -134,7 +135,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public UserLoginManage mLoginManage = null;
 	/** 注册管理类 **/
 	public UserRegistManage mRegistManage = null;
-	/**升级管理类**/
+	/** 升级管理类 **/
 	public IpcUpdateManage mIpcUpdateManage = null;
 
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String, ILocationFn>();
@@ -150,8 +151,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	/** 后台标识 */
 	private boolean isBackground = false;
 	public long startTime = 0;
-	public boolean autodownloadfile=false;
-	/**点击设置页版本检测标识**/
+	public boolean autodownloadfile = false;
+	/** 点击设置页版本检测标识 **/
 	public boolean flag = false;
 	/** SD卡无容量标识 */
 	private boolean isSDCardFull = false;
@@ -159,17 +160,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean isDownloading = false;
 	/** 下载列表个数 */
 	private int downloadCount = 0;
-	
-	/**测试ipc升级版本号**/
-//	public static final String TEST_IPC_VERSION = "1.0.1.8";
-	
-	/**极路客固件升级文件下载中的状态**/
+
+	/** 测试ipc升级版本号 **/
+	// public static final String TEST_IPC_VERSION = "1.0.1.8";
+
+	/** 极路客固件升级文件下载中的状态 **/
 	public boolean mLoadStatus = false;
-	/**极路客固件升级文件下载中的进度**/
+	/** 极路客固件升级文件下载中的进度 **/
 	public int mLoadProgress = 0;
-	/**极路客升级成功的状态**/
+	/** 极路客升级成功的状态 **/
 	public boolean updateSuccess = false;
-	
+
 	static {
 		System.loadLibrary("golukmobile");
 	}
@@ -240,13 +241,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		motioncfg = new int[2];
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
-		
+
 	}
-	
+
 	/**
 	 * 升级
 	 */
-	public void startUpgrade(){
+	public void startUpgrade() {
 		// app升级+ipc升级
 		String vIpc = mSharedPreUtil.getIPCVersion();
 		GolukDebugUtils.i("lily", "=====获取当前的vIpc=====" + vIpc);
@@ -440,7 +441,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @param data
 	 */
 	public void onLineVideoCallBack(int status, Object data) {
-		
+
 	}
 
 	/**
@@ -452,6 +453,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public void localVideoUpLoadCallBack(int success, Object param1, Object param2) {
 		if (mPageSource == "VideoShare") {
 			((VideoShareActivity) mContext).videoUploadCallBack(success, param1, param2);
+		}
+
+		if (mPageSource == "VideoEdit") {
+			((VideoEditActivity) mContext).videoUploadCallBack(success, param1, param2);
 		}
 	}
 
@@ -502,16 +507,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					savePath = mVideoSavePath + "loop/";
 					configPath = savePath + "loop.txt";
 				}
-				
-				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===isSDCardFull=" + isSDCardFull+
-						"==isDownloading="+isDownloading);
-				if (isSDCardFull && !isDownloading) {					
+
+				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===isSDCardFull=" + isSDCardFull
+						+ "==isDownloading=" + isDownloading);
+				if (isSDCardFull && !isDownloading) {
 					return;
 				}
-				
+
 				if (!GolukUtils.checkSDStorageCapacity(filesize)) {
 					isSDCardFull = true;
-					
+
 					if (!mDownLoadFileList.contains(fileName)) {
 						mDownLoadFileList.add(fileName);
 					}
@@ -520,17 +525,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						GlobalWindow.getInstance().updateText(
 								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
 					}
-					
+
 					if (!isDownloading) {
 						sdCardFull();
 						mHandler.sendEmptyMessageDelayed(1003, 1000);
 					}
-					
+
 					GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad=@@@@==isSDCardFull=" + isSDCardFull);
-					
+
 					return;
 				}
-				
+
 				isDownloading = true;
 				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath), fileName + ",");
 
@@ -567,9 +572,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 		}
 	}
-	
+
 	/**
 	 * sd卡满后停止下载并显示提示
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月11日
 	 */
@@ -578,33 +584,34 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mDownLoadFileList.clear();
 			mNoDownLoadFileList.clear();
 		}
-		
+
 		mIPCControlManager.stopDownloadFile();
-		
+
 		if (!GlobalWindow.getInstance().isShow()) {
 			GlobalWindow.getInstance().createVideoUploadWindow("视频传输取消");
 		}
-		GlobalWindow.getInstance().toFailed("视频传输取消");		
+		GlobalWindow.getInstance().toFailed("视频传输取消");
 		GolukUtils.showToast(mContext, "剩余空间不足");
 	}
-	
+
 	/**
 	 * 重置sd卡存储容量检查状态
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月11日
 	 */
-	private void resetSDCheckState(){
+	private void resetSDCheckState() {
 		downloadCount--;
 		if (downloadCount <= 0) {
 			downloadCount = 0;
 		}
-		
-		GolukDebugUtils.e("xuhw", "YYYYYYY===resetSDCheckState==downloadCount="+downloadCount);
-		
-		if(downloadCount > 0) {
+
+		GolukDebugUtils.e("xuhw", "YYYYYYY===resetSDCheckState==downloadCount=" + downloadCount);
+
+		if (downloadCount > 0) {
 			return;
 		}
-		
+
 		if (isSDCardFull) {
 			sdCardFull();
 			isSDCardFull = false;
@@ -612,7 +619,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			downloadCount = 0;
 		}
 	}
-	
+
 	/**
 	 * ipc视频下载回调函数
 	 * 
@@ -675,7 +682,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						mNoDownLoadFileList.clear();
 						GlobalWindow.getInstance().topWindowSucess("视频传输完成");
 					}
-					
+
 					resetSDCheckState();
 				} else {
 					resetSDCheckState();
@@ -731,12 +738,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * 网络请求数据回调
 	 */
 	@Override
-
-	public void pageNotifyCallBack(int type, int success, Object param1,
-			Object param2) {
-		GolukDebugUtils.e("","chxy send pageNotifyCallBack--" + "type:" + type
-				+ ",success:" + success + ",param1:" + param1 + ",param2:"
-				+ param2);
+	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
+		GolukDebugUtils.e("", "chxy send pageNotifyCallBack--" + "type:" + type + ",success:" + success + ",param1:"
+				+ param1 + ",param2:" + param2);
 
 		switch (type) {
 		case 0:
@@ -760,10 +764,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// 地图大头针
 				mMainActivity.mVideoSquareActivity.mVideoSquareAdapter.baidumap.pointDataCallback(success, param2);
 			}
-			/*if (mPageSource == "LiveVideoList") {
-				GolukDebugUtils.e("", "pageNotifyCallBack---直播列表数据---" + String.valueOf(param2));
-				((LiveVideoListActivity) mContext).LiveListDataCallback(success, param2);
-			}*/
+			/*
+			 * if (mPageSource == "LiveVideoList") { GolukDebugUtils.e("",
+			 * "pageNotifyCallBack---直播列表数据---" + String.valueOf(param2));
+			 * ((LiveVideoListActivity) mContext).LiveListDataCallback(success,
+			 * param2); }
+			 */
 
 			// 为了更新直播界面的别人的位置信息
 			if (null != mContext && mContext instanceof LiveActivity) {
@@ -774,22 +780,26 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (mPageSource == "Main") {
 				// 地图大头针图片
 				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针图片---" + String.valueOf(param2));
-				((MainActivity) mContext).mVideoSquareActivity.mVideoSquareAdapter.baidumap.downloadBubbleImageCallBack(success, param2);
+				((MainActivity) mContext).mVideoSquareActivity.mVideoSquareAdapter.baidumap
+						.downloadBubbleImageCallBack(success, param2);
 			}
-			/*if (mPageSource == "LiveVideoList") {
-				// 地图大头针图片
-				GolukDebugUtils.e("", "pageNotifyCallBack---直播列表图片---" + String.valueOf(param2));
-				((LiveVideoListActivity) mContext).downloadVideoImageCallBack(success, param2);
-			}*/
+			/*
+			 * if (mPageSource == "LiveVideoList") { // 地图大头针图片
+			 * GolukDebugUtils.e("", "pageNotifyCallBack---直播列表图片---" +
+			 * String.valueOf(param2)); ((LiveVideoListActivity)
+			 * mContext).downloadVideoImageCallBack(success, param2); }
+			 */
 			break;
 		case 9:
 			GolukDebugUtils.e(null, "jyf----20150406----application----999999999999---- : ");
 			if (mPageSource == "LiveVideo") {
 				GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
-				/*if (mContext instanceof LiveVideoPlayActivity) {
-					((LiveVideoPlayActivity) mContext).LiveVideoDataCallBack(success, param2);
-				} else */
-					if (mContext instanceof LiveActivity) {
+				/*
+				 * if (mContext instanceof LiveVideoPlayActivity) {
+				 * ((LiveVideoPlayActivity)
+				 * mContext).LiveVideoDataCallBack(success, param2); } else
+				 */
+				if (mContext instanceof LiveActivity) {
 					((LiveActivity) mContext).LiveVideoDataCallBack(success, param2);
 				}
 			}
@@ -870,10 +880,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 		// APP升级+IPC升级检测
 		case PageType_CheckUpgrade:
-//			mUpgrade.upgradeGolukCallback(success, param1, param2);
+			// mUpgrade.upgradeGolukCallback(success, param1, param2);
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
-		//ipc升级文件下载
+		// ipc升级文件下载
 		case PageType_CommDownloadFile:
 			mIpcUpdateManage.downloadCallback(success, param1, param2);
 			break;
@@ -1002,7 +1012,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					connectionDialog();
 				}
 				if (null != mMainActivity) {
-//					mMainActivity.wiFiLinkStatus(1);
+					// mMainActivity.wiFiLinkStatus(1);
 				}
 				break;
 			case ConnectionStateMsg_Connected:
@@ -1041,8 +1051,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					}
 
 					// 如果在wifi连接页面,通知连接成功
-					if (mPageSource.equals("WiFiLinkComplete") ) {
-						
+					if (mPageSource.equals("WiFiLinkComplete")) {
+
 					} else if (mPageSource.equals("WiFiLinkBindAll")) {
 						((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
 					}
@@ -1063,11 +1073,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						closeConnectionDialog();// 关闭连接的dialog
 						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
 						GolukDebugUtils.e("xuhw", "YYYYYYY========getIPCSystemTime=======a=" + a);
-						
-						//获取ipc版本号
+
+						// 获取ipc版本号
 						boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
-						GolukDebugUtils.i("lily", v+"========getIPCControlManager=====getIPCVersion");
-						
+						GolukDebugUtils.i("lily", v + "========getIPCControlManager=====getIPCVersion");
+
 						// 查询新文件列表（最多10条）
 						// long time =
 						// SettingUtils.getInstance().getLong("querytime", 0);
@@ -1150,7 +1160,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// 如果在wifi连接页面,通知设置成功
 				if (mPageSource.equals("WiFiLinkBindAll")) {
 					((WiFiLinkCompleteActivity) mContext).setIpcLinkWiFiCallBack(param1);
-				} else if (mPageSource .equals("changePassword")) {
+				} else if (mPageSource.equals("changePassword")) {
 					((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
 				} else if ("Main".equals(mPageSource)) {
 					((MainActivity) mContext).setIpcLinkWiFiCallBack(param1);
@@ -1241,10 +1251,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case IPC_VDCP_Msg_GetVersion:
 				// {"product": 67698688, "model": "", "macid": "", "serial": "",
 				// "version": "V1.4.21_tzz_vb_rootfs"}
-				if(event == ENetTransEvent_IPC_VDCP_CommandResp){
-					if(IPC_VDCP_Msg_GetVersion == msg){
-						if(param1 == RESULE_SUCESS){
-//							ipcConnect(param2);
+				if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+					if (IPC_VDCP_Msg_GetVersion == msg) {
+						if (param1 == RESULE_SUCESS) {
+							// ipcConnect(param2);
 							String str = (String) param2;
 							if (TextUtils.isEmpty(str)) {
 								return;
@@ -1255,7 +1265,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 								GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
 								// 保存ipc版本号
 								mSharedPreUtil.saveIPCVersion(ipcVersion);
-							}catch(Exception e){
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}

@@ -37,11 +37,11 @@ import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
 
 @SuppressLint("HandlerLeak")
-public class VideoEditActivity extends BaseActivity implements OnClickListener {
+public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
 	/** 视频编辑页面handler用来接收消息,更新UI */
 	public static Handler mVideoEditHandler = null;
 	/** mv滤镜appter */
-	public MVListAdapter mMVListAdapter = null;
+	// public MVListAdapter mMVListAdapter = null;
 	/** 自定义播放器支持特效 */
 	public FilterPlaybackView mVVPlayVideo = null;
 	/** application */
@@ -95,16 +95,19 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	private LinearLayout mShareFilterLayout = null;
 	private ImageView mShareFilterImg = null;
 	private TextView mShareSwitchFilterTv = null;
-	
+
 	private RelativeLayout mRootLayout = null;
 	private LayoutInflater mLayoutFlater = null;
+
+	private CreateNewVideo mCreateNewVideo = null;
+	private UploadVideo mUploadVideo = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		mLayoutFlater = LayoutInflater.from(this);
-		mRootLayout =(RelativeLayout) mLayoutFlater.inflate(R.layout.video_edit, null);
+		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.video_edit, null);
 		setContentView(mRootLayout);
 		mContext = this;
 		// 获取视频路径
@@ -119,13 +122,15 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 
 		mFilterLayout = new ShareFilterLayout(this);
 		mTypeLayout = new ShareTypeLayout(this);
-		mInputLayout = new InputLayout(this,mRootLayout);
+		mInputLayout = new InputLayout(this, mRootLayout);
 
 		loadRes();
 		// 页面初始化
 		init();
 		// 视频初始化
 		videoInit();
+
+		mCreateNewVideo = new CreateNewVideo(this, mVVPlayVideo, this);
 		mBaseHandler.sendEmptyMessageDelayed(100, 100);
 	}
 
@@ -326,68 +331,72 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * 保存视频
 	 */
-	private void onSaveVideo() {
-		try {
-			// 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
-			EditorParam editorParam = new EditorParam();
-			// 高清
-			editorParam.nVideoWidth = 854;
-			editorParam.nVideoHeight = 480;
-			// //分辨率 帧率 码率 480*270 30fps 1400kbps
-			editorParam.nVideoBitrate = 1500 * 1024;
-			editorParam.nFps = 15;
-
-			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
-			mVVPlayVideo.saveVideo(mVideoSavePath, editorParam, new FilterPlaybackView.FilterVideoEditorListener() {
-
-				@Override
-				public void onFilterVideoSaveStart() {
-					showLoadingView();
-				}
-
-				@Override
-				public boolean onFilterVideoSaving(int nProgress, int nMax) {
-					if (nProgress > 0) {
-						mLoadingText.setText("视频生成中" + nProgress + "%");
-					}
-					// 返回false代表取消保存。。。
-					return true;
-				}
-
-				@Override
-				public void onFilterVideoEnd(boolean bSuccess, boolean bCancel) {
-
-					GolukDebugUtils.e("", "VideoEditActivity---------onFilterVideoEnd- sucess:" + bSuccess
-							+ "  cancel:" + bCancel);
-
-					hideLoadingView();
-					if (bCancel) {
-						// strInfo = "已取消视频保存！";
-					} else if (bSuccess) {
-						// 视频保存成功,跳转到分享页面
-						toShareActivity(mVideoSavePath);
-					}
-
-					if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
-						try {
-							mVVPlayVideo.reload();
-						} catch (FilterVideoEditorException e) {
-							GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
-						}
-					}
-				}
-
-				@Override
-				public void onFilterVideoSaveError(int nErrorType, int nErrorNo, String strErrorInfo) {
-					GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + strErrorInfo);
-					hideLoadingView();
-				}
-			});
-		} catch (FilterVideoEditorException e) {
-			GolukUtils.showToast(this, "保存视频失败，" + e.getMessage());
-			hideLoadingView();
-		}
-	}
+	// private void onSaveVideo() {
+	// try {
+	// // 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
+	// EditorParam editorParam = new EditorParam();
+	// // 高清
+	// editorParam.nVideoWidth = 854;
+	// editorParam.nVideoHeight = 480;
+	// // //分辨率 帧率 码率 480*270 30fps 1400kbps
+	// editorParam.nVideoBitrate = 1500 * 1024;
+	// editorParam.nFps = 15;
+	//
+	// mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
+	// mVVPlayVideo.saveVideo(mVideoSavePath, editorParam, new
+	// FilterPlaybackView.FilterVideoEditorListener() {
+	//
+	// @Override
+	// public void onFilterVideoSaveStart() {
+	// showLoadingView();
+	// }
+	//
+	// @Override
+	// public boolean onFilterVideoSaving(int nProgress, int nMax) {
+	// if (nProgress > 0) {
+	// mLoadingText.setText("视频生成中" + nProgress + "%");
+	// }
+	// // 返回false代表取消保存。。。
+	// return true;
+	// }
+	//
+	// @Override
+	// public void onFilterVideoEnd(boolean bSuccess, boolean bCancel) {
+	//
+	// GolukDebugUtils.e("",
+	// "VideoEditActivity---------onFilterVideoEnd- sucess:" + bSuccess
+	// + "  cancel:" + bCancel);
+	//
+	// hideLoadingView();
+	// if (bCancel) {
+	// // strInfo = "已取消视频保存！";
+	// } else if (bSuccess) {
+	// // 视频保存成功,跳转到分享页面
+	// toShareActivity(mVideoSavePath);
+	// }
+	//
+	// if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
+	// try {
+	// mVVPlayVideo.reload();
+	// } catch (FilterVideoEditorException e) {
+	// GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" +
+	// e.getMessage());
+	// }
+	// }
+	// }
+	//
+	// @Override
+	// public void onFilterVideoSaveError(int nErrorType, int nErrorNo, String
+	// strErrorInfo) {
+	// GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + strErrorInfo);
+	// hideLoadingView();
+	// }
+	// });
+	// } catch (FilterVideoEditorException e) {
+	// GolukUtils.showToast(this, "保存视频失败，" + e.getMessage());
+	// hideLoadingView();
+	// }
+	// }
 
 	private void showLoadingView() {
 		// 显示视频导出loading
@@ -539,13 +548,17 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		// 暂停播放器
 		changeVideoPlayState();
 		// 如果是精彩视频，并且不添加滤镜，則直接跳转
-		if (2 == mCurrentVideoType && 0 == mMVListAdapter.getCurrentResIndex()) {
+		if (2 == mCurrentVideoType && 0 == mFilterLayout.mMVListAdapter.getCurrentResIndex()) {
 			// 直接跳转，不需要加滤镜
-			toShareActivity(mFilePath);
+			// toShareActivity(mFilePath);
+			this.createNewFileSucess(mFilePath);
 			return;
 		}
+
+		mCreateNewVideo.onSaveVideo();
+
 		// 保存编辑视频到本地
-		onSaveVideo();
+		// onSaveVideo();
 	}
 
 	/**
@@ -577,7 +590,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 		switch (id) {
 		case R.id.back_btn:
 			// 返回
-			exit();
+			// exit();
+
+			click_next();
 			break;
 		case R.id.play_layout:
 			click_play();
@@ -589,5 +604,72 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener {
 			switchMiddleLayout(false, false);
 			break;
 		}
+	}
+
+	private void createNewFileSucess(String filePath) {
+		GolukUtils.showToast(this, "添加滤镜成功");
+	}
+
+	public void videoUploadCallBack(int success, Object param1, Object param2) {
+		if (null != mUploadVideo) {
+			mUploadVideo.videoUploadCallBack(success, param1, param2);
+		}
+	}
+
+	@Override
+	public void CallBack_CreateNewVideoFn(int event, Object obj1, Object obj2, Object obj3) {
+		switch (event) {
+		case EVENT_START:
+			showLoadingView();
+			break;
+		case EVENT_SAVING:
+			int progress = (Integer) obj1;
+			if (progress > 0) {
+				mLoadingText.setText("视频生成中" + progress + "%");
+			}
+			break;
+		case EVENT_END:
+			hideLoadingView();
+			boolean bSuccess = (Boolean) obj1;
+			boolean bCancel = (Boolean) obj2;
+			if (bCancel) {
+				// strInfo = "已取消视频保存！";
+			} else if (bSuccess) {
+				// 视频保存成功,跳转到分享页面
+				String newFilePath = (String) obj3;
+				createNewFileSucess(newFilePath);
+				// toShareActivity(newFilePath);
+			}
+
+			if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
+				try {
+					mVVPlayVideo.reload();
+				} catch (FilterVideoEditorException e) {
+					GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
+				}
+			}
+			break;
+		case EVENT_ERROR:
+			String errorInfo = "";
+			if (null != obj3) {
+				errorInfo = (String) obj3;
+			}
+			GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + errorInfo);
+			hideLoadingView();
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	public void CallBack_UploadVideo(int event, Object obj) {
+		switch (event) {
+		case EVENT_EXIT:
+			exit(false);
+			break;
+		}
+
 	}
 }
