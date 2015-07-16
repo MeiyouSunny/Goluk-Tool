@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_layout"
         android:layout_marginTop="10dp" >
-		
+
         <TextView
             android:id="@+id/mConnectTip"
             android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             android:text="Goluk000001"
             android:textColor="@color/carrecorder_text_nor_color"
             android:textSize="12sp" />
-        
+
         <ImageView
             android:id="@+id/mIPCConnectState"
             android:layout_width="wrap_content"
@@ -59,7 +59,6 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/index_wifi"
             android:contentDescription="@string/def" />
-
     </LinearLayout>
 
     <ImageView
@@ -90,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-               <com.rd.car.player.RtmpPlayerView
+                <com.rd.car.player.RtmpPlayerView
                     android:id="@+id/mRtmpPlayerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -126,8 +125,8 @@
                 android:id="@+id/mPalyerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:background="@drawable/default_pic" >
+                android:background="@drawable/default_pic"
+                android:visibility="gone" >
 
                 <ImageButton
                     android:id="@+id/mPlayBtn"
@@ -136,19 +135,19 @@
                     android:layout_centerInParent="true"
                     android:background="@drawable/carrecorder_play_btn" />
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/mConncetLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/video_linking_pic" />
-            
+
             <RelativeLayout
                 android:id="@+id/mNotconnected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:background="@drawable/video_no_link_pic" />
+                android:background="@drawable/video_no_link_pic"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <ImageButton
@@ -300,39 +299,58 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
-    
-    <RelativeLayout 
+
+    <RelativeLayout
         android:id="@+id/jcqp_info"
         android:layout_width="match_parent"
+        android:layout_height="115dp"
         android:layout_below="@+id/mAddr"
         android:background="#17191a"
-        android:visibility="invisible"
-        android:layout_height="115dp">
-        
-        <LinearLayout 
+        android:visibility="invisible" >
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true">
-            <ImageView 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            android:layout_centerVertical="true" >
+
+            <RelativeLayout
+                android:id="@+id/new_image_layout"
+                android:layout_width="114dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp" >
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/share_video_no_pic" />
+
+                <cn.com.mobnote.golukmobile.videosuqare.RingView
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/downloadSize"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="114dp"
+                android:layout_height="64dp"
                 android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/share_video_no_pic"/>
-            <ImageView 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_toRightOf="@+id/new_image_layout"
+                android:background="@drawable/share_video_no_pic" />
+
+            <ImageView
+                android:id="@+id/image3"
+                android:layout_width="114dp"
+                android:layout_height="64dp"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/share_video_no_pic"/>
-            <ImageView 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/share_video_pic"/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/image2"
+                android:background="@drawable/share_video_pic" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <ImageView
@@ -406,7 +424,8 @@
         android:gravity="center_vertical|center"
         android:visibility="invisible" >
 
-        <!-- <LinearLayout
+        <!--
+        <LinearLayout
             android:id="@+id/mFileLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -434,7 +453,8 @@
                 android:text="文件管理"
                 android:textColor="@color/text_color"
                 android:textSize="12sp" />
-        </LinearLayout> -->
+        </LinearLayout>
+        -->
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -442,7 +462,8 @@
             android:background="@drawable/btn_ipc_8s"
             android:visibility="invisible" />
 
-       <!--  <LinearLayout
+        <!--
+        <LinearLayout
             android:id="@+id/mSettingLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -451,7 +472,7 @@
             android:orientation="vertical"
             android:paddingBottom="14dp"
             android:paddingTop="14dp"
-            android:visibility="invisible" >
+            android:visibility="gone" >
 
             <ImageView
                 android:id="@+id/mSettingBtn"
@@ -470,7 +491,8 @@
                 android:text="记录仪设置"
                 android:textColor="@color/text_color"
                 android:textSize="12sp" />
-        </LinearLayout> -->
+        </LinearLayout>
+        -->
     </LinearLayout>
 
     <ImageButton
@@ -480,9 +502,9 @@
         android:layout_below="@+id/txt_tab"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:visibility="invisible"
-        android:background="@drawable/btn_ipc_8s" />
-    
+        android:background="@drawable/btn_ipc_8s"
+        android:visibility="invisible" />
+
     <ImageButton
         android:id="@+id/liveBtn"
         android:layout_width="wrap_content"
