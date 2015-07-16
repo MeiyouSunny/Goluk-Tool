@@ -252,7 +252,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			break;
 		// 版本信息
 		case R.id.question_item:
-
+			Intent itQuestion = new Intent(mContext,UserVersionActivity.class);
+			mContext.startActivity(itQuestion);
 			break;
 		// 购买极路客
 		case R.id.shopping_item:

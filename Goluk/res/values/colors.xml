@@ -38,7 +38,7 @@
     <color name="carrecorder_text_sel_color">#3b97f5</color>
 
     <!-- user部分颜色 -->
-    <color name="user_login_bg">#f7f9fa</color>
+    <color name="user_login_bg">#EDEDED</color>
     <color name="user_login_text">#333333</color>
     <color name="user_regist_bottom_login">#737373</color>
     <color name="user_regist_bottom_login_btn">#333333</color>
