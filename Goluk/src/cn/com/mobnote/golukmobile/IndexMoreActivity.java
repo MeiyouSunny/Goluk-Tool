@@ -269,7 +269,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	 */
 	private String getRtmpAddress() {
 		String rtmpUrl = ma.mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
-				IGetServerAddressType.GetServerAddress_RtmpServer, "UrlRedirect");
+				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
 		GolukDebugUtils.e("", "jyf-----MainActivity-----test:" + rtmpUrl);
 		return rtmpUrl;
 	}
