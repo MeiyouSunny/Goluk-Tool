@@ -283,8 +283,9 @@
     <string name="user_identify_code">输入6位验证码</string>
     <string name="user_identify_count">重新发送</string>
     <string name="user_dialog_hint_title">提示</string>
-    <string name="user_boy">男</string>
-    <string name="user_girl">女</string>
+    <string name="opinion_content_null">反馈内容不能为空</string>
+    <string name="opinion_fail">反馈失败，请稍候再试</string>
+    <string name="opinion_success">感谢您的反馈，我们正在积极处理中！</string>
     
     <!-- 直播界面 -->
 

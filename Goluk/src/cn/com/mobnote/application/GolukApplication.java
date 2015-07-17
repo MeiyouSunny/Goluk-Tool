@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
+import cn.com.mobnote.golukmobile.UserOpinionActivity;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
@@ -876,6 +877,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_CommDownloadFile:
 			mIpcUpdateManage.downloadCallback(success, param1, param2);
 			break;
+		//意见反馈
+		case PageType_FeedBack:
+			if(mPageSource == "UserOpinion"){
+				((UserOpinionActivity)mContext).requestOpinionCallback(success, param1, param2);
+			}
+			break;
+			
 		}
 	}
 

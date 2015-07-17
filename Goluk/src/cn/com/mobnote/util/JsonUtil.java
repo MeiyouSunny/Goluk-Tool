@@ -766,8 +766,8 @@ public class JsonUtil {
 		}
 
 	}
-	
-	public static String registAndRepwdJson(String phoneNumber, String password,String vCode) {
+
+	public static String registAndRepwdJson(String phoneNumber, String password, String vCode) {
 		try {
 			// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
 			JSONObject obj = new JSONObject();
@@ -782,5 +782,34 @@ public class JsonUtil {
 		return null;
 	}
 
+	/**
+	 * 意见反馈请求服务器json串
+	 * 
+	 * @param tag
+	 * @param sys_version
+	 * @param app_version
+	 * @param ipc_version
+	 * @param phone_models
+	 * @param opinion
+	 * @param contact
+	 * @return
+	 */
+	public static String putOpinion(String tag, String sys_version, String app_version, String ipc_version,
+			String phone_models, String opinion, String contact) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("tag", tag);
+			obj.put("system_version", sys_version);
+			obj.put("app_version", app_version);
+			obj.put("ipc_version", ipc_version);
+			obj.put("phone_models", phone_models);
+			obj.put("opinion", opinion);
+			obj.put("contact", contact);
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }
