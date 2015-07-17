@@ -2,9 +2,16 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +26,8 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
+import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
@@ -311,7 +320,20 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		
 		String time[] = headerText.split("-");
 		if(3 ==time.length) {
-			holder.date.setText(time[1]+"/"+time[2]);
+			Calendar c = Calendar.getInstance();  
+			int year = c.get(Calendar.YEAR);
+			int o_year = Integer.parseInt(time[0]);
+			GolukDebugUtils.e("", "TTTTTT===year="+year+"===o_year="+o_year);
+			if (year == o_year) {
+				holder.date.setText(time[1]+"/"+time[2]);
+			}else{
+				String t_str = time[0] +"\n"+ time[1]+"/"+time[2];
+				
+				SpannableStringBuilder style=new SpannableStringBuilder(t_str);       
+			    style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, 4, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);         
+			    style.setSpan(new AbsoluteSizeSpan(16, true), 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			    holder.date.setText(style);  
+			}
 		}else {
 			holder.date.setText(headerText);
 		}

@@ -9,7 +9,7 @@
     	android:layout_height="34dp"
     	android:orientation="horizontal"
         >
-        
+               
         <TextView 
 	    android:id="@+id/date"
 	    android:layout_width="44dp"
