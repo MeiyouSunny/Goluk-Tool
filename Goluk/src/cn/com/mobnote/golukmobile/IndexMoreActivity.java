@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.user.UserUtils;
 import android.os.Bundle;
@@ -175,7 +176,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			break;
 		case R.id.local_video_item:
 			ma.mApp.mUser.setUserInterface(null);
-			intent = new Intent(mContext, LocalVideoListActivity.class);
+//			intent = new Intent(mContext, LocalVideoListActivity.class);
+			intent = new Intent(mContext, PhotoAlbumActivity.class);
 			mContext.startActivity(intent);
 			break;
 		case R.id.setup_item:

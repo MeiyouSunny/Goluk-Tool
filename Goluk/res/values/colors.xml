@@ -68,5 +68,10 @@
     <color name="live_address_color">#8e8e8e</color>
     <color name="live_loginlayout_color">#7F151515</color>
     <color name="carrecord_text_color">#3b97f5</color>
+    <!-- 相册按钮文字颜色 -->
+    <color name="photoalbum_text_color">#0080ff</color>
+    <color name="photoalbum_text_color_gray">#eeeeee</color>
+    <color name="photoalbum_line_color">#c8c7cc</color>
+    <color name="photoalbum_title_bg_color">#242629</color>
 
 </resources>

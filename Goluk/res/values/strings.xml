@@ -244,5 +244,12 @@
     <string name="refreshing">正在刷新...</string>
     <string name="updating">最近更新：</string>
     <string name="wifibind_defaultpassword">123456789</string>
+    
+    
+    <!-- 相册 -->
+    <string name="photoalbum_default_title">我的相册</string>
+    <string name="photoalbum_local_video_text">本地视频</string>
+    <string name="photoalbum_cloud_video_text">远程视频</string>
+    
 
 </resources>
