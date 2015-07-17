@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.UserUtils;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.user.UserInterface;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -244,22 +246,32 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			break;
 		// 极路客小技巧
 		case R.id.skill_item:
-
+			GolukUtils.openUrl(getRtmpAddress() + "?type=2", mContext);
 			break;
 		// 安装指导
 		case R.id.install_item:
-
+			GolukUtils.openUrl(getRtmpAddress() + "?type=3", mContext);
 			break;
 		// 版本信息
 		case R.id.question_item:
-			Intent itQuestion = new Intent(mContext,UserVersionActivity.class);
+			Intent itQuestion = new Intent(mContext, UserVersionActivity.class);
 			mContext.startActivity(itQuestion);
 			break;
 		// 购买极路客
 		case R.id.shopping_item:
-
+			GolukUtils.openUrl(getRtmpAddress() + "?type=4", mContext);
 			break;
 		}
+	}
+
+	/**
+	 * 读取UrlConfig
+	 */
+	private String getRtmpAddress() {
+		String rtmpUrl = ma.mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
+				IGetServerAddressType.GetServerAddress_RtmpServer, "UrlRedirect");
+		GolukDebugUtils.e("", "jyf-----MainActivity-----test:" + rtmpUrl);
+		return rtmpUrl;
 	}
 
 	private void dismissDialog() {
