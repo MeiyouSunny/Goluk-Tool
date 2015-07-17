@@ -52,7 +52,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	
 	private ImageView back = null;
 
-	private boolean mIsCanTalk = true;
+	private boolean mIsCanTalk = false;
 	/** 直播时长 */
 	private int mCurrentLiveSecond = DEFAULT_SECOND;
 	private boolean mIsCanSound = true;
@@ -85,9 +85,9 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		mPopWindow = new PopupWindow(mRootLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
 		//mEnter = (RelativeLayout) mRootLayout.findViewById(R.id.sysz_line);
-		mCanTalkBtn = (Button) mRootLayout.findViewById(R.id.car_talk);
+		mCanTalkBtn = (Button) mRootLayout.findViewById(R.id.live_talk_btn);
 		mSoundBtn = (Button) mRootLayout.findViewById(R.id.voice_switch_btn);
-		mTimeTv = (TextView) mRootLayout.findViewById(R.id.livesetting_time);
+		mTimeTv = (TextView) mRootLayout.findViewById(R.id.live_time);
 		//mDescEdit = (EditText) mRootLayout.findViewById(R.id.description);
 		mSeekBar = (SeekBar) mRootLayout.findViewById(R.id.progress);
 		mFlowTv = (TextView) mRootLayout.findViewById(R.id.live_flowl_txt);
@@ -97,15 +97,15 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		mSeekBar.setProgress(DEFAULT_SECOND);
 		mTimeTv.setText(GolukUtils.secondToString(DEFAULT_SECOND));
 		if (mIsCanTalk) {
-			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+			mCanTalkBtn.setBackgroundResource(R.drawable.set_open_btn);
 		} else {
-			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			mCanTalkBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
 
 		if (mIsCanSound) {
-			mSoundBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+			mSoundBtn.setBackgroundResource(R.drawable.set_open_btn);
 		} else {
-			mSoundBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			mSoundBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
 
 		mFlowTv.setText(getCurrentFlow(mCurrentLiveSecond));
@@ -175,20 +175,20 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	private void switchTalkState() {
 		if (mIsCanTalk) {
 			mIsCanTalk = false;
-			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			mCanTalkBtn.setBackgroundResource(R.drawable.set_close_btn);
 		} else {
 			mIsCanTalk = true;
-			mCanTalkBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+			mCanTalkBtn.setBackgroundResource(R.drawable.set_open_btn);
 		}
 	}
 
 	private void switchVoiceState() {
 		if (mIsCanSound) {
 			mIsCanSound = false;
-			mSoundBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			mSoundBtn.setBackgroundResource(R.drawable.set_close_btn);
 		} else {
 			mIsCanSound = true;
-			mSoundBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+			mSoundBtn.setBackgroundResource(R.drawable.set_open_btn);
 		}
 	}
 
@@ -202,8 +202,8 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		case R.id.back_btn:
 			mListener.callBackPopWindow(EVENT_ENTER, getCurrentSetting());
 			break;
-		case R.id.car_talk:
-			switchTalkState();
+		case R.id.live_talk_btn:
+			//switchTalkState();
 			break;
 		case R.id.voice_switch_btn:
 			switchVoiceState();

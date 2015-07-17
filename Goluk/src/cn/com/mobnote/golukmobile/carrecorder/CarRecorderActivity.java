@@ -240,6 +240,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private final int WIFI_STATE_CONNING = 1;
 	/** 连接 */
 	private final int WIFI_STATE_SUCCESS = 2;
+	
+	private ImageView liveVideo;
 
 	private View mNotconnected = null;
 
@@ -457,7 +459,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		image1 = (ImageView) findViewById(R.id.image1);
 		image2 = (ImageView) findViewById(R.id.image2);
 		image3 = (ImageView) findViewById(R.id.image3);
-		
+		liveVideo = (ImageView) findViewById(R.id.live_video);
 		downloadSize = (RingView) findViewById(R.id.downloadSize);
 		
 		mRtmpPlayerView.setAudioMute(true);
@@ -1602,7 +1604,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				return;
 			}
 			mSettingData = (LiveSettingBean) data;
-
+			if(mSettingData.isCanVoice){
+				liveVideo.setBackgroundResource(R.drawable.driving_voice_icon);
+			}else{
+				liveVideo.setBackgroundResource(R.drawable.driving_voice_off_icon);
+			}
 			liveTime.setText(GolukUtils.secondToString(mSettingData.duration));
 		}
 	}
