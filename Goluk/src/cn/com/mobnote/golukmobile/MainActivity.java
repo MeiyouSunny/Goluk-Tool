@@ -107,14 +107,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	/** 我的位置按钮 */
-	private Button mMapLocationBtn = null;
 	/** 百度地图 */
 	private MapView mMapView = null;
-	private BaiduMap mBaiduMap = null;
-
-	/** 分享按钮 */
-	// private Button mShareBtn = null;
 	/** 分享按钮布局 */
 	private RelativeLayout mShareLayout = null;
 	/** 关闭分享布局 */
@@ -149,8 +143,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	private RelativeLayout mRootLayout = null;
 
-	// private RelativeLayout indexMapLayout = null;
-
 	private View videoSquareLayout = null;
 
 	private View userInfoLayout = null;
@@ -166,9 +158,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
-
-	/** 看天下按钮 */
-	// private Button indexLookBtn = null;
 	/** 链接行车记录仪 */
 	private ImageButton indexCarrecoderBtn = null;
 	/** 连接ipc时的动画 */
@@ -231,8 +220,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// 提交修改
 			editor.commit();
 		}
-		// 初始化地图
-		// initMap();
 		// 初始化视频广场
 		initVideoSquare();
 		// 初始化个人中心
@@ -298,10 +285,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
-		// 地图我的位置按钮
-		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
-		// 分享按钮
-		// mShareBtn = (Button) findViewById(R.id.index_share_btn);
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
 
@@ -309,14 +292,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		msquareBtn = (Button) findViewById(R.id.index_square_btn);
-		// mWifiState = (ImageView) findViewById(R.id.index_wiifstate);
-		// mWifiStateTv = (TextView) findViewById(R.id.wifi_conn_txt);
 		videoSquareLayout = findViewById(R.id.video_square_layout);
 		// 本地视频更多按钮
 		mLocalVideoListBtn = (Button) findViewById(R.id.share_local_video_btn);
 		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
 
-		// indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
 		squareDefault = (ImageView) findViewById(R.id.square_default);
 
@@ -325,13 +305,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mHotBigPoint = (ImageView) findViewById(R.id.mHotBigPoint);
 
 		mShareLiveBtn.setOnClickListener(this);
-		// indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
 		indexDiv.setOnClickListener(this);
-		// 注册事件
-		mMapLocationBtn.setOnClickListener(this);
-		// mShareBtn.setOnClickListener(this);
-		// mShareBtn.setOnTouchListener(this);
 		mCloseShareBtn.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
@@ -524,11 +499,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			return;
 		}
 		mWiFiStatus = WIFI_STATE_CONNING;
-		// mWifiStateTv.setText(WIFI_CONNING_STR);
-		//anim = AnimationUtils.loadAnimation(mContext, R.anim.ipc_action_loading);
-		//LinearInterpolator lir = new LinearInterpolator();
-		//anim.setInterpolator(lir);
-		//indexCarrecoderBtn.startAnimation(anim);
 
 	}
 
@@ -543,26 +513,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			message.what = WIFI_STATE_RESULT;
 			CarRecorderActivity.mHandler.sendMessage(message);
 		}
-		// if (null != anim) {
-		// anim.cancel();
-		// indexCarrecoderBtn.clearAnimation();
-		// anim = null;
-		// }
-		// mWifiStateTv.setText(WIFI_CONNED_STR);
-		// mWifiState.setBackgroundResource(R.drawable.home_wifi_link_four);
 	}
 
 	// 连接失败
 	private void wifiConnectFailed() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectFailed:");
 		mWiFiStatus = WIFI_STATE_FAILED;
-//		if (null != anim) {
-//			anim.cancel();
-//			indexCarrecoderBtn.clearAnimation();
-//			anim = null;
-//		}
-		// mWifiState.setBackgroundResource(R.drawable.home_wifi_no_link);
-		// mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
 	}
 
 	// 是否綁定过 Goluk
@@ -700,11 +656,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 				exitTime = System.currentTimeMillis();
 			} else {
-				// if (null != mWac) {
-				// mWac.closeAp();
-				// }
 				SysApplication.getInstance().exit();
-				// }
 				mApp.mIPCControlManager.setIPCWifiState(false, "");
 				mApp.mGoluk.GolukLogicDestroy();
 				if (null != UserStartActivity.mHandler) {
@@ -748,15 +700,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.map_location_btn:
-			// 回到我的位置
-			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
-			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-			mBaiduMap.animateMapStatus(u);
-			break;
-		// case R.id.index_share_btn:
-		// click_share();
-		// break;
 		case R.id.close_share_btn:
 			// 关闭视频分享
 			mShareLayout.setVisibility(View.GONE);
@@ -797,9 +740,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			setBelowItem(R.id.index_square_btn);
 			break;
-		// case R.id.index_look_btn:
-		// setBelowItem(R.id.index_look_btn);
-		// break;
 		case R.id.index_carrecoder_btn:
 			checkWiFiStatus();
 			break;
@@ -914,10 +854,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void updateHotPointState(boolean isShow) {
 		SettingUtils.getInstance().putBoolean("HotPointState", isShow);
 		if (isShow) {
-			// mHotPoint.setVisibility(View.VISIBLE);
 			mHotBigPoint.setVisibility(View.VISIBLE);
 		} else {
-			// mHotPoint.setVisibility(View.GONE);
 			mHotBigPoint.setVisibility(View.GONE);
 		}
 	}
