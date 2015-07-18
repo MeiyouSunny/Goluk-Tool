@@ -52,7 +52,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * 
  */
 
-@SuppressLint("HandlerLeak")
+@SuppressLint({ "HandlerLeak", "Instantiatable" })
 public class IndexMoreActivity implements OnClickListener, UserInterface {
 	/** application */
 	//private GolukApplication mApp = null;

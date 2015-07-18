@@ -472,6 +472,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (mPageSource == "VideoShare") {
 			((VideoShareActivity) mContext).videoShareCallBack(success, data);
 		}
+		if (mPageSource == "VideoEdit") {
+			((VideoEditActivity) mContext).videoShareCallBack(success, data);
+		}
+		
+		
 	}
 
 	/**

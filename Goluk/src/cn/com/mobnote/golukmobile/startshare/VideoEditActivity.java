@@ -1,8 +1,13 @@
 package cn.com.mobnote.golukmobile.startshare;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
@@ -11,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,12 +33,14 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.video.MVListAdapter;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.rd.car.editor.Constants;
-import com.rd.car.editor.EditorParam;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
 
@@ -46,8 +54,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	public FilterPlaybackView mVVPlayVideo = null;
 	/** application */
 	private GolukApplication mApp = null;
-	/** 上下文 */
-	private Context mContext = null;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
 	/** 视频路径 */
@@ -98,9 +104,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private RelativeLayout mRootLayout = null;
 	private LayoutInflater mLayoutFlater = null;
+	private RelativeLayout mYouMengLayout = null;
 
 	private CreateNewVideo mCreateNewVideo = null;
 	private UploadVideo mUploadVideo = null;
+	/** 请求分享连接Dialog */
+	private ProgressDialog mPdsave = null;
+
+	private ShareDeal mShareDealTool = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -108,8 +119,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		super.onCreate(savedInstanceState);
 		mLayoutFlater = LayoutInflater.from(this);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.video_edit, null);
+		mYouMengLayout = (RelativeLayout) mRootLayout.findViewById(R.id.shortshare_youmeng_layout);
 		setContentView(mRootLayout);
-		mContext = this;
 		// 获取视频路径
 		Intent intent = getIntent();
 		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
@@ -119,6 +130,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "VideoEdit");
+
+		mShareDealTool = new ShareDeal(this, mYouMengLayout);
 
 		mFilterLayout = new ShareFilterLayout(this);
 		mTypeLayout = new ShareTypeLayout(this);
@@ -132,6 +145,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 		mCreateNewVideo = new CreateNewVideo(this, mVVPlayVideo, this);
 		mUploadVideo = new UploadVideo(this, mApp);
+		mUploadVideo.setListener(this);
 		mBaseHandler.sendEmptyMessageDelayed(100, 100);
 	}
 
@@ -521,22 +535,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	/**
-	 * 跳转到分享界面
-	 * 
-	 * @param filePath
-	 *            文件路径，有可能为原始路径，有可能有添加滤镜后的路径
-	 * @author jyf
-	 * @date 2015年6月10日
-	 */
-	private void toShareActivity(String filePath) {
-		Intent videoShare = new Intent(mContext, VideoShareActivity.class);
-		videoShare.putExtra("cn.com.mobnote.golukmobile.videopath", filePath);
-		videoShare.putExtra("type", mCurrentVideoType);
-		videoShare.putExtra("videoName", videoName);
-		startActivity(videoShare);
-	}
-
-	/**
 	 * 点击“下一步”
 	 * 
 	 * @author jyf
@@ -585,6 +583,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 	}
 
+	public void shareClick(final String type) {
+		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------shareClick---: " + type);
+		click_next();
+	}
+
 	@Override
 	public void onClick(View v) {
 		final int id = v.getId();
@@ -608,7 +611,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	private void createNewFileSucess(String filePath) {
-		GolukUtils.showToast(this, "添加滤镜成功");
+		GolukUtils.showToast(this, "添加滤镜成功,文件上传");
+		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------createNewFileSucess--filePath-: "
+				+ filePath);
+		this.mUploadVideo.setUploadInfo(filePath, mCurrentVideoType, videoName);
 	}
 
 	public void videoUploadCallBack(int success, Object param1, Object param2) {
@@ -666,11 +672,119 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	public void CallBack_UploadVideo(int event, Object obj) {
+		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------CallBack_UploadVideo--event-: "
+				+ event);
 		switch (event) {
 		case EVENT_EXIT:
 			this.finish();
 			break;
+		case EVENT_UPLOAD_SUCESS:
+			// 　文件上传成功，请求分享连接
+			GolukUtils.showToast(this, "文件上传成功，去请求分享连接");
+
+			requestShareInfo();
+			break;
+		}
+	}
+
+	// 请求分享信息
+	private void requestShareInfo() {
+
+		final String t_vid = this.mUploadVideo.getVideoId();
+		final String t_type = "" + (mCurrentVideoType == 2 ? 2 : 1);
+		final String selectTypeJson = JsonUtil.createShareType("" + mTypeLayout.getCurrentSelectType());
+		final String desc = mTypeLayout.getCurrentDesc();
+		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
+		final String t_thumbPath = mUploadVideo.getThumbPath();
+
+		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath);
+
+		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
+
+		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
+				json);
+		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares---b :  " + b);
+
+		if (!b) {
+			GolukUtils.showToast(this, "分享失败");
+			return;
+		}
+		showRequestShareDialog();
+		GolukDebugUtils.e("", "chxy____VideoShareActivity share11" + json);
+	}
+
+	/**
+	 * 本地视频分享回调
+	 * 
+	 * @param json
+	 *            ,分享数据
+	 */
+	public void videoShareCallBack(int success, String json) {
+		dimissRequestShareDialog();
+		if (1 != success) {
+			GolukUtils.showToast(this, "获取视频分享地址失败");
+			return;
+		}
+		JSONObject obj;
+		try {
+			obj = new JSONObject(json);
+			System.out.println("分享地址回调:" + json.toString());
+			boolean isSucess = obj.getBoolean("success");
+			if (!isSucess) {
+				GolukUtils.showToast(this, "获取视频分享地址失败");
+				return;
+			}
+
+			JSONObject dataObj = obj.getJSONObject("data");
+			final String shortUrl = dataObj.getString("shorturl");
+			final String coverUrl = dataObj.getString("coverurl");
+
+			final String title = "极路客精彩视频分享";
+			String describe = mTypeLayout.getCurrentDesc();
+			if (describe == null || "".equals(describe)) {
+				describe = "#极路客精彩视频#";
+			}
+			GolukDebugUtils.e("", "视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
+			this.mShareDealTool.toShare(shortUrl, coverUrl, describe, title);
+
+			// // 设置分享内容
+			// // sharePlatform.setShareContent(shortUrl, coverUrl,
+			// // mDesEdit.getText().toString());
+			// CustomShareBoard shareBoard = new CustomShareBoard(this,
+			// sharePlatform, shortUrl, coverUrl, describe, title);
+			// shareBoard.showAtLocation(this.getWindow().getDecorView(),
+			// Gravity.BOTTOM, 0, 0);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 
 	}
+
+	private void showRequestShareDialog() {
+		dimissRequestShareDialog();
+		mPdsave = ProgressDialog.show(this, "", "请求分享链接...");
+		mPdsave.setCancelable(true);
+		mPdsave.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface arg0) {
+				if (null != mPdsave) {
+					mPdsave.dismiss();
+					mPdsave = null;
+				}
+				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
+						JsonUtil.getCancelJson());
+			}
+		});
+
+	}
+
+	private void dimissRequestShareDialog() {
+		if (null != mPdsave) {
+			mPdsave.dismiss();
+			mPdsave = null;
+		}
+	}
+
 }

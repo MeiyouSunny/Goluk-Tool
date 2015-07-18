@@ -40,9 +40,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.R.drawable;
-import cn.com.mobnote.golukmobile.R.id;
-import cn.com.mobnote.golukmobile.R.layout;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
@@ -649,11 +646,8 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 		int position = mSpinner.getSelectedItemPosition();
 		// 为了保证与服务器协议兼容，需要加1
 		position++;
-
 		String type = createType("" + position);
-
 		GolukDebugUtils.e("", "spinner select :" + position + " type:" + type);
-
 		return type;
 	}
 

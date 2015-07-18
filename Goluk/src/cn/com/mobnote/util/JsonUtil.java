@@ -1,5 +1,6 @@
 package cn.com.mobnote.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
@@ -13,6 +14,7 @@ import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.user.APPInfo;
 import cn.com.mobnote.user.IPCInfo;
+import cn.com.tiros.api.FileUtils;
 
 public class JsonUtil {
 
@@ -764,7 +766,51 @@ public class JsonUtil {
 		} catch (Exception e) {
 			return null;
 		}
+	}
 
+	public static String createShareType(String type) {
+		JSONArray array = new JSONArray();
+		array.put(type);
+		return array.toString();
+	}
+
+	// videoId: 视频ID
+	// type: 视频类型 1/2 精彩/紧急
+	// attribute: 用户选择的视频类型(包括曝光，看天下,是一个json数組)
+	// desc 视频描述 (用户输入或选择 (比如：有人扔东西，注意素质))
+	// issquare 是否分享到视频广场 0/1 (否/是)
+	// thumbImgJavaPath: 缩略图路径
+	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
+			String thumbImgJavaPath) {
+
+		String json = null;
+		try {
+			final String fsFile = FileUtils.javaToLibPath(thumbImgJavaPath);
+			String videoDes = "";
+			String attriDefault = "";
+			try {
+				videoDes = URLEncoder.encode(desc, "UTF-8");
+				attriDefault = URLEncoder.encode(attribute, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			JSONObject obj = new JSONObject();
+			obj.put("videoid", videoId);
+			obj.put("describe", videoDes);
+			obj.put("attribute", attriDefault);
+			// 是否分享到视频广场 0/1 否/是
+			obj.put("issquare", issquare);
+			// 缩略图路径
+			obj.put("imgpath", fsFile);
+			// type: 1/2 精彩视频 / 紧急视频
+			obj.put("type", "1");
+			json = obj.toString();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return json;
 	}
 
 }

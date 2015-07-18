@@ -1,8 +1,10 @@
 package cn.com.mobnote.golukmobile.startshare;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Context;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +27,8 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	private final int TYPE_SG = 1;
 	private final int TYPE_ML = 2;
 	private final int TYPE_SSP = 3;
+
+	private int mCurrentType = TYPE_BG;
 
 	public final String[] typeArray = { "曝光台", "事故大爆料", "美丽风景", "随手拍" };
 	private final String[] bgArray = { "曝光台1", "曝光台2", "曝光台3", "曝光台4", "曝光台5", "曝光台6" };
@@ -62,14 +66,29 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 
 	private TextView[] typeViewArray = new TextView[4];
 
+	// <string name="share_str_type_bg">曝光台</string> 1
+	// <string name="share_str_type_sg">事故大爆料</string> 5
+	// <string name="share_str_type_ml">美丽风景</string> 3
+	// <string name="share_str_type_ssp">随手拍</string> 4
+
+	private SparseIntArray mTypeArray = new SparseIntArray();
+
 	public ShareTypeLayout(Context context) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.shareselecttype, null);
 		loadRes();
 		initView();
+		initData();
 
 		switchTypeUI(TYPE_BG);
+	}
+
+	private void initData() {
+		mTypeArray.put(TYPE_BG, 1);
+		mTypeArray.put(TYPE_SG, 5);
+		mTypeArray.put(TYPE_ML, 3);
+		mTypeArray.put(TYPE_SSP, 4);
 	}
 
 	private void loadRes() {
@@ -128,6 +147,19 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 
 	public boolean isOpenShare() {
 		return mIsOpenShare;
+	}
+
+	public int getCurrentSelectType() {
+		return mTypeArray.get(mCurrentType);
+	}
+
+	// 返回当前的描述文字
+	public String getCurrentDesc() {
+		String inputStr = mEditText.getText().toString().trim();
+		if (null != inputStr && !inputStr.equals("")) {
+			return inputStr;
+		}
+		return this.mAdapter.getCurrentSelectData();
 	}
 
 	private void switchOpenAndClose(boolean isOpen) {
@@ -226,6 +258,20 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 			return mDataList;
 		}
 
+		public String getCurrentSelectData() {
+			if (null == mDataList) {
+				return "";
+			}
+			final int size = mDataList.size();
+			for (int i = 0; i < size; i++) {
+				if (mDataList.get(i).isSelect) {
+					return mDataList.get(i).content;
+				}
+			}
+
+			return "";
+		}
+
 		public int getCurrentResIndex() {
 			return resIndex;
 		}
@@ -292,6 +338,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	}
 
 	private void switchTypeUI(final int select) {
+		mCurrentType = select;
 		final int length = typeViewArray.length;
 		for (int i = 0; i < length; i++) {
 			if (select == i) {

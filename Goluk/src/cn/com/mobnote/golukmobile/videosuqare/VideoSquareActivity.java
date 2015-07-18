@@ -1,12 +1,12 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import com.umeng.socialize.sso.UMSsoHandler;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+@SuppressLint("Instantiatable")
 public class VideoSquareActivity implements OnClickListener {
 	public VideoSquareAdapter mVideoSquareAdapter = null;
 	private ViewPager mViewPager = null;
