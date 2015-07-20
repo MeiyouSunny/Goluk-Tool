@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -41,10 +43,12 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomWifiDialog;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtmpPlayerView;
@@ -567,8 +571,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 			
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
+//				Intent intent = new Intent(CarRecorderActivity.this,
+//						IPCFileManagerActivity.class);
+//				startActivity(intent);
+				
 				Intent intent = new Intent(CarRecorderActivity.this,
-						IPCFileManagerActivity.class);
+						PhotoAlbumActivity.class);
+				intent.putExtra("from", "cloud");
 				startActivity(intent);
 			} else {
 				// 未登录

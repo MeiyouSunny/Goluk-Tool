@@ -16,8 +16,6 @@ import android.widget.TextView;
 public class LocalVideoListView implements OnClickListener{
 	private View mRootLayout = null;
 	private Context mContext = null;
-	private String from = null;
-	
 	private TextView mWonderfulText = null;
 	private TextView mEmergencyText = null;
 	private TextView mLoopText = null;
@@ -29,6 +27,7 @@ public class LocalVideoListView implements OnClickListener{
 	private LocalVideoAdapter mLocalVideoAdapter = null;
 	private LinearLayout functionLayout = null;
 	private int curTableState = -1;
+	private String from = null;
 	
 	public LocalVideoListView(Context context, String from) {
 		this.mContext = context;
@@ -48,7 +47,7 @@ public class LocalVideoListView implements OnClickListener{
 		
 		mViewPager = (CustomViewPager)mRootLayout.findViewById(R.id.mViewPager);
 		mViewPager.setOffscreenPageLimit(3);
-		mLocalVideoAdapter = new LocalVideoAdapter(mContext);
+		mLocalVideoAdapter = new LocalVideoAdapter(mContext, from);
 		mViewPager.setAdapter(mLocalVideoAdapter);
 		
 		setListener();

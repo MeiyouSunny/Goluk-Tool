@@ -3,11 +3,10 @@ package cn.com.mobnote.golukmobile.photoalbum;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.VideoEditActivity;
 import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
@@ -15,6 +14,8 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -43,8 +44,10 @@ public class WonderfulVideoListView {
 	private int screenWidth = 0;
 	private int type;
 	private CustomLoadingDialog mCustomProgressDialog = null;
+	private String from = null;
 	
-	public WonderfulVideoListView(Context context, int type) {
+	public WonderfulVideoListView(Context context, int type, String from) {
+		this.from = from;
 		this.mContext = context;
 		this.mActivity = (PhotoAlbumActivity)context;
 		this.type = type;
@@ -56,8 +59,9 @@ public class WonderfulVideoListView {
 	}
 	
 	private void initView() {
+		mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
 		mStickyListHeadersListView = (StickyListHeadersListView)mRootLayout.findViewById(R.id.mStickyListHeadersListView);
-		mWonderfulVideoAdapter = new WonderfulVideoAdapter(mContext, mStickyListHeadersListView);
+		mWonderfulVideoAdapter = new WonderfulVideoAdapter(mContext, mStickyListHeadersListView, type, from);
 		mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
 		loadData(type);
 		setListener();
@@ -117,7 +121,7 @@ public class WonderfulVideoListView {
 						if((screenX > 0) && (screenX < (screenWidth/2))) {
 							//点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(2, info1.videoPath);
+							gotoVideoPlayPage(type, info1.videoPath);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 							
@@ -128,7 +132,7 @@ public class WonderfulVideoListView {
 							VideoInfo info2 = d.getVideoInfo2();
 							if(null == info2)
 								return;
-							gotoVideoPlayPage(2, info2.videoPath);
+							gotoVideoPlayPage(type, info2.videoPath);
 							String filename = info2.filename;
 							updateNewState(filename);
 							
@@ -143,7 +147,7 @@ public class WonderfulVideoListView {
 	}
 	
 	private void updateNewState(String filename){
-		SettingUtils.getInstance().putBoolean(filename, false);
+		SettingUtils.getInstance().putBoolean("Local_"+filename, false);
 		for (int i=0; i < mDataList.size(); i++) {
 			VideoInfo info = mDataList.get(i);
 			if (info.filename.equals(filename)) {
@@ -157,10 +161,20 @@ public class WonderfulVideoListView {
 	 * 跳转到本地视频播放页面
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int from, String path){
+	private void gotoVideoPlayPage(int type, String path){
 		if(!TextUtils.isEmpty(path)){
+			if ("cloud".equals(from) ) {
+				if(1 != type) {
+					Intent intent = new Intent(mContext, VideoEditActivity.class);
+					intent.putExtra("type", type);
+					intent.putExtra("cn.com.mobnote.video.path", path);
+					mActivity.startActivity(intent);
+					return;
+				}
+			}
+			
 			Intent intent = null;
-			if(1 == from) {
+			if(1 == type) {
 				intent = new Intent(mContext, VideoPlayerActivity.class);
 			}else {
 				intent = new Intent(mContext, VideoPlayerView.class);
@@ -198,10 +212,10 @@ public class WonderfulVideoListView {
 	}
 	
 	private void loadData(int type) {
-		if(null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
+		if(IPCManagerFn.TYPE_SHORTCUT == type) {
 			if (!mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
+				GolukDebugUtils.e("", "YYYYYY==4444=======mCustomProgressDialog==show==");
 			}
 		}
 		LocalDataLoadAsyncTask task = new LocalDataLoadAsyncTask(type, new DataCallBack() {

@@ -40,12 +40,11 @@
 	
     <ImageView
         android:id="@+id/video_quality1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="11.33dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/carrecorder_icon_1080"
         android:paddingRight="6dp" />
 
     <TextView
@@ -76,6 +75,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/video_new_icon" />
+    
+    <ImageView 
+        android:id="@+id/mPreView1"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/photo_preview_icon" />
 
     	<RelativeLayout 
     	    android:id="@+id/mTMLayout1"
@@ -120,12 +126,11 @@
 
     <ImageView
         android:id="@+id/video_quality2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="11.33dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/carrecorder_icon_1080"
         android:paddingRight="6dp" />
 
     <TextView
@@ -156,6 +161,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/video_new_icon" />
+    
+    <ImageView 
+        android:id="@+id/mPreView2"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/photo_preview_icon" />
 
     <RelativeLayout 
     	    android:id="@+id/mTMLayout2"

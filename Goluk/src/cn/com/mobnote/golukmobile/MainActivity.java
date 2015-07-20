@@ -595,12 +595,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case WIFI_STATE_SUCCESS:
 			GolukApplication.getInstance().stopDownloadList();
 			
-			boolean b = mApp.mIpcUpdateManage.ipcConnect();
-			if(b){
+//			boolean b = mApp.mIpcUpdateManage.ipcConnect();
+//			if(b){
 				// 跳转到行车记录仪界面
 				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 				startActivity(i);
-			}
+//			}
 			break;
 		default:
 			break;

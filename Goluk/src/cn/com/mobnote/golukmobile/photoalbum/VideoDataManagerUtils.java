@@ -1,12 +1,77 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoDataManagerUtils {
+	
+	public static List<String> getGroupName(List<VideoInfo> mDataList) {
+		List<String> mGroupListName = new ArrayList<String>();
+		for (VideoInfo info : mDataList) {
+			String time = info.videoCreateDate;
+			String tabTime = null;
+			if (time.length() > 10) {
+				tabTime = time.substring(0,10);
+			}else{
+				tabTime = time;
+			}
+			
+			if (!mGroupListName.contains(tabTime)) {
+				mGroupListName.add(tabTime);
+			}
+		}
+		
+		return mGroupListName;
+	}
+	
+	/**
+	 * IPC视频文件信息转列表显示视频信息
+	 * @param mVideoFileInfo IPC视频文件信息
+	 * @return 列表显示视频信息
+	 * @author xuhw
+	 * @date 2015年3月25日
+	 */
+	public static VideoInfo getVideoInfo(VideoFileInfo mVideoFileInfo) {
+		VideoInfo info = new VideoInfo();
+		// 文件选择状态
+		info.isSelect = false;
+		info.id = mVideoFileInfo.id;
+		info.videoSize = Utils.getSizeShow(mVideoFileInfo.size);
+		info.countTime = Utils.minutesTimeToString(mVideoFileInfo.period);
+		info.videoHP = mVideoFileInfo.resolution;
+		info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
+		 info.videoPath = mVideoFileInfo.location;
+		 info.filename = mVideoFileInfo.location;
+		 info.time = mVideoFileInfo.time;
+		 info.isNew = SettingUtils.getInstance().getBoolean("Cloud_"+mVideoFileInfo.location, true);
+		
+		String fileName = mVideoFileInfo.location;
+		fileName = fileName.replace(".mp4", ".jpg");
+		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+		GFileUtils.makedir(filePath);
+		File file = new File(filePath + File.separator + fileName);
+		if (file.exists()) {
+//			info.videoBitmap = ImageManager.getBitmapFromCache(filePath + File.separator + fileName, 194, 109);
+		} else {
+			 if(1 == mVideoFileInfo.withSnapshot){
+				 GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath), mVideoFileInfo.time);
+				 GolukDebugUtils.e("xuhw", "TTT====111111=====filename="+fileName+"===tag="+mVideoFileInfo.id);
+			 }
+		}
+		
+		return info;
+	}
 	
 	/**
 	 * 单个视频数据对象转双个

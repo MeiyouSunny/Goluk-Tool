@@ -28,8 +28,8 @@ public class FileInfoManagerUtils {
 				String day = date.substring(4,6);
 				String hour = date.substring(6,8);
 				String minute = date.substring(8,10);
-				//String second = date.substring(10, 12);
-				dateString = year + "-" + mouth + "-" + day + " " + hour + ":" + minute;
+				String second = date.substring(10, 12);
+				dateString = year + "-" + mouth + "-" + day + " " + hour + ":" + minute + ":" + second;
 			}
 			catch(Exception e){
 				e.printStackTrace();

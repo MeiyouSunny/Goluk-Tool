@@ -1,20 +1,23 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
+import java.util.List;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
+@SuppressLint("InflateParams")
 public class CloudVideoListView implements OnClickListener{
 	private View mRootLayout = null;
 	private Context mContext = null;
-	private String from = null;
-	
 	private TextView mWonderfulText = null;
 	private TextView mEmergencyText = null;
 	private TextView mLoopText = null;
@@ -25,10 +28,10 @@ public class CloudVideoListView implements OnClickListener{
 	private CustomViewPager mViewPager = null;
 	private CloudVideoAdapter mCloudVideoAdapter = null;
 	private LinearLayout functionLayout = null;
+	private int curTableState = -1;
 	
-	public CloudVideoListView(Context context, String from) {
+	public CloudVideoListView(Context context) {
 		this.mContext = context;
-		this.from = from;
 		mRootLayout = LayoutInflater.from(context).inflate(R.layout.local_video_layout, null, false);
 		initView();
 	}
@@ -46,7 +49,9 @@ public class CloudVideoListView implements OnClickListener{
 		mViewPager.setOffscreenPageLimit(3);
 		mCloudVideoAdapter = new CloudVideoAdapter(mContext);
 		mViewPager.setAdapter(mCloudVideoAdapter);
-
+		updateTableState(R.id.mWonderfulVideo);
+		
+		
 		setListener();
 	}
 	
@@ -101,6 +106,7 @@ public class CloudVideoListView implements OnClickListener{
 	}
 	
 	private void updateTableState(int id) {
+		curTableState = id;
 		mWonderfulText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_title_bg_color));
 		mEmergencyText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_title_bg_color));
 		mLoopText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_title_bg_color));
@@ -116,16 +122,19 @@ public class CloudVideoListView implements OnClickListener{
 			mWonderfulText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mWonderfulLine.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mWonderfulLine.setVisibility(View.VISIBLE);
+			mCloudVideoAdapter.loadData(IPCManagerFn.TYPE_SHORTCUT);
 			break;
 		case R.id.mEmergencyVideo:
 			mEmergencyText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mEmergencyLine.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mEmergencyLine.setVisibility(View.VISIBLE);
+			mCloudVideoAdapter.loadData(IPCManagerFn.TYPE_URGENT);
 			break;
 		case R.id.mLoopVideo:
 			mLoopText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mLoopLine.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mLoopLine.setVisibility(View.VISIBLE);
+			mCloudVideoAdapter.loadData(IPCManagerFn.TYPE_CIRCULATE);
 			break;
 
 		default:
@@ -154,8 +163,39 @@ public class CloudVideoListView implements OnClickListener{
 		mViewPager.setCanScroll(true);
 		functionLayout.setVisibility(View.VISIBLE);
 	}
+
+	public void onResume() {
+		if(null != mCloudVideoAdapter) {
+			mCloudVideoAdapter.onResume();
+		}
+	}
 	
+	public void deleteDataFlush(List<String> deleteData) {
+		mCloudVideoAdapter.deleteDataFlush(getType(), deleteData);
+	}
 	
+	public void downloadVideoFlush(List<String> deleteData) {
+		mCloudVideoAdapter.downloadVideoFlush(getType(), deleteData);
+	}
 	
+	private int getType(){
+		int type = 0;
+		switch (curTableState) {
+		case R.id.mWonderfulVideo:
+			type = 0;
+			break;
+		case R.id.mEmergencyVideo:
+			type = 1;
+			break;
+		case R.id.mLoopVideo:
+			type = 2;
+			break;
+
+		default:
+			break;
+		}
+		return type;
+	}
+		
 }
 

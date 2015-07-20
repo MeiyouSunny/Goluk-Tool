@@ -26,13 +26,12 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
-public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 	private PhotoAlbumActivity mActivity = null;
 	private LayoutInflater inflater = null;
 	private StickyListHeadersListView mListView = null;
@@ -43,12 +42,8 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 	private int screenWidth = 0;
 	/** 滚动中锁标识 */
 	private boolean lock = false;
-	private String from = null;
-	private int type = 0;
 	
-	public WonderfulVideoAdapter(Context c, StickyListHeadersListView listview, int type, String from) {
-		this.from = from;
-		this.type = type;
+	public CloudWonderfulVideoAdapter(Context c, StickyListHeadersListView listview) {
 		this.mActivity = (PhotoAlbumActivity)c;
 		this.mListView = listview;
 		this.inflater = LayoutInflater.from(c);
@@ -56,12 +51,13 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		this.mDataList=new ArrayList<DoubleVideoInfo>();
 		this.mGroupNameList = new ArrayList<String>();
+		
 	}
 	
 	public void setData(List<String> groupname, List<DoubleVideoInfo> data) {
 		mDataList.clear();
-		mDataList.addAll(data);
 		mGroupNameList.clear();
+		mDataList.addAll(data);
 		mGroupNameList.addAll(groupname);
 		count = mDataList.size();
 		this.notifyDataSetChanged();
@@ -107,8 +103,6 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 			holder.line = (ImageView)convertView.findViewById(R.id.line);
 			holder.mNewIcon1 = (ImageView)convertView.findViewById(R.id.mNewIcon1);
 			holder.mNewIcon2 = (ImageView)convertView.findViewById(R.id.mNewIcon2);
-			holder.mPreView1 = (ImageView)convertView.findViewById(R.id.mPreView1);
-			holder.mPreView2 = (ImageView)convertView.findViewById(R.id.mPreView2);
 			
 			RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int)(2*density), (int)(height + 4*density));
 			lineParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -133,19 +127,6 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
-		}
-		
-		if ("local".equals(from)) {
-			holder.mPreView1.setBackgroundResource(R.drawable.photo_preview_icon);
-			holder.mPreView2.setBackgroundResource(R.drawable.photo_preview_icon);
-		}else {
-			if (type == IPCManagerFn.TYPE_CIRCULATE) {
-				holder.mPreView1.setBackgroundResource(R.drawable.photo_preview_icon);
-				holder.mPreView2.setBackgroundResource(R.drawable.photo_preview_icon);
-			}else {
-				holder.mPreView1.setBackgroundResource(R.drawable.photo_share_icon);
-				holder.mPreView2.setBackgroundResource(R.drawable.photo_share_icon);
-			}
 		}
 		
 		holder.image1.setImageResource(R.drawable.tacitly_pic);
@@ -286,7 +267,8 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 	 */
 	private void displayVideoQuality(String videoHP, ImageView image) {
 		image.setVisibility(View.GONE);
-		if ("1080".equals(videoHP)) {
+		GolukDebugUtils.e("", "TTTTTTTTTTTT===@@@@@===videoHP="+videoHP);
+		if ("1080P".equals(videoHP)) {
 			image.setVisibility(View.VISIBLE);
 			image.setBackgroundResource(R.drawable.hd1080p);
 		}
@@ -397,8 +379,6 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		ImageView line;
 		ImageView mNewIcon1;
 		ImageView mNewIcon2;
-		ImageView mPreView1;
-		ImageView mPreView2;
 	}
 	
 	/**
@@ -419,5 +399,14 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		lock = false;
 		this.notifyDataSetChanged();
 	}
+	
+	public void updateImage(String filename) {
+		filename = filename.replace(".jpg", ".mp4");
+		ImageView image = (ImageView)mListView.findViewWithTag("image:"+filename);
+		if (null != image) {
+			loadImage(filename, image);
+		}
+	}
 
 }
+

@@ -178,6 +178,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			ma.mApp.mUser.setUserInterface(null);
 //			intent = new Intent(mContext, LocalVideoListActivity.class);
 			intent = new Intent(mContext, PhotoAlbumActivity.class);
+			intent.putExtra("from", "local");
 			mContext.startActivity(intent);
 			break;
 		case R.id.setup_item:

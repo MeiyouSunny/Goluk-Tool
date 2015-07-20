@@ -76,7 +76,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String>{
 				mVideoInfo.videoSize = size;
 				mVideoInfo.isSelect = false;
 				mVideoInfo.videoPath = videoPath;
-				mVideoInfo.countTime = Utils.minutesTimeToString(period);;
+				mVideoInfo.countTime = Utils.minutesTimeToString(period);
 				if(1 == hp) {
 					mVideoInfo.videoHP = "1080";
 				}else if(2 == hp) {
@@ -85,7 +85,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String>{
 					mVideoInfo.videoHP = "480";
 				}
 				mVideoInfo.filename = fileName;
-				mVideoInfo.isNew = SettingUtils.getInstance().getBoolean(fileName, true);
+				mVideoInfo.isNew = SettingUtils.getInstance().getBoolean("Local_"+fileName, true);
 				
 				mLocalListData.add(mVideoInfo);
 			}

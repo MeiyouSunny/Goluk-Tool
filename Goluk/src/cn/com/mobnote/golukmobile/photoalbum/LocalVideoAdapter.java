@@ -13,23 +13,25 @@ public class LocalVideoAdapter extends PagerAdapter{
 	private WonderfulVideoListView mWonderfulVideoLiseView = null;
 	private WonderfulVideoListView mEmergencyVideoLiseView = null;
 	private WonderfulVideoListView mLoopVideoLiseView = null;
+	private String from = null;
 	
-	public LocalVideoAdapter(Context c) {
+	public LocalVideoAdapter(Context c, String from) {
 		this.mContext=c;
+		this.from = from;
 	}
 	
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		if(0 == position){
-			mWonderfulVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_SHORTCUT);
+			mWonderfulVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_SHORTCUT, from);
 			container.addView(mWonderfulVideoLiseView.getRootView());
 			return mWonderfulVideoLiseView.getRootView();
 		}else if(1 == position){
-			mEmergencyVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_URGENT);
+			mEmergencyVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_URGENT, from);
 			container.addView(mEmergencyVideoLiseView.getRootView());
 			return mEmergencyVideoLiseView.getRootView();
 		}else {		
-			mLoopVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_CIRCULATE);
+			mLoopVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_CIRCULATE, from);
 			container.addView(mLoopVideoLiseView.getRootView());
 			return mLoopVideoLiseView.getRootView();
 		}

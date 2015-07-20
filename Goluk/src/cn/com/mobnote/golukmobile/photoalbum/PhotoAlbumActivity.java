@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.LruCache;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 	private TextView mTitleName = null;
@@ -42,6 +44,8 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 	private List<String> selectedListData = null;
 	private ImageView mDownLoadIcon = null;
 	private ImageView mDeleteIcon = null;
+	public static final int UPDATELOGINSTATE = -1;
+	public static Handler mHandler = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,18 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 		from = getIntent().getStringExtra("from");
 		selectedListData = new ArrayList<String>();
 		initView();
+		
+		mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case UPDATELOGINSTATE:
+					updateLinkState();
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
 	}
 	
 	private void initCache() {
@@ -92,8 +108,19 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 		mDeleteIcon = (ImageView)findViewById(R.id.mDeleteIcon);
 		
 		updateBtnState(R.id.mLocalVideoBtn);
+		updateLinkState();
 		
 		setListener();
+	}
+	
+	private void updateLinkState() {
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			mCloudIcon.setBackgroundResource(R.drawable.my_cloud);
+			mCloudText.setText(getResources().getString(R.string.photoalbum_cloud_video_text));
+		}else {
+			mCloudIcon.setBackgroundResource(R.drawable.my_cloud_no_link);
+			mCloudText.setText("未连接极路客");
+		}
 	}
 	
 	private void setListener() {
@@ -117,7 +144,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 			mLocalIcon.setBackgroundResource(R.drawable.my_video_press);
 			mCloudIcon.setBackgroundResource(R.drawable.my_cloud);
 			mLocalText.setTextColor(getResources().getColor(R.color.photoalbum_text_color));
-			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_text_color_gray));
+			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 			
 			mLocalVideoListView.show();
 			if(null != mCloudVideoListView) {
@@ -128,10 +155,10 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 			mCloudIcon.setBackgroundResource(R.drawable.my_cloud_press);
 			mLocalIcon.setBackgroundResource(R.drawable.my_video);
 			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_text_color));
-			mLocalText.setTextColor(getResources().getColor(R.color.photoalbum_text_color_gray));
+			mLocalText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 			
 			if(null == mCloudVideoListView) {
-				mCloudVideoListView = new CloudVideoListView(this, from);
+				mCloudVideoListView = new CloudVideoListView(this);
 				mMainLayout.addView(mCloudVideoListView.getRootView());
 			}
 			mLocalVideoListView.hide();
@@ -170,10 +197,12 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 			updateBtnState(R.id.mLocalVideoBtn);
 			break;
 		case R.id.mCloudVideoBtn:
-			updateBtnState(R.id.mCloudVideoBtn);
+			if (GolukApplication.getInstance().getIpcIsLogin()) {
+				updateBtnState(R.id.mCloudVideoBtn);
+			}
 			break;
 		case R.id.mDownLoadBtn:
-			
+			downloadVideoFlush();
 			break;
 		case R.id.mDeleteBtn:
 			deleteDataFlush();
@@ -188,7 +217,14 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 		if(R.id.mLocalVideoBtn ==  curId) {
 			mLocalVideoListView.deleteDataFlush(selectedListData);
 		}else if(R.id.mCloudVideoBtn == curId) {
-			
+			mCloudVideoListView.deleteDataFlush(selectedListData);
+		}
+		resetEditState();
+	}
+	
+	private void downloadVideoFlush() {
+		if(R.id.mCloudVideoBtn == curId) {
+			mCloudVideoListView.downloadVideoFlush(selectedListData);
 		}
 		resetEditState();
 	}
@@ -227,7 +263,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 		}
 	}
 	
-	
 	private void resetEditState() {
 		mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon);
 		mDeleteIcon.setBackgroundResource(R.drawable.select_video_del_icon);
@@ -256,6 +291,15 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 	
 	private void exit() {
 		finish();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(null != mCloudVideoListView) {
+			mCloudVideoListView.onResume();
+		}
+		GolukApplication.getInstance().setContext(this, "ipcfilemanager");
 	}
 	
 	@Override
