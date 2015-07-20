@@ -22,7 +22,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -61,7 +60,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	private View mViewSolid1, mViewSolid2;
 	private ImageView mImageArrow1, mImageArrow2, mImageArrow3;
 	/** 右 **/
-	private boolean clickBtn = false;
+	public static boolean clickBtn = false;
 	/** 头像 **/
 	private RelativeLayout mHeadLayout = null;
 	/** 昵称 **/
@@ -178,10 +177,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				mImageArrow3.setVisibility(View.VISIBLE);
 				translateAnim(mImageHead);
 				rightBtn.setText("完成");
-				clickBtn = true;
 			} else {
 				saveInfo();
-				clickBtn = false;
 			}
 			break;
 		// 头像
@@ -189,7 +186,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			if (clickBtn) {
 				Intent itHead = new Intent(UserPersonalInfoActivity.this, UserPersonalHeadActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("intentHeadText", head);
+				if(head2 == null)
+					head2 = head;
+				bundle.putString("intentHeadText", head2);
 				itHead.putExtras(bundle);
 				startActivityForResult(itHead, 3);
 			}
@@ -199,7 +198,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			if (clickBtn) {
 				Intent itName = new Intent(UserPersonalInfoActivity.this, UserPersonalNameActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("intentNameText", name);
+				bundle.putString("intentNameText", mTextName.getText().toString());
 				itName.putExtras(bundle);
 				startActivityForResult(itName, 1);
 			}
@@ -209,7 +208,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			if (clickBtn) {
 				Intent itSign = new Intent(UserPersonalInfoActivity.this, UserPersonalSignActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("intentSignText", sign);
+				bundle.putString("intentSignText", mTextSign.getText().toString());
 				itSign.putExtras(bundle);
 				startActivityForResult(itSign, 2);
 			}
@@ -303,7 +302,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			e.printStackTrace();
 		}
 		if (name2.equals(name) && head2.equals(head) && sign2.equals(sign)) {
-//			this.finish();
+			// this.finish();
 			GolukDebugUtils.i("lily", "数据没有修改");
 			mViewSolid1.setVisibility(View.GONE);
 			mViewSolid2.setVisibility(View.GONE);
@@ -355,7 +354,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 					mImageArrow3.setVisibility(View.GONE);
 					translateAnim(mImageHead);
 					rightBtn.setText("编辑");
-//					this.finish();
+					// this.finish();
 					break;
 				case 405:
 					GolukUtils.showToast(mContext, "该用户未注册");
@@ -388,15 +387,20 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	public void translateAnim(ImageView mImageView) {
 		WindowManager wm = this.getWindowManager();
 		int width = wm.getDefaultDisplay().getWidth() / 3;
-		TranslateAnimation animation = new TranslateAnimation(0, -width, 0, 0);
-		animation.setDuration(500);
-		if(clickBtn){
+		TranslateAnimation animation = null;
+		if (clickBtn) {
 			animation = new TranslateAnimation(-width, 0, 0, 0);
 			animation.setDuration(500);
+			clickBtn = false;
+		}else{
+			animation = new TranslateAnimation(0, -width, 0, 0);
+			animation.setDuration(500);
+			clickBtn = true;
 		}
 		animation.setFillAfter(true);
 		mImageView.startAnimation(animation);
 	}
+
 	/**
 	 * 关闭加载中对话框
 	 * 

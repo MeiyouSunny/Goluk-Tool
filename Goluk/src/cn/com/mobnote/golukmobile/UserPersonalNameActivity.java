@@ -90,6 +90,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			if(name.trim().isEmpty()){
 				UserUtils.showDialog(this, "数据修改失败，昵称不能为空");
 			}else{
+				UserPersonalInfoActivity.clickBtn = true;
 				Intent it = new Intent(UserPersonalNameActivity.this,UserPersonalInfoActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("itName", name);

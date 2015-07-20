@@ -196,18 +196,12 @@
                     android:contentDescription="@string/imgdes" />
             </RelativeLayout>
 
-            <View
-                android:id="@+id/user_personal_solid_6"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:background="@drawable/solid" />
             <!-- 通用设置 -->
 
             <View
                 android:id="@+id/user_personal_solid_7"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                android:layout_marginTop="20dp"
                 android:background="@drawable/solid" />
 
             <RelativeLayout
@@ -293,19 +287,13 @@
                     android:background="@drawable/editor_arrow"
                     android:contentDescription="@string/imgdes" />
             </RelativeLayout>
-
-            <View
-                android:id="@+id/user_personal_solid_10"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:background="@drawable/solid" />
+            
             <!-- 安装指导 -->
 
             <View
                 android:id="@+id/user_personal_solid_11"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                android:layout_marginTop="20dp"
                 android:background="@drawable/solid" />
 
             <RelativeLayout
@@ -343,18 +331,12 @@
                     android:contentDescription="@string/imgdes" />
             </RelativeLayout>
 
-            <View
-                android:id="@+id/user_personal_solid_12"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:background="@drawable/solid" />
             <!-- 版本信息 -->
 
             <View
                 android:id="@+id/user_personal_solid_13"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                android:layout_marginTop="20dp"
                 android:background="@drawable/solid" />
 
             <RelativeLayout

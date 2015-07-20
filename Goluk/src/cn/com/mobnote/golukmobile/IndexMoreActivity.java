@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.user.UserInterface;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -246,11 +245,15 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			break;
 		// 极路客小技巧
 		case R.id.skill_item:
-			GolukUtils.openUrl(getRtmpAddress() + "?type=2", mContext);
+			Intent itSkill = new Intent(mContext,UserOpenUrlActivity.class);
+			itSkill.putExtra(UserOpenUrlActivity.FROM_TAG, "skill");
+			mContext.startActivity(itSkill);
 			break;
 		// 安装指导
 		case R.id.install_item:
-			GolukUtils.openUrl(getRtmpAddress() + "?type=3", mContext);
+			Intent itInstall = new Intent(mContext,UserOpenUrlActivity.class);
+			itInstall.putExtra(UserOpenUrlActivity.FROM_TAG, "install");
+			mContext.startActivity(itInstall);
 			break;
 		// 版本信息
 		case R.id.question_item:
@@ -259,19 +262,11 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			break;
 		// 购买极路客
 		case R.id.shopping_item:
-			GolukUtils.openUrl(getRtmpAddress() + "?type=4", mContext);
+			Intent itShopping = new Intent(mContext,UserOpenUrlActivity.class);
+			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
+			mContext.startActivity(itShopping);
 			break;
 		}
-	}
-
-	/**
-	 * 读取UrlConfig
-	 */
-	private String getRtmpAddress() {
-		String rtmpUrl = ma.mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
-				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
-		GolukDebugUtils.e("", "jyf-----MainActivity-----test:" + rtmpUrl);
-		return rtmpUrl;
 	}
 
 	private void dismissDialog() {
