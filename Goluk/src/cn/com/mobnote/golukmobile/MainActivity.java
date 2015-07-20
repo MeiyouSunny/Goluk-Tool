@@ -508,10 +508,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mWiFiStatus = WIFI_STATE_SUCCESS;
 		if (CarRecorderActivity.mHandler != null) {
-			Message message = new Message();
-			message.obj = mGolukName;
-			message.what = WIFI_STATE_RESULT;
-			CarRecorderActivity.mHandler.sendMessage(message);
+			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_RESULT);
 		}
 	}
 

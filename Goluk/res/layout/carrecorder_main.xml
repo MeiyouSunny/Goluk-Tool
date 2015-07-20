@@ -198,6 +198,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="#17191a"
+            android:paddingLeft="10dp"
             android:hint="描述下这个视频吧..."
             android:textColor="#808181"
             android:textSize="13sp" />

@@ -90,6 +90,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			holder = new ViewHolder();
 			holder.username = (TextView) convertView.findViewById(R.id.username);
 			holder.looknumber = (TextView) convertView.findViewById(R.id.looknumber_text);
+			holder.looknumberIcon = (TextView) convertView.findViewById(R.id.looknumber_icon);
 			holder.userhead = (ImageView) convertView.findViewById(R.id.user_head);
 			holder.videotitle = (TextView) convertView.findViewById(R.id.video_title);
 			holder.sharetime = (TextView) convertView.findViewById(R.id.time);
@@ -114,6 +115,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
 			holder.reporticon.setVisibility(View.GONE);
 			holder.liveicon.setVisibility(View.VISIBLE);
+			holder.looknumber.setVisibility(View.GONE);
+			holder.looknumberIcon.setVisibility(View.GONE);
 			// holder.mSurfaceView.setVisibility(View.GONE);
 		} else {// 点播
 			holder.reporticon.setVisibility(View.VISIBLE);
@@ -238,6 +241,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 	public static class ViewHolder {
 		TextView username;
 		TextView looknumber;
+		TextView looknumberIcon;
 		ImageView userhead;
 		TextView videotitle;
 		TextView sharetime;
