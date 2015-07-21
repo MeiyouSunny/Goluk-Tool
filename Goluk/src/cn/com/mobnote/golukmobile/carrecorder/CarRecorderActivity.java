@@ -1,8 +1,6 @@
 package cn.com.mobnote.golukmobile.carrecorder;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,14 +21,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.View.OnClickListener;
@@ -95,7 +97,7 @@ import com.rd.car.player.RtmpPlayerView;
  * 
  * @author xuhw
  */
-public class CarRecorderActivity extends BaseActivity implements OnClickListener, IPCManagerFn, IPopwindowFn {
+public class CarRecorderActivity extends BaseActivity implements OnClickListener,OnTouchListener, IPCManagerFn, IPopwindowFn {
 	public static Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -477,6 +479,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		fqzb = (TextView) findViewById(R.id.fqzb);
 		liveTime = (TextView) findViewById(R.id.live_time);
 		more = (Button) findViewById(R.id.car_recorder);
+		
 		liveBtn = (ImageButton) findViewById(R.id.liveBtn);
 		mRtmpPlayerView = (RtmpPlayerView) findViewById(R.id.mRtmpPlayerView);
 		image1 = (ImageView) findViewById(R.id.image1);
@@ -512,6 +515,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mAddr.setText(addr);
 		}
 	}
+	
 
 	/**
 	 * 设置监听事件
@@ -533,7 +537,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		image1.setOnClickListener(this);
 		image2.setOnClickListener(this);
 		image3.setOnClickListener(this);
-		
+		more.setOnTouchListener(this);
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		// findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -702,6 +706,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mRtmpPlayerView.start();
 		}
 	}
+	
 
 	@Override
 	public void onClick(View arg0) {
@@ -1609,36 +1614,72 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	public void initVideoImage() {
 		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
+		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
 		String file = mFilePath + filePaths[0];
 		List<String> list = this.getVideoConfigFile(file);
-		String videoname1 = list.get(list.size() - 1);
-		String videoname2 = list.get(list.size() - 2);
-
-		String name1 = mImagePath + videoname1.replace("mp4", "jpg");
-		String name2 = mImagePath + videoname2.replace("mp4", "jpg");
-
-		File video1 = new File(name1);
-		File video2 = new File(name2);
-
-		if (video1.exists()) {
-			VideoShareInfo vsi = new VideoShareInfo();
-			vsi.setBitmap(ImageManager.getBitmapFromCache(name1));
-			vsi.setName(videoname1);
-			images[0] = vsi;
-			image1.setImageBitmap(vsi.getBitmap());
-		}
-
-		if (video2.exists()) {
-			VideoShareInfo vsi = new VideoShareInfo();
-			vsi.setBitmap(ImageManager.getBitmapFromCache(name2));
-			vsi.setName(videoname2);
+		String videoname1 = "";
+		String videoname2 = "";
+		
+		
+		String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/";
+		
+		int flog = 0;
+		String videoname = "";
+		
+		File vfile = null;
+		for(int i=list.size()-1;i<list.size();i--){
+			videoname = list.get(i);
+			vfile = new File(path+videoname);
 			
-			images[1] = vsi;
-			image2.setImageBitmap(vsi.getBitmap());
+			
+			if(vfile.exists()){
+				flog++;
+				if(flog <= 1){
+					videoname1 = videoname;
+				}else if(flog == 2){
+					videoname2 = videoname;
+				}else{
+					break;
+				}
+				
+			}
+		}
+		
+		if(!"".equals(videoname1)){
+			String name1 = mImagePath + videoname1.replace("mp4", "jpg");
+			File video1 = new File(name1);
+			VideoShareInfo vsi1 = new VideoShareInfo();
+			if (video1.exists()) {
+				vsi1.setBitmap(ImageManager.getBitmapFromCache(name1));
+			}else{
+				vsi1.setBitmap(bitmap);
+			}
+			
+			vsi1.setName(videoname1);
+			images[0] = vsi1;
+			image1.setImageBitmap(vsi1.getBitmap());
+		}else{
+			image1.setVisibility(View.INVISIBLE);
+		}
+		
+		if(!"".equals(videoname2)){
+			String name2 = mImagePath + videoname2.replace("mp4", "jpg");
+			File video2 = new File(name2);
+			VideoShareInfo vsi2 = new VideoShareInfo();
+			vsi2.setName(videoname2);
+			if (video2.exists()) {
+				vsi2.setBitmap(ImageManager.getBitmapFromCache(name2));
+			}else{
+				vsi2.setBitmap(bitmap);
+			}
+			
+			images[1] = vsi2;
+			image2.setImageBitmap(vsi2.getBitmap());
+		}else{
+			image2.setVisibility(View.INVISIBLE);
 		}
 		
 		
-		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
 		VideoShareInfo pic = new VideoShareInfo();
 		pic.setBitmap(bitmap);
 		pic.setName("");
@@ -1683,6 +1724,29 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		int action = event.getAction();
+		switch (v.getId()) {
+
+		case R.id.car_recorder:
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				Drawable more_down = this.getResources().getDrawable(R.drawable.driving_car_next_btn1);
+				more.setCompoundDrawablesWithIntrinsicBounds(null, null,more_down, null);
+				more.setTextColor(Color.rgb(59, 151, 245));
+				break;
+			case MotionEvent.ACTION_UP:
+				Drawable more_up = this.getResources().getDrawable(R.drawable.driving_car_next_btn);
+				more.setCompoundDrawablesWithIntrinsicBounds(null, null, more_up, null);
+				more.setTextColor(Color.rgb(204, 204, 204));
+				break;
+			}
+			break;
+		}
+		return false;
 	}
 
 }

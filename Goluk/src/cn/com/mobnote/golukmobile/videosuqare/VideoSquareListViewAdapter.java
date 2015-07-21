@@ -24,11 +24,14 @@ import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
@@ -39,7 +42,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 @SuppressLint("InflateParams")
-public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn {
+public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn,OnTouchListener {
 	private Context mContext = null;
 	private List<VideoSquareInfo> mVideoSquareListData = null;
 	private HashMap<String, DWMediaPlayer> mDWMediaPlayerList = null;
@@ -158,6 +161,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 				mVideoSquareInfo, form, sharePlatform, this));
 		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
 				mVideoSquareInfo, form, sharePlatform, this));
+		holder.sharebtn.setOnTouchListener(this);
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
@@ -332,6 +336,32 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			}
 		}
 
+	}
+	
+	
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		int action = event.getAction();
+		switch (v.getId()) {
+
+		case R.id.share_btn:
+			Button sharebtn = (Button) v;
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				Drawable more_down = mContext.getResources().getDrawable(R.drawable.share_btn_press);
+				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null,null, null);
+				sharebtn.setTextColor(Color.rgb(59, 151, 245));
+				break;
+			case MotionEvent.ACTION_UP:
+				Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
+				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null,null, null);
+				sharebtn.setTextColor(Color.rgb(204, 204, 204));
+				break;
+			}
+			break;
+		}
+		return false;
 	}
 
 }
