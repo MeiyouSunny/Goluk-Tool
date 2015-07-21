@@ -677,6 +677,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
 		
+		indexMoreActivity.showView();
+		
 		super.onResume();
 	}
 
