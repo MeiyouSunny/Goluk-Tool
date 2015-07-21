@@ -74,9 +74,12 @@
     <color name="share_type_select">#0080ff</color>
     <color name="share_type_unselect">#a5a7aa</color>
     <color name="share_title_color">#d7d7d7</color>
-    
     <color name="share_type_shigu_select">#0080ff</color>
     <color name="share_type_shigu_unselect">#d7d7d7</color>
     <color name="share_filter_grid_txt">#d7d7d7</color>
+
+    <!-- 友盟分享背景颜色 -->
+    <color name="youmeng_share_bg">#8B8878</color>
+    <color name="youmeng_share_txt_color">#aaaaaa</color>
 
 </resources>

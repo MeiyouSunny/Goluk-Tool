@@ -60,7 +60,7 @@ public class ShareFilterLayout {
 		gridLayout.setBackgroundResource(R.color.color_bg_comm);
 		gridLayout.setNumColumns(4);
 		gridLayout.setPadding(16, 30, 16, 30);
-		gridLayout.setVerticalSpacing(22);
+		gridLayout.setVerticalSpacing(37);
 		gridLayout.setHorizontalSpacing(16);
 		return gridLayout;
 	}

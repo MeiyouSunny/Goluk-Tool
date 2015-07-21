@@ -16,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -48,8 +46,6 @@ import com.rd.car.editor.FilterVideoEditorException;
 public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
 	/** 视频编辑页面handler用来接收消息,更新UI */
 	public static Handler mVideoEditHandler = null;
-	/** mv滤镜appter */
-	// public MVListAdapter mMVListAdapter = null;
 	/** 自定义播放器支持特效 */
 	public FilterPlaybackView mVVPlayVideo = null;
 	/** application */

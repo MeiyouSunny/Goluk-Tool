@@ -20,7 +20,7 @@
     <string name="share_title2">即刻分享</string>
     <string name="share_type">类型</string>
     <string name="share_filter">滤镜</string>
-    <string name="share_str_open">公开</string>
+    <string name="share_str_open">公开(发布到广场)</string>
     <string name="share_str_close">不公开</string>
     <string name="share_str_sayother">说点其它的!</string>
     <string name="share_str_type_bg">曝光台</string>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.umeng.widget.CustomShareBoard;
@@ -15,17 +16,25 @@ public class ShareDeal implements OnClickListener {
 	private CustomShareBoard mShareBoard = null;
 	/** 保存当前的分享方式 */
 	private String mCurrentShareType = "2";
+	
+	private int txtColor = 0;
 
 	public ShareDeal(Activity activity, RelativeLayout rootLayout) {
 		mActivity = activity;
 		mYouMengRootLayout = rootLayout;
 		mSharePlatform = new SharePlatformUtil(mActivity);
 		mSharePlatform.configPlatforms();// 设置分享平台的参数
+		
+		txtColor = mActivity.getResources().getColor(R.color.youmeng_share_txt_color);
 
 		initView();
 	}
 
 	private void initView() {
+		mYouMengRootLayout.setBackgroundResource(R.color.youmeng_share_bg);
+		TextView tv =(TextView) mYouMengRootLayout.findViewById(R.id.share_text);
+		tv.setTextSize(13);
+		tv.setTextColor(txtColor);
 		mYouMengRootLayout.findViewById(R.id.wechat).setOnClickListener(this);
 		mYouMengRootLayout.findViewById(R.id.wechat_circle).setOnClickListener(this);
 		mYouMengRootLayout.findViewById(R.id.qq).setOnClickListener(this);

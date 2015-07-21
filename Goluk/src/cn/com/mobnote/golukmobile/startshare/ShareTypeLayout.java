@@ -1,7 +1,6 @@
 package cn.com.mobnote.golukmobile.startshare;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.content.Context;
 import android.util.SparseIntArray;
@@ -31,10 +30,11 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	private int mCurrentType = TYPE_BG;
 
 	public final String[] typeArray = { "曝光台", "事故大爆料", "美丽风景", "随手拍" };
-	private final String[] bgArray = { "曝光台1", "曝光台2", "曝光台3", "曝光台4", "曝光台5", "曝光台6" };
-	private final String[] sgArray = { "事故大爆料1", "事故大爆料2", "事故大爆料3", "事故大爆料4" };
-	private final String[] mlArray = { "美丽风景1", "美丽风景2", "美丽风景3" };
-	private final String[] sspArray = { "随手拍1", "随手拍2" };
+
+	private final String[] bgArray = { "加塞！加毛线啊！！不能好好排队啊！！！", "看见这样扔垃圾的也是醉了！", "打个转向灯真的那么难么？" };
+	private final String[] sgArray = { "偶遇一场事故，惊出一身冷汗！", "又一起事故，大家都应该慢点啊！", "车祸现场，极其惨烈......" };
+	private final String[] mlArray = { "世上美景无灱，不如车外沿途小路！", "这样风景如画的地方，心情也格外舒畅！", "这景色，美呆了！" };
+	private final String[] sspArray = { "灵光一闪，拒绝无聊时光！", "在路上，遇到最美的惊喜！", "拍拍回家的那条路！" };
 
 	private Context mContext = null;
 	private LayoutInflater mLayoutFlater = null;
