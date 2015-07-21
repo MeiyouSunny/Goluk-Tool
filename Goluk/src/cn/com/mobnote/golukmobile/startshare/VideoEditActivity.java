@@ -8,11 +8,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -66,15 +62,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private TextView mLoadingText = null;
 	/** 进度条 */
 	private ProgressBar mVideoProgressBar = null;
-	/** mv列表layout */
-
 	/** loading动画 */
 	private AnimationDrawable mLoadingAnimation = null;
-	/** 滤镜保存视频路径 */
-	private String mVideoSavePath = null;
-	/** 视频存放外卡文件路径 */
-	private static final String APP_FOLDER = android.os.Environment.getExternalStorageDirectory().getPath();
-	private String mNewVideoFilePath = APP_FOLDER + "/" + "goluk/";
 	/** 进度条线程 */
 	private Thread mProgressThread = null;
 	/** 当前编辑的视频类型 3 紧急 2 精彩 */
@@ -87,6 +76,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private ShareFilterLayout mFilterLayout = null;
 	public ShareTypeLayout mTypeLayout = null;
 	public InputLayout mInputLayout = null;
+	private CreateNewVideo mCreateNewVideo = null;
+	private UploadVideo mUploadVideo = null;
+	private ShareDeal mShareDealTool = null;
 
 	private boolean misCurrentType = true;
 
@@ -102,12 +94,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private LayoutInflater mLayoutFlater = null;
 	private RelativeLayout mYouMengLayout = null;
 
-	private CreateNewVideo mCreateNewVideo = null;
-	private UploadVideo mUploadVideo = null;
 	/** 请求分享连接Dialog */
 	private ProgressDialog mPdsave = null;
 
-	private ShareDeal mShareDealTool = null;
+	private int resTypeSelectColor = 0;
+	private int resTypeUnSelectColor = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -145,37 +136,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mBaseHandler.sendEmptyMessageDelayed(100, 100);
 	}
 
-	Bitmap typeNoSelectBitmap = null;
-	Drawable typeNoSelectDraw = null;
-
-	Bitmap typeSelectBitmap = null;
-	Drawable typeSelectDraw = null;
-
-	Bitmap filterNoSelectBitmap = null;
-	Drawable filterNoSelectDraw = null;
-
-	Bitmap filterSelectBitmap = null;
-	Drawable filterSelectDraw = null;
-
-	private int resTypeSelectColor = 0;
-	private int resTypeUnSelectColor = 0;
-
 	private void loadRes() {
-		typeNoSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_type_icon);
-		typeNoSelectDraw = new BitmapDrawable(typeNoSelectBitmap);
-
-		typeSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_type_press_icon);
-		typeSelectDraw = new BitmapDrawable(typeSelectBitmap);
-
-		filterNoSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_filter_icon);
-		filterNoSelectDraw = new BitmapDrawable(filterNoSelectBitmap);
-
-		filterSelectBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.share_filter_press_icon);
-		filterSelectDraw = new BitmapDrawable(filterSelectBitmap);
-
 		resTypeSelectColor = this.getResources().getColor(R.color.share_type_select);
 		resTypeUnSelectColor = this.getResources().getColor(R.color.share_type_unselect);
-		;
 	}
 
 	@Override
@@ -338,76 +301,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			mVVPlayVideo.pause();
 		}
 	}
-
-	/**
-	 * 保存视频
-	 */
-	// private void onSaveVideo() {
-	// try {
-	// // 创建保存视频参数，默认参数为 输出size为480*480,码率为512k，帧率为21的视频
-	// EditorParam editorParam = new EditorParam();
-	// // 高清
-	// editorParam.nVideoWidth = 854;
-	// editorParam.nVideoHeight = 480;
-	// // //分辨率 帧率 码率 480*270 30fps 1400kbps
-	// editorParam.nVideoBitrate = 1500 * 1024;
-	// editorParam.nFps = 15;
-	//
-	// mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
-	// mVVPlayVideo.saveVideo(mVideoSavePath, editorParam, new
-	// FilterPlaybackView.FilterVideoEditorListener() {
-	//
-	// @Override
-	// public void onFilterVideoSaveStart() {
-	// showLoadingView();
-	// }
-	//
-	// @Override
-	// public boolean onFilterVideoSaving(int nProgress, int nMax) {
-	// if (nProgress > 0) {
-	// mLoadingText.setText("视频生成中" + nProgress + "%");
-	// }
-	// // 返回false代表取消保存。。。
-	// return true;
-	// }
-	//
-	// @Override
-	// public void onFilterVideoEnd(boolean bSuccess, boolean bCancel) {
-	//
-	// GolukDebugUtils.e("",
-	// "VideoEditActivity---------onFilterVideoEnd- sucess:" + bSuccess
-	// + "  cancel:" + bCancel);
-	//
-	// hideLoadingView();
-	// if (bCancel) {
-	// // strInfo = "已取消视频保存！";
-	// } else if (bSuccess) {
-	// // 视频保存成功,跳转到分享页面
-	// toShareActivity(mVideoSavePath);
-	// }
-	//
-	// if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
-	// try {
-	// mVVPlayVideo.reload();
-	// } catch (FilterVideoEditorException e) {
-	// GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" +
-	// e.getMessage());
-	// }
-	// }
-	// }
-	//
-	// @Override
-	// public void onFilterVideoSaveError(int nErrorType, int nErrorNo, String
-	// strErrorInfo) {
-	// GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + strErrorInfo);
-	// hideLoadingView();
-	// }
-	// });
-	// } catch (FilterVideoEditorException e) {
-	// GolukUtils.showToast(this, "保存视频失败，" + e.getMessage());
-	// hideLoadingView();
-	// }
-	// }
 
 	private void showLoadingView() {
 		// 显示视频导出loading

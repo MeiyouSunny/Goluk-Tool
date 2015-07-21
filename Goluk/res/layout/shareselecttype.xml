@@ -4,51 +4,74 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg_comm" >
 
-    <HorizontalScrollView
+    <LinearLayout
         android:id="@+id/shareselecttype_type"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:scrollbars="none" >
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:layout_weight="1" >
 
             <TextView
                 android:id="@+id/share_type_bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
                 android:text="@string/share_str_type_bg"
                 android:textSize="@dimen/share_type_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
 
             <TextView
                 android:id="@+id/share_type_sg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
                 android:text="@string/share_str_type_sg"
                 android:textSize="@dimen/share_type_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
 
             <TextView
                 android:id="@+id/share_type_ml"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
                 android:text="@string/share_str_type_ml"
                 android:textSize="@dimen/share_type_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
 
             <TextView
                 android:id="@+id/share_type_ssp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
                 android:text="@string/share_str_type_ssp"
                 android:textSize="@dimen/share_type_size" />
-        </LinearLayout>
-    </HorizontalScrollView>
+        </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/share_open_layout"
