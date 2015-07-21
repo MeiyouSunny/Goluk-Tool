@@ -62,6 +62,9 @@ public class SharedPrefUtil {
 	/**下载ipc升级文件时保存version**/
 	public static final String PROPERTY_SAVE_IPC_DOWN_VERSION = "property_ipc_down_version";
 	
+	/**ipc密码**/
+	public static final String PROPERTY_SAVE_IPC_PASSWORD = "property_ipc_password";
+	
 	private SharedPreferences preference = null;
 	
 	private Editor mEditor = null;
@@ -430,6 +433,14 @@ public class SharedPrefUtil {
 		mEditor.remove(PROPERTY_SAVE_IPC_URL);
 		mEditor.remove(PROPERTY_SAVE_IPC_PATH);
 		mEditor.commit();
+	}
+	
+	public void saveIpcPwd(String ipcPwd){
+		preference.edit().putString(PROPERTY_SAVE_IPC_PASSWORD ,ipcPwd).commit();
+	}
+	
+	public String getIpcPwd(){
+		return preference.getString(PROPERTY_SAVE_IPC_PASSWORD, "");
 	}
 	
 }

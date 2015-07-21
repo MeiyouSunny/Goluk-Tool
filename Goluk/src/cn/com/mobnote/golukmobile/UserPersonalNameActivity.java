@@ -1,8 +1,11 @@
 package cn.com.mobnote.golukmobile;
 
+import cn.com.mobnote.user.UserUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -18,13 +21,17 @@ import android.widget.TextView;
  */
 public class UserPersonalNameActivity extends BaseActivity implements OnClickListener{
 
-	//title
-	ImageButton btnBack;
-	TextView mTextTitle,mTextOk;
-	//body
-	EditText mEditName;
-	ImageView mImageNameRight;
+	/**title**/
+	private ImageButton btnBack;
+	private TextView mTextTitle,mTextOk;
+	/**body**/
+	private EditText mEditName;
+	private ImageView mImageNameRight;
 	private String nameText;
+	/**文字字数提示**/
+	private TextView mTextCount = null;
+	/**最大输入字数**/
+	private static final int MAX_COUNT = 10;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,9 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		//title
 		mTextTitle.setText("编辑昵称");
 		mTextOk.setText("确认");
+		//
+		int count = mEditName.getText().toString().length();
+		mTextCount.setText("（"+(MAX_COUNT-count)+"/"+MAX_COUNT+"）");
 		
 	}
 	//初始化控件
@@ -45,6 +55,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditName = (EditText) findViewById(R.id.user_personal_name_edit);
 		mImageNameRight = (ImageView) findViewById(R.id.user_personal_name_image);
+		mTextCount = (TextView) findViewById(R.id.number_count);
 		
 		/**
 		 * 获取从编辑界面传来的姓名
@@ -63,6 +74,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		btnBack.setOnClickListener(this);
 		mTextOk.setOnClickListener(this);
 		mImageNameRight.setOnClickListener(this);
+		mEditName.addTextChangedListener(mTextWatcher);
 	}
 	@Override
 	public void onClick(View arg0) {
@@ -75,12 +87,17 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		case R.id.user_title_right:
 			String name = mEditName.getText().toString();
 			GolukDebugUtils.i("lily", "------UserPersonalNameActivity--修改昵称------"+name);
-			Intent it = new Intent(UserPersonalNameActivity.this,UserPersonalEditActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putString("itName", name);
-			it.putExtras(bundle);
-			this.setResult(1, it);
-			this.finish();
+			if(name.trim().isEmpty()){
+				UserUtils.showDialog(this, "数据修改失败，昵称不能为空");
+			}else{
+				UserPersonalInfoActivity.clickBtn = true;
+				Intent it = new Intent(UserPersonalNameActivity.this,UserPersonalInfoActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("itName", name);
+				it.putExtras(bundle);
+				this.setResult(1, it);
+				this.finish();
+			}
 			break;
 		//
 		case R.id.user_personal_name_image:
@@ -92,5 +109,23 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			break;
 		}
 	}
+	TextWatcher mTextWatcher = new TextWatcher() {
+		
+		@Override
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		}
+		@Override
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		}
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			int num = arg0.length();
+			int number = MAX_COUNT - num;
+			if(number < 0){
+				number = 0;
+			}
+			mTextCount.setText("（"+number + "/"+MAX_COUNT+"）");
+		}
+	};
 
 }

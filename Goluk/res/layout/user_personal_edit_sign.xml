@@ -9,7 +9,10 @@
 	<include layout="@layout/user_title"/>
 	
 	<!-- 主体部分 -->
-	
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    >
 	<View
 	        android:id="@+id/user_personal_solid_1"
 	        android:layout_width="wrap_content"
@@ -21,8 +24,11 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="118dp"
 	    android:id="@+id/user_personal_edit_sign_body"
+	    android:layout_below="@id/user_personal_solid_1"
 	    android:background="@color/white"
 	   android:hint="介绍一下自己吧！"
+	   android:gravity="top|left"
+	   android:paddingTop="8dp"
 	   android:textColor="@color/user_personal_black"
 	   android:paddingLeft="20dp"
 	   android:maxLength="50"
@@ -32,5 +38,16 @@
 	        android:id="@+id/user_personal_solid_2"
 	        android:layout_width="wrap_content"
 	        android:layout_height="1dp"
-	        android:background="@drawable/solid" />
+	        android:background="@drawable/solid" 
+	        android:layout_below="@id/user_personal_edit_sign_body"/>
+	 <TextView 
+		    android:id="@+id/number_count"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/user_personal_solid_2"
+		    android:layout_alignParentRight="true"
+		    android:layout_marginTop="5dp"
+		    android:textSize="10sp"
+		    android:textColor="#8e8e93"/>
+	</RelativeLayout>
 </LinearLayout>

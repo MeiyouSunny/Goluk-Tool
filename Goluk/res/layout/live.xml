@@ -13,12 +13,16 @@
         android:layout_height="wrap_content"
         android:background="@color/bg" >
 
-        <ImageButton
+        <TextView
             android:id="@+id/live_back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/live_btn_back" />
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@string/imgdes"
+            android:text="@string/live_str_close"
+            android:textColor="@color/red"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/live_title"
@@ -66,18 +70,34 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/live_icon_portrait" />
+            android:background="@drawable/live_icon_portrait"
+            android:contentDescription="@string/imgdes" />
 
-        <!-- 直播标识 -->
+        <!-- XX次围观 -->
 
-        <ImageView
-            android:id="@+id/live_sign"
+        <TextView
+            android:id="@+id/live_look_str"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/live_icon_live" />
+            android:contentDescription="@string/imgdes"
+            android:text="@string/live_str_lookcount"
+            android:textColor="#8e8e8e"
+            android:textSize="@dimen/live_text_time1_size" />
+
+        <TextView
+            android:id="@+id/live_lookcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="3dp"
+            android:layout_toLeftOf="@id/live_look_str"
+            android:contentDescription="@string/imgdes"
+            android:text="@string/live_str_look_default"
+            android:textColor="#8e8e8e"
+            android:textSize="@dimen/live_text_time1_size" />
 
         <!-- 用户名称 -->
 
@@ -87,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="8dp"
-            android:layout_toLeftOf="@id/live_sign"
+            android:layout_toLeftOf="@id/live_lookcount"
             android:layout_toRightOf="@id/live_userhead"
             android:singleLine="true"
             android:textColor="@color/live_nickname_color"
@@ -113,7 +133,7 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="8dp"
-            android:layout_toLeftOf="@id/live_sign"
+            android:layout_toLeftOf="@id/live_lookcount"
             android:layout_toRightOf="@id/live_address_sign"
             android:singleLine="true"
             android:text=""
@@ -192,9 +212,17 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="4dp"
-                android:text="00:00"
+                android:text="@string/live_str_default_timer"
                 android:textColor="@color/live_color_time1"
                 android:textSize="@dimen/live_text_time1_size" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/live_icon_live" />
         </LinearLayout>
 
         <!-- 控制视频播放暂停 -->
@@ -264,265 +292,30 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:text="暫无"
+            android:text="@string/live_str_default_livedesc"
             android:textColor="#8e8e8e"
             android:textSize="12sp" />
 
-        <!-- 多少人看 -->
+        <!-- 点赞　和　分享 -->
 
-        <LinearLayout
-            android:id="@+id/live_lookcountlayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <include
+            android:id="@+id/live_okshare_layout"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:layout_below="@id/live_desc"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/live_icon_eye"
-                android:contentDescription="@string/imgdes" />
-
-            <TextView
-                android:id="@+id/live_lookcount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="4788"
-                android:textColor="#8e8e8e"
-                android:textSize="@dimen/live_text_time1_size" >
-            </TextView>
-        </LinearLayout>
-
-        <!-- 分享 -->
-
-        <LinearLayout
-            android:id="@+id/live_sharelayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/live_lookcountlayout"
-            android:layout_marginRight="10dp"
-            android:orientation="horizontal" >
-
-            <ImageView
-                android:id="@+id/live_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/live_icon_share"
-                android:contentDescription="@string/imgdes" />
-
-            <TextView
-                android:id="@+id/live_share_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:text="分享"
-                android:textColor="#8e8e8e"
-                android:textSize="@dimen/live_text_time1_size" >
-            </TextView>
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/live_tilt_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/live_lookcountlayout"
-            android:layout_marginRight="18dp"
-            android:layout_toLeftOf="@id/live_sharelayout"
-            android:src="@drawable/live_icon_tilt_line" >
-        </ImageView>
-
-        <!-- 点赞 -->
-
-        <LinearLayout
-            android:id="@+id/live_oklayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/live_lookcountlayout"
-            android:layout_marginRight="18dp"
-            android:layout_toLeftOf="@id/live_tilt_line"
-            android:orientation="horizontal" >
-
-            <ImageView
-                android:id="@+id/live_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/live_icon_like"
-                android:contentDescription="@string/imgdes" />
-
-            <TextView
-                android:id="@+id/live_okcount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="4788"
-                android:textColor="#8e8e8e"
-                android:textSize="@dimen/live_text_time1_size" >
-            </TextView>
-        </LinearLayout>
+            android:layout_marginTop="10dp"
+            layout="@layout/live_ok_layout" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/live_bottomlayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/black"
-        android:visibility="gone" >
-
-        <LinearLayout
-            android:id="@+id/live_qiangpai"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="28dp"
-            android:clickable="true"
-            android:orientation="vertical" >
-
-            <ImageView
-                android:id="@+id/qiangpai_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/btn_live_6s"
-                android:contentDescription="@string/imgdes" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"
-                android:text="@string/str_live_qiang"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/live_exit"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="28dp"
-            android:clickable="true"
-            android:orientation="vertical" >
-
-            <ImageView
-                android:id="@+id/live_exit_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"
-                android:contentDescription="@string/imgdes"
-                android:src="@drawable/live_btn_off" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="6dp"
-                android:text="@string/live_exit"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <!-- 地图 -->
+    <!-- 百度地图 -->
 
     <RelativeLayout
         android:id="@+id/live_map_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/live_bottomlayout"
         android:layout_below="@id/live_play_info_layout"
         android:layout_marginTop="0dp"
         android:background="#ededed" >
-
-        <!-- 百度地图 -->
-        <!--
-        <com.baidu.mapapi.map.MapView
-            android:id="@+id/live_bmapView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:clickable="true" />
-        -->
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/live_speaklayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/live_play_info_layout"
-        android:background="@android:color/white"
-        android:visibility="gone" >
-
-        <!-- 说话 -->
-
-        <ImageView
-            android:id="@+id/live_talking_sign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/imgdes"
-            android:src="@drawable/live_icon_ptt_yellow" />
-
-        <TextView
-            android:id="@+id/live_talking"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="6dp"
-            android:layout_toRightOf="@+id/live_talking_sign"
-            android:singleLine="true"
-            android:textSize="@dimen/live_text_time1_size" />
-
-        <TextView
-            android:id="@+id/live_talktime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:singleLine="true"
-            android:textSize="@dimen/live_text_time1_size" />
-    </RelativeLayout>
-
-    <!-- 直播界面说话按钮 -->
-
-    <ImageButton
-        android:id="@+id/live_ppt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/live_btn_ptt_normal"
-        android:contentDescription="@string/imgdes"
-        android:visibility="gone" >
-    </ImageButton>
-
-    <!-- 观看直播界面说话按钮 -->
-
-    <ImageButton
-        android:id="@+id/livelook_ppt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/livelook_btn_ptt_normal"
-        android:contentDescription="@string/imgdes"
-        android:visibility="gone" >
-    </ImageButton>
 
 </RelativeLayout>

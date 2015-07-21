@@ -1,6 +1,10 @@
 package cn.com.mobnote.golukmobile.live;
 
-public class LiveSettingBean {
+import java.io.Serializable;
+
+public class LiveSettingBean implements Serializable {
+	/** */
+	private static final long serialVersionUID = 1L;
 	/** 视频类型 */
 	public int vtype;
 	/** 视频描述 */

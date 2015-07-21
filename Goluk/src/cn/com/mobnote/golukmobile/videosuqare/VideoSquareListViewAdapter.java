@@ -24,11 +24,14 @@ import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
@@ -39,7 +42,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 @SuppressLint("InflateParams")
-public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn {
+public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn,OnTouchListener {
 	private Context mContext = null;
 	private List<VideoSquareInfo> mVideoSquareListData = null;
 	private HashMap<String, DWMediaPlayer> mDWMediaPlayerList = null;
@@ -90,6 +93,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			holder = new ViewHolder();
 			holder.username = (TextView) convertView.findViewById(R.id.username);
 			holder.looknumber = (TextView) convertView.findViewById(R.id.looknumber_text);
+			holder.looknumberIcon = (TextView) convertView.findViewById(R.id.looknumber_icon);
 			holder.userhead = (ImageView) convertView.findViewById(R.id.user_head);
 			holder.videotitle = (TextView) convertView.findViewById(R.id.video_title);
 			holder.sharetime = (TextView) convertView.findViewById(R.id.time);
@@ -114,6 +118,8 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
 			holder.reporticon.setVisibility(View.GONE);
 			holder.liveicon.setVisibility(View.VISIBLE);
+			holder.looknumber.setVisibility(View.GONE);
+			holder.looknumberIcon.setVisibility(View.GONE);
 			// holder.mSurfaceView.setVisibility(View.GONE);
 		} else {// 点播
 			holder.reporticon.setVisibility(View.VISIBLE);
@@ -134,27 +140,28 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		}
 
 		if ("1".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_one);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_boy1);
 		} else if ("2".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_two);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_boy2);
 		} else if ("3".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_boy_three);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_boy3);
 		} else if ("4".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_one);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_girl4);
 		} else if ("5".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_two);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_girl5);
 		} else if ("6".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_girl_three);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_girl6);
 		} else if ("7".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_feault7);
 		} else {
-			holder.userhead.setBackgroundResource(R.drawable.individual_center_head_moren);
+			holder.userhead.setBackgroundResource(R.drawable.editor_head_feault7);
 		}
 
 		holder.likebtn.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
 				mVideoSquareInfo, form, sharePlatform, this));
 		holder.sharebtn.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
 				mVideoSquareInfo, form, sharePlatform, this));
+		holder.sharebtn.setOnTouchListener(this);
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
@@ -238,6 +245,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 	public static class ViewHolder {
 		TextView username;
 		TextView looknumber;
+		TextView looknumberIcon;
 		ImageView userhead;
 		TextView videotitle;
 		TextView sharetime;
@@ -328,6 +336,32 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			}
 		}
 
+	}
+	
+	
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		int action = event.getAction();
+		switch (v.getId()) {
+
+		case R.id.share_btn:
+			Button sharebtn = (Button) v;
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				Drawable more_down = mContext.getResources().getDrawable(R.drawable.share_btn_press);
+				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null,null, null);
+				sharebtn.setTextColor(Color.rgb(59, 151, 245));
+				break;
+			case MotionEvent.ACTION_UP:
+				Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
+				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null,null, null);
+				sharebtn.setTextColor(Color.rgb(204, 204, 204));
+				break;
+			}
+			break;
+		}
+		return false;
 	}
 
 }

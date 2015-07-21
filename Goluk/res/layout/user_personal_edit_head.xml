@@ -6,209 +6,188 @@
     android:background="@color/user_login_bg">
     
 	<!-- title -->
-	<include layout="@layout/user_personal_edit_title"/>
+	<RelativeLayout
+	            android:id="@+id/title_layout"
+	            android:layout_width="match_parent"
+	            android:layout_height="42dp"
+	            android:background="@color/bg" >
+
+            <ImageButton
+            	android:id="@+id/back_btn"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+           	 	android:layout_centerVertical="true"
+           		android:background="@drawable/live_btn_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_title_text"
+                android:layout_centerInParent="true"
+                android:text="title"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/user_title_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="完成"
+                android:background="@null"
+                />
+            
+        </RelativeLayout>
 	
 	<!-- body -->
 	<!-- 男 -->
-	<TextView 
-	    android:layout_width="match_parent"
-	    android:layout_height="34dp"
-	    android:text="@string/user_personal_edit_head_boy"
-	    android:paddingLeft="50dp"
-	    android:gravity="center_vertical"
-	    android:textSize="14sp"
-	    android:textColor="@color/user_personal_edit_head_text"
-	    android:background="@color/user_personal_edit_head_title_bg"
-	    />
 	<LinearLayout 
 	    android:layout_width="match_parent"
-	    android:layout_height="160dp"
-	    android:paddingLeft="20dp"
-	    android:paddingRight="20dp"
-	    android:gravity="center"
-	    >
-	    <FrameLayout 
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="30dp"
+	    android:paddingLeft="40dp"
+	    android:paddingRight="40dp">
+	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
+	        android:gravity="center"
 	        >
-	         <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:id="@+id/user_personal_boy_one"
-		        android:src="@drawable/edit_head_boy_one"
-		        />
-	         <ImageView 
+	        <ImageView 
+	            android:id="@+id/user_personal_boy_one"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/editor_head_boy1"/>
+	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
 	             android:id="@+id/user_personal_hint_image1"
-	             android:src="@drawable/edit_head_select_btn"
-	             android:layout_gravity="top|right"
-	             android:layout_marginRight="20dp"
-	             android:visibility="gone"
-	             />
-	    </FrameLayout>
-	    <FrameLayout 
+	             android:src="@drawable/editor_head_select"
+	             android:visibility="gone"/>
+	    </RelativeLayout>
+	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
+	        android:gravity="center"
 	        >
 	        <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:id="@+id/user_personal_boy_two"
-		        android:src="@drawable/edit_head_boy_two"
-		        />
+	            android:id="@+id/user_personal_boy_two"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/editor_head_boy3"/>
 	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
 	             android:id="@+id/user_personal_hint_image2"
-	             android:src="@drawable/edit_head_select_btn"
-	             android:layout_gravity="top|right"
-	             android:layout_marginRight="20dp"
-	             android:visibility="gone"
-	             />
-	    </FrameLayout>
-	    <FrameLayout 
+	             android:src="@drawable/editor_head_select"
+	             android:visibility="gone"/>
+	    </RelativeLayout>
+	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
+	        android:gravity="center"
 	        >
 	        <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:id="@+id/user_personal_boy_three"
-		        android:src="@drawable/edit_head_boy_three"
-		        />
+	            android:id="@+id/user_personal_boy_three"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/editor_head_boy2"/>
 	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
 	             android:id="@+id/user_personal_hint_image3"
-	             android:src="@drawable/edit_head_select_btn"
-	             android:layout_gravity="top|right"
-	             android:layout_marginRight="20dp"
-	             android:visibility="gone"
-	             />
-	    </FrameLayout>
+	             android:src="@drawable/editor_head_select"
+	             android:visibility="gone"/>
+	    </RelativeLayout>
 	</LinearLayout>
 	<!-- 女 -->
-	<TextView 
-	    android:layout_width="match_parent"
-	    android:layout_height="34dp"
-	    android:text="@string/user_personal_edit_head_girl"
-	    android:paddingLeft="50dp"
-	    android:gravity="center_vertical"
-	    android:textSize="14sp"
-	    android:textColor="@color/user_personal_edit_head_text"
-	    android:background="@color/user_personal_edit_head_title_bg"
-	    />
 	<LinearLayout 
 	    android:layout_width="match_parent"
-	    android:layout_height="160dp"
-	    android:paddingLeft="20dp"
-	    android:paddingRight="20dp"
-	    android:gravity="center"
-	    >
-	    <FrameLayout 
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="40dp"
+	    android:paddingLeft="40dp"
+	    android:paddingRight="40dp">
+	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
+	        android:gravity="center"
 	        >
 	        <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:id="@+id/user_personal_girl_one"
-		        android:src="@drawable/edit_head_girl_one"
-		        />
+	            android:id="@+id/user_personal_girl_one"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/editor_head_girl4"/>
 	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
 	             android:id="@+id/user_personal_hint_image4"
-	             android:src="@drawable/edit_head_select_btn"
-	             android:layout_gravity="top|right"
-	             android:layout_marginRight="20dp"
-	             android:visibility="gone"
-	             />
-	    </FrameLayout>
-	    <FrameLayout 
+	             android:src="@drawable/editor_head_select"
+	             android:visibility="gone"/>
+	    </RelativeLayout>
+	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
+	        android:gravity="center"
 	        >
 	        <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:id="@+id/user_personal_girl_two"
-		        android:src="@drawable/edit_head_girl_two"
-		        />
+	            android:id="@+id/user_personal_girl_two"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/editor_head_girl5"/>
 	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
 	             android:id="@+id/user_personal_hint_image5"
-	             android:src="@drawable/edit_head_select_btn"
-	             android:layout_gravity="top|right"
-	             android:layout_marginRight="20dp"
-	             android:visibility="gone"
-	             />
-	    </FrameLayout>
-	    <FrameLayout 
+	             android:src="@drawable/editor_head_select"
+	             android:visibility="gone"/>
+	    </RelativeLayout>
+	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
+	        android:gravity="center"
 	        >
 	        <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:id="@+id/user_personal_girl_three"
-		        android:src="@drawable/edit_head_girl_three"
-		        />
+	            android:id="@+id/user_personal_girl_three"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/editor_head_girl6"/>
 	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
 	             android:id="@+id/user_personal_hint_image6"
-	             android:src="@drawable/edit_head_select_btn"
-	             android:layout_gravity="top|right"
-	             android:layout_marginRight="20dp"
-	             android:visibility="gone"
-	             />
-	    </FrameLayout>
+	             android:src="@drawable/editor_head_select"
+	             android:visibility="gone"/>
+	    </RelativeLayout>
 	</LinearLayout>
 	<!-- 默认 -->
-	<TextView 
-	    android:layout_width="match_parent"
-	    android:layout_height="34dp"
-	    android:text="@string/user_personal_edit_head_default"
-	    android:paddingLeft="50dp"
-	    android:gravity="center_vertical"
-	    android:textSize="14sp"
-	    android:textColor="@color/user_personal_edit_head_text"
-	    android:background="@color/user_personal_edit_head_title_bg"
-	    />
 	<LinearLayout 
 	    android:layout_width="match_parent"
-	    android:layout_height="160dp"
-	    android:paddingLeft="20dp"
-	    android:gravity="center_vertical"
-	    >
-	    <FrameLayout 
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="40dp"
+	    android:paddingLeft="45dp"
+	    android:paddingRight="40dp">
+	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        >
 	        <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:id="@+id/user_personal_default"
-		        android:src="@drawable/edit_head_moren_btn"
-		        />
-	    <ImageView 
+	            android:id="@+id/user_personal_default"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/editor_head_feault7"/>
+	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
 	             android:id="@+id/user_personal_hint_image7"
-	             android:src="@drawable/edit_head_select_btn"
-	             android:layout_gravity="top|right"
-	             android:layout_marginRight="10dp"
-	             android:visibility="gone"
-	             />
-	    </FrameLayout>
+	             android:src="@drawable/editor_head_select"
+	             android:visibility="gone"/>
+	    </RelativeLayout>
 	</LinearLayout>
 </LinearLayout>

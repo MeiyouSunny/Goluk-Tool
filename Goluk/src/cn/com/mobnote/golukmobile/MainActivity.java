@@ -20,6 +20,7 @@ import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -50,6 +51,7 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
@@ -105,14 +107,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	/** 我的位置按钮 */
-	private Button mMapLocationBtn = null;
 	/** 百度地图 */
 	private MapView mMapView = null;
-	private BaiduMap mBaiduMap = null;
-
-	/** 分享按钮 */
-	// private Button mShareBtn = null;
 	/** 分享按钮布局 */
 	private RelativeLayout mShareLayout = null;
 	/** 关闭分享布局 */
@@ -133,7 +129,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	/** wifi列表manage */
 	private WifiConnectManager mWac = null;
-	
+
 	/** 首页handler用来接收消息,更新UI */
 	public static Handler mMainHandler = null;
 	/** 下载完成播放声音文件 */
@@ -147,8 +143,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	private RelativeLayout mRootLayout = null;
 
-	// private RelativeLayout indexMapLayout = null;
-
 	private View videoSquareLayout = null;
 
 	private View userInfoLayout = null;
@@ -159,12 +153,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private final int WIFI_STATE_CONNING = 1;
 	/** 连接 */
 	private final int WIFI_STATE_SUCCESS = 2;
+	
+	private final int WIFI_STATE_RESULT = 11;
 
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
-
-	/** 看天下按钮 */
-	// private Button indexLookBtn = null;
 	/** 链接行车记录仪 */
 	private ImageButton indexCarrecoderBtn = null;
 	/** 连接ipc时的动画 */
@@ -200,7 +193,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 注意该方法要再setContentView方法之前实现
 		SDKInitializer.initialize(getApplicationContext());
 		((GolukApplication) this.getApplication()).initSharedPreUtil(this);
-		
+
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 
@@ -227,8 +220,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// 提交修改
 			editor.commit();
 		}
-		// 初始化地图
-		// initMap();
 		// 初始化视频广场
 		initVideoSquare();
 		// 初始化个人中心
@@ -255,6 +246,26 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		String str = intent.getStringExtra("showMe").toString();
+		if("showMe".equals(str)){
+			Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
+			mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
+			mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
+
+			Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
+			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
+			msquareBtn.setTextColor(Color.rgb(204, 204, 204));
+			
+			userInfoLayout.setVisibility(View.VISIBLE);
+			videoSquareLayout.setVisibility(View.GONE);
+			
+			indexMoreActivity.showView();
+		}
 	}
 
 	/**
@@ -294,10 +305,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
-		// 地图我的位置按钮
-		mMapLocationBtn = (Button) findViewById(R.id.map_location_btn);
-		// 分享按钮
-		// mShareBtn = (Button) findViewById(R.id.index_share_btn);
 		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
 
@@ -305,29 +312,21 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		msquareBtn = (Button) findViewById(R.id.index_square_btn);
-		// mWifiState = (ImageView) findViewById(R.id.index_wiifstate);
-		// mWifiStateTv = (TextView) findViewById(R.id.wifi_conn_txt);
 		videoSquareLayout = findViewById(R.id.video_square_layout);
 		// 本地视频更多按钮
 		mLocalVideoListBtn = (Button) findViewById(R.id.share_local_video_btn);
 		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
 
-		// indexLookBtn = (Button) findViewById(R.id.index_look_btn);
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
 		squareDefault = (ImageView) findViewById(R.id.square_default);
 
 		userInfoLayout = findViewById(R.id.user_info);
 
 		mHotBigPoint = (ImageView) findViewById(R.id.mHotBigPoint);
-
+		
 		mShareLiveBtn.setOnClickListener(this);
-		// indexLookBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
 		indexDiv.setOnClickListener(this);
-		// 注册事件
-		mMapLocationBtn.setOnClickListener(this);
-		// mShareBtn.setOnClickListener(this);
-		// mShareBtn.setOnTouchListener(this);
 		mCloseShareBtn.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
@@ -359,6 +358,22 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					GolukDebugUtils.e("", "PageType_GetPinData:");
 					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_GetPinData, "");
+					break;
+				case 400:
+					// 已经绑定
+					mApp.mIPCControlManager.setIPCWifiState(false, "");
+					startWifi();
+					if (null != mWac) {
+						mWac.autoWifiManageReset();
+					}
+					break;
+				case 500:
+					MainActivity play = (MainActivity)mContext;
+					Intent intent = new Intent(); 
+					intent.putExtra("type", "1");
+					intent.putExtra("attribute", "0");
+			        intent.setClass(play,VideoSquarePlayActivity.class);
+					mContext.startActivity(intent);
 					break;
 				}
 			}
@@ -458,8 +473,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	
-
 	/**
 	 * 下载气泡图片
 	 * 
@@ -474,8 +487,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPictureByURL,
 				json);
 	}
-
-	
 
 	/**
 	 * 链接中断更新页面
@@ -508,11 +519,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			return;
 		}
 		mWiFiStatus = WIFI_STATE_CONNING;
-		// mWifiStateTv.setText(WIFI_CONNING_STR);
-		anim = AnimationUtils.loadAnimation(mContext, R.anim.ipc_action_loading);
-		LinearInterpolator lir = new LinearInterpolator();
-		anim.setInterpolator(lir);
-		indexCarrecoderBtn.startAnimation(anim);
 
 	}
 
@@ -520,28 +526,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void wifiConnectedSucess() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectedSucess:");
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
-
 		mWiFiStatus = WIFI_STATE_SUCCESS;
-		if (null != anim) {
-			anim.cancel();
-			indexCarrecoderBtn.clearAnimation();
-			anim = null;
+		if (CarRecorderActivity.mHandler != null) {
+			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_RESULT);
 		}
-		// mWifiStateTv.setText(WIFI_CONNED_STR);
-		// mWifiState.setBackgroundResource(R.drawable.home_wifi_link_four);
 	}
 
 	// 连接失败
 	private void wifiConnectFailed() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectFailed:");
 		mWiFiStatus = WIFI_STATE_FAILED;
-		if (null != anim) {
-			anim.cancel();
-			indexCarrecoderBtn.clearAnimation();
-			anim = null;
-		}
-		// mWifiState.setBackgroundResource(R.drawable.home_wifi_no_link);
-		// mWifiStateTv.setText(WIFI_CONNING_FAILED_STR);
 	}
 
 	// 是否綁定过 Goluk
@@ -562,59 +556,36 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		startActivity(intent);
 	}
 
-	private void click_ConnFailed() {
-		if (!isBindSucess()) {
-			// 跳转到wifi连接首页
-			if (mApp.isUserLoginSucess) {
-				Intent wifiIndex = new Intent(MainActivity.this, WiFiLinkIndexActivity.class);
-				startActivity(wifiIndex);
-			} else {
-				toLogin();
-			}
-		} else {
-			// 已经绑定
-			mApp.mIPCControlManager.setIPCWifiState(false, "");
-			startWifi();
-			if (null != mWac) {
-				mWac.autoWifiManageReset();
-			}
-		}
-	}
 
 	/**
 	 * 检测wifi链接状态
 	 */
 	public void checkWiFiStatus() {
 		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mWiFiStatus);
-		switch (mWiFiStatus) {
-		case WIFI_STATE_FAILED:
-			click_ConnFailed();
-			break;
-		case WIFI_STATE_CONNING:
-			break;
-		case WIFI_STATE_SUCCESS:
-			GolukApplication.getInstance().stopDownloadList();
-			
-//			boolean b = mApp.mIpcUpdateManage.ipcConnect();
-//			if(b){
-				// 跳转到行车记录仪界面
-				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-				startActivity(i);
-//			}
-			break;
-		default:
-			break;
+
+		// 跳转到wifi连接首页
+		if (mApp.isUserLoginSucess == false) {
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
+		}else{
+			// 跳转到行车记录仪界面
+			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+			i.putExtra("ipcState", mWiFiStatus);
+			i.putExtra("wifiname", mGolukName);
+			startActivity(i);
 		}
+		
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
-		
+
 		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
 		if (null != mMapView) {
 			mMapView.onDestroy();
@@ -656,7 +627,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
-		
+
+		indexMoreActivity.showView();
+
 		super.onResume();
 	}
 
@@ -702,11 +675,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 				exitTime = System.currentTimeMillis();
 			} else {
-				// if (null != mWac) {
-				// mWac.closeAp();
-				// }
 				SysApplication.getInstance().exit();
-				// }
 				mApp.mIPCControlManager.setIPCWifiState(false, "");
 				mApp.mGoluk.GolukLogicDestroy();
 				if (null != UserStartActivity.mHandler) {
@@ -750,15 +719,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.map_location_btn:
-			// 回到我的位置
-			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
-			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-			mBaiduMap.animateMapStatus(u);
-			break;
-		// case R.id.index_share_btn:
-		// click_share();
-		// break;
 		case R.id.close_share_btn:
 			// 关闭视频分享
 			mShareLayout.setVisibility(View.GONE);
@@ -773,9 +733,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
 			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
 			msquareBtn.setTextColor(Color.rgb(204, 204, 204));
-			
+
 			userInfoLayout.setVisibility(View.VISIBLE);
 			videoSquareLayout.setVisibility(View.GONE);
+			
+			indexMoreActivity.showView();
 			break;
 		case R.id.share_local_video_btn:
 			// 点击精彩视频
@@ -799,9 +761,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			setBelowItem(R.id.index_square_btn);
 			break;
-		// case R.id.index_look_btn:
-		// setBelowItem(R.id.index_look_btn);
-		// break;
 		case R.id.index_carrecoder_btn:
 			checkWiFiStatus();
 			break;
@@ -822,11 +781,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public void setBelowItem(int id) {
 		Drawable drawable;
-		
+
 		if (id == R.id.index_square_btn) {
 			if (null != mMapView) {
 				mMapView.onPause();
@@ -917,10 +875,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void updateHotPointState(boolean isShow) {
 		SettingUtils.getInstance().putBoolean("HotPointState", isShow);
 		if (isShow) {
-			// mHotPoint.setVisibility(View.VISIBLE);
 			mHotBigPoint.setVisibility(View.VISIBLE);
 		} else {
-			// mHotPoint.setVisibility(View.GONE);
 			mHotBigPoint.setVisibility(View.GONE);
 		}
 	}
@@ -965,10 +921,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		GolukApplication.getInstance().stopDownloadList();
-		
+
 		boolean b = mApp.mIpcUpdateManage.ipcConnect();
-		//匹配
-		if(b){
+		// 匹配
+		if (b) {
 			// 开启直播
 			Intent intent = new Intent(this, LiveActivity.class);
 			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
@@ -978,7 +934,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			startActivity(intent);
 			mShareLayout.setVisibility(View.GONE);
 		}
-		
+
 	}
 
 	// 查看他人的直播
@@ -1265,5 +1221,5 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "shareid-----" + shareVideoId + "   channel-----" + channel);
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 	}
-	
+
 }

@@ -18,6 +18,8 @@
 "StopPlay":"http://%s/navidog4MeetTrans/stopPlay.htm",
 "ActiveShare":"http://%s/navidog4MeetTrans/activeShare.htm",
 "ModifyInfo":"http://%s/cdcRegister/modifyInfo.htm",
-"UploadVedioPre":"rtmp://%s/live/"
+"UploadVedioPre":"rtmp://%s/live/",
+"FeedBack":"http://%s/cdcAdmin/feedback.htm?method=feedback",
+"UrlRedirect":"http://%s/cdcAdmin/redirect.htm"
 }
 

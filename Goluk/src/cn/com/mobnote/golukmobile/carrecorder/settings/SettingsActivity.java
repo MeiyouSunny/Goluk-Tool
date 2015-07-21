@@ -8,7 +8,6 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
@@ -216,10 +215,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				case R.id.rlcx_line://容量查询
 					Intent rlcx_line = new Intent(SettingsActivity.this, StorageCpacityQueryActivity.class);
 					startActivity(rlcx_line);
-					break;
-				case R.id.sysz_line://水印设置
-					Intent sysz_line = new Intent(SettingsActivity.this, WatermarkSettingActivity.class);
-					startActivity(sysz_line);
 					break;
 				case R.id.sjsz_line://时间设置
 					Intent sjsz_line = new Intent(SettingsActivity.this, TimeSettingActivity.class);
