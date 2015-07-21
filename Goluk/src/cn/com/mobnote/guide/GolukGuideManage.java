@@ -274,6 +274,7 @@ public class GolukGuideManage {
 			editor.commit();
 			// 启动个人中心的起始页
 			Intent userStart = new Intent(mContext, UserStartActivity.class);
+			userStart.putExtra("judgeVideo", false);
 			mContext.startActivity(userStart);
 			((GuideActivity) mContext).finish();
 		}
