@@ -20,7 +20,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -75,8 +74,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	public static Handler mHandler = null;
 
 	private String vIpc = "";
-	
-	/**连接ipc后自动同步开关**/
+
+	/** 连接ipc后自动同步开关 **/
 	private Button mBtnSwitch = null;
 	public static final String AUTO_SWITCH = "autoswitch";
 
@@ -90,15 +89,15 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
-		
+
 		mApp.initSharedPreUtil(this);
 		vIpc = mApp.mSharedPreUtil.getIPCVersion();
 		// 页面初始化
 		init();
 		boolean b = SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true);
-		if(b){
+		if (b) {
 			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
-		}else{
+		} else {
 			mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
 		}
 
@@ -113,15 +112,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 
 		mApp.mUser.setUserInterface(this);
 
-		// 调用同步接口，在设置页显示版本号
-		/*String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-		GolukDebugUtils.i("upgrade", "=======+version+=====" + verName);
-		mTextVersionCode.setText(verName);
-		mTextAppVersion.setText(verName);
-		String vIpc = mApp.mSharedPreUtil.getIPCVersion();
-		GolukDebugUtils.i("lily", vIpc + "===UserSetupActivity----vipc------" + verName);
-		mTextIPCVersion.setText(vIpc);*/
 		// 缓存
 		try {
 			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
@@ -157,7 +147,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
 		// 清除缓存大小显示
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
-		//自动同步开关
+		// 自动同步开关
 		mBtnSwitch = (Button) findViewById(R.id.set_ipc_btn);
 		// 没有登录过的状态
 		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
@@ -183,7 +173,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mBackBtn.setOnClickListener(this);
 		/** 清除缓存 **/
 		mClearCache.setOnClickListener(this);
-		/**自动同步开关**/
+		/** 自动同步开关 **/
 		mBtnSwitch.setOnClickListener(this);
 	}
 
@@ -244,71 +234,16 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 						}).create().show();
 			}
 			break;
-		//自动同步开关
+		// 自动同步开关
 		case R.id.set_ipc_btn:
-			if(SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true)){
+			if (SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true)) {
 				mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
 				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, false);
-			}else{
+			} else {
 				mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
 				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, true);
 			}
 			break;
-		// 解除绑定
-		/*case R.id.unbind_item:
-			mApp.mUser.setUserInterface(null);
-			Intent itUnbind = new Intent(UserSetupActivity.this, UnbindActivity.class);
-			startActivity(itUnbind);
-			break;
-		// 版本检测
-		case R.id.app_update_item:
-			mApp.mUser.setUserInterface(null);
-			// 点击设置页中版本检测无最新版本提示标识
-			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity==点击版本检测===中ipcVersion=====");
-			boolean appB = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_APP, vIpc);
-			break;
-		// 固件升级
-		case R.id.update_item:
-			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity===点击固件升级==中ipcVersion=====");
-			if (mApp.mLoadStatus) {// 下载中
-				new AlertDialog.Builder(mApp.getContext()).setTitle("提示").setMessage("新极路客固件升级文件正在下载……")
-						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								if ((Integer) (mApp.mIpcUpdateManage.mParam1) == 100) {
-									String localFile = mApp.mIpcUpdateManage.getLocalFile(vIpc);
-									if (null == localFile || "".equals(localFile)) {
-										boolean b = mApp.mIpcUpdateManage.requestInfo(
-												IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-									} else {
-										Intent itent = new Intent(UserSetupActivity.this, UpdateActivity.class);
-										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-										startActivity(itent);
-									}
-								} else {
-									Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
-									it.putExtra(UpdateActivity.UPDATE_PROGRESS,
-											(Integer) (mApp.mIpcUpdateManage.mParam1));
-									startActivity(it);
-								}
-							}
-						}).show();
-			} else {
-				if ((Integer) (mApp.mIpcUpdateManage.mParam1) == -1) {// 下载失败/程序刚进来
-					boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-				} else {// 下载成功
-					String localFile = mApp.mIpcUpdateManage.getLocalFile(vIpc);
-					if (null == localFile || "".equals(localFile)) {
-						boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-					} else {
-						Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
-						it.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-						startActivity(it);
-					}
-				}
-			}
-			break;*/
 		}
 	}
 
