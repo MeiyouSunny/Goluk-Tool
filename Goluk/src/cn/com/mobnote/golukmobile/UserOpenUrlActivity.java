@@ -81,6 +81,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			} else if (from_tag.equals("shopping")) {
 				mTextTitle.setText("购买极路客");
 				mWebView.loadUrl(getRtmpAddress() + "?type=4");
+			} else if (from_tag.equals("buyline")) {
+				mTextTitle.setText("购买极路客专用降压线");
+				mWebView.loadUrl(getRtmpAddress() + "?type=1");
 			}
 		}
 		mBackBtn.setOnClickListener(this);

@@ -2,9 +2,11 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
@@ -240,7 +242,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					startActivity(bbxx);
 					break;
 				case R.id.mBugLayout:
-					
+					Intent mBugLayout = new Intent(this,UserOpenUrlActivity.class);
+					mBugLayout.putExtra(UserOpenUrlActivity.FROM_TAG, "buyline");
+					startActivity(mBugLayout);
 					break;
 					
 			default:
