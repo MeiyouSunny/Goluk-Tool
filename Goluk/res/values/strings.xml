@@ -164,9 +164,9 @@
     <string name="spzl_text">极路客提供四种视频质量，1080P高、1080P中、720P高、720P中。</string>
     <string name="zdxhlx_title">自动循环录像</string>
     <string name="zdxhlx_text">启动此项后，极路客将每隔3分钟自动保存一段行车影像。当存储空间不足时，将自动覆盖早期循环录制的文件。</string>
-    <string name="sylz_title">声音录制开关</string>
+    <string name="sylz_title">声音录制</string>
     <string name="pzgy_title">碰撞感应灵敏度</string>
-    <string name="pzgy_text">启动此项后，车辆在行驶中如遭受异常的碰撞，极路客会自动保存16秒（前8秒+后8秒）紧急视频影像。当存储空间不足时，将自动覆盖早期录制的文件。碰撞灵敏度有低、中、高三档自行选择。</string>
+    <string name="pzgy_text">自动判断车辆当前状态；当前车辆处于行驶状态极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态极路客会触发1秒钟拍1张照片；同时会打开振动(触发前8秒+后8秒视频)与移动侦测(触发前8秒+后8秒视频)功能。</string>
     <string name="rlcx_title">存储容量查询</string>
     <string name="sysz">水印设置</string>
     <string name="ztts">状态提示灯</string>

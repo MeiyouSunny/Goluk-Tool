@@ -75,5 +75,10 @@
     <color name="photoalbum_title_bg_color">#242629</color>
     <color name="photoalbum_icon_color_gray">#a2a4a7</color>
     
+    <!-- 行车记录仪设置颜色 -->
+    <color name="setting_black_color">#000000</color>
+    <color name="setting_right_text_color">#8e8e93</color>
+    <color name="setting_white_color">#ffffff</color>
+    <color name="setting_line_color">#c8c7cc</color>
 
 </resources>
