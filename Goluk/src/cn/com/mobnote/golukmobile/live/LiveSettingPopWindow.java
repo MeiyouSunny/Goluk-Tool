@@ -153,7 +153,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		if (null != mPopWindow) {
 			isShow = false;
 			mPopWindow.dismiss();
-			mPopWindow = null;
+			//mPopWindow = null;
 		}
 	}
 

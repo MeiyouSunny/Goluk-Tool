@@ -1,8 +1,6 @@
 package cn.com.mobnote.golukmobile.carrecorder;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,14 +21,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.View.OnClickListener;
@@ -95,7 +97,7 @@ import com.rd.car.player.RtmpPlayerView;
  * 
  * @author xuhw
  */
-public class CarRecorderActivity extends BaseActivity implements OnClickListener, IPCManagerFn, IPopwindowFn {
+public class CarRecorderActivity extends BaseActivity implements OnClickListener,OnTouchListener, IPCManagerFn, IPopwindowFn {
 	public static Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -477,6 +479,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		fqzb = (TextView) findViewById(R.id.fqzb);
 		liveTime = (TextView) findViewById(R.id.live_time);
 		more = (Button) findViewById(R.id.car_recorder);
+		
 		liveBtn = (ImageButton) findViewById(R.id.liveBtn);
 		mRtmpPlayerView = (RtmpPlayerView) findViewById(R.id.mRtmpPlayerView);
 		image1 = (ImageView) findViewById(R.id.image1);
@@ -512,6 +515,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mAddr.setText(addr);
 		}
 	}
+	
 
 	/**
 	 * 设置监听事件
@@ -533,7 +537,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		image1.setOnClickListener(this);
 		image2.setOnClickListener(this);
 		image3.setOnClickListener(this);
-		
+		more.setOnTouchListener(this);
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		// findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -702,6 +706,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mRtmpPlayerView.start();
 		}
 	}
+	
 
 	@Override
 	public void onClick(View arg0) {
@@ -1683,6 +1688,29 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		int action = event.getAction();
+		switch (v.getId()) {
+
+		case R.id.car_recorder:
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				Drawable more_down = this.getResources().getDrawable(R.drawable.driving_car_next_btn1);
+				more.setCompoundDrawablesWithIntrinsicBounds(null, null,more_down, null);
+				more.setTextColor(Color.rgb(59, 151, 245));
+				break;
+			case MotionEvent.ACTION_UP:
+				Drawable more_up = this.getResources().getDrawable(R.drawable.driving_car_next_btn);
+				more.setCompoundDrawablesWithIntrinsicBounds(null, null, more_up, null);
+				more.setTextColor(Color.rgb(204, 204, 204));
+				break;
+			}
+			break;
+		}
+		return false;
 	}
 
 }
