@@ -377,7 +377,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (wrb != null) {
 				mConnectTip.setText(wrb.getIpc_ssid());
 			}
-			boolean b = mApp.mIpcUpdateManage.ipcConnect();
+			boolean b = false;
+			if (null != mApp.mIpcUpdateManage) {
+				mApp.mIpcUpdateManage.ipcConnect();
+			}
 			if (b) {
 				mPalyerLayout.setVisibility(View.VISIBLE);
 				mNotconnected.setVisibility(View.GONE);
@@ -764,10 +767,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			} else {
 				dialog();
 				// 未登录
-//			Intent intent = new Intent(CarRecorderActivity.this,
-//					PhotoAlbumActivity.class);
-//			intent.putExtra("from", "cloud");
-//			startActivity(intent);
 			}
 			break;
 		// case R.id.mFileBtn:
@@ -886,6 +885,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			open_shareVideo(images[1].getName());
 			break;
 		case R.id.image3:
+			Intent photoalbum = new Intent(CarRecorderActivity.this,
+					PhotoAlbumActivity.class);
+			photoalbum.putExtra("from", "cloud");
+			startActivity(photoalbum);
 			break;
 		default:
 			break;
@@ -1482,7 +1485,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				try {
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
-						String filename = json.getString("filename");
+						String filename = json.optString("filename");
 
 						if (videoname.equals(filename)) {// 是当前拍的文件
 							int filesize = json.getInt("filesize");
