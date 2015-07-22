@@ -111,6 +111,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mApp.setContext(mContext, "UserSetup");
 
 		mApp.mUser.setUserInterface(this);
+		
+		judgeLogin();
 
 		// 缓存
 		try {
@@ -149,6 +151,20 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		// 自动同步开关
 		mBtnSwitch = (Button) findViewById(R.id.set_ipc_btn);
+
+		// 注册监听
+		btnLoginout.setOnClickListener(this);
+		mBackBtn.setOnClickListener(this);
+		/** 清除缓存 **/
+		mClearCache.setOnClickListener(this);
+		/** 自动同步开关 **/
+		mBtnSwitch.setOnClickListener(this);
+	}
+
+	/**
+	 * 判断按钮是否为登录或者未登录
+	 */
+	public void judgeLogin() {
 		// 没有登录过的状态
 		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
@@ -157,24 +173,17 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			GolukDebugUtils.i("lily", "----------UserSetupActivity-------" + mApp.registStatus);
 			if (mApp.loginStatus == 1 || mApp.registStatus == 2 || mApp.autoLoginStatus == 2
 					|| mApp.isUserLoginSucess == true) {// 上次登录成功
-				btnLoginout.setText("退出登录");
+				btnLoginout.setText("注销");
 			} else {
 				btnLoginout.setText("登录");
 			}
 		} else {
 			if (mApp.registStatus == 2) {
-				btnLoginout.setText("退出登录");
+				btnLoginout.setText("注销");
 			} else {
 				btnLoginout.setText("登录");
 			}
 		}
-		// 注册监听
-		btnLoginout.setOnClickListener(this);
-		mBackBtn.setOnClickListener(this);
-		/** 清除缓存 **/
-		mClearCache.setOnClickListener(this);
-		/** 自动同步开关 **/
-		mBtnSwitch.setOnClickListener(this);
 	}
 
 	@Override
@@ -205,7 +214,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 					return;
 				}
 				initIntent(UserLoginActivity.class);
-			} else if (btnLoginout.getText().toString().equals("退出登录")) {
+			} else if (btnLoginout.getText().toString().equals("注销")) {
 				new AlertDialog.Builder(mContext).setTitle("提示").setMessage("是否确认退出？")
 						.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
@@ -269,7 +278,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				// 提交修改
 				mEditor.commit();
 
-				GolukUtils.showToast(mContext, "退出登录成功");
+				GolukUtils.showToast(mContext, "注销成功");
 				btnLoginout.setText("登录");
 
 			} else {
@@ -282,10 +291,10 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	}
 
 	/**
-	 * 退出登录的回调
+	 * 注销的回调
 	 */
 	public void getLogintoutCallback(int success, Object obj) {
-		GolukDebugUtils.e("", "-----------------退出登录回调--------------------");
+		GolukDebugUtils.e("", "-----------------注销回调--------------------");
 	}
 
 	/**
@@ -298,7 +307,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 
 			GolukDebugUtils.i("lily", "====json()====" + json);
 			phone = json.getString("phone");
-			// 退出登录后，将信息存储
+			// 注销后，将信息存储
 			mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 			mEditor = mPreferences.edit();
 			mEditor.putString("setupPhone", phone);
@@ -326,7 +335,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	}
 
 	/**
-	 * 退出登录后，点击返回键，返回到无用户信息的页面
+	 * 注销后，点击返回键，返回到无用户信息的页面
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -351,7 +360,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		if (mApp.autoLoginStatus != 1) {
 			dismissAutoDialog();
 			if (mApp.autoLoginStatus == 2) {
-				btnLoginout.setText("退出登录");
+				btnLoginout.setText("注销");
 			}
 		}
 	}
