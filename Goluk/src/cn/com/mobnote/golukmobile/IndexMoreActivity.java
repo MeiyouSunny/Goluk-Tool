@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.UserUtils;
@@ -186,7 +187,6 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		case R.id.back_btn:
 			ma.mApp.mUser.setUserInterface(null);
 			// 返回
-			// this.finish();
 			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
@@ -230,7 +230,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		// 我的相册
 		case R.id.video_item:
 			ma.mApp.mUser.setUserInterface(null);
-			intent = new Intent(mContext, LocalVideoListActivity.class);
+			intent = new Intent(mContext, PhotoAlbumActivity.class);
+			intent.putExtra("from", "local");
 			mContext.startActivity(intent);
 			break;
 		// 摄像头管理

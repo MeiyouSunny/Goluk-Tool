@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -19,6 +18,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import cn.com.mobnote.application.GolukApplication;
@@ -26,6 +27,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -74,6 +76,9 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 	private boolean systemtime;
 	/** 获取IPC系统时间标识 */
 	private boolean getTimeing=false;
+	private RelativeLayout mDateLayout = null;
+	private TextView line = null;
+	private float density = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +86,34 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_time_setting, null)); 
 		setTitle("时间设置");
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("timesetting", this);
+		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		
 		initView();
 		getSystemTime();
 		
 		systemtime = SettingUtils.getInstance().getBoolean("systemtime", true);
 		if(systemtime){
+			hideTimeLayout();
 			mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 		}else{
+			showTimeLayout();
 			mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 		}
+	}
+	
+	private void showTimeLayout() {
+		mDateLayout.setVisibility(View.VISIBLE);
+		RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
+		lineParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		lineParams.setMargins((int)(15*density), 0, 0, 0);
+		line.setLayoutParams(lineParams);
+	}
+	
+	private void hideTimeLayout() {
+		mDateLayout.setVisibility(View.GONE);
+		RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
+		lineParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		line.setLayoutParams(lineParams);
 	}
 	
 	/**
@@ -99,6 +122,24 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 	 * @date 2015年4月6日
 	 */
 	private void getSystemTime(){
+		Calendar calendar = Calendar.getInstance();  
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		
+	    year = calendar.get(Calendar.YEAR);  
+	    month = calendar.get(Calendar.MONTH) + 1;
+	    day = calendar.get(Calendar.DAY_OF_MONTH);
+	    hour = calendar.get(Calendar.HOUR_OF_DAY);
+	    minute = calendar.get(Calendar.MINUTE);
+	    seconds = calendar.get(Calendar.SECOND);
+	    
+	    mDateText.setText(year + "年" + month + "月" + day + "日");
+	    if(minute < 10){
+	    	mTimeText.setText(hour+":0"+minute);
+		}else{
+			mTimeText.setText(hour+":"+minute);
+		}
+	    
+	    
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -115,12 +156,14 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 	 * @date 2015年4月6日
 	 */
 	private void initView(){
-		findViewById(R.id.mDateLayout).setOnClickListener(this);
-		findViewById(R.id.mTimeLayout).setOnClickListener(this);
+		findViewById(R.id.mDateText).setOnClickListener(this);
+		findViewById(R.id.mTimeText).setOnClickListener(this);
 		mAutoBtn = (Button)findViewById(R.id.mAutoBtn);
 		mDateText = (TextView)findViewById(R.id.mDateText);
 		mTimeText = (TextView)findViewById(R.id.mTimeText);
 		mAutoBtn.setOnClickListener(this);
+		mDateLayout = (RelativeLayout)findViewById(R.id.mDateLayout);
+		line = (TextView)findViewById(R.id.line);
 	}
 	
 	@Override
@@ -132,11 +175,13 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 				break;
 			case R.id.mAutoBtn:
 				if(systemtime){
-					systemtime=false;
+					systemtime = false;
+					showTimeLayout();
 					mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 				}else{
-					systemtime=true;
+					systemtime = true;
 					mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+					hideTimeLayout();
 					
 					new Thread(new Runnable() {
 						@Override
@@ -151,36 +196,32 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 				}
 				SettingUtils.getInstance().putBoolean("systemtime", systemtime);
 				break;
-			case R.id.mDateLayout:
-				if(!systemtime && getTimeing){
-					DatePickerDialog datePicker=new DatePickerDialog(TimeSettingActivity.this, new OnDateSetListener() {
-						public void onDateSet(DatePicker view, int _year, int monthOfYear, int dayOfMonth) {
-							year = _year;
-							month = monthOfYear + 1;
-							day = dayOfMonth;
-							mDateText.setText(year + "-" + month + "-" + day);
-						  }
-					}, year, month - 1, day);
-					datePicker.show();
-				}
+			case R.id.mDateText:
+				DatePickerDialog datePicker=new DatePickerDialog(TimeSettingActivity.this, new OnDateSetListener() {
+					public void onDateSet(DatePicker view, int _year, int monthOfYear, int dayOfMonth) {
+						year = _year;
+						month = monthOfYear + 1;
+						day = dayOfMonth;
+						mDateText.setText(year + "年" + month + "月" + day + "日");
+					  }
+				}, year, month - 1, day);
+				datePicker.show();
 				
 				break;
-			case R.id.mTimeLayout:
-				if(!systemtime && getTimeing){
-					TimePickerDialog time=new TimePickerDialog(TimeSettingActivity.this, new OnTimeSetListener() {
-						@Override
-						public void onTimeSet(TimePicker view, int hourOfDay, int _minute) {
-							hour = hourOfDay;
-							minute = _minute;
-							if(minute < 10){
-								mTimeText.setText(hourOfDay+":0"+minute);
-							}else{
-								mTimeText.setText(hourOfDay+":"+minute);
-							}
+			case R.id.mTimeText:
+				TimePickerDialog time=new TimePickerDialog(TimeSettingActivity.this, new OnTimeSetListener() {
+					@Override
+					public void onTimeSet(TimePicker view, int hourOfDay, int _minute) {
+						hour = hourOfDay;
+						minute = _minute;
+						if(minute < 10){
+							mTimeText.setText(hourOfDay+":0"+minute);
+						}else{
+							mTimeText.setText(hourOfDay+":"+minute);
 						}
-					}, hour, minute, true);
-					time.show();
-				}
+					}
+				}, hour, minute, true);
+				time.show();
 				
 				break;
 	
@@ -215,8 +256,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 				    minute = calendar.get(Calendar.MINUTE);
 				    seconds = calendar.get(Calendar.SECOND);
 				    
-				    mDateText.setText(year + "-" + month + "-" + day);
-				    mTimeText.setText(hour+":"+minute);
+				    mDateText.setText(year + "年" + month + "月" + day + "日");
 				    if(minute < 10){
 				    	mTimeText.setText(hour+":0"+minute);
 					}else{

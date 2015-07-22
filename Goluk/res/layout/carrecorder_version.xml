@@ -1,57 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="42dp" >
+    android:paddingTop="42dp">
+    
+    <ImageView 
+        android:id="@+id/icon"
+        android:layout_marginTop="56dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/ipc"
+        />
+    
+    <TextView
+        android:id="@+id/text"
+        android:layout_below="@+id/icon"
+        android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="极路客G1"
+            android:textColor="#6d6d72"
+            android:textSize="16sp" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/idlayout"
+        android:layout_below="@+id/text"
+        android:gravity="center_vertical|left"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/carrecorder_line_press"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp" >
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical|left"
-            android:text="Goluk设备编号"
-            android:textColor="#333333"
-            android:textSize="18sp" />
+            android:text="设备编号: "
+            android:textColor="#6d6d72"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/mDeviceId"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical|right"
-            android:textColor="#999999"
-            android:textSize="18sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
+            android:textColor="#6d6d72"
+            android:textSize="13sp" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/vsnlayout"
+        android:layout_below="@+id/idlayout"
+        android:gravity="center_vertical|left"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/carrecorder_line_press"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp" >
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical|left"
-            android:text="固件版本号"
-            android:textColor="#333333"
-            android:textSize="18sp" />
+            android:text="固件版本号: "
+            android:textColor="#6d6d72"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/mVersion"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical|right"
-            android:textColor="#999999"
-            android:textSize="18sp" />
-    </RelativeLayout>
-
-</LinearLayout>
+            android:textColor="#6d6d72"
+            android:textSize="13sp" />
+    </LinearLayout>
+    
+</RelativeLayout>

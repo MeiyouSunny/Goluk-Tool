@@ -1,21 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed"
+    android:background="#f7f9fa"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:background="@color/bg" >
+        android:background="@color/photoalbum_title_bg_color" >
   
         <ImageButton
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/live_btn_back" />
+            android:background="@drawable/live_btn_back"
+            android:contentDescription="@string/def"  />
 
         <TextView
             android:layout_centerVertical="true"
@@ -35,62 +36,130 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+            
+            <!-- 存储容量查询 -->
+             <RelativeLayout
+                android:id="@+id/rlcx_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+				
+                <TextView
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/rlcx_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+                
+                <TextView
+                    android:id="@+id/mStorayeText"
+                	android:paddingRight="10dp"
+                	android:layout_toLeftOf="@+id/sc_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="0KB/0KB"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/sc_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+                
+            </RelativeLayout>
 
             <!-- 视频质量栏目 -->
 
             <RelativeLayout
                 android:id="@+id/mVideoDefinition"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_line_press"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
+                android:background="@color/setting_white_color"
+                 >
 
                 <TextView
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@string/spzl_title"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+                
+                <TextView
+                    android:id="@+id/mVideoText"
+                	android:paddingRight="10dp"
+                	android:layout_toLeftOf="@+id/vd_r"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="1080P高质量"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
 
                 <ImageButton
+                    android:id="@+id/vd_r"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_arrow"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+                
             </RelativeLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/spzl_text"
-                android:textColor="#999999"
-                android:textSize="12sp" />
-
+            
             <!-- 自动循环录像 -->
-
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color"
+                 >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@string/zdxhlx_title"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/zdxhlx"
@@ -98,36 +167,134 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
                     android:background="@drawable/carrecorder_setup_option_on" />
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+                
             </RelativeLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="10dp"
-                android:text="@string/zdxhlx_text"
-                android:textColor="#999999"
-                android:textSize="12sp" />
-
-            <!-- 停车安防开关 -->
-
+            
+            <!-- 声音录制开关 -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color"
+                >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:text="@string/sylz_title"
+                    android:textColor="@color/setting_black_color"
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp" 
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/sylz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/carrecorder_setup_option_on" />
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+                
+            </RelativeLayout>
+            
+            <!-- 碰撞感应灵敏度 -->
+            <RelativeLayout
+                android:id="@+id/pzgylmd_line"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color"
+                >
+
+                <TextView
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/pzgy_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+                
+                <TextView
+                    android:id="@+id/mSensitivityText"
+                	android:paddingRight="10dp"
+                	android:layout_toLeftOf="@+id/pzgy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="关闭"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/pzgy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+                
+            </RelativeLayout>
+			
+            <!--  
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/pzgy_text"
+                android:textColor="@color/setting_right_text_color"
+                android:textSize="10sp" />
+                -->
+            
+            <!-- 停车安防开关 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/setting_white_color"
+                >
+
+                <TextView
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp" 
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:text="停车安防开关"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/tcaf"
@@ -135,7 +302,20 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
                     android:background="@drawable/carrecorder_setup_option_on" />
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+                
             </RelativeLayout>
 
             <TextView
@@ -148,176 +328,52 @@
                 android:textColor="#999999"
                 android:textSize="12sp" />
             
-            <!-- 声音录制开关 -->
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/sylz_title"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
-
-                <Button
-                    android:id="@+id/sylz"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_on" />
-            </RelativeLayout>
-
-            <!-- 碰撞感应灵敏度 -->
-
-            <RelativeLayout
-                android:id="@+id/pzgylmd_line"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_line_press"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/pzgy_title"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
-
-                <ImageButton
-                    android:id="@+id/pzgy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_arrow"
-                    android:contentDescription="@string/def" />
-            </RelativeLayout>
-
-            <TextView
+            <LinearLayout 
+                android:id="@+id/mBugLayout"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/pzgy_text"
-                android:textColor="#999999"
-                android:textSize="12sp" />
-
-            <!-- 存储容量查询 -->
-
-            <RelativeLayout
-                android:id="@+id/rlcx_line"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_line_press"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
-
+                android:contentDescription="@string/def" 
+                >
+                
+                <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/my_shopping_car_icon" 
+                android:contentDescription="@string/def" />
+                
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/rlcx_title"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
-
-                <ImageButton
-                    android:id="@+id/rlcx"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_arrow"
-                    android:contentDescription="@string/def" />
-            </RelativeLayout>
-
-            <!-- 水印设置 -->
-
-            <RelativeLayout
-                android:visibility="gone"
-                android:id="@+id/sysz_line"
+                android:layout_marginLeft="3dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_line_press"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/sysz"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
-
-               <ImageButton
-                    android:id="@+id/sysz"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_arrow"
-                    android:contentDescription="@string/def" />
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:text="请立即购买极路客专用降压线"
+                android:textColor="#047cf3"
+                android:textSize="10sp" 
+                android:contentDescription="@string/def" />
+                
+            </LinearLayout>
             
-              <!-- 状态提示灯 -->
-            <RelativeLayout
-                android:visibility="gone"
-                android:id="@+id/ztts_line"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/ztts"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
-
-                <Button
-                    android:id="@+id/ztts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_on" />
-            </RelativeLayout>
-			
             <!-- 时间设置 -->
             <RelativeLayout
                 android:id="@+id/sjsz_line"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_line_press"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
+                android:background="@color/setting_white_color"
+                >
 
                 <TextView
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@string/sjsz"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                <ImageButton
                     android:id="@+id/sjsz"
@@ -325,55 +381,83 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_arrow"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
+               
+               <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+               
             </RelativeLayout>
             
-            <!-- 格式化SDK卡 -->
+            <!-- 版本信息 -->
             <RelativeLayout
-                android:id="@+id/gshsdk_line"
+                android:id="@+id/bbxx_line"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_line_press"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
+                android:background="@color/setting_white_color"
+                >
 
                 <TextView
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="@string/gsh"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
+                    android:text="@string/bbxx"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                <ImageButton
-                    android:id="@+id/gsh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_arrow"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
+               
+               <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+               
             </RelativeLayout>
             
             <!-- 恢复出厂设置-->
             <RelativeLayout
                 android:id="@+id/hfccsz_line"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_line_press"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
+                android:layout_marginBottom="15dp"
+                android:background="@color/setting_white_color"
+                >
 
                 <TextView
+                    android:paddingLeft="15dp"
+                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@string/hfcc"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                <ImageButton
                     android:id="@+id/hfcc"
@@ -381,38 +465,23 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_arrow"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
+               
+               <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+                
+                <TextView 
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+               
             </RelativeLayout>
             
-            <!-- 版本信息-->
-            <RelativeLayout
-                android:id="@+id/bbxx_line"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/carrecorder_line_press"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/bbxx"
-                    android:textColor="#333333"
-                    android:textSize="18sp" />
-
-               <ImageButton
-                    android:id="@+id/bbxx"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/carrecorder_setup_option_arrow"
-                    android:contentDescription="@string/def" />
-            </RelativeLayout>
-                       
         </LinearLayout>
     </ScrollView>
 

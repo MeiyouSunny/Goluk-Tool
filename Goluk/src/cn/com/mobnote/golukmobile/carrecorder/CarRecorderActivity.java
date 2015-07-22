@@ -61,6 +61,8 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ReadWifiConfig;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomWifiDialog;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow;
@@ -376,7 +378,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (wrb != null) {
 				mConnectTip.setText(wrb.getIpc_ssid());
 			}
-			boolean b = mApp.mIpcUpdateManage.ipcConnect();
+			boolean b = false;
+			if (null != mApp.mIpcUpdateManage) {
+				mApp.mIpcUpdateManage.ipcConnect();
+			}
 			if (b) {
 				mPalyerLayout.setVisibility(View.VISIBLE);
 				mNotconnected.setVisibility(View.GONE);
@@ -761,7 +766,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			} else {
 				dialog();
 				// 未登录
-				GFileUtils.writeIPCLog("=============================发起精彩视频命令===========未登录=============");
 			}
 			break;
 		// case R.id.mFileBtn:
@@ -880,6 +884,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			open_shareVideo(images[1].getName());
 			break;
 		case R.id.image3:
+			Intent photoalbum = new Intent(CarRecorderActivity.this,
+					PhotoAlbumActivity.class);
+			photoalbum.putExtra("from", "cloud");
+			startActivity(photoalbum);
 			break;
 		default:
 			break;
@@ -1476,7 +1484,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				try {
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
-						String filename = json.getString("filename");
+						String filename = json.optString("filename");
 
 						if (videoname.equals(filename)) {// 是当前拍的文件
 							int filesize = json.getInt("filesize");

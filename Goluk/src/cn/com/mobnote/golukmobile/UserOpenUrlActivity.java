@@ -12,6 +12,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.webkit.WebSettings;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
@@ -53,6 +55,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		}
 		
 		Intent itIndexMore = getIntent();
+		WebSettings webSettings = mWebView.getSettings();
+		webSettings.setSupportZoom(true);
+		webSettings.setBuiltInZoomControls(true);
 		mWebView.setWebViewClient(new WebViewClient() {
 
 			@Override
@@ -81,6 +86,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			} else if (from_tag.equals("shopping")) {
 				mTextTitle.setText("购买极路客");
 				mWebView.loadUrl(getRtmpAddress() + "?type=4");
+			} else if (from_tag.equals("buyline")) {
+				mTextTitle.setText("购买极路客专用降压线");
+				mWebView.loadUrl(getRtmpAddress() + "?type=1");
 			}
 		}
 		mBackBtn.setOnClickListener(this);

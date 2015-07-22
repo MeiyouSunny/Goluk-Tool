@@ -101,7 +101,9 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 			break;
 		//欢迎页
 		case R.id.welcome_item:
-			Intent itWelcome = new Intent(UserVersionActivity.this,UserWelcomeActivity.class);
+//			Intent itWelcome = new Intent(UserVersionActivity.this,UserWelcomeActivity.class);
+			Intent itWelcome = new Intent(UserVersionActivity.this,UserStartActivity.class);
+			itWelcome.putExtra("judgeVideo", true);
 			startActivity(itWelcome);
 			break;
 		//意见反馈

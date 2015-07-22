@@ -46,6 +46,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
@@ -1067,6 +1068,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						// 获取停车安防配置信息
 						// updateMotionCfg();
 						isconnection = true;// 连接成功
+						if(null != PhotoAlbumActivity.mHandler) {
+							PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
+						}
 						closeConnectionDialog();// 关闭连接的dialog
 						boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
 						GolukDebugUtils.e("xuhw", "YYYYYYY========getIPCSystemTime=======a=" + a);
@@ -1457,6 +1461,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年4月24日
 	 */
 	private void ipcDisconnect() {
+		if(null != PhotoAlbumActivity.mHandler) {
+			PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
+		}
 		if (mDownLoadFileList.size() > 0) {
 			mDownLoadFileList.clear();
 			mNoDownLoadFileList.clear();

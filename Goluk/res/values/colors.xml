@@ -73,8 +73,21 @@
     <color name="live_loginlayout_color">#7F151515</color>
     <color name="carrecord_text_color">#3b97f5</color>
     
+    <!-- 相册按钮文字颜色 -->
+    <color name="photoalbum_text_color">#0080ff</color>
+    <color name="photoalbum_text_color_gray">#eeeeee</color>
+    <color name="photoalbum_line_color">#c8c7cc</color>
+    <color name="photoalbum_title_bg_color">#242629</color>
+    <color name="photoalbum_icon_color_gray">#a2a4a7</color>
+    
+    <!-- 行车记录仪设置颜色 -->
+    <color name="setting_black_color">#000000</color>
+    <color name="setting_right_text_color">#8e8e93</color>
+    <color name="setting_white_color">#ffffff</color>
+    <color name="setting_line_color">#c8c7cc</color>
     
     <!-- 行车记录仪2.0 -->
 	<color name="text_select_color">#e13737</color>
 	<color name="text_diff_color">#808181</color>
+
 </resources>
