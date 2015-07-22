@@ -483,9 +483,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		switch (id) {
 		case R.id.back_btn:
 			// 返回
-			// exit();
-
-			click_next();
+			 exit();
 			break;
 		case R.id.play_layout:
 			click_play();
