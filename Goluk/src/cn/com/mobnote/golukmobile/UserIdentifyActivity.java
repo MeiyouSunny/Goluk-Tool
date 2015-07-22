@@ -772,6 +772,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					} else if ("fromIndexMore".equals(intentRegistInter)) {
 						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
 						it.putExtra("showMe", "showMe");
+						GolukDebugUtils.i("newintent", "-------------------");
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
