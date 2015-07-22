@@ -97,7 +97,8 @@ import com.rd.car.player.RtmpPlayerView;
  * 
  * @author xuhw
  */
-public class CarRecorderActivity extends BaseActivity implements OnClickListener,OnTouchListener, IPCManagerFn, IPopwindowFn {
+public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
+		IPopwindowFn {
 	public static Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -479,7 +480,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		fqzb = (TextView) findViewById(R.id.fqzb);
 		liveTime = (TextView) findViewById(R.id.live_time);
 		more = (Button) findViewById(R.id.car_recorder);
-		
+
 		liveBtn = (ImageButton) findViewById(R.id.liveBtn);
 		mRtmpPlayerView = (RtmpPlayerView) findViewById(R.id.mRtmpPlayerView);
 		image1 = (ImageView) findViewById(R.id.image1);
@@ -515,7 +516,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mAddr.setText(addr);
 		}
 	}
-	
 
 	/**
 	 * 设置监听事件
@@ -706,7 +706,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mRtmpPlayerView.start();
 		}
 	}
-	
 
 	@Override
 	public void onClick(View arg0) {
@@ -1131,7 +1130,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			m8sTimer.purge();
 			m8sTimer = null;
 		}
-		
+
 		image1.setImageBitmap(images[2].getBitmap());
 		image2.setImageBitmap(images[0].getBitmap());
 		downloadSize.setProcess(0);
@@ -1462,7 +1461,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							VideoShareInfo vsi = new VideoShareInfo();
 							vsi.setName(videoname);
 							vsi.setBitmap(ImageManager.getBitmapFromCache(mImagePath + filename));
-							
+
 							images[0] = vsi;
 							image1.setImageBitmap(vsi.getBitmap());
 						} else if (filename.equals(videoname)) {
@@ -1612,79 +1611,163 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
+	/**
+	 * 初始化文件同步和分享功能
+	  * @Title: initVideoImage 
+	  * @Description: TODO void 
+	  * @author 曾浩 
+	  * @throws
+	 */
 	public void initVideoImage() {
 		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
 		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
-		String file = mFilePath + filePaths[0];
-		List<String> list = this.getVideoConfigFile(file);
+		
+		List<String> wonderfuls = this.getNewVideoByType(filePaths[0],1);//最新的精彩视频
+		List<String> urgents = this.getNewVideoByType(filePaths[1], 2);//最新的紧急视频
+		
+		List<String> names = new ArrayList<String> ();
+		if(wonderfuls != null ){
+			names.addAll(wonderfuls);
+		}
+		if(urgents != null ){
+			names.addAll(urgents);
+		}
+		
+		
+		List<String> newvideo = this.shortNames(names);//拿到最新的4个视频
+		
 		String videoname1 = "";
 		String videoname2 = "";
 		
-		
-		String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/";
-		
-		int flog = 0;
-		String videoname = "";
-		
-		File vfile = null;
-		for(int i=list.size()-1;i<list.size();i--){
-			videoname = list.get(i);
-			vfile = new File(path+videoname);
-			
-			
-			if(vfile.exists()){
-				flog++;
-				if(flog <= 1){
-					videoname1 = videoname;
-				}else if(flog == 2){
-					videoname2 = videoname;
-				}else{
-					break;
-				}
-				
+		if(newvideo!= null && newvideo.size()>0){
+			videoname1 = newvideo.get(0);
+			if(newvideo.size()>1){
+				videoname2 = newvideo.get(1);
 			}
 		}
 		
-		if(!"".equals(videoname1)){
+		if (!"".equals(videoname1)) {
 			String name1 = mImagePath + videoname1.replace("mp4", "jpg");
 			File video1 = new File(name1);
 			VideoShareInfo vsi1 = new VideoShareInfo();
 			if (video1.exists()) {
 				vsi1.setBitmap(ImageManager.getBitmapFromCache(name1));
-			}else{
+			} else {
 				vsi1.setBitmap(bitmap);
 			}
-			
+
 			vsi1.setName(videoname1);
 			images[0] = vsi1;
 			image1.setImageBitmap(vsi1.getBitmap());
-		}else{
+		} else {
 			image1.setVisibility(View.INVISIBLE);
 		}
-		
-		if(!"".equals(videoname2)){
+
+		if (!"".equals(videoname2)) {
 			String name2 = mImagePath + videoname2.replace("mp4", "jpg");
 			File video2 = new File(name2);
 			VideoShareInfo vsi2 = new VideoShareInfo();
 			vsi2.setName(videoname2);
 			if (video2.exists()) {
 				vsi2.setBitmap(ImageManager.getBitmapFromCache(name2));
-			}else{
+			} else {
 				vsi2.setBitmap(bitmap);
 			}
-			
+
 			images[1] = vsi2;
 			image2.setImageBitmap(vsi2.getBitmap());
-		}else{
+		} else {
 			image2.setVisibility(View.INVISIBLE);
 		}
-		
-		
+
 		VideoShareInfo pic = new VideoShareInfo();
 		pic.setBitmap(bitmap);
 		pic.setName("");
 
 		images[2] = pic;
+	}
+	
+	/**
+	 * 冒泡排序把日期最新的排前面
+	  * @Title: shortNames 
+	  * @Description: TODO
+	  * @param names
+	  * @return List<String> 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	public List<String> shortNames(List<String> names){
+		if (names != null && names.size() > 0) {
+			for (int i = 0; i < names.size(); i++) {
+				String[] videos = names.get(i).split("_");
+				Long time = Long.parseLong(videos[1]);
+
+				for (int j = i + 1; j < names.size(); j++) {
+					Long date = Long.parseLong(names.get(j).split("_")[1]);
+					if (time < date) {
+						String name = names.get(i);
+						names.set(i, names.get(j));
+						names.set(j, name);
+					}
+				}
+			}
+		}
+		
+		return names;
+	}
+
+	public List<String> getNewVideoByType(String uri,int type) {
+		String file = mFilePath + uri;
+		List<String> list = this.getVideoConfigFile(file);
+
+		String videoname1 = "";
+		String videoname2 = "";
+		
+		String path = "";
+		if(type == 1){
+			path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/";
+		}else if(type == 2){
+			path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/urgent/";
+		}
+
+
+		int flog = 0;
+		String videoname = "";
+		
+		if(list != null && list.size()>0){
+			File vfile = null;
+			for (int i = list.size() - 1; i < list.size(); i--) {
+				videoname = list.get(i);
+				vfile = new File(path + videoname);
+
+				if (vfile.exists()) {
+					flog++;
+					if (flog <= 1) {
+						videoname1 = videoname;
+					} else if (flog == 2) {
+						videoname2 = videoname;
+					} else {
+						break;
+					}
+
+				}
+			}
+
+			List<String> result = new ArrayList<String>();
+
+			if (!"".equals(videoname1)) {
+				result.add(videoname1);
+			}
+
+			if (!"".equals(videoname2)) {
+				result.add(videoname2);
+			}
+
+			return result;
+		}else{
+			return null;
+		}
+		
 	}
 
 	/**
@@ -1735,7 +1818,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				Drawable more_down = this.getResources().getDrawable(R.drawable.driving_car_next_btn1);
-				more.setCompoundDrawablesWithIntrinsicBounds(null, null,more_down, null);
+				more.setCompoundDrawablesWithIntrinsicBounds(null, null, more_down, null);
 				more.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
