@@ -137,7 +137,7 @@
                 android:textSize="14sp"
                 android:maxLength="17"
                 android:maxLines="1"
-                android:ellipsize="marquee"/>
+                android:ellipsize="end"/>
 
             <ImageView
                 android:id="@+id/user_personal_arrow3"
