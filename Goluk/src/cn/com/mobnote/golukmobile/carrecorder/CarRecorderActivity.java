@@ -1619,36 +1619,72 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	public void initVideoImage() {
 		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
+		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
 		String file = mFilePath + filePaths[0];
 		List<String> list = this.getVideoConfigFile(file);
-		String videoname1 = list.get(list.size() - 1);
-		String videoname2 = list.get(list.size() - 2);
-
-		String name1 = mImagePath + videoname1.replace("mp4", "jpg");
-		String name2 = mImagePath + videoname2.replace("mp4", "jpg");
-
-		File video1 = new File(name1);
-		File video2 = new File(name2);
-
-		if (video1.exists()) {
-			VideoShareInfo vsi = new VideoShareInfo();
-			vsi.setBitmap(ImageManager.getBitmapFromCache(name1));
-			vsi.setName(videoname1);
-			images[0] = vsi;
-			image1.setImageBitmap(vsi.getBitmap());
-		}
-
-		if (video2.exists()) {
-			VideoShareInfo vsi = new VideoShareInfo();
-			vsi.setBitmap(ImageManager.getBitmapFromCache(name2));
-			vsi.setName(videoname2);
+		String videoname1 = "";
+		String videoname2 = "";
+		
+		
+		String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/";
+		
+		int flog = 0;
+		String videoname = "";
+		
+		File vfile = null;
+		for(int i=list.size()-1;i<list.size();i--){
+			videoname = list.get(i);
+			vfile = new File(path+videoname);
 			
-			images[1] = vsi;
-			image2.setImageBitmap(vsi.getBitmap());
+			
+			if(vfile.exists()){
+				flog++;
+				if(flog <= 1){
+					videoname1 = videoname;
+				}else if(flog == 2){
+					videoname2 = videoname;
+				}else{
+					break;
+				}
+				
+			}
+		}
+		
+		if(!"".equals(videoname1)){
+			String name1 = mImagePath + videoname1.replace("mp4", "jpg");
+			File video1 = new File(name1);
+			VideoShareInfo vsi1 = new VideoShareInfo();
+			if (video1.exists()) {
+				vsi1.setBitmap(ImageManager.getBitmapFromCache(name1));
+			}else{
+				vsi1.setBitmap(bitmap);
+			}
+			
+			vsi1.setName(videoname1);
+			images[0] = vsi1;
+			image1.setImageBitmap(vsi1.getBitmap());
+		}else{
+			image1.setVisibility(View.INVISIBLE);
+		}
+		
+		if(!"".equals(videoname2)){
+			String name2 = mImagePath + videoname2.replace("mp4", "jpg");
+			File video2 = new File(name2);
+			VideoShareInfo vsi2 = new VideoShareInfo();
+			vsi2.setName(videoname2);
+			if (video2.exists()) {
+				vsi2.setBitmap(ImageManager.getBitmapFromCache(name2));
+			}else{
+				vsi2.setBitmap(bitmap);
+			}
+			
+			images[1] = vsi2;
+			image2.setImageBitmap(vsi2.getBitmap());
+		}else{
+			image2.setVisibility(View.INVISIBLE);
 		}
 		
 		
-		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
 		VideoShareInfo pic = new VideoShareInfo();
 		pic.setBitmap(bitmap);
 		pic.setName("");

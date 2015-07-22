@@ -153,6 +153,22 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		if (null == mCustomDialogRepwd) {
 			mCustomDialogRepwd = new CustomLoadingDialog(mContext, "重置中，请稍候……");
 		}
+		// 6个框都为空
+		int one = mEditTextOne.getText().toString().replace(" ", "").length();
+		int Two = mEditTextTwo.getText().toString().replace(" ", "").length();
+		int Three = mEditTextThree.getText().toString().replace(" ", "").length();
+		int Four = mEditTextFour.getText().toString().replace(" ", "").length();
+		int Five = mEditTextFive.getText().toString().replace(" ", "").length();
+		int Six = mEditTextSix.getText().toString().replace(" ", "").length();
+		if (one == 0 && Two == 0 && Three == 0 && Four == 0 && Five == 0 && Six == 0) {
+			GolukDebugUtils.i(TAG, "--------6个都是空空空空---------");
+			mEditTextOne.setFocusable(true);
+			mEditTextTwo.setFocusable(false);
+			mEditTextThree.setFocusable(false);
+			mEditTextFour.setFocusable(false);
+			mEditTextFive.setFocusable(false);
+			mEditTextSix.setFocusable(false);
+		}
 		// 监听
 		mBtnBack.setOnClickListener(this);
 		mBtnCount.setOnClickListener(this);
@@ -186,9 +202,6 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		if (null != it.getStringExtra(IDENTIFY_INTER_REGIST)) {
 			intentRegistInter = it.getStringExtra(IDENTIFY_INTER_REGIST).toString();
 		}
-
-		GolukDebugUtils.i("final", "-------UserIdentifyActivity--------getInfo()--------intentRegistInter------"
-				+ intentRegistInter);
 
 	}
 
@@ -762,12 +775,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
-					} /*else if ("fromSetup".equals(intentRegistInter)) {
-						it = new Intent(UserIdentifyActivity.this, UserSetupActivity.class);
-						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(it);
-					}*/
+					}
 					finish();
 					break;
 
