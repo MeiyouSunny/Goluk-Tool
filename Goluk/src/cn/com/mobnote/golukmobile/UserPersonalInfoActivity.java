@@ -198,7 +198,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			if (clickBtn) {
 				Intent itName = new Intent(UserPersonalInfoActivity.this, UserPersonalNameActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("intentNameText", mTextName.getText().toString());
+				if(name2 == null)
+					name2 = name;
+				bundle.putString("intentNameText", name2);
 				itName.putExtras(bundle);
 				startActivityForResult(itName, 1);
 			}
@@ -208,7 +210,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			if (clickBtn) {
 				Intent itSign = new Intent(UserPersonalInfoActivity.this, UserPersonalSignActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("intentSignText", mTextSign.getText().toString());
+				if(sign2 == null)
+					sign2 = sign;
+				bundle.putString("intentSignText", sign2);
 				itSign.putExtras(bundle);
 				startActivityForResult(itSign, 2);
 			}

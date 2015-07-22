@@ -135,9 +135,9 @@
                 android:layout_marginRight="3dp"
                 android:textColor="@color/user_personal_black"
                 android:textSize="14sp"
-                android:maxLength="17"
                 android:maxLines="1"
-                android:ellipsize="marquee"/>
+                android:ellipsize="end"
+                android:maxLength="17"/>
 
             <ImageView
                 android:id="@+id/user_personal_arrow3"
