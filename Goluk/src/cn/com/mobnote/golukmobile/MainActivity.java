@@ -133,7 +133,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	/** wifi列表manage */
 	private WifiConnectManager mWac = null;
-	
+
 	/** 首页handler用来接收消息,更新UI */
 	public static Handler mMainHandler = null;
 	/** 下载完成播放声音文件 */
@@ -200,7 +200,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 注意该方法要再setContentView方法之前实现
 		SDKInitializer.initialize(getApplicationContext());
 		((GolukApplication) this.getApplication()).initSharedPreUtil(this);
-		
+
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 
@@ -458,8 +458,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	
-
 	/**
 	 * 下载气泡图片
 	 * 
@@ -474,8 +472,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPictureByURL,
 				json);
 	}
-
-	
 
 	/**
 	 * 链接中断更新页面
@@ -594,9 +590,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case WIFI_STATE_SUCCESS:
 			GolukApplication.getInstance().stopDownloadList();
-			
+
 			boolean b = mApp.mIpcUpdateManage.ipcConnect();
-			if(b){
+			if (b) {
 				// 跳转到行车记录仪界面
 				Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 				startActivity(i);
@@ -610,11 +606,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
-		
+
 		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
 		if (null != mMapView) {
 			mMapView.onDestroy();
@@ -656,7 +652,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
-		
+
 		super.onResume();
 	}
 
@@ -773,7 +769,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
 			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
 			msquareBtn.setTextColor(Color.rgb(204, 204, 204));
-			
+
 			userInfoLayout.setVisibility(View.VISIBLE);
 			videoSquareLayout.setVisibility(View.GONE);
 			break;
@@ -822,11 +818,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public void setBelowItem(int id) {
 		Drawable drawable;
-		
+
 		if (id == R.id.index_square_btn) {
 			if (null != mMapView) {
 				mMapView.onPause();
@@ -869,34 +864,34 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private AlertDialog dialog = null;
 
 	public void click_toLocalVideoShare() {
-//		GolukDebugUtils.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess
-//				+ "------autologinStatus-----" + mApp.autoLoginStatus);
-//		if (!mApp.isUserLoginSucess) {
-//			// 未登录成功
-//			mShareLayout.setVisibility(View.GONE);
-//			mApp.mUser.setUserInterface(this);
-//			if (mApp.autoLoginStatus == 1) {
-//				mBuilder = new AlertDialog.Builder(mContext);
-//				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
-//					@Override
-//					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-//						if (keyCode == KeyEvent.KEYCODE_BACK) {
-//							return true;
-//						}
-//						return false;
-//					}
-//				}).create();
-//				dialog.show();
-//				return;
-//			} else if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
-//				// console.toast("网络连接异常，请重试", mContext);
-//				return;
-//			}
-//			Intent intent = new Intent(this, UserLoginActivity.class);
-//			intent.putExtra("isInfo", "back");
-//			startActivity(intent);
-//			return;
-//		}
+		GolukDebugUtils.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess
+				+ "------autologinStatus-----" + mApp.autoLoginStatus);
+		if (!mApp.isUserLoginSucess) {
+			// 未登录成功
+			mShareLayout.setVisibility(View.GONE);
+			mApp.mUser.setUserInterface(this);
+			if (mApp.autoLoginStatus == 1) {
+				mBuilder = new AlertDialog.Builder(mContext);
+				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if (keyCode == KeyEvent.KEYCODE_BACK) {
+							return true;
+						}
+						return false;
+					}
+				}).create();
+				dialog.show();
+				return;
+			} else if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
+				// console.toast("网络连接异常，请重试", mContext);
+				return;
+			}
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
+			return;
+		}
 
 		// 跳转到本地视频分享列表
 		Intent localVideoShareList = new Intent(MainActivity.this, LocalVideoShareListActivity.class);
@@ -965,10 +960,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		GolukApplication.getInstance().stopDownloadList();
-		
+
 		boolean b = mApp.mIpcUpdateManage.ipcConnect();
-		//匹配
-		if(b){
+		// 匹配
+		if (b) {
 			// 开启直播
 			Intent intent = new Intent(this, LiveActivity.class);
 			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
@@ -978,7 +973,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			startActivity(intent);
 			mShareLayout.setVisibility(View.GONE);
 		}
-		
+
 	}
 
 	// 查看他人的直播
@@ -1265,5 +1260,5 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "shareid-----" + shareVideoId + "   channel-----" + channel);
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 	}
-	
+
 }

@@ -48,7 +48,7 @@ public class BaiduMapView implements ILocationFn {
 	/** 百度地图 */
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
-	
+
 	/** 定时请求直播点时间 */
 	private int mTiming = 1 * 60 * 1000;
 	/** 是否首次定位 */
@@ -62,7 +62,7 @@ public class BaiduMapView implements ILocationFn {
 	private LocationClient mLocClient;
 
 	private MainActivity ma;
-	
+
 	/** 控制离开页面不自动请求大头针数据 */
 	private boolean isCurrent = true;
 
@@ -81,7 +81,7 @@ public class BaiduMapView implements ILocationFn {
 
 	public void onResume() {
 		isCurrent = true;
-		
+
 		boolean b = mBaiduHandler.hasMessages(2);
 		if (!b) {
 			Message msg = new Message();
@@ -266,12 +266,6 @@ public class BaiduMapView implements ILocationFn {
 			GolukUtils.showToast(mContext, "气泡图片下载失败");
 		}
 	}
-	
-	private void test() {
-		if (null != mContext && mContext instanceof MainActivity) {
-			((MainActivity)mContext).click_toLocalVideoShare();
-		}
-	}
 
 	private class click implements View.OnClickListener {
 		@Override
@@ -283,8 +277,6 @@ public class BaiduMapView implements ILocationFn {
 				LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(u);
-				
-				test();
 				break;
 			}
 		}
