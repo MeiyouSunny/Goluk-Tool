@@ -55,6 +55,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
+	/**点击下一步按钮**/
+	public static boolean repwdClick = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +191,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			// 点按钮后,弹出重置密码中的提示,样式使用系统 loading 样式,文字描述:正在重置
 			// 重置密码成功,弹出系统短提示:重置密码成功。同时跳转至登录页面。
 			repwd();
+			repwdClick = true;
 			break;
 		}
 	}
@@ -207,19 +210,23 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 					if (!UserUtils.isNetDeviceAvailable(this)) {
 						GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 					} else {
-						mApplication.mIdentifyManage.setUserIdentifyInterface(this);
-						boolean b = mApplication.mIdentifyManage.getIdentify(false, phone);
-						if (b) {
-							UserUtils.hideSoftMethod(this);
-							mCustomProgressDialogIdentify.show();
-							mBtnOK.setEnabled(false);
-							mEditTextPhone.setEnabled(false);
-							mEditTextPwd.setEnabled(false);
-							mBtnBack.setEnabled(false);
+						if (!mApplication.mTimerManage.flag && repwdClick) {
+							GolukUtils.showToast(this, "倒计时没有结束");
 						} else {
-							closeProgressDialogIdentify();
-							GolukUtils.showToast(mContext, this.getResources()
-									.getString(R.string.user_getidentify_fail));
+							mApplication.mIdentifyManage.setUserIdentifyInterface(this);
+							boolean b = mApplication.mIdentifyManage.getIdentify(false, phone);
+							if (b) {
+								UserUtils.hideSoftMethod(this);
+								mCustomProgressDialogIdentify.show();
+								mBtnOK.setEnabled(false);
+								mEditTextPhone.setEnabled(false);
+								mEditTextPwd.setEnabled(false);
+								mBtnBack.setEnabled(false);
+							} else {
+								closeProgressDialogIdentify();
+								GolukUtils.showToast(mContext, this.getResources()
+										.getString(R.string.user_getidentify_fail));
+							}
 						}
 
 					}

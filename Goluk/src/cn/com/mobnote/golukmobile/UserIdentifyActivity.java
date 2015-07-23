@@ -563,6 +563,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			}
 		});
 		mCountDownhelper.start();
+		mApp.mTimerManage.timerCount();
 	}
 
 	/**
