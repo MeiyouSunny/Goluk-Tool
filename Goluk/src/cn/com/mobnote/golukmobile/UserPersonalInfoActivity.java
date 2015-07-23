@@ -186,7 +186,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			if (clickBtn) {
 				Intent itHead = new Intent(UserPersonalInfoActivity.this, UserPersonalHeadActivity.class);
 				Bundle bundle = new Bundle();
-				if(head2 == null)
+				if (head2 == null)
 					head2 = head;
 				bundle.putString("intentHeadText", head2);
 				itHead.putExtras(bundle);
@@ -198,7 +198,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			if (clickBtn) {
 				Intent itName = new Intent(UserPersonalInfoActivity.this, UserPersonalNameActivity.class);
 				Bundle bundle = new Bundle();
-				if(name2 == null)
+				if (name2 == null)
 					name2 = name;
 				bundle.putString("intentNameText", name2);
 				itName.putExtras(bundle);
@@ -210,7 +210,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			if (clickBtn) {
 				Intent itSign = new Intent(UserPersonalInfoActivity.this, UserPersonalSignActivity.class);
 				Bundle bundle = new Bundle();
-				if(sign2 == null)
+				if (sign2 == null)
 					sign2 = sign;
 				bundle.putString("intentSignText", sign2);
 				itSign.putExtras(bundle);
@@ -396,7 +396,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			animation = new TranslateAnimation(-width, 0, 0, 0);
 			animation.setDuration(500);
 			clickBtn = false;
-		}else{
+		} else {
 			animation = new TranslateAnimation(0, -width, 0, 0);
 			animation.setDuration(500);
 			clickBtn = true;
