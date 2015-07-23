@@ -27,9 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -249,6 +247,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mliveSettingWindow.setCallBackNotify(this);
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
+		mLiveManager = new TimerManager(10);
+		mLiveManager.setListener(this);
+
+		mApp.addLocationListener(TAG, this);
 
 		if (isShareLive) {
 			if (isContinueLive) {
@@ -258,7 +260,15 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				isSettingCallBack = true;
 			} else {
 				// 显示设置窗口
-				mBaseHandler.sendEmptyMessageDelayed(100, 600);
+
+				// mBaseHandler.sendEmptyMessageDelayed(100, 600);
+
+				if (null == mSettingData) {
+					this.finish();
+					return;
+				}
+
+				startLiveForSetting();
 			}
 
 			updateCount(0, 0);
@@ -279,11 +289,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
-
-		mLiveManager = new TimerManager(10);
-		mLiveManager.setListener(this);
-
-		mApp.addLocationListener(TAG, this);
 
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("live", this);
@@ -354,6 +359,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		isShareLive = intent.getBooleanExtra(KEY_IS_LIVE, true);
 		currentUserInfo = (UserInfo) intent.getSerializableExtra(KEY_USERINFO);
 		isContinueLive = intent.getBooleanExtra(KEY_LIVE_CONTINUE, false);
+		mSettingData = (LiveSettingBean) intent.getSerializableExtra(KEY_LIVE_SETTING_DATA);
 	}
 
 	private void setViewInitData() {
@@ -1572,44 +1578,73 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	}
 
+	private void startLiveForSetting() {
+		mLiveCountSecond = mSettingData.duration;
+		if (null != mDescTv && null != mSettingData.desc && !"".equals(mSettingData.desc)) {
+			mDescTv.setText(mSettingData.desc);
+		} else {
+			mDescTv.setVisibility(View.GONE);
+		}
+		if (!isAlreadExit) {
+			LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, LIVE_START_PROGRESS_MSG);
+		}
+
+		// 开始视频上传
+		startLive(mCurrentVideoId);
+		updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
+		// 开始计时
+		mLiveManager.startTimer(mLiveCountSecond, true);
+
+		isSettingCallBack = true;
+		try {
+			GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(myInfo.lat), Double.parseDouble(myInfo.lon));
+		} catch (Exception e) {
+
+		}
+	}
+
 	// POPWindow回调操作
 	@Override
 	public void callBackPopWindow(int event, Object data) {
-		if (LiveSettingPopWindow.EVENT_ENTER == event) {
-			if (null != mliveSettingWindow) {
-				mliveSettingWindow.close();
-			}
-			if (null == data) {
-				GolukUtils.showToast(this, "用户设置出错");
-				return;
-			}
-			mSettingData = (LiveSettingBean) data;
-			mLiveCountSecond = mSettingData.duration;
-			if (null != mDescTv && null != mSettingData.desc && !"".equals(mSettingData.desc)) {
-				mDescTv.setText(mSettingData.desc);
-			} else {
-				mDescTv.setVisibility(View.GONE);
-			}
-			if (!isAlreadExit) {
-				LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE,
-						LIVE_START_PROGRESS_MSG);
-			}
 
-			// 开始视频上传
-			startLive(mCurrentVideoId);
-			updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
-			// 开始计时
-			mLiveManager.startTimer(mLiveCountSecond, true);
+		// if (LiveSettingPopWindow.EVENT_ENTER == event) {
+		// if (null != mliveSettingWindow) {
+		// mliveSettingWindow.close();
+		// }
+		// if (null == data) {
+		// GolukUtils.showToast(this, "用户设置出错");
+		// return;
+		// }
+		// mSettingData = (LiveSettingBean) data;
+		// mLiveCountSecond = mSettingData.duration;
+		// if (null != mDescTv && null != mSettingData.desc &&
+		// !"".equals(mSettingData.desc)) {
+		// mDescTv.setText(mSettingData.desc);
+		// } else {
+		// mDescTv.setVisibility(View.GONE);
+		// }
+		// if (!isAlreadExit) {
+		// LiveDialogManager.getManagerInstance().showProgressDialog(this,
+		// LIVE_DIALOG_TITLE,
+		// LIVE_START_PROGRESS_MSG);
+		// }
+		//
+		// // 开始视频上传
+		// startLive(mCurrentVideoId);
+		// updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
+		// // 开始计时
+		// mLiveManager.startTimer(mLiveCountSecond, true);
+		//
+		// isSettingCallBack = true;
+		// try {
+		// GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(myInfo.lat),
+		// Double.parseDouble(myInfo.lon));
+		// } catch (Exception e) {
+		//
+		// }
+		//
+		// }
 
-			isSettingCallBack = true;
-			try {
-				GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(myInfo.lat),
-						Double.parseDouble(myInfo.lon));
-			} catch (Exception e) {
-
-			}
-
-		}
 	}
 
 	/**

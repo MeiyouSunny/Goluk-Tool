@@ -15,6 +15,9 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
+import cn.com.mobnote.golukmobile.photoalbum.VideoDataManagerUtils;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.text.TextUtils;
 
 public class IpcDataParser {
@@ -108,7 +111,6 @@ public class IpcDataParser {
 		ArrayList<VideoFileInfo> list = new ArrayList<VideoFileInfo>();
 		try {
 			JSONObject obj = new JSONObject(json);
-			int total = obj.getInt("total");
 			
 			JSONArray array = obj.getJSONArray("items");
 			int length = array.length();
@@ -117,6 +119,36 @@ public class IpcDataParser {
 				VideoFileInfo info = parseSingleFileResult(itemObj.toString());
 				if(null != info){
 					list.add(info);
+				}
+			}
+		} catch (Exception e) {
+			return null;
+		}
+		return list;
+	}
+	
+	/**
+	 * 解析多个文件
+	 * 
+	 * @param json
+	 * @return
+	 * @author jiayf
+	 * @date Mar 10, 2015
+	 */
+	public static ArrayList<VideoInfo> parseVideoListData(String json) {
+
+		ArrayList<VideoInfo> list = new ArrayList<VideoInfo>();
+		try {
+			JSONObject obj = new JSONObject(json);
+			
+			JSONArray array = obj.getJSONArray("items");
+			int length = array.length();
+			for (int i = length-1; i >= 0; i--) {
+				JSONObject itemObj = array.getJSONObject(i);
+				VideoFileInfo info = parseSingleFileResult(itemObj.toString());
+				if(null != info){
+					VideoInfo mVideoInfo = VideoDataManagerUtils.getVideoInfo(info);
+					list.add(mVideoInfo);
 				}
 			}
 		} catch (Exception e) {
@@ -412,6 +444,20 @@ public class IpcDataParser {
 		}
 		
 		return dataList;
+	}
+	
+	public static int parseVideoFileType(String filename) {
+		int type = -1;
+		
+		if (filename.contains("WND")) {
+			type = IPCManagerFn.TYPE_SHORTCUT;
+		} else if(filename.contains("URG")) {
+			type = IPCManagerFn.TYPE_URGENT;
+		}else if(filename.contains("NRM")) {
+			type = IPCManagerFn.TYPE_CIRCULATE;
+		}
+		
+		return type;
 	}
 
 }

@@ -9,12 +9,17 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -67,6 +72,15 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 			boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
 			GolukDebugUtils.e("xuhw","YYYYYY=======getVersion============v="+v);
 		}
+		
+		float density = SoundUtils.getInstance().getDisplayMetrics().density;
+		int screedWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+		LinearLayout idlayout = (LinearLayout)findViewById(R.id.idlayout);
+		LinearLayout vsnlayout = (LinearLayout)findViewById(R.id.vsnlayout);
+		int paddingLeft = (int)(screedWidth/2 - 85*density);
+		idlayout.setPadding(paddingLeft, (int)(58*density), 0, 0);
+		vsnlayout.setPadding(paddingLeft, (int)(6*density), 0, 0);
+		
 	}
 	
 	@Override

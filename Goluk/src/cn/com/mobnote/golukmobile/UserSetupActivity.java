@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.DataCleanManage;
@@ -57,8 +58,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private Button btnLoginout;
 	/** 缓存大小显示 **/
 	private TextView mTextCacheSize = null;
-	/** 版本号显示 **/
-	private TextView mTextVersionCode = null;
 	/** 更新版本号信息 **/
 	public static Handler mHandlerVersion = null;
 	/** 用户信息 **/
@@ -73,19 +72,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	/** 清除缓存 **/
 	private RelativeLayout mClearCache = null;
 	public static Handler mHandler = null;
-	/** 解除绑定 **/
-	private RelativeLayout mUnbindItem = null;
-	/** 版本检测 **/
-	private RelativeLayout mAppUpdate = null;
-	/** 固件升级 */
-	private RelativeLayout mUpdateItem = null;
-
-	/** APP版本号显示 **/
-	private TextView mTextAppVersion = null;
-	/** IPC固件版本号显示 **/
-	private TextView mTextIPCVersion = null;
 
 	private String vIpc = "";
+
+	/** 连接ipc后自动同步开关 **/
+	private Button mBtnSwitch = null;
+	public static final String AUTO_SWITCH = "autoswitch";
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -98,24 +90,16 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 
-		/** 清除缓存 */
-		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
-		// 获取页面元素
-		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
-		// 退出按钮
-		btnLoginout = (Button) findViewById(R.id.loginout_btn);
-		// 清除缓存大小显示
-		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
-		// 解除绑定
-		mUnbindItem = (RelativeLayout) findViewById(R.id.unbind_item);
-		// 版本号
-		mTextVersionCode = (TextView) findViewById(R.id.user_setup_versioncode);
-		// 版本检测
-		mAppUpdate = (RelativeLayout) findViewById(R.id.app_update_item);
-		// APP版本号
-		mTextAppVersion = (TextView) findViewById(R.id.app_update_text_version);
-		// IPC版本号
-		mTextIPCVersion = (TextView) findViewById(R.id.ipc_update_text_version);
+		mApp.initSharedPreUtil(this);
+		vIpc = mApp.mSharedPreUtil.getIPCVersion();
+		// 页面初始化
+		init();
+		boolean b = SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true);
+		if (b) {
+			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
+		} else {
+			mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
+		}
 
 	}
 
@@ -126,23 +110,16 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 
 		mApp.setContext(mContext, "UserSetup");
 
-		mApp.initSharedPreUtil(this);
-		vIpc = mApp.mSharedPreUtil.getIPCVersion();
-
 		mApp.mUser.setUserInterface(this);
 
-		// 页面初始化
-		init();
-
-		// 调用同步接口，在设置页显示版本号
-		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-		GolukDebugUtils.i("upgrade", "=======+version+=====" + verName);
-		mTextVersionCode.setText(verName);
-		mTextAppVersion.setText(verName);
-		String vIpc = mApp.mSharedPreUtil.getIPCVersion();
-		GolukDebugUtils.i("lily", vIpc + "===UserSetupActivity----vipc------" + verName);
-		mTextIPCVersion.setText(vIpc);
+		// 缓存
+		try {
+			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
+			mTextCacheSize.setText(cacheSize);
+			GolukDebugUtils.i("lily", "------cacheSize-------" + cacheSize);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		mHandler = new Handler() {
 			@Override
@@ -162,14 +139,16 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	@SuppressLint("HandlerLeak")
 	private void init() {
 
-		try {
-			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
-			mTextCacheSize.setText(cacheSize);
-			GolukDebugUtils.i("lily", "------cacheSize-------" + cacheSize);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		/** 清除缓存 */
+		mClearCache = (RelativeLayout) findViewById(R.id.remove_cache_item);
+		// 获取页面元素
+		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+		// 退出按钮
+		btnLoginout = (Button) findViewById(R.id.loginout_btn);
+		// 清除缓存大小显示
+		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
+		// 自动同步开关
+		mBtnSwitch = (Button) findViewById(R.id.set_ipc_btn);
 		// 没有登录过的状态
 		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
@@ -189,19 +168,13 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				btnLoginout.setText("登录");
 			}
 		}
+		// 注册监听
 		btnLoginout.setOnClickListener(this);
-
-		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		/** 清除缓存 **/
 		mClearCache.setOnClickListener(this);
-		/** 解除绑定 **/
-		mUnbindItem.setOnClickListener(this);
-		/** 版本检测 **/
-		mAppUpdate.setOnClickListener(this);
-		/** 固件升级 */
-		mUpdateItem = (RelativeLayout) findViewById(R.id.update_item);
-		mUpdateItem.setOnClickListener(this);
+		/** 自动同步开关 **/
+		mBtnSwitch.setOnClickListener(this);
 	}
 
 	@Override
@@ -212,10 +185,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			mApp.mUser.setUserInterface(null);
 			// 返回
 			this.finish();
-			break;
-		case R.id.setup_item:
-			// 跳转到设置页面
-			GolukDebugUtils.e("", "onclick---setup--item");
 			break;
 		// 退出按钮
 		case R.id.loginout_btn:
@@ -265,57 +234,14 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 						}).create().show();
 			}
 			break;
-		// 解除绑定
-		case R.id.unbind_item:
-			mApp.mUser.setUserInterface(null);
-			Intent itUnbind = new Intent(UserSetupActivity.this, UnbindActivity.class);
-			startActivity(itUnbind);
-			break;
-		// 版本检测
-		case R.id.app_update_item:
-			mApp.mUser.setUserInterface(null);
-			// 点击设置页中版本检测无最新版本提示标识
-			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity==点击版本检测===中ipcVersion=====");
-			boolean appB = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_APP, vIpc);
-			break;
-		// 固件升级
-		case R.id.update_item:
-			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity===点击固件升级==中ipcVersion=====");
-			if (mApp.mLoadStatus) {// 下载中
-				new AlertDialog.Builder(mApp.getContext()).setTitle("提示").setMessage("新极路客固件升级文件正在下载……")
-						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								if((Integer) (mApp.mIpcUpdateManage.mParam1) == 100){
-									String localFile = mApp.mIpcUpdateManage.getLocalFile(vIpc);
-									if (null == localFile || "".equals(localFile)) {
-										boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-									} else {
-										Intent itent = new Intent(UserSetupActivity.this, UpdateActivity.class);
-										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-										startActivity(itent);
-									}
-								}else{
-									Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
-									it.putExtra(UpdateActivity.UPDATE_PROGRESS, (Integer) (mApp.mIpcUpdateManage.mParam1));
-									startActivity(it);
-								}
-							}
-						}).show();
+		// 自动同步开关
+		case R.id.set_ipc_btn:
+			if (SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true)) {
+				mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
+				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, false);
 			} else {
-				if ((Integer) (mApp.mIpcUpdateManage.mParam1) == -1) {// 下载失败/程序刚进来
-					boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-				} else {// 下载成功
-					String localFile = mApp.mIpcUpdateManage.getLocalFile(vIpc);
-					if (null == localFile || "".equals(localFile)) {
-						boolean b = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-					} else {
-						Intent it = new Intent(UserSetupActivity.this, UpdateActivity.class);
-						it.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-						startActivity(it);
-					}
-				}
+				mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
+				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, true);
 			}
 			break;
 		}

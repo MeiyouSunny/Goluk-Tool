@@ -7,159 +7,232 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="42dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/carrecorder_line_press"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:background="@color/setting_white_color"
+        >
 
         <TextView
+            android:paddingLeft="15dp"
+        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:text="SD卡总容量"
-            android:textColor="#333333"
-            android:textSize="18sp" />
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/mTotalSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|right"
-            android:textColor="#999999"
-            android:textSize="18sp" />
+            android:paddingRight="15dp" 
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="15sp" />
+        
+		<TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/setting_line_color"/>
+                
+		<TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/setting_line_color"/>
+        
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/carrecorder_line_press"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:layout_height="42dp"
+        android:background="@color/setting_white_color"
+        >
 
         <TextView
+            android:paddingLeft="15dp"
+        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:text="已用空间"
-            android:textColor="#333333"
-            android:textSize="18sp" />
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/mUsedSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|right"
-            android:textColor="#999999"
-            android:textSize="18sp" />
+            android:paddingRight="15dp" 
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="15sp" />
+        
+        <TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/setting_line_color"/>
+        
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="42dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/carrecorder_line_press"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:background="@color/setting_white_color"
+        >
 
         <TextView
+            android:paddingLeft="15dp"
+        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:text="循环视频可用"
-            android:textColor="#333333"
-            android:textSize="18sp" />
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/mCycleSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|right"
-            android:textColor="#999999"
-            android:textSize="18sp" />
+            android:paddingRight="15dp" 
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="15sp" />
+        
+        <TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/setting_line_color"/>
+                
+		<TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/setting_line_color"/>
+        
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/carrecorder_line_press"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:layout_height="42dp"
+        android:background="@color/setting_white_color"
+        >
 
         <TextView
+            android:paddingLeft="15dp"
+        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:text="精彩视频可用"
-            android:textColor="#333333"
-            android:textSize="18sp" />
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/mWonderfulSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|right"
-            android:textColor="#999999"
-            android:textSize="18sp" />
+            android:paddingRight="15dp" 
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="15sp" />
+        
+        <TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/setting_line_color"/>
+        
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/carrecorder_line_press"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:layout_height="42dp"
+        android:background="@color/setting_white_color"
+        >
 
         <TextView
+            android:paddingLeft="15dp"
+        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:text="紧急视频可用"
-            android:textColor="#333333"
-            android:textSize="18sp" />
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/mEmergencySize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|right"
-            android:textColor="#999999"
-            android:textSize="18sp" />
+            android:paddingRight="15dp" 
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="15sp" />
+        
+        <TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/setting_line_color"/>
+        
     </RelativeLayout>
     
     <TextView
         	android:paddingLeft="15dp"
+        	android:paddingRight="15dp"
         	android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="每种类型的视频都有独立的空间大小分配。当剩余空间不足时会自动	循环覆盖掉早期的视频影像。"
-            android:textColor="#999999"
-            android:textSize="12sp" />
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="10sp" />
     
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="42dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/carrecorder_line_press"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:background="@color/setting_white_color"
+        >
 
         <TextView
+            android:paddingLeft="15dp"
+        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:text="其它可用"
-            android:textColor="#333333"
-            android:textSize="18sp" />
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/mOtherSize"
+            android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|right"
-            android:textColor="#999999"
-            android:textSize="18sp" />
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="15sp" />
+        
+        <TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/setting_line_color"/>
+        
+        <TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/setting_line_color"/>
+        
     </RelativeLayout>
     
     <TextView
@@ -168,8 +241,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="其它是指Goluk正常运行中所产生的临时文件。"
-            android:textColor="#999999"
-            android:textSize="12sp" />
+            android:text="极路客正常运行中所产生的临时文件。"
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="10sp" />
+    
+    <RelativeLayout
+        android:id="@+id/mFormatSDCard"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/setting_white_color"
+        >
+
+        <TextView
+            android:paddingLeft="15dp"
+        	android:paddingRight="15dp" 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="格式化SD卡"
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp" />
+
+        <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+        
+        <TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/setting_line_color"/>
+        
+        <TextView 
+        	android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/setting_line_color"/>
+        
+    </RelativeLayout>
+    
+    <TextView
+        	android:paddingLeft="15dp"
+        	android:paddingBottom="20dp"
+        	android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="清除SD卡中所有内容。"
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="10sp" />
 
 </LinearLayout>

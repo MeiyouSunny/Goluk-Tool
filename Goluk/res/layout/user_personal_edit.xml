@@ -55,8 +55,7 @@
 	   	        android:layout_width="wrap_content"
 	   	        android:layout_height="wrap_content"
 	   	        android:id="@+id/user_person_edit_head_image"
-	   	        android:src="@drawable/individual_center_head_boy_one"
-	   	        android:background="@drawable/individual_center_headbg_frame"
+	   	        android:src="@drawable/editor_head_boy1"
 	   	        android:layout_marginRight="10dp"
 	   	        />
 	   	    <ImageView 

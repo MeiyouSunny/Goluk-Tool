@@ -12,9 +12,9 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -101,7 +101,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean requestInfo(int function, String vipc) {
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
+			GolukUtils.showToast(mApp.getContext(), mApp.getResources().getString(R.string.user_net_unavailable));
 			return false;
 		} else {
 			if (isHasUpdateDialogShow()) {

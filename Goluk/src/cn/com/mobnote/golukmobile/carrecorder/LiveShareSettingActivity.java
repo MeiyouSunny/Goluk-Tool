@@ -27,24 +27,24 @@ public class LiveShareSettingActivity extends BaseActivity implements
 				true);// 视频声音开关
 
 		if (cartalkbtn) {
-			findViewById(R.id.car_talk).setBackgroundResource(
-					R.drawable.carrecorder_setup_option_on);// 打开
+			findViewById(R.id.live_talk_btn).setBackgroundResource(
+					R.drawable.set_open_btn);// 打开
 		} else {
-			findViewById(R.id.car_talk).setBackgroundResource(
-					R.drawable.carrecorder_setup_option_off);// 关闭
+			findViewById(R.id.live_talk_btn).setBackgroundResource(
+					R.drawable.set_close_btn);// 关闭
 		}
 
 		if (voiceopen) {
 			findViewById(R.id.voice_switch_btn).setBackgroundResource(
-					R.drawable.carrecorder_setup_option_on);// 打开
+					R.drawable.set_open_btn);// 打开
 		} else {
 			findViewById(R.id.voice_switch_btn).setBackgroundResource(
-					R.drawable.carrecorder_setup_option_off);// 关闭
+					R.drawable.set_close_btn);// 关闭
 		}
 	}
 
 	private void setListener() {
-		findViewById(R.id.car_talk).setOnClickListener(this);// 行车对讲
+		findViewById(R.id.live_talk_btn).setOnClickListener(this);// 行车对讲
 		findViewById(R.id.voice_switch_btn).setOnClickListener(this);// 视频声音开关
 		findViewById(R.id.progress).setOnClickListener(this);// 直播时间滚动条
 	}
@@ -58,9 +58,9 @@ public class LiveShareSettingActivity extends BaseActivity implements
 			boolean voiceopen = SettingUtils.getInstance().getBoolean("voiceopen");
 			this.setButtonsBk(voiceopen, R.id.voice_switch_btn, "voiceopen");
 			break;
-		case R.id.car_talk:
+		case R.id.live_talk_btn:
 			boolean cartalk = SettingUtils.getInstance().getBoolean("cartalk");
-			this.setButtonsBk(cartalk, R.id.car_talk, "cartalk");
+			this.setButtonsBk(cartalk, R.id.live_talk_btn, "cartalk");
 			break;
 		default:
 			break;
@@ -82,11 +82,11 @@ public class LiveShareSettingActivity extends BaseActivity implements
 	private void setButtonsBk(boolean flog, int id, String btn) {
 		if (flog) {
 			findViewById(id).setBackgroundResource(
-					R.drawable.carrecorder_setup_option_off);
+					R.drawable.set_close_btn);
 			SettingUtils.getInstance().putBoolean(btn, false);
 		} else {
 			findViewById(id).setBackgroundResource(
-					R.drawable.carrecorder_setup_option_on);
+					R.drawable.set_open_btn);
 			SettingUtils.getInstance().putBoolean(btn, true);
 		}
 	}

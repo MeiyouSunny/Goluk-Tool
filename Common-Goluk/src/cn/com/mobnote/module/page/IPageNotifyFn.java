@@ -61,6 +61,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_LiveUploadPic = 26;
 	/**下载ipc文件**/
 	public static final int PageType_CommDownloadFile = 27;
+	/**意见反馈**/
+	public static final int PageType_FeedBack = 28;
 
 	/**
 	 * 

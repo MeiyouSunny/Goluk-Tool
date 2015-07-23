@@ -1,6 +1,8 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,9 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -35,6 +40,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
   *
   * @author xuhw
   */
+@SuppressLint("InflateParams")
 public class StorageCpacityQueryActivity extends CarRecordBaseActivity implements IPCManagerFn, OnClickListener{
 	/**  SD卡总容量  */
 	private TextView mTotalSize=null;
@@ -48,6 +54,7 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 	private TextView mEmergencySize=null;
 	/**  其它可用容量  */
 	private TextView mOtherSize=null;
+	private CustomFormatDialog mCustomFormatDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,7 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 		mEmergencySize.setText("0MB");
 		mOtherSize.setText("0MB");
 		
+		findViewById(R.id.mFormatSDCard).setOnClickListener(this);
 	}
 	
 	@Override
@@ -122,7 +130,24 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 				}else{
 					GolukDebugUtils.e("xuhw", "YYY===========３３３３３===============");
 				}
+			}else if (msg == IPC_VDCP_Msg_FormatDisk) {
+				if(null != mCustomFormatDialog && mCustomFormatDialog.isShowing()){
+					mCustomFormatDialog.dismiss();
+				}
+				GolukDebugUtils.e("xuhw", "YYYYYY====IPC_VDCP_Msg_FormatDisk====msg="+msg+"===param1="+param1+"==param2="+param2);
+				String message="";
+				if(param1 == RESULE_SUCESS){
+					message = "SD卡格式化成功";
+				}else{
+					message = "SD卡格式化失败";
+				}
+				CustomDialog dialog = new CustomDialog(this);
+				dialog.setMessage(message, Gravity.CENTER);
+				dialog.setLeftButton("确定", null);
+				dialog.show();
 			}
+			
+			
 		}
 	}
 	
@@ -167,6 +192,27 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 		switch (v.getId()) {
 			case R.id.back_btn:
 				exit(); 
+				break;
+			case R.id.mFormatSDCard:
+				CustomDialog dialog = new CustomDialog(this);
+				dialog.setMessage("是否格式化SD卡？", Gravity.CENTER);
+				dialog.setLeftButton("是", new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						if(GolukApplication.getInstance().getIpcIsLogin()){
+							boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
+							GolukDebugUtils.e("xuhw", "YYYYYY=====formatDisk===flag="+flag);
+							if(flag){
+								mCustomFormatDialog = new CustomFormatDialog(StorageCpacityQueryActivity.this);
+								mCustomFormatDialog.setCancelable(false);
+								mCustomFormatDialog.setMessage("正在格式化SD卡，可能需要1~2分钟，请稍候...");
+								mCustomFormatDialog.show();
+							}
+						}
+					}
+				});
+				dialog.setRightButton("否", null);
+				dialog.show();
 				break;
 				
 			default:

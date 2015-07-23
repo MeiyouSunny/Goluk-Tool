@@ -70,7 +70,7 @@
 
     <!-- 定位与直播列表按钮 -->
 
-    <RelativeLayout
+ <!--    <RelativeLayout
         android:id="@+id/index_map_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -88,7 +88,6 @@
             android:orientation="vertical"
             android:visibility="visible" >
 
-            <!-- 定位按钮 -->
 
             <Button
                 android:id="@+id/map_location_btn"
@@ -96,7 +95,7 @@
                 android:layout_height="34dp"
                 android:background="@drawable/location_btn" />
         </LinearLayout>
-    </RelativeLayout>
+    </RelativeLayout> -->
 
     <include
         android:id="@+id/video_square_layout"

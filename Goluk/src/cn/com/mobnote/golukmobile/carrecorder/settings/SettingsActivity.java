@@ -6,9 +6,10 @@ import org.json.JSONObject;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
+import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
@@ -16,10 +17,12 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
  /**
   * 1.编辑器必须显示空白处
@@ -56,6 +59,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private CustomLoadingDialog mCustomProgressDialog=null;
 	private boolean getRecordState=false;
 	private boolean getMotionCfg=false;
+	/** 存储容量显示 */
+	private TextView mStorayeText = null;
+	/** 视频质量显示 */
+	private TextView mVideoText = null;
+	/** 碰撞灵敏度显示 */
+	private TextView mSensitivityText = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +89,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			getMotionCfg=true;
 			checkGetState();
 		}
+		
+		if(GolukApplication.getInstance().getIpcIsLogin()){
+			boolean flag = GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
+			GolukDebugUtils.e("xuhw", "YYY======queryRecordStorageStatus=====flag="+flag);
+		}
+		
+		boolean flag = GolukApplication.getInstance().getIPCControlManager().getGSensorControlCfg();
+		GolukDebugUtils.e("xuhw", "YYYYY===getIPCControlManager============getGSensorControlCfg======flag="+flag);
+		
 		GolukDebugUtils.e("xuhw", "YYYYYY=========getMotionCfg========="+ motionCfg);
 		showLoading();
 	}
@@ -101,6 +119,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		
 		mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
 		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//打开
+		mStorayeText = (TextView)findViewById(R.id.mStorayeText);
+		mVideoText = (TextView)findViewById(R.id.mVideoText);
+		mSensitivityText = (TextView)findViewById(R.id.mSensitivityText);
+		
+		mStorayeText.setText("21.04GB/29.46GB");
 	}
 	
 	/**
@@ -114,15 +137,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.zdxhlx).setOnClickListener(this);//自动循环录像按钮
 		findViewById(R.id.tcaf).setOnClickListener(this);//停车安防按钮
 		findViewById(R.id.sylz).setOnClickListener(this);//声音录制
-		findViewById(R.id.ztts).setOnClickListener(this);//状态提示灯
 		findViewById(R.id.pzgylmd_line).setOnClickListener(this);//碰撞感应灵敏度
 		
 		findViewById(R.id.rlcx_line).setOnClickListener(this);//存储容量查询
-		findViewById(R.id.sysz_line).setOnClickListener(this);//水印设置
 		findViewById(R.id.sjsz_line).setOnClickListener(this);//时间设置
-		findViewById(R.id.gshsdk_line).setOnClickListener(this);//格式化SDK卡
 		findViewById(R.id.hfccsz_line).setOnClickListener(this);//恢复出厂设置
 		findViewById(R.id.bbxx_line).setOnClickListener(this);//版本信息
+		findViewById(R.id.mBugLayout).setOnClickListener(this);//购买降压线
 	}
 	
 	/**
@@ -189,10 +210,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						}
 					}
 					break;
-				case R.id.ztts://状态提示灯
-					boolean ztts = SettingUtils.getInstance().getBoolean("ztts");
-					this.setButtonsBk(ztts, R.id.ztts, "ztts");
-					break;
 				case R.id.pzgylmd_line://碰撞感应灵敏度
 					Intent pzgylmd_line = new Intent(SettingsActivity.this, ImpactSensitivityActivity.class);
 					startActivity(pzgylmd_line);
@@ -201,51 +218,40 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					Intent rlcx_line = new Intent(SettingsActivity.this, StorageCpacityQueryActivity.class);
 					startActivity(rlcx_line);
 					break;
-				case R.id.sysz_line://水印设置
-					Intent sysz_line = new Intent(SettingsActivity.this, WatermarkSettingActivity.class);
-					startActivity(sysz_line);
-					break;
 				case R.id.sjsz_line://时间设置
 					Intent sjsz_line = new Intent(SettingsActivity.this, TimeSettingActivity.class);
 					startActivity(sjsz_line);
 					break;
-				case R.id.gshsdk_line://格式化SDK卡
-					Intent gshsdk_line = new Intent(SettingsActivity.this, FormatSDCardActivity.class);
-					startActivity(gshsdk_line);
-					break;
 				case R.id.hfccsz_line://恢复出厂设置
-					Intent hfccsz_line = new Intent(SettingsActivity.this, RestoreFactorySettingsActivity.class);
-					startActivity(hfccsz_line);
+					CustomDialog mCustomDialog = new CustomDialog(this);
+					mCustomDialog.setMessage("是否确认恢复Goluk出厂设置", Gravity.CENTER);
+					mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
+						@Override
+						public void onClickListener() {
+							if(GolukApplication.getInstance().getIpcIsLogin()){
+								boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
+								GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a="+a);
+							}
+						}
+					});
+					mCustomDialog.setRightButton("取消", null);
+					mCustomDialog.show();
 					break;
 				case R.id.bbxx_line://版本信息
 					Intent bbxx = new Intent(SettingsActivity.this, VersionActivity.class);
 					startActivity(bbxx);
 					break;
+				case R.id.mBugLayout:
+					Intent mBugLayout = new Intent(this,UserOpenUrlActivity.class);
+					mBugLayout.putExtra(UserOpenUrlActivity.FROM_TAG, "buyline");
+					startActivity(mBugLayout);
+					break;
+					
 			default:
 				break;
 			}
 		}else{
 			dialog();
-		}
-	}
-	
-	/**
-	 * 设置按钮的背景图片并保存属性值
-	  * @Title: setButtonsBk 
-	  * @Description: TODO
-	  * @param flog
-	  * @param id
-	  * @param btn void 
-	  * @author 曾浩 
-	  * @throws
-	 */
-	private void setButtonsBk(boolean flog,int id,String btn){
-		if(flog){
-			findViewById(id).setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-			SettingUtils.getInstance().putBoolean(btn, false);
-		}else{
-			findViewById(id).setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-			SettingUtils.getInstance().putBoolean(btn, true);
 		}
 	}
 	
@@ -260,32 +266,28 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}else{
 				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 			}
+			
+			updateVideoQualityText();
 		}else{
 			mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
 		}
 		
-		
-//		recordState = GolukApplication.getInstance().getAutoRecordState();
-//		if(!GolukApplication.getInstance().getAutoRecordState()){
-//			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
-//		}else{
-//			mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-//		}
-//		
-//		int[] motioncfg = GolukApplication.getInstance().getMotionCfg();
-//		if(null != motioncfg){
-//			if(2 == motioncfg.length){
-//				enableSecurity = motioncfg[0];
-//				snapInterval = motioncfg[1];
-//			}
-//			
-//			if(1 == enableSecurity){
-//				findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
-//			}else{
-//				findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
-//			}
-//		}
-		
+	}
+	
+	private void updateVideoQualityText() {
+		if("1080P".equals(mVideoConfigState.resolution)){
+			if(8192 == mVideoConfigState.bitrate){
+				mVideoText.setText("1080P高质量");
+			}else{
+				mVideoText.setText("1080P中等质量");
+			}
+		}else{
+			if(4096 == mVideoConfigState.bitrate){
+				mVideoText.setText("720P高质量");
+			}else{
+				mVideoText.setText("720P中等质量");
+			}
+		}
 	}
 	
 	@Override
@@ -327,6 +329,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}else if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){//获取IPC系统音视频编码配置
 				if(RESULE_SUCESS == param1){
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
+					updateVideoQualityText();
 					if(null != mVideoConfigState){
 						if(1 == mVideoConfigState.AudioEnabled){
 							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
@@ -378,8 +381,84 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						enableSecurity = 1;
 					}
 				}
+			}else if (msg == IPC_VDCP_Msg_RecPicUsage) {
+				if (RESULE_SUCESS == param1) {
+					RecordStorgeState mRecordStorgeState = IpcDataParser.parseRecordStorageStatus((String)param2);
+					if(null != mRecordStorgeState){
+						double usedsize = mRecordStorgeState.totalSdSize - mRecordStorgeState.leftSize;
+						mStorayeText.setText(getSize(usedsize) + "/" + getSize(mRecordStorgeState.totalSdSize));
+					}
+				}
+			}else if(msg == IPC_VDCP_Msg_GetGSensorControlCfg) {
+				if (param1 == RESULE_SUCESS) {
+					try {
+						JSONObject json = new JSONObject((String)param2);
+						int policy = json.optInt("policy");
+						if (0 == policy) {
+							mSensitivityText.setText("关闭");
+						}else if(1 == policy) {
+							mSensitivityText.setText("低");
+						}else if(2 == policy) {
+							mSensitivityText.setText("中");
+						}else {
+							mSensitivityText.setText("高");
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}else if(msg == IPC_VDCP_Msg_SetGSensorControlCfg) {
+				if (param1 == RESULE_SUCESS) {
+					GolukApplication.getInstance().getIPCControlManager().getGSensorControlCfg();
+				}
+			}else if(msg == IPC_VDCP_Msg_Restore) {
+				String message="";
+				if(param1 == RESULE_SUCESS){
+					message = "恢复出厂设置成功";
+				}else{
+					message = "恢复出厂设置失败";
+				}
+				
+				if (isFinishing()) {
+					return;
+				}
+				
+				CustomDialog mCustomDialog = new CustomDialog(this);
+				mCustomDialog.setCancelable(false);
+				mCustomDialog.setMessage(message, Gravity.CENTER);
+				mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						exit();
+					}
+				});
+				mCustomDialog.show();
 			}
+			
 		}
+	}
+	
+	/**
+	 * 容量大小转字符串
+	 * @param size 容量大小
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月11日
+	 */
+	private String getSize(double size){
+		String result="";
+		double totalsize=0;
+		
+		java.text.DecimalFormat   df=new   java.text.DecimalFormat("#.##");
+		if(size >= 1024){
+			totalsize = size/1024;
+			result = df.format(totalsize) + "GB";
+		}else{
+			totalsize = size;
+			result = df.format(totalsize) + "MB";
+		}
+
+		return result;
 	}
 	
 	private void showLoading(){

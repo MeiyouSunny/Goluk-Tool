@@ -240,6 +240,20 @@ public class GolukUtils {
 
 		return 0;
 	}
+	
+	/**
+	 * 获取系统版本号
+	 */
+	public static String getSystem_version(){
+		return android.os.Build.VERSION.RELEASE;
+	}
+	
+	/**
+	 * 获取手机型号
+	 */
+	public static String getPhone_models(){
+		return android.os.Build.MODEL;
+	}
 
 	@SuppressLint("NewApi")
 	public static  Bitmap createVideoThumbnail(String filePath) {

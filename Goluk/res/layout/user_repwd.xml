@@ -22,35 +22,30 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="94dp"
-            android:layout_marginTop="18dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
             android:background="@color/white"
             android:gravity="center"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="wrap_content"
                 android:gravity="center" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="34dp"
-                    android:src="@drawable/icon_mobile" />
 
                 <EditText
                     android:id="@+id/user_repwd_phonenumber"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="40dp"
                     android:background="@null"
-                    android:hint="请输入手机号码，暂时只支持中国大陆"
+                    android:hint="@string/user_login_phone_hint"
                     android:numeric="integer"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
-                    android:maxLength="11"
+                    android:maxLength="13"
                     android:singleLine="true"
                     android:textColorHint="@color/user_hint_text_color"
+                    android:paddingLeft="10dp"
                     />
             </LinearLayout>
 
@@ -61,40 +56,35 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
+                android:layout_height="wrap_content"
                 android:gravity="center" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="34dp"
-                    android:src="@drawable/icon_lock" />
 
                 <EditText
                     android:id="@+id/user_repwd_pwd"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="40dp"
                     android:background="@null"
                     android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:hint="请输入新密码（6-16位数字或英文）"
+                    android:hint="@string/user_login_password_hint"
                     android:password="true"
                     android:singleLine="true"
                     android:textColor="@color/user_login_text"
                     android:textSize="14sp" 
                     android:maxLength="16"
-                    android:textColorHint="@color/user_hint_text_color"/>
+                    android:textColorHint="@color/user_hint_text_color"
+                    android:paddingLeft="10dp"/>
             </LinearLayout>
         </LinearLayout>
 
         <!-- 验证码 -->
 
-        <LinearLayout
+        <!-- <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_marginTop="28dp"
             android:orientation="horizontal" >
 
-            <!--  android:layout_width="98dp"-->
+             android:layout_width="98dp"
             <Button
                 android:layout_width="110dp"
                 android:layout_height="42dp"
@@ -116,23 +106,33 @@
                 android:background="@color/white"
                 android:paddingLeft="20dp"
                 android:textSize="14sp"/>
-        </LinearLayout>
+        </LinearLayout> -->
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="34dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="66dp">
+            
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_repwd_hint"
+                android:text="@string/user_regist_below_hint"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:textSize="12sp"
+                />
 
             <Button
-                android:layout_width="328dp"
-                android:layout_height="38dp"
+                android:layout_width="316dp"
+                android:layout_height="42dp"
+                android:layout_below="@id/user_repwd_hint"
                 android:enabled="false"
                 android:background="@drawable/icon_more"
-                android:text="@string/user_repwd_ok" 
+                android:text="@string/user_regist_btn" 
                 android:id="@+id/user_repwd_ok_btn"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

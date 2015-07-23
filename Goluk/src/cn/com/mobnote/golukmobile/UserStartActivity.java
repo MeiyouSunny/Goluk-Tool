@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 import cn.com.mobnote.application.GolukApplication;
@@ -40,7 +41,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	//
 	private Context mContext = null;
 	private GolukApplication mApp = null;
-	// 如果是注销进来的，需要将手机号填进去
+	/** 如果是注销进来的，需要将手机号填进去 **/
 	private SharedPreferences mPreferences = null;
 	private String phone = null;
 	public static Handler mHandler = null;
@@ -50,6 +51,8 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	private VideoView videoStart = null;
 	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	private int screenHeight = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
+	/** 我有Goluk和随便看看两个按钮 **/
+	private LinearLayout mClickLayout = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -61,6 +64,23 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		mBGBitmap = ImageManager.getBitmapFromResource(R.drawable.guide_page, screenWidth, screenHeight);
 		RelativeLayout main = (RelativeLayout) findViewById(R.id.main);
 		main.setBackgroundDrawable(new BitmapDrawable(mBGBitmap));
+
+		mContext = this;
+		mApp = (GolukApplication) getApplication();
+		mApp.setContext(mContext, "UserStart");
+
+		SysApplication.getInstance().addActivity(this);
+
+		initView();
+		// true ----欢迎页 false开屏页
+		Intent it = getIntent();
+		boolean b = it.getBooleanExtra("judgeVideo", false);
+		GolukDebugUtils.e("lily", b + "--------judgeVideo-----");
+		if (b) {
+			mClickLayout.setVisibility(View.GONE);
+		} else {
+			mClickLayout.setVisibility(View.VISIBLE);
+		}
 		videoStart = (VideoView) findViewById(R.id.videoStart);
 		videoStart.setVideoURI(Uri.parse("android.resource://cn.com.mobnote.golukmobile/" + R.raw.start_video));
 		videoStart.start();
@@ -85,14 +105,6 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 
-		mContext = this;
-		mApp = (GolukApplication) getApplication();
-		mApp.setContext(mContext, "UserStart");
-
-		SysApplication.getInstance().addActivity(this);
-
-		initView();
-
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -111,6 +123,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	}
 
 	public void initView() {
+		mClickLayout = (LinearLayout) findViewById(R.id.user_start_click);
 		mImageViewHave = (ImageView) findViewById(R.id.user_start_have);
 		mImageViewLook = (ImageView) findViewById(R.id.user_start_look);
 		// 获取注销成功后传来的信息

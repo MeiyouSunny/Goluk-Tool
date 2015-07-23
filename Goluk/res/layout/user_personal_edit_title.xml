@@ -10,18 +10,6 @@
 	            android:layout_height="42dp"
 	            android:background="@color/bg" >
 
-            <!-- <Button
-                android:id="@+id/back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:background="@color/bg"
-                android:drawableLeft="@drawable/icon_back_btn"
-                android:drawablePadding="8dp"
-                android:gravity="center|left"
-                android:textColor="@color/white"
-                android:textSize="16sp" /> -->
-            
             <ImageButton
             	android:id="@+id/back_btn"
             	android:layout_width="wrap_content"

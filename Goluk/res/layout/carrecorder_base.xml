@@ -2,13 +2,13 @@
 <RelativeLayout   xmlns:android="http://schemas.android.com/apk/res/android"   
 android:layout_width="match_parent"
 android:layout_height="match_parent" 
-android:background="#ededed">   
+android:background="#f7f9fa">   
 
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:background="@color/bg" >
+        android:background="@color/photoalbum_title_bg_color" >
   
         <ImageButton
             android:id="@+id/back_btn"

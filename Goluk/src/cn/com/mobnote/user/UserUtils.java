@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -29,8 +30,8 @@ public class UserUtils {
 	 */
 	public static void showDialog(Context context,String message){
 		Builder builder = new AlertDialog.Builder(context);
-		AlertDialog dialog = builder.setMessage(message)
-		.setPositiveButton("确定", null)
+		AlertDialog dialog = builder.setTitle(context.getResources().getString(R.string.user_dialog_hint_title)).setMessage(message)
+		.setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null)
 		.create();
 		dialog.show();
 	}
@@ -70,47 +71,72 @@ public class UserUtils {
 	  */
 	 public static void userHeadChange(ImageView headImage,String headString,TextView textSex){
 		if(headString.equals("1")){
-			headImage.setImageResource(R.drawable.individual_center_head_boy_one);
+			headImage.setImageResource(R.drawable.my_head_boy1);
 			textSex.setText("男");
 		}else if(headString.equals("2")){
-			headImage.setImageResource(R.drawable.individual_center_head_boy_two);
+			headImage.setImageResource(R.drawable.my_head_boy2);
 			textSex.setText("男");
 		}else if(headString.equals("3")){
-			headImage.setImageResource(R.drawable.individual_center_head_boy_three);
+			headImage.setImageResource(R.drawable.my_head_boy3);
 			textSex.setText("男");
 		}else if(headString.equals("4")){
-			headImage.setImageResource(R.drawable.individual_center_head_girl_one);
+			headImage.setImageResource(R.drawable.my_head_girl4);
 			textSex.setText("女");
 		}else if(headString.equals("5")){
-			headImage.setImageResource(R.drawable.individual_center_head_girl_two);
+			headImage.setImageResource(R.drawable.my_head_girl5);
 			textSex.setText("女");
 		}else if(headString.equals("6")){
-			headImage.setImageResource(R.drawable.individual_center_head_girl_three);
+			headImage.setImageResource(R.drawable.my_head_girl6);
 			textSex.setText("女");
 		}else if(headString.equals("7")){
-			headImage.setImageResource(R.drawable.individual_center_head_moren);
+			headImage.setImageResource(R.drawable.my_head_moren7);
 			textSex.setText("未知");
 		}
 	 }
+	 
+	 public static void userHeadChanged(ImageView headImage,String headString,String textSex){
+			if(headString.equals("1")){
+				headImage.setImageResource(R.drawable.my_head_boy1);
+				textSex = "1";
+			}else if(headString.equals("2")){
+				headImage.setImageResource(R.drawable.my_head_boy2);
+				textSex = "1";
+			}else if(headString.equals("3")){
+				headImage.setImageResource(R.drawable.my_head_boy3);
+				textSex = "1";
+			}else if(headString.equals("4")){
+				headImage.setImageResource(R.drawable.my_head_girl4);
+				textSex = "2";
+			}else if(headString.equals("5")){
+				headImage.setImageResource(R.drawable.my_head_girl5);
+				textSex = "2";
+			}else if(headString.equals("6")){
+				headImage.setImageResource(R.drawable.my_head_girl6);
+				textSex = "2";
+			}else if(headString.equals("7")){
+				headImage.setImageResource(R.drawable.my_head_moren7);
+				textSex = "0";
+			}
+		 }
 	 
 	 /**
 	  * UserPersonalHeadActivity默认选中的head
 	  */
 	 public static void focusHead(String headString,ImageView headImage){
 		 if(headString.equals("1")){
-				headImage.setImageResource(R.drawable.individual_center_head_boy_one);
+				headImage.setImageResource(R.drawable.my_head_boy1);
 			}else if(headString.equals("2")){
-				headImage.setImageResource(R.drawable.individual_center_head_boy_two);
+				headImage.setImageResource(R.drawable.my_head_boy2);
 			}else if(headString.equals("3")){
-				headImage.setImageResource(R.drawable.individual_center_head_boy_three);
+				headImage.setImageResource(R.drawable.my_head_boy3);
 			}else if(headString.equals("4")){
-				headImage.setImageResource(R.drawable.individual_center_head_girl_one);
+				headImage.setImageResource(R.drawable.my_head_girl4);
 			}else if(headString.equals("5")){
-				headImage.setImageResource(R.drawable.individual_center_head_girl_two);
+				headImage.setImageResource(R.drawable.my_head_girl5);
 			}else if(headString.equals("6")){
-				headImage.setImageResource(R.drawable.individual_center_head_girl_three);
+				headImage.setImageResource(R.drawable.my_head_girl6);
 			}else if(headString.equals("7")){
-				headImage.setImageResource(R.drawable.individual_center_head_moren);
+				headImage.setImageResource(R.drawable.my_head_moren7);
 			}
 	 }
 	 
@@ -147,9 +173,9 @@ public class UserUtils {
 	 */
 	public static void showUpdateSuccess(AlertDialog showUpdateDialog,Context context,String message){
 		if(showUpdateDialog == null){
-			showUpdateDialog = new AlertDialog.Builder(context).setTitle("提示")
+			showUpdateDialog = new AlertDialog.Builder(context).setTitle(context.getResources().getString(R.string.user_dialog_hint_title))
 				.setMessage(message)
-				.setPositiveButton("确定", null)
+				.setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null)
 				.show();
 		}
 	}
@@ -208,5 +234,49 @@ public class UserUtils {
 				.create();
 		dialog.show();
 	}
-    
+    /**
+     * 手机号格式化显示  3-4-4
+     * @param s
+     * @param cursorPosition
+     * @param before
+     * @param count
+     * @param mEditPhone
+     * @param mTextWatcher
+     */
+	public static void formatPhone(CharSequence s,EditText mEditPhone){
+		String contents = s.toString();
+		int length = contents.length();
+		if (length == 4) {
+			if (contents.substring(3).equals(new String("-"))) { // -
+				contents = contents.substring(0, 3);
+				mEditPhone.setText(contents);
+				mEditPhone.setSelection(contents.length());
+			} else {
+				contents = contents.substring(0, 3) + "-" + contents.substring(3);
+				mEditPhone.setText(contents);
+				mEditPhone.setSelection(contents.length());
+			}
+		} else if (length == 9) {
+			if (contents.substring(8).equals(new String("-"))) { // -
+				contents = contents.substring(0, 8);
+				mEditPhone.setText(contents);
+				mEditPhone.setSelection(contents.length());
+			} else {
+				contents = contents.substring(0, 8) + "-" + contents.substring(8);
+				mEditPhone.setText(contents);
+				mEditPhone.setSelection(contents.length());
+			}
+		}
+	}
+	/**
+	 * 手机号格式化后保存
+	 * @param phone
+	 */
+	public static String formatSavePhone(String phone){
+		String a = phone.substring(0, 3);
+		String b = phone.substring(3,7);
+		String c = phone.substring(7,phone.length());
+		return a+"-"+b+"-"+c;
+	}
+	
 }

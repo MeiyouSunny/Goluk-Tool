@@ -107,10 +107,14 @@
     <string name="synchronous_desc_text">与小车本连接后自动</string>
     <string name="update_text">检查更新</string>
     <string name="remove_cache_text">清除缓存</string>
+    <string name="set_ipc_item_text">连接极路客后自动同步开关</string>
+    <string name="set_ipc_item_hint_text">手机与极路客连接成功后自动同步最近录制的5条精彩和紧急视频</string>
     <string name="unbind_text">摄像头管理</string>
-    <string name="unbind_camera">摄像头名称</string>
-    <string name="unbind_password">极路客WiFi密码</string>
+    <string name="unbind_camera">名称</string>
+    <string name="unbind_camera_wifi_hint_text">极路客WIFI信息</string>
+    <string name="unbind_camera_change_wifi_pwd_hint">当手机与极路客成功连接可修改密码</string>
     <string name="change_wifi_name">密码</string>
+    <string name="unbind_camera_update_text">固件升级</string>
     <string name="change_wifi_password_hint">密码必须为8&#8211;15个字符。更改密码将在30秒之后生效。</string>
     <string name="app_update_text">版本检测</string>
     <string name="loginout_text">退出</string>
@@ -126,7 +130,7 @@
     <string name="like_num_text">56</string>
     <string name="speed_text">50公里/小时</string>
     <string name="local_video_text">本地视频</string>
-    <string name="setup_text">设置</string>
+    <string name="setup_text">通用设置</string>
     <string name="ipc_update_text">极路客固件升级</string>
     <string name="ipc_update_layout_text">极路客固件</string>
     <string name="ipc_update_info_title">更新说明</string>
@@ -135,10 +139,55 @@
         \n安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。</string>
     <string name="shopping_text">去商店</string>
     <string name="cache_size_text">3.15M</string>
+    <string name="user_immediately_ok">立即登录</string>
+    <string name="user_immediately_regist">马上注册</string>
+    <string name="user_cancle">取消</string>
     <string name="count_identify_first">此手机号还有</string>
     <string name="count_identify_second">次获取验证码的机会,请确保手机号码正确和手机号所在的设备有信号</string>
     <string name="count_identify_six">此手机号之后已经不能再获取验证码,请确保手机号码正确和手机号所在的设备有信号</string>
-    <string name="count_identify_limit">获取验证码失败,此手机号已经达到获取验证码上限(每天</string>
+    <string name="count_identify_limit">获取验证码失败，此手机号已经达到获取验证码上限(每天</string>
+    <string name="count_background_identify_count">获取验证码失败，此手机号已经达到获取验证码上限</string>
+    <string name="count_identify_count_six_limit">获取验证码失败，此手机号已达到获取验证码上限（每天6次）</string>
+    <string name="user_no_regist">此手机号码还未被注册</string>
+    <string name="user_already_regist">此手机号已经被注册</string>
+    <string name="user_netword_outtime">网络连接超时</string>
+    <string name="user_getidentify_fail">验证码获取失败</string>
+    <string name="user_getidentify_success">验证码发送成功，请注意查收</string>
+    <string name="user_getidentify_limit">该手机号1小时内下发6次以上验证码</string>
+    <string name="user_background_error">服务端程序异常</string>
+    <string name="user_phone_input_error">输入手机号异常</string>
+    <string name="user_send_identify_fail">验证码发送失败，请重新发送</string>
+    <string name="user_identify_btn_afresh">重新获取</string>
+    <string name="user_no_getidentify">请输入验证码</string>
+    <string name="user_identify_format">验证码格式输入不正确</string>
+    <string name="user_login_success">登录成功</string>
+    <string name="user_regist">注册</string>
+    <string name="user_regist_fail">注册失败</string>
+    <string name="user_repwd_fail">重置密码失败</string>
+    <string name="user_regist_success">注册成功</string>
+    <string name="user_repwd_success">重置密码成功</string>
+    <string name="user_identify_right_hint">请输入正确的验证码</string>
+    <string name="user_identify_outtime">输入验证码超时</string>
+    <string name="user_password_error">密码错误，请重试</string>
+    
+    <!-- 我的 -->
+    <string name="my_video_title_text">我的相册</string>
+    <string name="my_camera_title_text">摄像头管理</string>
+    <string name="my_set_title_text">通用设置</string>
+    <string name="my_skill_title_text">极路客小技巧</string>
+    <string name="my_install_title_text">安装指导</string>
+    <string name="my_question_title_text">版本信息</string>
+    <string name="my_shopping_title_text">购买极路客</string>
+    <string name="version_app_update_text">版本检测</string>
+    <string name="version_welcome_text">欢迎页</string>
+    <string name="version_opinion_text">意见反馈</string>
+    <string name="version_bottom_title">极路客软件许可及服务协议</string>
+    <string name="version_bottom_company">北京智趣车联科技有限公司  版权所有</string>
+    <string name="version_bottom_copyright">Copyright@2015 Goluk.All Rights Reserved</string>
+    <string name="opinion_suggest">您的意见或建议</string>
+    <string name="opinion_connection">您的联系方式</string>
+    <string name="option_suggest_hint">必选内容（500字以内）</string>
+    <string name="option_connection_hint">选填内容（手机号/微博/QQ等）</string>
 
     <string-array name="video_share_class">
         <item>曝光台</item>
@@ -174,9 +223,9 @@
     <string name="spzl_text">极路客提供四种视频质量，1080P高、1080P中、720P高、720P中。</string>
     <string name="zdxhlx_title">自动循环录像</string>
     <string name="zdxhlx_text">启动此项后，极路客将每隔3分钟自动保存一段行车影像。当存储空间不足时，将自动覆盖早期循环录制的文件。</string>
-    <string name="sylz_title">声音录制开关</string>
+    <string name="sylz_title">声音录制</string>
     <string name="pzgy_title">碰撞感应灵敏度</string>
-    <string name="pzgy_text">启动此项后，车辆在行驶中如遭受异常的碰撞，极路客会自动保存16秒（前8秒+后8秒）紧急视频影像。当存储空间不足时，将自动覆盖早期录制的文件。碰撞灵敏度有低、中、高三档自行选择。</string>
+    <string name="pzgy_text">自动判断车辆当前状态；当前车辆处于行驶状态极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态极路客会触发1秒钟拍1张照片；同时会打开振动(触发前8秒+后8秒视频)与移动侦测(触发前8秒+后8秒视频)功能。</string>
     <string name="rlcx_title">存储容量查询</string>
     <string name="sysz">水印设置</string>
     <string name="ztts">状态提示灯</string>
@@ -195,12 +244,15 @@
     <string name="videolist_xhyx">循环影像</string>
 
     <!-- 视频直播设置 -->
-    <string name="live_setting_timelength">直播时长</string>
+    <string name="live_setting_timelength">直播时长:</string>
     <string name="live_cartalk">行车对讲</string>
-    <string name="voice_switch">视频声音开关</string>
+    <string name="voice_switch">直播声音</string>
+    <string name="live_guiji">直播轨迹(开发中)</string>
+    <string name="live_talk">直播对讲(开发中)</string>
+    <string name="release_square">发布到广场(开发中)</string>
     <string name="description">点击添加描述</string>
     <string name="voice_type">视频类型</string>
-    <string name="live_flow">预计本次直播消耗流量</string>
+    <string name="live_flow">预计消耗流量:</string>
     <string name="open_live_home">进入直播间</string>
 
     <!-- 个人中心 -->
@@ -211,7 +263,7 @@
     <string name="user_repwd_identify">获取验证码</string>
     <string name="user_repwd_ok">确定</string>
     <string name="user_regist_title">手机号注册</string>
-    <string name="user_regist_btn">注册</string>
+    <string name="user_regist_btn">下一步</string>
     <string name="user_regist_bottom_login">已注册过Goluk？点此</string>
     <string name="user_regist_bottom_login_btn">登录</string>
     <string name="user_personal_title_right">保存</string>
@@ -232,6 +284,22 @@
     <string name="user_personal_home_nologin_name">未登录</string>
     <string name="user_personal_setup_update">Goluk固件升级</string>
     <string name="user_personal_setup_update_bottom_text1">当前版本 </string>
+    
+    <string name="user_net_unavailable">当前网络不可用，请检查网络后重试</string>
+    <string name="user_login_phone_hint">输入手机号码</string>
+    <string name="user_login_password_hint">请填写密码，6-16位字符</string>
+    <string name="user_login_phone_show_error">手机号格式错误，请重新输入</string>
+    <string name="user_login_password_show_error">密码格式输入不正确，请输入 6-16 位数字、字母,字母区分大小写</string>
+    <string name="user_login_password_limit_top_hint">登录密码出错已经达到 5 次上限，账户被锁定 2 小时，请重置密码后登录</string>
+    <string name="user_regist_phone_hint">输入手机号码（暂时只支持中国大陆地区）</string>
+    <string name="user_regist_below_hint">请放心，我们不会将您的手机号码用于其他用途</string>
+    <string name="user_identify_code">输入6位验证码</string>
+    <string name="user_identify_count">重新发送</string>
+    <string name="user_dialog_hint_title">提示</string>
+    <string name="opinion_content_null">反馈内容不能为空</string>
+    <string name="opinion_fail">反馈失败，请稍候再试</string>
+    <string name="opinion_success">感谢您的反馈，我们正在积极处理中！</string>
+    
     <!-- 直播界面 -->
 
 
@@ -259,5 +327,12 @@
     <string name="refreshing">正在刷新...</string>
     <string name="updating">最近更新：</string>
     <string name="wifibind_defaultpassword">123456789</string>
+    
+    
+    <!-- 相册 -->
+    <string name="photoalbum_default_title">我的相册</string>
+    <string name="photoalbum_local_video_text">本地视频</string>
+    <string name="photoalbum_cloud_video_text">远程视频</string>
+    
 
 </resources>
