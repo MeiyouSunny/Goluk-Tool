@@ -79,7 +79,7 @@
     <color name="share_filter_grid_txt">#d7d7d7</color>
 
     <!-- 友盟分享背景颜色 -->
-    <color name="youmeng_share_bg">#8B8878</color>
+    <color name="youmeng_share_bg">#303235</color>
     <color name="youmeng_share_txt_color">#aaaaaa</color>
 
 </resources>

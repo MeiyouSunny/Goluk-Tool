@@ -90,11 +90,9 @@ public class InputLayout implements OnClickListener, OnTouchListener {
 			final String content = mShareInputEdit.getText().toString().trim();
 			((VideoEditActivity) mContext).mTypeLayout.setEditContent(false, content);
 			hide();
-
 			break;
 		default:
 			break;
-
 		}
 
 	}

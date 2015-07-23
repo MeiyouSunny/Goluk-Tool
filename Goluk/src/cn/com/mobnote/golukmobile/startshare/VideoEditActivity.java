@@ -79,6 +79,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private CreateNewVideo mCreateNewVideo = null;
 	private UploadVideo mUploadVideo = null;
 	private ShareDeal mShareDealTool = null;
+	private ShareLoading mShareLoading = null;
 
 	private boolean misCurrentType = true;
 
@@ -133,6 +134,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mCreateNewVideo = new CreateNewVideo(this, mVVPlayVideo, this);
 		mUploadVideo = new UploadVideo(this, mApp);
 		mUploadVideo.setListener(this);
+		mShareLoading = new ShareLoading(this, mRootLayout);
 		mBaseHandler.sendEmptyMessageDelayed(100, 100);
 	}
 
@@ -304,9 +306,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private void showLoadingView() {
 		// 显示视频导出loading
-		mVideoLoadingLayout.setVisibility(View.VISIBLE);
-		// 启动loading动画
-		mLoadingAnimation.start();
+		// mVideoLoadingLayout.setVisibility(View.VISIBLE);
+		// // 启动loading动画
+		// mLoadingAnimation.start();
+
+		mShareLoading.showLoadingLayout();
+		mShareLoading.switchState(ShareLoading.STATE_CREATE_VIDEO);
+
 	}
 
 	private void hideLoadingView() {
@@ -439,6 +445,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (2 == mCurrentVideoType && 0 == mFilterLayout.mMVListAdapter.getCurrentResIndex()) {
 			// 直接跳转，不需要加滤镜
 			// toShareActivity(mFilePath);
+			mShareLoading.showLoadingLayout();
 			this.createNewFileSucess(mFilePath);
 			return;
 		}
@@ -483,7 +490,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		switch (id) {
 		case R.id.back_btn:
 			// 返回
-			 exit();
+			exit();
 			break;
 		case R.id.play_layout:
 			click_play();
@@ -502,6 +509,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------createNewFileSucess--filePath-: "
 				+ filePath);
 		this.mUploadVideo.setUploadInfo(filePath, mCurrentVideoType, videoName);
+
+		mShareLoading.switchState(ShareLoading.STATE_UPLOAD);
 	}
 
 	public void videoUploadCallBack(int success, Object param1, Object param2) {
@@ -519,7 +528,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		case EVENT_SAVING:
 			int progress = (Integer) obj1;
 			if (progress > 0) {
-				mLoadingText.setText("视频生成中" + progress + "%");
+				// mLoadingText.setText("视频生成中" + progress + "%");
+
+				mShareLoading.setProcess(progress);
 			}
 			break;
 		case EVENT_END:
@@ -556,6 +567,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 
 	}
+	
+	public static final int EVENT_COMM_EXIT = 0;
+
+	public void CallBack_Comm(int event, Object obj) {
+		if (EVENT_COMM_EXIT == event) {
+			this.exit();
+		}
+	}
 
 	@Override
 	public void CallBack_UploadVideo(int event, Object obj) {
@@ -563,7 +582,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				+ event);
 		switch (event) {
 		case EVENT_EXIT:
-			this.finish();
+			exit();
 			break;
 		case EVENT_UPLOAD_SUCESS:
 			// 　文件上传成功，请求分享连接
@@ -571,11 +590,17 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 			requestShareInfo();
 			break;
+		case EVENT_PROCESS:
+			final int process = (Integer) obj;
+			mShareLoading.setProcess(process);
+			break;
 		}
 	}
 
 	// 请求分享信息
 	private void requestShareInfo() {
+
+		mShareLoading.switchState(ShareLoading.STATE_GET_SHARE);
 
 		final String t_vid = this.mUploadVideo.getVideoId();
 		final String t_type = "" + (mCurrentVideoType == 2 ? 2 : 1);
@@ -596,7 +621,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			GolukUtils.showToast(this, "分享失败");
 			return;
 		}
-		showRequestShareDialog();
+		// showRequestShareDialog();
 		GolukDebugUtils.e("", "chxy____VideoShareActivity share11" + json);
 	}
 
@@ -608,6 +633,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	 */
 	public void videoShareCallBack(int success, String json) {
 		dimissRequestShareDialog();
+		mShareLoading.hide();
 		if (1 != success) {
 			GolukUtils.showToast(this, "获取视频分享地址失败");
 			return;
