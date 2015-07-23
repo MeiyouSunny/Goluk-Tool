@@ -57,6 +57,7 @@ import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.IpcUpdateManage;
+import cn.com.mobnote.user.TimerManage;
 import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserIdentifyManage;
 import cn.com.mobnote.user.UserLoginManage;
@@ -147,6 +148,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public UserIdentifyManage mIdentifyManage = null;
 	/**注册/重置密码管理类**/
 	public UserRegistAndRepwdManage mRegistAndRepwdManage = null;
+	/**计时器管理类**/
+	public TimerManage mTimerManage = null;
 
 	private HashMap<String, ILocationFn> mLocationHashMap = new HashMap<String, ILocationFn>();
 	/** 未下载文件列表 */
@@ -239,6 +242,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mIpcUpdateManage = new IpcUpdateManage(this);
 		mIdentifyManage = new UserIdentifyManage(this);
 		mRegistAndRepwdManage = new UserRegistAndRepwdManage(this);
+		mTimerManage = new TimerManage(this);
 
 		mIPCControlManager = new IPCControlManager(this);
 		mIPCControlManager.addIPCManagerListener("application", this);

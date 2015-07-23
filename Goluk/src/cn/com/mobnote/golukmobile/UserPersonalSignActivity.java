@@ -63,6 +63,8 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			signText = bundle.getString("intentSignText");
 		}
 		mEditBody.setText(signText);
+		if (null != signText || "".equals(signText))
+			mEditBody.setSelection(signText.length());
 
 		/**
 		 * 监听
