@@ -150,7 +150,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private RingView downloadSize = null;
 
-	private String videoname = null;
+	private String videoname = "";
 
 	private int videoType = 0;
 
