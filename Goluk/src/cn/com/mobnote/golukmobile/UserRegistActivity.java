@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
@@ -62,8 +63,9 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); 
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_regist);
 
 		mContext = this;
@@ -118,11 +120,13 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			String number = itLoginPhone.getStringExtra("intentLogin").toString();
 			GolukDebugUtils.i("user", number);
 			mEditTextPhone.setText(UserUtils.formatSavePhone(number));
+			mEditTextPhone.setSelection(mEditTextPhone.getText().toString().length());
 		}
 		Intent itRepassword = getIntent();
 		if (null != itRepassword.getStringExtra("intentRepassword")) {
 			String repwdNum = itRepassword.getStringExtra("intentRepassword").toString();
 			mEditTextPhone.setText(UserUtils.formatSavePhone(repwdNum));
+			mEditTextPhone.setSelection(mEditTextPhone.getText().toString().length());
 		}
 
 		/**
