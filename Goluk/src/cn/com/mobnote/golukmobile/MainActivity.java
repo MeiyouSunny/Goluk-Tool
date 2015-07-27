@@ -527,7 +527,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectedSucess:");
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mWiFiStatus = WIFI_STATE_SUCCESS;
+		GolukDebugUtils.e("zh：wifi连接成功 ","");
 		if (CarRecorderActivity.mHandler != null) {
+			GolukDebugUtils.e("zh：mhandler不为空 ","");
 			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_RESULT);
 		}
 	}
