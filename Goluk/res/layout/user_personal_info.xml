@@ -130,14 +130,14 @@
 
             <TextView
                 android:id="@+id/user_personal_info_sign"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="3dp"
                 android:textColor="@color/user_personal_black"
                 android:textSize="14sp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:maxLength="17"/>
+                android:gravity="right"/>
 
             <ImageView
                 android:id="@+id/user_personal_arrow3"

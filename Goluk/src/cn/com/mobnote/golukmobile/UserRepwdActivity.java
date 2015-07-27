@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
@@ -55,13 +56,12 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
-	/**点击下一步按钮**/
-	public static boolean repwdClick = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); 
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_repwd);
 
 		mContext = this;
@@ -113,6 +113,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		if (null != it.getStringExtra("errorPwdOver")) {
 			String phone = it.getStringExtra("errorPwdOver").toString();
 			mEditTextPhone.setText(UserUtils.formatSavePhone(phone));
+			mEditTextPhone.setSelection(mEditTextPhone.getText().toString().length());
 		}
 
 		putPhones();
@@ -191,7 +192,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			// 点按钮后,弹出重置密码中的提示,样式使用系统 loading 样式,文字描述:正在重置
 			// 重置密码成功,弹出系统短提示:重置密码成功。同时跳转至登录页面。
 			repwd();
-			repwdClick = true;
 			break;
 		}
 	}
@@ -210,9 +210,10 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 					if (!UserUtils.isNetDeviceAvailable(this)) {
 						GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 					} else {
-						if (!mApplication.mTimerManage.flag && repwdClick) {
-							GolukUtils.showToast(this, "倒计时没有结束");
+						if (!mApplication.mTimerManage.flag) {
+							GolukUtils.showToast(this, this.getResources().getString(R.string.user_timer_count_hint));
 						} else {
+							mApplication.mTimerManage.timerCancel();
 							mApplication.mIdentifyManage.setUserIdentifyInterface(this);
 							boolean b = mApplication.mIdentifyManage.getIdentify(false, phone);
 							if (b) {
@@ -224,8 +225,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 								mBtnBack.setEnabled(false);
 							} else {
 								closeProgressDialogIdentify();
-								GolukUtils.showToast(mContext, this.getResources()
-										.getString(R.string.user_getidentify_fail));
+								GolukUtils.showToast(mContext,
+										this.getResources().getString(R.string.user_getidentify_fail));
 							}
 						}
 

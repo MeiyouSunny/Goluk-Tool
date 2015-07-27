@@ -69,7 +69,8 @@
                         android:id="@+id/user_center_id_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp" >
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone" >
 
                         <TextView
                             android:id="@+id/user_center_id_title_text"
@@ -84,7 +85,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/user_center_id_title_text"
-                            android:text="Ｇoluk"
                             android:textColor="#585858"
                             android:textSize="14sp" />
                     </RelativeLayout>
