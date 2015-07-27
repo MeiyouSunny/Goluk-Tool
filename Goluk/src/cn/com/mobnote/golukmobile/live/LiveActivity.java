@@ -80,26 +80,18 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	/** 自己预览地址 */
 	private static String VIEW_SELF_PLAY = "";
-
 	/** application */
 	private GolukApplication mApp = null;
 	/** 返回按钮 */
 	private TextView mLiveBackBtn = null;
-	/** 刷新按钮 */
-	// private Button mRefirshBtn = null;
 	/** 暂停按钮 */
 	private Button mPauseBtn = null;
 	/** title */
 	private TextView mTitleTv = null;
-	/** 当前地址 */
-	// private TextView mAddressTv = null;
-
 	/** 视频loading */
 	private RelativeLayout mVideoLoading = null;
 	/** 播放布局 */
 	private RelativeLayout mPlayLayout = null;
-	/** 直播超时提示文字 */
-	private TextView mTimeOutText = null;
 	/** 百度地图 */
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
@@ -123,11 +115,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	/** 观看人数 */
 	private TextView mLookCountTv = null;
 	private ImageView mMoreImg = null;
-	/** 点赞 显示 */
-	// private TextView mZancountTv = null;
-	// private LinearLayout mOkLayout = null;
-	private ImageView mLiveOk = null;
-
 	private UserInfo currentUserInfo = null;
 	/** 我的登录信息 如果未登录，则为空 */
 	private UserInfo myInfo = null;
@@ -144,9 +131,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private TimerManager mLiveManager = null;
 	/** 防止多次按退出键 */
 	private boolean isAlreadExit = false;
-
 	private String mCurrentVideoId = null;
-
 	/** -1/0/1 未定位/小蓝点/气泡 */
 	private int mCurrentLocationType = LOCATION_TYPE_UNKNOW;
 	/** 当前点赞次数 */
@@ -192,8 +177,13 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private SharePlatformUtil sharePlatform;
 	/** 设置是否返回 */
 	private boolean isSettingCallBack = false;
-
+	/** 定位按钮 */
 	private Button mLocationBtn = null;
+	/** 用户昵称 */
+	private TextView mNickName = null;
+	/** 点赞 */
+	private Button zanBtn = null;
+	private Button mShareBtn = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -215,7 +205,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (null == mRtmpUrl) {
 			mRtmpUrl = UPLOAD_VOIDE_PRE;
 		}
-
 		// 获取数据
 		getIntentData();
 		// 界面初始化
@@ -232,20 +221,20 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mCurrentVideoId = getVideoId();
 			startVideoAndLive("");
 			mTitleTv.setText("我的直播");
-			// if (null != mRefirshBtn) {
-			// mRefirshBtn.setVisibility(View.GONE);
-			// }
+			mMoreImg.setVisibility(View.GONE);
+			mNickName.setText(myInfo.nickName);
 			setUserHeadImage(myInfo.head);
 		} else {
 			if (null != currentUserInfo && null != currentUserInfo.desc) {
 				mDescTv.setText(currentUserInfo.desc);
 			}
+			mMoreImg.setVisibility(View.VISIBLE);
 			mApp.mSharedPreUtil.setIsLiveNormalExit(true);
 			if (null != currentUserInfo) {
 				mLiveCountSecond = currentUserInfo.liveDuration;
 			}
 			mTitleTv.setText(currentUserInfo.nickName + " 的直播");
-
+			mNickName.setText(currentUserInfo.nickName);
 			setUserHeadImage(currentUserInfo.head);
 		}
 		drawPersonsHead();
@@ -267,32 +256,23 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				isSettingCallBack = true;
 			} else {
 				// 显示设置窗口
-
-				// mBaseHandler.sendEmptyMessageDelayed(100, 600);
-
 				if (null == mSettingData) {
 					this.finish();
 					return;
 				}
-
 				startLiveForSetting();
 			}
-
 			updateCount(0, 0);
 		} else {
 			// 计时，90秒后，防止用户进入时没网
 			mBaseHandler.sendEmptyMessageDelayed(MSG_H_UPLOAD_TIMEOUT, DURATION_TIMEOUT);
 			startLiveLook(currentUserInfo);
 			updateCount(Integer.parseInt(currentUserInfo.zanCount), Integer.parseInt(currentUserInfo.persons));
-			// 获取地址
-			// isGetingAddress = true;
 			try {
 				GetBaiduAddress.getInstance().searchAddress(Double.parseDouble(currentUserInfo.lat),
 						Double.parseDouble(currentUserInfo.lon));
 			} catch (Exception e) {
-
 			}
-
 		}
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
@@ -302,11 +282,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
-
 			if (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")) {
 				mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
 			}
-
 			mVideoSquareManager.addVideoSquareManagerListener("live", this);
 		}
 	}
@@ -444,10 +422,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// showToast("查看他人直播失败");
 	}
 
-	/** 点赞 */
-	private Button zanBtn = null;
-	private Button mShareBtn = null;
-
 	/**
 	 * 页面初始化
 	 */
@@ -456,30 +430,20 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mLocationBtn = (Button) findViewById(R.id.live_location_btn);
 		mLiveBackBtn = (TextView) findViewById(R.id.live_back_btn);
 		mTitleTv = (TextView) findViewById(R.id.live_title);
-		// mRefirshBtn = (Button) findViewById(R.id.live_refirsh_btn);
 		mMoreImg = (ImageView) findViewById(R.id.live_more);
-		mMoreImg.setOnClickListener(this);
 		mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
-		mTimeOutText = (TextView) findViewById(R.id.live_time_out_text);
 		mVideoLoading = (RelativeLayout) findViewById(R.id.live_video_loading);
 		mPlayLayout = (RelativeLayout) findViewById(R.id.live_play_layout);
 		mLookCountTv = (TextView) findViewById(R.id.live_lookcount);
-		// mZancountTv = (TextView) findViewById(R.id.live_okcount);
-		// mOkLayout = (LinearLayout) findViewById(R.id.live_oklayout);
 		zanBtn = (Button) findViewById(R.id.like_btn);
-		zanBtn.setOnClickListener(this);
 		mShareBtn = (Button) findViewById(R.id.share_btn);
-		mShareBtn.setOnClickListener(this);
-		// mOkLayout.setOnClickListener(this);
-		// mLiveOk = (ImageView) findViewById(R.id.live_ok);
 		mHead = (ImageView) findViewById(R.id.live_userhead);
 		mLiveCountDownTv = (TextView) findViewById(R.id.live_countdown);
 		mDescTv = (TextView) findViewById(R.id.live_desc);
 		mPauseBtn = (Button) findViewById(R.id.live_pause);
-		mPauseBtn.setOnClickListener(this);
-		// mAddressTv = (TextView) findViewById(R.id.live_address);
 		mMapRootLayout = (RelativeLayout) findViewById(R.id.live_map_layout);
 		mRPVPalyVideo = (RtmpPlayerView) findViewById(R.id.live_vRtmpPlayVideo);
+		mNickName = (TextView) findViewById(R.id.live_nickname);
 		// 视频事件回调注册
 		mRPVPalyVideo.setPlayerListener(this);
 		mRPVPalyVideo.setBufferTime(1000);
@@ -487,18 +451,14 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 先显示气泡上的默认图片
 		// 注册事件
 		mLiveBackBtn.setOnClickListener(this);
-		// mRefirshBtn.setOnClickListener(this);
 		mPlayLayout.setOnClickListener(this);
 		mLocationBtn.setOnClickListener(this);
+		mMoreImg.setOnClickListener(this);
+		zanBtn.setOnClickListener(this);
+		mShareBtn.setOnClickListener(this);
+		mPauseBtn.setOnClickListener(this);
 
 		hidePlayer();
-
-		if (isShareLive) {
-			mMoreImg.setVisibility(View.GONE);
-		} else {
-			mMoreImg.setVisibility(View.VISIBLE);
-		}
-
 	}
 
 	@Override
@@ -1317,8 +1277,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		Drawable drawable = getResources().getDrawable(R.drawable.like_btn_press);
 		drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 		zanBtn.setCompoundDrawables(drawable, null, null, null); // 设置点赞背景
-
-		// mLiveOk.setBackgroundResource(R.drawable.live_icon_heart);
 		mCurrentOKCount++;
 		if (null != zanBtn) {
 			zanBtn.setText("" + mCurrentOKCount);
@@ -1921,18 +1879,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	@Override
 	public void CallBack_BaiduGeoCoder(int function, Object obj) {
-		// isGetingAddress = false;
-		if (null == obj) {
-			GolukDebugUtils.e("", "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : "
-					+ (String) obj);
-			return;
-		}
-		final String currentAddress = (String) obj;
-		// if (null != mAddressTv) {
-		// mAddressTv.setText(currentAddress);
-		// }
-		GolukDebugUtils
-				.e("", "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : " + (String) obj);
+
 	}
 
 	@Override
@@ -2004,8 +1951,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		String newFilePath = FileUtils.javaToLibPath(picName);
 		String uploadJson = JsonUtil.getUploadSnapJson(mCurrentVideoId, newFilePath);
-		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_LiveUploadPic, uploadJson);
+		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveUploadPic,
+				uploadJson);
 
 	}
 
