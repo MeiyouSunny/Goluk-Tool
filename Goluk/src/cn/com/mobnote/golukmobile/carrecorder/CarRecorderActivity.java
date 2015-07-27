@@ -59,6 +59,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ReadWifiConfig;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
@@ -149,7 +150,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private RingView downloadSize = null;
 
-	private String videoname = null;
+	private String videoname = "";
 
 	private int videoType = 0;
 
@@ -311,6 +312,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					wonderfulVideoDownloadShow();
 					break;
 				case 11:
+					GolukDebugUtils.e("zh：连接成功 ","");
 					WifiRsBean wrb = ReadWifiConfig.readConfig();
 					if (wrb != null) {
 						mConnectTip.setText(wrb.getIpc_ssid());
