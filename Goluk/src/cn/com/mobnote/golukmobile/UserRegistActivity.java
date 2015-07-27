@@ -59,8 +59,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private Editor mEditor = null;
 	/** 注册成功跳转页面的判断标志 */
 	private String registOk = null;
-	/**点击下一步按钮**/
-	public static boolean btnClick = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +232,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			// 点按钮后,弹出登录中的提示,样式使用系统 loading 样式,文字描述:注册中
 			// 注册成功:弹出系统短提示:注册成功,以登录状态进入 Goluk 首页
 			regist();
-			btnClick = true;
 			break;
 		}
 	}
@@ -253,9 +250,10 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 					if (!UserUtils.isNetDeviceAvailable(mContext)) {
 						GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 					} else {
-						if (!mApplication.mTimerManage.flag && btnClick) {
-							GolukUtils.showToast(this, "倒计时没有结束");
+						if (!mApplication.mTimerManage.flag) {
+							GolukUtils.showToast(this, this.getResources().getString(R.string.user_timer_count_hint));
 						} else {
+							mApplication.mTimerManage.timerCancel();
 							mApplication.mIdentifyManage.setUserIdentifyInterface(this);
 							boolean b = mApplication.mIdentifyManage.getIdentify(true, phone);
 							if (b) {
