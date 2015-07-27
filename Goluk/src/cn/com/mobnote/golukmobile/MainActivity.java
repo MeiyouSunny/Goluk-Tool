@@ -32,14 +32,12 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
-import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
@@ -531,7 +529,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectedSucess:");
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mWiFiStatus = WIFI_STATE_SUCCESS;
-		GolukDebugUtils.e("zh：wifi连接成功 ","");
+		GolukDebugUtils.e("zh：wifi连接成功 ",mWiFiStatus+"");
 		if (CarRecorderActivity.mHandler != null) {
 			GolukDebugUtils.e("zh：mhandler不为空 ","");
 			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_RESULT);
@@ -576,6 +574,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}else{
 			// 跳转到行车记录仪界面
 			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+			System.out.println("zh:wifi连接="+mWiFiStatus);
 			i.putExtra("ipcState", mWiFiStatus);
 			i.putExtra("wifiname", mGolukName);
 			startActivity(i);

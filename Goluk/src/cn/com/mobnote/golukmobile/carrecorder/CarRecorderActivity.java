@@ -285,6 +285,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mNormalScreen.setBackgroundResource(R.drawable.btn_player_normal);
 		mNormalScreen.setOnClickListener(this);
 		ipcState = getIntent().getIntExtra("ipcState", 0);
+		
+		
 		lsp = new LiveSettingPopWindow(this, mRootLayout);
 		lsp.setCallBackNotify(this);
 
