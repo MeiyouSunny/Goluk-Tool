@@ -84,23 +84,11 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		if("1".equals(attribute)){
 			title.setText("曝光台");
 		}else if("2".equals(attribute)){
-			title.setText("碰瓷达人");
+			title.setText("事故大爆料");
 		}else if("3".equals(attribute)){
-			title.setText("路上风景");
+			title.setText("美丽风景");
 		}else if("4".equals(attribute)){
 			title.setText("随手拍");
-		}else if("5".equals(attribute)){
-			title.setText("事故大爆料");
-		}else if("6".equals(attribute)){
-			title.setText("堵车预警");
-		}else if("7".equals(attribute)){
-			title.setText("惊险十分");
-		}else if("8".equals(attribute)){
-			title.setText("疯狂超车");
-		}else if("9".equals(attribute)){
-			title.setText("感人瞬间");
-		}else if("10".equals(attribute)){
-			title.setText("传递正能量");
 		}else{
 			title.setText("热门直播");
 		}
