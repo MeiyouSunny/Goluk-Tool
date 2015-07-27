@@ -1,39 +1,20 @@
 package cn.com.mobnote.video;
 
 import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.VideoEditActivity;
+import cn.com.mobnote.golukmobile.startshare.ShareFilterLayout;
+import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.video.MVManage.MVEditData;
-
-/**
- * <pre>
- * 1.类命名首字母大写
- * 2.公共函数驼峰式命名
- * 3.属性函数驼峰式命名
- * 4.变量/参数驼峰式命名
- * 5.操作符之间必须加空格
- * 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处
- * 8.所有代码必须使用TAB键缩进
- * 9.函数使用块注释,代码逻辑使用行注释
- * 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致
- * </pre>
- * 
- * @ 功能描述:视频编辑页面MV选项适配器
- * 
- * @author 陈宣宇
- * 
- */
 
 @SuppressLint("InflateParams")
 public class MVListAdapter extends BaseAdapter {
@@ -44,10 +25,12 @@ public class MVListAdapter extends BaseAdapter {
 	private int resIndex = 0;
 	/** 记录是否改变了滤镜 默认true */
 	private boolean mResChange = true;
+	private ShareFilterLayout mFilterInstance = null;
 
-	public MVListAdapter(Context context, ArrayList<MVEditData> data) {
+	public MVListAdapter(Context context, ArrayList<MVEditData> data, ShareFilterLayout filterInstance) {
 		mContext = context;
 		mDataList = data;
+		mFilterInstance = filterInstance;
 		mLayoutInflater = LayoutInflater.from(context);
 	}
 
@@ -142,7 +125,7 @@ public class MVListAdapter extends BaseAdapter {
 				((VideoEditActivity) mContext).mVVPlayVideo.switchFilterId(mFilter[index]);
 			}
 			data.display = true;
-			((VideoEditActivity) mContext).mMVListAdapter.notifyDataSetChanged();
+			mFilterInstance.mMVListAdapter.notifyDataSetChanged();
 		}
 	}
 }

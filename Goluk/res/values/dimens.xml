@@ -9,5 +9,6 @@
     <dimen name="live_pause_size">14sp</dimen>
     <dimen name="live_nickname_size">12sp</dimen>
     <dimen name="live_address_size">10sp</dimen>
+    <dimen name="share_type_size">16sp</dimen>
 
 </resources>
