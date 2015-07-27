@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.wifi.WifiManager;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
@@ -291,10 +289,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		}
 	}
 
-	private void setWifiCallBackNULL() {
-
-	}
-
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -349,10 +343,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 					mWac.unbind();
 				}
 				mWac = null;
-				// 跳转到ipc预览页面
-				Intent i = new Intent(mContext, CarRecorderActivity.class);
-				startActivity(i);
-
 				GFileUtils.writeLiveLog("WifiLinkCompleteActivity---------- Jump CarRecorderActivity----- ");
 			}
 			break;
@@ -407,10 +397,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
 			sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 		}
-	}
-
-	private void wifiConnectFailed() {
-
 	}
 
 	private void wifiCallBack_sameHot() {
