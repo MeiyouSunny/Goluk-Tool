@@ -48,7 +48,7 @@ public class BaiduMapView implements ILocationFn {
 	/** 百度地图 */
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
-	
+
 	/** 定时请求直播点时间 */
 	private int mTiming = 1 * 60 * 1000;
 	/** 是否首次定位 */
@@ -65,7 +65,7 @@ public class BaiduMapView implements ILocationFn {
 	private LocationClient mLocClient;
 
 	private MainActivity ma;
-	
+
 	/** 控制离开页面不自动请求大头针数据 */
 	private boolean isCurrent = true;
 
@@ -84,7 +84,7 @@ public class BaiduMapView implements ILocationFn {
 
 	public void onResume() {
 		isCurrent = true;
-		
+
 		boolean b = mBaiduHandler.hasMessages(2);
 		if (!b) {
 			Message msg = new Message();

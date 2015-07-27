@@ -3,19 +3,7 @@ package cn.com.mobnote.golukmobile.photoalbum;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.VideoEditActivity;
-import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
-import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.player.VideoPlayerView;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +17,20 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
+import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint("InflateParams")
 public class WonderfulVideoListView {

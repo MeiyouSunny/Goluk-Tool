@@ -12,23 +12,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.VideoShareActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.startshare.VideoShareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 import cn.com.mobnote.util.GolukUtils;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.SnsPlatform;
 import com.umeng.socialize.bean.SocializeEntity;
-import com.umeng.socialize.bean.StatusCode;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 /**
  * 
@@ -36,17 +32,17 @@ import com.umeng.socialize.weixin.media.WeiXinShareContent;
 public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	/** 微信 */
-	private final String TYPE_WEIXIN = "2";
+	public static final String TYPE_WEIXIN = "2";
 	/** 微博 */
-	public final String TYPE_WEIBO_XINLANG = "3";
+	public static final String TYPE_WEIBO_XINLANG = "3";
 	/** QQ */
-	public final String TYPE_QQ = "4";
+	public static final String TYPE_QQ = "4";
 	/** QQ空间 **/
-	public final String TYPE_QQ_ZONE = "7";
+	public static final String TYPE_QQ_ZONE = "7";
 	/** 微信朋友圈 */
-	public final String TYPE_WEIXIN_CIRCLE = "5";
+	public static final String TYPE_WEIXIN_CIRCLE = "5";
 	/** 短信 */
-	public final String TYPE_SMS = "6";
+	public static final String TYPE_SMS = "6";
 
 	private UMSocialService mController = UMServiceFactory.getUMSocialService(Constants.DESCRIPTOR);
 	private Activity mActivity;
@@ -60,7 +56,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	String describe = "";
 	String ttl = "";
 
-	public CustomShareBoard(Activity activity, SharePlatformUtil spf, String surl, String curl, String db,String tl) {
+	public CustomShareBoard(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl) {
 		super(activity);
 		this.mActivity = activity;
 		sharePlatform = spf;
@@ -71,6 +67,17 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		initView(activity);
 	}
 
+	public void setShareData(String surl, String curl, String db, String tl) {
+		shareurl = surl;
+		coverurl = curl;
+		describe = db;
+		ttl = tl;
+	}
+	
+	public void setShareType(String type) {
+		mCurrentShareType = type;
+	}
+
 	@SuppressWarnings("deprecation")
 	private void initView(Context context) {
 		View rootView = LayoutInflater.from(context).inflate(R.layout.custom_board, null);
@@ -79,7 +86,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.qq).setOnClickListener(this);
 		rootView.findViewById(R.id.qqZone).setOnClickListener(this);
 		rootView.findViewById(R.id.sina).setOnClickListener(this);
-		//rootView.findViewById(R.id.share_cancel).setOnClickListener(this);
+		// rootView.findViewById(R.id.share_cancel).setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
 		setHeight(LayoutParams.WRAP_CONTENT);
@@ -93,49 +100,73 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		int id = v.getId();
 		switch (id) {
 		case R.id.wechat:
-			System.out.println("zh======wx"+shareurl + coverurl + describe + ttl);
-			sharePlatform.setShareContent(shareurl+"&type=2", coverurl, describe,ttl);
-			mCurrentShareType = TYPE_WEIXIN;
-			this.shareUp();//上报分享统计
-			performShare(SHARE_MEDIA.WEIXIN);
+			click_wechat();
 			break;
 		case R.id.wechat_circle:
-			sharePlatform.setShareContent(shareurl+"&type=5", coverurl, describe,ttl);
-			mCurrentShareType = TYPE_WEIXIN_CIRCLE;
-			this.shareUp();//上报分享统计
-			performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
+			click_wechat_circle();
 			break;
 		case R.id.qq:
-			@SuppressWarnings("static-access")
-			Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
-			mCurrentShareType = TYPE_QQ;
-			this.shareUp();//上报分享统计
-			if (isQQ) {
-				sharePlatform.setShareContent(shareurl+"&type=4", coverurl, describe,ttl);
-				performShare(SHARE_MEDIA.QQ);
-			} else {
-				GolukUtils.showToast(mActivity, "你还没有安装QQ或版本太低"); 
-			}
-
+			click_QQ();
 			break;
 		case R.id.qqZone:
-			sharePlatform.setShareContent(shareurl+"&type=7", coverurl, describe,ttl);
-			mCurrentShareType = TYPE_QQ_ZONE;
-			this.shareUp();//上报分享统计
-			performShare(SHARE_MEDIA.QZONE);
+			click_qqZone();
 			break;
-		 case R.id.sina:
-			 sharePlatform.setShareContent(shareurl+"&type=3", coverurl, describe,ttl);
-			 mCurrentShareType = TYPE_WEIBO_XINLANG;
-			 this.shareUp();//上报分享统计
-			 performShare(SHARE_MEDIA.SINA);
-			 break;
+		case R.id.sina:
+			click_sina();
+			break;
 		default:
 			break;
 		}
 	}
-	
-	public void shareUp(){
+
+	// 点击　“微信”
+	public void click_wechat() {
+		System.out.println("zh======wx" + shareurl + coverurl + describe + ttl);
+		sharePlatform.setShareContent(shareurl + "&type=2", coverurl, describe, ttl);
+		mCurrentShareType = TYPE_WEIXIN;
+		this.shareUp();// 上报分享统计
+		performShare(SHARE_MEDIA.WEIXIN);
+	}
+
+	// 点击　“朋友圈”
+	public void click_wechat_circle() {
+		sharePlatform.setShareContent(shareurl + "&type=5", coverurl, describe, ttl);
+		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
+		this.shareUp();// 上报分享统计
+		performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
+	}
+
+	// 点击　“ＱＱ”
+	public void click_QQ() {
+		@SuppressWarnings("static-access")
+		Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
+		mCurrentShareType = TYPE_QQ;
+		this.shareUp();// 上报分享统计
+		if (isQQ) {
+			sharePlatform.setShareContent(shareurl + "&type=4", coverurl, describe, ttl);
+			performShare(SHARE_MEDIA.QQ);
+		} else {
+			GolukUtils.showToast(mActivity, "你还没有安装QQ或版本太低");
+		}
+	}
+
+	// 点击　“ＱＱ空间”
+	public void click_qqZone() {
+		sharePlatform.setShareContent(shareurl + "&type=7", coverurl, describe, ttl);
+		mCurrentShareType = TYPE_QQ_ZONE;
+		this.shareUp();// 上报分享统计
+		performShare(SHARE_MEDIA.QZONE);
+	}
+
+	// 点击　“新浪微博”
+	public void click_sina() {
+		sharePlatform.setShareContent(shareurl + "&type=3", coverurl, describe, ttl);
+		mCurrentShareType = TYPE_WEIBO_XINLANG;
+		this.shareUp();// 上报分享统计
+		performShare(SHARE_MEDIA.SINA);
+	}
+
+	public void shareUp() {
 		if (mActivity instanceof VideoShareActivity) {
 			((VideoShareActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 		} else if (mActivity instanceof MainActivity) {

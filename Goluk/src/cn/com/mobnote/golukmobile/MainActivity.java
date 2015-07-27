@@ -251,21 +251,25 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		String str = intent.getStringExtra("showMe").toString();
-		if("showMe".equals(str)){
-			Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
-			mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
-			mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
+		GolukDebugUtils.i("newintent", "-------str------------"+intent.getStringExtra("showMe"));
+		if(null != intent.getStringExtra("showMe")){
+			String str = intent.getStringExtra("showMe").toString();
+			if("showMe".equals(str)){
+				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
+				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
+				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
 
-			Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
-			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
-			msquareBtn.setTextColor(Color.rgb(204, 204, 204));
-			
-			userInfoLayout.setVisibility(View.VISIBLE);
-			videoSquareLayout.setVisibility(View.GONE);
-			
-			indexMoreActivity.showView();
+				Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
+				msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
+				msquareBtn.setTextColor(Color.rgb(204, 204, 204));
+				
+				userInfoLayout.setVisibility(View.VISIBLE);
+				videoSquareLayout.setVisibility(View.GONE);
+				
+				indexMoreActivity.showView();
+			}
 		}
+		
 	}
 
 	/**
@@ -564,7 +568,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	public void checkWiFiStatus() {
 		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mWiFiStatus);
-
 		// 跳转到wifi连接首页
 		if (mApp.isUserLoginSucess == false) {
 			Intent intent = new Intent(this, UserLoginActivity.class);
@@ -577,7 +580,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			i.putExtra("wifiname", mGolukName);
 			startActivity(i);
 		}
-		
 	}
 
 	@Override
@@ -631,7 +633,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		indexMoreActivity.showView();
-
 		super.onResume();
 	}
 
@@ -828,7 +829,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private Builder mBuilder = null;
 	private AlertDialog dialog = null;
 
-	private void click_toLocalVideoShare() {
+	public void click_toLocalVideoShare() {
 		GolukDebugUtils.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess
 				+ "------autologinStatus-----" + mApp.autoLoginStatus);
 		if (!mApp.isUserLoginSucess) {

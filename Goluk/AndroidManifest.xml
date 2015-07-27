@@ -110,11 +110,11 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.VideoEditActivity"
+            android:name="cn.com.mobnote.golukmobile.startshare.VideoEditActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.VideoShareActivity"
+            android:name="cn.com.mobnote.golukmobile.startshare.VideoShareActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity

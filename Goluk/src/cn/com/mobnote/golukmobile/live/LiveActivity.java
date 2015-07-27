@@ -260,6 +260,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				isSettingCallBack = true;
 			} else {
 				// 显示设置窗口
+
 				// mBaseHandler.sendEmptyMessageDelayed(100, 600);
 
 				if (null == mSettingData) {
@@ -268,7 +269,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				}
 
 				startLiveForSetting();
-
 			}
 
 			updateCount(0, 0);
@@ -1606,6 +1606,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	// POPWindow回调操作
 	@Override
 	public void callBackPopWindow(int event, Object data) {
+
 		// if (LiveSettingPopWindow.EVENT_ENTER == event) {
 		// if (null != mliveSettingWindow) {
 		// mliveSettingWindow.close();
@@ -1643,6 +1644,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// }
 		//
 		// }
+
 	}
 
 	/**
