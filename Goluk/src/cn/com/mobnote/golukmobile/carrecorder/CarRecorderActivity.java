@@ -285,8 +285,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mNormalScreen.setBackgroundResource(R.drawable.btn_player_normal);
 		mNormalScreen.setOnClickListener(this);
 		ipcState = getIntent().getIntExtra("ipcState", 0);
-		
-		
+
 		lsp = new LiveSettingPopWindow(this, mRootLayout);
 		lsp.setCallBackNotify(this);
 
@@ -314,7 +313,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					wonderfulVideoDownloadShow();
 					break;
 				case 11:
-					GolukDebugUtils.e("zh：连接成功 ","");
+					GolukDebugUtils.e("zh：连接成功 ", "");
 					WifiRsBean wrb = ReadWifiConfig.readConfig();
 					if (wrb != null) {
 						mConnectTip.setText(wrb.getIpc_ssid());
@@ -381,19 +380,19 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (wrb != null) {
 				mConnectTip.setText(wrb.getIpc_ssid());
 			}
-			boolean b = false;
+			// boolean b = false;
 			if (null != mApp.mIpcUpdateManage) {
 				mApp.mIpcUpdateManage.ipcConnect();
 			}
-			if (b) {
-				mPalyerLayout.setVisibility(View.VISIBLE);
-				mNotconnected.setVisibility(View.GONE);
-				mConncetLayout.setVisibility(View.GONE);
-				// 跳转到行车记录仪界面
-				// Intent i = new Intent(MainActivity.this,
-				// CarRecorderActivity.class);
-				// startActivity(i);
-			}
+			// if (b) {
+			mPalyerLayout.setVisibility(View.VISIBLE);
+			mNotconnected.setVisibility(View.GONE);
+			mConncetLayout.setVisibility(View.GONE);
+			// 跳转到行车记录仪界面
+			// Intent i = new Intent(MainActivity.this,
+			// CarRecorderActivity.class);
+			// startActivity(i);
+			// }
 			break;
 		default:
 			break;
@@ -887,8 +886,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			open_shareVideo(images[1].getName());
 			break;
 		case R.id.image3:
-			Intent photoalbum = new Intent(CarRecorderActivity.this,
-					PhotoAlbumActivity.class);
+			Intent photoalbum = new Intent(CarRecorderActivity.this, PhotoAlbumActivity.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);
 			break;
@@ -1624,39 +1622,39 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	/**
 	 * 初始化文件同步和分享功能
-	  * @Title: initVideoImage 
-	  * @Description: TODO void 
-	  * @author 曾浩 
-	  * @throws
+	 * 
+	 * @Title: initVideoImage
+	 * @Description: TODO void
+	 * @author 曾浩
+	 * @throws
 	 */
 	public void initVideoImage() {
 		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
 		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
-		
-		List<String> wonderfuls = this.getNewVideoByType(filePaths[0],1);//最新的精彩视频
-		List<String> urgents = this.getNewVideoByType(filePaths[1], 2);//最新的紧急视频
-		
-		List<String> names = new ArrayList<String> ();
-		if(wonderfuls != null ){
+
+		List<String> wonderfuls = this.getNewVideoByType(filePaths[0], 1);// 最新的精彩视频
+		List<String> urgents = this.getNewVideoByType(filePaths[1], 2);// 最新的紧急视频
+
+		List<String> names = new ArrayList<String>();
+		if (wonderfuls != null) {
 			names.addAll(wonderfuls);
 		}
-		if(urgents != null ){
+		if (urgents != null) {
 			names.addAll(urgents);
 		}
-		
-		
-		List<String> newvideo = this.shortNames(names);//拿到最新的4个视频
-		
+
+		List<String> newvideo = this.shortNames(names);// 拿到最新的4个视频
+
 		String videoname1 = "";
 		String videoname2 = "";
-		
-		if(newvideo!= null && newvideo.size()>0){
+
+		if (newvideo != null && newvideo.size() > 0) {
 			videoname1 = newvideo.get(0);
-			if(newvideo.size()>1){
+			if (newvideo.size() > 1) {
 				videoname2 = newvideo.get(1);
 			}
 		}
-		
+
 		if (!"".equals(videoname1)) {
 			String name1 = mImagePath + videoname1.replace("mp4", "jpg");
 			File video1 = new File(name1);
@@ -1697,17 +1695,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		images[2] = pic;
 	}
-	
+
 	/**
 	 * 冒泡排序把日期最新的排前面
-	  * @Title: shortNames 
-	  * @Description: TODO
-	  * @param names
-	  * @return List<String> 
-	  * @author 曾浩 
-	  * @throws
+	 * 
+	 * @Title: shortNames
+	 * @Description: TODO
+	 * @param names
+	 * @return List<String>
+	 * @author 曾浩
+	 * @throws
 	 */
-	public List<String> shortNames(List<String> names){
+	public List<String> shortNames(List<String> names) {
 		if (names != null && names.size() > 0) {
 			for (int i = 0; i < names.size(); i++) {
 				String[] videos = names.get(i).split("_");
@@ -1723,29 +1722,28 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				}
 			}
 		}
-		
+
 		return names;
 	}
 
-	public List<String> getNewVideoByType(String uri,int type) {
+	public List<String> getNewVideoByType(String uri, int type) {
 		String file = mFilePath + uri;
 		List<String> list = this.getVideoConfigFile(file);
 
 		String videoname1 = "";
 		String videoname2 = "";
-		
+
 		String path = "";
-		if(type == 1){
+		if (type == 1) {
 			path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/";
-		}else if(type == 2){
+		} else if (type == 2) {
 			path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/urgent/";
 		}
 
-
 		int flog = 0;
 		String videoname = "";
-		
-		if(list != null && list.size()>0){
+
+		if (list != null && list.size() > 0) {
 			File vfile = null;
 			for (int i = list.size() - 1; i < list.size(); i--) {
 				videoname = list.get(i);
@@ -1775,10 +1773,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 
 			return result;
-		}else{
+		} else {
 			return null;
 		}
-		
+
 	}
 
 	/**
