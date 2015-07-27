@@ -16,6 +16,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
@@ -240,23 +241,23 @@ public class GolukUtils {
 
 		return 0;
 	}
-	
+
 	/**
 	 * 获取系统版本号
 	 */
-	public static String getSystem_version(){
+	public static String getSystem_version() {
 		return android.os.Build.VERSION.RELEASE;
 	}
-	
+
 	/**
 	 * 获取手机型号
 	 */
-	public static String getPhone_models(){
+	public static String getPhone_models() {
 		return android.os.Build.MODEL;
 	}
 
 	@SuppressLint("NewApi")
-	public static  Bitmap createVideoThumbnail(String filePath) {
+	public static Bitmap createVideoThumbnail(String filePath) {
 		Bitmap bitmap = null;
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		try {
@@ -271,6 +272,16 @@ public class GolukUtils {
 			}
 		}
 		return bitmap;
+	}
+
+	public static String getCurrentTime() {
+		StringBuffer buffer = new StringBuffer();
+		Time t = new Time();
+		t.setToNow();
+		buffer.append(t.hour);
+		buffer.append(":");
+		buffer.append(t.minute);
+		return new String(buffer);
 	}
 
 }

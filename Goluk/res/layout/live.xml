@@ -99,7 +99,7 @@
             android:textSize="@dimen/live_nickname_size" />
 
         <TextView
-            android:id="@+id/live_time_aa"
+            android:id="@+id/live_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/live_nickname"
