@@ -512,7 +512,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		lp.leftMargin = 0;
 		mRtmpPlayerLayout.setLayoutParams(lp);
 
-		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
+		//m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 		mConnectTip.setText(wifiname);
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
@@ -1236,7 +1236,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					@Override
 					public void run() {
 						// mShareBtn.setVisibility(View.GONE);
-						m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
+						//m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 
 						downloadFileNumber = 0;
 						mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
