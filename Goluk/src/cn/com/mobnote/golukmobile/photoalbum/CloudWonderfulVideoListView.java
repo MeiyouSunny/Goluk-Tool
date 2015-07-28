@@ -1,7 +1,9 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.List;
+
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
@@ -10,10 +12,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import java.io.File;
 import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
@@ -28,6 +33,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
+import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,6 +71,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 	private RelativeLayout mBottomLoadingView = null;
 	private int timeend = 2147483647;
 	private boolean isShowPlayer = false;
+	private TextView empty = null;
 	
 	public CloudWonderfulVideoListView(Context context, int type) {
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
@@ -102,6 +109,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 	}
 	
 	private void initView() {
+		empty = (TextView)mRootLayout.findViewById(R.id.empty);
 		this.mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
 		mStickyListHeadersListView = (StickyListHeadersListView)mRootLayout.findViewById(R.id.mStickyListHeadersListView);
 		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(mContext, mStickyListHeadersListView);
@@ -298,6 +306,14 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+		
+		if(mDataList.size() <= 0) {
+			empty.setVisibility(View.VISIBLE);
+			mStickyListHeadersListView.setVisibility(View.GONE);
+		}else {
+			empty.setVisibility(View.GONE);
+			mStickyListHeadersListView.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	public void downloadVideoFlush(List<String> selectedListData) {
@@ -382,6 +398,14 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+		
+		if(mDataList.size() <= 0) {
+			empty.setVisibility(View.VISIBLE);
+			mStickyListHeadersListView.setVisibility(View.GONE);
+		}else {
+			empty.setVisibility(View.GONE);
+			mStickyListHeadersListView.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	@Override
