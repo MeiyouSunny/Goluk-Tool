@@ -444,6 +444,7 @@ public class LocalVideoShareListActivity extends BaseActivity implements  OnClic
 			intent.putExtra("type", mCurrentType);
 			intent.putExtra("cn.com.mobnote.video.path", path);
 			startActivity(intent);
+			overridePendingTransition(R.anim.shortshare_start,0);
 		}
 	}
 	
