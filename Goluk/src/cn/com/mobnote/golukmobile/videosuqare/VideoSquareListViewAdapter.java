@@ -356,7 +356,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			case MotionEvent.ACTION_UP:
 				Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
 				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null,null, null);
-				sharebtn.setTextColor(Color.rgb(204, 204, 204));
+				sharebtn.setTextColor(Color.rgb(136, 136, 136));
 				break;
 			}
 			break;
