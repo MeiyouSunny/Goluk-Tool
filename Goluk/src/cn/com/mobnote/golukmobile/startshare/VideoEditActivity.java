@@ -443,19 +443,25 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		stopProgressThread();
 		// 暂停播放器
 		changeVideoPlayState();
+
 		// 如果是精彩视频，并且不添加滤镜，則直接跳转
 		if (2 == mCurrentVideoType && 0 == mFilterLayout.mMVListAdapter.getCurrentResIndex()) {
 			// 直接跳转，不需要加滤镜
-			// toShareActivity(mFilePath);
 			mShareLoading.showLoadingLayout();
 			this.createNewFileSucess(mFilePath);
 			return;
 		}
 
+		if (mFilterLayout.mMVListAdapter.getCurrentResIndex() == mFilterLayout.mMVListAdapter.getSucessIndex()) {
+			// 上次添加过，不再重新添加
+			mShareLoading.showLoadingLayout();
+			this.createNewFileSucess(this.mCreateNewVideo.getNewFilePath());
+			return;
+		}
+
+		// 重新产生新的视频
 		mCreateNewVideo.onSaveVideo();
 
-		// 保存编辑视频到本地
-		// onSaveVideo();
 	}
 
 	/**
@@ -507,6 +513,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	private void createNewFileSucess(String filePath) {
+		// 把成功的保存起来
+		mFilterLayout.mMVListAdapter.setSucessIndex(mFilterLayout.mMVListAdapter.getCurrentResIndex());
 		GolukUtils.showToast(this, "添加滤镜成功,文件上传");
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------createNewFileSucess--filePath-: "
 				+ filePath);
@@ -530,8 +538,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		case EVENT_SAVING:
 			int progress = (Integer) obj1;
 			if (progress > 0) {
-				// mLoadingText.setText("视频生成中" + progress + "%");
-
 				mShareLoading.setProcess(progress);
 			}
 			break;

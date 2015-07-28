@@ -57,7 +57,10 @@ public class CreateNewVideo implements FilterPlaybackView.FilterVideoEditorListe
 		} catch (FilterVideoEditorException e) {
 			sendData(ICreateNewVideoFn.EVENT_ERROR, null, null, null);
 		}
+	}
 
+	public String getNewFilePath() {
+		return mVideoSavePath;
 	}
 
 	@Override

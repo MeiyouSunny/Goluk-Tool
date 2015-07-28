@@ -1,4 +1,4 @@
-package cn.com.mobnote.video;
+package cn.com.mobnote.golukmobile.startshare;
 
 import java.util.ArrayList;
 
@@ -12,8 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.startshare.ShareFilterLayout;
-import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.video.MVManage.MVEditData;
 
 @SuppressLint("InflateParams")
@@ -27,11 +25,22 @@ public class MVListAdapter extends BaseAdapter {
 	private boolean mResChange = true;
 	private ShareFilterLayout mFilterInstance = null;
 
+	/** 保存成功的滤镜，下次如果一样，則不再重新生成 */
+	private int mSucessIndex = -1;
+
 	public MVListAdapter(Context context, ArrayList<MVEditData> data, ShareFilterLayout filterInstance) {
 		mContext = context;
 		mDataList = data;
 		mFilterInstance = filterInstance;
 		mLayoutInflater = LayoutInflater.from(context);
+	}
+
+	public void setSucessIndex(int index) {
+		mSucessIndex = index;
+	}
+
+	public int getSucessIndex() {
+		return mSucessIndex;
 	}
 
 	public int getCurrentResIndex() {
