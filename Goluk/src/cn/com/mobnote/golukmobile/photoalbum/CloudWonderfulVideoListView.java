@@ -306,14 +306,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
-		
-		if(mDataList.size() <= 0) {
-			empty.setVisibility(View.VISIBLE);
-			mStickyListHeadersListView.setVisibility(View.GONE);
-		}else {
-			empty.setVisibility(View.GONE);
-			mStickyListHeadersListView.setVisibility(View.VISIBLE);
-		}
+		checkListState();
 	}
 	
 	public void downloadVideoFlush(List<String> selectedListData) {
@@ -398,7 +391,10 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
-		
+		checkListState();
+	}
+	
+	private void checkListState() {
 		if(mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
@@ -427,6 +423,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 					if (null != fileList && fileList.size() > 0) {
 						int type = IpcDataParser.parseVideoFileType(fileList.get(0).filename);
 						if (type != mCurrentType) {
+							checkListState();
 							return;
 						}
 						

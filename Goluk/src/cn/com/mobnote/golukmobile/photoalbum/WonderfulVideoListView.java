@@ -235,13 +235,7 @@ public class WonderfulVideoListView {
 					mCustomProgressDialog.close();
 				}
 				
-				if(mDataList.size() <= 0) {
-					empty.setVisibility(View.VISIBLE);
-					mStickyListHeadersListView.setVisibility(View.GONE);
-				}else {
-					empty.setVisibility(View.GONE);
-					mStickyListHeadersListView.setVisibility(View.VISIBLE);
-				}
+				checkListState();
 			}
 		});
 		task.execute("");
@@ -291,7 +285,10 @@ public class WonderfulVideoListView {
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
-		
+		checkListState();
+	}
+	
+	private void checkListState() {
 		if(mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);

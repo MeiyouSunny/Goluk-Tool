@@ -235,7 +235,7 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		if (null != mBitmap) {
 			image.setImageBitmap(mBitmap);
 		}else {
-			image.setImageResource(R.drawable.tacitly_pic);
+			image.setImageResource(R.drawable.album_default_img);
 			if (lock) {
 				return;
 			}
