@@ -191,7 +191,8 @@
         android:id="@+id/fqzb_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mAddr" >
+        android:layout_below="@+id/mAddr"
+        android:visibility="invisible">
 
         <EditText
             android:id="@+id/assess"
@@ -309,7 +310,7 @@
         android:layout_height="115dp"
         android:layout_below="@+id/mAddr"
         android:background="#17191a"
-        android:visibility="invisible" >
+         >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -377,18 +378,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
-            android:layout_toLeftOf="@+id/fqzb"
+            android:layout_centerHorizontal="true"
             android:text="精彩抢拍"
-            android:textColor="#808181"
+            android:textColor="#e13737"
             android:textSize="13sp" />
 
         <TextView
             android:id="@+id/fqzb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:text="发起直播"
-            android:textColor="#e13737"
+            android:layout_toRightOf="@+id/jcqp"
             android:textSize="13sp" />
     </RelativeLayout>
 
@@ -427,75 +427,11 @@
         android:gravity="center_vertical|center"
         android:visibility="invisible" >
 
-        <!--
-        <LinearLayout
-            android:id="@+id/mFileLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|center_horizontal"
-            android:orientation="vertical"
-            android:paddingBottom="14dp"
-            android:paddingTop="14dp"
-            android:visibility="invisible" >
-
-            <ImageView
-                android:id="@+id/mFileBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/carrecorder_filecontorl_btn"
-                android:contentDescription="@string/def"
-                android:duplicateParentState="true" />
-
-            <TextView
-                android:id="@+id/mFileText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:duplicateParentState="true"
-                android:text="文件管理"
-                android:textColor="@color/text_color"
-                android:textSize="12sp" />
-        </LinearLayout>
-        -->
-
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_ipc_8s"
             android:visibility="invisible" />
-
-        <!--
-        <LinearLayout
-            android:id="@+id/mSettingLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|center_horizontal"
-            android:orientation="vertical"
-            android:paddingBottom="14dp"
-            android:paddingTop="14dp"
-            android:visibility="gone" >
-
-            <ImageView
-                android:id="@+id/mSettingBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/carrecorder_setup_btn"
-                android:contentDescription="@string/def"
-                android:duplicateParentState="true" />
-
-            <TextView
-                android:id="@+id/mSettingText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:duplicateParentState="true"
-                android:text="记录仪设置"
-                android:textColor="@color/text_color"
-                android:textSize="12sp" />
-        </LinearLayout>
-        -->
     </LinearLayout>
 
     <ImageButton
@@ -505,8 +441,7 @@
         android:layout_below="@+id/txt_tab"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:background="@drawable/btn_ipc_8s"
-        android:visibility="invisible" />
+        android:background="@drawable/btn_ipc_8s"/>
 
     <ImageButton
         android:id="@+id/liveBtn"
@@ -515,6 +450,7 @@
         android:layout_below="@+id/txt_tab"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
+        android:visibility="invisible" 
         android:background="@drawable/driving_car_living_icon" />
 
     <Button

@@ -2,22 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
-    	<VideoView
+    	<cn.com.mobnote.golukmobile.carrecorder.view.CustomVideoView
     	    android:id="@+id/videoStart"
     	    android:layout_width="match_parent"
     	    android:layout_height="match_parent" />
 
 		<LinearLayout 
 		    android:id="@+id/user_start_click"
-		    android:layout_width="match_parent"
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:orientation="vertical"
 		    android:layout_alignParentBottom="true"
-		    android:gravity="center"
-		    >
+		    android:layout_centerHorizontal="true"
+		    android:layout_marginBottom="94dp">
 		    <ImageView 
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
@@ -30,7 +29,6 @@
 		        android:id="@+id/user_start_look"
 		        android:background="@drawable/icon_look"
 		        android:layout_marginTop="20dp"
-		        android:layout_marginBottom="94dp"
 		        />
 		</LinearLayout>
 </RelativeLayout>
