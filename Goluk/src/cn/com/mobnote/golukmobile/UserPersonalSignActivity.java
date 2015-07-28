@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
+import cn.com.mobnote.user.UserUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,11 +30,13 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 	/** 最大字数限制 **/
 	private TextView mTextCount = null;
 	private static final int MAX_COUNT = 50;
+	/** 输入的个性签名剩余字数 **/
+	private int number = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); 
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_personal_edit_sign);
 
@@ -86,13 +89,17 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		// que认
 		case R.id.user_title_right:
 			UserPersonalInfoActivity.clickBtn = true;
-			String body = mEditBody.getText().toString();
-			Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putString("itSign", body);
-			it.putExtras(bundle);
-			this.setResult(2, it);
-			this.finish();
+			if(number <0){
+				UserUtils.showDialog(this, "请输入50个字符以内的有效个性签名");
+			}else{
+				String body = mEditBody.getText().toString();
+				Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("itSign", body);
+				it.putExtras(bundle);
+				this.setResult(2, it);
+				this.finish();
+			}
 			break;
 
 		default:
@@ -113,10 +120,10 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		@Override
 		public void afterTextChanged(Editable arg0) {
 			int num = arg0.length();
-			int number = MAX_COUNT - num;
-			if (number < 0) {
+			number = MAX_COUNT - num;
+			/*if (number < 0) {
 				number = 0;
-			}
+			}*/
 			mTextCount.setText("（" + number + "/" + MAX_COUNT + "）");
 		}
 	};
