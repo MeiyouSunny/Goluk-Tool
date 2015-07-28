@@ -400,6 +400,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			mVVPlayVideo = null;
 		}
 		finish();
+		// overridePendingTransition(R.anim.shortshare_end,R.anim.shortshare_start);
 	}
 
 	@Override
@@ -567,7 +568,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 
 	}
-	
+
 	public static final int EVENT_COMM_EXIT = 0;
 
 	public void CallBack_Comm(int event, Object obj) {

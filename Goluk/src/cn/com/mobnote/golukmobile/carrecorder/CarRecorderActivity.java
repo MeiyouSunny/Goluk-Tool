@@ -422,6 +422,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			i.putExtra("cn.com.mobnote.video.path", path);
 			i.putExtra("type", 2);
 			startActivity(i);
+			overridePendingTransition(R.anim.shortshare_start,0);
 		} else {
 			Intent intent = new Intent(this, UserLoginActivity.class);
 			intent.putExtra("isInfo", "back");
