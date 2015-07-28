@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,15 +33,16 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 	private String nameText;
 	/** 文字字数提示 **/
 	private TextView mTextCount = null;
+	private TextView mTextCountAll = null;
 	/** 最大输入字数 **/
 	private static final int MAX_COUNT = 10;
-	/**输入超出的字数**/
+	/** 输入超出的字数 **/
 	private int number = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); 
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_personal_edit_name);
 
@@ -50,7 +52,8 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mTextOk.setText("确认");
 		//
 		int count = mEditName.getText().toString().length();
-		mTextCount.setText("（" + (MAX_COUNT - count) + "/" + MAX_COUNT + "）");
+		mTextCount.setText("" + (MAX_COUNT - count));
+		mTextCountAll.setText("/" + MAX_COUNT + "）");
 
 	}
 
@@ -62,6 +65,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mEditName = (EditText) findViewById(R.id.user_personal_name_edit);
 		mImageNameRight = (ImageView) findViewById(R.id.user_personal_name_image);
 		mTextCount = (TextView) findViewById(R.id.number_count);
+		mTextCountAll = (TextView) findViewById(R.id.number_count_all);
 
 		/**
 		 * 获取从编辑界面传来的姓名
@@ -93,9 +97,9 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			break;
 		// que认
 		case R.id.user_title_right:
-			if(number<0){
+			if (number < 0) {
 				UserUtils.showDialog(this, "请输入10个字符以内的有效昵称");
-			}else{
+			} else {
 				String name = mEditName.getText().toString();
 				GolukDebugUtils.i("lily", "------UserPersonalNameActivity--修改昵称------" + name);
 				if (name.trim().isEmpty()) {
@@ -136,10 +140,12 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		public void afterTextChanged(Editable arg0) {
 			int num = arg0.length();
 			number = MAX_COUNT - num;
-			/*if (number < 0) {
-				number = 0;
-			}*/
-			mTextCount.setText("（" + number + "/" + MAX_COUNT + "）");
+			if (number < 0) {
+				mTextCount.setTextColor(Color.RED);
+			}else{
+				mTextCount.setTextColor(getResources().getInteger(R.color.setting_right_text_color));
+			}
+			mTextCount.setText(number+"");
 		}
 	};
 

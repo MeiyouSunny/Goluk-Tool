@@ -93,7 +93,7 @@
                     android:id="@+id/mRtmpPlayerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </RelativeLayout>
+            </RelativeLayout> 
 
             <LinearLayout
                 android:id="@+id/mLoadingLayout"
@@ -252,7 +252,7 @@
                         android:id="@+id/live_video"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/driving_voice_icon" />
+                        android:background="@drawable/live_video_btn" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -262,9 +262,10 @@
                     android:gravity="center" >
 
                     <ImageView
+                        android:id="@+id/live_gps_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/driving_car_loca_btn" />
+                        android:background="@drawable/live_gps_icon_btn" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -274,9 +275,10 @@
                     android:gravity="center" >
 
                     <ImageView
+                        android:id="@+id/live_talk_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/driving_car_phone_btn" />
+                        android:background="@drawable/live_talk_icon_btn" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -286,9 +288,10 @@
                     android:gravity="center" >
 
                     <ImageView
+                        android:id="@+id/live_release_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/driving_car_local_btn" />
+                        android:background="@drawable/live_release_icon_btn" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -309,8 +312,7 @@
         android:layout_width="match_parent"
         android:layout_height="115dp"
         android:layout_below="@+id/mAddr"
-        android:background="#17191a"
-         >
+        android:background="#17191a">
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -33,6 +33,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
@@ -100,6 +101,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		setContentView(R.layout.user_identify_layout);
 
 		mContext = this;
@@ -535,7 +537,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	}
 
 	/**
-	 * 判断关闭哪个对话框
+	 * 判断关闭哪个对话框 // 从设置页注册 it.putExtra("fromRegist", "fromSetup");
 	 * 
 	 * @param b
 	 */
@@ -641,21 +643,15 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			justCloseDialog(justDifferent);
 			if (justDifferent) {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
-				mApp.registStatus = 2;// 注册成功的状态
-				// 登录成功跳转
-				mApp.loginStatus = 1;// 登录成功
-				mApp.isUserLoginSucess = true;
-
-				registLogin();
 			} else {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.user_repwd_success));
-				putPhone();
-				Intent it = new Intent(UserIdentifyActivity.this, UserLoginActivity.class);
-				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				startActivity(it);
-				this.finish();
 			}
+			mApp.registStatus = 2;// 注册成功的状态
+			// 登录成功跳转
+			mApp.loginStatus = 1;// 登录成功
+			mApp.isUserLoginSucess = true;
+
+			registLogin();
 			break;
 		// 注册/重置失败
 		case 3:
@@ -774,6 +770,11 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
 						it.putExtra("showMe", "showMe");
 						GolukDebugUtils.i("newintent", "-------------------");
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					} else if ("fromSetup".equals(intentRegistInter)) {
+						it = new Intent(UserIdentifyActivity.this, UserSetupActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);

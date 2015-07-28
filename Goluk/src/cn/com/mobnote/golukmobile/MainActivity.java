@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private final int WIFI_STATE_CONNING = 1;
 	/** 连接 */
 	private final int WIFI_STATE_SUCCESS = 2;
-	
+
 	private final int WIFI_STATE_RESULT = 11;
 
 	public CustomLoadingDialog mCustomProgressDialog;
@@ -246,14 +246,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 
 	}
-	
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		GolukDebugUtils.i("newintent", "-------str------------"+intent.getStringExtra("showMe"));
-		if(null != intent.getStringExtra("showMe")){
+		GolukDebugUtils.i("newintent", "-------str------------" + intent.getStringExtra("showMe"));
+		if (null != intent.getStringExtra("showMe")) {
 			String str = intent.getStringExtra("showMe").toString();
-			if("showMe".equals(str)){
+			if ("showMe".equals(str)) {
 				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
 				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
 				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
@@ -261,14 +261,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
 				msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
 				msquareBtn.setTextColor(Color.rgb(204, 204, 204));
-				
+
 				userInfoLayout.setVisibility(View.VISIBLE);
 				videoSquareLayout.setVisibility(View.GONE);
-				
+
 				indexMoreActivity.showView();
 			}
 		}
-		
+
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		userInfoLayout = findViewById(R.id.user_info);
 
 		mHotBigPoint = (ImageView) findViewById(R.id.mHotBigPoint);
-		
+
 		mShareLiveBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
 		indexDiv.setOnClickListener(this);
@@ -371,11 +371,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					}
 					break;
 				case 500:
-					MainActivity play = (MainActivity)mContext;
-					Intent intent = new Intent(); 
+					MainActivity play = (MainActivity) mContext;
+					Intent intent = new Intent();
 					intent.putExtra("type", "1");
 					intent.putExtra("attribute", "0");
-			        intent.setClass(play,VideoSquarePlayActivity.class);
+					intent.setClass(play, VideoSquarePlayActivity.class);
 					mContext.startActivity(intent);
 					break;
 				}
@@ -530,9 +530,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectedSucess:");
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mWiFiStatus = WIFI_STATE_SUCCESS;
-		GolukDebugUtils.e("zh：wifi连接成功 ",mWiFiStatus+"");
+		GolukDebugUtils.e("zh：wifi连接成功 ", mWiFiStatus + "");
 		if (CarRecorderActivity.mHandler != null) {
-			GolukDebugUtils.e("zh：mhandler不为空 ","");
+			GolukDebugUtils.e("zh：mhandler不为空 ", "");
 			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_RESULT);
 		}
 	}
@@ -561,25 +561,24 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		startActivity(intent);
 	}
 
-
 	/**
 	 * 检测wifi链接状态
 	 */
 	public void checkWiFiStatus() {
 		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mWiFiStatus);
 		// 跳转到wifi连接首页
-		if (mApp.isUserLoginSucess == false) {
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
-		}else{
-			// 跳转到行车记录仪界面
-			Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-			System.out.println("zh:wifi连接="+mWiFiStatus);
-			i.putExtra("ipcState", mWiFiStatus);
-			i.putExtra("wifiname", mGolukName);
-			startActivity(i);
-		}
+		// if (mApp.isUserLoginSucess == false) {
+		// Intent intent = new Intent(this, UserLoginActivity.class);
+		// intent.putExtra("isInfo", "back");
+		// startActivity(intent);
+		// }else{
+		// 跳转到行车记录仪界面
+		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+		System.out.println("zh:wifi连接=" + mWiFiStatus);
+		i.putExtra("ipcState", mWiFiStatus);
+		i.putExtra("wifiname", mGolukName);
+		startActivity(i);
+		// }
 	}
 
 	@Override
@@ -739,7 +738,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 			userInfoLayout.setVisibility(View.VISIBLE);
 			videoSquareLayout.setVisibility(View.GONE);
-			
+
 			indexMoreActivity.showView();
 			break;
 		case R.id.share_local_video_btn:

@@ -90,7 +90,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements
 		}else if("4".equals(attribute)){
 			title.setText("随手拍");
 		}else{
-			title.setText("热门直播");
+			title.setText("直播列表");
 		}
 		
 		GolukApplication.getInstance().getVideoSquareManager()
