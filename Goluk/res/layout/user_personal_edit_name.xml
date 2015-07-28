@@ -2,69 +2,90 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@color/user_login_bg">
-    
-	<!-- title -->
-	<include layout="@layout/user_title"/>
-	<!-- body -->
-	<RelativeLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:layout_marginTop="30dp"
-	    >
-	    <View
-	        android:id="@+id/user_personal_solid_1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="1dp"
-	        android:background="@drawable/solid" 
-	        />
-	    <RelativeLayout 
-	        android:id="@+id/user_personal_edit_content"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@id/user_personal_solid_1"
-	        android:background="@color/white"
-	        >
-	        <ImageView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:id="@+id/user_personal_name_image"
-	            android:src="@drawable/individual_center_close_icon"
-	            android:layout_alignParentRight="true"
-	            android:layout_centerVertical="true"
-	            android:layout_marginRight="10dp"
-	            />
-	        <EditText 
-		        android:layout_width="match_parent"
-		        android:layout_height="40dp"
-		        android:id="@+id/user_personal_name_edit"
-		        android:layout_toLeftOf="@id/user_personal_name_image"
-		        android:layout_centerVertical="true"
-		        android:background="@null"
-		        android:textColor="@color/user_personal_black"
-		        android:paddingLeft="20dp"
-		        android:singleLine="true"/>
-	    </RelativeLayout>
-	    
-	    <View
-	        android:id="@+id/user_personal_solid_2"
-	        android:layout_width="wrap_content"
-	        android:layout_height="1dp"
-	        android:background="@drawable/solid" 
-	        android:layout_below="@id/user_personal_edit_content"
-	     	/>
-	    <TextView 
-		    android:id="@+id/number_count"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@id/user_personal_solid_2"
-		    android:layout_alignParentRight="true"
-		    android:text="(10/10)"
-		    android:layout_marginTop="5dp"
-		    android:textSize="10sp"
-		    android:textColor="#8e8e93"/>
-	</RelativeLayout>
-	
+    android:background="@color/user_login_bg"
+    android:orientation="vertical" >
+
+    <!-- title -->
+
+    <include layout="@layout/user_title" />
+    <!-- body -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical" >
+
+        <View
+            android:id="@+id/user_personal_solid_1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@drawable/solid" />
+
+        <RelativeLayout
+            android:id="@+id/user_personal_edit_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_personal_solid_1"
+            android:background="@color/white" >
+
+            <ImageView
+                android:id="@+id/user_personal_name_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/individual_center_close_icon" />
+
+            <EditText
+                android:id="@+id/user_personal_name_edit"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/user_personal_name_image"
+                android:background="@null"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/user_personal_black" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/user_personal_solid_2"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@id/user_personal_edit_content"
+            android:background="@drawable/solid" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/user_personal_solid_2"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:id="@+id/number_count_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="（"
+                android:textColor="@color/setting_right_text_color"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/number_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/setting_right_text_color"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/number_count_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/setting_right_text_color"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
 </LinearLayout>

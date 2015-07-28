@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.user.UserUtils;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +30,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 	private String signText;
 	/** 最大字数限制 **/
 	private TextView mTextCount = null;
+	private TextView mTextCountAll = null;
 	private static final int MAX_COUNT = 50;
 	/** 输入的个性签名剩余字数 **/
 	private int number = 0;
@@ -46,8 +48,8 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		mTextOk.setText("确认");
 		//
 		int count = mEditBody.getText().toString().length();
-		mTextCount.setText("（" + (MAX_COUNT - count) + "/" + MAX_COUNT + "）");
-
+		mTextCount.setText("" + (MAX_COUNT - count));
+		mTextCountAll.setText("/" + MAX_COUNT + "）");
 	}
 
 	// 初始化控件
@@ -57,6 +59,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mEditBody = (EditText) findViewById(R.id.user_personal_edit_sign_body);
 		mTextCount = (TextView) findViewById(R.id.number_count);
+		mTextCountAll = (TextView) findViewById(R.id.number_count_all);
 
 		/**
 		 * 获取从编辑界面传来的信息
@@ -89,9 +92,9 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		// que认
 		case R.id.user_title_right:
 			UserPersonalInfoActivity.clickBtn = true;
-			if(number <0){
+			if (number < 0) {
 				UserUtils.showDialog(this, "请输入50个字符以内的有效个性签名");
-			}else{
+			} else {
 				String body = mEditBody.getText().toString();
 				Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
 				Bundle bundle = new Bundle();
@@ -121,10 +124,12 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		public void afterTextChanged(Editable arg0) {
 			int num = arg0.length();
 			number = MAX_COUNT - num;
-			/*if (number < 0) {
-				number = 0;
-			}*/
-			mTextCount.setText("（" + number + "/" + MAX_COUNT + "）");
+			if (number < 0) {
+				mTextCount.setTextColor(Color.RED);
+			} else {
+				mTextCount.setTextColor(getResources().getInteger(R.color.setting_right_text_color));
+			}
+			mTextCount.setText("" + number);
 		}
 	};
 }
