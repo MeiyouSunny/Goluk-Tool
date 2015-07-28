@@ -72,6 +72,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.api.Image;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.rd.car.CarRecorderManager;
@@ -99,6 +100,7 @@ import com.rd.car.player.RtmpPlayerView;
  * 
  * @author xuhw
  */
+@SuppressLint("NewApi")
 public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
 		IPopwindowFn {
 	public static Handler mHandler = null;
@@ -257,6 +259,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private VideoShareInfo[] images = new VideoShareInfo[3];
 
+	private ImageView live_gps;
+	private ImageView live_talk;
+	private ImageView live_release;
+
 	private String wifiname = "未连接到极路客";
 
 	/** 视频存放外卡文件路径 */
@@ -322,6 +328,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					mPalyerLayout.setVisibility(View.VISIBLE);
 					mNotconnected.setVisibility(View.GONE);
 					mConncetLayout.setVisibility(View.GONE);
+
+					mSettingBtn.setBackground(getResources().getDrawable(R.drawable.carrecorder_setting));
+					m8sBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_defalut_icon));
+					liveBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_icon));
 					break;
 				}
 			};
@@ -360,6 +370,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @author 曾浩
 	 * @throws
 	 */
+	@SuppressLint("NewApi")
 	private void initIpcState(int ipcS) {
 		switch (ipcS) {
 		case WIFI_STATE_FAILED:
@@ -367,11 +378,17 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mNotconnected.setVisibility(View.VISIBLE);
 			mConncetLayout.setVisibility(View.GONE);
 
+			mSettingBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_setting_1));
+			m8sBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_defalut_icon_1));
+			liveBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_icon_1));
 			break;
 		case WIFI_STATE_CONNING:
 			mPalyerLayout.setVisibility(View.GONE);
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.VISIBLE);
+			mSettingBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_setting_1));
+			m8sBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_defalut_icon_1));
+			liveBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_icon_1));
 			break;
 		case WIFI_STATE_SUCCESS:
 			GolukApplication.getInstance().stopDownloadList();
@@ -422,12 +439,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			i.putExtra("cn.com.mobnote.video.path", path);
 			i.putExtra("type", 2);
 			startActivity(i);
-			overridePendingTransition(R.anim.shortshare_start,0);
+			overridePendingTransition(R.anim.shortshare_start, 0);
 		} else {
 			Intent intent = new Intent(this, UserLoginActivity.class);
 			intent.putExtra("isInfo", "back");
 			startActivity(intent);
 		}
+
 	}
 
 	/**
@@ -497,6 +515,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		liveVideo = (ImageView) findViewById(R.id.live_video);
 		downloadSize = (RingView) findViewById(R.id.downloadSize);
 
+		live_gps = (ImageView) findViewById(R.id.live_gps_icon);
+		live_talk = (ImageView) findViewById(R.id.live_talk_icon);
+		live_release = (ImageView) findViewById(R.id.live_release_icon);
+
 		mRtmpPlayerView.setAudioMute(true);
 		mRtmpPlayerView.setZOrderMediaOverlay(true);
 		// mRtmpPlayerView.requestFocus();
@@ -513,7 +535,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		lp.leftMargin = 0;
 		mRtmpPlayerLayout.setLayoutParams(lp);
 
-		//m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
+		// m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 		mConnectTip.setText(wifiname);
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
@@ -546,6 +568,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		image2.setOnClickListener(this);
 		image3.setOnClickListener(this);
 		more.setOnTouchListener(this);
+		live_gps.setOnClickListener(this);
+		live_release.setOnClickListener(this);
+		live_talk.setOnClickListener(this);
+		liveVideo.setOnClickListener(this);
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		// findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -767,7 +793,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					}
 				}
 			} else {
-				dialog();
+				return;
+				// dialog();
 				// 未登录
 			}
 			break;
@@ -796,7 +823,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				Intent setting = new Intent(CarRecorderActivity.this, SettingsActivity.class);
 				startActivity(setting);
 			} else {
-				dialog();
+				return;
+				// dialog();
 			}
 			break;
 		case R.id.mFullScreen:
@@ -871,18 +899,31 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			click_ConnFailed();
 			break;
 		case R.id.liveBtn:
-			Intent intent = new Intent(this, LiveActivity.class);
-			String desc = et.getText().toString();
-			if (null == desc || "".equals(desc)) {
-				desc = "极路客精彩直播";
+
+			if (GolukApplication.getInstance().getIpcIsLogin()) {
+				if (mApp.isUserLoginSucess == false) {
+					Intent it = new Intent(this, UserLoginActivity.class);
+					it.putExtra("isInfo", "back");
+					startActivity(it);
+				} else {
+					Intent intent = new Intent(this, LiveActivity.class);
+					String desc = et.getText().toString();
+					if (null == desc || "".equals(desc)) {
+						desc = "极路客精彩直播";
+					}
+					mSettingData.desc = desc;
+					intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+					intent.putExtra(LiveActivity.KEY_GROUPID, "");
+					intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+					intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+					intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
+					startActivity(intent);
+				}
+
+			} else {
+				return;
 			}
-			mSettingData.desc = desc;
-			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-			intent.putExtra(LiveActivity.KEY_GROUPID, "");
-			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-			intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
-			startActivity(intent);
+
 			break;
 		case R.id.image1:
 			open_shareVideo(images[0].getName());
@@ -891,9 +932,29 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			open_shareVideo(images[1].getName());
 			break;
 		case R.id.image3:
-			Intent photoalbum = new Intent(CarRecorderActivity.this, PhotoAlbumActivity.class);
-			photoalbum.putExtra("from", "cloud");
-			startActivity(photoalbum);
+
+			if (mApp.isUserLoginSucess == false) {
+				Intent it = new Intent(this, UserLoginActivity.class);
+				it.putExtra("isInfo", "back");
+				startActivity(it);
+			} else {
+				Intent photoalbum = new Intent(CarRecorderActivity.this, PhotoAlbumActivity.class);
+				photoalbum.putExtra("from", "cloud");
+				startActivity(photoalbum);
+			}
+
+			break;
+		case R.id.live_video:
+			lsp.show();
+			break;
+		case R.id.live_gps_icon:
+			lsp.show();
+			break;
+		case R.id.live_talk_icon:
+			lsp.show();
+			break;
+		case R.id.live_release_icon:
+			lsp.show();
 			break;
 		default:
 			break;
@@ -1241,7 +1302,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					@Override
 					public void run() {
 						// mShareBtn.setVisibility(View.GONE);
-						//m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
+						// m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 
 						downloadFileNumber = 0;
 						mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
