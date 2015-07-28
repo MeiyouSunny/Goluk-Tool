@@ -152,7 +152,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private String videoname = "";
 
-	private int videoType = 0;
+	private int videoType = 1;
 
 	/**
 	 * 最新两个精彩视频或抢拍视频

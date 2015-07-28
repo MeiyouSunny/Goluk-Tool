@@ -24,6 +24,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomVideoView;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -48,7 +49,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	public static final int EXIT = -1;
 	private Editor mEditor = null;
 	private Bitmap mBGBitmap = null;
-	private VideoView videoStart = null;
+	private CustomVideoView videoStart = null;
 	private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	private int screenHeight = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
 	/** 我有Goluk和随便看看两个按钮 **/
@@ -81,7 +82,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		} else {
 			mClickLayout.setVisibility(View.VISIBLE);
 		}
-		videoStart = (VideoView) findViewById(R.id.videoStart);
+		videoStart = (CustomVideoView) findViewById(R.id.videoStart);
 		videoStart.setVideoURI(Uri.parse("android.resource://cn.com.mobnote.golukmobile/" + R.raw.start_video));
 		videoStart.start();
 
