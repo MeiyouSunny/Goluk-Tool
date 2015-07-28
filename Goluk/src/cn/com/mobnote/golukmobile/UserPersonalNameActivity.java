@@ -34,6 +34,8 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 	private TextView mTextCount = null;
 	/** 最大输入字数 **/
 	private static final int MAX_COUNT = 10;
+	/**输入超出的字数**/
+	private int number = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,18 +93,22 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			break;
 		// que认
 		case R.id.user_title_right:
-			String name = mEditName.getText().toString();
-			GolukDebugUtils.i("lily", "------UserPersonalNameActivity--修改昵称------" + name);
-			if (name.trim().isEmpty()) {
-				UserUtils.showDialog(this, "数据修改失败，昵称不能为空");
-			} else {
-				UserPersonalInfoActivity.clickBtn = true;
-				Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString("itName", name);
-				it.putExtras(bundle);
-				this.setResult(1, it);
-				this.finish();
+			if(number<0){
+				UserUtils.showDialog(this, "请输入10个字符以内的有效昵称");
+			}else{
+				String name = mEditName.getText().toString();
+				GolukDebugUtils.i("lily", "------UserPersonalNameActivity--修改昵称------" + name);
+				if (name.trim().isEmpty()) {
+					UserUtils.showDialog(this, "数据修改失败，昵称不能为空");
+				} else {
+					UserPersonalInfoActivity.clickBtn = true;
+					Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString("itName", name);
+					it.putExtras(bundle);
+					this.setResult(1, it);
+					this.finish();
+				}
 			}
 			break;
 		//
@@ -129,10 +135,10 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		@Override
 		public void afterTextChanged(Editable arg0) {
 			int num = arg0.length();
-			int number = MAX_COUNT - num;
-			if (number < 0) {
+			number = MAX_COUNT - num;
+			/*if (number < 0) {
 				number = 0;
-			}
+			}*/
 			mTextCount.setText("（" + number + "/" + MAX_COUNT + "）");
 		}
 	};

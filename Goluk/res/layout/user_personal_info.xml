@@ -137,7 +137,8 @@
                 android:textSize="14sp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:gravity="right"/>
+                android:gravity="right"
+                android:hint="介绍一下自己吧！"/>
 
             <ImageView
                 android:id="@+id/user_personal_arrow3"
