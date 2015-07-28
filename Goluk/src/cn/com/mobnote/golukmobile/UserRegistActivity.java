@@ -125,7 +125,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		Intent itRepassword = getIntent();
 		if (null != itRepassword.getStringExtra("intentRepassword")) {
 			String repwdNum = itRepassword.getStringExtra("intentRepassword").toString();
-			mEditTextPhone.setText(UserUtils.formatSavePhone(repwdNum));
+			mEditTextPhone.setText(repwdNum);
 			mEditTextPhone.setSelection(mEditTextPhone.getText().toString().length());
 		}
 

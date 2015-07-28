@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
+import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -47,6 +48,7 @@ public class WonderfulVideoListView {
 	private int type;
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	private String from = null;
+	private TextView empty = null;
 	
 	public WonderfulVideoListView(Context context, int type, String from) {
 		this.from = from;
@@ -61,6 +63,7 @@ public class WonderfulVideoListView {
 	}
 	
 	private void initView() {
+		empty = (TextView)mRootLayout.findViewById(R.id.empty);
 		mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
 		mStickyListHeadersListView = (StickyListHeadersListView)mRootLayout.findViewById(R.id.mStickyListHeadersListView);
 		mWonderfulVideoAdapter = new WonderfulVideoAdapter(mContext, mStickyListHeadersListView, type, from);
@@ -231,6 +234,8 @@ public class WonderfulVideoListView {
 				if (mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();
 				}
+				
+				checkListState();
 			}
 		});
 		task.execute("");
@@ -280,6 +285,17 @@ public class WonderfulVideoListView {
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+		checkListState();
+	}
+	
+	private void checkListState() {
+		if(mDataList.size() <= 0) {
+			empty.setVisibility(View.VISIBLE);
+			mStickyListHeadersListView.setVisibility(View.GONE);
+		}else {
+			empty.setVisibility(View.GONE);
+			mStickyListHeadersListView.setVisibility(View.VISIBLE);
+		}
 	}
 
 }

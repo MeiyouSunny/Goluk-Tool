@@ -40,8 +40,8 @@
 	
     <ImageView
         android:id="@+id/video_quality1"
-        android:layout_width="56dp"
-        android:layout_height="11.33dp"
+        android:layout_width="43.25dp"
+        android:layout_height="10.5dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
@@ -126,8 +126,8 @@
 
     <ImageView
         android:id="@+id/video_quality2"
-        android:layout_width="56dp"
-        android:layout_height="11.33dp"
+        android:layout_width="43.25dp"
+        android:layout_height="10.5dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"

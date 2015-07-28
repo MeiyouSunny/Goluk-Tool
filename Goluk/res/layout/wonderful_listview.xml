@@ -4,6 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
+    
+    <TextView 
+        android:visibility="gone"
+        android:id="@+id/empty"
+        android:text="当前没有视频"
+        android:textSize="18sp"
+        android:gravity="center"
+		android:textColor="@color/photoalbum_icon_color_gray"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+        />
 
     <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
         android:id="@+id/mStickyListHeadersListView"

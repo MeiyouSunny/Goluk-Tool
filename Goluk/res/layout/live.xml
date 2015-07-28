@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/white" >
 
-    <!-- 视频播放title -->
+    <!-- 直播title -->
 
     <RelativeLayout
         android:id="@+id/live_title_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg" >
+        android:background="@color/color_bg_comm" >
 
         <TextView
             android:id="@+id/live_back_btn"
@@ -29,36 +29,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/live_title"
             android:textColor="@color/white"
             android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/live_refirsh_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:background="@drawable/live_btn_more"
-            android:paddingRight="12dp" />
     </RelativeLayout>
 
-    <!-- 黑色分割线 -->
-
-    <View
-        android:id="@+id/live_title_solid"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/live_title_layout"
-        android:background="@color/border_bg" />
-
-    <!-- 视频详情title -->
+    <!-- 直播用户详情 -->
 
     <RelativeLayout
         android:id="@+id/live_video_desc_title"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_below="@id/live_title_solid"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/live_title_layout"
         android:background="@color/live_user_bg" >
 
         <!-- 用户头像 -->
@@ -106,42 +90,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:layout_toLeftOf="@id/live_lookcount"
             android:layout_toRightOf="@id/live_userhead"
             android:singleLine="true"
-            android:textColor="@color/live_nickname_color"
+            android:text="My"
+            android:textColor="@color/name_color"
             android:textSize="@dimen/live_nickname_size" />
 
-        <!-- 地址标识 -->
-
-        <ImageView
-            android:id="@+id/live_address_sign"
+        <TextView
+            android:id="@+id/live_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/live_nickname"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/imgdes"
-            android:src="@drawable/live_icon_address" />
-
-        <!-- 地址 -->
-
-        <TextView
-            android:id="@+id/live_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="8dp"
+            android:layout_below="@id/live_nickname"
+            android:layout_marginBottom="6dp"
             android:layout_toLeftOf="@id/live_lookcount"
-            android:layout_toRightOf="@id/live_address_sign"
             android:singleLine="true"
-            android:text=""
-            android:textColor="@color/live_address_color"
-            android:textSize="@dimen/live_address_size" />
+            android:text="今天13:44"
+            android:textColor="@color/live_time_desc"
+            android:textSize="@dimen/live_time_size" />
     </RelativeLayout>
 
-    <!-- 视频播放 -->
+    <!-- 视频播放区域 -->
 
     <RelativeLayout
         android:id="@+id/live_video_play_layout"
@@ -280,21 +251,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/live_video_play_layout"
-        android:background="@color/live_user_bg"
+        android:background="@color/white"
         android:paddingBottom="10dp" >
 
-        <!-- 视频描述 -->
-
-        <TextView
-            android:id="@+id/live_desc"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/live_desc_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/live_str_default_livedesc"
-            android:textColor="#8e8e8e"
-            android:textSize="12sp" />
+            android:background="@color/white" >
+
+            <!-- 更多按钮 -->
+
+            <ImageView
+                android:id="@+id/live_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/more"
+                android:contentDescription="@string/imgdes" />
+
+            <!-- 视频描述 -->
+
+            <TextView
+                android:id="@+id/live_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@id/live_more"
+                android:text="@string/live_str_default_livedesc"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
 
         <!-- 点赞　和　分享 -->
 
@@ -302,7 +294,7 @@
             android:id="@+id/live_okshare_layout"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_below="@id/live_desc"
+            android:layout_below="@id/live_desc_layout"
             android:layout_marginTop="10dp"
             layout="@layout/live_ok_layout" />
     </RelativeLayout>
@@ -316,6 +308,18 @@
         android:layout_below="@id/live_play_info_layout"
         android:layout_marginTop="0dp"
         android:background="#ededed" >
+
+        <!-- 定位按钮 -->
+
+        <Button
+            android:id="@+id/live_location_btn"
+            android:layout_width="44dp"
+            android:layout_height="34dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="14dp"
+            android:background="@drawable/location" />
     </RelativeLayout>
 
 </RelativeLayout>

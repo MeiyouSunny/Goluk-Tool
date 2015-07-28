@@ -422,6 +422,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			i.putExtra("cn.com.mobnote.video.path", path);
 			i.putExtra("type", 2);
 			startActivity(i);
+			overridePendingTransition(R.anim.shortshare_start,0);
 		} else {
 			Intent intent = new Intent(this, UserLoginActivity.class);
 			intent.putExtra("isInfo", "back");
@@ -871,7 +872,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.liveBtn:
 			Intent intent = new Intent(this, LiveActivity.class);
-			mSettingData.desc = et.getText().toString();
+			String desc = et.getText().toString();
+			if (null == desc || "".equals(desc)) {
+				desc = "极路客精彩直播";
+			}
+			mSettingData.desc = desc;
 			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
 			intent.putExtra(LiveActivity.KEY_GROUPID, "");
 			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");

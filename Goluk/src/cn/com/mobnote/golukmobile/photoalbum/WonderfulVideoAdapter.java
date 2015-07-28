@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -27,8 +26,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
@@ -238,7 +235,7 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		if (null != mBitmap) {
 			image.setImageBitmap(mBitmap);
 		}else {
-			image.setImageResource(R.drawable.tacitly_pic);
+			image.setImageResource(R.drawable.album_default_img);
 			if (lock) {
 				return;
 			}
@@ -288,7 +285,7 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		image.setVisibility(View.GONE);
 		if ("1080".equals(videoHP)) {
 			image.setVisibility(View.VISIBLE);
-			image.setBackgroundResource(R.drawable.hd1080p);
+			image.setBackgroundResource(R.drawable.carrecorder_liveindex_icon_1080);
 		}
 	}
 

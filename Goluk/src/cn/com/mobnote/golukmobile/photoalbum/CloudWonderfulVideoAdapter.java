@@ -219,7 +219,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		if (null != mBitmap) {
 			image.setImageBitmap(mBitmap);
 		}else {
-			image.setImageResource(R.drawable.tacitly_pic);
+			image.setImageResource(R.drawable.album_default_img);
 			if (lock) {
 				return;
 			}
@@ -270,7 +270,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		GolukDebugUtils.e("", "TTTTTTTTTTTT===@@@@@===videoHP="+videoHP);
 		if ("1080P".equals(videoHP)) {
 			image.setVisibility(View.VISIBLE);
-			image.setBackgroundResource(R.drawable.hd1080p);
+			image.setBackgroundResource(R.drawable.carrecorder_liveindex_icon_1080);
 		}
 	}
 
