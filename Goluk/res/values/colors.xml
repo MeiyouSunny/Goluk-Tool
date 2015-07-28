@@ -30,6 +30,7 @@
     <color name="share_btn_bg">#14AFDC</color>
     <color name="name_color">#1163a2</color>
     <color name="live_time_desc">#888888</color>
+    <color name="blue">#0000FF</color>
 
     <!-- 按钮的背景颜色 -->
     <color name="carrecorder_del_bg">#dedede</color>
