@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,13 +35,15 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.JsonCreateUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
@@ -52,7 +55,6 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.FileUtils;
@@ -277,10 +279,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		/** 使用SSO授权必须添加如下代码 */
-		UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode);
-		if (ssoHandler != null) {
-			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		if (null != sharePlatform) {
+			sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -1831,6 +1831,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			GolukDebugUtils.e("", "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令失败------22222");
 			return;
 		}
+		mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
 		String newFilePath = FileUtils.javaToLibPath(picName);
 		String uploadJson = JsonUtil.getUploadSnapJson(mCurrentVideoId, newFilePath);
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveUploadPic,
@@ -1858,9 +1859,12 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, vid);
 	}
 
+	private Bitmap mThumbBitmap = null;
+
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == SquareCmd_Req_GetShareUrl) {
+			// 销毁对话框
 			// 销毁对话框
 			LiveDialogManager.getManagerInstance().dismissShareProgressDialog();
 			if (1 != msg) {
@@ -1890,9 +1894,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				String ttl = name + "的直播视频分享";
 				if ("".equals(coverurl)) {
 				}
+
+				final String defalutInputStr = ttl + "(使用#极路客Goluk#拍摄)";
 				// 设置分享内容
 				CustomShareBoard sb = new CustomShareBoard(LiveActivity.this, sharePlatform, shareurl, coverurl,
-						describe, ttl);
+						describe, ttl, mThumbBitmap, defalutInputStr);
 				sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			} catch (JSONException e) {
 				e.printStackTrace();

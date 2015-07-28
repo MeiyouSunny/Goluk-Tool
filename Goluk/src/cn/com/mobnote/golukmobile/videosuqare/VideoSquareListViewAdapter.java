@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,21 +12,12 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.bokecc.sdk.mobile.play.DWMediaPlayer;
-
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.umeng.widget.CustomShareBoard;
-import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,15 +26,28 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GolukUtils;
+
+import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 
 @SuppressLint("InflateParams")
-public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn,OnTouchListener {
+public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqareManagerFn, OnTouchListener {
 	private Context mContext = null;
 	private List<VideoSquareInfo> mVideoSquareListData = null;
 	private HashMap<String, DWMediaPlayer> mDWMediaPlayerList = null;
@@ -116,7 +121,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		}
 
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
-			//holder.reporticon.setVisibility(View.GONE);
+			// holder.reporticon.setVisibility(View.GONE);
 			holder.liveicon.setVisibility(View.VISIBLE);
 			holder.looknumber.setVisibility(View.GONE);
 			holder.looknumberIcon.setVisibility(View.GONE);
@@ -129,14 +134,14 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
 				mVideoSquareInfo, form, sharePlatform, this));
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {// 点赞过
-			Drawable drawable= mContext.getResources().getDrawable(R.drawable.like_btn_press);  
-			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
-			holder.likebtn.setCompoundDrawables(drawable,null,null,null);  // 设置点赞背景
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.like_btn_press);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			holder.likebtn.setCompoundDrawables(drawable, null, null, null); // 设置点赞背景
 		} else {
 
-			Drawable drawable= mContext.getResources().getDrawable(R.drawable.like_btn);  
-			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
-			holder.likebtn.setCompoundDrawables(drawable,null,null,null);// 设置默认点赞背景
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.like_btn);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			holder.likebtn.setCompoundDrawables(drawable, null, null, null);// 设置默认点赞背景
 		}
 
 		if ("1".equals(mVideoSquareInfo.mUserEntity.headportrait)) {
@@ -169,7 +174,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		holder.likebtn.setText(mVideoSquareInfo.mVideoEntity.praisenumber);
 		holder.mPlayerLayout.setOnClickListener(new VideoOnClickListener(mVideoSquareListData, holder,
 				mDWMediaPlayerList, mVideoSquareInfo, mContext, form));
-
 
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);
@@ -233,12 +237,9 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 					}
 				}
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
-
 		return time;
 	}
 
@@ -257,8 +258,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		Button likebtn;
 		RingView mRingView;
 	}
-
-
 
 	VideoSquareOnClickListener mVideoSquareOnClickListener = null;
 
@@ -282,28 +281,30 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 						String shareurl = data.getString("shorturl");
 						String coverurl = data.getString("coverurl");
 						String describe = data.optString("describe");
+
+						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+
 						if (TextUtils.isEmpty(describe)) {
-							if("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)){
+							if ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)) {
 								describe = "#极路客直播#";
-							}else{
+							} else {
 								describe = "#极路客精彩视频#";
 							}
-						}
-
-						if ("".equals(coverurl)) {
-
 						}
 						String ttl = "极路客精彩视频分享";
 						if ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)) {// 直播
 							ttl = mVideoSquareOnClickListener.mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
-							
+							realDesc = ttl + "(使用#极路客Goluk#拍摄)";
 						}
+
+						Bitmap bitmap = getThumbBitmap(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.picture);
+
 						if (mContext instanceof VideoSquarePlayActivity) {
 							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mContext;
 							if (vspa != null && !vspa.isFinishing()) {
 								vspa.mCustomProgressDialog.close();
 								CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl,
-										coverurl, describe, ttl);
+										coverurl, describe, ttl, bitmap, realDesc);
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
 
@@ -315,7 +316,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 								if (vsa.mCustomProgressDialog != null) {
 									vsa.mCustomProgressDialog.close();
 									CustomShareBoard shareBoard = new CustomShareBoard(vsa, sharePlatform, shareurl,
-											coverurl, describe, ttl);
+											coverurl, describe, ttl, bitmap, realDesc);
 									shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 								}
 
@@ -327,7 +328,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 						GolukUtils.showToast(mContext, "网络异常，请检查网络");
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else {
@@ -337,9 +337,21 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 		}
 
 	}
-	
-	
-	
+
+	public Bitmap getThumbBitmap(String netUrl) {
+		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
+		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
+		File file = new File(path + File.separator + name);
+		Bitmap t_bitmap = null;
+		if (null == file) {
+			return null;
+		}
+		if (file.exists()) {
+			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 100, 100);
+		}
+		return t_bitmap;
+	}
+
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		int action = event.getAction();
@@ -350,12 +362,12 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				Drawable more_down = mContext.getResources().getDrawable(R.drawable.share_btn_press);
-				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null,null, null);
+				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null, null, null);
 				sharebtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
 				Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
-				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null,null, null);
+				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null, null, null);
 				sharebtn.setTextColor(Color.rgb(136, 136, 136));
 				break;
 			}

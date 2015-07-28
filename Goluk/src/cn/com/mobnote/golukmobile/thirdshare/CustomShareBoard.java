@@ -1,11 +1,8 @@
-/**
- * 
- */
-
-package cn.com.mobnote.umeng.widget;
+package cn.com.mobnote.golukmobile.thirdshare;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +11,11 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoShareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
@@ -26,10 +23,10 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
 
-/**
- * 
- */
 public class CustomShareBoard extends PopupWindow implements OnClickListener {
+
+	/** 新浪微博支持多条消息的值，大于等于字个值，就支持多条消息，否则只支持单条消息 */
+	private final int SUPPORT_MUTI_MSG = 10351;
 
 	/** 微信 */
 	public static final String TYPE_WEIXIN = "2";
@@ -37,12 +34,12 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	public static final String TYPE_WEIBO_XINLANG = "3";
 	/** QQ */
 	public static final String TYPE_QQ = "4";
-	/** QQ空间 **/
-	public static final String TYPE_QQ_ZONE = "7";
 	/** 微信朋友圈 */
 	public static final String TYPE_WEIXIN_CIRCLE = "5";
 	/** 短信 */
 	public static final String TYPE_SMS = "6";
+	/** QQ空间 **/
+	public static final String TYPE_QQ_ZONE = "7";
 
 	private UMSocialService mController = UMServiceFactory.getUMSocialService(Constants.DESCRIPTOR);
 	private Activity mActivity;
@@ -55,8 +52,12 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	String coverurl = "";
 	String describe = "";
 	String ttl = "";
+	Bitmap mThumbBitmap = null;
+	private String mRealDesc = null;
 
-	public CustomShareBoard(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl) {
+	public CustomShareBoard(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
+			Bitmap bitmap, String realDesc) {
+
 		super(activity);
 		this.mActivity = activity;
 		sharePlatform = spf;
@@ -64,18 +65,15 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		coverurl = curl;
 		describe = db;
 		ttl = tl;
+		mThumbBitmap = bitmap;
+		mRealDesc = realDesc;
+
 		initView(activity);
 	}
 
-	public void setShareData(String surl, String curl, String db, String tl) {
-		shareurl = surl;
-		coverurl = curl;
-		describe = db;
-		ttl = tl;
-	}
-	
-	public void setShareType(String type) {
-		mCurrentShareType = type;
+	private void printStr() {
+		GolukDebugUtils.e("", "CustomShareBoard-----shareurl: " + shareurl + "   coverurl:" + coverurl + "   describe:"
+				+ describe + " ttl: " + ttl);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -86,7 +84,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.qq).setOnClickListener(this);
 		rootView.findViewById(R.id.qqZone).setOnClickListener(this);
 		rootView.findViewById(R.id.sina).setOnClickListener(this);
-		// rootView.findViewById(R.id.share_cancel).setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
 		setHeight(LayoutParams.WRAP_CONTENT);
@@ -117,6 +114,10 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		default:
 			break;
 		}
+	}
+
+	public void setShareType(String type) {
+		mCurrentShareType = type;
 	}
 
 	// 点击　“微信”
@@ -158,12 +159,49 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		performShare(SHARE_MEDIA.QZONE);
 	}
 
-	// 点击　“新浪微博”
 	public void click_sina() {
-		sharePlatform.setShareContent(shareurl + "&type=3", coverurl, describe, ttl);
+		GolukDebugUtils.e("", "sina-------click----11111");
+		if (null == sharePlatform) {
+			return;
+		}
+
+		GolukDebugUtils.e("", "sina-------click----2222");
+		if (!sharePlatform.mSinaWBUtils.isAccessValid()) {
+			GolukDebugUtils.e("", "sina-------click----3333");
+			// 去授权
+			sharePlatform.mSinaWBUtils.authorize();
+			return;
+		}
 		mCurrentShareType = TYPE_WEIBO_XINLANG;
 		this.shareUp();// 上报分享统计
-		performShare(SHARE_MEDIA.SINA);
+		printStr();
+		final String t_des = describe;
+		final String inputDefaultContent = mRealDesc;
+		final String title = ttl;
+		final String dataUrl = shareurl;
+		final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;
+		final Bitmap t_bitmap = mThumbBitmap;
+		GolukDebugUtils.e("", "sina-------click----44444" + actionUrl);
+		if (sharePlatform.mSinaWBUtils.isInstallClient()) {
+			GolukDebugUtils.e("", "sina-------click----55555");
+			final int supportApi = sharePlatform.mSinaWBUtils.getSupportAPI();
+			GolukDebugUtils.e("", "sina-------click----6666:  " + supportApi);
+			if (supportApi >= SUPPORT_MUTI_MSG) {
+				GolukDebugUtils.e("", "sina-------click----77777:  ");
+				sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
+						true);
+			} else {
+				GolukDebugUtils.e("", "sina-------click----88888:  ");
+				sharePlatform.mSinaWBUtils.sendSingleMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl,
+						t_bitmap);
+			}
+		} else {
+			sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
+					false);
+			GolukDebugUtils.e("", "sina-------click----999999:  ");
+			// GolukUtils.showToast(mActivity, PROMPT_UNINSTALL);
+		}
+
 	}
 
 	public void shareUp() {

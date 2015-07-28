@@ -39,12 +39,12 @@ import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.umeng.widget.CustomShareBoard;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.FileUtils;
@@ -539,7 +539,7 @@ public class VideoShareActivity extends BaseActivity implements OnClickListener 
 			// 设置分享内容
 			// sharePlatform.setShareContent(shortUrl, coverUrl,
 			// mDesEdit.getText().toString());
-			CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shortUrl, coverUrl, describe, title);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shortUrl, coverUrl, describe, title, null, null);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
 		} catch (JSONException e) {

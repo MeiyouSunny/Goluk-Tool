@@ -7,9 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
-
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.umeng.widget.Constants;
+import cn.com.mobnote.golukmobile.thirdshare.Constants;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;

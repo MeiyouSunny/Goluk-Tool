@@ -1,11 +1,10 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
-import com.umeng.socialize.sso.UMSsoHandler;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -29,23 +28,18 @@ public class VideoSquareActivity implements OnClickListener {
 	private LinearLayout mTypeList = null;
 	private LinearLayout lookworld = null;
 	private TextView hotTitle = null;
-	private TextView squareTitle = null; 
+	private TextView squareTitle = null;
 	private TextView lookTitle = null;
-	//private ImageView hotImage = null;
-	//private ImageView squareImage = null;
-	
-	/** 返回按钮 */
-	//private ImageButton mBackBtn = null;
 
 	SharePlatformUtil sharePlatform;
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
-	
+
 	RelativeLayout mRootLayout = null;
 	Context mContext = null;
 	MainActivity ma = null;
-	
-	public VideoSquareActivity(RelativeLayout rootlayout,Context context) {
+
+	public VideoSquareActivity(RelativeLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
 		init();
@@ -57,35 +51,31 @@ public class VideoSquareActivity implements OnClickListener {
 		mViewPager.setOffscreenPageLimit(3);
 		sharePlatform = new SharePlatformUtil(mContext);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
-		mVideoSquareAdapter = new VideoSquareAdapter(mContext,sharePlatform);
+		mVideoSquareAdapter = new VideoSquareAdapter(mContext, sharePlatform);
 		mViewPager.setAdapter(mVideoSquareAdapter);
 		mViewPager.setOnPageChangeListener(opcl);
-		
+
 		hot = (ImageView) mRootLayout.findViewById(R.id.line_hot);
 		square = (ImageView) mRootLayout.findViewById(R.id.line_square);
 		look = (ImageView) mRootLayout.findViewById(R.id.line_look);
-		
+
 		mVideoList = (LinearLayout) mRootLayout.findViewById(R.id.mVideoList);
 		mTypeList = (LinearLayout) mRootLayout.findViewById(R.id.mTypeList);
 		lookworld = (LinearLayout) mRootLayout.findViewById(R.id.lookworld);
-		
+
 		hotTitle = (TextView) mRootLayout.findViewById(R.id.hot_title);
 		squareTitle = (TextView) mRootLayout.findViewById(R.id.square_title);
 		lookTitle = (TextView) mRootLayout.findViewById(R.id.look_title);
-		
-		//squareImage = (ImageView) mRootLayout.findViewById(R.id.square_image);
-		//hotImage = (ImageView) mRootLayout.findViewById(R.id.hot_image);
+
+		// squareImage = (ImageView)
+		// mRootLayout.findViewById(R.id.square_image);
+		// hotImage = (ImageView) mRootLayout.findViewById(R.id.hot_image);
 		setListener();
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    /**使用SSO授权必须添加如下代码 */
-	    UMSsoHandler ssoHandler = sharePlatform.mController.getConfig().getSsoHandler(requestCode) ;
-	    if(ssoHandler != null){
-	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-	    }
+		sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
 	}
-
 
 	private void setListener() {
 		mVideoList.setOnClickListener(this);
@@ -98,8 +88,8 @@ public class VideoSquareActivity implements OnClickListener {
 		if (!isSucess) {
 			return;
 		}
-		
-		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
+
+		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 	}
 
 	private OnPageChangeListener opcl = new OnPageChangeListener() {
@@ -129,38 +119,31 @@ public class VideoSquareActivity implements OnClickListener {
 			hot.setVisibility(View.VISIBLE);
 			square.setVisibility(View.INVISIBLE);
 			look.setVisibility(View.INVISIBLE);
-			
+
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 			lookTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
-		} else if (1 == type){
-			
+		} else if (1 == type) {
+
 			square.setVisibility(View.VISIBLE);
 			hot.setVisibility(View.INVISIBLE);
 			look.setVisibility(View.INVISIBLE);
-			
-			hotTitle.setTextColor(mContext.getResources().getColor(
-					R.color.textcolor_qx));
-			lookTitle.setTextColor(mContext.getResources().getColor(
-					R.color.textcolor_qx));
-			squareTitle.setTextColor(mContext.getResources().getColor(
-					R.color.textcolor_select));
-			
-			//squareImage.setBackgroundResource(R.drawable.home_video_btn_click);
-			//hotImage.setBackgroundResource(R.drawable.home_hot_btn);
-		}else{
-			
-			
+
+			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
+			lookTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
+			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
+
+			// squareImage.setBackgroundResource(R.drawable.home_video_btn_click);
+			// hotImage.setBackgroundResource(R.drawable.home_hot_btn);
+		} else {
+
 			look.setVisibility(View.VISIBLE);
 			hot.setVisibility(View.INVISIBLE);
 			square.setVisibility(View.INVISIBLE);
-			
-			hotTitle.setTextColor(mContext.getResources().getColor(
-					R.color.textcolor_qx));
-			squareTitle.setTextColor(mContext.getResources().getColor(
-					R.color.textcolor_qx));
-			lookTitle.setTextColor(mContext.getResources().getColor(
-					R.color.textcolor_select));
+
+			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
+			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
+			lookTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 		}
 	}
 
@@ -186,8 +169,7 @@ public class VideoSquareActivity implements OnClickListener {
 			break;
 		}
 	}
-	
-	
+
 	public void onBackPressed() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onBackPressed();
@@ -211,8 +193,8 @@ public class VideoSquareActivity implements OnClickListener {
 			mVideoSquareAdapter.onDestroy();
 		}
 	}
-	
-	public void exit(){
+
+	public void exit() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onDestroy();
 		}

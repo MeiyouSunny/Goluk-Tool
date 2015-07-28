@@ -37,6 +37,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
+import com.umeng.socialize.sso.UMSsoHandler;
 
 @SuppressLint("HandlerLeak")
 public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
@@ -598,6 +599,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (this.mShareDealTool != null) {
+			this.mShareDealTool.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
 	// 请求分享信息
 	private void requestShareInfo() {
 
@@ -658,17 +667,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			if (describe == null || "".equals(describe)) {
 				describe = "#极路客精彩视频#";
 			}
+			final String inputDeafultStr = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 			GolukDebugUtils.e("", "视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
-			this.mShareDealTool.toShare(shortUrl, coverUrl, describe, title);
-
-			// // 设置分享内容
-			// // sharePlatform.setShareContent(shortUrl, coverUrl,
-			// // mDesEdit.getText().toString());
-			// CustomShareBoard shareBoard = new CustomShareBoard(this,
-			// sharePlatform, shortUrl, coverUrl, describe, title);
-			// shareBoard.showAtLocation(this.getWindow().getDecorView(),
-			// Gravity.BOTTOM, 0, 0);
-
+			this.mShareDealTool.toShare(shortUrl, coverUrl, describe, title, mUploadVideo.getThumbBitmap(),
+					inputDeafultStr);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

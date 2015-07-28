@@ -1,13 +1,15 @@
 package cn.com.mobnote.golukmobile.startshare;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.SharePlatformUtil;
-import cn.com.mobnote.umeng.widget.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 
 public class ShareDeal implements OnClickListener {
 	private RelativeLayout mYouMengRootLayout = null;
@@ -16,7 +18,7 @@ public class ShareDeal implements OnClickListener {
 	private CustomShareBoard mShareBoard = null;
 	/** 保存当前的分享方式 */
 	private String mCurrentShareType = "2";
-	
+
 	private int txtColor = 0;
 
 	public ShareDeal(Activity activity, RelativeLayout rootLayout) {
@@ -24,7 +26,7 @@ public class ShareDeal implements OnClickListener {
 		mYouMengRootLayout = rootLayout;
 		mSharePlatform = new SharePlatformUtil(mActivity);
 		mSharePlatform.configPlatforms();// 设置分享平台的参数
-		
+
 		txtColor = mActivity.getResources().getColor(R.color.youmeng_share_txt_color);
 
 		initView();
@@ -32,7 +34,7 @@ public class ShareDeal implements OnClickListener {
 
 	private void initView() {
 		mYouMengRootLayout.setBackgroundResource(R.color.youmeng_share_bg);
-		TextView tv =(TextView) mYouMengRootLayout.findViewById(R.id.share_text);
+		TextView tv = (TextView) mYouMengRootLayout.findViewById(R.id.share_text);
 		tv.setTextSize(13);
 		tv.setTextColor(txtColor);
 		mYouMengRootLayout.findViewById(R.id.wechat).setOnClickListener(this);
@@ -42,8 +44,8 @@ public class ShareDeal implements OnClickListener {
 		mYouMengRootLayout.findViewById(R.id.sina).setOnClickListener(this);
 	}
 
-	public void toShare(String surl, String curl, String db, String tl) {
-		mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, surl, curl, db, tl);
+	public void toShare(String surl, String curl, String db, String tl, Bitmap bitmap, String inputDeafultStr) {
+		mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, surl, curl, db, tl, bitmap, inputDeafultStr);
 		mShareBoard.setShareType(mCurrentShareType);
 		if (mCurrentShareType.equals(CustomShareBoard.TYPE_WEIXIN)) {
 			mShareBoard.click_wechat();
@@ -56,6 +58,10 @@ public class ShareDeal implements OnClickListener {
 		} else if (mCurrentShareType.equals(CustomShareBoard.TYPE_WEIBO_XINLANG)) {
 			mShareBoard.click_sina();
 		}
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		mSharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
@@ -90,7 +96,6 @@ public class ShareDeal implements OnClickListener {
 		default:
 			break;
 		}
-
 	}
 
 	private void click_deal(String type) {
@@ -98,5 +103,4 @@ public class ShareDeal implements OnClickListener {
 			((VideoEditActivity) mActivity).shareClick(type);
 		}
 	}
-
 }

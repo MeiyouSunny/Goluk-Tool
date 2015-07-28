@@ -1,11 +1,12 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package cn.com.mobnote.umeng.widget;
+package cn.com.mobnote.golukmobile.thirdshare;
 
 public class Constants {
     

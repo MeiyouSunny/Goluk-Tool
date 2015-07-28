@@ -174,6 +174,10 @@ public class UploadVideo {
 	final String fileFolder = Environment.getExternalStorageDirectory().getPath() + PATH_FS1 + "/Cache";
 	private String thumbFile = fileFolder + "/thumb11.jpg";
 	private Bitmap mShortBitmap = null;
+	
+	public Bitmap getThumbBitmap() {
+		return mShortBitmap;
+	}
 
 	// 获取缩略图
 	private void createThumb() {

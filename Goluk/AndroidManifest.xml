@@ -39,7 +39,7 @@
         <activity
             android:name="cn.com.mobnote.golukmobile.UserRepwdActivity"
             android:screenOrientation="portrait" />
-        <activity 
+        <activity
             android:name="cn.com.mobnote.golukmobile.UserIdentifyActivity"
             android:screenOrientation="portrait" />
         <!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
@@ -112,7 +112,8 @@
         <activity
             android:name="cn.com.mobnote.golukmobile.startshare.VideoEditActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"  android:theme="@style/activityTheme"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/activityTheme" />
         <activity
             android:name="cn.com.mobnote.golukmobile.startshare.VideoShareActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
@@ -238,22 +239,18 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        
-          <activity
+        <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayer"
             android:configChanges="screenSize|keyboardHidden|orientation|screenLayout"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        
-        
         <activity
             android:name="cn.com.mobnote.golukmobile.player.VideoPlayerView"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
-        
 
         <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
         <activity
@@ -301,8 +298,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"  />
-                
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <!-- 添加百度地图key -->
         <!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
         <meta-data
@@ -318,6 +315,21 @@
                 <action android:name="com.rd.car.RECORDER_MESSAGE" />
             </intent-filter>
         </receiver>
+
+        <!-- 注册新浪微博 -->
+
+        <service
+            android:name="com.sina.weibo.sdk.net.DownloadService"
+            android:exported="false" >
+        </service>
+
+        <!-- 必须注册在微博授权，分享微博时候用到 -->
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

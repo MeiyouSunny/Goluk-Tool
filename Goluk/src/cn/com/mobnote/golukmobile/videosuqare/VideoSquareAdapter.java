@@ -1,7 +1,7 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import io.vov.vitamio.utils.Log;
-import cn.com.mobnote.golukmobile.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
