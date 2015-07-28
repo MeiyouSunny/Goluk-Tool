@@ -56,11 +56,13 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 
 	private SharedPreferences mSharedPreferences = null;
 	private Editor mEditor = null;
+	/** 重置密码跳转标志 **/
+	private String repwdOk = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); 
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_repwd);
 
@@ -115,6 +117,15 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			mEditTextPhone.setText(UserUtils.formatSavePhone(phone));
 			mEditTextPhone.setSelection(mEditTextPhone.getText().toString().length());
 		}
+
+		/**
+		 * 判断是从哪个入口进行的注册
+		 */
+		Intent itRepwd = getIntent();
+		if (null != itRepwd.getStringExtra("fromRegist")) {
+			repwdOk = itRepwd.getStringExtra("fromRegist").toString();
+		}
+		GolukDebugUtils.i("final", "--------UserRegistActivty-------registOk----" + repwdOk);
 
 		putPhones();
 
@@ -266,6 +277,9 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_DIFFERENT, false);
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PHONE, phone);
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PASSWORD, password);
+			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_INTER_REGIST, repwdOk);
+			GolukDebugUtils.i("final", "------UserRegistActivity-------identifyCallbackInterface-------registOk------"
+					+ repwdOk);
 			startActivity(getIdentify);
 			break;
 		// 验证码获取失败

@@ -281,6 +281,14 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		case R.id.user_login_forgetpwd:
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			Intent itForget = new Intent(UserLoginActivity.this, UserRepwdActivity.class);
+			GolukDebugUtils.i("final", "-----------UserLoginActivity忘记密码-----------" + justLogin);
+			if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
+				itForget.putExtra("fromRegist", "fromStart");
+			} else if (justLogin.equals("indexmore")) {// 从更多页个人中心注册
+				itForget.putExtra("fromRegist", "fromIndexMore");
+			} else if (justLogin.equals("setup")) {// 从设置页注册
+				itForget.putExtra("fromRegist", "fromSetup");
+			}
 			startActivity(itForget);
 			break;
 		}
@@ -388,7 +396,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 										Intent it = new Intent(UserLoginActivity.this, UserRegistActivity.class);
 										it.putExtra("intentLogin",
 												mEditTextPhoneNumber.getText().toString().replace("-", ""));
-										it.putExtra("fromRegist", "fromStart");
 
 										if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
 											it.putExtra("fromRegist", "fromStart");
