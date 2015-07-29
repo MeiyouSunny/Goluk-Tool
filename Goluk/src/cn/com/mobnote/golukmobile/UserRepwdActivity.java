@@ -78,7 +78,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		}
 		initView();
 		// title
-		mTextViewTitle.setText("重设密码");
+		mTextViewTitle.setText("找回密码");
 
 	}
 
