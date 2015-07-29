@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <RelativeLayout
+           <RelativeLayout
                 android:id="@+id/vLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
@@ -94,7 +94,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </RelativeLayout> 
-
             <LinearLayout
                 android:id="@+id/mLoadingLayout"
                 android:layout_width="fill_parent"
@@ -136,7 +135,7 @@
                     android:background="@drawable/carrecorder_play_btn" />
             </RelativeLayout>
 
-            <RelativeLayout
+           <RelativeLayout
                 android:id="@+id/mConncetLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -421,20 +420,6 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/bottomLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center_vertical|center"
-        android:visibility="invisible" >
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_ipc_8s"
-            android:visibility="invisible" />
-    </LinearLayout>
 
     <ImageButton
         android:id="@+id/m8sBtn"
