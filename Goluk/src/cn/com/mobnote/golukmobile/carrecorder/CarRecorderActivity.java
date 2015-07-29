@@ -539,7 +539,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		// m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 		mConnectTip.setText(wifiname);
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
-			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		}
 
 		String addr = GolukApplication.getInstance().mCurAddr;
@@ -1263,7 +1263,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+				m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 			}
 		});
 	}
@@ -1329,7 +1329,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 				}
 			});
 		}
@@ -1812,7 +1812,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		if (list != null && list.size() > 0) {
 			File vfile = null;
-			for (int i = list.size() - 1; i < list.size(); i--) {
+			for (int i = list.size() - 1; i >= 0; i--) {
 				videoname = list.get(i);
 				vfile = new File(path + videoname);
 
