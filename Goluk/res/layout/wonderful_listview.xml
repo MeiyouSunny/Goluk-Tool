@@ -8,7 +8,7 @@
     <TextView 
         android:visibility="gone"
         android:id="@+id/empty"
-        android:text="当前没有视频"
+        android:text="@string/photoalbum_no_video_text"
         android:textSize="18sp"
         android:gravity="center"
 		android:textColor="@color/photoalbum_icon_color_gray"

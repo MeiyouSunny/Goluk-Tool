@@ -50,6 +50,14 @@ public class FileInfoManagerUtils {
 				for(int j = i + 1; j <= files.size() - 1; j++) {
 					String fileI = files.get(i);
 					String fileJ = files.get(j);
+					if(fileI.length() >= 17) {
+						continue;
+					}
+					
+					if(fileJ.length() >= 17) {
+						continue;
+					}
+					
 					long timeI = Long.valueOf(fileI.substring(5, 17));
 					long timeJ = Long.valueOf(fileJ.substring(5, 17));
 					if(timeI > timeJ){
