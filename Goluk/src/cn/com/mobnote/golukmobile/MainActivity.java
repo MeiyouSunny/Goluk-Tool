@@ -20,7 +20,6 @@ import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -31,7 +30,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -66,11 +64,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -244,6 +238,31 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
+		
+		// 未登录跳转登录
+		Intent itStart_have = getIntent();
+		if (null != itStart_have.getStringExtra("userstart")) {
+			String start_have = itStart_have.getStringExtra("userstart").toString();
+			if ("start_have".equals(start_have)) {
+				Intent it = new Intent(MainActivity.this, UserLoginActivity.class);
+				// 登录页回调判断
+				it.putExtra("isInfo", "main");
+				mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+				mEditor = mPreferences.edit();
+				mEditor.putString("toRepwd", "start");
+				mEditor.commit();
+				// 在黑页面判断是注销进来的还是首次登录进来的
+				if (!mApp.loginoutStatus) {// 注销
+					// 获取注销成功后传来的信息
+					mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+					String phone = mPreferences.getString("setupPhone", "");// 最后一个参数为默认值
+					it.putExtra("startActivity", phone);
+					startActivity(it);
+				} else {
+					startActivity(it);
+				}
+			}
+		}
 
 	}
 

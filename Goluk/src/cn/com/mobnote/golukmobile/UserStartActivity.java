@@ -19,7 +19,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.VideoView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
@@ -146,27 +145,17 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		switch (arg0.getId()) {
 		case R.id.user_start_have:
 			// 我有Goluk
-			Intent it = new Intent(UserStartActivity.this, UserLoginActivity.class);
-			// 登录页回调判断
-			it.putExtra("isInfo", "main");
-			mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-			mEditor = mPreferences.edit();
-			mEditor.putString("toRepwd", "start");
-			mEditor.commit();
-			// 在黑页面判断是注销进来的还是首次登录进来的
-			if (!mApp.loginoutStatus) {// 注销
-				it.putExtra("startActivity", phone);
-				startActivity(it);
-			} else {
-				startActivity(it);
-			}
+			Intent itHave = new Intent(UserStartActivity.this,MainActivity.class);
+			itHave.putExtra("userstart", "start_have");
+			startActivity(itHave);
+			this.finish();
 			break;
 
 		case R.id.user_start_look:
 			// 随便看看
-			Intent it2 = new Intent(UserStartActivity.this, MainActivity.class);
+			Intent itLook = new Intent(UserStartActivity.this, MainActivity.class);
 			GolukDebugUtils.i("lily", "======MainActivity==UserStartActivity====");
-			startActivity(it2);
+			startActivity(itLook);
 			this.finish();
 			break;
 		//关闭

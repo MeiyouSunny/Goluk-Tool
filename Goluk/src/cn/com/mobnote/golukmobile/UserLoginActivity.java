@@ -238,12 +238,9 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 					mBtnLogin.setEnabled(false);
 				}
 			}
-
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-
 			}
-
 			@Override
 			public void afterTextChanged(Editable arg0) {
 
@@ -258,7 +255,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		case R.id.back_btn:
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			UserUtils.hideSoftMethod(this);
-			finish();
+			this.finish();
 			break;
 		// 登陆按钮
 		case R.id.user_login_layout_btn:
@@ -366,12 +363,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
 			mBackButton.setEnabled(true);
-
-			if (justLogin.equals("main")) {
-				mApplication.mLoginManage.setUserLoginInterface(null);
-				Intent login = new Intent(UserLoginActivity.this, MainActivity.class);
-				startActivity(login);
-			}
 			this.finish();
 			break;
 		case 2:
@@ -549,5 +540,5 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		String packageName = context.getPackageName();
 		return packageName;
 	}
-
+	
 }
