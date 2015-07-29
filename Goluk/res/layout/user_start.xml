@@ -8,6 +8,13 @@
     	    android:id="@+id/videoStart"
     	    android:layout_width="match_parent"
     	    android:layout_height="match_parent" />
+    	<ImageView
+            android:id="@+id/click_close_btn"
+            android:layout_width="35dp"
+            android:layout_height="33dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/close_btn" />
 
 		<LinearLayout 
 		    android:id="@+id/user_start_click"
