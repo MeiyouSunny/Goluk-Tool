@@ -573,6 +573,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		live_release.setOnClickListener(this);
 		live_talk.setOnClickListener(this);
 		liveVideo.setOnClickListener(this);
+		liveTime.setOnClickListener(this);
+		
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		// findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -955,6 +957,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			lsp.show();
 			break;
 		case R.id.live_release_icon:
+			lsp.show();
+			break;
+		case R.id.live_time:
 			lsp.show();
 			break;
 		default:
