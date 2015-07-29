@@ -75,7 +75,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); 
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_login);
 
@@ -186,7 +186,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				if (Phonenum.equals("")) {
 					isOnClick = false;
 				}
-				if (!Phonenum.equals("") && !psw.equals("")) {
+				if (!Phonenum.equals("") && !psw.equals("") && psw.length() >= 6 && Phonenum.length() == 11) {
 					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
 					mBtnLogin.setEnabled(true);
 				} else {
@@ -222,7 +222,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				String number = mEditTextPhoneNumber.getText().toString().replace("-", "");
 				String psw = mEditTextPwd.getText().toString();
 				if (isOnClick) {
-					if (!psw.equals("")) {
+					if (!psw.equals("") && psw.length() >= 6) {
 						mBtnLogin.setBackgroundResource(R.drawable.icon_login);
 						mBtnLogin.setEnabled(true);
 					} else {
@@ -230,7 +230,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 						mBtnLogin.setEnabled(false);
 					}
 				}
-				if (!number.equals("") && !psw.equals("")) {
+				if (!number.equals("") && !psw.equals("") && psw.length() >= 6 && number.length() == 11) {
 					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
 					mBtnLogin.setEnabled(true);
 				} else {
@@ -257,6 +257,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 返回
 		case R.id.back_btn:
 			mApplication.mLoginManage.setUserLoginInterface(null);
+			UserUtils.hideSoftMethod(this);
 			finish();
 			break;
 		// 登陆按钮
@@ -266,6 +267,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 手机快速注册
 		case R.id.user_login_phoneRegist:
 			mApplication.mLoginManage.setUserLoginInterface(null);
+			UserUtils.hideSoftMethod(this);
 			Intent itRegist = new Intent(UserLoginActivity.this, UserRegistActivity.class);
 			GolukDebugUtils.i("final", "-----------UserLoginActivity-----------" + justLogin);
 			if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
@@ -280,6 +282,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 忘记密码
 		case R.id.user_login_forgetpwd:
 			mApplication.mLoginManage.setUserLoginInterface(null);
+			UserUtils.hideSoftMethod(this);
 			Intent itForget = new Intent(UserLoginActivity.this, UserRepwdActivity.class);
 			GolukDebugUtils.i("final", "-----------UserLoginActivity忘记密码-----------" + justLogin);
 			if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
@@ -305,28 +308,36 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			if (UserUtils.isMobileNO(phone)) {
 				if (!"".equals(pwd)) {
 					if (pwd.length() >= 6 && pwd.length() <= 16) {
-						mApplication.mLoginManage.setUserLoginInterface(this);
-						boolean b = mApplication.mLoginManage.login(phone, pwd);
-						if (b) {
-							mApplication.loginStatus = 0;
+						if (!UserUtils.isNetDeviceAvailable(this)) {
 							UserUtils.hideSoftMethod(this);
-							mCustomProgressDialog.show();
-							mEditTextPhoneNumber.setEnabled(false);
-							mEditTextPwd.setEnabled(false);
-							mTextViewRegist.setEnabled(false);
-							mTextViewForgetPwd.setEnabled(false);
-							mBtnLogin.setEnabled(false);
-							mBackButton.setEnabled(false);
+							GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 						} else {
-							closeProgressDialog();
-							mApplication.loginStatus = 2;
+							mApplication.mLoginManage.setUserLoginInterface(this);
+							boolean b = mApplication.mLoginManage.login(phone, pwd);
+							if (b) {
+								mApplication.loginStatus = 0;
+								UserUtils.hideSoftMethod(this);
+								mCustomProgressDialog.show();
+								mEditTextPhoneNumber.setEnabled(false);
+								mEditTextPwd.setEnabled(false);
+								mTextViewRegist.setEnabled(false);
+								mTextViewForgetPwd.setEnabled(false);
+								mBtnLogin.setEnabled(false);
+								mBackButton.setEnabled(false);
+							} else {
+								closeProgressDialog();
+								mApplication.loginStatus = 2;
+							}
 						}
+
 					} else {
+						UserUtils.hideSoftMethod(this);
 						UserUtils.showDialog(mApplication.getContext(),
 								this.getResources().getString(R.string.user_login_password_show_error));
 					}
 				}
 			} else {
+				UserUtils.hideSoftMethod(this);
 				UserUtils.showDialog(mApplication.getContext(),
 						this.getResources().getString(R.string.user_login_phone_show_error));
 			}

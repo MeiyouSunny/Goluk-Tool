@@ -51,16 +51,8 @@ public class UserLoginManage {
 	 */
 	public boolean login(String phone, String pwd) {
 		boolean b = false;
-		// 网络判断
-		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			GolukUtils.showToast(mApp.getContext(),
-					mApp.getContext().getResources().getString(R.string.user_net_unavailable));
-			loginStatusChange(2);// 登录失败
-		} else {
-			String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
-			b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login,
-					condi);
-		}
+		String condi = "{\"PNumber\":\"" + phone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
+		b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login, condi);
 		return b;
 	}
 
@@ -91,21 +83,24 @@ public class UserLoginManage {
 					// 1------------------------------
 					// 登录成功跳转
 					if (mApp.registStatus != 2) {
-						GolukUtils.showToast(mApp.getContext(), mApp.getResources().getString(R.string.user_login_success));
+						GolukUtils.showToast(mApp.getContext(),
+								mApp.getResources().getString(R.string.user_login_success));
 					}
 					loginStatusChange(1);// 登录成功
 					mApp.isUserLoginSucess = true;
 					mApp.loginoutStatus = false;
 					break;
 				case 500:
-					UserUtils.showDialog(mApp.getContext(), mApp.getResources().getString(R.string.user_background_error));
+					UserUtils.showDialog(mApp.getContext(),
+							mApp.getResources().getString(R.string.user_background_error));
 					loginStatusChange(2);
 					break;
 				case 405:
 					loginStatusChange(3);// 手机号未注册
 					break;
 				case 402:
-					GolukUtils.showToast(mApp.getContext(), mApp.getResources().getString(R.string.user_password_error));
+					GolukUtils
+							.showToast(mApp.getContext(), mApp.getResources().getString(R.string.user_password_error));
 					loginStatusChange(2);
 					countErrorPassword++;
 					break;
