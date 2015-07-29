@@ -48,22 +48,13 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/live_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
-            android:background="@drawable/home_live_icon"
-            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="12dp" >
+            android:layout_marginRight="8dp" >
 
             <TextView
                 android:id="@+id/looknumber_text"
@@ -88,13 +79,22 @@
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+        
         <ImageView
             android:id="@+id/mPreLoading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/tacitly_pic"
             android:scaleType="fitXY" />
+        
+        <ImageView
+            android:id="@+id/live_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/live_icon"/>
 
         <cn.com.mobnote.golukmobile.videosuqare.RingView
             android:id="@+id/mRingView"

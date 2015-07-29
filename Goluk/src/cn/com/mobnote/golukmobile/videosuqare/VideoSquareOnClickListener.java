@@ -85,37 +85,54 @@ public class VideoSquareOnClickListener implements OnClickListener{
 
 			break;
 		case R.id.like_btn:
-
+			String praise = "0";
+			Button dz = (Button) view;
+			int likenumber = 0;
 			if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {// 没有点过赞
-				Button dz = (Button) view;
-				int likenumber = Integer.parseInt(dz.getText().toString())+1;
+				
+				likenumber = Integer.parseInt(dz.getText().toString())+1;
 				dz.setText(likenumber+"");
 				
 				Drawable drawable= mcontext.getResources().getDrawable(R.drawable.like_btn_press);  
 				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
 				dz.setCompoundDrawables(drawable,null,null,null);  
 				
-				String videoid = mVideoSquareInfo.mVideoEntity.videoid;
+				praise = "1";
 				
-				for (int i = 0; i < mVideoSquareListData.size(); i++) {
-					VideoSquareInfo vsi = mVideoSquareListData.get(i);
-					if (vsi.mVideoEntity.videoid.equals(videoid)) {
-						mVideoSquareInfo.mVideoEntity.praisenumber = likenumber + "";
-						mVideoSquareListData.get(i).mVideoEntity.praisenumber = likenumber + "";
-						mVideoSquareListData.get(i).mVideoEntity.ispraise = "1";
-						break;
-					}
-				}
 
 				GolukApplication.getInstance().getVideoSquareManager()
 						.clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
 
-				if (null != VideoSquareListView.mHandler) {
-					Message msg = new Message();
-					msg.what = 1;
-					msg.obj = mVideoSquareInfo;
-					VideoSquareListView.mHandler.sendMessage(msg);
+				
+			}else{
+				likenumber = Integer.parseInt(dz.getText().toString())-1;
+				dz.setText(likenumber+"");
+				
+				Drawable drawable= mcontext.getResources().getDrawable(R.drawable.like_btn);  
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
+				dz.setCompoundDrawables(drawable,null,null,null);  
+				
+				praise = "0";
+			}
+			
+			
+			String videoid = mVideoSquareInfo.mVideoEntity.videoid;
+			
+			for (int i = 0; i < mVideoSquareListData.size(); i++) {
+				VideoSquareInfo vsi = mVideoSquareListData.get(i);
+				if (vsi.mVideoEntity.videoid.equals(videoid)) {
+					mVideoSquareInfo.mVideoEntity.praisenumber = likenumber + "";
+					mVideoSquareListData.get(i).mVideoEntity.praisenumber = likenumber + "";
+					mVideoSquareListData.get(i).mVideoEntity.ispraise = praise;
+					break;
 				}
+			}
+			
+			if (null != VideoSquareListView.mHandler) {
+				Message msg = new Message();
+				msg.what = 1;
+				msg.obj = mVideoSquareInfo;
+				VideoSquareListView.mHandler.sendMessage(msg);
 			}
 			break;
 		case R.id.report_icon:

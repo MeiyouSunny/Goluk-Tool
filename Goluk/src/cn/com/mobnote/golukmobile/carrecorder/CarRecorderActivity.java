@@ -308,6 +308,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					break;
 				case ADDR:
 					String addr = (String) msg.obj;
+					System.out.println("zh-gps = " + addr);
 					if (!TextUtils.isEmpty(addr)) {
 						mAddr.setText(addr);
 					}

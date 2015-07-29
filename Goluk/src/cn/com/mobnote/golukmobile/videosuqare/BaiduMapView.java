@@ -215,6 +215,10 @@ public class BaiduMapView implements ILocationFn {
 		// 保存经纬度
 		LngLat.lng = location.rawLon;
 		LngLat.lat = location.rawLat;
+		
+		if (ma.mApp.getContext() instanceof CarRecorderActivity) {
+			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
+		}
 
 	}
 
