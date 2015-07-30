@@ -127,7 +127,7 @@
             android:layout_toRightOf="@id/user_personal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true" >
+            android:layout_centerVertical="true">
 
             <ImageView
                 android:id="@+id/user_personal_arrow3"
@@ -138,14 +138,22 @@
                 android:src="@drawable/editor_arrow" 
                 android:layout_marginLeft="3dp"
                 android:visibility="gone"/>
+            <TextView 
+                android:id="@+id/user_personal_none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@id/user_personal_arrow3"
+                android:paddingRight="3dp"/>
 
             <TextView
                 android:id="@+id/user_personal_info_sign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/user_personal_arrow3"
+                android:layout_toLeftOf="@id/user_personal_none"
                 android:textColor="@color/user_personal_black"
-                android:textSize="14sp" />
+                android:textSize="14sp" 
+                android:paddingLeft="10dp"/>
 
         </RelativeLayout>
     </RelativeLayout>
