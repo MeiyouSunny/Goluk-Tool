@@ -161,6 +161,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	public void click_sina() {
 		GolukDebugUtils.e("", "sina-------click----11111");
+		this.dismiss();
 		if (null == sharePlatform) {
 			return;
 		}

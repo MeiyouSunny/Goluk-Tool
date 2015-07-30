@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.LruCache;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -20,6 +21,9 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.util.GolukUtils;
 
 public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 	private TextView mTitleName = null;
@@ -205,7 +209,17 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 			downloadVideoFlush();
 			break;
 		case R.id.mDeleteBtn:
-			deleteDataFlush();
+			CustomDialog mCustomDialog = new CustomDialog(this);
+			mCustomDialog.setMessage("是否删除" + selectedListData.size() + "个视频？", Gravity.CENTER);
+			mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
+				@Override
+				public void onClickListener() {
+					deleteDataFlush();
+					GolukUtils.showToast(PhotoAlbumActivity.this, "删除视频成功");
+				}
+			});
+			mCustomDialog.setRightButton("取消", null);
+			mCustomDialog.show();
 			break;
 		
 		default:

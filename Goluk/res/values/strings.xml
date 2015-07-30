@@ -334,6 +334,7 @@
     <string name="photoalbum_default_title">我的相册</string>
     <string name="photoalbum_local_video_text">本地视频</string>
     <string name="photoalbum_cloud_video_text">远程视频</string>
+    <string name="photoalbum_no_video_text">当前无视频</string>
     
     <string name="short_input_ok">完成</string>
     <string name="short_input_cancel">取消</string>

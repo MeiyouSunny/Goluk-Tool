@@ -308,6 +308,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					break;
 				case ADDR:
 					String addr = (String) msg.obj;
+					System.out.println("zh-gps = " + addr);
 					if (!TextUtils.isEmpty(addr)) {
 						mAddr.setText(addr);
 					}
@@ -538,7 +539,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		// m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 		mConnectTip.setText(wifiname);
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
-			m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		}
 
 		String addr = GolukApplication.getInstance().mCurAddr;
@@ -572,6 +573,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		live_release.setOnClickListener(this);
 		live_talk.setOnClickListener(this);
 		liveVideo.setOnClickListener(this);
+		liveTime.setOnClickListener(this);
+		
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		// findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -956,6 +959,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.live_release_icon:
 			lsp.show();
 			break;
+		case R.id.live_time:
+			lsp.show();
+			break;
 		default:
 			break;
 		}
@@ -1262,7 +1268,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+				m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 			}
 		});
 	}
@@ -1328,7 +1334,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					m8sBtn.setBackgroundResource(R.drawable.btn_ipc_8s);
+					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 				}
 			});
 		}
@@ -1811,7 +1817,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		if (list != null && list.size() > 0) {
 			File vfile = null;
-			for (int i = list.size() - 1; i < list.size(); i--) {
+			for (int i = list.size() - 1; i >= 0; i--) {
 				videoname = list.get(i);
 				vfile = new File(path + videoname);
 
