@@ -21,20 +21,28 @@ import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 public class InputLayout implements OnClickListener, OnTouchListener, TextWatcher {
-
+	/** 上下文，此刻应该是 VideoEditActivity */
 	private Context mContext = null;
-	private ViewGroup mParentLayout = null;
 	private LayoutInflater mLayoutFlater = null;
+	/** InputLayout的父布局 */
+	private ViewGroup mParentLayout = null;
+	/** 当前布局 */
 	private RelativeLayout mRootLayout = null;
+	/** 取消按钮 */
 	private TextView mCanTv = null;
+	/** 确定按钮 */
 	private TextView mOkTv = null;
+	/** 输入框 */
 	private EditText mShareInputEdit = null;
+	/** 显示输入計数器 */
 	private TextView mCountTv = null;
-
+	/** 最大输入描述字符数 */
 	private final int MAX_COUNT = 50;
+	/** 字体颜色，用于计数器平时显示 */
 	private int mWhiteColor = 0;
+	/** 字体颜色，用户计数器超出显示 */
 	private int mRedColor = 0;
-
+	/** 用于标识用户输入描述是否超长 */
 	private boolean isInputValid = true;
 
 	public InputLayout(Context context, ViewGroup parentLayout) {
@@ -57,12 +65,26 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 
 	}
 
+	/**
+	 * 加载资源
+	 * 
+	 * @author jyf
+	 * @date 2015年7月30日
+	 */
 	private void loadRes() {
 		mWhiteColor = mContext.getResources().getColor(R.color.white);
 		mRedColor = mContext.getResources().getColor(R.color.red);
 	}
 
-	public void show() {
+	/**
+	 * 显示用户输入界面
+	 * 
+	 * @param msg
+	 *            输入框默认显示
+	 * @author jyf
+	 * @date 2015年7月30日
+	 */
+	public void show(String msg) {
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		mParentLayout.addView(mRootLayout, lp);
@@ -70,11 +92,26 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 		mShareInputEdit.setFocusableInTouchMode(true);
 		mShareInputEdit.requestFocus();
 		showSoft(mShareInputEdit);
-		isInputValid = true;
+		mShareInputEdit.setText(msg);
+		if (msg.length() > MAX_COUNT) {
+			isInputValid = false;
+		} else {
+			isInputValid = true;
+		}
+
 		mCountTv.setTextColor(mWhiteColor);
-		mCountTv.setText("" + MAX_COUNT);
+		mCountTv.setText("" + (MAX_COUNT - msg.length()));
+
+		mShareInputEdit.setSelection(msg.length());
 	}
 
+	/**
+	 * 显示軟键盘
+	 * 
+	 * @param edit
+	 * @author jyf
+	 * @date 2015年7月30日
+	 */
 	public void showSoft(final EditText edit) {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
@@ -93,6 +130,12 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 
 	}
 
+	/**
+	 * 隐藏当前界面
+	 * 
+	 * @author jyf
+	 * @date 2015年7月30日
+	 */
 	public void hide() {
 		mShareInputEdit.setText("");
 		mParentLayout.removeView(mRootLayout);
@@ -146,13 +189,11 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 
 	@Override
 	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
 
 	}
 

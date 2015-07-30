@@ -113,8 +113,9 @@ public class MVListAdapter extends BaseAdapter {
 
 	class onclick implements OnClickListener {
 		private int index;
+
 		/** 滤镜对应值 */
-		private int[] mFilter = { 0, 7, 1, 6, 2, 4, 5, 3 };
+		// private int[] mFilter = { 0, 7, 1, 6, 2, 4, 5, 3 };
 
 		public onclick(int index) {
 			this.index = index;
@@ -131,7 +132,7 @@ public class MVListAdapter extends BaseAdapter {
 				resData.display = false;
 				resIndex = index;
 				mResChange = true;
-				((VideoEditActivity) mContext).mVVPlayVideo.switchFilterId(mFilter[index]);
+				((VideoEditActivity) mContext).mVVPlayVideo.switchFilterId(data.filterId);
 			}
 			data.display = true;
 			mFilterInstance.mMVListAdapter.notifyDataSetChanged();

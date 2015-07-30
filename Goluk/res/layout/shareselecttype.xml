@@ -73,6 +73,8 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <!-- 公开　与　不公开 -->
+
     <LinearLayout
         android:id="@+id/share_open_layout"
         android:layout_width="wrap_content"
@@ -100,6 +102,8 @@
             android:textSize="13sp" />
     </LinearLayout>
 
+    <!-- 视频描述输入框 -->
+
     <EditText
         android:id="@+id/share_sayother"
         android:layout_width="match_parent"
@@ -112,7 +116,10 @@
         android:hint="@string/share_str_sayother"
         android:paddingBottom="7dp"
         android:paddingLeft="5dp"
-        android:paddingTop="7dp" />
+        android:paddingTop="7dp"
+        android:singleLine="true"
+        android:textColor="@color/share_list_unselect"
+        android:textSize="13sp" />
 
     <ListView
         android:id="@+id/shortshare_listview"

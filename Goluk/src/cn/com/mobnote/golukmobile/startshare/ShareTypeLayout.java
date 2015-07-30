@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.util.GolukUtils;
 
 public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 
@@ -65,12 +64,6 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	private int resTypeUnSelectColor = 0;
 
 	private TextView[] typeViewArray = new TextView[4];
-
-	// <string name="share_str_type_bg">曝光台</string> 1
-	// <string name="share_str_type_sg">事故大爆料</string> 5
-	// <string name="share_str_type_ml">美丽风景</string> 3
-	// <string name="share_str_type_ssp">随手拍</string> 4
-
 	private SparseIntArray mTypeArray = new SparseIntArray();
 
 	public ShareTypeLayout(Context context) {
@@ -353,7 +346,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 
 	public void setEditContent(boolean isCancel, String content) {
 		if (isCancel) {
-			mEditText.setText("");
+			// mEditText.setText("");
 		} else {
 			mEditText.setText(content);
 		}
@@ -382,7 +375,6 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 			switchOpenAndClose(!mIsOpenShare);
 			break;
 		case R.id.share_sayother:
-			// GolukUtils.showToast(mContext, "显示输入");
 			click_input();
 			break;
 		default:
@@ -390,9 +382,10 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 		}
 	}
 
+	// 显示输入界面
 	private void click_input() {
 		if (null != mContext && mContext instanceof VideoEditActivity) {
-			((VideoEditActivity) mContext).mInputLayout.show();
+			((VideoEditActivity) mContext).mInputLayout.show(mEditText.getText().toString().trim());
 		}
 	}
 }
