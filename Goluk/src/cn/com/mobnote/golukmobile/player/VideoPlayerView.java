@@ -4,11 +4,15 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
@@ -67,7 +71,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	private float width;
 	private float height;
 	/** 视频播放时间 */
-	private int playTime;
+	private int playTime = 0;
 	/** 视频播放地址 */
 	private String videoUrl = "";
 	/** 自动隐藏顶部和底部View的时间 */
@@ -101,6 +105,8 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	private boolean isPause = false;
 	/** 缓冲标识 */
 	private boolean isBuffering = false;
+	private boolean isStop = false;
+	private int duration = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -395,20 +401,30 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 						hideLoading();
 					}
 					
+					playTime = 0;
+					duration = mVideo.getDuration();
 					mPlayTime.setText(formatTime(mVideo.getCurrentPosition()));
 					int progress = mVideo.getCurrentPosition() * 100 / mVideo.getDuration();
+					GolukDebugUtils.e("", "TTTT============progress=="+progress);
 					mSeekBar.setProgress(progress);
 					if (mVideo.getCurrentPosition() > mVideo.getDuration() - 100) {
 						mPlayTime.setText("00:00");
 						mSeekBar.setProgress(0);
+						GolukDebugUtils.e("", "TTTT======00000======progress==");
 					}
 //					mSeekBar.setSecondaryProgress(mVideo.getBufferPercentage());
 					mPlay.setImageResource(R.drawable.player_pause_btn);
 				} else {
 //					mPreLoading.setVisibility(View.VISIBLE);
 					mPlay.setImageResource(R.drawable.player_play_btn);
-					mPlayTime.setText("00:00");
-					mSeekBar.setProgress(0);
+					mPlayTime.setText(formatTime(playTime));
+					if(0 != duration) {
+						mSeekBar.setProgress(playTime*100/duration);
+					}else {
+						mSeekBar.setProgress(0);
+					}
+					
+					GolukDebugUtils.e("", "TTTT=====111 000=======playTime=="+playTime+"==duration="+duration);
 				}
 				
 				break;
@@ -690,7 +706,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		mPlay.setImageResource(R.drawable.player_play_btn);
 		mPlayTime.setText("00:00");
 		mSeekBar.setProgress(0);
-		
+		GolukDebugUtils.e("", "TTTT======2220000=====progress==");
 	}
 
 	@Override
@@ -760,24 +776,6 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			return;
 		}
 		
-//		int curPosition = mVideo.getCurrentPosition();
-//		if(oldPosition == curPosition) {
-//			networkConnectTimeOut++;
-//			if (networkConnectTimeOut > 15) {
-//				hideLoading();
-//				mPreLoading.setVisibility(View.VISIBLE);
-//				dialog("网络访问异常，请重试！");
-//				if(null != mVideo) {
-//					mVideo.stopPlayback();
-//					mVideo = null;
-//				}
-//				return;
-//			}
-//		}else {
-//			oldPosition = curPosition;
-//			networkConnectTimeOut = 0;
-//		}
-		
 		if (!isNetworkConnected()) {
 			networkConnectTimeOut++;
 			if (networkConnectTimeOut > 15) {
@@ -806,6 +804,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		
 		if (mVideo.isPlaying()) {
 			isPause = true;
+			playTime = mVideo.getCurrentPosition();
 			mVideo.pause();
 		}
 		
@@ -814,12 +813,45 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (isStop) {
+			isStop = false;
+			showLoading();
+			mPreLoading.setVisibility(View.VISIBLE);
+		}
 		
-		if(isPause) {
+		if (isPause) {
 			isPause = false;
+			if (playTime != 0) {
+				GolukDebugUtils.e("", "TTTT============playTime=="+playTime+"==duration="+duration);
+				if(0 != duration) {
+					mSeekBar.setProgress(playTime * 100 / duration);
+				}
+				mVideo.seekTo(playTime);
+				
+			}
 			mVideo.start();
 		}
 		
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (isBackground(this)) {
+			isStop = true;
+		}
+	}
+	
+	public boolean isBackground(final Context context) {
+		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
+		if (!tasks.isEmpty()) {
+			ComponentName topActivity = tasks.get(0).topActivity;
+			if (!topActivity.getPackageName().equals(context.getPackageName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

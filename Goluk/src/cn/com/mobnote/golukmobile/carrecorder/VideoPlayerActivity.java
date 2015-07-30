@@ -12,8 +12,12 @@ import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
@@ -124,6 +128,12 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	private boolean reset = false;
 	/** 网络连接超时 */
 	private int networkConnectTimeOut = 0;
+	/** 暂停标识 */
+	private boolean isPause = false;
+	private boolean isStop = false;
+	/** 视频播放时间 */
+	private long playTime = 0;
+	private long duration = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +157,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 						
 						netWorkTimeoutCheck();
 						updatePlayerProcess();
-						mHandler.sendEmptyMessageDelayed(GETPROGRESS, 100);
+						mHandler.sendEmptyMessageDelayed(GETPROGRESS, 1000);
 						break;
 						
 					default:
@@ -239,7 +249,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 			hideLoading();
 			mPreLoading.setVisibility(View.GONE);
 			long curPosition = mMediaPlayer.getCurrentPosition();
-			long duration = mMediaPlayer.getDuration();
+			duration = mMediaPlayer.getDuration();
 			
 			GolukDebugUtils.e("xuhw", "TTT========duration=="+duration+"=====curPosition="+curPosition);
 			mCurTime.setText(long2TimeStr(curPosition));
@@ -610,7 +620,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mCurTime.setText("00:00");
 		mTotalTime.setText("00:00");
 		dialog(msg);
-		return false;
+		return true;
 	}
 	
 	/**
@@ -733,6 +743,42 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	protected void onResume() {
 		super.onResume();
 		GolukApplication.getInstance().setContext(this, "videoplayer");
+		if (isStop) {
+			isStop = false;
+			showLoading();
+			mPreLoading.setVisibility(View.VISIBLE);
+		}
+		
+		if (isPause) {
+			isPause = false;
+			if (playTime != 0) {
+				if(0 != duration) {
+					mSeekBar.setProgress((int)(playTime * 100 / duration));
+				}
+				mMediaPlayer.seekTo(playTime);
+				mCurTime.setText(long2TimeStr(playTime));
+				playTime = 0;
+			}
+			mMediaPlayer.start();
+		}
 	}
-
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (mMediaPlayer.isPlaying()) {
+			isPause = true;
+			playTime = mMediaPlayer.getCurrentPosition();
+			mMediaPlayer.pause();
+		}
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (isBackground(this)) {
+			isStop = true;
+		}
+	}
+	
 }
