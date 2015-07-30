@@ -114,9 +114,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private Button mLocalVideoListBtn = null;
 	/** 分享网络直播 */
 	private Button mShareLiveBtn = null;
-	/** wifi连接状态 */
-
-	private int mWiFiStatus = 0;
+	
 	/** 本地视频列表数据适配器 */
 	public LocalVideoListAdapter mLocalVideoListAdapter = null;
 
@@ -159,9 +157,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private SharedPreferences mPreferences = null;
 	private Editor mEditor = null;
 	private long exitTime = 0;
-
-	/** 当前连接的Goluk设备 */
-	private String mGolukName = "";
 
 	/** 热门视频列表默认背景图片 */
 	private ImageView squareDefault;
@@ -516,20 +511,20 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void wiFiLinkStatus(int status) {
 		GolukDebugUtils
 				.e("", "jyf-----MainActivity----wifiConn----wiFiLinkStatus-------------wiFiLinkStatus:" + status);
-		mWiFiStatus = 0;
+		mApp.mWiFiStatus = 0;
 		switch (status) {
 		case 1:
 			// 连接中
-			mWiFiStatus = WIFI_STATE_CONNING;
+			mApp.mWiFiStatus = WIFI_STATE_CONNING;
 			break;
 		case 2:
 			// 已连接
-			mWiFiStatus = WIFI_STATE_SUCCESS;
+			mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
 			wifiConnectedSucess();
 			break;
 		case 3:
 			// 未连接
-			mWiFiStatus = WIFI_STATE_FAILED;
+			mApp.mWiFiStatus = WIFI_STATE_FAILED;
 			wifiConnectFailed();
 			break;
 		}
@@ -537,10 +532,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	private void startWifi() {
 		GolukDebugUtils.e("", "wifiCallBack-------------startWifi:");
-		if (WIFI_STATE_CONNING == mWiFiStatus) {
+		if (WIFI_STATE_CONNING == mApp.mWiFiStatus) {
 			return;
 		}
-		mWiFiStatus = WIFI_STATE_CONNING;
+		mApp.mWiFiStatus = WIFI_STATE_CONNING;
 
 	}
 
@@ -548,8 +543,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void wifiConnectedSucess() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectedSucess:");
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
-		mWiFiStatus = WIFI_STATE_SUCCESS;
-		GolukDebugUtils.e("zh：wifi连接成功 ", mWiFiStatus + "");
+		mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
+		GolukDebugUtils.e("zh：wifi连接成功 ", mApp.mWiFiStatus + "");
 		if (CarRecorderActivity.mHandler != null) {
 			GolukDebugUtils.e("zh：mhandler不为空 ", "");
 			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_RESULT);
@@ -559,7 +554,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	// 连接失败
 	private void wifiConnectFailed() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectFailed:");
-		mWiFiStatus = WIFI_STATE_FAILED;
+		mApp.mWiFiStatus = WIFI_STATE_FAILED;
 	}
 
 	// 是否綁定过 Goluk
@@ -584,7 +579,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 检测wifi链接状态
 	 */
 	public void checkWiFiStatus() {
-		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mWiFiStatus);
+		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mApp.mWiFiStatus);
 		// 跳转到wifi连接首页
 		// if (mApp.isUserLoginSucess == false) {
 		// Intent intent = new Intent(this, UserLoginActivity.class);
@@ -593,9 +588,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// }else{
 		// 跳转到行车记录仪界面
 		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-		System.out.println("zh:wifi连接=" + mWiFiStatus);
-		i.putExtra("ipcState", mWiFiStatus);
-		i.putExtra("wifiname", mGolukName);
+		System.out.println("zh:wifi连接=" + mApp.mWiFiStatus);
+//		i.putExtra("ipcState", mApp.mWiFiStatus);
+//		i.putExtra("wifiname", mApp.mGolukName);
 		startActivity(i);
 		// }
 	}
@@ -1061,7 +1056,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
 			if (bean.length > 0) {
 				GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
-				mGolukName = bean[0].getIpc_ssid();
+				mApp.mGolukName = bean[0].getIpc_ssid();
 				sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 			}
 		}

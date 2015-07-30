@@ -215,7 +215,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 				@Override
 				public void onClickListener() {
 					deleteDataFlush();
-					GolukUtils.showToast(PhotoAlbumActivity.this, "删除视频成功");
 				}
 			});
 			mCustomDialog.setRightButton("取消", null);
@@ -227,13 +226,31 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 		}
 	}
 	
+	private boolean isAllowedDelete() {
+		boolean downloading = true;
+		List<String> dlist = GolukApplication.getInstance().getDownLoadList();
+		for (String name : selectedListData) {
+			if (dlist.contains(name)) {
+				downloading = false;
+				break;
+			}
+		}
+		
+		return downloading;
+	}
+	
 	private void deleteDataFlush() {
 		if(R.id.mLocalVideoBtn ==  curId) {
 			mLocalVideoListView.deleteDataFlush(selectedListData);
 		}else if(R.id.mCloudVideoBtn == curId) {
+			if (!isAllowedDelete()) {
+				GolukUtils.showToast(PhotoAlbumActivity.this, "视频正在下载，无法删除");
+				return;
+			}
 			mCloudVideoListView.deleteDataFlush(selectedListData);
 		}
 		resetEditState();
+		GolukUtils.showToast(PhotoAlbumActivity.this, "删除视频成功");
 	}
 	
 	private void downloadVideoFlush() {
