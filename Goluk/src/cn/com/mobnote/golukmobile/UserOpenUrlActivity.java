@@ -6,14 +6,16 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.MyProgressWebView;
 import cn.com.tiros.debug.GolukDebugUtils;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.WebSettings;
-import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
@@ -33,6 +35,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	private ImageButton mBackBtn = null;
 	private TextView mTextTitle = null;
 	private CustomLoadingDialog mLoadingDialog = null;
+	/****/
+	private Intent itIndexMore = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +53,12 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
-		
-		if(null == mLoadingDialog){
+
+		if (null == mLoadingDialog) {
 			mLoadingDialog = new CustomLoadingDialog(this, "页面加载中");
 		}
-		
-		Intent itIndexMore = getIntent();
+
+		itIndexMore = getIntent();
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setSupportZoom(true);
 		webSettings.setBuiltInZoomControls(true);
@@ -62,10 +66,17 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				String from_tag = itIndexMore.getStringExtra(FROM_TAG).toString();
+				if (from_tag.equals("skill")) {
+					if (url.contains("tel:")) {
+						webviewCall(url);
+						return true;
+					}
+				}
 				view.loadUrl(url);
 				return true;
 			}
-			
+
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
@@ -114,15 +125,18 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.back_btn:
-			finish();
+			if (mWebView.canGoBack()) {
+				mWebView.goBack();
+			} else {
+				finish();
+			}
 			break;
-
 		default:
 			break;
 		}
 	}
-	
-	private void closeLoading(){
+
+	private void closeLoading() {
 		mLoadingDialog.close();
 		mBackBtn.setEnabled(true);
 	}
@@ -135,5 +149,21 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
 		GolukDebugUtils.e("", "jyf-----MainActivity-----test:" + rtmpUrl);
 		return rtmpUrl;
+	}
+
+	/**
+	 * 拨打电话
+	 * 
+	 * @param phoneNumber
+	 */
+	public void webviewCall(final String phoneNumber) {
+		new AlertDialog.Builder(this).setTitle("提示").setMessage("确定拨打该电话号码？")
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
+						startActivity(intent);
+					}
+				}).setNegativeButton("取消", null).create().show();
 	}
 }

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
@@ -51,6 +52,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		setContentView(R.layout.user_setup_changewifi_password);
 		mApp = (GolukApplication) getApplication();
 		Intent intent = getIntent();
@@ -86,6 +88,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		GolukDebugUtils.i("lily", password + "------ChangeWiFiPassword----");
 		if (!"".equals(password)) {
 			mEditText.setText(password);
+			mEditText.setSelection(password.length());
 		} else {
 			mEditText.setText("");
 		}
@@ -100,6 +103,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		switch (view.getId()) {
 		// 返回
 		case R.id.back_btn:
+			UserUtils.hideSoftMethod(UserSetupChangeWifiActivity.this);
 			this.finish();
 			break;
 		// 保存

@@ -78,7 +78,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		}
 		initView();
 		// title
-		mTextViewTitle.setText("重设密码");
+		mTextViewTitle.setText("找回密码");
 
 	}
 
@@ -137,7 +137,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
 				String pwd = mEditTextPwd.getText().toString();
 				// 重置按钮
-				if (!"".equals(phone) && !"".equals(pwd)) {
+				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6) {
 					mBtnOK.setBackgroundResource(R.drawable.icon_login);
 					mBtnOK.setEnabled(true);
 				} else {
@@ -171,8 +171,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				String password = mEditTextPwd.getText().toString();
-				String mEditText = mEditTextPhone.getText().toString().replace("-", "");
-				if (!"".equals(password) && !mEditText.equals("")) {
+				String phone = mEditTextPhone.getText().toString().replace("-", "");
+				if (!"".equals(password) && !phone.equals("") && phone.length() == 11 && password.length() >= 6) {
 					mBtnOK.setBackgroundResource(R.drawable.icon_login);
 					mBtnOK.setEnabled(true);
 				} else {
@@ -219,6 +219,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 				mBtnOK.setFocusable(true);
 				if (password.length() >= 6 && password.length() <= 16) {
 					if (!UserUtils.isNetDeviceAvailable(this)) {
+						UserUtils.hideSoftMethod(this);
 						GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 					} else {
 						if (!mApplication.mTimerManage.flag) {
@@ -243,12 +244,14 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 
 					}
 				} else {
+					UserUtils.hideSoftMethod(this);
 					mBtnOK.setFocusable(true);
 					UserUtils.showDialog(UserRepwdActivity.this,
 							this.getResources().getString(R.string.user_login_password_show_error));
 				}
 			}
 		} else {
+			UserUtils.hideSoftMethod(this);
 			UserUtils.showDialog(mContext, this.getResources().getString(R.string.user_login_phone_show_error));
 		}
 

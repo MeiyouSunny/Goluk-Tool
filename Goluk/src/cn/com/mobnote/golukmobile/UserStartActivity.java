@@ -19,7 +19,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.VideoView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
@@ -54,6 +53,8 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 	private int screenHeight = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
 	/** 我有Goluk和随便看看两个按钮 **/
 	private LinearLayout mClickLayout = null;
+	/**欢迎页右上角关闭按钮**/
+	private ImageView mImageClose = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -79,8 +80,10 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		GolukDebugUtils.e("lily", b + "--------judgeVideo-----");
 		if (b) {
 			mClickLayout.setVisibility(View.GONE);
+			mImageClose.setVisibility(View.VISIBLE);
 		} else {
 			mClickLayout.setVisibility(View.VISIBLE);
+			mImageClose.setVisibility(View.GONE);
 		}
 		videoStart = (CustomVideoView) findViewById(R.id.videoStart);
 		videoStart.setVideoURI(Uri.parse("android.resource://cn.com.mobnote.golukmobile/" + R.raw.start_video));
@@ -127,12 +130,14 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		mClickLayout = (LinearLayout) findViewById(R.id.user_start_click);
 		mImageViewHave = (ImageView) findViewById(R.id.user_start_have);
 		mImageViewLook = (ImageView) findViewById(R.id.user_start_look);
+		mImageClose = (ImageView) findViewById(R.id.click_close_btn);
 		// 获取注销成功后传来的信息
 		mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 		phone = mPreferences.getString("setupPhone", "");// 最后一个参数为默认值
 
 		mImageViewHave.setOnClickListener(this);
 		mImageViewLook.setOnClickListener(this);
+		mImageClose.setOnClickListener(this);
 	}
 
 	@Override
@@ -140,28 +145,22 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		switch (arg0.getId()) {
 		case R.id.user_start_have:
 			// 我有Goluk
-			Intent it = new Intent(UserStartActivity.this, UserLoginActivity.class);
-			// 登录页回调判断
-			it.putExtra("isInfo", "main");
-			mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-			mEditor = mPreferences.edit();
-			mEditor.putString("toRepwd", "start");
-			mEditor.commit();
-			// 在黑页面判断是注销进来的还是首次登录进来的
-			if (!mApp.loginoutStatus) {// 注销
-				it.putExtra("startActivity", phone);
-				startActivity(it);
-			} else {
-				startActivity(it);
-			}
+			Intent itHave = new Intent(UserStartActivity.this,MainActivity.class);
+			itHave.putExtra("userstart", "start_have");
+			startActivity(itHave);
+			this.finish();
 			break;
 
 		case R.id.user_start_look:
 			// 随便看看
-			Intent it2 = new Intent(UserStartActivity.this, MainActivity.class);
+			Intent itLook = new Intent(UserStartActivity.this, MainActivity.class);
 			GolukDebugUtils.i("lily", "======MainActivity==UserStartActivity====");
-			startActivity(it2);
+			startActivity(itLook);
 			this.finish();
+			break;
+		//关闭
+		case R.id.click_close_btn:
+			finish();
 			break;
 		}
 	}

@@ -646,10 +646,6 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			} else {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.user_repwd_success));
 			}
-			mApp.registStatus = 2;// 注册成功的状态
-			// 登录成功跳转
-			mApp.loginStatus = 1;// 登录成功
-			mApp.isUserLoginSucess = true;
 
 			registLogin();
 			break;

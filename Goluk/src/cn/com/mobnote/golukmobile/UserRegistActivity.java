@@ -64,7 +64,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); 
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_regist);
 
@@ -148,7 +148,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String pwd = mEditTextPwd.getText().toString();
 				if (arg1) {
 					// 注册按钮
-					if (!"".equals(phone) && !"".equals(pwd)) {
+					if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6) {
 						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 						mBtnRegist.setEnabled(true);
 					} else {
@@ -167,7 +167,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
 				String pwd = mEditTextPwd.getText().toString();
 				// 注册按钮
-				if (!"".equals(phone) && !"".equals(pwd)) {
+				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6) {
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 					mBtnRegist.setEnabled(true);
 				} else {
@@ -204,7 +204,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
 				String pwd = mEditTextPwd.getText().toString();
 				// 注册按钮
-				if (!"".equals(phone) && !"".equals(pwd)) {
+				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6) {
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 					mBtnRegist.setEnabled(true);
 				} else {
@@ -276,12 +276,14 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 
 					}
 				} else {
+					UserUtils.hideSoftMethod(this);
 					UserUtils.showDialog(UserRegistActivity.this,
 							this.getResources().getString(R.string.user_login_password_show_error));
 					mBtnRegist.setEnabled(true);
 				}
 			}
 		} else {
+			UserUtils.hideSoftMethod(this);
 			UserUtils.showDialog(mContext, this.getResources().getString(R.string.user_login_phone_show_error));
 		}
 
