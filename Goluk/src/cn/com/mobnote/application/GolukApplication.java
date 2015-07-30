@@ -429,6 +429,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (null != mMainActivity) {
 			mMainActivity.wiFiLinkStatus(3);
 		}
+		
+		if (GlobalWindow.getInstance().isShow()) {
+			mDownLoadFileList.clear();
+			mNoDownLoadFileList.clear();
+			GlobalWindow.getInstance().toFailed("视频传输失败");
+		}
+		
 	}
 
 	/**
@@ -1104,20 +1111,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
 						GolukDebugUtils.i("lily", v + "========getIPCControlManager=====getIPCVersion");
 
-						// 查询新文件列表（最多10条）
-						// long time =
-						// SettingUtils.getInstance().getLong("querytime", 0);
-						// long curtime = System.currentTimeMillis()/1000;
-						// LogUtil.e("xuhw",
-						// "YYYYYYY===start==queryNewFileList=1111==time="+time+"=curtime="+curtime);
-						// if(Math.abs(curtime - time) >
-						// 5*60){//五分钟以内断开重新连接的不做处理
-						// SettingUtils.getInstance().putLong("querytime",
-						// curtime);
-						queryNewFileList();
-						// LogUtil.e("xuhw",
-						// "YYYYYYY===start==queryNewFileList====");
-						// }
+						if (SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
+							queryNewFileList();
+						}
+						
 						if (null != mMainActivity) {
 							mMainActivity.wiFiLinkStatus(2);
 						}
