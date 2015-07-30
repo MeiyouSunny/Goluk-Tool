@@ -185,6 +185,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public int mLoadProgress = 0;
 	/** 极路客升级成功的状态 **/
 	public boolean updateSuccess = false;
+	/** wifi连接状态 */
+	public int mWiFiStatus = 0;
+	/** 当前连接的Goluk设备 */
+	public String mGolukName = "";
 
 	static {
 		System.loadLibrary("golukmobile");
