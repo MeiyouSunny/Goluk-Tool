@@ -80,6 +80,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	private String newName = "";
 	private String newSign = "";
 
+	private TextView mTextNone = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -124,6 +126,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		mHeadLayout = (RelativeLayout) findViewById(R.id.user_personal_info_head_layout);
 		mNameLayout = (RelativeLayout) findViewById(R.id.user_personal_info_name_layout);
 		mSignLayout = (RelativeLayout) findViewById(R.id.user_personal_info_sign_layout);
+		
+		mTextNone = (TextView) findViewById(R.id.user_personal_none);
 
 		if (null == mCustomProgressDialog) {
 			mCustomProgressDialog = new CustomLoadingDialog(mContext, "保存中，请稍候……");
@@ -176,6 +180,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				mImageArrow1.setVisibility(View.VISIBLE);
 				mImageArrow2.setVisibility(View.VISIBLE);
 				mImageArrow3.setVisibility(View.VISIBLE);
+				mTextNone.setPadding(0, 0, 15, 0);
 				translateAnim(mImageHead);
 				rightBtn.setText("完成");
 			} else {
@@ -314,6 +319,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			mImageArrow1.setVisibility(View.GONE);
 			mImageArrow2.setVisibility(View.GONE);
 			mImageArrow3.setVisibility(View.GONE);
+			mTextSign.setPadding(25, 0, -2, 0);
+			mTextNone.setPadding(0, 0, -10, 0);
 			translateAnim(mImageHead);
 			rightBtn.setText("编辑");
 		} else {
@@ -357,9 +364,10 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 					mImageArrow1.setVisibility(View.GONE);
 					mImageArrow2.setVisibility(View.GONE);
 					mImageArrow3.setVisibility(View.GONE);
+					mTextSign.setPadding(25, 0, -2, 0);
+					mTextNone.setPadding(0, 0, -10, 0);
 					translateAnim(mImageHead);
 					rightBtn.setText("编辑");
-					// this.finish();
 					break;
 				case 405:
 					GolukUtils.showToast(mContext, "该用户未注册");
