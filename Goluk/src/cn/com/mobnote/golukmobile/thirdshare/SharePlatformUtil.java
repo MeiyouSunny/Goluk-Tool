@@ -9,11 +9,8 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
-import com.umeng.socialize.media.SinaShareContent;
-import com.umeng.socialize.media.SmsShareContent;
-import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMVideo;
-import com.umeng.socialize.sso.SmsHandler;
+import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
@@ -33,6 +30,7 @@ public class SharePlatformUtil {
 	private static final String DESCRIPTOR = "com.umeng.share";
 	public final UMSocialService mController = UMServiceFactory.getUMSocialService(DESCRIPTOR);
 	public SinaWeiBoUtils mSinaWBUtils = null;
+	public VideoSquareInfo mData = null;
 
 	public SharePlatformUtil(Context context) {
 		mContext = context;
@@ -45,9 +43,8 @@ public class SharePlatformUtil {
 	public void configPlatforms() {
 		// 添加微信、微信朋友圈平台
 		addWXPlatform();
-		// 添加短信
-		addSMS();
-		// 添加腾讯QQ
+
+		// 添加腾讯QQ及ＱＱ空间
 		addQQQZonePlatform();
 	}
 
@@ -77,8 +74,11 @@ public class SharePlatformUtil {
 	public void addQQQZonePlatform() {
 		// 添加QQ支持, 并且设置QQ分享内容的target url
 		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler((Activity) mContext, QQ_APPID, QQ_APPKEY);
-
 		qqSsoHandler.addToSocialSDK();
+
+		// 参数1为当前Activity， 参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
+		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler((Activity) mContext, QQ_APPID, QQ_APPKEY);
+		qZoneSsoHandler.addToSocialSDK();
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -88,17 +88,6 @@ public class SharePlatformUtil {
 			mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
 		}
 	}
-
-	/**
-	 * 添加短信平台</br>
-	 */
-	public void addSMS() {
-		// 添加短信
-		SmsHandler smsHandler = new SmsHandler();
-		smsHandler.addToSocialSDK();
-	}
-
-	public VideoSquareInfo mData = null;
 
 	public void setShareData(VideoSquareInfo data) {
 		mData = data;
@@ -113,63 +102,24 @@ public class SharePlatformUtil {
 		if (text == null || "".equals(text)) {
 			text = "goluk精彩视频";
 		}
-		UMImage umimage = new UMImage(mContext, imageurl);
 		UMVideo video = new UMVideo(videourl);
-		video.setThumb(umimage);
-
-		// // 微信
-		// WeiXinShareContent weixinContent = new WeiXinShareContent();
-		//
-		// weixinContent.setShareContent(text);
-		// weixinContent.setTitle(ttl);
-		// weixinContent.setTargetUrl(videourl);
-		// weixinContent.setShareImage(umimage);
-		// mController.setShareMedia(weixinContent);
+		video.setThumb(imageurl);
+		video.setTitle(ttl);
 
 		// 微信
 		WeiXinShareContent weixinContent = new WeiXinShareContent(video);
 		weixinContent.setShareContent(text);
 		mController.setShareMedia(weixinContent);
 
-		// // 设置朋友圈分享的内容
-		// CircleShareContent circleMedia = new CircleShareContent();
-		// circleMedia.setShareContent(text);
-		// circleMedia.setTitle(ttl);
-		// circleMedia.setTargetUrl(videourl);
-		// circleMedia.setShareImage(umimage);
-		// mController.setShareMedia(circleMedia);
-
 		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent(video);
 		circleMedia.setShareContent(text);
 		mController.setShareMedia(circleMedia);
 
-		// // 设置短信分享内容
-		// SmsShareContent sms = new SmsShareContent();
-		// sms.setShareContent(text + "。" + videourl);
-		// // sms.setShareImage(umimage);
-		// mController.setShareMedia(sms);
-
-		// // 新浪微博分享
-		// SinaShareContent sinaContent = new SinaShareContent();
-		// sinaContent.setShareContent(text);
-		// sinaContent.setTitle(ttl);
-		// sinaContent.setTargetUrl(videourl);
-		// sinaContent.setShareMedia(video);
-		// mController.setShareMedia(sinaContent);
-
 		// qq分享
 		QQShareContent qqContent = new QQShareContent(video);
 		qqContent.setShareContent(text);
 		mController.setShareMedia(qqContent);
-
-		// // qq分享
-		// QQShareContent qqContent = new QQShareContent();
-		// qqContent.setShareContent(text);
-		// qqContent.setTitle(ttl);
-		// qqContent.setTargetUrl(videourl);
-		// qqContent.setShareImage(umimage);
-		// mController.setShareMedia(qqContent);
 
 		// qq空间
 		QZoneShareContent qzone = new QZoneShareContent(video);
