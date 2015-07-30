@@ -425,6 +425,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (null != mMainActivity) {
 			mMainActivity.wiFiLinkStatus(3);
 		}
+		
+		if (GlobalWindow.getInstance().isShow()) {
+			mDownLoadFileList.clear();
+			mNoDownLoadFileList.clear();
+			GlobalWindow.getInstance().toFailed("视频传输失败");
+		}
+		
 	}
 
 	/**
