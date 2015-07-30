@@ -1110,11 +1110,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						// 获取ipc版本号
 						boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
 						GolukDebugUtils.i("lily", v + "========getIPCControlManager=====getIPCVersion");
-
-						if (SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
-							queryNewFileList();
-						}
 						
+						queryNewFileList();
 						if (null != mMainActivity) {
 							mMainActivity.wiFiLinkStatus(2);
 						}
@@ -1437,6 +1434,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年4月24日
 	 */
 	public void queryNewFileList() {
+		if (!SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
+			return;
+		}
+		
 		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 		boolean isbind = preferences.getBoolean("isbind", false);
 		if (!isbind) {
