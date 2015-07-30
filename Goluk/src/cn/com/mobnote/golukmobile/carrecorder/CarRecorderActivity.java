@@ -342,7 +342,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		initView();
 		setListener();
 		initIpcState(ipcState);// 初始化ipc的连接状态
-		initVideoImage();// 初始化相册列表
+		
 
 		// 获取是否是后台启动
 		Intent receiveIntent = getIntent();
@@ -434,12 +434,19 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void open_shareVideo(String videoname) {
 		// 跳转到wifi连接首页
 		if (mApp.isUserLoginSucess) {
-			String path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/" + videoname;
+			String path = Environment.getExternalStorageDirectory().getPath();
+			int type = 2 ;
+			if(videoname.indexOf("URG") >= 0){
+				path = path + "/goluk/video/urgent/" + videoname;
+				type = 3;
+			}else {
+				path = path + "/goluk/video/wonderful/" + videoname;
+			}
 			GolukDebugUtils.e("xuhw", "YYY====mShareBtn===path=" + path);
 
 			Intent i = new Intent(CarRecorderActivity.this, VideoEditActivity.class);
 			i.putExtra("cn.com.mobnote.video.path", path);
-			i.putExtra("type", 2);
+			i.putExtra("type", type);
 			startActivity(i);
 			overridePendingTransition(R.anim.shortshare_start, 0);
 		} else {
@@ -1075,6 +1082,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
 			}
 		}
+		
+		initVideoImage();// 初始化相册列表
 	};
 
 	@Override

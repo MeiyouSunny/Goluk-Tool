@@ -186,6 +186,9 @@ public class BaiduMapView implements ILocationFn {
 					Object obj2 = new Object();
 					downloadBubbleImageCallBack(1, obj2);
 					break;
+				case 99:
+					// 隐藏气泡,大头针
+					mBaiduMapManage.mapStatusChange();
 				}
 			}
 		};
