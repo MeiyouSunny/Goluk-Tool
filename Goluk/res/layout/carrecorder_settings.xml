@@ -168,7 +168,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/carrecorder_setup_option_on" />
+                    android:background="@drawable/set_open_btn" />
                 
                 <TextView 
                     android:layout_width="match_parent"
@@ -203,7 +203,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/carrecorder_setup_option_on" />
+                    android:background="@drawable/set_open_btn" />
                 
                 <TextView 
                     android:layout_width="match_parent"
@@ -303,7 +303,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/carrecorder_setup_option_on" />
+                    android:background="@drawable/set_open_btn" />
                 
                 <TextView 
                     android:layout_width="match_parent"

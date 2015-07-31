@@ -26,7 +26,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -180,7 +179,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				mImageArrow1.setVisibility(View.VISIBLE);
 				mImageArrow2.setVisibility(View.VISIBLE);
 				mImageArrow3.setVisibility(View.VISIBLE);
-				mTextNone.setPadding(0, 0, 15, 0);
+				mTextNone.setPadding(0, 0, 11, 0);
 				translateAnim(mImageHead);
 				rightBtn.setText("完成");
 			} else {

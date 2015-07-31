@@ -1,20 +1,22 @@
 package cn.com.mobnote.golukmobile;
 
-import cn.com.mobnote.user.UserUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 编辑昵称
@@ -56,7 +58,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mTextCountAll.setText("/" + MAX_COUNT + "）");
 
 	}
-
+	
 	// 初始化控件
 	public void initView() {
 		btnBack = (ImageButton) findViewById(R.id.back_btn);
@@ -79,6 +81,19 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mEditName.setText(nameText);
 		mEditName.setSelection(nameText.length());
 
+		mEditName.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+				 if(keyCode == KeyEvent.KEYCODE_ENTER){
+					GolukDebugUtils.e("lily", "----------回车------KEYCODE_ENTER-------");
+					mImageNameRight.setVisibility(View.GONE);
+				}else{
+					mImageNameRight.setVisibility(View.VISIBLE);
+				}
+				return false;
+			}
+		});
 		/**
 		 * 监听
 		 */
@@ -93,6 +108,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		switch (arg0.getId()) {
 		// 返回
 		case R.id.back_btn:
+			UserUtils.hideSoftMethod(this);
 			finish();
 			break;
 		// que认
@@ -106,6 +122,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 					UserUtils.showDialog(this, "数据修改失败，昵称不能为空");
 				} else {
 					UserPersonalInfoActivity.clickBtn = true;
+					UserUtils.hideSoftMethod(this);
 					Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("itName", name);
@@ -120,21 +137,26 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			// 点击清空
 			mEditName.setText("");
 			break;
-
 		default:
 			break;
 		}
 	}
-
+	
 	TextWatcher mTextWatcher = new TextWatcher() {
 
 		@Override
 		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			String name = mEditName.getText().toString();
+			if("".equals(name) || null == name){
+				mImageNameRight.setVisibility(View.GONE);
+			}else{
+				mImageNameRight.setVisibility(View.VISIBLE);
+			}
 		}
 
 		@Override
 		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-		}
+			}
 
 		@Override
 		public void afterTextChanged(Editable arg0) {
