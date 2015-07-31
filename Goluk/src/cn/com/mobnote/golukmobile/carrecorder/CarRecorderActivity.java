@@ -889,7 +889,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			open_shareVideo(images[0].getName());
 			break;
 		case R.id.image2:
-			open_shareVideo(images[1].getName());
+			if(images[1].getName().equals("")){
+				return;
+			}else{
+				open_shareVideo(images[1].getName());
+			}
 			break;
 		case R.id.image3:
 
@@ -1170,8 +1174,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			m8sTimer = null;
 		}
 
-		image1.setImageBitmap(images[2].getBitmap());
-		image2.setImageBitmap(images[0].getBitmap());
+		if(images[0] != null){
+			image1.setImageBitmap(images[2].getBitmap());
+			image2.setImageBitmap(images[0].getBitmap());
+			
+		}
 		downloadSize.setProcess(0);
 		downloadSize.setVisibility(View.VISIBLE);
 	}
@@ -1498,10 +1505,23 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 						if (filename.equals(imagename)) {
 							VideoShareInfo vsi = new VideoShareInfo();
 							vsi.setName(videoname);
-							vsi.setBitmap(ImageManager.getBitmapFromCache(mImagePath + filename));
-
-							images[0] = vsi;
-							image1.setImageBitmap(vsi.getBitmap());
+							vsi.setBitmap(ImageManager.getBitmapFromCache(mImagePath + filename,114,64));
+							
+							if(images[0] == null){
+								if("".equals(images[1].getName())){
+									images[1] = vsi;
+									image2.setImageBitmap(vsi.getBitmap());
+								}else{
+									images[0] = vsi;
+									image1.setVisibility(View.VISIBLE);
+									image1.setImageBitmap(vsi.getBitmap());
+								}
+								
+							}else{
+								images[0] = vsi;
+								image1.setImageBitmap(vsi.getBitmap());
+							}
+							
 						} else if (filename.equals(videoname)) {
 							downloadSize.setVisibility(View.GONE);
 						}
@@ -1665,6 +1685,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		List<String> urgents = this.getNewVideoByType(filePaths[1], 2);// 最新的紧急视频
 
 		List<String> names = new ArrayList<String>();
+		
+		VideoShareInfo defpic = new VideoShareInfo();
+		defpic.setBitmap(bitmap);
+		defpic.setName("");
+		
 		if (wonderfuls != null) {
 			names.addAll(wonderfuls);
 		}
@@ -1689,7 +1714,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			File video1 = new File(name1);
 			VideoShareInfo vsi1 = new VideoShareInfo();
 			if (video1.exists()) {
-				vsi1.setBitmap(ImageManager.getBitmapFromCache(name1));
+				vsi1.setBitmap(ImageManager.getBitmapFromCache(name1,114,64));
 			} else {
 				vsi1.setBitmap(bitmap);
 			}
@@ -1707,22 +1732,21 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			VideoShareInfo vsi2 = new VideoShareInfo();
 			vsi2.setName(videoname2);
 			if (video2.exists()) {
-				vsi2.setBitmap(ImageManager.getBitmapFromCache(name2));
+				vsi2.setBitmap(ImageManager.getBitmapFromCache(name2,114,64));
 			} else {
 				vsi2.setBitmap(bitmap);
 			}
 
 			images[1] = vsi2;
 			image2.setImageBitmap(vsi2.getBitmap());
-		} else {
-			image2.setVisibility(View.INVISIBLE);
+		}else{
+			images[1] = defpic;
+			image2.setImageBitmap(defpic.getBitmap());
 		}
+		
+		
 
-		VideoShareInfo pic = new VideoShareInfo();
-		pic.setBitmap(bitmap);
-		pic.setName("");
-
-		images[2] = pic;
+		images[2] = defpic;
 	}
 
 	/**
