@@ -6,6 +6,7 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.MyProgressWebView;
 import cn.com.tiros.debug.GolukDebugUtils;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +38,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	private CustomLoadingDialog mLoadingDialog = null;
 	/****/
 	private Intent itIndexMore = null;
+	private TextView mTextRight = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,13 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		initView();
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	public void initView() {
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
+		mTextRight = (TextView) findViewById(R.id.user_title_right);
+		mTextRight.setBackgroundResource(R.drawable.close_btn);
 
 		if (null == mLoadingDialog) {
 			mLoadingDialog = new CustomLoadingDialog(this, "页面加载中");
@@ -60,8 +65,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 
 		itIndexMore = getIntent();
 		WebSettings webSettings = mWebView.getSettings();
-		webSettings.setSupportZoom(true);
-		webSettings.setBuiltInZoomControls(true);
+		webSettings.setUseWideViewPort(true);
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);  
+		webSettings.setDomStorageEnabled(true);
 		mWebView.setWebViewClient(new WebViewClient() {
 
 			@Override
@@ -70,16 +77,17 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				if (from_tag.equals("skill")) {
 					if (url.contains("tel:")) {
 						webviewCall(url);
-						return true;
+						return false;
 					}
 				}
 				view.loadUrl(url);
-				return true;
+				return false;
 			}
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
+				GolukDebugUtils.e("webview", "--------onPageFinished--------");
 				closeLoading();
 			}
 		});
@@ -103,6 +111,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			}
 		}
 		mBackBtn.setOnClickListener(this);
+		mTextRight.setOnClickListener(this);
 	}
 
 	@Override
@@ -130,6 +139,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			} else {
 				finish();
 			}
+			break;
+		case R.id.user_title_right:
+			this.finish();
 			break;
 		default:
 			break;
