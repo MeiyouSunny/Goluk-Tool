@@ -290,7 +290,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mNormalScreen.setId(BTN_NORMALSCREEN);
 		mNormalScreen.setBackgroundResource(R.drawable.btn_player_normal);
 		mNormalScreen.setOnClickListener(this);
-//		ipcState = getIntent().getIntExtra("ipcState", 0);
 		ipcState = mApp.mWiFiStatus;
 
 		lsp = new LiveSettingPopWindow(this, mRootLayout);
@@ -399,19 +398,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (wrb != null) {
 				mConnectTip.setText(wrb.getIpc_ssid());
 			}
-			// boolean b = false;
 			if (null != mApp.mIpcUpdateManage) {
 				mApp.mIpcUpdateManage.ipcConnect();
 			}
-			// if (b) {
 			mPalyerLayout.setVisibility(View.VISIBLE);
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.GONE);
-			// 跳转到行车记录仪界面
-			// Intent i = new Intent(MainActivity.this,
-			// CarRecorderActivity.class);
-			// startActivity(i);
-			// }
 			break;
 		default:
 			break;
@@ -496,12 +488,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mFullScreen = (ImageButton) findViewById(R.id.mFullScreen);
 		mFullScreen.setVisibility(View.GONE);
 		mVideoResolutions = (ImageView) findViewById(R.id.mVideoResolutions);
-		// mShareBtn = (Button) findViewById(R.id.mShareBtn);
-		// mShareBtn.setVisibility(View.GONE);
 		mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
 		mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
 		m8sBtn = (ImageButton) findViewById(R.id.m8sBtn);
-		// mFileBtn = (ImageView) findViewById(R.id.mFileBtn);
 		mSettingBtn = (ImageView) findViewById(R.id.mSettingBtn);
 		mTime = (TextView) findViewById(R.id.mTime);
 		mAddr = (TextView) findViewById(R.id.mAddr);
@@ -530,7 +519,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		mRtmpPlayerView.setAudioMute(true);
 		mRtmpPlayerView.setZOrderMediaOverlay(true);
-		// mRtmpPlayerView.requestFocus();
 		mRtmpPlayerView.setBufferTime(1000);
 		mRtmpPlayerView.setConnectionTimeout(30000);
 		mRtmpPlayerView.setVisibility(View.VISIBLE);
@@ -544,7 +532,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		lp.leftMargin = 0;
 		mRtmpPlayerLayout.setLayoutParams(lp);
 
-		// m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 		mConnectTip.setText(wifiname);
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
@@ -566,7 +553,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		findViewById(R.id.mPlayBtn).setOnClickListener(this);
 		mPalyerLayout.setOnClickListener(this);
 		mFullScreen.setOnClickListener(this);
-		// mShareBtn.setOnClickListener(this);
 		m8sBtn.setOnClickListener(this);
 		jcqp.setOnClickListener(this);
 		fqzb.setOnClickListener(this);
@@ -584,7 +570,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		liveTime.setOnClickListener(this);
 		
 		findViewById(R.id.back_btn).setOnClickListener(this);
-		// findViewById(R.id.mFileLayout).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
 		mRtmpPlayerView.setPlayerListener(new RtmpPlayerView.RtmpPlayerViewLisener() {
 
@@ -597,7 +582,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			public boolean onPlayerError(RtmpPlayerView rpv, int what, int extra, String strErrorInfo) {
 				hidePlayer();
 				rtmpIsOk = false;
-				// updateVideoState();
 				rpv.removeCallbacks(retryRunnable);
 				showLoading();
 				rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
@@ -611,7 +595,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			public void onPlayerCompletion(RtmpPlayerView rpv) {
 				hidePlayer();
 				rtmpIsOk = false;
-				// updateVideoState();
 				rpv.removeCallbacks(retryRunnable);
 				showLoading();
 				rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
@@ -641,7 +624,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			public void onPlayerBegin(RtmpPlayerView arg0) {
 				hideLoading();
 				rtmpIsOk = true;
-				// updateVideoState();
 				showPlayer();
 				mFullScreen.setVisibility(View.VISIBLE);
 				isShowPlayer = true;
@@ -737,7 +719,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年1月28日
 	 */
 	public void start() {
-		// updateVideoState();
 		if (null != mRtmpPlayerView) {
 			mRtmpPlayerView.setVisibility(View.VISIBLE);
 			String preUrl = getResources().getString(R.string.default_rtsp_pre);
@@ -767,19 +748,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				return;
 			}
 
-			// if (downloadFinish) {
-			//
-			// //click_ConnFailed();
-			//
-			// mShareBtn.postDelayed(new Runnable() {
-			// @Override
-			// public void run() {
-			// downloadFinish = false;
-			// mShareBtn.setVisibility(View.GONE);
-			// }
-			// }, 1000);
-			//
-			// }
 			break;
 		case R.id.m8sBtn:
 			if (m_bIsFullScreen) {
@@ -805,26 +773,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				}
 			} else {
 				return;
-				// dialog();
-				// 未登录
 			}
 			break;
-		// case R.id.mFileBtn:
-		// case R.id.mFileText:
-		// case R.id.mFileLayout:
-		// if (m_bIsFullScreen) {
-		// return;
-		// }
-		//
-		// if (GolukApplication.getInstance().getIpcIsLogin()) {
-		// Intent intent = new Intent(CarRecorderActivity.this,
-		// IPCFileManagerActivity.class);
-		// startActivity(intent);
-		// } else {
-		// // 未登录
-		// dialog();
-		// }
-		// break;
 		case R.id.mSettingBtn:
 			if (m_bIsFullScreen) {
 				return;
@@ -835,7 +785,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				startActivity(setting);
 			} else {
 				return;
-				// dialog();
 			}
 			break;
 		case R.id.mFullScreen:
@@ -1099,7 +1048,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (isShowPlayer) {
 			if (null != mRtmpPlayerView) {
 				rtmpIsOk = false;
-				// updateVideoState();
 				mFullScreen.setVisibility(View.GONE);
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
 				if (mRtmpPlayerView.isPlaying()) {
@@ -1317,8 +1265,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						// mShareBtn.setVisibility(View.GONE);
-						// m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
 
 						downloadFileNumber = 0;
 						mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
@@ -1369,6 +1315,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @author xuhw
 	 * @date 2015年3月17日
 	 */
+	@SuppressLint("SimpleDateFormat")
 	private void callBack_VDCP(int msg, int param1, Object param2) {
 		switch (msg) {
 		// 实时抓图
