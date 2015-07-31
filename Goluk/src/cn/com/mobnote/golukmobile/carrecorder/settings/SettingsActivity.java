@@ -117,8 +117,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mAutoRecordBtn = (Button)findViewById(R.id.zdxhlx);
 		mAudioBtn = (Button)findViewById(R.id.sylz);
 		
-		mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
-		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//打开
+		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
+		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);//打开
 		mStorayeText = (TextView)findViewById(R.id.mStorayeText);
 		mVideoText = (TextView)findViewById(R.id.mVideoText);
 		mSensitivityText = (TextView)findViewById(R.id.mSensitivityText);
@@ -262,14 +262,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
 			if(1 == mVideoConfigState.AudioEnabled){
-				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+				mAudioBtn.setBackgroundResource(R.drawable.set_open_btn);
 			}else{
-				mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+				mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 			
 			updateVideoQualityText();
 		}else{
-			mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
 		
 	}
@@ -306,25 +306,25 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if(RESULE_SUCESS == param1){
 					recordState = IpcDataParser.getAutoRecordState((String)param2);
 					if(!recordState){
-						mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+						mAutoRecordBtn.setBackgroundResource(R.drawable.set_close_btn);
 					}else{
-						mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+						mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
 					}
 				}else{
 					//录制状态获取失败
-					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+					mAutoRecordBtn.setBackgroundResource(R.drawable.set_close_btn);
 				}
 			}else if(msg == IPC_VDCP_Msg_StartRecord){//设置IPC行车影像开始录制
 				closeLoading();
 				if(RESULE_SUCESS == param1){
 					recordState=true;
-					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+					mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
 				}
 			}else if(msg == IPC_VDCP_Msg_StopRecord){//设置IPC行车影像停止录制
 				closeLoading();
 				if(RESULE_SUCESS == param1){
 					recordState=false;
-					mAutoRecordBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+					mAutoRecordBtn.setBackgroundResource(R.drawable.set_close_btn);
 				}
 			}else if(msg == IPC_VDCP_Msg_GetVedioEncodeCfg){//获取IPC系统音视频编码配置
 				if(RESULE_SUCESS == param1){
@@ -332,15 +332,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					updateVideoQualityText();
 					if(null != mVideoConfigState){
 						if(1 == mVideoConfigState.AudioEnabled){
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+							mAudioBtn.setBackgroundResource(R.drawable.set_open_btn);
 						}else{
-							mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+							mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 						}
 					}else{
-						mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+						mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 					}
 				}else{
-					mAudioBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+					mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 				}
 			}else if(msg == IPC_VDCP_Msg_SetVedioEncodeCfg){//设置IPC系统音视频编码配置
 				closeLoading();
@@ -357,9 +357,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 							enableSecurity = json.getInt("enableSecurity");
 							snapInterval = json.getInt("snapInterval");
 							if(1 == enableSecurity){
-								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
+								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_open_btn);//打开
 							}else{
-								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
+								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);//关闭
 							}
 						}
 					} catch (JSONException e) {
@@ -370,9 +370,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				closeLoading();
 				if(RESULE_SUCESS == param1){
 					if(1 == enableSecurity){
-						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_on);//打开
+						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_open_btn);//打开
 					}else{
-						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.carrecorder_setup_option_off);//关闭
+						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);//关闭
 					}
 				}else{
 					if(1 == enableSecurity){

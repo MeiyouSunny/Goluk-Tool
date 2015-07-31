@@ -94,10 +94,10 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		systemtime = SettingUtils.getInstance().getBoolean("systemtime", true);
 		if(systemtime){
 			hideTimeLayout();
-			mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+			mAutoBtn.setBackgroundResource(R.drawable.set_open_btn);
 		}else{
 			showTimeLayout();
-			mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+			mAutoBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
 	}
 	
@@ -177,10 +177,10 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 				if(systemtime){
 					systemtime = false;
 					showTimeLayout();
-					mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_off);
+					mAutoBtn.setBackgroundResource(R.drawable.set_close_btn);
 				}else{
 					systemtime = true;
-					mAutoBtn.setBackgroundResource(R.drawable.carrecorder_setup_option_on);
+					mAutoBtn.setBackgroundResource(R.drawable.set_open_btn);
 					hideTimeLayout();
 					
 					new Thread(new Runnable() {
