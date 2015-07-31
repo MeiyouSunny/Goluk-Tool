@@ -201,6 +201,7 @@
             android:paddingLeft="10dp"
             android:hint="描述下这个视频吧..."
             android:textColor="#808181"
+            android:maxLength="50"
             android:textSize="13sp" />
 
         <LinearLayout

@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -103,9 +104,6 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			holder.videotitle = (TextView) convertView.findViewById(R.id.video_title);
 			holder.sharetime = (TextView) convertView.findViewById(R.id.time);
 			holder.mPlayerLayout = (RelativeLayout) convertView.findViewById(R.id.mPlayerLayout);
-			// holder.mSurfaceView = (SurfaceView) convertView
-			// .findViewById(R.id.mSurfaceView);
-			// holder.mSurfaceView.setZOrderMediaOverlay(true);
 			holder.reporticon = (ImageButton) convertView.findViewById(R.id.report_icon);
 			holder.liveicon = (ImageView) convertView.findViewById(R.id.live_icon);
 			holder.mPreLoading = (ImageView) convertView.findViewById(R.id.mPreLoading);
@@ -113,23 +111,16 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 			holder.sharebtn = (Button) convertView.findViewById(R.id.share_btn);
 
 			holder.mRingView = (RingView) convertView.findViewById(R.id.mRingView);
-			// holder.mTextureView =
-			// (TextureView)convertView.findViewById(R.id.mTextureView);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.type)) {// 直播
-			// holder.reporticon.setVisibility(View.GONE);
 			holder.liveicon.setVisibility(View.VISIBLE);
-			//holder.looknumber.setVisibility(View.GONE);
-			//holder.looknumberIcon.setVisibility(View.GONE);
-			// holder.mSurfaceView.setVisibility(View.GONE);
 		} else {// 点播
 			holder.reporticon.setVisibility(View.VISIBLE);
 			holder.liveicon.setVisibility(View.GONE);
-			// holder.mSurfaceView.setVisibility(View.VISIBLE);
 		}
 		holder.reporticon.setOnClickListener(new VideoSquareOnClickListener(mContext, mVideoSquareListData,
 				mVideoSquareInfo, form, sharePlatform, this));
@@ -168,7 +159,20 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 				mVideoSquareInfo, form, sharePlatform, this));
 		holder.sharebtn.setOnTouchListener(this);
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
-		holder.looknumber.setText(mVideoSquareInfo.mVideoEntity.clicknumber);
+		
+		
+		String fmtnumber = mVideoSquareInfo.mVideoEntity.clicknumber;
+		
+		DecimalFormat df= new DecimalFormat("#,###");
+		int wg = Integer.parseInt(fmtnumber);
+		
+		if(wg < 100000){
+			holder.looknumber.setText(df.format(wg));
+		}else{
+			holder.looknumber.setText("100,000+");
+		}
+		
+		
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
 		holder.sharetime.setText(this.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
 		holder.likebtn.setText(mVideoSquareInfo.mVideoEntity.praisenumber);

@@ -16,6 +16,8 @@ import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,8 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -113,6 +117,19 @@ public class BaiduMapManage {
 	public UserInfo getCurrentUserInfo() {
 		return mCurrentUserInfo;
 	}
+	
+	/** 首页handler用来接收消息,更新UI */
+	public  Handler manageHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			int what = msg.what;
+			switch (what) {
+			case 1:
+				mapStatusChange();
+			}
+		}
+	};
+
 
 	/**
 	 * 将gps坐标转换成baidu坐标
@@ -485,6 +502,9 @@ public class BaiduMapManage {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+			
+			manageHandler.removeMessages(1);
+			manageHandler.sendEmptyMessageDelayed(1, 10000);
 			return false;
 		}
 	}

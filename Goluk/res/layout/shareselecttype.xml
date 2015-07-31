@@ -12,6 +12,8 @@
         android:baselineAligned="false"
         android:orientation="horizontal" >
 
+        <!-- 曝光台 -->
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,6 +28,8 @@
                 android:text="@string/share_str_type_bg"
                 android:textSize="@dimen/share_type_size" />
         </RelativeLayout>
+
+        <!-- 事故大爆料 -->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -42,6 +46,8 @@
                 android:textSize="@dimen/share_type_size" />
         </RelativeLayout>
 
+        <!-- 美丽风景 -->
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,6 +62,8 @@
                 android:text="@string/share_str_type_ml"
                 android:textSize="@dimen/share_type_size" />
         </RelativeLayout>
+
+        <!-- 随手拍 -->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -72,6 +80,8 @@
                 android:textSize="@dimen/share_type_size" />
         </RelativeLayout>
     </LinearLayout>
+
+    <!-- 公开　与　不公开 -->
 
     <LinearLayout
         android:id="@+id/share_open_layout"
@@ -100,6 +110,8 @@
             android:textSize="13sp" />
     </LinearLayout>
 
+    <!-- 视频描述输入框 -->
+
     <EditText
         android:id="@+id/share_sayother"
         android:layout_width="match_parent"
@@ -112,7 +124,10 @@
         android:hint="@string/share_str_sayother"
         android:paddingBottom="7dp"
         android:paddingLeft="5dp"
-        android:paddingTop="7dp" />
+        android:paddingTop="7dp"
+        android:singleLine="true"
+        android:textColor="@color/share_list_unselect"
+        android:textSize="13sp" />
 
     <ListView
         android:id="@+id/shortshare_listview"

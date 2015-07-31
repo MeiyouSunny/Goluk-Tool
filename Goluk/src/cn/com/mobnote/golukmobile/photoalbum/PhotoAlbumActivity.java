@@ -209,6 +209,13 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 			downloadVideoFlush();
 			break;
 		case R.id.mDeleteBtn:
+			if(R.id.mCloudVideoBtn == curId) {
+				if (!isAllowedDelete()) {
+					GolukUtils.showToast(PhotoAlbumActivity.this, "视频正在下载，无法删除");
+					return;
+				}
+			}
+			
 			CustomDialog mCustomDialog = new CustomDialog(this);
 			mCustomDialog.setMessage("是否删除" + selectedListData.size() + "个视频？", Gravity.CENTER);
 			mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
@@ -243,10 +250,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 		if(R.id.mLocalVideoBtn ==  curId) {
 			mLocalVideoListView.deleteDataFlush(selectedListData);
 		}else if(R.id.mCloudVideoBtn == curId) {
-			if (!isAllowedDelete()) {
-				GolukUtils.showToast(PhotoAlbumActivity.this, "视频正在下载，无法删除");
-				return;
-			}
 			mCloudVideoListView.deleteDataFlush(selectedListData);
 		}
 		resetEditState();
