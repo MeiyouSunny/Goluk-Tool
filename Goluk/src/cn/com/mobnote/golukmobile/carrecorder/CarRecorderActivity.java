@@ -1167,7 +1167,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void stopTrimVideo() {
 		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
 		mShootTime = 0;
-		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
+		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
 			m8sTimer.purge();
