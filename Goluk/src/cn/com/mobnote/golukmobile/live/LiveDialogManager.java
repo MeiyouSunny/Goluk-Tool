@@ -5,7 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.view.View;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.util.GolukUtils;
 
 public class LiveDialogManager {
 	/** 单例实例 */
@@ -21,6 +24,10 @@ public class LiveDialogManager {
 	private CustomLoadingDialog mCustomLoadingDialog = null;
 	private ProgressDialog mProgressDialog = null;
 	private ProgressDialog mShareDialog = null;
+
+	private AlertDialog dialog = null;
+	private AlertDialog ad = null;
+	private AlertDialog confirmation = null;
 
 	/** 对话框回调方法 */
 	private ILiveDialogManagerFn dialogManagerFn = null;
@@ -63,6 +70,8 @@ public class LiveDialogManager {
 	/** 綁定失败提示框 */
 	public static final int DIALOG_TYPE_WIFIBIND_FAILED = 15;
 
+	public static final int DIALOG_TYPE_CONFIRM = 16;
+
 	private int mCurrentDialogType = 0;
 
 	/**
@@ -89,6 +98,96 @@ public class LiveDialogManager {
 	 */
 	public void setDialogManageFn(ILiveDialogManagerFn _fn) {
 		dialogManagerFn = _fn;
+	}
+
+	/**
+	 * 弹出举报的窗口
+	 * 
+	 * @Title: showDialog
+	 * @Description: TODO void
+	 * @author 曾浩
+	 * @throws
+	 */
+	public void showDialog(final Context context, final int dialogId) {
+		dialog = new AlertDialog.Builder(context, R.style.CustomDialog).create();
+		dialog.show();
+		dialog.getWindow().setContentView(R.layout.video_square_dialog_main);
+		dialog.getWindow().findViewById(R.id.report).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+				ad = new AlertDialog.Builder(context, R.style.CustomDialog).create();
+				ad.show();
+				ad.getWindow().setContentView(R.layout.video_square_dialog_selected);
+				ad.getWindow().findViewById(R.id.sqds).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						confirmation(context, dialogId, "1");
+					}
+				});
+				ad.getWindow().findViewById(R.id.yyhz).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						confirmation(context, dialogId, "2");
+					}
+				});
+				ad.getWindow().findViewById(R.id.zzmg).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						confirmation(context, dialogId, "3");
+					}
+				});
+				ad.getWindow().findViewById(R.id.qtyy).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						confirmation(context, dialogId, "4");
+					}
+				});
+				ad.getWindow().findViewById(R.id.qx).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+					}
+				});
+			}
+		});
+
+		dialog.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+	}
+
+	public void confirmation(final Context context, final int dialogId, final String reporttype) {
+		ad.dismiss();
+		confirmation = new AlertDialog.Builder(context, R.style.CustomDialog).create();
+		confirmation.show();
+		confirmation.getWindow().setContentView(R.layout.video_square_dialog_confirmation);
+		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				sendMessageCallBack(dialogId, FUNCTION_DIALOG_CANCEL, reporttype);
+
+				// boolean isSucess = report("1", getCurrentVideoId(),
+				// reporttype);
+				// if (isSucess) {
+				// GolukUtils.showToast(LiveActivity.this, "举报成功,我们稍后会进行处理");
+				// } else {
+				// GolukUtils.showToast(LiveActivity.this, "举报失败!");
+				// }
+
+				confirmation.dismiss();
+			}
+		});
+		confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				confirmation.dismiss();
+			}
+		});
 	}
 
 	/**
