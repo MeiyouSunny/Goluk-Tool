@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -72,7 +71,6 @@ import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
 import com.rd.car.player.RtmpPlayerView;
-import com.umeng.socialize.sso.UMSsoHandler;
 
 public class LiveActivity extends BaseActivity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
 		ILiveDialogManagerFn, ITimerManagerFn, ILocationFn, IPCManagerFn, ILive, VideoSuqareManagerFn {
@@ -178,6 +176,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private Button mShareBtn = null;
 	/** 直播发起时间 */
 	private TextView mStartTimeTv = null;
+	private Bitmap mThumbBitmap = null;
+	private boolean isRequestedForServer = false;
+	private boolean mIsFirstSucess = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -194,11 +195,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 
-		VIEW_SELF_PLAY = "rtsp://admin:123456@" + GolukApplication.mIpcIp + "/sub";
-		mRtmpUrl = this.getRtmpAddress();
-		if (null == mRtmpUrl) {
-			mRtmpUrl = UPLOAD_VOIDE_PRE;
-		}
+		// 获取直播所需的地址
+		getURL();
 		// 获取数据
 		getIntentData();
 		// 界面初始化
@@ -209,7 +207,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		initMap();
 		// 获取我的登录信息
 		getMyInfo();
-
 		// 开始预览或开始直播
 		if (isShareLive) {
 			mApp.mSharedPreUtil.setIsLiveNormalExit(false);
@@ -236,9 +233,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		drawPersonsHead();
 		mLiveManager = new TimerManager(10);
 		mLiveManager.setListener(this);
-
 		mApp.addLocationListener(TAG, this);
-
 		if (isShareLive) {
 			if (isContinueLive) {
 				// 续直播
@@ -259,11 +254,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mBaseHandler.sendEmptyMessageDelayed(MSG_H_UPLOAD_TIMEOUT, DURATION_TIMEOUT);
 			startLiveLook(currentUserInfo);
 			updateCount(Integer.parseInt(currentUserInfo.zanCount), Integer.parseInt(currentUserInfo.persons));
-
 		}
-
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
-
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("live", this);
 
@@ -273,6 +265,14 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
 			}
 			mVideoSquareManager.addVideoSquareManagerListener("live", this);
+		}
+	}
+
+	private void getURL() {
+		VIEW_SELF_PLAY = "rtsp://admin:123456@" + GolukApplication.mIpcIp + "/sub";
+		mRtmpUrl = this.getRtmpAddress();
+		if (null == mRtmpUrl) {
+			mRtmpUrl = UPLOAD_VOIDE_PRE;
 		}
 	}
 
@@ -337,7 +337,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			zanBtn.setText(currentUserInfo.zanCount);
 			mLookCountTv.setText(currentUserInfo.persons);
 		}
-
 		mStartTimeTv.setText("今天 " + GolukUtils.getCurrentTime());
 	}
 
@@ -350,8 +349,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		return "live" + time;
 	}
-
-	private boolean isRequestedForServer = false;
 
 	// 开启自己的直播,请求服务器 (在用户点击完设置后开始请求)
 	private void startLiveForServer() {
@@ -685,8 +682,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (!isShowPop) {
 			isShowPop = true;
 		}
-		loginSucess();
-
 	}
 
 	private void initMap() {
@@ -739,13 +734,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 					mRPVPalyVideo.setAudioMute(true);
 				}
 			}
-
 			isSetAudioMute = true;
-
 		}
-
 		mRPVPalyVideo.start();
-
 	}
 
 	private void updateCountDown(String msg) {
@@ -874,12 +865,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	}
 
-	private boolean mIsFirstSucess = true;
-
 	// 上报位置
 	private void startUploadMyPosition() {
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StartUploadPosition, "");
-		// Toast.makeText(this, "开始上报位置", Toast.LENGTH_LONG).show();
 	}
 
 	// 判断自己发起的直播是否有效
@@ -1054,7 +1042,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	// 点击 "举报"
 	private void click_juBao() {
 		if (!isShareLive) {
-			showDialog();
+			LiveDialogManager.getManagerInstance().showDialog(this, LiveDialogManager.DIALOG_TYPE_CONFIRM);
 		}
 	}
 
@@ -1096,96 +1084,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				VideoSuqareManagerFn.SquareCmd_Req_ReportUp, json);
 	}
 
-	private AlertDialog dialog = null;
-	private AlertDialog ad = null;
-	private AlertDialog confirmation = null;
-
-	/**
-	 * 弹出举报的窗口
-	 * 
-	 * @Title: showDialog
-	 * @Description: TODO void
-	 * @author 曾浩
-	 * @throws
-	 */
-	public void showDialog() {
-		dialog = new AlertDialog.Builder(LiveActivity.this, R.style.CustomDialog).create();
-		dialog.show();
-		dialog.getWindow().setContentView(R.layout.video_square_dialog_main);
-		dialog.getWindow().findViewById(R.id.report).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-				ad = new AlertDialog.Builder(LiveActivity.this, R.style.CustomDialog).create();
-				ad.show();
-				ad.getWindow().setContentView(R.layout.video_square_dialog_selected);
-				ad.getWindow().findViewById(R.id.sqds).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						confirmation("1");
-					}
-				});
-				ad.getWindow().findViewById(R.id.yyhz).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						confirmation("2");
-					}
-				});
-				ad.getWindow().findViewById(R.id.zzmg).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						confirmation("3");
-					}
-				});
-				ad.getWindow().findViewById(R.id.qtyy).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						confirmation("4");
-					}
-				});
-				ad.getWindow().findViewById(R.id.qx).setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						ad.dismiss();
-					}
-				});
-			}
-		});
-
-		dialog.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-	}
-
-	public void confirmation(final String reporttype) {
-		ad.dismiss();
-		confirmation = new AlertDialog.Builder(LiveActivity.this, R.style.CustomDialog).create();
-		confirmation.show();
-		confirmation.getWindow().setContentView(R.layout.video_square_dialog_confirmation);
-		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				boolean isSucess = report("1", getCurrentVideoId(), reporttype);
-				if (isSucess) {
-					GolukUtils.showToast(LiveActivity.this, "举报成功,我们稍后会进行处理");
-				} else {
-					GolukUtils.showToast(LiveActivity.this, "举报失败!");
-				}
-				confirmation.dismiss();
-			}
-		});
-		confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				confirmation.dismiss();
-			}
-		});
-	}
-
 	private void click_share(boolean isClick) {
 		String vid = null;
 		if (isShareLive) {
@@ -1196,32 +1094,17 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			vid = liveData.vid;
 		}
-
 		boolean isSucess = mVideoSquareManager.getShareUrl(vid, "1");
 		if (!isSucess) {
 			if (isClick) {
 				GolukUtils.showToast(this, "分享失败");
 			}
-
 		} else {
 			if (isClick) {
 				LiveDialogManager.getManagerInstance().showShareProgressDialog(this,
 						LiveDialogManager.DIALOG_TYPE_LIVE_SHARE, "提示", "正在请求分享地址");
 			}
-
 		}
-	}
-
-	private void loginSucess() {
-		if (this.isShareLive) {
-			return;
-		}
-		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 111111");
-		if (!mApp.isUserLoginSucess) {
-			// 登录失败
-			return;
-		}
-		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----loginSucess----22 : 222222");
 	}
 
 	private String getCurrentVideoId() {
@@ -1239,7 +1122,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			return;
 		}
 		if (isAlreadClickOK) {
-			// showToast("不能重复点赞");
 			return;
 		}
 		isAlreadClickOK = true;
@@ -1304,8 +1186,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				+ arg3);
 		playerError(rpv);
 		// 加载画面
-		// rpv.removeCallbacks(retryRunnable);
-		// rpv.postDelayed(retryRunnable, 5000);
 		return false;
 	}
 
@@ -1314,20 +1194,13 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 视频播放完成
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerCompletion : ");
 		playerError(rpv);
-		// rpv.removeCallbacks(retryRunnable);
-		// rpv.postDelayed(retryRunnable, 5000);
 	}
 
 	@Override
 	public void onPlayerBegin(RtmpPlayerView rpv) {
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerBegin : ");
 		mVideoLoading.setVisibility(View.GONE);
-		// mRPVPalyVideo.setVisibility(View.VISIBLE);
-		// // mRPVPalyVideo.invalidate();
-		// mRPVPalyVideo.postInvalidate();
-
 		showPlayer();
-
 		if (!isShareLive) {
 			mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
 			mLiveManager.cancelTimer();
@@ -1518,12 +1391,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type:  sucess:" + success);
 			return;
 		}
-
 		final String str = (String) obj;
-
 		GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type111:  str：" + str);
-		// String str =
-		// "{\"code\":\"200\",\"state\":\"true\",\"info\":[{\"utype\":\"1\",\"aid\":\"1\",\"nickname\":\"张三\",\"lon\":\"116.357428\",\"lat\":\"39.93923\",\"picurl\":\"http://img2.3lian.com/img2007/18/18/003.png\",\"speed\":\"34公里/小时\"},{\"aid\":\"2\",\"utype\":\"2\",\"nickname\":\"李四\",\"lon\":\"116.327428\",\"lat\":\"39.91923\",\"picurl\":\"http://img.cool80.com/i/png/217/02.png\",\"speed\":\"342公里/小时\"}]}";
 		try {
 			JSONObject json = new JSONObject(str);
 			// 请求成功
@@ -1557,41 +1426,28 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 					return;
 				}
 				this.updateCount(Integer.parseInt(tempMyInfo.zanCount), Integer.parseInt(tempMyInfo.persons));
-
 				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback 3333333:  更新我自己的赞 zanCount："
 						+ tempMyInfo.zanCount + "	permson:" + tempMyInfo.persons);
 				return;
 			}
 			if (null == tempUserInfo) {
-				// showToast("未找到用户信息");
-
 				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type44444:  str：" + str);
 				return;
 			}
-
 			GolukDebugUtils.e("", "jyf----20150406----LiveActivity----pointDataCallback----aid  : " + tempUserInfo.aid
 					+ " lon:" + tempUserInfo.lon + " lat:" + tempUserInfo.lat);
-
 			mBaiduMapManage.updatePosition(tempUserInfo.aid, Double.parseDouble(tempUserInfo.lon),
 					Double.parseDouble(tempUserInfo.lat));
-
 			currentUserInfo.lat = tempUserInfo.lat;
 			currentUserInfo.lon = tempUserInfo.lon;
-
 			GolukDebugUtils.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  str：" + str);
-
 			// 设置“赞”的人数，和观看人数
 			this.updateCount(Integer.parseInt(tempUserInfo.zanCount), Integer.parseInt(tempUserInfo.persons));
-
 			GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type66666:  str：" + str);
-
 			if (!isShareLive) {
 				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type777777:  str：" + str);
-				// if (!isGetingAddress) {
 				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type88888  str：" + str);
-				// isGetingAddress = true;
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type999999:  Exception ：");
@@ -1646,11 +1502,18 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		case LiveDialogManager.DIALOG_TYPE_LIVE_SHARE:
 			if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
 				// 取消
-				// showToast("取消分享");
-				// boolean b =
-				// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				// IPageNotifyFn.PageType_Share, JsonUtil.getCancelJson());
 			}
+			break;
+		case LiveDialogManager.DIALOG_TYPE_CONFIRM:
+
+			final String reporttype = (String) data;
+			boolean isSucess = report("1", getCurrentVideoId(), reporttype);
+			if (isSucess) {
+				GolukUtils.showToast(LiveActivity.this, "举报成功,我们稍后会进行处理");
+			} else {
+				GolukUtils.showToast(LiveActivity.this, "举报失败!");
+			}
+
 			break;
 		}
 	}
@@ -1720,47 +1583,27 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 不更新数据
 			return;
 		}
-		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack----0000  : ");
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack----111  : ");
-
 		if (null != location) {
-			// LogUtil.e(null,
-			// "jyf----20150406----LiveActivity----LocationCallBack----updatePositon  : ");
 			if (mApp.isUserLoginSucess) {
 				if (null == myInfo) {
 					this.getMyInfo();
 				}
-				// LogUtil.e(null,
-				// "jyf----20150406----LiveActivity----LocationCallBack---draw MY Head: "
-				// + myInfo.nickName);
 				if (null != myInfo) {
 					if (LOCATION_TYPE_UNKNOW == this.mCurrentLocationType) {
 						// 当前是未定位的,　直接画气泡
-
 					} else if (LOCATION_TYPE_POINT == mCurrentLocationType) {
 						// 当前画的是蓝点，需要清除掉蓝点，再画气泡
-
 					} else {
 						// 当前是画的气泡，直接更新气泡的位置即可
-						// LogUtil.e(null,
-						// "jyf----20150406----LiveActivity----LocationCallBack---lon:: "
-						// + location.rawLon + "	lat:" + location.rawLat);
 						mBaiduMapManage.updatePosition(myInfo.aid, location.rawLon, location.rawLat);
 					}
-
 					// 设置当前画的是头像
 					mCurrentLocationType = LOCATION_TYPE_HEAD;
-
 				}
 			} else {
 				baiduDrawMyPosition(location.rawLon, location.rawLat, location.radius);
 			}
-		}
-
-		if (!isShareLive) {
-			// 只有在直播界面时才获取自己的位置
-			return;
 		}
 	}
 
@@ -1845,7 +1688,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			GolukUtils.showToast(this, "分享失败");
 			return;
 		}
-
 		String vid = null;
 		if (isShareLive) {
 			vid = mCurrentVideoId;
@@ -1855,11 +1697,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			vid = liveData.vid;
 		}
-
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, vid);
 	}
-
-	private Bitmap mThumbBitmap = null;
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
@@ -1873,7 +1712,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			try {
 				JSONObject result = new JSONObject((String) param2);
-				GolukDebugUtils.e("", "YYYY+RESULT00000000");
 				if (!result.getBoolean("success")) {
 					return;
 				}
