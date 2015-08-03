@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
+import java.net.URLEncoder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -173,8 +175,16 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		} else {
 			opinion = mEditSuggest.getText().toString();
 			contact = mEditConnection.getText().toString();
-			String opinionJson = JsonUtil.putOpinion(tag, sys_version, app_version, ipc_version, phone_models, opinion,
-					contact);
+			String newOpinion = "";
+			String newContact = "";
+			try{
+				newOpinion = URLEncoder.encode(opinion, "utf-8");
+				newContact = URLEncoder.encode(contact, "utf-8");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			String opinionJson = JsonUtil.putOpinion(tag, sys_version, app_version, ipc_version, phone_models, newOpinion,
+					newContact);
 			GolukDebugUtils.i("lily", "-----------opinionJson------" + opinionJson);
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_FeedBack, opinionJson);

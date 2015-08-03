@@ -350,7 +350,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			} else if (mSign == 1) {
 				// TODO 判断摄像头是否连接 判断是否是最新版本
 				if (!mApp.getIpcIsLogin()) {
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "您好像没有连接摄像头哦。");
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, this.getResources()
+							.getString(R.string.update_no_connect_ipc_hint));
 				} else {
 					String version = mApp.mSharedPreUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
