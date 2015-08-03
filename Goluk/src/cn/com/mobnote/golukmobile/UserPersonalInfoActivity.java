@@ -125,7 +125,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		mHeadLayout = (RelativeLayout) findViewById(R.id.user_personal_info_head_layout);
 		mNameLayout = (RelativeLayout) findViewById(R.id.user_personal_info_name_layout);
 		mSignLayout = (RelativeLayout) findViewById(R.id.user_personal_info_sign_layout);
-		
+
 		mTextNone = (TextView) findViewById(R.id.user_personal_none);
 
 		if (null == mCustomProgressDialog) {
@@ -323,21 +323,25 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			translateAnim(mImageHead);
 			rightBtn.setText("编辑");
 		} else {
-			// {NickName：“昵称”，UserHead:”1”，UserSex:”1”,Desc:""}
-			String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\"" + head2 + "\",\"UserSex\":\"" + sex2
-					+ "\",\"Desc\":\"" + newSign + "\"}";
-			GolukDebugUtils.i("lily", "-----name-----" + newName + "-----head2----" + head2 + "-----sex2-----" + sex2
-					+ "-----newsign---" + newSign);
-			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_ModifyUserInfo, isSave);
-			if (b) {
-				// 保存中
-				mCustomProgressDialog.show();
-				backBtn.setEnabled(false);
-				rightBtn.setEnabled(false);
-				mHeadLayout.setEnabled(false);
-				mNameLayout.setEnabled(false);
-				mSignLayout.setEnabled(false);
+			if (!UserUtils.isNetDeviceAvailable(this)) {
+				GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+			} else {
+				// {NickName：“昵称”，UserHead:”1”，UserSex:”1”,Desc:""}
+				String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\"" + head2 + "\",\"UserSex\":\""
+						+ sex2 + "\",\"Desc\":\"" + newSign + "\"}";
+				GolukDebugUtils.i("lily", "-----name-----" + newName + "-----head2----" + head2 + "-----sex2-----"
+						+ sex2 + "-----newsign---" + newSign);
+				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+						IPageNotifyFn.PageType_ModifyUserInfo, isSave);
+				if (b) {
+					// 保存中
+					mCustomProgressDialog.show();
+					backBtn.setEnabled(false);
+					rightBtn.setEnabled(false);
+					mHeadLayout.setEnabled(false);
+					mNameLayout.setEnabled(false);
+					mSignLayout.setEnabled(false);
+				}
 			}
 		}
 	}
