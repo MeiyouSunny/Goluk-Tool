@@ -45,7 +45,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		initView();
 		// title
 		mTextTitle.setText("编辑签名");
-		mTextOk.setText("确认");
+		mTextOk.setText("确认  ");
 		//
 		int count = mEditBody.getText().toString().length();
 		mTextCount.setText("" + (MAX_COUNT - count));

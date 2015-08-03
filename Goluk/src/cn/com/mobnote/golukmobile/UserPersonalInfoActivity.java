@@ -179,7 +179,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				mImageArrow1.setVisibility(View.VISIBLE);
 				mImageArrow2.setVisibility(View.VISIBLE);
 				mImageArrow3.setVisibility(View.VISIBLE);
-				mTextNone.setPadding(0, 0, 11, 0);
+				mTextNone.setPadding(0, 0, 12, 0);
 				translateAnim(mImageHead);
 				rightBtn.setText("完成");
 			} else {

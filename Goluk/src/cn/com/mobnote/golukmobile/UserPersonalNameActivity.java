@@ -51,7 +51,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		initView();
 		// title
 		mTextTitle.setText("编辑昵称");
-		mTextOk.setText("确认");
+		mTextOk.setText("确认  ");
 		//
 		int count = mEditName.getText().toString().length();
 		mTextCount.setText("" + (MAX_COUNT - count));
