@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"  >
+    
+    <RelativeLayout 
+        android:id="@+id/headlayout"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content" >
+		
+        <ImageView 
+            android:id="@+id/headimg"
+            android:layout_width="50dp"
+    		android:layout_height="50dp" 
+    		android:background="#ff0000" />
+        
+        <LinearLayout 
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/headimg"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+  		  	android:layout_height="wrap_content" 
+  		  	android:gravity="center_vertical"
+  		  	android:orientation="vertical">
+            
+            <TextView
+	        android:id="@+id/nikename"
+	        android:text="chsdfkkasdf"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:gravity="center"
+	        android:textColor="#1163a2"
+	        android:textSize="14sp" />
+            
+            <TextView
+	        android:id="@+id/time"
+	        android:text="今天 13:59"
+	        android:layout_marginTop="3dp"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:gravity="center"
+	        android:textColor="#888888"
+	        android:textSize="12sp" />
+        </LinearLayout>
+        
+        <ImageView 
+            android:id="@+id/function"
+            android:layout_width="20dp"
+    		android:layout_height="20dp"
+    		android:layout_alignParentRight="true"
+    		android:layout_centerVertical="true"
+    		android:background="#ff0000" />
+        
+    </RelativeLayout>
+    
+    <RelativeLayout 
+        android:id="@+id/imageLayout"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content" >
+        
+        </RelativeLayout>
+        
+    
+    
+</RelativeLayout>
