@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -127,7 +125,6 @@ public class NewestAdapter extends BaseAdapter {
 				holder.comment2 = (TextView)convertView.findViewById(R.id.comment2);
 				holder.comment3 = (TextView)convertView.findViewById(R.id.comment3);
 				
-				
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
@@ -139,10 +136,24 @@ public class NewestAdapter extends BaseAdapter {
 			}
 			
 			initView(arg0 - 1);
-			
+			initListener(arg0 - 1);
 		}
 		
 		return convertView;
+	}
+	
+	private void initListener(int index) {
+		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
+		
+		holder.function.setOnClickListener(new ClickCategoryListener(mVideoSquareInfo.mVideoEntity.videoid));
+		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mVideoSquareInfo.mVideoEntity.videoid));
+		
+		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
+		if (comments.size() > 0) {
+			holder.totalcomments.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
+			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
+		}
+		
 	}
 	
 	private String getFormatNumber(String fmtnumber) {
@@ -193,6 +204,8 @@ public class NewestAdapter extends BaseAdapter {
 			holder.totalcomments.setText("查看所有"+getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)+"条评论");
 			holder.totalcomments.setVisibility(View.VISIBLE);
 			holder.totlaCommentLayout.setVisibility(View.VISIBLE);
+			holder.totalcomments.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
+			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
 			holder.comment1.setVisibility(View.VISIBLE);
 			holder.comment2.setVisibility(View.VISIBLE);
 			holder.comment3.setVisibility(View.VISIBLE);
@@ -314,7 +327,7 @@ public class NewestAdapter extends BaseAdapter {
         SimpleDraweeView view = new SimpleDraweeView(mContext);
         GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
         GenericDraweeHierarchy hierarchy = builder
-                        .setFadeDuration(300)
+                    .setFadeDuration(300)
                     .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
                     .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
                     .setActualImageScaleType(ScaleType.FIT_XY)
@@ -359,7 +372,6 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
-		
 		
 	}
 	

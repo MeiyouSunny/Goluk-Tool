@@ -143,7 +143,7 @@ public class NewestListView {
 				video.commentList.add(comm);
 			}
 			
-			video.comcount = "1565244";
+			video.comcount = "15244";
 			info.mVideoEntity = video;
 			
 			mDataList.add(info);
