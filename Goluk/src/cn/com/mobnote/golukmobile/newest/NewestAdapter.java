@@ -1,6 +1,10 @@
 package cn.com.mobnote.golukmobile.newest;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -9,12 +13,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -31,7 +34,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 @SuppressLint("InflateParams")
 public class NewestAdapter extends BaseAdapter {
 	private Context mContext = null;
-	private List<JXListItemDataInfo> mDataList = null;
+	private NewestListHeadDataInfo mHeadDataInfo = null;
+	private List<VideoSquareInfo> mDataList = null;
 	private int count = 0;
 	private int width = 0;
 	private float density = 0;
@@ -42,15 +46,16 @@ public class NewestAdapter extends BaseAdapter {
 	
 	public NewestAdapter(Context context) {
 		mContext = context;
-		mDataList = new ArrayList<JXListItemDataInfo>();
+		mDataList = new ArrayList<VideoSquareInfo>();
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
 	}
 
-	public void setData(List<JXListItemDataInfo> data) {
+	public void setData(NewestListHeadDataInfo headata, List<VideoSquareInfo> data) {
+		mHeadDataInfo = headata;
 		mDataList.clear();
 		mDataList.addAll(data);
-		count = mDataList.size();
+		count = mDataList.size() + 1;
 		this.notifyDataSetChanged();
 	}
 
@@ -114,9 +119,10 @@ public class NewestAdapter extends BaseAdapter {
 				
 				holder.zText = (TextView)convertView.findViewById(R.id.zText);
 				holder.weiguan = (TextView)convertView.findViewById(R.id.weiguan);
-				holder.weiguan = (TextView)convertView.findViewById(R.id.weiguan);
 				holder.totalcomments = (TextView)convertView.findViewById(R.id.totalcomments);
+				holder.detail = (TextView)convertView.findViewById(R.id.detail);
 				
+				holder.totlaCommentLayout = (LinearLayout)convertView.findViewById(R.id.totlaCommentLayout);
 				holder.comment1 = (TextView)convertView.findViewById(R.id.comment1);
 				holder.comment2 = (TextView)convertView.findViewById(R.id.comment2);
 				holder.comment3 = (TextView)convertView.findViewById(R.id.comment3);
@@ -132,44 +138,110 @@ public class NewestAdapter extends BaseAdapter {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			
-			initView();
+			initView(arg0 - 1);
 			
 		}
 		
-		
-		
-		
-	
- 
 		return convertView;
 	}
 	
-	private void initView() {
-		loadImage(holder.imageLayout, "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+	private String getFormatNumber(String fmtnumber) {
+		String number;
 		
-		String nikename = "chradrse";
-		String t_str = nikename+" "+"所得到的卡卡阿拉开口说道的";
+		int wg = Integer.parseInt(fmtnumber);
+		
+		if(wg < 100000){
+			DecimalFormat df= new DecimalFormat("#,###");
+			number = df.format(wg);
+		}else{
+			number = "100,000+";
+		}
+		return number;
+	}
+	
+	private void initView(int index) {
+		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
+		loadImage(holder.imageLayout, mVideoSquareInfo.mVideoEntity.picture);
+		
+		showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
+			
+		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
+		holder.time.setText(formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
+		
+		if("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
+		}else {
+			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
+		}
+		
+		if("-1".equals(mVideoSquareInfo.mVideoEntity.praisenumber)) {
+			holder.zText.setText("");
+		}else {
+			holder.zText.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.praisenumber) + "赞");
+		}
+		
+		if("-1".equals(mVideoSquareInfo.mVideoEntity.clicknumber)) {
+			holder.weiguan.setText("");
+		}else {
+			holder.weiguan.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + "围观");
+		}
+		
+		showText(holder.detail, mVideoSquareInfo.mUserEntity.nickname, mVideoSquareInfo.mVideoEntity.describe);	
+		
+		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
+		if (comments.size() > 0) {
+			holder.totalcomments.setText("查看所有"+getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)+"条评论");
+			holder.totalcomments.setVisibility(View.VISIBLE);
+			holder.totlaCommentLayout.setVisibility(View.VISIBLE);
+			holder.comment1.setVisibility(View.VISIBLE);
+			holder.comment2.setVisibility(View.VISIBLE);
+			holder.comment3.setVisibility(View.VISIBLE);
+			if (1 == comments.size()) {
+				showText(holder.comment1, comments.get(0).name, comments.get(0).text);										
+				holder.comment2.setVisibility(View.GONE);
+				holder.comment3.setVisibility(View.GONE);
+			}else if (2 == comments.size()) {
+				showText(holder.comment1, comments.get(0).name, comments.get(0).text);
+				showText(holder.comment2, comments.get(1).name, comments.get(1).text);
+				holder.comment3.setVisibility(View.GONE);
+			}else if (3 == comments.size()) {
+				showText(holder.comment1, comments.get(0).name, comments.get(0).text);
+				showText(holder.comment2, comments.get(1).name, comments.get(1).text);
+				showText(holder.comment3, comments.get(2).name, comments.get(2).text);
+			}
+			
+		}else {
+			holder.totalcomments.setVisibility(View.GONE);
+			holder.totlaCommentLayout.setVisibility(View.GONE);
+		}
+		
+	}
+	
+	private void showHead(ImageView view, String headportrait) {
+		if ("1".equals(headportrait)) {
+			view.setBackgroundResource(R.drawable.editor_head_boy1);
+		} else if ("2".equals(headportrait)) {
+			view.setBackgroundResource(R.drawable.editor_head_boy2);
+		} else if ("3".equals(headportrait)) {
+			view.setBackgroundResource(R.drawable.editor_head_boy3);
+		} else if ("4".equals(headportrait)) {
+			view.setBackgroundResource(R.drawable.editor_head_girl4);
+		} else if ("5".equals(headportrait)) {
+			view.setBackgroundResource(R.drawable.editor_head_girl5);
+		} else if ("6".equals(headportrait)) {
+			view.setBackgroundResource(R.drawable.editor_head_girl6);
+		} else if ("7".equals(headportrait)) {
+			view.setBackgroundResource(R.drawable.editor_head_feault7);
+		} else {
+			view.setBackgroundResource(R.drawable.editor_head_feault7);
+		}
+	}
+	
+	private void showText(TextView view, String nikename, String text){
+		String t_str = nikename + " " + text;
 		SpannableStringBuilder style=new SpannableStringBuilder(t_str);      
         style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);        
-        holder.comment1.setText(style);  
-		
-        String nikename2 = "shhdhdhd";
-		String t_str2 = nikename2+" "+"所三十三岁搜索得到的卡卡阿拉开口说道的";
-		SpannableStringBuilder style2=new SpannableStringBuilder(t_str2);      
-        style2.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename2.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);        
-        holder.comment2.setText(style2);  
-        
-        String nikename3 = "kkkhh";
-		String t_str3 = nikename3+" "+"所得到的卡卡阿ksksddh生活设施时候都会的回答很的拉开口说道的";
-		SpannableStringBuilder style3=new SpannableStringBuilder(t_str3);      
-         style3.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename3.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);        
-         holder.comment3.setText(style3);  
-    	holder.comment3.setVisibility(View.VISIBLE);
-    	
-    	
-    	
-    	
-    	
+        view.setText(style);  
 	}
 	
 	private View getHeadView() {
@@ -179,14 +251,31 @@ public class NewestAdapter extends BaseAdapter {
 		RelativeLayout main = (RelativeLayout)view.findViewById(R.id.main);
 		RelativeLayout liveLayout = (RelativeLayout)view.findViewById(R.id.liveLayout);
 		
-		int height = (int) ((float) width / 1.77f);
-		RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
-		liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
-		liveLayout.setLayoutParams(liveLayoutParams);
-		RelativeLayout imagelayout = (RelativeLayout)view.findViewById(R.id.imagelayout);
-		loadImage(imagelayout, "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+		LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
+		if (null != mLiveInfo) {
+			liveLayout.setVisibility(View.VISIBLE);
+			int height = (int) ((float) width / 1.77f);
+			RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
+			liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
+			liveLayout.setLayoutParams(liveLayoutParams);
+			RelativeLayout imagelayout = (RelativeLayout)view.findViewById(R.id.imagelayout);
+			loadImage(imagelayout, mLiveInfo.pic);
+			
+			LinearLayout mLookLayout = (LinearLayout)view.findViewById(R.id.mLookLayout);
+			TextView mLookNum = (TextView)view.findViewById(R.id.mLookNum);
+			if ("-1".equals(mLiveInfo.number)) {
+				mLookLayout.setVisibility(View.GONE);
+			}else {
+				mLookLayout.setVisibility(View.VISIBLE);
+				mLookNum.setText(mLiveInfo.number);
+			}
+			
+		}else {
+			liveLayout.setVisibility(View.GONE);
+		}
 				
-		for (int i=0; i<4; i++) {
+		for (int i=0; i<mHeadDataInfo.categoryList.size(); i++) {
+			CategoryDataInfo mCategoryDataInfo = mHeadDataInfo.categoryList.get(i);
 			RelativeLayout item = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.category_item, null);
 			main.setPadding(0, (int)(10*density), 0, 0);
 			int iid = i+1111;
@@ -198,9 +287,9 @@ public class NewestAdapter extends BaseAdapter {
 			
 			RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 			
-			mTitleName.setText("＃曝光台"+i);
-			mUpdateTime.setText("一分钟前更新");
-			loadImage(imageLayout, "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+			mTitleName.setText(mCategoryDataInfo.name);
+			mUpdateTime.setText(mCategoryDataInfo.time);
+			loadImage(imageLayout, mCategoryDataInfo.coverurl);
 			
 			int id = i+1111-2;
 			if (i%2 == 0) {				
@@ -216,13 +305,6 @@ public class NewestAdapter extends BaseAdapter {
 			main.addView(item, itemparams);
 			
 		}
-		
-		
-		
-		
-		
-		
-		
 		
 		return view;
 	}
@@ -273,6 +355,7 @@ public class NewestAdapter extends BaseAdapter {
 		TextView detail;
 		TextView totalcomments;
 		
+		LinearLayout totlaCommentLayout;
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
@@ -309,6 +392,27 @@ public class NewestAdapter extends BaseAdapter {
 
 	public void onDestroy() {
 		
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	public String formatTime(String date) {
+		String time = "";
+		if (null != date) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+
+			try {
+				Date strtodate = formatter.parse(date);
+				if (null != strtodate) {
+					formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
+					if (null != formatter) {
+						time = formatter.format(strtodate);
+					}
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return time;
 	}
 
 }

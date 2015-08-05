@@ -82,7 +82,6 @@ public class WonderfulSelectedListView {
 			}
 			
 			if(i == 1) {
-				info.showDate = true;
 				info.jxdate = "2015.08.04";
 			}
 			
