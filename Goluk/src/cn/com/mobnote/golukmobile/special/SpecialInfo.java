@@ -26,4 +26,15 @@ public class SpecialInfo {
 	 * 视频播放地址
 	 */
 	public String videopath;
+	
+	/**
+	 * outurl
+	 */
+	public String outurl;
+	
+	/**
+	 * outurlname
+	 */
+	public String outurlname;
+	
 }

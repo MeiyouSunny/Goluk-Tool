@@ -124,5 +124,141 @@ public class SpecialDataManage {
 			return null;
 		}
 	}
+	
+	
+	/**
+	 * 获取聚合的视频列表
+	  * @Title: getClusterList 
+	  * @Description: TODO
+	  * @param response
+	  * @return List<ClusterInfo> 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	public List<ClusterInfo> getClusterList(String response){
+		JSONObject resource;
+		try {
+			resource = new JSONObject(response);
+			List<ClusterInfo> clusters = null;
+			ClusterInfo item = null;
+
+			if (resource != null) {
+				boolean success = resource.getBoolean("success");
+				if (success) {
+					clusters = new ArrayList<ClusterInfo>();
+					JSONObject data = resource.getJSONObject("data");
+					String result = data.optString("result");
+					if ("0".equals(result)) {
+
+						// 解析视频列表集合
+						JSONArray videolist = data.getJSONArray("videolist");
+						if (videolist != null && videolist.length() > 0) {
+							for (int i = 0; i < videolist.length(); i++) {
+								JSONObject video = videolist.getJSONObject(i).getJSONObject("video");
+								JSONObject user = videolist.getJSONObject(i).getJSONObject("user");
+								item = new ClusterInfo();
+								item.author = user.optString("nickname");
+								item.describe = video.optString("describe");
+								item.imagepath = video.optString("picture");
+								item.clicknumber = video.optString("clicknumber");
+								item.videoid = video.optString("videoid");
+								item.sharingtime = video.optString("sharingtime");
+								item.headportrait = user.optString("headportrait");
+								item.videotype = "2";
+								item.videopath = video.optString("ondemandsdkaddress");
+								
+								JSONObject comment = video.getJSONObject("comment");
+								item.iscomment = comment.optString("iscomment");
+								
+								JSONArray comlist = comment.getJSONArray("comlist");
+
+								if (comlist.length() > 0) {
+									for (int j = 0; j < comlist.length(); j++) {
+										JSONObject json = comlist.getJSONObject(j);
+
+										CommentInfo	ci = new CommentInfo();
+										ci.authorid = json.optString("authorid");
+										ci.avatar = json.optString("avatar");
+										ci.commentid = json.optString("commentid");
+										ci.name = json.optString("name");
+										ci.text = json.optString("text");
+										ci.time = json.optString("time");
+										if(j == 0){
+											item.ci1 = ci ;
+										}else if(j == 1){
+											item.ci2 = ci ;
+										}else if(j == 2){
+											item.ci3 = ci ;
+										}
+									}
+								}
+								
+								clusters.add(item);
+
+							}
+						}
+
+					}
+				}
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @throws JSONException 
+	  * 获取聚合头部信息
+	  * @Title: getClusterHead 
+	  * @Description: TODO
+	  * @param response
+	  * @return JSONObject 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	public SpecialInfo getClusterHead(String response) throws JSONException{
+		JSONObject resource = new JSONObject(response);
+		
+		SpecialInfo item = null;
+
+		boolean success = resource.getBoolean("success");
+		if (success) {
+			JSONObject data = resource.getJSONObject("data");
+			String result = data.optString("result");
+			if ("0".equals(result)) {
+				JSONObject head = data.getJSONObject("head");
+				// 解析head
+				if (head != null && !"".equals(head)) {
+					item = new SpecialInfo();
+
+					// 图片
+					if ("1".equals(head.get("showhead"))) {
+						item.imagepath = head.optString("headimg");
+					} else {
+						// 视频
+						item.imagepath = head.optString("headvideoimg");
+						item.videopath = head.optString("headvideo");
+					}
+					item.describe = head.optString("ztIntroduction");// 描述
+					item.author = "";// 没有作者
+					
+					return item;
+				} else {
+					return null;
+				}
+			}else{
+				return null;
+			}
+			
+		}
+		
+		return item;
+		
+	}
+	
 
 }
