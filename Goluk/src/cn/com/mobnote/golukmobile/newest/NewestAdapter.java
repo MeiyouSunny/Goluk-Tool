@@ -2,20 +2,27 @@ package cn.com.mobnote.golukmobile.newest;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -81,75 +88,147 @@ public class NewestAdapter extends BaseAdapter {
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		int type = getItemViewType(arg0);
-		if (FIRST_TYPE == type) {
+		if (FIRST_TYPE == type) {	
 			convertView = getHeadView();
 		}else {
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
+			if(null == convertView) {
+				holder = new ViewHolder();
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
+				holder.imageLayout = (RelativeLayout)convertView.findViewById(R.id.imageLayout);
+				holder.headimg = (ImageView)convertView.findViewById(R.id.headimg);
+				holder.nikename = (TextView)convertView.findViewById(R.id.nikename);
+				holder.time = (TextView)convertView.findViewById(R.id.time);
+				holder.function = (ImageView)convertView.findViewById(R.id.function);
+				
+				holder.praiseLayout = (LinearLayout)convertView.findViewById(R.id.praiseLayout);
+				holder.zanIcon = (ImageView)convertView.findViewById(R.id.zanIcon);
+				holder.zanText = (TextView)convertView.findViewById(R.id.zanText);
+				
+				holder.commentLayout = (LinearLayout)convertView.findViewById(R.id.commentLayout);
+				holder.commentIcon = (ImageView)convertView.findViewById(R.id.commentIcon);
+				holder.commentText = (TextView)convertView.findViewById(R.id.commentText);
+				
+				holder.shareLayout = (LinearLayout)convertView.findViewById(R.id.shareLayout);
+				holder.shareIcon = (ImageView)convertView.findViewById(R.id.shareIcon);
+				holder.shareText = (TextView)convertView.findViewById(R.id.shareText);
+				
+				holder.zText = (TextView)convertView.findViewById(R.id.zText);
+				holder.weiguan = (TextView)convertView.findViewById(R.id.weiguan);
+				holder.weiguan = (TextView)convertView.findViewById(R.id.weiguan);
+				holder.totalcomments = (TextView)convertView.findViewById(R.id.totalcomments);
+				
+				holder.comment1 = (TextView)convertView.findViewById(R.id.comment1);
+				holder.comment2 = (TextView)convertView.findViewById(R.id.comment2);
+				holder.comment3 = (TextView)convertView.findViewById(R.id.comment3);
+				
+				
+				int height = (int) ((float) width / 1.77f);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
+				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
+				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
+				
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			initView();
+			
 		}
 		
 		
-//		if (0 == arg0) {
-//			convertView = getHeadView();
-//		}else {
-//			if (convertView == null) {
-//				convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
-////				holder = new ViewHolder();
-////				holder.imageLayout = (RelativeLayout) convertView.findViewById(R.id.imageLayout);
-////				holder.mTitleName = (TextView) convertView.findViewById(R.id.mTitleName);
-////				holder.mTagName = (TextView) convertView.findViewById(R.id.mTagName);
-////				holder.mVideoLayout = (LinearLayout) convertView.findViewById(R.id.mVideoLayout);
-////				holder.mLookLayout = (LinearLayout) convertView.findViewById(R.id.mLookLayout);
-////				holder.mVideoNum = (TextView) convertView.findViewById(R.id.mVideoNum);
-////				holder.mLookNum = (TextView) convertView.findViewById(R.id.mLookNum);
-//				
-//				convertView.setTag(holder);
-//			} else {
-//				holder = (ViewHolder) convertView.getTag();
-//			}
-//			
-////			JXListItemDataInfo info = mDataList.get(arg0 - 1);
-////			holder.mTitleName.getPaint().setFakeBoldText(true);
-////			holder.mTitleName.setText(info.ztitle);
-////			if(!TextUtils.isEmpty(info.ztag)) {
-////				holder.mTagName.setText(info.ztag);
-////				holder.mTagName.setVisibility(View.VISIBLE);
-////			}else {
-////				holder.mTagName.setVisibility(View.GONE);
-////			}
-////			holder.mVideoNum.setText(info.videonumber);
-////			holder.mLookNum.setText(info.clicknumber);
-////			
-////			loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
-//		}
+		
+		
+	
  
 		return convertView;
 	}
 	
-	private View getHeadView() {
-		RelativeLayout main = new RelativeLayout(mContext);
-		int imagewidth = (int)((width - 10*density)/2);
-		int imageheight = (int)(imagewidth * 0.56);
+	private void initView() {
+		loadImage(holder.imageLayout, "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
 		
-		RelativeLayout item = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.category_item, null);
-		RelativeLayout imageLayout = (RelativeLayout)item.findViewById(R.id.imageLayout);
-		TextView mTitleName = (TextView)item.findViewById(R.id.mTitleName);
-		TextView mUpdateTime = (TextView)item.findViewById(R.id.mUpdateTime);
+		String nikename = "chradrse";
+		String t_str = nikename+" "+"所得到的卡卡阿拉开口说道的";
+		SpannableStringBuilder style=new SpannableStringBuilder(t_str);      
+        style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);        
+        holder.comment1.setText(style);  
 		
-		mTitleName.setText("＃曝光台");
-		mUpdateTime.setText("一分钟前更新");
-		imageLayout.setBackgroundColor(Color.RED);
-		
-		RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
-		itemparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		itemparams.setMargins(0, 0, (int)(10*density), 0);
-		main.setPadding(0, (int)(10*density), 0, (int)(10*density));
-		main.addView(item, itemparams);
-		
-		return main;
+        String nikename2 = "shhdhdhd";
+		String t_str2 = nikename2+" "+"所三十三岁搜索得到的卡卡阿拉开口说道的";
+		SpannableStringBuilder style2=new SpannableStringBuilder(t_str2);      
+        style2.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename2.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);        
+        holder.comment2.setText(style2);  
+        
+        String nikename3 = "kkkhh";
+		String t_str3 = nikename3+" "+"所得到的卡卡阿ksksddh生活设施时候都会的回答很的拉开口说道的";
+		SpannableStringBuilder style3=new SpannableStringBuilder(t_str3);      
+         style3.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename3.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);        
+         holder.comment3.setText(style3);  
+    	holder.comment3.setVisibility(View.VISIBLE);
+    	
+    	
+    	
+    	
+    	
 	}
 	
-	private void loadImage(RelativeLayout mPlayerLayout, String url, String iconUrl) {
-        mPlayerLayout.removeAllViews();
+	private View getHeadView() {
+		int imagewidth = (int)((width - 10*density)/2);
+		int imageheight = (int)(imagewidth * 0.56);
+		RelativeLayout view = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
+		RelativeLayout main = (RelativeLayout)view.findViewById(R.id.main);
+		RelativeLayout liveLayout = (RelativeLayout)view.findViewById(R.id.liveLayout);
+		
+		int height = (int) ((float) width / 1.77f);
+		RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
+		liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
+		liveLayout.setLayoutParams(liveLayoutParams);
+		RelativeLayout imagelayout = (RelativeLayout)view.findViewById(R.id.imagelayout);
+		loadImage(imagelayout, "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+				
+		for (int i=0; i<4; i++) {
+			RelativeLayout item = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.category_item, null);
+			main.setPadding(0, (int)(10*density), 0, 0);
+			int iid = i+1111;
+			item.setId(iid);
+			
+			RelativeLayout imageLayout = (RelativeLayout)item.findViewById(R.id.imageLayout);
+			TextView mTitleName = (TextView)item.findViewById(R.id.mTitleName);
+			TextView mUpdateTime = (TextView)item.findViewById(R.id.mUpdateTime);
+			
+			RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
+			
+			mTitleName.setText("＃曝光台"+i);
+			mUpdateTime.setText("一分钟前更新");
+			loadImage(imageLayout, "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+			
+			int id = i+1111-2;
+			if (i%2 == 0) {				
+				itemparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				itemparams.setMargins(0, 0, (int)(10*density), (int)(10*density));
+				itemparams.addRule(RelativeLayout.BELOW, id);
+			}else {
+				itemparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				itemparams.setMargins(0, 0, 0, (int)(10*density));
+				itemparams.addRule(RelativeLayout.BELOW, id);
+			}
+			
+			main.addView(item, itemparams);
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		return view;
+	}
+	
+	private void loadImage(RelativeLayout layout, String url) {
+		layout.removeAllViews();
         SimpleDraweeView view = new SimpleDraweeView(mContext);
         GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
         GenericDraweeHierarchy hierarchy = builder
@@ -166,39 +245,39 @@ public class NewestAdapter extends BaseAdapter {
                 
         int height = (int) ((float) width / 1.77f);
         RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-        mPlayerLayout.addView(view, mPreLoadingParams);
+        layout.addView(view, mPreLoadingParams);
         
-        if(!TextUtils.isEmpty(iconUrl)) {
-        	SimpleDraweeView icon = new SimpleDraweeView(mContext);
-            GenericDraweeHierarchyBuilder iconbuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-            GenericDraweeHierarchy iconhierarchy = iconbuilder
-                            .setFadeDuration(300)
-                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-                        .setActualImageScaleType(ScaleType.FIT_XY)
-                        .build();
-            icon.setHierarchy(iconhierarchy);
-            
-            if (!lock) {
-            	icon.setImageURI(Uri.parse(iconUrl));
-            }
-            
-            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams((int)(39*density), (int)(20.33*density));
-//            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            iconParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            iconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            mPlayerLayout.addView(icon, iconParams);
-        }
 	}
 
 	public static class ViewHolder {
 		RelativeLayout imageLayout;
-		TextView mTitleName;
-		TextView mTagName;
-		LinearLayout mVideoLayout;
-		LinearLayout mLookLayout;
-		TextView mVideoNum;
-		TextView mLookNum;
+		ImageView headimg;
+		TextView nikename;
+		TextView time;
+		ImageView function;
+		
+		LinearLayout praiseLayout;
+		ImageView zanIcon;
+		TextView zanText;
+		
+		LinearLayout commentLayout;
+		ImageView commentIcon;
+		TextView commentText;
+		
+		LinearLayout shareLayout;
+		ImageView shareIcon;
+		TextView shareText;
+		
+		TextView zText;
+		TextView weiguan;
+		TextView detail;
+		TextView totalcomments;
+		
+		TextView comment1;
+		TextView comment2;
+		TextView comment3;
+		
+		
 	}
 	
 	/**

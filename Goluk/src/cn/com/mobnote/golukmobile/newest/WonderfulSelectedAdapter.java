@@ -66,6 +66,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.wonderful_selected_item, null);
 			holder = new ViewHolder();
+			holder.mDate = (TextView)convertView.findViewById(R.id.mDate);
 			holder.imageLayout = (RelativeLayout) convertView.findViewById(R.id.imageLayout);
 			holder.mTitleName = (TextView) convertView.findViewById(R.id.mTitleName);
 			holder.mTagName = (TextView) convertView.findViewById(R.id.mTagName);
@@ -91,6 +92,13 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		holder.mVideoNum.setText(info.videonumber);
 		holder.mLookNum.setText(info.clicknumber);
 		
+		if(info.showDate) {
+			holder.mDate.setText(info.jxdate);
+			holder.mDate.setVisibility(View.VISIBLE);
+		}else {
+			holder.mDate.setVisibility(View.GONE);
+		}
+		
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;
@@ -114,6 +122,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 
         int height = (int) ((float) width / 1.77f);
         RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+        mPreLoadingParams.addRule(RelativeLayout.BELOW, R.id.mDate);
         mPlayerLayout.addView(view, mPreLoadingParams);
         
         if(!TextUtils.isEmpty(iconUrl)) {
@@ -147,6 +156,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		LinearLayout mLookLayout;
 		TextView mVideoNum;
 		TextView mLookNum;
+		TextView mDate;
 	}
 	
 	/**
