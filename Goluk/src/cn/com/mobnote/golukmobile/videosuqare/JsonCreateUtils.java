@@ -273,5 +273,20 @@ public class JsonCreateUtils {
 
 		return json;
 	}
+	
+	public static String getJXListJson(String jxid, String pagesize) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("jxid", jxid);
+			obj.put("pagesize", pagesize);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
 
 }

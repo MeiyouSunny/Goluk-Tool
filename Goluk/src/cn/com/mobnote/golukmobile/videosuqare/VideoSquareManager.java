@@ -195,6 +195,30 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_ShareVideo,
 				json);
 	}
+	
+	public boolean getJXListData(String jxid, String pagesize) {
+		String json = JsonCreateUtils.getJXListJson(jxid, pagesize);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick, json);
+	}
+	
+	public boolean getZTListData(String jxid, String pagesize) {
+		String json = JsonCreateUtils.getJXListJson(jxid, pagesize);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_Topic_Content, json);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * 同步获取视频广场列表数据
