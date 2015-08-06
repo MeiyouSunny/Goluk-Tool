@@ -1,5 +1,10 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
+
  /**
   * 1.编辑器必须显示空白处
   *
@@ -52,4 +57,13 @@ public class VideoEntity {
 	public String ispraise;
 	
 	public LiveVideoData livevideodata;
+	public String reason;
+	public String iscomment;
+	public String comcount;
+	public List<CommentDataInfo> commentList;
+	
+	public VideoEntity() {
+		this.commentList = new ArrayList<CommentDataInfo>();
+	}
+	
 }

@@ -92,7 +92,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		holder.mVideoNum.setText(info.videonumber);
 		holder.mLookNum.setText(info.clicknumber);
 		
-		if(info.showDate) {
+		if(!TextUtils.isEmpty(info.jxdate)) {
 			holder.mDate.setText(info.jxdate);
 			holder.mDate.setVisibility(View.VISIBLE);
 		}else {

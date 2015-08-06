@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -220,6 +221,23 @@ public class JsonCreateUtils {
 
 		return json;
 	}
+	
+	public static String getRecomJson(String channel, String videoid,
+			String reason) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("channel", channel);
+			obj.put("videoid", videoid);
+			obj.put("reason", reason);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
 
 	/**
 	 * 组织获取分享地址json字符串
@@ -265,6 +283,123 @@ public class JsonCreateUtils {
 			JSONObject obj = new JSONObject();
 			obj.put("channel", channel);
 			obj.put("videoid", videoid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getJXListJson(String jxid, String pagesize) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("jxid", jxid);
+			obj.put("pagesize", pagesize);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getZTJson(String ztid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("ztid", ztid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getJHJson(String ztid, String operation, String timestamp, String pagesize) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("ztid", ztid);
+			obj.put("operation", operation);
+			obj.put("timestamp",timestamp);
+			obj.put("pagesize", pagesize);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getCommentJson(String topicid, String topictype, String operation, String timestamp, String pagesize) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("topicid", topicid);
+			obj.put("topictype", topictype);
+			obj.put("operation",operation);
+			obj.put("timestamp",timestamp);
+			obj.put("pagesize", pagesize);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String addCommentJson(String topicid, String topictype, String text, String replyid, String replyname) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("topicid", topicid);
+			obj.put("topictype", topictype);
+			String str="";
+			try {
+				str = URLEncoder.encode(text, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			obj.put("text", str);
+			obj.put("replyid", replyid);
+			obj.put("replyname", replyname);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String delCommentJson(String id) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("id", id);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getTagJson(String ztype, String ztid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("ztype", ztype);
+			obj.put("ztid", ztid);
 
 			json = obj.toString();
 		} catch (JSONException e) {

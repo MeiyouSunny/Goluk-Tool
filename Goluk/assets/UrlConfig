@@ -20,6 +20,17 @@
 "ModifyInfo":"http://%s/cdcRegister/modifyInfo.htm",
 "UploadVedioPre":"rtmp://%s/live/",
 "FeedBack":"http://%s/cdcAdmin/feedback.htm?method=feedback",
-"UrlRedirect":"http://%s/cdcAdmin/redirect.htm"
+"UrlRedirect":"http://%s/cdcAdmin/redirect.htm",
+"HandPick":"http://%s/navidog4MeetTrans/boutique.htm?method=jxList",
+"TopicList":"http://%s/navidog4MeetTrans/boutique.htm?method=special",
+"TagList":"http://%s/navidog4MeetTrans/boutique.htm?method=tags",
+"Recommend":"http://%s/navidog4MeetTrans/boutique.htm?method=recommend",
+"VideoDetail":"http://svr.goluk.cn/navidog4MeetTrans/boutique.htm?method=singleVideo",
+"Catlog":"http://%s/navidog4MeetTrans/boutique.htm?method=newest",
+"TownTalk":"http://%s/navidog4MeetTrans/boutique.htm?method=topicList",
+"CommentList":"http://%s/cdcComment/comment.htm",
+"AddComment":"http://%s/cdcComment/comment.htm",
+"DelComment":"http://%s/cdcComment/comment/delete.htm",
+"ShareURLTagTopic":"http://%s/navidog4MeetTrans/boutique.htm?method=share"
 }
 

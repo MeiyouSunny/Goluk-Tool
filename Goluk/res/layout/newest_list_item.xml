@@ -26,7 +26,6 @@
             
             <TextView
 	        android:id="@+id/nikename"
-	        android:text="chsdfkkasdf"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_centerInParent="true"
@@ -36,7 +35,6 @@
             
             <TextView
 	        android:id="@+id/time"
-	        android:text="今天 13:59"
 	        android:layout_marginTop="3dp"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -52,7 +50,7 @@
     		android:layout_height="20dp"
     		android:layout_alignParentRight="true"
     		android:layout_centerVertical="true"
-    		android:background="#ff0000" />
+    		android:background="@drawable/new_more_icon" />
         
     </RelativeLayout>
     
@@ -183,7 +181,6 @@
 	
 		    <TextView
 	        android:id="@+id/zText"
-	        android:text="3,789赞"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:paddingLeft="4dp"
@@ -195,7 +192,6 @@
 		
         <TextView
 	        android:id="@+id/weiguan"
-	        android:text="12,356围观"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
@@ -209,11 +205,9 @@
     <TextView
 	        android:id="@+id/detail"
 	        android:layout_below="@+id/zLayouyt"
-	        android:text="chsdfhadfk 上看看大开发发动方"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
-	        android:gravity="center"
 	        android:paddingLeft="10dp"
 			android:paddingRight="10dp"
 			android:paddingBottom="5dp"
@@ -223,7 +217,6 @@
     <TextView
 	        android:id="@+id/totalcomments"
 	        android:layout_below="@+id/detail"
-	        android:text="查看所有27364条评论"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
@@ -246,7 +239,6 @@
 	    
 	    <TextView
 	        android:id="@+id/comment1"
-	        android:text="chsdfhadfk 上看看大开发发动方"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 			android:paddingBottom="5dp"
@@ -255,7 +247,6 @@
 	    
 	    <TextView
 	        android:id="@+id/comment2"
-	        android:text="chsdfhadfk 上三十岁的和合法规范个看看大开发发动方"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 			android:paddingBottom="5dp"
@@ -264,7 +255,6 @@
 	    
 	    <TextView
 	        android:id="@+id/comment3"
-	        android:text="chsdfhadfk 上是考试的和广泛更合适的回调大法官看看大开发发动方"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 			android:paddingBottom="5dp"
