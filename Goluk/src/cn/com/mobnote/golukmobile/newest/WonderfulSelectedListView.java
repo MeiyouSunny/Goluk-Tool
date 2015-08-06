@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
+import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
@@ -93,6 +96,40 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		
 		if(null != GolukApplication.getInstance().getVideoSquareManager()){
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().getSPFLListData();
+//			GolukApplication.getInstance().getVideoSquareManager().getZTListData("zt001");
+//			GolukApplication.getInstance().getVideoSquareManager().getJHListData("zt001", "0", "", "20");
+//			GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData("zt001");
+//			GolukApplication.getInstance().getVideoSquareManager().getSPFLListData();
+			List<String> l = new ArrayList<String>();
+			l.add("0");
+			GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("1", "0", l, "0", "");
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().getCommentListData("zt001", "2", "0", "", "");
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().addComment("04DB0612A41EBB909C33DC5901307461", "1", "拼杀开始看开始", "", "");
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().deleteComment("6C0DDF2E74844517925A2BE1EC9D88EB");
+			
+//			List<VideoSquareInfo> info = new ArrayList<VideoSquareInfo>();
+//			for(int i=0;i<3;i++){
+//				VideoSquareInfo v = new VideoSquareInfo();
+//				VideoEntity e = new VideoEntity();
+//				e.videoid = "20150617_2BBD405013F011E58050892EFD2F8892";
+//				e.clicknumber="10";
+//				v.mVideoEntity = e;
+//				
+//			}
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().clickNumberUpload("1", info);
+			
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().clickPraise("1", "20150617_2BBD405013F011E58050892EFD2F8892", "1");
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().report("1", "20150617_2BBD405013F011E58050892EFD2F8892", "1");
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().recomVideo("1", "20150617_2BBD405013F011E58050892EFD2F8892", "的好感动个");
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().getShareUrl("20150617_2BBD405013F011E58050892EFD2F8892", "2");
+//			boolean b = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp("1", "20150617_2BBD405013F011E58050892EFD2F8892");
+//			boolean a = GolukApplication.getInstance().getVideoSquareManager().getTagShareUrl("1", "zt001");
+			
+//			GolukDebugUtils.e("", "VideoSuqare_CallBack=@@@@======a="+a);
+			
+			
+			
 			if(!result){
 				closeProgressDialog();
 			}
@@ -160,7 +197,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
 		if(event == VSquare_Req_List_HandPick){
-			GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@@@@=event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+//			GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@@@@=event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete(historyDate);
 			if(RESULE_SUCESS == msg){
@@ -178,16 +215,77 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 //				setViewListBg(true);
 //			}
 		}else if(event == VSquare_Req_List_Topic_Content){
-			
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@@@@=event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
 		}else if(event == VSquare_Req_List_Tag_Content){
-			
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@Tag_Content==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
 		}else if(event == VSquare_Req_Get_VideoDetail){
-			
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@Get_VideoDetail==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
 		}else if(event == VSquare_Req_List_Catlog){
-			
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@List_Catlog==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
 		}else if(event == VSquare_Req_List_Video_Catlog){
-			
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@List_Video_Catlog==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+				
+				String c = GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("0");
+				GolukDebugUtils.e("", "VideoSuqare_C1111111=====c="+c);			
+			}
+		}else if(event == VSquare_Req_List_Comment){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@List_Comment==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_Add_Comment){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@Add_Comment==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_Del_Comment){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@Del_Comment==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_VOP_ClickUp){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_ClickUp==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_VOP_Praise){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_Praise==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_VOP_ReportUp){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_ReportUp==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_VOP_RecomVideo){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_RecomVideo=event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_VOP_ShareVideo){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_ShareVideo==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_VOP_GetShareURL_Video){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@GetShareURL_Video==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
+		}else if(event == VSquare_Req_VOP_GetShareURL_Topic_Tag){
+			if(RESULE_SUCESS == msg){
+				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@GetShareURL_Topic_Tag==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
+			}
 		}
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	public void onDestroy(){

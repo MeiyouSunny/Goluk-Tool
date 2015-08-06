@@ -28,8 +28,9 @@
 "VideoDetail":"http://svr.goluk.cn/navidog4MeetTrans/boutique.htm?method=singleVideo",
 "Catlog":"http://%s/navidog4MeetTrans/boutique.htm?method=newest",
 "TownTalk":"http://%s/navidog4MeetTrans/boutique.htm?method=topicList",
-"CommentList":"http://%s/cdcComment/comment.htm?topicid=test",
-"AddComment":"http://%s/cdcComment/comment.htm?topicid=test",
-"DelComment":"http://%s/cdcComment/comment/delete.htm"
+"CommentList":"http://%s/cdcComment/comment.htm",
+"AddComment":"http://%s/cdcComment/comment.htm",
+"DelComment":"http://%s/cdcComment/comment/delete.htm",
+"ShareURLTagTopic":"http://%s/navidog4MeetTrans/boutique.htm?method=share"
 }
 
