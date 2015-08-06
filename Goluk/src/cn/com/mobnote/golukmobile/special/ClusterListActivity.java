@@ -84,6 +84,8 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	
 	private SpecialDataManage sdm = new SpecialDataManage();
 	
+	private SpecialInfo  headdata;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -159,7 +161,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 			clusterViewAdapter = new ClusterViewAdapter(this,2,sharePlatform);
 		}
 
-		clusterViewAdapter.setData(mDataList);
+		clusterViewAdapter.setData(mDataList,headdata);
 		
 		mRTPullListView.setAdapter(clusterViewAdapter,historyDate);
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
@@ -221,7 +223,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	}
 
 	public void flush() {
-		clusterViewAdapter.setData(mDataList);
+		clusterViewAdapter.setData(mDataList,headdata);
 	}
 
 	@Override
@@ -371,29 +373,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 			String videos = test();//GolukApplication.getInstance().getVideoSquareManager().getSquareList(attribute);
 			if(videos != null && !"".equals(videos)){
 				List<ClusterInfo> list = sdm.getClusterList(videos);
-				SpecialInfo head = sdm.getClusterHead(videos);
-				if(head != null){
-					View view =  LayoutInflater.from(this).inflate(R.layout.cluster_list_item, null);
-					
-					ImageView image = (ImageView) view.findViewById(R.id.mPreLoading);
-					TextView txt = (TextView) view.findViewById(R.id.video_title);
-					TextView link = (TextView) view.findViewById(R.id.link);
-					
-					txt.setText(head.describe);
-					if(head.outurlname != null){
-						link.setText(head.outurlname);
-					}
-					
-					int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-					int height = (int) ((float) width / 1.77f);
-					
-					RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-					image.setLayoutParams(mPreLoadingParams);
-					
-					BitmapManager.getInstance().mBitmapUtils.display(image, head.imagepath);
-					
-					mRTPullListView.addView(view, 1);
-				}
+				headdata = sdm.getClusterHead(videos);
 				
 				if(list!=null && list.size()>0){
 					mDataList = list;
@@ -423,6 +403,8 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		video.put("type", "2");
 		video.put("sharingtime", "2015/08/01");
 		video.put("describe", "记录卡记录卡据了解乐扣乐扣交流交流框架梁极乐空间垃圾筐拉进来");
+		video.put("clicknumber", "21");
+		video.put("praisenumber","232323");
 		video.put("picture", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
 		video.put("livesdkaddress", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
 		

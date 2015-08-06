@@ -46,6 +46,7 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.special.ClusterListActivity;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
@@ -588,10 +589,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// }else{
 		// 跳转到行车记录仪界面
 		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+		Intent j = new Intent(MainActivity.this, ClusterListActivity.class);
+		
 		System.out.println("zh:wifi连接=" + mApp.mWiFiStatus);
 //		i.putExtra("ipcState", mApp.mWiFiStatus);
 //		i.putExtra("wifiname", mApp.mGolukName);
-		startActivity(i);
+		startActivity(j);
 		// }
 	}
 

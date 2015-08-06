@@ -136,12 +136,13 @@ public class SpecialDataManage {
 	  * @throws
 	 */
 	public List<ClusterInfo> getClusterList(String response){
+		List<ClusterInfo> clusters = null;
+		ClusterInfo item = null;
+
 		JSONObject resource;
 		try {
 			resource = new JSONObject(response);
-			List<ClusterInfo> clusters = null;
-			ClusterInfo item = null;
-
+			
 			if (resource != null) {
 				boolean success = resource.getBoolean("success");
 				if (success) {
@@ -169,7 +170,7 @@ public class SpecialDataManage {
 								
 								JSONObject comment = video.getJSONObject("comment");
 								item.iscomment = comment.optString("iscomment");
-								
+								item.comments = comment.optString("comcount");
 								JSONArray comlist = comment.getJSONArray("comlist");
 
 								if (comlist.length() > 0) {
@@ -207,7 +208,7 @@ public class SpecialDataManage {
 			return null;
 		}
 		
-		return null;
+		return clusters;
 	}
 	
 	/**
@@ -243,6 +244,8 @@ public class SpecialDataManage {
 						item.imagepath = head.optString("headvideoimg");
 						item.videopath = head.optString("headvideo");
 					}
+					item.outurl = head.optString("outurl");
+					item.outurlname = head.optString("outurlname");
 					item.describe = head.optString("ztIntroduction");// 描述
 					item.author = "";// 没有作者
 					
