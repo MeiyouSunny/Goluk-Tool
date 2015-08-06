@@ -95,6 +95,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		String jsonStr = getFromAssets("json.json");
 		GolukDebugUtils.e("detail", jsonStr);
 		requestDetailCallback(jsonStr);
+		
+		sharePlatform = new SharePlatformUtil(this);
+		sharePlatform.configPlatforms();//设置分享平台的参数
 
 	}
 
@@ -123,7 +126,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mBtnLikeAll = (Button) findViewById(R.id.video_detail_like_all);
 		mBtnLookAll = (Button) findViewById(R.id.video_detail_look_all);
 		mLayoutShowAll = (LinearLayout) findViewById(R.id.video_square_show_all);
-		// mVideoView = (VideoView) findViewById(R.id.videoview);
 		// 评论内容
 		hasCommentLayout = (LinearLayout) findViewById(R.id.video_square_has_comment_layout);
 		noCommentLayout = (RelativeLayout) findViewById(R.id.video_square_no_comment_layout);
