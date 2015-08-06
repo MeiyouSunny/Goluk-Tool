@@ -66,23 +66,19 @@
             android:background="@drawable/tacitly_pic"
             android:scaleType="fitXY" />
 
-        <cn.com.mobnote.golukmobile.videosuqare.RingView
+       <VideoView
+           android:id="@+id/video_detail_videoview"
+           android:layout_width="match_parent"
+           android:layout_height="220dp"
+           android:layout_alignParentRight="true"
+           android:layout_centerVertical="true"/>
+
+        <!-- <cn.com.mobnote.golukmobile.videosuqare.RingView
             android:id="@+id/mRingView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:visibility="gone" />
-            <!-- <ImageView
-            	android:id="@+id/mPreLoading"
-            	android:layout_width="wrap_content"
-           		android:layout_height="wrap_content"
-            	android:background="@drawable/tacitly_pic"
-            	android:scaleType="fitXY"/>
-            <VideoView 
-                android:id="@+id/videoview"
-                android:layout_width="match_parent"
-                android:layout_height="210dp"
-                android:visibility="gone"/> -->
+            android:visibility="gone" /> -->
     </RelativeLayout>
     <!-- 点赞、评论、分享 -->
 
