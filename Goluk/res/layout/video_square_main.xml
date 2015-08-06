@@ -21,8 +21,8 @@
                 android:id="@+id/mVideoList"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="#313131"
+                android:layout_marginRight="40dp"
                 android:gravity="center|center_vertical"
                 android:orientation="vertical" >
                 
@@ -30,7 +30,7 @@
                     android:id="@+id/hot_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="热门"
+                    android:text="精选"
                     android:textColor="#0b59be"
                     android:textSize="16sp" />
 
@@ -47,7 +47,6 @@
                 android:id="@+id/mTypeList"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="#313131"
                 android:orientation="vertical"
                 android:gravity="center|center_vertical" >
@@ -56,7 +55,7 @@
                     android:id="@+id/square_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="广场"
+                    android:text="最新"
                     android:textColor="#ffffff"
                     android:textSize="16sp" />
                 
@@ -70,31 +69,6 @@
                     android:contentDescription="@string/def" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lookworld"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#313131"
-                android:orientation="vertical"
-                android:gravity="center|center_vertical" >
-
-                <TextView
-                    android:id="@+id/look_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="看天下"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp" />
-                <ImageView
-                    android:id="@+id/line_look"
-                    android:layout_width="50dp"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#0b59be"
-                    android:visibility="invisible"
-                    android:contentDescription="@string/def" />
-            </LinearLayout>
         </LinearLayout>
 
        <!--  <LinearLayout
