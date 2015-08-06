@@ -169,7 +169,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 		case R.id.back_btn:
-			finish();
+//			finish();
+			Intent it = new Intent(UserPersonalInfoActivity.this,VideoSquareDeatilActivity.class);
+			startActivity(it);
 			break;
 		// 编辑
 		case R.id.user_title_right:
