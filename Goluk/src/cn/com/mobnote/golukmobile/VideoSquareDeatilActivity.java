@@ -38,7 +38,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.newest.NewestAdapter;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
@@ -314,7 +313,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		String time = "";
 		if (null != date) {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-
 			try {
 				Date strtodate = formatter.parse(date);
 				if (null != strtodate) {
