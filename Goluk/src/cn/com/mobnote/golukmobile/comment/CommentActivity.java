@@ -21,6 +21,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
@@ -101,6 +102,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		isExit = false;
 		initListener();
 		firstDeal();
+
+		CommentTimerManager.getInstance();
 	}
 
 	private void firstDeal() {
@@ -204,6 +207,19 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	}
 
 	private void click_send() {
+		// 发评论前需要先判断用户是否登录
+		if (!mApp.isUserLoginSucess) {
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
+			return;
+		}
+
+		if (CommentTimerManager.getInstance().getIsStarting()) {
+			GolukUtils.showToast(this, "您评论的速度太快了,请休息一下再评论。");
+			return;
+		}
+
 		final String content = mEditText.getText().toString();
 		if (null == content || "".equals(content)) {
 			GolukUtils.showToast(this, "请输入评论内容");
@@ -319,6 +335,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					if (null != bean) {
 						bean.mCommentTime = GolukUtils.getCurrentFormatTime();
 						this.mAdapter.addFirstData(bean);
+						CommentTimerManager.getInstance().start(10);
 					} else {
 						GolukUtils.showToast(this, "评论失败");
 					}

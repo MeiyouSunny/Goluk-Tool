@@ -63,6 +63,7 @@
             android:layout_toLeftOf="@id/comment_send"
             android:background="@drawable/videodetail_inputbox"
             android:hint="@string/str_comment_input_hit"
+            android:maxLength="250"
             android:paddingLeft="10dp"
             android:textColor="#bcbcbc"
             android:textSize="14sp" />
