@@ -155,9 +155,19 @@
         
     </RelativeLayout>
     
+    <ImageView 
+        android:id="@+id/line"
+        android:layout_below="@+id/functionLayouyt"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+    	android:layout_height="1dp"
+    	android:background="#e5e5e5" 
+        />
+    
     <RelativeLayout 
         android:id="@+id/zLayouyt"
-        android:layout_below="@+id/functionLayouyt"
+        android:layout_below="@+id/line"
 		android:layout_width="match_parent"
     	android:layout_height="wrap_content" 
 		android:paddingLeft="10dp"
