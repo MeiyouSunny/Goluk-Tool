@@ -160,11 +160,15 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		case R.id.back_btn:
 			this.finish();
 			break;
-		case R.id.message:
-			this.startCommentActivity();
+		case R.id.send:
+		case R.id.push_comment:
+			// 输入框
+			this.startCommentActivity(true);
 			break;
 		case R.id.comment_link:
-			this.startCommentActivity();
+		case R.id.comments:
+			// 查看所有评论
+			this.startCommentActivity(false);
 			break;
 		case R.id.outurl:
 			Intent mBugLayout = new Intent(this,UserOpenUrlActivity.class);
@@ -184,11 +188,11 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	  * @author 曾浩 
 	  * @throws
 	 */
-	private void startCommentActivity(){
+	private void startCommentActivity(boolean isShowSoft){
 		Intent it = new Intent(this,CommentActivity.class);
 		it.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
 		it.putExtra(CommentActivity.COMMENT_KEY_MID, ztid);
-		it.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
+		it.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, isShowSoft);
 		it.putExtra(CommentActivity.COMMENT_KEY_TYPE, "2");
 		startActivity(it);
 	}
@@ -253,7 +257,9 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						String iscomment = map.get("iscomment").toString();
 						if ("1".equals(iscomment)) {
 							view.findViewById(R.id.push_comment).setVisibility(View.VISIBLE);
+							view.findViewById(R.id.push_comment).setOnClickListener(this);
 							view.findViewById(R.id.comments).setVisibility(View.VISIBLE);
+							view.findViewById(R.id.comments).setOnClickListener(this);
 						} else {
 							view.findViewById(R.id.push_comment).setVisibility(View.GONE);
 							view.findViewById(R.id.comments).setVisibility(View.GONE);
@@ -275,7 +281,9 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						
 						commentLink.setOnClickListener(this);
 						outurl.setOnClickListener(this);
-						view.findViewById(R.id.message).setOnClickListener(this);
+//						view.findViewById(R.id.message).setOnClickListener(this);
+						view.findViewById(R.id.send).setOnClickListener(this);
+						
 						
 						lv.addFooterView(view);
 
