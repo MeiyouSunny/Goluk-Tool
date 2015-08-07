@@ -142,8 +142,7 @@ public class NewestListView implements VideoSuqareManagerFn{
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				
-				mRTPullListView.onRefreshComplete(historyDate);
+				httpPost(true, "0", "");
 			}
 		});
 		

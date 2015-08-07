@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile.special;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +10,9 @@ import org.json.JSONObject;
 
 public class SpecialDataManage {
 
-
 	/**
 	 * @throws JSONException
-	 * 解析专题列表数据json
+	 *             解析专题列表数据json
 	 * @Title: getListData
 	 * @param data
 	 * @return List<SpecialInfo>
@@ -31,25 +31,6 @@ public class SpecialDataManage {
 				JSONObject data = resource.getJSONObject("data");
 				String result = data.optString("result");
 				if ("0".equals(result)) {
-					JSONObject head = data.getJSONObject("head");
-					// 解析head
-					if (head != null && !"".equals(head)) {
-						item = new SpecialInfo();
-
-						// 图片
-						if ("1".equals(head.get("showhead"))) {
-							item.imagepath = head.optString("headimg");
-						} else {
-							// 视频
-							item.imagepath = head.optString("headvideoimg");
-							item.videopath = head.optString("headvideo");
-						}
-						item.describe = head.optString("ztIntroduction");// 描述
-						item.author = "";// 没有作者
-						specials.add(item);
-					} else {
-						return null;
-					}
 
 					// 解析视频列表集合
 					JSONArray videolist = data.getJSONArray("videolist");
@@ -75,9 +56,52 @@ public class SpecialDataManage {
 		return specials;
 	}
 
+	public SpecialInfo getSpecialHead(String response) {
+		JSONObject resource = null;
+		SpecialInfo item = null;
+		try {
+			resource = new JSONObject(response);
+			if (resource != null) {
+				boolean success;
+				success = resource.getBoolean("success");
+				if (success) {
+					JSONObject data = resource.getJSONObject("data");
+					String result = data.optString("result");
+					if ("0".equals(result)) {
+						JSONObject head = data.getJSONObject("head");
+						// 解析head
+						if (head != null && !"".equals(head)) {
+							item = new SpecialInfo();
+
+							// 图片
+							if ("1".equals(head.get("showhead"))) {
+								item.imagepath = head.optString("headimg");
+							} else {
+								// 视频
+								item.imagepath = head.optString("headvideoimg");
+								item.videopath = head.optString("headvideo");
+							}
+							item.describe = head.optString("ztIntroduction");// 描述
+							item.author = "";// 没有作者
+						} else {
+							return null;
+						}
+
+					}
+				}
+
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return item;
+	}
+
 	/**
 	 * @throws JSONException
-	 *  获取评论列表
+	 *             获取评论列表
 	 * @Title: getComments
 	 * @return List<CommentInfo>
 	 * @author 曾浩
@@ -124,25 +148,25 @@ public class SpecialDataManage {
 			return null;
 		}
 	}
-	
-	
+
 	/**
 	 * 获取聚合的视频列表
-	  * @Title: getClusterList 
-	  * @Description: TODO
-	  * @param response
-	  * @return List<ClusterInfo> 
-	  * @author 曾浩 
-	  * @throws
+	 * 
+	 * @Title: getClusterList
+	 * @Description: TODO
+	 * @param response
+	 * @return List<ClusterInfo>
+	 * @author 曾浩
+	 * @throws
 	 */
-	public List<ClusterInfo> getClusterList(String response){
+	public List<ClusterInfo> getClusterList(String response) {
 		List<ClusterInfo> clusters = null;
 		ClusterInfo item = null;
 
 		JSONObject resource;
 		try {
 			resource = new JSONObject(response);
-			
+
 			if (resource != null) {
 				boolean success = resource.getBoolean("success");
 				if (success) {
@@ -167,7 +191,7 @@ public class SpecialDataManage {
 								item.headportrait = user.optString("headportrait");
 								item.videotype = "2";
 								item.videopath = video.optString("ondemandsdkaddress");
-								
+
 								JSONObject comment = video.getJSONObject("comment");
 								item.iscomment = comment.optString("iscomment");
 								item.comments = comment.optString("comcount");
@@ -177,23 +201,23 @@ public class SpecialDataManage {
 									for (int j = 0; j < comlist.length(); j++) {
 										JSONObject json = comlist.getJSONObject(j);
 
-										CommentInfo	ci = new CommentInfo();
+										CommentInfo ci = new CommentInfo();
 										ci.authorid = json.optString("authorid");
 										ci.avatar = json.optString("avatar");
 										ci.commentid = json.optString("commentid");
 										ci.name = json.optString("name");
 										ci.text = json.optString("text");
 										ci.time = json.optString("time");
-										if(j == 0){
-											item.ci1 = ci ;
-										}else if(j == 1){
-											item.ci2 = ci ;
-										}else if(j == 2){
-											item.ci3 = ci ;
+										if (j == 0) {
+											item.ci1 = ci;
+										} else if (j == 1) {
+											item.ci2 = ci;
+										} else if (j == 2) {
+											item.ci3 = ci;
 										}
 									}
 								}
-								
+
 								clusters.add(item);
 
 							}
@@ -207,21 +231,21 @@ public class SpecialDataManage {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		return clusters;
 	}
-	
+
 	/**
-	 * @throws JSONException 
-	  * 获取聚合头部信息
-	  * @Title: getClusterHead 
-	  * @Description: TODO
-	  * @param response
-	  * @return JSONObject 
-	  * @author 曾浩 
-	  * @throws
+	 * @throws JSONException
+	 *             获取聚合头部信息
+	 * @Title: getClusterHead
+	 * @Description: TODO
+	 * @param response
+	 * @return JSONObject
+	 * @author 曾浩
+	 * @throws
 	 */
-	public SpecialInfo getClusterHead(String response){
+	public SpecialInfo getClusterHead(String response) {
 		JSONObject resource;
 		SpecialInfo item = null;
 		try {
@@ -249,24 +273,23 @@ public class SpecialDataManage {
 						item.outurlname = head.optString("outurlname");
 						item.describe = head.optString("ztIntroduction");// 描述
 						item.author = "";// 没有作者
-						
+
 						return item;
 					} else {
 						return null;
 					}
-				}else{
+				} else {
 					return null;
 				}
-				
+
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return item;
-		
+
 	}
-	
 
 }

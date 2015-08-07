@@ -89,7 +89,8 @@
         android:background="#eaeaea"
         android:gravity="center_vertical" >
 
-        <EditText
+        <ImageView
+            android:id="@+id/message"
             android:layout_width="280dp"
             android:layout_height="32dp"
             android:layout_marginLeft="8dp"

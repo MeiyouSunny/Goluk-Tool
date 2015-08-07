@@ -10,11 +10,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.lidroid.xutils.view.annotation.event.OnClick;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -65,8 +70,10 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
 	private SpecialDataManage sdm = new SpecialDataManage();
+	private TextView textTitle;
 	
 	private String ztid;
+	private String title;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +83,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		Intent intent = getIntent();
 		
 		ztid = intent.getStringExtra("ztid");
+		title = intent.getStringExtra("title");
 
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("SpecialListActivity",this);
 
@@ -94,6 +102,9 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+		textTitle = (TextView) findViewById(R.id.title);
+		
+		textTitle.setText(title);
 		mBackBtn.setOnClickListener(this);
 
 		sharePlatform = new SharePlatformUtil(this);
@@ -149,10 +160,32 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		case R.id.back_btn:
 			this.finish();
 			break;
-
+		case R.id.message:
+			this.startCommentActivity();
+			break;
+		case R.id.comment_link:
+			this.startCommentActivity();
+			break;
 		default:
 			break;
 		}
+	}
+	
+	
+	/**
+	  * 跳转到评论页面
+	  * @Title: startCommentActivity 
+	  * @Description: TODO void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	private void startCommentActivity(){
+		Intent it = new Intent(this,CommentActivity.class);
+		it.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+		it.putExtra(CommentActivity.COMMENT_KEY_MID, ztid);
+		it.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
+		it.putExtra(CommentActivity.COMMENT_KEY_TYPE, "2");
+		startActivity(it);
 	}
 
 	// 分享成功后需要调用的接口
@@ -163,6 +196,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		}
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 	}
+	
 
 	/**
 	 * 关闭加载中对话框
@@ -185,9 +219,28 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 				List<SpecialInfo> list;
 				try {
 					list = sdm.getListData(param2.toString());
+					SpecialInfo si = sdm.getClusterHead(param2.toString());
+					//装载头部
+					if(si != null){
+						View view = LayoutInflater.from(this).inflate(R.layout.special_list_head, null);
+						ImageView image = (ImageView) view.findViewById(R.id.mPreLoading);
+						TextView  txt = (TextView) view.findViewById(R.id.video_title);
+						
+						int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+						int height = (int) ((float) width / 1.77f);
+						
+						txt.setText(si.describe);
+						
+						RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+						image.setLayoutParams(mPreLoadingParams);
+						BitmapManager.getInstance().mBitmapUtils.display(image, si.imagepath);
+						
+						lv.addHeaderView(view);
+					}
 					
 					Map<String, Object> map = sdm.getComments(param2.toString());
-
+					
+					//装载尾部
 					if (map != null) {
 
 						View view = LayoutInflater.from(this).inflate(R.layout.comment_below, null);
@@ -200,6 +253,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 							view.findViewById(R.id.push_comment).setVisibility(View.GONE);
 							view.findViewById(R.id.comments).setVisibility(View.GONE);
 						}
+						
+						
 
 						outurl = (TextView) view.findViewById(R.id.outurl);
 
@@ -212,7 +267,10 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						commentLink = (TextView) view.findViewById(R.id.comment_link);
 
 						commentLink.setText("查看所有  " + map.get("comcount") + " 条评论");
-
+						
+						commentLink.setOnClickListener(this);
+						view.findViewById(R.id.message).setOnClickListener(this);
+						
 						lv.addFooterView(view);
 
 						List<CommentInfo> comments = (List<CommentInfo>) map.get("comments");
@@ -242,7 +300,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						}
 					}
 					
-					// 说明有数据
+					// 说明有数据 装载list
 					if (list != null && list.size() > 0) {
 						mDataList.clear();
 						mDataList = list;
