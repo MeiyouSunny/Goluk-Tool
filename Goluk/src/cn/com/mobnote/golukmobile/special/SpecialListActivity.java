@@ -65,14 +65,19 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
 	private SpecialDataManage sdm = new SpecialDataManage();
-
+	
+	private String ztid;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.special_list);
+		
+		Intent intent = getIntent();
+		
+		ztid = intent.getStringExtra("ztid");
 
-		// GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videocategory",
-		// this);
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("SpecialListActivity",this);
 
 		mDataList = new ArrayList<SpecialInfo>();
 		lv = (ListView) findViewById(R.id.special_list);
@@ -83,7 +88,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				mCustomProgressDialog = null;
-				httpPost(true, "1", "0", "");
+				httpPost(true,ztid);
 			}
 		});
 
@@ -93,8 +98,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
-		loadHistorydata();// 显示历史请求数据
-		// httpPost(true, "2", "0", "");
+		//loadHistorydata();// 显示历史请求数据
+		httpPost(true,ztid);
 	}
 
 	@Override
@@ -113,7 +118,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
-	private void httpPost(boolean flag, String type, String operation, String timestamp) {
+	private void httpPost(boolean flag,String ztid) {
 		if (flag) {
 			if (null == mCustomProgressDialog) {
 				mCustomProgressDialog = new CustomLoadingDialog(this, null);
@@ -121,8 +126,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			}
 		}
 
-		boolean result = GolukApplication.getInstance().getVideoSquareManager()
-				.getSquareList("1", type, "", operation, timestamp);
+		boolean result = GolukApplication.getInstance().getVideoSquareManager().getZTListData(ztid);
 		if (!result) {
 			closeProgressDialog();
 		}
@@ -175,7 +179,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		if (event == SquareCmd_Req_SquareList) {
+		if (event == VSquare_Req_List_Topic_Content) {
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 
