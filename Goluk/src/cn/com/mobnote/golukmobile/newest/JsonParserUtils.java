@@ -58,6 +58,29 @@ public class JsonParserUtils {
 		return jxlistdata;
 	}
 	
+	public static int parserJXCount(String jsonStr) {
+		try {
+			JSONObject json = new JSONObject(jsonStr);
+			boolean success = json.optBoolean("success");
+			if (success) {
+				JSONObject data = json.optJSONObject("data");
+				if (null != data) {
+					String count = data.getString("count");
+					int number = Integer.parseInt(count);
+					return number;
+				}
+			}else {
+				String msg = json.optString("msg");
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		
+		return -1;
+	}
+	
 	public static NewestListHeadDataInfo parserNewestHeadData(String jsonStr) {
 		NewestListHeadDataInfo info = new NewestListHeadDataInfo();
 		try {
