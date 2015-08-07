@@ -44,6 +44,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
+import cn.com.mobnote.golukmobile.fresco.ConfigConstants;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
@@ -69,6 +70,7 @@ import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -200,6 +202,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		instance = this;
 		Const.setAppContext(this);
 		// TODO 此处不要做初始化相关的工作
+		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
 	}
 
 	public Handler mHandler = new Handler() {
@@ -791,12 +794,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			localVideoShareCallBack(success, String.valueOf(param2));
 			break;
 		case 7:
-			if (null != mMainActivity) {
-				// 地图大头针图片
-				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针数据---" + String.valueOf(param2));
-				// 地图大头针
-				mMainActivity.mVideoSquareActivity.mVideoSquareAdapter.baidumap.pointDataCallback(success, param2);
-			}
+//			if (null != mMainActivity) {
+//				// 地图大头针图片
+//				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针数据---" + String.valueOf(param2));
+//				// 地图大头针
+//				mMainActivity.mVideoSquareActivity.mVideoSquareAdapter.baidumap.pointDataCallback(success, param2);
+//			}
 			/*
 			 * if (mPageSource == "LiveVideoList") { GolukDebugUtils.e("",
 			 * "pageNotifyCallBack---直播列表数据---" + String.valueOf(param2));
@@ -810,12 +813,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 			break;
 		case 8:
-			if (mPageSource == "Main") {
-				// 地图大头针图片
-				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针图片---" + String.valueOf(param2));
-				((MainActivity) mContext).mVideoSquareActivity.mVideoSquareAdapter.baidumap
-						.downloadBubbleImageCallBack(success, param2);
-			}
+//			if (mPageSource == "Main") {
+//				// 地图大头针图片
+//				GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针图片---" + String.valueOf(param2));
+//				((MainActivity) mContext).mVideoSquareActivity.mVideoSquareAdapter.baidumap
+//						.downloadBubbleImageCallBack(success, param2);
+//			}
 			/*
 			 * if (mPageSource == "LiveVideoList") { // 地图大头针图片
 			 * GolukDebugUtils.e("", "pageNotifyCallBack---直播列表图片---" +

@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -73,11 +74,13 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				String from_tag = itIndexMore.getStringExtra(FROM_TAG).toString();
-				if (from_tag.equals("skill")) {
-					if (url.contains("tel:")) {
-						webviewCall(url);
-						return false;
+				String from_tag = itIndexMore.getStringExtra(FROM_TAG);
+				if(!TextUtils.isEmpty(from_tag)) {
+					if (from_tag.equals("skill")) {
+						if (url.contains("tel:")) {
+							webviewCall(url);
+							return false;
+						}
 					}
 				}
 				view.loadUrl(url);
@@ -93,22 +96,29 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		});
 
 		if (!itIndexMore.getExtras().toString().equals("")) {
-			String from_tag = itIndexMore.getStringExtra(FROM_TAG).toString();
+			String from_tag = itIndexMore.getStringExtra(FROM_TAG);
 			mLoadingDialog.show();
 			mBackBtn.setEnabled(false);
-			if (from_tag.equals("skill")) {
-				mTextTitle.setText("极路客小技巧");
-				mWebView.loadUrl(getRtmpAddress() + "?type=2");
-			} else if (from_tag.equals("install")) {
-				mTextTitle.setText("安装指导");
-				mWebView.loadUrl(getRtmpAddress() + "?type=3");
-			} else if (from_tag.equals("shopping")) {
-				mTextTitle.setText("购买极路客");
-				mWebView.loadUrl(getRtmpAddress() + "?type=4");
-			} else if (from_tag.equals("buyline")) {
-				mTextTitle.setText("购买极路客专用降压线");
-				mWebView.loadUrl(getRtmpAddress() + "?type=1");
+			if (!TextUtils.isEmpty(from_tag)) {
+				if (from_tag.equals("skill")) {
+					mTextTitle.setText("极路客小技巧");
+					mWebView.loadUrl(getRtmpAddress() + "?type=2");
+				} else if (from_tag.equals("install")) {
+					mTextTitle.setText("安装指导");
+					mWebView.loadUrl(getRtmpAddress() + "?type=3");
+				} else if (from_tag.equals("shopping")) {
+					mTextTitle.setText("购买极路客");
+					mWebView.loadUrl(getRtmpAddress() + "?type=4");
+				} else if (from_tag.equals("buyline")) {
+					mTextTitle.setText("购买极路客专用降压线");
+					mWebView.loadUrl(getRtmpAddress() + "?type=1");
+				}
+			}else {
+				mTextTitle.setText("");
+				String url = itIndexMore.getStringExtra("url");
+				mWebView.loadUrl(url);
 			}
+			
 		}
 		mBackBtn.setOnClickListener(this);
 		mTextRight.setOnClickListener(this);

@@ -91,6 +91,9 @@
         <activity
             android:name="cn.com.mobnote.golukmobile.UserOpenUrlActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoSquareDeatilActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >
@@ -256,6 +259,18 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        
+        <activity
+            android:name="cn.com.mobnote.golukmobile.special.SpecialListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        
+        <activity
+            android:name="cn.com.mobnote.golukmobile.special.ClusterListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
 
         <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
