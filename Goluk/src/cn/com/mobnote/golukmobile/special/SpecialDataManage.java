@@ -221,42 +221,47 @@ public class SpecialDataManage {
 	  * @author 曾浩 
 	  * @throws
 	 */
-	public SpecialInfo getClusterHead(String response) throws JSONException{
-		JSONObject resource = new JSONObject(response);
-		
+	public SpecialInfo getClusterHead(String response){
+		JSONObject resource;
 		SpecialInfo item = null;
+		try {
+			resource = new JSONObject(response);
 
-		boolean success = resource.getBoolean("success");
-		if (success) {
-			JSONObject data = resource.getJSONObject("data");
-			String result = data.optString("result");
-			if ("0".equals(result)) {
-				JSONObject head = data.getJSONObject("head");
-				// 解析head
-				if (head != null && !"".equals(head)) {
-					item = new SpecialInfo();
+			boolean success = resource.getBoolean("success");
+			if (success) {
+				JSONObject data = resource.getJSONObject("data");
+				String result = data.optString("result");
+				if ("0".equals(result)) {
+					JSONObject head = data.getJSONObject("head");
+					// 解析head
+					if (head != null && !"".equals(head)) {
+						item = new SpecialInfo();
 
-					// 图片
-					if ("1".equals(head.get("showhead"))) {
-						item.imagepath = head.optString("headimg");
+						// 图片
+						if ("1".equals(head.get("showhead"))) {
+							item.imagepath = head.optString("headimg");
+						} else {
+							// 视频
+							item.imagepath = head.optString("headvideoimg");
+							item.videopath = head.optString("headvideo");
+						}
+						item.outurl = head.optString("outurl");
+						item.outurlname = head.optString("outurlname");
+						item.describe = head.optString("ztIntroduction");// 描述
+						item.author = "";// 没有作者
+						
+						return item;
 					} else {
-						// 视频
-						item.imagepath = head.optString("headvideoimg");
-						item.videopath = head.optString("headvideo");
+						return null;
 					}
-					item.outurl = head.optString("outurl");
-					item.outurlname = head.optString("outurlname");
-					item.describe = head.optString("ztIntroduction");// 描述
-					item.author = "";// 没有作者
-					
-					return item;
-				} else {
+				}else{
 					return null;
 				}
-			}else{
-				return null;
+				
 			}
-			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return item;
