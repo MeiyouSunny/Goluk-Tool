@@ -38,7 +38,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		VideoSuqareManagerFn, ILiveDialogManagerFn {
 
 	/** 如果为true, 則为测试数据，false則使用真实数据 (上线前要删除掉) */
-	private final boolean isTest = true;
+	private final boolean isTest = false;
 
 	public static final String TAG = "Comment";
 
