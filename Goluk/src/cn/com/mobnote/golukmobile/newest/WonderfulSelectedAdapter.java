@@ -83,16 +83,28 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		JXListItemDataInfo info = mDataList.get(arg0);
 		holder.mTitleName.getPaint().setFakeBoldText(true);
 		holder.mTitleName.setText(info.ztitle);
-		if(!TextUtils.isEmpty(info.ztag)) {
+		if (!TextUtils.isEmpty(info.ztag)) {
 			holder.mTagName.setText(info.ztag);
 			holder.mTagName.setVisibility(View.VISIBLE);
 		}else {
 			holder.mTagName.setVisibility(View.GONE);
 		}
-		holder.mVideoNum.setText(info.videonumber);
-		holder.mLookNum.setText(info.clicknumber);
 		
-		if(!TextUtils.isEmpty(info.jxdate)) {
+		if ("-1".equals(info.videonumber)) {
+			holder.mVideoLayout.setVisibility(View.GONE);
+		}else {
+			holder.mVideoNum.setText(info.videonumber);
+			holder.mVideoLayout.setVisibility(View.VISIBLE);
+		}
+		
+		if ("-1".equals(info.clicknumber)) {
+			holder.mLookLayout.setVisibility(View.GONE);
+		}else {
+			holder.mLookNum.setText(info.clicknumber);
+			holder.mLookLayout.setVisibility(View.VISIBLE);
+		}
+		
+		if (!TextUtils.isEmpty(info.jxdate)) {
 			holder.mDate.setText(info.jxdate);
 			holder.mDate.setVisibility(View.VISIBLE);
 		}else {

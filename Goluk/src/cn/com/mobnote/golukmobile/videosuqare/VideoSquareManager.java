@@ -193,7 +193,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年8月6日
 	 */
-	public boolean getSPFLListData() {
+	public boolean getZXListData() {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_Catlog, "");
 	}
 	

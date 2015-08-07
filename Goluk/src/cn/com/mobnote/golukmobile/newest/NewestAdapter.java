@@ -6,12 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -197,7 +200,12 @@ public class NewestAdapter extends BaseAdapter {
 			holder.weiguan.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + "围观");
 		}
 		
-		showText(holder.detail, mVideoSquareInfo.mUserEntity.nickname, mVideoSquareInfo.mVideoEntity.describe);	
+		if (TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.describe)) {
+			holder.detail.setVisibility(View.GONE);
+		}else{
+			holder.detail.setVisibility(View.VISIBLE);
+			showText(holder.detail, mVideoSquareInfo.mUserEntity.nickname, mVideoSquareInfo.mVideoEntity.describe);
+		}
 		
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
