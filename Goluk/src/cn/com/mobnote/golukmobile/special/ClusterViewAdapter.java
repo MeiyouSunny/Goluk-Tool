@@ -40,9 +40,15 @@ import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.newest.ClickCategoryListener;
+import cn.com.mobnote.golukmobile.newest.ClickCommentListener;
+import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
+import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
+import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
 import cn.com.mobnote.golukmobile.newest.NewestAdapter.ViewHolder;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -233,6 +239,21 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		}
 
 		return convertView;
+	}
+	
+	private void initListener(int index) {
+		ClusterInfo clusterInfo = clusterListData.get(index);
+		
+//		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));
+//		holder.function.setOnClickListener(new ClickCategoryListener(mVideoSquareInfo.mVideoEntity.videoid));
+//		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mVideoSquareInfo.mVideoEntity.videoid));
+//		
+//		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
+//		if (comments.size() > 0) {
+//			holder.totalcomments.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
+//			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
+//		}
+		
 	}
 
 	public int getUserHead(String head) {

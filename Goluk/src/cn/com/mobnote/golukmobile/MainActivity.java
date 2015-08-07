@@ -589,13 +589,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// startActivity(intent);
 		// }else{
 		// 跳转到行车记录仪界面
-		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-		//Intent j = new Intent(MainActivity.this, SpecialListActivity.class);
-		//j.putExtra("ztid", "zt001");
+		//Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+		Intent j = new Intent(MainActivity.this, ClusterListActivity.class);
+		j.putExtra("ztid", "zt001");
 		System.out.println("zh:wifi连接=" + mApp.mWiFiStatus);
 //		i.putExtra("ipcState", mApp.mWiFiStatus);
 //		i.putExtra("wifiname", mApp.mGolukName);
-		startActivity(i);
+		startActivity(j);
 		// }
 	}
 

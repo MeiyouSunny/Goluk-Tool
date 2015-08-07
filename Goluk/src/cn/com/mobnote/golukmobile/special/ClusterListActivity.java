@@ -129,6 +129,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		httpPost(true,"0", "",ztid);
 	}
 	
+	
 	@Override 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
