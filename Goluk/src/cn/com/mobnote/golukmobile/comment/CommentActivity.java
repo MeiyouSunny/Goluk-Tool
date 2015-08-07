@@ -123,6 +123,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mCommentInputLayout.setVisibility(View.VISIBLE);
 			mNoInputTv.setVisibility(View.GONE);
 
+			mRTPullListView.firstFreshState();
 			firstEnter();
 		} else {
 			mCommentInputLayout.setVisibility(View.GONE);
