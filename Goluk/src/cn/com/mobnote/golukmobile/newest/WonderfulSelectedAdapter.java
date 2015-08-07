@@ -99,6 +99,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder.mDate.setVisibility(View.GONE);
 		}
 		
+		holder.imageLayout.setOnClickListener(new ClickWonderfulSelectedListener(mContext, info));
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;
@@ -130,8 +131,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             GenericDraweeHierarchyBuilder iconbuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
             GenericDraweeHierarchy iconhierarchy = iconbuilder
                             .setFadeDuration(300)
-                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
+//                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
+//                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
                         .setActualImageScaleType(ScaleType.FIT_XY)
                         .build();
             icon.setHierarchy(iconhierarchy);
