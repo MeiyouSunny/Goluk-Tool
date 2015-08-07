@@ -75,6 +75,8 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_CONFIRM = 16;
 	/** 提交评论 */
 	public static final int DIALOG_TYPE_COMMENT_COMMIT = 17;
+	/** 输入１０秒钟禁止评论限制 */
+	public static final int DIALOG_TYPE_COMMENT_TIMEOUT = 18;
 
 	private int mCurrentDialogType = 0;
 
@@ -204,7 +206,7 @@ public class LiveDialogManager {
 		public void dialogManagerCallBack(int dialogType, int function, String data);
 	}
 
-	public  void dissmissCommProgressDialog() {
+	public void dissmissCommProgressDialog() {
 		if (null != mCommProgressDialog) {
 			mCommProgressDialog.dismiss();
 			mCommProgressDialog = null;
@@ -217,7 +219,7 @@ public class LiveDialogManager {
 		mCommProgressDialog = ProgressDialog.show(context, title, message, true, isCancel);
 
 		if (isCancel) {
-			mCommProgressDialog.setButton( "取消", new OnClickListener() {
+			mCommProgressDialog.setButton("取消", new OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {

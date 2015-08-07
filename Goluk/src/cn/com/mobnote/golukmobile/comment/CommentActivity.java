@@ -216,7 +216,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 
 		if (CommentTimerManager.getInstance().getIsStarting()) {
-			GolukUtils.showToast(this, "您评论的速度太快了,请休息一下再评论。");
+			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+					LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", "您评论的速度太快了，请休息一下再评论。");
 			return;
 		}
 
