@@ -88,7 +88,7 @@ public class UserUtils {
 		}else if(headString.equals("6")){
 			headImage.setImageResource(R.drawable.my_head_girl6);
 			textSex.setText("女");
-		}else if(headString.equals("7")){
+		}else{
 			headImage.setImageResource(R.drawable.my_head_moren7);
 			textSex.setText("未知");
 		}
@@ -135,7 +135,7 @@ public class UserUtils {
 				headImage.setImageResource(R.drawable.my_head_girl5);
 			}else if(headString.equals("6")){
 				headImage.setImageResource(R.drawable.my_head_girl6);
-			}else if(headString.equals("7")){
+			}else{
 				headImage.setImageResource(R.drawable.my_head_moren7);
 			}
 	 }
