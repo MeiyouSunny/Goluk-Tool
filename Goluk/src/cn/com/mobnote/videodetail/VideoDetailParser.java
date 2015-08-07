@@ -8,125 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class VideoDetailParser {
-
-	/*public static VideoSquareDetailInfo parserVideoSquareDetailData(String json){
-		VideoSquareDetailInfo videoSquareDetailInfo = new VideoSquareDetailInfo();
-		try {
-			JSONObject obj = new JSONObject(json);
-			if(null != obj){
-				boolean success = obj.optBoolean("success");
-				if(success){
-					JSONObject data = obj.getJSONObject("data");
-					if(null != data){
-						String result = data.getString("result");
-						if("0".equals(result)){
-							JSONObject aVideo = data.getJSONObject("avideo");
-							if(null != aVideo){
-								VideoInfo videoInfo = new VideoInfo();
-								String videoStr = aVideo.optString("video");
-								String userStr = aVideo.optString("user");
-								//解析video
-								JSONObject video = new JSONObject(videoStr);
-								String commentStr = video.optString("comment");
-								JSONObject comment = new JSONObject(commentStr);
-								String videodataStr = video.optString("videodata");
-								JSONObject videodata = new JSONObject(videodataStr);
-								if(null != video){
-									VideoCommentInfo videoComment = new VideoCommentInfo();
-									//comment
-									if(null != comment){
-										videoComment.iscomment = comment.optString("iscomment");
-										videoComment.comcount = comment.optString("comcount");
-										//解析list
-										JSONArray list = comment.getJSONArray("comlist");
-										GolukDebugUtils.i("detail", "------list----"+list);
-										if(null != list){
-											VideoListInfo videoList = new VideoListInfo();
-											for(int i=0;i<list.length();i++){
-												JSONObject infoList = list.getJSONObject(i);
-												GolukDebugUtils.i("detail", "------infoList----"+infoList);
-												if(null != infoList){
-													GolukDebugUtils.i("detail", "------videoList.headimg----"+infoList.optString("headimg"));
-													GolukDebugUtils.i("detail", "------videoList.nickname----"+infoList.optString("nickname"));
-													GolukDebugUtils.i("detail", "------videoList.content----"+infoList.optString("content"));
-													GolukDebugUtils.i("detail", "------videoList.commtime----"+infoList.optString("commtime"));
-													videoList.headimg = infoList.optString("headimg");
-													videoList.nickname = infoList.optString("nickname");
-													videoList.content = infoList.optString("content");
-													videoList.commtime = infoList.optString("commtime");
-												}
-												GolukDebugUtils.i("detail", "---------videoList--------"+videoList.toString());
-												GolukDebugUtils.i("detail", "---------videoList--------"+videoList.content);
-//												videoComment.list.add(videoList);
-//												GolukDebugUtils.i("detail", "------videoComment.list.size()-----"+videoComment.list.size());
-											}
-										}
-									}
-									//videoData
-									VideoDataInfo videoDataInfo = new VideoDataInfo();
-									if(null != videodata){
-										GolukDebugUtils.i("detail", "---------aid------"+videodata.optString("aid"));
-										videoDataInfo.aid = videodata.optString("aid");
-										videoDataInfo.mid = videodata.optString("mid");
-										videoDataInfo.activie = videodata.optString("activie");
-										videoDataInfo.tag = videodata.optString("tag");
-										videoDataInfo.open = videodata.optString("open");
-										videoDataInfo.lon = videodata.optString("lon");
-										videoDataInfo.lat = videodata.optString("lat");
-										videoDataInfo.speed = videodata.optString("speed");
-										videoDataInfo.talk = videodata.optString("talk");
-										videoDataInfo.voice = videodata.optString("voice");
-										videoDataInfo.vtype = videodata.optString("vtype");
-										videoDataInfo.restime = videodata.optString("restime");
-										videoDataInfo.flux = videodata.optString("flux");
-									}
-									GolukDebugUtils.i("detail", "------videoInfo.videoid-------"+video.optString("videoid"));
-									//video
-									videoInfo.videoid = video.optString("videoid");
-									videoInfo.type = video.optString("type");
-									videoInfo.sharingtime = video.optString("sharingtime");
-									videoInfo.describe = video.optString("describe");
-									videoInfo.picture = video.optString("picture");
-									videoInfo.clicknumber = video.optString("clicknumber");
-									videoInfo.praisenumber = video.optString("praisenumber");
-									videoInfo.starttime = video.optString("starttime");
-									videoInfo.livetime = video.optString("livetime");
-									videoInfo.livewebaddress = video.optString("livewebaddress");
-									videoInfo.livesdkaddress = video.optString("livesdkaddress");
-									videoInfo.ondemandwebaddress= video.optString("ondemandwebaddress");
-									videoInfo.ondemandsdkaddress = video.optString("ondemandsdkaddress");
-									videoInfo.ispraise = video.optString("ispraise");
-									videoInfo.reason = video.optString("reason");
-									videoInfo.videodata = videoDataInfo;
-									videoInfo.comment = videoComment;
-								}
-								//解析user
-								VideoUserInfo videoUser = new VideoUserInfo();
-								JSONObject user = new JSONObject(userStr);
-								if(null != user){
-									GolukDebugUtils.i("detail", "---------videoUser.uid------"+user.optString("uid"));
-									videoUser.uid = user.optString("uid");
-									videoUser.nickname = user.optString("nickname");
-									videoUser.headportrait = user.optString("headportrait");
-									videoUser.sex = user.optString("sex");
-								}
-								
-								VideoSquareDetailInfo mVideoSquareDetail = new VideoSquareDetailInfo();
-								mVideoSquareDetail.video = videoInfo;
-								mVideoSquareDetail.user = videoUser;
-								GolukDebugUtils.i("detail", "------------final----------"+mVideoSquareDetail.video.comment.comcount);
-								
-							}
-						}
-					}
-				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return videoSquareDetailInfo;
-	}*/
-	
 	
 	public static VideoJson parseDataFromJson(String json){
 		VideoJson object = new VideoJson();
@@ -179,12 +60,14 @@ public class VideoDetailParser {
 								for(int i=0;i<json_list.length();i++){
 									JSONObject json_comlist = json_list.getJSONObject(i);
 									VideoListInfo list = new VideoListInfo();
-									list.headimg = json_comlist.optString("headimg");
-									list.nickname = json_comlist.optString("nickname");
-									list.content = json_comlist.optString("content");
-									list.commtime = json_comlist.optString("commtime");
+									list.avatar = json_comlist.optString("avatar");
+									list.name = json_comlist.optString("name");
+									list.text = json_comlist.optString("text");
+									list.time = json_comlist.optString("time");
+									list.authorid = json_comlist.optString("authorid");
+									list.commentid = json_comlist.optString("commentid");
 									com_list.add(list);
-									comment.list  = com_list;
+									comment.comlist  = com_list;
 								}
 								video.comment = comment;
 							}

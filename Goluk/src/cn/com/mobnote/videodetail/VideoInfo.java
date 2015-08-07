@@ -19,4 +19,5 @@ public class VideoInfo {
 	public VideoDataInfo videodata;
 	public String reason;
 	public VideoCommentInfo comment;
+	public String picture_thmb;
 }

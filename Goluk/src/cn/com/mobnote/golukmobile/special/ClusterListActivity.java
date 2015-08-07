@@ -86,18 +86,25 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	
 	private SpecialInfo  headdata;
 	
+	private String ztid;
+	
+	private static String pagesize = "20";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cluster_list);
 		
 		Intent intent = getIntent();
+		
+		ztid = intent.getStringExtra("ztid");
+		
 		title = (TextView) findViewById(R.id.title);
 		historyDate = SettingUtils.getInstance().getString("gcHistoryDate", sdf.format(new Date()));
 		
 		SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
 		
-		//GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videocategory", this);
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("ClusterListActivity", this);
 		mDataList = new ArrayList<ClusterInfo>();
 		
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
@@ -108,7 +115,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				mCustomProgressDialog = null;
-				httpPost(true, type, "0", "");
+				httpPost(true, "0","", ztid);
 			}
 		});
 		
@@ -119,9 +126,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();//设置分享平台的参数
 		
-		loadHistorydata();//显示历史请求数据
-		
-		//httpPost(true, type, "0", "");
+		httpPost(true,"0", "",ztid);
 	}
 	
 	@Override 
@@ -140,7 +145,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
-	private void httpPost(boolean flag,String type,String operation,String timestamp) {
+	private void httpPost(boolean flag,String operation,String timestamp,String ztid) {
 		if (flag) {
 			if (null == mCustomProgressDialog) {
 				mCustomProgressDialog = new CustomLoadingDialog(this,null);
@@ -148,8 +153,8 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 			}
 		}
 
-		boolean result = GolukApplication.getInstance().getVideoSquareManager()
-				.getSquareList("1", type, attribute, operation, timestamp);
+		boolean result = GolukApplication.getInstance().getVideoSquareManager().getJHListData(ztid, operation, timestamp,pagesize);
+		
 		if (!result) {
 			closeProgressDialog();
 		}
@@ -171,11 +176,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 				SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
 				if(begantime !=null){
 					uptype = 2;
-					if("1".equals(type)){//直播
-						httpPost(true, type, "0", "");
-					}else{
-						httpPost(true, type, "1", begantime.sharingtime);
-					}
+					httpPost(false,"0","", ztid);
 					
 				}else{
 					mRTPullListView.postDelayed(new Runnable() {
@@ -197,7 +198,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
 						if (isHaveData) {
 							uptype = 1;
-							httpPost(true, type, "2", endtime.sharingtime);
+							httpPost(true,"2", endtime.sharingtime,ztid);
 						}
 					}
 				}
@@ -214,8 +215,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		if(isloading == false){
 			//有下一页刷新
 			if(isHaveData){
-				loading = (RelativeLayout) LayoutInflater.from(this)
-						.inflate(R.layout.video_square_below_loading, null);
+				loading = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
 				mRTPullListView.addFooterView(loading);
 			}
 		}
@@ -264,19 +264,19 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
 			Object param2) {
-		if (event == SquareCmd_Req_SquareList) {
+		if (event == VSquare_Req_List_Tag_Content) {
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				
-				List<ClusterInfo> list = new ArrayList<ClusterInfo>();//DataParserUtils.parserVideoSquareListData((String) param2);
-				
+				List<ClusterInfo> list = sdm.getClusterList((String) param2);
+				headdata = sdm.getClusterHead((String) param2);
 				//说明有数据
 				if(list.size()>0){
 					begantime = list.get(0);
 					endtime = list.get(list.size()-1);
 					
 					if(uptype == 0){//说明是第一次
-						if(list.size() >= 30){
+						if(list.size() >= 20){
 							isHaveData = true;
 						}else{
 							isHaveData = false;
@@ -284,9 +284,9 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 						mDataList = list;
 						init(false);
 					}else if (uptype ==1){//上拉刷新
-						if (list.size() >= 30) {//数据超过30条
+						if (list.size() >= 20) {//数据超过20条
 							isHaveData = true;
-						} else {//数据没有30条
+						} else {//数据没有20条
 							isHaveData = false;
 							if(loading != null){
 								if(mRTPullListView!=null){
@@ -298,9 +298,11 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 						mDataList.addAll(list);
 						flush();
 					}else if (uptype ==2){//下拉刷新
-						if (list.size() >= 30) {//数据超过30条
+						mDataList.clear();
+						
+						if (list.size() >= 20) {//数据超过20条
 							isHaveData = true;
-						} else {//数据没有30条
+						} else {//数据没有20条
 							isHaveData = false;
 						}
 						
