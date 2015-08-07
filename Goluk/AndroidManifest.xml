@@ -320,6 +320,13 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.newest.VideoCategoryListActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        
 
         <!-- 添加百度地图key -->
         <!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->

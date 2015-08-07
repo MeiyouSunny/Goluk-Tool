@@ -4,50 +4,55 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
-import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
-import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.util.GolukUtils;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
+import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
+import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 
-public class NewestListView implements VideoSuqareManagerFn{
-	private RelativeLayout mRootLayout = null;
-	private Context mContext = null;
-	private RTPullListView mRTPullListView = null;
-	private NewestListHeadDataInfo mHeadDataInfo = null;
-	public List<VideoSquareInfo> mDataList = null;
-	private CustomLoadingDialog mCustomProgressDialog = null;
-	public  static Handler mHandler = null;
-	private NewestAdapter mNewestAdapter = null;
+public class VideoCategoryListActivity extends CarRecordBaseActivity implements VideoSuqareManagerFn{
+	private String id;
 	private boolean headLoading = false;
 	private boolean dataLoading = false;
 	private String curOperation = "0";
 	private String historyDate;
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	private RTPullListView mRTPullListView = null;
+	public List<VideoSquareInfo> mDataList = null;
+	private CustomLoadingDialog mCustomProgressDialog = null;
+	private NewestAdapter mNewestAdapter = null;
 	
-	public NewestListView(Context context) {
-		mContext = context;
-		mHeadDataInfo = new NewestListHeadDataInfo();
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addContentView(LayoutInflater.from(this).inflate(R.layout.video_type_list, null)); 
+		mRTPullListView = (RTPullListView)findViewById(R.id.mRTPullListView);
+		String title = getIntent().getStringExtra("title");
+		id = getIntent().getStringExtra("id");
+		setTitle(title);
+		
 		mDataList = new ArrayList<VideoSquareInfo>();
-		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		mRootLayout = new RelativeLayout(mContext);
-		mRootLayout.addView(mRTPullListView);
 	
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
 		if("".equals(historyDate)){
@@ -56,7 +61,7 @@ public class NewestListView implements VideoSuqareManagerFn{
 		SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
 		
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if (null != mVideoSquareManager) {
+		if(null != mVideoSquareManager){
 			mVideoSquareManager.addVideoSquareManagerListener("NewestListView", this);
 		}
 		
@@ -65,30 +70,18 @@ public class NewestListView implements VideoSuqareManagerFn{
 	}
 	
 	private void loadHistoryData() {
-		boolean headFlag = false;
-		boolean dataFlag = false;
-		String head = GolukApplication.getInstance().getVideoSquareManager().getZXList();
 		String data = GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("0");
-		if (!TextUtils.isEmpty(head)) {
-			headFlag = true;
-			mHeadDataInfo = JsonParserUtils.parserNewestHeadData(head);
-		}
 		if (!TextUtils.isEmpty(data)) {
-			dataFlag = true;
 			mDataList = JsonParserUtils.parserNewestItemData(data);
-		}
-		
-		if (headFlag && dataFlag) {
 			initLayout();
 		}
-		
 	}
 	
 	private void httpPost(boolean flag, String operation, String timestamp){
 		curOperation = operation;
 		if(flag){
 			if(null == mCustomProgressDialog){
-				mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
+				mCustomProgressDialog = new CustomLoadingDialog(this, null);
 				mCustomProgressDialog.show();
 			}
 		}
@@ -131,13 +124,13 @@ public class NewestListView implements VideoSuqareManagerFn{
 		closeProgressDialog();
 		mRTPullListView.onRefreshComplete(historyDate);
 		if(null == mNewestAdapter){
-			mNewestAdapter = new NewestAdapter(mContext);
+			mNewestAdapter = new NewestAdapter(this);
 		}
 	
 		if ("0".equals(curOperation)) {
 			mRTPullListView.setAdapter(mNewestAdapter);
 		}
-		mNewestAdapter.setData(mHeadDataInfo, mDataList);
+		mNewestAdapter.setData(null, mDataList);
 		
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
@@ -176,28 +169,10 @@ public class NewestListView implements VideoSuqareManagerFn{
 		});
 		
 	}
-
-	public View getView(){
-		return mRootLayout;
-	}
 	
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-		if(event == VSquare_Req_List_Catlog){
-			if (RESULE_SUCESS == msg) {
-				headLoading = false;
-				mHeadDataInfo = JsonParserUtils.parserNewestHeadData((String)param2);
-				initLayout();
-			}else{
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
-			}
-			
-//			if(mDataList.size()>0){
-//				setViewListBg(false);
-//			}else{
-//				setViewListBg(true);
-//			}
-		}else if(event == VSquare_Req_List_Video_Catlog) {
+		if(event == VSquare_Req_List_Video_Catlog) {
 			if (RESULE_SUCESS == msg) {
 				dataLoading = false;
 				List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData((String)param2);
@@ -208,29 +183,10 @@ public class NewestListView implements VideoSuqareManagerFn{
 				mDataList.addAll(datalist);
 				initLayout();
 			}else{
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+				GolukUtils.showToast(VideoCategoryListActivity.this, "网络异常，请检查网络");
 			}
 		}
 		
 	}
-	
-	public void onResume() {
-		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if(null != mVideoSquareManager){
-			mVideoSquareManager.addVideoSquareManagerListener("NewestListView", this);
-		}
-	}
-	
-	public void onPause() {
-		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if(null != mVideoSquareManager){
-			mVideoSquareManager.removeVideoSquareManagerListener("NewestListView");
-		}
-	}
-	
-	public void onDestroy(){
-		
-	}
-	
-}
 
+}
