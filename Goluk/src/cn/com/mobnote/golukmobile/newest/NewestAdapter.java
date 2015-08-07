@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -27,10 +32,6 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 @SuppressLint("InflateParams")
 public class NewestAdapter extends BaseAdapter {
@@ -148,14 +149,15 @@ public class NewestAdapter extends BaseAdapter {
 	private void initListener(int index) {
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 		
+		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));
 		holder.function.setOnClickListener(new ClickCategoryListener(mVideoSquareInfo.mVideoEntity.videoid));
 		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mVideoSquareInfo.mVideoEntity.videoid));
 		
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
-			holder.totalcomments.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
-			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
+			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 		}
 		
 	}
@@ -208,30 +210,35 @@ public class NewestAdapter extends BaseAdapter {
 			showText(holder.detail, mVideoSquareInfo.mUserEntity.nickname, mVideoSquareInfo.mVideoEntity.describe);
 		}
 		
-		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
-		if (comments.size() > 0) {
-			holder.totalcomments.setText("查看所有"+getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)+"条评论");
-			holder.totalcomments.setVisibility(View.VISIBLE);
-			holder.totlaCommentLayout.setVisibility(View.VISIBLE);
-			holder.totalcomments.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
-			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
-			holder.comment1.setVisibility(View.VISIBLE);
-			holder.comment2.setVisibility(View.VISIBLE);
-			holder.comment3.setVisibility(View.VISIBLE);
-			if (1 == comments.size()) {
-				showText(holder.comment1, comments.get(0).name, comments.get(0).text);										
-				holder.comment2.setVisibility(View.GONE);
-				holder.comment3.setVisibility(View.GONE);
-			}else if (2 == comments.size()) {
-				showText(holder.comment1, comments.get(0).name, comments.get(0).text);
-				showText(holder.comment2, comments.get(1).name, comments.get(1).text);
-				holder.comment3.setVisibility(View.GONE);
-			}else if (3 == comments.size()) {
-				showText(holder.comment1, comments.get(0).name, comments.get(0).text);
-				showText(holder.comment2, comments.get(1).name, comments.get(1).text);
-				showText(holder.comment3, comments.get(2).name, comments.get(2).text);
+		if ("1".equals(mVideoSquareInfo.mVideoEntity.iscomment)) {
+			List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
+			if (comments.size() > 0) {
+				holder.totalcomments.setText("查看所有"+getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)+"条评论");
+				holder.totalcomments.setVisibility(View.VISIBLE);
+				holder.totlaCommentLayout.setVisibility(View.VISIBLE);
+				holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+				holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+				holder.comment1.setVisibility(View.VISIBLE);
+				holder.comment2.setVisibility(View.VISIBLE);
+				holder.comment3.setVisibility(View.VISIBLE);
+				if (1 == comments.size()) {
+					showText(holder.comment1, comments.get(0).name, comments.get(0).text);										
+					holder.comment2.setVisibility(View.GONE);
+					holder.comment3.setVisibility(View.GONE);
+				}else if (2 == comments.size()) {
+					showText(holder.comment1, comments.get(0).name, comments.get(0).text);
+					showText(holder.comment2, comments.get(1).name, comments.get(1).text);
+					holder.comment3.setVisibility(View.GONE);
+				}else if (3 == comments.size()) {
+					showText(holder.comment1, comments.get(0).name, comments.get(0).text);
+					showText(holder.comment2, comments.get(1).name, comments.get(1).text);
+					showText(holder.comment3, comments.get(2).name, comments.get(2).text);
+				}
+				
+			}else {
+				holder.totalcomments.setVisibility(View.GONE);
+				holder.totlaCommentLayout.setVisibility(View.GONE);
 			}
-			
 		}else {
 			holder.totalcomments.setVisibility(View.GONE);
 			holder.totlaCommentLayout.setVisibility(View.GONE);

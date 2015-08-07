@@ -70,8 +70,10 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
 	private SpecialDataManage sdm = new SpecialDataManage();
+	private TextView textTitle;
 	
 	private String ztid;
+	private String title;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		Intent intent = getIntent();
 		
 		ztid = intent.getStringExtra("ztid");
+		title = intent.getStringExtra("title");
 
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("SpecialListActivity",this);
 
@@ -99,6 +102,9 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+		textTitle = (TextView) findViewById(R.id.title);
+		
+		textTitle.setText(title);
 		mBackBtn.setOnClickListener(this);
 
 		sharePlatform = new SharePlatformUtil(this);
@@ -155,15 +161,31 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			this.finish();
 			break;
 		case R.id.message:
-			Intent it = new Intent(this,CommentActivity.class);
-			it.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
-			it.putExtra(CommentActivity.COMMENT_KEY_MID, ztid);
-			it.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
-			it.putExtra(CommentActivity.COMMENT_KEY_TYPE, "2");
-			startActivity(it);
+			this.startCommentActivity();
+			break;
+		case R.id.comment_link:
+			this.startCommentActivity();
+			break;
 		default:
 			break;
 		}
+	}
+	
+	
+	/**
+	  * 跳转到评论页面
+	  * @Title: startCommentActivity 
+	  * @Description: TODO void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	private void startCommentActivity(){
+		Intent it = new Intent(this,CommentActivity.class);
+		it.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+		it.putExtra(CommentActivity.COMMENT_KEY_MID, ztid);
+		it.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
+		it.putExtra(CommentActivity.COMMENT_KEY_TYPE, "2");
+		startActivity(it);
 	}
 
 	// 分享成功后需要调用的接口
@@ -232,7 +254,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 							view.findViewById(R.id.comments).setVisibility(View.GONE);
 						}
 						
-						view.findViewById(R.id.message).setOnClickListener(this);
+						
 
 						outurl = (TextView) view.findViewById(R.id.outurl);
 
@@ -245,7 +267,10 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						commentLink = (TextView) view.findViewById(R.id.comment_link);
 
 						commentLink.setText("查看所有  " + map.get("comcount") + " 条评论");
-
+						
+						commentLink.setOnClickListener(this);
+						view.findViewById(R.id.message).setOnClickListener(this);
+						
 						lv.addFooterView(view);
 
 						List<CommentInfo> comments = (List<CommentInfo>) map.get("comments");

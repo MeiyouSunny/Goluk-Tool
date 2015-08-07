@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +71,6 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	/** 广场视频列表默认背景图片 */
 	private ImageView squareTypeDefault;
 	
-	private TextView title;
 	//点播分类
 	private String attribute;
 	
@@ -86,7 +87,11 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	
 	private SpecialInfo  headdata;
 	
+	private TextView textTitle;
+	
 	private String ztid;
+	
+	private String title;
 	
 	private static String pagesize = "20";
 	
@@ -98,8 +103,9 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		Intent intent = getIntent();
 		
 		ztid = intent.getStringExtra("ztid");
+		title = intent.getStringExtra("title");
 		
-		title = (TextView) findViewById(R.id.title);
+		textTitle = (TextView) findViewById(R.id.title);
 		historyDate = SettingUtils.getInstance().getString("gcHistoryDate", sdf.format(new Date()));
 		
 		SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
@@ -108,6 +114,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		mDataList = new ArrayList<ClusterInfo>();
 		
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
+		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		squareTypeDefault = (ImageView) findViewById(R.id.square_type_default);
 		squareTypeDefault.setOnClickListener(new OnClickListener() {
 			
@@ -122,6 +129,8 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mBackBtn.setOnClickListener(this);
+		
+		textTitle.setText(title);
 		
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();//设置分享平台的参数

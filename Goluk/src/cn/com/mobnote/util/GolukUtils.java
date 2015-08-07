@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -331,9 +332,65 @@ public class GolukUtils {
 			}
 		}, 500);
 	}
-	
+
 	public static String getCurrentFormatTime() {
-		String time =DateFormat.format("yyyy-MM-dd HH:mm:ss", Calendar.getInstance().getTime()).toString();
+		String time = DateFormat.format("yyyy-MM-dd HH:mm:ss", Calendar.getInstance().getTime()).toString();
+		return time;
+	}
+
+	/**
+	 * 获取评论列表显示时间规则()
+	 * 
+	 * @param time
+	 *            类似2010-11-20 11:10:10
+	 * @return
+	 * @author jyf
+	 * @date 2015年8月7日
+	 */
+	public static String getCommentShowFormatTime(String time) {
+		try {
+			String result = time;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINESE);
+			Date oldDate = formatter.parse(time);
+			// 转换成 2010-11-20 11:10
+			String ymdhm = formatter.format(oldDate);
+
+			result = ymdhm;
+
+			// 视频相关时间
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(oldDate);
+			int oldYear = c1.get(Calendar.YEAR);
+			int oldMonth = c1.get(Calendar.MONTH) + 1;
+			int oldDay = c1.get(Calendar.DAY_OF_MONTH);
+
+			// 当前时间
+			Calendar currentCalendar = Calendar.getInstance();
+			currentCalendar.setTime(new Date());
+			int currentYear = currentCalendar.get(Calendar.YEAR);
+			int currentMonth = currentCalendar.get(Calendar.MONTH) + 1;
+			int currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
+
+			if (currentYear == oldYear && oldMonth == currentMonth && oldDay == currentDay) {
+				// 今天
+				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm", Locale.CHINESE);
+				String todayFormatStr = hhmmFormat.format(oldDate);
+				result = "今天 " + todayFormatStr;
+			} else if (currentYear == oldYear && oldMonth == currentMonth && oldDay + 1 == currentDay) {
+				// 昨天
+				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm", Locale.CHINESE);
+				String todayFormatStr = hhmmFormat.format(oldDate);
+				result = "昨天 " + todayFormatStr;
+			} else if (currentYear == oldYear) {
+				// 本年
+				SimpleDateFormat hhmmFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINESE);
+				String todayFormatStr = hhmmFormat.format(oldDate);
+				result = todayFormatStr;
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return time;
 	}
 
