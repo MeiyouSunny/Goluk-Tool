@@ -1,7 +1,10 @@
 package cn.com.mobnote.golukmobile.newest;
 
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
 import cn.com.mobnote.golukmobile.special.ClusterListActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -18,20 +21,23 @@ public class ClickWonderfulSelectedListener implements OnClickListener{
 
 	@Override
 	public void onClick(View arg0) {
+		GolukDebugUtils.e("", "TTTTTTTTTTT===========mJXListItemDataInfo.ztype=="+mJXListItemDataInfo.ztype);
+		Intent intent = null;
 		if ("1".equals(mJXListItemDataInfo.ztype)) {//专题
-			Intent intent = new Intent(mContext, SpecialListActivity.class);
-			intent.putExtra("ztid", "");
-			mContext.startActivity(intent);
+			intent = new Intent(mContext, SpecialListActivity.class);
+			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
 		}else if ("2".equals(mJXListItemDataInfo.ztype)) {//tag
-			Intent intent = new Intent(mContext, ClusterListActivity.class);
-			intent.putExtra("ztid", "");
-			mContext.startActivity(intent);
+			intent = new Intent(mContext, ClusterListActivity.class);
+			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
 		}else if ("3".equals(mJXListItemDataInfo.ztype)) {//单视频
-			
+			intent = new Intent(mContext, VideoSquareDeatilActivity.class);
+			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
 		}else if ("4".equals(mJXListItemDataInfo.ztype)) {//url
-			
+			String url = mJXListItemDataInfo.adverturl;
+			intent = new Intent(mContext, UserOpenUrlActivity.class);
+			intent.putExtra("url", url);
 		}
-		
+		mContext.startActivity(intent);
 	}
 	
 }

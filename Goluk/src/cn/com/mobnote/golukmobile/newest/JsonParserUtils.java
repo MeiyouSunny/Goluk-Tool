@@ -38,8 +38,8 @@ public class JsonParserUtils {
 										if(j == 0) {
 											date = jxdate;
 										}
-										JSONObject jxlistitem = (JSONObject) jxlist.opt(i);
-										JXListItemDataInfo info = new JXListItemDataInfo(jxlistitem, date);
+										JSONObject jxlistitem = (JSONObject) jxlist.opt(j);
+										JXListItemDataInfo info = new JXListItemDataInfo(jxlistitem, date, jxid);
 										jxlistdata.add(info);
 									}
 								}
