@@ -26,9 +26,13 @@ import android.widget.TextView;
 public class RTPullListView extends ListView implements OnScrollListener {
 	private static final String TAG = "RTPullListView";
 
+	/** 松开手刷新状态 */
 	private final static int RELEASE_To_REFRESH = 0;
+	/** 下拉刷新状态 */
 	private final static int PULL_To_REFRESH = 1;
+	/** 当前正在刷新状态 (用户下拉完后，松手) */
 	private final static int REFRESHING = 2;
+	/** 当前无操作 */
 	private final static int DONE = 3;
 	private final static int LOADING = 4;
 
@@ -49,8 +53,6 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 	// 用于保证startY的值在一个完整的touch事件中只被记录一次
 	private boolean isRecored;
-
-	// private int headContentWidth;
 	private int headContentHeight;
 
 	private int startY;
@@ -82,21 +84,17 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		inflater = LayoutInflater.from(context);
 		headView = (LinearLayout) inflater.inflate(R.layout.pulllist_head, null);
 		arrowImageView = (ImageView) headView.findViewById(R.id.head_arrowImageView);
-		// arrowImageView.setMinimumWidth(70);
-		// arrowImageView.setMinimumHeight(50);
 		progressBar = (ProgressBar) headView.findViewById(R.id.head_progressBar);
 		tipsTextview = (TextView) headView.findViewById(R.id.head_tipsTextView);
 		lastUpdatedTextView = (TextView) headView.findViewById(R.id.head_lastUpdatedTextView);
 
 		measureView(headView);
 		headContentHeight = headView.getMeasuredHeight();
-		// headContentWidth = headView.getMeasuredWidth();
 
 		headView.setPadding(0, -1 * headContentHeight, 0, 0);
 		headView.invalidate();
 
 		addHeaderView(headView, null, false);
-		// setOnScrollListener(this);
 		setOnScrollListener(new PauseOnScrollListener(BitmapManager.getInstance().mBitmapUtils, false, true, this));
 
 		animation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
@@ -139,7 +137,9 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 	public void firstFreshState() {
 		state = REFRESHING;
+		isBack = true;
 		changeHeaderViewByState();
+		GolukDebugUtils.d(TAG, "由done或者下拉刷新状态转变到松开刷新");
 	}
 
 	@Override
@@ -152,6 +152,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 					isRecored = true;
 					isPush = true;
 					startY = (int) event.getY();
+					GolukDebugUtils.e("", "jyf----RTPullListView: DOWN: --startY: " + startY);
 					GolukDebugUtils.d(TAG, "在down时候记录当前位置‘");
 				}
 				break;
@@ -250,12 +251,14 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 					// 更新headView的size
 					if (state == PULL_To_REFRESH) {
+						GolukDebugUtils.e("", "jyf----RTPullListView: MOVE: --PULL_To_REFRESH: " + tempY);
 						headView.setPadding(0, -1 * headContentHeight + (tempY - startY) / RATIO, 0, 0);
 
 					}
 
 					// 更新headView的paddingTop
 					if (state == RELEASE_To_REFRESH) {
+						GolukDebugUtils.e("", "jyf----RTPullListView: MOVE: --RELEASE_To_REFRESH: " + tempY);
 						headView.setPadding(0, (tempY - startY) / RATIO - headContentHeight, 0, 0);
 					}
 
