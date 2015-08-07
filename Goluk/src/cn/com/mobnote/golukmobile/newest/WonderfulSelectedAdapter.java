@@ -2,6 +2,12 @@ package cn.com.mobnote.golukmobile.newest;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
@@ -15,10 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 @SuppressLint("InflateParams")
 public class WonderfulSelectedAdapter extends BaseAdapter {
@@ -159,6 +161,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             iconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mPlayerLayout.addView(icon, iconParams);
         }
+      
 
 	}
 

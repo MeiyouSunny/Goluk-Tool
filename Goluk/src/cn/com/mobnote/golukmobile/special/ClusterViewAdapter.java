@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -40,13 +41,23 @@ import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.newest.ClickCategoryListener;
+import cn.com.mobnote.golukmobile.newest.ClickCommentListener;
+import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
+import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
+import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
 import cn.com.mobnote.golukmobile.newest.NewestAdapter.ViewHolder;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 @SuppressLint("InflateParams")
 public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManagerFn, OnTouchListener {
@@ -62,7 +73,10 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 	final int TYPE_1 = 0;
 	final int TYPE_2 = 1;
-
+	
+	/** 滚动中锁标识 */
+	private boolean lock = false;
+	
 	private SpecialInfo headdata;
 
 	public ClusterViewAdapter(Context context, int plform, SharePlatformUtil spf) {
@@ -215,13 +229,16 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 				} else {
 					holder.comment3.setVisibility(View.GONE);
 				}
-
+				
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
-				//BitmapManager.getInstance().mBitmapUtils.display(holder.mPreLoading, specialInfo.imagepath);
-
+				
+				loadImage(holder.imageLayout, clusterInfo.imagepath);
+				
+				initListener(index--);
+				
 				convertView.setTag(holder);
 
 			} else {
@@ -233,6 +250,14 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		}
 
 		return convertView;
+	}
+	
+	private void initListener(int index) {
+		ClusterInfo clusterInfo = clusterListData.get(index);
+		
+		holder.commentLayout.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
+		holder.totalcomments.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
+		holder.imageLayout.setOnClickListener(new SpecialCommentListener(mContext,clusterInfo.imagepath,clusterInfo.videopath,"jh",clusterInfo.videotype));
 	}
 
 	public int getUserHead(String head) {
@@ -266,6 +291,47 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 			}
 		}
 		return time;
+	}
+	
+	private void loadImage(RelativeLayout layout, String url) {
+		layout.removeAllViews();
+        SimpleDraweeView view = new SimpleDraweeView(mContext);
+        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+        GenericDraweeHierarchy hierarchy = builder
+                    .setFadeDuration(300)
+                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+                    .setActualImageScaleType(ScaleType.FIT_XY)
+                    .build();
+        view.setHierarchy(hierarchy);
+
+        if (!lock) {
+        	view.setImageURI(Uri.parse(url));
+        }
+                
+        int height = (int) ((float) width / 1.77f);
+        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+        layout.addView(view, mPreLoadingParams);
+        
+	}
+	
+	/**
+	 * 锁住后滚动时禁止下载图片
+	 * @author xuhw
+	 * @date 2015年6月8日
+	 */
+	public void lock() {
+		lock = true;
+	}
+	
+	/**
+	 * 解锁后恢复下载图片功能
+	 * @author xuhw
+	 * @date 2015年6月8日
+	 */
+	public void unlock() {
+		lock = false;
+		this.notifyDataSetChanged();
 	}
 
 	public static class ViewHolder {

@@ -38,7 +38,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		VideoSuqareManagerFn, ILiveDialogManagerFn {
 
 	/** 如果为true, 則为测试数据，false則使用真实数据 (上线前要删除掉) */
-	private final boolean isTest = true;
+	private final boolean isTest = false;
 
 	public static final String TAG = "Comment";
 
@@ -95,6 +95,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private VideoSquareManager mVideoSquareManager = null;
 	private RelativeLayout mCommentInputLayout = null;
+	private TextView mNoInputTv = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,11 +121,14 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				GolukUtils.showSoft(mEditText);
 			}
 			mCommentInputLayout.setVisibility(View.VISIBLE);
+			mNoInputTv.setVisibility(View.GONE);
+
+			mRTPullListView.firstFreshState();
+			firstEnter();
 		} else {
 			mCommentInputLayout.setVisibility(View.GONE);
+			mNoInputTv.setVisibility(View.VISIBLE);
 		}
-
-		firstEnter();
 	}
 
 	private void initListener() {
@@ -133,7 +137,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")) {
 				mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
 			}
-			mVideoSquareManager.addVideoSquareManagerListener("live", this);
+			mVideoSquareManager.addVideoSquareManagerListener(TAG, this);
 		}
 	}
 
@@ -167,14 +171,18 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mCommentInputLayout = (RelativeLayout) findViewById(R.id.comment_layout);
+		mNoInputTv = (TextView) findViewById(R.id.comment_noinput);
 
 		mBackBtn.setOnClickListener(this);
 		mSendBtn.setOnClickListener(this);
 
 		mAdapter = new CommentListViewAdapter(this);
 		mRTPullListView.setAdapter(mAdapter);
-		mRTPullListView.setonRefreshListener(this);
-		mRTPullListView.setOnRTScrollListener(this);
+		if (isCanInput) {
+			mRTPullListView.setonRefreshListener(this);
+			mRTPullListView.setOnRTScrollListener(this);
+		}
+
 		loading = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
 	}
 
@@ -208,6 +216,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private void back() {
 		isExit = true;
+		mVideoSquareManager.removeVideoSquareManagerListener(TAG);
 		finish();
 	}
 
@@ -456,6 +465,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
 		if (!isSucess) {
 			// TODO 失败
+			GolukUtils.showToast(this, "评论失败!");
 			return;
 		}
 		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,

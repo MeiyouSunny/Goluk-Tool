@@ -22,7 +22,8 @@
     </RelativeLayout>
     
 	<LinearLayout 
-      	android:layout_centerInParent="true"
+	    android:layout_alignTop="@+id/imageLayout"
+	    android:layout_alignBottom="@+id/imageLayout"
       	android:layout_width="match_parent"
     	android:layout_height="wrap_content"  
     	android:orientation="vertical"
@@ -32,6 +33,7 @@
         android:id="@+id/mTitleName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
         android:textColor="#ffffff"
         android:textSize="18sp" />
@@ -40,6 +42,7 @@
         android:id="@+id/mTagName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
         android:textColor="#ffffff"
         android:textSize="18sp" />

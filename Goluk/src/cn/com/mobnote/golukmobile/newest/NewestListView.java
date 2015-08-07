@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -13,8 +14,12 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GolukUtils;
+import android.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
@@ -42,7 +47,7 @@ public class NewestListView implements VideoSuqareManagerFn{
 		mHeadDataInfo = new NewestListHeadDataInfo();
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = new RTPullListView(mContext);
-//		mRTPullListView.setSelector(0);
+		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		mRootLayout = new RelativeLayout(mContext);
 		mRootLayout.addView(mRTPullListView);
 	
@@ -186,7 +191,7 @@ public class NewestListView implements VideoSuqareManagerFn{
 				mHeadDataInfo = JsonParserUtils.parserNewestHeadData((String)param2);
 				initLayout();
 			}else{
-//				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 			
 //			if(mDataList.size()>0){
@@ -204,6 +209,8 @@ public class NewestListView implements VideoSuqareManagerFn{
 				
 				mDataList.addAll(datalist);
 				initLayout();
+			}else{
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 		}
 		

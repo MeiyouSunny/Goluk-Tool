@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
@@ -18,10 +20,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 
+@SuppressLint("InflateParams")
 public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 	private RelativeLayout mRootLayout = null;
 	private Context mContext = null;
@@ -30,13 +34,20 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	public  static Handler mHandler = null;
 	private WonderfulSelectedAdapter mWonderfulSelectedAdapter = null;
+	private String historyDate;
+	@SuppressLint("SimpleDateFormat")
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	/** 列表添加页脚标识 */
+	private boolean addFooter=false;
+	/** 添加列表底部加载中布局 */
+	private RelativeLayout mBottomLoadingView = null;
+	private int pageCount = 4;
+	private String jxid = "0";
+	private boolean isGetFileListDataing = false;
 	/** 保存列表一个显示项索引 */
 	private int firstVisible;
 	/** 保存列表显示item个数 */
 	private int visibleCount;
-	private String historyDate;
-	@SuppressLint("SimpleDateFormat")
-	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 	
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
@@ -63,13 +74,13 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 	private void initHistoryData() {
 		String data = GolukApplication.getInstance().getVideoSquareManager().getJXList();
 		if (!TextUtils.isEmpty(data)) {
-			mDataList = JsonParserUtils.parserJXData(data);
-			initLayout();
+			initLayout(JsonParserUtils.parserJXData(data));
 		}
 		
 	}
 	
 	private void httpPost(boolean flag, String jxid, String pagesize){
+		this.jxid = jxid;
 		if(flag){
 			if(null == mCustomProgressDialog){
 				mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
@@ -78,41 +89,12 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		}
 		
 		if(null != GolukApplication.getInstance().getVideoSquareManager()){
+			if (isGetFileListDataing) {
+				return;
+			}
+			isGetFileListDataing = true;
+			GolukDebugUtils.e("", "TTTTTT=====11111=====jxid="+jxid);
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().getSPFLListData();
-//			GolukApplication.getInstance().getVideoSquareManager().getZTListData("zt001");
-//			GolukApplication.getInstance().getVideoSquareManager().getJHListData("zt001", "0", "", "20");
-//			GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData("zt001");
-//			GolukApplication.getInstance().getVideoSquareManager().getSPFLListData();
-//			List<String> l = new ArrayList<String>();
-//			l.add("0");
-//			GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("1", "0", l, "0", "");
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().getCommentListData("zt001", "2", "0", "", "");
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().addComment("04DB0612A41EBB909C33DC5901307461", "1", "拼杀开始看开始", "", "");
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().deleteComment("6C0DDF2E74844517925A2BE1EC9D88EB");
-			
-//			List<VideoSquareInfo> info = new ArrayList<VideoSquareInfo>();
-//			for(int i=0;i<3;i++){
-//				VideoSquareInfo v = new VideoSquareInfo();
-//				VideoEntity e = new VideoEntity();
-//				e.videoid = "20150617_2BBD405013F011E58050892EFD2F8892";
-//				e.clicknumber="10";
-//				v.mVideoEntity = e;
-//				
-//			}
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().clickNumberUpload("1", info);
-			
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().clickPraise("1", "20150617_2BBD405013F011E58050892EFD2F8892", "1");
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().report("1", "20150617_2BBD405013F011E58050892EFD2F8892", "1");
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().recomVideo("1", "20150617_2BBD405013F011E58050892EFD2F8892", "的好感动个");
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().getShareUrl("20150617_2BBD405013F011E58050892EFD2F8892", "2");
-//			boolean b = GolukApplication.getInstance().getVideoSquareManager().shareVideoUp("1", "20150617_2BBD405013F011E58050892EFD2F8892");
-//			boolean a = GolukApplication.getInstance().getVideoSquareManager().getTagShareUrl("1", "zt001");
-			
-//			GolukDebugUtils.e("", "VideoSuqare_CallBack=@@@@======a="+a);
-			
-			
-			
 			if(!result){
 				closeProgressDialog();
 			}
@@ -127,13 +109,32 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		}
 	}
 	
-	private void initLayout(){
+	private void initLayout(List<JXListItemDataInfo> list){
+		mDataList.addAll(list);
+		
+		if (!addFooter) {
+			addFooter = true;
+			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext)
+					.inflate(R.layout.video_square_below_loading, null);
+			mRTPullListView.addFooterView(mBottomLoadingView);
+		}
+		
+		if (pageCount < 4) {
+			if (addFooter) {
+				addFooter = false;
+				mRTPullListView.removeFooterView(mBottomLoadingView);
+			}
+		}
+		
 		if(null == mWonderfulSelectedAdapter){
 			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
 		}
 		
+		if ("0".equals(jxid)) {
+			mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
+		}
 		mWonderfulSelectedAdapter.setData(mDataList);
-		mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
+		
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -152,6 +153,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
 					mWonderfulSelectedAdapter.unlock();
+					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
+						httpPost(false, mDataList.get(mDataList.size() - 1).jxid, "");
+					}
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 					mWonderfulSelectedAdapter.lock();
@@ -180,14 +184,20 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
 		if(event == VSquare_Req_List_HandPick){
-			closeProgressDialog();
-			mRTPullListView.onRefreshComplete(historyDate);
+			GolukDebugUtils.e("", "TTTTTT=====2222=====param2="+param2);
+			isGetFileListDataing = false;
+			if ("0".equals(jxid)) {
+				closeProgressDialog();
+				mRTPullListView.onRefreshComplete(historyDate);
+			}
+			
 			if(RESULE_SUCESS == msg){
 				List<JXListItemDataInfo> list = JsonParserUtils.parserJXData((String)param2);
-				
-				mDataList.clear();
-				mDataList.addAll(list);
-				initLayout();
+				pageCount = JsonParserUtils.parserJXCount((String)param2);
+				if ("0".equals(jxid)) {
+					mDataList.clear();
+				}
+				initLayout(list);
 			}else{
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
