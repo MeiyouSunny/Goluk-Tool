@@ -281,6 +281,15 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		this.mAdapter.appendData(dataList);
 	}
 
+	// 是否显示无数据提示
+	private void noData(boolean isno) {
+		if (isno) {
+			mNoData.setVisibility(View.VISIBLE);
+		} else {
+			mNoData.setVisibility(View.GONE);
+		}
+	}
+
 	private void callBack_commentList(int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "jyf----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
 		if (1 == msg) {
@@ -294,6 +303,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					// 有数据
 					ArrayList<CommentBean> dataList = JsonUtil.parseCommentData(dataObj.getJSONArray("comments"));
 					if (null != dataList && dataList.size() > 0) {
+
+						noData(false);
 
 						if (OPERATOR_FIRST == mCurrentOperator) {
 							// 首次进入
@@ -336,6 +347,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			removeFoot();
 		} else if (mCurrentOperator == OPERATOR_FIRST) {// 下拉刷新
 			mRTPullListView.onRefreshComplete(historyDate);
+		} else if (OPERATOR_FIRST == mCurrentOperator) {
+			if (this.mAdapter.getCount() <= 0) {
+				noData(true);
+			}
 		}
 	}
 
@@ -348,6 +363,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				if (isSucess) {
 					CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
 					if (null != bean) {
+						noData(false);
 						bean.mCommentTime = GolukUtils.getCurrentFormatTime();
 						this.mAdapter.addFirstData(bean);
 						CommentTimerManager.getInstance().start(10);
