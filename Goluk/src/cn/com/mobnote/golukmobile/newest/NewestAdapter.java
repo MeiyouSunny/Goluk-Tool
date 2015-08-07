@@ -154,8 +154,8 @@ public class NewestAdapter extends BaseAdapter {
 		
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
-			holder.totalcomments.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
-			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
+			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo));
+			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo));
 		}
 		
 	}
@@ -213,8 +213,8 @@ public class NewestAdapter extends BaseAdapter {
 			holder.totalcomments.setText("查看所有"+getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)+"条评论");
 			holder.totalcomments.setVisibility(View.VISIBLE);
 			holder.totlaCommentLayout.setVisibility(View.VISIBLE);
-			holder.totalcomments.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
-			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mVideoSquareInfo.id));
+			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo));
+			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo));
 			holder.comment1.setVisibility(View.VISIBLE);
 			holder.comment2.setVisibility(View.VISIBLE);
 			holder.comment3.setVisibility(View.VISIBLE);
