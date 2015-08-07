@@ -230,6 +230,11 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 					holder.comment3.setVisibility(View.GONE);
 				}
 				
+				int height = (int) ((float) width / 1.77f);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
+				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
+				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
+				
 				loadImage(holder.imageLayout, clusterInfo.imagepath);
 				
 				initListener(index--);
