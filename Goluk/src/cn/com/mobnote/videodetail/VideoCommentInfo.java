@@ -6,5 +6,5 @@ public class VideoCommentInfo {
 
 	public String iscomment;
 	public String comcount;
-	public List<VideoListInfo> list;
+	public List<VideoListInfo> comlist;
 }
