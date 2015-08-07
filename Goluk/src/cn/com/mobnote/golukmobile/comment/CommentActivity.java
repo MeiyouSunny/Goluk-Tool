@@ -95,6 +95,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private VideoSquareManager mVideoSquareManager = null;
 	private RelativeLayout mCommentInputLayout = null;
+	private TextView mNoInputTv = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,11 +121,13 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				GolukUtils.showSoft(mEditText);
 			}
 			mCommentInputLayout.setVisibility(View.VISIBLE);
+			mNoInputTv.setVisibility(View.GONE);
+
+			firstEnter();
 		} else {
 			mCommentInputLayout.setVisibility(View.GONE);
+			mNoInputTv.setVisibility(View.VISIBLE);
 		}
-
-		firstEnter();
 	}
 
 	private void initListener() {
@@ -167,14 +170,18 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mCommentInputLayout = (RelativeLayout) findViewById(R.id.comment_layout);
+		mNoInputTv = (TextView) findViewById(R.id.comment_noinput);
 
 		mBackBtn.setOnClickListener(this);
 		mSendBtn.setOnClickListener(this);
 
 		mAdapter = new CommentListViewAdapter(this);
 		mRTPullListView.setAdapter(mAdapter);
-		mRTPullListView.setonRefreshListener(this);
-		mRTPullListView.setOnRTScrollListener(this);
+		if (isCanInput) {
+			mRTPullListView.setonRefreshListener(this);
+			mRTPullListView.setOnRTScrollListener(this);
+		}
+
 		loading = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
 	}
 
