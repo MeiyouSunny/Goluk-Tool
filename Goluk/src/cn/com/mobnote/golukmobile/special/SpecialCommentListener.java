@@ -28,13 +28,13 @@ public class SpecialCommentListener implements OnClickListener{
 	@Override
 	public void onClick(View arg0) {
 		if("2".equals(type)){
-			MainActivity a = (MainActivity)mContext;
-			Intent intent = new Intent(a, VideoPlayerView.class);
+//			MainActivity a = (MainActivity)mContext;
+			Intent intent = new Intent(mContext, VideoPlayerView.class);
 			intent.putExtra("from", from);
 			intent.putExtra("image", imagepath);
 			intent.putExtra("playUrl", videopath);
 			//uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
-			a.startActivity(intent);
+			mContext.startActivity(intent);
 		}
 		
 	}
