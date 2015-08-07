@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukUtils;
 
 public class CommentListViewAdapter extends BaseAdapter {
 	private LayoutInflater mLayoutFlater = null;
@@ -87,7 +88,8 @@ public class CommentListViewAdapter extends BaseAdapter {
 
 		holder.mName.setText(temp.mUserName);
 		holder.mContent.setText(temp.mCommentTxt);
-		holder.mTime.setText(temp.mCommentTime);
+		
+		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
 		return converView;
 	}
 

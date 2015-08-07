@@ -133,7 +133,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")) {
 				mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
 			}
-			mVideoSquareManager.addVideoSquareManagerListener("live", this);
+			mVideoSquareManager.addVideoSquareManagerListener(TAG, this);
 		}
 	}
 
@@ -208,6 +208,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private void back() {
 		isExit = true;
+		mVideoSquareManager.removeVideoSquareManagerListener(TAG);
 		finish();
 	}
 
@@ -456,6 +457,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
 		if (!isSucess) {
 			// TODO 失败
+			GolukUtils.showToast(this, "评论失败!");
 			return;
 		}
 		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
