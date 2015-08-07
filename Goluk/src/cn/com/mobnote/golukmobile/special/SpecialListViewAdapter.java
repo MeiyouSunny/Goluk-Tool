@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -17,11 +18,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 @SuppressLint("InflateParams")
 public class SpecialListViewAdapter extends BaseAdapter{
 	private Context mContext = null;
@@ -73,6 +76,7 @@ public class SpecialListViewAdapter extends BaseAdapter{
 		
 		holder.author.setText(specialInfo.author);
 		holder.videoTitle.setText(specialInfo.describe);
+		holder.mPreLoading.setOnClickListener(new SpecialCommentListener(mContext,specialInfo.imagepath,specialInfo.videopath,"zt",specialInfo.videotype));
 
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);
@@ -83,6 +87,7 @@ public class SpecialListViewAdapter extends BaseAdapter{
 
 		return convertView;
 	}
+	
 
 	public int getUserHead(String head) {
 		return 0;
