@@ -15,6 +15,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -155,7 +156,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.back_btn:
 			this.finish();
@@ -165,6 +165,11 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.comment_link:
 			this.startCommentActivity();
+			break;
+		case R.id.outurl:
+			Intent mBugLayout = new Intent(this,UserOpenUrlActivity.class);
+			mBugLayout.putExtra("url", "http://www.goluk.com");
+			startActivity(mBugLayout);
 			break;
 		default:
 			break;
@@ -269,6 +274,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						commentLink.setText("查看所有  " + map.get("comcount") + " 条评论");
 						
 						commentLink.setOnClickListener(this);
+						outurl.setOnClickListener(this);
 						view.findViewById(R.id.message).setOnClickListener(this);
 						
 						lv.addFooterView(view);
@@ -307,7 +313,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						init(false);
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
