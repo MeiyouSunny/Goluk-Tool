@@ -2,12 +2,14 @@ package cn.com.mobnote.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
+import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -855,6 +857,92 @@ public class JsonUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+
+	public static String getCommentRequestStr(String id, String type, int operation, String timestamp, int pagesize) {
+		try {
+			JSONObject json = new JSONObject();
+			json.put("topicid", id);
+			json.put("topictype", "" + type);
+			json.put("operation", "" + operation);
+			if (!timestamp.equals("")) {
+				// timestamp = GolukUtils.formatTime(timestamp);
+				timestamp = timestamp.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+			}
+			json.put("timestamp", timestamp);
+			json.put("pagesize", "" + pagesize);
+
+			return json.toString();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static String getAddCommentJson(String id, String type, String txt) {
+		try {
+			JSONObject json = new JSONObject();
+			json.put("topicid", id);
+			json.put("topictype", type);
+			txt = URLEncoder.encode(txt, "utf-8");
+			json.put("text", txt);
+
+			return json.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static ArrayList<CommentBean> parseCommentData(JSONArray array) {
+		if (null == array) {
+			return null;
+		}
+		try {
+			final int length = array.length();
+			ArrayList<CommentBean> list = new ArrayList<CommentBean>();
+			for (int i = 0; i < length; i++) {
+				CommentBean temp = new CommentBean();
+				final JSONObject obj = (JSONObject) array.get(i);
+				temp.mCommentId = getJsonStringValue(obj, "commentId", "");
+				temp.mCommentTime = getJsonStringValue(obj, "time", "");
+				temp.mCommentTxt = getJsonStringValue(obj, "text", "");
+
+				JSONObject authorObj = obj.getJSONObject("author");
+				temp.mUserId = getJsonStringValue(authorObj, "id", "");
+				temp.mUserName = getJsonStringValue(authorObj, "name", "");
+				temp.mUserHead = getJsonStringValue(authorObj, "avatar", "");
+
+				list.add(temp);
+			}
+
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static CommentBean parseAddCommentData(JSONObject dataObj) {
+		if (null == dataObj) {
+			return null;
+		}
+		try {
+			// JSONObject obj = new JSONObject(data);
+			CommentBean bean = new CommentBean();
+
+			bean.mCommentId = getJsonStringValue(dataObj, "commentid", "");
+			bean.mCommentTxt = getJsonStringValue(dataObj, "text", "");
+			bean.mUserHead = getJsonStringValue(dataObj, "authoravatar", "");
+			bean.mUserId = getJsonStringValue(dataObj, "authorid", "");
+			bean.mUserName = getJsonStringValue(dataObj, "authorname", "");
+
+			return bean;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 

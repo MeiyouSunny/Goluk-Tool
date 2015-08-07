@@ -20,6 +20,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 
@@ -113,7 +114,7 @@ public class UserUtils {
 			}else if(headString.equals("6")){
 				headImage.setImageResource(R.drawable.my_head_girl6);
 				textSex = "2";
-			}else if(headString.equals("7")){
+			}else {
 				headImage.setImageResource(R.drawable.my_head_moren7);
 				textSex = "0";
 			}
@@ -278,5 +279,29 @@ public class UserUtils {
 		String c = phone.substring(7,phone.length());
 		return a+"-"+b+"-"+c;
 	}
+	
+	/**
+	 * 通过头像标识，得到头像图片
+	 * 
+	 * @param headStr
+	 *            头像标识 [1...6]
+	 * @return 返回图片id (R.darwable.xxx)
+	 * @author jyf
+	 * @date 2015年8月7日
+	 */
+	public static int getUserHeadImageResourceId(String headStr) {
+		try {
+			if (null != headStr && !"".equals(headStr)) {
+				int utype = Integer.valueOf(headStr);
+				int head = ILive.mHeadImg[utype];
+				return head;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 显示默认头像
+		return ILive.mHeadImg[7];
+	}
+	
 	
 }

@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 1.编辑器必须显示空白处
@@ -258,11 +260,13 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-
+		GolukDebugUtils.e("", "jyf----VideoSquareManager----event:" + event + "  msg:" + msg + "  param1: " + param1
+				+ "  param2:" + param2);
 		Iterator<String> iter = mVideoSquareManagerListener.keySet().iterator();
 		while (iter.hasNext()) {
 			Object key = iter.next();
 			if (null != key) {
+				GolukDebugUtils.e("", "jyf----VideoSquareManager----key:" + key);
 				VideoSuqareManagerFn fn = mVideoSquareManagerListener.get(key);
 				if (null != fn) {
 					fn.VideoSuqare_CallBack(event, msg, param1, param2);

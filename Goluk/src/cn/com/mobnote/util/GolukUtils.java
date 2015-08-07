@@ -2,6 +2,12 @@ package cn.com.mobnote.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,8 +22,11 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class GolukUtils {
@@ -282,6 +291,50 @@ public class GolukUtils {
 		buffer.append(":");
 		buffer.append(t.minute);
 		return new String(buffer);
+	}
+
+	@SuppressLint("SimpleDateFormat")
+	public static String formatTime(String date) {
+		String time = "";
+		if (null != date) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+
+			try {
+				Date strtodate = formatter.parse(date);
+				if (null != strtodate) {
+					// formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					if (null != formatter) {
+						time = formatter.format(strtodate);
+					}
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return time;
+	}
+
+	/**
+	 * 弹出软键盘
+	 * 
+	 * @param edit
+	 * @author jyf
+	 * @date 2015年8月7日
+	 */
+	public static void showSoft(final EditText edit) {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				InputMethodManager inputManager = (InputMethodManager) edit.getContext().getSystemService(
+						Context.INPUT_METHOD_SERVICE);
+				inputManager.showSoftInput(edit, 0);
+			}
+		}, 500);
+	}
+	
+	public static String getCurrentFormatTime() {
+		String time =DateFormat.format("yyyy-MM-dd hh:mm:ss", Calendar.getInstance().getTime()).toString();
+		return time;
 	}
 
 }
