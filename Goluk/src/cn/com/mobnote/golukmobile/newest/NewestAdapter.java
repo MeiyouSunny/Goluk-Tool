@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -27,10 +32,6 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 @SuppressLint("InflateParams")
 public class NewestAdapter extends BaseAdapter {
@@ -338,24 +339,24 @@ public class NewestAdapter extends BaseAdapter {
 	}
 	
 	private void loadImage(RelativeLayout layout, String url) {
-		layout.removeAllViews();
-        SimpleDraweeView view = new SimpleDraweeView(mContext);
-        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-        GenericDraweeHierarchy hierarchy = builder
-                    .setFadeDuration(300)
-                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-                    .setActualImageScaleType(ScaleType.FIT_XY)
-                    .build();
-        view.setHierarchy(hierarchy);
-
-        if (!lock) {
-        	view.setImageURI(Uri.parse(url));
-        }
-                
-        int height = (int) ((float) width / 1.77f);
-        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-        layout.addView(view, mPreLoadingParams);
+//		layout.removeAllViews();
+//        SimpleDraweeView view = new SimpleDraweeView(mContext);
+//        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+//        GenericDraweeHierarchy hierarchy = builder
+//                    .setFadeDuration(300)
+//                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+//                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+//                    .setActualImageScaleType(ScaleType.FIT_XY)
+//                    .build();
+//        view.setHierarchy(hierarchy);
+//
+//        if (!lock) {
+//        	view.setImageURI(Uri.parse(url));
+//        }
+//                
+//        int height = (int) ((float) width / 1.77f);
+//        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+//        layout.addView(view, mPreLoadingParams);
         
 	}
 

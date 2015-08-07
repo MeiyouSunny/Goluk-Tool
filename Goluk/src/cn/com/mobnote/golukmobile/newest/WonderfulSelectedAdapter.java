@@ -2,6 +2,12 @@ package cn.com.mobnote.golukmobile.newest;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
@@ -15,10 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 @SuppressLint("InflateParams")
 public class WonderfulSelectedAdapter extends BaseAdapter {
@@ -143,8 +145,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             GenericDraweeHierarchyBuilder iconbuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
             GenericDraweeHierarchy iconhierarchy = iconbuilder
                             .setFadeDuration(300)
-//                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-//                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
+                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
+                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
                         .setActualImageScaleType(ScaleType.FIT_XY)
                         .build();
             icon.setHierarchy(iconhierarchy);
@@ -159,6 +161,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             iconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mPlayerLayout.addView(icon, iconParams);
         }
+      
 
 	}
 

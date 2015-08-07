@@ -9,9 +9,7 @@
     <RelativeLayout
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_height="wrap_content" >
         
         <ImageView
             android:id="@+id/mPreLoading"
@@ -41,30 +39,5 @@
 
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="24dp"
-        android:orientation="horizontal" >
-		<TextView 
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textColor="#999999"
-		    android:textSize="12sp"
-		    android:text="感谢作者"/>
-		
-		<TextView 
-		    android:id="@+id/author"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textColor="#999999"
-		    android:textSize="12sp"
-		    android:layout_marginLeft="5dp"
-		    android:text="好大一只鸡"/>
-    </LinearLayout>
 
 </LinearLayout>
