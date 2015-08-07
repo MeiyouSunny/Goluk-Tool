@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -86,9 +87,10 @@ public class CommentListViewAdapter extends BaseAdapter {
 
 		holder.mHead.setBackgroundResource(UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 
-		holder.mName.setText(temp.mUserName);
+		holder.mName.setText(getShowUserName(temp));
+
 		holder.mContent.setText(temp.mCommentTxt);
-		
+
 		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
 		return converView;
 	}
@@ -100,4 +102,18 @@ public class CommentListViewAdapter extends BaseAdapter {
 		TextView mTime = null;
 	}
 
+	private String getShowUserName(CommentBean temp) {
+		if (null == mContext) {
+			return temp.mUserName;
+		}
+		UserInfo userInfo = ((CommentActivity) mContext).mApp.getMyInfo();
+		if (null == userInfo) {
+			return temp.mUserName;
+		}
+
+		if (userInfo.uid.equals(temp.mUserId)) {
+			return "车主";
+		}
+		return temp.mUserName;
+	}
 }
