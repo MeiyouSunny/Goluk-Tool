@@ -176,7 +176,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 				SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
 				if(begantime !=null){
 					uptype = 2;
-					httpPost(false,"1", begantime.sharingtime,ztid);
+					httpPost(false,"0","", ztid);
 					
 				}else{
 					mRTPullListView.postDelayed(new Runnable() {
@@ -269,7 +269,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 			if (RESULE_SUCESS == msg) {
 				
 				List<ClusterInfo> list = sdm.getClusterList((String) param2);
-				
+				headdata = sdm.getClusterHead((String) param2);
 				//说明有数据
 				if(list.size()>0){
 					begantime = list.get(0);
@@ -298,6 +298,8 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 						mDataList.addAll(list);
 						flush();
 					}else if (uptype ==2){//下拉刷新
+						mDataList.clear();
+						
 						if (list.size() >= 20) {//数据超过20条
 							isHaveData = true;
 						} else {//数据没有20条

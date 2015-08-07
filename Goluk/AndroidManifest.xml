@@ -85,6 +85,9 @@
         <activity
             android:name="cn.com.mobnote.golukmobile.UserOpenUrlActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.VideoSquareDeatilActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >

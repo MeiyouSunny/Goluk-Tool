@@ -189,7 +189,7 @@
     <string name="option_connection_hint">选填内容（手机号/微博/QQ等）</string>
     <string name="user_timer_count_hint">未够60秒，不能发起请求</string>
     <string name="unbind_hint_message">确定要解除设备绑定？（再次连接前将不再能配置设备信息）</string>
-    <string name="update_no_connect_ipc_hint">极路客固件升级需要手机与摄像头连接。连接成功后进入 我>设置>极路客固件升级页面，按照提示内容进行升级。</string>
+    <string name="update_no_connect_ipc_hint">固件升级需要您的手机先与摄像头连接。连接成功后进入 我>设置>极路客固件升级页面，按照提示内容进行升级即可。</string>
 
     <string-array name="video_share_class">
         <item>曝光台</item>

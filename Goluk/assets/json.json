@@ -1,0 +1,78 @@
+{
+    "data": {
+        "avideo": {
+            "user": {
+                "headportrait": "1",
+                "nickname": "黑子",
+                "sex": "1",
+                "uid": "FFFFFFFDVTHTHS"
+            },
+            "video": {
+                "clicknumber": "11222",
+                "comment": {
+                    "comcount": "11777",
+                    "comlist": [
+                        {
+                            "authorid": "AU000000111",
+                            "headimg": "2",
+                            "commentid": "COMM001",
+                            "nickname": "黑雪",
+                            "content": "好好好好好好好好好好好好",
+                            "commtime": "2015-08-04"
+                        },
+                        {
+                            "authorid": "AU000000111",
+                            "headimg": "2",
+                            "commentid": "COMM001",
+                            "nickname": "黑雪",
+                            "content": "你你你你你你你你你你你你你你你你你你你你你你你你你你",
+                            "commtime": "2015-08-04"
+                        },
+                        {
+                            "authorid": "AU000000111",
+                            "headimg": "2",
+                            "commentid": "COMM001",
+                            "nickname": "黑雪",
+                            "content": "杀杀杀杀杀杀杀杀杀杀杀",
+                            "commtime": "2015-08-04"
+                        }
+                    ],
+                    "iscomment": "1"
+                },
+                "describe": "还行",
+                "ispraise": "0",
+                "livesdkaddress": "",
+                "livetime": "",
+                "livewebaddress": "",
+                "ondemandsdkaddress": "20150731_FD7561D0197311E5A1D0FB815C767614",
+                "ondemandwebaddress": "http://cdn.goluk.cn/files/cdcvideo/20150731/20150731_FD7561D0197311E5A1D0FB815C767614.mp4",
+                "picture": "http://cdn.goluk.cn/files/cdccover/20150731/1438311931775.png",
+                "picture_thmb": "http://cdn.goluk.cn/files/cdccover/20150731/1438311931775_s.png",
+                "praisenumber": "11222",
+                "reason": "小编推荐",
+                "sharingtime": "20150602",
+                "starttime": "",
+                "type": "2",
+                "videodata": {
+                    "active": "",
+                    "aid": "",
+                    "flux": "",
+                    "lat": "",
+                    "lon": "",
+                    "mid": "",
+                    "open": "",
+                    "restime": "",
+                    "speed": "",
+                    "tag": "",
+                    "talk": "",
+                    "voice": "",
+                    "vtype": ""
+                },
+                "videoid": "20150731_FD7561D0197311E5A1D0FB815C767614"
+            }
+        },
+        "result": "0"
+    },
+    "msg": "成功",
+    "success": true
+}

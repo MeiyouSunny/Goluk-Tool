@@ -98,7 +98,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
-		//loadHistorydata();// 显示历史请求数据
 		httpPost(true,ztid);
 	}
 
@@ -186,49 +185,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 				List<SpecialInfo> list;
 				try {
 					list = sdm.getListData(param2.toString());
-					// 说明有数据
-					if (list != null && list.size() > 0) {
-						mDataList.clear();
-						mDataList = list;
-					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			} else {
-
-				GolukUtils.showToast(SpecialListActivity.this, "网络异常，请检查网络");
-			}
-
-			if (mDataList.size() > 0) {
-				squareTypeDefault.setVisibility(View.GONE);
-				lv.setVisibility(View.VISIBLE);
-			} else {
-				squareTypeDefault.setVisibility(View.VISIBLE);
-				lv.setVisibility(View.GONE);
-			}
-		}
-
-	}
-
-	/**
-	 * 初始化历史请求数据
-	 * 
-	 * @Title: loadHistorydata
-	 * @Description: TODO void
-	 * @author 曾浩
-	 * @throws
-	 */
-	public void loadHistorydata() {
-		String param;
-		try {
-			param = this.test();// GolukApplication.getInstance().getVideoSquareManager().getSquareList("");
-			if (param != null && !"".equals(param)) {
-				List<SpecialInfo> list;
-				try {
-					list = sdm.getListData(param);
-					Map<String, Object> map = sdm.getComments(param);
+					
+					Map<String, Object> map = sdm.getComments(param2.toString());
 
 					if (map != null) {
 
@@ -283,6 +241,51 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 						}
 					}
+					
+					// 说明有数据
+					if (list != null && list.size() > 0) {
+						mDataList.clear();
+						mDataList = list;
+						init(false);
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} else {
+
+				GolukUtils.showToast(SpecialListActivity.this, "网络异常，请检查网络");
+			}
+
+			if (mDataList.size() > 0) {
+				squareTypeDefault.setVisibility(View.GONE);
+				lv.setVisibility(View.VISIBLE);
+			} else {
+				squareTypeDefault.setVisibility(View.VISIBLE);
+				lv.setVisibility(View.GONE);
+			}
+		}
+
+	}
+
+	/**
+	 * 初始化历史请求数据
+	 * 
+	 * @Title: loadHistorydata
+	 * @Description: TODO void
+	 * @author 曾浩
+	 * @throws
+	 */
+	public void loadHistorydata() {
+		String param;
+		try {
+			param = this.test();// GolukApplication.getInstance().getVideoSquareManager().getSquareList("");
+			if (param != null && !"".equals(param)) {
+				List<SpecialInfo> list;
+				try {
+					list = sdm.getListData(param);
+					
 
 					if (list != null && list.size() > 0) {
 						mDataList = list;
