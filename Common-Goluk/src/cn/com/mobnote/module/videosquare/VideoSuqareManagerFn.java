@@ -2,7 +2,7 @@ package cn.com.mobnote.module.videosquare;
 
 import cn.com.mobnote.logic.IGolukCommFn;
 
-public interface VideoSuqareManagerFn extends IGolukCommFn{
+public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int RESULE_SUCESS = 1;
 	/** 获取广场列表 */
 	public static final int SquareCmd_Req_SquareList = 0;
@@ -18,11 +18,12 @@ public interface VideoSuqareManagerFn extends IGolukCommFn{
 	public static final int SquareCmd_Req_ShareVideo = 1536;
 	/** 获取分享地址 */
 	public static final int SquareCmd_Req_GetShareUrl = 1537;
-	
+
 	/** 获取本地广场视频列表缓存 */
 	public static final int SquareCmd_Get_SquareCache = 0;
 	/** 获取本地热门视频列表缓存 */
 	public static final int SquareCmd_Get_HotCache = 256;
+
 	
 	
 	
@@ -74,7 +75,7 @@ public interface VideoSuqareManagerFn extends IGolukCommFn{
 	/** 获取视频列表本地缓存 */
 	public static final int VSquare_Req_List_Video_Catlog_LocalCache = 257;
 	
-		
+
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2);
 
 }

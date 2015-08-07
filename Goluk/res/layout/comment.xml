@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <!-- title -->
+
+    <RelativeLayout
+        android:id="@+id/comment_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black" >
+
+        <!-- 返回 -->
+
+        <ImageButton
+            android:id="@+id/comment_back"
+            android:layout_width="36.66dp"
+            android:layout_height="36.66dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/player_back_btn"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/comment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/str_comment_title"
+            android:textColor="#e0e0e0"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <!-- 底部布局，包括写评论　与　发送 -->
+
+    <RelativeLayout
+        android:id="@+id/comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="#eaeaea" >
+
+        <TextView
+            android:id="@+id/comment_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="@string/str_comment_send"
+            android:textColor="#333333"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/comment_input"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@id/comment_send"
+            android:background="@drawable/videodetail_inputbox"
+            android:hint="@string/str_comment_input_hit"
+            android:maxLength="250"
+            android:paddingLeft="10dp"
+            android:textColor="#bcbcbc"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <!-- 评论显示列表 -->
+
+    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+        android:id="@+id/commentRTPullListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/comment_layout"
+        android:layout_below="@id/comment_title_layout"
+        android:divider="@null" />
+
+    <!-- 无数据显示 -->
+
+    <ImageView
+        android:id="@+id/comment_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/qitadifang"
+        android:contentDescription="@string/imgdes"
+        android:visibility="gone" />
+
+</RelativeLayout>

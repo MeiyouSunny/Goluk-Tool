@@ -193,7 +193,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年8月6日
 	 */
-	public boolean getSPFLListData() {
+	public boolean getZXListData() {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_Catlog, "");
 	}
 	
@@ -457,11 +457,13 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-
+		GolukDebugUtils.e("", "jyf----VideoSquareManager----event:" + event + "  msg:" + msg + "  param1: " + param1
+				+ "  param2:" + param2);
 		Iterator<String> iter = mVideoSquareManagerListener.keySet().iterator();
 		while (iter.hasNext()) {
 			Object key = iter.next();
 			if (null != key) {
+				GolukDebugUtils.e("", "jyf----VideoSquareManager----key:" + key);
 				VideoSuqareManagerFn fn = mVideoSquareManagerListener.get(key);
 				if (null != fn) {
 					fn.VideoSuqare_CallBack(event, msg, param1, param2);

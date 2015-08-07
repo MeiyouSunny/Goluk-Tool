@@ -5,10 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.view.View;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.util.GolukUtils;
 
 public class LiveDialogManager {
 	/** 单例实例 */
@@ -24,6 +24,8 @@ public class LiveDialogManager {
 	private CustomLoadingDialog mCustomLoadingDialog = null;
 	private ProgressDialog mProgressDialog = null;
 	private ProgressDialog mShareDialog = null;
+	/** 公共的加载对话框 */
+	private ProgressDialog mCommProgressDialog = null;
 
 	private AlertDialog dialog = null;
 	private AlertDialog ad = null;
@@ -71,6 +73,10 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_WIFIBIND_FAILED = 15;
 
 	public static final int DIALOG_TYPE_CONFIRM = 16;
+	/** 提交评论 */
+	public static final int DIALOG_TYPE_COMMENT_COMMIT = 17;
+	/** 输入１０秒钟禁止评论限制 */
+	public static final int DIALOG_TYPE_COMMENT_TIMEOUT = 18;
 
 	private int mCurrentDialogType = 0;
 
@@ -198,6 +204,41 @@ public class LiveDialogManager {
 		 * 对话框管理类的回调方法
 		 * */
 		public void dialogManagerCallBack(int dialogType, int function, String data);
+	}
+
+	public void dissmissCommProgressDialog() {
+		if (null != mCommProgressDialog) {
+			mCommProgressDialog.dismiss();
+			mCommProgressDialog = null;
+		}
+	}
+
+	public void showCommProgressDialog(Context context, int type, String title, String message, boolean isCancel) {
+		dissmissCommProgressDialog();
+		mCurrentDialogType = type;
+		mCommProgressDialog = ProgressDialog.show(context, title, message, true, isCancel);
+
+		if (isCancel) {
+			mCommProgressDialog.setButton("取消", new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					dissmissCommProgressDialog();
+					sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
+
+				}
+			});
+		}
+
+		mCommProgressDialog.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface arg0) {
+				dissmissCommProgressDialog();
+				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
+			}
+		});
+
 	}
 
 	public void showShareProgressDialog(Context context, int type, String title, String message) {
@@ -334,14 +375,6 @@ public class LiveDialogManager {
 		}
 	}
 
-	public void showNoMobileDialog(Context context, String title, String message) {
-
-	}
-
-	public void hideNoMobileDialog() {
-
-	}
-
 	private void sendMessageCallBack(int dialogType, int function, String data) {
 		if (null == dialogManagerFn) {
 			return;
@@ -406,9 +439,7 @@ public class LiveDialogManager {
 	}
 
 	public void showLiveBackDialog(Context context, int function, String message) {
-
 		dismissLiveBackDialog();
-
 		mCurrentDialogType = function;
 		mLiveBackDialog = new AlertDialog.Builder(context).create();
 
@@ -442,34 +473,4 @@ public class LiveDialogManager {
 			mLiveBackDialog = null;
 		}
 	}
-
-	/**
-	 * 显示授权中对话框
-	 * 
-	 * @param context
-	 *            上下文
-	 * @param message
-	 *            对话框显示的文字
-	 * @author jiayf
-	 * @date 2014-5-22
-	 */
-	public void showAuthLoadingDialog(Context context, String message) {
-
-	}
-
-	public boolean isAuthLoading() {
-
-		return false;
-	}
-
-	/**
-	 * 取消授权对话框
-	 * 
-	 * @author jiayf
-	 * @date 2014-5-22
-	 */
-	public void hideAuthLoadingDialog() {
-
-	}
-
 }

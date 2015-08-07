@@ -1,10 +1,7 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.lidroid.xutils.bitmap.PauseOnScrollListener;
-
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -26,7 +23,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class RTPullListView extends ListView implements OnScrollListener {  
+public class RTPullListView extends ListView implements OnScrollListener {
 	private static final String TAG = "RTPullListView";
 
 	private final static int RELEASE_To_REFRESH = 0;
@@ -53,7 +50,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	// 用于保证startY的值在一个完整的touch事件中只被记录一次
 	private boolean isRecored;
 
-//	private int headContentWidth;
+	// private int headContentWidth;
 	private int headContentHeight;
 
 	private int startY;
@@ -67,7 +64,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 	private int visibleLastIndex;
 	private int visibleItemCount;
-	
+
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
@@ -80,37 +77,35 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		super(context, attrs);
 		init(context);
 	}
-	
+
 	private void init(Context context) {
 		inflater = LayoutInflater.from(context);
 		headView = (LinearLayout) inflater.inflate(R.layout.pulllist_head, null);
 		arrowImageView = (ImageView) headView.findViewById(R.id.head_arrowImageView);
-//		arrowImageView.setMinimumWidth(70);
-//		arrowImageView.setMinimumHeight(50);
+		// arrowImageView.setMinimumWidth(70);
+		// arrowImageView.setMinimumHeight(50);
 		progressBar = (ProgressBar) headView.findViewById(R.id.head_progressBar);
 		tipsTextview = (TextView) headView.findViewById(R.id.head_tipsTextView);
 		lastUpdatedTextView = (TextView) headView.findViewById(R.id.head_lastUpdatedTextView);
 
 		measureView(headView);
 		headContentHeight = headView.getMeasuredHeight();
-//		headContentWidth = headView.getMeasuredWidth();
+		// headContentWidth = headView.getMeasuredWidth();
 
 		headView.setPadding(0, -1 * headContentHeight, 0, 0);
 		headView.invalidate();
 
 		addHeaderView(headView, null, false);
-//		setOnScrollListener(this);
+		// setOnScrollListener(this);
 		setOnScrollListener(new PauseOnScrollListener(BitmapManager.getInstance().mBitmapUtils, false, true, this));
 
-		animation = new RotateAnimation(0, -180,
-				RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+		animation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
 				RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 		animation.setInterpolator(new LinearInterpolator());
 		animation.setDuration(250);
 		animation.setFillAfter(true);
 
-		reverseAnimation = new RotateAnimation(-180, 0,
-				RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+		reverseAnimation = new RotateAnimation(-180, 0, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
 				RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 		reverseAnimation.setInterpolator(new LinearInterpolator());
 		reverseAnimation.setDuration(200);
@@ -120,28 +115,33 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		isRefreshable = false;
 		isPush = true;
 	}
-	
-	public void onScroll(AbsListView arg0, int firstVisiableItem, int arg2,
-			int arg3) {
+
+	public void onScroll(AbsListView arg0, int firstVisiableItem, int arg2, int arg3) {
 		firstItemIndex = firstVisiableItem;
-		visibleLastIndex = firstVisiableItem + arg2 - 1; 
+		visibleLastIndex = firstVisiableItem + arg2 - 1;
 		visibleItemCount = arg2;
-		if(firstItemIndex == 1 && !isPush){
+		if (firstItemIndex == 1 && !isPush) {
 			setSelection(0);
 		}
-		
-		if(null != mOnRTScrollListener)
+
+		if (null != mOnRTScrollListener)
 			mOnRTScrollListener.onScroll(arg0, firstVisiableItem, arg2, arg3);
 	}
-	
-	public void setSelectionfoot(){
+
+	public void setSelectionfoot() {
 		this.setSelection(visibleLastIndex - visibleItemCount + 1);
 	}
 
 	public void onScrollStateChanged(AbsListView arg0, int arg1) {
-		if(null != mOnRTScrollListener)
+		if (null != mOnRTScrollListener)
 			mOnRTScrollListener.onScrollStateChanged(arg0, arg1);
 	}
+
+	public void firstFreshState() {
+		state = REFRESHING;
+		changeHeaderViewByState();
+	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
@@ -199,8 +199,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 						setSelection(0);
 
 						// 往上推了，推到了屏幕足够掩盖head的程度，但是还没有推到全部掩盖的地步
-						if (((tempY - startY) / RATIO < headContentHeight)
-								&& (tempY - startY) > 0) {
+						if (((tempY - startY) / RATIO < headContentHeight) && (tempY - startY) > 0) {
 							state = PULL_To_REFRESH;
 							changeHeaderViewByState();
 
@@ -242,7 +241,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 					// done状态下
 					if (state == DONE) {
 						if (tempY - startY > 0) {
-							if(firstItemIndex <= 0){
+							if (firstItemIndex <= 0) {
 								state = PULL_To_REFRESH;
 								changeHeaderViewByState();
 							}
@@ -251,15 +250,13 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 					// 更新headView的size
 					if (state == PULL_To_REFRESH) {
-						headView.setPadding(0, -1 * headContentHeight
-								+ (tempY - startY) / RATIO, 0, 0);
+						headView.setPadding(0, -1 * headContentHeight + (tempY - startY) / RATIO, 0, 0);
 
 					}
 
 					// 更新headView的paddingTop
 					if (state == RELEASE_To_REFRESH) {
-						headView.setPadding(0, (tempY - startY) / RATIO
-								- headContentHeight, 0, 0);
+						headView.setPadding(0, (tempY - startY) / RATIO - headContentHeight, 0, 0);
 					}
 
 				}
@@ -343,7 +340,7 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 	public void onRefreshComplete(String history) {
 		state = DONE;
-		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + history );
+		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + history);
 		changeHeaderViewByState();
 		invalidateViews();
 		setSelection(0);
@@ -354,45 +351,43 @@ public class RTPullListView extends ListView implements OnScrollListener {
 			refreshListener.onRefresh();
 		}
 	}
-	
-	public void clickToRefresh(){
+
+	public void clickToRefresh() {
 		state = REFRESHING;
 		changeHeaderViewByState();
 	}
-	
+
 	// 此方法直接照搬自网络上的一个下拉刷新的demo，此处是“估计”headView的width以及height
 	private void measureView(View child) {
 		ViewGroup.LayoutParams p = child.getLayoutParams();
 		if (p == null) {
-			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-					ViewGroup.LayoutParams.WRAP_CONTENT);
+			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		}
 		int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
 		int lpHeight = p.height;
 		int childHeightSpec;
 		if (lpHeight > 0) {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight,
-					MeasureSpec.EXACTLY);
+			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);
 		} else {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(0,
-					MeasureSpec.UNSPECIFIED);
+			childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 		}
 		child.measure(childWidthSpec, childHeightSpec);
 	}
 
-	public void setAdapter(BaseAdapter adapter,String history) {
+	public void setAdapter(BaseAdapter adapter, String history) {
 		lastUpdatedTextView.setText(getResources().getString(R.string.updating) + history);
 		super.setAdapter(adapter);
 	}
-	
-	public void setOnRTScrollListener(OnRTScrollListener _mOnRTScrollListener){
+
+	public void setOnRTScrollListener(OnRTScrollListener _mOnRTScrollListener) {
 		mOnRTScrollListener = _mOnRTScrollListener;
 	}
-	
-	public interface OnRTScrollListener{
+
+	public interface OnRTScrollListener {
 		public void onScrollStateChanged(AbsListView arg0, int scrollState);
+
 		public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3);
 	}
-	
-	public OnRTScrollListener mOnRTScrollListener=null;
+
+	public OnRTScrollListener mOnRTScrollListener = null;
 }

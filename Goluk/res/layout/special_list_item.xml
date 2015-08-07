@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+
+    <RelativeLayout
+        android:id="@+id/mPlayerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <ImageView
+            android:id="@+id/mPreLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tacitly_pic"
+            android:scaleType="fitXY" />
+        
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:id="@+id/video_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="该死的碰瓷党，还好我有goluk的三十六计三闾大夫框架思路的福建省来对代理商家飞拉萨的解放路上快递费静安寺两地分居卡死了带飞机开发商两地分居卡洛斯咖啡机付"
+            android:textColor="#333333"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="该死的碰瓷党，还好我有goluk的三十六计三闾大夫框架思路的福建省来对代理商家飞拉萨的解放路上快递费静安寺两地分居卡死了带飞机开发商两地分居卡洛斯咖啡机付"
+            android:textColor="#333333"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal" >
+		<TextView 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textColor="#999999"
+		    android:textSize="12sp"
+		    android:text="感谢作者"/>
+		
+		<TextView 
+		    android:id="@+id/author"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textColor="#999999"
+		    android:textSize="12sp"
+		    android:layout_marginLeft="5dp"
+		    android:text="好大一只鸡"/>
+    </LinearLayout>
+
+</LinearLayout>

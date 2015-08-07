@@ -4,13 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
-import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
@@ -20,6 +17,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
@@ -47,7 +45,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		mRootLayout = new RelativeLayout(mContext);
 		mRootLayout.addView(mRTPullListView);
 		
-		
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
 		if("".equals(historyDate)){
 			historyDate = sdf.format(new Date());
@@ -58,32 +55,18 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		if(null != mVideoSquareManager){
 			mVideoSquareManager.addVideoSquareManagerListener("wonderfulSelectedList", this);
 		}
+	
+		initHistoryData();
+		httpPost(true, "0", "");
+	}
+	
+	private void initHistoryData() {
+		String data = GolukApplication.getInstance().getVideoSquareManager().getJXList();
+		if (!TextUtils.isEmpty(data)) {
+			mDataList = JsonParserUtils.parserJXData(data);
+			initLayout();
+		}
 		
-		httpPost(true, "0", "4");
-		
-//		for(int i=0; i<10; i++) {
-//			JXListItemDataInfo info = new JXListItemDataInfo();
-//			info.ztitle = "辽宁卫视冲上云霄===="+i;
-//			if(i == 1 || i==3)
-//				info.ztag = "聚合";
-//			info.videonumber = "3,896";
-//			info.clicknumber = "26";
-//			
-//			if(i == 0 || i==2){
-//				info.jximg = "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png";
-//				info.jtypeimg = "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png";
-//			}else{
-//				info.jximg = "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png";
-//			}
-//			
-//			if(i == 1) {
-//				info.jxdate = "2015.08.04";
-//			}
-//			
-//			mDataList.add(info);
-//		}
-//		
-//		initLayout();
 	}
 	
 	private void httpPost(boolean flag, String jxid, String pagesize){
@@ -101,9 +84,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 //			GolukApplication.getInstance().getVideoSquareManager().getJHListData("zt001", "0", "", "20");
 //			GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData("zt001");
 //			GolukApplication.getInstance().getVideoSquareManager().getSPFLListData();
-			List<String> l = new ArrayList<String>();
-			l.add("0");
-			GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("1", "0", l, "0", "");
+//			List<String> l = new ArrayList<String>();
+//			l.add("0");
+//			GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("1", "0", l, "0", "");
 //			boolean a = GolukApplication.getInstance().getVideoSquareManager().getCommentListData("zt001", "2", "0", "", "");
 //			boolean a = GolukApplication.getInstance().getVideoSquareManager().addComment("04DB0612A41EBB909C33DC5901307461", "1", "拼杀开始看开始", "", "");
 //			boolean a = GolukApplication.getInstance().getVideoSquareManager().deleteComment("6C0DDF2E74844517925A2BE1EC9D88EB");
@@ -156,7 +139,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 			public void onRefresh() {
 				historyDate = SettingUtils.getInstance().getString("hotHistoryDate", sdf.format(new Date()));
 				SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
-//				httpPost(true);
+				httpPost(true, "0", "");
 			}
 		});
 		
@@ -197,12 +180,12 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
 		if(event == VSquare_Req_List_HandPick){
-//			GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@@@@=event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete(historyDate);
 			if(RESULE_SUCESS == msg){
 				List<JXListItemDataInfo> list = JsonParserUtils.parserJXData((String)param2);
 				
+				mDataList.clear();
 				mDataList.addAll(list);
 				initLayout();
 			}else{
@@ -214,77 +197,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 //			}else{
 //				setViewListBg(true);
 //			}
-		}else if(event == VSquare_Req_List_Topic_Content){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@@@@=event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_List_Tag_Content){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@Tag_Content==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_Get_VideoDetail){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@Get_VideoDetail==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_List_Catlog){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@List_Catlog==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_List_Video_Catlog){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@List_Video_Catlog==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-				
-				String c = GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("0");
-				GolukDebugUtils.e("", "VideoSuqare_C1111111=====c="+c);			
-			}
-		}else if(event == VSquare_Req_List_Comment){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@List_Comment==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_Add_Comment){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@Add_Comment==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_Del_Comment){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@Del_Comment==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_VOP_ClickUp){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_ClickUp==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_VOP_Praise){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_Praise==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_VOP_ReportUp){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_ReportUp==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_VOP_RecomVideo){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_RecomVideo=event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_VOP_ShareVideo){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@VOP_ShareVideo==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_VOP_GetShareURL_Video){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@GetShareURL_Video==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
-		}else if(event == VSquare_Req_VOP_GetShareURL_Topic_Tag){
-			if(RESULE_SUCESS == msg){
-				GolukDebugUtils.e("xuhw", "VideoSuqare_CallBack=@@@@GetShareURL_Topic_Tag==event="+event+"=msg="+msg+"=param1="+param1+"=param2="+param2);
-			}
 		}
-		
-		
-		
-		
-		
-		
-		
 		
 	}
 	

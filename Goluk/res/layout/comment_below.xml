@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/outurl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp"
+        android:text="goluk.com"
+        android:textColor="#1163a2"
+        android:textSize="12dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="10dp"
+        android:background="#e6e6e6" />
+
+    <LinearLayout
+        android:id="@+id/comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/comment1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:text="大狗  记录卡据了解快来看记录卡六角恐龙代收代付圣诞节发上来的飞框架思路"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/comment2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:text="二狗  记录卡据了解快来看记录卡六角恐龙代收代付圣诞节发上来的飞框架思路"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/comment3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:text="三狗  记录卡据了解快来看记录卡六角恐龙代收代付圣诞节发上来的飞框架思路"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/comment_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:text="查看所有  99 条评论"
+            android:textColor="#a6a6a6"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="85dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="36dp"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/videodetail_sofaicon"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/push_comment"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:background="#eaeaea"
+        android:gravity="center_vertical" >
+
+        <EditText
+            android:layout_width="280dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/videodetail_inputbox" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:background="#eaeaea"
+            android:text="发送"
+            android:textColor="#333333" />
+    </LinearLayout>
+
+</LinearLayout>

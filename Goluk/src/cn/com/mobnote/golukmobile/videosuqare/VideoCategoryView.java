@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.special.ClusterListActivity;
+import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -70,7 +72,10 @@ public class VideoCategoryView{
 						return;
 					}else{
 						onlyOnClick = false;
-						startActivity("2","2");
+						MainActivity play = (MainActivity)mContext;
+						Intent intent = new Intent(); 
+				        intent.setClass(play,ClusterListActivity.class);
+						mContext.startActivity(intent);
 						break;
 					}
 					
@@ -112,7 +117,7 @@ public class VideoCategoryView{
 		Intent intent = new Intent(); 
 		intent.putExtra("type", type);
 		intent.putExtra("attribute", attribute);
-        intent.setClass(play,VideoSquarePlayActivity.class);
+        intent.setClass(play,SpecialListActivity.class);
 		mContext.startActivity(intent);
 	}
 

@@ -83,22 +83,35 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		JXListItemDataInfo info = mDataList.get(arg0);
 		holder.mTitleName.getPaint().setFakeBoldText(true);
 		holder.mTitleName.setText(info.ztitle);
-		if(!TextUtils.isEmpty(info.ztag)) {
+		if (!TextUtils.isEmpty(info.ztag)) {
 			holder.mTagName.setText(info.ztag);
 			holder.mTagName.setVisibility(View.VISIBLE);
 		}else {
 			holder.mTagName.setVisibility(View.GONE);
 		}
-		holder.mVideoNum.setText(info.videonumber);
-		holder.mLookNum.setText(info.clicknumber);
 		
-		if(!TextUtils.isEmpty(info.jxdate)) {
+		if ("-1".equals(info.videonumber)) {
+			holder.mVideoLayout.setVisibility(View.GONE);
+		}else {
+			holder.mVideoNum.setText(info.videonumber);
+			holder.mVideoLayout.setVisibility(View.VISIBLE);
+		}
+		
+		if ("-1".equals(info.clicknumber)) {
+			holder.mLookLayout.setVisibility(View.GONE);
+		}else {
+			holder.mLookNum.setText(info.clicknumber);
+			holder.mLookLayout.setVisibility(View.VISIBLE);
+		}
+		
+		if (!TextUtils.isEmpty(info.jxdate)) {
 			holder.mDate.setText(info.jxdate);
 			holder.mDate.setVisibility(View.VISIBLE);
 		}else {
 			holder.mDate.setVisibility(View.GONE);
 		}
 		
+		holder.imageLayout.setOnClickListener(new ClickWonderfulSelectedListener(mContext, info));
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;
@@ -130,8 +143,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             GenericDraweeHierarchyBuilder iconbuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
             GenericDraweeHierarchy iconhierarchy = iconbuilder
                             .setFadeDuration(300)
-                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
+//                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
+//                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
                         .setActualImageScaleType(ScaleType.FIT_XY)
                         .build();
             icon.setHierarchy(iconhierarchy);

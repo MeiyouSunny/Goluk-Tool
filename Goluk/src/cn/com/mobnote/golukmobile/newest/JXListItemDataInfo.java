@@ -17,13 +17,15 @@ public class JXListItemDataInfo {
 	public String adverturl;
 	
 	public String jxdate;
+	public String jxid;
 	
 	public JXListItemDataInfo(){
 		
 	}
 	
-	public JXListItemDataInfo(JSONObject json, String jxdate) {
+	public JXListItemDataInfo(JSONObject json, String jxdate, String jxid) {
 		this.jxdate = jxdate;
+		this.jxid = jxid;
 		
 		this.jtype = json.optString("jtype");
 		this.ztype = json.optString("ztype");

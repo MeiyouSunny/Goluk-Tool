@@ -25,6 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.comment.CommentActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
 
         <!-- 个人中心模块 -->
         <activity
@@ -253,6 +259,18 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        
+        <activity
+            android:name="cn.com.mobnote.golukmobile.special.SpecialListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        
+        <activity
+            android:name="cn.com.mobnote.golukmobile.special.ClusterListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
 
         <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
