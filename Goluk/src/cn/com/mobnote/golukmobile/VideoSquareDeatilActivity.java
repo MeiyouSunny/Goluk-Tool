@@ -38,6 +38,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
@@ -176,11 +177,21 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		// 评论
 		case R.id.commentLayout:
-			GolukUtils.showToast(this, "跳到评论页");
+			Intent toComment = new Intent(VideoSquareDeatilActivity.this,CommentActivity.class);
+			toComment.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoJson.data.avideo.video.videoid);
+			toComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
+			toComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
+			toComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			startActivity(toComment);
 			break;
 		// 显示全部评论
 		case R.id.video_square_show_all:
-			GolukUtils.showToast(this, "跳到评论列表");
+			Intent showComment = new Intent(VideoSquareDeatilActivity.this,CommentActivity.class);
+			showComment.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoJson.data.avideo.video.videoid);
+			showComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
+			showComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, false);
+			showComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			startActivity(showComment);
 			break;
 		// 外链接
 		case R.id.video_square_link:
