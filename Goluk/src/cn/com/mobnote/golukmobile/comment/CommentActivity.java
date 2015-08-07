@@ -37,10 +37,10 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
 		VideoSuqareManagerFn, ILiveDialogManagerFn {
 
-	public static final String TAG = "Comment";
-
 	/** 如果为true, 則为测试数据，false則使用真实数据 (上线前要删除掉) */
 	private final boolean isTest = true;
+
+	public static final String TAG = "Comment";
 
 	/** 视频、专题或直播的id */
 	public static final String COMMENT_KEY_MID = "comment_key_mid";
@@ -48,6 +48,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	public static final String COMMENT_KEY_TYPE = "comment_key_mid";
 	/** 是否弹出键盘, true/false 弹出/不弹出 */
 	public static final String COMMENT_KEY_SHOWSOFT = "comment_key_showsoft";
+	/** 是否允许评论 */
+	public static final String COMMENT_KEY_ISCAN_INPUT = "comment_key_iscan_input";
 
 	/** 一页请求多少条数据 */
 	private static final int PAGE_SIZE = 20;
@@ -81,6 +83,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private boolean mIsHaveData = true;
 	/** 是否弹出软键盘 */
 	private boolean mIsShowSoft = true;
+	/** 是否允许评论 */
+	private boolean isCanInput = true;
 
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
@@ -90,6 +94,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private String historyDate = "2015-8-6 18:10";
 
 	private VideoSquareManager mVideoSquareManager = null;
+	private RelativeLayout mCommentInputLayout = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +113,17 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private void firstDeal() {
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
-		if (mIsShowSoft) {
-			mEditText.requestFocus();
-			GolukUtils.showSoft(mEditText);
+
+		if (isCanInput) {
+			if (mIsShowSoft) {
+				mEditText.requestFocus();
+				GolukUtils.showSoft(mEditText);
+			}
+			mCommentInputLayout.setVisibility(View.VISIBLE);
+		} else {
+			mCommentInputLayout.setVisibility(View.GONE);
 		}
+
 		firstEnter();
 	}
 
@@ -138,6 +150,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mId = intent.getStringExtra(COMMENT_KEY_MID);
 			mTopicType = intent.getStringExtra(COMMENT_KEY_TYPE);
 			mIsShowSoft = intent.getBooleanExtra(COMMENT_KEY_SHOWSOFT, true);
+			isCanInput = intent.getBooleanExtra(COMMENT_KEY_ISCAN_INPUT, true);
 		}
 	}
 
@@ -153,6 +166,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mEditText = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mNoData = (ImageView) findViewById(R.id.comment_nodata);
+		mCommentInputLayout = (RelativeLayout) findViewById(R.id.comment_layout);
 
 		mBackBtn.setOnClickListener(this);
 		mSendBtn.setOnClickListener(this);
@@ -267,6 +281,15 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		this.mAdapter.appendData(dataList);
 	}
 
+	// 是否显示无数据提示
+	private void noData(boolean isno) {
+		if (isno) {
+			mNoData.setVisibility(View.VISIBLE);
+		} else {
+			mNoData.setVisibility(View.GONE);
+		}
+	}
+
 	private void callBack_commentList(int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "jyf----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
 		if (1 == msg) {
@@ -280,6 +303,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					// 有数据
 					ArrayList<CommentBean> dataList = JsonUtil.parseCommentData(dataObj.getJSONArray("comments"));
 					if (null != dataList && dataList.size() > 0) {
+
+						noData(false);
 
 						if (OPERATOR_FIRST == mCurrentOperator) {
 							// 首次进入
@@ -322,6 +347,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			removeFoot();
 		} else if (mCurrentOperator == OPERATOR_FIRST) {// 下拉刷新
 			mRTPullListView.onRefreshComplete(historyDate);
+		} else if (OPERATOR_FIRST == mCurrentOperator) {
+			if (this.mAdapter.getCount() <= 0) {
+				noData(true);
+			}
 		}
 	}
 
@@ -334,6 +363,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				if (isSucess) {
 					CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
 					if (null != bean) {
+						noData(false);
 						bean.mCommentTime = GolukUtils.getCurrentFormatTime();
 						this.mAdapter.addFirstData(bean);
 						CommentTimerManager.getInstance().start(10);
