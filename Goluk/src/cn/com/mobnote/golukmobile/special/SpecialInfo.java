@@ -37,4 +37,9 @@ public class SpecialInfo {
 	 */
 	public String outurlname;
 	
+	/**
+	 * 视频id
+	 */
+	public String videoid;
+	
 }

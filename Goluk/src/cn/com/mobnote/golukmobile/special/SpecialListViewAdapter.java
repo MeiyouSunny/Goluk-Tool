@@ -76,7 +76,7 @@ public class SpecialListViewAdapter extends BaseAdapter{
 		
 		holder.author.setText(specialInfo.author);
 		holder.videoTitle.setText(specialInfo.describe);
-		holder.mPreLoading.setOnClickListener(new SpecialCommentListener(mContext,specialInfo.imagepath,specialInfo.videopath,"suqare",specialInfo.videotype));
+		holder.mPreLoading.setOnClickListener(new SpecialCommentListener(mContext,specialInfo.imagepath,specialInfo.videopath,"suqare",specialInfo.videotype,specialInfo.videoid));
 
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);

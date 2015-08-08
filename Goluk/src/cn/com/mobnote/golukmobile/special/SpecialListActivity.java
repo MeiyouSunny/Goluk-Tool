@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.special;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,35 +15,51 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListView;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Message;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class SpecialListActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
+public class SpecialListActivity extends BaseActivity implements
+		OnClickListener, VideoSuqareManagerFn {
 	private SpecialListViewAdapter specialListViewAdapter = null;
 	private List<SpecialInfo> mDataList = null;
 	public CustomLoadingDialog mCustomProgressDialog = null;
@@ -66,27 +83,32 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	private TextView commentLink;
 
 	private ListView lv;
+	
+	SpecialInfo headdata = null;
 
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
 	private SpecialDataManage sdm = new SpecialDataManage();
 	private TextView textTitle;
-	
+
 	private String ztid;
 	private String title;
 	
+	private Button titleShare;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.special_list);
-		
+
 		Intent intent = getIntent();
-		
+
 		ztid = intent.getStringExtra("ztid");
 		title = intent.getStringExtra("title");
 
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("SpecialListActivity",this);
+		GolukApplication.getInstance().getVideoSquareManager()
+				.addVideoSquareManagerListener("SpecialListActivity", this);
 
 		mDataList = new ArrayList<SpecialInfo>();
 		lv = (ListView) findViewById(R.id.special_list);
@@ -97,27 +119,30 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				mCustomProgressDialog = null;
-				httpPost(true,ztid);
+				httpPost(true, ztid);
 			}
 		});
 
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		textTitle = (TextView) findViewById(R.id.title);
-		
+		titleShare = (Button) findViewById(R.id.title_share);
+
 		textTitle.setText(title);
 		mBackBtn.setOnClickListener(this);
+		titleShare.setOnClickListener(this);
 
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
-		httpPost(true,ztid);
+		httpPost(true, ztid);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (null != sharePlatform) {
-			sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
+			sharePlatform.mSinaWBUtils.onActivityResult(requestCode,
+					resultCode, data);
 		}
 	}
 
@@ -129,7 +154,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
-	private void httpPost(boolean flag,String ztid) {
+	private void httpPost(boolean flag, String ztid) {
 		if (flag) {
 			if (null == mCustomProgressDialog) {
 				mCustomProgressDialog = new CustomLoadingDialog(this, null);
@@ -137,7 +162,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			}
 		}
 
-		boolean result = GolukApplication.getInstance().getVideoSquareManager().getZTListData(ztid);
+		boolean result = GolukApplication.getInstance().getVideoSquareManager()
+				.getZTListData(ztid);
 		if (!result) {
 			closeProgressDialog();
 		}
@@ -171,25 +197,38 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			this.startCommentActivity(false);
 			break;
 		case R.id.outurl:
-			Intent mBugLayout = new Intent(this,UserOpenUrlActivity.class);
+			Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
 			mBugLayout.putExtra("url", "http://www.goluk.com");
 			startActivity(mBugLayout);
 			break;
+		case R.id.title_share:
+			if (null == mCustomProgressDialog) {
+				mCustomProgressDialog = new CustomLoadingDialog(this, null);
+				mCustomProgressDialog.show();
+			} else {
+				mCustomProgressDialog.show();
+			}
+			boolean result = GolukApplication.getInstance()
+					.getVideoSquareManager().getTagShareUrl("1", ztid);
+			if (result == false) {
+				mCustomProgressDialog.close();
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
 		default:
 			break;
 		}
 	}
-	
-	
+
 	/**
-	  * 跳转到评论页面
-	  * @Title: startCommentActivity 
-	  * @Description: TODO void 
-	  * @author 曾浩 
-	  * @throws
+	 * 跳转到评论页面
+	 * 
+	 * @Title: startCommentActivity
+	 * @Description: TODO void
+	 * @author 曾浩
+	 * @throws
 	 */
-	private void startCommentActivity(boolean isShowSoft){
-		Intent it = new Intent(this,CommentActivity.class);
+	private void startCommentActivity(boolean isShowSoft) {
+		Intent it = new Intent(this, CommentActivity.class);
 		it.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
 		it.putExtra(CommentActivity.COMMENT_KEY_MID, ztid);
 		it.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, isShowSoft);
@@ -203,9 +242,9 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			GolukUtils.showToast(SpecialListActivity.this, "第三方分享失败");
 			return;
 		}
-		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
+		GolukApplication.getInstance().getVideoSquareManager()
+				.shareVideoUp(channel, shareVideoId);
 	}
-	
 
 	/**
 	 * 关闭加载中对话框
@@ -220,7 +259,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	}
 
 	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+	public void VideoSuqare_CallBack(int event, int msg, int param1,
+			Object param2) {
 		if (event == VSquare_Req_List_Topic_Content) {
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
@@ -228,44 +268,57 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 				List<SpecialInfo> list;
 				try {
 					list = sdm.getListData(param2.toString());
-					SpecialInfo si = sdm.getClusterHead(param2.toString());
-					//装载头部
-					if(si != null){
-						View view = LayoutInflater.from(this).inflate(R.layout.special_list_head, null);
-						ImageView image = (ImageView) view.findViewById(R.id.mPreLoading);
-						TextView  txt = (TextView) view.findViewById(R.id.video_title);
-						
-						int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+					
+					headdata = sdm.getClusterHead(param2.toString());
+					// 装载头部
+					if (headdata != null) {
+						View view = LayoutInflater.from(this).inflate(
+								R.layout.special_list_head, null);
+						ImageView image = (ImageView) view
+								.findViewById(R.id.mPreLoading);
+						TextView txt = (TextView) view
+								.findViewById(R.id.video_title);
+
+						int width = SoundUtils.getInstance()
+								.getDisplayMetrics().widthPixels;
 						int height = (int) ((float) width / 1.77f);
-						
-						txt.setText(si.describe);
-						
-						RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+
+						txt.setText(headdata.describe);
+
+						RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
+								width, height);
 						image.setLayoutParams(mPreLoadingParams);
-						BitmapManager.getInstance().mBitmapUtils.display(image, si.imagepath);
-						
+						BitmapManager.getInstance().mBitmapUtils.display(image,
+								headdata.imagepath);
+
 						lv.addHeaderView(view);
 					}
-					
-					Map<String, Object> map = sdm.getComments(param2.toString());
-					
-					//装载尾部
+
+					Map<String, Object> map = sdm
+							.getComments(param2.toString());
+
+					// 装载尾部
 					if (map != null) {
 
-						View view = LayoutInflater.from(this).inflate(R.layout.comment_below, null);
+						View view = LayoutInflater.from(this).inflate(
+								R.layout.comment_below, null);
 
 						String iscomment = map.get("iscomment").toString();
 						if ("1".equals(iscomment)) {
-							view.findViewById(R.id.push_comment).setVisibility(View.VISIBLE);
-							view.findViewById(R.id.push_comment).setOnClickListener(this);
-							view.findViewById(R.id.comments).setVisibility(View.VISIBLE);
-							view.findViewById(R.id.comments).setOnClickListener(this);
+							view.findViewById(R.id.push_comment).setVisibility(
+									View.VISIBLE);
+							view.findViewById(R.id.push_comment)
+									.setOnClickListener(this);
+							view.findViewById(R.id.comments).setVisibility(
+									View.VISIBLE);
+							view.findViewById(R.id.comments)
+									.setOnClickListener(this);
 						} else {
-							view.findViewById(R.id.push_comment).setVisibility(View.GONE);
-							view.findViewById(R.id.comments).setVisibility(View.GONE);
+							view.findViewById(R.id.push_comment).setVisibility(
+									View.GONE);
+							view.findViewById(R.id.comments).setVisibility(
+									View.GONE);
 						}
-						
-						
 
 						outurl = (TextView) view.findViewById(R.id.outurl);
 
@@ -275,25 +328,31 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 						comment3 = (TextView) view.findViewById(R.id.comment3);
 
-						commentLink = (TextView) view.findViewById(R.id.comment_link);
+						commentLink = (TextView) view
+								.findViewById(R.id.comment_link);
 
-						commentLink.setText("查看所有  " + map.get("comcount") + " 条评论");
-						
+						commentLink.setText("查看所有  " + map.get("comcount")
+								+ " 条评论");
+
 						commentLink.setOnClickListener(this);
 						outurl.setOnClickListener(this);
-//						view.findViewById(R.id.message).setOnClickListener(this);
+
+						view.findViewById(R.id.message)
+								.setOnClickListener(this);
+						// view.findViewById(R.id.message).setOnClickListener(this);
 						view.findViewById(R.id.send).setOnClickListener(this);
-						
-						
+
 						lv.addFooterView(view);
 
-						List<CommentInfo> comments = (List<CommentInfo>) map.get("comments");
+						List<CommentInfo> comments = (List<CommentInfo>) map
+								.get("comments");
 						if (comments != null && comments.size() > 0) {
 
 							String source = null;
 							for (int i = 0; i < comments.size(); i++) {
 								CommentInfo ci = comments.get(i);
-								source = "<font color='#0B3FA2'>" + ci.name + "</font>  " + ci.text;
+								source = "<font color='#0B3FA2'>" + ci.name
+										+ "</font>  " + ci.text;
 
 								if (i == 0) {
 									comment1.setVisibility(View.VISIBLE);
@@ -310,10 +369,9 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 								}
 							}
 
-
 						}
 					}
-					
+
 					// 说明有数据 装载list
 					if (list != null && list.size() > 0) {
 						mDataList.clear();
@@ -336,8 +394,59 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 				squareTypeDefault.setVisibility(View.VISIBLE);
 				lv.setVisibility(View.GONE);
 			}
+		}else if(event == VSquare_Req_VOP_GetShareURL_Topic_Tag){
+			if (RESULE_SUCESS == msg) {
+				try {
+					JSONObject result = new JSONObject((String) param2);
+					if (result.getBoolean("success")) {
+						JSONObject data = result.getJSONObject("data");
+						GolukDebugUtils.i("detail", "------VideoSuqare_CallBack--------data-----" + data);
+						String shareurl = data.getString("shorturl");
+						String coverurl = data.getString("coverurl");
+						String describe = data.optString("describe");
+						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+
+						if (TextUtils.isEmpty(describe)) {
+								describe = "#极路客精彩视频#";
+						}
+						String ttl = "极路客精彩视频分享";
+						
+						// 缩略图
+						Bitmap bitmap = getThumbBitmap(headdata.imagepath);
+						
+						
+						if (this != null && !this.isFinishing()) {
+							mCustomProgressDialog.close();
+							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
+									describe, ttl, bitmap, realDesc);
+							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+						}
+					} else {
+						GolukUtils.showToast(this, "网络异常，请检查网络");
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} else {
+				mCustomProgressDialog.close();
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
 		}
 
+	}
+	
+	public Bitmap getThumbBitmap(String netUrl) {
+		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
+		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
+		File file = new File(path + File.separator + name);
+		Bitmap t_bitmap = null;
+		if (null == file) {
+			return null;
+		}
+		if (file.exists()) {
+			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
+		}
+		return t_bitmap;
 	}
 
 	/**
@@ -356,7 +465,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 				List<SpecialInfo> list;
 				try {
 					list = sdm.getListData(param);
-					
 
 					if (list != null && list.size() > 0) {
 						mDataList = list;
@@ -389,8 +497,10 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		video.put("type", "2");
 		video.put("sharingtime", "2015/08/01");
 		video.put("describe", "记录卡记录卡据了解乐扣乐扣交流交流框架梁极乐空间垃圾筐拉进来");
-		video.put("picture", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
-		video.put("livesdkaddress", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+		video.put("picture",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+		video.put("livesdkaddress",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
 
 		JSONObject user = new JSONObject();
 		user.put("uid", "32323");
@@ -437,9 +547,12 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 		JSONObject head = new JSONObject();
 		head.put("showhead", "1");
-		head.put("headimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-		head.put("headvideoimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-		head.put("headvideo", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+		head.put("headimg",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+		head.put("headvideoimg",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+		head.put("headvideo",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
 		head.put("ztIntroduction", "六角恐龙极乐空间六角恐龙极乐空间");
 		head.put("outurl", "www.baidu.com");
 		head.put("outurlname", "百度");
