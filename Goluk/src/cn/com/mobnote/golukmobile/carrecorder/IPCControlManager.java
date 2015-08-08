@@ -623,6 +623,24 @@ public class IPCControlManager implements IPCManagerFn {
 		this.mIpcManagerListener.remove(from);
 	}
 
+	/**
+	 * 获取ipc开关机声音状态
+	 * @return
+	 */
+	public boolean getIPCSwitchState() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetSpeakerSwitch, "");
+	}
+	
+	/**
+	 * 设置ipc开关机声音状态
+	 * @param switchState
+	 */
+	public void setIPCSwitchState(boolean switchState){
+		
+		
+	}
+
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		// LogUtil.e("jyf",

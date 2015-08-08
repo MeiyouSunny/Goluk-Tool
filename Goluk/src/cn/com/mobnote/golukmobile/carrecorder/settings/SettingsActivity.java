@@ -52,6 +52,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private Button mAutoRecordBtn=null;
 	/** 声音录制开关按钮 */
 	private Button mAudioBtn=null;
+	/**开关机提示音**/
+	private Button mSwitchBtn = null;
 	/**  音视频配置信息  */
 	private VideoConfigState mVideoConfigState=null;
 	private int enableSecurity=0;
@@ -98,6 +100,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		boolean flag = GolukApplication.getInstance().getIPCControlManager().getGSensorControlCfg();
 		GolukDebugUtils.e("xuhw", "YYYYY===getIPCControlManager============getGSensorControlCfg======flag="+flag);
 		
+		//开关机提示音开关状态
+		boolean switchFlag = GolukApplication.getInstance().getIPCControlManager().getIPCSwitchState();
+		GolukDebugUtils.e("lily", "");
+		
 		GolukDebugUtils.e("xuhw", "YYYYYY=========getMotionCfg========="+ motionCfg);
 		showLoading();
 	}
@@ -116,6 +122,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void initView(){
 		mAutoRecordBtn = (Button)findViewById(R.id.zdxhlx);
 		mAudioBtn = (Button)findViewById(R.id.sylz);
+		mSwitchBtn = (Button) findViewById(R.id.kgjtsy);
 		
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
 		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);//打开
@@ -138,6 +145,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.tcaf).setOnClickListener(this);//停车安防按钮
 		findViewById(R.id.sylz).setOnClickListener(this);//声音录制
 		findViewById(R.id.pzgylmd_line).setOnClickListener(this);//碰撞感应灵敏度
+		findViewById(R.id.kgjtsy).setOnClickListener(this);//开关机提示音
 		
 		findViewById(R.id.rlcx_line).setOnClickListener(this);//存储容量查询
 		findViewById(R.id.sjsz_line).setOnClickListener(this);//时间设置
@@ -213,6 +221,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				case R.id.pzgylmd_line://碰撞感应灵敏度
 					Intent pzgylmd_line = new Intent(SettingsActivity.this, ImpactSensitivityActivity.class);
 					startActivity(pzgylmd_line);
+					break;
+				case R.id.kgjtsy:
+					
 					break;
 				case R.id.rlcx_line://容量查询
 					Intent rlcx_line = new Intent(SettingsActivity.this, StorageCpacityQueryActivity.class);
