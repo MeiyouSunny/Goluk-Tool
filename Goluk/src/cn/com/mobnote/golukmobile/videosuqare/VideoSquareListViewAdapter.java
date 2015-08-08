@@ -159,20 +159,18 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 				mVideoSquareInfo, form, sharePlatform, this));
 		holder.sharebtn.setOnTouchListener(this);
 		holder.username.setText(mVideoSquareInfo.mUserEntity.nickname);
-		
-		
+
 		String fmtnumber = mVideoSquareInfo.mVideoEntity.clicknumber;
-		
-		DecimalFormat df= new DecimalFormat("#,###");
+
+		DecimalFormat df = new DecimalFormat("#,###");
 		int wg = Integer.parseInt(fmtnumber);
-		
-		if(wg < 100000){
+
+		if (wg < 100000) {
 			holder.looknumber.setText(df.format(wg));
-		}else{
+		} else {
 			holder.looknumber.setText("100,000+");
 		}
-		
-		
+
 		holder.videotitle.setText(mVideoSquareInfo.mVideoEntity.describe);
 		holder.sharetime.setText(this.formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
 		holder.likebtn.setText(mVideoSquareInfo.mVideoEntity.praisenumber);

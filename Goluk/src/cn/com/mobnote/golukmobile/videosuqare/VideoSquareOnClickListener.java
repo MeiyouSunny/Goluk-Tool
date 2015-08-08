@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile.videosuqare;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class VideoSquareOnClickListener implements OnClickListener{
+public class VideoSquareOnClickListener implements OnClickListener {
 
 	Context mcontext;
 	List<VideoSquareInfo> mVideoSquareListData;
@@ -30,7 +31,7 @@ public class VideoSquareOnClickListener implements OnClickListener{
 
 	AlertDialog confirmation;
 	VideoSquareListViewAdapter mVideoSquareListViewAdapter;
-	
+
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
@@ -45,11 +46,10 @@ public class VideoSquareOnClickListener implements OnClickListener{
 		form = plform;
 
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		mVideoSquareListViewAdapter.setOnClick(this);
-		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.share_btn:
 			if (mcontext instanceof MainActivity) {
@@ -76,42 +76,39 @@ public class VideoSquareOnClickListener implements OnClickListener{
 					vspa.mCustomProgressDialog.close();
 				}
 			}
-			
+
 			break;
 		case R.id.like_btn:
 			String praise = "0";
 			Button dz = (Button) view;
 			int likenumber = 0;
 			if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {// 没有点过赞
-				
-				likenumber = Integer.parseInt(dz.getText().toString())+1;
-				dz.setText(likenumber+"");
-				
-				Drawable drawable= mcontext.getResources().getDrawable(R.drawable.like_btn_press);  
-				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
-				dz.setCompoundDrawables(drawable,null,null,null);  
-				
+
+				likenumber = Integer.parseInt(dz.getText().toString()) + 1;
+				dz.setText(likenumber + "");
+
+				Drawable drawable = mcontext.getResources().getDrawable(R.drawable.like_btn_press);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				dz.setCompoundDrawables(drawable, null, null, null);
+
 				praise = "1";
-				
 
 				GolukApplication.getInstance().getVideoSquareManager()
 						.clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
 
-				
-			}else{
-				likenumber = Integer.parseInt(dz.getText().toString())-1;
-				dz.setText(likenumber+"");
-				
-				Drawable drawable= mcontext.getResources().getDrawable(R.drawable.like_btn);  
-				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
-				dz.setCompoundDrawables(drawable,null,null,null);  
-				
+			} else {
+				likenumber = Integer.parseInt(dz.getText().toString()) - 1;
+				dz.setText(likenumber + "");
+
+				Drawable drawable = mcontext.getResources().getDrawable(R.drawable.like_btn);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				dz.setCompoundDrawables(drawable, null, null, null);
+
 				praise = "0";
 			}
-			
-			
+
 			String videoid = mVideoSquareInfo.mVideoEntity.videoid;
-			
+
 			for (int i = 0; i < mVideoSquareListData.size(); i++) {
 				VideoSquareInfo vsi = mVideoSquareListData.get(i);
 				if (vsi.mVideoEntity.videoid.equals(videoid)) {
@@ -121,7 +118,7 @@ public class VideoSquareOnClickListener implements OnClickListener{
 					break;
 				}
 			}
-			
+
 			if (null != VideoSquareListView.mHandler) {
 				Message msg = new Message();
 				msg.what = 1;
@@ -146,14 +143,14 @@ public class VideoSquareOnClickListener implements OnClickListener{
 	 * @throws
 	 */
 	public void showDialog() {
-		dialog = new AlertDialog.Builder(mcontext,R.style.CustomDialog).create();
+		dialog = new AlertDialog.Builder(mcontext, R.style.CustomDialog).create();
 		dialog.show();
 		dialog.getWindow().setContentView(R.layout.video_square_dialog_main);
 		dialog.getWindow().findViewById(R.id.report).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dialog.dismiss();
-				ad = new AlertDialog.Builder(mcontext,R.style.CustomDialog).create();
+				ad = new AlertDialog.Builder(mcontext, R.style.CustomDialog).create();
 				ad.show();
 				ad.getWindow().setContentView(R.layout.video_square_dialog_selected);
 				ad.getWindow().findViewById(R.id.sqds).setOnClickListener(new View.OnClickListener() {
@@ -199,7 +196,7 @@ public class VideoSquareOnClickListener implements OnClickListener{
 
 	public void confirmation(final String reporttype) {
 		ad.dismiss();
-		confirmation = new AlertDialog.Builder(mcontext,R.style.CustomDialog).create();
+		confirmation = new AlertDialog.Builder(mcontext, R.style.CustomDialog).create();
 		confirmation.show();
 		confirmation.getWindow().setContentView(R.layout.video_square_dialog_confirmation);
 		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
@@ -209,7 +206,7 @@ public class VideoSquareOnClickListener implements OnClickListener{
 						.report("1", mVideoSquareInfo.mVideoEntity.videoid, reporttype);
 				if (flog) {
 					GolukUtils.showToast(mcontext, "举报成功，我们稍后会进行处理");
-				}else{
+				} else {
 					GolukUtils.showToast(mcontext, "网络异常，请检查网络");
 				}
 				confirmation.dismiss();
@@ -226,7 +223,6 @@ public class VideoSquareOnClickListener implements OnClickListener{
 	String getNikename() {
 		return mVideoSquareInfo.mUserEntity.nickname;
 	}
-
 
 	/**
 	 * 关闭之前请求的dialog
@@ -254,7 +250,5 @@ public class VideoSquareOnClickListener implements OnClickListener{
 			}
 		}
 	}
-
-	
 
 }

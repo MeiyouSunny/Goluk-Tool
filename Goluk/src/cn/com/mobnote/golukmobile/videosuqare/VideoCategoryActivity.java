@@ -4,6 +4,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -15,20 +31,8 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AbsListView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
 
-public class VideoSquarePlayActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
+public class VideoCategoryActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
 	private RTPullListView mRTPullListView = null;
 	private VideoSquareListViewAdapter mVideoSquareListViewAdapter = null;
 	private List<VideoSquareInfo> mDataList = null;
@@ -66,14 +70,36 @@ public class VideoSquarePlayActivity extends BaseActivity implements OnClickList
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
+	private FrameLayout mSwitchLayout = null;
+
+	/** 列表状态 */
+	private final int TYPE_LIST = 0;
+	/** 当前显示地图 */
+	private final int TYPE_MAP = 1;
+
+	private int mCurrentType = TYPE_LIST;
+	private BaiduMapView mMapView = null;
+
+	/** application */
+	public GolukApplication mApp = null;
+	private static final String TAG = "VideoCategoryActivity";
+
+	private TextView mMapTv = null;
+	CategoryListView mCategoryLayout = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.video_square_play);
-		Intent intent = getIntent();
-		title = (TextView) findViewById(R.id.title);
-		type = intent.getStringExtra("type");// 视频广场类型
-		attribute = intent.getStringExtra("attribute");// 点播类型
+
+		mApp = (GolukApplication) getApplication();
+		mApp.setContext(this, TAG);
+
+		getIntentData();
+
+		initView();
+
 		historyDate = SettingUtils.getInstance().getString("gcHistoryDate", sdf.format(new Date()));
 
 		SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
@@ -91,6 +117,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements OnClickList
 
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videocategory", this);
 		mDataList = new ArrayList<VideoSquareInfo>();
+
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		squareTypeDefault = (ImageView) findViewById(R.id.square_type_default);
 		squareTypeDefault.setOnClickListener(new OnClickListener() {
@@ -108,11 +135,46 @@ public class VideoSquarePlayActivity extends BaseActivity implements OnClickList
 
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
-		// 如果是直播就不拿历史数据
-		if (!"1".equals(type)) {
-			loadHistorydata();// 显示历史请求数据
+
+		initAdd();
+		switchLayout(TYPE_LIST);
+	}
+
+	private void getIntentData() {
+		Intent intent = getIntent();
+		type = intent.getStringExtra("type");// 视频广场类型
+		attribute = intent.getStringExtra("attribute");// 点播类型
+	}
+
+	private void initView() {
+		title = (TextView) findViewById(R.id.title);
+		mSwitchLayout = (FrameLayout) findViewById(R.id.category_switchlayout);
+		mMapView = new BaiduMapView(this);
+		mMapTv = (TextView) findViewById(R.id.category_map);
+		mCategoryLayout = new CategoryListView(this, type, attribute);
+		mMapTv.setOnClickListener(this);
+	}
+
+	private void initAdd() {
+		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+				FrameLayout.LayoutParams.MATCH_PARENT);
+		mSwitchLayout.addView(mMapView.getView(), lp);
+		mSwitchLayout.addView(mCategoryLayout.getView(), lp);
+	}
+
+	private void switchLayout(int type) {
+		if (TYPE_LIST == type) {
+			mCurrentType = type;
+			// TODO 切换到列表页
+			mCategoryLayout.getView().setVisibility(View.VISIBLE);
+			mMapView.getView().setVisibility(View.INVISIBLE);
+		} else if (TYPE_MAP == type) {
+			// 只有直播界面才有地图
+			mCurrentType = type;
+			// TODO 切换到地图
+			mCategoryLayout.getView().setVisibility(View.INVISIBLE);
+			mMapView.getView().setVisibility(View.VISIBLE);
 		}
-		httpPost(true, type, "0", "");
 	}
 
 	@Override
@@ -220,7 +282,10 @@ public class VideoSquarePlayActivity extends BaseActivity implements OnClickList
 		case R.id.back_btn:
 			this.finish();
 			break;
-
+		case R.id.category_map:
+			int temp = mCurrentType == TYPE_LIST ? TYPE_MAP : TYPE_LIST;
+			this.switchLayout(temp);
+			break;
 		default:
 			break;
 		}
@@ -229,7 +294,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements OnClickList
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			GolukUtils.showToast(VideoSquarePlayActivity.this, "第三方分享失败");
+			GolukUtils.showToast(VideoCategoryActivity.this, "第三方分享失败");
 			return;
 		}
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
@@ -372,7 +437,7 @@ public class VideoSquarePlayActivity extends BaseActivity implements OnClickList
 				} else if (2 == uptype) {
 					mRTPullListView.onRefreshComplete(historyDate);
 				}
-				GolukUtils.showToast(VideoSquarePlayActivity.this, "网络异常，请检查网络");
+				GolukUtils.showToast(VideoCategoryActivity.this, "网络异常，请检查网络");
 			}
 
 			if (mDataList.size() > 0) {

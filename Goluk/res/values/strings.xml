@@ -341,5 +341,6 @@
     <string name="str_comment_send">发送</string>
     <string name="str_comment_input_hit">写评论</string>
     <string name="str_comment_no_input">该评论已关闭</string>
+    <string name="str_category_map">地图</string>
 
 </resources>

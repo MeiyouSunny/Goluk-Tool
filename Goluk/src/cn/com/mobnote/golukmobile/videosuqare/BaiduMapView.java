@@ -14,11 +14,9 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 import cn.com.mobnote.entity.LngLat;
-import cn.com.mobnote.golukmobile.IndexMoreActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
@@ -30,14 +28,11 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 @SuppressLint("InflateParams")
@@ -64,7 +59,7 @@ public class BaiduMapView implements ILocationFn {
 	/** 定位相关 */
 	private LocationClient mLocClient;
 
-	private MainActivity ma;
+	private VideoCategoryActivity ma;
 
 	/** 控制离开页面不自动请求大头针数据 */
 	private boolean isCurrent = true;
@@ -76,7 +71,7 @@ public class BaiduMapView implements ILocationFn {
 		mContext = context;
 		mRootLayout = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.baidu_map, null);
 
-		ma = (MainActivity) mContext;
+		ma = (VideoCategoryActivity) mContext;
 		ma.mApp.addLocationListener("main", this);
 
 		initMap();
