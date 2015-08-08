@@ -203,7 +203,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		instance = this;
 		Const.setAppContext(this);
 		// TODO 此处不要做初始化相关的工作
-		//Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
+		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
 	}
 
 	public Handler mHandler = new Handler() {

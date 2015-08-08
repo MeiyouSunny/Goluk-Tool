@@ -118,47 +118,47 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	}
 	
 	private void loadImage(RelativeLayout mPlayerLayout, String url, String iconUrl) {
-//        mPlayerLayout.removeAllViews();
-//        SimpleDraweeView view = new SimpleDraweeView(mContext);
-//        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-//        GenericDraweeHierarchy hierarchy = builder
-//                        .setFadeDuration(300)
-//                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-//                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-//                    .setActualImageScaleType(ScaleType.FIT_XY)
-//                    .build();
-//        view.setHierarchy(hierarchy);
-//
-//        if (!lock) {
-//        	view.setImageURI(Uri.parse(url));
-//        }
-//                
-//        int height = (int) ((float) width / 1.77f);
-//        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-//        mPreLoadingParams.addRule(RelativeLayout.BELOW, R.id.mDate);
-//        mPlayerLayout.addView(view, mPreLoadingParams);
-//        
-//        if(!TextUtils.isEmpty(iconUrl)) {
-//        	SimpleDraweeView icon = new SimpleDraweeView(mContext);
-//            GenericDraweeHierarchyBuilder iconbuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-//            GenericDraweeHierarchy iconhierarchy = iconbuilder
-//                            .setFadeDuration(300)
-////                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-////                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-//                        .setActualImageScaleType(ScaleType.FIT_XY)
-//                        .build();
-//            icon.setHierarchy(iconhierarchy);
-//            
-//            if (!lock) {
-//            	icon.setImageURI(Uri.parse(iconUrl));
-//            }
-//            
-//            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams((int)(39*density), (int)(20.33*density));
-////            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-//            iconParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//            iconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//            mPlayerLayout.addView(icon, iconParams);
-//        }
+        mPlayerLayout.removeAllViews();
+        SimpleDraweeView view = new SimpleDraweeView(mContext);
+        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+        GenericDraweeHierarchy hierarchy = builder
+                        .setFadeDuration(300)
+                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+                    .setActualImageScaleType(ScaleType.FIT_XY)
+                    .build();
+        view.setHierarchy(hierarchy);
+
+        if (!lock) {
+        	view.setImageURI(Uri.parse(url));
+        }
+                
+        int height = (int) ((float) width / 1.77f);
+        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+        mPreLoadingParams.addRule(RelativeLayout.BELOW, R.id.mDate);
+        mPlayerLayout.addView(view, mPreLoadingParams);
+        
+        if(!TextUtils.isEmpty(iconUrl)) {
+        	SimpleDraweeView icon = new SimpleDraweeView(mContext);
+            GenericDraweeHierarchyBuilder iconbuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+            GenericDraweeHierarchy iconhierarchy = iconbuilder
+                            .setFadeDuration(300)
+//                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
+//                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
+                        .setActualImageScaleType(ScaleType.FIT_XY)
+                        .build();
+            icon.setHierarchy(iconhierarchy);
+            
+            if (!lock) {
+            	icon.setImageURI(Uri.parse(iconUrl));
+            }
+            
+            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams((int)(39*density), (int)(20.33*density));
+//            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            iconParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            iconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            mPlayerLayout.addView(icon, iconParams);
+        }
       
 
 	}
