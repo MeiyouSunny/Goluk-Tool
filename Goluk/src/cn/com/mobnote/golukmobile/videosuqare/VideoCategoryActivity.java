@@ -8,7 +8,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -84,7 +83,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	public GolukApplication mApp = null;
 	private static final String TAG = "VideoCategoryActivity";
 
-	private TextView mMapTv = null;
+	private ImageButton mMapBtn = null;
 	CategoryListView mCategoryLayout = null;
 
 	@Override
@@ -150,9 +149,9 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		title = (TextView) findViewById(R.id.title);
 		mSwitchLayout = (FrameLayout) findViewById(R.id.category_switchlayout);
 		mMapView = new BaiduMapView(this);
-		mMapTv = (TextView) findViewById(R.id.category_map);
+		mMapBtn = (ImageButton) findViewById(R.id.category_map);
 		mCategoryLayout = new CategoryListView(this, type, attribute);
-		mMapTv.setOnClickListener(this);
+		mMapBtn.setOnClickListener(this);
 	}
 
 	private void initAdd() {
@@ -168,12 +167,14 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 			// TODO 切换到列表页
 			mCategoryLayout.getView().setVisibility(View.VISIBLE);
 			mMapView.getView().setVisibility(View.INVISIBLE);
+			mMapBtn.setBackgroundResource(R.drawable.btn_live_switch_map);
 		} else if (TYPE_MAP == type) {
 			// 只有直播界面才有地图
 			mCurrentType = type;
-			// TODO 切换到地图
+			// 切换到地图
 			mCategoryLayout.getView().setVisibility(View.INVISIBLE);
 			mMapView.getView().setVisibility(View.VISIBLE);
+			mMapBtn.setBackgroundResource(R.drawable.btn_live_switch_list);
 		}
 	}
 
@@ -285,6 +286,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		case R.id.category_map:
 			int temp = mCurrentType == TYPE_LIST ? TYPE_MAP : TYPE_LIST;
 			this.switchLayout(temp);
+
 			break;
 		default:
 			break;

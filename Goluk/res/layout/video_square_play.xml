@@ -17,7 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/live_btn_back" />
+            android:background="@drawable/live_btn_back"
+            android:contentDescription="@string/imgdes" />
 
         <TextView
             android:id="@+id/title"
@@ -28,15 +29,15 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-        <TextView
+        <ImageButton
             android:id="@+id/category_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="@string/str_category_map"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/btn_live_switch_map"
+            android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
     <!-- 布局切换 (包括视频列表与地图的切换) -->

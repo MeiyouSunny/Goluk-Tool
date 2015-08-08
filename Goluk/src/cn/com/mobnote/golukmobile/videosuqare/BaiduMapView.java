@@ -52,7 +52,7 @@ public class BaiduMapView implements ILocationFn {
 
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
-	
+
 	/** 直播列表 */
 	private Button liveListBtn = null;
 
@@ -110,10 +110,10 @@ public class BaiduMapView implements ILocationFn {
 		mMapLocationBtn = (Button) mRootLayout.findViewById(R.id.map_location_btn);
 		// 注册事件
 		mMapLocationBtn.setOnClickListener(new click());
-		
+
 		liveListBtn = (Button) mRootLayout.findViewById(R.id.live_list);
 		liveListBtn.setOnClickListener(new click());
-		
+
 		BaiduMapOptions options = new BaiduMapOptions();
 		options.rotateGesturesEnabled(false); // 不允许手势
 		options.overlookingGesturesEnabled(false);
@@ -213,7 +213,7 @@ public class BaiduMapView implements ILocationFn {
 		// 保存经纬度
 		LngLat.lng = location.rawLon;
 		LngLat.lat = location.rawLat;
-		
+
 		if (ma.mApp.getContext() instanceof CarRecorderActivity) {
 			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
 		}
