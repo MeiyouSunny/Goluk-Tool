@@ -38,7 +38,7 @@ public class FunctionDialog extends Dialog implements android.view.View.OnClickL
 		case R.id.tuijian:
 			dismiss();
 			Intent intent = new Intent(mContext, RecomVideoActivity.class);
-			
+			intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
 			mContext.startActivity(intent);
 			break;
 		case R.id.jubao:

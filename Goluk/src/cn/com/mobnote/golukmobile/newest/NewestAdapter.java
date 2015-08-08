@@ -181,6 +181,8 @@ public class NewestAdapter extends BaseAdapter {
 		tempShareListener.setCategoryListView(mCategoryListView);
 		holder.shareLayout.setOnClickListener(tempShareListener);
 
+		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo));
+
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));
 		// 点赞
