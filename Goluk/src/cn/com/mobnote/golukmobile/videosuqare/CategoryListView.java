@@ -5,20 +5,30 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.newest.NewestAdapter;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
@@ -85,7 +95,16 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		addCallBackListener();
 		loadHistoryData();
 
+		initYMShare();
+
 		firstRequest();
+	}
+
+	private SharePlatformUtil sharePlatform;
+
+	private void initYMShare() {
+		sharePlatform = new SharePlatformUtil(mContext);
+		sharePlatform.configPlatforms();// 设置分享平台的参数
 	}
 
 	private void addCallBackListener() {
@@ -117,6 +136,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 		if (null == mCategoryAdapter) {
 			mCategoryAdapter = new NewestAdapter(mContext);
+			mCategoryAdapter.setCategoryListView(this);
 		}
 		mRTPullListView.setAdapter(mCategoryAdapter);
 	}
@@ -153,6 +173,12 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		}
 	}
 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (null != sharePlatform) {
+			sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
 	private void initLayout() {
 		// if (!headLoading && !dataLoading) {
 		// return;
@@ -176,19 +202,14 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	private final int COUNT = 30;
 
-	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		if (VSquare_Req_List_Video_Catlog != event) {
-			return;
-		}
+	private void callBack_CatLog(int msg, int param1, Object param2) {
 		if (1 != msg) {
 			// 失败
 			callBackFailed();
 			dataCallBackRefresh();
 			return;
 		}
-		GolukDebugUtils.e("", "jyf----CategoryListView------------------VideoSuqare_CallBack: " + event + " msg:" + msg
-				+ "  param2:" + param2);
+
 		// 解析数据
 		List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData((String) param2);
 		if (null != datalist && datalist.size() > 0) {
@@ -239,6 +260,84 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		}
 
 		dataCallBackRefresh();
+	}
+
+	private CustomLoadingDialog mCustomProgressDialog = null;
+
+	public void closeProgressDialog() {
+		if (null != mCustomProgressDialog) {
+			mCustomProgressDialog.close();
+		}
+	}
+
+	public void showProgressDialog() {
+		if (null == mCustomProgressDialog) {
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
+		}
+
+		if (!mCustomProgressDialog.isShowing()) {
+			mCustomProgressDialog.show();
+		}
+
+	}
+
+	private void callBack_getShareUrl(int msg, int param1, Object param2) {
+		closeProgressDialog();
+		if (RESULE_SUCESS != msg) {
+			GolukUtils.showToast(mContext, "网络异常，请检查网络");
+			return;
+		}
+		try {
+			JSONObject result = new JSONObject((String) param2);
+			if (result.getBoolean("success")) {
+				JSONObject data = result.getJSONObject("data");
+				String shareurl = data.getString("shorturl");
+				String coverurl = data.getString("coverurl");
+				String describe = data.optString("describe");
+				String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+				if (TextUtils.isEmpty(describe)) {
+					describe = "#极路客精彩视频#";
+				}
+				String ttl = "极路客精彩视频分享";
+				if (mContext instanceof VideoCategoryActivity) {
+					VideoCategoryActivity vspa = (VideoCategoryActivity) mContext;
+					if (vspa != null && !vspa.isFinishing()) {
+						CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl, coverurl,
+								describe, ttl, null, realDesc);
+						shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+					}
+				}
+			} else {
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void callBack_praise(int msg, int param1, Object param2) {
+		if (RESULE_SUCESS == msg) {
+			GolukDebugUtils.e("", "GGGG===@@@====2222=====");
+			if (null != mVideoSquareInfo) {
+				mVideoSquareInfo.mVideoEntity.ispraise = "1";
+				updateClickPraiseNumber(true, mVideoSquareInfo);
+			}
+
+		}
+	}
+
+	@Override
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "jyf----CategoryListView------------------VideoSuqare_CallBack: " + event + " msg:" + msg
+				+ "  param2:" + param2);
+		if (VSquare_Req_List_Video_Catlog == event) {
+			callBack_CatLog(msg, param1, param2);
+		} else if (VSquare_Req_VOP_GetShareURL_Video == event) {
+			callBack_getShareUrl(msg, param1, param2);
+		} else if (VSquare_Req_VOP_Praise == event) {
+			callBack_praise(msg, param1, param2);
+		}
+
 	}
 
 	// 数据回调失败的问题
@@ -298,12 +397,13 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	public void onPause() {
 		removeListener();
 	}
-	
+
 	public void onStop() {
-		
+
 	}
 
 	public void onDestroy() {
+		this.removeListener();
 
 	}
 
@@ -351,6 +451,32 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 		wonderfulFirstVisible = firstVisibleItem;
 		wonderfulVisibleCount = visibleItemCount;
+	}
+
+	VideoSquareInfo mVideoSquareInfo;
+
+	public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info) {
+		mVideoSquareInfo = info;
+		if (!flag) {
+			return;
+		}
+
+		for (int i = 0; i < mDataList.size(); i++) {
+			VideoSquareInfo vs = mDataList.get(i);
+			if (vs.id.equals(info.id)) {
+				int number = Integer.parseInt(info.mVideoEntity.praisenumber);
+				if ("1".equals(info.mVideoEntity.ispraise)) {
+					number++;
+				} else {
+					number--;
+				}
+				mDataList.get(i).mVideoEntity.praisenumber = "" + number;
+				mDataList.get(i).mVideoEntity.ispraise = info.mVideoEntity.ispraise;
+				info.mVideoEntity.praisenumber = "" + number;
+				break;
+			}
+		}
+		mCategoryAdapter.updateClickPraiseNumber(info);
 	}
 
 }

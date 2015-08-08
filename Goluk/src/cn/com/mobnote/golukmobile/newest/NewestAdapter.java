@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -46,7 +47,8 @@ public class NewestAdapter extends BaseAdapter {
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
 	private NewestListView mNewestListView = null;
-	
+	private CategoryListView mCategoryListView = null;
+
 	public NewestAdapter(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<VideoSquareInfo>();
@@ -175,11 +177,17 @@ public class NewestAdapter extends BaseAdapter {
 	private void initListener(int index) {
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 
-		holder.shareLayout.setOnClickListener(new ClickShareListener(mContext, mVideoSquareInfo, mNewestListView));
+		ClickShareListener tempShareListener = new ClickShareListener(mContext, mVideoSquareInfo, mNewestListView);
+		tempShareListener.setCategoryListView(mCategoryListView);
+		holder.shareLayout.setOnClickListener(tempShareListener);
+
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));
-		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView));
-		
+		// 点赞
+		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
+		tempPraiseListener.setCategoryListView(mCategoryListView);
+		holder.praiseLayout.setOnClickListener(tempPraiseListener);
+
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
 			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
@@ -327,17 +335,16 @@ public class NewestAdapter extends BaseAdapter {
 		view.setText(style);
 	}
 
-	
 	RelativeLayout mHeadView;
+
 	private View getHeadView() {
-		int imagewidth = (int)((width - 10*density)/2);
-		int imageheight = (int)(imagewidth * 0.56);
+		int imagewidth = (int) ((width - 10 * density) / 2);
+		int imageheight = (int) (imagewidth * 0.56);
 		if (null == mHeadView) {
-			mHeadView = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
+			mHeadView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
 		}
-		RelativeLayout main = (RelativeLayout)mHeadView.findViewById(R.id.main);
-		RelativeLayout liveLayout = (RelativeLayout)mHeadView.findViewById(R.id.liveLayout);
-		
+		RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
+		RelativeLayout liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
 
 		LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
 		if (null != mLiveInfo) {
@@ -347,11 +354,11 @@ public class NewestAdapter extends BaseAdapter {
 			liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
 			liveLayout.setLayoutParams(liveLayoutParams);
 
-			RelativeLayout imagelayout = (RelativeLayout)mHeadView.findViewById(R.id.imagelayout);
+			RelativeLayout imagelayout = (RelativeLayout) mHeadView.findViewById(R.id.imagelayout);
 			loadImage(imagelayout, mLiveInfo.pic);
-			
-			LinearLayout mLookLayout = (LinearLayout)mHeadView.findViewById(R.id.mLookLayout);
-			TextView mLookNum = (TextView)mHeadView.findViewById(R.id.mLookNum);
+
+			LinearLayout mLookLayout = (LinearLayout) mHeadView.findViewById(R.id.mLookLayout);
+			TextView mLookNum = (TextView) mHeadView.findViewById(R.id.mLookNum);
 
 			if ("-1".equals(mLiveInfo.number)) {
 				mLookLayout.setVisibility(View.GONE);
@@ -397,7 +404,6 @@ public class NewestAdapter extends BaseAdapter {
 
 		}
 
-		
 		return mHeadView;
 
 	}
@@ -494,13 +500,17 @@ public class NewestAdapter extends BaseAdapter {
 		}
 		return time;
 	}
-	
+
 	public void setNewestLiseView(NewestListView view) {
 		this.mNewestListView = view;
 	}
-	
+
+	public void setCategoryListView(CategoryListView view) {
+		mCategoryListView = view;
+	}
+
 	public void updateClickPraiseNumber(VideoSquareInfo info) {
-		for (int i=0; i<mDataList.size(); i++) {
+		for (int i = 0; i < mDataList.size(); i++) {
 			VideoSquareInfo vs = mDataList.get(i);
 			if (vs.id.equals(info.id)) {
 				mDataList.get(i).mVideoEntity.praisenumber = info.mVideoEntity.praisenumber;
@@ -509,7 +519,7 @@ public class NewestAdapter extends BaseAdapter {
 				break;
 			}
 		}
-		
+
 	}
 
 }

@@ -130,8 +130,8 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (null != sharePlatform) {
-			sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
+		if (null != mCategoryLayout) {
+			mCategoryLayout.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 

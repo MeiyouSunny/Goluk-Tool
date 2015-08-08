@@ -315,8 +315,11 @@ public class NewestListView implements VideoSuqareManagerFn{
 			GolukDebugUtils.e("", "GGGG===@@@===1111======");
 			if (RESULE_SUCESS == msg) {
 				GolukDebugUtils.e("", "GGGG===@@@====2222=====");
-				mVideoSquareInfo.mVideoEntity.ispraise = "1";
-				updateClickPraiseNumber(true, mVideoSquareInfo);
+				if (null != mVideoSquareInfo) {
+					mVideoSquareInfo.mVideoEntity.ispraise = "1";
+					updateClickPraiseNumber(true, mVideoSquareInfo);
+				}
+				
 			}
 		}
 		
