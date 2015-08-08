@@ -54,7 +54,17 @@ public class VideoSquareAdapter extends PagerAdapter{
 		
 	}
 	
-	public void onResume(){
+	public void onResume() {
+		if(null != mNewestListView){
+			mNewestListView.onResume();
+		}
+		
+	}
+	
+	public void onPause() {
+		if(null != mNewestListView){
+			mNewestListView.onPause();
+		}
 		
 	}
 	

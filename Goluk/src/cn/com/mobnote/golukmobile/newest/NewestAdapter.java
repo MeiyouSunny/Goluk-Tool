@@ -6,12 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -31,7 +29,7 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-
+import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class NewestAdapter extends BaseAdapter {
@@ -57,7 +55,11 @@ public class NewestAdapter extends BaseAdapter {
 		mHeadDataInfo = headata;
 		mDataList.clear();
 		mDataList.addAll(data);
-		count = mDataList.size() + 1;
+		if(null == mHeadDataInfo) {
+			count = mDataList.size();
+		}else {
+			count = mDataList.size() + 1;
+		}
 		this.notifyDataSetChanged();
 	}
 
@@ -78,16 +80,24 @@ public class NewestAdapter extends BaseAdapter {
 	
 	@Override
 	public int getViewTypeCount() {
-		return 2;
+		if(null == mHeadDataInfo) {
+			return 1;
+		}else{
+			return 2;
+		}
 	};
 
 	@Override
 	public int getItemViewType(int position) {
-		if (position==0) {  
-            return FIRST_TYPE;  
-        } else {  
-            return OTHERS_TYPE;  
-        }  
+		if(null == mHeadDataInfo) {
+			return OTHERS_TYPE;
+		}else{
+			if (position==0) {  
+	            return FIRST_TYPE;  
+	        } else {  
+	            return OTHERS_TYPE;  
+	        }  
+		}
 	};
 
 	ViewHolder holder;
@@ -98,51 +108,63 @@ public class NewestAdapter extends BaseAdapter {
 		if (FIRST_TYPE == type) {	
 			convertView = getHeadView();
 		}else {
-			if(null == convertView) {
-				holder = new ViewHolder();
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
-				holder.imageLayout = (RelativeLayout)convertView.findViewById(R.id.imageLayout);
-				holder.headimg = (ImageView)convertView.findViewById(R.id.headimg);
-				holder.nikename = (TextView)convertView.findViewById(R.id.nikename);
-				holder.time = (TextView)convertView.findViewById(R.id.time);
-				holder.function = (ImageView)convertView.findViewById(R.id.function);
-				
-				holder.praiseLayout = (LinearLayout)convertView.findViewById(R.id.praiseLayout);
-				holder.zanIcon = (ImageView)convertView.findViewById(R.id.zanIcon);
-				holder.zanText = (TextView)convertView.findViewById(R.id.zanText);
-				
-				holder.commentLayout = (LinearLayout)convertView.findViewById(R.id.commentLayout);
-				holder.commentIcon = (ImageView)convertView.findViewById(R.id.commentIcon);
-				holder.commentText = (TextView)convertView.findViewById(R.id.commentText);
-				
-				holder.shareLayout = (LinearLayout)convertView.findViewById(R.id.shareLayout);
-				holder.shareIcon = (ImageView)convertView.findViewById(R.id.shareIcon);
-				holder.shareText = (TextView)convertView.findViewById(R.id.shareText);
-				
-				holder.zText = (TextView)convertView.findViewById(R.id.zText);
-				holder.weiguan = (TextView)convertView.findViewById(R.id.weiguan);
-				holder.totalcomments = (TextView)convertView.findViewById(R.id.totalcomments);
-				holder.detail = (TextView)convertView.findViewById(R.id.detail);
-				
-				holder.totlaCommentLayout = (LinearLayout)convertView.findViewById(R.id.totlaCommentLayout);
-				holder.comment1 = (TextView)convertView.findViewById(R.id.comment1);
-				holder.comment2 = (TextView)convertView.findViewById(R.id.comment2);
-				holder.comment3 = (TextView)convertView.findViewById(R.id.comment3);
-				
-				int height = (int) ((float) width / 1.77f);
-				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
-				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
-				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
-				
-				convertView.setTag(holder);
+			if (null == convertView) {
+				convertView = loadLayout();
 			} else {
 				holder = (ViewHolder) convertView.getTag();
+				if (null == holder) {
+					convertView = loadLayout();
+				}
 			}
 			
-			initView(arg0 - 1);
-			initListener(arg0 - 1);
+			int index = arg0;
+			if (null != mHeadDataInfo) {
+				index = arg0 - 1;
+			}
+			initView(index);
+			initListener(index);
 		}
 		
+		return convertView;
+	}
+	
+	private View loadLayout() {
+		holder = new ViewHolder();
+		View convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
+		holder.imageLayout = (RelativeLayout)convertView.findViewById(R.id.imageLayout);
+		holder.headimg = (ImageView)convertView.findViewById(R.id.headimg);
+		holder.nikename = (TextView)convertView.findViewById(R.id.nikename);
+		holder.time = (TextView)convertView.findViewById(R.id.time);
+		holder.function = (ImageView)convertView.findViewById(R.id.function);
+		
+		holder.praiseLayout = (LinearLayout)convertView.findViewById(R.id.praiseLayout);
+		holder.zanIcon = (ImageView)convertView.findViewById(R.id.zanIcon);
+		holder.zanText = (TextView)convertView.findViewById(R.id.zanText);
+		
+		holder.commentLayout = (LinearLayout)convertView.findViewById(R.id.commentLayout);
+		holder.commentIcon = (ImageView)convertView.findViewById(R.id.commentIcon);
+		holder.commentText = (TextView)convertView.findViewById(R.id.commentText);
+		
+		holder.shareLayout = (LinearLayout)convertView.findViewById(R.id.shareLayout);
+		holder.shareIcon = (ImageView)convertView.findViewById(R.id.shareIcon);
+		holder.shareText = (TextView)convertView.findViewById(R.id.shareText);
+		
+		holder.zText = (TextView)convertView.findViewById(R.id.zText);
+		holder.weiguan = (TextView)convertView.findViewById(R.id.weiguan);
+		holder.totalcomments = (TextView)convertView.findViewById(R.id.totalcomments);
+		holder.detail = (TextView)convertView.findViewById(R.id.detail);
+		
+		holder.totlaCommentLayout = (LinearLayout)convertView.findViewById(R.id.totlaCommentLayout);
+		holder.comment1 = (TextView)convertView.findViewById(R.id.comment1);
+		holder.comment2 = (TextView)convertView.findViewById(R.id.comment2);
+		holder.comment3 = (TextView)convertView.findViewById(R.id.comment3);
+		
+		int height = (int) ((float) width / 1.77f);
+		RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
+		mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
+		holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
+		convertView.setTag(holder);
+
 		return convertView;
 	}
 	
@@ -151,7 +173,7 @@ public class NewestAdapter extends BaseAdapter {
 		
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));
-		holder.function.setOnClickListener(new ClickCategoryListener(mVideoSquareInfo.mVideoEntity.videoid));
+//		holder.function.setOnClickListener(new ClickCategoryListener(mVideoSquareInfo.mVideoEntity.videoid));
 		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mVideoSquareInfo.mVideoEntity.videoid));
 		
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
@@ -177,7 +199,9 @@ public class NewestAdapter extends BaseAdapter {
 	}
 	
 	private void initView(int index) {
+		GolukDebugUtils.e("", "TTTTTTT=========holder=="+holder);
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
+		GolukDebugUtils.e("", "TTTTTTT=========holder.imageLayout="+holder.imageLayout+"===mVideoSquareInfo="+mVideoSquareInfo+"==mVideoSquareInfo.mVideoEntity=="+mVideoSquareInfo.mVideoEntity);
 		loadImage(holder.imageLayout, mVideoSquareInfo.mVideoEntity.picture);
 		
 		showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
@@ -310,6 +334,7 @@ public class NewestAdapter extends BaseAdapter {
 			int iid = i+1111;
 			item.setId(iid);
 			
+			item.setOnClickListener(new ClickCategoryListener(mContext, mCategoryDataInfo));
 			RelativeLayout imageLayout = (RelativeLayout)item.findViewById(R.id.imageLayout);
 			TextView mTitleName = (TextView)item.findViewById(R.id.mTitleName);
 			TextView mUpdateTime = (TextView)item.findViewById(R.id.mUpdateTime);
@@ -339,25 +364,24 @@ public class NewestAdapter extends BaseAdapter {
 	}
 	
 	private void loadImage(RelativeLayout layout, String url) {
-//		layout.removeAllViews();
-//        SimpleDraweeView view = new SimpleDraweeView(mContext);
-//        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-//        GenericDraweeHierarchy hierarchy = builder
-//                    .setFadeDuration(300)
-//                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-//                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-//                    .setActualImageScaleType(ScaleType.FIT_XY)
-//                    .build();
-//        view.setHierarchy(hierarchy);
-//
-//        if (!lock) {
-//        	view.setImageURI(Uri.parse(url));
-//        }
-//                
-//        int height = (int) ((float) width / 1.77f);
-//        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-//        layout.addView(view, mPreLoadingParams);
-        
+		layout.removeAllViews();
+        SimpleDraweeView view = new SimpleDraweeView(mContext);
+        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+        GenericDraweeHierarchy hierarchy = builder
+                    .setFadeDuration(300)
+                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+                    .setActualImageScaleType(ScaleType.FIT_XY)
+                    .build();
+        view.setHierarchy(hierarchy);
+
+        if (!lock) {
+        	view.setImageURI(Uri.parse(url));
+        }
+                
+        int height = (int) ((float) width / 1.77f);
+        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+        layout.addView(view, mPreLoadingParams);
 	}
 
 	public static class ViewHolder {

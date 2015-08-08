@@ -24,7 +24,7 @@
 
     <LinearLayout
         android:id="@+id/comments"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
@@ -96,7 +96,7 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/videodetail_inputbox" />
 
-        <Button
+        <Button android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="21dp"
