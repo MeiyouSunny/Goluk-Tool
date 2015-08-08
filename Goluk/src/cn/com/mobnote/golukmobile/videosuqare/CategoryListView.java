@@ -292,20 +292,22 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	}
 
 	public void onResume() {
-		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if (null != mVideoSquareManager) {
-			mVideoSquareManager.addVideoSquareManagerListener("NewestListView", this);
-		}
+		addCallBackListener();
 	}
 
 	public void onPause() {
-		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if (null != mVideoSquareManager) {
-			mVideoSquareManager.removeVideoSquareManagerListener("NewestListView");
-		}
+		removeListener();
+	}
+	
+	public void onStop() {
+		
 	}
 
 	public void onDestroy() {
+
+	}
+
+	public void onBackPressed() {
 
 	}
 
