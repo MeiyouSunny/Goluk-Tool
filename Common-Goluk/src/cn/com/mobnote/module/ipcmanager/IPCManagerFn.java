@@ -238,6 +238,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetWifiCfg = 1032;
 	/**IPC设备升级停止**/
 	public static final int IPC_VDCPCmd_StopIPCUpgrade = 1033;
+	/**获取IPC系统语音播报开关状态**/
+	public static final int IPC_VDCPCmd_GetSpeakerSwitch = 1034;
+	/**设置IPC系统语音播报开关状态**/
+	public static final int IPC_VDCPCmd_SetSpeakerSwitch = 1035;
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }
