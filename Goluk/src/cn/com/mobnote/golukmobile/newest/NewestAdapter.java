@@ -174,6 +174,7 @@ public class NewestAdapter extends BaseAdapter {
 	private void initListener(int index) {
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 		
+		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo));
 		holder.shareLayout.setOnClickListener(new ClickShareListener(mContext, mVideoSquareInfo, mNewestListView));
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));

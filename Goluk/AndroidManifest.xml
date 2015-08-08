@@ -299,6 +299,15 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <activity
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent" 
+            android:windowSoftInputMode="adjustResize" 
+            android:name="cn.com.mobnote.golukmobile.newest.RecomVideoActivity">
+        </activity>
+        
+        
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
