@@ -166,6 +166,11 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		case R.id.comment_link:
 			this.startCommentActivity();
 			break;
+		case R.id.outurl:
+			
+			break;
+		case R.id.title_share:
+			break;
 		default:
 			break;
 		}
@@ -253,8 +258,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 							view.findViewById(R.id.push_comment).setVisibility(View.GONE);
 							view.findViewById(R.id.comments).setVisibility(View.GONE);
 						}
-						
-						
 
 						outurl = (TextView) view.findViewById(R.id.outurl);
 
@@ -269,6 +272,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						commentLink.setText("查看所有  " + map.get("comcount") + " 条评论");
 						
 						commentLink.setOnClickListener(this);
+						outurl.setOnClickListener(this);
+						
 						view.findViewById(R.id.message).setOnClickListener(this);
 						
 						lv.addFooterView(view);

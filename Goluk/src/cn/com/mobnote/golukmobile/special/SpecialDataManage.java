@@ -44,6 +44,7 @@ public class SpecialDataManage {
 							item.imagepath = video.optString("picture");
 							item.videotype = "2";
 							item.videopath = video.optString("ondemandsdkaddress");
+							item.videoid = video.optString("videoid");
 							specials.add(item);
 
 						}
