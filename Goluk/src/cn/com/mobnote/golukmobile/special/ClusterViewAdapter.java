@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -65,6 +66,7 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 	private List<ClusterInfo> clusterListData = null;
 	private int count = 0;
 	private int form = 1;
+	
 	private SharePlatformUtil sharePlatform;
 
 	private int width = 0;
@@ -208,10 +210,17 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 				holder.nikename.setText(clusterInfo.author);
 				holder.time.setText(clusterInfo.sharingtime);
 				holder.zText.setText(clusterInfo.praisenumber);
-				holder.weiguan.setText(clusterInfo.clicknumber + "次围观");
+				holder.weiguan.setText(clusterInfo.clicknumber + " 围观");
 				holder.detail.setText(clusterInfo.author + "  " + clusterInfo.describe);
 				holder.totalcomments.setText("查看所有" + clusterInfo.comments + "条评论");
-
+				holder.zText.setText(clusterInfo.praisenumber + " 赞");
+				
+				//没点过
+				if("0".equals(clusterInfo.ispraise)){
+					holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
+				}else{//点赞过
+					holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
+				}
 				if (clusterInfo.ci1 != null) {
 					holder.comment1.setText(clusterInfo.ci1.name + "  " + clusterInfo.ci1.text);
 				} else {
@@ -257,7 +266,9 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		
 		holder.commentLayout.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
 		holder.totalcomments.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
+		holder.praiseLayout.setOnClickListener(new ClusterPressListener(mContext, clusterInfo, this));
 		holder.imageLayout.setOnClickListener(new SpecialCommentListener(mContext,clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
+		holder.shareLayout.setOnClickListener(new SpecialCommentListener(mContext,clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
 	}
 
 	public int getUserHead(String head) {
@@ -270,6 +281,27 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 	public void onResume() {
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
+	}
+	
+	/**
+	 * 点赞
+	  * @Title: setLikePress 
+	  * @Description: TODO
+	  * @param clusterInfo void 
+	  * @author 曾浩 
+	  * @throws
+	 */
+	public void setLikePress(ClusterInfo clusterInfo){
+		for (int i = 0; i < clusterListData.size(); i++) {
+			ClusterInfo cl = clusterListData.get(i);
+			if(cl.videoid.equals(clusterInfo.videoid)){
+				clusterListData.set(i, clusterInfo);
+				break;
+			}
+		}
+		
+		this.notifyDataSetChanged();
+		
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -361,10 +393,6 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
-	}
-
-	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-
 	}
 
 	/*
@@ -467,6 +495,12 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 			break;
 		}
 		return false;
+	}
+
+	@Override
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

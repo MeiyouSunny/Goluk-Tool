@@ -188,8 +188,10 @@ public class SpecialDataManage {
 								item.imagepath = video.optString("picture");
 								item.clicknumber = video.optString("clicknumber");
 								item.videoid = video.optString("videoid");
+								item.praisenumber = video.optString("praisenumber");
 								item.sharingtime = video.optString("sharingtime");
 								item.headportrait = user.optString("headportrait");
+								item.ispraise = video.optString("ispraise");
 								item.videotype = "2";
 								item.videopath = video.optString("ondemandsdkaddress");
 

@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.special;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,13 +12,18 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,9 +33,12 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.DataParserUtils;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
@@ -40,6 +49,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class ClusterListActivity extends BaseActivity implements OnClickListener,VideoSuqareManagerFn{
 
@@ -95,6 +105,8 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	
 	private static String pagesize = "20";
 	
+	private Button titleShare;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -128,7 +140,10 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+		titleShare = (Button) findViewById(R.id.title_share);
+		
 		mBackBtn.setOnClickListener(this);
+		titleShare.setOnClickListener(this);
 		
 		textTitle.setText(title);
 		
@@ -243,7 +258,18 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		case R.id.back_btn:
 			this.finish();
 			break;
-
+		case R.id.title_share:
+			if (null == mCustomProgressDialog) {
+				mCustomProgressDialog = new CustomLoadingDialog(this, null);
+			}
+			mCustomProgressDialog.show();
+			boolean result = GolukApplication.getInstance()
+					.getVideoSquareManager().getTagShareUrl("2", ztid);
+			if (result == false) {
+				mCustomProgressDialog.close();
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
+			break;
 		default:
 			break;
 		}
@@ -368,8 +394,58 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 				squareTypeDefault.setVisibility(View.VISIBLE);
 				mRTPullListView.setVisibility(View.GONE);
 			}
+		}else if(event == VSquare_Req_VOP_GetShareURL_Video || event == VSquare_Req_VOP_GetShareURL_Topic_Tag){
+			if (RESULE_SUCESS == msg) {
+				try {
+					JSONObject result = new JSONObject((String) param2);
+					if (result.getBoolean("success")) {
+						JSONObject data = result.getJSONObject("data");
+						GolukDebugUtils.i("detail", "------VideoSuqare_CallBack--------data-----" + data);
+						String shareurl = data.getString("shorturl");
+						String coverurl = data.getString("coverurl");
+						String describe = data.optString("describe");
+						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+
+						if (TextUtils.isEmpty(describe)) {
+								describe = "#极路客精彩视频#";
+						}
+						String ttl = "极路客精彩视频分享";
+						
+						// 缩略图
+						Bitmap bitmap = getThumbBitmap(headdata.imagepath);
+						
+						
+						if (this != null && !this.isFinishing()) {
+							mCustomProgressDialog.close();
+							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
+									describe, ttl, bitmap, realDesc);
+							System.out.println("我日我日我日====bitmap="+bitmap);
+							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							System.out.println("我擦我擦我擦");
+						}
+					} else {
+						GolukUtils.showToast(this, "网络异常，请检查网络");
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} else {
+				mCustomProgressDialog.close();
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
 		}
 			
+	}
+	
+	public Bitmap getThumbBitmap(String netUrl) {
+		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
+		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
+		File file = new File(path + File.separator + name);
+		Bitmap t_bitmap = null;
+		if (file.exists()) {
+			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
+		}
+		return t_bitmap;
 	}
 	
 	/**

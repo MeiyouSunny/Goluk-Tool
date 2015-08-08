@@ -1,10 +1,13 @@
 package cn.com.mobnote.golukmobile.special;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.util.GolukUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -17,6 +20,7 @@ public class SpecialCommentListener implements OnClickListener{
 	String videopath;
 	String from;
 	String type;
+	String vid ;
 	
 	public SpecialCommentListener(Context context, String ipath,String vpath,String f,String t,String videoid) {
 		this.mContext = context;
@@ -24,6 +28,7 @@ public class SpecialCommentListener implements OnClickListener{
 		videopath = vpath;
 		from = f;
 		type = t;
+		vid = videoid;
 	}
 	
 	@Override
@@ -38,6 +43,17 @@ public class SpecialCommentListener implements OnClickListener{
 				intent.putExtra("playUrl", videopath);
 				//uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
 				mContext.startActivity(intent);
+			}
+			break;
+		case R.id.shareLayout:
+			ClusterListActivity vsa = (ClusterListActivity) mContext;
+			vsa.mCustomProgressDialog = new CustomLoadingDialog(vsa, null);
+			vsa.mCustomProgressDialog.show();
+			boolean result = GolukApplication.getInstance()
+					.getVideoSquareManager().getShareUrl(vid, "2");
+			if (!result) {
+				vsa.mCustomProgressDialog.close();
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 			break;
 		default:
