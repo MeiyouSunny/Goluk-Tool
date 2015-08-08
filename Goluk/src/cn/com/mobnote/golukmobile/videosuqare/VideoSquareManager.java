@@ -92,6 +92,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		List<String> arr = new ArrayList<String>();
 		arr.add(attribute);
 		String json = JsonCreateUtils.getSquareListRequestJson(channel, type, arr, operation, timestamp);
+		
+		GolukDebugUtils.e("", "jyf----CategoryListView------------------getSquareList  json: " + json );
+		
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_Video_Catlog,
 				json);
 	}
