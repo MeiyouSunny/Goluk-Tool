@@ -7,18 +7,31 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnErrorListener;
+import android.media.MediaPlayer.OnInfoListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -30,15 +43,20 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
+import cn.com.mobnote.golukmobile.player.DensityUtil;
+import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
@@ -56,7 +74,9 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  *
  */
-public class VideoSquareDeatilActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
+@SuppressLint("NewApi")
+public class VideoSquareDeatilActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn 
+		,OnInfoListener,OnErrorListener,OnCompletionListener,OnPreparedListener{
 
 	/** title **/
 	private ImageButton mBackBtn = null;
@@ -68,7 +88,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	/** 视频内容 **/
 	private RelativeLayout mPrepareLayout = null;
 	private ImageView mImagePrepare = null;
-	private VideoView mVideoView = null;
+	private FullScreenVideoView mFullVideoView = null;
 	private ImageView mImageLike;
 	private TextView mTextLikeAll, mTextLookAll;
 	private LinearLayout mLayoutShowAll = null;
@@ -87,6 +107,36 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private VideoJson mVideoJson = null;
 	private List<VideoJson> mVideoJsonList = null;
 	private String ztId = null;
+	
+	/**视频播放/暂停**/
+	private ImageView mPlayBtn = null;
+	private SeekBar mSeekBar = null;
+	private LinearLayout mLoadingLayout = null;
+	private ImageView mLoading = null;
+	
+	/** 屏幕宽高 */
+	private float width;
+	private float height;
+	/** 加载中动画对象 */
+	private AnimationDrawable mAnimationDrawable = null;
+	private boolean isShow = false;
+	private RelativeLayout mBottomLayout = null;
+	/** 缓冲标识 */
+	private boolean isBuffering = false;
+	/** 播放器报错标识 */
+	private boolean error = false;
+	/** 视频播放时间 */
+	private int playTime = 0;
+	/** 播放重置标识 */
+	private boolean reset = false;
+	/** 网络连接超时 */
+	private int networkConnectTimeOut = 0;
+	private int duration = 0;
+	private boolean isStop = false;
+	/** 暂停标识 */
+	private boolean isPause = false;
+	/**点击标识**/
+	private boolean isCilck = false;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -124,6 +174,21 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		super.onResume();
 		// 注册分享监听
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videodetailshare", this);
+		if (isStop) {
+			isStop = false;
+			showLoading();
+			mImagePrepare.setVisibility(View.VISIBLE);
+		}
+		if (isPause) {
+			isPause = false;
+			if (playTime != 0) {
+				if (0 != duration) {
+					mSeekBar.setProgress(playTime * 100 / duration);
+				}
+				mFullVideoView.seekTo(playTime);
+			}
+			mFullVideoView.start();
+		}
 	}
 
 	// 初始化
@@ -138,7 +203,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		// 视频内容
 		mPrepareLayout = (RelativeLayout) findViewById(R.id.mPlayerLayout);
 		mImagePrepare = (ImageView) findViewById(R.id.mPreLoading);
-		mVideoView = (VideoView) findViewById(R.id.video_detail_videoview);
+		mFullVideoView = (FullScreenVideoView) findViewById(R.id.video_detail_videoview);
 		mImageLike = (ImageView) findViewById(R.id.video_square_detail_like);
 		mTextLikeAll = (TextView) findViewById(R.id.video_detail_like_all);
 		mTextLookAll = (TextView) findViewById(R.id.video_detail_look_all);
@@ -152,13 +217,26 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mTextCommentSecond = (TextView) findViewById(R.id.video_square_comment_second);
 		mTextCommenThird = (TextView) findViewById(R.id.video_square_comment_three);
 		mTextLink = (TextView) findViewById(R.id.video_square_link);
-
+		//点赞、评论、分享
 		mLayoutPraise = (LinearLayout) findViewById(R.id.praiseLayout);
 		mLayoutComment = (LinearLayout) findViewById(R.id.commentLayout);
 		mLayoutShare = (LinearLayout) findViewById(R.id.shareLayout);
+		//视频播放/暂停
+		mPlayBtn = (ImageView) findViewById(R.id.play_btn);
+		mSeekBar = (SeekBar) findViewById(R.id.seekbar);
+		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
+		mLoading = (ImageView) findViewById(R.id.mLoading);
 
 		mTextTitle.setText("视频详情");
-
+		
+		width = DensityUtil.getWidthInPx(this);
+		height = DensityUtil.getHeightInPx(this);
+		
+		mImagePrepare.setBackgroundResource(R.drawable.tacitly_pic);
+		mImagePrepare.setVisibility(View.VISIBLE);
+		mLoading.setBackgroundResource(R.anim.video_loading);
+		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
+		
 		// 点击事件
 		mBackBtn.setOnClickListener(this);
 		mLayoutShowAll.setOnClickListener(this);
@@ -166,8 +244,67 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mLayoutPraise.setOnClickListener(this);
 		mLayoutComment.setOnClickListener(this);
 		mLayoutShare.setOnClickListener(this);
+		mPlayBtn.setOnClickListener(this);
+		mPrepareLayout.setOnClickListener(this);
+		
+		mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
+		mFullVideoView.setOnPreparedListener(this);
+		mFullVideoView.setOnErrorListener(this);
+		if (GolukUtils.getSystemSDK() >= 17) {
+			try {
+				mFullVideoView.setOnInfoListener(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		mFullVideoView.setOnCompletionListener(this);
+		showLoading();
 		
 	}
+	
+	@SuppressLint("HandlerLeak")
+	private Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+			case 1:
+				if (error) {
+					return;
+				}
+				if (null == mFullVideoView) {
+					return;
+				}
+				netWorkTimeoutCheck();
+				if (mFullVideoView.getCurrentPosition() > 0) {
+					if ( !mFullVideoView.isPlaying() ) {
+						return;
+					}
+					if(!isBuffering) {
+						hideLoading();
+					}
+					playTime = 0;
+					duration = mFullVideoView.getDuration();
+					int progress = mFullVideoView.getCurrentPosition() * 100 / mFullVideoView.getDuration();
+					mSeekBar.setProgress(progress);
+					if (mFullVideoView.getCurrentPosition() > mFullVideoView.getDuration() - 100) {
+						mSeekBar.setProgress(0);
+					}
+					mPlayBtn.setImageResource(R.drawable.player_pause_btn);
+				} else {
+					mPlayBtn.setImageResource(R.drawable.player_play_btn);
+					if(0 != duration) {
+						mSeekBar.setProgress(playTime*100/duration);
+					}else {
+						mSeekBar.setProgress(0);
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	};
 
 	@Override
 	public void onClick(View view) {
@@ -212,6 +349,22 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				mCustomLoadingDialog.close();
 			}
 			break;
+		case R.id.play_btn:
+			if (isBuffering) {
+				return;
+			}
+			if (mFullVideoView.isPlaying()) {
+				mFullVideoView.pause();
+				mPlayBtn.setImageResource(R.drawable.player_play_btn);
+			} else {
+				mFullVideoView.start();
+				mPlayBtn.setImageResource(R.drawable.player_pause_btn);
+			}
+			break;
+		case R.id.mPlayerLayout:
+			GolukDebugUtils.e("videoview", "------------click--------video_detail_videoview--------");
+			mPlayBtn.setVisibility(View.VISIBLE);
+			break;
 		default:
 			break;
 		}
@@ -221,7 +374,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	 * 获取网络视频详情数据
 	 */
 	public void getVideoDetailData() {
-		boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData("zt001");
+		boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 		if (!b) {
 			mCustomStartDialog.close();
 		}
@@ -240,19 +393,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mTextName.setText(mVideoJson.data.avideo.user.nickname);
 		mTextTime.setText(formatTime(mVideoJson.data.avideo.video.sharingtime));
 		// TODO 视频播放
-		Uri uri = null;
-		if ("1".equals(mVideoJson.data.avideo.video.type)) {
-			uri = Uri.parse(mVideoJson.data.avideo.video.livesdkaddress);
-		} else if ("2".equals(mVideoJson.data.avideo.video.type)) {
-			uri = Uri.parse(mVideoJson.data.avideo.video.ondemandwebaddress);
+		if (!TextUtils.isEmpty(mVideoJson.data.avideo.video.picture)) {
+			BitmapManager.getInstance().mBitmapUtils.display(mImagePrepare, mVideoJson.data.avideo.video.picture);
 		}
-		mImagePrepare.setVisibility(View.GONE);
-		mVideoView.setVisibility(View.VISIBLE);
-		mVideoView.setVideoURI(uri);
-		MediaController controller = new MediaController(this);
-		mVideoView.setMediaController(controller);
-		mVideoView.requestFocus();
-		mVideoView.start();
 		// 点赞数、评论数、观看数
 		DecimalFormat df = new DecimalFormat("#,###");
 		int wg_click = Integer.parseInt(mVideoJson.data.avideo.video.clicknumber);
@@ -296,6 +439,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		// TODO 外链
 
+		playVideo();
 	}
 
 	/**
@@ -432,7 +576,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			} else {
 				mTextLikeAll.setText("100,000+");
 			}
-
 			mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
 			isPraise = "1";
 			GolukApplication.getInstance().getVideoSquareManager()
@@ -463,24 +606,220 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 	}
 
+	/**
+	 * 显示加载中布局
+	 */
+	private void showLoading() {
+		if (!isShow) {
+			isShow = true;
+			mLoadingLayout.setVisibility(View.VISIBLE);
+			mLoading.setVisibility(View.VISIBLE);
+			mLoading.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (mAnimationDrawable != null) {
+						if (!mAnimationDrawable.isRunning()) {
+							mAnimationDrawable.start();
+						}
+					}
+				}
+			}, 100);
+		}
+	}
+	
+	private void playVideo() {
+		Uri uri = null;
+		if ("1".equals(mVideoJson.data.avideo.video.type)) {
+			uri = Uri.parse(mVideoJson.data.avideo.video.livesdkaddress);
+		} else if ("2".equals(mVideoJson.data.avideo.video.type)) {
+			uri = Uri.parse(mVideoJson.data.avideo.video.ondemandwebaddress);
+		}
+		mFullVideoView.setVideoURI(uri);
+		mFullVideoView.requestFocus();
+	}
+	
+	/**
+	 * 隐藏加载中显示画面
+	 * 
+	 * @author xuhw
+	 * @date 2015年3月8日
+	 */
+	private void hideLoading() {
+		if (isShow) {
+			isShow = false;
+			mImagePrepare.setVisibility(View.GONE);
+			if (mAnimationDrawable != null) {
+				if (mAnimationDrawable.isRunning()) {
+					mAnimationDrawable.stop();
+				}
+			}
+			mLoadingLayout.setVisibility(View.GONE);
+		}
+	}
+	
+	/**
+	 * 提示对话框
+	 * @param msg 提示信息
+	 */
+	private void dialog(String msg) {
+		CustomDialog mCustomDialog = new CustomDialog(this);
+		mCustomDialog.setCancelable(false);
+		mCustomDialog.setMessage(msg, Gravity.CENTER);
+		mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+			@Override
+			public void onClickListener() {
+				finish();
+			}
+		});
+		mCustomDialog.show();
+	}
+	private OnSeekBarChangeListener mSeekBarChangeListener = new OnSeekBarChangeListener() {
+		@Override
+		public void onStopTrackingTouch(SeekBar seekBar) {
+		}
+		@Override
+		public void onStartTrackingTouch(SeekBar seekBar) {
+		}
+		@Override
+		public void onProgressChanged(SeekBar seekBar, int progress,
+				boolean fromUser) {
+			if (fromUser) {
+				int time = progress * mFullVideoView.getDuration() / 100;
+				mFullVideoView.seekTo(time);
+			}
+		}
+	};
+	
 	@Override
-	protected void onStart() {
-		super.onStart();
+	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
+		// TODO onInfoListener
+		switch (arg1) {
+		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+			isBuffering = true;
+			if (0 == mFullVideoView.getCurrentPosition()) {
+				mImagePrepare.setVisibility(View.VISIBLE);
+			}
+			showLoading();
+			break;
+		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+			isBuffering = false;
+			hideLoading();
+			break;
+		default:
+			break;
+	}
+		return false;
+	}
+
+	@Override
+	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+		// TODO onErrorListener
+		if(error){
+			return false;
+		}
+		String msg = "播放错误";
+		switch (arg1) {
+			case 1:
+			case -1010:
+				msg = "视频出错，请重试！";
+				break;
+			case -110:
+				msg = "网络访问异常，请重试！";
+				break;
+				
+			default:
+				break;
+		}
+		if (!UserUtils.isNetDeviceAvailable(mContext)) {
+			msg = "网络访问异常，请重试！";
+		}
+		error=true;
+		hideLoading();
+		mImagePrepare.setVisibility(View.VISIBLE);
+		dialog(msg);
+		return false;
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer arg0) {
+		// TODO OnCompletionListener
+		if(error){
+			return;
+		}
+		mFullVideoView.seekTo(0);
+		mPlayBtn.setImageResource(R.drawable.player_play_btn);
+		mSeekBar.setProgress(0);
+	}
+
+	@Override
+	public void onPrepared(MediaPlayer mp) {
+		// TODO OnPreparedListener
+		mFullVideoView.setVideoWidth(mp.getVideoWidth());
+		mFullVideoView.setVideoHeight(mp.getVideoHeight());
+
+		mFullVideoView.start();
+		if (playTime != 0) {
+			mFullVideoView.seekTo(playTime);
+		}
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				mHandler.sendEmptyMessage(1);
+			}
+		}, 0, 1000);
+	}
+	/**
+	 * 无网络超时检查
+	 */
+	private void netWorkTimeoutCheck() {
+		if (!UserUtils.isNetDeviceAvailable(mContext)) {
+			networkConnectTimeOut++;
+			if (networkConnectTimeOut > 15) {
+				if (!reset) {
+					hideLoading();
+					mImagePrepare.setVisibility(View.VISIBLE);
+					dialog("网络访问异常，请重试！");
+					if(null != mFullVideoView) {
+						mFullVideoView.stopPlayback();
+						mFullVideoView = null;
+					}
+					return;
+				}
+			}
+		}else{
+			networkConnectTimeOut = 0;
+		}
 	}
 	
 	@Override
 	protected void onPause() {
-		if(mVideoView != null){
-			if(mVideoView.isPlaying()){
-				
-			}
-		}
 		super.onPause();
+		if (mFullVideoView.isPlaying()) {
+			isPause = true;
+			playTime = mFullVideoView.getCurrentPosition();
+			mFullVideoView.pause();
+		}
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
+		if (isBackground(this)) {
+			isStop = true;
+		}
+	}
+	
+	public boolean isBackground(final Context context) {
+		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
+		if (!tasks.isEmpty()) {
+			ComponentName topActivity = tasks.get(0).topActivity;
+			if (!topActivity.getPackageName().equals(context.getPackageName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
