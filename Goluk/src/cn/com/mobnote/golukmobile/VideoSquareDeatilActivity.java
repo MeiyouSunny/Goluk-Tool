@@ -98,6 +98,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private TextView mTextAutor, mTextCommentCount, mTextCommentFirst, mTextCommentSecond, mTextCommenThird;
 	private TextView mTextLink = null;
 	private LinearLayout mLayoutPraise, mLayoutComment, mLayoutShare;
+	/**所有数据**/
+	private LinearLayout mLayoutAllInfo = null;
 
 	/** 数据 **/
 	public CustomLoadingDialog mCustomLoadingDialog, mCustomStartDialog;
@@ -225,6 +227,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mSeekBar = (SeekBar) findViewById(R.id.seekbar);
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
+		mLayoutAllInfo = (LinearLayout) findViewById(R.id.video_square_detail_show_allinfo);
 
 		mTextTitle.setText("视频详情");
 
@@ -376,6 +379,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 		if (!b) {
 			mCustomStartDialog.close();
+		}else{
+			mLayoutAllInfo.setVisibility(View.GONE);
 		}
 	}
 
@@ -537,6 +542,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						+ "=param1=" + param1 + "=param2=" + param2);
 				if (RESULE_SUCESS == msg) {
 					mCustomStartDialog.close();
+					mLayoutAllInfo.setVisibility(View.VISIBLE);
 					String jsonStr = (String) param2;
 					getData(jsonStr);
 				} else {

@@ -1,78 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/user_login_bg"
-    android:orientation="vertical" >
+    android:background="@color/user_login_bg">
 
     <!-- title -->
 
-    <include layout="@layout/user_title" />
-    <!-- 用户信息 -->
+    <include layout="@layout/user_title"
+        android:id="@+id/video_square_detail_head" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/video_square_detail_show_allinfo"
         android:layout_width="match_parent"
-        android:layout_height="50dp" >
+        android:layout_height="match_parent"
+        android:layout_below="@id/video_square_detail_head"
+        android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/user_head"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/videodetail_portrait"
-            android:scaleType="fitXY" />
+        <!-- 用户信息 -->
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/user_head"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
 
-            <TextView
-                android:id="@+id/user_name"
+            <ImageView
+                android:id="@+id/user_head"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/videodetail_portrait"
+                android:scaleType="fitXY" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxEms="10"
-                android:singleLine="true"
-                android:text="极路客"
-                android:textColor="#1163a2"
-                android:textSize="14sp" />
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/user_head"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/user_time"
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    android:text="极路客"
+                    android:textColor="#1163a2"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/user_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="03-19  13:53"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+        <!-- 视频 -->
+
+        <RelativeLayout
+            android:id="@+id/mPlayerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="205dp" >
+
+            <ImageView
+                android:id="@+id/mPreLoading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="03-19  13:53"
-                android:textColor="#888888"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </RelativeLayout>
-    <!-- 视频 -->
+                android:background="@drawable/tacitly_pic"
+                android:scaleType="fitXY" />
 
-    <RelativeLayout
-        android:id="@+id/mPlayerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="205dp" >
-
-        <ImageView
-            android:id="@+id/mPreLoading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/tacitly_pic"
-            android:scaleType="fitXY" />
-
-            <cn.com.mobnote.golukmobile.player.FullScreenVideoView 
+            <cn.com.mobnote.golukmobile.player.FullScreenVideoView
                 android:id="@+id/video_detail_videoview"
                 android:layout_width="match_parent"
                 android:layout_height="205dp"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true" />
 
             <!-- 暂停按钮 -->
+
             <ImageView
                 android:id="@+id/play_btn"
                 android:layout_width="wrap_content"
@@ -81,11 +90,12 @@
                 android:visibility="gone" />
 
             <!-- 进度条 -->
+
             <RelativeLayout
+                android:id="@+id/bottom_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:id="@+id/bottom_layout" >
+                android:layout_alignParentBottom="true" >
 
                 <SeekBar
                     android:id="@+id/seekbar"
@@ -97,311 +107,311 @@
                     android:progress="0"
                     android:progressDrawable="@drawable/player_seekbar_style"
                     android:thumb="@drawable/player_time_control_btn" />
-
             </RelativeLayout>
             <!-- loading -->
+
             <LinearLayout
-		            android:id="@+id/mLoadingLayout"
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="center"
-		            android:layout_centerInParent="true"
-		            android:orientation="vertical" 
-		            android:visibility="gone">
-		
-		            <ImageView
-		                android:id="@+id/mLoading"
-		                android:layout_width="80dp"
-		                android:layout_height="80dp"
-		                android:layout_gravity="center"/>
-		
-		            <TextView
-		                android:id="@+id/mLoadingText"
-		                android:layout_width="fill_parent"
-		                android:layout_height="wrap_content"
-		                android:gravity="center"
-		                android:layout_marginTop="20dp"
-		                android:text="视频加载中，请稍候..."
-		                android:textColor="#ffffff"
-		                android:textSize="12sp" /> 
-		        </LinearLayout>
+                android:id="@+id/mLoadingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone" >
 
-    </RelativeLayout>
-    <!-- 点赞、评论、分享 -->
+                <ImageView
+                    android:id="@+id/mLoading"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center" />
 
-    <RelativeLayout
-        android:id="@+id/functionLayouyt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="16dp" >
+                <TextView
+                    android:id="@+id/mLoadingText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="视频加载中，请稍候..."
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+        <!-- 点赞、评论、分享 -->
 
-        <LinearLayout
-            android:id="@+id/praiseLayout"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/functionLayouyt"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical" >
+            android:paddingBottom="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="16dp" >
 
-            <ImageView
-                android:id="@+id/video_square_detail_like"
-                android:layout_width="20dp"
-                android:layout_height="18dp"
-                android:background="@drawable/videodetail_like"
-                android:contentDescription="@string/def" />
-
-            <TextView
-                android:id="@+id/zanText"
+            <LinearLayout
+                android:id="@+id/praiseLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="4dp"
-                android:text="赞"
-                android:textColor="#888888"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical" >
 
-        <LinearLayout
-            android:id="@+id/commentLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical" >
+                <ImageView
+                    android:id="@+id/video_square_detail_like"
+                    android:layout_width="20dp"
+                    android:layout_height="18dp"
+                    android:background="@drawable/videodetail_like"
+                    android:contentDescription="@string/def" />
 
-            <ImageView
-                android:id="@+id/video_square_detail_comment"
-                android:layout_width="20dp"
-                android:layout_height="18dp"
-                android:background="@drawable/videodetail_comment"
-                android:contentDescription="@string/def" />
+                <TextView
+                    android:id="@+id/zanText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="4dp"
+                    android:text="赞"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/commentText"
+            <LinearLayout
+                android:id="@+id/commentLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="4dp"
-                android:text="评论"
-                android:textColor="#888888"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical" >
 
-        <LinearLayout
-            android:id="@+id/shareLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical" >
+                <ImageView
+                    android:id="@+id/video_square_detail_comment"
+                    android:layout_width="20dp"
+                    android:layout_height="18dp"
+                    android:background="@drawable/videodetail_comment"
+                    android:contentDescription="@string/def" />
 
-            <ImageView
-                android:id="@+id/video_square_detail_share"
-                android:layout_width="20dp"
-                android:layout_height="18dp"
-                android:background="@drawable/videodetail_share"
-                android:contentDescription="@string/def" />
+                <TextView
+                    android:id="@+id/commentText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="4dp"
+                    android:text="评论"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/shareText"
+            <LinearLayout
+                android:id="@+id/shareLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="4dp"
-                android:text="分享"
-                android:textColor="#888888"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </RelativeLayout>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" >
+                <ImageView
+                    android:id="@+id/video_square_detail_share"
+                    android:layout_width="20dp"
+                    android:layout_height="18dp"
+                    android:background="@drawable/videodetail_share"
+                    android:contentDescription="@string/def" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal" >
+                <TextView
+                    android:id="@+id/shareText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="4dp"
+                    android:text="分享"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/videodetail_likeicon"
-                android:contentDescription="@string/def" />
-
-            <TextView
-                android:id="@+id/video_detail_like_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
-                android:text="0"
-                android:textColor="#1163a2"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="-10dp"
-                android:text="赞"
-                android:textColor="#1163a2"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/video_detail_look_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:text="0"
-                android:textColor="#888888"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="-10dp"
-                android:text="围观"
-                android:textColor="#888888"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/video_square_has_comment_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <!-- 评论内容 -->
-
-        <LinearLayout
-            android:id="@+id/video_detail_comment_content"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/video_square_author"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="前往"
-                android:textSize="14sp" />
+            android:layout_marginRight="10dp" >
 
             <LinearLayout
-                android:id="@+id/video_square_show_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/videodetail_likeicon"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:id="@+id/video_detail_like_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
+                    android:text="0"
+                    android:textColor="#1163a2"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="-10dp"
+                    android:text="赞"
+                    android:textColor="#1163a2"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:orientation="horizontal" >
 
                 <TextView
+                    android:id="@+id/video_detail_look_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="查看所有 "
-                    android:textColor="#888888"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/video_square_comment_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
                     android:text="0"
                     android:textColor="#888888"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" 条评论"
+                    android:layout_marginLeft="-10dp"
+                    android:text="围观"
                     android:textColor="#888888"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
-            <!-- 具体内容 -->
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/video_square_has_comment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <!-- 评论内容 -->
 
             <LinearLayout
+                android:id="@+id/video_detail_comment_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/video_square_comment_first"
+                    android:id="@+id/video_square_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="第一条评论"
+                    android:text="前往"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/video_square_comment_second"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/video_square_show_all"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="第二条评论"
-                    android:textSize="14sp" />
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/video_square_comment_three"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="查看所有 "
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/video_square_comment_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" 条评论"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <!-- 具体内容 -->
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="第三条评论"
-                    android:textSize="14sp" />
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/video_square_comment_first"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="第一条评论"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/video_square_comment_second"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="第二条评论"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/video_square_comment_three"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="第三条评论"
+                        android:textSize="14sp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+        <!-- 没有评论 -->
+
+        <RelativeLayout
+            android:id="@+id/video_square_no_comment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:layout_marginTop="60dp"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/video_square_no_comment_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/videodetail_sofaiconpng" />
+        </RelativeLayout>
+
+        <!-- 外连接 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" >
+
+            <TextView
+                android:id="@+id/video_square_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="goluk.com"
+                android:textColor="#1163a2"
+                android:textSize="14sp" />
+        </RelativeLayout>
     </LinearLayout>
-    <!-- 没有评论 -->
 
-    <RelativeLayout
-        android:id="@+id/video_square_no_comment_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:layout_marginTop="60dp"
-        android:visibility="gone" >
-
-        <ImageView
-            android:id="@+id/video_square_no_comment_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/videodetail_sofaiconpng" />
-    </RelativeLayout>
-
-    <!-- 外连接 -->
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" >
-
-        <TextView
-            android:id="@+id/video_square_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="goluk.com"
-            android:textColor="#1163a2"
-            android:textSize="14sp" />
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
