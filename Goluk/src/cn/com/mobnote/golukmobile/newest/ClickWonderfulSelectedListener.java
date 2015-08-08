@@ -26,6 +26,7 @@ public class ClickWonderfulSelectedListener implements OnClickListener{
 		if ("1".equals(mJXListItemDataInfo.ztype)) {//专题
 			intent = new Intent(mContext, SpecialListActivity.class);
 			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
+			intent.putExtra("title", mJXListItemDataInfo.ztitle);
 		}else if ("2".equals(mJXListItemDataInfo.ztype)) {//tag
 			intent = new Intent(mContext, ClusterListActivity.class);
 			intent.putExtra("ztid", mJXListItemDataInfo.ztid);

@@ -675,6 +675,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onDestroy();
 		}
+		if (null != mVideoSquareActivity) {
+			mVideoSquareActivity.onResume();
+		}
 	}
 
 	@Override

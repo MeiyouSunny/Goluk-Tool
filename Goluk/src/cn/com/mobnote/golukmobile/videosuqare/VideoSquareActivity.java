@@ -152,6 +152,12 @@ public class VideoSquareActivity implements OnClickListener {
 			mVideoSquareAdapter.onResume();
 		}
 	}
+	
+	public void onPause() {
+		if (null != mVideoSquareAdapter) {
+			mVideoSquareAdapter.onPause();
+		}
+	}
 
 	public void onStop() {
 		if (null != mVideoSquareAdapter) {
