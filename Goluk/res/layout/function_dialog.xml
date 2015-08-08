@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+android:orientation="vertical"
+android:layout_width="260dp"
+android:layout_height="fill_parent"
+android:background="@drawable/custom_dialog_bg">
+
+    <TextView   
+		android:id="@+id/tuijian"
+		android:text="推荐这个视频"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/> 
+	    
+    <TextView   
+	    android:layout_height="1dp" 
+	    android:layout_width="fill_parent"
+	    android:background="#cccccc"/> 
+	    
+     <TextView   
+		android:id="@+id/jubao"
+		android:text="举报不良内容"
+		android:textSize ="15sp"
+		android:textColor="#ff0000"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/> 
+	    
+     <TextView   
+	    android:layout_height="1dp" 
+	    android:layout_width="fill_parent"
+	    android:background="#cccccc"/> 
+	    
+	    <TextView   
+		android:id="@+id/cancle"
+		android:text="取消"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/> 
+    
+    
+</LinearLayout>

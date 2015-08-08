@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+    <RelativeLayout 
+       	android:id="@+id/titlelayout"
+        android:layout_width="match_parent"
+		android:layout_height="46dp"
+		android:background="#000000"
+        >
+        
+        <TextView   
+		android:id="@+id/cancle"
+		android:text="取消"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+		android:paddingLeft="10dp"
+	    android:layout_height="match_parent" 
+	    android:layout_width="wrap_content"/> 
+	    
+        
+        <TextView   
+		android:text="推荐这个视频"
+		android:textSize ="18sp"
+		android:textColor="#ffffff"
+		android:gravity="center" 
+		android:layout_centerInParent="true"
+	    android:layout_height="match_parent" 
+	    android:layout_width="wrap_content"/> 
+	    
+        <TextView   
+		android:id="@+id/tuijian"
+		android:text="推荐"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+		android:paddingRight="10dp"
+		android:layout_alignParentRight="true"
+	    android:layout_height="match_parent" 
+	    android:layout_width="wrap_content"/> 
+        
+    </RelativeLayout>
+
+    <EditText   
+		android:id="@+id/text"
+		android:layout_below="@+id/titlelayout"
+		android:hint="请填写视频描述"
+		android:textColorHint="#ffffff"
+		android:textSize ="15sp"
+		android:textColor="#ffffff"
+		android:padding="10dp"
+		android:gravity="top|left"
+	    android:layout_height="match_parent" 
+	    android:layout_width="match_parent"
+	    android:background="#80000000"/> 
+	    
+     <TextView   
+       	android:id="@+id/number"
+		android:text="50"
+		android:textSize ="15sp"
+		android:textColor="#ffffff"
+		android:gravity="right"
+		android:padding="10dp"
+		android:layout_alignBottom="@+id/text"
+		android:layout_alignParentRight="true"
+	    android:layout_height="wrap_content" 
+	    android:layout_width="wrap_content"/> 
+    
+</RelativeLayout>

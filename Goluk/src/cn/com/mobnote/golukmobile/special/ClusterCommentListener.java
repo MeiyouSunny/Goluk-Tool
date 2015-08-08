@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.special;
 
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import android.content.Context;
@@ -19,18 +20,25 @@ public class ClusterCommentListener implements OnClickListener{
 	}
 	
 	@Override
-	public void onClick(View arg0) {
-		Intent intent = new Intent(mContext, CommentActivity.class);
-		intent.putExtra(CommentActivity.COMMENT_KEY_MID, clusterInfo.videoid);
-		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
-		intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, showft);
-		boolean iscomment = false;
-		if ("1".equals(clusterInfo.iscomment)) {
-			iscomment = true;
+	public void onClick(View view) {
+		switch (view.getId()) {
+		case R.id.commentLayout:
+		case R.id.totalcomments:
+			Intent intent = new Intent(mContext, CommentActivity.class);
+			intent.putExtra(CommentActivity.COMMENT_KEY_MID, clusterInfo.videoid);
+			intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
+			intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, showft);
+			boolean iscomment = false;
+			if ("1".equals(clusterInfo.iscomment)) {
+				iscomment = true;
+			}
+			intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, iscomment);
+			
+			mContext.startActivity(intent);
+			break;
+		default:
+			break;
 		}
-		intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, iscomment);
-		
-		mContext.startActivity(intent);
 	}
 	
 }
