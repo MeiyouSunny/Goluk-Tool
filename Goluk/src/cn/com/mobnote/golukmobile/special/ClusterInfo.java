@@ -63,6 +63,11 @@ public class ClusterInfo {
 	public String iscomment;
 	
 	/**
+	 * 是否点赞过
+	 */
+	public String ispraise;
+	
+	/**
 	 * 评论1
 	 */
 	public CommentInfo ci1;

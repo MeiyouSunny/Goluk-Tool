@@ -204,17 +204,14 @@ public class SpecialListActivity extends BaseActivity implements
 		case R.id.title_share:
 			if (null == mCustomProgressDialog) {
 				mCustomProgressDialog = new CustomLoadingDialog(this, null);
-				mCustomProgressDialog.show();
-			} else {
-				mCustomProgressDialog.show();
 			}
+			mCustomProgressDialog.show();
 			boolean result = GolukApplication.getInstance()
 					.getVideoSquareManager().getTagShareUrl("1", ztid);
 			if (result == false) {
 				mCustomProgressDialog.close();
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
-		default:
 			break;
 		}
 	}
@@ -417,9 +414,11 @@ public class SpecialListActivity extends BaseActivity implements
 						
 						if (this != null && !this.isFinishing()) {
 							mCustomProgressDialog.close();
-							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
+							CustomShareBoard shareBoard = new CustomShareBoard(SpecialListActivity.this, sharePlatform, shareurl, coverurl,
 									describe, ttl, bitmap, realDesc);
-							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							System.out.println("我日我日我日====bitmap="+bitmap);
+							shareBoard.showAtLocation(SpecialListActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							System.out.println("我擦我擦我擦");
 						}
 					} else {
 						GolukUtils.showToast(this, "网络异常，请检查网络");

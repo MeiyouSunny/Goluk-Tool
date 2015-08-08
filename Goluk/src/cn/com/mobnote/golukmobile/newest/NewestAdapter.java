@@ -6,10 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -43,6 +45,7 @@ public class NewestAdapter extends BaseAdapter {
 	private boolean lock = false;
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
+	private NewestListView mNewestListView = null;
 	
 	public NewestAdapter(Context context) {
 		mContext = context;
@@ -171,10 +174,10 @@ public class NewestAdapter extends BaseAdapter {
 	private void initListener(int index) {
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 		
+		holder.shareLayout.setOnClickListener(new ClickShareListener(mContext, mVideoSquareInfo, mNewestListView));
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));
-//		holder.function.setOnClickListener(new ClickCategoryListener(mVideoSquareInfo.mVideoEntity.videoid));
-		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mVideoSquareInfo.mVideoEntity.videoid));
+		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView));
 		
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
@@ -297,12 +300,15 @@ public class NewestAdapter extends BaseAdapter {
         view.setText(style);  
 	}
 	
+	RelativeLayout mHeadView;
 	private View getHeadView() {
 		int imagewidth = (int)((width - 10*density)/2);
 		int imageheight = (int)(imagewidth * 0.56);
-		RelativeLayout view = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
-		RelativeLayout main = (RelativeLayout)view.findViewById(R.id.main);
-		RelativeLayout liveLayout = (RelativeLayout)view.findViewById(R.id.liveLayout);
+		if (null == mHeadView) {
+			mHeadView = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
+		}
+		RelativeLayout main = (RelativeLayout)mHeadView.findViewById(R.id.main);
+		RelativeLayout liveLayout = (RelativeLayout)mHeadView.findViewById(R.id.liveLayout);
 		
 		LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
 		if (null != mLiveInfo) {
@@ -311,11 +317,11 @@ public class NewestAdapter extends BaseAdapter {
 			RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
 			liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
 			liveLayout.setLayoutParams(liveLayoutParams);
-			RelativeLayout imagelayout = (RelativeLayout)view.findViewById(R.id.imagelayout);
+			RelativeLayout imagelayout = (RelativeLayout)mHeadView.findViewById(R.id.imagelayout);
 			loadImage(imagelayout, mLiveInfo.pic);
 			
-			LinearLayout mLookLayout = (LinearLayout)view.findViewById(R.id.mLookLayout);
-			TextView mLookNum = (TextView)view.findViewById(R.id.mLookNum);
+			LinearLayout mLookLayout = (LinearLayout)mHeadView.findViewById(R.id.mLookLayout);
+			TextView mLookNum = (TextView)mHeadView.findViewById(R.id.mLookNum);
 			if ("-1".equals(mLiveInfo.number)) {
 				mLookLayout.setVisibility(View.GONE);
 			}else {
@@ -360,7 +366,7 @@ public class NewestAdapter extends BaseAdapter {
 			
 		}
 		
-		return view;
+		return mHeadView;
 	}
 	
 	private void loadImage(RelativeLayout layout, String url) {
@@ -434,18 +440,6 @@ public class NewestAdapter extends BaseAdapter {
 		this.notifyDataSetChanged();
 	}
 
-	public void onResume() {
-		
-	}
-
-	public void onStop() {
-	
-	}
-
-	public void onDestroy() {
-		
-	}
-	
 	@SuppressLint("SimpleDateFormat")
 	public String formatTime(String date) {
 		String time = "";
@@ -465,6 +459,23 @@ public class NewestAdapter extends BaseAdapter {
 			}
 		}
 		return time;
+	}
+	
+	public void setNewestLiseView(NewestListView view) {
+		this.mNewestListView = view;
+	}
+	
+	public void updateClickPraiseNumber(VideoSquareInfo info) {
+		for (int i=0; i<mDataList.size(); i++) {
+			VideoSquareInfo vs = mDataList.get(i);
+			if (vs.id.equals(info.id)) {
+				mDataList.get(i).mVideoEntity.praisenumber = info.mVideoEntity.praisenumber;
+				mDataList.get(i).mVideoEntity.ispraise = info.mVideoEntity.ispraise;
+				this.notifyDataSetChanged();
+				break;
+			}
+		}
+		
 	}
 
 }
