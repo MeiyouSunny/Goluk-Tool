@@ -98,6 +98,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private TextView mTextAutor, mTextCommentCount, mTextCommentFirst, mTextCommentSecond, mTextCommenThird;
 	private TextView mTextLink = null;
 	private LinearLayout mLayoutPraise, mLayoutComment, mLayoutShare;
+	/**所有数据**/
+	private LinearLayout mLayoutAllInfo = null;
 
 	/** 数据 **/
 	public CustomLoadingDialog mCustomLoadingDialog, mCustomStartDialog;
@@ -225,6 +227,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mSeekBar = (SeekBar) findViewById(R.id.seekbar);
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
+		mLayoutAllInfo = (LinearLayout) findViewById(R.id.video_square_detail_show_allinfo);
 
 		mTextTitle.setText("视频详情");
 
@@ -331,7 +334,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		// 外链接
 		case R.id.video_square_link:
-
+			Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
+			mBugLayout.putExtra("url", "http://www.goluk.com");
+			startActivity(mBugLayout);
 			break;
 		// 点赞
 		case R.id.praiseLayout:
@@ -361,7 +366,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 			break;
 		case R.id.mPlayerLayout:
-			GolukDebugUtils.e("videoview", "------------click--------video_detail_videoview--------");
 			mPlayBtn.setVisibility(View.VISIBLE);
 			break;
 		default:
@@ -376,6 +380,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 		if (!b) {
 			mCustomStartDialog.close();
+		}else{
+			mLayoutAllInfo.setVisibility(View.GONE);
 		}
 	}
 
@@ -537,6 +543,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						+ "=param1=" + param1 + "=param2=" + param2);
 				if (RESULE_SUCESS == msg) {
 					mCustomStartDialog.close();
+					mLayoutAllInfo.setVisibility(View.VISIBLE);
 					String jsonStr = (String) param2;
 					getData(jsonStr);
 				} else {
@@ -695,7 +702,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
-		// TODO onInfoListener
+		// TODO onInfoListener有警告或者错误信息时调用（开始缓冲、缓冲结束）
 		switch (arg1) {
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			isBuffering = true;
@@ -745,7 +752,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
-		// TODO OnCompletionListener
+		// TODO OnCompletionListener视频播放完后调用
 		if (error) {
 			return;
 		}
