@@ -75,8 +75,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  */
 @SuppressLint("NewApi")
-public class VideoSquareDeatilActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn 
-		,OnInfoListener,OnErrorListener,OnCompletionListener,OnPreparedListener{
+public class VideoSquareDeatilActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn,
+		OnInfoListener, OnErrorListener, OnCompletionListener, OnPreparedListener {
 
 	/** title **/
 	private ImageButton mBackBtn = null;
@@ -107,13 +107,13 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private VideoJson mVideoJson = null;
 	private List<VideoJson> mVideoJsonList = null;
 	private String ztId = null;
-	
-	/**视频播放/暂停**/
+
+	/** 视频播放/暂停 **/
 	private ImageView mPlayBtn = null;
 	private SeekBar mSeekBar = null;
 	private LinearLayout mLoadingLayout = null;
 	private ImageView mLoading = null;
-	
+
 	/** 屏幕宽高 */
 	private float width;
 	private float height;
@@ -135,7 +135,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private boolean isStop = false;
 	/** 暂停标识 */
 	private boolean isPause = false;
-	/**点击标识**/
+	/** 点击标识 **/
 	private boolean isCilck = false;
 
 	@SuppressLint("HandlerLeak")
@@ -161,10 +161,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 
-		// 注册视频详情监听
+		// 注册监听
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
-			mVideoSquareManager.addVideoSquareManagerListener("videodetail", this);
+			mVideoSquareManager.addVideoSquareManagerListener("videodetailshare", this);
 		}
 
 	}
@@ -172,8 +172,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// 注册分享监听
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videodetailshare", this);
+
 		if (isStop) {
 			isStop = false;
 			showLoading();
@@ -217,26 +216,26 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mTextCommentSecond = (TextView) findViewById(R.id.video_square_comment_second);
 		mTextCommenThird = (TextView) findViewById(R.id.video_square_comment_three);
 		mTextLink = (TextView) findViewById(R.id.video_square_link);
-		//点赞、评论、分享
+		// 点赞、评论、分享
 		mLayoutPraise = (LinearLayout) findViewById(R.id.praiseLayout);
 		mLayoutComment = (LinearLayout) findViewById(R.id.commentLayout);
 		mLayoutShare = (LinearLayout) findViewById(R.id.shareLayout);
-		//视频播放/暂停
+		// 视频播放/暂停
 		mPlayBtn = (ImageView) findViewById(R.id.play_btn);
 		mSeekBar = (SeekBar) findViewById(R.id.seekbar);
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
 
 		mTextTitle.setText("视频详情");
-		
+
 		width = DensityUtil.getWidthInPx(this);
 		height = DensityUtil.getHeightInPx(this);
-		
+
 		mImagePrepare.setBackgroundResource(R.drawable.tacitly_pic);
 		mImagePrepare.setVisibility(View.VISIBLE);
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
-		
+
 		// 点击事件
 		mBackBtn.setOnClickListener(this);
 		mLayoutShowAll.setOnClickListener(this);
@@ -246,7 +245,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mLayoutShare.setOnClickListener(this);
 		mPlayBtn.setOnClickListener(this);
 		mPrepareLayout.setOnClickListener(this);
-		
+
 		mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
 		mFullVideoView.setOnPreparedListener(this);
 		mFullVideoView.setOnErrorListener(this);
@@ -259,9 +258,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		mFullVideoView.setOnCompletionListener(this);
 		showLoading();
-		
+
 	}
-	
+
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		@Override
@@ -277,10 +276,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				}
 				netWorkTimeoutCheck();
 				if (mFullVideoView.getCurrentPosition() > 0) {
-					if ( !mFullVideoView.isPlaying() ) {
+					if (!mFullVideoView.isPlaying()) {
 						return;
 					}
-					if(!isBuffering) {
+					if (!isBuffering) {
 						hideLoading();
 					}
 					playTime = 0;
@@ -293,9 +292,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					mPlayBtn.setImageResource(R.drawable.player_pause_btn);
 				} else {
 					mPlayBtn.setImageResource(R.drawable.player_play_btn);
-					if(0 != duration) {
-						mSeekBar.setProgress(playTime*100/duration);
-					}else {
+					if (0 != duration) {
+						mSeekBar.setProgress(playTime * 100 / duration);
+					} else {
 						mSeekBar.setProgress(0);
 					}
 				}
@@ -314,7 +313,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		// 评论
 		case R.id.commentLayout:
-			Intent toComment = new Intent(VideoSquareDeatilActivity.this,CommentActivity.class);
+			Intent toComment = new Intent(VideoSquareDeatilActivity.this, CommentActivity.class);
 			toComment.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoJson.data.avideo.video.videoid);
 			toComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			toComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
@@ -323,7 +322,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		// 显示全部评论
 		case R.id.video_square_show_all:
-			Intent showComment = new Intent(VideoSquareDeatilActivity.this,CommentActivity.class);
+			Intent showComment = new Intent(VideoSquareDeatilActivity.this, CommentActivity.class);
 			showComment.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoJson.data.avideo.video.videoid);
 			showComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			showComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, false);
@@ -626,7 +625,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}, 100);
 		}
 	}
-	
+
 	private void playVideo() {
 		Uri uri = null;
 		if ("1".equals(mVideoJson.data.avideo.video.type)) {
@@ -637,7 +636,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mFullVideoView.setVideoURI(uri);
 		mFullVideoView.requestFocus();
 	}
-	
+
 	/**
 	 * 隐藏加载中显示画面
 	 * 
@@ -656,10 +655,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mLoadingLayout.setVisibility(View.GONE);
 		}
 	}
-	
+
 	/**
 	 * 提示对话框
-	 * @param msg 提示信息
+	 * 
+	 * @param msg
+	 *            提示信息
 	 */
 	private void dialog(String msg) {
 		CustomDialog mCustomDialog = new CustomDialog(this);
@@ -673,23 +674,25 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		});
 		mCustomDialog.show();
 	}
+
 	private OnSeekBarChangeListener mSeekBarChangeListener = new OnSeekBarChangeListener() {
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
 		}
+
 		@Override
 		public void onStartTrackingTouch(SeekBar seekBar) {
 		}
+
 		@Override
-		public void onProgressChanged(SeekBar seekBar, int progress,
-				boolean fromUser) {
+		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 			if (fromUser) {
 				int time = progress * mFullVideoView.getDuration() / 100;
 				mFullVideoView.seekTo(time);
 			}
 		}
 	};
-	
+
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
 		// TODO onInfoListener
@@ -707,33 +710,33 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		default:
 			break;
-	}
+		}
 		return false;
 	}
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
 		// TODO onErrorListener
-		if(error){
+		if (error) {
 			return false;
 		}
 		String msg = "播放错误";
 		switch (arg1) {
-			case 1:
-			case -1010:
-				msg = "视频出错，请重试！";
-				break;
-			case -110:
-				msg = "网络访问异常，请重试！";
-				break;
-				
-			default:
-				break;
+		case 1:
+		case -1010:
+			msg = "视频出错，请重试！";
+			break;
+		case -110:
+			msg = "网络访问异常，请重试！";
+			break;
+
+		default:
+			break;
 		}
 		if (!UserUtils.isNetDeviceAvailable(mContext)) {
 			msg = "网络访问异常，请重试！";
 		}
-		error=true;
+		error = true;
 		hideLoading();
 		mImagePrepare.setVisibility(View.VISIBLE);
 		dialog(msg);
@@ -743,7 +746,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
 		// TODO OnCompletionListener
-		if(error){
+		if (error) {
 			return;
 		}
 		mFullVideoView.seekTo(0);
@@ -769,6 +772,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 		}, 0, 1000);
 	}
+
 	/**
 	 * 无网络超时检查
 	 */
@@ -780,18 +784,18 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					hideLoading();
 					mImagePrepare.setVisibility(View.VISIBLE);
 					dialog("网络访问异常，请重试！");
-					if(null != mFullVideoView) {
+					if (null != mFullVideoView) {
 						mFullVideoView.stopPlayback();
 						mFullVideoView = null;
 					}
 					return;
 				}
 			}
-		}else{
+		} else {
 			networkConnectTimeOut = 0;
 		}
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -801,7 +805,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mFullVideoView.pause();
 		}
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -809,7 +813,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			isStop = true;
 		}
 	}
-	
+
 	public boolean isBackground(final Context context) {
 		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
@@ -821,5 +825,5 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		return false;
 	}
-	
+
 }
