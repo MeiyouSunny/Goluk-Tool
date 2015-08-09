@@ -13,6 +13,8 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,6 +26,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
@@ -35,7 +38,7 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
-		VideoSuqareManagerFn, ILiveDialogManagerFn {
+		VideoSuqareManagerFn, ILiveDialogManagerFn, OnItemLongClickListener {
 
 	/** 如果为true, 則为测试数据，false則使用真实数据 (上线前要删除掉) */
 	private final boolean isTest = false;
@@ -183,6 +186,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mRTPullListView.setOnRTScrollListener(this);
 		}
 
+		mRTPullListView.setOnItemLongClickListener(this);
+
 		loading = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
 	}
 
@@ -300,7 +305,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	}
 
 	private void callBack_commentList(int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "jyf----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
+
 		if (1 == msg) {
 			try {
 				JSONObject rootObj = new JSONObject((String) param2);
@@ -393,7 +398,25 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	}
 
 	private void callBack_commentDel(int msg, int param1, Object param2) {
-
+		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+		if (1 != msg) {
+			// 失败
+			GolukUtils.showToast(this, "删除失败");
+			mWillDelBean = null;
+			return;
+		}
+		try {
+			JSONObject obj = new JSONObject((String) param2);
+			boolean isSucess = obj.getBoolean("success");
+			if (isSucess) {
+				mAdapter.deleteData(mWillDelBean);
+				GolukUtils.showToast(this, "删除成功");
+			} else {
+				GolukUtils.showToast(this, "删除失败");
+			}
+		} catch (Exception e) {
+		}
+		mWillDelBean = null;
 	}
 
 	@Override
@@ -401,6 +424,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		if (isExit) {
 			return;
 		}
+		GolukDebugUtils.e("", "jyf----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
 		if (VSquare_Req_List_Comment == event) {
 			callBack_commentList(msg, param1, param2);
 		} else if (VSquare_Req_Add_Comment == event) {
@@ -472,6 +496,20 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT, "", "正在提交评论", true);
 	}
 
+	// 删除评论
+	private void httpPost_requestDel(String id) {
+		final String requestStr = JsonUtil.getDelCommentJson(id);
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VideoSuqareManagerFn.VSquare_Req_Del_Comment, requestStr);
+		if (!isSucess) {
+			// 失败
+			GolukUtils.showToast(this, "删除失败");
+			return;
+		}
+		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
+				LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", "正在删除", true);
+	}
+
 	@Override
 	public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 		wonderfulFirstVisible = firstVisibleItem;
@@ -484,8 +522,41 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
 
 			}
+		} else if (LiveDialogManager.DIALOG_TYPE_COMMENT_DELETE == dialogType) {
+			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
+				httpPost_requestDel(mWillDelBean.mCommentId);
+			} else {
+				mWillDelBean = null;
+			}
+		} else if (LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE == dialogType) {
+			// 取消删除
 		}
 
+	}
+
+	/** 保存将要删除的数据 */
+	CommentBean mWillDelBean = null;
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		GolukDebugUtils.e("", "jyf-----commentActivity--------position:" + position + "   arg3:" + arg3);
+		if (null != mAdapter && this.mApp.isUserLoginSucess) {
+
+			mWillDelBean = (CommentBean) mAdapter.getItem(position - 1);
+			final UserInfo loginUser = mApp.getMyInfo();
+
+			GolukDebugUtils.e("", "jyf-----commentActivity--------bean userId:" + mWillDelBean.mUserId
+					+ "  login user:" + loginUser.uid);
+
+			if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
+						LiveDialogManager.DIALOG_TYPE_COMMENT_DELETE, "提示", "确定要删除吗？");
+			} else {
+				GolukUtils.showToast(this, "不是自己发表禁止删除");
+			}
+
+		}
+		return true;
 	}
 
 }

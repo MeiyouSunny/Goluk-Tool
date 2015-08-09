@@ -896,6 +896,18 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static String getDelCommentJson(String id) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("id", id);
+
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
+
 	public static ArrayList<CommentBean> parseCommentData(JSONArray array) {
 		if (null == array) {
 			return null;

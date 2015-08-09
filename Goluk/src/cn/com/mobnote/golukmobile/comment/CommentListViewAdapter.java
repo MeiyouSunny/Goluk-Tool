@@ -40,6 +40,24 @@ public class CommentListViewAdapter extends BaseAdapter {
 		this.notifyDataSetChanged();
 	}
 
+	public void deleteData(CommentBean delBean) {
+		if (null == delBean) {
+			return;
+		}
+		boolean isDelSuces = false;
+		int size = mData.size();
+		for (int i = 0; i < size; i++) {
+			if (mData.get(i).mCommentId.equals(delBean.mCommentId)) {
+				mData.remove(i);
+				isDelSuces = true;
+				break;
+			}
+		}
+		if (isDelSuces) {
+			this.notifyDataSetChanged();
+		}
+	}
+
 	// 获取最后一条数据的时间戳
 	public String getLastDataTime() {
 		if (null == mData || mData.size() <= 0) {
