@@ -700,7 +700,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mBaiduMap = mMapView.getMap();
 		// 找开定位图层，可以显示我的位置小蓝点
 		mBaiduMap.setMyLocationEnabled(true);
-		mBaiduMapManage = new BaiduMapManage(this, mBaiduMap, "LiveVideo");
+		mBaiduMapManage = new BaiduMapManage(this, mApp, mBaiduMap, "LiveVideo");
 	}
 
 	private boolean isSetAudioMute = false;

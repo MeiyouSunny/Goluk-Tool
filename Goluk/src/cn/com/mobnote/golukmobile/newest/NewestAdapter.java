@@ -176,27 +176,26 @@ public class NewestAdapter extends BaseAdapter {
 
 	private void initListener(int index) {
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
-
+		// 分享监听
 		ClickShareListener tempShareListener = new ClickShareListener(mContext, mVideoSquareInfo, mNewestListView);
 		tempShareListener.setCategoryListView(mCategoryListView);
 		holder.shareLayout.setOnClickListener(tempShareListener);
-
+		// 举报监听
 		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo));
-
+		// 评论监听
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
-		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));
+		// 播放区域监听
+		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext,  mVideoSquareInfo,mNewestListView));
 		// 点赞
 		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
 		tempPraiseListener.setCategoryListView(mCategoryListView);
 		holder.praiseLayout.setOnClickListener(tempPraiseListener);
-
+		// 评论总数监听
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
 			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 		}
-		// 播放点击
-		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo));
 	}
 
 	private String getFormatNumber(String fmtnumber) {

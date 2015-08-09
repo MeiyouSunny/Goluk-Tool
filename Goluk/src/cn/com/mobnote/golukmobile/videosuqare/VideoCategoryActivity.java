@@ -12,14 +12,26 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoCategoryActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
 	/** application */
 	public GolukApplication mApp = null;
 	private static final String TAG = "VideoCategoryActivity";
+
+	/** 类型表示 1表示直播 2 表示直播 */
+	public static final String KEY_VIDEO_CATEGORY_TYPE = "key_video_category_type";
+	/** 视频分类 例如 1表示曝光台, 2表示随手拍 */
+	public static final String KEY_VIDEO_CATEGORY_ATTRIBUTE = "key_video_category_attribute";
+	/** 视频分类名称 (例如，曝光台，随手拍) */
+	public static final String KEY_VIDEO_CATEGORY_TITLE = "key_video_category_title";
+
+	public static final String CATEGORY_TYPE_LIVE = "1";
+	public static final String CATEGORY_TYPE_DB = "2";
+	/** 直播类型　默认 attribute属性值 */
+	public static final String LIVE_ATTRIBUTE_VALUE = "0";
 
 	private ImageButton mBackBtn = null;
 	private TextView mTitleTv;
@@ -28,8 +40,9 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	private String mType;
 	// 点播分类
 	private String attribute = "1";
+	/** 名称显示 */
+	private String mTitle = "";
 
-	private SharePlatformUtil sharePlatform;
 	private FrameLayout mSwitchLayout = null;
 	/** 列表状态 */
 	private final int TYPE_LIST = 0;
@@ -53,9 +66,6 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		initView();
 		initViewData();
 
-		sharePlatform = new SharePlatformUtil(this);
-		sharePlatform.configPlatforms();// 设置分享平台的参数
-
 		switchLayout(TYPE_LIST);
 	}
 
@@ -64,23 +74,25 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void initViewData() {
-		if ("1".equals(attribute)) {
-			mTitleTv.setText("曝光台");
-		} else if ("2".equals(attribute)) {
-			mTitleTv.setText("事故大爆料");
-		} else if ("3".equals(attribute)) {
-			mTitleTv.setText("美丽风景");
-		} else if ("4".equals(attribute)) {
-			mTitleTv.setText("随手拍");
-		} else {
-			mTitleTv.setText("直播列表");
-		}
+		// if ("1".equals(attribute)) {
+		// mTitleTv.setText("曝光台");
+		// } else if ("2".equals(attribute)) {
+		// mTitleTv.setText("事故大爆料");
+		// } else if ("3".equals(attribute)) {
+		// mTitleTv.setText("美丽风景");
+		// } else if ("4".equals(attribute)) {
+		// mTitleTv.setText("随手拍");
+		// } else {
+		// mTitleTv.setText("直播列表");
+		// }
+
+		mTitleTv.setText(mTitle);
 
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
 				FrameLayout.LayoutParams.MATCH_PARENT);
 		mMapBtn.setVisibility(View.GONE);
 		if (isLive()) {
-			mMapView = new BaiduMapView(this);
+			mMapView = new BaiduMapView(this, mApp);
 			mSwitchLayout.addView(mMapView.getView(), lp);
 			mMapBtn.setVisibility(View.VISIBLE);
 		}
@@ -90,8 +102,9 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 
 	private void getIntentData() {
 		Intent intent = getIntent();
-		mType = intent.getStringExtra("type");// 视频广场类型
-		attribute = intent.getStringExtra("attribute");// 点播类型
+		mType = intent.getStringExtra(KEY_VIDEO_CATEGORY_TYPE);// 视频广场类型
+		attribute = intent.getStringExtra(KEY_VIDEO_CATEGORY_ATTRIBUTE);// 点播类型
+		mTitle = intent.getStringExtra(KEY_VIDEO_CATEGORY_TITLE);
 	}
 
 	private void initView() {
@@ -159,6 +172,20 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		}
 	}
 
+	public void pointDataCallback(int success, Object obj) {
+		if (!this.isLive()) {
+			// 当前不是直播界面，不需更新数据
+			return;
+		}
+		this.mMapView.pointDataCallback(success, obj);
+	}
+
+	public void downloadBubbleImageCallBack(int success, Object obj) {
+		if (this.isLive() && null != mMapView) {
+			mMapView.downloadBubbleImageCallBack(success, obj);
+		}
+	}
+
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
@@ -196,6 +223,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mApp.setContext(this, TAG);
 		if (null != mCategoryLayout) {
 			mCategoryLayout.onResume();
 		}

@@ -23,7 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.logic.GolukModule;
@@ -98,9 +98,12 @@ public class BaiduMapManage {
 	/** 当前正操作的用户信息 */
 	private UserInfo mCurrentUserInfo = null;
 
+	private GolukApplication mApp = null;
+
 	@SuppressLint("InflateParams")
-	public BaiduMapManage(Context context, BaiduMap map, String source) {
+	public BaiduMapManage(Context context, GolukApplication app, BaiduMap map, String source) {
 		mContext = context;
+		mApp = app;
 		mPageSource = source;
 		if (null == mLayoutInflater) {
 			mLayoutInflater = LayoutInflater.from(mContext);
@@ -117,9 +120,9 @@ public class BaiduMapManage {
 	public UserInfo getCurrentUserInfo() {
 		return mCurrentUserInfo;
 	}
-	
+
 	/** 首页handler用来接收消息,更新UI */
-	public  Handler manageHandler = new Handler() {
+	public Handler manageHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			int what = msg.what;
@@ -129,7 +132,6 @@ public class BaiduMapManage {
 			}
 		}
 	};
-
 
 	/**
 	 * 将gps坐标转换成baidu坐标
@@ -375,22 +377,11 @@ public class BaiduMapManage {
 	}
 
 	private void lookOtherLive() {
-		// 首页地图气泡跳转到直播详情页
-		// Intent bubble = new Intent(mContext, LiveVideoPlayActivity.class);
-		// bubble.putExtra("cn.com.mobnote.map.aid", mCurrentAid);
-		// bubble.putExtra("cn.com.mobnote.map.uid", "1");
-		// bubble.putExtra("cn.com.mobnote.map.imageurl", mBubbleImageUrl);
-		// mContext.startActivity(bubble);
-
 		GolukDebugUtils.e("", "jyf-----click------3333");
-
 		// 通知主界面要观看别人的视频
-		if (mContext instanceof MainActivity) {
-			GolukDebugUtils.e("", "jyf-----click------4444");
-			((MainActivity) mContext).startLiveLook(mCurrentUserInfo);
-
-			GolukDebugUtils.e("", "jyf-----click------55555");
-		}
+		GolukDebugUtils.e("", "jyf-----click------4444");
+		mApp.startLiveLook(mCurrentUserInfo);
+		GolukDebugUtils.e("", "jyf-----click------55555");
 	}
 
 	/**
@@ -436,6 +427,21 @@ public class BaiduMapManage {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 下载气泡图片
+	 * 
+	 * @param url
+	 * @param aid
+	 */
+	@SuppressWarnings("static-access")
+	public void downloadBubbleImg(String url, String aid) {
+		GolukDebugUtils.e("", "下载气泡图片downloadBubbleImg:" + url + ",aid" + aid);
+		String json = "{\"purl\":\"" + url + "\",\"aid\":\"" + aid + "\",\"type\":\"1\"}";
+		GolukDebugUtils.e("", "downloadBubbleImg---json" + json);
+		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPictureByURL,
+				json);
 	}
 
 	class MyOnMarkerClickListener implements OnMarkerClickListener {
@@ -484,25 +490,19 @@ public class BaiduMapManage {
 				Point pt = mBaiduMap.getProjection().toScreenLocation(ll);
 				pt.y = pt.y - offset;
 				LatLng lg = mBaiduMap.getProjection().fromScreenLocation(pt);
-
 				MapStatus status = new MapStatus.Builder().target(lg).build();
 				MapStatusUpdate statusUpdate = MapStatusUpdateFactory.newMapStatus(status);
 				// 改变地图中心点
 				mBaiduMap.setMapStatus(statusUpdate);
-
 				// 保存aid,跳转到
 				mCurrentAid = aid;
-
-				GolukDebugUtils.e("","下载气泡图片---onMarkerClick---" + picUrl);
-
-				if (mPageSource == "Main") {
-					((MainActivity) mContext).downloadBubbleImg(picUrl, aid);
-				}
+				GolukDebugUtils.e("", "下载气泡图片---onMarkerClick---" + picUrl);
+				downloadBubbleImg(picUrl, aid);
 				createBubbleInfo(nikeName, persons, lon, lat, open);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
+
 			manageHandler.removeMessages(1);
 			manageHandler.sendEmptyMessageDelayed(1, 10000);
 			return false;

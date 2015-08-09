@@ -50,6 +50,7 @@ import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoShareActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
@@ -808,12 +809,22 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			 * param2); }
 			 */
 
-			// 为了更新直播界面的别人的位置信息
-			if (null != mContext && mContext instanceof LiveActivity) {
-				((LiveActivity) mContext).pointDataCallback(success, param2);
+			if (null != mContext) {
+				if (mContext instanceof LiveActivity) {
+					// 为了更新直播界面的别人的位置信息
+					((LiveActivity) mContext).pointDataCallback(success, param2);
+				} else if (mContext instanceof VideoCategoryActivity) {
+					((VideoCategoryActivity) mContext).pointDataCallback(success, param2);
+				}
 			}
+
 			break;
 		case 8:
+			// 直播大头针图片下载完成
+			if (mContext instanceof VideoCategoryActivity) {
+				((VideoCategoryActivity) mContext).downloadBubbleImageCallBack(success, param2);
+			}
+
 			// if (mPageSource == "Main") {
 			// // 地图大头针图片
 			// GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针图片---" +
@@ -1750,6 +1761,23 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public boolean getIsBackgroundState() {
 		return isBackground;
+	}
+
+	// 查看他人的直播
+	public void startLiveLook(UserInfo userInfo) {
+		GolukDebugUtils.e("", "jyf-----click------666666");
+		if (null == userInfo) {
+			return;
+		}
+		// 跳转看他人界面
+		Intent intent = new Intent(mContext, LiveActivity.class);
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+		intent.putExtra(LiveActivity.KEY_GROUPID, "");
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
+		mContext.startActivity(intent);
+		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
 	}
 
 }

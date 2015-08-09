@@ -17,7 +17,6 @@ import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
@@ -26,7 +25,6 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -37,14 +35,14 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 
-public class NewestListView implements VideoSuqareManagerFn{
+public class NewestListView implements VideoSuqareManagerFn {
 	private RelativeLayout mRootLayout = null;
 	private Context mContext = null;
 	private RTPullListView mRTPullListView = null;
 	private NewestListHeadDataInfo mHeadDataInfo = null;
 	public List<VideoSquareInfo> mDataList = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	public  static Handler mHandler = null;
+	public static Handler mHandler = null;
 	private NewestAdapter mNewestAdapter = null;
 	private boolean headLoading = false;
 	private boolean dataLoading = false;
@@ -58,12 +56,12 @@ public class NewestListView implements VideoSuqareManagerFn{
 	/** 保存列表显示item个数 */
 	private int visibleCount;
 	/** 列表添加页脚标识 */
-	private boolean addFooter=false;
+	private boolean addFooter = false;
 	/** 添加列表底部加载中布局 */
 	private RelativeLayout mBottomLoadingView = null;
 	private int curpageCount = 0;
 	private SharePlatformUtil sharePlatform;
-	
+
 	public NewestListView(Context context) {
 		mContext = context;
 		mHeadDataInfo = new NewestListHeadDataInfo();
@@ -72,25 +70,25 @@ public class NewestListView implements VideoSuqareManagerFn{
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		mRootLayout = new RelativeLayout(mContext);
 		mRootLayout.addView(mRTPullListView);
-		
+
 		sharePlatform = new SharePlatformUtil(mContext);
-		sharePlatform.configPlatforms();//设置分享平台的参数
-	
+		sharePlatform.configPlatforms();// 设置分享平台的参数
+
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
-		if("".equals(historyDate)){
+		if ("".equals(historyDate)) {
 			historyDate = sdf.format(new Date());
 		}
 		SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
-		
+
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
 			mVideoSquareManager.addVideoSquareManagerListener("NewestListView", this);
 		}
-		
+
 		loadHistoryData();
 		httpPost(true, "0", "");
 	}
-	
+
 	private void loadHistoryData() {
 		boolean headFlag = false;
 		boolean dataFlag = false;
@@ -100,108 +98,109 @@ public class NewestListView implements VideoSuqareManagerFn{
 			headFlag = true;
 			mHeadDataInfo = JsonParserUtils.parserNewestHeadData(head);
 		}
-		
+
 		if (!TextUtils.isEmpty(data)) {
 			dataFlag = true;
 			mDataList = JsonParserUtils.parserNewestItemData(data);
 		}
-		
+
 		if (headFlag && dataFlag) {
 			initLayout();
 		}
-		
+
 	}
-	
-	private void httpPost(boolean flag, String operation, String timestamp){
+
+	private void httpPost(boolean flag, String operation, String timestamp) {
 		curOperation = operation;
-		if(flag){
-			if(null == mCustomProgressDialog){
-				mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
+		if (flag) {
+			if (null == mCustomProgressDialog) {
+				mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
 				mCustomProgressDialog.show();
 			}
 		}
-		
-		if(null != GolukApplication.getInstance().getVideoSquareManager()){
+
+		if (null != GolukApplication.getInstance().getVideoSquareManager()) {
 			if ("0".equals(operation)) {
-				if(!headLoading) {
+				if (!headLoading) {
 					headLoading = true;
 					GolukApplication.getInstance().getVideoSquareManager().getZXListData();
 				}
 			}
-			
-			GolukDebugUtils.e("", "GGGGGG=====111111=======dataLoading="+dataLoading);
+
+			GolukDebugUtils.e("", "GGGGGG=====111111=======dataLoading=" + dataLoading);
 			if (dataLoading) {
 				return;
 			}
-			
+
 			List<String> attribute = new ArrayList<String>();
 			attribute.add("0");
 			dataLoading = true;
-			boolean tv = GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("1", "0", attribute, operation, timestamp);
-			GolukDebugUtils.e("", "GGGGGG=====222222=======tv="+tv);
-			if(!tv){
+			boolean tv = GolukApplication.getInstance().getVideoSquareManager()
+					.getTypeVideoList("1", "0", attribute, operation, timestamp);
+			GolukDebugUtils.e("", "GGGGGG=====222222=======tv=" + tv);
+			if (!tv) {
 				closeProgressDialog();
 			}
-		}else{
+		} else {
 			closeProgressDialog();
 		}
 	}
-	
+
 	public void showProgressDialog() {
 		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
 		}
-		
+
 		if (!mCustomProgressDialog.isShowing()) {
 			mCustomProgressDialog.show();
 		}
-		
+
 	}
-	
-	public void closeProgressDialog(){
-		if(null != mCustomProgressDialog){
+
+	public void closeProgressDialog() {
+		if (null != mCustomProgressDialog) {
 			mCustomProgressDialog.close();
 		}
 	}
-	
-	private void initLayout(){
-		if(headLoading || dataLoading) {
+
+	private void initLayout() {
+		if (headLoading || dataLoading) {
 			return;
 		}
-		
+
 		if (!addFooter) {
 			addFooter = true;
-			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext)
-					.inflate(R.layout.video_square_below_loading, null);
+			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext).inflate(
+					R.layout.video_square_below_loading, null);
 			mRTPullListView.addFooterView(mBottomLoadingView);
 		}
-		
+
 		if (curpageCount < pageCount) {
 			if (addFooter) {
 				addFooter = false;
 				mRTPullListView.removeFooterView(mBottomLoadingView);
 			}
 		}
-		
+
 		closeProgressDialog();
 		mRTPullListView.onRefreshComplete(historyDate);
-		if(null == mNewestAdapter){
+		if (null == mNewestAdapter) {
 			mNewestAdapter = new NewestAdapter(mContext);
 			mNewestAdapter.setNewestLiseView(this);
 		}
-	
+
 		if ("0".equals(curOperation)) {
 			mRTPullListView.setAdapter(mNewestAdapter);
 		}
 		mNewestAdapter.setData(mHeadDataInfo, mDataList);
-		
+
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				httpPost(true, "0", "");
 			}
 		});
-		
+
 		mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
@@ -214,59 +213,64 @@ public class NewestListView implements VideoSuqareManagerFn{
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						httpPost(false, "2", mDataList.get(mDataList.size() - 1).mVideoEntity.sharingtime);
 					}
-					
+
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 					mNewestAdapter.lock();
 					break;
-					
+
 				default:
 					break;
 				}
 			}
 
 			@Override
-			public void onScroll(AbsListView arg0, int firstVisibleItem,
-					int visibleItemCount, int arg3) {
+			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
 			}
-			
+
 		});
-		
+
 	}
 
-	public View getView(){
+	public View getView() {
 		return mRootLayout;
 	}
-	
+
 	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-		if(event == VSquare_Req_List_Catlog){
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+		if (event == VSquare_Req_List_Catlog) {
 			if (RESULE_SUCESS == msg) {
 				headLoading = false;
-				mHeadDataInfo = JsonParserUtils.parserNewestHeadData((String)param2);
+				mHeadDataInfo = JsonParserUtils.parserNewestHeadData((String) param2);
 				initLayout();
-			}else{
+			} else {
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
-			
-		}else if(event == VSquare_Req_List_Video_Catlog) {
+
+		} else if (event == VSquare_Req_List_Video_Catlog) {
 			if (RESULE_SUCESS == msg) {
 				dataLoading = false;
-				List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData((String)param2);
+				List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData((String) param2);
 				if ("0".equals(curOperation)) {
 					mDataList.clear();
 					pageCount = datalist.size();
 				}
-				
+
 				mDataList.addAll(datalist);
 				curpageCount = datalist.size();
 				initLayout();
-			}else{
+			} else {
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
-		}else if (event == VSquare_Req_VOP_GetShareURL_Video) {
+		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
+			if (mContext instanceof MainActivity) {
+				Context topContext = ((MainActivity) mContext).mApp.getContext();
+				if (!(topContext instanceof MainActivity)) {
+					return;
+				}
+			}
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				try {
@@ -280,17 +284,23 @@ public class NewestListView implements VideoSuqareManagerFn{
 						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 
 						if (TextUtils.isEmpty(describe)) {
-//							if ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)) {
-//								describe = "#极路客直播#";
-//							} else {
-								describe = "#极路客精彩视频#";
-//							}
+							// if
+							// ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type))
+							// {
+							// describe = "#极路客直播#";
+							// } else {
+							describe = "#极路客精彩视频#";
+							// }
 						}
 						String ttl = "极路客精彩视频分享";
-//						if ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type)) {// 直播
-//							ttl = mVideoSquareOnClickListener.mVideoSquareInfo.mUserEntity.nickname + "的直播视频分享";
-//							realDesc = ttl + "(使用#极路客Goluk#拍摄)";
-//						}
+						// if
+						// ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type))
+						// {// 直播
+						// ttl =
+						// mVideoSquareOnClickListener.mVideoSquareInfo.mUserEntity.nickname
+						// + "的直播视频分享";
+						// realDesc = ttl + "(使用#极路客Goluk#拍摄)";
+						// }
 
 						if (mContext instanceof MainActivity) {
 							MainActivity vspa = (MainActivity) mContext;
@@ -311,7 +321,7 @@ public class NewestListView implements VideoSuqareManagerFn{
 			} else {
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
-		}else if(event == VSquare_Req_VOP_Praise) {
+		} else if (event == VSquare_Req_VOP_Praise) {
 			GolukDebugUtils.e("", "GGGG===@@@===1111======");
 			if (RESULE_SUCESS == msg) {
 				GolukDebugUtils.e("", "GGGG===@@@====2222=====");
@@ -319,44 +329,45 @@ public class NewestListView implements VideoSuqareManagerFn{
 					mVideoSquareInfo.mVideoEntity.ispraise = "1";
 					updateClickPraiseNumber(true, mVideoSquareInfo);
 				}
-				
+
 			}
 		}
-		
+
 	}
-	
+
 	public void onResume() {
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if(null != mVideoSquareManager){
+		if (null != mVideoSquareManager) {
 			mVideoSquareManager.addVideoSquareManagerListener("NewestListView", this);
 		}
 	}
-	
+
 	public void onPause() {
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if(null != mVideoSquareManager){
+		if (null != mVideoSquareManager) {
 			mVideoSquareManager.removeVideoSquareManagerListener("NewestListView");
 		}
 	}
-	
-	public void onDestroy(){
-		
+
+	public void onDestroy() {
+
 	}
-	
+
 	VideoSquareInfo mVideoSquareInfo;
+
 	public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info) {
 		mVideoSquareInfo = info;
 		if (!flag) {
 			return;
 		}
-		
-		for (int i=0; i<mDataList.size(); i++) {
+
+		for (int i = 0; i < mDataList.size(); i++) {
 			VideoSquareInfo vs = mDataList.get(i);
 			if (vs.id.equals(info.id)) {
 				int number = Integer.parseInt(info.mVideoEntity.praisenumber);
-				if("1".equals(info.mVideoEntity.ispraise)) {
+				if ("1".equals(info.mVideoEntity.ispraise)) {
 					number++;
-				}else {
+				} else {
 					number--;
 				}
 				mDataList.get(i).mVideoEntity.praisenumber = "" + number;
@@ -365,9 +376,8 @@ public class NewestListView implements VideoSuqareManagerFn{
 				break;
 			}
 		}
-		
+
 		mNewestAdapter.updateClickPraiseNumber(info);
 	}
-	
-}
 
+}

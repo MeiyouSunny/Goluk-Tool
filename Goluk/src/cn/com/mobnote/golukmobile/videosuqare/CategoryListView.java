@@ -33,6 +33,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener {
@@ -278,7 +279,20 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		if (!mCustomProgressDialog.isShowing()) {
 			mCustomProgressDialog.show();
 		}
+	}
 
+	/** 保存即将分享的数据实体，用于判断是否是直播和获取信息 */
+	private VideoSquareInfo mWillShareSquareInfo = null;
+
+	/**
+	 * 在用户点击列表分享前，要保存将被分享的实体
+	 * 
+	 * @param info
+	 * @author jyf
+	 * @date 2015年8月9日
+	 */
+	public void setWillShareInfo(VideoSquareInfo info) {
+		mWillShareSquareInfo = info;
 	}
 
 	private void callBack_getShareUrl(int msg, int param1, Object param2) {
@@ -287,32 +301,58 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			return;
 		}
-		try {
-			JSONObject result = new JSONObject((String) param2);
-			if (result.getBoolean("success")) {
-				JSONObject data = result.getJSONObject("data");
-				String shareurl = data.getString("shorturl");
-				String coverurl = data.getString("coverurl");
-				String describe = data.optString("describe");
-				String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
-				if (TextUtils.isEmpty(describe)) {
-					describe = "#极路客精彩视频#";
-				}
-				String ttl = "极路客精彩视频分享";
-				if (mContext instanceof VideoCategoryActivity) {
-					VideoCategoryActivity vspa = (VideoCategoryActivity) mContext;
-					if (vspa != null && !vspa.isFinishing()) {
-						CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl, coverurl,
-								describe, ttl, null, realDesc);
-						shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-					}
-				}
-			} else {
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+		ShareDataBean shareBean = JsonUtil.parseShareCallBackData((String) param2);
+		if (!shareBean.isSucess) {
+			GolukUtils.showToast(mContext, "网络异常，请检查网络");
 		}
+		// 获取描述
+		final String describe = getShareDescribe(shareBean.describe);
+		final String ttl = getTTL();
+		final String realDesc = getRealDesc();
+		if (mContext instanceof VideoCategoryActivity) {
+			VideoCategoryActivity activity = (VideoCategoryActivity) mContext;
+			if (activity != null && !activity.isFinishing()) {
+				CustomShareBoard shareBoard = new CustomShareBoard(activity, sharePlatform, shareBean.shareurl,
+						shareBean.coverurl, describe, ttl, null, realDesc);
+				shareBoard.showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+			}
+		}
+	}
+
+	private String getRealDesc() {
+		if (isShareLive()) {
+			return getTTL() + "(使用#极路客Goluk#拍摄)";
+		} else {
+			return "极路客精彩视频(使用#极路客Goluk#拍摄)";
+		}
+	}
+
+	private String getTTL() {
+		if (isShareLive()) {
+			return mWillShareSquareInfo.mUserEntity.nickname + "的直播视频分享";
+		} else {
+			return "极路客精彩视频分享";
+		}
+	}
+
+	private String getShareDescribe(String describe) {
+		if (isShareLive()) {
+			if (TextUtils.isEmpty(describe)) {
+				return "#极路客直播#";
+			}
+		} else {
+			if (TextUtils.isEmpty(describe)) {
+				return "#极路客精彩视频#";
+			}
+		}
+		return describe;
+	}
+
+	private boolean isShareLive() {
+		if (null == mWillShareSquareInfo) {
+			return false;
+		}
+		return mWillShareSquareInfo.mVideoEntity.type.equals("1");
 	}
 
 	private void callBack_praise(int msg, int param1, Object param2) {

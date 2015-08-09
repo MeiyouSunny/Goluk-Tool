@@ -17,11 +17,11 @@ public class ClickCategoryListener implements OnClickListener {
 
 	@Override
 	public void onClick(View arg0) {
+		// 跳转到点播
 		Intent intent = new Intent(mContext, VideoCategoryActivity.class);
-		intent.putExtra("type", "2");
-		intent.putExtra("attribute", "1");
-		intent.putExtra("title", mCategoryDataInfo.name);
-		intent.putExtra("id", mCategoryDataInfo.id);
+		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_TYPE, VideoCategoryActivity.CATEGORY_TYPE_DB);
+		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_ATTRIBUTE, mCategoryDataInfo.id);
+		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_TITLE, mCategoryDataInfo.name);
 		mContext.startActivity(intent);
 	}
 

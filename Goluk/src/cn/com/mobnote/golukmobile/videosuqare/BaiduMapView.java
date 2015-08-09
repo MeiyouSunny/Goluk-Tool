@@ -13,6 +13,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -67,8 +68,11 @@ public class BaiduMapView implements ILocationFn {
 	/** 首页handler用来接收消息,更新UI */
 	public static Handler mBaiduHandler = null;
 
-	public BaiduMapView(Context context) {
+	private GolukApplication mApp = null;
+
+	public BaiduMapView(Context context, GolukApplication app) {
 		mContext = context;
+		mApp = app;
 		mRootLayout = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.baidu_map, null);
 
 		ma = (VideoCategoryActivity) mContext;
@@ -130,7 +134,7 @@ public class BaiduMapView implements ILocationFn {
 
 		// 获取map对象
 		mBaiduMap = mMapView.getMap();
-		mBaiduMapManage = new BaiduMapManage(mContext, mBaiduMap, "Main");
+		mBaiduMapManage = new BaiduMapManage(mContext, mApp, mBaiduMap, "Main");
 
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);

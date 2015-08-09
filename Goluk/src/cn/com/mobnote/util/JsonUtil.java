@@ -13,6 +13,7 @@ import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.user.APPInfo;
 import cn.com.mobnote.user.IPCInfo;
@@ -944,6 +945,38 @@ public class JsonUtil {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 解析获取分享连接后的数据
+	 * 
+	 * @param json
+	 *            数据json串
+	 * @return
+	 * @author jyf
+	 * @date 2015年8月9日
+	 */
+	public static ShareDataBean parseShareCallBackData(String json) {
+		ShareDataBean bean = new ShareDataBean();
+		bean.isSucess = false;
+		try {
+			JSONObject rootObj = new JSONObject(json);
+			boolean isSucess = rootObj.getBoolean("success");
+
+			JSONObject data = rootObj.getJSONObject("data");
+			String shareurl = data.getString("shorturl");
+			String coverurl = data.getString("coverurl");
+			String describe = data.optString("describe");
+
+			bean.isSucess = isSucess;
+			bean.shareurl = shareurl;
+			bean.coverurl = coverurl;
+			bean.describe = describe;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bean;
 	}
 
 }
