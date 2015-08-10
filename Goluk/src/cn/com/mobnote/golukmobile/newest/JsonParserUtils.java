@@ -170,9 +170,9 @@ public class JsonParserUtils {
 											if(null != comment) {
 												mVideoEntity.iscomment = comment.optString("iscomment");
 												mVideoEntity.comcount = comment.optString("comcount");
+
 												JSONArray comlist = comment.optJSONArray("comlist");
 												if(null != comlist){
-													
 													for(int j=0; j<comlist.length(); j++){
 														JSONObject item = comlist.getJSONObject(j);
 														CommentDataInfo comminfo = new CommentDataInfo(item);

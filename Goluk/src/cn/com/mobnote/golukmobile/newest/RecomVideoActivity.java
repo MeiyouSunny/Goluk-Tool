@@ -1,11 +1,15 @@
 package cn.com.mobnote.golukmobile.newest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -95,7 +99,7 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 		case R.id.tuijian:
 			showProgressDialog();
 			boolean a = GolukApplication.getInstance().getVideoSquareManager().recomVideo("1", videoid, text.getText().toString());
-			
+			GolukDebugUtils.e("", "TTTTT=====tuijian====a="+a);
 			break;
 
 		default:
@@ -108,7 +112,27 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 		if(event == VSquare_Req_VOP_RecomVideo){
 			if (RESULE_SUCESS == msg) {
 				closeProgressDialog();
-				GolukUtils.showToast(RecomVideoActivity.this, "推荐成功");
+				String msgStr = "推荐失败";
+				try {
+					JSONObject json = new JSONObject((String)param2);
+					if(null != json) {
+						boolean success = json.optBoolean("success");
+						msgStr = json.optString("msg");
+						if(success) {
+							JSONObject data = json.optJSONObject("data");
+							if(null != data) {
+								String result = data.optString("result");
+								if("0".equals(result)) {
+									msgStr = "推荐成功";
+								}
+							}
+						}
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				GolukUtils.showToast(RecomVideoActivity.this, msgStr);
 				finish();
 			}
 		}

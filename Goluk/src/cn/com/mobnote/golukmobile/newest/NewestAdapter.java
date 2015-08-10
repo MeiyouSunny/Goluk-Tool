@@ -44,10 +44,10 @@ public class NewestAdapter extends BaseAdapter {
 	private float density = 0;
 	/** 滚动中锁标识 */
 	private boolean lock = false;
-	private final int FIRST_TYPE = 0;
-	private final int OTHERS_TYPE = 1;
 	private NewestListView mNewestListView = null;
 	private CategoryListView mCategoryListView = null;
+	private final int FIRST_TYPE = 0;
+	private final int OTHERS_TYPE = 1;
 
 	public NewestAdapter(Context context) {
 		mContext = context;
@@ -57,6 +57,7 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	public void setData(NewestListHeadDataInfo headata, List<VideoSquareInfo> data) {
+		GolukDebugUtils.e("", "TTTTTT==1111===headata="+headata);
 		mHeadDataInfo = headata;
 		mDataList.clear();
 		mDataList.addAll(data);
@@ -82,7 +83,7 @@ public class NewestAdapter extends BaseAdapter {
 	public long getItemId(int arg0) {
 		return 0;
 	}
-
+	
 	@Override
 	public int getViewTypeCount() {
 		if (null == mHeadDataInfo) {
@@ -106,34 +107,40 @@ public class NewestAdapter extends BaseAdapter {
 	};
 
 	ViewHolder holder;
-
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		int type = getItemViewType(arg0);
+		GolukDebugUtils.e("", "TTTTTTT==newest==arg0=="+arg0+"==type="+type+"==convertView="+convertView);
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView();
 		} else {
-			if (null == convertView) {
-				convertView = loadLayout();
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-				if (null == holder) {
-					convertView = loadLayout();
-				}
-			}
-
-			int index = arg0;
-			if (null != mHeadDataInfo) {
-				index = arg0 - 1;
-			}
-			initView(index);
-			initListener(index);
+			convertView = loadLayout(convertView, arg0);
 		}
 
 		return convertView;
 	}
+	
+	private View loadLayout(View convertView, int arg0) {
+		if (null == convertView) {
+			convertView = initLayout();
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+			if (null == holder) {
+				convertView = initLayout();
+			}
+		}
+		
+		int index = arg0;
+		if (null != mHeadDataInfo) {
+			index = arg0 - 1;
+		}
+		initView(index);
+		initListener(index);
+		
+		return convertView;
+	}
 
-	private View loadLayout() {
+	private View initLayout() {
 		holder = new ViewHolder();
 		View convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
 		holder.imageLayout = (RelativeLayout) convertView.findViewById(R.id.imageLayout);
@@ -175,6 +182,10 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	private void initListener(int index) {
+		if(index < 0 || index >= mDataList.size()) {
+			return;
+		}
+		
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 		// 分享监听
 		ClickShareListener tempShareListener = new ClickShareListener(mContext, mVideoSquareInfo, mNewestListView);
@@ -213,10 +224,11 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	private void initView(int index) {
-		GolukDebugUtils.e("", "TTTTTTT=========holder==" + holder);
+		if(index < 0 || index >= mDataList.size()) {
+			return;
+		}
+		
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
-		GolukDebugUtils.e("", "TTTTTTT=========holder.imageLayout=" + holder.imageLayout + "===mVideoSquareInfo="
-				+ mVideoSquareInfo + "==mVideoSquareInfo.mVideoEntity==" + mVideoSquareInfo.mVideoEntity);
 		loadImage(holder.imageLayout, mVideoSquareInfo.mVideoEntity.picture);
 
 		showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
@@ -356,7 +368,7 @@ public class NewestAdapter extends BaseAdapter {
 			liveLayout.setLayoutParams(liveLayoutParams);
 
 			RelativeLayout imagelayout = (RelativeLayout) mHeadView.findViewById(R.id.imagelayout);
-			loadImage(imagelayout, mLiveInfo.pic);
+//			loadImage(imagelayout, mLiveInfo.pic);
 
 			LinearLayout mLookLayout = (LinearLayout) mHeadView.findViewById(R.id.mLookLayout);
 			TextView mLookNum = (TextView) mHeadView.findViewById(R.id.mLookNum);
@@ -386,9 +398,9 @@ public class NewestAdapter extends BaseAdapter {
 
 			RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 
-			mTitleName.setText(mCategoryDataInfo.name);
-			mUpdateTime.setText(mCategoryDataInfo.time);
-			loadImage(imageLayout, mCategoryDataInfo.coverurl);
+//			mTitleName.setText(mCategoryDataInfo.name);
+//			mUpdateTime.setText(mCategoryDataInfo.time);
+//			loadImage(imageLayout, mCategoryDataInfo.coverurl);
 
 			int id = i + 1111 - 2;
 			if (i % 2 == 0) {

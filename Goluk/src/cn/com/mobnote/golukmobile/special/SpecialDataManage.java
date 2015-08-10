@@ -43,7 +43,7 @@ public class SpecialDataManage {
 							item.describe = video.optString("describe");
 							item.imagepath = video.optString("picture");
 							item.videotype = "2";
-							item.videopath = video.optString("ondemandsdkaddress");
+							item.videopath = video.optString("ondemandwebaddress");
 							item.videoid = video.optString("videoid");
 							specials.add(item);
 
@@ -193,7 +193,7 @@ public class SpecialDataManage {
 								item.headportrait = user.optString("headportrait");
 								item.ispraise = video.optString("ispraise");
 								item.videotype = "2";
-								item.videopath = video.optString("ondemandsdkaddress");
+								item.videopath = video.optString("ondemandwebaddress");
 
 								JSONObject comment = video.getJSONObject("comment");
 								item.iscomment = comment.optString("iscomment");

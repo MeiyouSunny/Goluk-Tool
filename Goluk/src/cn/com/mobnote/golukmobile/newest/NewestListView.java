@@ -33,6 +33,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 public class NewestListView implements VideoSuqareManagerFn {
@@ -87,6 +89,10 @@ public class NewestListView implements VideoSuqareManagerFn {
 
 		loadHistoryData();
 		httpPost(true, "0", "");
+	}
+	
+	public void loadData() {
+		
 	}
 
 	private void loadHistoryData() {
@@ -193,6 +199,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 			mRTPullListView.setAdapter(mNewestAdapter);
 		}
 		mNewestAdapter.setData(mHeadDataInfo, mDataList);
+//		mNewestAdapter.setData(null, mDataList);
 
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
