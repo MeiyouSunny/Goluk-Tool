@@ -34,6 +34,7 @@ public class ClickWonderfulSelectedListener implements OnClickListener{
 		}else if ("3".equals(mJXListItemDataInfo.ztype)) {//单视频
 			intent = new Intent(mContext, VideoSquareDeatilActivity.class);
 			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
+			intent.putExtra("imageurl", mJXListItemDataInfo.jximg);
 		}else if ("4".equals(mJXListItemDataInfo.ztype)) {//url
 			String url = mJXListItemDataInfo.adverturl;
 			intent = new Intent(mContext, UserOpenUrlActivity.class);

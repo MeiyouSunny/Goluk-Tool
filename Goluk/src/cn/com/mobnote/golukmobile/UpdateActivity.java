@@ -121,6 +121,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private String ipc_url = "";
 	private String ipc_path = "";
 
+	private boolean isExit = false;
+
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +132,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 
 		mApp = (GolukApplication) getApplication();
 		initView();
+		isExit = false;
 
 		Intent it = getIntent();
 		mSign = it.getIntExtra(UPDATE_SIGN, 0);
@@ -206,15 +209,24 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case UPDATE_FILE_NOT_EXISTS:
+					if (isExit) {
+						return;
+					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "没有找到升级文件。");
 					break;
 				case UPDATE_PREPARE_FILE:
+					if (isExit) {
+						return;
+					}
 					mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在为您准备升级，请稍候……");
 					break;
 				case UPDATE_TRANSFER_FILE:
 					GolukDebugUtils.i("lily", "-------正在传输文件------");
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
 					mPrepareDialog = null;
+					if (isExit) {
+						return;
+					}
 					if (mSendDialog == null) {
 						mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，过程可能需要几分钟，" + "\n"
 								+ "请不要关闭摄像头电源……" + "\n" + "升级1阶段：" + percent + "%");
@@ -226,11 +238,17 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				case UPDATE_TRANSFER_OK:
 					UserUtils.dismissUpdateDialog(mSendDialog);
 					mSendDialog = null;
+					if (isExit) {
+						return;
+					}
 					mSendOk = UserUtils.showDialogUpdate(UpdateActivity.this, "文件传输成功，正在为您准备升级");
 					break;
 				case UPDATE_UPGRADEING:
 					UserUtils.dismissUpdateDialog(mSendOk);
 					mSendOk = null;
+					if (isExit) {
+						return;
+					}
 					if (mUpdateDialog == null) {
 						mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "开始升级，过程可能需要几分钟，" + "\n"
 								+ "请不要关闭摄像头电源……" + "\n" + "升级2阶段：" + percent + "%");
@@ -240,8 +258,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					}
 					break;
 				case UPDATE_UPGRADE_OK:
+					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
+					if (isExit) {
+						return;
+					}
 					UserUtils
 							.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "恭喜您，极路客固件升级成功，正在重新启动，请稍候……");
 					mBtnDownload.setText("已安装");
@@ -258,12 +280,21 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mUpdateDialog = null;
 					mFirstDialog = null;
 					mSecondDialog = null;
+					if (isExit) {
+						return;
+					}
 					UserUtils.showUpdateSuccess(mUpdateDialogFail, UpdateActivity.this, "很抱歉，升级失败。请您重试。");
 					break;
 				case UPDATE_UPGRADE_CHECK:
+					if (isExit) {
+						return;
+					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "校验不通过");
 					break;
 				case UPDATE_IPC_UNUNITED:
+					if (isExit) {
+						return;
+					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "您好像没有连接摄像头哦。");
 					break;
 				case UPDATE_IPC_DISCONNECT:
@@ -272,6 +303,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					UserUtils.dismissUpdateDialog(mSendDialog);
 					mPrepareDialog = null;
 					mUpdateDialog = null;
+					if (isExit) {
+						return;
+					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "摄像头断开连接，请检查后重试");
 					break;
 				case UPDATE_IPC_FIRST_DISCONNECT:
@@ -280,6 +314,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					UserUtils.dismissUpdateDialog(mSendDialog);
 					mPrepareDialog = null;
 					mSendDialog = null;
+					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					showUpdateFirstDisconnect("很抱歉，升级失败，请先不要关闭摄像头电源，等待摄像头重新启动后再试。");
 					timerFive();
 					break;
@@ -329,7 +364,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.back_btn:
-			finish();
+			exit();
 			break;
 		case R.id.update_btn:
 			// 下载 / 升级
@@ -350,6 +385,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			} else if (mSign == 1) {
 				// TODO 判断摄像头是否连接 判断是否是最新版本
 				if (!mApp.getIpcIsLogin()) {
+					if (isExit) {
+						return;
+					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, this.getResources()
 							.getString(R.string.update_no_connect_ipc_hint));
 				} else {
@@ -422,8 +460,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 */
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("lily", "YYYYYY====IPC_VDCP_Msg_IPCUpgrade====msg=" + msg + "===param1=" + param1
-				+ "==param2=" + param2 + "--------event-----" + event);
+		GolukDebugUtils.e("lily", "lily====IPC_VDCP_Msg_IPCUpgrade====msg=" + msg + "===param1=" + param1 + "==param2="
+				+ param2 + "--------event-----" + event);
 		GolukDebugUtils.i("lily", "------------install-------22222");
 		if (event == ENetTransEvent_IPC_UpGrade_Resp) {
 			if (IPC_VDCP_Msg_IPCUpgrade == msg) {
@@ -480,6 +518,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							|| !(null != mSecondDialog && mSecondDialog.isShowing())) {
 						mApp.updateSuccess = false;
 						// 升级失败
+						GolukDebugUtils.e("uuuu", "---------param1!=0--------");
 						mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
 					}
 				}
@@ -521,7 +560,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 
 			@Override
 			public void run() {
-				finish();
+				mApp.mIpcUpdateManage.stopIpcUpgrade();
+				exit();
 			}
 		}, 5000);
 	}
@@ -569,13 +609,17 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 * 升级1阶段
 	 */
 	public void showUpdateFirstDisconnect(String message) {
+		if (isExit) {
+			return;
+		}
 		if (null == mFirstDialog) {
 			mFirstDialog = new AlertDialog.Builder(UpdateActivity.this).setTitle("提示").setMessage(message)
 					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
-							finish();
+							mApp.mIpcUpdateManage.stopIpcUpgrade();
+							exit();
 						}
 					}).show();
 		}
@@ -585,9 +629,17 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 * 升级2阶段
 	 */
 	public void showUpdateSecondDisconnect(String message) {
+		if (isExit) {
+			return;
+		}
 		if (null == mSecondDialog) {
 			mSecondDialog = new AlertDialog.Builder(UpdateActivity.this).setTitle("提示").setMessage(message)
 					.setPositiveButton("确定", null).show();
 		}
+	}
+
+	public void exit() {
+		isExit = true;
+		finish();
 	}
 }
