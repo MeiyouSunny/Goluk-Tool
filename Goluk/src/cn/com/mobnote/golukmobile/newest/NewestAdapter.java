@@ -261,7 +261,7 @@ public class NewestAdapter extends BaseAdapter {
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.clicknumber)) {
 			holder.weiguan.setText("");
 		} else {
-			holder.weiguan.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + "围观");
+			holder.weiguan.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + " 围观");
 		}
 
 		if (TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.describe)) {

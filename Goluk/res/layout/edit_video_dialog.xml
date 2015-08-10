@@ -33,7 +33,7 @@ android:layout_height="match_parent">
 	    
         <TextView   
 		android:id="@+id/tuijian"
-		android:text="推荐"
+		android:text="提交"
 		android:textSize ="15sp"
 		android:textColor="#1163a2"
 		android:gravity="center" 
@@ -47,7 +47,7 @@ android:layout_height="match_parent">
     <EditText   
 		android:id="@+id/text"
 		android:layout_below="@+id/titlelayout"
-		android:hint="请填写视频描述"
+		android:hint="请填写推荐理由"
 		android:textColorHint="#ffffff"
 		android:textSize ="15sp"
 		android:textColor="#ffffff"
