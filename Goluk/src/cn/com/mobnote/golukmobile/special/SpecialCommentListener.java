@@ -45,6 +45,9 @@ public class SpecialCommentListener implements OnClickListener{
 				intent.putExtra("from", from);
 				intent.putExtra("image", imagepath);
 				intent.putExtra("playUrl", videopath);
+				if(vid == null || "".equals(vid)){
+					vid = "232";
+				}
 				uploadPlayer(vid, "1", "1");// 上报播放次数
 				mContext.startActivity(intent);
 			}
