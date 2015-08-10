@@ -444,9 +444,9 @@ public class NewestAdapter extends BaseAdapter {
 				.setActualImageScaleType(ScaleType.FIT_XY).build();
 		view.setHierarchy(hierarchy);
 
-		if (!lock) {
+//		if (!lock) {
 			view.setImageURI(Uri.parse(url));
-		}
+//		}
 
 		int height = (int) ((float) width / 1.77f);
 		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
