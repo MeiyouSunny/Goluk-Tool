@@ -4,17 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoCategoryActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
 	/** application */
@@ -53,6 +53,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	private ImageButton mMapBtn = null;
 	private CategoryListView mCategoryLayout = null;
 	private BaiduMapView mMapView = null;
+	private ImageView noDataView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,20 +75,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void initViewData() {
-		// if ("1".equals(attribute)) {
-		// mTitleTv.setText("曝光台");
-		// } else if ("2".equals(attribute)) {
-		// mTitleTv.setText("事故大爆料");
-		// } else if ("3".equals(attribute)) {
-		// mTitleTv.setText("美丽风景");
-		// } else if ("4".equals(attribute)) {
-		// mTitleTv.setText("随手拍");
-		// } else {
-		// mTitleTv.setText("直播列表");
-		// }
-
 		mTitleTv.setText(mTitle);
-
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
 				FrameLayout.LayoutParams.MATCH_PARENT);
 		mMapBtn.setVisibility(View.GONE);
@@ -112,12 +100,14 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		mSwitchLayout = (FrameLayout) findViewById(R.id.category_switchlayout);
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+		noDataView = (ImageView) findViewById(R.id.square_type_default);
 
 		mMapBtn = (ImageButton) findViewById(R.id.category_map);
 		mCategoryLayout = new CategoryListView(this, mType, attribute);
 
 		mMapBtn.setOnClickListener(this);
 		mBackBtn.setOnClickListener(this);
+		noDataView.setOnClickListener(this);
 	}
 
 	private void switchLayout(int type) {
@@ -165,6 +155,11 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 			if (isLive()) {
 				int temp = mCurrentType == TYPE_LIST ? TYPE_MAP : TYPE_LIST;
 				this.switchLayout(temp);
+			}
+			break;
+		case R.id.square_type_default:
+			if (null != mCategoryLayout) {
+				mCategoryLayout.firstRequest();
 			}
 			break;
 		default:
