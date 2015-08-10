@@ -167,16 +167,22 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 				image.setLayoutParams(mPreLoadingParams);
 
 				BitmapManager.getInstance().mBitmapUtils.display(image, headdata.imagepath);
+				
+				if("1".equals(headdata.videotype)){
+					convertView.findViewById(R.id.mPlayBigBtn).setVisibility(View.GONE);
+				}
 
+				image.setOnClickListener(new SpecialCommentListener(mContext,headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
 			}
 			break;
 		case TYPE_2:
+			int index = position;
+			if (headdata != null) {
+				index--;
+			}
+			ClusterInfo clusterInfo = clusterListData.get(index);
 			if (convertView == null) {
-				int index = position;
-				if (headdata != null) {
-					index--;
-				}
-				ClusterInfo clusterInfo = clusterListData.get(index);
+				
 				holder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
 				holder.imageLayout = (RelativeLayout) convertView.findViewById(R.id.imageLayout);
@@ -206,38 +212,6 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 				holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
 				holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 				holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
-
-				holder.nikename.setText(clusterInfo.author);
-				holder.time.setText(clusterInfo.sharingtime);
-				holder.zText.setText(clusterInfo.praisenumber);
-				holder.weiguan.setText(clusterInfo.clicknumber + " 围观");
-				holder.detail.setText(clusterInfo.author + "  " + clusterInfo.describe);
-				holder.totalcomments.setText("查看所有" + clusterInfo.comments + "条评论");
-				holder.zText.setText(clusterInfo.praisenumber + " 赞");
-				
-				//没点过
-				if("0".equals(clusterInfo.ispraise)){
-					holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
-				}else{//点赞过
-					holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
-				}
-				if (clusterInfo.ci1 != null) {
-					holder.comment1.setText(clusterInfo.ci1.name + "  " + clusterInfo.ci1.text);
-				} else {
-					holder.comment1.setVisibility(View.GONE);
-				}
-
-				if (clusterInfo.ci2 != null) {
-					holder.comment2.setText(clusterInfo.ci2.name + "  " + clusterInfo.ci2.text);
-				} else {
-					holder.comment2.setVisibility(View.GONE);
-				}
-
-				if (clusterInfo.ci3 != null) {
-					holder.comment3.setText(clusterInfo.ci3.name + "  " + clusterInfo.ci3.text);
-				} else {
-					holder.comment3.setVisibility(View.GONE);
-				}
 				
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
@@ -252,6 +226,38 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 			} else {
 				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			holder.nikename.setText(clusterInfo.author);
+			holder.time.setText(clusterInfo.sharingtime);
+			holder.zText.setText(clusterInfo.praisenumber);
+			holder.weiguan.setText(clusterInfo.clicknumber + " 围观");
+			holder.detail.setText(clusterInfo.author + "  " + clusterInfo.describe);
+			holder.totalcomments.setText("查看所有" + clusterInfo.comments + "条评论");
+			holder.zText.setText(clusterInfo.praisenumber + " 赞");
+			
+			//没点过
+			if("0".equals(clusterInfo.ispraise)){
+				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
+			}else{//点赞过
+				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
+			}
+			if (clusterInfo.ci1 != null) {
+				holder.comment1.setText(clusterInfo.ci1.name + "  " + clusterInfo.ci1.text);
+			} else {
+				holder.comment1.setVisibility(View.GONE);
+			}
+
+			if (clusterInfo.ci2 != null) {
+				holder.comment2.setText(clusterInfo.ci2.name + "  " + clusterInfo.ci2.text);
+			} else {
+				holder.comment2.setVisibility(View.GONE);
+			}
+
+			if (clusterInfo.ci3 != null) {
+				holder.comment3.setText(clusterInfo.ci3.name + "  " + clusterInfo.ci3.text);
+			} else {
+				holder.comment3.setVisibility(View.GONE);
 			}
 			break;
 		default:

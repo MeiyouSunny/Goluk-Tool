@@ -136,6 +136,9 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		if (null != mCategoryLayout) {
 			mCategoryLayout.onDestroy();
 		}
+		if (null != mMapView) {
+			mMapView.onDestroy();
+		}
 		this.finish();
 	}
 
@@ -210,11 +213,23 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+
+		if (null != mMapView) {
+			mMapView.onPause();
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(this, TAG);
 		if (null != mCategoryLayout) {
 			mCategoryLayout.onResume();
+		}
+		if (null != mMapView) {
+			mMapView.onResume();
 		}
 	}
 }

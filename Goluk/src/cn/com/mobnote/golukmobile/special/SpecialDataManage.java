@@ -276,7 +276,7 @@ public class SpecialDataManage {
 						item.outurlname = head.optString("outurlname");
 						item.describe = head.optString("ztIntroduction");// 描述
 						item.author = "";// 没有作者
-
+						item.videotype = head.optString("showhead");
 						return item;
 					} else {
 						return null;
