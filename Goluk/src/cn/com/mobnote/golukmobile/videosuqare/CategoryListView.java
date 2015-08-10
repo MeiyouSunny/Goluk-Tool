@@ -5,23 +5,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -36,7 +35,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener {
+public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener, OnClickListener {
 
 	public static final String TAG = "CategoryListView";
 
@@ -78,6 +77,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private int uptype = 0;
 
 	LayoutInflater layoutInflater = null;
+	private SharePlatformUtil sharePlatform;
 
 	public CategoryListView(Context context, final String type, final String attr) {
 		mContext = context;
@@ -101,11 +101,23 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		firstRequest();
 	}
 
-	private SharePlatformUtil sharePlatform;
-
 	private void initYMShare() {
 		sharePlatform = new SharePlatformUtil(mContext);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
+	}
+
+	private void showLoadingDialog() {
+		if (null == mCustomProgressDialog) {
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
+			mCustomProgressDialog.show();
+		}
+	}
+
+	private void closeLoadingDialog() {
+		if (null != mCustomProgressDialog) {
+			mCustomProgressDialog.close();
+			mCustomProgressDialog = null;
+		}
 	}
 
 	private void addCallBackListener() {
@@ -123,17 +135,35 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	}
 
 	// 第一次进入列表请求
-	private void firstRequest() {
-		httpPost(mType, mAttribute, "0", "");
+	public void firstRequest() {
+		boolean isSucess = httpPost(mType, mAttribute, "0", "");
+		if (isSucess) {
+			mHandler.sendEmptyMessageDelayed(100, 150);
+		} else {
+			GolukDebugUtils.e("", "加载失败");
+		}
 	}
 
+	Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+
+			super.handleMessage(msg);
+			if (msg.what == 100) {
+				showLoadingDialog();
+			}
+		}
+
+	};
+
 	private void initView() {
-		// mRTPullListView = new RTPullListView(mContext);
 		mRootLayout = (RelativeLayout) layoutInflater.inflate(R.layout.video_type_list, null);
 		mRTPullListView = (RTPullListView) mRootLayout.findViewById(R.id.mRTPullListView);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
 		noDataView = (ImageView) mRootLayout.findViewById(R.id.category_list_nodata);
+		noDataView.setOnClickListener(this);
 
 		if (null == mCategoryAdapter) {
 			mCategoryAdapter = new NewestAdapter(mContext);
@@ -166,12 +196,14 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
-	private void httpPost(String type, String attribute, String operation, String timestamp) {
+	private boolean httpPost(String type, String attribute, String operation, String timestamp) {
 		boolean result = GolukApplication.getInstance().getVideoSquareManager()
 				.getSquareList("1", type, attribute, operation, timestamp);
 		if (!result) {
 
 		}
+
+		return result;
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -204,6 +236,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private final int COUNT = 30;
 
 	private void callBack_CatLog(int msg, int param1, Object param2) {
+		closeLoadingDialog();
 		if (1 != msg) {
 			// 失败
 			callBackFailed();
@@ -444,6 +477,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	public void onDestroy() {
 		this.removeListener();
+		this.closeLoadingDialog();
 
 	}
 
@@ -517,6 +551,14 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			}
 		}
 		mCategoryAdapter.updateClickPraiseNumber(info);
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.category_list_nodata) {
+			this.firstRequest();
+		}
+
 	}
 
 }

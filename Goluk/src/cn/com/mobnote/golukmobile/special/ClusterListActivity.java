@@ -32,19 +32,13 @@ import android.widget.AbsListView.OnScrollListener;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.videosuqare.DataParserUtils;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareListViewAdapter;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
@@ -275,15 +269,6 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		}
 	}
 	
-	/*// 分享成功后需要调用的接口
-	public void shareSucessDeal(boolean isSucess, String channel) {
-			if (!isSucess) {
-				GolukUtils.showToast(VideoSquarePlayActivity.this, "第三方分享失败");
-				return;
-			}
-			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel,shareVideoId);
-	}
-	 */
 	/**
 	 * 关闭加载中对话框
 	 * 
