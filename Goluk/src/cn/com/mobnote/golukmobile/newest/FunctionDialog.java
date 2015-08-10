@@ -16,15 +16,15 @@ public class FunctionDialog extends Dialog implements android.view.View.OnClickL
 	private TextView jubao;
 	private TextView cancle;
 	private Context mContext;
-	private VideoSquareInfo mVideoSquareInfo;
+	private String  videoid;
 	private AlertDialog dialog;
 	private AlertDialog ad;
 	private AlertDialog confirmation;
 	 
-	public FunctionDialog(Context context, VideoSquareInfo mVideoSquareInfo) { 
+	public FunctionDialog(Context context, String vid) { 
 		super(context, R.style.CustomDialog);  
 		setContentView(R.layout.function_dialog);
-		this.mVideoSquareInfo = mVideoSquareInfo;
+		this.videoid = vid;
 		mContext = context;
 		initLayout();
 	}
@@ -44,7 +44,7 @@ public class FunctionDialog extends Dialog implements android.view.View.OnClickL
 		case R.id.tuijian:
 			dismiss();
 			Intent intent = new Intent(mContext, RecomVideoActivity.class);
-			intent.putExtra("videoid", mVideoSquareInfo.mVideoEntity.videoid);
+			intent.putExtra("videoid", videoid);
 			mContext.startActivity(intent);
 			break;
 		case R.id.jubao:
@@ -128,7 +128,7 @@ public class FunctionDialog extends Dialog implements android.view.View.OnClickL
 			@Override
 			public void onClick(View v) {
 				boolean flog = GolukApplication.getInstance().getVideoSquareManager()
-						.report("1", mVideoSquareInfo.mVideoEntity.videoid, reporttype);
+						.report("1", videoid, reporttype);
 				if (flog) {
 					GolukUtils.showToast(mContext, "举报成功，我们稍后会进行处理");
 				} else {
