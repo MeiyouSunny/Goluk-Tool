@@ -2,10 +2,12 @@ package cn.com.mobnote.golukmobile.newest;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
@@ -19,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class WonderfulSelectedAdapter extends BaseAdapter {
@@ -63,6 +66,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
+		GolukDebugUtils.e("", "TTTTTTT==wonderful==arg0=="+arg0+"==convertView="+convertView);
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.wonderful_selected_item, null);
 			holder = new ViewHolder();
@@ -154,7 +158,6 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             }
             
             RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams((int)(39*density), (int)(20.33*density));
-//            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             iconParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             iconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mPlayerLayout.addView(icon, iconParams);
@@ -191,18 +194,6 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	public void unlock() {
 		lock = false;
 		this.notifyDataSetChanged();
-	}
-
-	public void onResume() {
-		
-	}
-
-	public void onStop() {
-	
-	}
-
-	public void onDestroy() {
-		
 	}
 
 }
