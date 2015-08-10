@@ -576,7 +576,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			if (RESULE_SUCESS == msg) {
 				isZanOk = true;
 				mCustomStartDialog.close();
-				mImageLayout.setVisibility(View.GONE);
+//				mImageLayout.setVisibility(View.GONE);
 				mLayoutAllInfo.setVisibility(View.VISIBLE);
 				String jsonStr = (String) param2;
 				getData(jsonStr);

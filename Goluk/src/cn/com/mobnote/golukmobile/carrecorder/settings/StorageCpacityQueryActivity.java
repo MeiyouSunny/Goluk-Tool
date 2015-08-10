@@ -138,6 +138,7 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 				String message="";
 				if(param1 == RESULE_SUCESS){
 					message = "SD卡格式化成功";
+					GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
 				}else{
 					message = "SD卡格式化失败";
 				}
