@@ -1,11 +1,15 @@
 package cn.com.mobnote.golukmobile.special;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GolukUtils;
 import android.content.Context;
@@ -35,13 +39,13 @@ public class SpecialCommentListener implements OnClickListener{
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.mPreLoading:
+		case R.id.imageLayout:
 			if("2".equals(type)){
-//				MainActivity a = (MainActivity)mContext;
 				Intent intent = new Intent(mContext, VideoPlayerView.class);
 				intent.putExtra("from", from);
 				intent.putExtra("image", imagepath);
 				intent.putExtra("playUrl", videopath);
-				//uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1","1");//上报播放次数
+				uploadPlayer(vid, "1", "1");// 上报播放次数
 				mContext.startActivity(intent);
 			}
 			break;
@@ -61,6 +65,17 @@ public class SpecialCommentListener implements OnClickListener{
 		}
 		
 		
+	}
+	
+	private void uploadPlayer(String videoid, String channel, String clicknumber) {
+		VideoSquareInfo vsi = new VideoSquareInfo();
+		VideoEntity ve = new VideoEntity();
+		ve.videoid = videoid;
+		ve.clicknumber = clicknumber;
+		vsi.mVideoEntity = ve;
+		List<VideoSquareInfo> list = new ArrayList<VideoSquareInfo>();
+		list.add(vsi);
+		GolukApplication.getInstance().getVideoSquareManager().clickNumberUpload(channel, list);
 	}
 	
 }
