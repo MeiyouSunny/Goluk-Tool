@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -15,6 +18,7 @@ import android.app.ActivityManager.RunningTaskInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -24,6 +28,7 @@ import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -39,12 +44,14 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
@@ -86,8 +93,6 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	private String image = "";
 	/** 文件名字 */
 	private String filename="";
-	/** 预加载图片 */
-	private ImageView mPreLoading = null;
 	/** 加载中布局 */
 	private LinearLayout mLoadingLayout = null;
 	/** 加载中动画显示控件 */
@@ -105,8 +110,12 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	private boolean isPause = false;
 	/** 缓冲标识 */
 	private boolean isBuffering = false;
-	private boolean isStop = false;
 	private int duration = 0;
+	
+	private RelativeLayout mImageLayout = null;
+	private Bitmap mBitmap = null;
+	private ImageView mImageView = null;
+	private boolean isStop = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -139,21 +148,38 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 
 		orginalLight = LightnessController.getLightness(this);
 		
-		mPreLoading = (ImageView)findViewById(R.id.mPreLoading);
-		mPreLoading.setBackgroundResource(R.drawable.tacitly_pic);
-		mPreLoading.setVisibility(View.VISIBLE);
-		
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
-		mPreLoading = (ImageView)findViewById(R.id.mPreLoading);
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 		
 		TextView title = (TextView)findViewById(R.id.title);
 		title.setText(filename);
 		
-		if (!TextUtils.isEmpty(image)) {
-			BitmapManager.getInstance().mBitmapUtils.display(mPreLoading, image);
+		mImageLayout = (RelativeLayout)findViewById(R.id.mImageLayout);
+		mImageLayout.removeAllViews();
+		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		
+		if (from.equals("suqare")) {
+			SimpleDraweeView view = new SimpleDraweeView(this);
+			GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
+			GenericDraweeHierarchy hierarchy = builder
+					.setFadeDuration(300)
+				    .setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				    .setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				    .setActualImageScaleType(ScaleType.FIT_XY)
+				    .build();
+				view.setHierarchy(hierarchy);
+			view.setImageURI(Uri.parse(image));
+			mImageLayout.addView(view, mPreLoadingParams);
+		}else {
+			mImageView = new ImageView(this);
+			mImageView.setImageResource(R.drawable.tacitly_pic);
+			mBitmap = ImageManager.getBitmapFromCache(image, 400, 400);
+			if(null != mBitmap) {
+				mImageView.setImageBitmap(mBitmap);
+			}
+			mImageLayout.addView(mImageView, mPreLoadingParams);
 		}
 		
 		showLoading();
@@ -219,7 +245,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		if (isShow) {
 			isShow = false;
 			
-			mPreLoading.setVisibility(View.GONE);
+			mImageLayout.setVisibility(View.GONE);
 			if (mAnimationDrawable != null) {
 				if (mAnimationDrawable.isRunning()) {
 					mAnimationDrawable.stop();
@@ -363,8 +389,11 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		super.onDestroy();
 		mHandler.removeMessages(0);
 		mHandler.removeCallbacksAndMessages(null);
-		if (!TextUtils.isEmpty(image)) {
-			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(image);
+		if (null != mBitmap) {
+			if (!mBitmap.isRecycled()) {
+				mBitmap.recycle();
+				mBitmap = null;
+			}
 		}
 		
 		if (null != mVideo) {
@@ -571,7 +600,8 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	}
 	
 	private void exit(){
-//		android.os.Process.killProcess(android.os.Process.myPid());
+		this.cancelTimer();
+		mHandler.removeMessages(1);
 		this.finish();
 	}
 
@@ -645,7 +675,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 				isBuffering = true;
 				if (0 == mVideo.getCurrentPosition()) {
-					mPreLoading.setVisibility(View.VISIBLE);
+					mImageLayout.setVisibility(View.VISIBLE);
 				}
 				showLoading();
 				break;
@@ -690,7 +720,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		GolukDebugUtils.e("xuhw", "BBBBBB=====onError==arg1="+arg1+"==arg2="+arg2);
 		hideLoading();
 		mPlayTime.setText("00:00");
-		mPreLoading.setVisibility(View.VISIBLE);
+		mImageLayout.setVisibility(View.VISIBLE);
 		dialog(msg);
 		
 		return true;
@@ -722,14 +752,8 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		mHandler.removeCallbacks(hideRunnable);
 		mHandler.postDelayed(hideRunnable, HIDE_TIME);
 		mDurationTime.setText(formatTime(mVideo.getDuration()));
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-
-			@Override
-			public void run() {
-				mHandler.sendEmptyMessage(1);
-			}
-		}, 0, 1000);
+		
+		startTimer();
 	}
 	
 	/**
@@ -781,7 +805,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			if (networkConnectTimeOut > 15) {
 				if (!reset) {
 					hideLoading();
-					mPreLoading.setVisibility(View.VISIBLE);
+					mImageLayout.setVisibility(View.VISIBLE);
 					dialog("网络访问异常，请重试！");
 					if(null != mVideo) {
 						mVideo.stopPlayback();
@@ -816,7 +840,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		if (isStop) {
 			isStop = false;
 			showLoading();
-			mPreLoading.setVisibility(View.VISIBLE);
+			mImageLayout.setVisibility(View.VISIBLE);
 		}
 		
 		if (isPause) {
@@ -832,6 +856,27 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			mVideo.start();
 		}
 		
+	}
+	
+	private Timer mTimer = null;
+
+	private void cancelTimer() {
+		if (null != mTimer) {
+			mTimer.cancel();
+			mTimer = null;
+		}
+	}
+
+	private void startTimer() {
+		cancelTimer();
+		mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				mHandler.sendEmptyMessage(1);
+			}
+		}, 0, 1000);
 	}
 
 	@Override
