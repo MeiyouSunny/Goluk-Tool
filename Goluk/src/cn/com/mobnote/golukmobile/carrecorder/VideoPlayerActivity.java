@@ -9,22 +9,21 @@ import io.vov.vitamio.MediaPlayer.OnInfoListener;
 import io.vov.vitamio.MediaPlayer.OnPreparedListener;
 import io.vov.vitamio.MediaPlayer.OnSeekCompleteListener;
 import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -40,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -47,8 +47,8 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -120,8 +120,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	private boolean isShow = false;
 	/** 播放器报错标识 */
 	private boolean error = false;
-	/** 预加载图片 */
-	private ImageView mPreLoading = null;
 	/** 视频第一帧图片地址 */
 	private String image = "";
 	/** 播放重置标识 */
@@ -134,6 +132,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 	/** 视频播放时间 */
 	private long playTime = 0;
 	private long duration = 0;
+	private RelativeLayout mImageLayout = null;
+	private Bitmap mBitmap = null;
+	private ImageView mImageView = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -247,7 +248,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		
 		if(mMediaPlayer.isPlaying()){
 			hideLoading();
-			mPreLoading.setVisibility(View.GONE);
+			mImageLayout.setVisibility(View.GONE);
 			long curPosition = mMediaPlayer.getCurrentPosition();
 			duration = mMediaPlayer.getDuration();
 			
@@ -278,7 +279,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mSurfaceHolder.setFormat(PixelFormat.RGBA_8888); 
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
-		mPreLoading = (ImageView)findViewById(R.id.mPreLoading);
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 		findViewById(R.id.back_btn).setOnClickListener(this);
@@ -292,15 +292,30 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		mPlayBigBtn = (ImageButton) findViewById(R.id.mPlayBigBtn);
 		mSeekBar = (SeekBar) findViewById(R.id.mSeekBar);
 		
-		if (from.equals("suqare")) {
-			mPreLoading.setBackgroundResource(R.drawable.tacitly_pic);
-		}else {
-			mPreLoading.setBackgroundResource(R.drawable.tacitly_pic);
-		}
-		mPreLoading.setVisibility(View.VISIBLE);
+		mImageLayout = (RelativeLayout)findViewById(R.id.mImageLayout);
+		mImageLayout.removeAllViews();
+		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		
-		if (!TextUtils.isEmpty(image)) {
-			BitmapManager.getInstance().mBitmapUtils.display(mPreLoading, image);
+		if (from.equals("suqare")) {
+			SimpleDraweeView view = new SimpleDraweeView(this);
+			GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
+			GenericDraweeHierarchy hierarchy = builder
+					.setFadeDuration(300)
+				    .setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				    .setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				    .setActualImageScaleType(ScaleType.FIT_XY)
+				    .build();
+				view.setHierarchy(hierarchy);
+			view.setImageURI(Uri.parse(image));
+			mImageLayout.addView(view, mPreLoadingParams);
+		}else {
+			mImageView = new ImageView(this);
+			mImageView.setImageResource(R.drawable.tacitly_pic);
+			mBitmap = ImageManager.getBitmapFromCache(image, 400, 400);
+			if(null != mBitmap) {
+				mImageView.setImageBitmap(mBitmap);
+			}
+			mImageLayout.addView(mImageView, mPreLoadingParams);
 		}
 		
 		showLoading();
@@ -578,7 +593,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 			reset = true;
 			isShow = false;
 			mMediaPlayer.reset();
-			mPreLoading.setVisibility(View.VISIBLE);
+			mImageLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -746,7 +761,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 		if (isStop) {
 			isStop = false;
 			showLoading();
-			mPreLoading.setVisibility(View.VISIBLE);
+			mImageLayout.setVisibility(View.VISIBLE);
 		}
 		
 		if (isPause) {

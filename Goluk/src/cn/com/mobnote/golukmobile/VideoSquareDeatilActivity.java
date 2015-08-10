@@ -13,6 +13,11 @@ import java.util.TimerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -46,6 +51,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
@@ -86,7 +92,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private TextView mTextTime = null;
 	/** 视频内容 **/
 	private RelativeLayout mPrepareLayout = null;
-	private ImageView mImagePrepare = null;
 	private FullScreenVideoView mFullVideoView = null;
 	private ImageView mImageLike;
 	private TextView mTextLikeAll, mTextLookAll;
@@ -175,7 +180,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		if (isStop) {
 			isStop = false;
 			showLoading();
-			mImagePrepare.setVisibility(View.VISIBLE);
+			mImageLayout.setVisibility(View.VISIBLE);
 		}
 		if (isPause) {
 			isPause = false;
@@ -200,7 +205,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mTextTime = (TextView) findViewById(R.id.user_time);
 		// 视频内容
 		mPrepareLayout = (RelativeLayout) findViewById(R.id.mPlayerLayout);
-		mImagePrepare = (ImageView) findViewById(R.id.mPreLoading);
 		mFullVideoView = (FullScreenVideoView) findViewById(R.id.video_detail_videoview);
 		mImageLike = (ImageView) findViewById(R.id.video_square_detail_like);
 		mTextLikeAll = (TextView) findViewById(R.id.video_detail_like_all);
@@ -228,8 +232,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 		mTextTitle.setText("视频详情");
 
-		mImagePrepare.setVisibility(View.VISIBLE);
-		mImagePrepare.setBackgroundResource(R.drawable.tacitly_pic);
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
@@ -256,6 +258,24 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mFullVideoView.setOnCompletionListener(this);
 		showLoading();
 
+		String image = getIntent().getStringExtra("imageurl");
+		GolukDebugUtils.e("lily", "---------imageUrl-------"+image);
+		mImageLayout = (RelativeLayout)findViewById(R.id.mImageLayout);
+		mImageLayout.removeAllViews();
+		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		
+			SimpleDraweeView view = new SimpleDraweeView(this);
+			GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
+			GenericDraweeHierarchy hierarchy = builder
+					.setFadeDuration(300)
+				    .setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				    .setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				    .setActualImageScaleType(ScaleType.FIT_XY)
+				    .build();
+				view.setHierarchy(hierarchy);
+			view.setImageURI(Uri.parse(image));
+			mImageLayout.addView(view, mPreLoadingParams);
+		
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -336,11 +356,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		// 点赞
 		case R.id.praiseLayout:
 			GolukDebugUtils.e("lily", "----------点赞状态判断-------"+isZanOk);
-			if(isZanOk){
+//			if(isZanOk){
 				clickPraise();
-			}else{
-				GolukUtils.showToast(mContext, "系统繁忙，请稍候再试");
-			}
+//			}else{
+//				GolukUtils.showToast(mContext, "系统繁忙，请稍候再试");
+//			}
 			break;
 		// 分享
 		case R.id.shareLayout:
@@ -411,10 +431,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		UserUtils.focusHead(mVideoJson.data.avideo.user.headportrait, mImageHead);
 		mTextName.setText(mVideoJson.data.avideo.user.nickname);
 		mTextTime.setText(formatTime(mVideoJson.data.avideo.video.sharingtime));
-		// TODO BitmapManager
-		if (!TextUtils.isEmpty(mVideoJson.data.avideo.video.picture)) {
-			BitmapManager.getInstance().mBitmapUtils.display(mImagePrepare, mVideoJson.data.avideo.video.picture);
-		}
 		// 点赞数、评论数、观看数
 		DecimalFormat df = new DecimalFormat("#,###");
 		int wg_click = Integer.parseInt(mVideoJson.data.avideo.video.clicknumber);
@@ -558,7 +574,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			GolukDebugUtils.e("lily", "111VideoSuqare_CallBack=@@@@Get_VideoDetail==event=" + event + "=msg=" + msg
 					+ "=param1=" + param1 + "=param2=" + param2);
 			if (RESULE_SUCESS == msg) {
+				isZanOk = true;
 				mCustomStartDialog.close();
+				mImageLayout.setVisibility(View.GONE);
 				mLayoutAllInfo.setVisibility(View.VISIBLE);
 				String jsonStr = (String) param2;
 				getData(jsonStr);
@@ -572,7 +590,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					+ "=param1=" + param1 + "=param2=" + param2);
 			if (msg == RESULE_SUCESS) {
 				//{"data":{"result":"3"},"msg":"视频不存在","success":false}
-				isZanOk = true;
+//				isZanOk = true;
 				try{
 					String jsonStr = (String) param2;
 					JSONObject jsonObject = new JSONObject(jsonStr);
@@ -580,7 +598,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					String result = dataObject.optString("result");
 					if("0".equals(result)){
 						//成功
-						likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) + 1;
+						/*likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) + 1;
 						DecimalFormat df = new DecimalFormat("#,###");
 						if (likeNumber < 100000) {
 							mTextLikeAll.setText(df.format(likeNumber));
@@ -588,7 +606,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 							mTextLikeAll.setText("100,000+");
 						}
 						mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
-						isPraise = "1";
+						isPraise = "1";*/
 					}else{
 						//错误
 						isZanOk = false;
@@ -629,7 +647,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	 */
 	public void clickPraise() {
 		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
-			/*likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) + 1;
+			likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) + 1;
 			DecimalFormat df = new DecimalFormat("#,###");
 			if (likeNumber < 100000) {
 				mTextLikeAll.setText(df.format(likeNumber));
@@ -637,7 +655,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				mTextLikeAll.setText("100,000+");
 			}
 			mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
-			isPraise = "1";*/
+			isPraise = "1";
 			boolean b = GolukApplication.getInstance().getVideoSquareManager()
 					.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
 			if(b){
@@ -712,7 +730,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private void hideLoading() {
 		if (isShow) {
 			isShow = false;
-			mImagePrepare.setVisibility(View.GONE);
+			mImageLayout.setVisibility(View.GONE);
 			if (mAnimationDrawable != null) {
 				if (mAnimationDrawable.isRunning()) {
 					mAnimationDrawable.stop();
@@ -756,6 +774,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 		}
 	};
+	private RelativeLayout mImageLayout;
 
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
@@ -764,7 +783,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			isBuffering = true;
 			if (0 == mFullVideoView.getCurrentPosition()) {
-				mImagePrepare.setVisibility(View.VISIBLE);
+				mImageLayout.setVisibility(View.VISIBLE);
 			}
 			showLoading();
 			break;
@@ -802,7 +821,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		error = true;
 		hideLoading();
-		mImagePrepare.setVisibility(View.VISIBLE);
+		mImageLayout.setVisibility(View.VISIBLE);
 		dialog(msg);
 		return false;
 	}
@@ -847,7 +866,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			if (networkConnectTimeOut > 15) {
 				if (!reset) {
 					hideLoading();
-					mImagePrepare.setVisibility(View.VISIBLE);
+					mImageLayout.setVisibility(View.VISIBLE);
 					dialog("网络访问异常，请重试！");
 					if (null != mFullVideoView) {
 						mFullVideoView.stopPlayback();

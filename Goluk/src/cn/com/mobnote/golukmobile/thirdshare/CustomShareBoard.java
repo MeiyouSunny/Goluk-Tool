@@ -14,6 +14,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoShareActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -217,6 +218,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 		} else if(mActivity instanceof VideoSquareDeatilActivity){
 			((VideoSquareDeatilActivity)mActivity).shareSucessDeal(true, mCurrentShareType);
+		} else if (mActivity instanceof VideoCategoryActivity) {
+			((VideoCategoryActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 		}
 	}
 

@@ -290,9 +290,6 @@ public class BaiduMapView implements ILocationFn {
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(u);
 				break;
-			case R.id.live_list:
-				MainActivity.mMainHandler.sendEmptyMessage(500);
-				break;
 			}
 		}
 	}
