@@ -595,7 +595,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		System.out.println("zh:wifi连接=" + mApp.mWiFiStatus);
 //		i.putExtra("ipcState", mApp.mWiFiStatus);
 //		i.putExtra("wifiname", mApp.mGolukName);
-		startActivity(j);
+		startActivity(i);
 		// }
 	}
 

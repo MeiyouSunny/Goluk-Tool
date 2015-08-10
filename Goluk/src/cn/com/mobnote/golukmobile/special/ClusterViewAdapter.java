@@ -344,7 +344,7 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
         int height = (int) ((float) width / 1.77f);
         RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
         layout.addView(view, mPreLoadingParams);
-        
+//        
 	}
 	
 	/**

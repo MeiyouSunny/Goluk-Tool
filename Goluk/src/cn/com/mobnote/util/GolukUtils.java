@@ -338,6 +338,77 @@ public class GolukUtils {
 		return time;
 	}
 
+	public static String getCurrentCommentTime() {
+		Calendar calar = Calendar.getInstance();
+		int year = calar.get(Calendar.YEAR);
+		int month = calar.get(Calendar.MONTH) + 1;
+		int day = calar.get(Calendar.DAY_OF_MONTH);
+		int h = calar.get(Calendar.HOUR_OF_DAY);
+		int m = calar.get(Calendar.MINUTE);
+		int s = calar.get(Calendar.SECOND);
+		int hm = calar.get(Calendar.MILLISECOND);
+
+		StringBuffer sb = new StringBuffer();
+		sb.append(year);
+		if (month >= 10) {
+			sb.append(month);
+		} else {
+			sb.append("0" + month);
+		}
+
+		if (day >= 10) {
+			sb.append(day);
+		} else {
+			sb.append("0" + day);
+		}
+		if (h >= 10) {
+			sb.append(h);
+		} else {
+			sb.append("0" + h);
+		}
+
+		if (m >= 10) {
+			sb.append(m);
+		} else {
+			sb.append("0" + m);
+		}
+		if (s >= 10) {
+			sb.append(s);
+		} else {
+			sb.append("0" + s);
+		}
+
+		if (hm >= 100) {
+			sb.append(hm);
+		} else if (hm >= 10 && hm < 100) {
+			sb.append("0" + hm);
+		} else {
+			sb.append("00" + hm);
+		}
+
+		return sb.toString();
+	}
+
+	public static String formatTimeYMDHMS(String date) {
+		String time = "";
+		if (null != date) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.CHINESE);
+
+			try {
+				Date strtodate = formatter.parse(date);
+				if (null != strtodate) {
+					formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
+					if (null != formatter) {
+						time = formatter.format(strtodate);
+					}
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return time;
+	}
+
 	/**
 	 * 获取评论列表显示时间规则()
 	 * 
@@ -349,9 +420,9 @@ public class GolukUtils {
 	 */
 	public static String getCommentShowFormatTime(String time) {
 		try {
-			String result = time;
+			String result = formatTimeYMDHMS(time);
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINESE);
-			Date oldDate = formatter.parse(time);
+			Date oldDate = formatter.parse(result);
 			// 转换成 2010-11-20 11:10
 			String ymdhm = formatter.format(oldDate);
 
