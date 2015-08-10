@@ -262,6 +262,18 @@ public class BaiduMapView implements ILocationFn {
 		return mRootLayout;
 	}
 
+	public void onDestroy() {
+		if (null != mMapView) {
+			mMapView.onDestroy();
+		}
+	}
+
+	protected void onPause() {
+		if (null != mMapView) {
+			mMapView.onPause();
+		}
+	}
+
 	/**
 	 * 下载气泡图片完成
 	 * 
