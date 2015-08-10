@@ -46,7 +46,6 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.special.ClusterListActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
@@ -65,31 +64,9 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.baidu.mapapi.map.MapView;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
-
-/**
- * <pre>
- * 1.类命名首字母大写
- * 2.公共函数驼峰式命名
- * 3.属性函数驼峰式命名
- * 4.变量/参数驼峰式命名
- * 5.操作符之间必须加空格
- * 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处
- * 8.所有代码必须使用TAB键缩进
- * 9.函数使用块注释,代码逻辑使用行注释
- * 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致
- * </pre>
- * 
- * @ 功能描述:Goluk首页
- * 
- * @author 陈宣宇
- * 
- */
 
 @SuppressLint({ "HandlerLeak", "NewApi" })
 public class MainActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, OnTouchListener,
@@ -101,8 +78,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	/** 百度地图 */
-	private MapView mMapView = null;
 	/** 分享按钮布局 */
 	private RelativeLayout mShareLayout = null;
 	/** 关闭分享布局 */
@@ -115,7 +90,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private Button mLocalVideoListBtn = null;
 	/** 分享网络直播 */
 	private Button mShareLiveBtn = null;
-	
+
 	/** 本地视频列表数据适配器 */
 	public LocalVideoListAdapter mLocalVideoListAdapter = null;
 
@@ -158,9 +133,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private SharedPreferences mPreferences = null;
 	private Editor mEditor = null;
 	private long exitTime = 0;
-
-	/** 热门视频列表默认背景图片 */
-	private ImageView squareDefault;
 
 	SharePlatformUtil sharePlatform;
 
@@ -234,7 +206,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
-		
+
 		// 未登录跳转登录
 		Intent itStart_have = getIntent();
 		if (null != itStart_have.getStringExtra("userstart")) {
@@ -336,7 +308,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
 
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
-		squareDefault = (ImageView) findViewById(R.id.square_default);
 
 		userInfoLayout = findViewById(R.id.user_info);
 
@@ -584,8 +555,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		Intent j = new Intent(MainActivity.this, SpecialListActivity.class);
 		j.putExtra("ztid", "zt001");
 		System.out.println("zh:wifi连接=" + mApp.mWiFiStatus);
-//		i.putExtra("ipcState", mApp.mWiFiStatus);
-//		i.putExtra("wifiname", mApp.mGolukName);
+		// i.putExtra("ipcState", mApp.mWiFiStatus);
+		// i.putExtra("wifiname", mApp.mGolukName);
 		startActivity(i);
 		// }
 	}
@@ -598,10 +569,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
 
-		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
-		if (null != mMapView) {
-			mMapView.onDestroy();
-		}
 		try {
 			// 应用退出时调用
 			CarRecorderManager.onExit(this);
@@ -659,10 +626,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// 在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
-		if (null != mMapView) {
-			mMapView.onPause();
-		}
 		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onDestroy();
 		}
@@ -781,16 +744,19 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case R.id.index_div:
 			if (divIndex == 0) {
 				GolukUtils.freeBitmap(indexDiv.getBackground());
-				indexDiv.setBackgroundResource(R.drawable.guide_two);
+				// indexDiv.setBackgroundResource(R.drawable.guide_two);
 				divIndex++;
-			} else if (divIndex == 1) {
-				GolukUtils.freeBitmap(indexDiv.getBackground());
-				indexDiv.setBackgroundResource(R.drawable.guide_three);
-				divIndex++;
-			} else {
 				indexDiv.setVisibility(View.GONE);
 				GolukUtils.freeBitmap(indexDiv.getBackground());
 			}
+			// else if (divIndex == 1) {
+			// GolukUtils.freeBitmap(indexDiv.getBackground());
+			// indexDiv.setBackgroundResource(R.drawable.guide_three);
+			// divIndex++;
+			// } else {
+			// indexDiv.setVisibility(View.GONE);
+			// GolukUtils.freeBitmap(indexDiv.getBackground());
+			// }
 			break;
 		}
 	}
@@ -800,41 +766,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		Drawable drawable;
 
 		if (id == R.id.index_square_btn) {
-			if (null != mMapView) {
-				mMapView.onPause();
-			}
+
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			mVideoSquareActivity.onResume();
 			drawable = this.getResources().getDrawable(R.drawable.index_find_btn_press);
 			msquareBtn.setTextColor(Color.rgb(59, 151, 245));
 			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
 		}
-	}
-
-	private void click_share() {
-		GolukDebugUtils.i("lily", "----------click------");
-		if (!mApp.isUserLoginSucess) {
-			mShareLayout.setVisibility(View.GONE);
-			mApp.mUser.setUserInterface(this);
-			if (mApp.autoLoginStatus == 1) {
-				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							return true;
-						}
-						return false;
-					}
-				}).create();
-				dialog.show();
-				return;
-			}
-			toLogin();
-			return;
-		}
-		// 视频分享
-		mShareLayout.setVisibility(View.VISIBLE);
 	}
 
 	private Builder mBuilder = null;
