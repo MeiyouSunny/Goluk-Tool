@@ -167,7 +167,9 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 				image.setLayoutParams(mPreLoadingParams);
 
 				BitmapManager.getInstance().mBitmapUtils.display(image, headdata.imagepath);
+				
 
+				image.setOnClickListener(new SpecialCommentListener(mContext,headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
 			}
 			break;
 		case TYPE_2:
