@@ -56,6 +56,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		mRootLayout = new RelativeLayout(mContext);
 		mRootLayout.addView(mRTPullListView);
 		
+		initListener();
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
 		if("".equals(historyDate)){
 			historyDate = sdf.format(new Date());
@@ -135,6 +136,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		}
 		mWonderfulSelectedAdapter.setData(mDataList);
 		
+	}
+	
+	private void initListener() {
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -174,7 +178,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 			}
 			
 		});
-		
 	}
 
 	public View getView(){
