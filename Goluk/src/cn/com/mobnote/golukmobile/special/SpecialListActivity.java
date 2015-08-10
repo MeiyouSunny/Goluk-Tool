@@ -279,6 +279,10 @@ public class SpecialListActivity extends BaseActivity implements
 						int width = SoundUtils.getInstance()
 								.getDisplayMetrics().widthPixels;
 						int height = (int) ((float) width / 1.77f);
+						
+						if("1".equals(headdata.videotype)){
+							view.findViewById(R.id.mPlayBigBtn).setVisibility(View.GONE);
+						}
 
 						txt.setText(headdata.describe);
 
@@ -289,6 +293,8 @@ public class SpecialListActivity extends BaseActivity implements
 								headdata.imagepath);
 
 						lv.addHeaderView(view);
+						
+						image.setOnClickListener(new SpecialCommentListener(this,headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
 					}
 
 					Map<String, Object> map = sdm
