@@ -98,7 +98,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private TextView mTextAutor, mTextCommentCount, mTextCommentFirst, mTextCommentSecond, mTextCommenThird;
 	private TextView mTextLink = null;
 	private LinearLayout mLayoutPraise, mLayoutComment, mLayoutShare;
-	/**所有数据**/
+	/** 所有数据 **/
 	private LinearLayout mLayoutAllInfo = null;
 
 	/** 数据 **/
@@ -137,8 +137,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private boolean isStop = false;
 	/** 暂停标识 */
 	private boolean isPause = false;
-	/** 点击标识 **/
-	private boolean isCilck = false;
+	/** 点赞标识 **/
+	private boolean isZanOk = false;
+	private String isPraise = "0";
+	private int likeNumber = 0;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -340,7 +342,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		// 点赞
 		case R.id.praiseLayout:
-			clickPraise();
+			GolukDebugUtils.e("lily", "----------点赞状态判断-------"+isZanOk);
+			if(isZanOk){
+				clickPraise();
+			}else{
+				GolukUtils.showToast(mContext, "系统繁忙，请稍候再试");
+			}
 			break;
 		// 分享
 		case R.id.shareLayout:
@@ -380,7 +387,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 		if (!b) {
 			mCustomStartDialog.close();
-		}else{
+		} else {
 			mLayoutAllInfo.setVisibility(View.GONE);
 		}
 	}
@@ -538,17 +545,45 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 		} else if (event == VSquare_Req_Get_VideoDetail) {
+			GolukDebugUtils.e("lily", "111VideoSuqare_CallBack=@@@@Get_VideoDetail==event=" + event + "=msg=" + msg
+					+ "=param1=" + param1 + "=param2=" + param2);
 			if (RESULE_SUCESS == msg) {
-				GolukDebugUtils.e("xuhw", "111VideoSuqare_CallBack=@@@@Get_VideoDetail==event=" + event + "=msg=" + msg
-						+ "=param1=" + param1 + "=param2=" + param2);
-				if (RESULE_SUCESS == msg) {
-					mCustomStartDialog.close();
-					mLayoutAllInfo.setVisibility(View.VISIBLE);
+				mCustomStartDialog.close();
+				mLayoutAllInfo.setVisibility(View.VISIBLE);
+				String jsonStr = (String) param2;
+				getData(jsonStr);
+			} else {
+				mCustomStartDialog.close();
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
+		} else if (event == VSquare_Req_VOP_Praise) {
+			GolukDebugUtils.e("lily", "222VideoSuqare_CallBack=@@@@Get_VideoDetail==event=" + event + "=msg=" + msg
+					+ "=param1=" + param1 + "=param2=" + param2);
+			if (msg == RESULE_SUCESS) {
+				//{"data":{"result":"3"},"msg":"视频不存在","success":false}
+				isZanOk = true;
+				try{
 					String jsonStr = (String) param2;
-					getData(jsonStr);
-				} else {
-					mCustomStartDialog.close();
-					GolukUtils.showToast(this, "网络异常，请检查网络");
+					JSONObject jsonObject = new JSONObject(jsonStr);
+					JSONObject dataObject = jsonObject.optJSONObject("data");
+					String result = dataObject.optString("result");
+					if("0".equals(result)){
+						//成功
+						likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) + 1;
+						DecimalFormat df = new DecimalFormat("#,###");
+						if (likeNumber < 100000) {
+							mTextLikeAll.setText(df.format(likeNumber));
+						} else {
+							mTextLikeAll.setText("100,000+");
+						}
+						mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
+						isPraise = "1";
+					}else{
+						//错误
+						GolukUtils.showToast(mContext, "视频点赞异常，请稍后再试");
+					}
+				}catch(Exception e){
+					e.printStackTrace();
 				}
 			}
 		}
@@ -572,10 +607,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	 * 点赞
 	 */
 	public void clickPraise() {
-		String isPraise = "0";
-		int likeNumber = 0;
 		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
-			likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) + 1;
+			/*likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) + 1;
 			DecimalFormat df = new DecimalFormat("#,###");
 			if (likeNumber < 100000) {
 				mTextLikeAll.setText(df.format(likeNumber));
@@ -583,9 +616,14 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				mTextLikeAll.setText("100,000+");
 			}
 			mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
-			isPraise = "1";
-			GolukApplication.getInstance().getVideoSquareManager()
+			isPraise = "1";*/
+			boolean b = GolukApplication.getInstance().getVideoSquareManager()
 					.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
+			if(b){
+				isZanOk = true;
+			}else{
+				isZanOk = false;
+			}
 		} else {
 			likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) - 1;
 

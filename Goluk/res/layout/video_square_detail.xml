@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/user_login_bg">
+    android:background="@color/user_login_bg" >
 
     <!-- title -->
 
-    <include layout="@layout/user_title"
-        android:id="@+id/video_square_detail_head" />
+    <include
+        android:id="@+id/video_square_detail_head"
+        layout="@layout/user_title" />
 
     <LinearLayout
         android:id="@+id/video_square_detail_show_allinfo"
@@ -91,23 +92,19 @@
 
             <!-- 进度条 -->
 
-            <RelativeLayout
-                android:id="@+id/bottom_layout"
+            <SeekBar
+                android:id="@+id/seekbar"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true" >
+                android:layout_height="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/player_time_bg"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/player_seekbar_style"
+                android:thumb="@drawable/player_time_control_btn" />
 
-                <SeekBar
-                    android:id="@+id/seekbar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="13dp"
-                    android:background="@drawable/player_time_bg"
-                    android:max="100"
-                    android:progress="0"
-                    android:progressDrawable="@drawable/player_seekbar_style"
-                    android:thumb="@drawable/player_time_control_btn" />
-            </RelativeLayout>
             <!-- loading -->
 
             <LinearLayout
