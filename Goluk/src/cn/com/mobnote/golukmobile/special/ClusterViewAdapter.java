@@ -267,6 +267,7 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		holder.commentLayout.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
 		holder.totalcomments.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
 		holder.praiseLayout.setOnClickListener(new ClusterPressListener(mContext, clusterInfo, this));
+		holder.function.setOnClickListener(new ClusterPressListener(mContext, clusterInfo, this));
 		holder.imageLayout.setOnClickListener(new SpecialCommentListener(mContext,clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
 		holder.shareLayout.setOnClickListener(new SpecialCommentListener(mContext,clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
 	}
