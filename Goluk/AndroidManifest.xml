@@ -134,6 +134,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="cn.com.mobnote.golukmobile.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
