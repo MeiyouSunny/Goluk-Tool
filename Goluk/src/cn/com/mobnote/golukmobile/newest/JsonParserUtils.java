@@ -165,15 +165,19 @@ public class JsonParserUtils {
 											mVideoEntity.ispraise = video.optString("ispraise");
 											mVideoEntity.livevideodata = lvd;
 											mVideoEntity.reason = video.optString("reason");
-											mVideoEntity.iscomment = video.optString("iscomment");
-											mVideoEntity.comcount = video.optString("comcount");
 											
-											JSONArray comment = video.optJSONArray("comment");
-											if(null != comment){
-												for(int j=0; j<comment.length(); j++){
-													JSONObject item = comment.getJSONObject(j);
-													CommentDataInfo comminfo = new CommentDataInfo(item);
-													mVideoEntity.commentList.add(comminfo);
+											JSONObject comment = video.optJSONObject("comment");
+											if(null != comment) {
+												mVideoEntity.iscomment = comment.optString("iscomment");
+												mVideoEntity.comcount = comment.optString("comcount");
+												JSONArray comlist = comment.optJSONArray("comlist");
+												if(null != comlist){
+													
+													for(int j=0; j<comlist.length(); j++){
+														JSONObject item = comlist.getJSONObject(j);
+														CommentDataInfo comminfo = new CommentDataInfo(item);
+														mVideoEntity.commentList.add(comminfo);
+													}
 												}
 											}
 											

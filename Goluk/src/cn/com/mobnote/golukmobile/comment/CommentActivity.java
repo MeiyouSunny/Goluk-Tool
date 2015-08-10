@@ -38,30 +38,12 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
-		VideoSuqareManagerFn, ILiveDialogManagerFn, OnItemLongClickListener {
+		VideoSuqareManagerFn, ILiveDialogManagerFn, OnItemLongClickListener, ICommentFn {
 
 	/** 如果为true, 則为测试数据，false則使用真实数据 (上线前要删除掉) */
 	private final boolean isTest = false;
 
 	public static final String TAG = "Comment";
-
-	/** 视频、专题或直播的id */
-	public static final String COMMENT_KEY_MID = "comment_key_mid";
-	/** 评论主题类型 (1:单视频；2:专题；3:直播；4:其它) */
-	public static final String COMMENT_KEY_TYPE = "comment_key_mid";
-	/** 是否弹出键盘, true/false 弹出/不弹出 */
-	public static final String COMMENT_KEY_SHOWSOFT = "comment_key_showsoft";
-	/** 是否允许评论 */
-	public static final String COMMENT_KEY_ISCAN_INPUT = "comment_key_iscan_input";
-
-	/** 一页请求多少条数据 */
-	private static final int PAGE_SIZE = 20;
-	/** 首次进入 */
-	private static final int OPERATOR_FIRST = 0;
-	/** 上拉 */
-	private static final int OPERATOR_PUSH = 1;
-	/** 下拉 */
-	private static final int OPERATOR_PULL = 2;
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -94,11 +76,13 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
 
-	private String historyDate = "2015-8-6 18:10";
+	private String historyDate = "";
 
 	private VideoSquareManager mVideoSquareManager = null;
 	private RelativeLayout mCommentInputLayout = null;
 	private TextView mNoInputTv = null;
+	/** 保存将要删除的数据 */
+	private CommentBean mWillDelBean = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +91,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mApp = (GolukApplication) getApplication();
 		getWindow().setContentView(R.layout.comment);
 		getIntentData();
+		historyDate = GolukUtils.getCurrentFormatTime();
 		initView();
 		isExit = false;
 		initListener();
@@ -159,6 +144,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mIsShowSoft = intent.getBooleanExtra(COMMENT_KEY_SHOWSOFT, true);
 			isCanInput = intent.getBooleanExtra(COMMENT_KEY_ISCAN_INPUT, true);
 		}
+
+		GolukDebugUtils.e("", "jyf----CommentActivity-----mId:" + mId + "   type:" + mTopicType + "  mIsShowSoft:"
+				+ mIsShowSoft + "  isCanInput:" + isCanInput);
+
 	}
 
 	@Override
@@ -189,22 +178,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mRTPullListView.setOnItemLongClickListener(this);
 
 		loading = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
-	}
-
-	private ArrayList<CommentBean> getTestData() {
-		ArrayList<CommentBean> data = new ArrayList<CommentBean>();
-
-		for (int i = 0; i < 10; i++) {
-			CommentBean bean = new CommentBean();
-			bean.mUserHead = "2";
-			bean.mUserName = "name: " + i;
-			bean.mCommentTxt = "This is comment :" + i;
-			bean.mCommentTime = "today 13:19";
-
-			data.add(bean);
-		}
-
-		return data;
 	}
 
 	@Override
@@ -267,7 +240,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 		this.mAdapter.setData(dataList);
 
-		mRTPullListView.onRefreshComplete(historyDate);
+		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		this.removeFoot();
 	}
 
@@ -280,8 +253,17 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 		this.mAdapter.appendData(dataList);
 
-		mRTPullListView.onRefreshComplete(historyDate);
+		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		this.removeFoot();
+	}
+
+	private String getLastRefreshTime() {
+		return GolukUtils.getCurrentFormatTime();
+		// if (this.mLastBean == null) {
+		// return historyDate;
+		// } else {
+		// return GolukUtils.formatTimeYMDHMS(mLastBean.mCommentTime);
+		// }
 	}
 
 	// 上拉刷新，数据回调处理
@@ -295,56 +277,86 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		this.mAdapter.appendData(dataList);
 	}
 
+	private void callBackFailed() {
+		if (mCurrentOperator == OPERATOR_FIRST || mCurrentOperator == OPERATOR_PULL) {
+			mRTPullListView.onRefreshComplete(getLastRefreshTime());
+		} else if (mCurrentOperator == OPERATOR_PUSH) {
+			// 上拉刷新
+			removeFoot();
+		}
+
+		noData(mAdapter.getCount() <= 0);
+	}
+
+	private void noDataDeal() {
+		mIsHaveData = false;
+		if (mCurrentOperator == OPERATOR_PUSH) {// 上拉刷新
+			removeFoot();
+		} else if (mCurrentOperator == OPERATOR_FIRST || OPERATOR_FIRST == mCurrentOperator) {// 下拉刷新
+			mRTPullListView.onRefreshComplete(getLastRefreshTime());
+		}
+
+		noData(mAdapter.getCount() <= 0);
+	}
+
 	// 是否显示无数据提示
 	private void noData(boolean isno) {
 		if (isno) {
+			mRTPullListView.setVisibility(View.GONE);
 			mNoData.setVisibility(View.VISIBLE);
 		} else {
+			mRTPullListView.setVisibility(View.VISIBLE);
 			mNoData.setVisibility(View.GONE);
 		}
 	}
 
+	/** 记录每次记录的最后一条数据，用于更新最后一次刷新时间 */
+	CommentBean mLastBean = null;
+
 	private void callBack_commentList(int msg, int param1, Object param2) {
-
-		if (1 == msg) {
-			try {
-				JSONObject rootObj = new JSONObject((String) param2);
-				boolean isSucess = rootObj.getBoolean("success");
-				JSONObject dataObj = rootObj.getJSONObject("data");
-				String result = dataObj.getString("result");
-				int count = Integer.parseInt(dataObj.getString("count"));
-				if (count > 0) {
-					// 有数据
-					ArrayList<CommentBean> dataList = JsonUtil.parseCommentData(dataObj.getJSONArray("comments"));
-					if (null != dataList && dataList.size() > 0) {
-
-						noData(false);
-
-						if (OPERATOR_FIRST == mCurrentOperator) {
-							// 首次进入
-							firstEnterCallBack(count, dataList);
-						} else if (OPERATOR_PULL == mCurrentOperator) {
-							// 上拉刷新
-							pushCallBack(count, dataList);
-						} else if (OPERATOR_PUSH == mCurrentOperator) {
-							// 下拉刷新
-							pullCallBack(count, dataList);
-						}
-
-					} else {
-						// 无数据
-						noDataDeal();
-					}
-				} else {
-					// 无数据
-					noDataDeal();
-				}
-
-			} catch (Exception e) {
-
+		if (1 != msg) {
+			// 请求失败
+			callBackFailed();
+			return;
+		}
+		try {
+			JSONObject rootObj = new JSONObject((String) param2);
+			boolean isSucess = rootObj.getBoolean("success");
+			if (!isSucess) {
+				// 请求失败
+				callBackFailed();
+				return;
 			}
-		} else {
+			JSONObject dataObj = rootObj.getJSONObject("data");
+			String result = dataObj.getString("result");
+			int count = Integer.parseInt(dataObj.getString("count"));
+			if (count <= 0) {
+				// 　没数据
+				noDataDeal();
+				return;
+			}
+			// 有数据
+			ArrayList<CommentBean> dataList = JsonUtil.parseCommentData(dataObj.getJSONArray("comments"));
+			if (null == dataList || dataList.size() <= 0) {
+				// 无数据
+				noDataDeal();
+				return;
+			}
+			mLastBean = dataList.get(dataList.size() - 1);
+			noData(false);
+			if (OPERATOR_FIRST == mCurrentOperator) {
+				// 首次进入
+				firstEnterCallBack(count, dataList);
+			} else if (OPERATOR_PULL == mCurrentOperator) {
+				// 上拉刷新
+				pushCallBack(count, dataList);
+			} else if (OPERATOR_PUSH == mCurrentOperator) {
+				// 下拉刷新
+				pullCallBack(count, dataList);
+			}
 
+		} catch (Exception e) {
+			callBackFailed();
 		}
 	}
 
@@ -352,18 +364,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		if (loading != null) {
 			if (mRTPullListView != null) {
 				mRTPullListView.removeFooterView(loading);
-			}
-		}
-	}
-
-	private void noDataDeal() {
-		if (mCurrentOperator == OPERATOR_PUSH) {// 上拉刷新
-			removeFoot();
-		} else if (mCurrentOperator == OPERATOR_FIRST) {// 下拉刷新
-			mRTPullListView.onRefreshComplete(historyDate);
-		} else if (OPERATOR_FIRST == mCurrentOperator) {
-			if (this.mAdapter.getCount() <= 0) {
-				noData(true);
 			}
 		}
 	}
@@ -378,7 +378,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
 					if (null != bean) {
 						noData(false);
-						bean.mCommentTime = GolukUtils.getCurrentFormatTime();
+						bean.mCommentTime = GolukUtils.getCurrentCommentTime();
 						this.mAdapter.addFirstData(bean);
 						CommentTimerManager.getInstance().start(10);
 					} else {
@@ -411,6 +411,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (isSucess) {
 				mAdapter.deleteData(mWillDelBean);
 				GolukUtils.showToast(this, "删除成功");
+
+				noData(mAdapter.getCount() <= 0);
 			} else {
 				GolukUtils.showToast(this, "删除失败");
 			}
@@ -442,8 +444,16 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	@Override
 	public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+		GolukDebugUtils.e("", "jyf----CommentActivity-----onScrollStateChanged-----scrollState: " + scrollState + "  "
+				+ mIsHaveData);
 		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-			if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
+			int count = mRTPullListView.getAdapter().getCount();
+			int visibleCount = wonderfulFirstVisible + wonderfulVisibleCount;
+
+			GolukDebugUtils.e("", "jyf----CommentActivity-----onScrollStateChanged-----222: " + count + "  " + count
+					+ "  vicount:" + visibleCount + "  mIsHaveData:" + mIsHaveData);
+
+			if (count == visibleCount) {
 				if (mIsHaveData) {
 					startPush();
 				}
@@ -533,9 +543,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 
 	}
-
-	/** 保存将要删除的数据 */
-	CommentBean mWillDelBean = null;
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
