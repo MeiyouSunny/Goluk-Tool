@@ -336,6 +336,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			toComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			toComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
 			toComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			toComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 			startActivity(toComment);
 			break;
 		// 显示全部评论
@@ -345,6 +346,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			showComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			showComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, false);
 			showComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			showComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 			startActivity(showComment);
 			break;
 		// 外链接

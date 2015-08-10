@@ -194,6 +194,7 @@ public class SpecialDataManage {
 								item.ispraise = video.optString("ispraise");
 								item.videotype = "2";
 								item.videopath = video.optString("ondemandwebaddress");
+								item.uid = video.optString("uid");
 
 								JSONObject comment = video.getJSONObject("comment");
 								item.iscomment = comment.optString("iscomment");

@@ -7,7 +7,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;

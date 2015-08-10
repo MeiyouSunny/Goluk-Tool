@@ -18,10 +18,16 @@ public class CommentListViewAdapter extends BaseAdapter {
 	private LayoutInflater mLayoutFlater = null;
 	private Context mContext = null;
 	private ArrayList<CommentBean> mData = new ArrayList<CommentBean>();
+	/** 此视频的发布者 */
+	private String mVideoUserId = null;
 
 	public CommentListViewAdapter(Context context) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
+	}
+
+	public void setVideoUserId(String userid) {
+		mVideoUserId = userid;
 	}
 
 	public void setData(ArrayList<CommentBean> data) {
@@ -82,7 +88,6 @@ public class CommentListViewAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int arg0) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -102,13 +107,13 @@ public class CommentListViewAdapter extends BaseAdapter {
 		}
 
 		final CommentBean temp = mData.get(position);
-
+		// 设置头像
 		holder.mHead.setBackgroundResource(UserUtils.getUserHeadImageResourceId(temp.mUserHead));
-
+		// 设置名称
 		holder.mName.setText(getShowUserName(temp));
-
+		// 设置评论内容
 		holder.mContent.setText(temp.mCommentTxt);
-
+		// 设置显示时间
 		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
 		return converView;
 	}
@@ -121,15 +126,16 @@ public class CommentListViewAdapter extends BaseAdapter {
 	}
 
 	private String getShowUserName(CommentBean temp) {
-		if (null == mContext) {
+		if (null == mContext || null == mVideoUserId || "".equals(mVideoUserId)) {
 			return temp.mUserName;
 		}
+
 		UserInfo userInfo = ((CommentActivity) mContext).mApp.getMyInfo();
 		if (null == userInfo) {
 			return temp.mUserName;
 		}
 
-		if (userInfo.uid.equals(temp.mUserId)) {
+		if (userInfo.uid.equals(mVideoUserId)) {
 			return "车主";
 		}
 		return temp.mUserName;

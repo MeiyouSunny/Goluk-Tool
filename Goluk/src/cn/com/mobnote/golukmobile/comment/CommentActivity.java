@@ -62,6 +62,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private String mId = null;
 	/** 评论主题类型 (1:单视频；2:专题；3:直播；4:其它) */
 	private String mTopicType = null;
+	private String mVideoUserId = null;
 	/** 操作 (0:首次进入；1:下拉；2:上拉) */
 	private int mCurrentOperator = 0;
 	/** 是否还有分页 */
@@ -143,6 +144,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mTopicType = intent.getStringExtra(COMMENT_KEY_TYPE);
 			mIsShowSoft = intent.getBooleanExtra(COMMENT_KEY_SHOWSOFT, true);
 			isCanInput = intent.getBooleanExtra(COMMENT_KEY_ISCAN_INPUT, true);
+			mVideoUserId = intent.getStringExtra(COMMENT_KEY_USERID);
 		}
 
 		GolukDebugUtils.e("", "jyf----CommentActivity-----mId:" + mId + "   type:" + mTopicType + "  mIsShowSoft:"
@@ -169,6 +171,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mSendBtn.setOnClickListener(this);
 
 		mAdapter = new CommentListViewAdapter(this);
+		mAdapter.setVideoUserId(mVideoUserId);
 		mRTPullListView.setAdapter(mAdapter);
 		if (isCanInput) {
 			mRTPullListView.setonRefreshListener(this);

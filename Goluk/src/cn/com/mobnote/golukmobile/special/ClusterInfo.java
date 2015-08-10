@@ -16,7 +16,8 @@ public class ClusterInfo {
 	 * 图片地址
 	 */
 	public String imagepath;
-	
+	/** 发布者的uid */
+	public String uid;
 	/**
 	 * 作者
 	 */

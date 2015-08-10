@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile.special;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -33,6 +32,7 @@ public class ClusterCommentListener implements OnClickListener{
 				iscomment = true;
 			}
 			intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, iscomment);
+			intent.putExtra(CommentActivity.COMMENT_KEY_USERID, clusterInfo.uid);
 			
 			mContext.startActivity(intent);
 			break;
