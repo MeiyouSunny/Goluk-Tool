@@ -16,7 +16,7 @@ public class ClickFunctionListener implements OnClickListener{
 
 	@Override
 	public void onClick(View arg0) {
-		new FunctionDialog(mContext, mVideoSquareInfo).show();
+		new FunctionDialog(mContext, mVideoSquareInfo.mVideoEntity.videoid).show();
 	}
 	
 }

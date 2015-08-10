@@ -49,22 +49,4 @@
         android:layout_below="@id/title_layout" >
     </FrameLayout>
 
-    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
-        android:id="@+id/mRTPullListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/title_layout"
-        android:divider="#ededed"
-        android:dividerHeight="2dp"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/square_type_default"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/qitadifang"
-        android:contentDescription="TODO"
-        android:visibility="gone" />
-
 </RelativeLayout>

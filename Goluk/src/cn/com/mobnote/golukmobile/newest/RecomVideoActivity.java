@@ -13,6 +13,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
@@ -97,9 +98,14 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 			finish();
 			break;
 		case R.id.tuijian:
-			showProgressDialog();
-			boolean a = GolukApplication.getInstance().getVideoSquareManager().recomVideo("1", videoid, text.getText().toString());
-			GolukDebugUtils.e("", "TTTTT=====tuijian====a="+a);
+			String textStr = text.getText().toString();
+			if(TextUtils.isEmpty(textStr)) {
+				GolukUtils.showToast(this, "请填写推荐理由！");
+			}else {
+				showProgressDialog();
+				boolean a = GolukApplication.getInstance().getVideoSquareManager().recomVideo("1", videoid, text.getText().toString());
+				GolukDebugUtils.e("", "TTTTT=====tuijian====a="+a);
+			}
 			break;
 
 		default:

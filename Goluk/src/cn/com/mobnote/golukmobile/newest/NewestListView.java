@@ -4,10 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -33,8 +31,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 public class NewestListView implements VideoSuqareManagerFn {
@@ -76,6 +72,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 		sharePlatform = new SharePlatformUtil(mContext);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 
+		initListener();
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
 		if ("".equals(historyDate)) {
 			historyDate = sdf.format(new Date());
@@ -89,10 +86,6 @@ public class NewestListView implements VideoSuqareManagerFn {
 
 		loadHistoryData();
 		httpPost(true, "0", "");
-	}
-	
-	public void loadData() {
-		
 	}
 
 	private void loadHistoryData() {
@@ -197,10 +190,14 @@ public class NewestListView implements VideoSuqareManagerFn {
 
 		if ("0".equals(curOperation)) {
 			mRTPullListView.setAdapter(mNewestAdapter);
+			mNewestAdapter.setData(mHeadDataInfo, mDataList);
+		}else {
+			mNewestAdapter.loadData(mDataList);
 		}
-		mNewestAdapter.setData(mHeadDataInfo, mDataList);
-//		mNewestAdapter.setData(null, mDataList);
 
+	}
+	
+	private void initListener() {
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -238,7 +235,6 @@ public class NewestListView implements VideoSuqareManagerFn {
 			}
 
 		});
-
 	}
 
 	public View getView() {
