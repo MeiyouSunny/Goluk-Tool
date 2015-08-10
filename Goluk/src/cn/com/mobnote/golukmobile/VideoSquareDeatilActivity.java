@@ -429,11 +429,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mTextLikeAll.setText("100,000+");
 			mTextCommentCount.setText("100,000+");
 		}
-		/*if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
-			mImageLike.setBackgroundResource(R.drawable.videodetail_like);
-		} else {
-			mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
-		}*/
 
 		showText(mTextAutor, mVideoJson.data.avideo.user.nickname, mVideoJson.data.avideo.video.describe);
 		// 三条评论
@@ -605,6 +600,15 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 		}
 	}
+	
+	// 分享成功后需要调用的接口
+		public void shareSucessDeal(boolean isSucess, String channel) {
+			if (!isSucess) {
+				GolukUtils.showToast(mContext, "分享失败");
+				return;
+			}
+			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, mVideoJson.data.avideo.video.videoid);
+		}
 
 	public Bitmap getThumbBitmap(String netUrl) {
 		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";

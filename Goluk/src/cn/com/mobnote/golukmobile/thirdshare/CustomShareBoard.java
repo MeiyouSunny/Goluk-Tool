@@ -11,6 +11,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoShareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity;
@@ -214,6 +215,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			((VideoSquarePlayActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
 		} else if (mActivity instanceof LiveActivity) {
 			((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+		} else if(mActivity instanceof VideoSquareDeatilActivity){
+			((VideoSquareDeatilActivity)mActivity).shareSucessDeal(true, mCurrentShareType);
 		}
 	}
 
