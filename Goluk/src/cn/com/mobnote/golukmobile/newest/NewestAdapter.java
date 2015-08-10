@@ -57,8 +57,19 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	public void setData(NewestListHeadDataInfo headata, List<VideoSquareInfo> data) {
-		GolukDebugUtils.e("", "TTTTTT==1111===headata="+headata);
+		mHeadView = null;
 		mHeadDataInfo = headata;
+		mDataList.clear();
+		mDataList.addAll(data);
+		if (null == mHeadDataInfo) {
+			count = mDataList.size();
+		} else {
+			count = mDataList.size() + 1;
+		}
+		this.notifyDataSetChanged();
+	}
+	
+	public void loadData(List<VideoSquareInfo> data) {
 		mDataList.clear();
 		mDataList.addAll(data);
 		if (null == mHeadDataInfo) {
@@ -110,7 +121,7 @@ public class NewestAdapter extends BaseAdapter {
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		int type = getItemViewType(arg0);
-		GolukDebugUtils.e("", "TTTTTTT==newest==arg0=="+arg0+"==type="+type+"==convertView="+convertView);
+		GolukDebugUtils.e("", "TTTTTTT==newest==arg0=="+arg0+"==type="+type+"==convertView=");
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView();
 		} else {
@@ -354,8 +365,9 @@ public class NewestAdapter extends BaseAdapter {
 		int imagewidth = (int) ((width - 10 * density) / 2);
 		int imageheight = (int) (imagewidth * 0.56);
 		if (null == mHeadView) {
+			GolukDebugUtils.e("", "TTTTTT=====@@@@@@@@@@@@@==========");
 			mHeadView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
-		}
+//		}
 		RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
 		RelativeLayout liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
 
@@ -368,7 +380,7 @@ public class NewestAdapter extends BaseAdapter {
 			liveLayout.setLayoutParams(liveLayoutParams);
 
 			RelativeLayout imagelayout = (RelativeLayout) mHeadView.findViewById(R.id.imagelayout);
-//			loadImage(imagelayout, mLiveInfo.pic);
+			loadImage(imagelayout, mLiveInfo.pic);
 
 			LinearLayout mLookLayout = (LinearLayout) mHeadView.findViewById(R.id.mLookLayout);
 			TextView mLookNum = (TextView) mHeadView.findViewById(R.id.mLookNum);
@@ -398,9 +410,9 @@ public class NewestAdapter extends BaseAdapter {
 
 			RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 
-//			mTitleName.setText(mCategoryDataInfo.name);
-//			mUpdateTime.setText(mCategoryDataInfo.time);
-//			loadImage(imageLayout, mCategoryDataInfo.coverurl);
+			mTitleName.setText(mCategoryDataInfo.name);
+			mUpdateTime.setText(mCategoryDataInfo.time);
+			loadImage(imageLayout, mCategoryDataInfo.coverurl);
 
 			int id = i + 1111 - 2;
 			if (i % 2 == 0) {
@@ -415,6 +427,7 @@ public class NewestAdapter extends BaseAdapter {
 
 			main.addView(item, itemparams);
 
+		}
 		}
 
 		return mHeadView;

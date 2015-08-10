@@ -35,7 +35,7 @@ public class ClickPraiseListener implements OnClickListener{
 			
 		}else {
 			GolukApplication.getInstance().getVideoSquareManager().
-			clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, mVideoSquareInfo.mVideoEntity.type);
+			clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
 			
 			if (null != mNewestListView) {
 				mNewestListView.updateClickPraiseNumber(false, mVideoSquareInfo);
