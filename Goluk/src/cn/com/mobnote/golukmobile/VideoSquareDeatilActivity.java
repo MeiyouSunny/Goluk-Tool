@@ -411,7 +411,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		UserUtils.focusHead(mVideoJson.data.avideo.user.headportrait, mImageHead);
 		mTextName.setText(mVideoJson.data.avideo.user.nickname);
 		mTextTime.setText(formatTime(mVideoJson.data.avideo.video.sharingtime));
-		// TODO 视频播放
+		// TODO BitmapManager
 		if (!TextUtils.isEmpty(mVideoJson.data.avideo.video.picture)) {
 			BitmapManager.getInstance().mBitmapUtils.display(mImagePrepare, mVideoJson.data.avideo.video.picture);
 		}
@@ -429,11 +429,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mTextLikeAll.setText("100,000+");
 			mTextCommentCount.setText("100,000+");
 		}
-		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
+		/*if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
 			mImageLike.setBackgroundResource(R.drawable.videodetail_like);
 		} else {
 			mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
-		}
+		}*/
 
 		showText(mTextAutor, mVideoJson.data.avideo.user.nickname, mVideoJson.data.avideo.video.describe);
 		// 三条评论
@@ -441,16 +441,25 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			hasCommentLayout.setVisibility(View.VISIBLE);
 			noCommentLayout.setVisibility(View.GONE);
 			List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
-			for (int i = 0; i < videoList.size(); i++) {
-				if (i == 0) {
-					showText(mTextCommentFirst, videoList.get(i).name, videoList.get(i).text);
+			if(null != videoList){
+				if(videoList.size() < 3){
+					//TODO 评论条数小于3条
+					mLayoutShowAll.setVisibility(View.GONE);
 				}
-				if (i == 1) {
-					showText(mTextCommentSecond, videoList.get(i).name, videoList.get(i).text);
+				for (int i = 0; i < videoList.size(); i++) {
+					if (i == 0) {
+						showText(mTextCommentFirst, videoList.get(i).name, videoList.get(i).text);
+					}
+					if (i == 1) {
+						showText(mTextCommentSecond, videoList.get(i).name, videoList.get(i).text);
+					}
+					if (i == 2) {
+						showText(mTextCommenThird, videoList.get(i).name, videoList.get(i).text);
+					}
 				}
-				if (i == 2) {
-					showText(mTextCommenThird, videoList.get(i).name, videoList.get(i).text);
-				}
+			}else{
+				hasCommentLayout.setVisibility(View.GONE);
+				noCommentLayout.setVisibility(View.VISIBLE);
 			}
 		} else {
 			hasCommentLayout.setVisibility(View.GONE);
@@ -587,6 +596,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						isPraise = "1";
 					}else{
 						//错误
+						isZanOk = false;
 						GolukUtils.showToast(mContext, "视频点赞异常，请稍后再试");
 					}
 				}catch(Exception e){
