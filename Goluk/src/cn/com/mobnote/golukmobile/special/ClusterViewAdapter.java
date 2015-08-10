@@ -85,7 +85,7 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		mContext = context;
 		clusterListData = new ArrayList<ClusterInfo>();
 		sharePlatform = spf;
-
+		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
 	}
 
@@ -331,8 +331,8 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
         GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
         GenericDraweeHierarchy hierarchy = builder
                     .setFadeDuration(300)
-                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+//                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+//                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
                     .setActualImageScaleType(ScaleType.FIT_XY)
                     .build();
         view.setHierarchy(hierarchy);
