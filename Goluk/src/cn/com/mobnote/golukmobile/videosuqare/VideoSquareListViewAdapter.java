@@ -301,16 +301,21 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 
 						Bitmap bitmap = getThumbBitmap(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.picture);
 
-						if (mContext instanceof VideoSquarePlayActivity) {
-							VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mContext;
-							if (vspa != null && !vspa.isFinishing()) {
-								vspa.mCustomProgressDialog.close();
-								CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl,
-										coverurl, describe, ttl, bitmap, realDesc);
-								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-							}
+						// if (mContext instanceof VideoSquarePlayActivity) {
+						// VideoSquarePlayActivity vspa =
+						// (VideoSquarePlayActivity) mContext;
+						// if (vspa != null && !vspa.isFinishing()) {
+						// vspa.mCustomProgressDialog.close();
+						// CustomShareBoard shareBoard = new
+						// CustomShareBoard(vspa, sharePlatform, shareurl,
+						// coverurl, describe, ttl, bitmap, realDesc);
+						// shareBoard.showAtLocation(vspa.getWindow().getDecorView(),
+						// Gravity.BOTTOM, 0, 0);
+						// }
+						//
+						// } else
 
-						} else if (mContext instanceof MainActivity) {
+						if (mContext instanceof MainActivity) {
 							MainActivity vsa = (MainActivity) mContext;
 							if (vsa == null || vsa.isFinishing()) {
 								return;

@@ -32,7 +32,6 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -78,18 +77,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
-	/** 分享按钮布局 */
-	private RelativeLayout mShareLayout = null;
-	/** 关闭分享布局 */
-	private ImageButton mCloseShareBtn = null;
+
 	/** 更多按钮 */
 	private Button mMoreBtn = null;
 	/** 视频广场按钮 */
 	private Button msquareBtn = null;
-	/** 本地视频按钮 */
-	private Button mLocalVideoListBtn = null;
-	/** 分享网络直播 */
-	private Button mShareLiveBtn = null;
 
 	/** 本地视频列表数据适配器 */
 	public LocalVideoListAdapter mLocalVideoListAdapter = null;
@@ -135,8 +127,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private long exitTime = 0;
 
 	SharePlatformUtil sharePlatform;
-
-	private ImageView mHotBigPoint = null;
 
 	/** 首次进入的引导div */
 	private View indexDiv = null;
@@ -295,33 +285,21 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
-		mShareLayout = (RelativeLayout) findViewById(R.id.share_layout);
-		mCloseShareBtn = (ImageButton) findViewById(R.id.close_share_btn);
-
 		indexDiv = findViewById(R.id.index_div);
 
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		msquareBtn = (Button) findViewById(R.id.index_square_btn);
 		videoSquareLayout = findViewById(R.id.video_square_layout);
-		// 本地视频更多按钮
-		mLocalVideoListBtn = (Button) findViewById(R.id.share_local_video_btn);
-		mShareLiveBtn = (Button) findViewById(R.id.share_mylive_btn);
 
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
 
 		userInfoLayout = findViewById(R.id.user_info);
 
-		mHotBigPoint = (ImageView) findViewById(R.id.mHotBigPoint);
-
-		mShareLiveBtn.setOnClickListener(this);
 		indexCarrecoderBtn.setOnClickListener(this);
 		indexDiv.setOnClickListener(this);
-		mCloseShareBtn.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
 		msquareBtn.setOnClickListener(this);
-		mLocalVideoListBtn.setOnClickListener(this);
-		findViewById(R.id.share_mylive_btn).setOnClickListener(this);
 
 		boolean hotPointState = SettingUtils.getInstance().getBoolean("HotPointState", false);
 		updateHotPointState(hotPointState);
@@ -455,21 +433,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	/**
-	 * 下载气泡图片
-	 * 
-	 * @param url
-	 * @param aid
-	 */
-	@SuppressWarnings("static-access")
-	public void downloadBubbleImg(String url, String aid) {
-		GolukDebugUtils.e("", "下载气泡图片downloadBubbleImg:" + url + ",aid" + aid);
-		String json = "{\"purl\":\"" + url + "\",\"aid\":\"" + aid + "\",\"type\":\"1\"}";
-		GolukDebugUtils.e("", "downloadBubbleImg---json" + json);
-		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPictureByURL,
-				json);
-	}
-
-	/**
 	 * 链接中断更新页面
 	 */
 	public void wiFiLinkStatus(int status) {
@@ -531,7 +494,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void toLogin() {
 		Intent intent = new Intent(this, UserLoginActivity.class);
 		intent.putExtra("isInfo", "back");
-		mShareLayout.setVisibility(View.GONE);
 		mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
 		mEditor.putString("toRepwd", "mainActivity");
@@ -593,10 +555,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 
-		/*
-		 * // 回到页面启动定位 if (null != mLocClient) { mLocClient.start(); }
-		 */
-
 		if (mApp.isNeedCheckLive) {
 			mApp.isNeedCheckLive = false;
 			mApp.isCheckContinuteLiveFinish = true;
@@ -645,26 +603,24 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void exit() {
-		if (mShareLayout != null && mShareLayout.getVisibility() == View.VISIBLE) {
-			mShareLayout.setVisibility(View.GONE);
+
+		if ((System.currentTimeMillis() - exitTime) > 2000) {
+			GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
+			exitTime = System.currentTimeMillis();
 		} else {
-			if ((System.currentTimeMillis() - exitTime) > 2000) {
-				GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
-				exitTime = System.currentTimeMillis();
-			} else {
-				SysApplication.getInstance().exit();
-				mApp.mIPCControlManager.setIPCWifiState(false, "");
-				mApp.mGoluk.GolukLogicDestroy();
-				if (null != UserStartActivity.mHandler) {
-					UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-				}
-				MobclickAgent.onKillProcess(this);
-				finish();
-				int PID = android.os.Process.myPid();
-				android.os.Process.killProcess(PID);
-				System.exit(0);
+			SysApplication.getInstance().exit();
+			mApp.mIPCControlManager.setIPCWifiState(false, "");
+			mApp.mGoluk.GolukLogicDestroy();
+			if (null != UserStartActivity.mHandler) {
+				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
 			}
+			MobclickAgent.onKillProcess(this);
+			finish();
+			int PID = android.os.Process.myPid();
+			android.os.Process.killProcess(PID);
+			System.exit(0);
 		}
+
 	}
 
 	@SuppressLint("ClickableViewAccessibility")
@@ -696,13 +652,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.close_share_btn:
-			// 关闭视频分享
-			mShareLayout.setVisibility(View.GONE);
-			break;
 		case R.id.more_btn:
 			// 更多页面
-			// 视频广场
 			Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
 			mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
 			mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
@@ -715,14 +666,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.GONE);
 
 			indexMoreActivity.showView();
-			break;
-		case R.id.share_local_video_btn:
-			// 点击精彩视频
-			click_toLocalVideoShare();
-			break;
-		case R.id.share_mylive_btn:
-			// 点击视频直播
-			toShareLive();
 			break;
 		case R.id.index_square_btn:
 			// 视频广场
@@ -744,19 +687,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case R.id.index_div:
 			if (divIndex == 0) {
 				GolukUtils.freeBitmap(indexDiv.getBackground());
-				// indexDiv.setBackgroundResource(R.drawable.guide_two);
-				divIndex++;
 				indexDiv.setVisibility(View.GONE);
 				GolukUtils.freeBitmap(indexDiv.getBackground());
 			}
-			// else if (divIndex == 1) {
-			// GolukUtils.freeBitmap(indexDiv.getBackground());
-			// indexDiv.setBackgroundResource(R.drawable.guide_three);
-			// divIndex++;
-			// } else {
-			// indexDiv.setVisibility(View.GONE);
-			// GolukUtils.freeBitmap(indexDiv.getBackground());
-			// }
 			break;
 		}
 	}
@@ -782,8 +715,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess
 				+ "------autologinStatus-----" + mApp.autoLoginStatus);
 		if (!mApp.isUserLoginSucess) {
-			// 未登录成功
-			mShareLayout.setVisibility(View.GONE);
+
 			mApp.mUser.setUserInterface(this);
 			if (mApp.autoLoginStatus == 1) {
 				mBuilder = new AlertDialog.Builder(mContext);
@@ -812,8 +744,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		Intent localVideoShareList = new Intent(MainActivity.this, LocalVideoShareListActivity.class);
 		startActivity(localVideoShareList);
 		updateHotPointState(false);
-		// 关闭视频分享
-		mShareLayout.setVisibility(View.GONE);
 	}
 
 	/**
@@ -827,9 +757,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void updateHotPointState(boolean isShow) {
 		SettingUtils.getInstance().putBoolean("HotPointState", isShow);
 		if (isShow) {
-			mHotBigPoint.setVisibility(View.VISIBLE);
+
 		} else {
-			mHotBigPoint.setVisibility(View.GONE);
+
 		}
 	}
 
@@ -842,7 +772,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void toShareLive() {
 		if (!mApp.isUserLoginSucess) {
 			// 未登录成功
-			mShareLayout.setVisibility(View.GONE);
 			mApp.mUser.setUserInterface(this);
 			if (mApp.autoLoginStatus == 1) {
 				mBuilder = new AlertDialog.Builder(mContext);
@@ -884,7 +813,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
 			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 			startActivity(intent);
-			mShareLayout.setVisibility(View.GONE);
 		}
 
 	}
@@ -920,7 +848,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (mApp.autoLoginStatus != 1) {
 			dismissAutoDialog();
 			if (mApp.autoLoginStatus == 2) {
-				mShareLayout.setVisibility(View.VISIBLE);
 			}
 		}
 	}
@@ -929,7 +856,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-				mShareLayout.setVisibility(View.GONE);
 				Intent intent = new Intent(this, UserLoginActivity.class);
 				intent.putExtra("isInfo", "back");
 				startActivity(intent);
