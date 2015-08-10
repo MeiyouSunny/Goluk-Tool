@@ -66,7 +66,6 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
-		GolukDebugUtils.e("", "TTTTTTT==wonderful==arg0=="+arg0+"==convertView="+convertView);
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.wonderful_selected_item, null);
 			holder = new ViewHolder();

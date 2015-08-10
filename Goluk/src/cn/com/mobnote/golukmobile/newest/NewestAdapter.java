@@ -121,7 +121,6 @@ public class NewestAdapter extends BaseAdapter {
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		int type = getItemViewType(arg0);
-		GolukDebugUtils.e("", "TTTTTTT==newest==arg0=="+arg0+"==type="+type+"==convertView=");
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView();
 		} else {
@@ -365,7 +364,6 @@ public class NewestAdapter extends BaseAdapter {
 		int imagewidth = (int) ((width - 10 * density) / 2);
 		int imageheight = (int) (imagewidth * 0.56);
 		if (null == mHeadView) {
-			GolukDebugUtils.e("", "TTTTTT=====@@@@@@@@@@@@@==========");
 			mHeadView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
 //		}
 		RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
@@ -411,7 +409,7 @@ public class NewestAdapter extends BaseAdapter {
 			RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 
 			mTitleName.setText(mCategoryDataInfo.name);
-			mUpdateTime.setText(mCategoryDataInfo.time);
+			mUpdateTime.setText(getTime(mCategoryDataInfo.time));
 			loadImage(imageLayout, mCategoryDataInfo.coverurl);
 
 			int id = i + 1111 - 2;
@@ -524,6 +522,45 @@ public class NewestAdapter extends BaseAdapter {
 				e.printStackTrace();
 			}
 		}
+		return time;
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	private String getTime(String date) {
+		final long MINTUE = 60*1000;
+		final long HOUR = 60*MINTUE;
+		final long DAY = 24*HOUR;
+		final long WEEK = 7*DAY;
+		
+		String time = null;
+		try {
+			long curTime = System.currentTimeMillis();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+			Date strtodate = formatter.parse(date);
+			long historytime = strtodate.getTime();
+
+			Date curDate = new Date(curTime);
+			int curYear = curDate.getYear();
+			int history = strtodate.getYear();
+			
+			long diff = Math.abs(historytime - curTime);// 时间差
+			if (curYear == history) {
+				SimpleDateFormat jn = new SimpleDateFormat("MM月dd日更新");
+				return jn.format(strtodate);// 今年内：月日更新
+			} else if (diff <= WEEK && diff > DAY) {
+				return time = diff / DAY + "天前更新";// 天前更新
+			}else if (diff <= DAY && diff > HOUR) {
+				return time = diff / HOUR + "小时前更新";// 小时前更新
+			}else if (diff <= HOUR) {
+				return time = diff / MINTUE + "分钟前更新";// 分钟前更新
+			}else {
+				SimpleDateFormat jn = new SimpleDateFormat("yyyy年MM月dd日更新");
+				return jn.format(strtodate);// 非今年：年月日更新
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		return time;
 	}
 
