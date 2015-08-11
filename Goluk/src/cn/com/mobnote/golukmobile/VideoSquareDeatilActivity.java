@@ -232,8 +232,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mLayoutAllInfo = (LinearLayout) findViewById(R.id.video_square_detail_show_allinfo);
 		mImageToRefresh = (ImageView) findViewById(R.id.video_square_detail_click_refresh);
 
-		mTextTitle.setText("视频详情");
-
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
@@ -278,6 +276,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		view.setImageURI(Uri.parse(image));
 		mImageLayout.addView(view, mPreLoadingParams);
 
+		String title = getIntent().getStringExtra("title");
+		if(null == title || "".equals(title)){
+			mTextTitle.setText("视频详情");
+		}else{
+			mTextTitle.setText(title);
+		}
 	}
 
 	@SuppressLint("HandlerLeak")
