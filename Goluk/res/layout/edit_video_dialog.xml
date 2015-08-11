@@ -8,13 +8,13 @@ android:layout_height="match_parent">
        	android:id="@+id/titlelayout"
         android:layout_width="match_parent"
 		android:layout_height="46dp"
-		android:background="#000000"
+		android:background="#242629"
         >
         
         <TextView   
 		android:id="@+id/cancle"
 		android:text="取消"
-		android:textSize ="15sp"
+		android:textSize ="16sp"
 		android:textColor="#1163a2"
 		android:gravity="center" 
 		android:paddingLeft="10dp"
@@ -34,7 +34,7 @@ android:layout_height="match_parent">
         <TextView   
 		android:id="@+id/tuijian"
 		android:text="提交"
-		android:textSize ="15sp"
+		android:textSize ="16sp"
 		android:textColor="#1163a2"
 		android:gravity="center" 
 		android:paddingRight="10dp"
@@ -49,18 +49,18 @@ android:layout_height="match_parent">
 		android:layout_below="@+id/titlelayout"
 		android:hint="请填写推荐理由"
 		android:textColorHint="#ffffff"
-		android:textSize ="15sp"
+		android:textSize ="16sp"
 		android:textColor="#ffffff"
 		android:padding="10dp"
 		android:gravity="top|left"
 	    android:layout_height="match_parent" 
 	    android:layout_width="match_parent"
-	    android:background="#80000000"/> 
+	    android:background="#f2242629"/> 
 	    
      <TextView   
        	android:id="@+id/number"
 		android:text="50"
-		android:textSize ="15sp"
+		android:textSize ="16sp"
 		android:textColor="#ffffff"
 		android:gravity="right"
 		android:padding="10dp"
