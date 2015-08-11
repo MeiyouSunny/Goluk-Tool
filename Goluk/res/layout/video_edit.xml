@@ -67,7 +67,7 @@
         android:id="@+id/play_layout"
         android:layout_width="match_parent"
         android:layout_height="204dp"
-        android:layout_below="@id/title_layout"
+        android:layout_below="@id/startshare_prompt"
         android:background="#00000000" >
 
         <!-- 视频播放按钮 -->

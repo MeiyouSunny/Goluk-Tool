@@ -1,15 +1,14 @@
 package cn.com.mobnote.golukmobile;
 
 import java.io.File;
+import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.util.EncodingUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,18 +43,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
-import cn.com.mobnote.golukmobile.player.DensityUtil;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
@@ -67,6 +65,11 @@ import cn.com.mobnote.videodetail.VideoDetailParser;
 import cn.com.mobnote.videodetail.VideoJson;
 import cn.com.mobnote.videodetail.VideoListInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 /**
  * 视频详情
@@ -87,7 +90,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private TextView mTextTime = null;
 	/** 视频内容 **/
 	private RelativeLayout mPrepareLayout = null;
-	private ImageView mImagePrepare = null;
 	private FullScreenVideoView mFullVideoView = null;
 	private ImageView mImageLike;
 	private TextView mTextLikeAll, mTextLookAll;
@@ -98,9 +100,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private TextView mTextAutor, mTextCommentCount, mTextCommentFirst, mTextCommentSecond, mTextCommenThird;
 	private TextView mTextLink = null;
 	private LinearLayout mLayoutPraise, mLayoutComment, mLayoutShare;
-	/**所有数据**/
+	/** 所有数据 **/
 	private LinearLayout mLayoutAllInfo = null;
-
+	private LinearLayout mLayoutShowComment = null;
 	/** 数据 **/
 	public CustomLoadingDialog mCustomLoadingDialog, mCustomStartDialog;
 	private SharePlatformUtil sharePlatform;
@@ -116,13 +118,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private LinearLayout mLoadingLayout = null;
 	private ImageView mLoading = null;
 
-	/** 屏幕宽高 */
-	private float width;
-	private float height;
 	/** 加载中动画对象 */
 	private AnimationDrawable mAnimationDrawable = null;
 	private boolean isShow = false;
-	private RelativeLayout mBottomLayout = null;
 	/** 缓冲标识 */
 	private boolean isBuffering = false;
 	/** 播放器报错标识 */
@@ -137,8 +135,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private boolean isStop = false;
 	/** 暂停标识 */
 	private boolean isPause = false;
-	/** 点击标识 **/
-	private boolean isCilck = false;
+	/** 点赞标识 **/
+	// private boolean isZanOk = false;
+	private String isPraise = "0";
+	private int likeNumber = 0;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -157,8 +157,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
 		mCustomStartDialog.show();
-		// 获取视频详情数据
-		getVideoDetailData();
 
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
@@ -174,11 +172,13 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		// 获取视频详情数据
+		getVideoDetailData();
+		
 		if (isStop) {
 			isStop = false;
 			showLoading();
-			mImagePrepare.setVisibility(View.VISIBLE);
+			mImageLayout.setVisibility(View.VISIBLE);
 		}
 		if (isPause) {
 			isPause = false;
@@ -203,12 +203,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mTextTime = (TextView) findViewById(R.id.user_time);
 		// 视频内容
 		mPrepareLayout = (RelativeLayout) findViewById(R.id.mPlayerLayout);
-		mImagePrepare = (ImageView) findViewById(R.id.mPreLoading);
 		mFullVideoView = (FullScreenVideoView) findViewById(R.id.video_detail_videoview);
 		mImageLike = (ImageView) findViewById(R.id.video_square_detail_like);
 		mTextLikeAll = (TextView) findViewById(R.id.video_detail_like_all);
 		mTextLookAll = (TextView) findViewById(R.id.video_detail_look_all);
-		mLayoutShowAll = (LinearLayout) findViewById(R.id.video_square_show_all);
+		mLayoutShowAll = (LinearLayout) findViewById(R.id.video_detail_comment_content);
+		mLayoutShowComment = (LinearLayout) findViewById(R.id.video_square_show_all);
 		// 评论内容
 		hasCommentLayout = (LinearLayout) findViewById(R.id.video_square_has_comment_layout);
 		noCommentLayout = (RelativeLayout) findViewById(R.id.video_square_no_comment_layout);
@@ -231,11 +231,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 		mTextTitle.setText("视频详情");
 
-		width = DensityUtil.getWidthInPx(this);
-		height = DensityUtil.getHeightInPx(this);
-
-		mImagePrepare.setBackgroundResource(R.drawable.tacitly_pic);
-		mImagePrepare.setVisibility(View.VISIBLE);
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
@@ -261,6 +256,23 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		mFullVideoView.setOnCompletionListener(this);
 		showLoading();
+
+		String image = getIntent().getStringExtra("imageurl");
+		GolukDebugUtils.e("lily", "---------imageUrl-------" + image);
+		mImageLayout = (RelativeLayout) findViewById(R.id.mImageLayout);
+		mImageLayout.removeAllViews();
+		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
+
+		SimpleDraweeView view = new SimpleDraweeView(this);
+		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
+		GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
+				.setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				.setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				.setActualImageScaleType(ScaleType.FIT_XY).build();
+		view.setHierarchy(hierarchy);
+		view.setImageURI(Uri.parse(image));
+		mImageLayout.addView(view, mPreLoadingParams);
 
 	}
 
@@ -292,8 +304,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					if (mFullVideoView.getCurrentPosition() > mFullVideoView.getDuration() - 100) {
 						mSeekBar.setProgress(0);
 					}
-					mPlayBtn.setImageResource(R.drawable.player_pause_btn);
+					mPlayBtn.setVisibility(View.GONE);
 				} else {
+					mPlayBtn.setVisibility(View.VISIBLE);
 					mPlayBtn.setImageResource(R.drawable.player_play_btn);
 					if (0 != duration) {
 						mSeekBar.setProgress(playTime * 100 / duration);
@@ -321,15 +334,17 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			toComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			toComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
 			toComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			toComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 			startActivity(toComment);
 			break;
 		// 显示全部评论
-		case R.id.video_square_show_all:
+		case R.id.video_detail_comment_content:
 			Intent showComment = new Intent(VideoSquareDeatilActivity.this, CommentActivity.class);
 			showComment.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoJson.data.avideo.video.videoid);
 			showComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			showComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, false);
 			showComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			showComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 			startActivity(showComment);
 			break;
 		// 外链接
@@ -359,14 +374,29 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 			if (mFullVideoView.isPlaying()) {
 				mFullVideoView.pause();
-				mPlayBtn.setImageResource(R.drawable.player_play_btn);
+				mPlayBtn.setVisibility(View.VISIBLE);
+				mPlayBtn.setImageResource(R.drawable.btn_video_detail_play);
 			} else {
 				mFullVideoView.start();
-				mPlayBtn.setImageResource(R.drawable.player_pause_btn);
+				mPlayBtn.setVisibility(View.GONE);
 			}
 			break;
 		case R.id.mPlayerLayout:
-			mPlayBtn.setVisibility(View.VISIBLE);
+			if (isBuffering) {
+				return;
+			}
+			if (!isShow) {
+				if (null != mFullVideoView) {
+					if (mFullVideoView.isPlaying()) {
+						mFullVideoView.pause();
+						mPlayBtn.setVisibility(View.VISIBLE);
+						mPlayBtn.setImageResource(R.drawable.btn_video_detail_play);
+					} else {
+						mPlayBtn.setVisibility(View.GONE);
+						mFullVideoView.start();
+					}
+				}
+			}
 			break;
 		default:
 			break;
@@ -380,9 +410,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 		if (!b) {
 			mCustomStartDialog.close();
-		}else{
-			mLayoutAllInfo.setVisibility(View.GONE);
 		}
+		mLayoutAllInfo.setVisibility(View.GONE);
 	}
 
 	/**
@@ -392,15 +421,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	 */
 	public void getData(String jsonStr) {
 		mVideoJson = VideoDetailParser.parseDataFromJson(jsonStr);
+		GolukDebugUtils.e("testtest", "------jsonStr--------" + jsonStr);
 		mVideoJsonList = new ArrayList<VideoJson>();
 		mVideoJsonList.add(mVideoJson);
 		UserUtils.focusHead(mVideoJson.data.avideo.user.headportrait, mImageHead);
 		mTextName.setText(mVideoJson.data.avideo.user.nickname);
-		mTextTime.setText(formatTime(mVideoJson.data.avideo.video.sharingtime));
-		// TODO 视频播放
-		if (!TextUtils.isEmpty(mVideoJson.data.avideo.video.picture)) {
-			BitmapManager.getInstance().mBitmapUtils.display(mImagePrepare, mVideoJson.data.avideo.video.picture);
-		}
+		mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoJson.data.avideo.video.sharingtime));
 		// 点赞数、评论数、观看数
 		DecimalFormat df = new DecimalFormat("#,###");
 		int wg_click = Integer.parseInt(mVideoJson.data.avideo.video.clicknumber);
@@ -416,9 +442,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mTextCommentCount.setText("100,000+");
 		}
 		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
-			mImageLike.setBackgroundResource(R.drawable.videodetail_like);
+			mImageLike.setImageResource(R.drawable.videodetail_like);
 		} else {
-			mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
+			mImageLike.setImageResource(R.drawable.videodetail_like_press);
 		}
 
 		showText(mTextAutor, mVideoJson.data.avideo.user.nickname, mVideoJson.data.avideo.video.describe);
@@ -427,23 +453,30 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			hasCommentLayout.setVisibility(View.VISIBLE);
 			noCommentLayout.setVisibility(View.GONE);
 			List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
-			for (int i = 0; i < videoList.size(); i++) {
-				if (i == 0) {
-					showText(mTextCommentFirst, videoList.get(i).name, videoList.get(i).text);
+			if (null != videoList) {
+				if (videoList.size() < 3) {
+					// TODO 评论条数小于3条
+					mLayoutShowComment.setVisibility(View.GONE);
 				}
-				if (i == 1) {
-					showText(mTextCommentSecond, videoList.get(i).name, videoList.get(i).text);
+				for (int i = 0; i < videoList.size(); i++) {
+					if (i == 0) {
+						showText(mTextCommentFirst, videoList.get(i).name, videoList.get(i).text);
+					}
+					if (i == 1) {
+						showText(mTextCommentSecond, videoList.get(i).name, videoList.get(i).text);
+					}
+					if (i == 2) {
+						showText(mTextCommenThird, videoList.get(i).name, videoList.get(i).text);
+					}
 				}
-				if (i == 2) {
-					showText(mTextCommenThird, videoList.get(i).name, videoList.get(i).text);
-				}
+			} else {
+				hasCommentLayout.setVisibility(View.GONE);
+				noCommentLayout.setVisibility(View.VISIBLE);
 			}
 		} else {
 			hasCommentLayout.setVisibility(View.GONE);
 			noCommentLayout.setVisibility(View.VISIBLE);
 		}
-		// TODO 外链
-
 		playVideo();
 	}
 
@@ -463,33 +496,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	}
 
 	/**
-	 * 格式化时间
+	 * 分享、获取视频详情、点赞
 	 * 
-	 * @param date
-	 * @return
-	 */
-	@SuppressLint("SimpleDateFormat")
-	public String formatTime(String date) {
-		String time = "";
-		if (null != date) {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-			try {
-				Date strtodate = formatter.parse(date);
-				if (null != strtodate) {
-					formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
-					if (null != formatter) {
-						time = formatter.format(strtodate);
-					}
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-		return time;
-	}
-
-	/**
-	 * 分享
 	 */
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
@@ -538,20 +546,50 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 		} else if (event == VSquare_Req_Get_VideoDetail) {
+			GolukDebugUtils.e("lily", "111VideoSuqare_CallBack=@@@@Get_VideoDetail==event=" + event + "=msg=" + msg
+					+ "=param1=" + param1 + "=param2=" + param2);
 			if (RESULE_SUCESS == msg) {
-				GolukDebugUtils.e("xuhw", "111VideoSuqare_CallBack=@@@@Get_VideoDetail==event=" + event + "=msg=" + msg
-						+ "=param1=" + param1 + "=param2=" + param2);
-				if (RESULE_SUCESS == msg) {
-					mCustomStartDialog.close();
-					mLayoutAllInfo.setVisibility(View.VISIBLE);
+				mCustomStartDialog.close();
+//				mImageLayout.setVisibility(View.GONE);
+				mLayoutAllInfo.setVisibility(View.VISIBLE);
+				String jsonStr = (String) param2;
+				getData(jsonStr);
+			} else {
+				mCustomStartDialog.close();
+				mLayoutAllInfo.setVisibility(View.GONE);
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
+		} else if (event == VSquare_Req_VOP_Praise) {
+			GolukDebugUtils.e("lily", "222VideoSuqare_CallBack=@@@@Get_VideoDetail==event=" + event + "=msg=" + msg
+					+ "=param1=" + param1 + "=param2=" + param2);
+			if (msg == RESULE_SUCESS) {
+				// {"data":{"result":"3"},"msg":"视频不存在","success":false}
+				try {
 					String jsonStr = (String) param2;
-					getData(jsonStr);
-				} else {
-					mCustomStartDialog.close();
-					GolukUtils.showToast(this, "网络异常，请检查网络");
+					JSONObject jsonObject = new JSONObject(jsonStr);
+					JSONObject dataObject = jsonObject.optJSONObject("data");
+					String result = dataObject.optString("result");
+					if ("0".equals(result)) {
+						// 成功
+					} else {
+						// 错误
+						GolukUtils.showToast(mContext, "视频点赞异常，请稍后再试");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}
+	}
+
+	// 分享成功后需要调用的接口
+	public void shareSucessDeal(boolean isSucess, String channel) {
+		if (!isSucess) {
+			GolukUtils.showToast(mContext, "分享失败");
+			return;
+		}
+		GolukApplication.getInstance().getVideoSquareManager()
+				.shareVideoUp(channel, mVideoJson.data.avideo.video.videoid);
 	}
 
 	public Bitmap getThumbBitmap(String netUrl) {
@@ -572,8 +610,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	 * 点赞
 	 */
 	public void clickPraise() {
-		String isPraise = "0";
-		int likeNumber = 0;
 		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
 			likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) + 1;
 			DecimalFormat df = new DecimalFormat("#,###");
@@ -584,8 +620,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 			mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
 			isPraise = "1";
-			GolukApplication.getInstance().getVideoSquareManager()
+			boolean b = GolukApplication.getInstance().getVideoSquareManager()
 					.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
+			if (b) {
+			}
 		} else {
 			likeNumber = Integer.parseInt(mTextLikeAll.getText().toString().replace(",", "")) - 1;
 
@@ -653,7 +691,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private void hideLoading() {
 		if (isShow) {
 			isShow = false;
-			mImagePrepare.setVisibility(View.GONE);
+			mImageLayout.setVisibility(View.GONE);
 			if (mAnimationDrawable != null) {
 				if (mAnimationDrawable.isRunning()) {
 					mAnimationDrawable.stop();
@@ -699,6 +737,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 		}
 	};
+	private RelativeLayout mImageLayout;
 
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
@@ -707,7 +746,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			isBuffering = true;
 			if (0 == mFullVideoView.getCurrentPosition()) {
-				mImagePrepare.setVisibility(View.VISIBLE);
+				mImageLayout.setVisibility(View.VISIBLE);
 			}
 			showLoading();
 			break;
@@ -745,25 +784,26 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		error = true;
 		hideLoading();
-		mImagePrepare.setVisibility(View.VISIBLE);
+		mImageLayout.setVisibility(View.VISIBLE);
 		dialog(msg);
 		return false;
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
-		// TODO OnCompletionListener视频播放完后调用
+		// TODO OnCompletionListener视频播放完后进度条回到初始位置
 		if (error) {
 			return;
 		}
 		mFullVideoView.seekTo(0);
+		mPlayBtn.setVisibility(View.VISIBLE);
 		mPlayBtn.setImageResource(R.drawable.player_play_btn);
 		mSeekBar.setProgress(0);
 	}
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		// TODO OnPreparedListener
+		// TODO OnPreparedListener 视频播放之前的一个视频准备工作，准备完成后调用此方法
 		mFullVideoView.setVideoWidth(mp.getVideoWidth());
 		mFullVideoView.setVideoHeight(mp.getVideoHeight());
 
@@ -789,7 +829,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			if (networkConnectTimeOut > 15) {
 				if (!reset) {
 					hideLoading();
-					mImagePrepare.setVisibility(View.VISIBLE);
+					mImageLayout.setVisibility(View.VISIBLE);
 					dialog("网络访问异常，请重试！");
 					if (null != mFullVideoView) {
 						mFullVideoView.stopPlayback();

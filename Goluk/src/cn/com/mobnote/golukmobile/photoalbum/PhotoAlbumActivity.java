@@ -23,6 +23,7 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.util.GolukUtils;
 
 public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
@@ -206,9 +207,17 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 			}
 			break;
 		case R.id.mDownLoadBtn:
+			if (selectedListData.size() <= 0) {
+				return;
+			}
+			
 			downloadVideoFlush();
 			break;
 		case R.id.mDeleteBtn:
+			if (selectedListData.size() <= 0) {
+				return;
+			}
+			
 			if(R.id.mCloudVideoBtn == curId) {
 				if (!isAllowedDelete()) {
 					GolukUtils.showToast(PhotoAlbumActivity.this, "视频正在下载，无法删除");
@@ -224,7 +233,12 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 					deleteDataFlush();
 				}
 			});
-			mCustomDialog.setRightButton("取消", null);
+			mCustomDialog.setRightButton("取消", new OnRightClickListener() {
+				@Override
+				public void onClickListener() {
+					resetEditState();
+				}
+			});
 			mCustomDialog.show();
 			break;
 		

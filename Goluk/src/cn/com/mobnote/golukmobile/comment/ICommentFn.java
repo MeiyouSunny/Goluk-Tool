@@ -9,6 +9,8 @@ public interface ICommentFn {
 	public static final String COMMENT_KEY_SHOWSOFT = "comment_key_showsoft";
 	/** 是否允许评论 */
 	public static final String COMMENT_KEY_ISCAN_INPUT = "comment_key_iscan_input";
+	/** 视频发起者的uid */
+	public static final String COMMENT_KEY_USERID = "comment_key_userid";
 
 	/** 一页请求多少条数据 */
 	public static final int PAGE_SIZE = 20;

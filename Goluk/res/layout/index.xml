@@ -76,15 +76,6 @@
         layout="@layout/video_square_main"
         android:visibility="visible" />
 
-    <!-- 分享布局 -->
-
-    <include
-        android:id="@+id/share_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/index_share"
-        android:visibility="gone" />
-
     <!-- 用户中心布局 -->
 
     <include

@@ -261,7 +261,7 @@ public class NewestAdapter extends BaseAdapter {
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.clicknumber)) {
 			holder.weiguan.setText("");
 		} else {
-			holder.weiguan.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + "围观");
+			holder.weiguan.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + " 围观");
 		}
 
 		if (TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.describe)) {
@@ -545,7 +545,7 @@ public class NewestAdapter extends BaseAdapter {
 			
 			long diff = Math.abs(historytime - curTime);// 时间差
 			if (curYear == history) {
-				SimpleDateFormat jn = new SimpleDateFormat("MM月dd日更新");
+				SimpleDateFormat jn = new SimpleDateFormat("MM.dd更新");
 				return jn.format(strtodate);// 今年内：月日更新
 			} else if (diff <= WEEK && diff > DAY) {
 				return time = diff / DAY + "天前更新";// 天前更新
@@ -554,7 +554,7 @@ public class NewestAdapter extends BaseAdapter {
 			}else if (diff <= HOUR) {
 				return time = diff / MINTUE + "分钟前更新";// 分钟前更新
 			}else {
-				SimpleDateFormat jn = new SimpleDateFormat("yyyy年MM月dd日更新");
+				SimpleDateFormat jn = new SimpleDateFormat("yyyy.MM.dd更新");
 				return jn.format(strtodate);// 非今年：年月日更新
 			}
 		} catch (ParseException e) {

@@ -49,7 +49,6 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
-import cn.com.mobnote.golukmobile.startshare.VideoShareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
@@ -483,10 +482,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 *            ,视频ID
 	 */
 	public void localVideoUpLoadCallBack(int success, Object param1, Object param2) {
-		if (mPageSource == "VideoShare") {
-			((VideoShareActivity) mContext).videoUploadCallBack(success, param1, param2);
-		}
-
 		if (mPageSource == "VideoEdit") {
 			((VideoEditActivity) mContext).videoUploadCallBack(success, param1, param2);
 		}
@@ -501,9 +496,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 *            ,"vid":"3dfa8172-8fdc-4acd-b882-f191608f236720141124183820"}
 	 */
 	public void localVideoShareCallBack(int success, String data) {
-		if (mPageSource == "VideoShare") {
-			((VideoShareActivity) mContext).videoShareCallBack(success, data);
-		}
 		if (mPageSource == "VideoEdit") {
 			((VideoEditActivity) mContext).videoShareCallBack(success, data);
 		}
@@ -593,14 +585,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}
-				if (!GlobalWindow.getInstance().isShow()) {
-					GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
-					GlobalWindow.getInstance().createVideoUploadWindow(
-							"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
-				} else {
-					GolukDebugUtils.e("xuhw", "YYYYYY======22222=========");
-					GlobalWindow.getInstance().updateText(
-							"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+				
+				if (!isBackground) {
+					if (!GlobalWindow.getInstance().isShow()) {
+						GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
+						GlobalWindow.getInstance().createVideoUploadWindow(
+								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+					} else {
+						GolukDebugUtils.e("xuhw", "YYYYYY======22222=========");
+						GlobalWindow.getInstance().updateText(
+								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+					}
 				}
 			} catch (Exception e) {
 				GolukDebugUtils.e("", "解析视频下载JSON数据错误");
@@ -663,8 +658,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @param data
 	 * @author chenxy
 	 */
+	List<String> freeList = new ArrayList<String>();
 	public void ipcVideoDownLoadCallBack(int success, String data) {
-
+		freeList.clear();
 		if (TextUtils.isEmpty(data)) {
 			return;
 		}
@@ -689,7 +685,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					if (!mDownLoadFileList.contains(filename)) {
 						mDownLoadFileList.add(filename);
 					}
-
+					
+					for (int i=0; i<mNoDownLoadFileList.size(); i++) {
+						String name = mNoDownLoadFileList.get(i);
+						if (!mDownLoadFileList.contains(name)) {
+							freeList.add(name);
+						}
+					}
+					
+					for(String name : freeList) {
+						mNoDownLoadFileList.remove(name);
+					}
+					
 					if (!isBackground) {
 						if (GlobalWindow.getInstance().isShow()) {
 							GlobalWindow.getInstance().refreshPercent(percent);
@@ -698,6 +705,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						} else {
 							GlobalWindow.getInstance().createVideoUploadWindow(
 									"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+						}
+					}else {
+						if (GlobalWindow.getInstance().isShow()) {
+							GlobalWindow.getInstance().dimissGlobalWindow();
 						}
 					}
 

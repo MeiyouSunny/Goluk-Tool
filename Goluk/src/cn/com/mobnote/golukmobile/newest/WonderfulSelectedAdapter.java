@@ -1,6 +1,9 @@
 package cn.com.mobnote.golukmobile.newest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -108,8 +111,12 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		}
 		
 		if (!TextUtils.isEmpty(info.jxdate)) {
-			holder.mDate.setText(info.jxdate);
-			holder.mDate.setVisibility(View.VISIBLE);
+			if(0 == arg0) {
+				holder.mDate.setVisibility(View.GONE);
+			}else {
+				holder.mDate.setText(getTime(info.jxdate));
+				holder.mDate.setVisibility(View.VISIBLE);
+			}
 		}else {
 			holder.mDate.setVisibility(View.GONE);
 		}
@@ -118,6 +125,32 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	private String getTime(String date) {
+		String time = null;
+		try {
+			long curTime = System.currentTimeMillis();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date strtodate = formatter.parse(date);
+
+			Date curDate = new Date(curTime);
+			int curYear = curDate.getYear();
+			int history = strtodate.getYear();
+			
+			if (curYear == history) {
+				SimpleDateFormat jn = new SimpleDateFormat("-MM.dd-");
+				return jn.format(strtodate);// 今年内：月日更新
+			}else {
+				SimpleDateFormat jn = new SimpleDateFormat("-yyyy.MM.dd-");
+				return jn.format(strtodate);// 非今年：年月日更新
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return time;
 	}
 	
 	private void loadImage(RelativeLayout mPlayerLayout, String url, String iconUrl) {

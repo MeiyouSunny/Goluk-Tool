@@ -63,19 +63,24 @@ public class VideoSquareOnClickListener implements OnClickListener {
 					vsa.mCustomProgressDialog.close();
 					GolukUtils.showToast(mcontext, "网络异常，请检查网络");
 				}
-			} else if (mcontext instanceof VideoSquarePlayActivity) {
-				VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
-				vspa.mCustomProgressDialog = new CustomLoadingDialog(vspa, null);
-				vspa.mCustomProgressDialog.show();
-
-				vspa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
-
-				boolean result = GolukApplication.getInstance().getVideoSquareManager()
-						.getShareUrl(mVideoSquareInfo.mVideoEntity.videoid, mVideoSquareInfo.mVideoEntity.type);
-				if (!result) {
-					vspa.mCustomProgressDialog.close();
-				}
 			}
+
+			// else if (mcontext instanceof VideoSquarePlayActivity) {
+			// VideoSquarePlayActivity vspa = (VideoSquarePlayActivity)
+			// mcontext;
+			// vspa.mCustomProgressDialog = new CustomLoadingDialog(vspa, null);
+			// vspa.mCustomProgressDialog.show();
+			//
+			// vspa.shareVideoId = mVideoSquareInfo.mVideoEntity.videoid;
+			//
+			// boolean result =
+			// GolukApplication.getInstance().getVideoSquareManager()
+			// .getShareUrl(mVideoSquareInfo.mVideoEntity.videoid,
+			// mVideoSquareInfo.mVideoEntity.type);
+			// if (!result) {
+			// vspa.mCustomProgressDialog.close();
+			// }
+			// }
 
 			break;
 		case R.id.like_btn:
@@ -235,13 +240,15 @@ public class VideoSquareOnClickListener implements OnClickListener {
 	 * @throws
 	 */
 	public void closeRqsDialog(Context context) {
-		if (mcontext instanceof VideoSquarePlayActivity) {
-			VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
-			if (vspa != null && !vspa.isFinishing()) {
-				vspa.mCustomProgressDialog.close();
-			}
+		// if (mcontext instanceof VideoSquarePlayActivity) {
+		// VideoSquarePlayActivity vspa = (VideoSquarePlayActivity) mcontext;
+		// if (vspa != null && !vspa.isFinishing()) {
+		// vspa.mCustomProgressDialog.close();
+		// }
+		//
+		// } else
 
-		} else if (mcontext instanceof MainActivity) {
+		if (mcontext instanceof MainActivity) {
 			MainActivity vsa = (MainActivity) mcontext;
 			if (vsa != null && !vsa.isFinishing()) {
 				if (vsa.mCustomProgressDialog != null) {
