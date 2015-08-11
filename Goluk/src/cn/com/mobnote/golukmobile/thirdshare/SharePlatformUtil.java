@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
@@ -82,6 +84,18 @@ public class SharePlatformUtil {
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		GolukDebugUtils.e("", "jyf----thirdshare--------SharePlatformUtil----onActivityResult: " + "   requestCode:"
+				+ requestCode + "   resultCode:" + resultCode);
+
+		if (10103 == requestCode && 0 == resultCode) {
+			// QQ
+			GolukUtils.showToast(mContext, "分享成功");
+		} else if (10104 == requestCode && 0 == resultCode) {
+			// QQ 空间
+			GolukUtils.showToast(mContext, "分享成功");
+		}
+
 		// SSO 授权回调
 		// 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResults
 		if (mSinaWBUtils != null) {

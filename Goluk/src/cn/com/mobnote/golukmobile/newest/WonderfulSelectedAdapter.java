@@ -1,6 +1,9 @@
 package cn.com.mobnote.golukmobile.newest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -10,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -32,12 +36,14 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	private float density = 0;
 	/** 滚动中锁标识 */
 	private boolean lock = false;
+	private Typeface mTypeface = null;
 
 	public WonderfulSelectedAdapter(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<JXListItemDataInfo>();
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
+		mTypeface = Typeface.createFromAsset (context.getAssets() , "AdobeHebrew-Bold.otf" ); 
 	}
 
 	public void setData(List<JXListItemDataInfo> data) {
@@ -111,7 +117,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			if(0 == arg0) {
 				holder.mDate.setVisibility(View.GONE);
 			}else {
-				holder.mDate.setText(info.jxdate);
+				holder.mDate.setTypeface (mTypeface);
+				holder.mDate.setText(getTime(info.jxdate));
 				holder.mDate.setVisibility(View.VISIBLE);
 			}
 		}else {
@@ -122,6 +129,32 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	private String getTime(String date) {
+		String time = null;
+		try {
+			long curTime = System.currentTimeMillis();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date strtodate = formatter.parse(date);
+
+			Date curDate = new Date(curTime);
+			int curYear = curDate.getYear();
+			int history = strtodate.getYear();
+			
+			if (curYear == history) {
+				SimpleDateFormat jn = new SimpleDateFormat("-MM.dd-");
+				return jn.format(strtodate);// 今年内：月日更新
+			}else {
+				SimpleDateFormat jn = new SimpleDateFormat("-yyyy.MM.dd-");
+				return jn.format(strtodate);// 非今年：年月日更新
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return time;
 	}
 	
 	private void loadImage(RelativeLayout mPlayerLayout, String url, String iconUrl) {
@@ -142,7 +175,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 
         int height = (int) ((float) width / 1.77f);
         RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-        mPreLoadingParams.addRule(RelativeLayout.BELOW, R.id.mDate);
+//        mPreLoadingParams.addRule(RelativeLayout.BELOW, R.id.mDate);
         mPlayerLayout.addView(view, mPreLoadingParams);
         
         if(!TextUtils.isEmpty(iconUrl)) {

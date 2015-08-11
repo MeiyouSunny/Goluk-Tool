@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -23,6 +25,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -86,6 +89,12 @@ public class NewestListView implements VideoSuqareManagerFn {
 
 		loadHistoryData();
 		httpPost(true, "0", "");
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (null != sharePlatform) {
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	private void loadHistoryData() {
@@ -240,6 +249,12 @@ public class NewestListView implements VideoSuqareManagerFn {
 	public View getView() {
 		return mRootLayout;
 	}
+	
+	private VideoSquareInfo mWillShareVideoSquareInfo;
+	
+	public void setWillShareInfo(VideoSquareInfo info) {
+		mWillShareVideoSquareInfo = info;
+	}
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
@@ -308,8 +323,10 @@ public class NewestListView implements VideoSuqareManagerFn {
 						if (mContext instanceof MainActivity) {
 							MainActivity vspa = (MainActivity) mContext;
 							if (vspa != null && !vspa.isFinishing()) {
+								String videoId = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mVideoEntity.videoid : "";
+								
 								CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl,
-										coverurl, describe, ttl, null, realDesc);
+										coverurl, describe, ttl, null, realDesc, videoId);
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
 

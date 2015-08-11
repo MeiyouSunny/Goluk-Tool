@@ -141,7 +141,7 @@ public class SpecialListActivity extends BaseActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (null != sharePlatform) {
-			sharePlatform.mSinaWBUtils.onActivityResult(requestCode,
+			sharePlatform.onActivityResult(requestCode,
 					resultCode, data);
 		}
 	}
@@ -285,7 +285,6 @@ public class SpecialListActivity extends BaseActivity implements
 						}
 
 						txt.setText(headdata.describe);
-
 						RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
 								width, height);
 						image.setLayoutParams(mPreLoadingParams);
@@ -294,7 +293,7 @@ public class SpecialListActivity extends BaseActivity implements
 
 						lv.addHeaderView(view);
 						
-						image.setOnClickListener(new SpecialCommentListener(this,headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
+						image.setOnClickListener(new SpecialCommentListener(this,null, headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
 					}
 
 					Map<String, Object> map = sdm
@@ -421,7 +420,7 @@ public class SpecialListActivity extends BaseActivity implements
 						if (this != null && !this.isFinishing()) {
 							mCustomProgressDialog.close();
 							CustomShareBoard shareBoard = new CustomShareBoard(SpecialListActivity.this, sharePlatform, shareurl, coverurl,
-									describe, ttl, bitmap, realDesc);
+									describe, ttl, bitmap, realDesc, ztid);
 							System.out.println("我日我日我日====bitmap="+bitmap);
 							shareBoard.showAtLocation(SpecialListActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							System.out.println("我擦我擦我擦");

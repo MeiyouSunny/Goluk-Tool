@@ -14,16 +14,29 @@
         android:textSize="18sp" />
     
     <RelativeLayout 
-      	android:id="@+id/imageLayout"
+      	android:id="@+id/imlayout"
       	android:layout_below="@+id/mDate"
       	android:layout_width="match_parent"
     	android:layout_height="match_parent"  >
+    	
+        <RelativeLayout 
+      	android:id="@+id/imageLayout"
+      	android:layout_width="match_parent"
+    	android:layout_height="match_parent"  >
+        
+    	</RelativeLayout>
+        
+        <ImageView 
+            android:layout_width="match_parent"
+    		android:layout_height="match_parent"  
+    		android:background="#4c000000"
+            />
         
     </RelativeLayout>
     
 	<LinearLayout 
-	    android:layout_alignTop="@+id/imageLayout"
-	    android:layout_alignBottom="@+id/imageLayout"
+	    android:layout_alignTop="@+id/imlayout"
+	    android:layout_alignBottom="@+id/imlayout"
       	android:layout_width="match_parent"
     	android:layout_height="wrap_content"  
     	android:orientation="vertical"

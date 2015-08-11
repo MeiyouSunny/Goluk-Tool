@@ -280,7 +280,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (null != sharePlatform) {
-			sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -1681,6 +1681,20 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				uploadJson);
 
 	}
+	
+	private String getShareVideoId() {
+		String vid = null;
+		if (isShareLive) {
+			vid = mCurrentVideoId;
+		} else {
+			if (!isKaiGeSucess) {
+				vid = "";
+			} else {
+				vid = liveData.vid;
+			}
+		}
+		return vid;
+	}
 
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
@@ -1736,7 +1750,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				final String defalutInputStr = ttl + "(使用#极路客Goluk#拍摄)";
 				// 设置分享内容
 				CustomShareBoard sb = new CustomShareBoard(LiveActivity.this, sharePlatform, shareurl, coverurl,
-						describe, ttl, mThumbBitmap, defalutInputStr);
+						describe, ttl, mThumbBitmap, defalutInputStr, getShareVideoId());
 				sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			} catch (JSONException e) {
 				e.printStackTrace();
