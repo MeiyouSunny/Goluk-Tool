@@ -38,7 +38,6 @@ import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
@@ -485,6 +484,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 直播视频上传成功，现在请求服务器
 			// 请求直播
 			startLiveForServer();
+			break;
+		case MSG_H_TO_MYLOCATION:
+			toMyLocation();
 			break;
 		}
 	}
@@ -1030,13 +1032,17 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			break;
 		case R.id.live_location_btn:
 			// 定位
-			LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
-			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-			mBaiduMap.animateMapStatus(u);
+			toMyLocation();
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void toMyLocation() {
+		LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
+		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+		mBaiduMap.animateMapStatus(u);
 	}
 
 	// 点击 "举报"
@@ -1269,7 +1275,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 * @date 2015年3月21日
 	 */
 	private void showPlayer() {
-		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout.getLayoutParams();
 		lp.width = RelativeLayout.LayoutParams.MATCH_PARENT;
 		lp.height = RelativeLayout.LayoutParams.MATCH_PARENT;
@@ -1681,7 +1686,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				uploadJson);
 
 	}
-	
+
 	private String getShareVideoId() {
 		String vid = null;
 		if (isShareLive) {
