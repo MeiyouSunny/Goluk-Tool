@@ -180,6 +180,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		if (isStop) {
 			isStop = false;
 			showLoading();
+			mPlayBtn.setVisibility(View.GONE);
 			mImageLayout.setVisibility(View.VISIBLE);
 		}
 		if (isPause) {
@@ -190,6 +191,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				}
 				mFullVideoView.seekTo(playTime);
 			}
+			mPlayBtn.setVisibility(View.GONE);
 			mFullVideoView.start();
 		}
 	}
@@ -454,8 +456,14 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				noCommentLayout.setVisibility(View.GONE);
 				List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
 				if (null != videoList) {
-					if (videoList.size() < 3) {
-						// TODO 评论条数小于3条
+					if(null != mVideoJson.data.avideo.video.comment.comcount && !"".equals(mVideoJson.data.avideo.video.comment.comcount)){
+						int commentCount = Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount);
+						if(commentCount <= 3){
+							mLayoutShowComment.setVisibility(View.GONE);
+						}else{
+							mLayoutShowComment.setVisibility(View.VISIBLE);
+						}
+					}else{
 						mLayoutShowComment.setVisibility(View.GONE);
 					}
 					for (int i = 0; i < videoList.size(); i++) {
@@ -830,6 +838,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
 		if(netInfo.getType() == ConnectivityManager.TYPE_WIFI){
 			GolukDebugUtils.e("videostart", "--------------WIFI环境----------------");
+			if(mPlayBtn.getVisibility() == View.VISIBLE){
+				mPlayBtn.setVisibility(View.GONE);
+			}
 			mFullVideoView.start();
 			mp.setLooping(true);
 		}else{
