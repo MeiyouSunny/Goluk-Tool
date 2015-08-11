@@ -143,11 +143,11 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		holder.image1.setTag("image:"+mVideoInfo1.filename);
 		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
-		if(mVideoInfo1.isNew) {
-			holder.mNewIcon1.setVisibility(View.VISIBLE);
-		}else {
+//		if(mVideoInfo1.isNew) {
+//			holder.mNewIcon1.setVisibility(View.VISIBLE);
+//		}else {
 			holder.mNewIcon1.setVisibility(View.GONE);
-		}
+//		}
 		
 		if (null != mVideoInfo2) {
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
@@ -159,11 +159,11 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 			
-			if(mVideoInfo2.isNew) {
-				holder.mNewIcon2.setVisibility(View.VISIBLE);
-			}else {
+//			if(mVideoInfo2.isNew) {
+//				holder.mNewIcon2.setVisibility(View.VISIBLE);
+//			}else {
 				holder.mNewIcon2.setVisibility(View.GONE);
-			}
+//			}
 		}
 		
 		updateEditState(mDataList.get(position), holder.mTMLayout1, holder.mTMLayout2);

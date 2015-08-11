@@ -505,23 +505,36 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	@SuppressLint("SimpleDateFormat")
-	public String formatTime(String date) {
-		String time = "";
-		if (null != date) {
+	private String formatTime(String date) {
+		String time = null;
+		try {
+			long curTime = System.currentTimeMillis();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-
-			try {
-				Date strtodate = formatter.parse(date);
-				if (null != strtodate) {
-					formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
-					if (null != formatter) {
-						time = formatter.format(strtodate);
-					}
+			Date strtodate = formatter.parse(date);
+			
+			Date curDate = new Date(curTime);
+			int curYear = curDate.getYear();
+			int history = strtodate.getYear();
+			int hisDay = strtodate.getDay();
+			int curDay = curDate.getDay();
+			
+			if (curYear == history) {
+				if(hisDay == curDay) {
+					return "今天";
+				}else if((hisDay + 1) == curDay) {
+					return "昨天";
+				}else {
+					SimpleDateFormat jn = new SimpleDateFormat("MM-dd HH:mm");
+					return jn.format(strtodate);// 今年内：月日更新
 				}
-			} catch (ParseException e) {
-				e.printStackTrace();
+			} else {
+				SimpleDateFormat jn = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				return jn.format(strtodate);// 非今年：年月日更新
 			}
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
+		
 		return time;
 	}
 	

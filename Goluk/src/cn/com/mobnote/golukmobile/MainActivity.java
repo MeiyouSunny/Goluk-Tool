@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
@@ -425,6 +426,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
 				updateHotPointState(true);
 
+				if (null != PhotoAlbumActivity.mHandler) {
+					Message msg = PhotoAlbumActivity.mHandler.obtainMessage(PhotoAlbumActivity.UPDATEDATE);
+					msg.obj = filename;
+					PhotoAlbumActivity.mHandler.sendMessage(msg);
+				}
+				
 				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime=" + time);
 			}
 		} catch (JSONException e) {

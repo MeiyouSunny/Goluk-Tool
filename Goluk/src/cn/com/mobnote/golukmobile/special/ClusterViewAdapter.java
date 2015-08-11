@@ -178,7 +178,7 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 					convertView.findViewById(R.id.mPlayBigBtn).setVisibility(View.GONE);
 				}
 
-				image.setOnClickListener(new SpecialCommentListener(mContext,headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
+				image.setOnClickListener(new SpecialCommentListener(mContext,this, headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
 			}
 			break;
 		case TYPE_2:
@@ -270,6 +270,16 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		return convertView;
 	}
 	
+	private String mVideoId = null;
+	
+	public void setWillShareVideoId(String vid) {
+		mVideoId = vid;
+	}
+	
+	public String getWillShareVideoId() {
+		return mVideoId;
+	}
+	
 	private void initListener(int index) {
 		ClusterInfo clusterInfo = clusterListData.get(index);
 		
@@ -277,8 +287,8 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		holder.totalcomments.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
 		holder.praiseLayout.setOnClickListener(new ClusterPressListener(mContext, clusterInfo, this));
 		holder.function.setOnClickListener(new ClusterPressListener(mContext, clusterInfo, this));
-		holder.imageLayout.setOnClickListener(new SpecialCommentListener(mContext,clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
-		holder.shareLayout.setOnClickListener(new SpecialCommentListener(mContext,clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
+		holder.imageLayout.setOnClickListener(new SpecialCommentListener(mContext,this,clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
+		holder.shareLayout.setOnClickListener(new SpecialCommentListener(mContext,this, clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
 	}
 
 	public int getUserHead(String head) {

@@ -2,7 +2,7 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +26,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListe
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.util.GolukUtils;
 
+@SuppressLint("HandlerLeak")
 public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 	private TextView mTitleName = null;
 	private Button mEditBtn = null;
@@ -50,6 +51,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 	private ImageView mDownLoadIcon = null;
 	private ImageView mDeleteIcon = null;
 	public static final int UPDATELOGINSTATE = -1;
+	public static final int UPDATEDATE = -2;
 	public static Handler mHandler = null;
 	
 	@Override
@@ -68,7 +70,12 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 				case UPDATELOGINSTATE:
 					updateLinkState();
 					break;
+				case UPDATEDATE:
+					String filename = (String)msg.obj;
+					mLocalVideoListView.updateData(filename);
+					break;
 				}
+				
 				super.handleMessage(msg);
 			}
 		};

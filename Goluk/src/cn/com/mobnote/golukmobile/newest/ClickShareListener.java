@@ -44,6 +44,10 @@ public class ClickShareListener implements OnClickListener {
 		if (null != mCategoryListView) {
 			mCategoryListView.setWillShareInfo(mVideoSquareInfo);
 		}
+		
+		if (null != mNewestListView) {
+			mNewestListView.setWillShareInfo(mVideoSquareInfo);
+		}
 	}
 
 	@Override

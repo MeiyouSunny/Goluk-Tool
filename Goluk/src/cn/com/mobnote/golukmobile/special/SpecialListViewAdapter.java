@@ -25,8 +25,9 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+
 @SuppressLint("InflateParams")
-public class SpecialListViewAdapter extends BaseAdapter{
+public class SpecialListViewAdapter extends BaseAdapter {
 	private Context mContext = null;
 	private List<SpecialInfo> specialListData = null;
 
@@ -64,7 +65,7 @@ public class SpecialListViewAdapter extends BaseAdapter{
 		SpecialInfo specialInfo = specialListData.get(arg0);
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.special_list_item, null);
-			
+
 			holder = new ViewHolder();
 			holder.author = (TextView) convertView.findViewById(R.id.author);
 			holder.mPreLoading = (ImageView) convertView.findViewById(R.id.mPreLoading);
@@ -73,21 +74,21 @@ public class SpecialListViewAdapter extends BaseAdapter{
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		holder.author.setText(specialInfo.author);
 		holder.videoTitle.setText(specialInfo.describe);
-		holder.mPreLoading.setOnClickListener(new SpecialCommentListener(mContext,specialInfo.imagepath,specialInfo.videopath,"suqare",specialInfo.videotype,specialInfo.videoid));
+		holder.mPreLoading.setOnClickListener(new SpecialCommentListener(mContext, null, specialInfo.imagepath,
+				specialInfo.videopath, "suqare", specialInfo.videotype, specialInfo.videoid));
 
 		int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		int height = (int) ((float) width / 1.77f);
-		
+
 		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 		holder.mPreLoading.setLayoutParams(mPreLoadingParams);
 		BitmapManager.getInstance().mBitmapUtils.display(holder.mPreLoading, specialInfo.imagepath);
 
 		return convertView;
 	}
-	
 
 	public int getUserHead(String head) {
 		return 0;
@@ -96,7 +97,6 @@ public class SpecialListViewAdapter extends BaseAdapter{
 	public void onBackPressed() {
 
 	}
-	
 
 	@SuppressLint("SimpleDateFormat")
 	public String formatTime(String date) {
@@ -124,7 +124,6 @@ public class SpecialListViewAdapter extends BaseAdapter{
 		TextView videoTitle;
 		TextView author;
 	}
-
 
 	public Bitmap getThumbBitmap(String netUrl) {
 		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";

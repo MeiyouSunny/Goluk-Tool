@@ -153,10 +153,9 @@ public class ClusterListActivity extends BaseActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (null != sharePlatform) {
-			sharePlatform.mSinaWBUtils.onActivityResult(requestCode,
-					resultCode, data);
+	    super.onActivityResult(requestCode, resultCode, data);
+	    if (null != sharePlatform) {
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -255,7 +254,6 @@ public class ClusterListActivity extends BaseActivity implements
 
 	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.back_btn:
 			this.finish();
@@ -270,6 +268,11 @@ public class ClusterListActivity extends BaseActivity implements
 			if (result == false) {
 				mCustomProgressDialog.close();
 				GolukUtils.showToast(this, "网络异常，请检查网络");
+			} else {
+				// 把之前保存的单个视频id清空，分享结果回来后就使用整个聚合的vid
+				if (null != clusterViewAdapter) {
+					clusterViewAdapter.setWillShareVideoId(null);
+				}
 			}
 			break;
 		default:
@@ -416,12 +419,10 @@ public class ClusterListActivity extends BaseActivity implements
 
 						if (this != null && !this.isFinishing()) {
 							mCustomProgressDialog.close();
-							CustomShareBoard shareBoard = new CustomShareBoard(
-									this, sharePlatform, shareurl, coverurl,
-									describe, ttl, bitmap, realDesc);
-							System.out.println("我日我日我日====bitmap=" + bitmap);
-							shareBoard.showAtLocation(this.getWindow()
-									.getDecorView(), Gravity.BOTTOM, 0, 0);
+							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
+									describe, ttl, bitmap, realDesc , getShareVideoId());
+							System.out.println("我日我日我日====bitmap="+bitmap);
+							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							System.out.println("我擦我擦我擦");
 						}
 					} else {
@@ -438,6 +439,17 @@ public class ClusterListActivity extends BaseActivity implements
 
 	}
 
+	
+	private String getShareVideoId() {
+		if (null != this.clusterViewAdapter) {
+			// 单个视频的分享
+			return this.clusterViewAdapter.getWillShareVideoId();
+		} else {
+			// 整个聚合的分享
+			return ztid;
+		}
+	}
+	
 	public Bitmap getThumbBitmap(String netUrl) {
 		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
 		String path = Environment.getExternalStorageDirectory()

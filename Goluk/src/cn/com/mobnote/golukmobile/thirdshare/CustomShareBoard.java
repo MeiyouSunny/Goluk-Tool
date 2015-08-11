@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
@@ -55,9 +56,11 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	String ttl = "";
 	Bitmap mThumbBitmap = null;
 	private String mRealDesc = null;
+	/** 视频Id ,用户服务器上报　 */
+	private String mVideoId = null;
 
 	public CustomShareBoard(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
-			Bitmap bitmap, String realDesc) {
+			Bitmap bitmap, String realDesc, String videoId) {
 
 		super(activity);
 		this.mActivity = activity;
@@ -68,6 +71,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		ttl = tl;
 		mThumbBitmap = bitmap;
 		mRealDesc = realDesc;
+		mVideoId = videoId;
 
 		initView(activity);
 	}
@@ -206,18 +210,32 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	}
 
+	/**
+	 * 上报分享服务器
+	 * 
+	 * @author jyf
+	 * @date 2015年8月11日
+	 */
 	public void shareUp() {
-		if (mActivity instanceof VideoEditActivity) {
-			((VideoEditActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-		} else if (mActivity instanceof MainActivity) {
-			((MainActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-		} else if (mActivity instanceof LiveActivity) {
-			((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-		} else if(mActivity instanceof VideoSquareDeatilActivity){
-			((VideoSquareDeatilActivity)mActivity).shareSucessDeal(true, mCurrentShareType);
-		} else if (mActivity instanceof VideoCategoryActivity) {
-			((VideoCategoryActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-		}
+
+		GolukDebugUtils.e("", "jyf----thirdshare--------share up: " + "   mVideoId:" + mVideoId);
+
+		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(mCurrentShareType, this.mVideoId);
+
+		// if (mActivity instanceof VideoEditActivity) {
+		// ((VideoEditActivity) mActivity).shareSucessDeal(true,
+		// mCurrentShareType);
+		// } else if (mActivity instanceof MainActivity) {
+		// ((MainActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+		// } else if (mActivity instanceof LiveActivity) {
+		// ((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
+		// } else if (mActivity instanceof VideoSquareDeatilActivity) {
+		// ((VideoSquareDeatilActivity) mActivity).shareSucessDeal(true,
+		// mCurrentShareType);
+		// } else if (mActivity instanceof VideoCategoryActivity) {
+		// ((VideoCategoryActivity) mActivity).shareSucessDeal(true,
+		// mCurrentShareType);
+		// }
 	}
 
 	private void performShare(SHARE_MEDIA platform) {
@@ -227,12 +245,30 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 			@Override
 			public void onStart() {
-
+				GolukDebugUtils.e("", "jyf----thirdshare--------onStart: " + "   mCurrentShareType:"
+						+ mCurrentShareType);
 			}
 
 			@Override
 			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-				System.out.println("mCurrentShareType------" + mCurrentShareType);
+				// 第一个参数platform是分享的平台
+				// 第二个参数是状态码（200代码分享成功，非200表示失败）
+				// 第三个参数entity是保存本次分享相关的信息
+
+				// if (platform == SHARE_MEDIA.WEIXIN || platform ==
+				// SHARE_MEDIA.WEIXIN_CIRCLE) {
+				// // 如果是微信与朋友圈，則会自动提示
+				// } else {
+				// if (200 == eCode) {
+				// GolukUtils.showToast(mActivity, "发送成功");
+				// } else {
+				// GolukUtils.showToast(mActivity, "发送失败，请重试...[" + eCode +
+				// "]");
+				// }
+				// }
+
+				GolukDebugUtils.e("", "jyf----thirdshare--------onComplete eCode: " + eCode + "   mCurrentShareType:"
+						+ mCurrentShareType);
 				dismiss();
 			}
 		});

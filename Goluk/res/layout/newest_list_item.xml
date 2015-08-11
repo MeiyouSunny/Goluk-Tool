@@ -245,11 +245,11 @@
 
     <TextView
         android:id="@+id/totalcomments"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/detail"
         android:layout_centerVertical="true"
-        android:gravity="center"
+        android:gravity="center_vertical|left"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -258,7 +258,7 @@
 
     <LinearLayout
         android:id="@+id/totlaCommentLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/totalcomments"
         android:orientation="vertical"
@@ -267,7 +267,7 @@
 
         <TextView
             android:id="@+id/comment1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:textColor="#333333"
@@ -275,7 +275,7 @@
 
         <TextView
             android:id="@+id/comment2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:textColor="#333333"
@@ -283,7 +283,7 @@
 
         <TextView
             android:id="@+id/comment3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:textColor="#333333"

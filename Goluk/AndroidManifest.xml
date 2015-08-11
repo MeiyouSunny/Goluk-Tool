@@ -277,7 +277,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID -->
-                <data android:scheme="1104418156" />
+                <data android:scheme="tencent1104418156" />
             </intent-filter>
         </activity>
         <activity
@@ -316,12 +316,6 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name="cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name="cn.com.mobnote.golukmobile.newest.VideoCategoryListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"

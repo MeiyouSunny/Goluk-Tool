@@ -323,7 +323,7 @@ public class VideoSquareListViewAdapter extends BaseAdapter implements VideoSuqa
 								if (vsa.mCustomProgressDialog != null) {
 									vsa.mCustomProgressDialog.close();
 									CustomShareBoard shareBoard = new CustomShareBoard(vsa, sharePlatform, shareurl,
-											coverurl, describe, ttl, bitmap, realDesc);
+											coverurl, describe, ttl, bitmap, realDesc, "");
 									shareBoard.showAtLocation(vsa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 								}
 
