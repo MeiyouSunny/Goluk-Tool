@@ -18,6 +18,8 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -53,6 +55,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		mContext = context;
 		mDataList = new ArrayList<JXListItemDataInfo>();
 		mRTPullListView = new RTPullListView(mContext);
+		mRTPullListView.setDividerHeight(0);
+		mRTPullListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
 		mRootLayout = new RelativeLayout(mContext);
 		mRootLayout.addView(mRTPullListView);
 		

@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -35,12 +36,14 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	private float density = 0;
 	/** 滚动中锁标识 */
 	private boolean lock = false;
+	private Typeface mTypeface = null;
 
 	public WonderfulSelectedAdapter(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<JXListItemDataInfo>();
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
+		mTypeface = Typeface.createFromAsset (context.getAssets() , "AdobeHebrew-Bold.otf" ); 
 	}
 
 	public void setData(List<JXListItemDataInfo> data) {
@@ -114,6 +117,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			if(0 == arg0) {
 				holder.mDate.setVisibility(View.GONE);
 			}else {
+				holder.mDate.setTypeface (mTypeface);
 				holder.mDate.setText(getTime(info.jxdate));
 				holder.mDate.setVisibility(View.VISIBLE);
 			}
