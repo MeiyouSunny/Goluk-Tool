@@ -26,6 +26,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Intent;
@@ -72,6 +73,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 	private int timeend = 2147483647;
 	private boolean isShowPlayer = false;
 	private TextView empty = null;
+	private float density = 1;
 	
 	public CloudWonderfulVideoListView(Context context, int type) {
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
@@ -85,6 +87,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		this.mGroupListName = new ArrayList<String>();
 		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		this.mRootLayout = LayoutInflater.from(context).inflate(R.layout.wonderful_listview, null, false);
+		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
 		initView();
 	}
 	
@@ -173,6 +176,10 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		mStickyListHeadersListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				if(screenX < (30*density)) {
+					return;
+				}
+				
 				if (arg2 < mDoubleDataList.size()) {
 					RelativeLayout mTMLayout1 = (RelativeLayout)arg1.findViewById(R.id.mTMLayout1);
 					RelativeLayout mTMLayout2 = (RelativeLayout)arg1.findViewById(R.id.mTMLayout2);
@@ -309,7 +316,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		checkListState();
 	}
 	
+	List<Boolean> exist = new ArrayList<Boolean>();
 	public void downloadVideoFlush(List<String> selectedListData) {
+		exist.clear();
 		for(String filename : selectedListData) {
 			String videoSavePath="fs1:/video/";
 			if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
@@ -330,13 +339,30 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 			String mp4 = FileUtils.libToJavaPath(videoSavePath+filename);
 			File file = new File(mp4);
 			if(!file.exists()){
+				exist.add(false);
 				boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
 				GolukDebugUtils.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
 			}else{
+				exist.add(true);
 				GolukDebugUtils.e("xuhw", "YYYYYY====querySingleFile==文件已存在===filename="+filename);
 			}
 			
 		}
+		
+		boolean isshow = false;
+		for (boolean flag : exist) {
+			if(!flag) {
+				isshow = false;
+				break;
+			}else {
+				isshow = true;
+			}
+		}
+		
+		if (isshow) {
+			GolukUtils.showToast(mContext, "视频已同步到本地");
+		}
+		
 	}
 	
 	/**
