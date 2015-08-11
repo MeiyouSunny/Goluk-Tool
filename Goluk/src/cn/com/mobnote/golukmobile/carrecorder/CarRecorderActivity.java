@@ -735,6 +735,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void onClick(View arg0) {
+		if (!isAllowedClicked())
+			return;
 		switch (arg0.getId()) {
 		case R.id.back_btn:
 			if (m_bIsFullScreen) {
@@ -996,7 +998,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		if (isShowPlayer) {
 			GolukDebugUtils.e("xuhw", "YYYYYY======isConnecting==" + isConnecting);
 			if (!isConnecting) {

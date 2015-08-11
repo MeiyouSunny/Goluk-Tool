@@ -7,6 +7,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -49,6 +50,7 @@ public class BaseActivity extends Activity {
 	public static final String WIFI_CONNING_FAILED_STR = "未连接Goluk";
 	public static final String WIFI_CONNING_STR = "正在连接Goluk...";
 	public static final String WIFI_CONNED_STR = "已连接Goluk";
+	private boolean m_bJumpActivity = false;
 
 	public Handler mBaseHandler = new Handler() {
 
@@ -79,6 +81,7 @@ public class BaseActivity extends Activity {
 
 	@Override
 	protected void onResume() {
+		m_bJumpActivity = false;
 		super.onResume();
 		MobclickAgent.onResume(this);
 		GolukApplication.getInstance().setIsBackgroundState(false);
@@ -105,7 +108,17 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
+	}
+	
+	@Override
+	public void startActivity(Intent intent)
+	{
+		m_bJumpActivity = true;
+		super.startActivity(intent);
+	}
+	
+	public boolean isAllowedClicked(){
+		return m_bJumpActivity?false:true;
 	}
 
 	/**
