@@ -454,8 +454,14 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				noCommentLayout.setVisibility(View.GONE);
 				List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
 				if (null != videoList) {
-					if (videoList.size() < 3) {
-						// TODO 评论条数小于3条
+					if(null != mVideoJson.data.avideo.video.comment.comcount && !"".equals(mVideoJson.data.avideo.video.comment.comcount)){
+						int commentCount = Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount);
+						if(commentCount <= 3){
+							mLayoutShowComment.setVisibility(View.GONE);
+						}else{
+							mLayoutShowComment.setVisibility(View.VISIBLE);
+						}
+					}else{
 						mLayoutShowComment.setVisibility(View.GONE);
 					}
 					for (int i = 0; i < videoList.size(); i++) {
