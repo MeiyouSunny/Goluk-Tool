@@ -180,6 +180,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		if (isStop) {
 			isStop = false;
 			showLoading();
+			mPlayBtn.setVisibility(View.GONE);
 			mImageLayout.setVisibility(View.VISIBLE);
 		}
 		if (isPause) {
@@ -190,6 +191,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				}
 				mFullVideoView.seekTo(playTime);
 			}
+			mPlayBtn.setVisibility(View.GONE);
 			mFullVideoView.start();
 		}
 	}
@@ -836,6 +838,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
 		if(netInfo.getType() == ConnectivityManager.TYPE_WIFI){
 			GolukDebugUtils.e("videostart", "--------------WIFI环境----------------");
+			if(mPlayBtn.getVisibility() == View.VISIBLE){
+				mPlayBtn.setVisibility(View.GONE);
+			}
 			mFullVideoView.start();
 			mp.setLooping(true);
 		}else{
