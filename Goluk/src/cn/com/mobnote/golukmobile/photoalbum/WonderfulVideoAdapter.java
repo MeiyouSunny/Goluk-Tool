@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -26,6 +27,8 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
@@ -297,11 +300,13 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 			groupname = mGroupNameList.get(i);
 			String path1 = mDataList.get(position).getVideoInfo1().videoCreateDate;
 			if (path1.contains(groupname)) {
+				GolukDebugUtils.e("", "BBBBBBB=====#####====groupname="+groupname);
 				id = i;
 				break;
 			}
 		}
 		
+		GolukDebugUtils.e("", "BBBBBBB=====#####====position="+position+"==id="+id);
 		return id;
 	}
 

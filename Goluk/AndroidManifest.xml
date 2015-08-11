@@ -29,7 +29,7 @@
             android:name="cn.com.mobnote.golukmobile.comment.CommentActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" >
         </activity>
 
         <!-- 个人中心模块 -->
@@ -109,12 +109,11 @@
             android:enabled="true"
             android:process=":remote" >
         </service>
-        
-         <activity
+
+        <activity
             android:name="cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="cn.com.mobnote.golukmobile.LocalVideoListActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
@@ -134,9 +133,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="cn.com.mobnote.golukmobile.MainActivity"
-            android:windowSoftInputMode="adjustPan"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
@@ -243,12 +242,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name="cn.com.mobnote.golukmobile.videosuqare.VideoSquarePlayActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-        </activity>
-        <activity
             android:name="cn.com.mobnote.golukmobile.videosuqare.CCPlayerPage"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="landscape"
@@ -266,13 +259,11 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
-        
         <activity
             android:name="cn.com.mobnote.golukmobile.special.SpecialListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        
         <activity
             android:name="cn.com.mobnote.golukmobile.special.ClusterListActivity"
             android:screenOrientation="portrait"
@@ -304,16 +295,14 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
         <activity
+            android:name="cn.com.mobnote.golukmobile.newest.RecomVideoActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent" 
-            android:windowSoftInputMode="adjustResize" 
-            android:name="cn.com.mobnote.golukmobile.newest.RecomVideoActivity">
+            android:theme="@android:style/Theme.Translucent"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
-        
-        
+
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -341,7 +330,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        
 
         <!-- 添加百度地图key -->
         <!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->

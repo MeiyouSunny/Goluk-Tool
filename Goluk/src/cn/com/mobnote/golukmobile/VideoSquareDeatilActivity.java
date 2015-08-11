@@ -334,6 +334,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			toComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			toComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
 			toComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			toComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 			startActivity(toComment);
 			break;
 		// 显示全部评论
@@ -343,6 +344,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			showComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			showComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, false);
 			showComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			showComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 			startActivity(showComment);
 			break;
 		// 外链接
@@ -548,7 +550,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					+ "=param1=" + param1 + "=param2=" + param2);
 			if (RESULE_SUCESS == msg) {
 				mCustomStartDialog.close();
-				mImageLayout.setVisibility(View.GONE);
+//				mImageLayout.setVisibility(View.GONE);
 				mLayoutAllInfo.setVisibility(View.VISIBLE);
 				String jsonStr = (String) param2;
 				getData(jsonStr);

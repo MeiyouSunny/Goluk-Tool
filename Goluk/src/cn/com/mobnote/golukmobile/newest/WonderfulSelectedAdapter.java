@@ -108,8 +108,12 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		}
 		
 		if (!TextUtils.isEmpty(info.jxdate)) {
-			holder.mDate.setText(info.jxdate);
-			holder.mDate.setVisibility(View.VISIBLE);
+			if(0 == arg0) {
+				holder.mDate.setVisibility(View.GONE);
+			}else {
+				holder.mDate.setText(info.jxdate);
+				holder.mDate.setVisibility(View.VISIBLE);
+			}
 		}else {
 			holder.mDate.setVisibility(View.GONE);
 		}
