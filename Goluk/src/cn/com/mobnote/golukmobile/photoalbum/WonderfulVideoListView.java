@@ -70,7 +70,7 @@ public class WonderfulVideoListView {
 		mStickyListHeadersListView = (StickyListHeadersListView)mRootLayout.findViewById(R.id.mStickyListHeadersListView);
 		mWonderfulVideoAdapter = new WonderfulVideoAdapter(mContext, mStickyListHeadersListView, type, from);
 		mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
-		loadData(type);
+		loadData(type, true);
 		setListener();
 	}
 	
@@ -222,13 +222,16 @@ public class WonderfulVideoListView {
 		}
 	}
 	
-	private void loadData(int type) {
-		if(IPCManagerFn.TYPE_SHORTCUT == type) {
-			if (!mCustomProgressDialog.isShowing()) {
-				mCustomProgressDialog.show();
-				GolukDebugUtils.e("", "YYYYYY==4444=======mCustomProgressDialog==show==");
+	private void loadData(int type, boolean flag) {
+		if(flag) {
+			if(IPCManagerFn.TYPE_SHORTCUT == type) {
+				if (!mCustomProgressDialog.isShowing()) {
+					mCustomProgressDialog.show();
+					GolukDebugUtils.e("", "YYYYYY==4444=======mCustomProgressDialog==show==");
+				}
 			}
 		}
+		
 		LocalDataLoadAsyncTask task = new LocalDataLoadAsyncTask(type, new DataCallBack() {
 			@Override
 			public void onSuccess(int type, List<VideoInfo> mLocalListData, List<String> mGroupListName) {
@@ -245,6 +248,10 @@ public class WonderfulVideoListView {
 			}
 		});
 		task.execute("");
+	}
+	
+	public void updateData() {
+		loadData(type, false);
 	}
 	
 	public View getRootView() {

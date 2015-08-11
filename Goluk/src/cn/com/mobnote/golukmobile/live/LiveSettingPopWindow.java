@@ -130,7 +130,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 				@Override
 				public void onDismiss() {
 					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----mPopWindow-----dimiss:");
-
+					mListener.callBackPopWindow(EVENT_ENTER, getCurrentSetting());
 					isShow = false;
 					if (!isUserDimiss) {
 						if (null != mContext && mContext instanceof LiveActivity) {
@@ -200,7 +200,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 //			
 //			break;
 		case R.id.back_btn:
-			mListener.callBackPopWindow(EVENT_ENTER, getCurrentSetting());
+//			mListener.callBackPopWindow(EVENT_ENTER, getCurrentSetting());
 			break;
 		case R.id.live_talk_btn:
 			//switchTalkState();
@@ -239,4 +239,6 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	public void onStopTrackingTouch(SeekBar seekBar) {
 
 	}
+	
+	
 }

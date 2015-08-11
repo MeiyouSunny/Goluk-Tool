@@ -183,4 +183,14 @@ public class LocalVideoListView implements OnClickListener{
 		return type;
 	}
 	
+	public void updateData(String filename) {
+		if (filename.contains("WND")) {
+			mLocalVideoAdapter.updateData(0);
+		}else if (filename.contains("URG")) {
+			mLocalVideoAdapter.updateData(1);
+		}else if (filename.contains("NRM")) {
+			mLocalVideoAdapter.updateData(2);
+		}
+	}
+	
 }

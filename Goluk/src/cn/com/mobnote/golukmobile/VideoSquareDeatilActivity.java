@@ -180,6 +180,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		if (isStop) {
 			isStop = false;
 			showLoading();
+			mPlayBtn.setVisibility(View.GONE);
 			mImageLayout.setVisibility(View.VISIBLE);
 		}
 		if (isPause) {
@@ -190,6 +191,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				}
 				mFullVideoView.seekTo(playTime);
 			}
+			mPlayBtn.setVisibility(View.GONE);
 			mFullVideoView.start();
 		}
 	}
@@ -232,8 +234,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mLayoutAllInfo = (LinearLayout) findViewById(R.id.video_square_detail_show_allinfo);
 		mImageToRefresh = (ImageView) findViewById(R.id.video_square_detail_click_refresh);
 
-		mTextTitle.setText("视频详情");
-
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
@@ -261,23 +261,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mImageToRefresh.setOnClickListener(this);
 		showLoading();
 
-		String image = getIntent().getStringExtra("imageurl");
-		GolukDebugUtils.e("lily", "---------imageUrl-------" + image);
-		mImageLayout = (RelativeLayout) findViewById(R.id.mImageLayout);
-		mImageLayout.removeAllViews();
-		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT);
-
-		SimpleDraweeView view = new SimpleDraweeView(this);
-		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
-		GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
-				.setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setActualImageScaleType(ScaleType.FIT_XY).build();
-		view.setHierarchy(hierarchy);
-		view.setImageURI(Uri.parse(image));
-		mImageLayout.addView(view, mPreLoadingParams);
-
+		String title = getIntent().getStringExtra("title");
+		if(null == title || "".equals(title)){
+			mTextTitle.setText("视频详情");
+		}else{
+			mTextTitle.setText(title);
+		}
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -467,8 +456,14 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				noCommentLayout.setVisibility(View.GONE);
 				List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
 				if (null != videoList) {
-					if (videoList.size() < 3) {
-						// TODO 评论条数小于3条
+					if(null != mVideoJson.data.avideo.video.comment.comcount && !"".equals(mVideoJson.data.avideo.video.comment.comcount)){
+						int commentCount = Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount);
+						if(commentCount <= 3){
+							mLayoutShowComment.setVisibility(View.GONE);
+						}else{
+							mLayoutShowComment.setVisibility(View.VISIBLE);
+						}
+					}else{
 						mLayoutShowComment.setVisibility(View.GONE);
 					}
 					for (int i = 0; i < videoList.size(); i++) {
@@ -490,6 +485,22 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				hasCommentLayout.setVisibility(View.GONE);
 				noCommentLayout.setVisibility(View.VISIBLE);
 			}
+			//下载视频第一帧截图
+			mImageLayout = (RelativeLayout) findViewById(R.id.mImageLayout);
+			mImageLayout.removeAllViews();
+			RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
+
+			SimpleDraweeView view = new SimpleDraweeView(this);
+			GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
+			GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
+					.setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+					.setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+					.setActualImageScaleType(ScaleType.FIT_XY).build();
+			view.setHierarchy(hierarchy);
+			view.setImageURI(Uri.parse(mVideoJson.data.avideo.video.picture));
+			mImageLayout.addView(view, mPreLoadingParams);
+			
 			playVideo();
 		}
 		
@@ -827,6 +838,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
 		if(netInfo.getType() == ConnectivityManager.TYPE_WIFI){
 			GolukDebugUtils.e("videostart", "--------------WIFI环境----------------");
+			if(mPlayBtn.getVisibility() == View.VISIBLE){
+				mPlayBtn.setVisibility(View.GONE);
+			}
 			mFullVideoView.start();
 			mp.setLooping(true);
 		}else{
