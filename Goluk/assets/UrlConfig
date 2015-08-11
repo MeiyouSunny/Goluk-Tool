@@ -25,7 +25,7 @@
 "TopicList":"http://%s/navidog4MeetTrans/boutique.htm?method=special",
 "TagList":"http://%s/navidog4MeetTrans/boutique.htm?method=tags",
 "Recommend":"http://%s/navidog4MeetTrans/boutique.htm?method=recommend",
-"VideoDetail":"http://svr.goluk.cn/navidog4MeetTrans/boutique.htm?method=singleVideo",
+"VideoDetail":"http://%s/navidog4MeetTrans/boutique.htm?method=singleVideo",
 "Catlog":"http://%s/navidog4MeetTrans/boutique.htm?method=newest",
 "TownTalk":"http://%s/navidog4MeetTrans/boutique.htm?method=topicList",
 "CommentList":"http://%s/cdcComment/comment.htm",

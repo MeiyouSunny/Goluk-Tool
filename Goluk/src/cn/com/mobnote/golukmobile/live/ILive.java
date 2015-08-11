@@ -56,7 +56,7 @@ public interface ILive {
 
 	public static final int[] mHeadImg = { 0, R.drawable.editor_boy_one, R.drawable.editor_boy_two,
 			R.drawable.editor_boy_three, R.drawable.editor_girl_one, R.drawable.editor_girl_two,
-			R.drawable.editor_girl_two, R.drawable.head_unknown };
+			R.drawable.editor_girl_three, R.drawable.head_unknown };
 
 	/** 开始说话 */
 	public final int MSG_SPEAKING_START_SPEAK = 1;
@@ -82,6 +82,8 @@ public interface ILive {
 	public static final int MSG_H_RETRY_REQUEST_DETAIL = 7;
 	/** 播放器错误里，UI需要更新 */
 	public static final int MSG_H_PLAY_LOADING = 8;
+	/** 回到我的位置 */
+	public static final int MSG_H_TO_MYLOCATION = 9;
 	/** 文件查询时间 */
 	public static final int QUERYFILETIME = 500;
 }

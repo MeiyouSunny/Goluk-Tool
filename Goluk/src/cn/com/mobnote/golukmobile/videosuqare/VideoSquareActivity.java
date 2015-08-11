@@ -27,8 +27,6 @@ public class VideoSquareActivity implements OnClickListener {
 	private LinearLayout mTypeList = null;
 	private TextView hotTitle = null;
 	private TextView squareTitle = null;
-
-	SharePlatformUtil sharePlatform;
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
 
@@ -46,9 +44,7 @@ public class VideoSquareActivity implements OnClickListener {
 		ma = (MainActivity) mContext;
 		mViewPager = (ViewPager) mRootLayout.findViewById(R.id.mViewpager);
 		mViewPager.setOffscreenPageLimit(3);
-		sharePlatform = new SharePlatformUtil(mContext);
-		sharePlatform.configPlatforms();// 设置分享平台的参数
-		mVideoSquareAdapter = new VideoSquareAdapter(mContext, sharePlatform);
+		mVideoSquareAdapter = new VideoSquareAdapter(mContext, null);
 		mViewPager.setAdapter(mVideoSquareAdapter);
 		mViewPager.setOnPageChangeListener(opcl);
 
@@ -68,7 +64,7 @@ public class VideoSquareActivity implements OnClickListener {
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
+		mVideoSquareAdapter.onActivityResult( requestCode,  resultCode,  data);
 	}
 
 	private void setListener() {

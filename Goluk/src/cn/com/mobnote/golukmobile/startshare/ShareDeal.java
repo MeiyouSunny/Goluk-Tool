@@ -46,8 +46,8 @@ public class ShareDeal implements OnClickListener {
 		mYouMengRootLayout.findViewById(R.id.sina).setOnClickListener(this);
 	}
 
-	public void toShare(String surl, String curl, String db, String tl, Bitmap bitmap, String inputDeafultStr) {
-		mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, surl, curl, db, tl, bitmap, inputDeafultStr);
+	public void toShare(String surl, String curl, String db, String tl, Bitmap bitmap, String inputDeafultStr, String videoId) {
+		mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, surl, curl, db, tl, bitmap, inputDeafultStr, videoId);
 		mShareBoard.setShareType(mCurrentShareType);
 		if (mCurrentShareType.equals(CustomShareBoard.TYPE_WEIXIN)) {
 			mShareBoard.click_wechat();
@@ -63,7 +63,7 @@ public class ShareDeal implements OnClickListener {
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		mSharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
+		mSharePlatform.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	
