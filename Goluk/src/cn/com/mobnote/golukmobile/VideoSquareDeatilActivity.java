@@ -1,14 +1,12 @@
 package cn.com.mobnote.golukmobile;
 
 import java.io.File;
-import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.http.util.EncodingUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +24,8 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -139,6 +139,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	// private boolean isZanOk = false;
 	private String isPraise = "0";
 	private int likeNumber = 0;
+	/**猛戳刷新**/
+	private ImageView mImageToRefresh = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -228,6 +230,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
 		mLayoutAllInfo = (LinearLayout) findViewById(R.id.video_square_detail_show_allinfo);
+		mImageToRefresh = (ImageView) findViewById(R.id.video_square_detail_click_refresh);
 
 		mTextTitle.setText("视频详情");
 
@@ -255,6 +258,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 		}
 		mFullVideoView.setOnCompletionListener(this);
+		mImageToRefresh.setOnClickListener(this);
 		showLoading();
 
 		String image = getIntent().getStringExtra("imageurl");
@@ -304,10 +308,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					if (mFullVideoView.getCurrentPosition() > mFullVideoView.getDuration() - 100) {
 						mSeekBar.setProgress(0);
 					}
-					mPlayBtn.setVisibility(View.GONE);
 				} else {
-					mPlayBtn.setVisibility(View.VISIBLE);
-					mPlayBtn.setImageResource(R.drawable.player_play_btn);
 					if (0 != duration) {
 						mSeekBar.setProgress(playTime * 100 / duration);
 					} else {
@@ -379,6 +380,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			} else {
 				mFullVideoView.start();
 				mPlayBtn.setVisibility(View.GONE);
+				mImageLayout.setVisibility(View.GONE);
 			}
 			break;
 		case R.id.mPlayerLayout:
@@ -392,11 +394,15 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						mPlayBtn.setVisibility(View.VISIBLE);
 						mPlayBtn.setImageResource(R.drawable.btn_video_detail_play);
 					} else {
+						mImageLayout.setVisibility(View.GONE);
 						mPlayBtn.setVisibility(View.GONE);
 						mFullVideoView.start();
 					}
 				}
 			}
+			break;
+		case R.id.video_square_detail_click_refresh:
+			getVideoDetailData();
 			break;
 		default:
 			break;
@@ -422,62 +428,71 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	public void getData(String jsonStr) {
 		mVideoJson = VideoDetailParser.parseDataFromJson(jsonStr);
 		GolukDebugUtils.e("testtest", "------jsonStr--------" + jsonStr);
-		mVideoJsonList = new ArrayList<VideoJson>();
-		mVideoJsonList.add(mVideoJson);
-		UserUtils.focusHead(mVideoJson.data.avideo.user.headportrait, mImageHead);
-		mTextName.setText(mVideoJson.data.avideo.user.nickname);
-		mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoJson.data.avideo.video.sharingtime));
-		// 点赞数、评论数、观看数
-		DecimalFormat df = new DecimalFormat("#,###");
-		int wg_click = Integer.parseInt(mVideoJson.data.avideo.video.clicknumber);
-		int wg_praise = Integer.parseInt(mVideoJson.data.avideo.video.praisenumber);
-		int wg_comment = Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount);
-		if (wg_click < 100000 || wg_praise < 100000 || wg_comment < 100000) {
-			mTextLookAll.setText(df.format(wg_click));
-			mTextLikeAll.setText(df.format(wg_praise));
-			mTextCommentCount.setText(df.format(wg_comment));
-		} else {
-			mTextLookAll.setText("100,000+");
-			mTextLikeAll.setText("100,000+");
-			mTextCommentCount.setText("100,000+");
-		}
-		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
-			mImageLike.setImageResource(R.drawable.videodetail_like);
-		} else {
-			mImageLike.setImageResource(R.drawable.videodetail_like_press);
-		}
+		if(!mVideoJson.success){
+			//TODO 后台数据异常
+			mLayoutAllInfo.setVisibility(View.GONE);
+			mImageToRefresh.setVisibility(View.VISIBLE);
+			GolukDebugUtils.e("lily", "---------后台服务器数据异常-------"+mVideoJson);
+			GolukUtils.showToast(mContext, "数据异常，请重试");
+		}else{
+			mVideoJsonList = new ArrayList<VideoJson>();
+			mVideoJsonList.add(mVideoJson);
+			UserUtils.focusHead(mVideoJson.data.avideo.user.headportrait, mImageHead);
+			mTextName.setText(mVideoJson.data.avideo.user.nickname);
+			mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoJson.data.avideo.video.sharingtime));
+			// 点赞数、评论数、观看数
+			DecimalFormat df = new DecimalFormat("#,###");
+			int wg_click = Integer.parseInt(mVideoJson.data.avideo.video.clicknumber);
+			int wg_praise = Integer.parseInt(mVideoJson.data.avideo.video.praisenumber);
+			int wg_comment = Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount);
+			if (wg_click < 100000 || wg_praise < 100000 || wg_comment < 100000) {
+				mTextLookAll.setText(df.format(wg_click));
+				mTextLikeAll.setText(df.format(wg_praise));
+				mTextCommentCount.setText(df.format(wg_comment));
+			} else {
+				mTextLookAll.setText("100,000+");
+				mTextLikeAll.setText("100,000+");
+				mTextCommentCount.setText("100,000+");
+			}
+			if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
+				mImageLike.setImageResource(R.drawable.videodetail_like);
+			} else {
+				mImageLike.setImageResource(R.drawable.videodetail_like_press);
+			}
 
-		showText(mTextAutor, mVideoJson.data.avideo.user.nickname, mVideoJson.data.avideo.video.describe);
-		// 三条评论
-		if ("1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
-			hasCommentLayout.setVisibility(View.VISIBLE);
-			noCommentLayout.setVisibility(View.GONE);
-			List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
-			if (null != videoList) {
-				if (videoList.size() < 3) {
-					// TODO 评论条数小于3条
-					mLayoutShowComment.setVisibility(View.GONE);
-				}
-				for (int i = 0; i < videoList.size(); i++) {
-					if (i == 0) {
-						showText(mTextCommentFirst, videoList.get(i).name, videoList.get(i).text);
+			showText(mTextAutor, mVideoJson.data.avideo.user.nickname, mVideoJson.data.avideo.video.describe);
+			// 三条评论
+			if ("1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
+				hasCommentLayout.setVisibility(View.VISIBLE);
+				noCommentLayout.setVisibility(View.GONE);
+				List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
+				if (null != videoList) {
+					if (videoList.size() < 3) {
+						// TODO 评论条数小于3条
+						mLayoutShowComment.setVisibility(View.GONE);
 					}
-					if (i == 1) {
-						showText(mTextCommentSecond, videoList.get(i).name, videoList.get(i).text);
+					for (int i = 0; i < videoList.size(); i++) {
+						if (i == 0) {
+							showText(mTextCommentFirst, videoList.get(i).name, videoList.get(i).text);
+						}
+						if (i == 1) {
+							showText(mTextCommentSecond, videoList.get(i).name, videoList.get(i).text);
+						}
+						if (i == 2) {
+							showText(mTextCommenThird, videoList.get(i).name, videoList.get(i).text);
+						}
 					}
-					if (i == 2) {
-						showText(mTextCommenThird, videoList.get(i).name, videoList.get(i).text);
-					}
+				} else {
+					hasCommentLayout.setVisibility(View.GONE);
+					noCommentLayout.setVisibility(View.VISIBLE);
 				}
 			} else {
 				hasCommentLayout.setVisibility(View.GONE);
 				noCommentLayout.setVisibility(View.VISIBLE);
 			}
-		} else {
-			hasCommentLayout.setVisibility(View.GONE);
-			noCommentLayout.setVisibility(View.VISIBLE);
+			playVideo();
 		}
-		playVideo();
+		
 	}
 
 	/**
@@ -532,7 +547,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						if (this != null && !this.isFinishing()) {
 							this.mCustomLoadingDialog.close();
 							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
-									describe, ttl, bitmap, realDesc);
+									describe, ttl, bitmap, realDesc, mVideoJson.data.avideo.video.videoid);
 							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 						}
 					} else {
@@ -550,13 +565,14 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					+ "=param1=" + param1 + "=param2=" + param2);
 			if (RESULE_SUCESS == msg) {
 				mCustomStartDialog.close();
-//				mImageLayout.setVisibility(View.GONE);
 				mLayoutAllInfo.setVisibility(View.VISIBLE);
+				mImageToRefresh.setVisibility(View.GONE);
 				String jsonStr = (String) param2;
 				getData(jsonStr);
 			} else {
 				mCustomStartDialog.close();
 				mLayoutAllInfo.setVisibility(View.GONE);
+				mImageToRefresh.setVisibility(View.VISIBLE);
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 		} else if (event == VSquare_Req_VOP_Praise) {
@@ -807,7 +823,21 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mFullVideoView.setVideoWidth(mp.getVideoWidth());
 		mFullVideoView.setVideoHeight(mp.getVideoHeight());
 
-		mFullVideoView.start();
+		ConnectivityManager connectivityManager= (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+		if(netInfo.getType() == ConnectivityManager.TYPE_WIFI){
+			GolukDebugUtils.e("videostart", "--------------WIFI环境----------------");
+			mFullVideoView.start();
+			mp.setLooping(true);
+		}else{
+			GolukDebugUtils.e("videostart", "--------------非WIFI环境----------------");
+			hideLoading();
+			mFullVideoView.pause();
+			mImageLayout.setVisibility(View.VISIBLE);
+			mPlayBtn.setVisibility(View.VISIBLE);
+			mPlayBtn.setImageResource(R.drawable.player_play_btn);
+		}
+		
 		if (playTime != 0) {
 			mFullVideoView.seekTo(playTime);
 		}

@@ -675,7 +675,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			final String inputDeafultStr = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 			GolukDebugUtils.e("", "视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 			this.mShareDealTool.toShare(shortUrl, coverUrl, describe, title, mUploadVideo.getThumbBitmap(),
-					inputDeafultStr);
+					inputDeafultStr , this.mUploadVideo.getVideoId());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

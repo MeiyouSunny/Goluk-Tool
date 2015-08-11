@@ -19,14 +19,17 @@ import android.view.View.OnClickListener;
 public class SpecialCommentListener implements OnClickListener{
 	private Context mContext;
 	
+	private ClusterViewAdapter mClusterViewAdapter = null;
+	
 	String imagepath;
 	String videopath;
 	String from;
 	String type;
 	String vid ;
 	
-	public SpecialCommentListener(Context context, String ipath,String vpath,String f,String t,String videoid) {
+	public SpecialCommentListener(Context context, ClusterViewAdapter viewAdapter, String ipath,String vpath,String f,String t,String videoid) {
 		this.mContext = context;
+		this.mClusterViewAdapter = viewAdapter;
 		imagepath = ipath;
 		videopath = vpath;
 		from = f;
@@ -60,6 +63,12 @@ public class SpecialCommentListener implements OnClickListener{
 			if (!result) {
 				vsa.mCustomProgressDialog.close();
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+			} else {
+				// 保存将要分享的视频id
+				if (null != mClusterViewAdapter) {
+					mClusterViewAdapter.setWillShareVideoId(vid);
+				}
+				
 			}
 			break;
 		default:
