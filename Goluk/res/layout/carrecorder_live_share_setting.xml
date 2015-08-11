@@ -343,6 +343,8 @@
                         android:background="@drawable/live_setup_time_bg"
                         android:max="10800"
                         android:progressDrawable="@drawable/carrecorder_jdt"
+                        android:paddingLeft="16.0dip" 
+                        android:paddingRight="16.0dip" 
                         android:thumb="@drawable/carrecorder_thumb" />
                 </RelativeLayout>
 
