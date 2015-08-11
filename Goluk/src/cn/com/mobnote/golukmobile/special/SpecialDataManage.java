@@ -178,6 +178,7 @@ public class SpecialDataManage {
 
 						// 解析视频列表集合
 						JSONArray videolist = data.getJSONArray("videolist");
+						System.out.println(videolist.length());
 						if (videolist != null && videolist.length() > 0) {
 							for (int i = 0; i < videolist.length(); i++) {
 								JSONObject video = videolist.getJSONObject(i).getJSONObject("video");

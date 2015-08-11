@@ -5,12 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -25,7 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class WonderfulSelectedAdapter extends BaseAdapter {
@@ -91,13 +88,13 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		
 		JXListItemDataInfo info = mDataList.get(arg0);
 		holder.mTitleName.getPaint().setFakeBoldText(true);
-		holder.mTitleName.setText(info.ztitle);
-		if (!TextUtils.isEmpty(info.ztag)) {
-			holder.mTagName.setText(info.ztag);
-			holder.mTagName.setVisibility(View.VISIBLE);
-		}else {
+		holder.mTitleName.setText( getTitleString( info.ztitle ) );
+//		if (!TextUtils.isEmpty(info.ztag)) {
+//			holder.mTagName.setText(info.ztag);
+//			holder.mTagName.setVisibility(View.VISIBLE);
+//		}else {
 			holder.mTagName.setVisibility(View.GONE);
-		}
+//		}
 		
 		if ("-1".equals(info.videonumber)) {
 			holder.mVideoLayout.setVisibility(View.GONE);
@@ -129,6 +126,26 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;
+	}
+	
+	private String getTitleString(String title) {
+		String name = "";
+		int len = title.length();
+		if (len > 15) {
+			int size = len/15 + 1;
+			for (int i=0; i<size; i++) {
+				int index = 15*(i + 1);
+				if(index < len) {
+					name += title.substring(15*i, index) + "\n";	
+				}else {
+					name += title.substring(15*i);
+				}
+			}
+		}else {
+			name = title;
+		}
+		
+		return name;
 	}
 	
 	@SuppressLint("SimpleDateFormat")

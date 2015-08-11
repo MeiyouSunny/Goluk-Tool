@@ -67,6 +67,16 @@ public class LocalVideoAdapter extends PagerAdapter{
 		}
 	}
 	
+	public void updateData(int type) {
+		if(0 == type) {
+			mWonderfulVideoLiseView.updateData();
+		}else if(1 == type) {
+			mEmergencyVideoLiseView.updateData();
+		}else {
+			mLoopVideoLiseView.updateData();
+		}
+	}
+	
 	public void onDestroy() {
 		
 	}
