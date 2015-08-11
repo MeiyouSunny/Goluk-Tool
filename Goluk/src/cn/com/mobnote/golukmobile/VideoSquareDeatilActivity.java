@@ -532,7 +532,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						if (this != null && !this.isFinishing()) {
 							this.mCustomLoadingDialog.close();
 							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
-									describe, ttl, bitmap, realDesc);
+									describe, ttl, bitmap, realDesc, mVideoJson.data.avideo.video.videoid);
 							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 						}
 					} else {

@@ -208,7 +208,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (null != sharePlatform) {
-			sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -345,8 +345,10 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		if (mContext instanceof VideoCategoryActivity) {
 			VideoCategoryActivity activity = (VideoCategoryActivity) mContext;
 			if (activity != null && !activity.isFinishing()) {
+				String videoId = null != mWillShareSquareInfo ? mWillShareSquareInfo.mVideoEntity.videoid : "";
+
 				CustomShareBoard shareBoard = new CustomShareBoard(activity, sharePlatform, shareBean.shareurl,
-						shareBean.coverurl, describe, ttl, null, realDesc);
+						shareBean.coverurl, describe, ttl, null, realDesc, videoId);
 				shareBoard.showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			}
 		}
