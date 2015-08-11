@@ -242,10 +242,10 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 			mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
 		}
 
-		if (765 == requestCode && 0 == resultCode) {
-			// 新浪微博分享成功
-			GolukUtils.showToast(mActivity, "分享成功");
-		}
+		// if (765 == requestCode && 0 == resultCode) {
+		// // 新浪微博分享成功
+		// GolukUtils.showToast(mActivity, "分享成功");
+		// }
 
 	}
 
