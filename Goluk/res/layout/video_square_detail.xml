@@ -90,19 +90,19 @@
                 android:visibility="gone" />
             
             <!-- 进度条 -->
-             <SeekBar
-                android:id="@+id/seekbar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:background="@drawable/player_time_bg"
-                android:layout_alignParentBottom="true"
-                android:layout_centerVertical="true" 
-                android:layout_height="16dp"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/player_seekbar_style"
-                android:thumb="@drawable/player_time_control_btn"
-                />
+                <SeekBar
+                    android:id="@+id/seekbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@drawable/progress_bg"
+                    android:layout_alignParentBottom="true"
+                    android:paddingLeft="-10dp"
+                    android:paddingRight="-12dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/video_detail_seekbar_style"
+                    android:thumb="@null"/>
 
             <!-- loading -->
 
