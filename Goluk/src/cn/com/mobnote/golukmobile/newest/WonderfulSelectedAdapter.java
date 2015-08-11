@@ -175,7 +175,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 
         int height = (int) ((float) width / 1.77f);
         RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-        mPreLoadingParams.addRule(RelativeLayout.BELOW, R.id.mDate);
+//        mPreLoadingParams.addRule(RelativeLayout.BELOW, R.id.mDate);
         mPlayerLayout.addView(view, mPreLoadingParams);
         
         if(!TextUtils.isEmpty(iconUrl)) {
