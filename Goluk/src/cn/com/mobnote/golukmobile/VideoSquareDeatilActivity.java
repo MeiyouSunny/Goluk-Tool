@@ -1,14 +1,12 @@
 package cn.com.mobnote.golukmobile;
 
 import java.io.File;
-import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.http.util.EncodingUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -304,10 +302,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					if (mFullVideoView.getCurrentPosition() > mFullVideoView.getDuration() - 100) {
 						mSeekBar.setProgress(0);
 					}
-					mPlayBtn.setVisibility(View.GONE);
 				} else {
-					mPlayBtn.setVisibility(View.VISIBLE);
-					mPlayBtn.setImageResource(R.drawable.player_play_btn);
 					if (0 != duration) {
 						mSeekBar.setProgress(playTime * 100 / duration);
 					} else {
@@ -808,6 +803,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mFullVideoView.setVideoHeight(mp.getVideoHeight());
 
 		mFullVideoView.start();
+		mp.setLooping(true);
 		if (playTime != 0) {
 			mFullVideoView.seekTo(playTime);
 		}
