@@ -49,7 +49,6 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
-import cn.com.mobnote.golukmobile.startshare.VideoShareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
@@ -483,10 +482,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 *            ,视频ID
 	 */
 	public void localVideoUpLoadCallBack(int success, Object param1, Object param2) {
-		if (mPageSource == "VideoShare") {
-			((VideoShareActivity) mContext).videoUploadCallBack(success, param1, param2);
-		}
-
 		if (mPageSource == "VideoEdit") {
 			((VideoEditActivity) mContext).videoUploadCallBack(success, param1, param2);
 		}
@@ -501,9 +496,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 *            ,"vid":"3dfa8172-8fdc-4acd-b882-f191608f236720141124183820"}
 	 */
 	public void localVideoShareCallBack(int success, String data) {
-		if (mPageSource == "VideoShare") {
-			((VideoShareActivity) mContext).videoShareCallBack(success, data);
-		}
 		if (mPageSource == "VideoEdit") {
 			((VideoEditActivity) mContext).videoShareCallBack(success, data);
 		}
