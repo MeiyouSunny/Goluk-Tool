@@ -45,19 +45,20 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class ClusterListActivity extends BaseActivity implements OnClickListener,VideoSuqareManagerFn{
+public class ClusterListActivity extends BaseActivity implements
+		OnClickListener, VideoSuqareManagerFn {
 
 	private RTPullListView mRTPullListView = null;
 	private List<ClusterInfo> mDataList = null;
-	
-	public  CustomLoadingDialog mCustomProgressDialog = null;
-	
+
+	public CustomLoadingDialog mCustomProgressDialog = null;
+
 	private ClusterInfo begantime = null;
 	private ClusterInfo endtime = null;
-	
+
 	private ImageButton mBackBtn = null;
 	private RelativeLayout loading = null;
-	
+
 	public String shareVideoId;
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
@@ -68,91 +69,94 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	/** 视频广场类型 */
 	private String type;
 	/**
-	 * 1：上拉  2：下拉   0:第一次
+	 * 1：上拉 2：下拉 0:第一次
 	 */
 	private int uptype = 0;
-	
+
 	/** 广场视频列表默认背景图片 */
 	private ImageView squareTypeDefault;
-	
-	//点播分类
+
+	// 点播分类
 	private String attribute;
-	
+
 	SharePlatformUtil sharePlatform;
-	
+
 	private String historyDate;
-	
+
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
-	
+
 	ClusterViewAdapter clusterViewAdapter = null;
-	
+
 	private SpecialDataManage sdm = new SpecialDataManage();
-	
-	private SpecialInfo  headdata;
-	
+
+	private SpecialInfo headdata;
+
 	private TextView textTitle;
-	
+
 	private String ztid;
-	
+
 	private String title;
-	
+
 	private static String pagesize = "20";
-	
+
 	private Button titleShare;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cluster_list);
-		
+
 		Intent intent = getIntent();
-		
+
 		ztid = intent.getStringExtra("ztid");
 		title = intent.getStringExtra("title");
-		
+
 		textTitle = (TextView) findViewById(R.id.title);
-		historyDate = SettingUtils.getInstance().getString("gcHistoryDate", sdf.format(new Date()));
-		
-		SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
-		
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("ClusterListActivity", this);
+		historyDate = SettingUtils.getInstance().getString("gcHistoryDate",
+				sdf.format(new Date()));
+
+		SettingUtils.getInstance().putString("gcHistoryDate",
+				sdf.format(new Date()));
+
+		GolukApplication.getInstance().getVideoSquareManager()
+				.addVideoSquareManagerListener("ClusterListActivity", this);
 		mDataList = new ArrayList<ClusterInfo>();
-		
+
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		squareTypeDefault = (ImageView) findViewById(R.id.square_type_default);
 		squareTypeDefault.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				mCustomProgressDialog = null;
-				httpPost(true, "0","", ztid);
+				httpPost(true, "0", "", ztid);
 			}
 		});
-		
+
 		/** 返回按钮 */
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		titleShare = (Button) findViewById(R.id.title_share);
-		
+
 		mBackBtn.setOnClickListener(this);
 		titleShare.setOnClickListener(this);
-		
+
 		textTitle.setText(title);
-		
+
 		sharePlatform = new SharePlatformUtil(this);
-		sharePlatform.configPlatforms();//设置分享平台的参数
-		
-		httpPost(true,"0", "",ztid);
+		sharePlatform.configPlatforms();// 设置分享平台的参数
+
+		httpPost(true, "0", "", ztid);
 	}
-	
-	
-	@Override 
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    if (null != sharePlatform) {
-			sharePlatform.mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
+		if (null != sharePlatform) {
+			sharePlatform.mSinaWBUtils.onActivityResult(requestCode,
+					resultCode, data);
 		}
 	}
 
@@ -164,16 +168,18 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
-	private void httpPost(boolean flag,String operation,String timestamp,String ztid) {
+	private void httpPost(boolean flag, String operation, String timestamp,
+			String ztid) {
 		if (flag) {
 			if (null == mCustomProgressDialog) {
-				mCustomProgressDialog = new CustomLoadingDialog(this,null);
+				mCustomProgressDialog = new CustomLoadingDialog(this, null);
 				mCustomProgressDialog.show();
 			}
 		}
 
-		boolean result = GolukApplication.getInstance().getVideoSquareManager().getJHListData(ztid, operation, timestamp,pagesize);
-		
+		boolean result = GolukApplication.getInstance().getVideoSquareManager()
+				.getJHListData(ztid, operation, timestamp, pagesize);
+
 		if (!result) {
 			closeProgressDialog();
 		}
@@ -182,22 +188,23 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	private void init(boolean isloading) {
 
 		if (null == clusterViewAdapter) {
-			clusterViewAdapter = new ClusterViewAdapter(this,2,sharePlatform);
+			clusterViewAdapter = new ClusterViewAdapter(this, 2, sharePlatform);
 		}
 
-		clusterViewAdapter.setData(mDataList,headdata);
-		
-		mRTPullListView.setAdapter(clusterViewAdapter,historyDate);
+		mRTPullListView.setAdapter(clusterViewAdapter, historyDate);
+		clusterViewAdapter.setData(mDataList, headdata);
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				historyDate = SettingUtils.getInstance().getString("gcHistoryDate", sdf.format(new Date()));
-				SettingUtils.getInstance().putString("gcHistoryDate", sdf.format(new Date()));
-				if(begantime !=null){
+				historyDate = SettingUtils.getInstance().getString(
+						"gcHistoryDate", sdf.format(new Date()));
+				SettingUtils.getInstance().putString("gcHistoryDate",
+						sdf.format(new Date()));
+				if (begantime != null) {
 					uptype = 2;
-					httpPost(false,"0","", ztid);
-					
-				}else{
+					httpPost(false, "0", "", ztid);
+
+				} else {
 					mRTPullListView.postDelayed(new Runnable() {
 						@Override
 						public void run() {
@@ -205,7 +212,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 						}
 					}, 1500);
 				}
-				
+
 			}
 		});
 
@@ -213,11 +220,11 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-					
+
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
 						if (isHaveData) {
 							uptype = 1;
-							httpPost(true,"2", endtime.sharingtime,ztid);
+							httpPost(true, "2", endtime.sharingtime, ztid);
 						}
 					}
 				}
@@ -230,19 +237,20 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 				wonderfulVisibleCount = visibleItemCount;
 			}
 		});
-		
-		if(isloading == false){
-			//有下一页刷新
-			if(isHaveData){
-				loading = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
+
+		if (isloading == false) {
+			// 有下一页刷新
+			if (isHaveData) {
+				loading = (RelativeLayout) LayoutInflater.from(this).inflate(
+						R.layout.video_square_below_loading, null);
 				mRTPullListView.addFooterView(loading);
 			}
 		}
-		
+
 	}
 
 	public void flush() {
-		clusterViewAdapter.setData(mDataList,headdata);
+		clusterViewAdapter.setData(mDataList, headdata);
 	}
 
 	@Override
@@ -268,7 +276,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 			break;
 		}
 	}
-	
+
 	/**
 	 * 关闭加载中对话框
 	 * 
@@ -277,10 +285,9 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 	 */
 	private void closeProgressDialog() {
 		if (null != mCustomProgressDialog) {
-				mCustomProgressDialog.close();
+			mCustomProgressDialog.close();
 		}
 	}
-
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
@@ -288,29 +295,28 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		if (event == VSquare_Req_List_Tag_Content) {
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
-				
+
 				List<ClusterInfo> list = sdm.getClusterList((String) param2);
 				headdata = sdm.getClusterHead((String) param2);
-				//说明有数据
-				if(list.size()>0){
+				// 说明有数据
+				if (list.size() > 0) {
 					begantime = list.get(0);
-					endtime = list.get(list.size()-1);
-					
-					if(uptype == 0){//说明是第一次
-						if(list.size() >= 20){
+					endtime = list.get(list.size() - 1);
+
+					if (uptype == 0) {// 说明是第一次
+						if (list.size() >= 20) {
 							isHaveData = true;
-						}else{
+						} else {
 							isHaveData = false;
 						}
 						mDataList = list;
-						init(false);
-					}else if (uptype ==1){//上拉刷新
-						if (list.size() >= 20) {//数据超过20条
+					} else if (uptype == 1) {// 上拉刷新
+						if (list.size() >= 20) {// 数据超过20条
 							isHaveData = true;
-						} else {//数据没有20条
+						} else {// 数据没有20条
 							isHaveData = false;
-							if(loading != null){
-								if(mRTPullListView!=null){
+							if (loading != null) {
+								if (mRTPullListView != null) {
 									mRTPullListView.removeFooterView(loading);
 									loading = null;
 								}
@@ -318,94 +324,104 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 						}
 						mDataList.addAll(list);
 						flush();
-					}else if (uptype ==2){//下拉刷新
+					} else if (uptype == 2) {// 下拉刷新
 						mDataList.clear();
-						
-						if (list.size() >= 20) {//数据超过20条
+
+						if (list.size() >= 20) {// 数据超过20条
 							isHaveData = true;
-						} else {//数据没有20条
+						} else {// 数据没有20条
 							isHaveData = false;
 						}
-						
-						
-						if("1".equals(type)){//直播
+
+						if ("1".equals(type)) {// 直播
 							mDataList = list;
-						}else{
+						} else {
 							list.addAll(mDataList);
 							mDataList = list;
 						}
-						
+
 						mRTPullListView.onRefreshComplete(historyDate);
 						flush();
 					}
+
+					init(false);
+
+				} else {// 没有数据
+					isHaveData = false;
 					
-				}else{//没有数据
-					
-					if(uptype == 1){//上拉刷新
-						if(loading != null){
-							if(mRTPullListView!=null){
-								mRTPullListView.removeFooterView(loading);
-								loading = null;
+					if (headdata != null) {
+						init(false);
+					} else {
+						if (uptype == 1) {// 上拉刷新
+							if (loading != null) {
+								if (mRTPullListView != null) {
+									mRTPullListView.removeFooterView(loading);
+									loading = null;
+								}
 							}
+						} else if (uptype == 2) {// 下拉刷新
+							if ("1".equals(type)) {// 直播
+								mDataList.clear();
+							}
+							mRTPullListView.onRefreshComplete(historyDate);
 						}
-					}else if(uptype == 2){//下拉刷新
-						if("1".equals(type)){//直播
-							mDataList.clear();
-						}
-						mRTPullListView.onRefreshComplete(historyDate);
 					}
 				}
-				
-			}else {
+
+			} else {
 				isHaveData = false;
-				
-				if(0 == uptype){
+
+				if (0 == uptype) {
 					closeProgressDialog();
-				} else if (1 == uptype){
-					if(mRTPullListView!=null){
+				} else if (1 == uptype) {
+					if (mRTPullListView != null) {
 						mRTPullListView.removeFooterView(loading);
 						loading = null;
 					}
-				} else if (2 == uptype){
+				} else if (2 == uptype) {
 					mRTPullListView.onRefreshComplete(historyDate);
 				}
 				GolukUtils.showToast(ClusterListActivity.this, "网络异常，请检查网络");
 			}
-			
-			if(mDataList.size()>0){
+
+			if (mDataList.size() > 0) {
 				squareTypeDefault.setVisibility(View.GONE);
 				mRTPullListView.setVisibility(View.VISIBLE);
-			}else{
+			} else {
 				squareTypeDefault.setVisibility(View.VISIBLE);
 				mRTPullListView.setVisibility(View.GONE);
 			}
-		}else if(event == VSquare_Req_VOP_GetShareURL_Video || event == VSquare_Req_VOP_GetShareURL_Topic_Tag){
+		} else if (event == VSquare_Req_VOP_GetShareURL_Video
+				|| event == VSquare_Req_VOP_GetShareURL_Topic_Tag) {
 			if (RESULE_SUCESS == msg) {
 				try {
 					JSONObject result = new JSONObject((String) param2);
 					if (result.getBoolean("success")) {
 						JSONObject data = result.getJSONObject("data");
-						GolukDebugUtils.i("detail", "------VideoSuqare_CallBack--------data-----" + data);
+						GolukDebugUtils.i("detail",
+								"------VideoSuqare_CallBack--------data-----"
+										+ data);
 						String shareurl = data.getString("shorturl");
 						String coverurl = data.getString("coverurl");
 						String describe = data.optString("describe");
 						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 
 						if (TextUtils.isEmpty(describe)) {
-								describe = "#极路客精彩视频#";
+							describe = "#极路客精彩视频#";
 						}
 						String ttl = "极路客精彩视频分享";
-						
+
 						// 缩略图
 						Bitmap bitmap = getThumbBitmap(headdata.imagepath);
-						
-						
+
 						if (this != null && !this.isFinishing()) {
 							mCustomProgressDialog.close();
-							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
+							CustomShareBoard shareBoard = new CustomShareBoard(
+									this, sharePlatform, shareurl, coverurl,
 									describe, ttl, bitmap, realDesc);
-							System.out.println("我日我日我日====bitmap="+bitmap);
-							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							System.out.println("我日我日我日====bitmap=" + bitmap);
+							shareBoard.showAtLocation(this.getWindow()
+									.getDecorView(), Gravity.BOTTOM, 0, 0);
 							System.out.println("我擦我擦我擦");
 						}
 					} else {
@@ -419,39 +435,42 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 		}
-			
+
 	}
-	
+
 	public Bitmap getThumbBitmap(String netUrl) {
 		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
-		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
+		String path = Environment.getExternalStorageDirectory()
+				+ File.separator + "goluk/image_cache";
 		File file = new File(path + File.separator + name);
 		Bitmap t_bitmap = null;
 		if (file.exists()) {
-			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
+			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(),
+					50, 50);
 		}
 		return t_bitmap;
 	}
-	
+
 	/**
 	 * 初始化历史请求数据
-	  * @Title: loadHistorydata 
-	  * @Description: TODO void 
-	  * @author 曾浩 
-	  * @throws
+	 * 
+	 * @Title: loadHistorydata
+	 * @Description: TODO void
+	 * @author 曾浩
+	 * @throws
 	 */
-	public void loadHistorydata(){
-		
+	public void loadHistorydata() {
+
 		try {
-			String videos = test();//GolukApplication.getInstance().getVideoSquareManager().getSquareList(attribute);
-			if(videos != null && !"".equals(videos)){
+			String videos = test();// GolukApplication.getInstance().getVideoSquareManager().getSquareList(attribute);
+			if (videos != null && !"".equals(videos)) {
 				List<ClusterInfo> list = sdm.getClusterList(videos);
 				headdata = sdm.getClusterHead(videos);
-				
-				if(list!=null && list.size()>0){
+
+				if (list != null && list.size() > 0) {
 					mDataList = list;
 					begantime = list.get(0);
-					endtime = list.get(list.size()-1);
+					endtime = list.get(list.size() - 1);
 					init(true);
 				}
 			}
@@ -459,7 +478,7 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public String test() throws JSONException {
@@ -477,10 +496,12 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		video.put("sharingtime", "2015/08/01");
 		video.put("describe", "记录卡记录卡据了解乐扣乐扣交流交流框架梁极乐空间垃圾筐拉进来");
 		video.put("clicknumber", "21");
-		video.put("praisenumber","232323");
-		video.put("picture", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
-		video.put("livesdkaddress", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
-		
+		video.put("praisenumber", "232323");
+		video.put("picture",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+		video.put("livesdkaddress",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+
 		JSONObject commentdata = new JSONObject();
 		commentdata.put("commentid", "2312");
 		commentdata.put("authorid", "34233");
@@ -506,9 +527,9 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		comment.put("comcount", "2");
 		comment.put("iscomment", "1");
 		comment.put("comlist", comments);
-		
+
 		video.put("comment", comment);
-		
+
 		JSONObject user = new JSONObject();
 		user.put("uid", "32323");
 		user.put("nickname", "为什么不");
@@ -524,13 +545,14 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 
 		data.put("videolist", videos);
 
-		
-
 		JSONObject head = new JSONObject();
 		head.put("showhead", "1");
-		head.put("headimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-		head.put("headvideoimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-		head.put("headvideo", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+		head.put("headimg",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+		head.put("headvideoimg",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+		head.put("headvideo",
+				"http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
 		head.put("ztIntroduction", "六角恐龙极乐空间六角恐龙极乐空间");
 		head.put("outurl", "www.baidu.com");
 		head.put("outurlname", "百度");
@@ -543,5 +565,5 @@ public class ClusterListActivity extends BaseActivity implements OnClickListener
 		return jx.toString();
 
 	}
-	
+
 }

@@ -94,12 +94,10 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		clusterListData.addAll(data);
 		count = clusterListData.size();
 		
-		if (head == null) {
-			VIEW_TYPE = 1;
-		} else {
+		if (head != null && !"".equals(head)) {
 			count++;
-			headdata = head;
-		}
+		} 
+		headdata = head;
 		
 		this.notifyDataSetChanged();
 	}
@@ -121,7 +119,15 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 	@Override
 	public int getViewTypeCount() {
-		return VIEW_TYPE;
+		if(headdata == null){
+			return 1;
+		}else{
+			if(clusterListData == null || clusterListData.size() == 0){
+				return 1;
+			}else{
+				return 2;
+			}
+		}
 	}
 
 	@Override
@@ -218,10 +224,6 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
 				
-				loadImage(holder.imageLayout, clusterInfo.imagepath);
-				
-				initListener(index--);
-				
 				convertView.setTag(holder);
 
 			} else {
@@ -235,7 +237,8 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 			holder.detail.setText(clusterInfo.author + "  " + clusterInfo.describe);
 			holder.totalcomments.setText("查看所有" + clusterInfo.comments + "条评论");
 			holder.zText.setText(clusterInfo.praisenumber + " 赞");
-			
+			loadImage(holder.imageLayout, clusterInfo.imagepath);
+			initListener(index);
 			//没点过
 			if("0".equals(clusterInfo.ispraise)){
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
