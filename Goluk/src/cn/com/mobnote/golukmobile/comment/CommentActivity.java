@@ -225,7 +225,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			return;
 		}
 
-		final String content = mEditText.getText().toString();
+		final String content = mEditText.getText().toString().trim();
 		if (null == content || "".equals(content)) {
 			GolukUtils.showToast(this, "请输入评论内容");
 			return;
