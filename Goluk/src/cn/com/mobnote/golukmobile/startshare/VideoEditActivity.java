@@ -37,7 +37,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
-import com.umeng.socialize.sso.UMSsoHandler;
 
 @SuppressLint("HandlerLeak")
 public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
@@ -682,6 +681,16 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 
 	}
+	
+	// 分享成功后需要调用的接口
+		public void shareSucessDeal(boolean isSucess, String channel) {
+			if (!isSucess) {
+				GolukUtils.showToast(this, "分享失败");
+				return;
+			}
+			String mVideoVid = "";
+			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, mVideoVid);
+		}
 
 	private void showRequestShareDialog() {
 		dimissRequestShareDialog();
