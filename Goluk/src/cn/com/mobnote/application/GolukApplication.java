@@ -585,14 +585,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}
-				if (!GlobalWindow.getInstance().isShow()) {
-					GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
-					GlobalWindow.getInstance().createVideoUploadWindow(
-							"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
-				} else {
-					GolukDebugUtils.e("xuhw", "YYYYYY======22222=========");
-					GlobalWindow.getInstance().updateText(
-							"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+				
+				if (!isBackground) {
+					if (!GlobalWindow.getInstance().isShow()) {
+						GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
+						GlobalWindow.getInstance().createVideoUploadWindow(
+								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+					} else {
+						GolukDebugUtils.e("xuhw", "YYYYYY======22222=========");
+						GlobalWindow.getInstance().updateText(
+								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+					}
 				}
 			} catch (Exception e) {
 				GolukDebugUtils.e("", "解析视频下载JSON数据错误");
@@ -655,8 +658,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @param data
 	 * @author chenxy
 	 */
+	List<String> freeList = new ArrayList<String>();
 	public void ipcVideoDownLoadCallBack(int success, String data) {
-
+		freeList.clear();
 		if (TextUtils.isEmpty(data)) {
 			return;
 		}
@@ -681,7 +685,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					if (!mDownLoadFileList.contains(filename)) {
 						mDownLoadFileList.add(filename);
 					}
-
+					
+					for (int i=0; i<mNoDownLoadFileList.size(); i++) {
+						String name = mNoDownLoadFileList.get(i);
+						if (!mDownLoadFileList.contains(name)) {
+							freeList.add(name);
+						}
+					}
+					
+					for(String name : freeList) {
+						mNoDownLoadFileList.remove(name);
+					}
+					
 					if (!isBackground) {
 						if (GlobalWindow.getInstance().isShow()) {
 							GlobalWindow.getInstance().refreshPercent(percent);
@@ -690,6 +705,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						} else {
 							GlobalWindow.getInstance().createVideoUploadWindow(
 									"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
+						}
+					}else {
+						if (GlobalWindow.getInstance().isShow()) {
+							GlobalWindow.getInstance().dimissGlobalWindow();
 						}
 					}
 

@@ -410,5 +410,12 @@
                 android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
-
+	<!-- 猛戳我刷新 -->
+	<ImageView 
+	    android:id="@+id/video_square_detail_click_refresh"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:src="@drawable/qitadifang"
+	    android:layout_centerInParent="true"
+	    android:visibility="gone"/>
 </RelativeLayout>

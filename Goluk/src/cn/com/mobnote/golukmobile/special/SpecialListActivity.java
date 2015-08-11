@@ -285,7 +285,6 @@ public class SpecialListActivity extends BaseActivity implements
 						}
 
 						txt.setText(headdata.describe);
-
 						RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
 								width, height);
 						image.setLayoutParams(mPreLoadingParams);
