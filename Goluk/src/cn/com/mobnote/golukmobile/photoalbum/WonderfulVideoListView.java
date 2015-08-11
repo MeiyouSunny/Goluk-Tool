@@ -49,6 +49,7 @@ public class WonderfulVideoListView {
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	private String from = null;
 	private TextView empty = null;
+	private float density = 1;
 	
 	public WonderfulVideoListView(Context context, int type, String from) {
 		this.from = from;
@@ -59,6 +60,7 @@ public class WonderfulVideoListView {
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		mRootLayout = LayoutInflater.from(context).inflate(R.layout.wonderful_listview, null, false);
+		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		initView();
 	}
 	
@@ -109,6 +111,10 @@ public class WonderfulVideoListView {
 		mStickyListHeadersListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				if(screenX < (30*density)) {
+					return;
+				}
+				
 				if (arg2 < mDoubleDataList.size()) {
 					RelativeLayout mTMLayout1 = (RelativeLayout)arg1.findViewById(R.id.mTMLayout1);
 					RelativeLayout mTMLayout2 = (RelativeLayout)arg1.findViewById(R.id.mTMLayout2);

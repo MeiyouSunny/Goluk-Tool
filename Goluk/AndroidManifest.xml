@@ -128,10 +128,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/activityTheme" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.startshare.VideoShareActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="cn.com.mobnote.golukmobile.MainActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
