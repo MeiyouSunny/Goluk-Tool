@@ -930,6 +930,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.mRtmpPlayerView:
 			{//停止预览
+				if (!GolukApplication.getInstance().getIpcIsLogin())
+					return;
 				setFullScreen(false);
 				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
