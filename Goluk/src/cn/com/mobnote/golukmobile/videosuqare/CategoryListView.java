@@ -40,6 +40,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	public static final String TAG = "CategoryListView";
 
 	private Context mContext = null;
+	private LayoutInflater layoutInflater = null;
 	private RelativeLayout mRootLayout = null;
 
 	public List<VideoSquareInfo> mDataList = null;
@@ -76,8 +77,14 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	 */
 	private int uptype = 0;
 
-	LayoutInflater layoutInflater = null;
 	private SharePlatformUtil sharePlatform;
+
+	private VideoSquareInfo begantime = null;
+	private VideoSquareInfo endtime = null;
+
+	private VideoSquareInfo mPraiseVideoSquareInfo;
+
+	private final int COUNT = 30;
 
 	public CategoryListView(Context context, final String type, final String attr) {
 		mContext = context;
@@ -97,7 +104,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		loadHistoryData();
 
 		initYMShare();
-
 		firstRequest();
 	}
 
@@ -144,6 +150,10 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		}
 	}
 
+	private boolean isLive() {
+		return "1".equals(mType);
+	}
+
 	Handler mHandler = new Handler() {
 
 		@Override
@@ -177,15 +187,29 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	}
 
 	private void loadHistoryData() {
-		boolean headFlag = false;
-		boolean dataFlag = false;
-		String head = GolukApplication.getInstance().getVideoSquareManager().getZXList();
-		String data = GolukApplication.getInstance().getVideoSquareManager().getTypeVideoList("0");
-
-		// if (headFlag && dataFlag) {
 		initLayout();
-		// }
+		if (!isLive()) {
+			String result = getLocalCacheData();
+			if (null != result && !"".equals(result)) {
+				List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData(result);
+				if (null != datalist && datalist.size() > 0) {
+					mCategoryAdapter.setData(null, datalist);
+				}
+			}
+		}
+	}
 
+	/**
+	 * 获取本地缓存数据
+	 * 
+	 * @return
+	 * @author jyf
+	 * @date 2015年8月12日
+	 */
+	private String getLocalCacheData() {
+		String json = JsonUtil.getCategoryLocalCacheJson(mAttribute);
+		String result = GolukApplication.getInstance().getVideoSquareManager().getCategoryLocalCacheData(json);
+		return result;
 	}
 
 	/**
@@ -213,27 +237,10 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	}
 
 	private void initLayout() {
-		// if (!headLoading && !dataLoading) {
-		// return;
-		// }
-
 		mRTPullListView.onRefreshComplete(historyDate);
-
-		// mCategoryAdapter.setData(mDataList);
-		// if ("0".equals(curOperation)) {
-
-		// }
-
 		mRTPullListView.setonRefreshListener(this);
-
 		mRTPullListView.setOnRTScrollListener(this);
-
 	}
-
-	private VideoSquareInfo begantime = null;
-	private VideoSquareInfo endtime = null;
-
-	private final int COUNT = 30;
 
 	private void callBack_CatLog(int msg, int param1, Object param2) {
 		closeLoadingDialog();
@@ -393,9 +400,9 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private void callBack_praise(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == msg) {
 			GolukDebugUtils.e("", "GGGG===@@@====2222=====");
-			if (null != mVideoSquareInfo) {
-				mVideoSquareInfo.mVideoEntity.ispraise = "1";
-				updateClickPraiseNumber(true, mVideoSquareInfo);
+			if (null != mPraiseVideoSquareInfo) {
+				mPraiseVideoSquareInfo.mVideoEntity.ispraise = "1";
+				updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
 			}
 
 		}
@@ -529,10 +536,8 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		wonderfulVisibleCount = visibleItemCount;
 	}
 
-	VideoSquareInfo mVideoSquareInfo;
-
 	public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info) {
-		mVideoSquareInfo = info;
+		mPraiseVideoSquareInfo = info;
 		if (!flag) {
 			return;
 		}
