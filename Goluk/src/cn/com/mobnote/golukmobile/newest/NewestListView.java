@@ -210,6 +210,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 			}
 		}
 
+		setViewListBg(false);
 		closeProgressDialog();
 		mRTPullListView.onRefreshComplete(historyDate);
 		if (null == mNewestAdapter) {
@@ -230,7 +231,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				httpPost(true, "0", "");
+				httpPost(false, "0", "");
 			}
 		});
 
@@ -387,10 +388,14 @@ public class NewestListView implements VideoSuqareManagerFn {
 			if (RESULE_SUCESS == msg) {
 				GolukDebugUtils.e("", "GGGG===@@@====2222=====");
 				if (null != mVideoSquareInfo) {
-					mVideoSquareInfo.mVideoEntity.ispraise = "1";
-					updateClickPraiseNumber(true, mVideoSquareInfo);
+					if("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+						mVideoSquareInfo.mVideoEntity.ispraise = "1";
+						updateClickPraiseNumber(true, mVideoSquareInfo);
+					}
 				}
 
+			}else {
+				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 		}
 
@@ -432,16 +437,17 @@ public class NewestListView implements VideoSuqareManagerFn {
 
 		for (int i = 0; i < mDataList.size(); i++) {
 			VideoSquareInfo vs = mDataList.get(i);
-			if (vs.id.equals(info.id)) {
-				int number = Integer.parseInt(info.mVideoEntity.praisenumber);
-				if ("1".equals(info.mVideoEntity.ispraise)) {
+			if (vs.id.equals(mVideoSquareInfo.id)) {
+				int number = Integer.parseInt(mVideoSquareInfo.mVideoEntity.praisenumber);
+				if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 					number++;
-				} else {
+				}else {
 					number--;
 				}
+				
 				mDataList.get(i).mVideoEntity.praisenumber = "" + number;
-				mDataList.get(i).mVideoEntity.ispraise = info.mVideoEntity.ispraise;
-				info.mVideoEntity.praisenumber = "" + number;
+				mDataList.get(i).mVideoEntity.ispraise = mVideoSquareInfo.mVideoEntity.ispraise;
+				mVideoSquareInfo.mVideoEntity.praisenumber = "" + number;
 				break;
 			}
 		}

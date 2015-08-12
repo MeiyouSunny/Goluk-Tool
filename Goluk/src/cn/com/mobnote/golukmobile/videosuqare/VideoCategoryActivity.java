@@ -212,7 +212,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		super.onPause();
 
 		if (null != mMapView) {
-			mMapView.onPause();
+//			mMapView.onPause();
 		}
 	}
 

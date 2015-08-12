@@ -167,7 +167,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 			public void onRefresh() {
 				historyDate = SettingUtils.getInstance().getString("hotHistoryDate", sdf.format(new Date()));
 				SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
-				httpPost(true, "0", "");
+				httpPost(false, "0", "");
 			}
 		});
 		

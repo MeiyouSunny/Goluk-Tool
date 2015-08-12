@@ -286,9 +286,15 @@ public class NewestAdapter extends BaseAdapter {
 					holder.totalcomments.setVisibility(View.GONE);
 					holder.totlaCommentLayout.setVisibility(View.GONE);
 				} else {
-					holder.totalcomments.setText("查看所有" + getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)
-							+ "条评论");
-					holder.totalcomments.setVisibility(View.VISIBLE);
+					int comcount = Integer.parseInt(mVideoSquareInfo.mVideoEntity.comcount);
+					if (comcount <= 3) {
+						holder.totalcomments.setVisibility(View.GONE);
+					}else {
+						holder.totalcomments.setVisibility(View.VISIBLE);
+						holder.totalcomments.setText("查看所有" + getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)
+								+ "条评论");
+					}
+					
 					holder.totlaCommentLayout.setVisibility(View.VISIBLE);
 					holder.totalcomments
 							.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));

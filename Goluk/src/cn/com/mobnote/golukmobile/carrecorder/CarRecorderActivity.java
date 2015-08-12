@@ -580,6 +580,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		liveVideo.setOnClickListener(this);
 		liveTime.setOnClickListener(this);
 		mRtmpPlayerView.setOnClickListener(this);
+		mConncetLayout.setOnClickListener(this);
 		
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -873,6 +874,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.mNotconnected:
 			click_ConnFailed();
 			break;
+		case R.id.mConncetLayout:
+			break;
 		case R.id.liveBtn:
 
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
@@ -943,6 +946,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.mRtmpPlayerView:
 			{//停止预览
+				if (!GolukApplication.getInstance().getIpcIsLogin())
+					return;
 				setFullScreen(false);
 				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
@@ -1738,7 +1743,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		images = new VideoShareInfo[3];
 		
 		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
-		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
+		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.tacitly_pic);
 
 		List<String> wonderfuls = this.getNewVideoByType(filePaths[0], 1);// 最新的精彩视频
 		List<String> urgents = this.getNewVideoByType(filePaths[1], 2);// 最新的紧急视频
