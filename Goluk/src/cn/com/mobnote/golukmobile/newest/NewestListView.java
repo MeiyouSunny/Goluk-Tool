@@ -255,21 +255,28 @@ public class NewestListView implements VideoSuqareManagerFn {
 	public void setWillShareInfo(VideoSquareInfo info) {
 		mWillShareVideoSquareInfo = info;
 	}
+	
+	private void showErrorTips() {
+		if (!headLoading && !dataLoading) {
+			closeProgressDialog();
+		}
+		GolukUtils.showToast(mContext, "网络异常，请检查网络");
+	}
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == VSquare_Req_List_Catlog) {
+			headLoading = false;
 			if (RESULE_SUCESS == msg) {
-				headLoading = false;
 				mHeadDataInfo = JsonParserUtils.parserNewestHeadData((String) param2);
 				initLayout();
 			} else {
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+				showErrorTips() ;
 			}
 
 		} else if (event == VSquare_Req_List_Video_Catlog) {
+			dataLoading = false;
 			if (RESULE_SUCESS == msg) {
-				dataLoading = false;
 				List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData((String) param2);
 				if ("0".equals(curOperation)) {
 					mDataList.clear();
@@ -280,7 +287,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 				curpageCount = datalist.size();
 				initLayout();
 			} else {
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+				showErrorTips() ;
 			}
 		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
 			if (mContext instanceof MainActivity) {
