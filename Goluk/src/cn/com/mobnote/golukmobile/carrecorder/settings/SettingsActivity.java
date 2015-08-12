@@ -133,7 +133,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVideoText = (TextView) findViewById(R.id.mVideoText);
 		mSensitivityText = (TextView) findViewById(R.id.mSensitivityText);
 
-		mStorayeText.setText("21.04GB/29.46GB");
+		mStorayeText.setText("0MB/0MB");
 	}
 
 	/**
@@ -468,6 +468,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				});
 				mCustomDialog.show();
 			} else if (msg == IPC_VDCPCmd_GetSpeakerSwitch) {// 获取ipc开关机声音状态
+				closeLoading();
 				if (param1 == RESULE_SUCESS) {
 					try {
 						JSONObject json = new JSONObject((String) param2);

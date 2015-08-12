@@ -365,6 +365,7 @@ public class NewestAdapter extends BaseAdapter {
 //		}
 		RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
 		RelativeLayout liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
+		liveLayout.setOnClickListener(new ClickLiveListener(mContext));
 
 		LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
 		if (null != mLiveInfo) {

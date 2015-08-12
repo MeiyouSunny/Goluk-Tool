@@ -63,15 +63,14 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		mApSSID = intent.getStringExtra("apssid");
 		mApPWD = intent.getStringExtra("appwd");
 
-		mTextTitle = (TextView) findViewById(R.id.user_title_text);
-		mTextTitle.setText("极路客WiFi密码");
+		initView();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(this, "changePassword");
-		initView();
+		
 	}
 
 	// 初始化
@@ -79,6 +78,9 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		mBtnBack = (ImageButton) findViewById(R.id.back_btn);
 		mBtnSave = (Button) findViewById(R.id.user_title_right);
 		mEditText = (EditText) findViewById(R.id.changewifi_password_editText);
+		mTextTitle = (TextView) findViewById(R.id.user_title_text);
+		
+		mTextTitle.setText("极路客WiFi密码");
 
 		/**
 		 * 获取摄像头管理页面传来的WIFI密码

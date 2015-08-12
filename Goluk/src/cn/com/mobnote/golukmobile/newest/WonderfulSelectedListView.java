@@ -105,6 +105,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		if(flag){
 			if(null == mCustomProgressDialog){
 				mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
+			}
+			
+			if (!mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
 			}
 		}
@@ -178,7 +181,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
 					mWonderfulSelectedAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
-						httpPost(false, mDataList.get(mDataList.size() - 1).jxid, "");
+						if (mDataList.size() > 0) {
+							httpPost(false, mDataList.get(mDataList.size() - 1).jxid, "");
+						}
 					}
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
