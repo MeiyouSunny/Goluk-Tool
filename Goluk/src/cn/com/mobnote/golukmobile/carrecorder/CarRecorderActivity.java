@@ -931,6 +931,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.mRtmpPlayerView:
 			{
 				mFullScreen.setVisibility(View.GONE);
+				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
 				if (mRtmpPlayerView.isPlaying()) {
 					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
