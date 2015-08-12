@@ -153,9 +153,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		initView();
 		// ---------------------
 
-		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
-		mCustomStartDialog.show();
-
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 
@@ -170,6 +167,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
+		mCustomStartDialog.show();
 		// 获取视频详情数据
 		getVideoDetailData();
 		
@@ -275,10 +274,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				if (error) {
 					return;
 				}
+				netWorkTimeoutCheck();
 				if (null == mFullVideoView) {
 					return;
 				}
-				netWorkTimeoutCheck();
 				if (mFullVideoView.getCurrentPosition() > 0) {
 					if (!mFullVideoView.isPlaying()) {
 						return;
@@ -749,16 +748,18 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	 *            提示信息
 	 */
 	private void dialog(String msg) {
-		CustomDialog mCustomDialog = new CustomDialog(this);
-		mCustomDialog.setCancelable(false);
-		mCustomDialog.setMessage(msg, Gravity.CENTER);
-		mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
-			@Override
-			public void onClickListener() {
-				finish();
-			}
-		});
-		mCustomDialog.show();
+		if(null == mCustomDialog){
+			mCustomDialog = new CustomDialog(this);
+			mCustomDialog.setCancelable(false);
+			mCustomDialog.setMessage(msg, Gravity.CENTER);
+			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+				@Override
+				public void onClickListener() {
+					finish();
+				}
+			});
+			mCustomDialog.show();
+		}
 	}
 
 	private OnSeekBarChangeListener mSeekBarChangeListener = new OnSeekBarChangeListener() {
@@ -779,6 +780,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 	};
 	private RelativeLayout mImageLayout;
+	private CustomDialog mCustomDialog;
 
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
@@ -904,6 +906,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if(null == mFullVideoView){
+			return ;
+		}
 		if (mFullVideoView.isPlaying()) {
 			isPause = true;
 			playTime = mFullVideoView.getCurrentPosition();
