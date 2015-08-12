@@ -169,6 +169,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 		case R.id.back_btn:
+			clickBtn = false;
 			finish();
 			break;
 		// 编辑
