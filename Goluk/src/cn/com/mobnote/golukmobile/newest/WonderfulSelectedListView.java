@@ -105,6 +105,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		if(flag){
 			if(null == mCustomProgressDialog){
 				mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
+			}
+			
+			if (!mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
 			}
 		}

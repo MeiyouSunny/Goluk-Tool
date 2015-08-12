@@ -102,6 +102,7 @@ public class JsonParserUtils {
 						LiveInfo liveinfo = new LiveInfo(live);
 						info.mLiveDataInfo = liveinfo;
 					}
+					
 				}
 			}else {
 				String msg = json.optString("msg");

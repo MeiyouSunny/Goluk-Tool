@@ -59,6 +59,7 @@ import cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ReadWifiConfig;
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
@@ -275,6 +276,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private int[] a = new int[2];
 	private int[] e = new int[2];
+	
+	private ImageView new1;
+	
+	private ImageView new2;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -436,7 +441,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				path = path + "/goluk/video/wonderful/" + videoname;
 			}
 			GolukDebugUtils.e("xuhw", "YYY====mShareBtn===path=" + path);
-
+			
+			SettingUtils.getInstance().putBoolean("Local_"+videoname, false);
+			
 			Intent i = new Intent(CarRecorderActivity.this, VideoEditActivity.class);
 			i.putExtra("cn.com.mobnote.video.path", path);
 			i.putExtra("type", type);
@@ -517,6 +524,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		live_gps = (ImageView) findViewById(R.id.live_gps_icon);
 		live_talk = (ImageView) findViewById(R.id.live_talk_icon);
 		live_release = (ImageView) findViewById(R.id.live_release_icon);
+		
+		new1 = (ImageView) findViewById(R.id.new1);
+		new2 = (ImageView) findViewById(R.id.new2);
 
 		mRtmpPlayerView.setAudioMute(true);
 		mRtmpPlayerView.setZOrderMediaOverlay(true);
@@ -891,9 +901,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 			break;
 		case R.id.image1:
+			new1.setVisibility(View.GONE);
 			open_shareVideo(images[0].getName());
 			break;
 		case R.id.image2:
+			new2.setVisibility(View.GONE);
+			
 			if(images[1].getName().equals("")){
 				return;
 			}else{
@@ -1209,6 +1222,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 
 		if(images[0] != null){
+			Boolean flog = SettingUtils.getInstance().getBoolean("Local_"+images[0].getName(), true);
+			if(flog){
+				new2.setVisibility(View.VISIBLE);
+			}else{
+				new2.setVisibility(View.GONE);
+			}
 			image1.setImageBitmap(images[2].getBitmap());
 			image2.setImageBitmap(images[0].getBitmap());
 			
@@ -1545,15 +1564,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 								if("".equals(images[1].getName())){
 									images[1] = vsi;
 									image2.setImageBitmap(vsi.getBitmap());
+									new2.setVisibility(View.VISIBLE);
 								}else{
 									images[0] = vsi;
 									image1.setVisibility(View.VISIBLE);
 									image1.setImageBitmap(vsi.getBitmap());
+									new1.setVisibility(View.VISIBLE);
 								}
 								
 							}else{
 								images[0] = vsi;
 								image1.setImageBitmap(vsi.getBitmap());
+								new1.setVisibility(View.VISIBLE);
 							}
 							
 						} else if (filename.equals(videoname)) {
@@ -1747,6 +1769,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 
 		if (!"".equals(videoname1)) {
+			
+			Boolean flog = SettingUtils.getInstance().getBoolean("Local_"+videoname1, true);
+			
 			String name1 = mImagePath + videoname1.replace("mp4", "jpg");
 			File video1 = new File(name1);
 			VideoShareInfo vsi1 = new VideoShareInfo();
@@ -1759,17 +1784,32 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			vsi1.setName(videoname1);
 			
 			if(!"".equals(videoname2)){
+				
 				images[0] = vsi1;
 				image1.setImageBitmap(vsi1.getBitmap());
+				
+				if(flog){
+					new1.setVisibility(View.VISIBLE);
+				}else{
+					new1.setVisibility(View.GONE);
+				}
+				
 			}else{
 				images[1] = vsi1;
 				image1.setVisibility(View.INVISIBLE);
+				new1.setVisibility(View.GONE);
+				
 				image2.setImageBitmap(vsi1.getBitmap());
+				if(flog){
+					new2.setVisibility(View.VISIBLE);
+				}else{
+					new2.setVisibility(View.GONE);
+				}
 			}
 			
 		} else {
-			
 			image1.setVisibility(View.INVISIBLE);
+			new1.setVisibility(View.GONE);
 		}
 
 		if (!"".equals(videoname2)) {
@@ -1785,10 +1825,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 			images[1] = vsi2;
 			image2.setImageBitmap(vsi2.getBitmap());
+			
+			boolean flog2 = SettingUtils.getInstance().getBoolean("Local_"+videoname2, true);
+			if(flog2){
+				new2.setVisibility(View.VISIBLE);
+			}else{
+				new2.setVisibility(View.GONE);
+			}
 		}else{
 			if("".equals(videoname1)){
 				images[1] = defpic;
 				image2.setImageBitmap(defpic.getBitmap());
+				new2.setVisibility(View.GONE);
 			}
 		}
 		
