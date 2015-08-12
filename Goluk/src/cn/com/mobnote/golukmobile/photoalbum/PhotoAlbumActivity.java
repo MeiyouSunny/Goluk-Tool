@@ -232,6 +232,12 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 					GolukUtils.showToast(PhotoAlbumActivity.this, "视频正在下载，无法删除");
 					return;
 				}
+				
+				if (!GolukApplication.getInstance().getIpcIsLogin()) {
+					resetEditState();
+					GolukUtils.showToast(PhotoAlbumActivity.this, "请检查摄像头连接状态");
+					return;
+				}
 			}
 			
 			CustomDialog mCustomDialog = new CustomDialog(this);
@@ -275,13 +281,18 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 		}else if(R.id.mCloudVideoBtn == curId) {
 			mCloudVideoListView.deleteDataFlush(selectedListData);
 		}
+		
 		resetEditState();
 		GolukUtils.showToast(PhotoAlbumActivity.this, "删除视频成功");
 	}
 	
 	private void downloadVideoFlush() {
-		if(R.id.mCloudVideoBtn == curId) {
-			mCloudVideoListView.downloadVideoFlush(selectedListData);
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			if(R.id.mCloudVideoBtn == curId) {
+				mCloudVideoListView.downloadVideoFlush(selectedListData);
+			}
+		}else {
+			GolukUtils.showToast(PhotoAlbumActivity.this, "请检查摄像头连接状态");
 		}
 		resetEditState();
 	}
