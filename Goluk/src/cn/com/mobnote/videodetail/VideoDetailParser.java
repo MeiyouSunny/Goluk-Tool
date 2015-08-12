@@ -93,6 +93,15 @@ public class VideoDetailParser {
 						}
 						data.avideo = videoDetailInfo;
 					}
+					//link
+					JSONObject json_link = json_data.optJSONObject("link");
+					if(null!= json_link){
+						VideoLink videoLink = new VideoLink();
+						videoLink.outurl = json_link.optString("outurl");
+						videoLink.outurlname = json_link.optString("outurlname");
+						videoLink.showurl = json_link.optString("showurl");
+						data.link = videoLink;
+					}
 					object.data = data;
 				}
 			}

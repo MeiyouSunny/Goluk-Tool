@@ -335,9 +335,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		// 外链接
 		case R.id.video_square_link:
-			Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
-			mBugLayout.putExtra("url", "http://www.goluk.com");
-			startActivity(mBugLayout);
+			if("1".equals(mVideoJson.data.link.showurl)){
+				Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
+				mBugLayout.putExtra("url", mVideoJson.data.link.outurl);
+				startActivity(mBugLayout);
+			}
 			break;
 		// 点赞
 		case R.id.praiseLayout:
@@ -501,7 +503,13 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			view.setHierarchy(hierarchy);
 			view.setImageURI(Uri.parse(mVideoJson.data.avideo.video.picture));
 			mImageLayout.addView(view, mPreLoadingParams);
-			
+			//外链接
+			if("0".equals(mVideoJson.data.link.showurl)){
+				mTextLink.setVisibility(View.GONE);
+			}else{
+				mTextLink.setVisibility(View.VISIBLE);
+				mTextLink.setText(mVideoJson.data.link.outurlname);
+			}
 			playVideo();
 		}
 		
