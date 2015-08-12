@@ -27,6 +27,10 @@
     	</RelativeLayout>
         
         <ImageView 
+            android:layout_alignTop="@+id/imageLayout"
+			android:layout_alignLeft="@+id/imageLayout"
+			android:layout_alignRight="@+id/imageLayout"
+			android:layout_alignBottom="@+id/imageLayout"
             android:layout_width="match_parent"
     		android:layout_height="match_parent"  
     		android:background="#4c000000"
