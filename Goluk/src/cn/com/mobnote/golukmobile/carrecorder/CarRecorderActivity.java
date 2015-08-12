@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -568,6 +569,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		live_talk.setOnClickListener(this);
 		liveVideo.setOnClickListener(this);
 		liveTime.setOnClickListener(this);
+		mRtmpPlayerView.setOnClickListener(this);
 		
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -737,6 +739,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void onClick(View arg0) {
 		if (!isAllowedClicked())
 			return;
+		Log.e("", "GGGGGGGGGGG-------------id=" + arg0.getId());
 		switch (arg0.getId()) {
 		case R.id.back_btn:
 			if (m_bIsFullScreen) {
@@ -925,6 +928,23 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.live_time:
 			lsp.show();
 			break;
+		case R.id.mRtmpPlayerView:
+			{//停止预览
+				setFullScreen(false);
+				rtmpIsOk = false;
+				mRtmpPlayerView.removeCallbacks(retryRunnable);
+				if (mRtmpPlayerView.isPlaying()) {
+					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
+					mRtmpPlayerView.stopPlayback();
+				}				
+				hidePlayer();
+				isShowPlayer = false;
+				isConnecting = false;
+				mPalyerLayout.setVisibility(View.VISIBLE);
+				mNotconnected.setVisibility(View.GONE);
+				mConncetLayout.setVisibility(View.GONE);
+			}
+			break;
 		default:
 			break;
 		}
@@ -1044,12 +1064,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	protected void onPause() {
 		super.onPause();
 		GolukDebugUtils.e("xuhw", "YYYYYY======onPause======");
-	};
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
 		if (isShowPlayer) {
 			if (null != mRtmpPlayerView) {
 				rtmpIsOk = false;
@@ -1063,6 +1077,25 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				hidePlayer();
 			}
 		}
+	};
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
+//		if (isShowPlayer) {
+//			if (null != mRtmpPlayerView) {
+//				rtmpIsOk = false;
+//				mFullScreen.setVisibility(View.GONE);
+//				mRtmpPlayerView.removeCallbacks(retryRunnable);
+//				if (mRtmpPlayerView.isPlaying()) {
+//					isConnecting = false;
+//					mRtmpPlayerView.stopPlayback();
+//					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback======");
+//				}
+//				hidePlayer();
+//			}
+//		}
 	};
 
 	@Override

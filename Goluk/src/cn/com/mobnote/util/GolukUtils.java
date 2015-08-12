@@ -146,7 +146,13 @@ public class GolukUtils {
 	 * @date 2015年5月29日
 	 */
 	public static void showToast(Context context, String text) {
-		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+		if (mToast == null) {  
+            mToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);  
+        } else {  
+            mToast.setText(text);  
+        }  
+		
+        mToast.show();  
 	}
 
 	/**
@@ -161,8 +167,16 @@ public class GolukUtils {
 	 * @author xuhw
 	 * @date 2015年5月29日
 	 */
+	private static Toast mToast = null;  
 	public static void showToast(Context context, String text, int duration) {
-		Toast.makeText(context, text, duration).show();
+		if (mToast == null) {  
+            mToast = Toast.makeText(context, text, duration);  
+        } else {  
+            mToast.setText(text);  
+            mToast.setDuration(duration);  
+        }  
+  
+        mToast.show();  
 	}
 
 	/**

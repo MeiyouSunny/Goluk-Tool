@@ -556,10 +556,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mVideoSquareActivity.onResume();
 		}
 
-		if (null != mVideoSquareActivity) {
-			mVideoSquareActivity.onDestroy();
-		}
-
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 
 		if (mApp.isNeedCheckLive) {
@@ -592,10 +588,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	protected void onPause() {
 		super.onPause();
 		if (null != mVideoSquareActivity) {
-			mVideoSquareActivity.onDestroy();
-		}
-		if (null != mVideoSquareActivity) {
-			mVideoSquareActivity.onResume();
+			mVideoSquareActivity.onPause();
 		}
 	}
 

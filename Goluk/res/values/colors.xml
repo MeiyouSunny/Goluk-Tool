@@ -105,5 +105,9 @@
     <!-- 行车记录仪2.0 -->
 	<color name="text_select_color">#e13737</color>
 	<color name="text_diff_color">#808181</color>
+	
+	<color name="wonderful_item_nor_color">#4c000000</color>
+	<color name="wonderful_item_sel_color">#00000000</color>
+	<color name="cagtegory_text_color">#bfffffff</color>
 
 </resources>

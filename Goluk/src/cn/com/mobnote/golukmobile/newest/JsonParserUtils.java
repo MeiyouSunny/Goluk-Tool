@@ -97,7 +97,7 @@ public class JsonParserUtils {
 							info.categoryList.add(cate);
 						}
 					}
-					JSONObject live = json.optJSONObject("live");
+					JSONObject live = data.optJSONObject("live");
 					if (null != live) {
 						LiveInfo liveinfo = new LiveInfo(live);
 						info.mLiveDataInfo = liveinfo;

@@ -129,9 +129,11 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			mCloudIcon.setBackgroundResource(R.drawable.my_cloud);
 			mCloudText.setText(getResources().getString(R.string.photoalbum_cloud_video_text));
+//			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_text_color));
 		}else {
 			mCloudIcon.setBackgroundResource(R.drawable.my_cloud_no_link);
 			mCloudText.setText("未连接极路客");
+			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 		}
 	}
 	

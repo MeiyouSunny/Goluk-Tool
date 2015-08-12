@@ -79,6 +79,9 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private String historyDate = "";
 
+	/** 评论超时为2 秒 */
+	private final int COMMENT_CIMMIT_TIMEOUT = 2;
+
 	private VideoSquareManager mVideoSquareManager = null;
 	private RelativeLayout mCommentInputLayout = null;
 	private TextView mNoInputTv = null;
@@ -254,7 +257,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		} else {
 			mIsHaveData = false;
 		}
-		this.mAdapter.appendData(dataList);
+		this.mAdapter.setData(dataList);
 
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		this.removeFoot();
@@ -384,7 +387,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 						bean.mCommentTime = GolukUtils.getCurrentCommentTime();
 						this.mAdapter.addFirstData(bean);
 						mEditText.setText("");
-						CommentTimerManager.getInstance().start(10);
+						CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
 					} else {
 						GolukUtils.showToast(this, "评论失败");
 					}
