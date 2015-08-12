@@ -259,6 +259,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 	private void showErrorTips() {
 		if (!headLoading && !dataLoading) {
 			closeProgressDialog();
+			mRTPullListView.onRefreshComplete(historyDate);
 		}
 		GolukUtils.showToast(mContext, "网络异常，请检查网络");
 	}
