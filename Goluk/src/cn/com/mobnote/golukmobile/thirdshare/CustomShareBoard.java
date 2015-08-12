@@ -255,6 +255,18 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				// 第二个参数是状态码（200代码分享成功，非200表示失败）
 				// 第三个参数entity是保存本次分享相关的信息
 
+				// if (platform == SHARE_MEDIA.WEIXIN || platform ==
+				// SHARE_MEDIA.WEIXIN_CIRCLE) {
+				// // 如果是微信与朋友圈，則会自动提示
+				// } else {
+				// if (200 == eCode) {
+				// GolukUtils.showToast(mActivity, "发送成功");
+				// } else {
+				// GolukUtils.showToast(mActivity, "发送失败，请重试...[" + eCode +
+				// "]");
+				// }
+				// }
+
 				GolukDebugUtils.e("", "jyf----thirdshare--------onComplete eCode: " + eCode + "   mCurrentShareType:"
 						+ mCurrentShareType);
 				dismiss();
