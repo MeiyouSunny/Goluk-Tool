@@ -72,6 +72,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.wonderful_selected_item, null);
 			holder = new ViewHolder();
+			holder.main = (RelativeLayout) convertView.findViewById(R.id.main);
 			holder.mDate = (TextView)convertView.findViewById(R.id.mDate);
 			holder.imageLayout = (RelativeLayout) convertView.findViewById(R.id.imageLayout);
 			holder.mTitleName = (TextView) convertView.findViewById(R.id.mTitleName);
@@ -87,7 +88,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		}
 		
 		JXListItemDataInfo info = mDataList.get(arg0);
-		holder.mTitleName.getPaint().setFakeBoldText(true);
+//		holder.mTitleName.getPaint().setFakeBoldText(true);
 		holder.mTitleName.setText( getTitleString( info.ztitle ) );
 //		if (!TextUtils.isEmpty(info.ztag)) {
 //			holder.mTagName.setText(info.ztag);
@@ -96,17 +97,17 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder.mTagName.setVisibility(View.GONE);
 //		}
 		
-		if ("-1".equals(info.videonumber)) {
+		if ("-1".equals(info.clicknumber)) {
 			holder.mVideoLayout.setVisibility(View.GONE);
 		}else {
-			holder.mVideoNum.setText(info.videonumber);
+			holder.mVideoNum.setText(info.clicknumber);
 			holder.mVideoLayout.setVisibility(View.VISIBLE);
 		}
 		
-		if ("-1".equals(info.clicknumber)) {
+		if ("-1".equals(info.videonumber)) {
 			holder.mLookLayout.setVisibility(View.GONE);
 		}else {
-			holder.mLookNum.setText(info.clicknumber);
+			holder.mLookNum.setText(info.videonumber);
 			holder.mLookLayout.setVisibility(View.VISIBLE);
 		}
 		
@@ -122,7 +123,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder.mDate.setVisibility(View.GONE);
 		}
 		
-		holder.imageLayout.setOnClickListener(new ClickWonderfulSelectedListener(mContext, info));
+		holder.main.setOnClickListener(new ClickWonderfulSelectedListener(mContext, info));
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;
@@ -220,6 +221,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	}
 
 	public static class ViewHolder {
+		RelativeLayout main;
 		RelativeLayout imageLayout;
 		TextView mTitleName;
 		TextView mTagName;

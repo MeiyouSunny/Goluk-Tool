@@ -14,8 +14,13 @@
         android:textSize="18sp" />
     
     <RelativeLayout 
+	android:id="@+id/main"
+    android:layout_below="@+id/mDate"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <RelativeLayout 
       	android:id="@+id/imlayout"
-      	android:layout_below="@+id/mDate"
       	android:layout_width="match_parent"
     	android:layout_height="match_parent"  >
     	
@@ -33,7 +38,8 @@
 			android:layout_alignBottom="@+id/imageLayout"
             android:layout_width="match_parent"
     		android:layout_height="match_parent"  
-    		android:background="#4c000000"
+    		android:duplicateParentState="true"
+    		android:background="@drawable/wonderful_item_mb"
             />
         
     </RelativeLayout>
@@ -52,7 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textColor="#ffffff"
+        android:duplicateParentState="true"
+        android:textColor="@color/wonder_title_color"
         android:textSize="18sp" />
 	    
 	    <TextView
@@ -71,6 +78,7 @@
 	    android:paddingLeft="10dp"
 	    android:paddingBottom="12dp"
 	    android:gravity="center_vertical"
+	    android:duplicateParentState="true"
 	    android:layout_alignParentBottom="true"
 	    android:layout_alignParentLeft="true"
 	    android:layout_width="wrap_content"
@@ -79,7 +87,8 @@
 	    <ImageView
         android:layout_width="21.33dp"
         android:layout_height="21.33dp"
-        android:background="@drawable/icon_2"
+        android:duplicateParentState="true"
+        android:background="@drawable/wonderful_video_icon"
         android:contentDescription="@string/def" />
 
 	    <TextView
@@ -88,7 +97,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="4dp"
         android:gravity="center"
-        android:textColor="#ffffff"
+        android:duplicateParentState="true"
+        android:textColor="@color/wonder_title_color"
         android:textSize="13sp" />
 	    	    
 	</LinearLayout>
@@ -98,6 +108,7 @@
 	    android:paddingRight="10dp"
 	    android:paddingBottom="12dp"
 	    android:gravity="center_vertical"
+	    android:duplicateParentState="true"
 	    android:layout_alignParentBottom="true"
 	    android:layout_alignParentRight="true"
 	    android:layout_width="wrap_content"
@@ -106,7 +117,8 @@
 	    <ImageView
         android:layout_width="21.33dp"
         android:layout_height="21.33dp"
-        android:background="@drawable/icon_1"
+        android:duplicateParentState="true"
+        android:background="@drawable/wonderful_look_icon"
         android:contentDescription="@string/def" />
 
 	    <TextView
@@ -115,10 +127,10 @@
         android:layout_height="wrap_content"
         android:paddingLeft="4dp"
         android:gravity="center"
-        android:textColor="#ffffff"
+        android:duplicateParentState="true"
+        android:textColor="@color/wonder_title_color"
         android:textSize="13sp" />
 	    	    
 	</LinearLayout>
-    
-    
+    </RelativeLayout>
 </RelativeLayout>
