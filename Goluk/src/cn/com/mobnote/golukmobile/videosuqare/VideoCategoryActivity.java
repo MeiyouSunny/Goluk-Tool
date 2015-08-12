@@ -154,11 +154,6 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 				this.switchLayout(temp);
 			}
 			break;
-		case R.id.square_type_default:
-			if (null != mCategoryLayout) {
-				mCategoryLayout.firstRequest();
-			}
-			break;
 		default:
 			break;
 		}

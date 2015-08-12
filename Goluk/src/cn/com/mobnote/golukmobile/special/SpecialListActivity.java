@@ -411,18 +411,17 @@ public class SpecialListActivity extends BaseActivity implements
 								describe = "#极路客精彩视频#";
 						}
 						String ttl = "极路客精彩视频分享";
-						
 						// 缩略图
-						Bitmap bitmap = getThumbBitmap(headdata.imagepath);
-						
+						Bitmap bitmap = null;
+						if(headdata != null){
+							 bitmap = getThumbBitmap(headdata.imagepath);
+						}
 						
 						if (this != null && !this.isFinishing()) {
 							mCustomProgressDialog.close();
 							CustomShareBoard shareBoard = new CustomShareBoard(SpecialListActivity.this, sharePlatform, shareurl, coverurl,
 									describe, ttl, bitmap, realDesc, ztid);
-							System.out.println("我日我日我日====bitmap="+bitmap);
 							shareBoard.showAtLocation(SpecialListActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-							System.out.println("我擦我擦我擦");
 						}
 					} else {
 						GolukUtils.showToast(this, "网络异常，请检查网络");

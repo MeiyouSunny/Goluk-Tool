@@ -1721,7 +1721,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		if (event == SquareCmd_Req_GetShareUrl) {
+		if (event == VSquare_Req_VOP_GetShareURL_Video) {
 			// 销毁对话框
 			// 销毁对话框
 			LiveDialogManager.getManagerInstance().dismissShareProgressDialog();

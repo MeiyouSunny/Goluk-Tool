@@ -200,7 +200,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 //			
 //			break;
 		case R.id.back_btn:
-//			mListener.callBackPopWindow(EVENT_ENTER, getCurrentSetting());
+			mListener.callBackPopWindow(EVENT_ENTER, getCurrentSetting());
 			break;
 		case R.id.live_talk_btn:
 			//switchTalkState();
