@@ -257,7 +257,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		} else {
 			mIsHaveData = false;
 		}
-		this.mAdapter.appendData(dataList);
+		this.mAdapter.setData(dataList);
 
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		this.removeFoot();

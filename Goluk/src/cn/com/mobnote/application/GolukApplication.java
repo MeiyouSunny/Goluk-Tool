@@ -1682,6 +1682,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean testActivity() {
 		if (mContext instanceof CarRecorderActivity) {
 			return true;
+		}else if (mContext instanceof PhotoAlbumActivity) {
+			return true;
 		} else {
 			return false;
 		}

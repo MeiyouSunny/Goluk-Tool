@@ -96,7 +96,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private LinearLayout mLayoutShowAll = null;
 	/** 评论内容 **/
 	private LinearLayout hasCommentLayout = null;
-	private RelativeLayout noCommentLayout = null;
+	private ImageView mImageNoInput = null;
+	private TextView mTextNoComment = null;
 	private TextView mTextAutor, mTextCommentCount, mTextCommentFirst, mTextCommentSecond, mTextCommenThird;
 	private TextView mTextLink = null;
 	private LinearLayout mLayoutPraise, mLayoutComment, mLayoutShare;
@@ -153,9 +154,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		initView();
 		// ---------------------
 
-		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
-		mCustomStartDialog.show();
-
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 
@@ -170,6 +168,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
+		mCustomStartDialog.show();
 		// 获取视频详情数据
 		getVideoDetailData();
 		
@@ -211,7 +211,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mLayoutShowComment = (LinearLayout) findViewById(R.id.video_square_show_all);
 		// 评论内容
 		hasCommentLayout = (LinearLayout) findViewById(R.id.video_square_has_comment_layout);
-		noCommentLayout = (RelativeLayout) findViewById(R.id.video_square_no_comment_layout);
+		mImageNoInput = (ImageView) findViewById(R.id.video_square_no_comment_img);
+		mTextNoComment = (TextView) findViewById(R.id.comment_noinput);
 		mTextAutor = (TextView) findViewById(R.id.video_square_author);
 		mTextCommentCount = (TextView) findViewById(R.id.video_square_comment_count);
 		mTextCommentFirst = (TextView) findViewById(R.id.video_square_comment_first);
@@ -275,10 +276,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				if (error) {
 					return;
 				}
+				netWorkTimeoutCheck();
 				if (null == mFullVideoView) {
 					return;
 				}
-				netWorkTimeoutCheck();
 				if (mFullVideoView.getCurrentPosition() > 0) {
 					if (!mFullVideoView.isPlaying()) {
 						return;
@@ -319,7 +320,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			toComment.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoJson.data.avideo.video.videoid);
 			toComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			toComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, true);
-			toComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			toComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, noInput());
 			toComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 			startActivity(toComment);
 			break;
@@ -329,7 +330,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			showComment.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoJson.data.avideo.video.videoid);
 			showComment.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
 			showComment.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, false);
-			showComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
+			showComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, noInput());
 			showComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 			startActivity(showComment);
 			break;
@@ -456,7 +457,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			// 三条评论
 			if ("1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 				hasCommentLayout.setVisibility(View.VISIBLE);
-				noCommentLayout.setVisibility(View.GONE);
+				mImageNoInput.setVisibility(View.GONE);
+				mTextNoComment.setVisibility(View.GONE);
 				List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
 				if (null != videoList) {
 					if(null != mVideoJson.data.avideo.video.comment.comcount && !"".equals(mVideoJson.data.avideo.video.comment.comcount)){
@@ -482,11 +484,13 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					}
 				} else {
 					hasCommentLayout.setVisibility(View.GONE);
-					noCommentLayout.setVisibility(View.VISIBLE);
+					mTextNoComment.setVisibility(View.GONE);
+					mImageNoInput.setVisibility(View.VISIBLE);
 				}
 			} else {
 				hasCommentLayout.setVisibility(View.GONE);
-				noCommentLayout.setVisibility(View.VISIBLE);
+				mTextNoComment.setVisibility(View.VISIBLE);
+				mImageNoInput.setVisibility(View.GONE);
 			}
 			//下载视频第一帧截图
 			mImageLayout = (RelativeLayout) findViewById(R.id.mImageLayout);
@@ -749,16 +753,18 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	 *            提示信息
 	 */
 	private void dialog(String msg) {
-		CustomDialog mCustomDialog = new CustomDialog(this);
-		mCustomDialog.setCancelable(false);
-		mCustomDialog.setMessage(msg, Gravity.CENTER);
-		mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
-			@Override
-			public void onClickListener() {
-				finish();
-			}
-		});
-		mCustomDialog.show();
+		if(null == mCustomDialog){
+			mCustomDialog = new CustomDialog(this);
+			mCustomDialog.setCancelable(false);
+			mCustomDialog.setMessage(msg, Gravity.CENTER);
+			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+				@Override
+				public void onClickListener() {
+					finish();
+				}
+			});
+			mCustomDialog.show();
+		}
 	}
 
 	private OnSeekBarChangeListener mSeekBarChangeListener = new OnSeekBarChangeListener() {
@@ -779,6 +785,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 	};
 	private RelativeLayout mImageLayout;
+	private CustomDialog mCustomDialog;
 
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
@@ -904,6 +911,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if(null == mFullVideoView){
+			return ;
+		}
 		if (mFullVideoView.isPlaying()) {
 			isPause = true;
 			playTime = mFullVideoView.getCurrentPosition();
@@ -929,6 +939,17 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 		}
 		return false;
+	}
+	/**
+	 * 根据iscomment字段，判断是否允许评论
+	 * @return
+	 */
+	private boolean noInput(){
+		if("1".equals(mVideoJson.data.avideo.video.comment.iscomment)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 }
