@@ -1443,7 +1443,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	@Override
 	public void LocationCallBack(String locationJson) {
 		// TODO 定位回调
-		GolukDebugUtils.e("", "jyf-------Application   LocationCallBack: " + locationJson);
+//		GolukDebugUtils.e("", "jyf-------Application   LocationCallBack: " + locationJson);
 		if (null == mLocationHashMap) {
 			return;
 		}
