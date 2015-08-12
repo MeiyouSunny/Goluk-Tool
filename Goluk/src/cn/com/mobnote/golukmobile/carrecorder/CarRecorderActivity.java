@@ -1743,7 +1743,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		images = new VideoShareInfo[3];
 		
 		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
-		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
+		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.tacitly_pic);
 
 		List<String> wonderfuls = this.getNewVideoByType(filePaths[0], 1);// 最新的精彩视频
 		List<String> urgents = this.getNewVideoByType(filePaths[1], 2);// 最新的紧急视频
