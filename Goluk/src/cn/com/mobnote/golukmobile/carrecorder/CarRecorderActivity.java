@@ -1063,12 +1063,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	protected void onPause() {
 		super.onPause();
 		GolukDebugUtils.e("xuhw", "YYYYYY======onPause======");
-	};
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
 		if (isShowPlayer) {
 			if (null != mRtmpPlayerView) {
 				rtmpIsOk = false;
@@ -1082,6 +1076,25 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				hidePlayer();
 			}
 		}
+	};
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
+//		if (isShowPlayer) {
+//			if (null != mRtmpPlayerView) {
+//				rtmpIsOk = false;
+//				mFullScreen.setVisibility(View.GONE);
+//				mRtmpPlayerView.removeCallbacks(retryRunnable);
+//				if (mRtmpPlayerView.isPlaying()) {
+//					isConnecting = false;
+//					mRtmpPlayerView.stopPlayback();
+//					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback======");
+//				}
+//				hidePlayer();
+//			}
+//		}
 	};
 
 	@Override
