@@ -990,5 +990,18 @@ public class JsonUtil {
 		}
 		return bean;
 	}
+	
+	public static String getCategoryLocalCacheJson(String mAttribute) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("attribute", mAttribute);
+			
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
 
 }
