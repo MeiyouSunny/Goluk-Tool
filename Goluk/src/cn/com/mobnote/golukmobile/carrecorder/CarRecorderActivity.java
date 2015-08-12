@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -568,6 +569,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		live_talk.setOnClickListener(this);
 		liveVideo.setOnClickListener(this);
 		liveTime.setOnClickListener(this);
+		mRtmpPlayerView.setOnClickListener(this);
 		
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -737,6 +739,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void onClick(View arg0) {
 		if (!isAllowedClicked())
 			return;
+		Log.e("", "GGGGGGGGGGG-------------id=" + arg0.getId());
 		switch (arg0.getId()) {
 		case R.id.back_btn:
 			if (m_bIsFullScreen) {
@@ -924,6 +927,22 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.live_time:
 			lsp.show();
+			break;
+		case R.id.mRtmpPlayerView:
+			{
+				mFullScreen.setVisibility(View.GONE);
+				mRtmpPlayerView.removeCallbacks(retryRunnable);
+				if (mRtmpPlayerView.isPlaying()) {
+					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
+					mRtmpPlayerView.stopPlayback();
+				}				
+				hidePlayer();
+				isShowPlayer = false;
+				isConnecting = false;
+				mPalyerLayout.setVisibility(View.VISIBLE);
+				mNotconnected.setVisibility(View.GONE);
+				mConncetLayout.setVisibility(View.GONE);
+			}
 			break;
 		default:
 			break;
