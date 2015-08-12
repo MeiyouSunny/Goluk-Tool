@@ -186,6 +186,7 @@ public class SpecialListActivity extends BaseActivity implements
 		case R.id.back_btn:
 			this.finish();
 			break;
+		case R.id.message:
 		case R.id.send:
 		case R.id.push_comment:
 			// 输入框
@@ -339,9 +340,7 @@ public class SpecialListActivity extends BaseActivity implements
 						commentLink.setOnClickListener(this);
 						outurl.setOnClickListener(this);
 
-						view.findViewById(R.id.message)
-								.setOnClickListener(this);
-						// view.findViewById(R.id.message).setOnClickListener(this);
+						view.findViewById(R.id.message).setOnClickListener(this);
 						view.findViewById(R.id.send).setOnClickListener(this);
 
 						lv.addFooterView(view);

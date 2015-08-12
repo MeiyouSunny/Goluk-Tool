@@ -152,10 +152,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 		initView();
 		// ---------------------
-		Intent it = getIntent();
-		if (null != it.getStringExtra("ztid")) {
-			ztId = it.getStringExtra("ztid").toString();
-		}
 
 		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
 		mCustomStartDialog.show();
@@ -339,9 +335,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		// 外链接
 		case R.id.video_square_link:
-			Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
-			mBugLayout.putExtra("url", "http://www.goluk.com");
-			startActivity(mBugLayout);
+			if("1".equals(mVideoJson.data.link.showurl)){
+				Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
+				mBugLayout.putExtra("url", mVideoJson.data.link.outurl);
+				startActivity(mBugLayout);
+			}
 			break;
 		// 点赞
 		case R.id.praiseLayout:
@@ -356,6 +354,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			GolukDebugUtils.i("detail", "--------result-----Onclick------" + result);
 			if (!result) {
 				mCustomLoadingDialog.close();
+				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 			break;
 		case R.id.play_btn:
@@ -402,11 +401,15 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	 * 获取网络视频详情数据
 	 */
 	public void getVideoDetailData() {
-		boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
-		if (!b) {
-			mCustomStartDialog.close();
+		Intent it = getIntent();
+		if (null != it.getStringExtra("ztid")) {
+			ztId = it.getStringExtra("ztid").toString();
+			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
+			if (!b) {
+				mCustomStartDialog.close();
+			}
+			mLayoutAllInfo.setVisibility(View.GONE);
 		}
-		mLayoutAllInfo.setVisibility(View.GONE);
 	}
 
 	/**
@@ -500,7 +503,13 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			view.setHierarchy(hierarchy);
 			view.setImageURI(Uri.parse(mVideoJson.data.avideo.video.picture));
 			mImageLayout.addView(view, mPreLoadingParams);
-			
+			//外链接
+			if("0".equals(mVideoJson.data.link.showurl)){
+				mTextLink.setVisibility(View.GONE);
+			}else{
+				mTextLink.setVisibility(View.VISIBLE);
+				mTextLink.setText(mVideoJson.data.link.outurlname);
+			}
 			playVideo();
 		}
 		
@@ -543,9 +552,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 						if (TextUtils.isEmpty(describe)) {
 							if ("1".equals(mVideoJson.data.avideo.video.type)) {
-								describe = "#极路客直播#";
-							} else {
 								describe = "#极路客精彩视频#";
+							} else {
+								describe = "#极路客精彩视频分享#";
 							}
 						}
 						String ttl = "极路客精彩视频分享";
@@ -624,13 +633,18 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
 		File file = new File(path + File.separator + name);
 		Bitmap t_bitmap = null;
-		if (null == file) {
-			return null;
-		}
 		if (file.exists()) {
-			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 100, 100);
+			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
 		}
 		return t_bitmap;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (null != sharePlatform) {
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	/**
