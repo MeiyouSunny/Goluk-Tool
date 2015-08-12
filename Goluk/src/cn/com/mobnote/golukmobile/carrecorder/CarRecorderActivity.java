@@ -258,7 +258,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private EditText et = null;
 
-	private VideoShareInfo[] images = new VideoShareInfo[3];
+	private VideoShareInfo[] images = null;
 
 	private ImageView live_gps;
 	private ImageView live_talk;
@@ -1712,6 +1712,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @throws
 	 */
 	public void initVideoImage() {
+		
+		images = new VideoShareInfo[3];
+		
 		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
 		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.share_video_no_pic);
 
@@ -1754,9 +1757,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 
 			vsi1.setName(videoname1);
-			images[0] = vsi1;
-			image1.setImageBitmap(vsi1.getBitmap());
+			
+			if(!"".equals(videoname2)){
+				images[0] = vsi1;
+				image1.setImageBitmap(vsi1.getBitmap());
+			}else{
+				images[1] = vsi1;
+				image1.setVisibility(View.INVISIBLE);
+				image2.setImageBitmap(vsi1.getBitmap());
+			}
+			
 		} else {
+			
 			image1.setVisibility(View.INVISIBLE);
 		}
 
@@ -1774,12 +1786,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			images[1] = vsi2;
 			image2.setImageBitmap(vsi2.getBitmap());
 		}else{
-			images[1] = defpic;
-			image2.setImageBitmap(defpic.getBitmap());
+			if("".equals(videoname1)){
+				images[1] = defpic;
+				image2.setImageBitmap(defpic.getBitmap());
+			}
 		}
 		
-		
-
 		images[2] = defpic;
 	}
 
