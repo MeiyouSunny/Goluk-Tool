@@ -129,13 +129,13 @@ public class CommentListViewAdapter extends BaseAdapter {
 		if (null == mContext || null == mVideoUserId || "".equals(mVideoUserId)) {
 			return temp.mUserName;
 		}
-
+		// 获取当前登录用户信息
 		UserInfo userInfo = ((CommentActivity) mContext).mApp.getMyInfo();
 		if (null == userInfo) {
 			return temp.mUserName;
 		}
 
-		if (userInfo.uid.equals(mVideoUserId)) {
+		if (userInfo.uid.equals(mVideoUserId) && userInfo.uid.equals(temp.mUserId) && mVideoUserId.equals(temp.mUserId)) {
 			return "车主";
 		}
 		return temp.mUserName;
