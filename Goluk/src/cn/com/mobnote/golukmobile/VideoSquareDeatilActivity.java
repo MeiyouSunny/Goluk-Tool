@@ -409,7 +409,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			if (!b) {
 				mCustomStartDialog.close();
 			}
-			mLayoutAllInfo.setVisibility(View.GONE);
+//			mLayoutAllInfo.setVisibility(View.GONE);
 		}
 	}
 
@@ -589,7 +589,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					+ "=param1=" + param1 + "=param2=" + param2);
 			if (RESULE_SUCESS == msg) {
 				mCustomStartDialog.close();
-				mLayoutAllInfo.setVisibility(View.VISIBLE);
+//				mLayoutAllInfo.setVisibility(View.VISIBLE);
 				mImageToRefresh.setVisibility(View.GONE);
 				String jsonStr = (String) param2;
 				getData(jsonStr);
@@ -761,6 +761,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				@Override
 				public void onClickListener() {
 					finish();
+					timer.cancel();
 				}
 			});
 			mCustomDialog.show();
@@ -786,6 +787,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	};
 	private RelativeLayout mImageLayout;
 	private CustomDialog mCustomDialog;
+	private Timer timer;
 
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
@@ -876,7 +878,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		if (playTime != 0) {
 			mFullVideoView.seekTo(playTime);
 		}
-		Timer timer = new Timer();
+		timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
