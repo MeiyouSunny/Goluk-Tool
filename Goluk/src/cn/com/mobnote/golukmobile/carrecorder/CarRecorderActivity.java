@@ -580,6 +580,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		liveVideo.setOnClickListener(this);
 		liveTime.setOnClickListener(this);
 		mRtmpPlayerView.setOnClickListener(this);
+		mConncetLayout.setOnClickListener(this);
 		
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -872,6 +873,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.mNotconnected:
 			click_ConnFailed();
+			break;
+		case R.id.mConncetLayout:
 			break;
 		case R.id.liveBtn:
 
