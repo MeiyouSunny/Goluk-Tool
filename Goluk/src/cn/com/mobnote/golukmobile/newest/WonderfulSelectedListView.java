@@ -24,8 +24,11 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 
 @SuppressLint("InflateParams")
 public class WonderfulSelectedListView implements VideoSuqareManagerFn{
@@ -50,6 +53,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 	private int firstVisible;
 	/** 保存列表显示item个数 */
 	private int visibleCount;
+	private ImageView shareBg = null;
 	
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
@@ -58,7 +62,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		mRTPullListView.setDividerHeight(0);
 		mRTPullListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
 		mRootLayout = new RelativeLayout(mContext);
-		mRootLayout.addView(mRTPullListView);
+		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
 		
 		initListener();
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
@@ -71,9 +75,21 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		if(null != mVideoSquareManager){
 			mVideoSquareManager.addVideoSquareManagerListener("wonderfulSelectedList", this);
 		}
+		
+		RelativeLayout.LayoutParams rlp =new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		rlp.addRule(RelativeLayout.CENTER_IN_PARENT);
+		mRootLayout.addView(shareBg,rlp);
+		mRootLayout.addView(mRTPullListView);
 	
 		initHistoryData();
 		httpPost(true, "0", "");
+		
+		shareBg.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				httpPost(true, "0", "");
+			}
+		});
 	}
 	
 	private void initHistoryData() {
@@ -209,13 +225,21 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 			
-//			if(mDataList.size()>0){
-//				setViewListBg(false);
-//			}else{
-//				setViewListBg(true);
-//			}
+			if (mDataList.size() > 0) {
+				setViewListBg(false);
+			}else {
+				setViewListBg(true);
+			}
 		}
 		
+	}
+	
+	public void setViewListBg(boolean flog){
+		if(flog){
+			shareBg.setVisibility(View.VISIBLE);
+		}else{
+			shareBg.setVisibility(View.GONE);
+		}
 	}
 	
 	public void onDestroy(){

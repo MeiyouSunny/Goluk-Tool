@@ -339,12 +339,14 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 			String mp4 = FileUtils.libToJavaPath(videoSavePath+filename);
 			File file = new File(mp4);
 			if(!file.exists()){
-				exist.add(false);
-				boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
-				GolukDebugUtils.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
+				List<String> downloadlist = GolukApplication.getInstance().getDownLoadList();
+				if (!downloadlist.contains(filename)) {
+					exist.add(false);
+					boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
+					GolukDebugUtils.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
+				}
 			}else{
 				exist.add(true);
-				GolukDebugUtils.e("xuhw", "YYYYYY====querySingleFile==文件已存在===filename="+filename);
 			}
 			
 		}
