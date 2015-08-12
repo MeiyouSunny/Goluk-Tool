@@ -929,8 +929,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			lsp.show();
 			break;
 		case R.id.mRtmpPlayerView:
-			{
-				mFullScreen.setVisibility(View.GONE);
+			{//停止预览
+				setFullScreen(false);
 				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
 				if (mRtmpPlayerView.isPlaying()) {
