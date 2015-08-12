@@ -224,7 +224,9 @@ public class NewestListView implements VideoSuqareManagerFn {
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
 					mNewestAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
-						httpPost(false, "2", mDataList.get(mDataList.size() - 1).mVideoEntity.sharingtime);
+						if (mDataList.size() > 0) {
+							httpPost(false, "2", mDataList.get(mDataList.size() - 1).mVideoEntity.sharingtime);
+						}
 					}
 
 					break;
