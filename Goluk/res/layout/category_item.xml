@@ -10,8 +10,19 @@
     		android:layout_height="match_parent" >
 			    		
 	        </RelativeLayout>
+	        
+	    <ImageView 
+            android:layout_alignTop="@+id/imageLayout"
+			android:layout_alignLeft="@+id/imageLayout"
+			android:layout_alignRight="@+id/imageLayout"
+			android:layout_alignBottom="@+id/imageLayout"
+            android:layout_width="match_parent"
+    		android:layout_height="match_parent"  
+    		android:background="@drawable/wonderful_item_mb"
+            />
     
 	<RelativeLayout 
+	    android:duplicateParentState="true"
 	        android:layout_width="match_parent"
     		android:layout_height="match_parent" >
         	    
@@ -22,7 +33,8 @@
 	        android:layout_height="wrap_content"
 	        android:layout_centerInParent="true"
 	        android:gravity="center"
-	        android:textColor="#ffffff"
+	        android:duplicateParentState="true"
+	        android:textColor="@color/wonder_title_color"
 	        android:textSize="18sp" />
             
             <TextView
@@ -35,7 +47,8 @@
 	        android:layout_alignParentRight="true"
 	        android:layout_alignParentBottom="true"
 	        android:gravity="center"
-	        android:textColor="#bfffffff"
+	        android:textColor="@color/category_update_text_color"
+	        android:duplicateParentState="true"
 	        android:textSize="12sp" />
             
         </RelativeLayout>

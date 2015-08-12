@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile.newest;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -98,13 +101,18 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 			finish();
 			break;
 		case R.id.tuijian:
-			String textStr = text.getText().toString();
+			String textStr = text.getText().toString().trim();
 			if(TextUtils.isEmpty(textStr)) {
 				GolukUtils.showToast(this, "请填写推荐理由！");
 			}else {
 				showProgressDialog();
-				boolean a = GolukApplication.getInstance().getVideoSquareManager().recomVideo("1", videoid, text.getText().toString());
-				GolukDebugUtils.e("", "TTTTT=====tuijian====a="+a);
+				try {
+					String encodeStr = URLEncoder.encode(textStr, "UTF-8");
+					boolean a = GolukApplication.getInstance().getVideoSquareManager().recomVideo("1", videoid, encodeStr);
+					GolukDebugUtils.e("", "TTTTT=====tuijian====a="+a);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 			break;
 
