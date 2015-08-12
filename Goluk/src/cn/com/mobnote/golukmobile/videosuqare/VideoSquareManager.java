@@ -407,6 +407,11 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square, VSquare_Req_List_Catlog_LocalCache, "");
 	}
 	
+	// 获取分类列表本地缓存(比如　曝光台，事故　，随手拍)
+	public String getCategoryLocalCacheData(String json) {
+		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square, VSquare_Req_List_Video_Catlog_LocalCache, json);
+	}
+	
 	/**
 	 * 同步获取视频列表本地缓存
 	 * 
