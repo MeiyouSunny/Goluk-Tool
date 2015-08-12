@@ -152,7 +152,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mContext = this;
 
 		initView();
-		// ---------------------
+		
+		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
+		mCustomStartDialog.show();
+		// 获取视频详情数据
+		getVideoDetailData();
 
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
@@ -168,10 +172,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
-		mCustomStartDialog.show();
-		// 获取视频详情数据
-		getVideoDetailData();
 		
 		if (isStop) {
 			isStop = false;

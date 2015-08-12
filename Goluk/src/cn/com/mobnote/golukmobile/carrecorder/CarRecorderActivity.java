@@ -943,6 +943,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.mRtmpPlayerView:
 			{//停止预览
+				if (!GolukApplication.getInstance().getIpcIsLogin())
+					return;
 				setFullScreen(false);
 				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
@@ -983,7 +985,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void showLoading() {
-		mLoadingText.setText("无码的视频也是高潮迭起");
+		mLoadingText.setText("视频加载中，请稍后...");
 		mLoadingLayout.setVisibility(View.VISIBLE);
 		mLoading.setVisibility(View.VISIBLE);
 		mLoading.postDelayed(new Runnable() {
