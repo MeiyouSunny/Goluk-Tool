@@ -87,6 +87,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private TextView mNoInputTv = null;
 	/** 保存将要删除的数据 */
 	private CommentBean mWillDelBean = null;
+	/** 记录每次记录的最后一条数据，用于更新最后一次刷新时间 */
+	private CommentBean mLastBean = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -262,9 +264,13 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		this.removeFoot();
 	}
+	
+	private void updateRefreshTime()  {
+		historyDate = GolukUtils.getCurrentFormatTime();
+	}
 
 	private String getLastRefreshTime() {
-		return GolukUtils.getCurrentFormatTime();
+		return historyDate;
 		// if (this.mLastBean == null) {
 		// return historyDate;
 		// } else {
@@ -316,13 +322,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 	}
 
-	/** 记录每次记录的最后一条数据，用于更新最后一次刷新时间 */
-	CommentBean mLastBean = null;
-
 	private void callBack_commentList(int msg, int param1, Object param2) {
 		if (1 != msg) {
 			// 请求失败
 			callBackFailed();
+			GolukUtils.showToast(this, "当前网络不可用，请检查网络");
 			return;
 		}
 		try {
@@ -348,6 +352,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				noDataDeal();
 				return;
 			}
+			updateRefreshTime();
 			mLastBean = dataList.get(dataList.size() - 1);
 			noData(false);
 			if (OPERATOR_FIRST == mCurrentOperator) {
@@ -460,10 +465,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			GolukDebugUtils.e("", "jyf----CommentActivity-----onScrollStateChanged-----222: " + count + "  " + count
 					+ "  vicount:" + visibleCount + "  mIsHaveData:" + mIsHaveData);
 
-			if (count == visibleCount) {
-				if (mIsHaveData) {
-					startPush();
-				}
+			if (count == visibleCount && mIsHaveData) {
+				startPush();
 			}
 		}
 	}

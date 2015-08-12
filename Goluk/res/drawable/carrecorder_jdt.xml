@@ -7,7 +7,7 @@
         android:drawable="@drawable/live_setup_time_select_bg"/> -->
 
     <item android:id="@android:id/progress">
-        <clip android:drawable="@drawable/live_setup_time_select_bg" />
+        <clip android:drawable="@drawable/set_time_blue" />
     </item>
 
 </layer-list>

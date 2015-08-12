@@ -95,16 +95,13 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 		mDataList = new ArrayList<VideoSquareInfo>();
 		initView();
-		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
-		if ("".equals(historyDate)) {
-			historyDate = sdf.format(new Date());
-		}
-		SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
+		updateRefreshTime();
+
 		addCallBackListener();
 		loadHistoryData();
 
 		initYMShare();
-		firstRequest();
+		firstRequest(false);
 	}
 
 	private void initYMShare() {
@@ -112,17 +109,22 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 	}
 
-	private void showLoadingDialog() {
-		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
-			mCustomProgressDialog.show();
-		}
-	}
+	private CustomLoadingDialog mCustomProgressDialog = null;
 
-	private void closeLoadingDialog() {
+	public void closeProgressDialog() {
 		if (null != mCustomProgressDialog) {
 			mCustomProgressDialog.close();
 			mCustomProgressDialog = null;
+		}
+	}
+
+	public void showProgressDialog() {
+		if (null == mCustomProgressDialog) {
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
+		}
+
+		if (!mCustomProgressDialog.isShowing()) {
+			mCustomProgressDialog.show();
 		}
 	}
 
@@ -141,12 +143,20 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	}
 
 	// 第一次进入列表请求
-	public void firstRequest() {
+	public void firstRequest(boolean isclick) {
 		boolean isSucess = httpPost(mType, mAttribute, "0", "");
 		if (isSucess) {
-			mHandler.sendEmptyMessageDelayed(100, 150);
+			if (isclick) {
+				this.showProgressDialog();
+			} else {
+				GolukDebugUtils.e("", "jyf----category-------firstRequest--------" + isFirstShowDialog);
+				if (this.isFirstShowDialog) {
+					mHandler.sendEmptyMessageDelayed(100, 150);
+				}
+			}
+
 		} else {
-			GolukDebugUtils.e("", "加载失败");
+			GolukUtils.showToast(mContext, "请求失败");
 		}
 	}
 
@@ -161,7 +171,10 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 			super.handleMessage(msg);
 			if (msg.what == 100) {
-				showLoadingDialog();
+				if (isFirstShowDialog) {
+					showProgressDialog();
+				}
+
 			}
 		}
 
@@ -182,6 +195,14 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		mRTPullListView.setAdapter(mCategoryAdapter);
 	}
 
+	private void updateRefreshTime() {
+		historyDate = GolukUtils.getCurrentFormatTime();
+	}
+
+	private String getLastRefreshTime() {
+		return historyDate;
+	}
+
 	public View getView() {
 		return mRootLayout;
 	}
@@ -193,7 +214,8 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			if (null != result && !"".equals(result)) {
 				List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData(result);
 				if (null != datalist && datalist.size() > 0) {
-					mCategoryAdapter.setData(null, datalist);
+					mDataList.addAll(datalist);
+					mCategoryAdapter.setData(null, mDataList);
 				}
 			}
 		}
@@ -237,15 +259,18 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	}
 
 	private void initLayout() {
-		mRTPullListView.onRefreshComplete(historyDate);
+		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
 	}
 
+	boolean isFirstShowDialog = true;
+
 	private void callBack_CatLog(int msg, int param1, Object param2) {
-		closeLoadingDialog();
+		closeProgressDialog();
 		if (1 != msg) {
 			// 失败
+			isFirstShowDialog = false;
 			callBackFailed();
 			dataCallBackRefresh();
 			return;
@@ -260,6 +285,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 					+ listSize + "   uptype:" + uptype);
 
 			// 有数据
+			updateRefreshTime();
 			begantime = datalist.get(0);
 			endtime = datalist.get(listSize - 1);
 
@@ -292,7 +318,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 				}
 				mDataList = datalist;
 				mCategoryAdapter.setData(null, mDataList);
-				mRTPullListView.onRefreshComplete(historyDate);
+				mRTPullListView.onRefreshComplete(getLastRefreshTime());
 			}
 
 		} else {
@@ -301,24 +327,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		}
 
 		dataCallBackRefresh();
-	}
-
-	private CustomLoadingDialog mCustomProgressDialog = null;
-
-	public void closeProgressDialog() {
-		if (null != mCustomProgressDialog) {
-			mCustomProgressDialog.close();
-		}
-	}
-
-	public void showProgressDialog() {
-		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
-		}
-
-		if (!mCustomProgressDialog.isShowing()) {
-			mCustomProgressDialog.show();
-		}
 	}
 
 	/** 保存即将分享的数据实体，用于判断是否是直播和获取信息 */
@@ -431,7 +439,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		} else if (1 == uptype) {
 			this.removeFoot();
 		} else if (2 == uptype) {
-			mRTPullListView.onRefreshComplete(historyDate);
+			mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		}
 		GolukUtils.showToast(mContext, "网络异常，请检查网络");
 	}
@@ -444,7 +452,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			if ("1".equals(mType)) {
 				mDataList.clear();
 			}
-			mRTPullListView.onRefreshComplete(historyDate);
+			mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		}
 	}
 
@@ -486,7 +494,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	public void onDestroy() {
 		this.removeListener();
-		this.closeLoadingDialog();
+		closeProgressDialog();
 
 	}
 
@@ -563,7 +571,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.category_list_nodata) {
-			this.firstRequest();
+			this.firstRequest(true);
 		}
 
 	}
