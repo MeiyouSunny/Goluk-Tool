@@ -164,7 +164,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 			attribute.add("0");
 			dataLoading = true;
 			boolean tv = GolukApplication.getInstance().getVideoSquareManager()
-					.getTypeVideoList("1", "0", attribute, operation, timestamp);
+					.getTypeVideoList("1", "2", attribute, operation, timestamp);
 			GolukDebugUtils.e("", "GGGGGG=====222222=======tv=" + tv);
 			if (!tv) {
 				closeProgressDialog();
