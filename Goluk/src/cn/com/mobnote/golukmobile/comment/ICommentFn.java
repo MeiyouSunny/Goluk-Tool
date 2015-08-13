@@ -17,7 +17,10 @@ public interface ICommentFn {
 	/** 首次进入 */
 	public static final int OPERATOR_FIRST = 0;
 	/** 上拉 */
-	public static final int OPERATOR_PUSH = 1;
+	public static final int OPERATOR_UP = 1;
 	/** 下拉 */
-	public static final int OPERATOR_PULL = 2;
+	public static final int OPERATOR_DOWN = 2;
+
+	/** 评论超时为2 秒 */
+	public static final int COMMENT_CIMMIT_TIMEOUT = 2;
 }

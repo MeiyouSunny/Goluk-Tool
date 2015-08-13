@@ -333,6 +333,11 @@ public class SpecialListActivity extends BaseActivity implements
 
 						commentLink = (TextView) view
 								.findViewById(R.id.comment_link);
+						
+						int count = Integer.parseInt(map.get("comcount").toString());
+						if(count <= 3){
+							commentLink.setVisibility(View.GONE);
+						}
 
 						commentLink.setText("查看所有  " + map.get("comcount")
 								+ " 条评论");
@@ -549,8 +554,7 @@ public class SpecialListActivity extends BaseActivity implements
 
 		JSONObject head = new JSONObject();
 		head.put("showhead", "1");
-		head.put("headimg",
-				"http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+		head.put("headimg","http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
 		head.put("headvideoimg",
 				"http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
 		head.put("headvideo",
