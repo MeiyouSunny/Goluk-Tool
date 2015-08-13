@@ -2,15 +2,11 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +24,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  *
  */
-public class UserSetupChangeWifiActivity extends BaseActivity implements OnClickListener, OnTouchListener {
+public class UserSetupChangeWifiActivity extends BaseActivity implements OnClickListener {
 
 	/** title部分 **/
 	private ImageButton mBtnBack = null;// 返回
@@ -176,26 +172,4 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		return json;
 	}
 
-	@SuppressLint("ClickableViewAccessibility")
-	@Override
-	public boolean onTouch(View view, MotionEvent event) {
-		int action = event.getAction();
-		switch (view.getId()) {
-		case R.id.user_title_right:
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				mBtnSave.setTextColor(Color.rgb(0, 197, 176));
-				break;
-			case MotionEvent.ACTION_UP:
-				mBtnSave.setTextColor(Color.WHITE);
-				break;
-			default:
-				break;
-			}
-			break;
-		default:
-			break;
-		}
-		return false;
-	}
 }
