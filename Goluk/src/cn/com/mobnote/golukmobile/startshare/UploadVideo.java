@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore.Video.Thumbnails;
-import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
@@ -174,7 +173,7 @@ public class UploadVideo {
 	final String fileFolder = Environment.getExternalStorageDirectory().getPath() + PATH_FS1 + "/Cache";
 	private String thumbFile = fileFolder + "/thumb11.jpg";
 	private Bitmap mShortBitmap = null;
-	
+
 	public Bitmap getThumbBitmap() {
 		return mShortBitmap;
 	}

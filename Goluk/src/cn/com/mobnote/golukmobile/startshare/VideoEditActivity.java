@@ -40,6 +40,7 @@ import com.rd.car.editor.FilterVideoEditorException;
 
 @SuppressLint("HandlerLeak")
 public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
+	public static final int EVENT_COMM_EXIT = 0;
 	/** 视频编辑页面handler用来接收消息,更新UI */
 	public static Handler mVideoEditHandler = null;
 	/** 自定义播放器支持特效 */
@@ -138,6 +139,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mBaseHandler.sendEmptyMessageDelayed(100, 100);
 	}
 
+	/**
+	 * 加载资源
+	 * 
+	 * @author jyf
+	 * @date 2015年8月13日
+	 */
 	private void loadRes() {
 		resTypeSelectColor = this.getResources().getColor(R.color.share_type_select);
 		resTypeUnSelectColor = this.getResources().getColor(R.color.share_type_unselect);
@@ -305,14 +312,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	private void showLoadingView() {
-		// 显示视频导出loading
-		// mVideoLoadingLayout.setVisibility(View.VISIBLE);
-		// // 启动loading动画
-		// mLoadingAnimation.start();
-
 		mShareLoading.showLoadingLayout();
 		mShareLoading.switchState(ShareLoading.STATE_CREATE_VIDEO);
-
 	}
 
 	private void hideLoadingView() {
@@ -400,7 +401,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			mVVPlayVideo = null;
 		}
 		finish();
-		// overridePendingTransition(R.anim.shortshare_end,R.anim.shortshare_start);
 	}
 
 	@Override
@@ -457,10 +457,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			this.createNewFileSucess(this.mCreateNewVideo.getNewFilePath());
 			return;
 		}
-
 		// 重新产生新的视频
 		mCreateNewVideo.onSaveVideo();
-
 	}
 
 	/**
@@ -550,7 +548,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				// 视频保存成功,跳转到分享页面
 				String newFilePath = (String) obj3;
 				createNewFileSucess(newFilePath);
-				// toShareActivity(newFilePath);
 			}
 
 			if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
@@ -575,8 +572,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	}
 
-	public static final int EVENT_COMM_EXIT = 0;
-
 	public void CallBack_Comm(int event, Object obj) {
 		if (EVENT_COMM_EXIT == event) {
 			this.exit();
@@ -593,8 +588,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			break;
 		case EVENT_UPLOAD_SUCESS:
 			// 　文件上传成功，请求分享连接
-			GolukUtils.showToast(this, "文件上传成功，去请求分享连接");
-
 			requestShareInfo();
 			break;
 		case EVENT_PROCESS:
@@ -614,30 +607,22 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	// 请求分享信息
 	private void requestShareInfo() {
-
 		mShareLoading.switchState(ShareLoading.STATE_GET_SHARE);
-
 		final String t_vid = this.mUploadVideo.getVideoId();
 		final String t_type = "" + (mCurrentVideoType == 2 ? 2 : 1);
 		final String selectTypeJson = JsonUtil.createShareType("" + mTypeLayout.getCurrentSelectType());
 		final String desc = mTypeLayout.getCurrentDesc();
 		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
 		final String t_thumbPath = mUploadVideo.getThumbPath();
-
 		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath);
-
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
-
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
 		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares---b :  " + b);
-
 		if (!b) {
 			GolukUtils.showToast(this, "分享失败");
 			return;
 		}
-		// showRequestShareDialog();
-		GolukDebugUtils.e("", "chxy____VideoShareActivity share11" + json);
 	}
 
 	/**
@@ -675,22 +660,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			final String inputDeafultStr = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 			GolukDebugUtils.e("", "视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
 			this.mShareDealTool.toShare(shortUrl, coverUrl, describe, title, mUploadVideo.getThumbBitmap(),
-					inputDeafultStr , this.mUploadVideo.getVideoId());
+					inputDeafultStr, this.mUploadVideo.getVideoId());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
 	}
-	
-	// 分享成功后需要调用的接口
-		public void shareSucessDeal(boolean isSucess, String channel) {
-			if (!isSucess) {
-				GolukUtils.showToast(this, "分享失败");
-				return;
-			}
-			String mVideoVid = "";
-			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, mVideoVid);
-		}
 
 	private void showRequestShareDialog() {
 		dimissRequestShareDialog();
