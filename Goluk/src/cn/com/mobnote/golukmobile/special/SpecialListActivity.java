@@ -199,7 +199,7 @@ public class SpecialListActivity extends BaseActivity implements
 			break;
 		case R.id.outurl:
 			Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
-			mBugLayout.putExtra("url", "http://www.goluk.com");
+			mBugLayout.putExtra("url", headdata.outurl);
 			startActivity(mBugLayout);
 			break;
 		case R.id.title_share:
@@ -334,10 +334,15 @@ public class SpecialListActivity extends BaseActivity implements
 						commentLink = (TextView) view
 								.findViewById(R.id.comment_link);
 						
-						int count = Integer.parseInt(map.get("comcount").toString());
-						if(count <= 3){
-							commentLink.setVisibility(View.GONE);
+						outurl.setText(map.get("outurlname").toString());
+						
+						if(map.containsKey("comcount")){
+							int count = Integer.parseInt(map.get("comcount").toString());
+							if(count <= 3){
+								commentLink.setVisibility(View.GONE);
+							}
 						}
+						
 
 						commentLink.setText("查看所有  " + map.get("comcount")
 								+ " 条评论");
