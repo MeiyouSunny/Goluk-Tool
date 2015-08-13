@@ -11,9 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -133,7 +130,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	/** 网络连接超时 */
 	private int networkConnectTimeOut = 0;
 	private int duration = 0;
-	private boolean isStop = false;
 	/** 暂停标识 */
 	private boolean isPause = false;
 	/** 点赞标识 **/
@@ -154,7 +150,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		initView();
 
 		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
-		mCustomStartDialog.show();
 		// 获取视频详情数据
 		getVideoDetailData();
 
@@ -172,13 +167,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		if (isStop) {
-			isStop = false;
-			showLoading();
-			mPlayBtn.setVisibility(View.GONE);
-			mImageLayout.setVisibility(View.VISIBLE);
-		}
 		if (isPause) {
 			isPause = false;
 			if (playTime != 0) {
@@ -187,7 +175,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				}
 				mFullVideoView.seekTo(playTime);
 			}
+			showLoading();
 			mPlayBtn.setVisibility(View.GONE);
+			mImageLayout.setVisibility(View.VISIBLE);
 			mFullVideoView.start();
 		}
 	}
@@ -336,9 +326,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		// 外链接
 		case R.id.video_square_link:
-			if(!UserUtils.isNetDeviceAvailable(mContext)){
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
-			}else{
+			} else {
 				if ("1".equals(mVideoJson.data.link.showurl)) {
 					Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
 					mBugLayout.putExtra("url", mVideoJson.data.link.outurl);
@@ -367,27 +357,27 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 			break;
 		case R.id.play_btn:
-			if(!UserUtils.isNetDeviceAvailable(mContext)){
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
-				return ;
+				return;
 			}
 			if (isBuffering) {
 				return;
 			}
 			if (mFullVideoView.isPlaying()) {
 				mFullVideoView.pause();
+				isPause = true;
 				mPlayBtn.setVisibility(View.VISIBLE);
 				mPlayBtn.setImageResource(R.drawable.btn_player_play);
 			} else {
 				mFullVideoView.start();
 				mPlayBtn.setVisibility(View.GONE);
-				mImageLayout.setVisibility(View.GONE);
 			}
 			break;
 		case R.id.mPlayerLayout:
-			if(!UserUtils.isNetDeviceAvailable(mContext)){
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
-				return ;
+				return;
 			}
 			if (isBuffering) {
 				return;
@@ -396,10 +386,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				if (null != mFullVideoView) {
 					if (mFullVideoView.isPlaying()) {
 						mFullVideoView.pause();
+						isPause = true;
 						mPlayBtn.setVisibility(View.VISIBLE);
 						mPlayBtn.setImageResource(R.drawable.btn_player_play);
 					} else {
-						mImageLayout.setVisibility(View.GONE);
 						mPlayBtn.setVisibility(View.GONE);
 						mFullVideoView.start();
 					}
@@ -424,8 +414,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 			if (!b) {
 				mCustomStartDialog.close();
+			} else {
+				mCustomStartDialog.show();
 			}
-			// mLayoutAllInfo.setVisibility(View.GONE);
+			mImageToRefresh.setVisibility(View.GONE);
+			mLayoutAllInfo.setVisibility(View.GONE);
 		}
 	}
 
@@ -606,7 +599,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					+ "=param1=" + param1 + "=param2=" + param2);
 			if (RESULE_SUCESS == msg) {
 				mCustomStartDialog.close();
-				 mLayoutAllInfo.setVisibility(View.VISIBLE);
+				mLayoutAllInfo.setVisibility(View.VISIBLE);
 				mImageToRefresh.setVisibility(View.GONE);
 				String jsonStr = (String) param2;
 				getData(jsonStr);
@@ -781,7 +774,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					timer.cancel();
 				}
 			});
-			mCustomDialog.show();
+			if(!this.isFinishing()){				
+				mCustomDialog.show();
+			}
 		}
 	}
 
@@ -874,8 +869,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		// TODO OnPreparedListener 视频播放之前的一个视频准备工作，准备完成后调用此方法
-		if(null == mFullVideoView){
-			return ;
+		if (null == mFullVideoView) {
+			return;
 		}
 		mFullVideoView.setVideoWidth(mp.getVideoWidth());
 		mFullVideoView.setVideoHeight(mp.getVideoHeight());
@@ -889,6 +884,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				mPlayBtn.setVisibility(View.GONE);
 			}
 			mFullVideoView.start();
+			mImageLayout.setVisibility(View.GONE);
 			mp.setLooping(true);
 		} else {
 			GolukDebugUtils.e("videostart", "--------------非WIFI环境----------------");
@@ -945,26 +941,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			playTime = mFullVideoView.getCurrentPosition();
 			mFullVideoView.pause();
 		}
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		if (isBackground(this)) {
-			isStop = true;
-		}
-	}
-
-	public boolean isBackground(final Context context) {
-		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
-		if (!tasks.isEmpty()) {
-			ComponentName topActivity = tasks.get(0).topActivity;
-			if (!topActivity.getPackageName().equals(context.getPackageName())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
