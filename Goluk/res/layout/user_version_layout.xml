@@ -53,7 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp" >
+            android:paddingRight="14dp"
+            android:background="#f4f4f4" >
 
             <TextView
                 android:id="@+id/app_update_text"
@@ -86,7 +87,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp" >
+            android:paddingRight="14dp"
+            android:background="#f4f4f4" >
 
             <TextView
                 android:id="@+id/welcome_text"
@@ -119,7 +121,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp" >
+            android:paddingRight="14dp"
+            android:background="#f4f4f4" >
 
             <TextView
                 android:id="@+id/opinion_text"
