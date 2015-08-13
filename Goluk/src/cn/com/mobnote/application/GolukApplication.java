@@ -1070,7 +1070,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					connectionDialog();
 				}
 				if (null != mMainActivity) {
-					// mMainActivity.wiFiLinkStatus(1);
+					mMainActivity.wiFiLinkStatus(1);
 				}
 				break;
 			case ConnectionStateMsg_Connected:
@@ -1680,9 +1680,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @throws
 	 */
 	public boolean testActivity() {
-		if (mContext instanceof CarRecorderActivity) {
-			return true;
-		}else if (mContext instanceof PhotoAlbumActivity) {
+		if (mContext instanceof PhotoAlbumActivity) {
 			return true;
 		} else {
 			return false;

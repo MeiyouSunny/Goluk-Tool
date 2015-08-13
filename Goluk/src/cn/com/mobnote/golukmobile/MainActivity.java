@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
@@ -136,6 +137,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public VideoSquareActivity mVideoSquareActivity;
 
 	private IndexMoreActivity indexMoreActivity;
+	
+	private RelativeLayout indexCarrecoderBtnlayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +182,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 初始化连接与綁定状态
 		boolean b = this.isBindSucess();
 		GolukDebugUtils.i("lily", "======bind====status===" + b);
-		if (this.isBindSucess()) {
+		if (b) {
 			startWifi();
 			// 启动创建热点
 			createWiFiHot();
@@ -293,10 +296,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		videoSquareLayout = findViewById(R.id.video_square_layout);
 
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
-
+		this.updateRecoderBtn(mApp.mWiFiStatus);//设置行测记录仪状态
+		
+		indexCarrecoderBtnlayout = (RelativeLayout) findViewById(R.id.index_carrecoder_btn_layout);
 		userInfoLayout = findViewById(R.id.user_info);
 
 		indexCarrecoderBtn.setOnClickListener(this);
+		indexCarrecoderBtnlayout.setOnClickListener(this);
+		
 		indexDiv.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
@@ -449,18 +456,50 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		switch (status) {
 		case 1:
 			// 连接中
+			this.updateRecoderBtn(1);
 			mApp.mWiFiStatus = WIFI_STATE_CONNING;
+			
+			if (CarRecorderActivity.mHandler != null) {
+				CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_CONNING);
+			}
 			break;
 		case 2:
 			// 已连接
+			this.updateRecoderBtn(2);
 			mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
 			wifiConnectedSucess();
 			break;
 		case 3:
 			// 未连接
+			this.updateRecoderBtn(0);
 			mApp.mWiFiStatus = WIFI_STATE_FAILED;
 			wifiConnectFailed();
 			break;
+		}
+	}
+	
+	/**
+	 * 更新行车记录仪按钮 1:连接中  2：已连接  0：未连接
+	 */
+	public void updateRecoderBtn(int state){
+		if(this.isFinishing() == false){
+			
+			AnimationDrawable ad = null;
+			
+			if(state == WIFI_STATE_CONNING){
+				indexCarrecoderBtn.setBackgroundResource(R.anim.carrecoder_btn);
+				ad = (AnimationDrawable) indexCarrecoderBtn.getBackground();
+				if(ad.isRunning() == false){
+					ad.setOneShot(false);
+					ad.start();
+				}
+			}else if(state == WIFI_STATE_SUCCESS){
+				indexCarrecoderBtn.setBackgroundResource(R.drawable.index_video_icon);
+			}else if(state == WIFI_STATE_FAILED){
+				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
+			}
+			
+			 
 		}
 	}
 
@@ -481,7 +520,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("zh：wifi连接成功 ", mApp.mWiFiStatus + "");
 		if (CarRecorderActivity.mHandler != null) {
 			GolukDebugUtils.e("zh：mhandler不为空 ", "");
-			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_RESULT);
+			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_SUCCESS);
 		}
 	}
 
@@ -489,6 +528,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void wifiConnectFailed() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectFailed:");
 		mApp.mWiFiStatus = WIFI_STATE_FAILED;
+		if (CarRecorderActivity.mHandler != null) {
+			GolukDebugUtils.e("zh：mhandler不为空 ", "");
+			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_FAILED);
+		}
 	}
 
 	// 是否綁定过 Goluk
@@ -513,21 +556,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	public void checkWiFiStatus() {
 		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mApp.mWiFiStatus);
-		// 跳转到wifi连接首页
-		// if (mApp.isUserLoginSucess == false) {
-		// Intent intent = new Intent(this, UserLoginActivity.class);
-		// intent.putExtra("isInfo", "back");
-		// startActivity(intent);
-		// }else{
-		// 跳转到行车记录仪界面
 		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
-		Intent j = new Intent(MainActivity.this, SpecialListActivity.class);
-		j.putExtra("ztid", "zt001");
-		System.out.println("zh:wifi连接=" + mApp.mWiFiStatus);
-		// i.putExtra("ipcState", mApp.mWiFiStatus);
-		// i.putExtra("wifiname", mApp.mGolukName);
 		startActivity(i);
-		// }
 	}
 
 	@Override
@@ -567,6 +597,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
+		
+		this.updateRecoderBtn(mApp.mWiFiStatus);
 
 		indexMoreActivity.showView();
 		super.onResume();
@@ -681,6 +713,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			setBelowItem(R.id.index_square_btn);
 			break;
+		case R.id.index_carrecoder_btn_layout:
 		case R.id.index_carrecoder_btn:
 			checkWiFiStatus();
 			break;

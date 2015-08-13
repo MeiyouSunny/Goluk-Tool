@@ -280,6 +280,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView new1;
 	
 	private ImageView new2;
+	
+	
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -325,7 +327,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				case DOWNLOADWONDERFULVIDEO:
 					wonderfulVideoDownloadShow();
 					break;
-				case 11:
+				case WIFI_STATE_SUCCESS:
 					GolukDebugUtils.e("zh：连接成功 ", "");
 					WifiRsBean wrb = ReadWifiConfig.readConfig();
 					if (wrb != null) {
@@ -340,10 +342,32 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					m8sBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_defalut_icon));
 					liveBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_icon));
 					break;
+				case WIFI_STATE_FAILED:
+					
+					mPalyerLayout.setVisibility(View.GONE);
+					mNotconnected.setVisibility(View.VISIBLE);
+					mConncetLayout.setVisibility(View.GONE);
+					
+					mSettingBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_setting_1));
+					m8sBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_defalut_icon_1));
+					liveBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_icon_1));
+					break;
+				case WIFI_STATE_CONNING:
+					
+					mPalyerLayout.setVisibility(View.GONE);
+					mNotconnected.setVisibility(View.GONE);
+					mConncetLayout.setVisibility(View.VISIBLE);
+
+					mSettingBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_setting_1));
+					m8sBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_defalut_icon_1));
+					liveBtn.setBackground(getResources().getDrawable(R.drawable.driving_car_living_icon_1));
+					break;
 				}
 			};
 		};
-
+		
+		GolukApplication.getInstance().stopDownloadList();//停止视频同步
+		
 		initView();
 		setListener();
 		initIpcState(ipcState);// 初始化ipc的连接状态
@@ -379,6 +403,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 */
 	@SuppressLint("NewApi")
 	private void initIpcState(int ipcS) {
+		System.out.println("曾浩" + ipcS);
 		switch (ipcS) {
 		case WIFI_STATE_FAILED:
 			mPalyerLayout.setVisibility(View.GONE);
