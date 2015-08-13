@@ -375,7 +375,13 @@ public class NewestAdapter extends BaseAdapter {
 
 		LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
 		if (null != mLiveInfo) {
-			liveLayout.setVisibility(View.VISIBLE);
+			int number = Integer.parseInt(mLiveInfo.number);
+			if (number > 0) {
+				liveLayout.setVisibility(View.VISIBLE);
+			}else {
+				liveLayout.setVisibility(View.GONE);
+			}
+			
 			int height = (int) ((float) width / 1.77f);
 			RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
 			liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);

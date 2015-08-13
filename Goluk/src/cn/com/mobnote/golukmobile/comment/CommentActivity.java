@@ -40,28 +40,36 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
 		VideoSuqareManagerFn, ILiveDialogManagerFn, OnItemLongClickListener, ICommentFn {
 
-	/** 如果为true, 則为测试数据，false則使用真实数据 (上线前要删除掉) */
-	private final boolean isTest = false;
-
 	public static final String TAG = "Comment";
 
 	/** application */
 	public GolukApplication mApp = null;
+	/** 是否退出本界面,　防止用户按了退出键再更新数据 */
 	private boolean isExit = true;
-
+	/** 返回键 */
 	private ImageButton mBackBtn = null;
+	/** 发送评论按钮 */
 	private TextView mSendBtn = null;
+	/** 评论输入框 */
 	private EditText mEditText = null;
+	/** 评论列表无数据时显示 */
 	private ImageView mNoData = null;
+	/** 上拉刷新时，在ListView底部显示的布局 */
 	private RelativeLayout loading = null;
-
+	/** 评论关闭显示布局 */
+	private TextView mNoInputTv = null;
+	/** 输入评论底部的整体布局 */
+	private RelativeLayout mCommentInputLayout = null;
+	/** 数据显示适配器 */
 	private CommentListViewAdapter mAdapter = null;
+	/** 可上下拉的ListView */
 	private RTPullListView mRTPullListView = null;
 
 	/** 视频、专题或直播的id */
 	private String mId = null;
 	/** 评论主题类型 (1:单视频；2:专题；3:直播；4:其它) */
 	private String mTopicType = null;
+	/** 视频发布者的uid, 用于显示判断是否是“车主”发布的信息 */
 	private String mVideoUserId = null;
 	/** 操作 (0:首次进入；1:下拉；2:上拉) */
 	private int mCurrentOperator = 0;
@@ -76,19 +84,13 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
-
+	/** 最近更新时间 */
 	private String historyDate = "";
 
-	/** 评论超时为2 秒 */
-	private final int COMMENT_CIMMIT_TIMEOUT = 2;
-
 	private VideoSquareManager mVideoSquareManager = null;
-	private RelativeLayout mCommentInputLayout = null;
-	private TextView mNoInputTv = null;
+
 	/** 保存将要删除的数据 */
 	private CommentBean mWillDelBean = null;
-	/** 记录每次记录的最后一条数据，用于更新最后一次刷新时间 */
-	private CommentBean mLastBean = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,43 +108,13 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		CommentTimerManager.getInstance();
 	}
 
-	private void firstDeal() {
-		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
-
-		if (isCanInput) {
-			if (mIsShowSoft) {
-				mEditText.requestFocus();
-				GolukUtils.showSoft(mEditText);
-			}
-			mCommentInputLayout.setVisibility(View.VISIBLE);
-			mNoInputTv.setVisibility(View.GONE);
-
-			mRTPullListView.firstFreshState();
-			firstEnter();
-		} else {
-			mCommentInputLayout.setVisibility(View.GONE);
-			mNoInputTv.setVisibility(View.VISIBLE);
-		}
-	}
-
-	private void initListener() {
-		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if (null != mVideoSquareManager) {
-			if (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")) {
-				mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
-			}
-			mVideoSquareManager.addVideoSquareManagerListener(TAG, this);
-		}
-	}
-
+	/**
+	 * 获取外部传递的数据
+	 * 
+	 * @author jyf
+	 * @date 2015年8月12日
+	 */
 	private void getIntentData() {
-		if (isTest) {
-			mIsShowSoft = false;
-			mId = "04DB0612A41EBB909C33DC5901307461";
-			mTopicType = "1";
-			return;
-		}
-
 		Intent intent = getIntent();
 		if (null != intent) {
 			mId = intent.getStringExtra(COMMENT_KEY_MID);
@@ -151,16 +123,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			isCanInput = intent.getBooleanExtra(COMMENT_KEY_ISCAN_INPUT, true);
 			mVideoUserId = intent.getStringExtra(COMMENT_KEY_USERID);
 		}
-
 		GolukDebugUtils.e("", "jyf----CommentActivity-----mId:" + mId + "   type:" + mTopicType + "  mIsShowSoft:"
 				+ mIsShowSoft + "  isCanInput:" + isCanInput);
-
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mApp.setContext(this, TAG);
 	}
 
 	private void initView() {
@@ -182,10 +146,54 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mRTPullListView.setonRefreshListener(this);
 			mRTPullListView.setOnRTScrollListener(this);
 		}
-
 		mRTPullListView.setOnItemLongClickListener(this);
+	}
 
-		loading = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
+	/**
+	 * 注册数据回调
+	 * 
+	 * @author jyf
+	 * @date 2015年8月12日
+	 */
+	private void initListener() {
+		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
+		if (null != mVideoSquareManager) {
+			if (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")) {
+				mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
+			}
+			mVideoSquareManager.addVideoSquareManagerListener(TAG, this);
+		}
+	}
+
+	/**
+	 * 初次进入界面，数据初始化操作
+	 * 
+	 * @author jyf
+	 * @date 2015年8月12日
+	 */
+	private void firstDeal() {
+		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
+
+		if (isCanInput) {
+			if (mIsShowSoft) {
+				mEditText.requestFocus();
+				GolukUtils.showSoft(mEditText);
+			}
+			mCommentInputLayout.setVisibility(View.VISIBLE);
+			mNoInputTv.setVisibility(View.GONE);
+
+			mRTPullListView.firstFreshState();
+			firstEnter();
+		} else {
+			mCommentInputLayout.setVisibility(View.GONE);
+			mNoInputTv.setVisibility(View.VISIBLE);
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mApp.setContext(this, TAG);
 	}
 
 	@Override
@@ -241,41 +249,37 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	// 首次进入，数据回调处理
 	private void firstEnterCallBack(int count, ArrayList<CommentBean> dataList) {
 		// 首次进入
+		this.mAdapter.setData(dataList);
+		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		if (count >= PAGE_SIZE) {
 			mIsHaveData = true;
+			addFoot();
 		} else {
 			mIsHaveData = false;
+			this.removeFoot();
 		}
-		this.mAdapter.setData(dataList);
-
-		mRTPullListView.onRefreshComplete(getLastRefreshTime());
-		this.removeFoot();
 	}
 
 	// 下拉刷新，数据回调处理
 	private void pullCallBack(int count, ArrayList<CommentBean> dataList) {
+		this.mAdapter.setData(dataList);
+		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		if (count >= PAGE_SIZE) {
 			mIsHaveData = true;
+			addFoot();
 		} else {
 			mIsHaveData = false;
+			this.removeFoot();
 		}
-		this.mAdapter.setData(dataList);
 
-		mRTPullListView.onRefreshComplete(getLastRefreshTime());
-		this.removeFoot();
 	}
-	
-	private void updateRefreshTime()  {
+
+	private void updateRefreshTime() {
 		historyDate = GolukUtils.getCurrentFormatTime();
 	}
 
 	private String getLastRefreshTime() {
 		return historyDate;
-		// if (this.mLastBean == null) {
-		// return historyDate;
-		// } else {
-		// return GolukUtils.formatTimeYMDHMS(mLastBean.mCommentTime);
-		// }
 	}
 
 	// 上拉刷新，数据回调处理
@@ -284,15 +288,15 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mIsHaveData = true;
 		} else {
 			mIsHaveData = false;
+			this.removeFoot();
 		}
-		removeFoot();
 		this.mAdapter.appendData(dataList);
 	}
 
 	private void callBackFailed() {
-		if (mCurrentOperator == OPERATOR_FIRST || mCurrentOperator == OPERATOR_PULL) {
+		if (mCurrentOperator == OPERATOR_FIRST || mCurrentOperator == OPERATOR_DOWN) {
 			mRTPullListView.onRefreshComplete(getLastRefreshTime());
-		} else if (mCurrentOperator == OPERATOR_PUSH) {
+		} else if (mCurrentOperator == OPERATOR_UP) {
 			// 上拉刷新
 			removeFoot();
 		}
@@ -302,9 +306,9 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private void noDataDeal() {
 		mIsHaveData = false;
-		if (mCurrentOperator == OPERATOR_PUSH) {// 上拉刷新
+		if (mCurrentOperator == OPERATOR_UP) {// 上拉刷新
 			removeFoot();
-		} else if (mCurrentOperator == OPERATOR_FIRST || OPERATOR_FIRST == mCurrentOperator) {// 下拉刷新
+		} else if (mCurrentOperator == OPERATOR_FIRST || OPERATOR_DOWN == mCurrentOperator) {// 下拉刷新
 			mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		}
 
@@ -353,22 +357,38 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				return;
 			}
 			updateRefreshTime();
-			mLastBean = dataList.get(dataList.size() - 1);
 			noData(false);
+
+			GolukDebugUtils.e("", "jyf----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
+
 			if (OPERATOR_FIRST == mCurrentOperator) {
 				// 首次进入
 				firstEnterCallBack(count, dataList);
-			} else if (OPERATOR_PULL == mCurrentOperator) {
-				// 上拉刷新
-				pushCallBack(count, dataList);
-			} else if (OPERATOR_PUSH == mCurrentOperator) {
+			} else if (OPERATOR_DOWN == mCurrentOperator) {
 				// 下拉刷新
 				pullCallBack(count, dataList);
+			} else if (OPERATOR_UP == mCurrentOperator) {
+				// 上拉刷新
+				pushCallBack(count, dataList);
 			}
 
 		} catch (Exception e) {
 			callBackFailed();
 		}
+	}
+
+	/**
+	 * 添加上拉底部的loading View
+	 * 
+	 * @author jyf
+	 * @date 2015年8月12日
+	 */
+	private void addFoot() {
+		if (mRTPullListView.getFooterViewsCount() > 0) {
+			return;
+		}
+		loading = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
+		mRTPullListView.addFooterView(loading);
 	}
 
 	private void removeFoot() {
@@ -381,32 +401,32 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private void callBack_commentAdd(int msg, int param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-		if (1 == msg) {
-			try {
-				JSONObject obj = new JSONObject((String) param2);
-				boolean isSucess = obj.getBoolean("success");
-				if (isSucess) {
-					CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
-					if (null != bean) {
-						noData(false);
-						bean.mCommentTime = GolukUtils.getCurrentCommentTime();
-						this.mAdapter.addFirstData(bean);
-						mEditText.setText("");
-						CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
-					} else {
-						GolukUtils.showToast(this, "评论失败");
-					}
-				} else {
-					// 失败
-					GolukUtils.showToast(this, "评论失败");
-				}
-			} catch (Exception e) {
+		if (1 != msg) {
+			GolukUtils.showToast(this, "评论失败");
+			return;
+		}
+		try {
+			JSONObject obj = new JSONObject((String) param2);
+			boolean isSucess = obj.getBoolean("success");
+			if (!isSucess) {
+				GolukUtils.showToast(this, "评论失败");
+				return;
+			}
+
+			CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
+			if (null != bean) {
+				noData(false);
+				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
+				this.mAdapter.addFirstData(bean);
+				mEditText.setText("");
+				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
+			} else {
 				GolukUtils.showToast(this, "评论失败");
 			}
-		} else {
+		} catch (Exception e) {
 			GolukUtils.showToast(this, "评论失败");
-			// 失败
 		}
+
 	}
 
 	private void callBack_commentDel(int msg, int param1, Object param2) {
@@ -478,19 +498,15 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	// 开始下拉刷新
 	private void startPull() {
-		mCurrentOperator = OPERATOR_FIRST;
+		mCurrentOperator = OPERATOR_DOWN;
 		httpPost_requestList(OPERATOR_FIRST, "");
 	}
 
 	// 开始上拉刷新
 	private void startPush() {
-
 		GolukDebugUtils.e("", "jyf----CommentActivity-----startPush-----1111" + this.mIsHaveData);
-
-		mCurrentOperator = OPERATOR_PUSH;
-		httpPost_requestList(OPERATOR_PULL, mAdapter.getLastDataTime());
-
-		mRTPullListView.addFooterView(loading);
+		mCurrentOperator = OPERATOR_UP;
+		httpPost_requestList(OPERATOR_DOWN, mAdapter.getLastDataTime());
 	}
 
 	private void httpPost_requestList(int operation, String timestamp) {
@@ -508,7 +524,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
 		if (!isSucess) {
-			// TODO 失败
+			// 失败
 			GolukUtils.showToast(this, "评论失败!");
 			return;
 		}
@@ -558,20 +574,16 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		GolukDebugUtils.e("", "jyf-----commentActivity--------position:" + position + "   arg3:" + arg3);
 		if (null != mAdapter && this.mApp.isUserLoginSucess) {
-
 			mWillDelBean = (CommentBean) mAdapter.getItem(position - 1);
 			final UserInfo loginUser = mApp.getMyInfo();
-
 			GolukDebugUtils.e("", "jyf-----commentActivity--------bean userId:" + mWillDelBean.mUserId
 					+ "  login user:" + loginUser.uid);
-
 			if (loginUser.uid.equals(mWillDelBean.mUserId)) {
 				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
 						LiveDialogManager.DIALOG_TYPE_COMMENT_DELETE, "提示", "确定要删除吗？");
 			} else {
-				GolukUtils.showToast(this, "不是自己发表禁止删除");
+				// GolukUtils.showToast(this, "不是自己发表禁止删除");
 			}
-
 		}
 		return true;
 	}

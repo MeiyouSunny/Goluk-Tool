@@ -182,6 +182,13 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 					mWonderfulSelectedAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						if (mDataList.size() > 0) {
+							if (!addFooter) {
+								addFooter = true;
+								mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext)
+										.inflate(R.layout.video_square_below_loading, null);
+								mRTPullListView.addFooterView(mBottomLoadingView);
+							}
+							
 							httpPost(false, mDataList.get(mDataList.size() - 1).jxid, "");
 						}
 					}
@@ -214,10 +221,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		if(event == VSquare_Req_List_HandPick){
 			GolukDebugUtils.e("", "TTTTTT=====2222=====param2="+param2);
 			isGetFileListDataing = false;
-			if ("0".equals(jxid)) {
-				closeProgressDialog();
-				mRTPullListView.onRefreshComplete(historyDate);
-			}
+			closeProgressDialog();
+			mRTPullListView.onRefreshComplete(historyDate);
 			
 			if(RESULE_SUCESS == msg){
 				List<JXListItemDataInfo> list = JsonParserUtils.parserJXData((String)param2);
@@ -227,6 +232,14 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 				}
 				initLayout(list);
 			}else{
+				
+				if (!"0".equals(jxid)) {
+					if (addFooter) {
+						addFooter = false;
+						mRTPullListView.removeFooterView(mBottomLoadingView);
+					}
+				}
+				
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
 			
