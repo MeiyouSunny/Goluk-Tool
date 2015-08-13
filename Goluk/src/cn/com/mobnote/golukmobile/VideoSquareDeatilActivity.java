@@ -154,7 +154,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		initView();
 
 		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
-		mCustomStartDialog.show();
 		// 获取视频详情数据
 		getVideoDetailData();
 
@@ -424,8 +423,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 			if (!b) {
 				mCustomStartDialog.close();
+			}else{
+				mCustomStartDialog.show();
 			}
-			// mLayoutAllInfo.setVisibility(View.GONE);
+			mImageToRefresh.setVisibility(View.GONE);
+			 mLayoutAllInfo.setVisibility(View.GONE);
 		}
 	}
 
