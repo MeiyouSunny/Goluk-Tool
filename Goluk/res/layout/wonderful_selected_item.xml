@@ -88,8 +88,7 @@
 	    <ImageView
         android:layout_width="21.33dp"
         android:layout_height="21.33dp"
-        android:duplicateParentState="true"
-        android:background="@drawable/wonderful_video_icon"
+        android:background="@drawable/icon_2"
         android:contentDescription="@string/def" />
 
 	    <TextView
@@ -98,8 +97,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="4dp"
         android:gravity="center"
-        android:duplicateParentState="true"
-        android:textColor="@color/wonder_title_color"
+        android:textColor="@color/white"
         android:textSize="13sp" />
 	    	    
 	</LinearLayout>
@@ -118,8 +116,7 @@
 	    <ImageView
         android:layout_width="21.33dp"
         android:layout_height="21.33dp"
-        android:duplicateParentState="true"
-        android:background="@drawable/wonderful_look_icon"
+        android:background="@drawable/icon_1"
         android:contentDescription="@string/def" />
 
 	    <TextView
@@ -128,8 +125,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="4dp"
         android:gravity="center"
-        android:duplicateParentState="true"
-        android:textColor="@color/wonder_title_color"
+        android:textColor="@color/white"
         android:textSize="13sp" />
 	    	    
 	</LinearLayout>

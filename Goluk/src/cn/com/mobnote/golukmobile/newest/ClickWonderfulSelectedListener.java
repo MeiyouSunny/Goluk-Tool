@@ -23,10 +23,12 @@ import android.widget.TextView;
 public class ClickWonderfulSelectedListener implements OnTouchListener{
 	private JXListItemDataInfo mJXListItemDataInfo; 
 	private Context mContext;
+	private WonderfulSelectedAdapter mWonderfulSelectedAdapter;
 	
-	public ClickWonderfulSelectedListener(Context context, JXListItemDataInfo info) {
+	public ClickWonderfulSelectedListener(Context context, JXListItemDataInfo info, WonderfulSelectedAdapter adapter) {
 		this.mJXListItemDataInfo = info;
 		this.mContext = context;
+		this.mWonderfulSelectedAdapter = adapter;
 	}
 
 	@Override
@@ -34,12 +36,15 @@ public class ClickWonderfulSelectedListener implements OnTouchListener{
 		switch (arg1.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				hideAnimation(arg0);
+				GolukDebugUtils.e("", "BBBBBBB======ACTION_DOWN=======");
 				break;
 			case MotionEvent.ACTION_UP:
+				GolukDebugUtils.e("", "BBBBBBB======ACTION_UP=======");
 				showAnimation(arg0);
 				jump();
 				break;
 			case MotionEvent.ACTION_CANCEL:
+				GolukDebugUtils.e("", "BBBBBBB======ACTION_CANCEL=======");
 				showAnimation(arg0);
 				break;
 	
@@ -50,7 +55,6 @@ public class ClickWonderfulSelectedListener implements OnTouchListener{
 	}
 	
 	private void jump() {
-		GolukDebugUtils.e("", "TTTTTTTTTTT===========mJXListItemDataInfo.ztype=="+mJXListItemDataInfo.ztype);
 		Intent intent = null;
 		if ("1".equals(mJXListItemDataInfo.ztype)) {//专题
 			intent = new Intent(mContext, SpecialListActivity.class);
@@ -95,6 +99,7 @@ public class ClickWonderfulSelectedListener implements OnTouchListener{
 				
 				mengban.setVisibility(View.VISIBLE);
 				mTitleName.setVisibility(View.VISIBLE);
+				GolukDebugUtils.e("", "BBBBBBB====videonumber="+mJXListItemDataInfo.videonumber+"====="+mJXListItemDataInfo.ztitle);
 				if ("-1".equals(mJXListItemDataInfo.clicknumber)) {
 					mVideoLayout.setVisibility(View.GONE);
 				}else {

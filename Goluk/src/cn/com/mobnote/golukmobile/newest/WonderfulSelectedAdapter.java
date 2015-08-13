@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -23,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class WonderfulSelectedAdapter extends BaseAdapter {
@@ -104,6 +107,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder.mVideoLayout.setVisibility(View.VISIBLE);
 		}
 		
+		GolukDebugUtils.e("", "BBBBBBB===1111===videonumber="+info.videonumber+"===="+info.ztitle);
 		if ("-1".equals(info.videonumber)) {
 			holder.mLookLayout.setVisibility(View.GONE);
 		}else {
@@ -123,7 +127,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder.mDate.setVisibility(View.GONE);
 		}
 		
-		holder.main.setOnTouchListener(new ClickWonderfulSelectedListener(mContext, info));
+		holder.main.setOnTouchListener(new ClickWonderfulSelectedListener(mContext, info, this));
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;
