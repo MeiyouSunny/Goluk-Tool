@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:textColor="#0b59be"
+                android:textColor="#0080ff"
                 android:textSize="16sp"
                 android:text="完成"
                 android:background="@null"

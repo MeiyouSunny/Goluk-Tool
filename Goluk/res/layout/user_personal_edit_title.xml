@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:textColor="#0b59be"
+                android:textColor="#0080ff"
                 android:textSize="16sp"
                 android:drawableLeft="@drawable/individual_center_preservation_icon_down"
                 android:text="@string/user_personal_title_right"

@@ -530,9 +530,13 @@ public class NewestAdapter extends BaseAdapter {
 			
 			if (curYear == history) {
 				if(hisDay == curDay) {
-					return "今天";
+					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
+					String timestr =  jn.format(strtodate);
+					return "今天 " + timestr;
 				}else if((hisDay + 1) == curDay) {
-					return "昨天";
+					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
+					String timestr =  jn.format(strtodate);
+					return "昨天 " + timestr;
 				}else {
 					SimpleDateFormat jn = new SimpleDateFormat("MM-dd HH:mm");
 					return jn.format(strtodate);// 今年内：月日更新

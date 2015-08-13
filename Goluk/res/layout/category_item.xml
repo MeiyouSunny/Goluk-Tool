@@ -34,7 +34,7 @@
 	        android:layout_centerInParent="true"
 	        android:gravity="center"
 	        android:duplicateParentState="true"
-	        android:textColor="@color/wonder_title_color"
+	        android:textColor="@color/category_title_text_color"
 	        android:textSize="18sp" />
             
             <TextView

@@ -14,8 +14,8 @@
 
         <ImageButton
             android:id="@+id/mBackBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36.66dp"
+            android:layout_height="36.66dp"
             android:layout_centerVertical="true"
             android:background="@drawable/cross_screen_arrow_icon1" 
             android:contentDescription="@string/def"/>
@@ -40,7 +40,7 @@
             android:paddingRight="10dp"
             android:background="#00000000"
             android:text="@string/videolist_edit"
-            android:textColor="#0b59be"
+            android:textColor="#0080ff"
             android:textSize="14sp" />
     </RelativeLayout>
     

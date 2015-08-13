@@ -1132,7 +1132,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		isAlreadClickOK = true;
 
-		Drawable drawable = getResources().getDrawable(R.drawable.like_btn_press);
+		Drawable drawable = getResources().getDrawable(R.drawable.videodetail_like_press);
 		drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 		zanBtn.setCompoundDrawables(drawable, null, null, null); // 设置点赞背景
 		mCurrentOKCount++;

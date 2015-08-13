@@ -1,60 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="200dp"
+	android:layout_width="260dp"
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"
-	android:background="#00000000"
+	android:background="@drawable/custom_dialog_bg"
 	android:orientation="vertical">
     <Button 
         android:id="@+id/sqds"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/video_square_title_btn"
-        android:textColor="#333333"
-        android:textSize="18sp"
+        android:layout_height="43.3dp"
+        android:textColor="#1163a2"
+        android:textSize="15sp"
+        android:background="#00000000"
         android:text="色情低俗"/>
     <View 
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#b1b1b1"/>
+        android:background="#cccccc"/>
     <Button 
         android:id="@+id/yyhz"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/video_square_item_btn"
-        android:textColor="#333333"
-        android:textSize="18sp"
+        android:layout_height="43.3dp"
+        android:textColor="#1163a2"
+        android:textSize="15sp"
+        android:background="#00000000"
         android:text="谣言惑众"/>
     <View 
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#b1b1b1"/>
+        android:background="#cccccc"/>
     <Button 
         android:id="@+id/zzmg"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/video_square_item_btn"
-        android:textColor="#333333"
-        android:textSize="18sp"
+        android:layout_height="43.3dp"
+        android:textColor="#1163a2"
+        android:textSize="15sp"
+        android:background="#00000000"
         android:text="政治敏感"/>
     <View 
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#b1b1b1"/>
+        android:background="#cccccc"/>
     <Button 
         android:id="@+id/qtyy"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/video_square_item_btn"
-        android:textColor="#333333"
-        android:textSize="18sp"
+        android:layout_height="43.3dp"
+        android:textColor="#1163a2"
+        android:textSize="15sp"
+        android:background="#00000000"
         android:text="其它原因"/>
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc"/>
     <Button 
         android:id="@+id/qx"
          android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/video_square_exit_btn"
-        android:textColor="#ffffff"
-        android:textSize="18sp"
+        android:layout_height="43.3dp"
+        android:textColor="#1163a2"
+        android:textSize="15sp"
+        android:background="#00000000"
         android:text="取消"/>
 </LinearLayout>

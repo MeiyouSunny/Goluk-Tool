@@ -109,5 +109,6 @@
 	<color name="wonderful_item_nor_color">#4c000000</color>
 	<color name="wonderful_item_sel_color">#00000000</color>
 	<color name="cagtegory_text_color">#bfffffff</color>
+	<color name="cagtegory_title_color">#e5ffffff</color>
 
 </resources>
