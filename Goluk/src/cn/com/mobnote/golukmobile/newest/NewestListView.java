@@ -212,6 +212,8 @@ public class NewestListView implements VideoSuqareManagerFn {
 
 		setViewListBg(false);
 		closeProgressDialog();
+		historyDate = sdf.format(new Date());
+		SettingUtils.getInstance().putString("hotHistoryDate", historyDate);
 		mRTPullListView.onRefreshComplete(historyDate);
 		if (null == mNewestAdapter) {
 			mNewestAdapter = new NewestAdapter(mContext);
@@ -246,6 +248,12 @@ public class NewestListView implements VideoSuqareManagerFn {
 					mNewestAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						if (mDataList.size() > 0) {
+							if (!addFooter) {
+								addFooter = true;
+								mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext).inflate(
+										R.layout.video_square_below_loading, null);
+								mRTPullListView.addFooterView(mBottomLoadingView);
+							}
 							httpPost(false, "2", mDataList.get(mDataList.size() - 1).mVideoEntity.sharingtime);
 						}
 					}
@@ -284,6 +292,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete(historyDate);
 		}
+		
 		GolukUtils.showToast(mContext, "网络异常，请检查网络");
 	}
 	
@@ -322,6 +331,14 @@ public class NewestListView implements VideoSuqareManagerFn {
 				initLayout();
 			} else {
 				showErrorTips() ;
+
+				if ("2".equals(curOperation)) {
+					if (addFooter) {
+						addFooter = false;
+						mRTPullListView.removeFooterView(mBottomLoadingView);
+					}
+				}
+				
 			}
 			checkData();
 		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
