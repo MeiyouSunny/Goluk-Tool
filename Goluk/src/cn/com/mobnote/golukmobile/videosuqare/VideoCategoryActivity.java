@@ -13,6 +13,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoCategoryActivity extends BaseActivity implements OnClickListener {
 	/** application */
@@ -132,14 +133,31 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		}
 	}
 
+	/** 防止重复点击　 */
+	private boolean isPressBack = false;
+
 	private void back() {
+		if (isPressBack) {
+			return;
+		}
+		isPressBack = true;
+		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----111");
 		if (null != mCategoryLayout) {
 			mCategoryLayout.onDestroy();
 		}
+
+		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----2222");
 		if (null != mMapView) {
 			mMapView.onDestroy();
 		}
+
+		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----3333");
+		mSwitchLayout.removeAllViews();
+
+		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----4444");
 		this.finish();
+
+		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----5555");
 	}
 
 	@Override
@@ -212,7 +230,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		super.onPause();
 
 		if (null != mMapView) {
-//			mMapView.onPause();
+			// mMapView.onPause();
 		}
 	}
 
