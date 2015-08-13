@@ -58,7 +58,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
-		mTextRight.setBackgroundResource(R.drawable.close_btn);
+		mTextRight.setBackgroundResource(R.drawable.btn_close_image);
 
 		if (null == mLoadingDialog) {
 			mLoadingDialog = new CustomLoadingDialog(this, "页面加载中");

@@ -97,12 +97,14 @@
                     android:layout_height="2dp"
                     android:background="@drawable/progress_bg"
                     android:layout_alignParentBottom="true"
-                    android:paddingLeft="-10dp"
-                    android:paddingRight="-12dp"
+                    android:paddingLeft="-3dp"
+                    android:paddingRight="-10dp"
                     android:max="100"
                     android:progress="0"
                     android:progressDrawable="@drawable/video_detail_seekbar_style"
-                    android:thumb="@null"/>
+                    android:thumb="@null"
+                    android:clickable="false"
+                    android:longClickable="false"/>
 
             <!-- loading -->
 

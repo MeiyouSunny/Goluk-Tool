@@ -365,7 +365,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			if (mFullVideoView.isPlaying()) {
 				mFullVideoView.pause();
 				mPlayBtn.setVisibility(View.VISIBLE);
-				mPlayBtn.setImageResource(R.drawable.btn_video_detail_play);
+				mPlayBtn.setImageResource(R.drawable.btn_player_play);
 			} else {
 				mFullVideoView.start();
 				mPlayBtn.setVisibility(View.GONE);
@@ -381,7 +381,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					if (mFullVideoView.isPlaying()) {
 						mFullVideoView.pause();
 						mPlayBtn.setVisibility(View.VISIBLE);
-						mPlayBtn.setImageResource(R.drawable.btn_video_detail_play);
+						mPlayBtn.setImageResource(R.drawable.btn_player_play);
 					} else {
 						mImageLayout.setVisibility(View.GONE);
 						mPlayBtn.setVisibility(View.GONE);
@@ -768,6 +768,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 	}
 
+	int originProgress = 0;
 	private OnSeekBarChangeListener mSeekBarChangeListener = new OnSeekBarChangeListener() {
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
@@ -775,13 +776,15 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 		@Override
 		public void onStartTrackingTouch(SeekBar seekBar) {
+			originProgress = mSeekBar.getProgress();
 		}
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 			if (fromUser) {
-				int time = progress * mFullVideoView.getDuration() / 100;
-				mFullVideoView.seekTo(time);
+//				int time = progress * mFullVideoView.getDuration() / 100;
+//				mFullVideoView.seekTo(time);
+				mSeekBar.setProgress(originProgress);
 			}
 		}
 	};
@@ -847,7 +850,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		mFullVideoView.seekTo(0);
 		mPlayBtn.setVisibility(View.VISIBLE);
-		mPlayBtn.setImageResource(R.drawable.player_play_btn);
+		mPlayBtn.setImageResource(R.drawable.btn_player_play);
 		mSeekBar.setProgress(0);
 	}
 
@@ -872,7 +875,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mFullVideoView.pause();
 			mImageLayout.setVisibility(View.VISIBLE);
 			mPlayBtn.setVisibility(View.VISIBLE);
-			mPlayBtn.setImageResource(R.drawable.player_play_btn);
+			mPlayBtn.setImageResource(R.drawable.btn_player_play);
 		}
 		
 		if (playTime != 0) {

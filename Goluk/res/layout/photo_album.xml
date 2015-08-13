@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/live_btn_back" 
+            android:background="@drawable/cross_screen_arrow_icon1" 
             android:contentDescription="@string/def"/>
 
         <TextView
@@ -40,7 +40,7 @@
             android:paddingRight="10dp"
             android:background="#00000000"
             android:text="@string/videolist_edit"
-            android:textColor="@color/white"
+            android:textColor="#0b59be"
             android:textSize="14sp" />
     </RelativeLayout>
     
