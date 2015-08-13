@@ -495,7 +495,9 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	public void onDestroy() {
 		this.removeListener();
 		closeProgressDialog();
-
+		if (null != mDataList) {
+			mDataList.clear();
+		}
 	}
 
 	public void onBackPressed() {

@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.baidu.location.LocationClient;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapStatus;
@@ -54,12 +53,6 @@ public class BaiduMapView implements ILocationFn {
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
 
-	/** 直播列表 */
-	private Button liveListBtn = null;
-
-	/** 定位相关 */
-	private LocationClient mLocClient;
-
 	private VideoCategoryActivity ma;
 
 	/** 控制离开页面不自动请求大头针数据 */
@@ -95,12 +88,6 @@ public class BaiduMapView implements ILocationFn {
 			mMapView.onResume();
 			mMapView.invalidate();
 		}
-
-		// 回到页面启动定位
-		if (null != mLocClient) {
-			mLocClient.start();
-		}
-
 	}
 
 	/**
@@ -114,9 +101,6 @@ public class BaiduMapView implements ILocationFn {
 		mMapLocationBtn = (Button) mRootLayout.findViewById(R.id.map_location_btn);
 		// 注册事件
 		mMapLocationBtn.setOnClickListener(new click());
-
-		liveListBtn = (Button) mRootLayout.findViewById(R.id.live_list);
-		liveListBtn.setOnClickListener(new click());
 
 		BaiduMapOptions options = new BaiduMapOptions();
 		options.rotateGesturesEnabled(false); // 不允许手势
@@ -146,6 +130,8 @@ public class BaiduMapView implements ILocationFn {
 				// 地图加载完成,请求大头针数据
 				GolukDebugUtils.e("", "PageType_GetPinData:地图加载完成,请求大头针数据");
 
+				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapLoaded ----11111");
+
 				ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 						IPageNotifyFn.PageType_GetPinData, "");
 			}
@@ -158,14 +144,18 @@ public class BaiduMapView implements ILocationFn {
 				mBaiduMapManage.mapStatusChange();
 				// 移动了地图,第一次不改变地图中心点位置
 				isFirstLoc = false;
+
+				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapStatusChangeStart ----: ");
 			}
 
 			@Override
 			public void onMapStatusChangeFinish(MapStatus arg0) {
+				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapStatusChangeFinish ----: ");
 			}
 
 			@Override
 			public void onMapStatusChange(MapStatus arg0) {
+				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapStatusChange ----: ");
 			}
 		});
 
@@ -179,11 +169,6 @@ public class BaiduMapView implements ILocationFn {
 					// 5分钟更新一次大头针数据
 					ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_GetPinData, "");
-					break;
-				case 98:
-					// 测试,气泡图片下载完成
-					Object obj2 = new Object();
-					downloadBubbleImageCallBack(1, obj2);
 					break;
 				case 99:
 					// 隐藏气泡,大头针
@@ -230,11 +215,8 @@ public class BaiduMapView implements ILocationFn {
 	public void pointDataCallback(int success, Object obj) {
 		if (1 == success) {
 			String str = (String) obj;
-			GolukDebugUtils.e("", "大头针数据返回---" + str);
-			// 记录大头针日志
-			// console.print("mapmarker", str);
-			// String str =
-			// "{\"code\":\"200\",\"state\":\"true\",\"info\":[{\"utype\":\"1\",\"aid\":\"1\",\"nickname\":\"张三\",\"lon\":\"116.357428\",\"lat\":\"39.93923\",\"picurl\":\"http://img2.3lian.com/img2007/18/18/003.png\",\"speed\":\"34公里/小时\"},{\"aid\":\"2\",\"utype\":\"2\",\"nickname\":\"李四\",\"lon\":\"116.327428\",\"lat\":\"39.91923\",\"picurl\":\"http://img.cool80.com/i/png/217/02.png\",\"speed\":\"342公里/小时\"}]}";
+			GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--pointDataCallback ----obj: "
+					+ (String) obj);
 			try {
 				JSONObject json = new JSONObject(str);
 				// 请求成功
@@ -263,9 +245,11 @@ public class BaiduMapView implements ILocationFn {
 	}
 
 	public void onDestroy() {
-		if (null != mMapView) {
-			mMapView.onDestroy();
-		}
+		ma.mApp.removeLocationListener("main");
+		// TODO 先不释放，释放会引起界面退出卡死的问题
+		// if (null != mMapView) {
+		// mMapView.onDestroy();
+		// }
 	}
 
 	protected void onPause() {
