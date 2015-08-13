@@ -48,20 +48,20 @@ android:layout_height="match_parent">
 		android:id="@+id/text"
 		android:layout_below="@+id/titlelayout"
 		android:hint="请填写推荐理由"
-		android:textColorHint="#ffffff"
+		android:textColorHint="#5f5f5f"
 		android:textSize ="16sp"
 		android:textColor="#ffffff"
 		android:padding="10dp"
 		android:gravity="top|left"
 	    android:layout_height="match_parent" 
 	    android:layout_width="match_parent"
-	    android:background="#f2242629"/> 
+	    android:background="#7f242629"/> 
 	    
      <TextView   
        	android:id="@+id/number"
 		android:text="50"
 		android:textSize ="16sp"
-		android:textColor="#ffffff"
+		android:textColor="#5f5f5f"
 		android:gravity="right"
 		android:padding="10dp"
 		android:layout_alignBottom="@+id/text"
