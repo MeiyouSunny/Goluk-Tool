@@ -447,7 +447,7 @@ public class LiveDialogManager {
 		mCurrentDialogType = function;
 		mLiveBackDialog = new AlertDialog.Builder(context).create();
 
-		mLiveBackDialog.setTitle("提示");
+		mLiveBackDialog.setTitle("");
 		mLiveBackDialog.setMessage(message);
 		mLiveBackDialog.setCancelable(false);
 

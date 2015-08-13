@@ -7,11 +7,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-import cn.com.mobnote.util.GolukUtils;
 
 public class ShareDeal implements OnClickListener {
 	private RelativeLayout mYouMengRootLayout = null;
@@ -46,8 +44,10 @@ public class ShareDeal implements OnClickListener {
 		mYouMengRootLayout.findViewById(R.id.sina).setOnClickListener(this);
 	}
 
-	public void toShare(String surl, String curl, String db, String tl, Bitmap bitmap, String inputDeafultStr, String videoId) {
-		mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, surl, curl, db, tl, bitmap, inputDeafultStr, videoId);
+	public void toShare(String surl, String curl, String db, String tl, Bitmap bitmap, String inputDeafultStr,
+			String videoId) {
+		mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, surl, curl, db, tl, bitmap, inputDeafultStr,
+				videoId);
 		mShareBoard.setShareType(mCurrentShareType);
 		if (mCurrentShareType.equals(CustomShareBoard.TYPE_WEIXIN)) {
 			mShareBoard.click_wechat();
@@ -65,8 +65,6 @@ public class ShareDeal implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		mSharePlatform.onActivityResult(requestCode, resultCode, data);
 	}
-	
-	
 
 	@Override
 	public void onClick(View v) {

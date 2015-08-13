@@ -23,6 +23,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserOpinionActivity;
@@ -55,6 +56,7 @@ import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
@@ -585,7 +587,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}
-				
+
 				if (!isBackground) {
 					if (!GlobalWindow.getInstance().isShow()) {
 						GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
@@ -659,6 +661,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @author chenxy
 	 */
 	List<String> freeList = new ArrayList<String>();
+
 	public void ipcVideoDownLoadCallBack(int success, String data) {
 		freeList.clear();
 		if (TextUtils.isEmpty(data)) {
@@ -685,18 +688,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					if (!mDownLoadFileList.contains(filename)) {
 						mDownLoadFileList.add(filename);
 					}
-					
-					for (int i=0; i<mNoDownLoadFileList.size(); i++) {
+
+					for (int i = 0; i < mNoDownLoadFileList.size(); i++) {
 						String name = mNoDownLoadFileList.get(i);
 						if (!mDownLoadFileList.contains(name)) {
 							freeList.add(name);
 						}
 					}
-					
-					for(String name : freeList) {
+
+					for (String name : freeList) {
 						mNoDownLoadFileList.remove(name);
 					}
-					
+
 					if (!isBackground) {
 						if (GlobalWindow.getInstance().isShow()) {
 							GlobalWindow.getInstance().refreshPercent(percent);
@@ -706,7 +709,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 							GlobalWindow.getInstance().createVideoUploadWindow(
 									"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
 						}
-					}else {
+					} else {
 						if (GlobalWindow.getInstance().isShow()) {
 							GlobalWindow.getInstance().dimissGlobalWindow();
 						}
@@ -1443,9 +1446,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	@Override
 	public void LocationCallBack(String locationJson) {
 		// TODO 定位回调
-//		GolukDebugUtils.e("", "jyf-------Application   LocationCallBack: " + locationJson);
+		// GolukDebugUtils.e("", "jyf-------Application   LocationCallBack: " +
+		// locationJson);
 		if (null == mLocationHashMap) {
 			return;
+		}
+
+		BaiduPosition location = JsonUtil.parseLocatoinJson(locationJson);
+		if (null != location) {
+			LngLat.lat = location.rawLat;
+			LngLat.lng = location.rawLon;
+			LngLat.radius = location.radius;
 		}
 
 		Iterator<Entry<String, ILocationFn>> it = mLocationHashMap.entrySet().iterator();
@@ -1682,7 +1693,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean testActivity() {
 		if (mContext instanceof CarRecorderActivity) {
 			return true;
-		}else if (mContext instanceof PhotoAlbumActivity) {
+		} else if (mContext instanceof PhotoAlbumActivity) {
 			return true;
 		} else {
 			return false;

@@ -22,4 +22,5 @@ package cn.com.mobnote.entity;
 public class LngLat {
 	public static double lng;
 	public static double lat;
+	public static double radius;
 }

@@ -348,7 +348,7 @@ public class GolukUtils {
 	}
 
 	public static String getCurrentFormatTime() {
-		String time = DateFormat.format("yyyy-MM-dd HH:mm:ss", Calendar.getInstance().getTime()).toString();
+		String time = DateFormat.format("MM月dd日 HH时mm分ss秒", Calendar.getInstance().getTime()).toString();
 		return time;
 	}
 

@@ -578,7 +578,11 @@ public class NewestAdapter extends BaseAdapter {
 				 }else if (diff <= DAY && diff > HOUR) {
 					 return time = diff / HOUR + "小时前更新";// 小时前更新
 				 }else if (diff <= HOUR) {
-					 return time = diff / MINTUE + "分钟前更新";// 分钟前更新
+					 int min = (int)(diff / MINTUE);
+					 if(min < 1) {
+						 min = 1;
+					 }
+					 return time = min + "分钟前更新";// 分钟前更新
 				 }else {
 					 SimpleDateFormat jn = new SimpleDateFormat("MM.dd更新");
 					 return jn.format(strtodate);// 今年内：月日更新

@@ -267,6 +267,8 @@ public class BaiduMapManage {
 		if (null == mMarkerData) {
 			return;
 		}
+		
+		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --111 : " );
 
 		Iterator<Entry<Marker, Object>> it = mMarkerData.entrySet().iterator();
 		while (it.hasNext()) {
@@ -278,6 +280,9 @@ public class BaiduMapManage {
 					Marker marker = obj.getKey();
 					LatLng point = ConvertLonLat(lat, lon);
 					marker.setPosition(point);
+					
+					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --222 : lat: " + lat + "  lon:" + lon );
+					
 					break;
 				}
 			} catch (Exception e) {
