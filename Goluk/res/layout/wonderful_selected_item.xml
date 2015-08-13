@@ -32,6 +32,7 @@
     	</RelativeLayout>
         
         <ImageView 
+           	android:id="@+id/mengban"
             android:layout_alignTop="@+id/imageLayout"
 			android:layout_alignLeft="@+id/imageLayout"
 			android:layout_alignRight="@+id/imageLayout"

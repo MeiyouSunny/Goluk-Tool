@@ -427,6 +427,10 @@ public class NewestListView implements VideoSuqareManagerFn {
 	}
 
 	public void onResume() {
+		if (null != mNewestAdapter) {
+			mNewestAdapter.onResume();
+		}
+		
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
 			mVideoSquareManager.addVideoSquareManagerListener("NewestListView", this);
