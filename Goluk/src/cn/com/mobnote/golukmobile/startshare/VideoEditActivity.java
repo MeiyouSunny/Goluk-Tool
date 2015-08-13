@@ -5,9 +5,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnCancelListener;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,16 +53,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private RelativeLayout mPlayLayout = null;
 	/** 播放状态图片 */
 	private ImageView mPlayStatusImage = null;
-	/** loading布局 */
-	private RelativeLayout mVideoLoadingLayout = null;
-	/** loading图片 */
-	private ImageView mLoadingImage = null;
-	/** loading文本 */
-	private TextView mLoadingText = null;
 	/** 进度条 */
 	private ProgressBar mVideoProgressBar = null;
-	/** loading动画 */
-	private AnimationDrawable mLoadingAnimation = null;
 	/** 进度条线程 */
 	private Thread mProgressThread = null;
 	/** 当前编辑的视频类型 3 紧急 2 精彩 */
@@ -95,9 +85,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private RelativeLayout mRootLayout = null;
 	private LayoutInflater mLayoutFlater = null;
 	private RelativeLayout mYouMengLayout = null;
-
-	/** 请求分享连接Dialog */
-	private ProgressDialog mPdsave = null;
 
 	private int resTypeSelectColor = 0;
 	private int resTypeUnSelectColor = 0;
@@ -225,11 +212,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mPlayLayout = (RelativeLayout) findViewById(R.id.play_layout);
 		mPlayStatusImage = (ImageView) findViewById(R.id.play_image);
-		mVideoLoadingLayout = (RelativeLayout) findViewById(R.id.video_loading_layout);
-		mLoadingImage = (ImageView) findViewById(R.id.loading_img);
-		mLoadingText = (TextView) findViewById(R.id.loading_text);
-		mLoadingAnimation = (AnimationDrawable) mLoadingImage.getBackground();
-
 		mVideoProgressBar = (ProgressBar) findViewById(R.id.video_progress_bar);
 
 		// 注册事件
@@ -317,10 +299,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	private void hideLoadingView() {
-		mVideoLoadingLayout.setVisibility(View.GONE);
-		mLoadingText.setText("视频生成中" + 0 + "%");
-		// 停止loading动画
-		mLoadingAnimation.stop();
+		// mVideoLoadingLayout.setVisibility(View.GONE);
+		// mLoadingText.setText("视频生成中" + 0 + "%");
+		// // 停止loading动画
+		// mLoadingAnimation.stop();
 	}
 
 	/**
@@ -382,23 +364,24 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private void exit() {
 		isExit = true;
-		if (null != mVideoLoadingLayout) {
+		if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
 			// 判断是否正在上传
-			int t = mVideoLoadingLayout.getVisibility();
-			if (t == 0) {
-				// 正在上传
-				mVideoLoadingLayout.setVisibility(View.GONE);
-
-				// 为了修复上传的是时返回几率崩溃控制针问题.
-				// 感觉可能崩溃到这里了,chenxy 5.11
-				if (null != mVVPlayVideo) {
-					mVVPlayVideo.cancelSave();
-				}
+			// 为了修复上传的是时返回几率崩溃控制针问题.
+			// 感觉可能崩溃到这里了,chenxy 5.11
+			if (null != mVVPlayVideo) {
+				mVVPlayVideo.cancelSave();
 			}
 		}
+		this.toInitState();
 		if (null != mVVPlayVideo) {
 			mVVPlayVideo.cleanUp();
 			mVVPlayVideo = null;
+		}
+		// 正在获取连接
+		if (mShareLoading.getCurrentState() == ShareLoading.STATE_GET_SHARE) {
+			// 如果正在获取分享连接状态，則要取消
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
+					JsonUtil.getCancelJson());
 		}
 		finish();
 	}
@@ -423,10 +406,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (mVVPlayVideo != null) {
 			mVVPlayVideo.onResume();
 		}
-		if (mLoadingText != null) {
-			mLoadingText.setText("视频生成中0%");
-		}
 		mApp.setContext(this, "VideoEdit");
+
+		if (ShareLoading.STATE_SHAREING == mShareLoading.getCurrentState()) {
+			toInitState();
+		}
+
 		super.onResume();
 	}
 
@@ -512,11 +497,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private void createNewFileSucess(String filePath) {
 		// 把成功的保存起来
 		mFilterLayout.mMVListAdapter.setSucessIndex(mFilterLayout.mMVListAdapter.getCurrentResIndex());
-		// GolukUtils.showToast(this, "添加滤镜成功,文件上传");
+		// 添加滤镜成功,文件上传
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------createNewFileSucess--filePath-: "
 				+ filePath);
 		this.mUploadVideo.setUploadInfo(filePath, mCurrentVideoType, videoName);
-
 		mShareLoading.switchState(ShareLoading.STATE_UPLOAD);
 	}
 
@@ -543,7 +527,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			boolean bSuccess = (Boolean) obj1;
 			boolean bCancel = (Boolean) obj2;
 			if (bCancel) {
-				// strInfo = "已取消视频保存！";
+				// 已取消视频保存
+				toInitState();
 			} else if (bSuccess) {
 				// 视频保存成功,跳转到分享页面
 				String newFilePath = (String) obj3;
@@ -563,6 +548,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			if (null != obj3) {
 				errorInfo = (String) obj3;
 			}
+			toInitState();
 			GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + errorInfo);
 			hideLoadingView();
 			break;
@@ -621,6 +607,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares---b :  " + b);
 		if (!b) {
 			GolukUtils.showToast(this, "分享失败");
+			toInitState();
 			return;
 		}
 	}
@@ -632,10 +619,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	 *            ,分享数据
 	 */
 	public void videoShareCallBack(int success, String json) {
-		dimissRequestShareDialog();
-		mShareLoading.hide();
+		mShareLoading.switchState(ShareLoading.STATE_SHAREING);
 		if (1 != success) {
 			GolukUtils.showToast(this, "获取视频分享地址失败");
+			toInitState();
 			return;
 		}
 		JSONObject obj;
@@ -645,6 +632,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			boolean isSucess = obj.getBoolean("success");
 			if (!isSucess) {
 				GolukUtils.showToast(this, "获取视频分享地址失败");
+				toInitState();
 				return;
 			}
 
@@ -667,30 +655,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	}
 
-	private void showRequestShareDialog() {
-		dimissRequestShareDialog();
-		mPdsave = ProgressDialog.show(this, "", "请求分享链接...");
-		mPdsave.setCancelable(true);
-		mPdsave.setOnCancelListener(new OnCancelListener() {
-
-			@Override
-			public void onCancel(DialogInterface arg0) {
-				if (null != mPdsave) {
-					mPdsave.dismiss();
-					mPdsave = null;
-				}
-				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
-						JsonUtil.getCancelJson());
-			}
-		});
-
+	public void shareCallBack(boolean isSucess) {
+		toInitState();
 	}
 
-	private void dimissRequestShareDialog() {
-		if (null != mPdsave) {
-			mPdsave.dismiss();
-			mPdsave = null;
-		}
+	// 当分享成功，失败　或某一环节出现失败后，还原到原始状态，再进行分享
+	private void toInitState() {
+		mShareLoading.hide();
+		mShareLoading.switchState(ShareLoading.STATE_NONE);
 	}
 
 }

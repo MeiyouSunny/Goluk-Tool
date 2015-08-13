@@ -119,43 +119,4 @@
         android:layout_below="@id/shortshare_typelayout" >
     </FrameLayout>
 
-    <!-- 视频loading -->
-
-    <RelativeLayout
-        android:id="@+id/video_loading_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:visibility="gone" >
-
-        <RelativeLayout
-            android:id="@+id/loading_bg"
-            android:layout_width="146dp"
-            android:layout_height="146dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/edit_loading_bg" >
-
-            <TextView
-                android:id="@+id/loading_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="18dp"
-                android:text="@string/video_export_text"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/loading_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/loading_text"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="5dp"
-                android:background="@anim/loading"
-                android:contentDescription="@string/imgdes" />
-        </RelativeLayout>
-    </RelativeLayout>
-
 </RelativeLayout>

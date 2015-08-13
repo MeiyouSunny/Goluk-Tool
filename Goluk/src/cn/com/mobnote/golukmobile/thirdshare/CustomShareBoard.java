@@ -238,6 +238,16 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		// }
 	}
 
+	private void notifyShareState(boolean isSucess) {
+		if (null == mActivity) {
+			return;
+		}
+
+		if (mActivity instanceof VideoEditActivity) {
+			((VideoEditActivity) mActivity).shareCallBack(isSucess);
+		}
+	}
+
 	private void performShare(SHARE_MEDIA platform) {
 		mController.getConfig().cleanListeners();
 
@@ -266,6 +276,12 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				// "]");
 				// }
 				// }
+
+				if (eCode == 200) {
+					notifyShareState(true);
+				} else {
+					notifyShareState(false);
+				}
 
 				GolukDebugUtils.e("", "jyf----thirdshare--------onComplete eCode: " + eCode + "   mCurrentShareType:"
 						+ mCurrentShareType);
