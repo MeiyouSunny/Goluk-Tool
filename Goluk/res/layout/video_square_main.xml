@@ -3,7 +3,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff" >
-
+    
+    <RelativeLayout
+	    android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="46dp" 
+        android:background="#313131">
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:layout_width="150dp"
+        android:layout_height="46dp" >
+    
+        	<TextView
+                    android:id="@+id/hot_title"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="精选"
+                    android:gravity="center_horizontal"
+                    android:textColor="#0b59be"
+                    android:textSize="16sp" />
+        
+         	<TextView
+                    android:id="@+id/square_title"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="最新"
+                    android:gravity="center_horizontal"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
+        
+        <ImageView
+                    android:id="@+id/line_hot"
+                    android:layout_below="@+id/hot_title"
+                    android:layout_width="50dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#0b59be" />
+     
+    </RelativeLayout>
+    </RelativeLayout>
+    
+	<!-- 
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -69,6 +111,7 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
+     -->
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mViewpager"

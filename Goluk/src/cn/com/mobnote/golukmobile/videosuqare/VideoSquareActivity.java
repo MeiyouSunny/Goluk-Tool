@@ -23,9 +23,9 @@ public class VideoSquareActivity implements OnClickListener {
 	public VideoSquareAdapter mVideoSquareAdapter = null;
 	private ViewPager mViewPager = null;
 	private ImageView hot = null;
-	private ImageView square = null;
-	private LinearLayout mVideoList = null;
-	private LinearLayout mTypeList = null;
+//	private ImageView square = null;
+//	private LinearLayout mVideoList = null;
+//	private LinearLayout mTypeList = null;
 	private TextView hotTitle = null;
 	private TextView squareTitle = null;
 	public CustomLoadingDialog mCustomProgressDialog;
@@ -50,10 +50,10 @@ public class VideoSquareActivity implements OnClickListener {
 		mViewPager.setOnPageChangeListener(opcl);
 
 		hot = (ImageView) mRootLayout.findViewById(R.id.line_hot);
-		square = (ImageView) mRootLayout.findViewById(R.id.line_square);
+//		square = (ImageView) mRootLayout.findViewById(R.id.line_square);
 
-		mVideoList = (LinearLayout) mRootLayout.findViewById(R.id.mVideoList);
-		mTypeList = (LinearLayout) mRootLayout.findViewById(R.id.mTypeList);
+//		mVideoList = (LinearLayout) mRootLayout.findViewById(R.id.mVideoList);
+//		mTypeList = (LinearLayout) mRootLayout.findViewById(R.id.mTypeList);
 
 		hotTitle = (TextView) mRootLayout.findViewById(R.id.hot_title);
 		squareTitle = (TextView) mRootLayout.findViewById(R.id.square_title);
@@ -69,8 +69,8 @@ public class VideoSquareActivity implements OnClickListener {
 	}
 
 	private void setListener() {
-		mVideoList.setOnClickListener(this);
-		mTypeList.setOnClickListener(this);
+		hotTitle.setOnClickListener(this);
+		squareTitle.setOnClickListener(this);
 	}
 
 	// 分享成功后需要调用的接口
@@ -91,25 +91,46 @@ public class VideoSquareActivity implements OnClickListener {
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
-			GolukDebugUtils.e("", "BBBBBB===onPageScrolled==arg0="+arg0+"===arg1="+arg1+"==arg2="+arg2);
+			if (0 == arg2) {
+				return;
+			}
+			
+			float process = arg1 * 100;
+			if (process < 0) {
+				process = 0;
+			}
+			
+			if (process > 99) {
+				process = 100;
+			}
+			
+			updateLine((int)process);
 		}
 
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
 		}
 	};
+	
+	private void updateLine(int process) {
+		RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams(50*3, 2*3);
+		lineParams.addRule(RelativeLayout.BELOW, R.id.hot_title);
+		lineParams.setMargins(process*3, 5*3, 0, 0);
+		hot.setLayoutParams(lineParams);
+	}
 
 	private void updateState(int type) {
 		if (0 == type) {
-			hot.setVisibility(View.VISIBLE);
-			square.setVisibility(View.INVISIBLE);
+//			updateLine(0);
+//			hot.setVisibility(View.VISIBLE);
+//			square.setVisibility(View.INVISIBLE);
 
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 		} else if (1 == type) {
-
-			square.setVisibility(View.VISIBLE);
-			hot.setVisibility(View.INVISIBLE);
+//			updateLine(100);
+//			square.setVisibility(View.VISIBLE);
+//			hot.setVisibility(View.INVISIBLE);
 
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
@@ -120,13 +141,15 @@ public class VideoSquareActivity implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
-		case R.id.mVideoList:
+		case R.id.hot_title:
 			mViewPager.setCurrentItem(0);
 			this.updateState(0);
+			updateLine(0);
 			break;
-		case R.id.mTypeList:
+		case R.id.square_title:
 			mViewPager.setCurrentItem(1);
 			this.updateState(1);
+			updateLine(100);
 			break;
 		case R.id.back_btn:
 			exit();
