@@ -333,11 +333,13 @@ public class SpecialListActivity extends BaseActivity implements
 
 						commentLink = (TextView) view
 								.findViewById(R.id.comment_link);
-						
-						int count = Integer.parseInt(map.get("comcount").toString());
-						if(count <= 3){
-							commentLink.setVisibility(View.GONE);
+						if(map.containsKey("comcount")){
+							int count = Integer.parseInt(map.get("comcount").toString());
+							if(count <= 3){
+								commentLink.setVisibility(View.GONE);
+							}
 						}
+						
 
 						commentLink.setText("查看所有  " + map.get("comcount")
 								+ " 条评论");
