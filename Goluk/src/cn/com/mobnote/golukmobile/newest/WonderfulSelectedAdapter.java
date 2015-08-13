@@ -123,7 +123,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder.mDate.setVisibility(View.GONE);
 		}
 		
-		holder.main.setOnClickListener(new ClickWonderfulSelectedListener(mContext, info));
+		holder.main.setOnTouchListener(new ClickWonderfulSelectedListener(mContext, info));
 		loadImage(holder.imageLayout, info.jximg, info.jtypeimg);
  
 		return convertView;

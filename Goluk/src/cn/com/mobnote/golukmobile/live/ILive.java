@@ -10,7 +10,7 @@ public interface ILive {
 
 	public static final String LIVE_NET_ERROR = "网络异常，直播结束";
 
-	public static final String LIVE_DIALOG_TITLE = "提示";
+	public static final String LIVE_DIALOG_TITLE = "";
 
 	public static final String LIVE_RETRY_LIVE = "正在恢复直播，请稍候...";
 

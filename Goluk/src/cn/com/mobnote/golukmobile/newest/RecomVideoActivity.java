@@ -14,6 +14,9 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -101,6 +104,11 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 			finish();
 			break;
 		case R.id.tuijian:
+			if (!isNetworkConnected() ) {
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+				return;
+			}
+			
 			String textStr = text.getText().toString().trim();
 			if(TextUtils.isEmpty(textStr)) {
 				GolukUtils.showToast(this, "请填写推荐理由！");
@@ -148,8 +156,25 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 				
 				GolukUtils.showToast(RecomVideoActivity.this, msgStr);
 				finish();
+			}else {
+				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 		}
 	}
+	
+	/**
+	 * 检查是否有可用网络
+	 * @return
+	 * @author xuhw
+	 * @date 2015年6月5日
+	 */
+	public boolean isNetworkConnected() {
+		ConnectivityManager mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		if (mNetworkInfo != null) {
+			return mNetworkInfo.isAvailable();
+		}
+		return false;
+	} 
 	
 }

@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.UserUtils;
 import android.os.Handler;
 import android.os.Message;

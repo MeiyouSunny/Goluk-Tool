@@ -5,6 +5,7 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -85,20 +86,16 @@ public class VideoSquareActivity implements OnClickListener {
 
 		@Override
 		public void onPageSelected(int arg0) {
-			// TODO Auto-generated method stub
 			updateState(arg0);
 		}
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
-			// TODO Auto-generated method stub
-
+			GolukDebugUtils.e("", "BBBBBB===onPageScrolled==arg0="+arg0+"===arg1="+arg1+"==arg2="+arg2);
 		}
 
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
-			// TODO Auto-generated method stub
-
 		}
 	};
 

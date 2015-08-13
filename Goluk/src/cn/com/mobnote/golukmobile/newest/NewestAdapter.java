@@ -45,7 +45,8 @@ public class NewestAdapter extends BaseAdapter {
 	private CategoryListView mCategoryListView = null;
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
-
+	private boolean clickLock = false;
+	
 	public NewestAdapter(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<VideoSquareInfo>();
@@ -411,7 +412,7 @@ public class NewestAdapter extends BaseAdapter {
 			int iid = i + 1111;
 			item.setId(iid);
 
-			item.setOnClickListener(new ClickCategoryListener(mContext, mCategoryDataInfo));
+			item.setOnTouchListener(new ClickCategoryListener(mContext, mCategoryDataInfo, this));
 			RelativeLayout imageLayout = (RelativeLayout) item.findViewById(R.id.imageLayout);
 			TextView mTitleName = (TextView) item.findViewById(R.id.mTitleName);
 			TextView mUpdateTime = (TextView) item.findViewById(R.id.mUpdateTime);
@@ -530,9 +531,13 @@ public class NewestAdapter extends BaseAdapter {
 			
 			if (curYear == history) {
 				if(hisDay == curDay) {
-					return "今天";
+					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
+					String timestr =  jn.format(strtodate);
+					return "今天 " + timestr;
 				}else if((hisDay + 1) == curDay) {
-					return "昨天";
+					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
+					String timestr =  jn.format(strtodate);
+					return "昨天 " + timestr;
 				}else {
 					SimpleDateFormat jn = new SimpleDateFormat("MM-dd HH:mm");
 					return jn.format(strtodate);// 今年内：月日更新
@@ -568,14 +573,20 @@ public class NewestAdapter extends BaseAdapter {
 			
 			long diff = Math.abs(historytime - curTime);// 时间差
 			if (curYear == history) {
-				SimpleDateFormat jn = new SimpleDateFormat("MM.dd更新");
-				return jn.format(strtodate);// 今年内：月日更新
-			} else if (diff <= WEEK && diff > DAY) {
-				return time = diff / DAY + "天前更新";// 天前更新
-			}else if (diff <= DAY && diff > HOUR) {
-				return time = diff / HOUR + "小时前更新";// 小时前更新
-			}else if (diff <= HOUR) {
-				return time = diff / MINTUE + "分钟前更新";// 分钟前更新
+				 if (diff <= WEEK && diff > DAY) {
+					 return time = diff / DAY + "天前更新";// 天前更新
+				 }else if (diff <= DAY && diff > HOUR) {
+					 return time = diff / HOUR + "小时前更新";// 小时前更新
+				 }else if (diff <= HOUR) {
+					 int min = (int)(diff / MINTUE);
+					 if(min < 1) {
+						 min = 1;
+					 }
+					 return time = min + "分钟前更新";// 分钟前更新
+				 }else {
+					 SimpleDateFormat jn = new SimpleDateFormat("MM.dd更新");
+					 return jn.format(strtodate);// 今年内：月日更新
+				 }
 			}else {
 				SimpleDateFormat jn = new SimpleDateFormat("yyyy.MM.dd更新");
 				return jn.format(strtodate);// 非今年：年月日更新
@@ -606,6 +617,18 @@ public class NewestAdapter extends BaseAdapter {
 			}
 		}
 
+	}
+	
+	public synchronized boolean getClickLock() {
+		return clickLock;
+	}
+	
+	public synchronized void setClickLock(boolean lock) {
+		clickLock = lock;
+	}
+	
+	public void onResume() {
+		setClickLock(false);
 	}
 
 }

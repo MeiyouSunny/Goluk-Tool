@@ -3,7 +3,10 @@ package cn.com.mobnote.golukmobile.newest;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.util.GolukUtils;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -25,6 +28,11 @@ public class ClickPraiseListener implements OnClickListener{
 
 	@Override
 	public void onClick(View arg0) {
+		if (!isNetworkConnected()) {
+			GolukUtils.showToast(mContext, "网络异常，请检查网络");
+			return;
+		}
+		
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 			mVideoSquareInfo.mVideoEntity.ispraise = "0";
 			if (null != mNewestListView) {
@@ -43,8 +51,22 @@ public class ClickPraiseListener implements OnClickListener{
 				mCategoryListView.updateClickPraiseNumber(false, mVideoSquareInfo);
 			}
 			
-			
 		}
 	}
+	
+	/**
+	 * 检查是否有可用网络
+	 * @return
+	 * @author xuhw
+	 * @date 2015年6月5日
+	 */
+	public boolean isNetworkConnected() {
+		ConnectivityManager mConnectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		if (mNetworkInfo != null) {
+			return mNetworkInfo.isAvailable();
+		}
+		return false;
+	} 
 	
 }

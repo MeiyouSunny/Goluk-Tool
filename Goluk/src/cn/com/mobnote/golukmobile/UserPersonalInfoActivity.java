@@ -11,15 +11,11 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
@@ -35,7 +31,7 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UserPersonalInfoActivity extends BaseActivity implements OnClickListener, OnTouchListener {
+public class UserPersonalInfoActivity extends BaseActivity implements OnClickListener{
 
 	/** application **/
 	private GolukApplication mApplication = null;
@@ -135,34 +131,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		// 监听
 		backBtn.setOnClickListener(this);
 		rightBtn.setOnClickListener(this);
-		rightBtn.setOnTouchListener(this);
 		mHeadLayout.setOnClickListener(this);
 		mNameLayout.setOnClickListener(this);
 		mSignLayout.setOnClickListener(this);
-	}
-
-	// 点击效果
-	@SuppressLint("ClickableViewAccessibility")
-	@Override
-	public boolean onTouch(View view, MotionEvent event) {
-		int action = event.getAction();
-		switch (view.getId()) {
-		case R.id.user_title_right:
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				rightBtn.setTextColor(Color.rgb(0, 197, 176));
-				break;
-			case MotionEvent.ACTION_UP:
-				rightBtn.setTextColor(Color.WHITE);
-				break;
-			default:
-				break;
-			}
-			break;
-		default:
-			break;
-		}
-		return false;
 	}
 
 	@Override
