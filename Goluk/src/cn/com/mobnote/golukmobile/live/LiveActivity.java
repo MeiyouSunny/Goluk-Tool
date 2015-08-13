@@ -575,11 +575,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 						// 不是续播，才可以请求
 						mBaseHandler.sendEmptyMessage(101);
 					}
-
 				} else {
 					LiveDialogManager.getManagerInstance().dismissProgressDialog();
 				}
-
 			} else {
 				// 视频录制上传失败
 				liveUploadVideoFailed();
@@ -748,59 +746,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	}
 
 	private void drawPersonsHead() {
-		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----1111111: ");
+		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----1: ");
 		try {
-			String jsonMyPos = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Location,
-					ILocationFn.LOCATION_CMD_GET_POSITION, "");
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----2222: " + jsonMyPos);
-			if (null != jsonMyPos) {
-				BaiduPosition myPosition = JsonUtil.parseLocatoinJson(jsonMyPos);
-				if (null != myPosition) {
-					// 开始绘制我的位置
-
-					if (mApp.isUserLoginSucess) {
-						if (null == myInfo) {
-							this.getMyInfo();
-						}
-						GolukDebugUtils.e(null,
-								"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head 333333: "
-										+ myInfo.nickName);
-						if (null != myInfo) {
-							GolukDebugUtils.e(null,
-									"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head4444444444: ");
-							mCurrentLocationType = LOCATION_TYPE_HEAD;
-							myInfo.lon = String.valueOf(myPosition.rawLon);
-							myInfo.lat = String.valueOf(myPosition.rawLat);
-							String drawTxt = JsonUtil.UserInfoToString(myInfo);
-							mBaiduMapManage.addSinglePoint(drawTxt);
-							GolukDebugUtils.e(null,
-									"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head555555555: "
-											+ drawTxt);
-						}
-
-						GolukDebugUtils.e(null,
-								"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head6666666666: ");
-
-					} else {
-						GolukDebugUtils.e(null,
-								"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head777777777777777: ");
-						mCurrentLocationType = LOCATION_TYPE_POINT;
-						// 画小蓝点
-						MyLocationData locData = new MyLocationData.Builder().accuracy((float) myPosition.radius)
-								.direction(100).latitude(myPosition.rawLat).longitude(myPosition.rawLon).build();
-						// 确认地图我的位置点是否更新位置
-						mBaiduMap.setMyLocationData(locData);
-					}
-
-				} else {
-					GolukUtils.showToast(this, "无法获取我的位置信息");
-					GolukDebugUtils.e(null,
-							"jyf----20150406----LiveActivity----drawPersonsHead---draw MY Head8888888888: ");
-				}
-			} else {
-				GolukUtils.showToast(this, "无法获取我的位置信息");
-			}
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----999999999999: ");
+			drawMyLocation();
+			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----2: ");
 			if (isShareLive) {
 				// 自己直播不再绘制其它人的点
 				return;
@@ -809,12 +758,58 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				GolukUtils.showToast(this, "无法获取看直播人的经纬度");
 				return;
 			}
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----AAAAAAAAAA  : "
-					+ currentUserInfo.aid);
+			GolukDebugUtils
+					.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----3  : " + currentUserInfo.aid);
 			mBaiduMapManage.addSinglePoint(JsonUtil.UserInfoToString(currentUserInfo));
 		} catch (Exception e) {
 			e.printStackTrace();
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---BBBBBBBB-Exception : ");
+			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---4-Exception : ");
+		}
+	}
+
+	/**
+	 * 绘制我的位置　，登录成功里，绘制头像，登录不成功里，绘制蓝点
+	 * 
+	 * @author jyf
+	 * @date 2015年8月13日
+	 */
+	private void drawMyLocation() {
+		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation----1: ");
+
+		BaiduPosition myPosition = JsonUtil.parseLocatoinJson(mApp.mGoluk.GolukLogicCommGet(
+				GolukModule.Goluk_Module_Location, ILocationFn.LOCATION_CMD_GET_POSITION, ""));
+		if (null == myPosition) {
+			GolukUtils.showToast(this, "无法获取我的位置信息");
+			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---2: ");
+			return;
+		}
+
+		// 开始绘制我的位置
+		if (mApp.isUserLoginSucess) {
+			if (null == myInfo) {
+				this.getMyInfo();
+			}
+			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---3: " + myInfo.nickName);
+			if (null != myInfo) {
+				GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---4: ");
+				mCurrentLocationType = LOCATION_TYPE_HEAD;
+				myInfo.lon = String.valueOf(myPosition.rawLon);
+				myInfo.lat = String.valueOf(myPosition.rawLat);
+				String drawTxt = JsonUtil.UserInfoToString(myInfo);
+				mBaiduMapManage.addSinglePoint(drawTxt);
+				GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---5: " + drawTxt);
+			}
+
+			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---6: ");
+
+		} else {
+			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---7: ");
+			mCurrentLocationType = LOCATION_TYPE_POINT;
+			// 画小蓝点
+			MyLocationData locData = new MyLocationData.Builder().accuracy((float) myPosition.radius).direction(100)
+					.latitude(myPosition.rawLat).longitude(myPosition.rawLon).build();
+			// 确认地图我的位置点是否更新位置
+			mBaiduMap.setMyLocationData(locData);
 		}
 
 	}
@@ -1068,7 +1063,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	public boolean clickPraise(String channel, String videoid, String type) {
 		String json = JsonCreateUtils.getClickPraiseRequestJson(channel, videoid, type);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-				VideoSuqareManagerFn.SquareCmd_Req_Praise, json);
+				VideoSuqareManagerFn.VSquare_Req_VOP_Praise, json);
 	}
 
 	/**
