@@ -986,6 +986,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				mPalyerLayout.setVisibility(View.VISIBLE);
 				mNotconnected.setVisibility(View.GONE);
 				mConncetLayout.setVisibility(View.GONE);
+				mFullScreen.setVisibility(View.GONE);
 			}
 			break;
 		default:
