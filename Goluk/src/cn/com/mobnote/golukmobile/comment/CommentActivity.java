@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +41,7 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
-		VideoSuqareManagerFn, ILiveDialogManagerFn, OnItemLongClickListener, ICommentFn {
+		VideoSuqareManagerFn, ILiveDialogManagerFn, OnItemLongClickListener, ICommentFn, TextWatcher {
 
 	public static final String TAG = "Comment";
 
@@ -138,6 +141,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 		mBackBtn.setOnClickListener(this);
 		mSendBtn.setOnClickListener(this);
+		mEditText.addTextChangedListener(this);
 
 		mAdapter = new CommentListViewAdapter(this);
 		mAdapter.setVideoUserId(mVideoUserId);
@@ -419,6 +423,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
 				this.mAdapter.addFirstData(bean);
 				mEditText.setText("");
+				switchSendState(false);
 				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
 			} else {
 				GolukUtils.showToast(this, "评论失败");
@@ -586,6 +591,37 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public void afterTextChanged(Editable arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		// TODO Auto-generated method stub
+
+	}
+	
+	private void switchSendState(boolean isSend) {
+		if (isSend) {
+			mSendBtn.setTextColor(this.getResources().getColor(R.color.color_comment_can_send));
+		} else {
+			mSendBtn.setTextColor(this.getResources().getColor(R.color.color_comment_not_send));
+		}
+	}
+
+	@Override
+	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+		final String txt = mEditText.getText().toString().trim();
+		if (null != txt && txt.length() > 0) {
+			switchSendState(true);
+		} else {
+			switchSendState(false);
+		}
+
 	}
 
 }

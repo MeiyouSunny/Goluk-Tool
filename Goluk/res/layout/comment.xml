@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/comment_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:background="#313131" >
 
         <!-- 返回 -->
@@ -51,7 +51,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:text="@string/str_comment_send"
-            android:textColor="#333333"
+            android:textColor="@color/color_comment_not_send"
             android:textSize="14sp" />
 
         <EditText

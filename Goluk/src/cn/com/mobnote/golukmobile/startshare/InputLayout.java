@@ -72,7 +72,7 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 	 * @date 2015年7月30日
 	 */
 	private void loadRes() {
-		mWhiteColor = mContext.getResources().getColor(R.color.white);
+		mWhiteColor = mContext.getResources().getColor(R.color.color_input_count);
 		mRedColor = mContext.getResources().getColor(R.color.red);
 	}
 

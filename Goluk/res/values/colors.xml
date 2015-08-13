@@ -110,5 +110,8 @@
 	<color name="wonderful_item_sel_color">#00000000</color>
 	<color name="cagtegory_text_color">#bfffffff</color>
 	<color name="cagtegory_title_color">#e5ffffff</color>
+	<color name="color_comment_can_send">#0080ff</color>
+	<color name="color_comment_not_send">#333333</color>
+	<color name="color_input_count">#5f5f5f</color>
 
 </resources>
