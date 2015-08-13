@@ -33,6 +33,7 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
@@ -131,7 +132,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	SharePlatformUtil sharePlatform;
 
 	/** 首次进入的引导div */
-	private View indexDiv = null;
+	private RelativeLayout indexDiv = null;
+	private ImageView mIndexImg = null;
 	private int divIndex = 0;
 
 	public VideoSquareActivity mVideoSquareActivity;
@@ -289,7 +291,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
-		indexDiv = findViewById(R.id.index_div);
+		indexDiv = (RelativeLayout)findViewById(R.id.index_div);
+		mIndexImg = (ImageView) findViewById(R.id.index_img);
 
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
 		msquareBtn = (Button) findViewById(R.id.index_square_btn);
@@ -719,9 +722,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		case R.id.index_div:
 			if (divIndex == 0) {
-				GolukUtils.freeBitmap(indexDiv.getBackground());
+				GolukUtils.freeBitmap(mIndexImg.getBackground());
 				indexDiv.setVisibility(View.GONE);
-				GolukUtils.freeBitmap(indexDiv.getBackground());
 			}
 			break;
 		}

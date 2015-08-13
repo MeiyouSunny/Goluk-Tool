@@ -512,7 +512,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private void createNewFileSucess(String filePath) {
 		// 把成功的保存起来
 		mFilterLayout.mMVListAdapter.setSucessIndex(mFilterLayout.mMVListAdapter.getCurrentResIndex());
-		GolukUtils.showToast(this, "添加滤镜成功,文件上传");
+		// GolukUtils.showToast(this, "添加滤镜成功,文件上传");
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------createNewFileSucess--filePath-: "
 				+ filePath);
 		this.mUploadVideo.setUploadInfo(filePath, mCurrentVideoType, videoName);
