@@ -13,6 +13,7 @@ import android.content.DialogInterface.OnKeyListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,8 +41,15 @@ public class UserUtils {
 	 * 隐藏软件盘
 	 */
 	public static void hideSoftMethod(Activity activity){
+		if (null == activity) {
+			return;
+		}
 		 InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-		  imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+		 View focusView = activity.getCurrentFocus();
+		 if (null == imm || null == focusView) {
+			 return;
+		 }
+		  imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
 	}
 	/**
 	 * 常用手机号的判断

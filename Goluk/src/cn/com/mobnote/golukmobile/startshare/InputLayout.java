@@ -138,8 +138,8 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 	 */
 	public void hide() {
 		mShareInputEdit.setText("");
-		mParentLayout.removeView(mRootLayout);
 		UserUtils.hideSoftMethod((VideoEditActivity) mContext);
+		mParentLayout.removeView(mRootLayout);
 	}
 
 	@Override
