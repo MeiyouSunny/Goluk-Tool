@@ -10,11 +10,16 @@
         android:id="@+id/video_square_detail_head"
         layout="@layout/user_title" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:layout_below="@id/video_square_detail_head" >
+        
     <LinearLayout
         android:id="@+id/video_square_detail_show_allinfo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/video_square_detail_head"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <!-- 用户信息 -->
@@ -420,6 +425,7 @@
                 android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
+    </ScrollView>
 	<!-- 猛戳我刷新 -->
 	<ImageView 
 	    android:id="@+id/video_square_detail_click_refresh"
