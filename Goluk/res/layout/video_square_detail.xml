@@ -158,7 +158,7 @@
                     android:id="@+id/video_square_detail_like"
                     android:layout_width="20dp"
                     android:layout_height="18dp"
-                    android:background="@drawable/videodetail_like"
+                    android:src="@drawable/videodetail_like"
                     android:contentDescription="@string/def" />
 
                 <TextView

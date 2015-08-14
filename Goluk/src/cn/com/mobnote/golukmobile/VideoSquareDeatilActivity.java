@@ -88,7 +88,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	/** 视频内容 **/
 	private RelativeLayout mPrepareLayout = null;
 	private FullScreenVideoView mFullVideoView = null;
-	private ImageView mImageLike;
+	private ImageView mImageLike = null;
+	private TextView mTextLike = null;
 	private TextView mTextLikeAll, mTextLookAll;
 	private LinearLayout mLayoutShowAll = null;
 	/** 评论内容 **/
@@ -195,6 +196,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mPrepareLayout = (RelativeLayout) findViewById(R.id.mPlayerLayout);
 		mFullVideoView = (FullScreenVideoView) findViewById(R.id.video_detail_videoview);
 		mImageLike = (ImageView) findViewById(R.id.video_square_detail_like);
+		mTextLike = (TextView) findViewById(R.id.zanText);
 		mTextLikeAll = (TextView) findViewById(R.id.video_detail_like_all);
 		mTextLookAll = (TextView) findViewById(R.id.video_detail_look_all);
 		mLayoutShowAll = (LinearLayout) findViewById(R.id.video_detail_comment_content);
@@ -458,8 +460,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 			if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
 				mImageLike.setImageResource(R.drawable.videodetail_like);
+				mTextLike.setTextColor(Color.rgb(136, 136, 136));
 			} else {
 				mImageLike.setImageResource(R.drawable.videodetail_like_press);
+				mTextLike.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 			}
 
 			showText(mTextAutor, mVideoJson.data.avideo.user.nickname, mVideoJson.data.avideo.video.describe);
@@ -673,7 +677,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			} else {
 				mTextLikeAll.setText("100,000+");
 			}
-			mImageLike.setBackgroundResource(R.drawable.videodetail_like_press);
+			mImageLike.setImageResource(R.drawable.videodetail_like_press);
+			mTextLike.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 			isPraise = "1";
 			boolean b = GolukApplication.getInstance().getVideoSquareManager()
 					.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
@@ -689,7 +694,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				mTextLikeAll.setText("100,000+");
 			}
 
-			mImageLike.setBackgroundResource(R.drawable.videodetail_like);
+			mImageLike.setImageResource(R.drawable.videodetail_like);
+			mTextLike.setTextColor(Color.rgb(136, 136, 136));
 			isPraise = "0";
 		}
 		// 为点赞数重新赋值
