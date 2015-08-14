@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.http.util.EncodingUtils;
 
 public class FileInfoManagerUtils {
@@ -69,6 +70,52 @@ public class FileInfoManagerUtils {
 			}
 		}
 		return files;
+	}
+	
+	public static List<String> bubbleSort(List<String> list, boolean order){
+		String arr[] = new String[list.size()];
+		for(int i=0;i<list.size();i++){
+			arr[i] = list.get(i);
+		}
+		
+		int size=list.size();
+		String t;
+		for(int i=0;i<size-1;i++){
+			for(int j=0;j<size-i-1;j++){
+				if(order){
+					if(arr[j+1].length() < 4 || arr[j].length() < 4) {
+						continue;
+					}
+					String str1 = arr[j+1].substring(4);
+					String str2 = arr[j].substring(4);
+					if (str1.compareTo(str2) < 0) {
+//					if(arr[j+1].compareTo(arr[j]) < 0){
+						t=arr[j+1];
+						arr[j+1]=arr[j];
+						arr[j]=t;
+					}
+				}else{
+					if(arr[j+1].length() < 4 || arr[j].length() < 4) {
+						continue;
+					}
+					String str1 = arr[j+1].substring(4);
+					String str2 = arr[j].substring(4);
+					if (str1.compareTo(str2) > 0) {
+//					if(arr[j+1].compareTo(arr[j]) > 0){
+						t=arr[j+1];
+						arr[j+1]=arr[j];
+						arr[j]=t;
+					}
+				}
+			}
+		}
+		
+		List<String> arrlist = new ArrayList<String>();
+		for(int i=0;i<list.size();i++){
+			arrlist.add(arr[i]);
+		}
+		
+		return arrlist;
 	}
 	
 	/**

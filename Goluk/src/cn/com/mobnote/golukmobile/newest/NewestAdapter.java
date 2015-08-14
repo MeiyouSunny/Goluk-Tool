@@ -245,8 +245,10 @@ public class NewestAdapter extends BaseAdapter {
 		holder.time.setText(formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
 
 		if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+			holder.zanText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
 			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
 		} else {
+			holder.zanText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
 		}
 
