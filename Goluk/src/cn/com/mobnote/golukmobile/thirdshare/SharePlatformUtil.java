@@ -43,6 +43,7 @@ public class SharePlatformUtil {
 	 * 配置分享平台参数</br>
 	 */
 	public void configPlatforms() {
+		mController.getConfig().closeToast();
 		// 添加微信、微信朋友圈平台
 		addWXPlatform();
 

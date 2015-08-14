@@ -450,7 +450,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.VISIBLE);
 			mPalyerLayout.setVisibility(View.GONE);
-			MainActivity.mMainHandler.sendEmptyMessage(400);
+			if (null != MainActivity.mMainHandler) {
+				MainActivity.mMainHandler.sendEmptyMessage(400);
+			}
 		}
 	}
 
