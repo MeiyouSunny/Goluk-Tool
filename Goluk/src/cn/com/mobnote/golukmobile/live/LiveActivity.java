@@ -154,13 +154,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	/** 保存录制中的状态 */
 	public boolean isRecording = false;
 
-	public enum VideoType {
-		mounts, emergency, idle
-	};
-
-	/** 保存当前录制的视频类型 */
-	public VideoType mCurVideoType = VideoType.idle;
-
 	private VideoSquareManager mVideoSquareManager = null;
 
 	private SharePlatformUtil sharePlatform;
@@ -178,6 +171,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private Bitmap mThumbBitmap = null;
 	private boolean isRequestedForServer = false;
 	private boolean mIsFirstSucess = true;
+	private String mRtmpUrl = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -281,16 +275,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (null != sharePlatform) {
 			sharePlatform.onActivityResult(requestCode, resultCode, data);
 		}
-	}
-
-	/**
-	 * 视频截图
-	 * 
-	 * @author xuhw
-	 * @date 2015年3月4日
-	 */
-	private void screenShoot() {
-		GolukApplication.getInstance().getIPCControlManager().screenShot();
 	}
 
 	// 更新观看人数和点赞人数
@@ -490,8 +474,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			break;
 		}
 	}
-
-	private String mRtmpUrl = null;
 
 	/**
 	 * 开启直播录制上传
@@ -850,16 +832,14 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		LiveDialogManager.getManagerInstance().dismissProgressDialog();
 		isKaiGeSucess = true;
 		if (this.isShareLive) {
-			// 开始视频，上传图片
-			screenShoot();
+			// 视频截图 开始视频，上传图片
+			GolukApplication.getInstance().getIPCControlManager().screenShot();
 		}
 		startUploadMyPosition();
-
 		if (mIsFirstSucess) {
 			this.click_share(false);
 			mIsFirstSucess = false;
 		}
-
 	}
 
 	// 上报位置
@@ -1080,9 +1060,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 * @date 2015年4月17日
 	 */
 	public boolean report(String channel, String videoid, String reporttype) {
-		String json = JsonCreateUtils.getReportRequestJson(channel, videoid, reporttype);
-		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-				VideoSuqareManagerFn.SquareCmd_Req_ReportUp, json);
+		return GolukApplication.getInstance().getVideoSquareManager().report(channel, videoid, reporttype);
 	}
 
 	private void click_share(boolean isClick) {
@@ -1583,9 +1561,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 不更新数据
 			return;
 		}
-		
-		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson );
-		
+
+		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson);
+
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (null != location) {
 			if (mApp.isUserLoginSucess) {
