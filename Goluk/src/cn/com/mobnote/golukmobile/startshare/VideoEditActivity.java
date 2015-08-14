@@ -464,8 +464,15 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 	}
 
+	/** 防止重复点击 */
+	private boolean isSharing = false;
+
 	public void shareClick(final String type) {
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------shareClick---: " + type);
+		if (isSharing) {
+			return;
+		}
+		isSharing = true;
 		click_next();
 	}
 
@@ -654,6 +661,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	// 当分享成功，失败　或某一环节出现失败后，还原到原始状态，再进行分享
 	private void toInitState() {
+		isSharing = false;
 		mShareLoading.hide();
 		mShareLoading.switchState(ShareLoading.STATE_NONE);
 	}
