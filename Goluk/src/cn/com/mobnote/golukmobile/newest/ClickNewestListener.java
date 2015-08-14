@@ -14,6 +14,7 @@ import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class ClickNewestListener implements OnClickListener {
 	private VideoSquareInfo mVideoSquareInfo;
@@ -111,7 +112,7 @@ public class ClickNewestListener implements OnClickListener {
 		return "1".equals(mVideoSquareInfo.mVideoEntity.type);
 	}
 
-	private void uploadPlayer(String videoid, String channel, String clicknumber) {
+	public static void uploadPlayer(String videoid, String channel, String clicknumber) {
 		VideoSquareInfo vsi = new VideoSquareInfo();
 		VideoEntity ve = new VideoEntity();
 		ve.videoid = videoid;

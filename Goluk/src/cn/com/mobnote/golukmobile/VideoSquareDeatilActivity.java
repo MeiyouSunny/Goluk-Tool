@@ -51,6 +51,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
+import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
@@ -614,6 +615,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				mImageToRefresh.setVisibility(View.GONE);
 				String jsonStr = (String) param2;
 				getData(jsonStr);
+				//TODO 上报
+				ClickNewestListener.uploadPlayer(mVideoJson.data.avideo.video.videoid, "1", "1");// 上报播放次数
+				GolukDebugUtils.e("", "-----------------上报上报上报上报---------------------------");
 			} else {
 				mCustomStartDialog.close();
 				mLayoutAllInfo.setVisibility(View.GONE);
@@ -642,7 +646,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 		}
 	}
-
+	
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
