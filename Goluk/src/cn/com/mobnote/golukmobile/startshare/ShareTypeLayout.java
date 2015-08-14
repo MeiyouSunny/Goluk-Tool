@@ -30,7 +30,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 
 	public final String[] typeArray = { "曝光台", "事故大爆料", "美丽风景", "随手拍" };
 
-	private final String[] bgArray = { "加塞！加毛线啊！！不能好好排队啊！！！", "看见这样扔垃圾的也是醉了！", "打个转向灯真的那么难么？" };
+	private final String[] bgArray = { "小手一抖，抢录精彩一幕", "看见这样扔垃圾的也是醉了！", "打个转向灯真的那么难么？" };
 	private final String[] sgArray = { "偶遇一场事故，惊出一身冷汗！", "又一起事故，大家都应该慢点啊！", "车祸现场，极其惨烈......" };
 	private final String[] mlArray = { "世上美景无灱，不如车外沿途小路！", "这样风景如画的地方，心情也格外舒畅！", "这景色，美呆了！" };
 	private final String[] sspArray = { "灵光一闪，拒绝无聊时光！", "在路上，遇到最美的惊喜！", "拍拍回家的那条路！" };
