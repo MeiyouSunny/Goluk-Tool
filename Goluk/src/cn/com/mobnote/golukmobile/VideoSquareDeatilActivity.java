@@ -139,6 +139,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private int likeNumber = 0;
 	/** 猛戳刷新 **/
 	private ImageView mImageToRefresh = null;
+	
+	private ConnectivityManager connectivityManager = null;
+	private NetworkInfo netInfo = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -156,6 +159,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
+		
+		connectivityManager = (ConnectivityManager) mContext
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		netInfo = connectivityManager.getActiveNetworkInfo();
 
 		// 注册监听
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
@@ -866,9 +873,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		if (error) {
 			return;
 		}
+		if (netInfo.getType() != ConnectivityManager.TYPE_WIFI) {
+			mPlayBtn.setVisibility(View.VISIBLE);
+			mPlayBtn.setImageResource(R.drawable.btn_player_play);
+		}
 		mFullVideoView.seekTo(0);
-		mPlayBtn.setVisibility(View.VISIBLE);
-		mPlayBtn.setImageResource(R.drawable.btn_player_play);
 		mSeekBar.setProgress(0);
 	}
 
@@ -881,9 +890,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mFullVideoView.setVideoWidth(mp.getVideoWidth());
 		mFullVideoView.setVideoHeight(mp.getVideoHeight());
 
-		ConnectivityManager connectivityManager = (ConnectivityManager) mContext
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
 		if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
 			GolukDebugUtils.e("videostart", "--------------WIFI环境----------------");
 			if (mPlayBtn.getVisibility() == View.VISIBLE) {
