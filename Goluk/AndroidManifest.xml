@@ -126,7 +126,8 @@
             android:name="cn.com.mobnote.golukmobile.startshare.VideoEditActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/activityTheme" />
+            android:theme="@style/activityTheme"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
         <activity
             android:name="cn.com.mobnote.golukmobile.MainActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"

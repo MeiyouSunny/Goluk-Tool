@@ -79,7 +79,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (from_tag.equals("skill")) {
 						if (url.contains("tel:")) {
 							webviewCall(url);
-							return false;
+							return true;
 						}
 					}
 				}

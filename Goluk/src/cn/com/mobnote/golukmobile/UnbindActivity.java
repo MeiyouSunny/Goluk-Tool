@@ -84,17 +84,19 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mTextVersion.setText("");
 		}
 		// 密码
-		mApplication.getIPCControlManager().addIPCManagerListener("Unbind", this);
-		if (isBindSucess()) {
-			boolean isSucess = mApplication.getIPCControlManager().getIpcWifiConfig();
-			if (isSucess) {
-				// LiveDialogManager.getManagerInstance().showCustomDialog(this,
-				// "正在获取信息");
+		if (null != mApplication) {
+			mApplication.getIPCControlManager().addIPCManagerListener("Unbind", this);
+			if (isBindSucess()) {
+				boolean isSucess = mApplication.getIPCControlManager().getIpcWifiConfig();
+				if (isSucess) {
+					// LiveDialogManager.getManagerInstance().showCustomDialog(this,
+					// "正在获取信息");
+				}
 			}
-		}
-		if (isBindSucess()) {
-			String ipcPwd = mApplication.mSharedPreUtil.getIpcPwd();
-			mTextPasswordName.setText(ipcPwd);
+			if (isBindSucess()) {
+				String ipcPwd = mApplication.mSharedPreUtil.getIpcPwd();
+				mTextPasswordName.setText(ipcPwd);
+			}
 		}
 	}
 
