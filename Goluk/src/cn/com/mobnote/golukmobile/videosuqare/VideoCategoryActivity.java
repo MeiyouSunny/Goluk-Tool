@@ -152,7 +152,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		}
 
 		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----3333");
-		mSwitchLayout.removeAllViews();
+//		mSwitchLayout.removeAllViews();
 
 		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----4444");
 		this.finish();

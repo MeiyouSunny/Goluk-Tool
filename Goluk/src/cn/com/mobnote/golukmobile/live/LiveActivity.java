@@ -61,6 +61,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -72,7 +73,8 @@ import com.rd.car.ResultConstants;
 import com.rd.car.player.RtmpPlayerView;
 
 public class LiveActivity extends BaseActivity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
-		ILiveDialogManagerFn, ITimerManagerFn, ILocationFn, IPCManagerFn, ILive, VideoSuqareManagerFn {
+		ILiveDialogManagerFn, ITimerManagerFn, ILocationFn, IPCManagerFn, ILive, VideoSuqareManagerFn,
+		BaiduMap.OnMapStatusChangeListener {
 
 	/** 自己预览地址 */
 	private static String VIEW_SELF_PLAY = "";
@@ -259,6 +261,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			mVideoSquareManager.addVideoSquareManagerListener("live", this);
 		}
+
+		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
 	}
 
 	private void getURL() {
@@ -683,6 +687,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 找开定位图层，可以显示我的位置小蓝点
 		mBaiduMap.setMyLocationEnabled(true);
 		mBaiduMapManage = new BaiduMapManage(this, mApp, mBaiduMap, "LiveVideo");
+		mBaiduMap.setOnMapStatusChangeListener(this);
 	}
 
 	private boolean isSetAudioMute = false;
@@ -1280,7 +1285,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mVideoSquareManager.removeVideoSquareManagerListener("live");
 		// 移除监听
 		mApp.removeLocationListener(TAG);
-
+		mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
 		mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
 		mBaseHandler.removeMessages(MSG_H_RETRY_UPLOAD);
 		mBaseHandler.removeMessages(MSG_H_RETRY_SHOW_VIEW);
@@ -1737,5 +1742,20 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public void onMapStatusChange(MapStatus arg0) {
+
+	}
+
+	@Override
+	public void onMapStatusChangeFinish(MapStatus arg0) {
+		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
+	}
+
+	@Override
+	public void onMapStatusChangeStart(MapStatus arg0) {
+		mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
 	}
 }
