@@ -218,23 +218,6 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	}
 
 	@Override
-	protected void onStop() {
-		super.onStop();
-		if (null != mCategoryLayout) {
-			mCategoryLayout.onStop();
-		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		if (null != mMapView) {
-			// mMapView.onPause();
-		}
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(this, TAG);
@@ -245,4 +228,24 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 			mMapView.onResume();
 		}
 	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (null != mCategoryLayout) {
+			mCategoryLayout.onPause();
+		}
+		if (null != mMapView) {
+			// mMapView.onPause();
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (null != mCategoryLayout) {
+			mCategoryLayout.onStop();
+		}
+	}
+
 }

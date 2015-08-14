@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -22,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.newest.NewestAdapter;
@@ -76,15 +74,13 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	 * 
 	 */
 	private int uptype = 0;
-
 	private SharePlatformUtil sharePlatform;
-
-	private VideoSquareInfo begantime = null;
 	private VideoSquareInfo endtime = null;
-
 	private VideoSquareInfo mPraiseVideoSquareInfo;
-
 	private final int COUNT = 30;
+	/** 保存即将分享的数据实体，用于判断是否是直播和获取信息 */
+	private VideoSquareInfo mWillShareSquareInfo = null;
+	private CustomLoadingDialog mCustomProgressDialog = null;
 
 	public CategoryListView(Context context, final String type, final String attr) {
 		mContext = context;
@@ -108,8 +104,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		sharePlatform = new SharePlatformUtil(mContext);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 	}
-
-	private CustomLoadingDialog mCustomProgressDialog = null;
 
 	public void closeProgressDialog() {
 		if (null != mCustomProgressDialog) {
@@ -174,10 +168,8 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 				if (isFirstShowDialog) {
 					showProgressDialog();
 				}
-
 			}
 		}
-
 	};
 
 	private void initView() {
@@ -286,7 +278,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 			// 有数据
 			updateRefreshTime();
-			begantime = datalist.get(0);
 			endtime = datalist.get(listSize - 1);
 
 			if (uptype == 0) {// 说明是第一次
@@ -328,9 +319,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 		dataCallBackRefresh();
 	}
-
-	/** 保存即将分享的数据实体，用于判断是否是直播和获取信息 */
-	private VideoSquareInfo mWillShareSquareInfo = null;
 
 	/**
 	 * 在用户点击列表分享前，要保存将被分享的实体
@@ -489,7 +477,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	}
 
 	public void onStop() {
-
 	}
 
 	public void onDestroy() {
