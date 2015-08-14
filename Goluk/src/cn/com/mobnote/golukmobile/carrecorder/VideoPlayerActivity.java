@@ -310,6 +310,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnCompletionLis
 			mImageLayout.addView(view, mPreLoadingParams);
 		}else {
 			mImageView = new ImageView(this);
+			mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
 			mImageView.setImageResource(R.drawable.tacitly_pic);
 			mBitmap = ImageManager.getBitmapFromCache(image, 400, 400);
 			if(null != mBitmap) {
