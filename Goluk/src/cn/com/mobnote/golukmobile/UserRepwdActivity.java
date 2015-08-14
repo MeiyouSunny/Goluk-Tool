@@ -281,7 +281,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PHONE, phone);
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PASSWORD, password);
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_INTER_REGIST, repwdOk);
-			GolukDebugUtils.i("final", "------UserRegistActivity-------identifyCallbackInterface-------registOk------"
+			GolukDebugUtils.i("final", "------UserRepwdActivity--------------registOk------"
 					+ repwdOk);
 			startActivity(getIdentify);
 			break;
