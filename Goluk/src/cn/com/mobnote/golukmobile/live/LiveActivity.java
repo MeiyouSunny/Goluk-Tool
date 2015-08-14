@@ -285,10 +285,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private void updateCount(int okCount, int lookCount) {
 		mCurrentOKCount = okCount;
 		if (null != zanBtn) {
-			zanBtn.setText("" + okCount);
+			zanBtn.setText("" + GolukUtils.getFormatNumber("" + okCount));
 		}
 		if (null != mLookCountTv) {
-			mLookCountTv.setText("" + lookCount);
+			mLookCountTv.setText("" + GolukUtils.getFormatNumber("" + lookCount));
 		}
 	}
 

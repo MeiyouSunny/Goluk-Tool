@@ -2,6 +2,7 @@ package cn.com.mobnote.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -146,13 +147,13 @@ public class GolukUtils {
 	 * @date 2015年5月29日
 	 */
 	public static void showToast(Context context, String text) {
-		if (mToast == null) {  
-            mToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);  
-        } else {  
-            mToast.setText(text);  
-        }  
-		
-        mToast.show();  
+		if (mToast == null) {
+			mToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+		} else {
+			mToast.setText(text);
+		}
+
+		mToast.show();
 	}
 
 	/**
@@ -167,16 +168,17 @@ public class GolukUtils {
 	 * @author xuhw
 	 * @date 2015年5月29日
 	 */
-	private static Toast mToast = null;  
+	private static Toast mToast = null;
+
 	public static void showToast(Context context, String text, int duration) {
-		if (mToast == null) {  
-            mToast = Toast.makeText(context, text, duration);  
-        } else {  
-            mToast.setText(text);  
-            mToast.setDuration(duration);  
-        }  
-  
-        mToast.show();  
+		if (mToast == null) {
+			mToast = Toast.makeText(context, text, duration);
+		} else {
+			mToast.setText(text);
+			mToast.setDuration(duration);
+		}
+
+		mToast.show();
 	}
 
 	/**
@@ -477,6 +479,20 @@ public class GolukUtils {
 			e.printStackTrace();
 		}
 		return time;
+	}
+
+	public static String getFormatNumber(String fmtnumber) {
+		String number;
+
+		int wg = Integer.parseInt(fmtnumber);
+
+		if (wg < 100000) {
+			DecimalFormat df = new DecimalFormat("#,###");
+			number = df.format(wg);
+		} else {
+			number = "100,000+";
+		}
+		return number;
 	}
 
 }
