@@ -151,6 +151,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		setContentView(R.layout.video_square_detail);
 		mContext = this;
 
+		connectivityManager = (ConnectivityManager) mContext
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		netInfo = connectivityManager.getActiveNetworkInfo();
+		
 		initView();
 
 		mCustomStartDialog = new CustomLoadingDialog(mContext, null);
@@ -160,10 +164,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 		
-		connectivityManager = (ConnectivityManager) mContext
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		netInfo = connectivityManager.getActiveNetworkInfo();
-
 		// 注册监听
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
