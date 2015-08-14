@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/live_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:background="@color/color_bg_comm" >
 
         <TextView
