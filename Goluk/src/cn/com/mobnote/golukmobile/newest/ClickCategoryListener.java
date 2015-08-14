@@ -35,6 +35,19 @@ public class ClickCategoryListener implements OnTouchListener {
 		case MotionEvent.ACTION_UP:
 			showAnimation(arg0);
 			jump();
+			
+			final ImageView mengban = (ImageView)arg0.findViewById(R.id.mengban);
+			final TextView mTitleName = (TextView) arg0.findViewById(R.id.mTitleName);
+			final TextView mUpdateTime = (TextView) arg0.findViewById(R.id.mUpdateTime);
+			
+			mengban.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					mengban.setVisibility(View.VISIBLE);
+					mTitleName.setVisibility(View.VISIBLE);
+					mUpdateTime.setVisibility(View.VISIBLE);
+				}
+			}, 300);
 			break;
 		case MotionEvent.ACTION_CANCEL:
 			showAnimation(arg0);
