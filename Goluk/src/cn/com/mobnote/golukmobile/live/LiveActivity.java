@@ -1080,9 +1080,13 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 * @date 2015年4月17日
 	 */
 	public boolean report(String channel, String videoid, String reporttype) {
-		String json = JsonCreateUtils.getReportRequestJson(channel, videoid, reporttype);
-		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-				VideoSuqareManagerFn.SquareCmd_Req_ReportUp, json);
+		// String json = JsonCreateUtils.getReportRequestJson(channel, videoid,
+		// reporttype);
+		// return
+		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+		// VideoSuqareManagerFn.SquareCmd_Req_ReportUp, json);
+
+		return GolukApplication.getInstance().getVideoSquareManager().report(channel, videoid, reporttype);
 	}
 
 	private void click_share(boolean isClick) {
@@ -1583,9 +1587,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			// 不更新数据
 			return;
 		}
-		
-		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson );
-		
+
+		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson);
+
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (null != location) {
 			if (mApp.isUserLoginSucess) {
