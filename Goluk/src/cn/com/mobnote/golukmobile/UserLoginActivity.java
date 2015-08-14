@@ -398,7 +398,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 										Intent it = new Intent(UserLoginActivity.this, UserRegistActivity.class);
 										it.putExtra("intentLogin",
 												mEditTextPhoneNumber.getText().toString().replace("-", ""));
-
 										if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
 											it.putExtra("fromRegist", "fromStart");
 										} else if (justLogin.equals("indexmore")) {// 从更多页个人中心注册
@@ -446,6 +445,13 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 									Intent it = new Intent(UserLoginActivity.this, UserRepwdActivity.class);
 									it.putExtra("errorPwdOver",
 											mEditTextPhoneNumber.getText().toString().replace("-", ""));
+									if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
+										it.putExtra("fromRegist", "fromStart");
+									} else if (justLogin.equals("indexmore")) {// 从更多页个人中心注册
+										it.putExtra("fromRegist", "fromIndexMore");
+									} else if (justLogin.equals("setup")) {// 从设置页注册
+										it.putExtra("fromRegist", "fromSetup");
+									}
 									startActivity(it);
 								}
 							}).create().show();
