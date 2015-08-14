@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -100,8 +101,18 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 	public void showLoadingLayout() {
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
+		removeIt();
 		mRootLayout.addView(mLoadingLayout, lp);
 		mLoadingLayout.setOnTouchListener(this);
+	}
+
+	private void removeIt() {
+		if (null != mLoadingLayout) {
+			ViewParent vp = mLoadingLayout.getParent();
+			if (null != vp && vp instanceof RelativeLayout) {
+				((RelativeLayout) vp).removeView(mLoadingLayout);
+			}
+		}
 	}
 
 	public void hide() {
