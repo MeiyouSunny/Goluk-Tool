@@ -178,26 +178,27 @@ public class UploadVideo {
 		return mShortBitmap;
 	}
 
-	// 获取缩略图
+	private final int THUMB_WIDTH = 854;
+	private final int THUMB_HEIGHT = 480;
+
+	//
+
+	/**
+	 * 创建视频缩略图
+	 * 
+	 * @author jyf
+	 * @date 2015年8月14日
+	 */
 	private void createThumb() {
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 		thumbFile = filePath + File.separator + mVideoName;
-		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, 194, 109);
+		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, THUMB_WIDTH, THUMB_HEIGHT);
 		File image = new File(thumbFile);
-		if (image.exists()) {
+		if (image.exists() && null != image) {
 			return;
 		}
-
 		thumbFile = fileFolder + "/thumb11.jpg";
-		mShortBitmap = GolukUtils.createVideoThumbnail(mVideoPath);
-		if (mShortBitmap != null) {
-			int width = mShortBitmap.getWidth();
-			int height = mShortBitmap.getHeight();
-			GolukDebugUtils.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
-		} else {
-			GolukDebugUtils.e("", "VideoShareActivity createThumb: NULL:");
-			mShortBitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
-		}
+		mShortBitmap = getSelfBitmap();
 		try {
 			File file = new File(fileFolder);
 			file.mkdirs();
@@ -208,11 +209,29 @@ public class UploadVideo {
 			file.createNewFile();
 			FileOutputStream fos = new FileOutputStream(file);
 			mShortBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-			String fsFile = FileUtils.javaToLibPath(thumbFile);
-			GolukDebugUtils.e("", "VideoShareActivity createThumb: time: " + fsFile);
+			mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, THUMB_WIDTH, THUMB_HEIGHT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 自己抓取视频第一幀图片
+	 * 
+	 * @return
+	 * @author jyf
+	 * @date 2015年8月14日
+	 */
+	private Bitmap getSelfBitmap() {
+		Bitmap temp = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
+		if (temp == null) {
+			temp = GolukUtils.createVideoThumbnail(mVideoPath);
+		}
+
+		int width = temp.getWidth();
+		int height = temp.getHeight();
+		GolukDebugUtils.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
+		return temp;
 	}
 
 	public String getVideoId() {

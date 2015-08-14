@@ -79,6 +79,7 @@ public class BaiduMapManage {
 	private int[] mHeadImg = { 0, R.drawable.needle_boy_one_little, R.drawable.needle_boy_two_little,
 			R.drawable.needle_boy_three_little, R.drawable.needle_girl_one_little, R.drawable.needle_girl_two_little,
 			R.drawable.needle_girl_three_little, R.drawable.needle_index_little };
+	
 	private int[] mBigHeadImg = { 0, R.drawable.needle_boy_one_big, R.drawable.needle_boy_two_big,
 			R.drawable.needle_boy_three_big, R.drawable.needle_girl_one_big, R.drawable.needle_girl_two_big,
 			R.drawable.needle_girl_three_big, R.drawable.needle_index_big };

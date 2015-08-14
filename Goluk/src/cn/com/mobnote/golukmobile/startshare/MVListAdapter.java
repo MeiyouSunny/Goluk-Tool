@@ -33,6 +33,8 @@ public class MVListAdapter extends BaseAdapter {
 		mDataList = data;
 		mFilterInstance = filterInstance;
 		mLayoutInflater = LayoutInflater.from(context);
+		resIndex = 0;
+		mSucessIndex = -1;
 	}
 
 	public void setSucessIndex(int index) {

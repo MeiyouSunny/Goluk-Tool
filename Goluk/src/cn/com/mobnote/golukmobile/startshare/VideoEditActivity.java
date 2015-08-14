@@ -4,9 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -97,11 +95,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.video_edit, null);
 		mYouMengLayout = (RelativeLayout) mRootLayout.findViewById(R.id.shortshare_youmeng_layout);
 		setContentView(mRootLayout);
-		// 获取视频路径
-		Intent intent = getIntent();
-		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
-		interceptVideoName(mFilePath);// 拿到视频名称
-		mCurrentVideoType = intent.getIntExtra("type", 2);
+
+		getIntentData();
 
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -124,6 +119,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mUploadVideo.setListener(this);
 		mShareLoading = new ShareLoading(this, mRootLayout);
 		mBaseHandler.sendEmptyMessageDelayed(100, 100);
+	}
+
+	private void getIntentData() {
+		Intent intent = getIntent();
+		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
+		interceptVideoName(mFilePath);// 拿到视频名称
+		mCurrentVideoType = intent.getIntExtra("type", 2);
 	}
 
 	/**
@@ -296,13 +298,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private void showLoadingView() {
 		mShareLoading.showLoadingLayout();
 		mShareLoading.switchState(ShareLoading.STATE_CREATE_VIDEO);
-	}
-
-	private void hideLoadingView() {
-		// mVideoLoadingLayout.setVisibility(View.GONE);
-		// mLoadingText.setText("视频生成中" + 0 + "%");
-		// // 停止loading动画
-		// mLoadingAnimation.stop();
 	}
 
 	/**
@@ -523,7 +518,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			}
 			break;
 		case EVENT_END:
-			hideLoadingView();
 			boolean bSuccess = (Boolean) obj1;
 			boolean bCancel = (Boolean) obj2;
 			if (bCancel) {
@@ -550,7 +544,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			}
 			toInitState();
 			GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + errorInfo);
-			hideLoadingView();
 			break;
 		default:
 			break;
