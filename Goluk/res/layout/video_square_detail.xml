@@ -71,7 +71,7 @@
         <RelativeLayout
             android:id="@+id/mPlayerLayout"
             android:layout_width="match_parent"
-            android:layout_height="205dp" >
+            android:layout_height="205dp">
 
             <cn.com.mobnote.golukmobile.player.FullScreenVideoView
                 android:id="@+id/video_detail_videoview"
@@ -386,8 +386,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
-            android:layout_marginTop="60dp" >
+            android:layout_marginTop="30dp" >
             <TextView
                 android:id="@+id/comment_noinput"
                 android:layout_width="wrap_content"
