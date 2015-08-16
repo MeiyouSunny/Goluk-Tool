@@ -33,6 +33,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -174,12 +175,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onResume  " + isPause);
 		if (isPause) {
 			isPause = false;
-//			if (playTime != 0) {
-//				if (0 != duration) {
-//					mSeekBar.setProgress(playTime * 100 / duration);
-//				}
-//				mFullVideoView.seekTo(playTime);
-//			}
+			// if (playTime != 0) {
+			// if (0 != duration) {
+			// mSeekBar.setProgress(playTime * 100 / duration);
+			// }
+			// mFullVideoView.seekTo(playTime);
+			// }
 			showLoading();
 			mPlayBtn.setVisibility(View.GONE);
 			mImageLayout.setVisibility(View.VISIBLE);
@@ -304,6 +305,29 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 	};
 
+	/**
+	 * 退出
+	 * 
+	 * @author jyf
+	 * @date 2015年8月16日
+	 */
+	private void exit() {
+		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
+		if (null != mVideoSquareManager) {
+			mVideoSquareManager.removeVideoSquareManagerListener("videodetailshare");
+		}
+		this.finish();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			exit();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
 	private void toComment(boolean isShowSoft) {
 		Intent toComment = new Intent(VideoSquareDeatilActivity.this, CommentActivity.class);
 		toComment.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoJson.data.avideo.video.videoid);
@@ -313,12 +337,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		toComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 		startActivity(toComment);
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.back_btn:
-			finish();
+			exit();
 			break;
 		// 评论
 		case R.id.commentLayout:
@@ -530,7 +554,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				mTextLink.setText(mVideoJson.data.link.outurlname);
 			}
 
-			if ((netInfo != null ) && (netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
+			if ((netInfo != null) && (netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
 				playVideo();
 				mFullVideoView.start();
 				showLoading();
