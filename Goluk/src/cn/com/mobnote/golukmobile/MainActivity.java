@@ -48,7 +48,6 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
-import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
@@ -66,6 +65,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -139,8 +139,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public VideoSquareActivity mVideoSquareActivity;
 
 	private IndexMoreActivity indexMoreActivity;
-	
+
 	private RelativeLayout indexCarrecoderBtnlayout;
+	private WifiManager mWifiManager = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +151,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 注意该方法要再setContentView方法之前实现
 		SDKInitializer.initialize(getApplicationContext());
 		((GolukApplication) this.getApplication()).initSharedPreUtil(this);
-
+		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 
@@ -282,8 +283,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	private void createWiFiHot() {
 		GolukDebugUtils.e("", "自动连接小车本wifi---linkMobnoteWiFi---1");
-		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		mWac = new WifiConnectManager(wm, this);
+		mWac = new WifiConnectManager(mWifiManager, this);
 		mWac.autoWifiManage();
 	}
 
@@ -291,7 +291,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
-		indexDiv = (RelativeLayout)findViewById(R.id.index_div);
+		indexDiv = (RelativeLayout) findViewById(R.id.index_div);
 		mIndexImg = (ImageView) findViewById(R.id.index_img);
 
 		mMoreBtn = (Button) findViewById(R.id.more_btn);
@@ -299,14 +299,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		videoSquareLayout = findViewById(R.id.video_square_layout);
 
 		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
-		this.updateRecoderBtn(mApp.mWiFiStatus);//设置行测记录仪状态
-		
+		this.updateRecoderBtn(mApp.mWiFiStatus);// 设置行测记录仪状态
+
 		indexCarrecoderBtnlayout = (RelativeLayout) findViewById(R.id.index_carrecoder_btn_layout);
 		userInfoLayout = findViewById(R.id.user_info);
 
 		indexCarrecoderBtn.setOnClickListener(this);
 		indexCarrecoderBtnlayout.setOnClickListener(this);
-		
+
 		indexDiv.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mMoreBtn.setOnTouchListener(this);
@@ -441,7 +441,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					msg.obj = filename;
 					PhotoAlbumActivity.mHandler.sendMessage(msg);
 				}
-				
+
 				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime=" + time);
 			}
 		} catch (JSONException e) {
@@ -461,7 +461,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// 连接中
 			this.updateRecoderBtn(1);
 			mApp.mWiFiStatus = WIFI_STATE_CONNING;
-			
+
 			if (CarRecorderActivity.mHandler != null) {
 				CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_CONNING);
 			}
@@ -480,29 +480,28 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			break;
 		}
 	}
-	
+
 	/**
-	 * 更新行车记录仪按钮 1:连接中  2：已连接  0：未连接
+	 * 更新行车记录仪按钮 1:连接中 2：已连接 0：未连接
 	 */
-	public void updateRecoderBtn(int state){
-		if(this.isFinishing() == false){
-			
+	public void updateRecoderBtn(int state) {
+		if (this.isFinishing() == false) {
+
 			AnimationDrawable ad = null;
-			
-			if(state == WIFI_STATE_CONNING){
+
+			if (state == WIFI_STATE_CONNING) {
 				indexCarrecoderBtn.setBackgroundResource(R.anim.carrecoder_btn);
 				ad = (AnimationDrawable) indexCarrecoderBtn.getBackground();
-				if(ad.isRunning() == false){
+				if (ad.isRunning() == false) {
 					ad.setOneShot(false);
 					ad.start();
 				}
-			}else if(state == WIFI_STATE_SUCCESS){
+			} else if (state == WIFI_STATE_SUCCESS) {
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.index_video_icon);
-			}else if(state == WIFI_STATE_FAILED){
+			} else if (state == WIFI_STATE_FAILED) {
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
 			}
-			
-			 
+
 		}
 	}
 
@@ -600,7 +599,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
-		
+
 		this.updateRecoderBtn(mApp.mWiFiStatus);
 
 		indexMoreActivity.showView();
@@ -638,24 +637,38 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void exit() {
-
 		if ((System.currentTimeMillis() - exitTime) > 2000) {
 			GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 			exitTime = System.currentTimeMillis();
 		} else {
-			SysApplication.getInstance().exit();
 			mApp.mIPCControlManager.setIPCWifiState(false, "");
+			closeWifiHot();
+			SysApplication.getInstance().exit();
 			mApp.mGoluk.GolukLogicDestroy();
 			if (null != UserStartActivity.mHandler) {
 				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
 			}
 			MobclickAgent.onKillProcess(this);
 			finish();
+			Fresco.shutDown();
 			int PID = android.os.Process.myPid();
 			android.os.Process.killProcess(PID);
 			System.exit(0);
 		}
 
+	}
+
+	/**
+	 * 关闭WIFI热点
+	 * 
+	 * @author jyf
+	 * @date 2015年7月20日
+	 */
+	private void closeWifiHot() {
+		if (null == mWac) {
+			mWac = new WifiConnectManager(mWifiManager, this);
+		}
+		mWac.closeAp();
 	}
 
 	@SuppressLint("ClickableViewAccessibility")
@@ -963,8 +976,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private String mNewMobilePWD = null;
 
 	private void modifyApNotifyIPc(final String newMobilePWD) {
-		WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		mWac = new WifiConnectManager(wm, this);
+		mWac = new WifiConnectManager(mWifiManager, this);
 
 		WifiRsBean oldBean = mWac.readConfig();
 		if (null == oldBean) {
