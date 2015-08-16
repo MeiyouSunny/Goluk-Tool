@@ -419,7 +419,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
-		checkListState();
+		
 	}
 	
 	private void checkListState() {
@@ -467,6 +467,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 					GolukDebugUtils.e("xuhw","YYYYYY=======获取文件列表====fail==@@@======param1="+ param1 );
 					// 命令发送失败
 				}
+				checkListState();
 			}
 			break;
 		// IPC下载结果应答
