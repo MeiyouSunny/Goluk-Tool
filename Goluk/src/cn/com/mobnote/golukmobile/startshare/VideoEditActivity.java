@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -323,25 +324,32 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				if (isExit) {
 					return;
 				}
-				int maxDuration = mVVPlayVideo.getDuration();
-				while (null != mProgressThread && null != mVVPlayVideo) {
-					if (isExit) {
-						break;
+				try{
+					int maxDuration = mVVPlayVideo.getDuration();
+					while (null != mProgressThread && null != mVVPlayVideo) {
+						if (isExit) {
+							break;
+						}
+						// 设置进度条的长度为视频的总长度
+						mVideoProgressBar.setMax(maxDuration);
+						// 如果视频正在播放而且进度条没有被拖动
+						if (mVVPlayVideo.isPlaying()) {
+							// 设置进度条的当前进度为视频已经播放的长度
+							int position = mVVPlayVideo.getCurrentPosition();
+							mVideoProgressBar.setProgress(position);
+						}
+						try {
+							// 休眠50毫秒
+							Thread.sleep(50);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
-					// 设置进度条的长度为视频的总长度
-					mVideoProgressBar.setMax(maxDuration);
-					// 如果视频正在播放而且进度条没有被拖动
-					if (mVVPlayVideo.isPlaying()) {
-						// 设置进度条的当前进度为视频已经播放的长度
-						int position = mVVPlayVideo.getCurrentPosition();
-						mVideoProgressBar.setProgress(position);
-					}
-					try {
-						// 休眠50毫秒
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				}
+				catch (Exception e)
+				{
+					Log.e("jyf", "jyf------ViewEditActivity-----updateVideoProgress-----Error!");
+					e.printStackTrace();
 				}
 			};
 		};
