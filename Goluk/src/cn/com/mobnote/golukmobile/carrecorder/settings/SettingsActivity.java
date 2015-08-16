@@ -243,7 +243,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					setSwitchStatus = true;
 				}
 				// {"SpeakerSwitch":0}
-				String condi = "{\"SpeakerSwitch\":\"" + status + "\"}";
+				String condi = "{\"SpeakerSwitch\":" + status + "}";
 				boolean b = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(condi);
 				GolukDebugUtils.e("lily", "---------点击开关结果-----------" + b);
 				break;
