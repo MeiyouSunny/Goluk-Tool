@@ -306,7 +306,12 @@ public class GolukUtils {
 		t.setToNow();
 		buffer.append(t.hour);
 		buffer.append(":");
-		buffer.append(t.minute);
+		int minute = t.minute;
+		String aa ="" +  minute;
+		if (minute < 10) {
+			aa = "0" + minute;
+		}
+		buffer.append(aa);
 		return new String(buffer);
 	}
 
