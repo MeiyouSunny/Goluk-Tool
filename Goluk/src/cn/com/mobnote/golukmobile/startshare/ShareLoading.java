@@ -59,6 +59,9 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 	}
 
 	public void switchState(int state) {
+		if (mIsExit) {
+			return;
+		}
 		mCurrentState = state;
 		switch (mCurrentState) {
 		case STATE_CREATE_VIDEO:
@@ -90,15 +93,24 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 
 	// 更新内容
 	public void updateLoadingTxt(String content) {
+		if (mIsExit) {
+			return;
+		}
 		mLoadingTv.setText(content);
 	}
 
 	public void setProcess(int process) {
+		if (mIsExit) {
+			return;
+		}
 		mRingView.setProcess(process);
 		mLoadingProress.setText(process + "%");
 	}
 
 	public void showLoadingLayout() {
+		if (mIsExit) {
+			return;
+		}
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		removeIt();
@@ -121,13 +133,21 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 
 	@Override
 	public void onClick(View v) {
+		if (mIsExit) {
+			return;
+		}
 		if (v.getId() == R.id.share_loading_top) {
-			GolukUtils.showToast(mContext, "关闭");
 			if (null != mContext && mContext instanceof VideoEditActivity) {
 				((VideoEditActivity) mContext).CallBack_Comm(VideoEditActivity.EVENT_COMM_EXIT, null);
 			}
 		}
 
+	}
+
+	private boolean mIsExit = false;
+
+	public void setExit() {
+		mIsExit = true;
 	}
 
 	@Override

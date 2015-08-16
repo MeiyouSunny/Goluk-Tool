@@ -67,12 +67,21 @@ public class ShareDeal implements OnClickListener {
 		mSharePlatform.onActivityResult(requestCode, resultCode, data);
 	}
 
+	private boolean mIsExit = false;
+
+	public void setExit() {
+		mIsExit = true;
+	}
+
 	@Override
 	public void onClick(View v) {
 		final int id = v.getId();
 		switch (id) {
 		case R.id.wechat:
 			// 微信
+			if (mIsExit) {
+				return;
+			}
 			if (mSharePlatform.isInstallWeiXin()) {
 				mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
 				click_deal(mCurrentShareType);
@@ -83,6 +92,9 @@ public class ShareDeal implements OnClickListener {
 			break;
 		case R.id.wechat_circle:
 			// 朋友圈
+			if (mIsExit) {
+				return;
+			}
 			if (mSharePlatform.isInstallWeiXin()) {
 				mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
 				click_deal(mCurrentShareType);
@@ -93,6 +105,9 @@ public class ShareDeal implements OnClickListener {
 			break;
 		case R.id.qq:
 			// QQ
+			if (mIsExit) {
+				return;
+			}
 			if (mSharePlatform.isInstallQQ()) {
 				mCurrentShareType = CustomShareBoard.TYPE_QQ;
 				click_deal(mCurrentShareType);
@@ -103,11 +118,17 @@ public class ShareDeal implements OnClickListener {
 			break;
 		case R.id.qqZone:
 			// QQ空间
+			if (mIsExit) {
+				return;
+			}
 			mCurrentShareType = CustomShareBoard.TYPE_QQ_ZONE;
 			click_deal(mCurrentShareType);
 			break;
 		case R.id.sina:
 			// 新浪微博
+			if (mIsExit) {
+				return;
+			}
 			if (mSharePlatform.isSinaWBValid()) {
 				mCurrentShareType = CustomShareBoard.TYPE_WEIBO_XINLANG;
 				click_deal(mCurrentShareType);
