@@ -182,6 +182,12 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 		}
 
 	}
+	
+	private boolean mIsExit = false;
+
+	public void setExit() {
+		mIsExit = true;
+	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent arg1) {

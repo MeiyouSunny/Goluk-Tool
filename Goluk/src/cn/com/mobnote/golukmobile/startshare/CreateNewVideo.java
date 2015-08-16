@@ -29,7 +29,7 @@ public class CreateNewVideo implements FilterPlaybackView.FilterVideoEditorListe
 	}
 
 	private void sendData(int event, Object obj1, Object obj2, Object obj3) {
-		if (null == mFn) {
+		if (null == mFn || mIsExit) {
 			return;
 		}
 		mFn.CallBack_CreateNewVideoFn(event, obj1, obj2, obj3);
@@ -61,6 +61,12 @@ public class CreateNewVideo implements FilterPlaybackView.FilterVideoEditorListe
 
 	public String getNewFilePath() {
 		return mVideoSavePath;
+	}
+
+	private boolean mIsExit = false;
+
+	public void setExit() {
+		mIsExit = true;
 	}
 
 	@Override
