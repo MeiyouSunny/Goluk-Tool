@@ -45,7 +45,9 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -116,7 +118,8 @@ public class SpecialListActivity extends BaseActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				mCustomProgressDialog = null;
+//				mCustomProgressDialog = null;
+				closeProgressDialog();
 				httpPost(true, ztid);
 			}
 		});
@@ -154,10 +157,11 @@ public class SpecialListActivity extends BaseActivity implements
 	 */
 	private void httpPost(boolean flag, String ztid) {
 		if (flag) {
-			if (null == mCustomProgressDialog) {
-				mCustomProgressDialog = new CustomLoadingDialog(this, null);
-				mCustomProgressDialog.show();
-			}
+//			if (null == mCustomProgressDialog) {
+//				mCustomProgressDialog = new CustomLoadingDialog(this, null);
+//				mCustomProgressDialog.show();
+//			}
+			showProgressDialog();
 		}
 
 		boolean result = GolukApplication.getInstance().getVideoSquareManager()
@@ -177,11 +181,40 @@ public class SpecialListActivity extends BaseActivity implements
 		lv.setAdapter(specialListViewAdapter);
 
 	}
+	
+	@Override
+	public void onResume()
+	{
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("SpecialListActivity", this);
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause()
+	{
+//		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("SpecialListActivity");
+		super.onPause();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("SpecialListActivity");
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	{
+		
+	}
 
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.back_btn:
+			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("SpecialListActivity");
 			this.finish();
 			break;
 		case R.id.message:
@@ -201,14 +234,16 @@ public class SpecialListActivity extends BaseActivity implements
 			startActivity(mBugLayout);
 			break;
 		case R.id.title_share:
-			if (null == mCustomProgressDialog) {
-				mCustomProgressDialog = new CustomLoadingDialog(this, null);
-			}
-			mCustomProgressDialog.show();
+//			if (null == mCustomProgressDialog) {
+//				mCustomProgressDialog = new CustomLoadingDialog(this, null);
+//			}
+//			mCustomProgressDialog.show();
+			showProgressDialog();
 			boolean result = GolukApplication.getInstance()
 					.getVideoSquareManager().getTagShareUrl("1", ztid);
 			if (result == false) {
-				mCustomProgressDialog.close();
+//				mCustomProgressDialog.close();
+				closeProgressDialog();
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 			break;
@@ -251,9 +286,23 @@ public class SpecialListActivity extends BaseActivity implements
 	private void closeProgressDialog() {
 		if (null != mCustomProgressDialog) {
 			mCustomProgressDialog.close();
+			mCustomProgressDialog = null;
 		}
 	}
 
+	/**
+	 * 显示加载中对话框
+	 * 
+	 * @author xuhw
+	 * @date 2015年4月15日
+	 */
+	private void showProgressDialog() {
+		if (null == mCustomProgressDialog) {
+			mCustomProgressDialog = new CustomLoadingDialog(this, null);
+			mCustomProgressDialog.show();
+		}
+	}
+	
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
 			Object param2) {
@@ -426,7 +475,8 @@ public class SpecialListActivity extends BaseActivity implements
 						}
 						
 						if (this != null && !this.isFinishing()) {
-							mCustomProgressDialog.close();
+//							mCustomProgressDialog.close();
+							closeProgressDialog();
 							CustomShareBoard shareBoard = new CustomShareBoard(SpecialListActivity.this, sharePlatform, shareurl, coverurl,
 									describe, ttl, bitmap, realDesc, ztid);
 							shareBoard.showAtLocation(SpecialListActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -438,7 +488,8 @@ public class SpecialListActivity extends BaseActivity implements
 					e.printStackTrace();
 				}
 			} else {
-				mCustomProgressDialog.close();
+//				mCustomProgressDialog.close();
+				closeProgressDialog();
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 		}
