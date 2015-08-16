@@ -144,7 +144,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private NetworkInfo netInfo = null;
 	private RelativeLayout mImageLayout;
 	private CustomDialog mCustomDialog;
-	private Timer timer;
+	private Timer timer = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -530,7 +530,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				mTextLink.setText(mVideoJson.data.link.outurlname);
 			}
 
-			if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+			if ((netInfo != null ) && (netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
 				playVideo();
 				mFullVideoView.start();
 				showLoading();
@@ -783,8 +783,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 				@Override
 				public void onClickListener() {
+					if (timer != null)
+						timer.cancel();
 					finish();
-					timer.cancel();
 				}
 			});
 			if (!this.isFinishing()) {
