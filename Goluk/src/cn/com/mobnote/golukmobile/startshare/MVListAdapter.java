@@ -113,6 +113,12 @@ public class MVListAdapter extends BaseAdapter {
 		ImageView display = null;
 	}
 
+	private boolean mIsExit = false;
+
+	public void setExit() {
+		mIsExit = true;
+	}
+
 	class onclick implements OnClickListener {
 		private int index;
 
@@ -128,6 +134,9 @@ public class MVListAdapter extends BaseAdapter {
 		 */
 		@Override
 		public void onClick(View v) {
+			if (mIsExit) {
+				return;
+			}
 			MVEditData data = (MVEditData) getItem(index);
 			if (index != resIndex) {
 				MVEditData resData = (MVEditData) getItem(resIndex);

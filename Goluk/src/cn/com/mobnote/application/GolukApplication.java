@@ -467,17 +467,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	/**
-	 * 首页,在线视频基础数据,图片下载数据回调
-	 * 
-	 * @param status
-	 *            ,0/1,基础数据/图片下载
-	 * @param data
-	 */
-	public void onLineVideoCallBack(int status, Object data) {
-
-	}
-
-	/**
 	 * 本地视频上传回调
 	 * 
 	 * @param vid
@@ -793,12 +782,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				+ param1 + ",param2:" + param2);
 
 		switch (type) {
-		case 0:
-			if (success == 1) {
-				// 首页,在线视频基础数据,图片下载数据回调
-				onLineVideoCallBack((Integer) param1, param2);
-			}
-			break;
 		case PageType_UploadVideo:
 			// 本地视频编辑页面,点击下一步,在上传页面上传本地视频回调
 			localVideoUpLoadCallBack(success, param1, param2);
@@ -808,21 +791,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			localVideoShareCallBack(success, String.valueOf(param2));
 			break;
 		case 7:
-			// if (null != mMainActivity) {
-			// // 地图大头针图片
-			// GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针数据---" +
-			// String.valueOf(param2));
-			// // 地图大头针
-			// mMainActivity.mVideoSquareActivity.mVideoSquareAdapter.baidumap.pointDataCallback(success,
-			// param2);
-			// }
-			/*
-			 * if (mPageSource == "LiveVideoList") { GolukDebugUtils.e("",
-			 * "pageNotifyCallBack---直播列表数据---" + String.valueOf(param2));
-			 * ((LiveVideoListActivity) mContext).LiveListDataCallback(success,
-			 * param2); }
-			 */
-
+			// 地图大头针数据
 			if (null != mContext) {
 				if (mContext instanceof LiveActivity) {
 					// 为了更新直播界面的别人的位置信息
@@ -831,38 +800,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					((VideoCategoryActivity) mContext).pointDataCallback(success, param2);
 				}
 			}
-
 			break;
 		case 8:
 			// 直播大头针图片下载完成
 			if (mContext instanceof VideoCategoryActivity) {
 				((VideoCategoryActivity) mContext).downloadBubbleImageCallBack(success, param2);
 			}
-
-			// if (mPageSource == "Main") {
-			// // 地图大头针图片
-			// GolukDebugUtils.e("", "pageNotifyCallBack---地图大头针图片---" +
-			// String.valueOf(param2));
-			// ((MainActivity)
-			// mContext).mVideoSquareActivity.mVideoSquareAdapter.baidumap
-			// .downloadBubbleImageCallBack(success, param2);
-			// }
-			/*
-			 * if (mPageSource == "LiveVideoList") { // 地图大头针图片
-			 * GolukDebugUtils.e("", "pageNotifyCallBack---直播列表图片---" +
-			 * String.valueOf(param2)); ((LiveVideoListActivity)
-			 * mContext).downloadVideoImageCallBack(success, param2); }
-			 */
 			break;
 		case 9:
 			GolukDebugUtils.e(null, "jyf----20150406----application----999999999999---- : ");
 			if (mPageSource == "LiveVideo") {
 				GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
-				/*
-				 * if (mContext instanceof LiveVideoPlayActivity) {
-				 * ((LiveVideoPlayActivity)
-				 * mContext).LiveVideoDataCallBack(success, param2); } else
-				 */
 				if (mContext instanceof LiveActivity) {
 					((LiveActivity) mContext).LiveVideoDataCallBack(success, param2);
 				}
@@ -884,8 +832,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 			parseLoginData(success, param2);
 			break;
-		// 自动登录
 
+		// 自动登录
 		case PageType_AutoLogin:
 			mUser.initAutoLoginCallback(success, param1, param2);
 			parseLoginData(success, param2);
@@ -914,10 +862,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					((LiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
 				}
 			}
-
-			break;
-		case PageType_PlayStart:
-
 			break;
 		case PageType_LiveLike:
 			// 直播点赞
@@ -925,7 +869,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((LiveActivity) mContext).callBack_clickOK(success, param1, param2);
 			}
 			break;
-
 		// 注销
 		case PageType_SignOut:
 			if (mPageSource == "UserSetup") {
@@ -934,7 +877,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 		// APP升级+IPC升级检测
 		case PageType_CheckUpgrade:
-			// mUpgrade.upgradeGolukCallback(success, param1, param2);
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
 		// ipc升级文件下载
@@ -947,7 +889,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((UserOpinionActivity) mContext).requestOpinionCallback(success, param1, param2);
 			}
 			break;
-
 		}
 	}
 
@@ -1784,20 +1725,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean getIsBackgroundState() {
 		return isBackground;
 	}
-	
-	// isReal 是否立刻上传
-		public void uploadMsg(String msg, boolean isReal) {
-			if (null == mGoluk || null == msg || "".equals(msg)) {
-				return;
-			}
-			
-			GolukDebugUtils.e("", "jyf------logReport-------GolukApplicaiton-------: " + msg);
-			
-			final int which = isReal ? IMessageReportFn.REPORT_CMD_LOG_REPORT_REAL
-					: IMessageReportFn.REPORT_CMD_LOG_REPORT_HTTP;
 
-			mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_MessageReport, which, msg);
+	// isReal 是否立刻上传
+	public void uploadMsg(String msg, boolean isReal) {
+		if (null == mGoluk || null == msg || "".equals(msg)) {
+			return;
 		}
+
+		GolukDebugUtils.e("", "jyf------logReport-------GolukApplicaiton-------: " + msg);
+
+		final int which = isReal ? IMessageReportFn.REPORT_CMD_LOG_REPORT_REAL
+				: IMessageReportFn.REPORT_CMD_LOG_REPORT_HTTP;
+
+		mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_MessageReport, which, msg);
+	}
 
 	// 查看他人的直播
 	public void startLiveLook(UserInfo userInfo) {

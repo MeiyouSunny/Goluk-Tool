@@ -87,6 +87,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private int resTypeSelectColor = 0;
 	private int resTypeUnSelectColor = 0;
+	private RelativeLayout mTitleLayout = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -230,7 +231,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareFilterLayout = (LinearLayout) findViewById(R.id.share_filter_layout);
 		mShareFilterImg = (ImageView) findViewById(R.id.share_filter_img);
 		mShareSwitchFilterTv = (TextView) findViewById(R.id.share_switch_filter);
+		mTitleLayout = (RelativeLayout) findViewById(R.id.title_layout);
 
+		mTitleLayout.setOnClickListener(this);
 		mShareTypeLayout.setOnClickListener(this);
 		mShareFilterLayout.setOnClickListener(this);
 
@@ -324,7 +327,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				if (isExit) {
 					return;
 				}
-				try{
+				try {
 					int maxDuration = mVVPlayVideo.getDuration();
 					while (null != mProgressThread && null != mVVPlayVideo) {
 						if (isExit) {
@@ -345,9 +348,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 							e.printStackTrace();
 						}
 					}
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
 					Log.e("jyf", "jyf------ViewEditActivity-----updateVideoProgress-----Error!");
 					e.printStackTrace();
 				}
@@ -365,8 +366,20 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		return super.onKeyDown(keyCode, event);
 	}
 
+	private boolean isBack = false;
+
 	private void exit() {
+		if (isBack) {
+			return;
+		}
+		isBack = true;
 		isExit = true;
+		mTypeLayout.setExit();
+		mInputLayout.setExit();
+		mCreateNewVideo.setExit();
+		mUploadVideo.setExit();
+		mShareDealTool.setExit();
+		mFilterLayout.setExit();
 		if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
 			// 判断是否正在上传
 			// 为了修复上传的是时返回几率崩溃控制针问题.
@@ -489,17 +502,26 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final int id = v.getId();
 		switch (id) {
 		case R.id.back_btn:
+		case R.id.title_layout:
 			// 返回
 			exit();
 			break;
 		case R.id.play_layout:
-			click_play();
+			if (!isExit) {
+				click_play();
+			}
+
 			break;
 		case R.id.share_type_layout:
-			switchMiddleLayout(false, true);
+			if (!isExit) {
+				switchMiddleLayout(false, true);
+			}
+
 			break;
 		case R.id.share_filter_layout:
-			switchMiddleLayout(false, false);
+			if (!isExit) {
+				switchMiddleLayout(false, false);
+			}
 			break;
 		}
 	}

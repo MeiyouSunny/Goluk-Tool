@@ -333,7 +333,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					break;
 				case 99:
 					// 请求在线视频轮播数据
-					GolukDebugUtils.e("", "PageType_GetPinData:");
 					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_GetPinData, "");
 					break;
