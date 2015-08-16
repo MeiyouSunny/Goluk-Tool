@@ -951,6 +951,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			isPause = true;
 			playTime = mFullVideoView.getCurrentPosition();
 			mFullVideoView.pause();
+			mImageLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
