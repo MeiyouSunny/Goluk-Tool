@@ -46,6 +46,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -63,6 +64,8 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow;
@@ -71,12 +74,19 @@ import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RingView;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.api.Image;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtmpPlayerView;
@@ -104,7 +114,7 @@ import com.rd.car.player.RtmpPlayerView;
  */
 @SuppressLint("NewApi")
 public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
-		IPopwindowFn {
+		IPopwindowFn, ILocationFn {
 	public static Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -281,7 +291,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	
 	private ImageView new2;
 	
+	private String SelfContextTag = "carrecorder";
 	
+	private IBaiduGeoCoderFn mBaiduGeoCoderFn = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -304,6 +316,23 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		lsp.setCallBackNotify(this);
 
 		mSettingData = lsp.getCurrentSetting();
+		
+		mApp.addLocationListener(SelfContextTag, this);
+		
+		mBaiduGeoCoderFn = new IBaiduGeoCoderFn(){
+
+			@Override
+			public void CallBack_BaiduGeoCoder(int function, Object obj) {
+				// TODO Auto-generated method stub
+				if (function == GetBaiduAddress.FUN_GET_ADDRESS && obj != null)
+				{
+					mAddr.setText((String)obj);
+				}
+			}
+			
+		};
+		
+		GetBaiduAddress.getInstance().setCallBackListener(mBaiduGeoCoderFn);
 
 		mHandler = new Handler() {
 			public void handleMessage(final android.os.Message msg) {
@@ -1102,7 +1131,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
 			}
 		}
-		
+		//添加定位通知及反编码通知
+		mApp.addLocationListener(SelfContextTag, this);
+		GetBaiduAddress.getInstance().setCallBackListener(mBaiduGeoCoderFn);
 		initVideoImage();// 初始化相册列表
 	};
 
@@ -1123,6 +1154,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				hidePlayer();
 			}
 		}
+		//移除定位通知及反编码通知
+		mApp.removeLocationListener(SelfContextTag);
+		GetBaiduAddress.getInstance().setCallBackListener(null);
 	};
 
 	@Override
@@ -2021,4 +2055,20 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		return false;
 	}
 
+	@Override
+	public void LocationCallBack(String gpsJson) {
+		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+		if (location == null) {
+			return;
+		}
+		// 保存经纬度
+		LngLat.lng = location.rawLon;
+		LngLat.lat = location.rawLat;
+
+		if (mApp.getContext() instanceof CarRecorderActivity) {
+			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
+		}
+
+	}
+	
 }
