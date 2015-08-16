@@ -429,9 +429,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (wrb != null) {
 				mConnectTip.setText(wrb.getIpc_ssid());
 			}
-			if (null != mApp.mIpcUpdateManage) {
+			/*if (null != mApp.mIpcUpdateManage) {
 				mApp.mIpcUpdateManage.ipcConnect();
-			}
+			}*/
 			mPalyerLayout.setVisibility(View.VISIBLE);
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.GONE);
