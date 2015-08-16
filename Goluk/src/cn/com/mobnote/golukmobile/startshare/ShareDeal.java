@@ -10,6 +10,7 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.util.GolukUtils;
 
 public class ShareDeal implements OnClickListener {
 	private RelativeLayout mYouMengRootLayout = null;
@@ -72,18 +73,33 @@ public class ShareDeal implements OnClickListener {
 		switch (id) {
 		case R.id.wechat:
 			// 微信
-			mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
-			click_deal(mCurrentShareType);
+			if (mSharePlatform.isInstallWeiXin()) {
+				mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
+				click_deal(mCurrentShareType);
+			} else {
+				GolukUtils.showToast(mActivity, "你未安装微信");
+			}
+
 			break;
 		case R.id.wechat_circle:
 			// 朋友圈
-			mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
-			click_deal(mCurrentShareType);
+			if (mSharePlatform.isInstallWeiXin()) {
+				mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
+				click_deal(mCurrentShareType);
+			} else {
+				GolukUtils.showToast(mActivity, "你未安装微信");
+			}
+
 			break;
 		case R.id.qq:
 			// QQ
-			mCurrentShareType = CustomShareBoard.TYPE_QQ;
-			click_deal(mCurrentShareType);
+			if (mSharePlatform.isInstallQQ()) {
+				mCurrentShareType = CustomShareBoard.TYPE_QQ;
+				click_deal(mCurrentShareType);
+			} else {
+				GolukUtils.showToast(mActivity, "你未安装QQ或版本太低");
+			}
+
 			break;
 		case R.id.qqZone:
 			// QQ空间
@@ -92,8 +108,14 @@ public class ShareDeal implements OnClickListener {
 			break;
 		case R.id.sina:
 			// 新浪微博
-			mCurrentShareType = CustomShareBoard.TYPE_WEIBO_XINLANG;
-			click_deal(mCurrentShareType);
+			if (mSharePlatform.isSinaWBValid()) {
+				mCurrentShareType = CustomShareBoard.TYPE_WEIBO_XINLANG;
+				click_deal(mCurrentShareType);
+			} else {
+				// 先去授权
+				mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, null, null, null, null, null, null, null);
+				mShareBoard.click_sina();
+			}
 			break;
 		default:
 			break;
