@@ -32,7 +32,9 @@ public class GolukModule {
 	public static final int Goluk_Module_Square = 4;
 	/** 服务地址管理模块 */
 	public static final int Goluk_Module_GetServerAddress = 5;
+	/** 信息上报模块 */
+	public static final int Goluk_Module_MessageReport = 6;
 
-	public static final int Goluk_Module_MaxID = 6;
+	public static final int Goluk_Module_MaxID = 7;
 
 }

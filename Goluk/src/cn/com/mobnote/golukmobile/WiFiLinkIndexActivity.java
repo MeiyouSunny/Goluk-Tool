@@ -17,7 +17,10 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -42,6 +45,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
  */
 
 public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListener {
+
+	private static final String TAG = "WiFiLinkIndexActivity";
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -66,11 +71,14 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_index);
 		mContext = this;
-
-		SysApplication.getInstance().addActivity(this);
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, "WiFiLinkIndex");
+
+		// collectLog("onCreate", "-----111111");
+
+		SysApplication.getInstance().addActivity(this);
+
 		// 断开连接
 		mApp.mIPCControlManager.setIPCWifiState(false, "");
 		// 改变Application-IPC退出登录
@@ -116,6 +124,18 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		mProgressImg.setImageBitmap(mProgressBitmap);
 	}
 
+	// private void collectLog(String method, String msg) {
+	// mApp.uploadMsg(
+	// JsonUtil.getReportJson(IMessageReportFn.KEY_WIFI_BIND,
+	// JsonUtil.getReportData(TAG, method, msg)), false);
+	// }
+
+	// private void collectLog(String method, String msg) {
+	// ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
+	// .addLogData(JsonUtil.getReportData(TAG, method, msg));
+	//
+	// }
+
 	@Override
 	protected void onResume() {
 		mApp.setContext(this, "WiFiLinkIndex");
@@ -150,6 +170,8 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 			break;
 		case R.id.keep_btn:
 			// 新版需求,直接跳转到wifi列表页面
+			// collectLog("onClick", "-----jump----to----WiFiLinkListActivity");
+
 			Intent list = new Intent(WiFiLinkIndexActivity.this, WiFiLinkListActivity.class);
 			startActivity(list);
 			break;

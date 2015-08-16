@@ -23,11 +23,15 @@ import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.reportlog.ReportLog;
+import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
 import cn.com.mobnote.golukmobile.wifibind.ViewFrame;
 import cn.com.mobnote.golukmobile.wifibind.WifiLinkSetIpcLayout;
 import cn.com.mobnote.golukmobile.wifibind.WifiLinkSucessLayout;
 import cn.com.mobnote.golukmobile.wifibind.WifiLinkWaitConnLayout;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -37,6 +41,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		ILiveDialogManagerFn {
 
 	private static final String TAG = "WiFiLinkBindAll";
+	private static final String TAG_LOG = "WiFiLinkCompleteActivity";
 	/** 创建手机热点消息 */
 	private static final int MSG_H_CREATE_HOT = 100;
 	/** 计时时间到，跳转到“等待”界面 */
@@ -88,6 +93,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_complete2);
 		GFileUtils.writeLiveLog("WiFiLinkCompleteActivity------------onCreate-------:");
+		// 获得GolukApplication对象
+		mApp = (GolukApplication) getApplication();
+		mApp.setContext(mContext, TAG);
+
+		collectLog("onCreate", "-----1");
 		mContext = this;
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(mWifiManager, this);
@@ -99,9 +109,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		init();
 		toSetIPCInfoView();
 		SysApplication.getInstance().addActivity(this);
-		// 获得GolukApplication对象
-		mApp = (GolukApplication) getApplication();
-		mApp.setContext(mContext, TAG);
 
 		setIpcLinkInfo();
 		// 6秒后，没有配置成功，直接跳转“等待连接”界面
@@ -112,6 +119,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		layout1 = new WifiLinkSetIpcLayout(this);
 		layout2 = new WifiLinkWaitConnLayout(this);
 		layout3 = new WifiLinkSucessLayout(this);
+	}
+
+	private void collectLog(String method, String msg) {
+		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
+				.addLogData(JsonUtil.getReportData(TAG_LOG, method, msg));
+
 	}
 
 	@Override
@@ -146,16 +159,21 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		connectCount++;
 		// 连接ipc热点wifi---调用ipc接口
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
+		collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---1");
 		final String json = getSetIPCJson();
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
+		collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---2---josn---" + json);
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 		if (!b) {
 			// GolukUtils.showToast(mContext, "调用设置IPC连接热点失败");
 		}
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
+		collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---3---b---" + b);
 	}
 
 	private String getSetIPCJson() {
+
+		collectLog("getSetIPCJson", "----1");
 
 		// 连接ipc热点wifi---调用ipc接口
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
@@ -168,6 +186,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			json = "{\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID + "\",\"GolukPWD\":\"" + WiFiInfo.MOBILE_PWD
 					+ "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" + DEFAULT_WAY + "\" }";
 		}
+
+		collectLog("getSetIPCJson", "---json: " + json);
+
 		return json;
 	}
 
@@ -178,6 +199,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		if (STATE_SET_IPC_INFO != mState) {
 			return;
 		}
+		collectLog("setIpcLinkWiFiCallBack", "---1 :   " + state);
 		if (0 == state) {
 			mBaseHandler.removeMessages(MSG_H_TO_WAITING_VIEW);
 			// 隐藏loading
@@ -186,8 +208,14 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
 			GolukDebugUtils.e("",
 					"WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
+
+			collectLog("setIpcLinkWiFiCallBack", "--------: 2");
+
 		} else {
 			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
+
+			collectLog("setIpcLinkWiFiCallBack", "---: 3 failed:  " + connectCount);
+
 			if (connectCount > 3) {
 				GolukUtils.showToast(this, "绑定失败");
 			} else {
@@ -212,6 +240,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		// 调用韩峥接口创建手机热点
 		GolukDebugUtils
 				.e("", "创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
+
+		collectLog("createPhoneHot", wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
+
 		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
 	}
 
@@ -221,11 +252,14 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private void sendLogicLinkIpc(String ip, String ipcmac) {
 		// 连接ipc热点wifi---调用ipc接口
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
+		collectLog("sendLogicLinkIpc", "11--ip: " + ip + "   ipcmac:" + ipcmac);
 		GolukApplication.mIpcIp = ip;
 		mIpcMac = ipcmac;
 		mWiFiIp = ip;
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+
+		collectLog("sendLogicLinkIpc", "2---b:  " + b);
 	}
 
 	/**
@@ -252,7 +286,14 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	 */
 	public void ipcLinkWiFiCallBack() {
 		GFileUtils
-				.writeLiveLog("WifiLinkCompleteActivity-----------ipcLinkWiFiCallBack    Bind Sucess ! Bind Sucess ! Bind Sucess! (重要事情说三遍) ");
+				.writeLiveLog("WifiLinkCompleteActivity-----------ipcLinkWiFiCallBack    Bind Sucess ! Bind Sucess ! Bind Sucess! ");
+
+		collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
+
+		// 设置绑定成功
+		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_SUCESS);
+		reportLog();
+
 		this.toSucessView();
 		// 保存连接数据
 		WifiRsBean beans = new WifiRsBean();
@@ -268,6 +309,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		saveBind(WiFiInfo.IPC_SSID);
 		// 保存绑定标识
 		saveBindMark();
+	}
+
+	private void reportLog() {
+		final String jsonData = ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
+				.getReportData();
+		mApp.uploadMsg(jsonData, false);
+		ReportLogManager.getInstance().removeKey(IMessageReportFn.KEY_WIFI_BIND);
 	}
 
 	/**
@@ -295,6 +343,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			GolukDebugUtils.e("", "按下系统返回键---WiFiLinkCompleteActivity---1");
+			collectLog("onKeyDown", " 11111");
 			// 返回关闭全部页面
 			backSetup();
 			return true;
@@ -308,6 +357,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		GolukDebugUtils.e("", "通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
 
 		GolukDebugUtils.e("", "jyf-----WifiBind-----WifiCompelete-----onDestroy----");
+
+		collectLog("onDestroy", "1");
 		if (null != layout1) {
 			layout1.free();
 		}
@@ -345,11 +396,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 					mWac.unbind();
 				}
 				mWac = null;
-				Intent it = new Intent(WiFiLinkCompleteActivity.this,CarRecorderActivity.class);
+				Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
 				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				startActivity(it);
 				GFileUtils.writeLiveLog("WifiLinkCompleteActivity---------- Jump CarRecorderActivity----- ");
+
+				// collectLog("onClick", " Jump CarRecorderActivity----- ");
 			}
 			break;
 		}
@@ -399,9 +452,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			return;
 		}
 		GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
+		collectLog("wifiCallBack_ipcConnHotSucess", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
 		if (bean.length > 0) {
 			GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
+			collectLog("wifiCallBack_ipcConnHotSucess", "1");
 			sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
+		} else {
+			collectLog("wifiCallBack_ipcConnHotSucess", "2 ");
 		}
 	}
 
@@ -421,6 +478,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 					WifiRsBean[] bean = (WifiRsBean[]) arrays;
 					if (null != bean) {
 						GolukDebugUtils.e("", "IPC连接上WIFI热点回调---length---" + bean.length);
+						collectLog("wifiCallBack_3", "IPC conn hot---length:" + bean.length);
 						if (bean.length > 0) {
 							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 						}
@@ -468,8 +526,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 	private void connFailed() {
 		GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed : " + mStep);
+		collectLog("connFailed", "WifiLinkCompleteActivity-----------connFailed : " + mStep);
 		if (0 == mStep) {
 			GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed show Dialog 请先将极路客断电5~10秒");
+			collectLog("connFailed", "connFailed show Dialog  please 5~10s");
 			// 弹框提示用户重启GoLUK
 			LiveDialogManager.getManagerInstance()
 					.showSingleBtnDialog(this, LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC, "提示",
@@ -477,6 +537,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			mStep++;
 		} else {
 			GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed show Dialog 极路客绑定失败");
+			collectLog("connFailed", "connFailed show Dialog Conn Failed");
 			// 提示用户绑定失败，重新退出程序绑定
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
 					LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED, "提示", "极路客绑定失败，请您重试");
@@ -485,8 +546,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		final String log = " WifiLlinkCompleteActivity-------wifi链接接口回调---type---" + type + "---state---" + state
-				+ "---process---" + process + "---message---" + message + "---arrays---" + arrays;
+		final String log = " type---" + type + "---state---" + state + "---process---" + process + "---message---"
+				+ message;
+
+		collectLog("wifiCallBack", log);
 
 		GolukDebugUtils.e("", log);
 
@@ -510,6 +573,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
 				GFileUtils
 						.writeLiveLog("WifiLinkCompleteActivity-----------dialogManagerCallBack DIALOG_TYPE_WIFIBIND_RESTART_IPC");
+
+				collectLog("dialogManagerCallBack", "DIALOG_TYPE_WIFIBIND_RESTART_IPC---clickOK");
+
 				mWac = new WifiConnectManager(mWifiManager, this);
 				mWac.autoWifiManage(WiFiInfo.IPC_SSID, WiFiInfo.IPC_PWD, WiFiInfo.MOBILE_SSID, WiFiInfo.MOBILE_PWD);
 				mStep++;
@@ -517,6 +583,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		} else if (LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED == dialogType) {
 			GFileUtils
 					.writeLiveLog("WifiLinkCompleteActivity-----------dialogManagerCallBack DIALOG_TYPE_WIFIBIND_FAILED");
+
+			collectLog("dialogManagerCallBack", "DIALOG_TYPE_WIFIBIND_FAILED---onclick");
+
+			ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_FAILED);
+			reportLog();
+
 			LiveDialogManager.getManagerInstance().dismissSingleBtnDialog();
 			SysApplication.getInstance().exit();
 			if (null != mWac) {
