@@ -43,6 +43,7 @@ public class CustomLoadingDialog {
 			}
 		});
 
+		customDialog.setCanceledOnTouchOutside(false);
 		customDialog.show();
 		customDialog.getWindow().setContentView(R.layout.video_square_loading);
 
