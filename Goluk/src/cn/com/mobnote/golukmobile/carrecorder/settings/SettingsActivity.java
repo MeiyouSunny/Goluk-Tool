@@ -14,6 +14,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.os.Bundle;
 import android.content.Intent;
@@ -67,7 +68,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mVideoText = null;
 	/** 碰撞灵敏度显示 */
 	private TextView mSensitivityText = null;
-	/** IPC开关机提示音状态 **/
+	/** IPC开关机提示音状态 true打开  false关闭**/
 	private boolean setSwitchStatus = true;
 
 	@Override
@@ -230,22 +231,40 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				Intent pzgylmd_line = new Intent(SettingsActivity.this, ImpactSensitivityActivity.class);
 				startActivity(pzgylmd_line);
 				break;
-			case R.id.kgjtsy:
+			case R.id.kgjtsy://开关机提示音
 				showLoading();
 				String status = "";
 				if (setSwitchStatus) {
 					mSwitchBtn.setBackgroundResource(R.drawable.set_close_btn);
 					status = "0";
-					setSwitchStatus = false;
 				} else {
 					mSwitchBtn.setBackgroundResource(R.drawable.set_open_btn);
 					status = "1";
-					setSwitchStatus = true;
 				}
 				// {"SpeakerSwitch":0}
 				String condi = "{\"SpeakerSwitch\":" + status + "}";
 				boolean b = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(condi);
 				GolukDebugUtils.e("lily", "---------点击开关结果-----------" + b);
+				if(b){
+					GolukUtils.showToast(this, "设置成功");
+					if(setSwitchStatus){
+						setSwitchStatus = false;
+					}else{
+						setSwitchStatus = true;
+					}
+				}else{
+					closeLoading();
+					GolukUtils.showToast(this, "设置失败");
+					if (setSwitchStatus) {
+						mSwitchBtn.setBackgroundResource(R.drawable.set_open_btn);
+						status = "1";
+						setSwitchStatus = true;
+					} else {
+						mSwitchBtn.setBackgroundResource(R.drawable.set_close_btn);
+						status = "0";
+						setSwitchStatus = false;
+					}
+				}
 				break;
 			case R.id.rlcx_line:// 容量查询
 				Intent rlcx_line = new Intent(SettingsActivity.this, StorageCpacityQueryActivity.class);
