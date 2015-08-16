@@ -193,4 +193,10 @@ public class LocalVideoListView implements OnClickListener{
 		}
 	}
 	
+	public void onResume() {
+		if(null != mLocalVideoAdapter) {
+			mLocalVideoAdapter.onResume();
+		}
+	}
+	
 }

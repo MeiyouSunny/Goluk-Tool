@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.EventLogTags.Description;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -34,10 +36,13 @@ public class VideoSquareActivity implements OnClickListener {
 	RelativeLayout mRootLayout = null;
 	Context mContext = null;
 	MainActivity ma = null;
+	
+	private float density;
 
 	public VideoSquareActivity(RelativeLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
+		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		init();
 	}
 
@@ -113,9 +118,9 @@ public class VideoSquareActivity implements OnClickListener {
 	};
 	
 	private void updateLine(int process) {
-		RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams(50*3, 2*3);
+		RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int)(50*density), (int)(2*density));
 		lineParams.addRule(RelativeLayout.BELOW, R.id.hot_title);
-		lineParams.setMargins(process*3, 5*3, 0, 0);
+		lineParams.setMargins((int)(process*density), (int)(5*density), 0, 0);
 		hot.setLayoutParams(lineParams);
 	}
 

@@ -131,6 +131,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();
 			} else {
+				mWebView.destroy();
 				finish();
 			}
 			break;
@@ -147,10 +148,12 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();
 			} else {
+				mWebView.destroy();
 				finish();
 			}
 			break;
 		case R.id.user_title_right:
+			mWebView.destroy();
 			this.finish();
 			break;
 		default:

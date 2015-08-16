@@ -387,7 +387,7 @@
                 android:layout_marginLeft="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="请立即购买极路客专用降压线"
+                android:text="立即购买极路客专用降压线"
                 android:textColor="#047cf3"
                 android:textSize="10sp" 
                 android:contentDescription="@string/def" />

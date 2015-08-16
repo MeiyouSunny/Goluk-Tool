@@ -84,6 +84,8 @@ public interface ILive {
 	public static final int MSG_H_PLAY_LOADING = 8;
 	/** 回到我的位置 */
 	public static final int MSG_H_TO_MYLOCATION = 9;
+	/** 查询地图上的大头針数据 */
+	public static final int MSG_H_TO_GETMAP_PERSONS = 10;
 	/** 文件查询时间 */
 	public static final int QUERYFILETIME = 500;
 }

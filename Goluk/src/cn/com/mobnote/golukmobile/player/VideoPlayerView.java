@@ -7,10 +7,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -35,6 +37,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -387,19 +390,19 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mHandler.removeMessages(0);
-		mHandler.removeCallbacksAndMessages(null);
-		if (null != mBitmap) {
-			if (!mBitmap.isRecycled()) {
-				mBitmap.recycle();
-				mBitmap = null;
-			}
-		}
-		
-		if (null != mVideo) {
-			mVideo.stopPlayback();
-			mVideo = null;
-		}
+//		mHandler.removeMessages(0);
+//		mHandler.removeCallbacksAndMessages(null);
+//		if (null != mBitmap) {
+//			if (!mBitmap.isRecycled()) {
+//				mBitmap.recycle();
+//				mBitmap = null;
+//			}
+//		}
+//		
+//		if (null != mVideo) {
+//			mVideo.stopPlayback();
+//			mVideo = null;
+//		}
 	}
 
 	private int oldPosition=0;
@@ -602,8 +605,31 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	private void exit(){
 		this.cancelTimer();
 		mHandler.removeMessages(1);
-		this.finish();
+		if (null != mBitmap) {
+			if (!mBitmap.isRecycled()) {
+				mBitmap.recycle();
+				mBitmap = null;
+			}
+		}
+		
+		if (null != mVideo) {
+			mVideo.stopPlayback();
+			mVideo = null;
+		}
+		
+		
+		mHandler.removeMessages(0);
+		mHandler.removeCallbacksAndMessages(null);
+		mHandler.removeCallbacks(mRunnable);
+		mHandler.postDelayed(mRunnable, 200);
 	}
+	
+	Runnable mRunnable = new Runnable() {
+		@Override
+		public void run() {
+			VideoPlayerView.this.finish();
+		}
+	};
 
 	/**
 	 * 显示隐藏顶部底部布局
@@ -826,6 +852,10 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		super.onPause();
 		LightnessController.setLightness(this, orginalLight);
 		
+		if (null == mVideo) {
+			return;
+		}
+		
 		if (mVideo.isPlaying()) {
 			isPause = true;
 			playTime = mVideo.getCurrentPosition();
@@ -897,6 +927,14 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			}
 		}
 		return false;
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if(keyCode==KeyEvent.KEYCODE_BACK){
+    		exit(); 
+        	return true;
+        }else
+        	return super.onKeyDown(keyCode, event); 
 	}
 	
 }

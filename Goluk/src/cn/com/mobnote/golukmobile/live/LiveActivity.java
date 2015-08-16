@@ -33,6 +33,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
@@ -42,6 +43,7 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videosuqare.BaiduMapView;
 import cn.com.mobnote.golukmobile.videosuqare.JsonCreateUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
@@ -74,7 +76,7 @@ import com.rd.car.player.RtmpPlayerView;
 
 public class LiveActivity extends BaseActivity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
 		ILiveDialogManagerFn, ITimerManagerFn, ILocationFn, IPCManagerFn, ILive, VideoSuqareManagerFn,
-		BaiduMap.OnMapStatusChangeListener {
+		BaiduMap.OnMapStatusChangeListener, BaiduMap.OnMapLoadedCallback {
 
 	/** 自己预览地址 */
 	private static String VIEW_SELF_PLAY = "";
@@ -266,6 +268,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 
 		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
+
 	}
 
 	private void getURL() {
@@ -484,6 +487,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		case MSG_H_TO_MYLOCATION:
 			toMyLocation();
 			break;
+		case MSG_H_TO_GETMAP_PERSONS:
+			MainActivity.mMainHandler.sendEmptyMessage(99);
+			break;
 		}
 	}
 
@@ -696,6 +702,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mBaiduMap.setMyLocationEnabled(true);
 		mBaiduMapManage = new BaiduMapManage(this, mApp, mBaiduMap, "LiveVideo");
 		mBaiduMap.setOnMapStatusChangeListener(this);
+		mBaiduMap.setOnMapLoadedCallback(this);
 	}
 
 	private boolean isSetAudioMute = false;
@@ -1299,6 +1306,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mBaseHandler.removeMessages(MSG_H_RETRY_SHOW_VIEW);
 		mBaseHandler.removeMessages(MSG_H_RETRY_REQUEST_DETAIL);
 		mBaseHandler.removeMessages(MSG_H_PLAY_LOADING);
+		mBaseHandler.removeMessages(MSG_H_TO_GETMAP_PERSONS);
 
 		dissmissAllDialog();
 
@@ -1380,6 +1388,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	public void pointDataCallback(int success, Object obj) {
 		if (1 != success) {
 			GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type:  sucess:" + success);
+			// 重新請求大头針数据
+			mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, BaiduMapView.mTiming);
 			return;
 		}
 		final String str = (String) obj;
@@ -1414,15 +1424,21 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			if (this.isShareLive) {
 				// 如果是我发起的直播,更新我的信息即可
 				if (null == tempMyInfo) {
+					// 重新請求大头針数据
+					mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, BaiduMapView.mTiming);
 					return;
 				}
 				this.updateCount(Integer.parseInt(tempMyInfo.zanCount), Integer.parseInt(tempMyInfo.persons));
 				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback 3333333:  更新我自己的赞 zanCount："
 						+ tempMyInfo.zanCount + "	permson:" + tempMyInfo.persons);
+				// 重新請求大头針数据
+				mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, BaiduMapView.mTiming);
 				return;
 			}
 			if (null == tempUserInfo) {
 				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type44444:  str：" + str);
+				// 重新請求大头針数据
+				mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, BaiduMapView.mTiming);
 				return;
 			}
 			GolukDebugUtils.e("", "jyf----20150406----LiveActivity----pointDataCallback----aid  : " + tempUserInfo.aid
@@ -1443,6 +1459,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			e.printStackTrace();
 			GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type999999:  Exception ：");
 		}
+
+		// 重新請求大头針数据
+		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, BaiduMapView.mTiming);
 
 	}
 
@@ -1765,5 +1784,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	@Override
 	public void onMapStatusChangeStart(MapStatus arg0) {
 		mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
+	}
+
+	@Override
+	public void onMapLoaded() {
+		GolukDebugUtils.e("", "jyf-------live----LiveActivity--onMapLoaded:");
+		MainActivity.mMainHandler.sendEmptyMessage(99);
 	}
 }

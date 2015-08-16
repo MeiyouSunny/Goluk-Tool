@@ -50,6 +50,7 @@ public class WonderfulVideoListView {
 	private String from = null;
 	private TextView empty = null;
 	private float density = 1;
+	private boolean clickLock = false;
 	
 	public WonderfulVideoListView(Context context, int type, String from) {
 		this.from = from;
@@ -173,6 +174,11 @@ public class WonderfulVideoListView {
 	 * @param path
 	 */
 	private void gotoVideoPlayPage(int type, String path){
+		if(getClickLock()) {
+			return;
+		}
+		
+		setClickLock(true);
 		if(!TextUtils.isEmpty(path)){
 			if ("cloud".equals(from) ) {
 				if(1 != type) {
@@ -309,6 +315,18 @@ public class WonderfulVideoListView {
 			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
 		}
+	}
+	
+	public synchronized boolean getClickLock() {
+		return clickLock;
+	}
+	
+	public synchronized void setClickLock(boolean lock) {
+		clickLock = lock;
+	}
+	
+	public void onResume() {
+		setClickLock(false);
 	}
 
 }
