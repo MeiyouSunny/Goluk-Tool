@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.umeng.socialize.bean.HandlerRequestCode;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.media.QQShareContent;
@@ -141,6 +141,20 @@ public class SharePlatformUtil {
 		// 设置分享文字
 		qzone.setShareContent(text);
 		mController.setShareMedia(qzone);
+	}
+
+	// 是否安装微信
+	public boolean isInstallWeiXin() {
+		return mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled();
+	}
+
+	// 是否安装微信
+	public boolean isInstallQQ() {
+		return mController.getConfig().getSsoHandler(HandlerRequestCode.QQ_REQUEST_CODE).isClientInstalled();
+	}
+
+	public boolean isSinaWBValid() {
+		return mSinaWBUtils.isAccessValid();
 	}
 
 }

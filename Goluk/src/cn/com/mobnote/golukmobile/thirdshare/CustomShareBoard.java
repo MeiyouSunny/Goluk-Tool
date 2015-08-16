@@ -163,6 +163,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		this.shareUp();// 上报分享统计
 		performShare(SHARE_MEDIA.QZONE);
 	}
+	
+
 
 	public void click_sina() {
 		GolukDebugUtils.e("", "sina-------click----11111");
@@ -172,7 +174,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		}
 
 		GolukDebugUtils.e("", "sina-------click----2222");
-		if (!sharePlatform.mSinaWBUtils.isAccessValid()) {
+		if (!sharePlatform.isSinaWBValid()) {
 			GolukDebugUtils.e("", "sina-------click----3333");
 			// 去授权
 			sharePlatform.mSinaWBUtils.authorize();
