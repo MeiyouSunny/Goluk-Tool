@@ -73,6 +73,9 @@ public class FileInfoManagerUtils {
 	}
 	
 	public static List<String> bubbleSort(List<String> list, boolean order){
+		List<String> arrlist = new ArrayList<String>();
+		if (list == null)
+			return arrlist;
 		String arr[] = new String[list.size()];
 		for(int i=0;i<list.size();i++){
 			arr[i] = list.get(i);
@@ -110,7 +113,6 @@ public class FileInfoManagerUtils {
 			}
 		}
 		
-		List<String> arrlist = new ArrayList<String>();
 		for(int i=0;i<list.size();i++){
 			arrlist.add(arr[i]);
 		}
