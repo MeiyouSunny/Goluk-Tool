@@ -93,7 +93,9 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 设置title
 		mTextViewTitle.setText(this.getResources().getString(R.string.user_login_title_text));
 
-		mApplication.mLoginManage.initData();
+		if(null != mApplication && null != mApplication.mLoginManage){			
+			mApplication.mLoginManage.initData();
+		}
 	}
 
 	@Override
