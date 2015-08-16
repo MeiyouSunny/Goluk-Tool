@@ -246,48 +246,48 @@ public class WifiApManagerSupport {
 		return "";
 	}
 
-	/**
-	 * Endable/disable wifi
-	 * 
-	 * @param enabled
-	 * @return WifiAP state
-	 */
-	public boolean closeWifiAP() {
-		try {
-
-			if (mWifiManager != null
-					&& mWifiManager.getConnectionInfo() != null) {
-				mWifiManager.setWifiEnabled(false);
-
-				Method method1 = mWifiManager.getClass().getMethod(
-						"setWifiApEnabled", WifiConfiguration.class,
-						boolean.class);
-				method1.invoke(mWifiManager, null, false); // true
-				int tag = getWifiApState();
-				GolukDebugUtils.i(TAG, "热点关闭成功....stateaaaa====="+tag);
-				int count = 0;
-				//循环等待关闭信息  11成功 其他失败
-				while (tag != 11) {
-					if (count == 5) {
-						return false;
-					}
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
-					}
-					tag = getWifiApState();
-					count++;
-					GolukDebugUtils.i(TAG, "热点关闭成功....statebbbbbb====="+tag);
-				}
-			}
-			GolukDebugUtils.i(TAG, "热点关闭成功....");
-		} catch (Exception e) {
-
-			GolukDebugUtils.i(TAG, "热点关闭失败....");
-			return false;
-		}
-		return true;
-	}
+//	/**
+//	 * Endable/disable wifi
+//	 * 
+//	 * @param enabled
+//	 * @return WifiAP state
+//	 */
+//	public boolean closeWifiAP() {
+//		try {
+//
+//			if (mWifiManager != null
+//					&& mWifiManager.getConnectionInfo() != null) {
+//				mWifiManager.setWifiEnabled(false);
+//
+//				Method method1 = mWifiManager.getClass().getMethod(
+//						"setWifiApEnabled", WifiConfiguration.class,
+//						boolean.class);
+//				method1.invoke(mWifiManager, null, false); // true
+//				int tag = getWifiApState();
+//				GolukDebugUtils.i(TAG, "热点关闭成功....stateaaaa====="+tag);
+//				int count = 0;
+//				//循环等待关闭信息  11成功 其他失败
+//				while (tag != 11) {
+//					if (count == 5) {
+//						return false;
+//					}
+//					try {
+//						Thread.sleep(1000);
+//					} catch (Exception e) {
+//					}
+//					tag = getWifiApState();
+//					count++;
+//					GolukDebugUtils.i(TAG, "热点关闭成功....statebbbbbb====="+tag);
+//				}
+//			}
+//			GolukDebugUtils.i(TAG, "热点关闭成功....");
+//		} catch (Exception e) {
+//
+//			GolukDebugUtils.i(TAG, "热点关闭失败....");
+//			return false;
+//		}
+//		return true;
+//	}
 
 	/**
 	 * 创建wifi ap
