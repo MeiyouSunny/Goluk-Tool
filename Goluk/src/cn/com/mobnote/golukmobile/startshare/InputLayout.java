@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -76,6 +77,15 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 		mRedColor = mContext.getResources().getColor(R.color.red);
 	}
 
+	private void removeIt() {
+		if (null != mRootLayout) {
+			ViewParent vp = mRootLayout.getParent();
+			if (null != vp && vp instanceof RelativeLayout) {
+				((RelativeLayout) vp).removeView(mRootLayout);
+			}
+		}
+	}
+
 	/**
 	 * 显示用户输入界面
 	 * 
@@ -85,6 +95,11 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 	 * @date 2015年7月30日
 	 */
 	public void show(String msg) {
+		if (isShow) {
+			return;
+		}
+		isShow = true;
+		removeIt();
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		mParentLayout.addView(mRootLayout, lp);
@@ -130,6 +145,8 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 
 	}
 
+	private boolean isShow = false;
+
 	/**
 	 * 隐藏当前界面
 	 * 
@@ -137,6 +154,7 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 	 * @date 2015年7月30日
 	 */
 	public void hide() {
+		isShow = false;
 		mShareInputEdit.setText("");
 		UserUtils.hideSoftMethod((VideoEditActivity) mContext);
 		mParentLayout.removeView(mRootLayout);
