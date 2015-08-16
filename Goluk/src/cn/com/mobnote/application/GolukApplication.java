@@ -32,7 +32,6 @@ import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.WiFiLinkListActivity;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -58,6 +57,7 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.IpcUpdateManage;
@@ -1784,6 +1784,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean getIsBackgroundState() {
 		return isBackground;
 	}
+	
+	// isReal 是否立刻上传
+		public void uploadMsg(String msg, boolean isReal) {
+			if (null == mGoluk || null == msg || "".equals(msg)) {
+				return;
+			}
+			
+			GolukDebugUtils.e("", "jyf------logReport-------GolukApplicaiton-------: " + msg);
+			
+			final int which = isReal ? IMessageReportFn.REPORT_CMD_LOG_REPORT_REAL
+					: IMessageReportFn.REPORT_CMD_LOG_REPORT_HTTP;
+
+			mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_MessageReport, which, msg);
+		}
 
 	// 查看他人的直播
 	public void startLiveLook(UserInfo userInfo) {

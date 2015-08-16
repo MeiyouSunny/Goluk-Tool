@@ -17,6 +17,7 @@ import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.user.APPInfo;
 import cn.com.mobnote.user.IPCInfo;
+import cn.com.tiros.api.CSLog;
 import cn.com.tiros.api.FileUtils;
 
 public class JsonUtil {
@@ -989,6 +990,32 @@ public class JsonUtil {
 			e.printStackTrace();
 		}
 		return bean;
+	}
+	
+	public static JSONObject getReportData(String tag, String function, String log) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("time", CSLog.getCurrentTime());
+			obj.put("tag", tag);
+			obj.put("function", function);
+			obj.put("log", log);
+			return obj;
+		} catch (Exception e) {
+
+		}
+		return null;
+	}
+	
+	public static String getReportJson(String key, JSONObject dataObj) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("key", key);
+			obj.put("data", dataObj);
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
 	}
 	
 	public static String getCategoryLocalCacheJson(String mAttribute) {

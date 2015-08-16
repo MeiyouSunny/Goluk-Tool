@@ -4,18 +4,8 @@ import cn.com.mobnote.logic.IGolukCommFn;
 
 public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int RESULE_SUCESS = 1;
-	/** 获取广场列表 */
-	public static final int SquareCmd_Req_SquareList = 0;
 	/** 获取热门列表 */
 	public static final int SquareCmd_Req_HotList = 256;
-	/** 点击次数上报 */
-	public static final int SquareCmd_Req_ClickUp = 512;
-	/** 点赞 */
-	public static final int SquareCmd_Req_Praise = 768;
-	/** 举报 */
-	public static final int SquareCmd_Req_ReportUp = 1024;
-	/** 分享请求 */
-	public static final int SquareCmd_Req_ShareVideo = 1536;
 	/** 获取分享地址 */
 	public static final int SquareCmd_Req_GetShareUrl = 1537;
 
