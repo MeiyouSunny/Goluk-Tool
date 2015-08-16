@@ -462,12 +462,16 @@ public class SpecialListActivity extends BaseActivity implements
 						String shareurl = data.getString("shorturl");
 						String coverurl = data.getString("coverurl");
 						String describe = data.optString("describe");
-						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+						String realDesc = "极路客精选专题(使用#极路客Goluk#拍摄)";
 
 						if (TextUtils.isEmpty(describe)) {
-								describe = "#极路客精彩视频#";
+								describe = "";
 						}
-						String ttl = "极路客精彩视频分享";
+						String ttl = title;
+						if (TextUtils.isEmpty(title))
+						{
+							ttl = "极路客精选专题分享";
+						}
 						// 缩略图
 						Bitmap bitmap = null;
 						if(headdata != null){
