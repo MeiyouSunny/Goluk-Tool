@@ -128,8 +128,6 @@ public class BaiduMapView implements ILocationFn {
 			@Override
 			public void onMapLoaded() {
 				// 地图加载完成,请求大头针数据
-				GolukDebugUtils.e("", "PageType_GetPinData:地图加载完成,请求大头针数据");
-
 				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapLoaded ----11111");
 
 				ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,

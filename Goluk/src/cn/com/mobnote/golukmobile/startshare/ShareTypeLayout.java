@@ -352,29 +352,53 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 		}
 	}
 
+	private boolean mIsExit = false;
+
+	public void setExit() {
+		mIsExit = true;
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.share_type_bg:
+			if (mIsExit) {
+				return;
+			}
 			mAdapter.setData(getData(TYPE_BG));
 			switchTypeUI(TYPE_BG);
 			break;
 		case R.id.share_type_sg:
+			if (mIsExit) {
+				return;
+			}
 			mAdapter.setData(getData(TYPE_SG));
 			switchTypeUI(TYPE_SG);
 			break;
 		case R.id.share_type_ml:
+			if (mIsExit) {
+				return;
+			}
 			mAdapter.setData(getData(TYPE_ML));
 			switchTypeUI(TYPE_ML);
 			break;
 		case R.id.share_type_ssp:
+			if (mIsExit) {
+				return;
+			}
 			mAdapter.setData(getData(TYPE_SSP));
 			switchTypeUI(TYPE_SSP);
 			break;
 		case R.id.share_open_layout:
+			if (mIsExit) {
+				return;
+			}
 			switchOpenAndClose(!mIsOpenShare);
 			break;
 		case R.id.share_sayother:
+			if (mIsExit) {
+				return;
+			}
 			click_input();
 			break;
 		default:

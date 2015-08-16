@@ -50,19 +50,19 @@ public class UploadVideo {
 	private String mVideoVid = "";
 	/** 上传视频是否完成 */
 	private boolean mIsUploadSucess = false;
-	private int mCurrentPercent = 0;
-
 	private AlertDialog mErrorDialog = null;
 
 	private IUploadVideoFn mFn = null;
-
-	private VideoSquareManager mVideoSquareManager = null;
 
 	/** 退出提示框 */
 	private AlertDialog mExitPromptDialog = null;
 
 	public void setListener(IUploadVideoFn fn) {
 		mFn = fn;
+	}
+
+	public void setExit() {
+		mIsExit = true;
 	}
 
 	public Handler mBaseHandler = new Handler() {
@@ -73,28 +73,8 @@ public class UploadVideo {
 			case MSG_H_UPLOAD_PROGRESS:
 				int percent = ((Integer) msg.obj).intValue();
 				sendData(IUploadVideoFn.EVENT_PROCESS, percent);
-				// if (!GolukApplication.getInstance().getIsBackgroundState()) {
-				// int percent = ((Integer) msg.obj).intValue();
-				// sendData(IUploadVideoFn.EVENT_PROCESS,percent);
-				//
-				// // if (GlobalWindow.getInstance().isShow()) {
-				// // // 更新进度条
-				// // int percent = ((Integer) msg.obj).intValue();
-				// // GlobalWindow.getInstance().refreshPercent(percent);
-				// // GolukDebugUtils.e("",
-				// "upload service--VideoShareActivity-mmmHandler percent:" +
-				// percent);
-				// // } else {
-				// // if (null == GlobalWindow.getInstance().getApplication()) {
-				// // GlobalWindow.getInstance().setApplication(mApp);
-				// // }
-				// //
-				// GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
-				// // }
-				// }
 				break;
 			case MSG_H_UPLOAD_SUCESS:
-				// GlobalWindow.getInstance().topWindowSucess("视频上传成功");
 				// 回调文件上传成功
 				sendData(IUploadVideoFn.EVENT_UPLOAD_SUCESS, null);
 				break;
@@ -108,7 +88,6 @@ public class UploadVideo {
 			case MSG_H_COUNT:
 				finishShowCount++;
 				if (finishShowCount >= 3) {
-					// GlobalWindow.getInstance().dimissGlobalWindow();
 					mBaseHandler.removeMessages(MSG_H_COUNT);
 					finishShowCount = 0;
 				} else {
@@ -120,17 +99,12 @@ public class UploadVideo {
 					return;
 				}
 				uploadVideoFile(mVideoPath);
-				// if (null == GlobalWindow.getInstance().getApplication()) {
-				// GlobalWindow.getInstance().setApplication(mApp);
-				// }
 				break;
 			default:
 				break;
 			}
 			super.handleMessage(msg);
-
 		}
-
 	};
 
 	public UploadVideo(Context context, GolukApplication application) {
@@ -153,20 +127,7 @@ public class UploadVideo {
 	}
 
 	private void initState() {
-		// if (null == GlobalWindow.getInstance().getApplication()) {
-		// GlobalWindow.getInstance().setApplication(mApp);
-		// }
-		// GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
-		//
-		// mVideoSquareManager =
-		// GolukApplication.getInstance().getVideoSquareManager();
-		// if (null != mVideoSquareManager) {
-		// if
-		// (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist"))
-		// {
-		// mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
-		// }
-		// }
+
 	}
 
 	public static final String PATH_FS1 = "/goluk";
@@ -270,9 +231,6 @@ public class UploadVideo {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// dimissExitDialog();
-						// GlobalWindow.getInstance().toFailed("视频上传取消");
-						// exit(false);
 						click_Exit();
 					}
 
@@ -311,25 +269,13 @@ public class UploadVideo {
 						uploadVideoFile(mVideoPath);
 						dimissErrorDialog();
 						GolukUtils.showToast(mContext, "重新开始上传");
-						// if (null ==
-						// GlobalWindow.getInstance().getApplication()) {
-						// GlobalWindow.getInstance().setApplication(mApp);
-						// }
-						// GlobalWindow.getInstance().createVideoUploadWindow("正在上传Goluk视频");
-
 					}
 
 				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// dimissErrorDialog();
-						// GlobalWindow.getInstance().toFailed("视频上传取消");
-						// exit(false);
-						// sendData(IUploadVideoFn.EVENT_EXIT, false);
-
 						click_Exit();
-
 					}
 
 				}).create();
@@ -368,7 +314,6 @@ public class UploadVideo {
 		if (mIsExit) {
 			return;
 		}
-		mCurrentPercent = 0;
 		GolukDebugUtils.e("", "jyf-----VideoShareActivity-------------uploadError :uploadCount:  " + uploadCount);
 		if (uploadCount >= UPLOAD_FAILED_UP) {
 			// 报错
@@ -383,15 +328,10 @@ public class UploadVideo {
 		if (mIsExit) {
 			return;
 		}
-		mCurrentPercent = per;
 		Message msg = new Message();
 		msg.what = MSG_H_UPLOAD_PROGRESS;
 		msg.obj = per;
 		mBaseHandler.sendMessage(msg);
-	}
-
-	private void cancelLoad() {
-		// TODO 取消上传
 	}
 
 	private void dimissExitDialog() {
@@ -411,9 +351,6 @@ public class UploadVideo {
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
 		mBaseHandler.removeMessages(MSG_H_RETRY_UPLOAD);
-		if (isdestroyTopwindow) {
-			// GlobalWindow.getInstance().dimissGlobalWindow();
-		}
 	}
 
 	/** 文件上传成功 */

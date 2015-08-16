@@ -232,6 +232,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (isShareLive) {
 			if (isContinueLive) {
 				// 续直播
+				// 获取墨认的设置
+				LiveSettingPopWindow lpw = new LiveSettingPopWindow(this, mRootLayout);
+				mSettingData = lpw.getCurrentSetting();
 				startLiveLook(myInfo);
 				LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, LIVE_RETRY_LIVE);
 				isSettingCallBack = true;
@@ -467,6 +470,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			break;
 		case 100:
 			isContinueLive = false;
+			if (null == mSettingData) {
+				this.finish();
+				return;
+			}
+			startLiveForSetting();
 			break;
 		case 101:
 			// 直播视频上传成功，现在请求服务器

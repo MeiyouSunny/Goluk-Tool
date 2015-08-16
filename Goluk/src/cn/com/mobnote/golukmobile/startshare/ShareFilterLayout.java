@@ -35,6 +35,10 @@ public class ShareFilterLayout {
 		return mRootLayout;
 	}
 
+	public void setExit() {
+		mMVListAdapter.setExit();
+	}
+
 	/**
 	 * 初始化滤镜布局
 	 */
