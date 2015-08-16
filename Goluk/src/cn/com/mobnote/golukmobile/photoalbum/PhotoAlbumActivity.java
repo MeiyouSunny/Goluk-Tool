@@ -364,6 +364,10 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener{
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(null != mLocalVideoListView) {
+			mLocalVideoListView.onResume();
+		}
+		
 		if(null != mCloudVideoListView) {
 			mCloudVideoListView.onResume();
 		}
