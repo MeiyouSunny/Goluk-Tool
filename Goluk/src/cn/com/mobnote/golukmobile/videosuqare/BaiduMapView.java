@@ -45,7 +45,7 @@ public class BaiduMapView implements ILocationFn {
 	private BaiduMap mBaiduMap = null;
 
 	/** 定时请求直播点时间 */
-	private int mTiming = 1 * 60 * 1000;
+	public static final int mTiming = 1 * 60 * 1000;
 	/** 是否首次定位 */
 	private boolean isFirstLoc = true;
 	private BaiduMapManage mBaiduMapManage = null;
@@ -233,7 +233,7 @@ public class BaiduMapView implements ILocationFn {
 			if (!b) {
 				Message msg = new Message();
 				msg.what = 2;
-				MainActivity.mMainHandler.sendMessageDelayed(msg, mTiming);
+				mBaiduHandler.sendMessageDelayed(msg, mTiming);
 			}
 		}
 	}
