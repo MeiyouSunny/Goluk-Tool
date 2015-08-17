@@ -991,7 +991,7 @@ public class JsonUtil {
 		}
 		return bean;
 	}
-	
+
 	public static JSONObject getReportData(String tag, String function, String log) {
 		try {
 			JSONObject obj = new JSONObject();
@@ -1005,7 +1005,7 @@ public class JsonUtil {
 		}
 		return null;
 	}
-	
+
 	public static String getReportJson(String key, JSONObject dataObj) {
 		try {
 			JSONObject obj = new JSONObject();
@@ -1017,17 +1017,30 @@ public class JsonUtil {
 		}
 		return "";
 	}
-	
+
 	public static String getCategoryLocalCacheJson(String mAttribute) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("attribute", mAttribute);
-			
+
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
+		return "";
+	}
+
+	public static String getNetStateJson(boolean isConn) {
+		try {
+			JSONObject obj = new JSONObject();
+			final String state = isConn ? "1" : "2";
+			obj.put("NetStatus", state);
+
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
 		return "";
 	}
 
