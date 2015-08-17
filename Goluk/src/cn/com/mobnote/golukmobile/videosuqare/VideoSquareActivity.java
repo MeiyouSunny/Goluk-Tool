@@ -5,18 +5,14 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.EventLogTags.Description;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,9 +21,6 @@ public class VideoSquareActivity implements OnClickListener {
 	public VideoSquareAdapter mVideoSquareAdapter = null;
 	private ViewPager mViewPager = null;
 	private ImageView hot = null;
-//	private ImageView square = null;
-//	private LinearLayout mVideoList = null;
-//	private LinearLayout mTypeList = null;
 	private TextView hotTitle = null;
 	private TextView squareTitle = null;
 	public CustomLoadingDialog mCustomProgressDialog;
@@ -53,19 +46,9 @@ public class VideoSquareActivity implements OnClickListener {
 		mVideoSquareAdapter = new VideoSquareAdapter(mContext, null);
 		mViewPager.setAdapter(mVideoSquareAdapter);
 		mViewPager.setOnPageChangeListener(opcl);
-
 		hot = (ImageView) mRootLayout.findViewById(R.id.line_hot);
-//		square = (ImageView) mRootLayout.findViewById(R.id.line_square);
-
-//		mVideoList = (LinearLayout) mRootLayout.findViewById(R.id.mVideoList);
-//		mTypeList = (LinearLayout) mRootLayout.findViewById(R.id.mTypeList);
-
 		hotTitle = (TextView) mRootLayout.findViewById(R.id.hot_title);
 		squareTitle = (TextView) mRootLayout.findViewById(R.id.square_title);
-
-		// squareImage = (ImageView)
-		// mRootLayout.findViewById(R.id.square_image);
-		// hotImage = (ImageView) mRootLayout.findViewById(R.id.hot_image);
 		setListener();
 	}
 
@@ -126,17 +109,9 @@ public class VideoSquareActivity implements OnClickListener {
 
 	private void updateState(int type) {
 		if (0 == type) {
-//			updateLine(0);
-//			hot.setVisibility(View.VISIBLE);
-//			square.setVisibility(View.INVISIBLE);
-
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 		} else if (1 == type) {
-//			updateLine(100);
-//			square.setVisibility(View.VISIBLE);
-//			hot.setVisibility(View.INVISIBLE);
-
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 

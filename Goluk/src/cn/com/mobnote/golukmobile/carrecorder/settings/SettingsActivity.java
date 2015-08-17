@@ -234,36 +234,19 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			case R.id.kgjtsy://开关机提示音
 				showLoading();
 				String status = "";
-				if (setSwitchStatus) {
-					mSwitchBtn.setBackgroundResource(R.drawable.set_close_btn);
+				if(setSwitchStatus){
 					status = "0";
-				} else {
-					mSwitchBtn.setBackgroundResource(R.drawable.set_open_btn);
+				}else{
 					status = "1";
 				}
-				// {"SpeakerSwitch":0}
 				String condi = "{\"SpeakerSwitch\":" + status + "}";
 				boolean b = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(condi);
 				GolukDebugUtils.e("lily", "---------点击开关结果-----------" + b);
 				if(b){
-					GolukUtils.showToast(this, "设置成功");
-					if(setSwitchStatus){
-						setSwitchStatus = false;
-					}else{
-						setSwitchStatus = true;
-					}
+					
 				}else{
 					closeLoading();
 					GolukUtils.showToast(this, "设置失败");
-					if (setSwitchStatus) {
-						mSwitchBtn.setBackgroundResource(R.drawable.set_open_btn);
-						status = "1";
-						setSwitchStatus = true;
-					} else {
-						mSwitchBtn.setBackgroundResource(R.drawable.set_close_btn);
-						status = "0";
-						setSwitchStatus = false;
-					}
 				}
 				break;
 			case R.id.rlcx_line:// 容量查询
@@ -488,6 +471,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mCustomDialog.show();
 			} else if (msg == IPC_VDCPCmd_GetSpeakerSwitch) {// 获取ipc开关机声音状态
 				closeLoading();
+				GolukDebugUtils.e("lily", "------IPC_VDCPCmd_GetSpeakerSwitch----------------param1:"+param1+"----param2:--"+param2);
 				if (param1 == RESULE_SUCESS) {
 					try {
 						JSONObject json = new JSONObject((String) param2);
@@ -504,12 +488,24 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
+				}else{
+					mSwitchBtn.setBackgroundResource(R.drawable.set_open_btn);
+					setSwitchStatus = true;
 				}
 			} else if (msg == IPC_VDCPCmd_SetSpeakerSwitch) {// 设置ipc开关机声音状态
 				closeLoading();
-				GolukDebugUtils.e("lily", "-------IPC_VDCPCmd_GetSpeakerSwitch------msg-----" + msg+ "-------param2------" + param2);
+				GolukDebugUtils.e("lily", "-------IPC_VDCPCmd_SetSpeakerSwitch------msg-----" + msg+ "-------param2------" + param2+"---param1:--"+param1);
 				if (RESULE_SUCESS == param1) {
-
+					if (setSwitchStatus) {
+						mSwitchBtn.setBackgroundResource(R.drawable.set_close_btn);
+						setSwitchStatus = false;
+					} else {
+						mSwitchBtn.setBackgroundResource(R.drawable.set_open_btn);
+						setSwitchStatus = true;
+					}
+					GolukUtils.showToast(this, "设置成功");
+				}else{
+					GolukUtils.showToast(this, "当前固件不支持此项设置，请升级固件后再试");
 				}
 			}
 
