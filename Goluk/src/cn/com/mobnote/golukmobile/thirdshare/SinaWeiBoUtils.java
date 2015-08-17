@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.util.GolukUtils;
@@ -95,6 +96,21 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 
 	public int getSupportAPI() {
 		return mWeiboShareAPI.getWeiboAppSupportAPI();
+	}
+
+	public static Bitmap zoomImage(Bitmap bgimage, double newWidth, double newHeight) {
+		// 获取这个图片的宽和高
+		float width = bgimage.getWidth();
+		float height = bgimage.getHeight();
+		// 创建操作图片用的matrix对象
+		Matrix matrix = new Matrix();
+		// 计算宽高缩放率
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeight) / height;
+		// 缩放图片动作
+		matrix.postScale(scaleWidth, scaleHeight);
+		Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width, (int) height, matrix, true);
+		return bitmap;
 	}
 
 	/**
@@ -198,9 +214,11 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 		videoObject.description = dec;
 		// 设置 Bitmap 类型的图片到视频对象里
 		if (null != bitmap) {
-			videoObject.setThumbImage(bitmap);
+			Bitmap temp = zoomImage(bitmap, 100, 100);
+			videoObject.setThumbImage(temp);
 		} else {
-			videoObject.setThumbImage(getDefaultShareBitmap());
+			Bitmap tt = zoomImage(getDefaultShareBitmap(), 100, 100);
+			videoObject.setThumbImage(tt);
 		}
 
 		videoObject.actionUrl = actionUrl;
