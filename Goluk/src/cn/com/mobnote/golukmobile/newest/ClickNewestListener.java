@@ -97,7 +97,7 @@ public class ClickNewestListener implements OnClickListener {
 		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 		intent.putExtra(LiveActivity.KEY_USERINFO, user);
 
-		uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1", "1");// 上报播放次数
+		//uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1", "1");// 上报播放次数
 		mContext.startActivity(intent);
 	}
 
