@@ -470,19 +470,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mTextName.setText(mVideoJson.data.avideo.user.nickname);
 			mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoJson.data.avideo.video.sharingtime));
 			// 点赞数、评论数、观看数
-			DecimalFormat df = new DecimalFormat("#,###");
-			int wg_click = Integer.parseInt(mVideoJson.data.avideo.video.clicknumber);
-			int wg_praise = Integer.parseInt(mVideoJson.data.avideo.video.praisenumber);
-			int wg_comment = Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount);
-			if (wg_click < 100000 || wg_praise < 100000 || wg_comment < 100000) {
-				mTextLookAll.setText(df.format(wg_click));
-				mTextLikeAll.setText(df.format(wg_praise));
-				mTextCommentCount.setText(df.format(wg_comment));
-			} else {
-				mTextLookAll.setText("100,000+");
-				mTextLikeAll.setText("100,000+");
-				mTextCommentCount.setText("100,000+");
-			}
+			mTextLookAll.setText(GolukUtils.getFormatNumber(mVideoJson.data.avideo.video.clicknumber));
+			mTextLikeAll.setText(GolukUtils.getFormatNumber(mVideoJson.data.avideo.video.praisenumber));
+			mTextCommentCount.setText(GolukUtils.getFormatNumber(mVideoJson.data.avideo.video.comment.comcount));
 			if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
 				mImageLike.setImageResource(R.drawable.videodetail_like);
 				mTextLike.setTextColor(Color.rgb(136, 136, 136));
