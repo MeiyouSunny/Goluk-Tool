@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.newest;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		if ("-1".equals(info.clicknumber)) {
 			holder.mVideoLayout.setVisibility(View.GONE);
 		}else {
-			holder.mVideoNum.setText(info.clicknumber);
+			holder.mVideoNum.setText(getFormatNumber(info.clicknumber));
 			holder.mVideoLayout.setVisibility(View.VISIBLE);
 		}
 		
@@ -111,7 +112,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		if ("-1".equals(info.videonumber)) {
 			holder.mLookLayout.setVisibility(View.GONE);
 		}else {
-			holder.mLookNum.setText(info.videonumber);
+			holder.mLookNum.setText(getFormatNumber(info.videonumber));
 			holder.mLookLayout.setVisibility(View.VISIBLE);
 		}
 		
@@ -253,6 +254,20 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	public void unlock() {
 		lock = false;
 		this.notifyDataSetChanged();
+	}
+	
+	private String getFormatNumber(String fmtnumber) {
+		String number;
+
+		int wg = Integer.parseInt(fmtnumber);
+
+		if (wg < 100000) {
+			DecimalFormat df = new DecimalFormat("#,###");
+			number = df.format(wg);
+		} else {
+			number = "100,000+";
+		}
+		return number;
 	}
 
 }
