@@ -68,7 +68,8 @@
             android:maxLength="250"
             android:paddingLeft="10dp"
             android:textColor="#333333"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textCursorDrawable="@drawable/cursor_color" />
     </RelativeLayout>
 
     <!-- 评论显示列表 -->

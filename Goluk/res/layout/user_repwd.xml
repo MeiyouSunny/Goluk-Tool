@@ -46,7 +46,7 @@
                     android:singleLine="true"
                     android:textColorHint="@color/user_hint_text_color"
                     android:paddingLeft="10dp"
-                    />
+                    android:textCursorDrawable="@drawable/cursor_color"/>
             </LinearLayout>
 
             <ImageView
@@ -72,41 +72,10 @@
                     android:textSize="14sp" 
                     android:maxLength="16"
                     android:textColorHint="@color/user_hint_text_color"
-                    android:paddingLeft="10dp"/>
+                    android:paddingLeft="10dp"
+                    android:textCursorDrawable="@drawable/cursor_color"/>
             </LinearLayout>
         </LinearLayout>
-
-        <!-- 验证码 -->
-
-        <!-- <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginTop="28dp"
-            android:orientation="horizontal" >
-
-             android:layout_width="98dp"
-            <Button
-                android:layout_width="110dp"
-                android:layout_height="42dp"
-                android:id="@+id/user_repwd_identify_btn"
-                android:background="@drawable/icon_more"
-                android:text="@string/user_repwd_identify"
-                android:textSize="16sp" 
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:textColor="@color/white"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:id="@+id/user_repwd_identify"
-                android:numeric="integer"
-                android:textColor="#000" 
-                android:maxLength="6"
-                android:background="@color/white"
-                android:paddingLeft="20dp"
-                android:textSize="14sp"/>
-        </LinearLayout> -->
 
         <RelativeLayout
             android:layout_width="match_parent"

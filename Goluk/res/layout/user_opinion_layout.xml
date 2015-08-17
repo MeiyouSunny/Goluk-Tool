@@ -52,7 +52,8 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:maxLength="500"
-        android:gravity="top|left"/>
+        android:gravity="top|left"
+        android:textCursorDrawable="@drawable/cursor_color"/>
 
     <View
         android:id="@+id/soild_2"
@@ -104,7 +105,8 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:maxLength="70"
-        android:gravity="top|left"/>
+        android:gravity="top|left"
+        android:textCursorDrawable="@drawable/cursor_color"/>
 
     <View
         android:id="@+id/soild_4"

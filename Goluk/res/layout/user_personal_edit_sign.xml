@@ -32,7 +32,8 @@
             android:hint="介绍一下自己吧！"
             android:paddingLeft="20dp"
             android:paddingTop="8dp"
-            android:textColor="@color/user_personal_black" />
+            android:textColor="@color/user_personal_black"
+            android:textCursorDrawable="@drawable/cursor_color" />
 
         <View
             android:id="@+id/user_personal_solid_2"

@@ -40,7 +40,8 @@
                     android:singleLine="true"
                     android:textColor="@color/user_login_text"
                     android:textColorHint="@color/user_hint_text_color"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textCursorDrawable="@drawable/cursor_color"/>
             </LinearLayout>
 
             <ImageView
@@ -66,7 +67,8 @@
                     android:singleLine="true"
                     android:textColor="@color/user_login_text"
                     android:textColorHint="@color/user_hint_text_color"
-                    android:textSize="14sp" />
+                    android:textSize="14sp" 
+                    android:textCursorDrawable="@drawable/cursor_color"/>
             </LinearLayout>
         </LinearLayout>
 
