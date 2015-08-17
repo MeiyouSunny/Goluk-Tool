@@ -396,6 +396,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 					mWac.unbind();
 				}
 				mWac = null;
+				GolukApplication.getInstance().stopDownloadList();//停止视频同步
 				Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
 				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
