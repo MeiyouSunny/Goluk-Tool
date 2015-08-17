@@ -101,6 +101,10 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 	}
 	
 	private void httpPost(boolean flag, String jxid, String pagesize){
+		if (isGetFileListDataing) {
+			return;
+		}
+		
 		this.jxid = jxid;
 		if(flag){
 			if(null == mCustomProgressDialog){
@@ -113,9 +117,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		}
 		
 		if(null != GolukApplication.getInstance().getVideoSquareManager()){
-			if (isGetFileListDataing) {
-				return;
-			}
 			isGetFileListDataing = true;
 			GolukDebugUtils.e("", "TTTTTT=====11111=====jxid="+jxid);
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
@@ -182,6 +183,10 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 					mWonderfulSelectedAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						if (mDataList.size() > 0) {
+							if (isGetFileListDataing) {
+								return;
+							}
+														
 							if (!addFooter) {
 								addFooter = true;
 								mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext)

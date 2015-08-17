@@ -51,6 +51,7 @@ import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.user.UserInterface;
@@ -371,6 +372,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == mApp.mGoluk) {
 			return;
 		}
+		final String connJson = JsonUtil.getNetStateJson(isConnected);
+		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_MessageReport,
+				IMessageReportFn.REPORT_CMD_NET_STATA_CHG, connJson);
 		if (isConnected) {
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_RecoveryNetwork, "");
 		}
