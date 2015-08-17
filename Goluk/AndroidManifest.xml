@@ -233,12 +233,6 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-        </activity>
-        <activity
             android:name="cn.com.mobnote.golukmobile.videosuqare.CCPlayerPage"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="landscape"

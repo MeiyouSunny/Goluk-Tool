@@ -117,8 +117,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	/** 连接 */
 	private final int WIFI_STATE_SUCCESS = 2;
 
-	private final int WIFI_STATE_RESULT = 11;
-
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
 	/** 链接行车记录仪 */
@@ -748,9 +746,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public void setBelowItem(int id) {
 		Drawable drawable;
-
 		if (id == R.id.index_square_btn) {
-
 			videoSquareLayout.setVisibility(View.VISIBLE);
 			mVideoSquareActivity.onResume();
 			drawable = this.getResources().getDrawable(R.drawable.index_find_btn_press);
