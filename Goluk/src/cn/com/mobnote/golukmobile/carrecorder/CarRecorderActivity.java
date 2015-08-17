@@ -815,12 +815,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 			exit();
 			break;
-		case R.id.mShareBtn:
-			if (m_bIsFullScreen) {
-				return;
-			}
-
-			break;
 		case R.id.m8sBtn:
 			if (m_bIsFullScreen) {
 				return;
