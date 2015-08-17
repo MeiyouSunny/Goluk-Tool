@@ -148,7 +148,8 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String pwd = mEditTextPwd.getText().toString();
 				if (arg1) {
 					// 注册按钮
-					if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6) {
+					if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6
+							&& UserUtils.isMobileNO(phone)) {
 						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 						mBtnRegist.setEnabled(true);
 					} else {
@@ -167,7 +168,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
 				String pwd = mEditTextPwd.getText().toString();
 				// 注册按钮
-				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6) {
+				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6 && UserUtils.isMobileNO(phone)) {
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 					mBtnRegist.setEnabled(true);
 				} else {
@@ -204,7 +205,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
 				String pwd = mEditTextPwd.getText().toString();
 				// 注册按钮
-				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6) {
+				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6 && UserUtils.isMobileNO(phone)) {
 					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
 					mBtnRegist.setEnabled(true);
 				} else {

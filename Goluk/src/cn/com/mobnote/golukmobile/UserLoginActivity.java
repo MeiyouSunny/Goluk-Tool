@@ -93,7 +93,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 设置title
 		mTextViewTitle.setText(this.getResources().getString(R.string.user_login_title_text));
 
-		if(null != mApplication && null != mApplication.mLoginManage){			
+		if (null != mApplication && null != mApplication.mLoginManage) {
 			mApplication.mLoginManage.initData();
 		}
 	}
@@ -188,7 +188,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				if (Phonenum.equals("")) {
 					isOnClick = false;
 				}
-				if (!Phonenum.equals("") && !psw.equals("") && psw.length() >= 6 && Phonenum.length() == 11) {
+				if (!Phonenum.equals("") && !psw.equals("") && psw.length() >= 6 && Phonenum.length() == 11
+						&& UserUtils.isMobileNO(Phonenum)) {
 					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
 					mBtnLogin.setEnabled(true);
 				} else {
@@ -232,7 +233,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 						mBtnLogin.setEnabled(false);
 					}
 				}
-				if (!number.equals("") && !psw.equals("") && psw.length() >= 6 && number.length() == 11) {
+				if (!number.equals("") && !psw.equals("") && psw.length() >= 6 && number.length() == 11
+						&& UserUtils.isMobileNO(number)) {
 					mBtnLogin.setBackgroundResource(R.drawable.icon_login);
 					mBtnLogin.setEnabled(true);
 				} else {
@@ -240,9 +242,11 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 					mBtnLogin.setEnabled(false);
 				}
 			}
+
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 			}
+
 			@Override
 			public void afterTextChanged(Editable arg0) {
 
@@ -548,5 +552,5 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		String packageName = context.getPackageName();
 		return packageName;
 	}
-	
+
 }

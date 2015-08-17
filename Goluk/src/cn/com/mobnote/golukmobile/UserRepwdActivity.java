@@ -137,7 +137,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
 				String pwd = mEditTextPwd.getText().toString();
 				// 重置按钮
-				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6) {
+				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6
+						&& UserUtils.isMobileNO(phone)) {
 					mBtnOK.setBackgroundResource(R.drawable.icon_login);
 					mBtnOK.setEnabled(true);
 				} else {
@@ -172,7 +173,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 				String password = mEditTextPwd.getText().toString();
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
-				if (!"".equals(password) && !phone.equals("") && phone.length() == 11 && password.length() >= 6) {
+				if (!"".equals(password) && !phone.equals("") && phone.length() == 11 && password.length() >= 6
+						&& UserUtils.isMobileNO(phone)) {
 					mBtnOK.setBackgroundResource(R.drawable.icon_login);
 					mBtnOK.setEnabled(true);
 				} else {
@@ -281,8 +283,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PHONE, phone);
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_PASSWORD, password);
 			getIdentify.putExtra(UserIdentifyActivity.IDENTIFY_INTER_REGIST, repwdOk);
-			GolukDebugUtils.i("final", "------UserRepwdActivity--------------registOk------"
-					+ repwdOk);
+			GolukDebugUtils.i("final", "------UserRepwdActivity--------------registOk------" + repwdOk);
 			startActivity(getIdentify);
 			break;
 		// 验证码获取失败
