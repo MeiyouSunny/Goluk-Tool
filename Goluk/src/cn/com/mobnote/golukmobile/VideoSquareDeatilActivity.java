@@ -880,7 +880,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		hideLoading();
 		mImageLayout.setVisibility(View.VISIBLE);
 		dialog(msg);
-		return false;
+		return true;
 	}
 
 	@Override
