@@ -293,15 +293,15 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	@Override
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
 		HeaderViewHolder holder;
-		if (convertView == null) {
+//		if (convertView == null) {
 			holder = new HeaderViewHolder();
 			convertView = inflater.inflate(R.layout.video_list_groupname, parent, false);
 			holder.date = (TextView) convertView.findViewById(R.id.date);
 			holder.mTopLine = (ImageView)convertView.findViewById(R.id.mTopLine);
 			convertView.setTag(holder);
-		} else {
-			holder = (HeaderViewHolder) convertView.getTag();
-		}
+//		} else {
+//			holder = (HeaderViewHolder) convertView.getTag();
+//		}
 		
 		if(0 == position) {
 			holder.mTopLine.setVisibility(View.GONE);
@@ -397,7 +397,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	 */
 	public void unlock() {
 		lock = false;
-		this.notifyDataSetChanged();
+//		this.notifyDataSetChanged();
 	}
 	
 	public void updateImage(String filename) {

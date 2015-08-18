@@ -54,6 +54,7 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.receiver.NetworkStateReceiver;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
@@ -226,6 +227,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					startActivity(it);
 				}
 			}
+		}
+		
+		if (NetworkStateReceiver.isNetworkAvailable(this)) {
+			notifyLogicNetWorkState(true);
 		}
 
 	}
