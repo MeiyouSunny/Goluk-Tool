@@ -70,7 +70,6 @@ public class WonderfulVideoListView {
 		mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
 		mStickyListHeadersListView = (StickyListHeadersListView)mRootLayout.findViewById(R.id.mStickyListHeadersListView);
 		mWonderfulVideoAdapter = new WonderfulVideoAdapter(mContext, mStickyListHeadersListView, type, from);
-		mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
 		loadData(type, true);
 		setListener();
 	}
@@ -246,6 +245,7 @@ public class WonderfulVideoListView {
 				mDataList.addAll(mLocalListData);
 				mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mLocalListData);
 				mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+				mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
 				if (mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();
 				}
