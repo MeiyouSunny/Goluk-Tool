@@ -63,6 +63,7 @@ public class UploadVideo {
 
 	public void setExit() {
 		mIsExit = true;
+		exit(true);
 	}
 
 	public Handler mBaseHandler = new Handler() {
