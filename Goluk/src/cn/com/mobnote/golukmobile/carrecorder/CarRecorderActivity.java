@@ -1703,7 +1703,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 */
 	public void setFullScreen(boolean bFull) {
 		if (bFull == m_bIsFullScreen) {
-			GolukUtils.showToast(this, "已处于全屏状态.");
+			//GolukUtils.showToast(this, "已处于全屏状态.");
 			return;
 		}
 		if (bFull) {
