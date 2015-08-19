@@ -197,7 +197,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 						if((screenX > 0) && (screenX < (screenWidth/2))) {
 							//点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(2, info1.videoPath);
+							gotoVideoPlayPage(mCurrentType, info1.videoPath);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 							
@@ -208,7 +208,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 							VideoInfo info2 = d.getVideoInfo2();
 							if(null == info2)
 								return;
-							gotoVideoPlayPage(2, info2.videoPath);
+							gotoVideoPlayPage(mCurrentType, info2.videoPath);
 							String filename = info2.filename;
 							updateNewState(filename);
 							
