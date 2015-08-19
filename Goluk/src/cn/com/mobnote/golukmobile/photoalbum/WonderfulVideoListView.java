@@ -182,7 +182,13 @@ public class WonderfulVideoListView {
 			if ("cloud".equals(from) ) {
 				if(1 != type) {
 					Intent intent = new Intent(mContext, VideoEditActivity.class);
-					intent.putExtra("type", type);
+					
+					int tempType = 2;
+					if (type == IPCManagerFn.TYPE_URGENT) {
+						tempType = 3;
+					}
+					
+					intent.putExtra("type", tempType);
 					intent.putExtra("cn.com.mobnote.video.path", path);
 					mActivity.startActivity(intent);
 					return;
