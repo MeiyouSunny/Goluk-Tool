@@ -8,14 +8,15 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnErrorListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,7 +36,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  * 
  */
-public class UserStartActivity extends BaseActivity implements OnClickListener {
+public class UserStartActivity extends BaseActivity implements OnClickListener,OnErrorListener {
 
 	private ImageView mImageViewHave, mImageViewLook;
 	//
@@ -88,7 +89,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 		videoStart = (CustomVideoView) findViewById(R.id.videoStart);
 		videoStart.setVideoURI(Uri.parse("android.resource://cn.com.mobnote.golukmobile/" + R.raw.start_video));
 		videoStart.start();
-
+		videoStart.setOnErrorListener(this);
 		videoStart.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
 			@Override
@@ -175,5 +176,10 @@ public class UserStartActivity extends BaseActivity implements OnClickListener {
 				mBGBitmap = null;
 			}
 		}
+	}
+
+	@Override
+	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+		return true;
 	}
 }
