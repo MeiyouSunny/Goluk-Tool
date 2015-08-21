@@ -154,12 +154,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
-            android:name="cn.com.mobnote.golukmobile.carrecorder.IPCFileManagerActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+
         <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity"
             android:screenOrientation="portrait"
@@ -181,12 +176,7 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        <activity
-            android:name="cn.com.mobnote.golukmobile.carrecorder.LocalVideoPlayerActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+        
         <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity"
             android:screenOrientation="portrait"
@@ -238,12 +228,7 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        <activity
-            android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayer"
-            android:configChanges="screenSize|keyboardHidden|orientation|screenLayout"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-        </activity>
+      
         <activity
             android:name="cn.com.mobnote.golukmobile.player.VideoPlayerView"
             android:configChanges="orientation|keyboardHidden|screenSize"
