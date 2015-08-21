@@ -30,6 +30,9 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String>{
 		String file = mFilePath + filePaths[type];
 		
 		List<String> files = FileInfoManagerUtils.getVideoConfigFile(file);
+		if(null == files || files.size() <= 0) {
+			return null;
+		}
 		files = FileInfoManagerUtils.bubbleSort(files, true);
 		if(null == files || files.size() <= 0) {
 			return null;
