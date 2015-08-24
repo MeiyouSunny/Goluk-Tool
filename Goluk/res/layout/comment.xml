@@ -49,7 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/str_comment_send"
             android:textColor="@color/color_comment_not_send"
             android:textSize="14sp" />
@@ -60,7 +63,6 @@
             android:layout_height="32dp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="8dp"
             android:layout_toLeftOf="@id/comment_send"
             android:background="@drawable/videodetail_inputbox"
@@ -68,8 +70,8 @@
             android:maxLength="250"
             android:paddingLeft="10dp"
             android:textColor="#333333"
-            android:textSize="14sp"
-            android:textCursorDrawable="@drawable/cursor_color" />
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <!-- 评论显示列表 -->
