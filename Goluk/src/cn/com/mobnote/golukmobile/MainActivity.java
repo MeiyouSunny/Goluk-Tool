@@ -495,7 +495,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 			AnimationDrawable ad = null;
 
-			if (state == WIFI_STATE_CONNING) {
+			if (state == WIFI_STATE_CONNING && isBindSucess()) {
 				indexCarrecoderBtn.setBackgroundResource(R.anim.carrecoder_btn);
 				ad = (AnimationDrawable) indexCarrecoderBtn.getBackground();
 				if (ad.isRunning() == false) {
@@ -506,6 +506,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.index_video_icon);
 			} else if (state == WIFI_STATE_FAILED) {
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
+			}else{
+				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
+				
 			}
 
 		}
