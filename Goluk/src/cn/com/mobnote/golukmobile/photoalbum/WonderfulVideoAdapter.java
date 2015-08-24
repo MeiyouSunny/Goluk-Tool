@@ -64,11 +64,12 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		mGroupNameList.clear();
 		mGroupNameList.addAll(groupname);
 		count = mDataList.size();
+		this.notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return count;
+		return mDataList.size();
 	}
 
 	@Override
@@ -149,6 +150,10 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		
 		holder.image1.setImageResource(R.drawable.tacitly_pic);
 		holder.image2.setImageResource(R.drawable.tacitly_pic);
+		
+		if (position > this.getCount() -1) {
+			return convertView;
+		}
 		
 		holder.mVideoLayout2.setVisibility(View.GONE);
 		VideoInfo mVideoInfo1 = mDataList.get(position).getVideoInfo1();
@@ -326,6 +331,10 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 			holder.mTopLine.setVisibility(View.GONE);
 		}else {
 			holder.mTopLine.setVisibility(View.VISIBLE);
+		}
+		
+		if (position > getCount() -1) {
+			return convertView;
 		}
 		
 		String headerText ="";

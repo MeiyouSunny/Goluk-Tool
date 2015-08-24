@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.http.util.EncodingUtils;
 
+import android.text.TextUtils;
+
 public class FileInfoManagerUtils {
 	
 	/**
@@ -133,10 +135,18 @@ public class FileInfoManagerUtils {
 				try {
 					FileInputStream fin = new FileInputStream(path);
 					int length = fin.available();
+					if (length <= 0) {
+						fin.close();
+						return data;
+					}
 					byte[] buffer = new byte[length];
 					fin.read(buffer);
 					str = EncodingUtils.getString(buffer, "UTF-8");
 					fin.close();
+					
+					if (TextUtils.isEmpty(str)) {
+						return data;
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
