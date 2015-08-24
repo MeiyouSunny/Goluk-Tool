@@ -120,6 +120,11 @@ public class BaseActivity extends Activity {
 		return m_bJumpActivity ? false : true;
 	}
 
+	/**
+	 * 标记当前界面跳转到其它界面，用于防止重复点击
+	 * 
+	 * @author jyf
+	 */
 	public void setJumpToNext() {
 		m_bJumpActivity = true;
 	}

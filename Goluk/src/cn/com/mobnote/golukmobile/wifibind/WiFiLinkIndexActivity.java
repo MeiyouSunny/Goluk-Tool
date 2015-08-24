@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile;
+package cn.com.mobnote.golukmobile.wifibind;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,11 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
-import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
-import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
