@@ -8,13 +8,13 @@ import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.player.VideoPlayerView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class ClickNewestListener implements OnClickListener {
 	private VideoSquareInfo mVideoSquareInfo;
@@ -29,6 +29,14 @@ public class ClickNewestListener implements OnClickListener {
 
 	@Override
 	public void onClick(View arg0) {
+		// 防止重复点击
+		if (null != mContext && mContext instanceof BaseActivity) {
+			if (!((BaseActivity) mContext).isAllowedClicked()) {
+				return;
+			}
+			((BaseActivity) mContext).setJumpToNext();
+		}
+
 		if (isLive()) {
 			if (null != mNewestListView) {
 				toLiveList();
@@ -97,7 +105,8 @@ public class ClickNewestListener implements OnClickListener {
 		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
 		intent.putExtra(LiveActivity.KEY_USERINFO, user);
 
-		//uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1", "1");// 上报播放次数
+		// uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1", "1");//
+		// 上报播放次数
 		mContext.startActivity(intent);
 	}
 

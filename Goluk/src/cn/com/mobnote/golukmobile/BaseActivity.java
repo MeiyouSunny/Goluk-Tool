@@ -42,7 +42,7 @@ public class BaseActivity extends Activity {
 	public static final String IPC_PWD_DEFAULT = "123456789";
 	/** 手机创建热点默认密码 */
 	public static final String MOBILE_HOT_PWD_DEFAULT = "123456789";
-	
+
 	// 写死ip,网关
 	public static final String DEFAULT_IP = "192.168.1.103";
 	public static final String DEFAULT_WAY = "192.168.1.103";
@@ -109,16 +109,19 @@ public class BaseActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 	}
-	
+
 	@Override
-	public void startActivity(Intent intent)
-	{
+	public void startActivity(Intent intent) {
 		m_bJumpActivity = true;
 		super.startActivity(intent);
 	}
-	
-	public boolean isAllowedClicked(){
-		return m_bJumpActivity?false:true;
+
+	public boolean isAllowedClicked() {
+		return m_bJumpActivity ? false : true;
+	}
+
+	public void setJumpToNext() {
+		m_bJumpActivity = true;
 	}
 
 	/**
