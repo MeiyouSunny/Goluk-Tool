@@ -130,6 +130,17 @@ public class BaseActivity extends Activity {
 	}
 
 	/**
+	 * 去登录
+	 * 
+	 * @author jyf
+	 */
+	public void toLoginBack() {
+		Intent it = new Intent(this, UserLoginActivity.class);
+		it.putExtra("isInfo", "back");
+		startActivity(it);
+	}
+
+	/**
 	 * 判断当前应用程序处于前台还是后台
 	 * 
 	 * @param context
