@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -438,7 +437,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != msg) {
 			// 失败
-			GolukUtils.showToast(this, "删除失败");
+			GolukUtils.showToast(this, "网络异常，请稍后重试");
 			mWillDelBean = null;
 			return;
 		}
