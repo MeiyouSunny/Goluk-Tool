@@ -342,14 +342,15 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			GolukUtils.showToast(mContext, "网络异常，请检查网络");
 		}
 		// 获取描述
-		final String describe = getShareDescribe(shareBean.describe);
+		String describe = getShareDescribe(shareBean.describe);
 		final String ttl = getTTL();
 		final String realDesc = getRealDesc();
 		if (mContext instanceof VideoCategoryActivity) {
 			VideoCategoryActivity activity = (VideoCategoryActivity) mContext;
 			if (activity != null && !activity.isFinishing()) {
 				String videoId = null != mWillShareSquareInfo ? mWillShareSquareInfo.mVideoEntity.videoid : "";
-
+				String nickname = null != mWillShareSquareInfo ? mWillShareSquareInfo.mUserEntity.nickname : "";
+				describe = nickname + "：" + describe;
 				CustomShareBoard shareBoard = new CustomShareBoard(activity, sharePlatform, shareBean.shareurl,
 						shareBean.coverurl, describe, ttl, null, realDesc, videoId);
 				shareBoard.showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -367,9 +368,9 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	private String getTTL() {
 		if (isShareLive()) {
-			return mWillShareSquareInfo.mUserEntity.nickname + "的直播视频分享";
+			return "极路客精彩直播";
 		} else {
-			return "极路客精彩视频分享";
+			return "极路客精彩视频";
 		}
 	}
 
