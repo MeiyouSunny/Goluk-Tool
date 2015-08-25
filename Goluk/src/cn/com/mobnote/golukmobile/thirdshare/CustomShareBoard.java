@@ -52,7 +52,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	private String describe = "";
 	private String ttl = "";
 	private Bitmap mThumbBitmap = null;
-	private String mRealDesc = null;
+	/** 新浪微博Txt */
+	private String mSinaTxt = null;
 	/** 视频Id ,用户服务器上报　 */
 	private String mVideoId = null;
 
@@ -67,7 +68,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		describe = db;
 		ttl = tl;
 		mThumbBitmap = bitmap;
-		mRealDesc = realDesc;
+		mSinaTxt = realDesc;
 		mVideoId = videoId;
 
 		initView(activity);
@@ -214,7 +215,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		this.shareUp();// 上报分享统计
 		printStr();
 		final String t_des = describe;
-		final String inputDefaultContent = mRealDesc;
+		final String inputDefaultContent = mSinaTxt;
 		final String title = ttl;
 		final String dataUrl = shareurl;
 		final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;
