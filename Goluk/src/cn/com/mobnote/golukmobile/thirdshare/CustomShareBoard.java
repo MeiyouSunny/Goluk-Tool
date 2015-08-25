@@ -149,7 +149,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				((BaseActivity) mActivity).setJumpToNext();
 			}
 		}
-		sharePlatform.setShareContent(shareurl + "&type=5", coverurl, describe, ttl);
+		sharePlatform.setShareContent(shareurl + "&type=5", coverurl, describe, describe);
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 		this.shareUp();// 上报分享统计
 		performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
