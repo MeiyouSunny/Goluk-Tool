@@ -25,6 +25,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -642,6 +643,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 	}
 
+	private void getShareFailed() {
+		GolukUtils.showToast(this, "获取视频分享地址失败");
+		toInitState();
+	}
+
 	/**
 	 * 本地视频分享回调
 	 * 
@@ -651,38 +657,36 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	public void videoShareCallBack(int success, String json) {
 		mShareLoading.switchState(ShareLoading.STATE_SHAREING);
 		if (1 != success) {
-			GolukUtils.showToast(this, "获取视频分享地址失败");
-			toInitState();
+			getShareFailed();
 			return;
 		}
-		JSONObject obj;
-		try {
-			obj = new JSONObject(json);
-			System.out.println("分享地址回调:" + json.toString());
-			boolean isSucess = obj.getBoolean("success");
-			if (!isSucess) {
-				GolukUtils.showToast(this, "获取视频分享地址失败");
-				toInitState();
-				return;
-			}
-
-			JSONObject dataObj = obj.getJSONObject("data");
-			final String shortUrl = dataObj.getString("shorturl");
-			final String coverUrl = dataObj.getString("coverurl");
-
-			final String title = "极路客精彩视频分享";
-			String describe = mTypeLayout.getCurrentDesc();
-			if (describe == null || "".equals(describe)) {
-				describe = "#极路客精彩视频#";
-			}
-			final String inputDeafultStr = "极路客精彩视频(使用#极路客Goluk#拍摄)";
-			GolukDebugUtils.e("", "视频上传返回id--VideoShareActivity-videoUploadCallBack---调用第三方分享---: " + shortUrl);
-			this.mShareDealTool.toShare(shortUrl, coverUrl, describe, title, mUploadVideo.getThumbBitmap(),
-					inputDeafultStr, this.mUploadVideo.getVideoId());
-		} catch (JSONException e) {
-			e.printStackTrace();
+		GolukDebugUtils.i("", "分享地址回调:" + json.toString());
+		ShareDataBean dataBean = JsonUtil.parseShareCallBackData(json);
+		if (!dataBean.isSucess) {
+			getShareFailed();
+			return;
 		}
 
+		final String title = "极路客精彩视频分享";
+		final String describe = getShareDesc();
+		final String sinaTxt = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+
+		this.mShareDealTool.toShare(dataBean.shareurl, dataBean.coverurl, describe, title,
+				mUploadVideo.getThumbBitmap(), sinaTxt, this.mUploadVideo.getVideoId());
+	}
+
+	/**
+	 * 获取视频分享描述
+	 * 
+	 * @return
+	 * @author jyf
+	 */
+	private String getShareDesc() {
+		String describe = mTypeLayout.getCurrentDesc();
+		if (describe == null || "".equals(describe)) {
+			describe = "#极路客精彩视频#";
+		}
+		return describe;
 	}
 
 	public void shareCallBack(boolean isSucess) {
