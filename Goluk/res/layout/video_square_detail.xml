@@ -301,6 +301,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <TextView
+                    android:id="@+id/video_square_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#888888" 
+                    android:layout_marginLeft="10dp"
+                	android:layout_marginRight="10dp"/>
             <!-- 评论内容 -->
 
             <LinearLayout
@@ -310,13 +318,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/video_square_author"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#888888" />
 
                 <LinearLayout
                     android:id="@+id/video_square_show_all"

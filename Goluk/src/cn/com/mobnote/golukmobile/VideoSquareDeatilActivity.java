@@ -182,6 +182,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			// mFullVideoView.seekTo(playTime);
 			// }
 			showLoading();
+			GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onResume  showLoading");
 			mPlayBtn.setVisibility(View.GONE);
 			mImageLayout.setVisibility(View.VISIBLE);
 			mFullVideoView.start();
@@ -281,6 +282,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					if (!mFullVideoView.isPlaying()) {
 						return;
 					}
+					GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------mHandler :  isBuffering  "
+							+ isBuffering);
 					if (!isBuffering) {
 						hideLoading();
 					}
@@ -316,6 +319,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		if (null != mVideoSquareManager) {
 			mVideoSquareManager.removeVideoSquareManagerListener("videodetailshare");
 		}
+		cancleTimer();
 		this.finish();
 	}
 
@@ -336,6 +340,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		toComment.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, noInput());
 		toComment.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoJson.data.avideo.user.uid);
 		startActivity(toComment);
+		cancleTimer();
 	}
 
 	@Override
@@ -361,6 +366,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					Intent mBugLayout = new Intent(this, UserOpenUrlActivity.class);
 					mBugLayout.putExtra("url", mVideoJson.data.link.outurl);
 					startActivity(mBugLayout);
+					cancleTimer();
 				}
 			}
 			break;
@@ -401,6 +407,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				playVideo();
 				mFullVideoView.start();
 				showLoading();
+				GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onClick  showLoading");
 				mPlayBtn.setVisibility(View.GONE);
 			}
 			break;
@@ -419,6 +426,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						mPlayBtn.setVisibility(View.GONE);
 						mFullVideoView.start();
 						showLoading();
+						GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onClick  showLoading");
 					}
 				}
 			}
@@ -548,6 +556,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 				playVideo();
 				mFullVideoView.start();
 				showLoading();
+				GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------getData  showLoading");
 			} else {
 				mImageLayout.setVisibility(View.VISIBLE);
 				mPlayBtn.setVisibility(View.VISIBLE);
@@ -797,9 +806,11 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 				@Override
 				public void onClickListener() {
-					if (timer != null)
-						timer.cancel();
-					finish();
+					cancleTimer();
+					mImageLayout.setVisibility(View.VISIBLE);
+					mPrepareLayout.setEnabled(false);
+					mSeekBar.setProgress(0);
+					// finish();
 				}
 			});
 			if (!this.isFinishing()) {
@@ -839,26 +850,28 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			isBuffering = true;
-			if (0 == mFullVideoView.getCurrentPosition()) {
-				mImageLayout.setVisibility(View.VISIBLE);
-			}
+//			 if (0 == mFullVideoView.getCurrentPosition()) {
+			mImageLayout.setVisibility(View.VISIBLE);
+//			 }
 			showLoading();
+			GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onInfo  showLoading");
 			break;
 		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
 			isBuffering = false;
 			hideLoading();
+			GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onInfo : hideLoading ");
 			break;
 		default:
 			break;
 		}
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
 		// TODO onErrorListener
 		if (error) {
-			return false;
+			return true;
 		}
 		String msg = "播放错误";
 		switch (arg1) {
@@ -878,6 +891,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		error = true;
 		hideLoading();
+		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onInfo : hideLoading ");
 		mImageLayout.setVisibility(View.VISIBLE);
 		dialog(msg);
 		return true;
@@ -890,11 +904,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		if (error) {
 			return;
 		}
-		if (netInfo.getType() != ConnectivityManager.TYPE_WIFI) {
-			mPlayBtn.setVisibility(View.VISIBLE);
-			mPlayBtn.setImageResource(R.drawable.btn_player_play);
-			mImageLayout.setVisibility(View.VISIBLE);
-		}
+		mPlayBtn.setVisibility(View.VISIBLE);
+		mPlayBtn.setImageResource(R.drawable.btn_player_play);
+		mImageLayout.setVisibility(View.VISIBLE);
 		mFullVideoView.seekTo(0);
 		mSeekBar.setProgress(0);
 	}
@@ -908,7 +920,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onPrepared :  ");
 		mFullVideoView.setVideoWidth(mp.getVideoWidth());
 		mFullVideoView.setVideoHeight(mp.getVideoHeight());
-		if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+		if ((null != netInfo) && (netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
 			mp.setLooping(true);
 		}
 		if (playTime != 0) {
@@ -925,10 +937,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 
 	private void callBack_realStart() {
 		mPlayBtn.setVisibility(View.GONE);
-		// mFullVideoView.start();
 		mImageLayout.setVisibility(View.GONE);
 		hideLoading();
-
+		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------callBack_realStart : hideLoading ");
 	}
 
 	/**
@@ -940,6 +951,8 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			if (networkConnectTimeOut > 15) {
 				if (!reset) {
 					hideLoading();
+					GolukDebugUtils.e("",
+							"VideoSquareDetailActivity-------------------------netWorkTimeoutCheck : hideLoading ");
 					mImageLayout.setVisibility(View.VISIBLE);
 					dialog("网络访问异常，请重试！");
 					if (null != mFullVideoView) {
@@ -961,13 +974,13 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			return;
 		}
 		boolean isPlaying = mFullVideoView.isPlaying();
-		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onPause : isPause  " + isPause);
 		if (isPlaying) {
 			isPause = true;
 			playTime = mFullVideoView.getCurrentPosition();
 			mFullVideoView.pause();
 			mImageLayout.setVisibility(View.VISIBLE);
 		}
+		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onPause : isPause  " + isPause);
 	}
 
 	/**
@@ -980,6 +993,15 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	/**
+	 * 取消计时
+	 */
+	private void cancleTimer() {
+		if (null != timer) {
+			timer.cancel();
 		}
 	}
 
