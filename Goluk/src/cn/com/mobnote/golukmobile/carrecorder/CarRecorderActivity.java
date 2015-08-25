@@ -1956,7 +1956,7 @@ public class CarRecorderActivity extends BaseActivity implements
 
 				images[0] = vsi1;
 				image1.setImageBitmap(vsi1.getBitmap());
-
+				image1.setVisibility(View.VISIBLE);
 				if (flog) {
 					new1.setVisibility(View.VISIBLE);
 				} else {
