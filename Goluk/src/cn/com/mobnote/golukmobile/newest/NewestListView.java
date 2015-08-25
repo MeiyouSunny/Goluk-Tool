@@ -369,7 +369,8 @@ public class NewestListView implements VideoSuqareManagerFn {
 							describe = "#极路客精彩视频#";
 							// }
 						}
-						String ttl = "极路客精彩视频分享";
+						String ttl = "极路客精彩视频";
+						
 						// if
 						// ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type))
 						// {// 直播
@@ -383,7 +384,8 @@ public class NewestListView implements VideoSuqareManagerFn {
 							MainActivity vspa = (MainActivity) mContext;
 							if (vspa != null && !vspa.isFinishing()) {
 								String videoId = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mVideoEntity.videoid : "";
-								
+								String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname : "";
+								describe = username + "：" + describe;
 								CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl,
 										coverurl, describe, ttl, null, realDesc, videoId);
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);

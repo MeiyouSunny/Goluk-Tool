@@ -592,24 +592,30 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						String describe = data.optString("describe");
 						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 
-						if (TextUtils.isEmpty(describe)) {
+						/*if (TextUtils.isEmpty(describe)) {
 							if ("1".equals(mVideoJson.data.avideo.video.type)) {
 								describe = "#极路客精彩视频#";
 							} else {
 								describe = "#极路客精彩视频分享#";
 							}
+						}*/
+						String allDescribe = "";
+						if (TextUtils.isEmpty(describe)) {
+							allDescribe = mVideoJson.data.avideo.user.nickname+"："+mVideoJson.data.avideo.video.describe;
+						}else{
+							allDescribe = mVideoJson.data.avideo.user.nickname+"："+describe;
 						}
-						String ttl = "极路客精彩视频分享";
-						if ("1".equals(mVideoJson.data.avideo.video.type)) {// 直播
+						String ttl = "极路客精彩视频";
+						/*if ("1".equals(mVideoJson.data.avideo.video.type)) {// 直播
 							ttl = mVideoJson.data.avideo.user.nickname + "的直播视频分享";
 							realDesc = ttl + "(使用#极路客Goluk#拍摄)";
-						}
+						}*/
 						// 缩略图
 						Bitmap bitmap = getThumbBitmap(mVideoJson.data.avideo.video.picture);
 						if (this != null && !this.isFinishing()) {
 							this.mCustomLoadingDialog.close();
 							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
-									describe, ttl, bitmap, realDesc, mVideoJson.data.avideo.video.videoid);
+									allDescribe, ttl, bitmap, realDesc, mVideoJson.data.avideo.video.videoid);
 							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 						}
 					} else {
