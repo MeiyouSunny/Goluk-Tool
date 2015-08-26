@@ -850,9 +850,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			break;
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			isBuffering = true;
-//			 if (0 == mFullVideoView.getCurrentPosition()) {
-			mImageLayout.setVisibility(View.VISIBLE);
-//			 }
+			 if (0 == mFullVideoView.getCurrentPosition()) {
+				 mImageLayout.setVisibility(View.VISIBLE);
+			 }
 			showLoading();
 			GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onInfo  showLoading");
 			break;
