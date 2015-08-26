@@ -401,6 +401,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 			switchOpenAndClose(!mIsOpenShare);
 			break;
 		case R.id.share_sayother:
+			GolukDebugUtils.e("", "------------点击输入框-----------------mIsExit："+mIsExit);
 			if (mIsExit) {
 				return;
 			}
