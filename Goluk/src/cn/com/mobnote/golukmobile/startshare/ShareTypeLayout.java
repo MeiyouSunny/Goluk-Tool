@@ -375,7 +375,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 				return;
 			}
 //			mAdapter.setData(getData(TYPE_SG));
-			mEditText.setHint("吓死宝宝了，前面啥情况?说说呗...");
+			mEditText.setHint("吓死宝宝了，前面啥情况？说说呗...");
 			switchTypeUI(TYPE_SG);
 			break;
 		case R.id.share_type_ml:

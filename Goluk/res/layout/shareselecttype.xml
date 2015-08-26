@@ -18,7 +18,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_gravity="center">
 
             <TextView
                 android:id="@+id/share_type_bg"
@@ -27,7 +28,8 @@
                 android:layout_centerInParent="true"
                 android:singleLine="true"
                 android:text="@string/share_str_type_bg"
-                android:textSize="@dimen/share_type_size"/>
+                android:textSize="@dimen/share_type_size"
+                android:gravity="center_vertical"/>
         </RelativeLayout>
 
         <!-- 事故大爆料 -->
@@ -35,7 +37,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:layout_gravity="center" >
 
             <TextView
                 android:id="@+id/share_type_sg"
@@ -44,7 +47,8 @@
                 android:layout_centerInParent="true"
                 android:singleLine="true"
                 android:text="@string/share_str_type_sg"
-                android:textSize="@dimen/share_type_size" />
+                android:textSize="@dimen/share_type_size"
+                android:gravity="center_vertical" />
         </RelativeLayout>
 
         <!-- 美丽风景 -->
@@ -52,7 +56,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:layout_gravity="center" >
 
             <TextView
                 android:id="@+id/share_type_ml"
@@ -61,7 +66,8 @@
                 android:layout_centerInParent="true"
                 android:singleLine="true"
                 android:text="@string/share_str_type_ml"
-                android:textSize="@dimen/share_type_size" />
+                android:textSize="@dimen/share_type_size"
+                android:gravity="center_vertical" />
         </RelativeLayout>
 
         <!-- 随手拍 -->
@@ -69,7 +75,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:layout_gravity="center" >
 
             <TextView
                 android:id="@+id/share_type_ssp"
@@ -78,7 +85,8 @@
                 android:layout_centerInParent="true"
                 android:singleLine="true"
                 android:text="@string/share_str_type_ssp"
-                android:textSize="@dimen/share_type_size" />
+                android:textSize="@dimen/share_type_size"
+                android:gravity="center_vertical" />
         </RelativeLayout>
     </LinearLayout>
     
