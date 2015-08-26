@@ -106,6 +106,10 @@ public class SpecialListActivity extends BaseActivity implements
 
 		ztid = intent.getStringExtra("ztid");
 		title = intent.getStringExtra("title");
+		
+		if(title.length()>12){
+			title = title.substring(0, 12) + "...";
+		}
 
 		GolukApplication.getInstance().getVideoSquareManager()
 				.addVideoSquareManagerListener("SpecialListActivity", this);
