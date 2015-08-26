@@ -88,7 +88,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private int resTypeSelectColor = 0;
 	private int resTypeUnSelectColor = 0;
-	private RelativeLayout mTitleLayout = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -161,13 +160,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (isType) {
 			mShareSwitchTypeTv.setTextColor(resTypeSelectColor);
 			mShareSwitchFilterTv.setTextColor(resTypeUnSelectColor);
-			mShareTypeImg.setBackgroundResource(R.drawable.share_type_press_icon);
+			mShareTypeImg.setBackgroundResource(R.drawable.share_type_icon_select);
 			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_icon);
 		} else {
 			mShareSwitchTypeTv.setTextColor(resTypeUnSelectColor);
 			mShareSwitchFilterTv.setTextColor(resTypeSelectColor);
 			mShareTypeImg.setBackgroundResource(R.drawable.share_type_icon);
-			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_press_icon);
+			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_icon_select);
 		}
 	}
 
@@ -232,9 +231,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareFilterLayout = (LinearLayout) findViewById(R.id.share_filter_layout);
 		mShareFilterImg = (ImageView) findViewById(R.id.share_filter_img);
 		mShareSwitchFilterTv = (TextView) findViewById(R.id.share_switch_filter);
-		mTitleLayout = (RelativeLayout) findViewById(R.id.title_layout);
 
-		mTitleLayout.setOnClickListener(this);
 		mShareTypeLayout.setOnClickListener(this);
 		mShareFilterLayout.setOnClickListener(this);
 
@@ -503,7 +500,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final int id = v.getId();
 		switch (id) {
 		case R.id.back_btn:
-		case R.id.title_layout:
 			// 返回
 			exit();
 			break;
