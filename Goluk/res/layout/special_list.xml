@@ -28,7 +28,7 @@
             android:textColor="@color/white"
             android:ellipsize="end" 
             android:singleLine="true"
-            android:maxLength="12"
+            android:maxEms="12"
             android:textSize="18sp" />
 
         <Button
