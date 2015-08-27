@@ -462,6 +462,8 @@ public class CarRecorderActivity extends BaseActivity implements
 			mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
 			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+			
+			mConnectTip.setText(wifiname);
 			break;
 		case WIFI_STATE_CONNING:
 			if (isBindSucess()) {

@@ -81,7 +81,6 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 
 		mLayoutFlater = LayoutInflater.from(mContext);
 		mParentLayout = parentLayout;
-		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
 		initLayout();
 	}
 
@@ -188,7 +187,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	}
 
 	private void switchVoiceState() {
-		
+		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
 		if (null != mVideoConfigState) {
 			if (1 == mVideoConfigState.AudioEnabled) {
 				if (mIsCanSound) {
