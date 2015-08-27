@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -129,9 +128,9 @@ public class CommentListViewAdapter extends BaseAdapter {
 		if (null == mContext || null == mVideoUserId || "".equals(mVideoUserId)) {
 			return temp.mUserName;
 		}
-		if (mVideoUserId.equals(temp.mUserId)) {
-			return "车主";
-		}
+		// if (mVideoUserId.equals(temp.mUserId)) {
+		// return "车主";
+		// }
 		return temp.mUserName;
 	}
 }

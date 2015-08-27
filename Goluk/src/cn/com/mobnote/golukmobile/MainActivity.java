@@ -53,7 +53,6 @@ import cn.com.mobnote.receiver.NetworkStateReceiver;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.mobnote.video.LocalVideoListAdapter;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -82,10 +81,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private Button mMoreBtn = null;
 	/** 视频广场按钮 */
 	private Button msquareBtn = null;
-
-	/** 本地视频列表数据适配器 */
-	public LocalVideoListAdapter mLocalVideoListAdapter = null;
-
 	/** wifi列表manage */
 	private WifiConnectManager mWac = null;
 
@@ -319,7 +314,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				switch (what) {
 				case 1:
 					// 视频第一针截取成功,刷新页面UI
-					mLocalVideoListAdapter.notifyDataSetChanged();
 					break;
 				case 3:
 					// 检测是否已连接小车本热点

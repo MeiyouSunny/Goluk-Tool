@@ -666,11 +666,13 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						// 成功
 					} else {
 						// 错误
-						GolukUtils.showToast(mContext, "视频点赞异常，请稍后再试");
+						GolukUtils.showToast(mContext, "网络异常，请稍后重试");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			} else {
+				GolukUtils.showToast(mContext, "网络异常，请稍后重试");
 			}
 		}
 	}

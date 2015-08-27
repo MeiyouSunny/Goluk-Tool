@@ -9,8 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.video.MVManage;
-import cn.com.mobnote.video.MVManage.MVEditData;
+import cn.com.mobnote.golukmobile.startshare.MVManage.MVEditData;
 import cn.com.mobnote.view.MyGridView;
 
 public class ShareFilterLayout {

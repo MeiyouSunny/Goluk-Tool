@@ -1137,11 +1137,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----click_OK----isSucess : " + isSucess);
 	}
 
-	// 点赞接口回调
-	public void callBack_clickOK(int success, Object param1, Object param2) {
-
-	}
-
 	/**
 	 * 重连runnable
 	 */
