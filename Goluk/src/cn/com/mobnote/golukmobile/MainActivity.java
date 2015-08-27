@@ -432,6 +432,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
 				time = time > oldtime ? time : oldtime;
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
+				
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList"+ time);
 				updateHotPointState(true);
 
 				if (null != PhotoAlbumActivity.mHandler) {

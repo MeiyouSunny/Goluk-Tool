@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
 import cn.com.mobnote.golukmobile.fresco.ConfigConstants;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
@@ -1109,18 +1110,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case IPC_VDCP_Msg_Query:
 				// msg = 1000 多文件目录查询
 				if (RESULE_SUCESS == param1) {
-					GolukDebugUtils.e("xuhw", "YYYYYY=====IPC_VDCP_Msg_Query==mPageSource=" + mPageSource + "=param2="
-							+ param2);
+					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==5555===stopDownloadList"+ param2);
 					if ("ipcfilemanager".equals(mPageSource)) {
 						return;
 					}
-					GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=###====11111===");
+					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==6666===stopDownloadList");
 					if (TextUtils.isEmpty((String) param2)) {
 						return;
 					}
-					GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@===####==2222===");
+					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==7777===stopDownloadList");
 					fileList = IpcDataParser.parseMoreFile((String) param2);
-					GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@===####==333==fileList.size()=" + fileList.size());
+					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList===fileList.size()=" + fileList.size());
 					mHandler.removeMessages(1001);
 					mHandler.sendEmptyMessageDelayed(1001, 1000);
 				}
@@ -1452,7 +1452,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
-		GolukDebugUtils.e("xuhw", "YYYYYY===queryNewFileList====starttime=" + starttime);
+		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" +starttime);
 		mIPCControlManager.queryFileListInfo(6, 5, starttime, 2147483647);
 	}
 
@@ -1511,7 +1511,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	CustomDialog mCustomDialog = null;
 
 	private void tips() {
-		GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====11111===");
+		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck===stopDownloadList");
+		
 		if (null != mCustomDialog && mCustomDialog.isShowing()) {
 			return;
 		}
@@ -1520,12 +1521,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return;
 		}
 
-		GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====2222==fileList.size()=" + fileList.size());
+		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck===stopDownloadList==fileList.size()=" + fileList.size());
 		if (mContext instanceof Activity && fileList.size() > 0) {
-			GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====33333===");
+			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck");
 			Activity a = (Activity) mContext;
 			if (!a.isFinishing()) {
-				GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====44444===");
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck");
 				int size = fileList.size();
 				for (int i = 0; i < fileList.size(); i++) {
 					VideoFileInfo info = fileList.get(i);
@@ -1553,7 +1554,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						if (mNoDownLoadFileList.contains(info.location)) {
 							mNoDownLoadFileList.remove(info.location);
 						}
-						GolukDebugUtils.e("xuhw", "BBBBBB===1111==mNoDownLoadFileList="+mNoDownLoadFileList.size()+"==mDownLoadFileList="+mDownLoadFileList.size());
+						GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck===mNoDownLoadFileList="+mNoDownLoadFileList.size()+"==mDownLoadFileList="+mDownLoadFileList.size());
 					} else {
 						if (!mDownLoadFileList.contains(info.location)) {
 							mDownLoadFileList.add(info.location);
@@ -1561,7 +1562,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					}
 
 				}
-				GolukDebugUtils.e("xuhw", "YYYYYY===@@@@@@=====5555===");
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck");
 				if (size <= 0) {
 					return;
 				}
@@ -1577,11 +1578,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 				// @Override
 				// public void onClickListener() {
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==11111===stopDownloadList" +mDownLoadFileList.size());
-				List<String> order = Utils.bubbleSort(mDownLoadFileList, true);
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==11111===stopDownloadList" +mDownLoadFileList.size() + mDownLoadFileList);
+				List<String> order = FileInfoManagerUtils.bubbleSort(mDownLoadFileList, true);
 				mDownLoadFileList.clear();
 				mDownLoadFileList.addAll(order);
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==22222===stopDownloadList" +mDownLoadFileList.size());
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==22222===stopDownloadList" +mDownLoadFileList.size() + mDownLoadFileList );
 				if (mDownLoadFileList.size() > 0) {
 					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList=====stopDownloadList" );
 					autodownloadfile = true;
