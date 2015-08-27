@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.video.MVManage.MVEditData;
+import cn.com.mobnote.golukmobile.startshare.MVManage.MVEditData;
 
 @SuppressLint("InflateParams")
 public class MVListAdapter extends BaseAdapter {

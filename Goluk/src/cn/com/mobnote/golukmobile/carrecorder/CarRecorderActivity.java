@@ -61,7 +61,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ReadWifiConfig;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -80,13 +79,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.api.Image;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtmpPlayerView;
@@ -462,6 +455,8 @@ public class CarRecorderActivity extends BaseActivity implements
 			mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
 			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+			
+			mConnectTip.setText(wifiname);
 			break;
 		case WIFI_STATE_CONNING:
 			if (isBindSucess()) {
@@ -1055,20 +1050,26 @@ public class CarRecorderActivity extends BaseActivity implements
 		case R.id.mRtmpPlayerView: {// 停止预览
 			if (!GolukApplication.getInstance().getIpcIsLogin())
 				return;
-			setFullScreen(false);
-			rtmpIsOk = false;
-			mRtmpPlayerView.removeCallbacks(retryRunnable);
-			if (mRtmpPlayerView.isPlaying()) {
-				GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
-				mRtmpPlayerView.stopPlayback();
+			if (m_bIsFullScreen)
+			{
+				setFullScreen(false);
 			}
-			hidePlayer();
-			isShowPlayer = false;
-			isConnecting = false;
-			mPalyerLayout.setVisibility(View.VISIBLE);
-			mNotconnected.setVisibility(View.GONE);
-			mConncetLayout.setVisibility(View.GONE);
-			mFullScreen.setVisibility(View.GONE);
+			else
+			{
+				rtmpIsOk = false;
+				mRtmpPlayerView.removeCallbacks(retryRunnable);
+				if (mRtmpPlayerView.isPlaying()) {
+					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
+					mRtmpPlayerView.stopPlayback();
+				}
+				hidePlayer();
+				isShowPlayer = false;
+				isConnecting = false;
+				mPalyerLayout.setVisibility(View.VISIBLE);
+				mNotconnected.setVisibility(View.GONE);
+				mConncetLayout.setVisibility(View.GONE);
+				mFullScreen.setVisibility(View.GONE);
+			}
 		}
 			break;
 		default:
@@ -1211,7 +1212,7 @@ public class CarRecorderActivity extends BaseActivity implements
 		// 移除定位通知及反编码通知
 		mApp.removeLocationListener(SelfContextTag);
 		GetBaiduAddress.getInstance().setCallBackListener(null);
-	};
+	}
 
 	@Override
 	protected void onStop() {
@@ -1230,7 +1231,7 @@ public class CarRecorderActivity extends BaseActivity implements
 		// hidePlayer();
 		// }
 		// }
-	};
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -1246,7 +1247,7 @@ public class CarRecorderActivity extends BaseActivity implements
 					.removeIPCManagerListener("main");
 		}
 
-	};
+	}
 
 	/**
 	 * 8s视频一键抢拍
@@ -2114,6 +2115,7 @@ public class CarRecorderActivity extends BaseActivity implements
 						new FileInputStream(file), "UTF-8"));
 				String str = br.readLine();
 				if (TextUtils.isEmpty(str)) {
+					br.close();
 					return data;
 				}
 

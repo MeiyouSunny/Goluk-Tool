@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -1136,11 +1135,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		boolean isSucess = clickPraise("1", getCurrentVideoId(), "1");
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----click_OK----isSucess : " + isSucess);
-	}
-
-	// 点赞接口回调
-	public void callBack_clickOK(int success, Object param1, Object param2) {
-
 	}
 
 	/**

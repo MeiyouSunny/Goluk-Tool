@@ -14,7 +14,6 @@ import android.os.Message;
 import android.provider.MediaStore.Video.Thumbnails;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;

@@ -114,14 +114,6 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.LocalVideoListActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="cn.com.mobnote.golukmobile.LocalVideoShareListActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="cn.com.mobnote.golukmobile.startshare.VideoEditActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
@@ -151,11 +143,6 @@
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
@@ -214,12 +201,6 @@
             android:name="cn.com.mobnote.golukmobile.carrecorder.settings.TimeSettingActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="cn.com.mobnote.golukmobile.videosuqare.CCPlayerPage"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
             android:name="cn.com.mobnote.golukmobile.player.VideoPlayerView"

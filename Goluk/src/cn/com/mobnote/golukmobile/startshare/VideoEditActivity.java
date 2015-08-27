@@ -1,14 +1,10 @@
 package cn.com.mobnote.golukmobile.startshare;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +21,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -90,6 +87,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private int resTypeSelectColor = 0;
 	private int resTypeUnSelectColor = 0;
+
+	/** 防止重复点击退出 */
+	private boolean isBack = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -269,7 +269,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			@Override
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
-				GolukDebugUtils.e("", "onPrepared---video---加载完成");
+				GolukDebugUtils.e("", "VideoEditActivity----onPrepared---video---加载完成");
 				updateVideoProgress();
 			}
 
@@ -284,6 +284,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			public void onCompletion(MediaPlayerControl mpc) {
 				// 视频播放完成
 				mVideoProgressBar.setProgress(mVVPlayVideo.getDuration());
+
+				GolukDebugUtils.e("", "VideoEditActivity----onCompletion---");
 			}
 		});
 
@@ -340,33 +342,44 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 					return;
 				}
 				try {
-					int maxDuration = mVVPlayVideo.getDuration();
-					while (null != mProgressThread && null != mVVPlayVideo) {
-						if (isExit) {
-							break;
-						}
-						// 设置进度条的长度为视频的总长度
-						mVideoProgressBar.setMax(maxDuration);
-						// 如果视频正在播放而且进度条没有被拖动
-						if (mVVPlayVideo.isPlaying()) {
-							// 设置进度条的当前进度为视频已经播放的长度
-							int position = mVVPlayVideo.getCurrentPosition();
-							mVideoProgressBar.setProgress(position);
-						}
-						try {
-							// 休眠50毫秒
-							Thread.sleep(50);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
+					updatePlayerProgress();
 				} catch (Exception e) {
-					Log.e("jyf", "jyf------ViewEditActivity-----updateVideoProgress-----Error!");
+					GolukDebugUtils.e("jyf", "jyf------ViewEditActivity-----updateVideoProgress-----Error!");
 					e.printStackTrace();
 				}
 			};
 		};
 		mProgressThread.start();
+	}
+
+	/**
+	 * 更新播放器进度
+	 * 
+	 * @author jyf
+	 */
+	private void updatePlayerProgress() {
+		int maxDuration = mVVPlayVideo.getDuration();
+		// 设置进度条的长度为视频的总长度
+		mVideoProgressBar.setMax(maxDuration);
+		while (null != mProgressThread && null != mVVPlayVideo) {
+			if (isExit) {
+				break;
+			}
+			// 如果视频正在播放而且进度条没有被拖动
+			if (mVVPlayVideo.isPlaying()) {
+				// 设置进度条的当前进度为视频已经播放的长度
+				int position = mVVPlayVideo.getCurrentPosition();
+				mVideoProgressBar.setProgress(position);
+				GolukDebugUtils.e("jyf", "VideoEditActivity----thread----getCurrent----position:" + position);
+			}
+			GolukDebugUtils.e("jyf", "VideoEditActivity----thread----getCurrent----max:" + maxDuration);
+			try {
+				// 休眠500毫秒
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -378,14 +391,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		return super.onKeyDown(keyCode, event);
 	}
 
-	private boolean isBack = false;
-
 	private void exit() {
 		if (isBack) {
 			return;
 		}
 		isBack = true;
 		isExit = true;
+		stopProgressThread();
 		mTypeLayout.setExit();
 		mInputLayout.setExit();
 		mCreateNewVideo.setExit();
@@ -450,7 +462,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	 * @date 2015年6月10日
 	 */
 	private void click_next() {
-		// 下一步,导出视频编码
+		// 导出视频编码
 		// 停止进度条线程
 		stopProgressThread();
 		// 暂停播放器
@@ -677,7 +689,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			return;
 		}
 
-		final String title = "极路客精彩视频分享";
+		final String title = "极路客精彩视频";
 		final String describe = getShareDesc();
 		final String sinaTxt = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 
@@ -696,6 +708,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (describe == null || "".equals(describe)) {
 			describe = "#极路客精彩视频#";
 		}
+
+		UserInfo info = mApp.getMyInfo();
+		if (null != info) {
+			describe = info.nickName + "：" + describe;
+		}
+
 		return describe;
 	}
 

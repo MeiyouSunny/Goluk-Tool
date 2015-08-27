@@ -401,7 +401,8 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 				mPraiseVideoSquareInfo.mVideoEntity.ispraise = "1";
 				updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
 			}
-
+		} else {
+			GolukUtils.showToast(mContext, "网络异常，请稍后重试");
 		}
 	}
 
