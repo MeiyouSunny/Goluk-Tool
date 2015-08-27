@@ -66,10 +66,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 
 		itIndexMore = getIntent();
 		WebSettings webSettings = mWebView.getSettings();
-		webSettings.setUseWideViewPort(true);
 		webSettings.setJavaScriptEnabled(true);
-		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);  
-		webSettings.setDomStorageEnabled(true);
 		mWebView.setWebViewClient(new WebViewClient() {
 
 			@Override
@@ -131,10 +128,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();
 			} else {
-				mWebView.destroy();
 				finish();
 			}
-			break;
+			return true;
 		default:
 			break;
 		}
@@ -148,12 +144,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();
 			} else {
-				mWebView.destroy();
 				finish();
 			}
 			break;
 		case R.id.user_title_right:
-			mWebView.destroy();
 			this.finish();
 			break;
 		default:
@@ -162,8 +156,11 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void closeLoading() {
-		mLoadingDialog.close();
-		mBackBtn.setEnabled(true);
+		if(mLoadingDialog != null){
+			mLoadingDialog.close();
+			mLoadingDialog = null;
+			mBackBtn.setEnabled(true);
+		}
 	}
 
 	/**
@@ -191,4 +188,13 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					}
 				}).setNegativeButton("取消", null).create().show();
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		GolukDebugUtils.e("", "--------UserOpenUrlActivity-------onDestory：");
+		mWebView.destroy();
+		mWebView = null;
+	}
+	
 }
