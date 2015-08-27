@@ -342,5 +342,14 @@
     <string name="str_comment_input_hit">写评论</string>
     <string name="str_comment_no_input">该评论已关闭</string>
     <string name="str_category_map">地图</string>
+    
+    <!-- 意见反馈 -->
+    <string name="user_opinion_type_yingjiang">硬件相关</string>
+    <string name="user_opinion_type_anzhuang">安装相关</string>
+    <string name="user_opinion_type_tuxiang">图象效果</string>
+    <string name="user_opinion_type_shouji">手机客户端</string>
+    <string name="user_opinion_type_qita">其他</string>
+    <string name="user_opinion_type_cancle">取消</string>
+    <string name="user_opinion_type_select">选择意见类型</string>
 
 </resources>

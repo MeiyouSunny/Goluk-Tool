@@ -846,7 +846,7 @@ public class JsonUtil {
 	 * @return
 	 */
 	public static String putOpinion(String tag, String sys_version, String app_version, String ipc_version,
-			String phone_models, String opinion, String contact) {
+			String phone_models, String opinion, String contact,String selectType) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("tag", tag);
@@ -856,6 +856,7 @@ public class JsonUtil {
 			obj.put("phone_models", phone_models);
 			obj.put("opinion", opinion);
 			obj.put("contact", contact);
+			obj.put("type", selectType);
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
