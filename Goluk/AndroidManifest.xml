@@ -154,11 +154,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        <activity
-            android:name="cn.com.mobnote.golukmobile.carrecorder.LiveShareSettingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+
         <activity
             android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
