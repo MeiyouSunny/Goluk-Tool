@@ -1058,10 +1058,10 @@ public class CarRecorderActivity extends BaseActivity implements
 			{
 				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
-				if (mRtmpPlayerView.isPlaying()) {
+//				if (mRtmpPlayerView.isPlaying()) {
 					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
 					mRtmpPlayerView.stopPlayback();
-				}
+//				}
 				hidePlayer();
 				isShowPlayer = false;
 				isConnecting = false;
