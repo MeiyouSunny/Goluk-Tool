@@ -50,6 +50,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mApp = (GolukApplication) getApplication();
 
 		initView();
+		GolukDebugUtils.e("", "--------UserOpenUrlActivity-------onCreate：");
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
