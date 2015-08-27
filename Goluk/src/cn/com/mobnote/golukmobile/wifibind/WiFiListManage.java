@@ -1,11 +1,10 @@
-package cn.com.mobnote.list;
+package cn.com.mobnote.golukmobile.wifibind;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 
 import java.util.ArrayList;
 
-import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 
