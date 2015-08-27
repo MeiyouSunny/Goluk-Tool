@@ -1,4 +1,4 @@
-package cn.com.mobnote.video;
+package cn.com.mobnote.golukmobile.startshare;
 
 import android.content.Context;
 import java.util.ArrayList;
