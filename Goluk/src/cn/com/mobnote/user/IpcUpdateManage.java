@@ -596,10 +596,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean ipcInstall(String filePath) {
 		// 判断网络是否连接
-		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
-			return false;
-		} else {
+//		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
+//			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
+//			return false;
+//		} else {
 			// 判断摄像头是否连接
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				return update(filePath);
@@ -608,7 +608,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 				return false;
 			}
 
-		}
+//		}
 	}
 
 	/**

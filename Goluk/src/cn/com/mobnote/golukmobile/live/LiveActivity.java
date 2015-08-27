@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.BaiduMapView;
 import cn.com.mobnote.golukmobile.videosuqare.JsonCreateUtils;
+import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
@@ -1737,37 +1738,47 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				GolukUtils.showToast(this, "分享失败");
 				return;
 			}
-			try {
-				JSONObject result = new JSONObject((String) param2);
-				if (!result.getBoolean("success")) {
-					return;
-				}
-				JSONObject data = result.getJSONObject("data");
-				String shareurl = data.getString("shorturl");
-				String coverurl = data.getString("coverurl");
-				GolukDebugUtils.e("", "zhdata===" + data);
-				String describe = data.optString("describe");
-				if (TextUtils.isEmpty(describe)) {
-					describe = "#极路客直播#";
-				}
-				String name = "";
-				if (this.isShareLive) {
-					name = this.myInfo.nickName;
-				} else {
-					name = this.currentUserInfo.nickName;
-				}
-				String ttl = name + "的直播视频分享";
-				if ("".equals(coverurl)) {
-				}
 
-				final String defalutInputStr = ttl + "(使用#极路客Goluk#拍摄)";
-				// 设置分享内容
-				CustomShareBoard sb = new CustomShareBoard(LiveActivity.this, sharePlatform, shareurl, coverurl,
-						describe, ttl, mThumbBitmap, defalutInputStr, getShareVideoId());
-				sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-			} catch (JSONException e) {
-				e.printStackTrace();
+			ShareDataBean dataBean = JsonUtil.parseShareCallBackData((String) param2);
+			if (!dataBean.isSucess) {
+				GolukUtils.showToast(this, "分享失败");
+				return;
 			}
+			final String title = "极路客精彩直播";
+			final String describe = getLiveUserName() + "：" + getShareDes(dataBean.describe);
+			final String sinaTxt = title + "(使用#极路客Goluk#拍摄)";
+			// 设置分享内容
+			CustomShareBoard sb = new CustomShareBoard(LiveActivity.this, sharePlatform, dataBean.shareurl,
+					dataBean.coverurl, describe, title, mThumbBitmap, sinaTxt, getShareVideoId());
+			sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+
+		}
+	}
+
+	/**
+	 * 得到分享中视频描述(便于异常处理)
+	 * 
+	 * @param des
+	 *            视频的原描述
+	 * @author jyf
+	 */
+	private String getShareDes(String des) {
+		if (TextUtils.isEmpty(des)) {
+			return "#极路客直播#";
+		}
+		return des;
+	}
+
+	/**
+	 * 得到当前发起直播的用户名称
+	 * 
+	 * @author jyf
+	 */
+	private String getLiveUserName() {
+		if (this.isShareLive) {
+			return this.myInfo.nickName;
+		} else {
+			return this.currentUserInfo.nickName;
 		}
 	}
 

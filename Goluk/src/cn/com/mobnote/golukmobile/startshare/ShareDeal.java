@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
@@ -21,6 +23,8 @@ public class ShareDeal implements OnClickListener {
 	private String mCurrentShareType = "2";
 
 	private int txtColor = 0;
+	/** 标志是否退出 */
+	private boolean mIsExit = false;
 
 	public ShareDeal(Activity activity, RelativeLayout rootLayout) {
 		mActivity = activity;
@@ -45,6 +49,21 @@ public class ShareDeal implements OnClickListener {
 		mYouMengRootLayout.findViewById(R.id.sina).setOnClickListener(this);
 	}
 
+	/**
+	 * 请求分享数据成功后，调用此方法进行第三方分享
+	 * 
+	 * @param surl
+	 *            分享地址
+	 * @param curl
+	 *            在线图片地址
+	 * @param db
+	 * @param tl
+	 * @param bitmap
+	 * @param inputDeafultStr
+	 * @param videoId
+	 *            视频 ID
+	 * @author jyf
+	 */
 	public void toShare(String surl, String curl, String db, String tl, Bitmap bitmap, String inputDeafultStr,
 			String videoId) {
 		mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, surl, curl, db, tl, bitmap, inputDeafultStr,
@@ -63,12 +82,20 @@ public class ShareDeal implements OnClickListener {
 		}
 	}
 
+	/**
+	 * 接受第三方界面分享的返回结果, (参数同Activity中的onActivityResult方法参数一样)
+	 * 
+	 * @author jyf
+	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		mSharePlatform.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private boolean mIsExit = false;
-
+	/**
+	 * 标志本界面退出，不再响应事件
+	 * 
+	 * @author jyf
+	 */
 	public void setExit() {
 		mIsExit = true;
 	}
@@ -79,70 +106,138 @@ public class ShareDeal implements OnClickListener {
 		switch (id) {
 		case R.id.wechat:
 			// 微信
-			if (mIsExit) {
-				return;
-			}
-			if (mSharePlatform.isInstallWeiXin()) {
-				mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
-				click_deal(mCurrentShareType);
-			} else {
-				GolukUtils.showToast(mActivity, "你未安装微信");
-			}
-
+			click_WeiXin();
 			break;
 		case R.id.wechat_circle:
 			// 朋友圈
-			if (mIsExit) {
-				return;
-			}
-			if (mSharePlatform.isInstallWeiXin()) {
-				mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
-				click_deal(mCurrentShareType);
-			} else {
-				GolukUtils.showToast(mActivity, "你未安装微信");
-			}
-
+			click_WeiXin_Penyou();
 			break;
 		case R.id.qq:
 			// QQ
-			if (mIsExit) {
-				return;
-			}
-			if (mSharePlatform.isInstallQQ()) {
-				mCurrentShareType = CustomShareBoard.TYPE_QQ;
-				click_deal(mCurrentShareType);
-			} else {
-				GolukUtils.showToast(mActivity, "你未安装QQ或版本太低");
-			}
-
+			click_QQ();
 			break;
 		case R.id.qqZone:
 			// QQ空间
-			if (mIsExit) {
-				return;
-			}
-			mCurrentShareType = CustomShareBoard.TYPE_QQ_ZONE;
-			click_deal(mCurrentShareType);
+			click_QQ_KongJian();
 			break;
 		case R.id.sina:
 			// 新浪微博
-			if (mIsExit) {
-				return;
-			}
-			if (mSharePlatform.isSinaWBValid()) {
-				mCurrentShareType = CustomShareBoard.TYPE_WEIBO_XINLANG;
-				click_deal(mCurrentShareType);
-			} else {
-				// 先去授权
-				mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, null, null, null, null, null, null, null);
-				mShareBoard.click_sina();
-			}
+			click_Sina();
 			break;
 		default:
 			break;
 		}
 	}
 
+	/**
+	 * 判断点击第三方分享时，是否合法，如果合法再去执行,把不合法的因素全部写在这个方法里
+	 * 
+	 * @return false/true 不合法/合法
+	 * @author jyf
+	 */
+	public boolean isValid() {
+		if (mIsExit) {
+			return false;
+		}
+		if (!GolukApplication.getInstance().isUserLoginSucess) {
+			if (null != mActivity && mActivity instanceof BaseActivity) {
+				((BaseActivity) mActivity).toLoginBack();
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 点击微信
+	 * 
+	 * @author jyf
+	 */
+	private void click_WeiXin() {
+		if (!isValid()) {
+			return;
+		}
+		if (mSharePlatform.isInstallWeiXin()) {
+			mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
+			click_deal(mCurrentShareType);
+		} else {
+			GolukUtils.showToast(mActivity, "你未安装微信");
+		}
+	}
+
+	/**
+	 * 点击微信朋友圈
+	 * 
+	 * @author jyf
+	 */
+	private void click_WeiXin_Penyou() {
+		if (!isValid()) {
+			return;
+		}
+		if (mSharePlatform.isInstallWeiXin()) {
+			mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
+			click_deal(mCurrentShareType);
+		} else {
+			GolukUtils.showToast(mActivity, "你未安装微信");
+		}
+	}
+
+	/**
+	 * 点击QQ
+	 * 
+	 * @author jyf
+	 */
+	private void click_QQ() {
+		if (!isValid()) {
+			return;
+		}
+		if (mSharePlatform.isInstallQQ()) {
+			mCurrentShareType = CustomShareBoard.TYPE_QQ;
+			click_deal(mCurrentShareType);
+		} else {
+			GolukUtils.showToast(mActivity, "你未安装QQ或版本太低");
+		}
+	}
+
+	/**
+	 * 点击QQ空间
+	 * 
+	 * @author jyf
+	 */
+	private void click_QQ_KongJian() {
+		if (!isValid()) {
+			return;
+		}
+		mCurrentShareType = CustomShareBoard.TYPE_QQ_ZONE;
+		click_deal(mCurrentShareType);
+	}
+
+	/**
+	 * 点击新浪微博
+	 * 
+	 * @author jyf
+	 */
+	private void click_Sina() {
+		if (!isValid()) {
+			return;
+		}
+		if (mSharePlatform.isSinaWBValid()) {
+			mCurrentShareType = CustomShareBoard.TYPE_WEIBO_XINLANG;
+			click_deal(mCurrentShareType);
+		} else {
+			// 先去授权
+			mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, null, null, null, null, null, null, null);
+			mShareBoard.click_sina();
+		}
+	}
+
+	/**
+	 * 第三方分享，点击事件统一处理
+	 * 
+	 * @param type
+	 *            CustomShareBoard类中的常量定义
+	 * @author jyf
+	 */
 	private void click_deal(String type) {
 		if (null != mActivity && mActivity instanceof VideoEditActivity) {
 			((VideoEditActivity) mActivity).shareClick(type);

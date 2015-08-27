@@ -23,7 +23,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/share_type_icon"
-                android:contentDescription="@string/imgdes" />
+                android:contentDescription="@string/imgdes"
+                android:layout_gravity="center_vertical" />
 
             <TextView
                 android:id="@+id/share_switch_type"
@@ -31,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:text="@string/share_type"
-                android:textSize="13sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <!-- 滤镜 -->
@@ -49,7 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/share_filter_icon"
-                android:contentDescription="@string/imgdes" />
+                android:contentDescription="@string/imgdes"
+                android:layout_gravity="center_vertical" />
 
             <TextView
                 android:id="@+id/share_switch_filter"
@@ -57,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:text="@string/share_filter"
-                android:textSize="13sp" />
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 

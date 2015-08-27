@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 
@@ -38,7 +39,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	private Context mContext = null;
 	private LayoutInflater mLayoutFlater = null;
 	private RelativeLayout mRootLayout = null;
-	private ListView mListView = null;
+//	private ListView mListView = null;
 	private EditText mEditText = null;
 
 	private SelectTypeAdapter mAdapter = null;
@@ -106,8 +107,8 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	}
 
 	private void initView() {
-		mListView = (ListView) mRootLayout.findViewById(R.id.shortshare_listview);
-		mListView.setOnItemClickListener(this);
+//		mListView = (ListView) mRootLayout.findViewById(R.id.shortshare_listview);
+//		mListView.setOnItemClickListener(this);
 		mEditText = (EditText) mRootLayout.findViewById(R.id.share_sayother);
 		mEditText.setOnClickListener(this);
 		mEditText.setKeyListener(null);
@@ -133,7 +134,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 		mShareOpenLayout.setOnClickListener(this);
 
 		mAdapter = new SelectTypeAdapter(getData(TYPE_BG));
-		mListView.setAdapter(mAdapter);
+//		mListView.setAdapter(mAdapter);
 
 		switchOpenAndClose(mIsOpenShare);
 	}
@@ -152,7 +153,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 		if (null != inputStr && !inputStr.equals("")) {
 			return inputStr;
 		}
-		return this.mAdapter.getCurrentSelectData();
+		return "啥也不想说，快看视频吧...";
 	}
 
 	private void switchOpenAndClose(boolean isOpen) {
@@ -335,7 +336,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 		final int length = typeViewArray.length;
 		for (int i = 0; i < length; i++) {
 			if (select == i) {
-				typeViewArray[i].setBackgroundResource(R.drawable.share_bg_icon);
+				typeViewArray[i].setBackgroundResource(R.drawable.share_type_bg);
 				typeViewArray[i].setTextColor(resTypeSelectColor);
 			} else {
 				typeViewArray[i].setBackgroundDrawable(null);
@@ -365,28 +366,32 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 			if (mIsExit) {
 				return;
 			}
-			mAdapter.setData(getData(TYPE_BG));
+//			mAdapter.setData(getData(TYPE_BG));
+			mEditText.setHint("视频描述裸奔中，快来给他披大衣...");
 			switchTypeUI(TYPE_BG);
 			break;
 		case R.id.share_type_sg:
 			if (mIsExit) {
 				return;
 			}
-			mAdapter.setData(getData(TYPE_SG));
+//			mAdapter.setData(getData(TYPE_SG));
+			mEditText.setHint("吓死宝宝了，前面啥情况？说说呗...");
 			switchTypeUI(TYPE_SG);
 			break;
 		case R.id.share_type_ml:
 			if (mIsExit) {
 				return;
 			}
-			mAdapter.setData(getData(TYPE_ML));
+//			mAdapter.setData(getData(TYPE_ML));
+			mEditText.setHint("任何伟大的创意都需要一个漂亮的描述...");
 			switchTypeUI(TYPE_ML);
 			break;
 		case R.id.share_type_ssp:
 			if (mIsExit) {
 				return;
 			}
-			mAdapter.setData(getData(TYPE_SSP));
+//			mAdapter.setData(getData(TYPE_SSP));
+			mEditText.setHint("导演，配个文字再加场吻戏吧！");
 			switchTypeUI(TYPE_SSP);
 			break;
 		case R.id.share_open_layout:
@@ -396,6 +401,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 			switchOpenAndClose(!mIsOpenShare);
 			break;
 		case R.id.share_sayother:
+			GolukDebugUtils.e("", "------------点击输入框-----------------mIsExit："+mIsExit);
 			if (mIsExit) {
 				return;
 			}

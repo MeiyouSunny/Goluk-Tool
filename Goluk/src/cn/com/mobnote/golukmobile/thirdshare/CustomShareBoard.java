@@ -10,12 +10,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
-import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -48,14 +45,15 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	/** 保存当前的分享方式 */
 	private String mCurrentShareType = "2";
 
-	SharePlatformUtil sharePlatform;
+	private SharePlatformUtil sharePlatform;
 
-	String shareurl = "";
-	String coverurl = "";
-	String describe = "";
-	String ttl = "";
-	Bitmap mThumbBitmap = null;
-	private String mRealDesc = null;
+	private String shareurl = "";
+	private String coverurl = "";
+	private String describe = "";
+	private String ttl = "";
+	private Bitmap mThumbBitmap = null;
+	/** 新浪微博Txt */
+	private String mSinaTxt = null;
 	/** 视频Id ,用户服务器上报　 */
 	private String mVideoId = null;
 
@@ -70,7 +68,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		describe = db;
 		ttl = tl;
 		mThumbBitmap = bitmap;
-		mRealDesc = realDesc;
+		mSinaTxt = realDesc;
 		mVideoId = videoId;
 
 		initView(activity);
@@ -127,6 +125,14 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“微信”
 	public void click_wechat() {
+		if (sharePlatform.isInstallWeiXin()) {
+			if (null != mActivity && mActivity instanceof BaseActivity) {
+				if (!((BaseActivity) mActivity).isAllowedClicked()) {
+					return;
+				}
+				((BaseActivity) mActivity).setJumpToNext();
+			}
+		}
 		System.out.println("zh======wx" + shareurl + coverurl + describe + ttl);
 		sharePlatform.setShareContent(shareurl + "&type=2", coverurl, describe, ttl);
 		mCurrentShareType = TYPE_WEIXIN;
@@ -136,7 +142,15 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“朋友圈”
 	public void click_wechat_circle() {
-		sharePlatform.setShareContent(shareurl + "&type=5", coverurl, describe, ttl);
+		if (sharePlatform.isInstallWeiXin()) {
+			if (null != mActivity && mActivity instanceof BaseActivity) {
+				if (!((BaseActivity) mActivity).isAllowedClicked()) {
+					return;
+				}
+				((BaseActivity) mActivity).setJumpToNext();
+			}
+		}
+		sharePlatform.setShareContent(shareurl + "&type=5", coverurl, describe, describe);
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 		this.shareUp();// 上报分享统计
 		performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
@@ -144,6 +158,12 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“ＱＱ”
 	public void click_QQ() {
+		if (null != mActivity && mActivity instanceof BaseActivity) {
+			if (!((BaseActivity) mActivity).isAllowedClicked()) {
+				return;
+			}
+			((BaseActivity) mActivity).setJumpToNext();
+		}
 		@SuppressWarnings("static-access")
 		Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
 		mCurrentShareType = TYPE_QQ;
@@ -158,19 +178,30 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“ＱＱ空间”
 	public void click_qqZone() {
+		if (null != mActivity && mActivity instanceof BaseActivity) {
+			if (!((BaseActivity) mActivity).isAllowedClicked()) {
+				return;
+			}
+			((BaseActivity) mActivity).setJumpToNext();
+		}
 		sharePlatform.setShareContent(shareurl + "&type=7", coverurl, describe, ttl);
 		mCurrentShareType = TYPE_QQ_ZONE;
 		this.shareUp();// 上报分享统计
 		performShare(SHARE_MEDIA.QZONE);
 	}
-	
-
 
 	public void click_sina() {
 		GolukDebugUtils.e("", "sina-------click----11111");
 		this.dismiss();
 		if (null == sharePlatform) {
 			return;
+		}
+
+		if (null != mActivity && mActivity instanceof BaseActivity) {
+			if (!((BaseActivity) mActivity).isAllowedClicked()) {
+				return;
+			}
+			((BaseActivity) mActivity).setJumpToNext();
 		}
 
 		GolukDebugUtils.e("", "sina-------click----2222");
@@ -184,7 +215,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		this.shareUp();// 上报分享统计
 		printStr();
 		final String t_des = describe;
-		final String inputDefaultContent = mRealDesc;
+		final String inputDefaultContent = mSinaTxt;
 		final String title = ttl;
 		final String dataUrl = shareurl;
 		final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;

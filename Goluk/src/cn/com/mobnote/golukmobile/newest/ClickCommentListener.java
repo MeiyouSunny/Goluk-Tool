@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.newest;
 
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import android.content.Context;
@@ -20,6 +21,13 @@ public class ClickCommentListener implements OnClickListener {
 
 	@Override
 	public void onClick(View arg0) {
+		// 防止重复点击
+		if (null != mContext && mContext instanceof BaseActivity) {
+			if (!((BaseActivity) mContext).isAllowedClicked()) {
+				return;
+			}
+			((BaseActivity) mContext).setJumpToNext();
+		}
 		Intent intent = new Intent(mContext, CommentActivity.class);
 		intent.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoSquareInfo.mVideoEntity.videoid);
 		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");

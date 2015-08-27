@@ -11,7 +11,6 @@
     <application
         android:name="cn.com.mobnote.application.GolukApplication"
         android:allowBackup="true"
-        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
@@ -134,19 +133,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.WiFiLinkCompleteActivity"
+            android:name="cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.VideoEditMusicActivity"
+            android:name="cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.WiFiLinkIndexActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="cn.com.mobnote.golukmobile.WiFiLinkListActivity"
+            android:name="cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
@@ -154,7 +149,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-
         <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity"
             android:screenOrientation="portrait"
@@ -176,7 +170,6 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        
         <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity"
             android:screenOrientation="portrait"
@@ -228,7 +221,6 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-      
         <activity
             android:name="cn.com.mobnote.golukmobile.player.VideoPlayerView"
             android:configChanges="orientation|keyboardHidden|screenSize"

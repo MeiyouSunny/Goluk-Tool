@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile;
+package cn.com.mobnote.golukmobile.wifibind;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,16 +19,14 @@ import android.widget.ImageView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.entity.WiFiInfo;
+import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.reportlog.ReportLog;
 import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
-import cn.com.mobnote.golukmobile.wifibind.ViewFrame;
-import cn.com.mobnote.golukmobile.wifibind.WifiLinkSetIpcLayout;
-import cn.com.mobnote.golukmobile.wifibind.WifiLinkSucessLayout;
-import cn.com.mobnote.golukmobile.wifibind.WifiLinkWaitConnLayout;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
