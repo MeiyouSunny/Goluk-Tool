@@ -5,11 +5,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -48,7 +44,6 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
-import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
@@ -128,9 +123,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private SharedPreferences mPreferences = null;
 	private Editor mEditor = null;
 	private long exitTime = 0;
-
-	SharePlatformUtil sharePlatform;
-
 	/** 首次进入的引导div */
 	private RelativeLayout indexDiv = null;
 	private ImageView mIndexImg = null;
@@ -520,7 +512,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			return;
 		}
 		mApp.mWiFiStatus = WIFI_STATE_CONNING;
-
 	}
 
 	// 连接成功
@@ -550,16 +541,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
 		return preferences.getBoolean("isbind", false);
-	}
-
-	private void toLogin() {
-		Intent intent = new Intent(this, UserLoginActivity.class);
-		intent.putExtra("isInfo", "back");
-		mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-		mEditor = mPreferences.edit();
-		mEditor.putString("toRepwd", "mainActivity");
-		mEditor.commit();
-		startActivity(intent);
 	}
 
 	/**
@@ -622,9 +603,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (mApp.getIpcIsLogin()) {
 			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
 					"提示", "是否继续直播");
-		} else {
-
-		}
+		} 
 	}
 
 	@Override
@@ -763,44 +742,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	private Builder mBuilder = null;
-	private AlertDialog dialog = null;
-
-	public void click_toLocalVideoShare() {
-		GolukDebugUtils.i("lily", "-------isUserLoginSuccess------" + mApp.isUserLoginSucess
-				+ "------autologinStatus-----" + mApp.autoLoginStatus);
-		if (!mApp.isUserLoginSucess) {
-
-			mApp.mUser.setUserInterface(this);
-			if (mApp.autoLoginStatus == 1) {
-				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							return true;
-						}
-						return false;
-					}
-				}).create();
-				dialog.show();
-				return;
-			} else if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
-				// console.toast("网络连接异常，请重试", mContext);
-				return;
-			}
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
-			return;
-		}
-
-		// 跳转到本地视频分享列表
-		Intent localVideoShareList = new Intent(MainActivity.this, LocalVideoShareListActivity.class);
-		startActivity(localVideoShareList);
-		updateHotPointState(false);
-	}
-
 	/**
 	 * 重置红点显示状态
 	 * 
@@ -816,60 +757,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		} else {
 
 		}
-	}
-
-	/**
-	 * 发起主动直播
-	 * 
-	 * @author jiayf
-	 * @date Apr 2, 2015
-	 */
-	private void toShareLive() {
-		if (!mApp.isUserLoginSucess) {
-			// 未登录成功
-			mApp.mUser.setUserInterface(this);
-			if (mApp.autoLoginStatus == 1) {
-				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false).setOnKeyListener(new OnKeyListener() {
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							return true;
-						}
-						return false;
-					}
-				}).create();
-				dialog.show();
-				return;
-			} else if (mApp.autoLoginStatus == 3 || mApp.autoLoginStatus == 4) {
-				return;
-			}
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
-			return;
-		}
-
-		if (!mApp.getIpcIsLogin()) {
-			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_IPC_LOGINOUT, "提示", "请先连接摄像头");
-			return;
-		}
-
-		GolukApplication.getInstance().stopDownloadList();
-
-		boolean b = mApp.mIpcUpdateManage.ipcConnect();
-		// 匹配
-		if (b) {
-			// 开启直播
-			Intent intent = new Intent(this, LiveActivity.class);
-			intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-			intent.putExtra(LiveActivity.KEY_GROUPID, "");
-			intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-			intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-			startActivity(intent);
-		}
-
 	}
 
 	// 查看他人的直播
@@ -892,10 +779,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void dismissAutoDialog() {
-		if (null != dialog) {
-			dialog.dismiss();
-			dialog = null;
-		}
+	
 	}
 
 	@Override
@@ -979,84 +863,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	/** 保存要修改的手机热点密码 */
-	private String mNewMobilePWD = null;
-
-	private void modifyApNotifyIPc(final String newMobilePWD) {
-		mWac = new WifiConnectManager(mWifiManager, this);
-
-		WifiRsBean oldBean = mWac.readConfig();
-		if (null == oldBean) {
-			return;
-		}
-
-		mNewMobilePWD = newMobilePWD;
-
-		final String ipc_ssid = oldBean.getIpc_ssid();
-		final String ipc_pass = oldBean.getIpc_pass();
-		final String ipc_mac = oldBean.getIpc_mac();
-		final String ipc_ip = oldBean.getIpc_ip();
-
-		final String ph_ssid = oldBean.getPh_ssid();
-		final String ph_pwd = newMobilePWD;
-
-		boolean isHasPwd = true;
-		if (null == ipc_pass || "".equals(ipc_pass)) {
-			isHasPwd = false;
-		}
-		final String json = JsonUtil.getIPcJson(ipc_ssid, ipc_pass, ph_ssid, ph_pwd, DEFAULT_IP, DEFAULT_WAY, isHasPwd);
-		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
-		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
-	}
-
-	// 修改热点的密码
-	// newMobilePWD 为新密码
-	private void editMobileWifiPwd(final String newMobilePWD) {
-		if (null == mWac) {
-			return;
-		}
-
-		WifiRsBean oldBean = mWac.readConfig();
-		if (null == oldBean) {
-			return;
-		}
-		final String ipc_ssid = oldBean.getIpc_ssid();
-		final String ipc_ip = oldBean.getIpc_ip();
-		final String ipc_mac = oldBean.getIpc_mac();
-
-		final String ph_ssid = oldBean.getPh_ssid();
-		final String ph_pwd = newMobilePWD;
-
-		// 保存连接数据
-		WifiRsBean beans = new WifiRsBean();
-		beans.setIpc_mac(ipc_mac);
-		beans.setIpc_ssid(ipc_ssid);
-		beans.setIpc_ip(ipc_ip);
-		beans.setPh_ssid(ph_ssid);
-		beans.setPh_pass(ph_pwd);
-
-		mWac.saveConfiguration(beans);
-
-		// 创建热点之前先断开ipc连接
-		mApp.mIPCControlManager.setIPCWifiState(false, "");
-		// 改变Application-IPC退出登录
-		mApp.setIpcLoginOut();
-		// 创建热点
-		mWac.createWifiAP(ph_ssid, ph_pwd, ipc_ssid, ipc_mac);
-	}
-
 	/**
 	 * 设置IPC信息成功回调
 	 */
 	public void setIpcLinkWiFiCallBack(int state) {
-		// if (0 == state) {
-		// // sucess
-		// if (null != mNewMobilePWD) {
-		// editMobileWifiPwd(mNewMobilePWD);
-		// }
-		// } else {
-		// GolukUtils.showToast(this, "修改密码失败");
-		// }
+		
 	}
 
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
