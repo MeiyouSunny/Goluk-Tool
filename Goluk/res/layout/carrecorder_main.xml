@@ -140,13 +140,13 @@
                 android:id="@+id/mConncetLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/video_linking_pic" />
+                android:background="@drawable/video_no_link_pic" />
 
             <RelativeLayout
                 android:id="@+id/mNotconnected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/video_no_link_pic"
+                android:background="@drawable/video_linking_pic"
                 android:visibility="gone" />
         </RelativeLayout>
 
