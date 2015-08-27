@@ -1050,20 +1050,26 @@ public class CarRecorderActivity extends BaseActivity implements
 		case R.id.mRtmpPlayerView: {// 停止预览
 			if (!GolukApplication.getInstance().getIpcIsLogin())
 				return;
-			setFullScreen(false);
-			rtmpIsOk = false;
-			mRtmpPlayerView.removeCallbacks(retryRunnable);
-			if (mRtmpPlayerView.isPlaying()) {
-				GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
-				mRtmpPlayerView.stopPlayback();
+			if (m_bIsFullScreen)
+			{
+				setFullScreen(false);
 			}
-			hidePlayer();
-			isShowPlayer = false;
-			isConnecting = false;
-			mPalyerLayout.setVisibility(View.VISIBLE);
-			mNotconnected.setVisibility(View.GONE);
-			mConncetLayout.setVisibility(View.GONE);
-			mFullScreen.setVisibility(View.GONE);
+			else
+			{
+				rtmpIsOk = false;
+				mRtmpPlayerView.removeCallbacks(retryRunnable);
+				if (mRtmpPlayerView.isPlaying()) {
+					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
+					mRtmpPlayerView.stopPlayback();
+				}
+				hidePlayer();
+				isShowPlayer = false;
+				isConnecting = false;
+				mPalyerLayout.setVisibility(View.VISIBLE);
+				mNotconnected.setVisibility(View.GONE);
+				mConncetLayout.setVisibility(View.GONE);
+				mFullScreen.setVisibility(View.GONE);
+			}
 		}
 			break;
 		default:
