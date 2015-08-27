@@ -1463,6 +1463,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年5月19日
 	 */
 	public void stopDownloadList() {
+		GolukDebugUtils.e("xuhw", "BBBBBB===0000==m=====stopDownloadList="+autodownloadfile);
 		if (autodownloadfile) {
 			autodownloadfile = false;
 			if (mDownLoadFileList.size() > 0) {
@@ -1473,7 +1474,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					GolukDebugUtils.e("xuhw", "BBBBBB===1111==m=====stopDownloadList=");
 				}
 			}
+			GolukDebugUtils.e("xuhw", "BBBBBB===2222==m=====stopDownloadList=");
 			mIPCControlManager.stopDownloadFile();
+			GolukDebugUtils.e("xuhw", "BBBBBB===3333==m=====stopDownloadList=");
+			
 		}
 	}
 
@@ -1573,10 +1577,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 				// @Override
 				// public void onClickListener() {
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==11111===stopDownloadList" +mDownLoadFileList.size());
 				List<String> order = Utils.bubbleSort(mDownLoadFileList, true);
 				mDownLoadFileList.clear();
 				mDownLoadFileList.addAll(order);
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==22222===stopDownloadList" +mDownLoadFileList.size());
 				if (mDownLoadFileList.size() > 0) {
+					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList=====stopDownloadList" );
 					autodownloadfile = true;
 				}
 

@@ -17,7 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -54,13 +56,17 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	private boolean mIsCanTalk = false;
 	/** 直播时长 */
 	private int mCurrentLiveSecond = DEFAULT_SECOND;
-	private boolean mIsCanSound = true;
+	private boolean mIsCanSound = false;
 	/** 当前选择视频类型 */
 	private int mVideoType = 0;
 
 	private boolean isShow = false;
 	/** 是否用户主动点击取消 */
 	private boolean isUserDimiss = false;
+	
+	/** 音视频配置信息 */
+	private VideoConfigState mVideoConfigState = null;
+	
 
 	public void setCallBackNotify(IPopwindowFn fn) {
 		this.mListener = fn;
@@ -75,7 +81,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 
 		mLayoutFlater = LayoutInflater.from(mContext);
 		mParentLayout = parentLayout;
-
+		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
 		initLayout();
 	}
 
@@ -182,13 +188,27 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	}
 
 	private void switchVoiceState() {
-		if (mIsCanSound) {
+		
+		if (null != mVideoConfigState) {
+			if (1 == mVideoConfigState.AudioEnabled) {
+				if (mIsCanSound) {
+					mIsCanSound = false;
+					mSoundBtn.setBackgroundResource(R.drawable.set_close_btn);
+				} else {
+					mIsCanSound = true;
+					mSoundBtn.setBackgroundResource(R.drawable.set_open_btn);
+				}
+			} else {
+				mIsCanSound = false;
+				mSoundBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+
+		} else {
 			mIsCanSound = false;
 			mSoundBtn.setBackgroundResource(R.drawable.set_close_btn);
-		} else {
-			mIsCanSound = true;
-			mSoundBtn.setBackgroundResource(R.drawable.set_open_btn);
 		}
+		
+		
 	}
 
 	@Override

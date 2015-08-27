@@ -24,11 +24,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="xx专题"
             android:textColor="@color/white"
             android:ellipsize="end" 
             android:singleLine="true"
-            android:maxLength="12"
+            android:text="xx专题"
             android:textSize="18sp" />
 
         <Button
