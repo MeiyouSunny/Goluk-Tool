@@ -61,6 +61,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private int mCurrentVideoType = 0;
 	/** 分享的视频名称 */
 	private String videoName = "";
+	/**分享的视频创建时间**/
+	private String videoCreateTime = "";
 	private boolean isExit = false;
 
 	private FrameLayout mMiddleLayout = null;
@@ -205,6 +207,18 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			String[] strs = videopath.split("/");
 			videoName = strs[strs.length - 1];
 			videoName = videoName.replace("mp4", "jpg");
+			//TODO 分享时间
+			GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName："+videoName);
+			if(videoName.contains("_")){
+				String[] videoTimeArray = videoName.split("_");
+				if((null != videoTimeArray) && (videoTimeArray.length == 3)){
+					videoCreateTime = "20"+videoTimeArray[1]+"000";
+				}else{
+					videoCreateTime = "";
+				}
+			}else{
+				videoCreateTime = "";
+			}
 		}
 	}
 
@@ -627,7 +641,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String desc = mTypeLayout.getCurrentDesc();
 		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
 		final String t_thumbPath = mUploadVideo.getThumbPath();
-		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath);
+		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,videoCreateTime);
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
