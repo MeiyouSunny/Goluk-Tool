@@ -1,8 +1,5 @@
 package cn.com.mobnote.golukmobile.startshare;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +22,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -663,7 +661,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			return;
 		}
 
-		final String title = "极路客精彩视频分享";
+		final String title = "极路客精彩视频";
 		final String describe = getShareDesc();
 		final String sinaTxt = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 
@@ -682,6 +680,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (describe == null || "".equals(describe)) {
 			describe = "#极路客精彩视频#";
 		}
+
+		UserInfo info = mApp.getMyInfo();
+		if (null != info) {
+			describe = info.nickName + "：" + describe;
+		}
+
 		return describe;
 	}
 
