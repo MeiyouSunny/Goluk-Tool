@@ -74,6 +74,16 @@
             android:visibility="gone" />
     </RelativeLayout>
 
+    <!-- 显示第一帧图片 -->
+
+    <RelativeLayout
+        android:id="@+id/edit_play_img"
+        android:layout_width="match_parent"
+        android:layout_height="204dp"
+        android:layout_below="@id/startshare_prompt"
+        android:background="#00000000" >
+    </RelativeLayout>
+
     <!-- 类型布局 -->
 
     <include
