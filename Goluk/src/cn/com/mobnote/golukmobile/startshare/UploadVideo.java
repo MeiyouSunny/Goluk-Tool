@@ -107,9 +107,11 @@ public class UploadVideo {
 		}
 	};
 
-	public UploadVideo(Context context, GolukApplication application) {
+	public UploadVideo(Context context, GolukApplication application, final String videoName) {
 		mContext = context;
 		mApp = application;
+		mVideoName = videoName;
+		createThumb();
 	}
 
 	public void setUploadInfo(final String videoPath, final int videoType, final String videoName) {
@@ -151,6 +153,9 @@ public class UploadVideo {
 	 * @date 2015年8月14日
 	 */
 	private void createThumb() {
+		if (null != mShortBitmap) {
+			return;
+		}
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 		thumbFile = filePath + File.separator + mVideoName;
 		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, THUMB_WIDTH, THUMB_HEIGHT);
