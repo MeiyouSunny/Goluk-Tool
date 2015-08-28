@@ -181,47 +181,49 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	}
 	
 	private void loadImage(RelativeLayout mPlayerLayout, String url, String iconUrl) {
-        mPlayerLayout.removeAllViews();
-        SimpleDraweeView view = new SimpleDraweeView(mContext);
-        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-        GenericDraweeHierarchy hierarchy = builder
-                        .setFadeDuration(300)
-                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-                    .setActualImageScaleType(ScaleType.FIT_XY)
-                    .build();
-        view.setHierarchy(hierarchy);
-
-//        if (!lock) {
-        	view.setImageURI(Uri.parse(url));
-//        }
-                
-        int height = (int) ((float) width / 1.77f);
-        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-//        mPreLoadingParams.addRule(RelativeLayout.BELOW, R.id.mDate);
-        mPlayerLayout.addView(view, mPreLoadingParams);
-        
-        if(!TextUtils.isEmpty(iconUrl)) {
-        	SimpleDraweeView icon = new SimpleDraweeView(mContext);
-            GenericDraweeHierarchyBuilder iconbuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-            GenericDraweeHierarchy iconhierarchy = iconbuilder
-                            .setFadeDuration(300)
-//                            .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-//                        .setFailureImage(mContext.getResources().getDrawable(R.drawable.tag_1), ScaleType.FIT_XY)
-                        .setActualImageScaleType(ScaleType.FIT_XY)
-                        .build();
-            icon.setHierarchy(iconhierarchy);
-            
-            if (!lock) {
-            	icon.setImageURI(Uri.parse(iconUrl));
-            }
-            
-            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams((int)(39*density), (int)(20.33*density));
+		final int id = 3123;
+		final int iconId = 3124;
+		SimpleDraweeView view, icon;
+		int count = mPlayerLayout.getChildCount();
+		if (0 == count) {
+			mPlayerLayout.removeAllViews();
+			view = new SimpleDraweeView(mContext);
+			view.setId(id);
+			int height = (int) ((float) width / 1.77f);
+			RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+			mPlayerLayout.addView(view, mPreLoadingParams);
+			
+			icon = new SimpleDraweeView(mContext);
+			icon.setId(iconId);
+			RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams((int)(39*density), (int)(20.33*density));
             iconParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             iconParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mPlayerLayout.addView(icon, iconParams);
-        }
-      
+		}else {
+			view = (SimpleDraweeView)mPlayerLayout.findViewById(id);
+			icon = (SimpleDraweeView)mPlayerLayout.findViewById(iconId);
+		}
+		
+		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+		GenericDraweeHierarchy mGenericDraweeHierarchy = builder.setFadeDuration(300)
+				.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				.setActualImageScaleType(ScaleType.FIT_XY).build();
+		view.setHierarchy(mGenericDraweeHierarchy);
+		view.setImageURI(Uri.parse(url));
+		
+		if (TextUtils.isEmpty(iconUrl)) {
+			icon.setVisibility(View.GONE);
+		}else {
+			icon.setVisibility(View.VISIBLE);
+			GenericDraweeHierarchyBuilder iconbuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+	        GenericDraweeHierarchy iconhierarchy = iconbuilder
+	                        .setFadeDuration(300)
+	                    .setActualImageScaleType(ScaleType.FIT_XY)
+	                    .build();
+	        icon.setHierarchy(iconhierarchy);
+	        icon.setImageURI(Uri.parse(iconUrl));
+		}
 
 	}
 
@@ -253,7 +255,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	 */
 	public void unlock() {
 		lock = false;
-		this.notifyDataSetChanged();
+//		this.notifyDataSetChanged();
 	}
 	
 	private String getFormatNumber(String fmtnumber) {

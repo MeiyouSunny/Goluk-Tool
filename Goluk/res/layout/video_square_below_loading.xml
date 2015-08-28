@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="加载中，请稍候..."
+            android:textColor="#333333"
             android:textSize="12sp" />
     </LinearLayout>
 

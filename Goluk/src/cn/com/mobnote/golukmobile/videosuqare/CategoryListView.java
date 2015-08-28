@@ -4,11 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -533,6 +536,29 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 		wonderfulFirstVisible = firstVisibleItem;
 		wonderfulVisibleCount = visibleItemCount;
+		
+		if(null == mDataList && mDataList.size() <= 0) {
+			return;
+		}
+		
+		int first = firstVisibleItem - 1;
+		if (first < mDataList.size()) {
+			for(int i=0; i<first; i++) {
+				String url = mDataList.get(i).mVideoEntity.picture;
+				Uri uri = Uri.parse(url);
+				Fresco.getImagePipeline().evictFromMemoryCache(uri);
+			}
+		}
+		
+		int last = firstVisibleItem + visibleItemCount + 1;
+		if (last < mDataList.size()) {
+			for(int i=last; i<mDataList.size(); i++) {
+				String url = mDataList.get(i).mVideoEntity.picture;
+				Uri uri = Uri.parse(url);
+				Fresco.getImagePipeline().evictFromMemoryCache(uri);
+			}
+		}
+		
 	}
 
 	public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info) {

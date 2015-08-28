@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.text.Spannable;
@@ -23,13 +25,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.core.BitmapSize;
 
 @SuppressLint("InflateParams")
 public class NewestAdapter extends BaseAdapter {
@@ -390,8 +396,10 @@ public class NewestAdapter extends BaseAdapter {
 			liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
 			liveLayout.setLayoutParams(liveLayoutParams);
 
-			RelativeLayout imagelayout = (RelativeLayout) mHeadView.findViewById(R.id.imagelayout);
-			loadImage(imagelayout, mLiveInfo.pic);
+			ImageView mImageView =  (ImageView) mHeadView.findViewById(R.id.mImageView);
+			RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(width, height);
+			mImageView.setLayoutParams(dvParams);
+			loadHeadImage(mImageView, mLiveInfo.pic, width, height);
 
 			LinearLayout mLookLayout = (LinearLayout) mHeadView.findViewById(R.id.mLookLayout);
 			TextView mLookNum = (TextView) mHeadView.findViewById(R.id.mLookNum);
@@ -415,16 +423,18 @@ public class NewestAdapter extends BaseAdapter {
 			item.setId(iid);
 
 			item.setOnTouchListener(new ClickCategoryListener(mContext, mCategoryDataInfo, this));
-			RelativeLayout imageLayout = (RelativeLayout) item.findViewById(R.id.imageLayout);
 			TextView mTitleName = (TextView) item.findViewById(R.id.mTitleName);
 			TextView mUpdateTime = (TextView) item.findViewById(R.id.mUpdateTime);
 
 			RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
-
 			mTitleName.setText(mCategoryDataInfo.name);
 			mUpdateTime.setText(getTime(mCategoryDataInfo.time));
-			loadImage(imageLayout, mCategoryDataInfo.coverurl);
 
+			ImageView mImageView = (ImageView)item.findViewById(R.id.mImageView);
+			RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
+			mImageView.setLayoutParams(dvParams);
+			loadHeadImage(mImageView, mCategoryDataInfo.coverurl, imagewidth, imageheight);
+			
 			int id = i + 1111 - 2;
 			if (i % 2 == 0) {
 				itemparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -444,24 +454,42 @@ public class NewestAdapter extends BaseAdapter {
 		return mHeadView;
 
 	}
+	
+	private void loadHeadImage(final ImageView image, String url, int width, int height) {
+		BitmapDisplayConfig config = new BitmapDisplayConfig();
+		config.setBitmapMaxSize(new BitmapSize(width, height));
+		Bitmap bitmap = BitmapManager.getInstance().mBitmapUtils.getBitmapFromMemCache(url, config);
+		if (null == bitmap) {
+			image.setImageResource(R.drawable.tacitly_pic);
+			
+			BitmapManager.getInstance().mBitmapUtils.display(image, url);
+		}else {
+			image.setImageBitmap(bitmap);
+		}
+	}
 
 	private void loadImage(RelativeLayout layout, String url) {
-		layout.removeAllViews();
-		SimpleDraweeView view = new SimpleDraweeView(mContext);
+		final int id = 3123;
+		SimpleDraweeView view;
+		int count = layout.getChildCount();
+		if (0 == count) {
+			layout.removeAllViews();
+			view = new SimpleDraweeView(mContext);
+			view.setId(id);
+			int height = (int) ((float) width / 1.77f);
+			RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+			layout.addView(view, mPreLoadingParams);
+		}else {
+			view = (SimpleDraweeView)layout.findViewById(id);
+		}
+		
 		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-		GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
+		GenericDraweeHierarchy mGenericDraweeHierarchy = builder.setFadeDuration(300)
 				.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
 				.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
 				.setActualImageScaleType(ScaleType.FIT_XY).build();
-		view.setHierarchy(hierarchy);
-
-//		if (!lock) {
-			view.setImageURI(Uri.parse(url));
-//		}
-
-		int height = (int) ((float) width / 1.77f);
-		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-		layout.addView(view, mPreLoadingParams);
+		view.setHierarchy(mGenericDraweeHierarchy);
+		view.setImageURI(Uri.parse(url));
 	}
 
 	public static class ViewHolder {
@@ -514,7 +542,7 @@ public class NewestAdapter extends BaseAdapter {
 	 */
 	public void unlock() {
 		lock = false;
-		this.notifyDataSetChanged();
+//		this.notifyDataSetChanged();
 	}
 
 	@SuppressLint("SimpleDateFormat")
