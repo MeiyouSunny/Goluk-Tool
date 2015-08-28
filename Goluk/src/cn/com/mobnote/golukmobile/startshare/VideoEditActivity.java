@@ -199,7 +199,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				FrameLayout.LayoutParams.MATCH_PARENT);
 		if (isType) {
 			mMiddleLayout.addView(mTypeLayout.getRootLayout(), lp);
-			mTypeLayout.show();
 		} else {
 			mMiddleLayout.addView(mFilterLayout.getRootLayout(), lp);
 		}

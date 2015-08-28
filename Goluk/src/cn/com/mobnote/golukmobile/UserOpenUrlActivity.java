@@ -1,13 +1,8 @@
 package cn.com.mobnote.golukmobile;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
-import cn.com.mobnote.user.MyProgressWebView;
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,11 +12,19 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
+import cn.com.mobnote.user.MyProgressWebView;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 程序内打开浏览器
@@ -40,7 +43,12 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	/****/
 	private Intent itIndexMore = null;
 	private TextView mTextRight = null;
-
+	/** 加载webview发生错误状态 **/
+	private boolean mErrorState = false;
+	
+	private RelativeLayout mErrorLayout = null;
+	private TextView mErrorText = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +68,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
 		mTextRight.setBackgroundResource(R.drawable.btn_close_image);
+		mErrorLayout = (RelativeLayout) findViewById(R.id.error_layout);
+		mErrorText = (TextView) findViewById(R.id.error_text);
 
 		if (null == mLoadingDialog) {
 			mLoadingDialog = new CustomLoadingDialog(this, "页面加载中");
@@ -73,7 +83,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				String from_tag = itIndexMore.getStringExtra(FROM_TAG);
-				if(!TextUtils.isEmpty(from_tag)) {
+				if (!TextUtils.isEmpty(from_tag)) {
 					if (from_tag.equals("skill")) {
 						if (url.contains("tel:")) {
 							webviewCall(url);
@@ -91,6 +101,16 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				GolukDebugUtils.e("webview", "--------onPageFinished--------");
 				closeLoading();
 			}
+
+			@Override
+			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+				mErrorState = true;
+				WindowManager wm = (WindowManager) mApp.getContext()
+			            .getSystemService(Context.WINDOW_SERVICE);
+				mWebView.setVisibility(View.GONE);
+				mErrorText.setVisibility(View.VISIBLE);
+			}
+
 		});
 
 		if (!itIndexMore.getExtras().toString().equals("")) {
@@ -100,23 +120,28 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			if (!TextUtils.isEmpty(from_tag)) {
 				if (from_tag.equals("skill")) {
 					mTextTitle.setText("极路客小技巧");
+					errorFunction();
 					mWebView.loadUrl(getRtmpAddress() + "?type=2");
 				} else if (from_tag.equals("install")) {
 					mTextTitle.setText("安装指导");
+					errorFunction();
 					mWebView.loadUrl(getRtmpAddress() + "?type=3");
 				} else if (from_tag.equals("shopping")) {
 					mTextTitle.setText("购买极路客");
+					errorFunction();
 					mWebView.loadUrl(getRtmpAddress() + "?type=4");
 				} else if (from_tag.equals("buyline")) {
 					mTextTitle.setText("购买极路客专用降压线");
+					errorFunction();
 					mWebView.loadUrl(getRtmpAddress() + "?type=1");
 				}
-			}else {
+			} else {
 				mTextTitle.setText("");
 				String url = itIndexMore.getStringExtra("url");
+				errorFunction();
 				mWebView.loadUrl(url);
 			}
-			
+
 		}
 		mBackBtn.setOnClickListener(this);
 		mTextRight.setOnClickListener(this);
@@ -126,6 +151,11 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
+			if (mErrorState) {
+				finish();
+				mErrorState = false;
+				return true;
+			}
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();
 			} else {
@@ -142,6 +172,11 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.back_btn:
+			if (mErrorState) {
+				finish();
+				mErrorState = false;
+				return;
+			}
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();
 			} else {
@@ -157,7 +192,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void closeLoading() {
-		if(mLoadingDialog != null){
+		if (mLoadingDialog != null) {
 			mLoadingDialog.close();
 			mLoadingDialog = null;
 			mBackBtn.setEnabled(true);
@@ -189,7 +224,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					}
 				}).setNegativeButton("取消", null).create().show();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -198,4 +233,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mWebView = null;
 	}
 	
+	private void errorFunction(){
+		if(mErrorState){
+			return ;
+		}
+	}
+
 }

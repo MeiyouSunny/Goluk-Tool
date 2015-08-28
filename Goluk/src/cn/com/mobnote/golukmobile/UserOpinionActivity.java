@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -36,7 +37,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  *
  */
-public class UserOpinionActivity extends BaseActivity implements OnClickListener,OpinionDialogFn {
+public class UserOpinionActivity extends BaseActivity implements OnClickListener, OpinionDialogFn {
 
 	/****/
 	private GolukApplication mApp = null;
@@ -65,13 +66,13 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 	private String app_version = "";
 	private String ipc_version = "";
 	private String phone_models = "";
-	private String opinion = "";
-	private String contact = "";
+	private String userOpinion = "";
+	private String userContact = "";
 	/** loading **/
 	private CustomLoadingDialog mLoadingDialog = null;
-	/**选择意见反馈类型的Dialog**/
+	/** 选择意见反馈类型的Dialog **/
 	private OpinionDialog mOpinionDialog = null;
-	
+
 	private String selectType = "5";
 
 	@Override
@@ -98,8 +99,8 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
 		ipc_version = mApp.mSharedPreUtil.getIPCVersion();
 		phone_models = GolukUtils.getPhone_models();
-		
-		mOpinionDialog = new OpinionDialog(mContext,this);
+
+		mOpinionDialog = new OpinionDialog(mContext, this);
 	}
 
 	@Override
@@ -157,21 +158,21 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 	}
 
 	public void request() {
-		opinion = mEditSuggest.getText().toString();
-		contact = mEditConnection.getText().toString();
+		userOpinion = mEditSuggest.getText().toString();
+		userContact = mEditConnection.getText().toString();
 		UserUtils.hideSoftMethod(this);
-		if ("".equals(opinion)) {
+		if ("".equals(userOpinion)) {
 			UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_content_null));
 		} else {
-			boolean b = requestOpinion("android", sys_version, app_version, ipc_version, phone_models, opinion, contact,
-					selectType);
+			boolean b = requestOpinion("android", sys_version, app_version, ipc_version, phone_models, userOpinion,
+					userContact, selectType);
 			if (b) {
 				mLoadingDialog.show();
 				mBtnBack.setEnabled(false);
 				mTextRight.setEnabled(false);
 				mEditSuggest.setEnabled(false);
 				mEditConnection.setEnabled(false);
-			}else{
+			} else {
 				GolukUtils.showToast(mContext, "反馈失败，请稍候重试");
 			}
 		}
@@ -192,13 +193,9 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 	public boolean requestOpinion(String tag, String sys_version, String app_version, String ipc_version,
 			String phone_models, String opinion, String contact, String type) {
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			// GolukUtils.showToast(mApp.getContext(),
-			// mApp.getResources().getString(R.string.user_net_unavailable));
 			UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_fail));
 			return false;
 		} else {
-			opinion = mEditSuggest.getText().toString();
-			contact = mEditConnection.getText().toString();
 			String newOpinion = "";
 			String newContact = "";
 			try {
@@ -233,6 +230,13 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 					new AlertDialog.Builder(mContext)
 							.setTitle("感谢")
 							.setMessage(this.getResources().getString(R.string.opinion_success))
+							.setOnKeyListener(new DialogInterface.OnKeyListener() {
+								
+								@Override
+								public boolean onKey(DialogInterface arg0, int arg1, KeyEvent arg2) {
+									return true;
+								}
+							})
 							.setPositiveButton(this.getResources().getString(R.string.user_repwd_ok),
 									new DialogInterface.OnClickListener() {
 
@@ -241,14 +245,13 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 											finish();
 										}
 									}).create().show();
-				} else if ("1".equals(result)) {
-					UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_fail));
-				} else if ("2".equals(result)) {
+				} else {
 					UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_fail));
 				}
 
 			} catch (JSONException e) {
 				e.printStackTrace();
+				UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_fail));
 			}
 		} else {
 			switch (codeOut) {
@@ -319,26 +322,26 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void showOpinionDialog(int type) {
-		if(type == OpinionDialogFn.TYPE_FIRST){
+		if (type == OpinionDialogFn.TYPE_FIRST) {
 			mBtnSelect.setText(mContext.getResources().getString(R.string.user_opinion_type_yingjiang));
-			selectType = OpinionDialogFn.TYPE_FIRST+"";
-			GolukDebugUtils.e("", "----------------UserOpinionActivity----------selectType："+selectType);
-		}else if(type == OpinionDialogFn.TYPE_SECOND){
+			selectType = OpinionDialogFn.TYPE_FIRST + "";
+			GolukDebugUtils.e("", "----------------UserOpinionActivity----------selectType：" + selectType);
+		} else if (type == OpinionDialogFn.TYPE_SECOND) {
 			mBtnSelect.setText(mContext.getResources().getString(R.string.user_opinion_type_anzhuang));
-			selectType = OpinionDialogFn.TYPE_SECOND+"";
-		}else if(type == OpinionDialogFn.TYPE_THIRD){
+			selectType = OpinionDialogFn.TYPE_SECOND + "";
+		} else if (type == OpinionDialogFn.TYPE_THIRD) {
 			mBtnSelect.setText(mContext.getResources().getString(R.string.user_opinion_type_tuxiang));
-			selectType = OpinionDialogFn.TYPE_THIRD+"";
-		}else if(type == OpinionDialogFn.TYPE_FOUR){
+			selectType = OpinionDialogFn.TYPE_THIRD + "";
+		} else if (type == OpinionDialogFn.TYPE_FOUR) {
 			mBtnSelect.setText(mContext.getResources().getString(R.string.user_opinion_type_shouji));
-			selectType = OpinionDialogFn.TYPE_FOUR+"";
-		}else if(type == OpinionDialogFn.TYPE_FIVE){
+			selectType = OpinionDialogFn.TYPE_FOUR + "";
+		} else if (type == OpinionDialogFn.TYPE_FIVE) {
 			mBtnSelect.setText(mContext.getResources().getString(R.string.user_opinion_type_qita));
-			selectType = OpinionDialogFn.TYPE_FIVE+"";
-		}else{
-			selectType = OpinionDialogFn.TYPE_FIVE+"";
+			selectType = OpinionDialogFn.TYPE_FIVE + "";
+		} else {
+			selectType = OpinionDialogFn.TYPE_FIVE + "";
 		}
-		GolukDebugUtils.e("", "----------------UserOpinionActivity----------selectType222："+selectType);
+		GolukDebugUtils.e("", "----------------UserOpinionActivity----------selectType222：" + selectType);
 	}
-	
+
 }
