@@ -610,10 +610,13 @@ public class CarRecorderActivity extends BaseActivity implements
 		live_gps = (ImageView) findViewById(R.id.live_gps_icon);
 		live_talk = (ImageView) findViewById(R.id.live_talk_icon);
 		live_release = (ImageView) findViewById(R.id.live_release_icon);
+		
+		
 
 		new1 = (ImageView) findViewById(R.id.new1);
 		new2 = (ImageView) findViewById(R.id.new2);
-
+		
+		liveVideo.setBackgroundResource(R.drawable.driving_voice_off_icon);
 		mRtmpPlayerView.setAudioMute(true);
 		mRtmpPlayerView.setZOrderMediaOverlay(true);
 		mRtmpPlayerView.setBufferTime(1000);
@@ -1886,8 +1889,7 @@ public class CarRecorderActivity extends BaseActivity implements
 			if (mSettingData.isCanVoice) {
 				liveVideo.setBackgroundResource(R.drawable.driving_voice_icon);
 			} else {
-				liveVideo
-						.setBackgroundResource(R.drawable.driving_voice_off_icon);
+				liveVideo.setBackgroundResource(R.drawable.driving_voice_off_icon);
 			}
 			liveTime.setText(GolukUtils.secondToString(mSettingData.duration));
 		}
