@@ -162,13 +162,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (isType) {
 			mShareSwitchTypeTv.setTextColor(resTypeSelectColor);
 			mShareSwitchFilterTv.setTextColor(resTypeUnSelectColor);
-			mShareTypeImg.setBackgroundResource(R.drawable.share_type_icon_select);
+			mShareTypeImg.setBackgroundResource(R.drawable.share_type_press_icon);
 			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_icon);
 		} else {
 			mShareSwitchTypeTv.setTextColor(resTypeUnSelectColor);
 			mShareSwitchFilterTv.setTextColor(resTypeSelectColor);
 			mShareTypeImg.setBackgroundResource(R.drawable.share_type_icon);
-			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_icon_select);
+			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_press_icon);
 		}
 	}
 

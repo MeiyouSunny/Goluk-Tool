@@ -34,7 +34,7 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:paddingTop="14dp"
-        android:background="#c8000000"
+        android:background="@null"
         android:gravity="left|top"
         android:hint="@string/str_shortshare_other"
         android:textColor="@color/white"
