@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-	    <RelativeLayout 
-	        android:id="@+id/imageLayout"
-            android:layout_width="match_parent"
-    		android:layout_height="match_parent" >
-			    		
-	        </RelativeLayout>
+    
+    	<ImageView 
+    	    android:id="@+id/mImageView"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="match_parent"
+    	    />
 	        
 	    <ImageView 
 	        android:id="@+id/mengban"
-            android:layout_alignTop="@+id/imageLayout"
-			android:layout_alignLeft="@+id/imageLayout"
-			android:layout_alignRight="@+id/imageLayout"
-			android:layout_alignBottom="@+id/imageLayout"
+            android:layout_alignTop="@+id/mImageView"
+			android:layout_alignLeft="@+id/mImageView"
+			android:layout_alignRight="@+id/mImageView"
+			android:layout_alignBottom="@+id/mImageView"
             android:layout_width="match_parent"
     		android:layout_height="match_parent"  
     		android:background="@drawable/wonderful_item_mb"

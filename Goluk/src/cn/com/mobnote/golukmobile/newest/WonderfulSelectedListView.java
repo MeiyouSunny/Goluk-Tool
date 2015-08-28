@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
@@ -20,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -212,6 +215,47 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 					int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
+				
+				if(null == mDataList && mDataList.size() <= 0) {
+					return;
+				}
+				
+				int first = firstVisibleItem - 1;
+				if (first < mDataList.size()) {
+					for(int i=0; i<first; i++) {
+						String url = mDataList.get(i).jximg;
+						if (!TextUtils.isEmpty(url)) {
+							Uri uri = Uri.parse(url);
+							Fresco.getImagePipeline().evictFromMemoryCache(uri);
+						}
+						
+						String url2 = mDataList.get(i).jtypeimg;
+						if (!TextUtils.isEmpty(url2)) {
+							Uri uri = Uri.parse(url2);
+							Fresco.getImagePipeline().evictFromMemoryCache(uri);
+						}
+						
+					}
+				}
+				
+				int last = firstVisibleItem + visibleItemCount + 1;
+				if (last < mDataList.size()) {
+					for(int i=last; i<mDataList.size(); i++) {
+						String url = mDataList.get(i).jximg;
+						if (!TextUtils.isEmpty(url)) {
+							Uri uri = Uri.parse(url);
+							Fresco.getImagePipeline().evictFromMemoryCache(uri);
+						}
+						
+						String url2 = mDataList.get(i).jtypeimg;
+						if (!TextUtils.isEmpty(url2)) {
+							Uri uri = Uri.parse(url2);
+							Fresco.getImagePipeline().evictFromMemoryCache(uri);
+						}
+						
+					}
+				}
+				
 			}
 			
 		});

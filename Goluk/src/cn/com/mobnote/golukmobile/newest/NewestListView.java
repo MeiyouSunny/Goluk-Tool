@@ -8,6 +8,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -28,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -272,6 +275,29 @@ public class NewestListView implements VideoSuqareManagerFn {
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
+				
+				if(null == mDataList && mDataList.size() <= 0) {
+					return;
+				}
+				
+				int first = firstVisibleItem - 1;
+				if (first < mDataList.size()) {
+					for(int i=0; i<first; i++) {
+						String url = mDataList.get(i).mVideoEntity.picture;
+						Uri uri = Uri.parse(url);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+				}
+				
+				int last = firstVisibleItem + visibleItemCount + 1;
+				if (last < mDataList.size()) {
+					for(int i=last; i<mDataList.size(); i++) {
+						String url = mDataList.get(i).mVideoEntity.picture;
+						Uri uri = Uri.parse(url);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+				}
+				
 			}
 
 		});

@@ -24,7 +24,7 @@ public class BitmapManager {
 	public BitmapManager(){
 		String diskCachePath = Environment.getExternalStorageDirectory()
 				+ File.separator + "goluk" + File.separator + "image_cache";
-		mBitmapUtils = new BitmapUtils(GolukApplication.getInstance(), diskCachePath, 0.5f);
+		mBitmapUtils = new BitmapUtils(GolukApplication.getInstance(), diskCachePath, 0.2f);
 		mBitmapUtils.configDefaultBitmapConfig(Bitmap.Config.RGB_565);
 		mBitmapUtils.configMemoryCacheEnabled(true);
 		mBitmapUtils.configThreadPoolSize(3);
