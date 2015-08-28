@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.startshare;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -58,7 +59,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private int mCurrentVideoType = 0;
 	/** 分享的视频名称 */
 	private String videoName = "";
-	/**分享的视频创建时间**/
+	/** 分享的视频创建时间 **/
 	private String videoCreateTime = "";
 	private boolean isExit = false;
 
@@ -90,6 +91,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	/** 防止重复点击退出 */
 	private boolean isBack = false;
+	private RelativeLayout mPlayImgLayout = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -114,15 +116,22 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 		loadRes();
 		// 页面初始化
-		init();
+		initView();
 		// 视频初始化
 		videoInit();
 
 		mCreateNewVideo = new CreateNewVideo(this, mVVPlayVideo, this);
-		mUploadVideo = new UploadVideo(this, mApp);
+		mUploadVideo = new UploadVideo(this, mApp, videoName);
 		mUploadVideo.setListener(this);
 		mShareLoading = new ShareLoading(this, mRootLayout);
 		mBaseHandler.sendEmptyMessageDelayed(100, 100);
+
+		if (mUploadVideo.getThumbBitmap() != null) {
+			mPlayImgLayout.setBackgroundDrawable(new BitmapDrawable(mUploadVideo.getThumbBitmap()));
+			mPlayImgLayout.setVisibility(View.VISIBLE);
+		} else {
+			mPlayImgLayout.setVisibility(View.GONE);
+		}
 	}
 
 	private void getIntentData() {
@@ -153,6 +162,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		case 100:
 			switchMiddleLayout(true, true);
 			break;
+		case 105:
+			mPlayImgLayout.setVisibility(View.GONE);
+			break;
 		default:
 			break;
 		}
@@ -162,13 +174,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (isType) {
 			mShareSwitchTypeTv.setTextColor(resTypeSelectColor);
 			mShareSwitchFilterTv.setTextColor(resTypeUnSelectColor);
-			mShareTypeImg.setBackgroundResource(R.drawable.share_type_icon_select);
+			mShareTypeImg.setBackgroundResource(R.drawable.share_type_press_icon);
 			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_icon);
 		} else {
 			mShareSwitchTypeTv.setTextColor(resTypeUnSelectColor);
 			mShareSwitchFilterTv.setTextColor(resTypeSelectColor);
 			mShareTypeImg.setBackgroundResource(R.drawable.share_type_icon);
-			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_icon_select);
+			mShareFilterImg.setBackgroundResource(R.drawable.share_filter_press_icon);
 		}
 	}
 
@@ -207,16 +219,16 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			String[] strs = videopath.split("/");
 			videoName = strs[strs.length - 1];
 			videoName = videoName.replace("mp4", "jpg");
-			//TODO 分享时间
-			GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName："+videoName);
-			if(videoName.contains("_")){
+			// TODO 分享时间
+			GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName：" + videoName);
+			if (videoName.contains("_")) {
 				String[] videoTimeArray = videoName.split("_");
-				if((null != videoTimeArray) && (videoTimeArray.length == 3)){
-					videoCreateTime = "20"+videoTimeArray[1]+"000";
-				}else{
+				if ((null != videoTimeArray) && (videoTimeArray.length == 3)) {
+					videoCreateTime = "20" + videoTimeArray[1] + "000";
+				} else {
 					videoCreateTime = "";
 				}
-			}else{
+			} else {
 				videoCreateTime = "";
 			}
 		}
@@ -225,7 +237,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	/**
 	 * 页面初始化
 	 */
-	private void init() {
+	private void initView() {
 		// 获取页面元素
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mPlayLayout = (RelativeLayout) findViewById(R.id.play_layout);
@@ -245,6 +257,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareFilterLayout = (LinearLayout) findViewById(R.id.share_filter_layout);
 		mShareFilterImg = (ImageView) findViewById(R.id.share_filter_img);
 		mShareSwitchFilterTv = (TextView) findViewById(R.id.share_switch_filter);
+
+		mPlayImgLayout = (RelativeLayout) findViewById(R.id.edit_play_img);
 
 		mShareTypeLayout.setOnClickListener(this);
 		mShareFilterLayout.setOnClickListener(this);
@@ -271,6 +285,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				// 视频播放已就绪
 				GolukDebugUtils.e("", "VideoEditActivity----onPrepared---video---加载完成");
 				updateVideoProgress();
+				if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
+					mBaseHandler.sendEmptyMessageDelayed(105, 800);
+				}
 			}
 
 			@Override
@@ -653,7 +670,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String desc = mTypeLayout.getCurrentDesc();
 		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
 		final String t_thumbPath = mUploadVideo.getThumbPath();
-		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,videoCreateTime);
+		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,
+				videoCreateTime);
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);

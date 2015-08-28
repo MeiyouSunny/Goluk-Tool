@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,7 +38,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	private LayoutInflater mLayoutFlater = null;
 	private RelativeLayout mRootLayout = null;
 //	private ListView mListView = null;
-	private EditText mEditText = null;
+	private TextView mTextView = null;
 
 	private SelectTypeAdapter mAdapter = null;
 	/** 曝光台 */
@@ -108,9 +107,9 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	private void initView() {
 //		mListView = (ListView) mRootLayout.findViewById(R.id.shortshare_listview);
 //		mListView.setOnItemClickListener(this);
-		mEditText = (EditText) mRootLayout.findViewById(R.id.share_sayother);
-		mEditText.setOnClickListener(this);
-		mEditText.setKeyListener(null);
+		mTextView = (TextView) mRootLayout.findViewById(R.id.share_sayother);
+		mTextView.setOnClickListener(this);
+//		mEditText.setKeyListener(null);
 
 		mBgBtn = (TextView) mRootLayout.findViewById(R.id.share_type_bg);
 		mSgBtn = (TextView) mRootLayout.findViewById(R.id.share_type_sg);
@@ -148,7 +147,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 
 	// 返回当前的描述文字
 	public String getCurrentDesc() {
-		String inputStr = mEditText.getText().toString().trim();
+		String inputStr = mTextView.getText().toString().trim();
 		if (null != inputStr && !inputStr.equals("")) {
 			return inputStr;
 		}
@@ -348,7 +347,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 		if (isCancel) {
 			// mEditText.setText("");
 		} else {
-			mEditText.setText(content);
+			mTextView.setText(content);
 		}
 	}
 
@@ -366,7 +365,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 				return;
 			}
 //			mAdapter.setData(getData(TYPE_BG));
-			mEditText.setHint("视频描述裸奔中，快来给他披大衣...");
+			mTextView.setHint("视频描述裸奔中，快来给他披大衣...");
 			switchTypeUI(TYPE_BG);
 			break;
 		case R.id.share_type_sg:
@@ -374,7 +373,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 				return;
 			}
 //			mAdapter.setData(getData(TYPE_SG));
-			mEditText.setHint("吓死宝宝了，前面啥情况？说说呗...");
+			mTextView.setHint("吓死宝宝了，前面啥情况？说说呗...");
 			switchTypeUI(TYPE_SG);
 			break;
 		case R.id.share_type_ml:
@@ -382,7 +381,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 				return;
 			}
 //			mAdapter.setData(getData(TYPE_ML));
-			mEditText.setHint("任何伟大的创意都需要一个漂亮的描述...");
+			mTextView.setHint("任何伟大的创意都需要一个漂亮的描述...");
 			switchTypeUI(TYPE_ML);
 			break;
 		case R.id.share_type_ssp:
@@ -390,7 +389,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 				return;
 			}
 //			mAdapter.setData(getData(TYPE_SSP));
-			mEditText.setHint("导演，配个文字再加场吻戏吧！");
+			mTextView.setHint("导演，配个文字再加场吻戏吧！");
 			switchTypeUI(TYPE_SSP);
 			break;
 		case R.id.share_open_layout:
@@ -414,7 +413,7 @@ public class ShareTypeLayout implements OnItemClickListener, OnClickListener {
 	// 显示输入界面
 	private void click_input() {
 		if (null != mContext && mContext instanceof VideoEditActivity) {
-			((VideoEditActivity) mContext).mInputLayout.show(mEditText.getText().toString().trim());
+			((VideoEditActivity) mContext).mInputLayout.show(mTextView.getText().toString().trim());
 		}
 	}
 }
