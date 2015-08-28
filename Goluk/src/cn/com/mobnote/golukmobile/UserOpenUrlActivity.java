@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.MyProgressWebView;
@@ -32,7 +31,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  *
  */
-public class UserOpenUrlActivity extends BaseActivity implements OnClickListener {
+public class UserOpenUrlActivity extends BaseActivity implements OnClickListener,ForbidBack {
 
 	private GolukApplication mApp = null;
 	public static final String FROM_TAG = "from_tag";
@@ -47,7 +46,6 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	private boolean mErrorState = false;
 	
 	private RelativeLayout mErrorLayout = null;
-	private TextView mErrorText = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +67,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
 		mTextRight.setBackgroundResource(R.drawable.btn_close_image);
 		mErrorLayout = (RelativeLayout) findViewById(R.id.error_layout);
-		mErrorText = (TextView) findViewById(R.id.error_text);
 
 		if (null == mLoadingDialog) {
 			mLoadingDialog = new CustomLoadingDialog(this, "页面加载中");
+			mLoadingDialog.setListener(this);
 		}
 
 		itIndexMore = getIntent();
@@ -105,10 +103,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			@Override
 			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				mErrorState = true;
-				WindowManager wm = (WindowManager) mApp.getContext()
-			            .getSystemService(Context.WINDOW_SERVICE);
 				mWebView.setVisibility(View.GONE);
-				mErrorText.setVisibility(View.VISIBLE);
+				mErrorLayout.setVisibility(View.VISIBLE);
 			}
 
 		});
@@ -120,25 +116,35 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			if (!TextUtils.isEmpty(from_tag)) {
 				if (from_tag.equals("skill")) {
 					mTextTitle.setText("极路客小技巧");
-					errorFunction();
+					if(mErrorState){
+						return ;
+					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=2");
 				} else if (from_tag.equals("install")) {
 					mTextTitle.setText("安装指导");
-					errorFunction();
+					if(mErrorState){
+						return ;
+					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=3");
 				} else if (from_tag.equals("shopping")) {
 					mTextTitle.setText("购买极路客");
-					errorFunction();
+					if(mErrorState){
+						return ;
+					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=4");
 				} else if (from_tag.equals("buyline")) {
 					mTextTitle.setText("购买极路客专用降压线");
-					errorFunction();
+					if(mErrorState){
+						return ;
+					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=1");
 				}
 			} else {
 				mTextTitle.setText("");
 				String url = itIndexMore.getStringExtra("url");
-				errorFunction();
+				if(mErrorState){
+					return ;
+				}
 				mWebView.loadUrl(url);
 			}
 
@@ -232,10 +238,12 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mWebView.destroy();
 		mWebView = null;
 	}
-	
-	private void errorFunction(){
-		if(mErrorState){
-			return ;
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		if(backKey == 1){
+			GolukDebugUtils.e("", "------------------customDialog------------back-----ok");
+			finish();
 		}
 	}
 

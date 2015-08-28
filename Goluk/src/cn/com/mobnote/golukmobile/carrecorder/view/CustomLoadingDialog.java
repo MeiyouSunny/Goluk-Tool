@@ -1,11 +1,14 @@
 package cn.com.mobnote.golukmobile.carrecorder.view;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.DialogInterface.OnShowListener;
 import android.graphics.drawable.AnimationDrawable;
+import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +17,7 @@ public class CustomLoadingDialog {
 	AlertDialog customDialog;
 	String textTitle;
 	AnimationDrawable ad;
+	ForbidBack forbidInterface;
 
 	public CustomLoadingDialog(Context context, String txt) {
 		customDialog = new AlertDialog.Builder(context, R.style.CustomDialog).create();
@@ -21,6 +25,18 @@ public class CustomLoadingDialog {
 			textTitle = txt;
 		}
 
+	}
+	
+	public void setListener(ForbidBack forbidInterface){
+		if(null != forbidInterface){
+			this.forbidInterface = forbidInterface;
+		}
+	}
+	
+	private void setData(int key){
+		if(null != forbidInterface){
+			forbidInterface.forbidBackKey(key);
+		}
 	}
 
 	public void show() {
@@ -46,8 +62,19 @@ public class CustomLoadingDialog {
 		customDialog.setCanceledOnTouchOutside(false);
 		customDialog.show();
 		customDialog.getWindow().setContentView(R.layout.video_square_loading);
+		
+		customDialog.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(DialogInterface arg0, int arg1, KeyEvent arg2) {
+				GolukDebugUtils.e("", "------------------customDialog-------------back");
+				setData(1);
+				return false;
+			}
+		});
 
 	}
+	
 
 	public void close() {
 		if (customDialog != null) {
@@ -66,6 +93,11 @@ public class CustomLoadingDialog {
 		}
 
 		return false;
+	}
+	
+	public interface ForbidBack{
+		public static final int BACK_OK = 1;
+		void forbidBackKey(int backKey);
 	}
 
 	// customDialog.setOnShowListener(new AlertDialog.OnShowListener() {
