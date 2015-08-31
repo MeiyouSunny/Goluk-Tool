@@ -346,7 +346,7 @@
     <!-- 意见反馈 -->
     <string name="user_opinion_type_yingjiang">硬件相关</string>
     <string name="user_opinion_type_anzhuang">安装相关</string>
-    <string name="user_opinion_type_tuxiang">图象效果</string>
+    <string name="user_opinion_type_tuxiang">图像效果</string>
     <string name="user_opinion_type_shouji">手机客户端</string>
     <string name="user_opinion_type_qita">其他</string>
     <string name="user_opinion_type_cancle">取消</string>

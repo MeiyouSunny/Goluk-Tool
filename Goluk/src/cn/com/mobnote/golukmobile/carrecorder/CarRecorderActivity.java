@@ -1152,12 +1152,12 @@ public class CarRecorderActivity extends BaseActivity implements
 			GolukDebugUtils.e("xuhw", "YYYYYY======isConnecting=="
 					+ isConnecting);
 			if (!isConnecting) {
+				showLoading();
+				hidePlayer();
 				isConnecting = true;
 				start();
 			}
 
-			showLoading();
-			hidePlayer();
 		}
 
 		GolukApplication.getInstance().setContext(this, "carrecorder");
