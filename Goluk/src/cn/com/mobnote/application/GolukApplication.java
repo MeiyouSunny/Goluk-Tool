@@ -722,6 +722,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						GolukDebugUtils.e("xuhw", "YYYYYY======VideoDownLoad=====data=" + data);
 						mMainActivity.videoAnalyzeComplete(data);
 					}
+					
+					try {
+						JSONObject json = new JSONObject(data);
+						String filename = json.optString("filename");
+						if (mDownLoadFileList.contains(filename)) {
+							if(!mNoDownLoadFileList.contains(filename)) {
+								mNoDownLoadFileList.add(filename);
+							}
+						}
+					} catch (Exception e) {
+					}
 
 					if (checkDownloadCompleteState()) {
 						autodownloadfile = false;
