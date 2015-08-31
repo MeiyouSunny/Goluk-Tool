@@ -320,6 +320,9 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mVideoSquareManager.removeVideoSquareManagerListener("videodetailshare");
 		}
 		cancleTimer();
+		if(null != mFullVideoView){
+			mFullVideoView = null;
+		}
 		this.finish();
 	}
 
@@ -412,6 +415,10 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 			break;
 		case R.id.mPlayerLayout:
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
+				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
+				return;
+			}
 			if (isBuffering) {
 				return;
 			}
@@ -965,7 +972,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 					dialog("网络访问异常，请重试！");
 					if (null != mFullVideoView) {
 						mFullVideoView.stopPlayback();
-						mFullVideoView = null;
 					}
 					return;
 				}
