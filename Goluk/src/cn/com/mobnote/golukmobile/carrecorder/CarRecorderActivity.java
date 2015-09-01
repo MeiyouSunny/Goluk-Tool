@@ -1015,17 +1015,9 @@ public class CarRecorderActivity extends BaseActivity implements
 
 			break;
 		case R.id.live_video:
-			lsp.show();
-			break;
 		case R.id.live_gps_icon:
-			lsp.show();
-			break;
 		case R.id.live_talk_icon:
-			lsp.show();
-			break;
 		case R.id.live_release_icon:
-			lsp.show();
-			break;
 		case R.id.live_time:
 			lsp.show();
 			break;
