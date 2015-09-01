@@ -486,10 +486,6 @@ public class CarRecorderActivity extends BaseActivity implements
 			if (wrb != null) {
 				mConnectTip.setText(wrb.getIpc_ssid());
 			}
-			/*
-			 * if (null != mApp.mIpcUpdateManage) {
-			 * mApp.mIpcUpdateManage.ipcConnect(); }
-			 */
 			mPalyerLayout.setVisibility(View.VISIBLE);
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.GONE);
@@ -517,7 +513,6 @@ public class CarRecorderActivity extends BaseActivity implements
 
 	private void open_shareVideo(String videoname) {
 		// // 跳转到wifi连接首页
-		// if (mApp.isUserLoginSucess) {
 		String path = Environment.getExternalStorageDirectory().getPath();
 		int type = 2;
 		if (videoname.indexOf("URG") >= 0) {
@@ -535,11 +530,6 @@ public class CarRecorderActivity extends BaseActivity implements
 		i.putExtra("type", type);
 		startActivity(i);
 		overridePendingTransition(R.anim.shortshare_start, 0);
-		// } else {
-		// Intent intent = new Intent(this, UserLoginActivity.class);
-		// intent.putExtra("isInfo", "back");
-		// startActivity(intent);
-		// }
 
 	}
 
@@ -553,16 +543,12 @@ public class CarRecorderActivity extends BaseActivity implements
 		if (!TextUtils.isEmpty(wonderfulVideoName)) {
 			downloadNumber++;
 			mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
-			// mShareBtn.setVisibility(View.VISIBLE);
 
 			if (!downloadFinish) {
 				if (1 == downloadNumber) {
-					// mShareBtn.setBackgroundResource(R.drawable.screen_loading_1);
 				} else if (2 == downloadNumber) {
-					// mShareBtn.setBackgroundResource(R.drawable.screen_loading_2);
 				} else {
 					downloadNumber = 0;
-					// mShareBtn.setBackgroundResource(R.drawable.screen_loading_3);
 				}
 
 				mHandler.sendEmptyMessageDelayed(DOWNLOADWONDERFULVIDEO, 600);
@@ -1022,17 +1008,10 @@ public class CarRecorderActivity extends BaseActivity implements
 			}
 			break;
 		case R.id.image3:
-
-			// if (mApp.isUserLoginSucess == false) {
-			// Intent it = new Intent(this, UserLoginActivity.class);
-			// it.putExtra("isInfo", "back");
-			// startActivity(it);
-			// } else {
 			Intent photoalbum = new Intent(CarRecorderActivity.this,
 					PhotoAlbumActivity.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);
-			// }
 
 			break;
 		case R.id.live_video:
@@ -1061,10 +1040,8 @@ public class CarRecorderActivity extends BaseActivity implements
 			{
 				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
-//				if (mRtmpPlayerView.isPlaying()) {
 					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
 					mRtmpPlayerView.stopPlayback();
-//				}
 				hidePlayer();
 				isShowPlayer = false;
 				isConnecting = false;
@@ -1170,10 +1147,8 @@ public class CarRecorderActivity extends BaseActivity implements
 			if (downloadFileNumber <= 0) {
 				downloadFileNumber = 0;
 				downloadFinish = false;
-				// mShareBtn.setVisibility(View.GONE);
 			} else {
-				GolukDebugUtils.e("xuhw",
-						"KKKK=================================");
+				GolukDebugUtils.e("xuhw","KKKK=================================");
 				downloadFinish = false;
 				mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
 				mHandler.sendEmptyMessage(DOWNLOADWONDERFULVIDEO);
@@ -1221,19 +1196,6 @@ public class CarRecorderActivity extends BaseActivity implements
 	protected void onStop() {
 		super.onStop();
 		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
-		// if (isShowPlayer) {
-		// if (null != mRtmpPlayerView) {
-		// rtmpIsOk = false;
-		// mFullScreen.setVisibility(View.GONE);
-		// mRtmpPlayerView.removeCallbacks(retryRunnable);
-		// if (mRtmpPlayerView.isPlaying()) {
-		// isConnecting = false;
-		// mRtmpPlayerView.stopPlayback();
-		// GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback======");
-		// }
-		// hidePlayer();
-		// }
-		// }
 	}
 
 	@Override
@@ -1788,7 +1750,6 @@ public class CarRecorderActivity extends BaseActivity implements
 			if (downloadFileNumber <= 0) {
 				downloadFileNumber = 0;
 				downloadFinish = false;
-				// mShareBtn.setVisibility(View.GONE);
 			} else {
 				GolukDebugUtils.e("xuhw",
 						"KKKK=================================");
@@ -1809,7 +1770,6 @@ public class CarRecorderActivity extends BaseActivity implements
 	 */
 	public void setFullScreen(boolean bFull) {
 		if (bFull == m_bIsFullScreen) {
-			// GolukUtils.showToast(this, "已处于全屏状态.");
 			return;
 		}
 		if (bFull) {
