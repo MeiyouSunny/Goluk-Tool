@@ -243,9 +243,9 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 			image.setImageBitmap(mBitmap);
 		}else {
 			image.setImageResource(R.drawable.album_default_img);
-			if (lock) {
-				return;
-			}
+//			if (lock) {
+//				return;
+//			}
 			
 			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 			
