@@ -341,7 +341,6 @@ public class CarRecorderActivity extends BaseActivity implements
 					break;
 				case ADDR:
 					String addr = (String) msg.obj;
-					System.out.println("zh-gps = " + addr);
 					if (!TextUtils.isEmpty(addr)) {
 						mAddr.setText(addr);
 					}
@@ -445,7 +444,6 @@ public class CarRecorderActivity extends BaseActivity implements
 	 */
 	@SuppressLint("NewApi")
 	private void initIpcState(int ipcS) {
-		System.out.println("曾浩" + ipcS);
 		switch (ipcS) {
 		case WIFI_STATE_FAILED:
 			mPalyerLayout.setVisibility(View.GONE);
@@ -486,10 +484,6 @@ public class CarRecorderActivity extends BaseActivity implements
 			if (wrb != null) {
 				mConnectTip.setText(wrb.getIpc_ssid());
 			}
-			/*
-			 * if (null != mApp.mIpcUpdateManage) {
-			 * mApp.mIpcUpdateManage.ipcConnect(); }
-			 */
 			mPalyerLayout.setVisibility(View.VISIBLE);
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.GONE);
@@ -517,7 +511,6 @@ public class CarRecorderActivity extends BaseActivity implements
 
 	private void open_shareVideo(String videoname) {
 		// // 跳转到wifi连接首页
-		// if (mApp.isUserLoginSucess) {
 		String path = Environment.getExternalStorageDirectory().getPath();
 		int type = 2;
 		if (videoname.indexOf("URG") >= 0) {
@@ -535,11 +528,6 @@ public class CarRecorderActivity extends BaseActivity implements
 		i.putExtra("type", type);
 		startActivity(i);
 		overridePendingTransition(R.anim.shortshare_start, 0);
-		// } else {
-		// Intent intent = new Intent(this, UserLoginActivity.class);
-		// intent.putExtra("isInfo", "back");
-		// startActivity(intent);
-		// }
 
 	}
 
@@ -553,7 +541,6 @@ public class CarRecorderActivity extends BaseActivity implements
 		if (!TextUtils.isEmpty(wonderfulVideoName)) {
 			downloadNumber++;
 			mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
-			// mShareBtn.setVisibility(View.VISIBLE);
 
 			if (!downloadFinish) {
 				if (1 == downloadNumber) {
@@ -1022,31 +1009,16 @@ public class CarRecorderActivity extends BaseActivity implements
 			}
 			break;
 		case R.id.image3:
-
-			// if (mApp.isUserLoginSucess == false) {
-			// Intent it = new Intent(this, UserLoginActivity.class);
-			// it.putExtra("isInfo", "back");
-			// startActivity(it);
-			// } else {
 			Intent photoalbum = new Intent(CarRecorderActivity.this,
 					PhotoAlbumActivity.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);
-			// }
 
 			break;
 		case R.id.live_video:
-			lsp.show();
-			break;
 		case R.id.live_gps_icon:
-			lsp.show();
-			break;
 		case R.id.live_talk_icon:
-			lsp.show();
-			break;
 		case R.id.live_release_icon:
-			lsp.show();
-			break;
 		case R.id.live_time:
 			lsp.show();
 			break;
@@ -1061,10 +1033,8 @@ public class CarRecorderActivity extends BaseActivity implements
 			{
 				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
-//				if (mRtmpPlayerView.isPlaying()) {
 					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
 					mRtmpPlayerView.stopPlayback();
-//				}
 				hidePlayer();
 				isShowPlayer = false;
 				isConnecting = false;
@@ -1170,7 +1140,6 @@ public class CarRecorderActivity extends BaseActivity implements
 			if (downloadFileNumber <= 0) {
 				downloadFileNumber = 0;
 				downloadFinish = false;
-				// mShareBtn.setVisibility(View.GONE);
 			} else {
 				GolukDebugUtils.e("xuhw",
 						"KKKK=================================");
@@ -1636,9 +1605,6 @@ public class CarRecorderActivity extends BaseActivity implements
 							wonderfulVideoName = path + File.separator
 									+ mRecordVideFileName;
 
-							System.out
-									.println("YYY========Finish=======1111======="
-											+ downloadFileNumber);
 							if (downloadFileNumber <= 1)
 								mHandler.sendEmptyMessage(DOWNLOADWONDERFULVIDEO);
 						} else if (TYPE_URGENT == fileInfo.type) {// 紧急
