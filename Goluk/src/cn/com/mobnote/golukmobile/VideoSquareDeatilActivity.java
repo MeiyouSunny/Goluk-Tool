@@ -321,6 +321,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		}
 		cancleTimer();
 		if(null != mFullVideoView){
+			mFullVideoView.stopPlayback();
 			mFullVideoView = null;
 		}
 		this.finish();
@@ -916,7 +917,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	public void onCompletion(MediaPlayer arg0) {
 		// TODO OnCompletionListener视频播放完后进度条回到初始位置
 		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onCompletion :  ");
-		if (error) {
+		if (error || null == mFullVideoView) {
 			return;
 		}
 		mPlayBtn.setVisibility(View.VISIBLE);
