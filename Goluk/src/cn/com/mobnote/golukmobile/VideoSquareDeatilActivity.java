@@ -860,7 +860,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		// TODO onInfoListener有警告或者错误信息时调用（开始缓冲、缓冲结束）
 		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onInfo : arg1 " + arg1);
 		switch (arg1) {
-		case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+		case 3:
 			callBack_realStart();
 			break;
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
