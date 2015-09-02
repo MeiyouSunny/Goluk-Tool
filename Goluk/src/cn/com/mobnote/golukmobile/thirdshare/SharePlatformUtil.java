@@ -11,6 +11,7 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
+import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMVideo;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
@@ -136,10 +137,15 @@ public class SharePlatformUtil {
 		qqContent.setShareContent(text);
 		mController.setShareMedia(qqContent);
 
+		/** QQ空间需要以下写法，它与上面的QQ,微信写法不一致，否则分享的视频地址都是一样的，有问题 , 这可能是友盟的BUG */
+
 		// qq空间
-		QZoneShareContent qzone = new QZoneShareContent(video);
+		QZoneShareContent qzone = new QZoneShareContent();
 		// 设置分享文字
 		qzone.setShareContent(text);
+		qzone.setTitle(ttl);
+		qzone.setTargetUrl(videourl);
+		qzone.setShareImage(new UMImage(mContext, imageurl));
 		mController.setShareMedia(qzone);
 	}
 
