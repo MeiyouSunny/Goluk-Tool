@@ -79,6 +79,15 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
+// Tecent QCloud
+import com.tencent.base.util.ProcessUtils;
+import com.tencent.base.Global;
+import com.tencent.wns.client.data.Option;
+import com.tencent.wns.client.inte.WnsClientFactory;
+import com.tencent.wns.client.inte.WnsService;
+import com.tencent.wns.client.inte.WnsService.GlobalListener;
+import com.tencent.wns.client.log.WnsClientLog;
+
 public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
@@ -205,6 +214,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		super.onCreate();
 		instance = this;
 		Const.setAppContext(this);
+		
+		// Cloud service
+		startCloudService();
+		
 		// TODO 此处不要做初始化相关的工作
 		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
 	}
@@ -1787,5 +1800,43 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mContext.startActivity(intent);
 		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Cloud Service
+	private void startCloudService() {
+		startWnsService();
+	}
 
+    private WnsService wns;
+	private void startWnsService() {
+		// 初始化WNS全局参数
+        Global.init(this);
+        wns = WnsClientFactory.getThirdPartyWnsService();
+        
+        // 判断是否主进程
+        boolean isMain = ProcessUtils.isMainProcess(this);
+
+        // important-只能够在主进程执行
+        if (isMain)
+        {
+            // 初始化app的身份信息，不必在Application中调用，但是必须在使用WnsService接口之前调用
+            int your_appid = 202066;				// your appid
+            String your_appversion = "1.0.0";
+            String your_channelid = "Android";
+            boolean isQuickVerification = false; 	//是否开启快速验证模式
+            wns.initWnsWithAppInfo(your_appid, your_appversion, your_channelid, isQuickVerification);
+
+            // 设置测试服务器,正式版本可以删除这段代码**********开始
+//            String debugIp = Option.getString(AioConst.DEBUG_IP, "");
+//            String debugPort = Option.getString(AioConst.DEBUG_IP_PORT, "");
+//            if (!TextUtils.isEmpty(debugIp) && !TextUtils.isEmpty(debugPort))
+//            {
+//                wns.setDebugIp(debugIp, Integer.parseInt(debugPort));
+//            }
+            // 设置测试服务器,正式版本也可以删除这段代码**********结束
+
+            // 启动wns服务
+            wns.startWnsService();
+        }
+	}
 }
