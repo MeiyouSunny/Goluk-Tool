@@ -408,4 +408,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- 腾讯云相关权限: End -->
+    
+    <!-- OneAPM: Start, by Micle Bu -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- OneAPM: End -->
 </manifest>

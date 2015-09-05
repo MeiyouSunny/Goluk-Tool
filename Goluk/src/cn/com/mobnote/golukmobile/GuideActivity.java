@@ -14,6 +14,9 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+// OneAPM, Micle
+import com.blueware.agent.android.BlueWare;
+
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -53,8 +56,13 @@ public class GuideActivity extends BaseActivity {
 		((GolukApplication) this.getApplication()).initLogic();
 		
 		((GolukApplication) this.getApplication()).startUpgrade();
+		
 		// 初始化
 		init();
+		
+		// OneAPM
+		BlueWare.withApplicationToken("E18AA269D23C98A1521C6454D1836CE006").start(this.getApplication());
+		
 		SysApplication.getInstance().addActivity(this);
 	}
 
