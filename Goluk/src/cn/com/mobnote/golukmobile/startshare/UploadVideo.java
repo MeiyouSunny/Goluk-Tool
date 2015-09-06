@@ -165,6 +165,9 @@ public class UploadVideo {
 		}
 		thumbFile = fileFolder + "/thumb11.jpg";
 		mShortBitmap = getSelfBitmap();
+		if (null == mShortBitmap) {
+			return;
+		}
 		try {
 			File file = new File(fileFolder);
 			file.mkdirs();
@@ -194,9 +197,6 @@ public class UploadVideo {
 			temp = GolukUtils.createVideoThumbnail(mVideoPath);
 		}
 
-		int width = temp.getWidth();
-		int height = temp.getHeight();
-		GolukDebugUtils.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
 		return temp;
 	}
 
