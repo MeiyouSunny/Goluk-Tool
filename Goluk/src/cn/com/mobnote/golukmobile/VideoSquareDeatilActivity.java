@@ -94,7 +94,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 	private TextView mTextLikeAll, mTextLookAll;
 	private LinearLayout mLayoutShowAll = null;
 	/** 评论内容 **/
-	private LinearLayout hasCommentLayout = null;
 	private ImageView mImageNoInput = null;
 	private TextView mTextNoComment = null;
 	private TextView mTextAutor, mTextCommentCount, mTextCommentFirst, mTextCommentSecond, mTextCommenThird;
@@ -208,7 +207,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 		mLayoutShowAll = (LinearLayout) findViewById(R.id.video_detail_comment_content);
 		mLayoutShowComment = (LinearLayout) findViewById(R.id.video_square_show_all);
 		// 评论内容
-		hasCommentLayout = (LinearLayout) findViewById(R.id.video_square_has_comment_layout);
 		mImageNoInput = (ImageView) findViewById(R.id.video_square_no_comment_img);
 		mTextNoComment = (TextView) findViewById(R.id.comment_noinput);
 		mTextAutor = (TextView) findViewById(R.id.video_square_author);
@@ -500,7 +498,7 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			showText(mTextAutor, mVideoJson.data.avideo.user.nickname, mVideoJson.data.avideo.video.describe);
 			// 三条评论
 			if ("1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
-				hasCommentLayout.setVisibility(View.VISIBLE);
+				mLayoutShowAll.setVisibility(View.VISIBLE);
 				mImageNoInput.setVisibility(View.GONE);
 				mTextNoComment.setVisibility(View.GONE);
 				List<VideoListInfo> videoList = mVideoJson.data.avideo.video.comment.comlist;
@@ -528,12 +526,12 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 						}
 					}
 				} else {
-					hasCommentLayout.setVisibility(View.GONE);
+					mLayoutShowAll.setVisibility(View.GONE);
 					mTextNoComment.setVisibility(View.GONE);
 					mImageNoInput.setVisibility(View.VISIBLE);
 				}
 			} else {
-				hasCommentLayout.setVisibility(View.GONE);
+				mLayoutShowAll.setVisibility(View.GONE);
 				mTextNoComment.setVisibility(View.VISIBLE);
 				mImageNoInput.setVisibility(View.GONE);
 			}
