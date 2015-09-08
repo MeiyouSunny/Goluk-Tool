@@ -14,12 +14,12 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.entity.LngLat;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 

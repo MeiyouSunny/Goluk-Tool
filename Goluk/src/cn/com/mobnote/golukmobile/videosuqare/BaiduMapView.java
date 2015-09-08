@@ -13,13 +13,12 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.entity.LngLat;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.BaiduMapManage;
+import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
