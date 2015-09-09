@@ -77,7 +77,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
-public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn,  ITalkFn, ILocationFn {
+public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
 	/** ip地址 */
@@ -188,7 +188,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public String mGolukName = "";
 
 	private ArrayList<VideoFileInfo> fileList;
-	private CustomDialog mCustomDialog = null;
 
 	static {
 		System.loadLibrary("golukmobile");
@@ -568,18 +567,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}
-				
+
 				if (!isBackground) {
 					if (!GlobalWindow.getInstance().isShow()) {
 						GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
 						GlobalWindow.getInstance().createVideoUploadWindow(
 								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
-						GolukDebugUtils.e("xuhw", "BBBBBB===2222=updateText=4444==nosize=="+mNoDownLoadFileList.size());
+						GolukDebugUtils.e("xuhw",
+								"BBBBBB===2222=updateText=4444==nosize==" + mNoDownLoadFileList.size());
 					} else {
 						GolukDebugUtils.e("xuhw", "YYYYYY======22222=========");
 						GlobalWindow.getInstance().updateText(
 								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
-						GolukDebugUtils.e("xuhw", "BBBBBB===2222=updateText=55555=====nosize=="+mNoDownLoadFileList.size());
+						GolukDebugUtils.e("xuhw",
+								"BBBBBB===2222=updateText=55555=====nosize==" + mNoDownLoadFileList.size());
 					}
 				}
 			} catch (Exception e) {
@@ -711,12 +712,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						GolukDebugUtils.e("xuhw", "YYYYYY======VideoDownLoad=====data=" + data);
 						mMainActivity.videoAnalyzeComplete(data);
 					}
-					
+
 					try {
 						JSONObject json = new JSONObject(data);
 						String filename = json.optString("filename");
 						if (mDownLoadFileList.contains(filename)) {
-							if(!mNoDownLoadFileList.contains(filename)) {
+							if (!mNoDownLoadFileList.contains(filename)) {
 								mNoDownLoadFileList.add(filename);
 							}
 						}
@@ -737,13 +738,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					JSONObject json = new JSONObject(data);
 					String filename = json.optString("filename");
 
-					if(mDownLoadFileList.contains(filename)) {
+					if (mDownLoadFileList.contains(filename)) {
 						if (!mNoDownLoadFileList.contains(filename)) {
 							mNoDownLoadFileList.add(filename);
 						}
 					}
 
-					GolukDebugUtils.e("xuhw", "BBBBBBB=======down==fail===="+mNoDownLoadFileList.size());
+					GolukDebugUtils.e("xuhw", "BBBBBBB=======down==fail====" + mNoDownLoadFileList.size());
 					if (checkDownloadCompleteState()) {
 						mDownLoadFileList.clear();
 						mNoDownLoadFileList.clear();
@@ -836,7 +837,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((UserIdentifyActivity) mContext).registLoginCallBack(success, param2);
 			}
 			parseLoginData(success, param2);
-			
+
 			break;
 		// 自动登录
 		case PageType_AutoLogin:
@@ -862,9 +863,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 		case PageType_LiveStart:
 			// 获取直播信息成功
-				if (null != mContext && mContext instanceof LiveActivity) {
-					((LiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
-				}
+			if (null != mContext && mContext instanceof LiveActivity) {
+				((LiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+			}
 
 			break;
 		// 注销
@@ -982,6 +983,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			showContinuteLive();
 		}
 	}
+
 	// VDCP 连接状态 回调
 	private void IPC_VDCP_Connect_CallBack(int msg, int param1, Object param2) {
 		// 如果不是连接成功,都标识为失败
@@ -1028,8 +1030,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 		}
 	}
-	
-	
+
 	private void IPC_VDCP_Command_Init_CallBack(int msg, int param1, Object param2) {
 		// msg = 0 初始化消息
 		// param1 = 0 成功 | 失败
@@ -1092,7 +1093,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case IPC_VDCP_Msg_Query:
 				// msg = 1000 多文件目录查询
 				if (RESULE_SUCESS == param1) {
-					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==5555===stopDownloadList"+ param2);
+					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==5555===stopDownloadList" + param2);
 					if ("ipcfilemanager".equals(mPageSource)) {
 						return;
 					}
@@ -1102,7 +1103,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					}
 					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==7777===stopDownloadList");
 					fileList = IpcDataParser.parseMoreFile((String) param2);
-					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList===fileList.size()=" + fileList.size());
+					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList===fileList.size()="
+							+ fileList.size());
 					mHandler.removeMessages(1001);
 					mHandler.sendEmptyMessageDelayed(1001, 1000);
 				}
@@ -1267,7 +1269,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	@Override
 	public void TalkNotifyCallBack(int type, String data) {
 	}
-	
+
 	/**
 	 * 获取音视频配置信息
 	 * 
@@ -1299,7 +1301,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	@Override
 	public void LocationCallBack(String locationJson) {
-		//  定位回调
+		// 定位回调
 		if (null == mLocationHashMap) {
 			return;
 		}
@@ -1319,32 +1321,45 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	/**
+	 * 判断是否可以同步5个最新的视频
+	 * 
+	 * @return true/false 可以/不可以
+	 * @author jyf
+	 */
+	private boolean isCanQueryNewFile() {
+		if (!SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
+			return false;
+		}
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+		boolean isbind = preferences.getBoolean("isbind", false);
+		if (!isbind) {
+			return false;
+		}
+		if ("carrecorder".equals(mPageSource)) {
+			return false;
+		}
+		if (!isIpcLoginSuccess) {
+			return false;
+		}
+		if (mDownLoadFileList.size() > 0) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * 查询新文件列表（最多10条）
 	 * 
 	 * @author xuhw
 	 * @date 2015年4月24日
 	 */
 	public void queryNewFileList() {
-		if (!SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
+		if (!isCanQueryNewFile()) {
+			// 不允许同步视频
 			return;
 		}
-
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		boolean isbind = preferences.getBoolean("isbind", false);
-		if (!isbind) {
-			return;
-		}
-
-		if (!isIpcLoginSuccess) {
-			return;
-		}
-
-		if (mDownLoadFileList.size() > 0) {
-			return;
-		}
-
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
-		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" +starttime);
+		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" + starttime);
 		mIPCControlManager.queryFileListInfo(6, 5, starttime, 2147483647);
 	}
 
@@ -1355,7 +1370,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年5月19日
 	 */
 	public void stopDownloadList() {
-		GolukDebugUtils.e("xuhw", "BBBBBB===0000==m=====stopDownloadList="+autodownloadfile);
+		GolukDebugUtils.e("xuhw", "BBBBBB===0000==m=====stopDownloadList=" + autodownloadfile);
 		if (autodownloadfile) {
 			autodownloadfile = false;
 			if (mDownLoadFileList.size() > 0) {
@@ -1369,7 +1384,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			GolukDebugUtils.e("xuhw", "BBBBBB===2222==m=====stopDownloadList=");
 			mIPCControlManager.stopDownloadFile();
 			GolukDebugUtils.e("xuhw", "BBBBBB===3333==m=====stopDownloadList=");
-			
 		}
 	}
 
@@ -1383,35 +1397,25 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (null != PhotoAlbumActivity.mHandler) {
 			PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
 		}
-		
+
 		if (mDownLoadFileList.size() > 0) {
 			mDownLoadFileList.clear();
 			mNoDownLoadFileList.clear();
 			if (GlobalWindow.getInstance().isShow()) {
 				GlobalWindow.getInstance().dimissGlobalWindow();
-				GolukDebugUtils.e("xuhw", "BBBBBB===1111==m=====ipcDisconnect="+mNoDownLoadFileList.size());
+				GolukDebugUtils.e("xuhw", "BBBBBB===1111==m=====ipcDisconnect=" + mNoDownLoadFileList.size());
 			}
 		}
-
-		if (null != mCustomDialog && mCustomDialog.isShowing()) {
-			mCustomDialog.dismiss();
-		}
-		
 	}
-
 
 	private void tips() {
 		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck===stopDownloadList");
-		
-		if (null != mCustomDialog && mCustomDialog.isShowing()) {
-			return;
-		}
-
 		if ("carrecorder".equals(mPageSource)) {
 			return;
 		}
 
-		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck===stopDownloadList==fileList.size()=" + fileList.size());
+		GolukDebugUtils.e("xuhw",
+				"BBBB=====stopDownloadList==fuck===stopDownloadList==fileList.size()=" + fileList.size());
 		if (mContext instanceof Activity && fileList.size() > 0) {
 			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck");
 			Activity a = (Activity) mContext;
@@ -1444,7 +1448,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						if (mNoDownLoadFileList.contains(info.location)) {
 							mNoDownLoadFileList.remove(info.location);
 						}
-						GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck===mNoDownLoadFileList="+mNoDownLoadFileList.size()+"==mDownLoadFileList="+mDownLoadFileList.size());
+						GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck===mNoDownLoadFileList="
+								+ mNoDownLoadFileList.size() + "==mDownLoadFileList=" + mDownLoadFileList.size());
 					} else {
 						if (!mDownLoadFileList.contains(info.location)) {
 							mDownLoadFileList.add(info.location);
@@ -1457,13 +1462,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					return;
 				}
 
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==11111===stopDownloadList" +mDownLoadFileList.size() + mDownLoadFileList);
+				GolukDebugUtils.e("xuhw",
+						"BBBB=====stopDownloadList==11111===stopDownloadList" + mDownLoadFileList.size()
+								+ mDownLoadFileList);
 				List<String> order = FileInfoManagerUtils.bubbleSort(mDownLoadFileList, true);
 				mDownLoadFileList.clear();
 				mDownLoadFileList.addAll(order);
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==22222===stopDownloadList" +mDownLoadFileList.size() + mDownLoadFileList );
+				GolukDebugUtils.e("xuhw",
+						"BBBB=====stopDownloadList==22222===stopDownloadList" + mDownLoadFileList.size()
+								+ mDownLoadFileList);
 				if (mDownLoadFileList.size() > 0) {
-					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList=====stopDownloadList" );
+					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList=====stopDownloadList");
 					autodownloadfile = true;
 				}
 
@@ -1501,7 +1510,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * 验证固定的几个activity 可以弹框
 	 * 
 	 * @Title: testActivity
-	 * @Description: 
+	 * @Description:
 	 * @return boolean
 	 * @author 曾浩
 	 * @throws
