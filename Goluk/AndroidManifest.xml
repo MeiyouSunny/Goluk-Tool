@@ -336,7 +336,13 @@
             </intent-filter>
         </receiver>-->
     	<!-- 腾讯云: End -->
+    	
+    	<!-- 测试支持 -->
+    	<uses-library android:name="android.test.runner"/>
     </application>
+    	<!-- 测试支持 -->
+    <instrumentation android:name="android.test.InstrumentationTestRunner"  
+            android:targetPackage="cn.com.mobnote.golukmobile" android:label="Unit Test"/>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -399,6 +405,7 @@
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
     <!-- 腾讯云相关权限: Start, by Micle Bu -->
+    <!-- WNS -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -407,6 +414,10 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- UVS -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- 腾讯云相关权限: End -->
     
     <!-- OneAPM: Start, by Micle Bu -->

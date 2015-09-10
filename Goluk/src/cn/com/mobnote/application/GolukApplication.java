@@ -82,10 +82,8 @@ import com.rd.car.RecorderStateException;
 // Tecent QCloud
 import com.tencent.base.util.ProcessUtils;
 import com.tencent.base.Global;
-import com.tencent.wns.client.data.Option;
 import com.tencent.wns.client.inte.WnsClientFactory;
 import com.tencent.wns.client.inte.WnsService;
-import com.tencent.wns.client.inte.WnsService.GlobalListener;
 import com.tencent.wns.client.log.WnsClientLog;
 
 public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {

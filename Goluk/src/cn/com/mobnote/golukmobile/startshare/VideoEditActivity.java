@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.startshare;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,9 +31,18 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import java.util.LinkedList;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
+
+// Micle
+import cn.com.mobnote.golukmobile.helper.VideoHelper;
 
 @SuppressLint("HandlerLeak")
 public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
@@ -664,6 +674,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private void requestShareInfo() {
 		mShareLoading.switchState(ShareLoading.STATE_GET_SHARE);
 		final String t_vid = this.mUploadVideo.getVideoId();
+		final String t_signTime = this.mUploadVideo.getSignTime();
 		final String t_type = "" + (mCurrentVideoType == 2 ? 2 : 1);
 		final String selectTypeJson = JsonUtil.createShareType("" + mTypeLayout.getCurrentSelectType());
 		final String desc = mTypeLayout.getCurrentDesc();
@@ -672,13 +683,56 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,
 				videoCreateTime);
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
+		
+		// 根据存储方式选择不同的业务处理， Micle
+		boolean isSuccess = false;
+		String storage = mApp.mSharedPreUtil.getConfigStorage();		
+		
+		if (storage.equals("cloud")) {
+			LinkedList<BasicNameValuePair> params = new LinkedList<BasicNameValuePair>();  
+			params.add(new BasicNameValuePair("videoid", t_vid));  
+			params.add(new BasicNameValuePair("uid", mApp.mCurrentUId));
+			params.add(new BasicNameValuePair("lon", "0"));
+			params.add(new BasicNameValuePair("lat", "0"));
+			params.add(new BasicNameValuePair("type", t_type));
+			params.add(new BasicNameValuePair("attribute", selectTypeJson));
+			params.add(new BasicNameValuePair("describe", desc));
+			params.add(new BasicNameValuePair("issquare", isSeque));
+			params.add(new BasicNameValuePair("tagid", "goluk"));
+			params.add(new BasicNameValuePair("creattime", videoCreateTime));
+			params.add(new BasicNameValuePair("signtime", t_signTime));
+			
+			new SaveShareVideoTask().execute(params);
+			isSuccess = true;
+		} else {
+			isSuccess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
-		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares---b :  " + b);
-		if (!b) {
+		}
+		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares---b :  " + isSuccess);
+		
+		if (!isSuccess) {
 			GolukUtils.showToast(this, "分享失败");
 			toInitState();
 			return;
+		}
+	}
+	
+	private class SaveShareVideoTask extends AsyncTask<LinkedList<BasicNameValuePair>, Void, String>{
+
+		@Override
+		protected String doInBackground(LinkedList<BasicNameValuePair>... params) {
+			VideoHelper helper = new VideoHelper(mApp.getContext(), mApp);
+			String content = helper.save(params[0]);
+			
+			return content;
+		}
+		
+		@Override
+		protected void onPostExecute(String content) {
+			if (null != content) {
+	    		int success = 1;
+	    		videoShareCallBack(success, content);
+	    	}
 		}
 	}
 
