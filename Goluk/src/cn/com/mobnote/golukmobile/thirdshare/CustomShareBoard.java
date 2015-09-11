@@ -158,17 +158,17 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“ＱＱ”
 	public void click_QQ() {
-		if (null != mActivity && mActivity instanceof BaseActivity) {
-			if (!((BaseActivity) mActivity).isAllowedClicked()) {
-				return;
-			}
-			((BaseActivity) mActivity).setJumpToNext();
-		}
 		@SuppressWarnings("static-access")
 		Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
-		mCurrentShareType = TYPE_QQ;
-		this.shareUp();// 上报分享统计
 		if (isQQ) {
+			if (null != mActivity && mActivity instanceof BaseActivity) {
+				if (!((BaseActivity) mActivity).isAllowedClicked()) {
+					return;
+				}
+				((BaseActivity) mActivity).setJumpToNext();
+			}
+			mCurrentShareType = TYPE_QQ;
+			this.shareUp();// 上报分享统计
 			sharePlatform.setShareContent(shareurl + "&type=4", coverurl, describe, ttl);
 			performShare(SHARE_MEDIA.QQ);
 		} else {

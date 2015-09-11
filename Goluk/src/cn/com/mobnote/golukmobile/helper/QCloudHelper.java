@@ -43,9 +43,10 @@ public class QCloudHelper extends GolukHttpClientHelper implements ICloudHelper 
 	
 	public QCloudHelper() { }
 	public QCloudHelper(Context context, GolukApplication application) { 
+		super(context, application);
+
 		mContext = context;
-		mApp = application;
-		
+		mApp = application;		
 		init();
 	}
 	

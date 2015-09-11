@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -13,6 +14,11 @@ import android.view.WindowManager;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 // OneAPM, Micle
 import com.blueware.agent.android.BlueWare;
@@ -97,6 +103,33 @@ public class GuideActivity extends BaseActivity {
 		} else {// 没有启动过
 			initViewPager();
 		}
+		
+		// 初始化配置
+		initConfig();
+	}
+	
+	/**
+	 * 初始化配置
+	 * @作者 卜长清，buchangqing@goluk.com
+	 */
+	public void initConfig() {
+		// Serverflag
+		AssetManager assetManager = getAssets();
+		InputStream inputStream = null ;
+		try {
+		   inputStream = assetManager.open("serverflag");
+		   InputStreamReader ireader = new InputStreamReader(inputStream);		   
+		   BufferedReader breader = new BufferedReader(ireader);
+		   String serverFlag = "test";
+		   while ((serverFlag = breader.readLine().trim()) == "") {}
+		   ireader.close();
+		   breader.close();
+		   inputStream.close();
+		   
+		   ((GolukApplication) this.getApplication()).mSharedPreUtil.saveConfigServerFlag(serverFlag);
+		  } catch (IOException e) {
+			  GolukDebugUtils.e ("goluk", e.getMessage());
+		  } 
 	}
 
 	/**

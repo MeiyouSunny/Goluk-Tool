@@ -230,11 +230,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			String str = intent.getStringExtra("showMe").toString();
 			if ("showMe".equals(str)) {
 				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
-				mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
+				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
 				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
 
 				Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
-				msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
+				msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_up, null, null);
 				msquareBtn.setTextColor(Color.rgb(204, 204, 204));
 
 				userInfoLayout.setVisibility(View.VISIBLE);
@@ -687,11 +687,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case R.id.more_btn:
 			// 更多页面
 			Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
-			mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_down, null, null);
+			mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
 			mMoreBtn.setTextColor(Color.rgb(11, 89, 190));
 
 			Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
-			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_up, null, null);
+			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_up, null, null);
 			msquareBtn.setTextColor(Color.rgb(204, 204, 204));
 
 			userInfoLayout.setVisibility(View.VISIBLE);
@@ -702,11 +702,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case R.id.index_square_btn:
 			// 视频广场
 			Drawable square_down = this.getResources().getDrawable(R.drawable.index_find_btn_press);
-			msquareBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, square_down, null, null);
+			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_down, null, null);
 			msquareBtn.setTextColor(Color.rgb(11, 89, 190));
 
 			Drawable user_up = this.getResources().getDrawable(R.drawable.index_user_btn);
-			mMoreBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, user_up, null, null);
+			mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_up, null, null);
 			mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
 
 			userInfoLayout.setVisibility(View.GONE);
@@ -726,7 +726,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public void setBelowItem(int id) {
 		Drawable drawable;
 		if (id == R.id.index_square_btn) {

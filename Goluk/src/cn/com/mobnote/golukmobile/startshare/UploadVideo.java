@@ -2,7 +2,9 @@ package cn.com.mobnote.golukmobile.startshare;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.http.ParseException;
 import org.apache.http.message.BasicNameValuePair;
@@ -127,7 +129,8 @@ public class UploadVideo {
 				signAndUploadVideoCloud(mVideoPath, content);
 				break;
 			case MSG_CLOUD_UPLOAD_SUCCESS:
-				videoUploadCallBack(UPLOAD_STATE_SUCESS, "qcloud", mVideoVid);
+//				videoUploadCallBack(UPLOAD_STATE_SUCESS, "qcloud", mVideoVid);
+				uploadToCloudCallBack(msg.obj);
 				break;				
 			default:
 				break;
@@ -194,6 +197,9 @@ public class UploadVideo {
 		}
 		thumbFile = fileFolder + "/thumb11.jpg";
 		mShortBitmap = getSelfBitmap();
+		if (null == mShortBitmap) {
+			return;
+		}
 		try {
 			File file = new File(fileFolder);
 			file.mkdirs();
@@ -223,9 +229,6 @@ public class UploadVideo {
 			temp = GolukUtils.createVideoThumbnail(mVideoPath);
 		}
 
-		int width = temp.getWidth();
-		int height = temp.getHeight();
-		GolukDebugUtils.e("", "VideoShareActivity createThumb: width:" + width + "	height:" + height);
 		return temp;
 	}
 
@@ -507,9 +510,17 @@ public class UploadVideo {
 				new IUploadTaskListener() {
 			@Override
 			public void onUploadSucceed(FileInfo fileInfo) {
-				Log.d("goluk", "上传成功! ret:" + fileInfo);
+				Log.e("goluk", "上传成功! ret:" + fileInfo);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("url", fileInfo.url);
+				map.put("type", "video");
 				
-	    		mBaseHandler.sendEmptyMessage(MSG_CLOUD_UPLOAD_SUCCESS);	    		
+				Message msg = new Message();
+	    		msg.what = MSG_CLOUD_UPLOAD_SUCCESS;
+	    		msg.obj = map;
+	    		mBaseHandler.sendMessage(msg);
+	    		
+//	    		mBaseHandler.sendEmptyMessage(MSG_CLOUD_UPLOAD_SUCCESS);		
 			}
 			
 			@Override
@@ -557,21 +568,21 @@ public class UploadVideo {
 				new IUploadTaskListener() {
 			@Override
 			public void onUploadSucceed(FileInfo fileInfo) {
-				Log.d("goluk", "上传成功! ret:" + fileInfo);
-				String url = fileInfo.url;
+				Log.e("goluk", "上传成功! ret:" + fileInfo);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("url", fileInfo.url);
+				map.put("type", "photo");
 				
-//	    		mBaseHandler.sendEmptyMessage(MSG_CLOUD_UPLOAD_SUCCESS);	    		
+				Message msg = new Message();
+	    		msg.what = MSG_CLOUD_UPLOAD_SUCCESS;
+	    		msg.obj = map;
+	    		mBaseHandler.sendMessage(msg);  		
 			}
 			
 			@Override
 	  		public void onUploadProgress(long totalSize, long sendSize) {
 	  			int percent = (int) ((sendSize * 100) / (totalSize * 1.0f));
 				Log.d("goluk", "上传中! ret:" + percent);
-				
-//	    		Message msg = new Message();
-//	    		msg.what = MSG_H_UPLOAD_PROGRESS;
-//	    		msg.obj = percent;
-//	    		mBaseHandler.sendMessage(msg);
 	  		}
 
 			@Override
@@ -586,11 +597,41 @@ public class UploadVideo {
 		});
 		task.setBucket(QCloudHelper.PHOTO_BUCKET);
 		task.setAppid(QCloudHelper.APPID);
-		task.setFileId(id);
+		task.setFileId(String.format("%s/%s.png", remotePath, id));
 		task.setAuth(sign);
 		
 		// 上传
 		QCloudHelper helper = QCloudHelper.getInstance(mContext, mApp);
 		return helper.upload(task);
+	}
+	
+	private String mVideoUrl = "";
+	private String mCoverUrl = "";
+	/**
+	 * 上传回调
+	 * @param obj
+	 */
+	private void uploadToCloudCallBack(Object obj) {
+		Map<String, String> map = (HashMap<String, String>) obj;
+		String url = map.get("url");
+		String type = map.get("type");
+		if (type.equals("video")) { 
+			mVideoUrl = url;
+			
+			Log.e("goluk", "Video url: " + url);
+		}
+		
+		if (type.equals("photo")) { 
+			mCoverUrl = url;
+			
+			Log.e("goluk", "Cover url: " + url);
+		}
+		
+		if (!mVideoUrl.equals("") &&
+				!mCoverUrl.equals("")) {
+			mVideoUrl = "";
+			mCoverUrl = "";
+			videoUploadCallBack(UPLOAD_STATE_SUCESS, "qcloud", mVideoVid);
+		}
 	}
 }

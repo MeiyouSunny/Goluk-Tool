@@ -1,7 +1,6 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -73,33 +72,6 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VSquare_Req_List_Video_Catlog, json);
-	}
-
-	/**
-	 * 获取热门列表
-	 * 
-	 * @param channel
-	 *            分享渠道：1.视频广场 2.微信 3.微博 4.QQ
-	 * @param operation
-	 *            操作：0.首次进入30条 1.下拉30条 2.上拉30条
-	 * @return true:命令发送成功 false:失败
-	 * @author xuhw
-	 * @date 2015年4月17日
-	 */
-	public boolean getHotList(String channel, String operation) {
-		String json = JsonCreateUtils.getHotListRequestJson(channel, operation);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, SquareCmd_Req_HotList, json);
-	}
-
-	/**
-	 * 同步获取热门列表数据
-	 * 
-	 * @return
-	 * @author xuhw
-	 * @date 2015年4月24日
-	 */
-	public String getHotList() {
-		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square, SquareCmd_Get_HotCache, "");
 	}
 
 	/**
