@@ -23,7 +23,7 @@ public class QCloudHelper extends GolukHttpClientHelper implements ICloudHelper 
 	private static class DefaultConfig {
         private static final String APPID = "10002984";
         private static final String FILE_BUCKET = "file";
-        private static final String PHOTO_BUCKET = "image";
+        private static final String PHOTO_BUCKET = "picture";
         private static final String VIDEO_BUCKET = "video";
     }	
     
@@ -31,6 +31,7 @@ public class QCloudHelper extends GolukHttpClientHelper implements ICloudHelper 
 	public static final String APPID = DefaultConfig.APPID;
     public static String VIDEO_SIGN = "";
     public static String VIDEO_BUCKET = DefaultConfig.VIDEO_BUCKET;
+    public static String PHOTO_BUCKET = DefaultConfig.PHOTO_BUCKET;
     
     /******************* 通用 **************************/
 	private GolukApplication mApp;
@@ -67,6 +68,7 @@ public class QCloudHelper extends GolukHttpClientHelper implements ICloudHelper 
 	
 	private void init() {
 		mVideoUploadManager = new UploadManager(mContext, QCloudHelper.APPID, FileType.Video, null);
+		mPhotoUploadManager = new UploadManager(mContext, QCloudHelper.APPID, FileType.Photo, null);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

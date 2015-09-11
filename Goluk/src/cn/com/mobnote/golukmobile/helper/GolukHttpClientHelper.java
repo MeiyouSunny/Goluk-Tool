@@ -27,9 +27,9 @@ public class GolukHttpClientHelper extends HttpClientHelper {
 				// serverflag
 				String serverFlag = mApp.mSharedPreUtil.getConfigServerFlag();
 				if (serverFlag == "nvd") {
-					super.setServer("192.168.2.104:9090");
+					super.setServer("svr.goluk.cn");
 				} else if (serverFlag == "test") {
-					super.setServer("192.168.2.104:9090");
+					super.setServer("svr.goluk.cn");
 				}
 			}
 		}

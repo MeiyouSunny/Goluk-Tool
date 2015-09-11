@@ -34,6 +34,7 @@ import com.tencent.upload.task.IUploadTaskListener;
 import com.tencent.upload.task.VideoAttr;
 import com.tencent.upload.task.data.FileInfo;
 import com.tencent.upload.task.impl.VideoUploadTask;
+import com.tencent.upload.task.impl.PhotoUploadTask;
 import cn.com.mobnote.golukmobile.helper.QCloudHelper;
 
 public class UploadVideo {
@@ -466,7 +467,9 @@ public class UploadVideo {
 					String coversign = data.optString("coversign");
 					String coverpath = data.optString("coverpath");
 					String signtime = data.optString("signtime");
-					result = uploadVideoCloud(videoid, videosign, filePath, videopath, signtime);
+					
+					result = uploadVideoToCloud(videoid, videosign, filePath, videopath, signtime);
+					uploadPhotoToCloud(videoid, coversign, thumbFile, coverpath, signtime);
 				} else {
 					GolukDebugUtils.e("goluk", "请求视频签名失败！");
 				}
@@ -482,7 +485,16 @@ public class UploadVideo {
 		 return result;
 	}
 
-	private boolean uploadVideoCloud(String id, String sign, String localPath, String remotePath, String signTime) {		
+	/**
+	 * 上传视频至云服务
+	 * @param id
+	 * @param sign
+	 * @param localPath
+	 * @param remotePath
+	 * @param signTime
+	 * @return
+	 */
+	private boolean uploadVideoToCloud(String id, String sign, String localPath, String remotePath, String signTime) {		
 		mVideoVid = id;
 		mSignTime = signTime;
 		
@@ -530,5 +542,55 @@ public class UploadVideo {
 		boolean result =  helper.upload(task);
 		return result;
 	}
-	
+
+	/**
+	 * 上传视频封面至云服务
+	 * @param id
+	 * @param sign
+	 * @param localPath
+	 * @param remotePath
+	 * @param signTime
+	 * @return
+	 */
+	private boolean uploadPhotoToCloud(String id, String sign, String localPath, String remotePath, String signTime) {
+		PhotoUploadTask task = new PhotoUploadTask(localPath,
+				new IUploadTaskListener() {
+			@Override
+			public void onUploadSucceed(FileInfo fileInfo) {
+				Log.d("goluk", "上传成功! ret:" + fileInfo);
+				String url = fileInfo.url;
+				
+//	    		mBaseHandler.sendEmptyMessage(MSG_CLOUD_UPLOAD_SUCCESS);	    		
+			}
+			
+			@Override
+	  		public void onUploadProgress(long totalSize, long sendSize) {
+	  			int percent = (int) ((sendSize * 100) / (totalSize * 1.0f));
+				Log.d("goluk", "上传中! ret:" + percent);
+				
+//	    		Message msg = new Message();
+//	    		msg.what = MSG_H_UPLOAD_PROGRESS;
+//	    		msg.obj = percent;
+//	    		mBaseHandler.sendMessage(msg);
+	  		}
+
+			@Override
+			public void onUploadFailed(int errorCode, String errorMsg) {
+				Log.e("goluk", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
+			}
+
+			@Override
+			public void onUploadStateChange(TaskState taskState) {
+				Log.d("goluk", "上传状态变化! ret:" + taskState);				
+			}
+		});
+		task.setBucket(QCloudHelper.PHOTO_BUCKET);
+		task.setAppid(QCloudHelper.APPID);
+		task.setFileId(id);
+		task.setAuth(sign);
+		
+		// 上传
+		QCloudHelper helper = QCloudHelper.getInstance(mContext, mApp);
+		return helper.upload(task);
+	}
 }

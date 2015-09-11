@@ -29,7 +29,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class HttpClientHelper {
 	private static HttpClient httpClient = null;
 	private String protocol = "http";																// 使用的协议，默认HTTP
-	private String server = "192.168.2.104:9090";											// 服务器
+	private String server = "svr.goluk.cn";											// 服务器
 	private String service = "cdcComment/comment.htm";							// 服务
 	
 	public HttpClientHelper() {
