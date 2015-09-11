@@ -51,9 +51,7 @@ public class UploadVideo {
 	private final int MSG_H_RETRY_UPLOAD = 8;
 	
 	/* 云服务相关 Micle */
-	private final int MSG_CLOUD_UPLOAD_SIGN = 11;
-	private final int MSG_CLOUD_UPLOAD_LOADING = 12;
-	private final int MSG_CLOUD_UPLOAD_SUCCESS = 13;
+	private final int MSG_CLOUD_UPLOAD_SUCCESS = 10;
 
 	private GolukApplication mApp = null;
 	private Context mContext = null;
@@ -124,12 +122,8 @@ public class UploadVideo {
 				}
 				uploadVideoFile(mVideoPath);
 				break;
-			case MSG_CLOUD_UPLOAD_SIGN:
-				String content = msg.obj.toString();
-				signAndUploadVideoCloud(mVideoPath, content);
-				break;
+			// Upload to cloud, Micle
 			case MSG_CLOUD_UPLOAD_SUCCESS:
-//				videoUploadCallBack(UPLOAD_STATE_SUCESS, "qcloud", mVideoVid);
 				uploadToCloudCallBack(msg.obj);
 				break;				
 			default:
@@ -442,12 +436,7 @@ public class UploadVideo {
 	    
 	    new Thread() {
 	    	public void run() {
-	    		String content = helper.videoSign(params);
-//	    		Message msg = new Message();
-//	    		msg.what = MSG_CLOUD_UPLOAD_SIGN;
-//	    		msg.obj = content;
-//	    		mBaseHandler.sendMessage(msg);
-	    		
+	    		String content = helper.videoSign(params);	    		
 	    		signAndUploadVideoCloud(mVideoPath, content);
 	    	}
 	    }.start();
@@ -519,8 +508,6 @@ public class UploadVideo {
 	    		msg.what = MSG_CLOUD_UPLOAD_SUCCESS;
 	    		msg.obj = map;
 	    		mBaseHandler.sendMessage(msg);
-	    		
-//	    		mBaseHandler.sendEmptyMessage(MSG_CLOUD_UPLOAD_SUCCESS);		
 			}
 			
 			@Override
@@ -537,6 +524,8 @@ public class UploadVideo {
 			@Override
 			public void onUploadFailed(int errorCode, String errorMsg) {
 				Log.e("goluk", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
+				
+				mBaseHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
 			}
 
 			@Override
