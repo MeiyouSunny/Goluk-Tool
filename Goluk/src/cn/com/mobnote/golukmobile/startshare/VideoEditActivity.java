@@ -33,10 +33,13 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 import java.util.LinkedList;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
@@ -689,21 +692,48 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		String storage = mApp.mSharedPreUtil.getConfigStorage();		
 		
 		if (storage.equals("cloud")) {
-			LinkedList<BasicNameValuePair> params = new LinkedList<BasicNameValuePair>();  
-			params.add(new BasicNameValuePair("videoid", t_vid));  
-			params.add(new BasicNameValuePair("uid", mApp.mCurrentUId));
-			params.add(new BasicNameValuePair("lon", "0"));
-			params.add(new BasicNameValuePair("lat", "0"));
-			params.add(new BasicNameValuePair("type", t_type));
-			params.add(new BasicNameValuePair("attribute", selectTypeJson));
-			params.add(new BasicNameValuePair("describe", desc));
-			params.add(new BasicNameValuePair("issquare", isSeque));
-			params.add(new BasicNameValuePair("tagid", "goluk"));
-			params.add(new BasicNameValuePair("creattime", videoCreateTime));
-			params.add(new BasicNameValuePair("signtime", t_signTime));
+			VideoHelper helper = new VideoHelper(mApp.getContext(), mApp);
+			RequestParams params = new RequestParams();  
+			params.add("videoid", t_vid);  
+			params.add("uid", mApp.mCurrentUId);
+			params.add("lon", "0");
+			params.add("lat", "0");
+			params.add("type", t_type);
+			params.add("attribute", selectTypeJson);
+			params.add("describe", desc);
+			params.add("issquare", isSeque);
+			params.add("tagid", "goluk");
+			params.add("creattime", videoCreateTime);
+			params.add("signtime", t_signTime);
 			
-			new SaveShareVideoTask().execute(params);
-			isSuccess = true;
+			helper.save(params, new AsyncHttpResponseHandler() {
+				@Override
+			    public void onStart() {
+			        // called before request is started
+			    }
+
+			    @Override
+			    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+			        // called when "200 OK"
+
+		    		String content = new String(response);	    		
+		    		int success = 1;
+		    		videoShareCallBack(success, content);
+			    }
+
+			    @Override
+			    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+			        // called when "4XX" (eg. 401, 403, 404)
+			    	exit();
+					GolukUtils.showToast(mApp.getContext(), "网络错误，分享失败！");
+			    }
+
+			    @Override
+			    public void onRetry(int retryNo) {
+			        // called when request is retried
+				}
+			});
+			isSuccess = true;			
 		} else {
 			isSuccess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
@@ -714,25 +744,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			GolukUtils.showToast(this, "分享失败");
 			toInitState();
 			return;
-		}
-	}
-	
-	private class SaveShareVideoTask extends AsyncTask<LinkedList<BasicNameValuePair>, Void, String>{
-
-		@Override
-		protected String doInBackground(LinkedList<BasicNameValuePair>... params) {
-			VideoHelper helper = new VideoHelper(mApp.getContext(), mApp);
-			String content = helper.save(params[0]);
-			
-			return content;
-		}
-		
-		@Override
-		protected void onPostExecute(String content) {
-			if (null != content) {
-	    		int success = 1;
-	    		videoShareCallBack(success, content);
-	    	}
 		}
 	}
 

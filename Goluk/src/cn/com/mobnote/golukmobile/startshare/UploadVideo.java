@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.http.Header;
 import org.apache.http.ParseException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -30,6 +31,8 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 // Tecent QCloud
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -430,16 +433,38 @@ public class UploadVideo {
 	// 云存储服务
 	private void uploadToCloud(String filePath) {
 		// 请求签名
-		final QCloudHelper helper = QCloudHelper.getInstance(mContext, mApp);
-		final LinkedList<BasicNameValuePair> params = new LinkedList<BasicNameValuePair>();  
-		params.add(new BasicNameValuePair("uid", mApp.mCurrentUId));
-	    
-	    new Thread() {
-	    	public void run() {
-	    		String content = helper.videoSign(params);	    		
+		QCloudHelper helper = QCloudHelper.getInstance(mContext, mApp);
+		RequestParams params = new RequestParams("uid", mApp.mCurrentUId);
+		helper.videoSign(params, new AsyncHttpResponseHandler() {
+		    @Override
+		    public void onStart() {
+		        // called before request is started
+		    	Log.d("goluk", "请求签名开始！");
+		    }
+
+		    @Override
+		    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+		        // called when "200 OK"
+		    	Log.d("goluk", "请求签名成功！");
+
+	    		String content = new String(response);	    		
 	    		signAndUploadVideoCloud(mVideoPath, content);
-	    	}
-	    }.start();
+		    }
+
+		    @Override
+		    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+		        // called when "4XX" (eg. 401, 403, 404)
+		    	Log.e("goluk", "请求签名失败！");
+		    	click_Exit();
+		    	GolukUtils.showToast(mContext, "网络错误，分享失败！");
+		    }
+
+		    @Override
+		    public void onRetry(int retryNo) {
+		        // called when request is retried
+		    	Log.e("goluk", "请求签名重试！");
+			}
+		});
 	}
 	
 	private boolean signAndUploadVideoCloud(String filePath, String content) {
@@ -464,6 +489,8 @@ public class UploadVideo {
 					uploadPhotoToCloud(videoid, coversign, thumbFile, coverpath, signtime);
 				} else {
 					GolukDebugUtils.e("goluk", "请求视频签名失败！");
+			    	click_Exit();
+			    	GolukUtils.showToast(mContext, "网络错误，分享失败！");
 				}
 				
 			} catch (ParseException e) {

@@ -1,11 +1,8 @@
 package cn.com.mobnote.golukmobile.helper;
 
-import java.util.LinkedList;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.message.BasicNameValuePair;
-
 import com.tencent.upload.Const.FileType;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.CommandTask;
 import com.tencent.upload.task.UploadTask;
@@ -19,7 +16,7 @@ import cn.com.mobnote.application.GolukApplication;
  * @日期 2015-09-09
  * @版本 1.0
  */
-public class QCloudHelper extends GolukHttpClientHelper implements ICloudHelper  {
+public class QCloudHelper extends GolukHttpClientHelper  {
 	private static class DefaultConfig {
         private static final String APPID = "10002984";
         private static final String FILE_BUCKET = "file";
@@ -210,23 +207,26 @@ public class QCloudHelper extends GolukHttpClientHelper implements ICloudHelper 
 	/**
 	 * 获取视频签名
 	 */
-	public String fileSign(LinkedList<BasicNameValuePair> params) {
-		String service = "navidog4MeetTrans/filesign.htm";
-		super.setService(service);
+	public void fileSign(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+		String uri = "navidog4MeetTrans/filesign.htm";
 		
-		return super.get(params);
+		// 添加appid参数
+		params.add("appid", APPID);  
+		
+		super.setUri(uri);		
+		super.get(params, responseHandler);
 	}
 	
 	/**
 	 * 获取视频签名
 	 */
-	public String videoSign(LinkedList<BasicNameValuePair> params) {
-		String service = "navidog4MeetTrans/videosign.htm";
-		super.setService(service);
+	public void videoSign(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+		String uri = "navidog4MeetTrans/videosign.htm";
 		
 		// 添加appid参数
-		params.add(new BasicNameValuePair("appid", APPID));  
+		params.add("appid", APPID);  
 		
-		return super.get(params);
+		super.setUri(uri);
+		super.get(params, responseHandler);
 	}
 }

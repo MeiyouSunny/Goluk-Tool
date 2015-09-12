@@ -9,7 +9,7 @@ import cn.com.mobnote.application.GolukApplication;
  * @日期 2015-09-09
  * @版本 1.0
  */
-public class GolukHttpClientHelper extends HttpClientHelper {
+public class GolukHttpClientHelper extends AsyncHttpClientHelper {
 	private GolukApplication mApp = null;
 	private Context mContext = null;
 	
