@@ -2,15 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/user_login_bg"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
     
-   <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
-        android:id="@+id/mRTPullListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/title_layout"
-        android:divider="@null" >
-    </cn.com.mobnote.golukmobile.videosuqare.RTPullListView>
-
+   <ImageView 
+       android:layout_width="wrap_content"
+   	   android:layout_height="wrap_content"
+       android:background="@drawable/editor_head_girl4"/>
+   <LinearLayout 
+       android:layout_width="wrap_content"
+   	   android:layout_height="wrap_content"
+   	   android:orientation="vertical">
+       
+       <TextView 
+           android:layout_width="wrap_content"
+   	   	   android:layout_height="wrap_content"
+   	   	   android:text="用户信息"/>
+       <TextView 
+           android:layout_width="wrap_content"
+   	   	   android:layout_height="wrap_content"
+   	   	   android:text="用户信息"/>
+   </LinearLayout>
+	<ImageView 
+       android:layout_width="wrap_content"
+   	   android:layout_height="wrap_content"
+       android:background="@drawable/editor_head_girl4"/>
 </LinearLayout>
