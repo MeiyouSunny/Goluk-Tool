@@ -55,13 +55,13 @@ import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailParser;
+import cn.com.mobnote.golukmobile.videodetail.VideoJson;
+import cn.com.mobnote.golukmobile.videodetail.VideoListInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.videodetail.VideoDetailParser;
-import cn.com.mobnote.videodetail.VideoJson;
-import cn.com.mobnote.videodetail.VideoListInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;

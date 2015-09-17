@@ -1,4 +1,4 @@
-package cn.com.mobnote.videodetail;
+package cn.com.mobnote.golukmobile.videodetail;
 
 public class VideoListInfo {
 
