@@ -188,9 +188,19 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public String mGolukName = "";
 
 	private ArrayList<VideoFileInfo> fileList;
+	
+	private boolean mIsExit = true;
 
 	static {
 		System.loadLibrary("golukmobile");
+	}
+	
+	public void setExit(boolean isExit) {
+		mIsExit = isExit;
+	}
+	
+	public boolean isExit() {
+		return mIsExit;
 	}
 
 	@Override
@@ -262,6 +272,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		motioncfg = new int[2];
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
+		
+		setExit(false);
 	}
 
 	/**
@@ -1640,4 +1652,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mContext.startActivity(intent);
 		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
 	}
+	
+	
+	
 }

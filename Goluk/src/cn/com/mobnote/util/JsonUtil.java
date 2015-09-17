@@ -14,6 +14,7 @@ import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
+import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.user.APPInfo;
 import cn.com.mobnote.user.IPCInfo;
@@ -785,7 +786,7 @@ public class JsonUtil {
 	// issquare 是否分享到视频广场 0/1 (否/是)
 	// thumbImgJavaPath: 缩略图路径
 	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
-			String thumbImgJavaPath,String createTime) {
+			String thumbImgJavaPath, String createTime) {
 
 		String json = null;
 		try {
@@ -846,7 +847,7 @@ public class JsonUtil {
 	 * @return
 	 */
 	public static String putOpinion(String tag, String sys_version, String app_version, String ipc_version,
-			String phone_models, String opinion, String contact,String selectType) {
+			String phone_models, String opinion, String contact, String selectType) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("tag", tag);
@@ -1044,6 +1045,28 @@ public class JsonUtil {
 
 		}
 		return "";
+	}
+
+	public static XingGeMsgBean parseXingGePushMsg(String json) {
+		if (null == json) {
+			return null;
+		}
+		try {
+			JSONObject root = new JSONObject(json);
+			final int action = root.getInt("action");
+			final String title = getJsonStringValue(root, "title", "");
+			final String msg = getJsonStringValue(root, "msg", "");
+
+			XingGeMsgBean bean = new XingGeMsgBean();
+			bean.action = action;
+			bean.title = title;
+			bean.msg = msg;
+			bean.notifyId = (int) System.currentTimeMillis();
+
+			return bean;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }

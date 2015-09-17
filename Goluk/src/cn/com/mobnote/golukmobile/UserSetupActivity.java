@@ -111,7 +111,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mApp.setContext(mContext, "UserSetup");
 
 		mApp.mUser.setUserInterface(this);
-		
+
 		judgeLogin();
 
 		// 缓存
@@ -151,6 +151,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		// 自动同步开关
 		mBtnSwitch = (Button) findViewById(R.id.set_ipc_btn);
+		// 消息通知添加监听
+		findViewById(R.id.notify_comm_item).setOnClickListener(this);
 
 		// 注册监听
 		btnLoginout.setOnClickListener(this);
@@ -253,7 +255,20 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, true);
 			}
 			break;
+		case R.id.notify_comm_item:
+			startMsgSettingActivity();
+			break;
 		}
+	}
+
+	/**
+	 * 跳转到消息通知设置界面
+	 * 
+	 * @author jyf
+	 */
+	private void startMsgSettingActivity() {
+		Intent intent = new Intent(this, PushSettingActivity.class);
+		startActivity(intent);
 	}
 
 	/**

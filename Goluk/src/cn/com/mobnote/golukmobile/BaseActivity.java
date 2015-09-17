@@ -13,6 +13,9 @@ import android.os.Handler;
 import android.os.Message;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.umeng.analytics.MobclickAgent;
 
@@ -102,6 +105,39 @@ public class BaseActivity extends Activity {
 			if (GlobalWindow.getInstance().isShow()) {
 				GlobalWindow.getInstance().dimissGlobalWindow();
 			}
+		}
+	}
+
+//	protected void onNewIntent(Intent intent) {
+//		super.onNewIntent(intent);
+//		setIntent(intent);
+////		if (!(GolukApplication.getInstance().getContext() instanceof MainActivity)) {
+////			dealPush(intent);
+////		}
+//
+//		GolukDebugUtils.i("newintent", "jyf----onNew---Base------------");
+//	}
+
+	/**
+	 * 处理推送消息
+	 * 
+	 * @param intent
+	 * @author jyf
+	 */
+	private void dealPush(Intent intent) {
+		if (null == intent) {
+			return;
+		}
+		String from = intent.getStringExtra("from");
+		GolukDebugUtils.e("", "jyf----BaseActivity-----from: " + from);
+		if (null != from && !"".equals(from) && from.equals("notication")) {
+			String action = intent.getStringExtra("action");
+			Intent startIntent = new Intent(this, MainActivity.class);
+			startIntent.putExtra(GolukNotification.NOTIFICATION_KEY_FROM, from);
+			startIntent.putExtra(GolukNotification.NOTIFICATION_KEY_ACTION, action);
+			startActivity(startIntent);
+
+			GolukDebugUtils.e("", "jyf----BaseActivity-----from: " + from + "  action:" + action);
 		}
 	}
 

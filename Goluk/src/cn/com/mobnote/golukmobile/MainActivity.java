@@ -45,6 +45,7 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
+import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -215,7 +216,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				}
 			}
 		}
-		
+
+		dealPush(itStart_have);
+
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
 			notifyLogicNetWorkState(true);
 		}
@@ -244,6 +247,26 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 		}
 
+		dealPush(intent);
+	}
+
+	/**
+	 * 处理推送消息
+	 * 
+	 * @param intent
+	 * @author jyf
+	 */
+	private void dealPush(Intent intent) {
+		if (null == intent) {
+			return;
+		}
+		String from = intent.getStringExtra("from");
+		GolukDebugUtils.e("", "jyf----MainActivity-----from: " + from);
+		if (null != from && !"".equals(from) && from.equals("notication")) {
+			String action = intent.getStringExtra("action");
+			GolukUtils.showToast(this, "处理推送数据 :" + action);
+			GolukDebugUtils.e("", "jyf----MainActivity-----from: " + from + "  action:" + action);
+		}
 	}
 
 	/**
@@ -426,8 +449,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
 				time = time > oldtime ? time : oldtime;
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
-				
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList"+ time);
+
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList" + time);
 				updateHotPointState(true);
 
 				if (null != PhotoAlbumActivity.mHandler) {
@@ -494,9 +517,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.index_video_icon);
 			} else if (state == WIFI_STATE_FAILED) {
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-			}else{
+			} else {
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-				
+
 			}
 
 		}
@@ -599,7 +622,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (mApp.getIpcIsLogin()) {
 			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
 					"提示", "是否继续直播");
-		} 
+		}
 	}
 
 	@Override
@@ -635,9 +658,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			MobclickAgent.onKillProcess(this);
 			finish();
 			Fresco.shutDown();
-			int PID = android.os.Process.myPid();
-			android.os.Process.killProcess(PID);
-			System.exit(0);
+//			int PID = android.os.Process.myPid();
+//			android.os.Process.killProcess(PID);
+//			System.exit(0);
+			
+			mApp.setExit(true);
 		}
 
 	}
@@ -679,6 +704,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		return false;
 	}
+	
+	int testCount = 0;
 
 	@Override
 	public void onClick(View v) {
@@ -698,6 +725,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.GONE);
 
 			indexMoreActivity.showView();
+
+			testCount++;
+//			GolukNotification.getInstance().showNotify(this, testCount, "Goluk", "掏粪男孩演唱会正在厕所举行");
+
 			break;
 		case R.id.index_square_btn:
 			// 视频广场
@@ -774,7 +805,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void dismissAutoDialog() {
-	
+
 	}
 
 	@Override
@@ -862,7 +893,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 设置IPC信息成功回调
 	 */
 	public void setIpcLinkWiFiCallBack(int state) {
-		
+
 	}
 
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
