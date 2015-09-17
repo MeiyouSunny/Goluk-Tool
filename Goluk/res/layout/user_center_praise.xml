@@ -1,29 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
-    
-   <ImageView 
-       android:layout_width="wrap_content"
-   	   android:layout_height="wrap_content"
-       android:background="@drawable/editor_head_girl4"/>
-   <LinearLayout 
-       android:layout_width="wrap_content"
-   	   android:layout_height="wrap_content"
-   	   android:orientation="vertical">
-       
-       <TextView 
-           android:layout_width="wrap_content"
-   	   	   android:layout_height="wrap_content"
-   	   	   android:text="用户信息"/>
-       <TextView 
-           android:layout_width="wrap_content"
-   	   	   android:layout_height="wrap_content"
-   	   	   android:text="用户信息"/>
-   </LinearLayout>
-	<ImageView 
-       android:layout_width="wrap_content"
-   	   android:layout_height="wrap_content"
-       android:background="@drawable/editor_head_girl4"/>
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp" >
+
+        <ImageView
+            android:id="@+id/userhead"
+            android:layout_width="37.33dp"
+            android:layout_height="37.33dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:background="@drawable/editor_head_girl4" />
+
+        <LinearLayout
+            android:id="@+id/userinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@+id/userhead"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户信息"
+                android:textColor="#1163a2"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="各种签名签名签名签"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="95dp"
+            android:layout_height="52dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/screenshot" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="59dp"
+        android:layout_marginRight="14dp"
+        android:background="#e5e5e5" >
+    </View>
+
 </LinearLayout>

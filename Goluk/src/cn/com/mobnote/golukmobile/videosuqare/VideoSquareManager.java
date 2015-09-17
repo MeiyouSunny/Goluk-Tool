@@ -418,6 +418,21 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square,
 				VSquare_Req_List_Video_Catlog_LocalCache, json.toString());
 	}
+	
+	
+	/**
+	 * 
+	 * @param ztype
+	 * @param ztid
+	 * @return
+	 */
+	public boolean getUserCenter(String otheruid) {
+		String json = JsonCreateUtils.getUserCenterJson(otheruid);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VSquare_Req_MainPage_Infor, json);
+	}
+	
+	
 
 	/**
 	 * 添加视频广场监听

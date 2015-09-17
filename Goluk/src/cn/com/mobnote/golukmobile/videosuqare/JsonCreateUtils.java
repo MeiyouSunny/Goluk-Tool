@@ -408,5 +408,19 @@ public class JsonCreateUtils {
 
 		return json;
 	}
+	
+	public static String getUserCenterJson(String otheruid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("otheruid", otheruid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
 
 }

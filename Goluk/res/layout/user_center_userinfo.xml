@@ -2,62 +2,131 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#404246"
     android:orientation="vertical" >
-    
-   <RelativeLayout 
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-        android:gravity="center">
-       
-       <TextView 
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textSize="20sp"
-           android:text="用户信息"/>
-   </RelativeLayout>
-   
-   <LinearLayout 
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal">
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:id="@+id/sharelayout"
-           android:gravity="center"
-           android:layout_weight="1"
-           android:orientation="vertical">
-           <TextView 
-               android:layout_width="wrap_content"
-           	   android:layout_height="wrap_content"
-           	   android:textSize="20sp"
-           	   android:text="分享视频"/>
-           	<TextView 
-               android:layout_width="wrap_content"
-           	   android:layout_height="wrap_content"
-           	   android:textSize="20sp"
-           	   android:text="10"/>
-       </LinearLayout>
-       
-       <LinearLayout 
-           android:layout_weight="1"
-           android:id="@+id/praiselayout"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:orientation="vertical">
-           <TextView 
-               android:layout_width="wrap_content"
-           	   android:layout_height="wrap_content"
-           	   android:textSize="20sp"
-           	   android:text="赞我的人"/>
-           	<TextView 
-               android:layout_width="wrap_content"
-           	   android:layout_height="wrap_content"
-           	   android:textSize="20sp"
-           	   android:text="10"/>
-       </LinearLayout>
-     
-   </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14sp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/user_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:layout_marginLeft="14dp"
+            android:background="@drawable/editor_head_girl4" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/user_head"
+            android:layout_marginLeft="14dp"
+            android:layout_centerVertical="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="拉我起来，我还能送"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="在哪里跌倒 就在哪里躺下。"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/mine_arrow" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/sharelayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+			
+            <TextView
+                android:id="@+id/fxsp_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="#0984ff"
+                android:textSize="14sp" />
+            
+            <TextView
+                android:id="@+id/fxsp_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#0984ff"
+                android:text="分享视频"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="12sp" />
+            
+            <ImageView 
+                android:id="@+id/video_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/mine_cursor"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/praiselayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+			
+            <TextView
+                android:id="@+id/dz_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+            
+            <TextView
+                android:id="@+id/dz_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="赞我的人"
+                android:textColor="#ffffff"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="12sp" />
+	
+            <ImageView 
+                android:id="@+id/praise_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:background="@drawable/mine_cursor"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

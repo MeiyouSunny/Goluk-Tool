@@ -69,10 +69,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 		VideoSuqareManagerFn, OnTouchListener {
 	private Context mContext = null;
 	private List<ClusterInfo> videoListData = null;
-	private List<ClusterInfo> praisListData = null;
-	
+	private List<PraiseInfo> praisListData = null;
+
 	private List<ClusterInfo> vData = new ArrayList<ClusterInfo>();
-	private List<ClusterInfo> pData = new ArrayList<ClusterInfo>();
+	private List<PraiseInfo> pData = new ArrayList<PraiseInfo>();
 	private int count = 0;
 
 	private SharePlatformUtil sharePlatform;
@@ -90,12 +90,20 @@ public class UserCenterAdapter extends BaseAdapter implements
 	/** 滚动中锁标识 */
 	private boolean lock = false;
 
-	private SpecialInfo headdata;
+	private UserInfo userinfo;
+
+	private ImageView praiseselect = null;
+	private ImageView videoselect = null;
+	private TextView fxsptxt = null;
+	private TextView fxspnum = null;
+
+	private TextView dztxt = null;
+	private TextView dzpnum = null;
 
 	public UserCenterAdapter(Context context, SharePlatformUtil spf) {
 		mContext = context;
 		videoListData = new ArrayList<ClusterInfo>();
-		praisListData = new ArrayList<ClusterInfo>();
+		praisListData = new ArrayList<PraiseInfo>();
 		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		GolukApplication.getInstance().getVideoSquareManager()
@@ -104,39 +112,42 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 	/**
 	 * 设置视频数据
+	 * 
 	 * @param data
 	 */
 	public void setVideoData(List<ClusterInfo> data) {
 		videoListData.clear();
 		videoListData.addAll(data);
-		
+
 		vData.clear();
 		vData.addAll(data);
-		
+
 		count = videoListData.size();
 		count++;
 	}
-	
+
 	/**
 	 * 设置点赞数据
+	 * 
 	 * @param data
 	 */
-	public void setPraisData(List<ClusterInfo> data) {
+	public void setPraisData(List<PraiseInfo> data) {
 		praisListData.clear();
 		praisListData.addAll(data);
-		
+
 		pData.clear();
 		pData.addAll(data);
 		count = praisListData.size();
 		count++;
 	}
-	
+
 	/**
 	 * 设置用户数据
+	 * 
 	 * @param head
 	 */
-	public void setUserData(SpecialInfo head) {
-		headdata = head;
+	public void setUserData(UserInfo user) {
+		userinfo = user;
 	}
 
 	// 每个convert view都会调用此方法，获得当前所需要的view样式
@@ -178,142 +189,144 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 		switch (type) {
 		case TYPE_1:
-			if (headdata != null) {
+			if (userinfo != null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.user_center_userinfo, null);
 				LinearLayout praise = (LinearLayout) convertView
 						.findViewById(R.id.praiselayout);
 				LinearLayout share = (LinearLayout) convertView
 						.findViewById(R.id.sharelayout);
+				
+				praiseselect = (ImageView) convertView
+						.findViewById(R.id.praise_select);
+				videoselect = (ImageView) convertView
+						.findViewById(R.id.video_select);
+				fxsptxt = (TextView) convertView.findViewById(R.id.fxsp_txt);
+				fxspnum = (TextView) convertView.findViewById(R.id.fxsp_num);
+
+				dztxt = (TextView) convertView.findViewById(R.id.dz_txt);
+				dzpnum = (TextView) convertView.findViewById(R.id.dz_num);
+
+				if (itemtype == TYPE_2) {
+					praiseselect.setVisibility(View.INVISIBLE);
+					videoselect.setVisibility(View.VISIBLE);
+					fxsptxt.setTextColor(Color.rgb(9, 132, 255));
+					fxspnum.setTextColor(Color.rgb(9, 132, 255));
+
+					dztxt.setTextColor(Color.rgb(255, 255, 255));
+					dzpnum.setTextColor(Color.rgb(255, 255, 255));
+				} else {
+					videoselect.setVisibility(View.INVISIBLE);
+					praiseselect.setVisibility(View.VISIBLE);
+
+					dztxt.setTextColor(Color.rgb(9, 132, 255));
+					dzpnum.setTextColor(Color.rgb(9, 132, 255));
+
+					fxsptxt.setTextColor(Color.rgb(255, 255, 255));
+					fxspnum.setTextColor(Color.rgb(255, 255, 255));
+				}
+
 				share.setOnClickListener(new OnClickListener() {
-					
+
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
+
 						itemtype = TYPE_2;
 						videoListData.clear();
 						videoListData.addAll(vData);
-						
+
 						praisListData.clear();
-						
+
 						count = videoListData.size();
-						count ++;
+						count++;
 						notifyDataSetChanged();
 					}
 				});
-				
+
 				praise.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
+
 						itemtype = TYPE_3;
 						praisListData.clear();
 						praisListData.addAll(pData);
-						
+
 						videoListData.clear();
-						
+
 						count = praisListData.size();
-						count ++;
+						count++;
 						notifyDataSetChanged();
 					}
 				});
-				// ImageView image = (ImageView)
-				// convertView.findViewById(R.id.mPreLoading);
-				// TextView txt = (TextView)
-				// convertView.findViewById(R.id.video_title);
-				// TextView link = (TextView)
-				// convertView.findViewById(R.id.link);
-				//
-				// txt.setText(headdata.describe);
-				// if (headdata.outurlname != null) {
-				// link.setText(headdata.outurlname);
-				// }
-				//
-				// int width =
-				// SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-				// int height = (int) ((float) width / 1.77f);
-				//
-				// RelativeLayout.LayoutParams mPreLoadingParams = new
-				// RelativeLayout.LayoutParams(width, height);
-				// image.setLayoutParams(mPreLoadingParams);
-				//
-				// BitmapManager.getInstance().mBitmapUtils.display(image,
-				// headdata.imagepath);
-				//
-				// if("1".equals(headdata.videotype)){
-				// convertView.findViewById(R.id.mPlayBigBtn).setVisibility(View.GONE);
-				// }
-
-				// image.setOnClickListener(new
-				// SpecialCommentListener(mContext,this,
-				// headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
+				
 			}
 			break;
 		case TYPE_2:
 			int index_v = position;
 			index_v--;
-			ClusterInfo video = videoListData.get(index_v);
+			ClusterInfo clusterInfo = videoListData.get(index_v);
 			if (convertView == null) {
 
 				holder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.newest_list_item, null);
-				// holder.imageLayout = (RelativeLayout)
-				// convertView.findViewById(R.id.imageLayout);
-				// holder.headimg = (ImageView)
-				// convertView.findViewById(R.id.headimg);
-				// holder.nikename = (TextView)
-				// convertView.findViewById(R.id.nikename);
-				// holder.time = (TextView) convertView.findViewById(R.id.time);
-				// holder.function = (ImageView)
-				// convertView.findViewById(R.id.function);
-				//
-				// holder.praiseLayout = (LinearLayout)
-				// convertView.findViewById(R.id.praiseLayout);
-				// holder.zanIcon = (ImageView)
-				// convertView.findViewById(R.id.zanIcon);
-				// holder.zanText = (TextView)
-				// convertView.findViewById(R.id.zanText);
-				//
-				// holder.commentLayout = (LinearLayout)
-				// convertView.findViewById(R.id.commentLayout);
-				// holder.commentIcon = (ImageView)
-				// convertView.findViewById(R.id.commentIcon);
-				// holder.commentText = (TextView)
-				// convertView.findViewById(R.id.commentText);
-				//
-				// holder.shareLayout = (LinearLayout)
-				// convertView.findViewById(R.id.shareLayout);
-				// holder.shareIcon = (ImageView)
-				// convertView.findViewById(R.id.shareIcon);
-				// holder.shareText = (TextView)
-				// convertView.findViewById(R.id.shareText);
-				//
-				// holder.zText = (TextView)
-				// convertView.findViewById(R.id.zText);
-				// holder.weiguan = (TextView)
-				// convertView.findViewById(R.id.weiguan);
-				// holder.weiguan = (TextView)
-				// convertView.findViewById(R.id.weiguan);
-				// holder.totalcomments = (TextView)
-				// convertView.findViewById(R.id.totalcomments);
-				//
-				// holder.detail = (TextView)
-				// convertView.findViewById(R.id.detail);
-				// holder.comment1 = (TextView)
-				// convertView.findViewById(R.id.comment1);
-				// holder.comment2 = (TextView)
-				// convertView.findViewById(R.id.comment2);
-				// holder.comment3 = (TextView)
-				// convertView.findViewById(R.id.comment3);
-				//
-				// int height = (int) ((float) width / 1.77f);
-				// RelativeLayout.LayoutParams mPlayerLayoutParams = new
-				// RelativeLayout.LayoutParams(width, height);
-				// mPlayerLayoutParams.addRule(RelativeLayout.BELOW,
-				// R.id.headlayout);
-				// holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
+				holder.imageLayout = (RelativeLayout) convertView
+						.findViewById(R.id.imageLayout);
+				holder.headimg = (ImageView) convertView
+						.findViewById(R.id.headimg);
+				holder.nikename = (TextView) convertView
+						.findViewById(R.id.nikename);
+				holder.time = (TextView) convertView.findViewById(R.id.time);
+				holder.function = (ImageView) convertView
+						.findViewById(R.id.function);
+
+				holder.praiseLayout = (LinearLayout) convertView
+						.findViewById(R.id.praiseLayout);
+				holder.zanIcon = (ImageView) convertView
+						.findViewById(R.id.zanIcon);
+				holder.zanText = (TextView) convertView
+						.findViewById(R.id.zanText);
+
+				holder.commentLayout = (LinearLayout) convertView
+						.findViewById(R.id.commentLayout);
+				holder.commentIcon = (ImageView) convertView
+						.findViewById(R.id.commentIcon);
+				holder.commentText = (TextView) convertView
+						.findViewById(R.id.commentText);
+
+				holder.shareLayout = (LinearLayout) convertView
+						.findViewById(R.id.shareLayout);
+				holder.shareIcon = (ImageView) convertView
+						.findViewById(R.id.shareIcon);
+				holder.shareText = (TextView) convertView
+						.findViewById(R.id.shareText);
+
+				holder.zText = (TextView) convertView.findViewById(R.id.zText);
+				holder.weiguan = (TextView) convertView
+						.findViewById(R.id.weiguan);
+				holder.weiguan = (TextView) convertView
+						.findViewById(R.id.weiguan);
+				holder.totalcomments = (TextView) convertView
+						.findViewById(R.id.totalcomments);
+
+				holder.detail = (TextView) convertView
+						.findViewById(R.id.detail);
+				holder.comment1 = (TextView) convertView
+						.findViewById(R.id.comment1);
+				holder.comment2 = (TextView) convertView
+						.findViewById(R.id.comment2);
+				holder.comment3 = (TextView) convertView
+						.findViewById(R.id.comment3);
+
+				int height = (int) ((float) width / 1.77f);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(
+						width, height);
+				mPlayerLayoutParams.addRule(RelativeLayout.BELOW,
+						R.id.headlayout);
+				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
 
 				convertView.setTag(holder);
 
@@ -321,54 +334,53 @@ public class UserCenterAdapter extends BaseAdapter implements
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			// holder.nikename.setText(clusterInfo.author);
-			// holder.time.setText(clusterInfo.sharingtime);
-			// holder.zText.setText(clusterInfo.praisenumber);
-			// holder.weiguan.setText(clusterInfo.clicknumber + " 围观");
-			// holder.detail.setText(clusterInfo.author + "  " +
-			// clusterInfo.describe);
-			// holder.totalcomments.setText("查看所有" + clusterInfo.comments +
-			// "条评论");
-			// holder.zText.setText(clusterInfo.praisenumber + " 赞");
-			// loadImage(holder.imageLayout, clusterInfo.imagepath);
-			// initListener(index);
-			// //没点过
-			// if("0".equals(clusterInfo.ispraise)){
-			// holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
-			// }else{//点赞过
-			// holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
-			// }
-			// if (clusterInfo.ci1 != null) {
-			// holder.comment1.setText(clusterInfo.ci1.name + "  " +
-			// clusterInfo.ci1.text);
-			// } else {
-			// holder.comment1.setVisibility(View.GONE);
-			// }
-			//
-			// if (clusterInfo.ci2 != null) {
-			// holder.comment2.setText(clusterInfo.ci2.name + "  " +
-			// clusterInfo.ci2.text);
-			// } else {
-			// holder.comment2.setVisibility(View.GONE);
-			// }
-			//
-			// if (clusterInfo.ci3 != null) {
-			// holder.comment3.setText(clusterInfo.ci3.name + "  " +
-			// clusterInfo.ci3.text);
-			// } else {
-			// holder.comment3.setVisibility(View.GONE);
-			// }
+			holder.nikename.setText(clusterInfo.author);
+			holder.time.setText(clusterInfo.sharingtime);
+			holder.zText.setText(clusterInfo.praisenumber);
+			holder.weiguan.setText(clusterInfo.clicknumber + " 围观");
+			holder.detail.setText(clusterInfo.author + "  "
+					+ clusterInfo.describe);
+			holder.totalcomments.setText("查看所有" + clusterInfo.comments + "条评论");
+			holder.zText.setText(clusterInfo.praisenumber + " 赞");
+			loadImage(holder.imageLayout, clusterInfo.imagepath);
+			initListener(index_v);
+			// 没点过
+			if ("0".equals(clusterInfo.ispraise)) {
+				holder.zanIcon
+						.setBackgroundResource(R.drawable.videodetail_like);
+			} else {// 点赞过
+				holder.zanIcon
+						.setBackgroundResource(R.drawable.videodetail_like_press);
+			}
+			if (clusterInfo.ci1 != null) {
+				holder.comment1.setText(clusterInfo.ci1.name + "  "
+						+ clusterInfo.ci1.text);
+			} else {
+				holder.comment1.setVisibility(View.GONE);
+			}
+
+			if (clusterInfo.ci2 != null) {
+				holder.comment2.setText(clusterInfo.ci2.name + "  "
+						+ clusterInfo.ci2.text);
+			} else {
+				holder.comment2.setVisibility(View.GONE);
+			}
+
+			if (clusterInfo.ci3 != null) {
+				holder.comment3.setText(clusterInfo.ci3.name + "  "
+						+ clusterInfo.ci3.text);
+			} else {
+				holder.comment3.setVisibility(View.GONE);
+			}
 			break;
 		case TYPE_3:
 			int index_p = position;
 			index_p--;
-			ClusterInfo prais = praisListData.get(index_p);
+			PraiseInfo prais = praisListData.get(index_p);
 			if (convertView == null) {
-
 				holder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.user_center_praise, null);
-				
 			}
 			break;
 		default:
