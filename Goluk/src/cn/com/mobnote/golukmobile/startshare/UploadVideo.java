@@ -478,15 +478,17 @@ public class UploadVideo {
 
 				if (isSuccess) {
 					JSONObject data = rootObj.getJSONObject("data");
-					String videoid = data.getString("videoid");
-					String videosign = data.getString("videosign");
-					String videopath = data.getString("videopath");
+					String videoid = data.optString("videoid");
+					String videosign = data.optString("videosign");
+					String videopath = data.optString("videopath");
 					String coversign = data.optString("coversign");
 					String coverpath = data.optString("coverpath");
 					String signtime = data.optString("signtime");
+					String env = data.optString("envsync");
 					
-					result = uploadVideoToCloud(videoid, videosign, filePath, videopath, signtime);
-					uploadPhotoToCloud(videoid, coversign, thumbFile, coverpath, signtime);
+					// 根据不同环境使用不同存储空间					
+					result = uploadVideoToCloud(env, videoid, videosign, filePath, videopath, signtime);
+					uploadPhotoToCloud(env, videoid, coversign, thumbFile, coverpath, signtime);
 				} else {
 					GolukDebugUtils.e("goluk", "请求视频签名失败！");
 			    	click_Exit();
@@ -513,16 +515,17 @@ public class UploadVideo {
 	 * @param signTime
 	 * @return
 	 */
-	private boolean uploadVideoToCloud(String id, String sign, String localPath, String remotePath, String signTime) {		
+	private boolean uploadVideoToCloud(String env, String id, String sign, String localPath, String remotePath, String signTime) {		
 		mVideoVid = id;
 		mSignTime = signTime;
 		
+		String space = env + QCloudHelper.VIDEO_BUCKET;
 		VideoAttr videoAttr = new VideoAttr();
 		videoAttr.isCheck = false;
 		videoAttr.title = id;
 		remotePath = String.format("%s%s.mp4", remotePath, id);
 		
-		VideoUploadTask task = new VideoUploadTask(QCloudHelper.VIDEO_BUCKET , localPath, remotePath, "wonderful", videoAttr, 
+		VideoUploadTask task = new VideoUploadTask(space , localPath, remotePath, "wonderful", videoAttr, 
 				new IUploadTaskListener() {
 			@Override
 			public void onUploadSucceed(FileInfo fileInfo) {
@@ -560,7 +563,7 @@ public class UploadVideo {
 				Log.d("goluk", "上传状态变化! ret:" + taskState);				
 			}
 		});
-		task.setBucket(QCloudHelper.VIDEO_BUCKET);
+		task.setBucket(space);
 		task.setAppid(QCloudHelper.APPID);
 		task.setAuth(sign);
 		
@@ -579,7 +582,8 @@ public class UploadVideo {
 	 * @param signTime
 	 * @return
 	 */
-	private boolean uploadPhotoToCloud(String id, String sign, String localPath, String remotePath, String signTime) {
+	private boolean uploadPhotoToCloud(String env, String id, String sign, String localPath, String remotePath, String signTime) {
+		String space = env + QCloudHelper.PHOTO_BUCKET;
 		PhotoUploadTask task = new PhotoUploadTask(localPath,
 				new IUploadTaskListener() {
 			@Override
@@ -611,7 +615,7 @@ public class UploadVideo {
 				Log.d("goluk", "上传状态变化! ret:" + taskState);				
 			}
 		});
-		task.setBucket(QCloudHelper.PHOTO_BUCKET);
+		task.setBucket(space);
 		task.setAppid(QCloudHelper.APPID);
 		task.setFileId(String.format("%s/%s.png", remotePath, id));
 		task.setAuth(sign);

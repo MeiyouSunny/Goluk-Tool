@@ -20,7 +20,7 @@ public class QCloudHelper extends GolukHttpClientHelper  {
 	private static class DefaultConfig {
         private static final String APPID = "10002984";
         private static final String FILE_BUCKET = "file";
-        private static final String PHOTO_BUCKET = "picture";
+        private static final String PHOTO_BUCKET = "photo";
         private static final String VIDEO_BUCKET = "video";
     }	
     
