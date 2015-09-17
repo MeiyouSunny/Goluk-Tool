@@ -12,11 +12,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnInfoListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -26,7 +21,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
@@ -44,7 +37,7 @@ import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
+public class VideoDetailAdapter extends BaseAdapter{
 
 	private Context mContext = null;
 	private int count = 0;
@@ -56,26 +49,27 @@ public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
 	private final int OTHERS_TYPE = 1;
 	
 	/**视频缓冲计时**/
-	private Timer timer = null;
+	public Timer timer = null;
 	/** 加载中动画对象 */
 	private AnimationDrawable mAnimationDrawable = null;
-	private boolean isShow = false;
+	public boolean isShow = false;
 	/** 缓冲标识 */
-	private boolean isBuffering = false;
+	public boolean isBuffering = false;
 	/** 播放器报错标识 */
-	private boolean error = false;
+	public boolean error = false;
 	/** 视频播放时间 */
-	private int playTime = 0;
-	/** 播放重置标识 */
-	private boolean reset = false;
+	public int playTime = 0;
 	/** 网络连接超时 */
 	private int networkConnectTimeOut = 0;
 	private int duration = 0;
 	/** 暂停标识 */
-	private boolean isPause = false;
+	public boolean isPause = false;
 	private ConnectivityManager connectivityManager = null;
-	private NetworkInfo netInfo = null;
+	public NetworkInfo netInfo = null;
 	private CustomDialog mCustomDialog;
+	public Handler mHandler;
+	
+	public ViewHolder headHolder = null;
 
 	public VideoDetailAdapter(Context context) {
 		mContext = context;
@@ -100,13 +94,13 @@ public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
 		}
 		count = mDataList.size();
 		count++;
-		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：count==" + count);
 		this.notifyDataSetChanged();
 	}
 
 	public void appendData(ArrayList<CommentBean> data) {
 		mDataList.addAll(data);
 		this.notifyDataSetChanged();
+		GolukDebugUtils.e("", "========appendData====mDataList==="+mDataList.size());
 	}
 
 	// 获取最后一条数据的时间戳
@@ -174,7 +168,6 @@ public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
 	 */
 	@SuppressLint("NewApi")
 	private View getHeadView(View convertView) {
-		ViewHolder headHolder = null;
 		if (null == convertView) {
 			headHolder = new ViewHolder();
 			convertView = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.video_detail_head, null);
@@ -207,21 +200,20 @@ public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
 		getHeadData(headHolder, mVideoJson.data);
 		
 		headHolder.mLoading.setBackgroundResource(R.anim.video_loading);
-		headHolder.mAnimationDrawable = (AnimationDrawable) headHolder.mLoading.getBackground();
+		mAnimationDrawable = (AnimationDrawable) headHolder.mLoading.getBackground();
 		
-		headHolder.mPlayBtn.setOnClickListener(this);
-		headHolder.mTextLink.setOnClickListener(this);
-		headHolder.mPraiseLayout.setOnClickListener(this);
-		headHolder.mShareLayout.setOnClickListener(this);
+		headHolder.mPlayBtn.setOnClickListener(new ClickVideoListener(mContext, this));
+		headHolder.mPlayerLayout.setOnClickListener(new ClickVideoListener(mContext, this));
+//		headHolder.mTextLink.setOnClickListener(new ClickListener());
+		headHolder.mPraiseLayout.setOnClickListener(new ClickPraiseListener(mVideoJson, mContext, false));
+//		headHolder.mShareLayout.setOnClickListener(new ClickListener());
 		
-		headHolder.mSeekBar.setOnSeekBarChangeListener(new SeekBarListener(mContext, headHolder));
-		
-//		headHolder.mVideoView.setOnPreparedListener(this);
-//		headHolder.mVideoView.setOnCompletionListener(this);
-//		headHolder.mVideoView.setOnErrorListener(this);
+		headHolder.mVideoView.setOnPreparedListener(new PlayPreparedListener(headHolder, this));
+		headHolder.mVideoView.setOnCompletionListener(new PlayCompletionListener(this, headHolder));
+		headHolder.mVideoView.setOnErrorListener(new PlayErrorListener(mContext, headHolder, this));
 		if (GolukUtils.getSystemSDK() >= 17) {
 			try {
-//				headHolder.mVideoView.setOnInfoListener(this);
+				headHolder.mVideoView.setOnInfoListener(new PlayInfoListener(this, headHolder));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -231,6 +223,7 @@ public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
 	}
 
 	// 设置详情数据
+	@SuppressLint("HandlerLeak")
 	private void getHeadData(final ViewHolder headHolder, VideoAllData mVideoAllData) {
 		if (!mVideoJson.success) {
 			// TODO 后台数据异常
@@ -269,17 +262,57 @@ public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
 			}
 			
 			//视频
-			Uri uri = null;
-			if ("1".equals(mVideoJson.data.avideo.video.type)) {
-				uri = Uri.parse(mVideoJson.data.avideo.video.livesdkaddress);
-			} else if ("2".equals(mVideoJson.data.avideo.video.type)) {
-				uri = Uri.parse(mVideoJson.data.avideo.video.ondemandwebaddress);
+			if ((netInfo != null) && (netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
+				playVideo();
+				headHolder.mVideoView.start();
+				showLoading();
+				GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------getHeadData  showLoading");
+			} else {
+				headHolder.mImageLayout.setVisibility(View.VISIBLE);
+				headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 			}
-			headHolder.mVideoView.setVideoURI(uri);
-			headHolder.mVideoView.requestFocus();
-			headHolder.mImageLayout.setVisibility(View.GONE);
-			headHolder.mVideoView.start();
 			
+			mHandler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					super.handleMessage(msg);
+					switch (msg.what) {
+					case 1:
+						if (error) {
+							return;
+						}
+						netWorkTimeoutCheck();
+						if (null == headHolder.mVideoView) {
+							return;
+						}
+						if (headHolder.mVideoView.getCurrentPosition() > 0) {
+							if (!headHolder.mVideoView.isPlaying()) {
+								return;
+							}
+							if (!isBuffering) {
+								hideLoading();
+								GolukDebugUtils.e("videoview","VideoDetailActivity-------------------mHandler : hideLoading ");
+							}
+							playTime = 0;
+							duration = headHolder.mVideoView.getDuration();
+							int progress = headHolder.mVideoView.getCurrentPosition() * 100 / headHolder.mVideoView.getDuration();
+							headHolder.mSeekBar.setProgress(progress);
+							if (headHolder.mVideoView.getCurrentPosition() > headHolder.mVideoView.getDuration() - 100) {
+								headHolder.mSeekBar.setProgress(0);
+							}
+						} else {
+							if (0 != duration) {
+								headHolder.mSeekBar.setProgress(playTime * 100 / duration);
+							} else {
+								headHolder.mSeekBar.setProgress(0);
+							}
+						}
+						break;
+					default:
+						break;
+					}
+				}
+			};
 		}
 	}
 
@@ -349,13 +382,11 @@ public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
 		ImageView mCommentHead = null;
 		TextView mCommentTime, mCommentName, mCommentConennt;
 		
-		/** 加载中动画对象 */
-		AnimationDrawable mAnimationDrawable = null;
 	}
 	
 	private boolean isCallVideo = false;
 	
-	private void playVideo(ViewHolder headHolder) {
+	public void playVideo() {
 		if (isCallVideo) {
 			return;
 		}
@@ -373,15 +404,121 @@ public class VideoDetailAdapter extends BaseAdapter implements OnClickListener {
 	/**
 	 * 取消计时
 	 */
-	private void cancleTimer() {
+	public void cancleTimer() {
 		if (null != timer) {
 			timer.cancel();
 		}
 	}
 	
-	@Override
-	public void onClick(View arg0) {
-		
+	/**
+	 * 提示对话框
+	 * 
+	 * @param msg
+	 *            提示信息
+	 */
+	public void dialog(String msg,final ViewHolder headHolder) {
+		if (null == mCustomDialog) {
+			mCustomDialog = new CustomDialog(mContext);
+			mCustomDialog.setCancelable(false);
+			mCustomDialog.setMessage(msg, Gravity.CENTER);
+			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+				@Override
+				public void onClickListener() {
+					cancleTimer();
+					headHolder.mImageLayout.setVisibility(View.VISIBLE);
+					headHolder.mPlayerLayout.setEnabled(false);
+					headHolder.mSeekBar.setProgress(0);
+				}
+			});
+			if (!((VideoDetailActivity)mContext).isFinishing()) {
+				mCustomDialog.show();
+			}
+		}
+	}
+	/**
+	 * 显示加载中布局
+	 */
+	public void showLoading() {
+		GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------showLoading()  isShow==="+isShow);
+		if (!isShow) {
+			isShow = true;
+			headHolder.mVideoLoading.setVisibility(View.VISIBLE);
+			headHolder.mLoading.setVisibility(View.VISIBLE);
+			headHolder.mLoading.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (mAnimationDrawable != null) {
+						if (!mAnimationDrawable.isRunning()) {
+							mAnimationDrawable.start();
+						}
+					}
+				}
+			}, 100);
+		}
+	}
+	/**
+	 * 隐藏加载中显示画面
+	 * 
+	 * @author xuhw
+	 * @date 2015年3月8日
+	 */
+	public void hideLoading() {
+		if (isShow) {
+			isShow = false;
+			headHolder.mImageLayout.setVisibility(View.GONE);
+			if (mAnimationDrawable != null) {
+				if (mAnimationDrawable.isRunning()) {
+					mAnimationDrawable.stop();
+				}
+			}
+			headHolder.mVideoLoading.setVisibility(View.GONE);
+		}
+	}
+	/**
+	 * 无网络超时检查
+	 */
+	private void netWorkTimeoutCheck() {
+		if (!UserUtils.isNetDeviceAvailable(mContext)) {
+			networkConnectTimeOut++;
+			if (networkConnectTimeOut > 15) {
+				hideLoading();
+				GolukDebugUtils.e("videoview","VideoDetailActivity-------------------netWorkTimeoutCheck : hideLoading ");
+				headHolder.mImageLayout.setVisibility(View.VISIBLE);
+				dialog("网络访问异常，请重试！", headHolder);
+				if (null != headHolder.mVideoView) {
+					headHolder.mVideoView.stopPlayback();
+				}
+				return;
+			}
+		} else {
+			networkConnectTimeOut = 0;
+		}
+	}
+	
+	public void setOnResume(){
+		GolukDebugUtils.e("videostate", "VideoDetailActivity--------------------setOnResume  "+isPause);
+		if (isPause) {
+			isPause = false;
+			showLoading();
+			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------setOnResume  showLoading");
+			headHolder.mPlayBtn.setVisibility(View.GONE);
+			headHolder.mImageLayout.setVisibility(View.VISIBLE);
+			headHolder.mVideoView.start();
+		}
+	}
+	
+	public void setOnPause(){
+		GolukDebugUtils.e("videostate", "VideoDetailActivity--------------------setOnPause  "+isPause);
+		if (null == headHolder.mVideoView) {
+			return;
+		}
+		boolean isPlaying = headHolder.mVideoView.isPlaying();
+		if (isPlaying) {
+			isPause = true;
+			playTime = headHolder.mVideoView.getCurrentPosition();
+			headHolder.mVideoView.pause();
+			headHolder.mImageLayout.setVisibility(View.VISIBLE);
+		}
 	}
 
 }

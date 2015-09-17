@@ -97,6 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:src="@drawable/btn_player_play"
             android:visibility="gone" />
 
         <!-- 进度条 -->
@@ -202,7 +203,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:gravity="center_vertical" >
 
             <ImageView
@@ -237,7 +237,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:gravity="center_vertical" >
 
             <ImageView

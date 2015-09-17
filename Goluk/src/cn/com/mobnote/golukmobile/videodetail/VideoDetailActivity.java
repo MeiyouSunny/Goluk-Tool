@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.videodetail;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,6 +34,9 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
 		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn {
+
+	/** application */
+	public GolukApplication mApp = null;
 
 	/** 布局 **/
 	private ImageButton mImageBack = null;
@@ -72,6 +77,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
+		mApp = (GolukApplication) getApplication();
 		setContentView(R.layout.comment);
 
 		initView();
@@ -81,6 +87,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 		getDetailData();
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mApp.setContext(this, "detailcomment");
+		mAdapter.setOnResume();
 	}
 
 	private void initView() {
@@ -102,7 +115,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mImageBack.setOnClickListener(this);
 		mImageRight.setOnClickListener(this);
 		mTextSend.setOnClickListener(this);
-		
+
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
 	}
@@ -113,19 +126,34 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void getDetailData() {
 		// 设置这个参数第一次进来会由下拉状态变为松开刷新的状态
 		mRTPullListView.firstFreshState();
-		
+
 		String title = getIntent().getStringExtra("title");
 		if (null == title || "".equals(title)) {
 			mTextTitle.setText("视频详情");
 		} else {
 			mTextTitle.setText(title);
 		}
-		
+
 		Intent it = getIntent();
 		if (null != it.getStringExtra("ztid")) {
 			ztId = it.getStringExtra("ztid").toString();
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
-			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b );
+			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
+		}
+	}
+
+	/**
+	 * 获取评论列表数据
+	 */
+	public void getCommentList(int operation, String timestamp) {
+		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, "1", operation,
+				timestamp, PAGE_SIZE);
+		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr=="+requestStr);
+		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VideoSuqareManagerFn.VSquare_Req_List_Comment, requestStr);
+		GolukDebugUtils.e("", "================VideoDetailActivity：isSucess=="+isSucess);
+		if (!isSucess) {
+			// TODO 失败
 		}
 	}
 
@@ -145,7 +173,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.comment_back:
-			exist();
+			exit();
 			break;
 
 		default:
@@ -160,7 +188,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			int visibleCount = detailFirstVisible + detailVisibleCount;
 
 			GolukDebugUtils.e("", "----VideoDetailActivity-----onScrollStateChanged-----222: " + count + "  vicount:"
-					+ visibleCount);
+					+ visibleCount+"  mIsHaveData==="+mIsHaveData);
 
 			if (count == visibleCount && mIsHaveData) {
 				startPush();
@@ -173,7 +201,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		detailFirstVisible = firstVisibleItem;
 		detailVisibleCount = visibleItemCount;
 	}
-	
+
 	/*
 	 * 
 	 * 首次进入，数据回调处理 之调用视频详情的借口
@@ -225,19 +253,21 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void startPull() {
 		mCurrentOperator = OPERATOR_DOWN;
 		getDetailData();
-		// initData(OPERATOR_FIRST, "");
 	}
 
 	// 开始上拉刷新
 	private void startPush() {
 		mCurrentOperator = OPERATOR_UP;
-		// initData(OPERATOR_DOWN, mAdapter.getLastDataTime());
+		GolukDebugUtils.e("", "================VideoDetailActivity：mCurrentOperator=="+mCurrentOperator+"  down=="+OPERATOR_DOWN);
+		getCommentList(OPERATOR_DOWN, mAdapter.getLastDataTime());
 	}
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == VSquare_Req_Get_VideoDetail) {
 			callBack_videoDetail(msg, param1, param2);
+		} else if (event == VSquare_Req_List_Comment) {
+			callBack_commentList(msg, param1, param2);
 		}
 	}
 
@@ -246,11 +276,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			String jsonStr = (String) param2;
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：jsonStr==" + jsonStr);
 			mVideoJson = VideoDetailParser.parseDataFromJson(jsonStr);
-			
-			mAdapter.setData(mVideoJson, commentDataList);
-			
-			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：id==="
-					+ mVideoJson.data.avideo.video.videoid);
+
+//			mAdapter.setData(mVideoJson, commentDataList);
 
 			updateRefreshTime();
 			if (null != mVideoJson.data.avideo.video.comment.comcount
@@ -262,14 +289,60 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				} else if (OPERATOR_DOWN == mCurrentOperator) {
 					// 下拉刷新
 					pullCallBack(commentCount, mVideoJson, commentDataList);
-				} else if (OPERATOR_UP == mCurrentOperator) {
-					// 上拉刷新
-					pushCallBack(commentCount, mVideoJson, commentDataList);
 				}
 			}
 		}
 	}
-	
+
+	private void callBack_commentList(int msg, int param1, Object param2) {
+		if (1 != msg) {
+			// 请求失败
+			callBackFailed();
+			GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+			return;
+		}
+		try {
+			JSONObject rootObj = new JSONObject((String) param2);
+			boolean isSucess = rootObj.getBoolean("success");
+			if (!isSucess) {
+				// 请求失败
+				callBackFailed();
+				return;
+			}
+			JSONObject dataObj = rootObj.getJSONObject("data");
+			String result = dataObj.getString("result");
+			int count = Integer.parseInt(dataObj.getString("count"));
+			if (count <= 0) {
+				// 　没数据
+				noDataDeal();
+				return;
+			}
+			// 有数据
+			commentDataList = JsonUtil.parseCommentData(dataObj.getJSONArray("comments"));
+			if (null == commentDataList || commentDataList.size() <= 0) {
+				// 无数据
+				noDataDeal();
+				return;
+			}
+			GolukDebugUtils.e("", "----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
+
+			updateRefreshTime();
+			noData(false);
+
+			if (OPERATOR_FIRST == mCurrentOperator) {
+				// 首次进入
+				firstEnterCallBack(count, mVideoJson, commentDataList);
+			} else if (OPERATOR_UP == mCurrentOperator) {
+				// 上拉刷新
+				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentDataList=="+commentDataList.size());
+				pushCallBack(count, mVideoJson, commentDataList);
+			}
+
+		} catch (Exception e) {
+			callBackFailed();
+		}
+	}
+
 	private void updateRefreshTime() {
 		historyDate = GolukUtils.getCurrentFormatTime();
 	}
@@ -277,7 +350,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private String getLastRefreshTime() {
 		return historyDate;
 	}
-	
+
 	/**
 	 * 添加上拉底部的loading View
 	 * 
@@ -300,17 +373,54 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
-	private void exist() {
+	private void exit() {
 		if (null != mVideoSquareManager) {
 			mVideoSquareManager.removeVideoSquareManagerListener("detailcomment");
+		}
+		mAdapter.cancleTimer();
+		if(null != mAdapter.headHolder.mVideoView){
+			mAdapter.headHolder.mVideoView.stopPlayback();
+			mAdapter.headHolder.mVideoView = null;
 		}
 		this.finish();
 	}
 
+	private void callBackFailed() {
+		if (mCurrentOperator == OPERATOR_FIRST || mCurrentOperator == OPERATOR_DOWN) {
+			mRTPullListView.onRefreshComplete(getLastRefreshTime());
+		} else if (mCurrentOperator == OPERATOR_UP) {
+			// 上拉刷新
+			removeFoot();
+		}
+
+		noData(mAdapter.getCount() <= 0);
+	}
+	
+	private void noDataDeal() {
+		mIsHaveData = false;
+		if (mCurrentOperator == OPERATOR_UP) {// 上拉刷新
+			removeFoot();
+		} else if (mCurrentOperator == OPERATOR_FIRST || OPERATOR_DOWN == mCurrentOperator) {// 下拉刷新
+			mRTPullListView.onRefreshComplete(getLastRefreshTime());
+		}
+
+		noData(mAdapter.getCount() <= 0);
+	}
+	// 是否显示无数据提示
+	private void noData(boolean isno) {
+		if (isno) {
+			mRTPullListView.setVisibility(View.GONE);
+//			mNoData.setVisibility(View.VISIBLE);
+		} else {
+			mRTPullListView.setVisibility(View.VISIBLE);
+//			mNoData.setVisibility(View.GONE);
+		}
+	}
+
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		exist();
+	protected void onPause() {
+		super.onPause();
+		mAdapter.setOnPause();
 	}
 
 }
