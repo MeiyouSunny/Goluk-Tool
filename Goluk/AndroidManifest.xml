@@ -261,6 +261,14 @@
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        
+         <activity
+            android:name="cn.com.mobnote.golukmobile.PushSettingActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
 
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data

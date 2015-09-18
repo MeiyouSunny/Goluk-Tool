@@ -83,6 +83,8 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_COMMENT_PROGRESS_DELETE = 20;
 	/** 注销 */
 	public static final int DIALOG_TYPE_LOGOUT = 21;
+	/** 获取推送配置 */
+	public static final int DIALOG_TYPE_GET_PUSH_CONFIGE = 22;
 
 	private int mCurrentDialogType = 0;
 

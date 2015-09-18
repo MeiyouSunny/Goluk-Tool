@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.PushSettingActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserOpinionActivity;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
@@ -904,6 +905,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_PushReg:
 			// token上传回调
 			GolukNotification.getInstance().getXg().golukServerRegisterCallBack(success, param1, param2);
+			break;
+		case PageType_GetPushCfg:
+		case PageType_SetPushCfg:
+			if (null != mContext && mContext instanceof PushSettingActivity) {
+				((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
+			}
 			break;
 		}
 	}

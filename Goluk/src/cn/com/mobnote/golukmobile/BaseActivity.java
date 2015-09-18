@@ -14,25 +14,11 @@ import android.os.Message;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.umeng.analytics.MobclickAgent;
 
 /**
- * 1.编辑器必须显示空白处
- *
- * 2.所有代码必须使用TAB键缩进
- *
- * 3.类首字母大写,函数、变量使用驼峰式命名,常量所有字母大写
- *
- * 4.注释必须在行首写.(枚举除外)
- *
- * 5.函数使用块注释,代码逻辑使用行注释
- *
- * 6.文件头部必须写功能说明
- *
- * 7.所有代码文件头部必须包含规则说明
  *
  * 基础Activity
  *
@@ -54,6 +40,8 @@ public class BaseActivity extends Activity {
 	public static final String WIFI_CONNING_STR = "正在连接Goluk...";
 	public static final String WIFI_CONNED_STR = "已连接Goluk";
 	private boolean m_bJumpActivity = false;
+
+	protected GolukApplication mBaseApp = null;
 
 	public Handler mBaseHandler = new Handler() {
 
@@ -79,7 +67,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		mBaseApp = (GolukApplication) getApplication();
 	}
 
 	@Override
@@ -108,15 +96,16 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-//	protected void onNewIntent(Intent intent) {
-//		super.onNewIntent(intent);
-//		setIntent(intent);
-////		if (!(GolukApplication.getInstance().getContext() instanceof MainActivity)) {
-////			dealPush(intent);
-////		}
-//
-//		GolukDebugUtils.i("newintent", "jyf----onNew---Base------------");
-//	}
+	// protected void onNewIntent(Intent intent) {
+	// super.onNewIntent(intent);
+	// setIntent(intent);
+	// // if (!(GolukApplication.getInstance().getContext() instanceof
+	// MainActivity)) {
+	// // dealPush(intent);
+	// // }
+	//
+	// GolukDebugUtils.i("newintent", "jyf----onNew---Base------------");
+	// }
 
 	/**
 	 * 处理推送消息
