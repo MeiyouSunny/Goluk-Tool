@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile.videodetail;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -244,30 +243,30 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	 * 
 	 * 首次进入，数据回调处理 之调用视频详情的借口
 	 */
-	private void firstEnterCallBack(VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+	private void firstEnterCallBack(int count,VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
 		// 首次进入
 		this.mAdapter.setData(videoJsonData, dataList);
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
-//		if (count >= PAGE_SIZE) {
-//			mIsHaveData = true;
-//			addFoot();
-//		} else {
-//			mIsHaveData = false;
-//			this.removeFoot();
-//		}
+		if (count >= PAGE_SIZE) {
+			mIsHaveData = true;
+			addFoot();
+		} else {
+			mIsHaveData = false;
+			this.removeFoot();
+		}
 	}
 
 	// 下拉刷新，数据回调处理
-	private void pullCallBack(VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+	private void pullCallBack(int count,VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
 		this.mAdapter.setData(videoJsonData, dataList);
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
-//		if (count >= PAGE_SIZE) {
-//			mIsHaveData = true;
-//			addFoot();
-//		} else {
-//			mIsHaveData = false;
-//			this.removeFoot();
-//		}
+		if (count >= PAGE_SIZE) {
+			mIsHaveData = true;
+			addFoot();
+		} else {
+			mIsHaveData = false;
+			this.removeFoot();
+		}
 
 	}
 
@@ -358,7 +357,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "=====VideoSuqare_CallBack===========VideoDetailActivity：event==" + event);
-		if (event == VSquare_Req_Get_VideoDetail_ComentList) {
+		if (event == VSquare_Req_Get_VideoDetail) {
 			callBack_videoDetail(msg, param1, param2);
 		} else if (event == VSquare_Req_List_Comment) {
 			callBack_commentList(msg, param1, param2);
@@ -379,15 +378,16 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：jsonStr==" + jsonStr);
 			try {
 				mVideoJson = VideoDetailParser.parseDataFromJson(jsonStr);
-				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentList==" + mVideoJson.data.avideo.video.describe);
-
+				
 				updateRefreshTime();
+				GolukDebugUtils.e("newadapter", "========VideoDetailActivity：mCurrentOperator==" + mCurrentOperator);
 				if (OPERATOR_FIRST == mCurrentOperator) {
 					// 首次进入
-					firstEnterCallBack(mVideoJson, commentDataList);
+					firstEnterCallBack(0,mVideoJson, commentDataList);
+					getCommentList(OPERATOR_FIRST, "");
 				} else if (OPERATOR_DOWN == mCurrentOperator) {
 					// 下拉刷新
-					pullCallBack(mVideoJson, commentDataList);
+					pullCallBack(0,mVideoJson, commentDataList);
 				}
 			}catch(Exception e){
 				e.printStackTrace();
@@ -433,7 +433,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 			if (OPERATOR_FIRST == mCurrentOperator) {
 				// 首次进入
-				firstEnterCallBack(mVideoJson, commentDataList);
+				firstEnterCallBack(0,mVideoJson, commentDataList);
 			} else if (OPERATOR_UP == mCurrentOperator) {
 				// 上拉刷新
 				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentDataList=="+commentDataList.size());

@@ -101,6 +101,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 //			mDataList.add(bean);
 //		}
 		mDataList.addAll(commentData);
+		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：mDataList==" + mDataList.size());
 		count = mDataList.size();
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：commentData==" + commentData);
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：count==" + count);
