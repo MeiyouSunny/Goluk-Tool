@@ -287,6 +287,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			String head = json.getString("head");
 			String name = json.getString("nickname");
 			String id = json.getString("key");
+			int shareCount = json.getInt("sharevideonumber");
+			int praiseCount = json.getInt("praisemenumber");
 
 			mTextName.setText(name);
 			GolukDebugUtils.i("lily", head);

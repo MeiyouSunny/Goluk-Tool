@@ -104,7 +104,11 @@ public class VideoDetailAdapter extends BaseAdapter{
 		count = mDataList.size();
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：commentData==" + commentData);
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：count==" + count);
-		count++;
+		if(0 == count){
+			count += 2;
+		}else{
+			count++;
+		}
 		this.notifyDataSetChanged();
 	}
 
@@ -112,6 +116,30 @@ public class VideoDetailAdapter extends BaseAdapter{
 		mDataList.addAll(data);
 		this.notifyDataSetChanged();
 		GolukDebugUtils.e("", "========appendData====mDataList==="+mDataList.size());
+	}
+	
+	public void addFirstData(CommentBean data) {
+		mDataList.add(0, data);
+		this.notifyDataSetChanged();
+	}
+	
+	public void deleteData(CommentBean delBean) {
+		if (null == delBean) {
+			return;
+		}
+		boolean isDelSuces = false;
+		int size = mDataList.size();
+		for (int i = 0; i < size; i++) {
+			if (mDataList.get(i).mCommentId.equals(delBean.mCommentId)) {
+				mDataList.remove(i);
+				isDelSuces = true;
+				count --;
+				break;
+			}
+		}
+		if (isDelSuces) {
+			this.notifyDataSetChanged();
+		}
 	}
 
 	// 获取最后一条数据的时间戳
@@ -129,7 +157,11 @@ public class VideoDetailAdapter extends BaseAdapter{
 
 	@Override
 	public Object getItem(int arg0) {
-		return null;
+		if (null == mDataList || arg0 < 0 || arg0 > mDataList.size() - 1) {
+			return null;
+		}
+
+		return mDataList.get(arg0);
 	}
 
 	@Override
@@ -164,6 +196,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup arg2) {
 		int type = getItemViewType(arg0);
+		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：count@@==" + count);
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView(convertView);
 		} else {
@@ -244,8 +277,6 @@ public class VideoDetailAdapter extends BaseAdapter{
 			GolukDebugUtils.e("lily", "---------后台服务器数据异常-------" + mVideoAllData);
 			GolukUtils.showToast(mContext, "数据异常，请重试");
 		} else {
-			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：head==" + mVideoAllData.avideo.user.headportrait);
-			
 			UserUtils.focusHead(mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
 			headHolder.mTextName.setText(mVideoAllData.avideo.user.nickname);
 			headHolder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoAllData.avideo.video.sharingtime));
@@ -338,17 +369,18 @@ public class VideoDetailAdapter extends BaseAdapter{
 	 * @return
 	 */
 	private View getCommentView(View convertView) {
-		ViewHolder holder = new ViewHolder();
+		ViewHolder commentHolder = new ViewHolder();
 		convertView = LayoutInflater.from(mContext).inflate(R.layout.comment_list_item, null);
 
-		holder.mCommentHead = (ImageView) convertView.findViewById(R.id.comment_item_head);
-		holder.mCommentTime = (TextView) convertView.findViewById(R.id.comment_item_time);
-		holder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
-		holder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
+		commentHolder.mCommentHead = (ImageView) convertView.findViewById(R.id.comment_item_head);
+		commentHolder.mCommentTime = (TextView) convertView.findViewById(R.id.comment_item_time);
+		commentHolder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
+		commentHolder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
 		
-		holder.mNoData = (ImageView) convertView.findViewById(R.id.comment_nodata);
+		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
+		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 
-		convertView.setTag(holder);
+		convertView.setTag(commentHolder);
 		return convertView;
 	}
 
@@ -370,11 +402,13 @@ public class VideoDetailAdapter extends BaseAdapter{
 	// 设置评论数据
 	private void getCommentData(ViewHolder holder, int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
-//		if(0 == mDataList.size()){
-//			holder.mNoData.setVisibility(View.VISIBLE);
-//			return ;
-//		}
-//		holder.mNoData.setVisibility(View.GONE);
+		if(0 == mDataList.size()){
+			holder.mListLayout.setVisibility(View.GONE);
+			holder.mNoData.setVisibility(View.VISIBLE);
+			return ;
+		}
+		holder.mListLayout.setVisibility(View.VISIBLE);
+		holder.mNoData.setVisibility(View.GONE);
 		CommentBean temp = mDataList.get(index);
 		holder.mCommentHead.setBackgroundResource(UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 		holder.mCommentName.setText(temp.mUserName);
@@ -445,6 +479,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 		ImageView mCommentHead = null;
 		TextView mCommentTime, mCommentName, mCommentConennt;
 		ImageView mNoData = null;
+		RelativeLayout mListLayout = null;
 		
 	}
 	

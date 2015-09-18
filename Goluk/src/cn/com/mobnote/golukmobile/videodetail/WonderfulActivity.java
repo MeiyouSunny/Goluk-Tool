@@ -52,7 +52,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
+public class WonderfulActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
 		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn,TextWatcher,OnItemLongClickListener, ILiveDialogManagerFn {
 
 	/** application */
@@ -94,6 +94,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private SharePlatformUtil sharePlatform;
 	/** 保存将要删除的数据 */
 	private CommentBean mWillDelBean = null;
+	/**专题id**/
+	private String ztId = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -167,11 +169,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 
 		Intent it = getIntent();
-		if (null != it.getStringExtra(VIDEO_ID)) {
-			String videoId = it.getStringExtra(VIDEO_ID).toString();
-			GolukDebugUtils.e("", "================videoid=="+videoId);
-			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailListData(videoId);
-			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
+		if (null != it.getStringExtra("ztid")) {
+			ztId = it.getStringExtra("ztid").toString();
+			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 		}
 	}
 
@@ -244,30 +244,30 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	 * 
 	 * 首次进入，数据回调处理 之调用视频详情的借口
 	 */
-	private void firstEnterCallBack(int count, VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+	private void firstEnterCallBack(VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
 		// 首次进入
 		this.mAdapter.setData(videoJsonData, dataList);
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
-		if (count >= PAGE_SIZE) {
-			mIsHaveData = true;
-			addFoot();
-		} else {
-			mIsHaveData = false;
-			this.removeFoot();
-		}
+//		if (count >= PAGE_SIZE) {
+//			mIsHaveData = true;
+//			addFoot();
+//		} else {
+//			mIsHaveData = false;
+//			this.removeFoot();
+//		}
 	}
 
 	// 下拉刷新，数据回调处理
-	private void pullCallBack(int count, VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+	private void pullCallBack(VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
 		this.mAdapter.setData(videoJsonData, dataList);
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
-		if (count >= PAGE_SIZE) {
-			mIsHaveData = true;
-			addFoot();
-		} else {
-			mIsHaveData = false;
-			this.removeFoot();
-		}
+//		if (count >= PAGE_SIZE) {
+//			mIsHaveData = true;
+//			addFoot();
+//		} else {
+//			mIsHaveData = false;
+//			this.removeFoot();
+//		}
 
 	}
 
@@ -378,27 +378,16 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			String jsonStr = (String) param2;
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：jsonStr==" + jsonStr);
 			try {
-				JSONObject jsonObject = new JSONObject(jsonStr);
-				JSONObject commentList = jsonObject.optJSONObject("CommentList");
-				// 详情
-				String detailStr = jsonObject.optString("VideoDetail");
-				mVideoJson = VideoDetailParser.parseDataFromJson(detailStr);
-				GolukDebugUtils.e("newadapter", "=========VideoDetailActivity：commentList==" + mVideoJson.data.avideo.video.describe);
-				// 评论
-				JSONObject root = commentList.optJSONObject("data");
-				JSONArray commentArray = root.optJSONArray("comments");
-				int count = Integer.parseInt(root.getString("count"));
-				GolukDebugUtils.e("newadapter", "==========VideoDetailActivity：commentArray==" + commentArray);
-				
-				commentDataList = JsonUtil.parseCommentData(commentArray);
+				mVideoJson = VideoDetailParser.parseDataFromJson(jsonStr);
+				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentList==" + mVideoJson.data.avideo.video.describe);
 
 				updateRefreshTime();
 				if (OPERATOR_FIRST == mCurrentOperator) {
 					// 首次进入
-					firstEnterCallBack(count, mVideoJson, commentDataList);
+					firstEnterCallBack(mVideoJson, commentDataList);
 				} else if (OPERATOR_DOWN == mCurrentOperator) {
 					// 下拉刷新
-					pullCallBack(count, mVideoJson, commentDataList);
+					pullCallBack(mVideoJson, commentDataList);
 				}
 			}catch(Exception e){
 				e.printStackTrace();
@@ -444,7 +433,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 			if (OPERATOR_FIRST == mCurrentOperator) {
 				// 首次进入
-				firstEnterCallBack(count, mVideoJson, commentDataList);
+				firstEnterCallBack(mVideoJson, commentDataList);
 			} else if (OPERATOR_UP == mCurrentOperator) {
 				// 上拉刷新
 				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentDataList=="+commentDataList.size());

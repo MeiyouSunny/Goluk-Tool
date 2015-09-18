@@ -78,8 +78,7 @@
             android:paddingLeft="10dp"
             android:textColor="#333333"
             android:textCursorDrawable="@drawable/cursor_color"
-            android:textSize="14sp"
-            android:focusable="false" />
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <!-- 评论显示列表 -->
