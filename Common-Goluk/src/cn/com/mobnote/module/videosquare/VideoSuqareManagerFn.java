@@ -22,6 +22,8 @@ public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int VSquare_Req_List_Tag_Content = 2;
 	/** 获取视频详情 */
 	public static final int VSquare_Req_Get_VideoDetail = 3;
+	/** 获取视频详情 */
+	public static final int VSquare_Req_Get_VideoDetail_ComentList = 4;
 
 	/** 获取视频分类 */
 	public static final int VSquare_Req_List_Catlog = 256;

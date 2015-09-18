@@ -1,11 +1,18 @@
 package cn.com.mobnote.golukmobile.videodetail;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,8 +27,12 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
@@ -55,10 +66,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	/** 监听管理类 **/
 	private VideoSquareManager mVideoSquareManager = null;
-	/****/
+	/**视频id**/
+	public static final String VIDEO_ID = "videoid";
 	private VideoDetailAdapter mAdapter = null;
 	/** 专题id **/
-	private String ztId = null;
+//	private String ztId = null;
+	/****/
+	
 	/** 保存列表一个显示项索引 */
 	private int detailFirstVisible;
 	/** 保存列表显示item个数 */
@@ -72,6 +86,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private String historyDate = "";
 	/** 是否还有分页 */
 	private boolean mIsHaveData = true;
+	private SharePlatformUtil sharePlatform;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +96,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		setContentView(R.layout.comment);
 
 		initView();
+		
+		sharePlatform = new SharePlatformUtil(this);
+		sharePlatform.configPlatforms();// 设置分享平台的参数
 		historyDate = GolukUtils.getCurrentFormatTime();
 		setListener();
 		initListener();
@@ -105,6 +123,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mImageNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mTextNoInput = (TextView) findViewById(R.id.comment_noinput);
+		
+		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
 		mAdapter = new VideoDetailAdapter(this);
 		mRTPullListView.setAdapter(mAdapter);
@@ -115,6 +135,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mImageBack.setOnClickListener(this);
 		mImageRight.setOnClickListener(this);
 		mTextSend.setOnClickListener(this);
+		mImageRight.setOnClickListener(this);
 
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
@@ -135,9 +156,17 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 
 		Intent it = getIntent();
-		if (null != it.getStringExtra("ztid")) {
-			ztId = it.getStringExtra("ztid").toString();
-			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
+//		if (null != it.getStringExtra("ztid")) {
+//			ztId = it.getStringExtra("ztid").toString();
+//			GolukDebugUtils.e("", "================ztId=="+ztId);
+////			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
+//			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailListData(ztId);
+//			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
+//		}
+		if (null != it.getStringExtra(VIDEO_ID)) {
+			String videoId = it.getStringExtra(VIDEO_ID).toString();
+			GolukDebugUtils.e("", "================videoid=="+videoId);
+			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailListData(videoId);
 			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
 		}
 	}
@@ -175,7 +204,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		case R.id.comment_back:
 			exit();
 			break;
-
+		case R.id.comment_title_right:
+			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
+			break;
 		default:
 			break;
 		}
@@ -264,10 +295,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		if (event == VSquare_Req_Get_VideoDetail) {
+		GolukDebugUtils.e("", "=====VideoSuqare_CallBack===========VideoDetailActivity：event==" + event);
+		if (event == VSquare_Req_Get_VideoDetail_ComentList) {
 			callBack_videoDetail(msg, param1, param2);
 		} else if (event == VSquare_Req_List_Comment) {
 			callBack_commentList(msg, param1, param2);
+		} else if (event == VSquare_Req_VOP_GetShareURL_Video){
+			callBack_share(msg, param1, param2);
+		} else if (event == VSquare_Req_VOP_Praise){
+			callBack_praise(msg, param1, param2);
 		}
 	}
 
@@ -275,22 +311,38 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (RESULE_SUCESS == msg) {
 			String jsonStr = (String) param2;
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：jsonStr==" + jsonStr);
-			mVideoJson = VideoDetailParser.parseDataFromJson(jsonStr);
+			try {
+				JSONObject jsonObject = new JSONObject(jsonStr);
+				JSONObject commentList = jsonObject.optJSONObject("CommentList");
+				// 详情
+				String detailStr = jsonObject.optString("VideoDetail");
+				mVideoJson = VideoDetailParser.parseDataFromJson(detailStr);
+				GolukDebugUtils.e("newadapter", "=========VideoDetailActivity：commentList==" + mVideoJson.data.avideo.video.describe);
+				// 评论
+				JSONObject root = commentList.optJSONObject("data");
+				JSONArray commentArray = root.optJSONArray("comments");
+				int count = Integer.parseInt(root.getString("count"));
+				GolukDebugUtils.e("newadapter", "==========VideoDetailActivity：commentArray==" + commentArray);
+//				if (count <= 0) {
+//					// 　没数据
+//					noDataDeal();
+//				}else{
+//					// 有数据
+//					commentDataList = JsonUtil.parseCommentData(commentArray);
+//				}
 
-//			mAdapter.setData(mVideoJson, commentDataList);
-
-			updateRefreshTime();
-			if (null != mVideoJson.data.avideo.video.comment.comcount
-					&& !"".equals(mVideoJson.data.avideo.video.comment.comcount)) {
-				int commentCount = Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount);
+				updateRefreshTime();
 				if (OPERATOR_FIRST == mCurrentOperator) {
 					// 首次进入
-					firstEnterCallBack(commentCount, mVideoJson, commentDataList);
+					firstEnterCallBack(count, mVideoJson, commentDataList);
 				} else if (OPERATOR_DOWN == mCurrentOperator) {
 					// 下拉刷新
-					pullCallBack(commentCount, mVideoJson, commentDataList);
+					pullCallBack(count, mVideoJson, commentDataList);
 				}
+			}catch(Exception e){
+				e.printStackTrace();
 			}
+			
 		}
 	}
 
@@ -341,6 +393,79 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		} catch (Exception e) {
 			callBackFailed();
 		}
+	}
+	
+	private void callBack_share(int msg, int param1, Object param2) {
+		if (RESULE_SUCESS == msg) {
+			try {
+				JSONObject result = new JSONObject((String) param2);
+				if (result.getBoolean("success")) {
+					JSONObject data = result.getJSONObject("data");
+					GolukDebugUtils.i("detail", "------VideoSuqare_CallBack--------data-----" + data);
+					String shareurl = data.getString("shorturl");
+					String coverurl = data.getString("coverurl");
+					String describe = data.optString("describe");
+					String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+
+					String allDescribe = "";
+					if (TextUtils.isEmpty(describe)) {
+						allDescribe = mVideoJson.data.avideo.user.nickname+"："+mVideoJson.data.avideo.video.describe;
+					}else{
+						allDescribe = mVideoJson.data.avideo.user.nickname+"："+describe;
+					}
+					String ttl = "极路客精彩视频";
+					// 缩略图
+					Bitmap bitmap = getThumbBitmap(mVideoJson.data.avideo.video.picture);
+					if (this != null && !this.isFinishing()) {
+						mAdapter.closeLoadingDialog();
+						CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
+								allDescribe, ttl, bitmap, realDesc, mVideoJson.data.avideo.video.videoid);
+						shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+					}
+				} else {
+					GolukUtils.showToast(this, "网络异常，请检查网络");
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			mAdapter.closeLoadingDialog();
+			GolukUtils.showToast(this, "网络异常，请检查网络");
+		}
+	}
+	
+	private void callBack_praise(int msg, int param1, Object param2) {
+		GolukDebugUtils.e("lily", "222VideoSuqare_CallBack=@@@@Get_VideoDetail=="+ "=msg=" + msg+ "=param1=" + param1 + "=param2=" + param2);
+		if (msg == RESULE_SUCESS) {
+			// {"data":{"result":"3"},"msg":"视频不存在","success":false}
+			try {
+				String jsonStr = (String) param2;
+				JSONObject jsonObject = new JSONObject(jsonStr);
+				JSONObject dataObject = jsonObject.optJSONObject("data");
+				String result = dataObject.optString("result");
+				if ("0".equals(result)) {
+					// 成功
+				} else {
+					// 错误
+					GolukUtils.showToast(this, "网络异常，请稍后重试");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			GolukUtils.showToast(this, "网络异常，请稍后重试");
+		}
+	}
+	
+	public Bitmap getThumbBitmap(String netUrl) {
+		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
+		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
+		File file = new File(path + File.separator + name);
+		Bitmap t_bitmap = null;
+		if (file.exists()) {
+			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
+		}
+		return t_bitmap;
 	}
 
 	private void updateRefreshTime() {

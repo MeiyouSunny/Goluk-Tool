@@ -6,7 +6,6 @@ import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
 import cn.com.mobnote.golukmobile.special.ClusterListActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
-import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -67,7 +66,7 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
 			intent.putExtra("title", mJXListItemDataInfo.ztitle);
 		} else if ("3".equals(mJXListItemDataInfo.ztype)) {// 单视频
-			intent = new Intent(mContext, VideoDetailActivity.class);
+			intent = new Intent(mContext, VideoSquareDeatilActivity.class);
 			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
 			intent.putExtra("imageurl", mJXListItemDataInfo.jximg);
 			intent.putExtra("title", mJXListItemDataInfo.ztitle);

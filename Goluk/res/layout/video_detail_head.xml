@@ -206,13 +206,14 @@
             android:gravity="center_vertical" >
 
             <ImageView
-                android:id="@+id/video_square_detail_like"
+                android:id="@+id/video_square_detail_like_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/def"
                 android:src="@drawable/videodetail_like" />
 
             <TextView
+                android:id="@+id/zanName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"

@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.videodetail;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -11,6 +12,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,8 +30,10 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
@@ -70,6 +74,10 @@ public class VideoDetailAdapter extends BaseAdapter{
 	public Handler mHandler;
 	
 	public ViewHolder headHolder = null;
+	
+	public CustomLoadingDialog mCustomLoadingDialog;
+	private String isPraise = "0";
+	private int likeNumber = 0;
 
 	public VideoDetailAdapter(Context context) {
 		mContext = context;
@@ -81,18 +89,21 @@ public class VideoDetailAdapter extends BaseAdapter{
 	public void setData(VideoJson videoJsonData, List<CommentBean> commentData) {
 		mVideoJson = videoJsonData;
 		mDataList.clear();
-		List<VideoListInfo> list = videoJsonData.data.avideo.video.comment.comlist;
-		for (int i = 0; i < list.size(); i++) {
-			CommentBean bean = new CommentBean();
-			bean.mCommentId = list.get(i).commentid;
-			bean.mCommentTime = list.get(i).time;
-			bean.mCommentTxt = list.get(i).text;
-			bean.mUserHead = list.get(i).avatar;
-			bean.mUserId = list.get(i).authorid;
-			bean.mUserName = list.get(i).name;
-			mDataList.add(bean);
-		}
+//		List<VideoListInfo> list = videoJsonData.data.avideo.video.comment.comlist;
+//		for (int i = 0; i < list.size(); i++) {
+//			CommentBean bean = new CommentBean();
+//			bean.mCommentId = list.get(i).commentid;
+//			bean.mCommentTime = list.get(i).time;
+//			bean.mCommentTxt = list.get(i).text;
+//			bean.mUserHead = list.get(i).avatar;
+//			bean.mUserId = list.get(i).authorid;
+//			bean.mUserName = list.get(i).name;
+//			mDataList.add(bean);
+//		}
+		mDataList.addAll(commentData);
 		count = mDataList.size();
+		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：commentData==" + commentData);
+		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：count==" + count);
 		count++;
 		this.notifyDataSetChanged();
 	}
@@ -156,6 +167,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView(convertView);
 		} else {
+			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：arg0==" + arg0);
 			convertView = loadLayout(convertView, arg0 - 1);
 		}
 		return convertView;
@@ -192,6 +204,8 @@ public class VideoDetailAdapter extends BaseAdapter{
 			headHolder.mCommentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
 			headHolder.mTextZan = (TextView) convertView.findViewById(R.id.zanText);
 			headHolder.mTextComment = (TextView) convertView.findViewById(R.id.commentText);
+			headHolder.mZanImage = (ImageView) convertView.findViewById(R.id.video_square_detail_like_image);
+			headHolder.mTextZanName = (TextView) convertView.findViewById(R.id.zanName);
 
 			convertView.setTag(headHolder);
 		} else {
@@ -205,8 +219,8 @@ public class VideoDetailAdapter extends BaseAdapter{
 		headHolder.mPlayBtn.setOnClickListener(new ClickVideoListener(mContext, this));
 		headHolder.mPlayerLayout.setOnClickListener(new ClickVideoListener(mContext, this));
 //		headHolder.mTextLink.setOnClickListener(new ClickListener());
-		headHolder.mPraiseLayout.setOnClickListener(new ClickPraiseListener(mVideoJson, mContext, false));
-//		headHolder.mShareLayout.setOnClickListener(new ClickListener());
+		headHolder.mPraiseLayout.setOnClickListener(new ClickPraiseListener(mContext, this));
+		headHolder.mShareLayout.setOnClickListener(new ClickShareListener(mContext, mVideoJson, this));
 		
 		headHolder.mVideoView.setOnPreparedListener(new PlayPreparedListener(headHolder, this));
 		headHolder.mVideoView.setOnCompletionListener(new PlayCompletionListener(this, headHolder));
@@ -230,6 +244,8 @@ public class VideoDetailAdapter extends BaseAdapter{
 			GolukDebugUtils.e("lily", "---------后台服务器数据异常-------" + mVideoAllData);
 			GolukUtils.showToast(mContext, "数据异常，请重试");
 		} else {
+			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：head==" + mVideoAllData.avideo.user.headportrait);
+			
 			UserUtils.focusHead(mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
 			headHolder.mTextName.setText(mVideoAllData.avideo.user.nickname);
 			headHolder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoAllData.avideo.video.sharingtime));
@@ -253,13 +269,13 @@ public class VideoDetailAdapter extends BaseAdapter{
 			view.setHierarchy(hierarchy);
 			view.setImageURI(Uri.parse(mVideoAllData.avideo.video.picture));
 			headHolder.mImageLayout.addView(view, mPreLoadingParams);
-			// 外链接
-			if ("0".equals(mVideoAllData.link.showurl)) {
-				headHolder.mTextLink.setVisibility(View.GONE);
-			} else {
-				headHolder.mTextLink.setVisibility(View.VISIBLE);
-				headHolder.mTextLink.setText(mVideoAllData.link.outurlname);
-			}
+			//TODO 外链接
+//			if ("0".equals(mVideoAllData.link.showurl)) {
+//				headHolder.mTextLink.setVisibility(View.GONE);
+//			} else {
+//				headHolder.mTextLink.setVisibility(View.VISIBLE);
+//				headHolder.mTextLink.setText(mVideoAllData.link.outurlname);
+//			}
 			
 			//视频
 			if ((netInfo != null) && (netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
@@ -329,6 +345,8 @@ public class VideoDetailAdapter extends BaseAdapter{
 		holder.mCommentTime = (TextView) convertView.findViewById(R.id.comment_item_time);
 		holder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
 		holder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
+		
+		holder.mNoData = (ImageView) convertView.findViewById(R.id.comment_nodata);
 
 		convertView.setTag(holder);
 		return convertView;
@@ -352,12 +370,56 @@ public class VideoDetailAdapter extends BaseAdapter{
 	// 设置评论数据
 	private void getCommentData(ViewHolder holder, int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
+//		if(0 == mDataList.size()){
+//			holder.mNoData.setVisibility(View.VISIBLE);
+//			return ;
+//		}
+//		holder.mNoData.setVisibility(View.GONE);
 		CommentBean temp = mDataList.get(index);
 		holder.mCommentHead.setBackgroundResource(UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 		holder.mCommentName.setText(temp.mUserName);
 		holder.mCommentConennt.setText(temp.mCommentTxt);
 		holder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
 
+	}
+	
+	/**
+	 * 点赞
+	 */
+	public void clickPraise() {
+		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
+			likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) + 1;
+			DecimalFormat df = new DecimalFormat("#,###");
+			if (likeNumber < 100000) {
+				headHolder.mTextZan.setText(df.format(likeNumber));
+			} else {
+				headHolder.mTextZan.setText("100,000+");
+			}
+			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like_press);
+			headHolder.mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+			headHolder.mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+			isPraise = "1";
+			boolean b = GolukApplication.getInstance().getVideoSquareManager()
+					.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
+			if (b) {
+			}
+		} else {
+			likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) - 1;
+
+			DecimalFormat df = new DecimalFormat("#,###");
+			if (likeNumber < 100000) {
+				headHolder.mTextZan.setText(df.format(likeNumber));
+			} else {
+				headHolder.mTextZan.setText("100,000+");
+			}
+
+			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
+			headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
+			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
+			isPraise = "0";
+		}
+		mVideoJson.data.avideo.video.praisenumber = likeNumber + "";
+		mVideoJson.data.avideo.video.ispraise = isPraise;
 	}
 
 	public static class ViewHolder {
@@ -377,10 +439,12 @@ public class VideoDetailAdapter extends BaseAdapter{
 		TextView mTextDescribe = null;
 		TextView mTextAuthor, mTextLink;
 		LinearLayout mPraiseLayout, mShareLayout, mCommentLayout;
-		TextView mTextZan, mTextComment;
+		TextView mTextZan, mTextComment,mTextZanName;
+		ImageView mZanImage;
 		// 评论
 		ImageView mCommentHead = null;
 		TextView mCommentTime, mCommentName, mCommentConennt;
+		ImageView mNoData = null;
 		
 	}
 	
@@ -518,6 +582,19 @@ public class VideoDetailAdapter extends BaseAdapter{
 			playTime = headHolder.mVideoView.getCurrentPosition();
 			headHolder.mVideoView.pause();
 			headHolder.mImageLayout.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	public void showLoadingDialog(){
+		if(mCustomLoadingDialog == null){
+			mCustomLoadingDialog = new CustomLoadingDialog(mContext, null);
+			mCustomLoadingDialog.show();
+		}
+	}
+	
+	public void closeLoadingDialog(){
+		if(null != mCustomLoadingDialog){
+			mCustomLoadingDialog.close();
 		}
 	}
 

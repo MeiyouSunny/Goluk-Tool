@@ -320,6 +320,20 @@ public class JsonCreateUtils {
 
 		return json;
 	}
+	//最新进入单视频
+	public static String getVideoDetailJson(String videoid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("videoid", videoid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
 	
 	public static String getJHJson(String ztid, String operation, String timestamp, String pagesize) {
 		String json = "";

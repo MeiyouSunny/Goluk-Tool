@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.newest;
 
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import android.content.Context;
 import android.content.Intent;
@@ -28,17 +29,20 @@ public class ClickCommentListener implements OnClickListener {
 			}
 			((BaseActivity) mContext).setJumpToNext();
 		}
-		Intent intent = new Intent(mContext, CommentActivity.class);
-		intent.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoSquareInfo.mVideoEntity.videoid);
-		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
-		intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, showft);
-		intent.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoSquareInfo.mUserEntity.uid);
-		boolean iscomment = false;
-		if ("1".equals(mVideoSquareInfo.mVideoEntity.iscomment)) {
-			iscomment = true;
-		}
-		intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, iscomment);
-
+//		Intent intent = new Intent(mContext, CommentActivity.class);
+//		intent.putExtra(CommentActivity.COMMENT_KEY_MID, mVideoSquareInfo.mVideoEntity.videoid);
+//		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, "1");
+//		intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, showft);
+//		intent.putExtra(CommentActivity.COMMENT_KEY_USERID, mVideoSquareInfo.mUserEntity.uid);
+//		boolean iscomment = false;
+//		if ("1".equals(mVideoSquareInfo.mVideoEntity.iscomment)) {
+//			iscomment = true;
+//		}
+//		intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, iscomment);
+		
+		Intent intent = new Intent(mContext,VideoDetailActivity.class);
+		intent.putExtra(VideoDetailActivity.VIDEO_ID, mVideoSquareInfo.mVideoEntity.videoid);
+		
 		mContext.startActivity(intent);
 	}
 
