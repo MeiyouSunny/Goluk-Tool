@@ -50,6 +50,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
+import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.LngLat;
@@ -188,17 +189,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public String mGolukName = "";
 
 	private ArrayList<VideoFileInfo> fileList;
-	
+
 	private boolean mIsExit = true;
 
 	static {
 		System.loadLibrary("golukmobile");
 	}
-	
+
 	public void setExit(boolean isExit) {
 		mIsExit = isExit;
 	}
-	
+
 	public boolean isExit() {
 		return mIsExit;
 	}
@@ -272,7 +273,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		motioncfg = new int[2];
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
-		
+
 		setExit(false);
 	}
 
@@ -899,6 +900,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (mPageSource == "UserOpinion") {
 				((UserOpinionActivity) mContext).requestOpinionCallback(success, param1, param2);
 			}
+			break;
+		case PageType_PushReg:
+			// token上传回调
+			GolukNotification.getInstance().getXg().golukServerRegisterCallBack(success, param1, param2);
 			break;
 		}
 	}
@@ -1652,7 +1657,5 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mContext.startActivity(intent);
 		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
 	}
-	
-	
-	
+
 }

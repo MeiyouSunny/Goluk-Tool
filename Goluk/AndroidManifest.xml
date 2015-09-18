@@ -103,10 +103,10 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="cn.com.mobnote.receiver.GolukPushReceiver"
+            android:name="cn.com.mobnote.golukmobile.xdpush.GolukClickNotificationReceiver"
             android:exported="true" >
             <intent-filter>
-                <action android:name="cn.com.goluk.broadcast" />
+                <action android:name="cn.com.goluk.broadcast.clicknotification" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -359,7 +359,7 @@
                 <action android:name="com.rd.car.RECORDER_MESSAGE" />
             </intent-filter>
         </receiver>
-        <receiver android:name="cn.com.mobnote.receiver.MessageReceiver" >
+        <receiver android:name="cn.com.mobnote.golukmobile.xdpush.AcceptXDMessageReceiver" >
             <intent-filter>
 
                 <!-- 接收消息透传 -->

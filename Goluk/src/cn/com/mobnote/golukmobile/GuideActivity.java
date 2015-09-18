@@ -43,16 +43,14 @@ public class GuideActivity extends BaseActivity {
 	private GolukGuideManage mGolukGuideManage = null;
 
 	private String mPushFrom = null;
-	private String mPushAction = "";
+	private String mPushJson = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
-		
-		GolukNotification.getInstance().createXG(this);
-		
+
 		setContentView(R.layout.guide);
 		mContext = this;
 		getIntentData();
@@ -60,6 +58,8 @@ public class GuideActivity extends BaseActivity {
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		GolukApplication.getInstance().initSharedPreUtil(this);
 		((GolukApplication) this.getApplication()).initLogic();
+		// 注册信鸽的推送
+		GolukNotification.getInstance().createXG(this);
 
 		((GolukApplication) this.getApplication()).startUpgrade();
 		// 初始化
@@ -73,9 +73,8 @@ public class GuideActivity extends BaseActivity {
 		GolukDebugUtils.e("", "jyf----GuideActivity-----from: " + mPushFrom);
 
 		if (null != mPushFrom && !"".equals(mPushFrom) && mPushFrom.equals("notication")) {
-			mPushAction = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_ACTION);
+			mPushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
 		}
-
 	}
 
 	private boolean isFirstStart() {
@@ -97,7 +96,7 @@ public class GuideActivity extends BaseActivity {
 			return;
 		}
 		intent.putExtra(GolukNotification.NOTIFICATION_KEY_FROM, mPushFrom);
-		intent.putExtra(GolukNotification.NOTIFICATION_KEY_ACTION, mPushAction);
+		intent.putExtra(GolukNotification.NOTIFICATION_KEY_ACTION, mPushJson);
 	}
 
 	/**

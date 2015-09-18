@@ -81,6 +81,8 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_COMMENT_DELETE = 19;
 	/** 正在提交删除评论 */
 	public static final int DIALOG_TYPE_COMMENT_PROGRESS_DELETE = 20;
+	/** 注销 */
+	public static final int DIALOG_TYPE_LOGOUT = 21;
 
 	private int mCurrentDialogType = 0;
 

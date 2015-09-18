@@ -1,28 +1,38 @@
-package cn.com.mobnote.receiver;
+package cn.com.mobnote.golukmobile.xdpush;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.GuideActivity;
-import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class GolukPushReceiver extends BroadcastReceiver {
+/**
+ * 主要接受点击状态栏里的通知时的数据
+ * 
+ * @author jyf
+ */
+public class GolukClickNotificationReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		GolukDebugUtils.e("", "XDPushReceiver--------------------------onReceiver");
-
-		if (GolukApplication.getInstance() != null) {
-			if (GolukApplication.getInstance().isExit()) {
-				startApp(context, intent);
-			} else {
-				pushMessage(context, intent);
-			}
-		} else {
-			startApp(context, intent);
+		if (null == intent) {
+			return;
 		}
+		final String action = intent.getAction();
+		if (action.equals(GolukNotification.NOTIFICATION_BROADCAST)) {
+			if (GolukApplication.getInstance() != null) {
+				if (GolukApplication.getInstance().isExit()) {
+					startApp(context, intent);
+				} else {
+					pushMessage(context, intent);
+				}
+			} else {
+				startApp(context, intent);
+			}
+		}
+
 	}
 
 	/**
@@ -32,17 +42,14 @@ public class GolukPushReceiver extends BroadcastReceiver {
 	 * @author jyf
 	 */
 	private void startApp(Context context, Intent intent) {
-
 		Intent startIntent = new Intent(context, GuideActivity.class);
 		startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		
 		if (null != intent) {
 			String from = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
-			String action = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_ACTION);
+			String json = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
 			startIntent.putExtra(GolukNotification.NOTIFICATION_KEY_FROM, from);
-			startIntent.putExtra(GolukNotification.NOTIFICATION_KEY_ACTION, action);
+			startIntent.putExtra(GolukNotification.NOTIFICATION_KEY_JSON, json);
 		}
-
 		context.startActivity(startIntent);
 	}
 

@@ -1047,26 +1047,82 @@ public class JsonUtil {
 		return "";
 	}
 
+	/**
+	 * 获取显示notify
+	 * 
+	 * @return
+	 * @author jyf
+	 */
+	public static int getValidNotifyId() {
+		int notifyId = 0;
+		try {
+			String current = String.valueOf(System.currentTimeMillis());
+			if (current != null) {
+				if (current.length() <= 9) {
+					notifyId = Integer.valueOf(current);
+				} else {
+					int start = current.length() - 9;
+					notifyId = Integer.valueOf(current.substring(start));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return notifyId;
+	}
+
 	public static XingGeMsgBean parseXingGePushMsg(String json) {
 		if (null == json) {
 			return null;
 		}
 		try {
 			JSONObject root = new JSONObject(json);
-			final int action = root.getInt("action");
-			final String title = getJsonStringValue(root, "title", "");
-			final String msg = getJsonStringValue(root, "msg", "");
-
 			XingGeMsgBean bean = new XingGeMsgBean();
-			bean.action = action;
-			bean.title = title;
-			bean.msg = msg;
-			bean.notifyId = (int) System.currentTimeMillis();
+			bean.notifyId = getValidNotifyId();
+			bean.title = getJsonStringValue(root, "t", "");
+			bean.msg = getJsonStringValue(root, "d", "");
+			bean.target = getJsonStringValue(root, "g", "0");
+			bean.tarkey = getJsonStringValue(root, "k", "1");
+			bean.weburl = getJsonStringValue(root, "w", "");
+			bean.params = root.getString("p");
+			bean.disturb = getJsonStringValue(root, "b", "1");
 
 			return bean;
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static String[] parseVideoDetailId(String jsonArray) {
+		try {
+			JSONArray array = new JSONArray(jsonArray);
+			int size = array.length();
+			String[] strArray = new String[size];
+			for (int i = 0; i < size; i++) {
+				JSONObject obj = array.getJSONObject(i);
+				strArray[i] = getJsonStringValue(obj, "vid", "");
+			}
+
+			return strArray;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static String getPushRegisterJsonStr(String tid, String source, String ipcversion) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("tid", tid);
+			obj.put("source", source);
+			obj.put("ipcversion", ipcversion);
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+
+		return "";
 	}
 
 }
