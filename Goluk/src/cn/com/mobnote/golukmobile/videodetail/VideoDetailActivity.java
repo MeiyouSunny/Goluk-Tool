@@ -48,6 +48,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -65,8 +66,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private TextView mTextSend = null;
 	private EditText mEditInput = null;
 	private RTPullListView mRTPullListView = null;
-	private ImageView mImageNoData = null;
+//	private ImageView mImageNoData = null;
 	private TextView mTextNoInput = null;
+	private ImageView mImageRefresh = null;
+	private RelativeLayout mCommentLayout = null;
 
 	/** 评论 **/
 	private ArrayList<CommentBean> commentDataList = null;
@@ -77,6 +80,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private VideoSquareManager mVideoSquareManager = null;
 	/**视频id**/
 	public static final String VIDEO_ID = "videoid";
+	/**是否允许评论**/
+	public static final String VIDEO_ISCAN_COMMENT = "iscan_input";
+	private boolean isCanInput = true;
 	private VideoDetailAdapter mAdapter = null;
 	/** 保存列表一个显示项索引 */
 	private int detailFirstVisible;
@@ -129,8 +135,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mTextSend = (TextView) findViewById(R.id.comment_send);
 		mEditInput = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
-		mImageNoData = (ImageView) findViewById(R.id.comment_nodata);
+//		mImageNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mTextNoInput = (TextView) findViewById(R.id.comment_noinput);
+		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
+		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
 		
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
@@ -145,6 +153,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mTextSend.setOnClickListener(this);
 		mImageRight.setOnClickListener(this);
 		mEditInput.addTextChangedListener(this);
+		mImageRefresh.setOnClickListener(this);
 
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
@@ -167,11 +176,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 
 		Intent it = getIntent();
-		if (null != it.getStringExtra(VIDEO_ID)) {
+		if (null != it) {
 			String videoId = it.getStringExtra(VIDEO_ID).toString();
+			isCanInput = it.getBooleanExtra(VIDEO_ISCAN_COMMENT, true);
 			GolukDebugUtils.e("", "================videoid=="+videoId);
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailListData(videoId);
 			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
+			if(!b){
+				mImageRefresh.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
@@ -209,6 +222,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			exit();
 			break;
 		case R.id.comment_title_right:
+			if(null == mVideoJson){
+				if(!UserUtils.isNetDeviceAvailable(this)){
+					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+					return ;
+				}
+			}
 			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
 			break;
 		case R.id.comment_send:
@@ -346,6 +365,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
+		GolukDebugUtils.e("null", "-----VideoDetailActivity------isSuccess："+isSucess);
 		if (!isSucess) {
 			// 失败
 			GolukUtils.showToast(this, "评论失败!");
@@ -375,6 +395,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	//视频详情回调
 	private void callBack_videoDetail(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == msg) {
+			mRTPullListView.setVisibility(View.VISIBLE);
+			mImageRefresh.setVisibility(View.GONE);
 			String jsonStr = (String) param2;
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：jsonStr==" + jsonStr);
 			try {
@@ -404,6 +426,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				e.printStackTrace();
 			}
 			
+		}else{
+			mRTPullListView.setVisibility(View.GONE);
+			mImageRefresh.setVisibility(View.VISIBLE);
+			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
 	//评论回调
@@ -411,10 +437,16 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (1 != msg) {
 			// 请求失败
 			callBackFailed();
-			GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 			return;
 		}
 		try {
+			if (!isCanInput) {
+				mCommentLayout.setVisibility(View.GONE);
+				mAdapter.closeComment();
+			}else{
+				mCommentLayout.setVisibility(View.VISIBLE);
+			}
 			JSONObject rootObj = new JSONObject((String) param2);
 			boolean isSucess = rootObj.getBoolean("success");
 			if (!isSucess) {
@@ -484,14 +516,14 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 					}
 				} else {
-					GolukUtils.showToast(this, "网络异常，请检查网络");
+					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		} else {
 			mAdapter.closeLoadingDialog();
-			GolukUtils.showToast(this, "网络异常，请检查网络");
+			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
 	//点赞回调
@@ -508,13 +540,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					// 成功
 				} else {
 					// 错误
-					GolukUtils.showToast(this, "网络异常，请稍后重试");
+					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
-			GolukUtils.showToast(this, "网络异常，请稍后重试");
+			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
 	//添加评论回调
@@ -564,7 +596,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				mAdapter.deleteData(mWillDelBean);
 				GolukUtils.showToast(this, "删除成功");
 
-				noData(mAdapter.getCount() <= 0);
+				noData(mAdapter.getCount() <= 1);
 			} else {
 				GolukUtils.showToast(this, "删除失败");
 			}
@@ -658,17 +690,18 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	// 是否显示无数据提示
 	private void noData(boolean isno) {
 		if (isno) {
-			mRTPullListView.setVisibility(View.GONE);
-//			mImageNoData.setVisibility(View.VISIBLE);
-		} else {
-			mRTPullListView.setVisibility(View.VISIBLE);
-//			mImageNoData.setVisibility(View.GONE);
+			mAdapter.commentNoData();
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if(null == mVideoJson){
+			if(!UserUtils.isNetDeviceAvailable(this)){
+				return ;
+			}
+		}
 		mAdapter.setOnPause();
 	}
 

@@ -55,7 +55,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	/** 评论输入框 */
 	private EditText mEditText = null;
 	/** 评论列表无数据时显示 */
-	private ImageView mNoData = null;
+//	private ImageView mNoData = null;
 	/** 上拉刷新时，在ListView底部显示的布局 */
 	private RelativeLayout loading = null;
 	/** 评论关闭显示布局 */
@@ -134,7 +134,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mSendBtn = (TextView) findViewById(R.id.comment_send);
 		mEditText = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
-		mNoData = (ImageView) findViewById(R.id.comment_nodata);
+//		mNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mCommentInputLayout = (RelativeLayout) findViewById(R.id.comment_layout);
 		mNoInputTv = (TextView) findViewById(R.id.comment_noinput);
 
@@ -322,10 +322,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void noData(boolean isno) {
 		if (isno) {
 			mRTPullListView.setVisibility(View.GONE);
-			mNoData.setVisibility(View.VISIBLE);
+//			mNoData.setVisibility(View.VISIBLE);
 		} else {
 			mRTPullListView.setVisibility(View.VISIBLE);
-			mNoData.setVisibility(View.GONE);
+//			mNoData.setVisibility(View.GONE);
 		}
 	}
 

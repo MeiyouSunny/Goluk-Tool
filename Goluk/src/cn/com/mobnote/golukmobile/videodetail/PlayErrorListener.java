@@ -47,7 +47,7 @@ public class PlayErrorListener implements OnErrorListener {
 		mAdapter.hideLoading();
 		GolukDebugUtils.e("videoview", "VideoSquareDetailActivity-------------------------onError : hideLoading ");
 		mHolder.mImageLayout.setVisibility(View.VISIBLE);
-		mAdapter.dialog(msg, mHolder);
+		mAdapter.dialog(msg,mHolder);
 		return true;
 	}
 

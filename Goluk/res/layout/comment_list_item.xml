@@ -73,9 +73,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/videodetail_sofaicon"
         android:contentDescription="@string/imgdes"
+        android:visibility="gone" />
+    
+    <!-- 评论关闭 -->
+
+    <TextView
+        android:id="@+id/comment_forbid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true"
+       android:layout_marginTop="60dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/str_comment_no_input"
+        android:textColor="@color/red"
+        android:textSize="18sp"
         android:visibility="gone" />
 
 </RelativeLayout>

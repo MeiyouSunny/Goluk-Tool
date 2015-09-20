@@ -42,6 +42,11 @@ public class ClickCommentListener implements OnClickListener {
 		
 		Intent intent = new Intent(mContext,VideoDetailActivity.class);
 		intent.putExtra(VideoDetailActivity.VIDEO_ID, mVideoSquareInfo.mVideoEntity.videoid);
+		boolean iscomment = false;
+		if ("1".equals(mVideoSquareInfo.mVideoEntity.iscomment)) {
+			iscomment = true;
+		}
+		intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, iscomment);
 		
 		mContext.startActivity(intent);
 	}
