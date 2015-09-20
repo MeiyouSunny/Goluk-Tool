@@ -5,11 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -27,21 +22,26 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.RelativeLayout.LayoutParams;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class VideoDetailAdapter extends BaseAdapter{
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+
+public class VideoDetailAdapter extends BaseAdapter {
 
 	private Context mContext = null;
 	private int count = 0;
@@ -51,8 +51,8 @@ public class VideoDetailAdapter extends BaseAdapter{
 	private final int FIRST_TYPE = 0;
 	/** body **/
 	private final int OTHERS_TYPE = 1;
-	
-	/**视频缓冲计时**/
+
+	/** 视频缓冲计时 **/
 	public Timer timer = null;
 	/** 加载中动画对象 */
 	private AnimationDrawable mAnimationDrawable = null;
@@ -72,9 +72,10 @@ public class VideoDetailAdapter extends BaseAdapter{
 	public NetworkInfo netInfo = null;
 	private CustomDialog mCustomDialog;
 	public Handler mHandler;
-	
+
 	public ViewHolder headHolder = null;
-	
+	public View mHeadView = null;
+
 	public CustomLoadingDialog mCustomLoadingDialog;
 	private String isPraise = "0";
 	private int likeNumber = 0;
@@ -89,25 +90,26 @@ public class VideoDetailAdapter extends BaseAdapter{
 	public void setData(VideoJson videoJsonData, List<CommentBean> commentData) {
 		mVideoJson = videoJsonData;
 		mDataList.clear();
-//		List<VideoListInfo> list = videoJsonData.data.avideo.video.comment.comlist;
-//		for (int i = 0; i < list.size(); i++) {
-//			CommentBean bean = new CommentBean();
-//			bean.mCommentId = list.get(i).commentid;
-//			bean.mCommentTime = list.get(i).time;
-//			bean.mCommentTxt = list.get(i).text;
-//			bean.mUserHead = list.get(i).avatar;
-//			bean.mUserId = list.get(i).authorid;
-//			bean.mUserName = list.get(i).name;
-//			mDataList.add(bean);
-//		}
+		// List<VideoListInfo> list =
+		// videoJsonData.data.avideo.video.comment.comlist;
+		// for (int i = 0; i < list.size(); i++) {
+		// CommentBean bean = new CommentBean();
+		// bean.mCommentId = list.get(i).commentid;
+		// bean.mCommentTime = list.get(i).time;
+		// bean.mCommentTxt = list.get(i).text;
+		// bean.mUserHead = list.get(i).avatar;
+		// bean.mUserId = list.get(i).authorid;
+		// bean.mUserName = list.get(i).name;
+		// mDataList.add(bean);
+		// }
 		mDataList.addAll(commentData);
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：mDataList==" + mDataList.size());
 		count = mDataList.size();
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：commentData==" + commentData);
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：count==" + count);
-		if(0 == count){
+		if (0 == count) {
 			count += 2;
-		}else{
+		} else {
 			count++;
 		}
 		this.notifyDataSetChanged();
@@ -116,14 +118,14 @@ public class VideoDetailAdapter extends BaseAdapter{
 	public void appendData(ArrayList<CommentBean> data) {
 		mDataList.addAll(data);
 		this.notifyDataSetChanged();
-		GolukDebugUtils.e("", "========appendData====mDataList==="+mDataList.size());
+		GolukDebugUtils.e("", "========appendData====mDataList===" + mDataList.size());
 	}
-	
+
 	public void addFirstData(CommentBean data) {
 		mDataList.add(0, data);
 		this.notifyDataSetChanged();
 	}
-	
+
 	public void deleteData(CommentBean delBean) {
 		if (null == delBean) {
 			return;
@@ -134,7 +136,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 			if (mDataList.get(i).mCommentId.equals(delBean.mCommentId)) {
 				mDataList.remove(i);
 				isDelSuces = true;
-				count --;
+				count--;
 				break;
 			}
 		}
@@ -197,13 +199,43 @@ public class VideoDetailAdapter extends BaseAdapter{
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup arg2) {
 		int type = getItemViewType(arg0);
-		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：count@@==" + count);
+		boolean isNULL = null == convertView ? true : false;
+		String s = (null == convertView) ? "convertView == NULL" : "converView Not null";
+		GolukDebugUtils.e("newadapter", "VideoDetailActivity===getView=  positon:" + arg0 + "  " + s);
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView(convertView);
 		} else {
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：arg0==" + arg0);
 			convertView = loadLayout(convertView, arg0 - 1);
 		}
+		return convertView;
+	}
+
+	public View createHeadView() {
+		View convertView = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.video_detail_head, null);
+		headHolder.mImageHead = (ImageView) convertView.findViewById(R.id.user_head);
+		headHolder.mTextName = (TextView) convertView.findViewById(R.id.user_name);
+		headHolder.mTextTime = (TextView) convertView.findViewById(R.id.user_time);
+		headHolder.mTextLook = (TextView) convertView.findViewById(R.id.video_detail_count_look);
+
+		headHolder.mVideoView = (FullScreenVideoView) convertView.findViewById(R.id.video_detail_videoview);
+		headHolder.mImageLayout = (RelativeLayout) convertView.findViewById(R.id.mImageLayout);
+		headHolder.mPlayBtn = (ImageView) convertView.findViewById(R.id.play_btn);
+		headHolder.mSeekBar = (SeekBar) convertView.findViewById(R.id.seekbar);
+		headHolder.mVideoLoading = (LinearLayout) convertView.findViewById(R.id.mLoadingLayout);
+		headHolder.mLoading = (ImageView) convertView.findViewById(R.id.mLoading);
+		headHolder.mPlayerLayout = (RelativeLayout) convertView.findViewById(R.id.mPlayerLayout);
+
+		headHolder.mTextDescribe = (TextView) convertView.findViewById(R.id.video_detail_describe);
+		headHolder.mTextAuthor = (TextView) convertView.findViewById(R.id.video_detail_author);
+		headHolder.mTextLink = (TextView) convertView.findViewById(R.id.video_detail_link);
+		headHolder.mPraiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
+		headHolder.mShareLayout = (LinearLayout) convertView.findViewById(R.id.shareLayout);
+		headHolder.mCommentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
+		headHolder.mTextZan = (TextView) convertView.findViewById(R.id.zanText);
+		headHolder.mTextComment = (TextView) convertView.findViewById(R.id.commentText);
+		headHolder.mZanImage = (ImageView) convertView.findViewById(R.id.video_square_detail_like_image);
+		headHolder.mTextZanName = (TextView) convertView.findViewById(R.id.zanName);
 		return convertView;
 	}
 
@@ -214,48 +246,28 @@ public class VideoDetailAdapter extends BaseAdapter{
 	 */
 	@SuppressLint("NewApi")
 	private View getHeadView(View convertView) {
-		if (null == convertView) {
+		boolean isStartPlay = true;
+		if (null == mHeadView) {
+			isStartPlay = true;
 			headHolder = new ViewHolder();
-			convertView = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.video_detail_head, null);
-			headHolder.mImageHead = (ImageView) convertView.findViewById(R.id.user_head);
-			headHolder.mTextName = (TextView) convertView.findViewById(R.id.user_name);
-			headHolder.mTextTime = (TextView) convertView.findViewById(R.id.user_time);
-			headHolder.mTextLook = (TextView) convertView.findViewById(R.id.video_detail_count_look);
-
-			headHolder.mVideoView = (FullScreenVideoView) convertView.findViewById(R.id.video_detail_videoview);
-			headHolder.mImageLayout = (RelativeLayout) convertView.findViewById(R.id.mImageLayout);
-			headHolder.mPlayBtn = (ImageView) convertView.findViewById(R.id.play_btn);
-			headHolder.mSeekBar = (SeekBar) convertView.findViewById(R.id.seekbar);
-			headHolder.mVideoLoading = (LinearLayout) convertView.findViewById(R.id.mLoadingLayout);
-			headHolder.mLoading = (ImageView) convertView.findViewById(R.id.mLoading);
-			headHolder.mPlayerLayout = (RelativeLayout) convertView.findViewById(R.id.mPlayerLayout);
-
-			headHolder.mTextDescribe = (TextView) convertView.findViewById(R.id.video_detail_describe);
-			headHolder.mTextAuthor = (TextView) convertView.findViewById(R.id.video_detail_author);
-			headHolder.mTextLink = (TextView) convertView.findViewById(R.id.video_detail_link);
-			headHolder.mPraiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
-			headHolder.mShareLayout = (LinearLayout) convertView.findViewById(R.id.shareLayout);
-			headHolder.mCommentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
-			headHolder.mTextZan = (TextView) convertView.findViewById(R.id.zanText);
-			headHolder.mTextComment = (TextView) convertView.findViewById(R.id.commentText);
-			headHolder.mZanImage = (ImageView) convertView.findViewById(R.id.video_square_detail_like_image);
-			headHolder.mTextZanName = (TextView) convertView.findViewById(R.id.zanName);
-
-			convertView.setTag(headHolder);
+			mHeadView = createHeadView();
+			mHeadView.setTag(headHolder);
 		} else {
-			headHolder = (ViewHolder) convertView.getTag();
+			headHolder = (ViewHolder) mHeadView.getTag();
+			isStartPlay = false;
 		}
-		getHeadData(headHolder, mVideoJson.data);
-		
+
+		getHeadData(headHolder, mVideoJson.data, isStartPlay);
+
 		headHolder.mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) headHolder.mLoading.getBackground();
-		
+
 		headHolder.mPlayBtn.setOnClickListener(new ClickVideoListener(mContext, this));
 		headHolder.mPlayerLayout.setOnClickListener(new ClickVideoListener(mContext, this));
-//		headHolder.mTextLink.setOnClickListener(new ClickListener());
+		// headHolder.mTextLink.setOnClickListener(new ClickListener());
 		headHolder.mPraiseLayout.setOnClickListener(new ClickPraiseListener(mContext, this));
 		headHolder.mShareLayout.setOnClickListener(new ClickShareListener(mContext, mVideoJson, this));
-		
+
 		headHolder.mVideoView.setOnPreparedListener(new PlayPreparedListener(headHolder, this));
 		headHolder.mVideoView.setOnCompletionListener(new PlayCompletionListener(this, headHolder));
 		headHolder.mVideoView.setOnErrorListener(new PlayErrorListener(mContext, headHolder, this));
@@ -266,13 +278,13 @@ public class VideoDetailAdapter extends BaseAdapter{
 				e.printStackTrace();
 			}
 		}
-		
-		return convertView;
+
+		return mHeadView;
 	}
 
 	// 设置详情数据
 	@SuppressLint("HandlerLeak")
-	private void getHeadData(final ViewHolder headHolder, VideoAllData mVideoAllData) {
+	private void getHeadData(final ViewHolder headHolder, VideoAllData mVideoAllData, boolean isStartPlay) {
 		if (!mVideoJson.success) {
 			// TODO 后台数据异常
 			GolukDebugUtils.e("lily", "---------后台服务器数据异常-------" + mVideoAllData);
@@ -301,25 +313,28 @@ public class VideoDetailAdapter extends BaseAdapter{
 			view.setHierarchy(hierarchy);
 			view.setImageURI(Uri.parse(mVideoAllData.avideo.video.picture));
 			headHolder.mImageLayout.addView(view, mPreLoadingParams);
-			//TODO 外链接
-//			if ("0".equals(mVideoAllData.link.showurl)) {
-//				headHolder.mTextLink.setVisibility(View.GONE);
-//			} else {
-//				headHolder.mTextLink.setVisibility(View.VISIBLE);
-//				headHolder.mTextLink.setText(mVideoAllData.link.outurlname);
-//			}
-			
-			//视频
+			// TODO 外链接
+			// if ("0".equals(mVideoAllData.link.showurl)) {
+			// headHolder.mTextLink.setVisibility(View.GONE);
+			// } else {
+			// headHolder.mTextLink.setVisibility(View.VISIBLE);
+			// headHolder.mTextLink.setText(mVideoAllData.link.outurlname);
+			// }
+
+			// 视频
 			if ((netInfo != null) && (netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
-				playVideo();
-				headHolder.mVideoView.start();
-				showLoading();
-				GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------getHeadData  showLoading");
+				if (!headHolder.mVideoView.isPlaying() && isStartPlay) {
+					GolukDebugUtils.e("newadapter", "VideoDetailActivity===getHeadData=  stat Play:");
+					playVideo();
+					headHolder.mVideoView.start();
+					showLoading();
+				}
+
 			} else {
 				headHolder.mImageLayout.setVisibility(View.VISIBLE);
 				headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 			}
-			
+
 			mHandler = new Handler() {
 				@Override
 				public void handleMessage(Message msg) {
@@ -339,11 +354,13 @@ public class VideoDetailAdapter extends BaseAdapter{
 							}
 							if (!isBuffering) {
 								hideLoading();
-								GolukDebugUtils.e("videoview","VideoDetailActivity-------------------mHandler : hideLoading ");
+								GolukDebugUtils.e("videoview",
+										"VideoDetailActivity-------------------mHandler : hideLoading ");
 							}
 							playTime = 0;
 							duration = headHolder.mVideoView.getDuration();
-							int progress = headHolder.mVideoView.getCurrentPosition() * 100 / headHolder.mVideoView.getDuration();
+							int progress = headHolder.mVideoView.getCurrentPosition() * 100
+									/ headHolder.mVideoView.getDuration();
 							headHolder.mSeekBar.setProgress(progress);
 							if (headHolder.mVideoView.getCurrentPosition() > headHolder.mVideoView.getDuration() - 100) {
 								headHolder.mSeekBar.setProgress(0);
@@ -377,7 +394,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 		commentHolder.mCommentTime = (TextView) convertView.findViewById(R.id.comment_item_time);
 		commentHolder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
 		commentHolder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
-		
+
 		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 
@@ -403,10 +420,10 @@ public class VideoDetailAdapter extends BaseAdapter{
 	// 设置评论数据
 	private void getCommentData(ViewHolder holder, int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
-		if(0 == mDataList.size()){
+		if (0 == mDataList.size()) {
 			holder.mListLayout.setVisibility(View.GONE);
 			holder.mNoData.setVisibility(View.VISIBLE);
-			return ;
+			return;
 		}
 		holder.mListLayout.setVisibility(View.VISIBLE);
 		holder.mNoData.setVisibility(View.GONE);
@@ -417,7 +434,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 		holder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
 
 	}
-	
+
 	/**
 	 * 点赞
 	 */
@@ -474,18 +491,18 @@ public class VideoDetailAdapter extends BaseAdapter{
 		TextView mTextDescribe = null;
 		TextView mTextAuthor, mTextLink;
 		LinearLayout mPraiseLayout, mShareLayout, mCommentLayout;
-		TextView mTextZan, mTextComment,mTextZanName;
+		TextView mTextZan, mTextComment, mTextZanName;
 		ImageView mZanImage;
 		// 评论
 		ImageView mCommentHead = null;
 		TextView mCommentTime, mCommentName, mCommentConennt;
 		ImageView mNoData = null;
 		RelativeLayout mListLayout = null;
-		
+
 	}
-	
+
 	private boolean isCallVideo = false;
-	
+
 	public void playVideo() {
 		if (isCallVideo) {
 			return;
@@ -501,6 +518,57 @@ public class VideoDetailAdapter extends BaseAdapter{
 		headHolder.mVideoView.requestFocus();
 	}
 
+	/** DP */
+	public final int mPlayerHeight = 205;
+	/** 布局title 的高度 dp */
+	public final int mTitleHeight = 46;
+	/** 是否是用户拖出屏幕暂停的，拖回来根据此变变量恢复 */
+	private boolean isOuterPause = false;
+
+	public void scrollDealPlayer() {
+		if (null == headHolder || null == headHolder.mVideoView) {
+			return;
+		}
+		final int[] locations = new int[2];
+		headHolder.mVideoView.getLocationOnScreen(locations);
+		// 计算播放布局的所占的像素高度
+		final int playHeightPx = (int) (mPlayerHeight * GolukUtils.mDensity);
+		// 计算布局title所占的高度
+		final int titleHeightPx = (int) (mTitleHeight * GolukUtils.mDensity);
+		final int duration = -(playHeightPx - titleHeightPx - VideoDetailActivity.stateBraHeight);
+
+		if (locations[1] < duration) {
+			GolukDebugUtils.e("", "onScreen--------------pause");
+			// 滑出屏幕外了
+			pausePlayer();
+		} else {
+			int dd = (titleHeightPx + VideoDetailActivity.stateBraHeight);
+			if (locations[1] > dd) {
+				// 开始播放
+				startPlayer();
+			}
+		}
+	}
+
+	private void pausePlayer() {
+		if (headHolder.mVideoView.isPlaying()) {
+			isOuterPause = true;
+			headHolder.mVideoView.pause();
+			headHolder.mImageLayout.setVisibility(View.VISIBLE);
+			headHolder.mVideoView.setVisibility(View.GONE);
+		}
+	}
+
+	private void startPlayer() {
+		if (!headHolder.mVideoView.isPlaying() && isOuterPause) {
+			GolukDebugUtils.e("", "onScreen--------------start");
+			headHolder.mVideoView.start();
+			headHolder.mVideoView.setVisibility(View.VISIBLE);
+			showLoading();
+		}
+		isOuterPause = false;
+	}
+
 	/**
 	 * 取消计时
 	 */
@@ -509,14 +577,14 @@ public class VideoDetailAdapter extends BaseAdapter{
 			timer.cancel();
 		}
 	}
-	
+
 	/**
 	 * 提示对话框
 	 * 
 	 * @param msg
 	 *            提示信息
 	 */
-	public void dialog(String msg,final ViewHolder headHolder) {
+	public void dialog(String msg, final ViewHolder headHolder) {
 		if (null == mCustomDialog) {
 			mCustomDialog = new CustomDialog(mContext);
 			mCustomDialog.setCancelable(false);
@@ -530,16 +598,17 @@ public class VideoDetailAdapter extends BaseAdapter{
 					headHolder.mSeekBar.setProgress(0);
 				}
 			});
-			if (!((VideoDetailActivity)mContext).isFinishing()) {
+			if (!((VideoDetailActivity) mContext).isFinishing()) {
 				mCustomDialog.show();
 			}
 		}
 	}
+
 	/**
 	 * 显示加载中布局
 	 */
 	public void showLoading() {
-		GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------showLoading()  isShow==="+isShow);
+		GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------showLoading()  isShow===" + isShow);
 		if (!isShow) {
 			isShow = true;
 			headHolder.mVideoLoading.setVisibility(View.VISIBLE);
@@ -556,6 +625,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 			}, 100);
 		}
 	}
+
 	/**
 	 * 隐藏加载中显示画面
 	 * 
@@ -574,6 +644,7 @@ public class VideoDetailAdapter extends BaseAdapter{
 			headHolder.mVideoLoading.setVisibility(View.GONE);
 		}
 	}
+
 	/**
 	 * 无网络超时检查
 	 */
@@ -582,7 +653,8 @@ public class VideoDetailAdapter extends BaseAdapter{
 			networkConnectTimeOut++;
 			if (networkConnectTimeOut > 15) {
 				hideLoading();
-				GolukDebugUtils.e("videoview","VideoDetailActivity-------------------netWorkTimeoutCheck : hideLoading ");
+				GolukDebugUtils.e("videoview",
+						"VideoDetailActivity-------------------netWorkTimeoutCheck : hideLoading ");
 				headHolder.mImageLayout.setVisibility(View.VISIBLE);
 				dialog("网络访问异常，请重试！", headHolder);
 				if (null != headHolder.mVideoView) {
@@ -594,9 +666,9 @@ public class VideoDetailAdapter extends BaseAdapter{
 			networkConnectTimeOut = 0;
 		}
 	}
-	
-	public void setOnResume(){
-		GolukDebugUtils.e("videostate", "VideoDetailActivity--------------------setOnResume  "+isPause);
+
+	public void setOnResume() {
+		GolukDebugUtils.e("videostate", "VideoDetailActivity--------------------setOnResume  " + isPause);
 		if (isPause) {
 			isPause = false;
 			showLoading();
@@ -606,10 +678,10 @@ public class VideoDetailAdapter extends BaseAdapter{
 			headHolder.mVideoView.start();
 		}
 	}
-	
-	public void setOnPause(){
-		GolukDebugUtils.e("videostate", "VideoDetailActivity--------------------setOnPause  "+isPause);
-		if (null == headHolder.mVideoView) {
+
+	public void setOnPause() {
+		GolukDebugUtils.e("videostate", "VideoDetailActivity--------------------setOnPause  " + isPause);
+		if (null == headHolder || null == headHolder.mVideoView) {
 			return;
 		}
 		boolean isPlaying = headHolder.mVideoView.isPlaying();
@@ -620,16 +692,16 @@ public class VideoDetailAdapter extends BaseAdapter{
 			headHolder.mImageLayout.setVisibility(View.VISIBLE);
 		}
 	}
-	
-	public void showLoadingDialog(){
-		if(mCustomLoadingDialog == null){
+
+	public void showLoadingDialog() {
+		if (mCustomLoadingDialog == null) {
 			mCustomLoadingDialog = new CustomLoadingDialog(mContext, null);
 			mCustomLoadingDialog.show();
 		}
 	}
-	
-	public void closeLoadingDialog(){
-		if(null != mCustomLoadingDialog){
+
+	public void closeLoadingDialog() {
+		if (null != mCustomLoadingDialog) {
 			mCustomLoadingDialog.close();
 		}
 	}
