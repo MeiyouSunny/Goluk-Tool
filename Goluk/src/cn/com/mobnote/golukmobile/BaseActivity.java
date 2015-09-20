@@ -96,40 +96,6 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-	// protected void onNewIntent(Intent intent) {
-	// super.onNewIntent(intent);
-	// setIntent(intent);
-	// // if (!(GolukApplication.getInstance().getContext() instanceof
-	// MainActivity)) {
-	// // dealPush(intent);
-	// // }
-	//
-	// GolukDebugUtils.i("newintent", "jyf----onNew---Base------------");
-	// }
-
-	/**
-	 * 处理推送消息
-	 * 
-	 * @param intent
-	 * @author jyf
-	 */
-	private void dealPush(Intent intent) {
-		if (null == intent) {
-			return;
-		}
-		String from = intent.getStringExtra("from");
-		GolukDebugUtils.e("", "jyf----BaseActivity-----from: " + from);
-		if (null != from && !"".equals(from) && from.equals("notication")) {
-			String action = intent.getStringExtra("action");
-			Intent startIntent = new Intent(this, MainActivity.class);
-			startIntent.putExtra(GolukNotification.NOTIFICATION_KEY_FROM, from);
-			startIntent.putExtra(GolukNotification.NOTIFICATION_KEY_ACTION, action);
-			startActivity(startIntent);
-
-			GolukDebugUtils.e("", "jyf----BaseActivity-----from: " + from + "  action:" + action);
-		}
-	}
-
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

@@ -259,13 +259,15 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == intent) {
 			return;
 		}
-		String from = intent.getStringExtra("from");
+		final String from = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
 		GolukDebugUtils.e("", "jyf----MainActivity-----from: " + from);
 		if (null != from && !"".equals(from) && from.equals("notication")) {
-			String pushJson = intent.getStringExtra("json");
+			String pushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
+
+			GolukDebugUtils.e("", "jyf----MainActivity-----pushJson: " + pushJson);
 			XingGeMsgBean bean = JsonUtil.parseXingGePushMsg(pushJson);
 			if (null != bean) {
-				click_push(bean);
+				GolukNotification.getInstance().dealAppinnerClick(this, bean);
 			}
 			GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
 		}
