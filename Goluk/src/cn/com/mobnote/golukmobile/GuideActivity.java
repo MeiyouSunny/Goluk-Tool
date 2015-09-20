@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.guide.GolukGuideManage;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -41,21 +42,39 @@ public class GuideActivity extends BaseActivity {
 	/** 引导页管理类 */
 	private GolukGuideManage mGolukGuideManage = null;
 
+	private String mPushFrom = null;
+	private String mPushJson = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.guide);
 		mContext = this;
+		getIntentData();
+
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		GolukApplication.getInstance().initSharedPreUtil(this);
 		((GolukApplication) this.getApplication()).initLogic();
-		
+		// 注册信鸽的推送
+		GolukNotification.getInstance().createXG(this);
+
 		((GolukApplication) this.getApplication()).startUpgrade();
 		// 初始化
 		init();
 		SysApplication.getInstance().addActivity(this);
+	}
+
+	private void getIntentData() {
+		Intent intent = getIntent();
+		mPushFrom = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
+		GolukDebugUtils.e("", "jyf----GuideActivity-----from: " + mPushFrom);
+
+		if (null != mPushFrom && !"".equals(mPushFrom) && mPushFrom.equals("notication")) {
+			mPushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
+		}
 	}
 
 	private boolean isFirstStart() {
@@ -63,6 +82,21 @@ public class GuideActivity extends BaseActivity {
 		SharedPreferences preferences = getSharedPreferences("golukmark", MODE_PRIVATE);
 		// 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
 		return preferences.getBoolean("isfirst", true);
+	}
+
+	/**
+	 * 当启动主界面的时候，添加推送标志，用于在主界面执行推送动作
+	 * 
+	 * @param intent
+	 *            启动主界面的动作
+	 * @author jyf
+	 */
+	private void addPushData(Intent intent) {
+		if (null == mPushFrom) {
+			return;
+		}
+		intent.putExtra(GolukNotification.NOTIFICATION_KEY_FROM, mPushFrom);
+		intent.putExtra(GolukNotification.NOTIFICATION_KEY_ACTION, mPushJson);
 	}
 
 	/**
@@ -78,7 +112,7 @@ public class GuideActivity extends BaseActivity {
 			if (!isFirstLogin) {
 				// 登录过，跳转到地图首页进行自动登录
 				Intent it = new Intent(this, MainActivity.class);
-				GolukDebugUtils.i("lily", "======MainActivity==GuideActivity====");
+				addPushData(it);
 				startActivity(it);
 			} else {
 				// 是第一次登录(没有登录过)

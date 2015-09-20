@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -38,8 +39,8 @@ import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
-import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
@@ -54,7 +55,8 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
-		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn,TextWatcher,OnItemLongClickListener, ILiveDialogManagerFn {
+		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn, TextWatcher, OnItemLongClickListener,
+		ILiveDialogManagerFn {
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -78,7 +80,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	/** 监听管理类 **/
 	private VideoSquareManager mVideoSquareManager = null;
-	/**视频id**/
+	/** 视频id **/
 	public static final String VIDEO_ID = "videoid";
 	/**是否允许评论**/
 	public static final String VIDEO_ISCAN_COMMENT = "iscan_input";
@@ -100,6 +102,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private SharePlatformUtil sharePlatform;
 	/** 保存将要删除的数据 */
 	private CommentBean mWillDelBean = null;
+	/** 状态栏的高度 */
+	public static int stateBraHeight = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +113,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		setContentView(R.layout.comment);
 
 		initView();
-		
+
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 		historyDate = GolukUtils.getCurrentFormatTime();
@@ -117,8 +121,23 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		initListener();
 
 		getDetailData();
-		
+
 		CommentTimerManager.getInstance();
+
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		getStateHeight();
+	}
+
+	private void getStateHeight() {
+		Rect rectangle = new Rect();
+		Window window = getWindow();
+		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+		stateBraHeight = rectangle.top;
+		GolukDebugUtils.e("", "videoDetailActivity-----------------statusBarHeight:" + stateBraHeight);
 	}
 
 	@Override
@@ -139,12 +158,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mTextNoInput = (TextView) findViewById(R.id.comment_noinput);
 		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
-		
+
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
 		mAdapter = new VideoDetailAdapter(this);
 		mRTPullListView.setAdapter(mAdapter);
-		
+
 	}
 
 	private void initListener() {
@@ -194,10 +213,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void getCommentList(int operation, String timestamp) {
 		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, "1", operation,
 				timestamp, PAGE_SIZE);
-		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr=="+requestStr);
+		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr==" + requestStr);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_List_Comment, requestStr);
-		GolukDebugUtils.e("", "================VideoDetailActivity：isSucess=="+isSucess);
+		GolukDebugUtils.e("", "================VideoDetailActivity：isSucess==" + isSucess);
 		if (!isSucess) {
 			// TODO 失败
 		}
@@ -245,7 +264,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			int visibleCount = detailFirstVisible + detailVisibleCount;
 
 			GolukDebugUtils.e("", "----VideoDetailActivity-----onScrollStateChanged-----222: " + count + "  vicount:"
-					+ visibleCount+"  mIsHaveData==="+mIsHaveData);
+					+ visibleCount + "  mIsHaveData===" + mIsHaveData + "  detailFirstVisible:" + detailFirstVisible);
+			if (null != mAdapter) {
+				mAdapter.scrollDealPlayer();
+			}
 
 			if (count == visibleCount && mIsHaveData) {
 				startPush();
@@ -255,6 +277,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
+
+		GolukDebugUtils.e("", "----VideoDetailActivity-----onScroll-----222: firstVisibleItem:" + firstVisibleItem);
 		detailFirstVisible = firstVisibleItem;
 		detailVisibleCount = visibleItemCount;
 	}
@@ -315,10 +339,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	// 开始上拉刷新
 	private void startPush() {
 		mCurrentOperator = OPERATOR_UP;
-		GolukDebugUtils.e("", "================VideoDetailActivity：mCurrentOperator=="+mCurrentOperator+"  down=="+OPERATOR_DOWN);
+		GolukDebugUtils.e("", "================VideoDetailActivity：mCurrentOperator==" + mCurrentOperator + "  down=="
+				+ OPERATOR_DOWN);
 		getCommentList(OPERATOR_DOWN, mAdapter.getLastDataTime());
 	}
-	//发表评论
+
+	// 发表评论
 	private void click_send() {
 		// 发评论前需要先判断用户是否登录
 		if (!mApp.isUserLoginSucess) {
@@ -355,12 +381,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
 				LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", "正在删除", true);
 	}
-	
+
 	// 添加评论
 	private void httpPost_requestAdd(String txt) {
-		if(null == mVideoJson.data.avideo.video.videoid){
+		if (null == mVideoJson.data.avideo.video.videoid) {
 			GolukUtils.showToast(this, "数据加载中，请稍候再试");
-			return ;
+			return;
 		}
 		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
@@ -382,9 +408,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			callBack_videoDetail(msg, param1, param2);
 		} else if (event == VSquare_Req_List_Comment) {
 			callBack_commentList(msg, param1, param2);
-		} else if (event == VSquare_Req_VOP_GetShareURL_Video){
+		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
 			callBack_share(msg, param1, param2);
-		} else if (event == VSquare_Req_VOP_Praise){
+		} else if (event == VSquare_Req_VOP_Praise) {
 			callBack_praise(msg, param1, param2);
 		} else if (VSquare_Req_Add_Comment == event) {
 			callBack_commentAdd(msg, param1, param2);
@@ -392,7 +418,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			callBack_commentDel(msg, param1, param2);
 		}
 	}
-	//视频详情回调
+
+	// 视频详情回调
 	private void callBack_videoDetail(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == msg) {
 			mRTPullListView.setVisibility(View.VISIBLE);
@@ -405,13 +432,14 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				// 详情
 				String detailStr = jsonObject.optString("VideoDetail");
 				mVideoJson = VideoDetailParser.parseDataFromJson(detailStr);
-				GolukDebugUtils.e("newadapter", "=========VideoDetailActivity：commentList==" + mVideoJson.data.avideo.video.describe);
+				GolukDebugUtils.e("newadapter", "=========VideoDetailActivity：commentList=="
+						+ mVideoJson.data.avideo.video.describe);
 				// 评论
 				JSONObject root = commentList.optJSONObject("data");
 				JSONArray commentArray = root.optJSONArray("comments");
 				int count = Integer.parseInt(root.getString("count"));
 				GolukDebugUtils.e("newadapter", "==========VideoDetailActivity：commentArray==" + commentArray);
-				
+
 				commentDataList = JsonUtil.parseCommentData(commentArray);
 
 				updateRefreshTime();
@@ -422,7 +450,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					// 下拉刷新
 					pullCallBack(count, mVideoJson, commentDataList);
 				}
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
@@ -432,7 +460,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
-	//评论回调
+
+	// 评论回调
 	private void callBack_commentList(int msg, int param1, Object param2) {
 		if (1 != msg) {
 			// 请求失败
@@ -479,7 +508,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				firstEnterCallBack(count, mVideoJson, commentDataList);
 			} else if (OPERATOR_UP == mCurrentOperator) {
 				// 上拉刷新
-				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentDataList=="+commentDataList.size());
+				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentDataList=="
+						+ commentDataList.size());
 				pushCallBack(count, mVideoJson, commentDataList);
 			}
 
@@ -487,7 +517,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			callBackFailed();
 		}
 	}
-	//分享回调
+
+	// 分享回调
 	private void callBack_share(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == msg) {
 			try {
@@ -502,9 +533,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 					String allDescribe = "";
 					if (TextUtils.isEmpty(describe)) {
-						allDescribe = mVideoJson.data.avideo.user.nickname+"："+mVideoJson.data.avideo.video.describe;
-					}else{
-						allDescribe = mVideoJson.data.avideo.user.nickname+"："+describe;
+						allDescribe = mVideoJson.data.avideo.user.nickname + "："
+								+ mVideoJson.data.avideo.video.describe;
+					} else {
+						allDescribe = mVideoJson.data.avideo.user.nickname + "：" + describe;
 					}
 					String ttl = "极路客精彩视频";
 					// 缩略图
@@ -526,9 +558,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
-	//点赞回调
+
+	// 点赞回调
 	private void callBack_praise(int msg, int param1, Object param2) {
-		GolukDebugUtils.e("lily", "222VideoSuqare_CallBack=@@@@Get_VideoDetail=="+ "=msg=" + msg+ "=param1=" + param1 + "=param2=" + param2);
+		GolukDebugUtils.e("lily", "222VideoSuqare_CallBack=@@@@Get_VideoDetail==" + "=msg=" + msg + "=param1=" + param1
+				+ "=param2=" + param2);
 		if (msg == RESULE_SUCESS) {
 			// {"data":{"result":"3"},"msg":"视频不存在","success":false}
 			try {
@@ -549,7 +583,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
-	//添加评论回调
+
+	// 添加评论回调
 	private void callBack_commentAdd(int msg, int param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != msg) {
@@ -580,7 +615,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 
 	}
-	//删除评论回调
+
+	// 删除评论回调
 	private void callBack_commentDel(int msg, int param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != msg) {
@@ -604,7 +640,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 		mWillDelBean = null;
 	}
-	
+
 	private void switchSendState(boolean isSend) {
 		if (isSend) {
 			mTextSend.setTextColor(this.getResources().getColor(R.color.color_comment_can_send));
@@ -612,7 +648,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			mTextSend.setTextColor(this.getResources().getColor(R.color.color_comment_not_send));
 		}
 	}
-	
+
 	public Bitmap getThumbBitmap(String netUrl) {
 		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
 		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
@@ -659,7 +695,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			mVideoSquareManager.removeVideoSquareManagerListener("detailcomment");
 		}
 		mAdapter.cancleTimer();
-		if(null != mAdapter.headHolder.mVideoView){
+		if (null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
 			mAdapter.headHolder.mVideoView = null;
 		}
@@ -676,7 +712,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 		noData(mAdapter.getCount() <= 0);
 	}
-	
+
 	private void noDataDeal() {
 		mIsHaveData = false;
 		if (mCurrentOperator == OPERATOR_UP) {// 上拉刷新
@@ -687,11 +723,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 		noData(mAdapter.getCount() <= 0);
 	}
+
 	// 是否显示无数据提示
 	private void noData(boolean isno) {
 		if (isno) {
 			mAdapter.commentNoData();
-		}
+		} 
 	}
 
 	@Override
@@ -708,11 +745,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	@Override
 	public void afterTextChanged(Editable arg0) {
 	}
-	
+
 	@Override
 	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 	}
-	
+
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 		final String txt = mEditInput.getText().toString().trim();
@@ -721,7 +758,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		} else {
 			switchSendState(false);
 		}
-		
+
 	}
 
 	@Override

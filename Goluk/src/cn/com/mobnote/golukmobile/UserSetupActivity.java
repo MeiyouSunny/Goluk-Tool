@@ -7,9 +7,9 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +25,8 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.DataCleanManage;
@@ -32,13 +34,11 @@ import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
- * 1.类命名首字母大写 2.公共函数驼峰式命名 3.属性函数驼峰式命名 4.变量/参数驼峰式命名 5.操作符之间必须加空格 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处 8.所有代码必须使用TAB键缩进 9.函数使用块注释,代码逻辑使用行注释 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致 </pre>
  * 
  * @ 功能描述:Goluk个人设置
  * 
@@ -46,7 +46,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * 
  */
 
-public class UserSetupActivity extends CarRecordBaseActivity implements OnClickListener, UserInterface {
+public class UserSetupActivity extends CarRecordBaseActivity implements OnClickListener, UserInterface,
+		ILiveDialogManagerFn {
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -111,7 +112,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mApp.setContext(mContext, "UserSetup");
 
 		mApp.mUser.setUserInterface(this);
-		
+
 		judgeLogin();
 
 		// 缓存
@@ -151,6 +152,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		// 自动同步开关
 		mBtnSwitch = (Button) findViewById(R.id.set_ipc_btn);
+		// 消息通知添加监听
+		findViewById(R.id.notify_comm_item).setOnClickListener(this);
 
 		// 注册监听
 		btnLoginout.setOnClickListener(this);
@@ -200,7 +203,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			if (btnLoginout.getText().toString().equals("登录")) {
 				if (mApp.autoLoginStatus == 1) {
 					mBuilder = new AlertDialog.Builder(mContext);
-					dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false)
+					dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(true)
 							.setOnKeyListener(new OnKeyListener() {
 								@Override
 								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -253,7 +256,20 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, true);
 			}
 			break;
+		case R.id.notify_comm_item:
+			startMsgSettingActivity();
+			break;
 		}
+	}
+
+	/**
+	 * 跳转到消息通知设置界面
+	 * 
+	 * @author jyf
+	 */
+	private void startMsgSettingActivity() {
+		Intent intent = new Intent(this, PushSettingActivity.class);
+		startActivity(intent);
 	}
 
 	/**
@@ -265,29 +281,29 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		} else {
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_SignOut, "");
-			GolukDebugUtils.e("", b + "");
-			if (b) {
-				// 注销成功
-				mApp.isUserLoginSucess = false;
-				mApp.loginoutStatus = true;// 注销成功
-				mApp.registStatus = 3;// 注册失败
-
-				mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-				mEditor = mPreferences.edit();
-				mEditor.putBoolean("FirstLogin", true);// 注销完成后，设置为没有登录过的一个状态
-				// 提交修改
-				mEditor.commit();
-
-				GolukUtils.showToast(mContext, "注销成功");
-				btnLoginout.setText("登录");
-
-			} else {
-				// 注销失败
-				mApp.loginoutStatus = false;
-				mApp.isUserLoginSucess = true;
+			if (!b) {
+				GolukUtils.showToast(this, "注销失败");
+				return;
 			}
+			LiveDialogManager.getManagerInstance().showCommProgressDialog(this, LiveDialogManager.DIALOG_TYPE_LOGOUT,
+					"", "正在注销...", true);
 		}
+	}
 
+	private void logoutSucess() {
+		// 注销成功
+		mApp.isUserLoginSucess = false;
+		mApp.loginoutStatus = true;// 注销成功
+		mApp.registStatus = 3;// 注册失败
+
+		mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+		mEditor = mPreferences.edit();
+		mEditor.putBoolean("FirstLogin", true);// 注销完成后，设置为没有登录过的一个状态
+		// 提交修改
+		mEditor.commit();
+
+		GolukUtils.showToast(mContext, "注销成功");
+		btnLoginout.setText("登录");
 	}
 
 	/**
@@ -295,6 +311,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	 */
 	public void getLogintoutCallback(int success, Object obj) {
 		GolukDebugUtils.e("", "-----------------注销回调--------------------");
+		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+		if (1 != success) {
+			GolukUtils.showToast(this, "注销失败");
+			return;
+		}
+		logoutSucess();
 	}
 
 	/**
@@ -383,6 +405,17 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			break;
 		default:
 			break;
+		}
+	}
+
+	@Override
+	public void dialogManagerCallBack(int dialogType, int function, String data) {
+		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGOUT) {
+			if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
+				// 用户取消注销
+				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut,
+						JsonUtil.getCancelJson());
+			}
 		}
 	}
 

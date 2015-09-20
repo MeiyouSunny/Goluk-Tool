@@ -54,6 +54,12 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_CommDownloadFile = 27;
 	/** 意见反馈 **/
 	public static final int PageType_FeedBack = 28;
+	/** 推送注册 */
+	public static final int PageType_PushReg = 29;
+	/** 获取推送配置 (是否允许点赞) */
+	public static final int PageType_GetPushCfg = 30;
+	
+	public static final int PageType_SetPushCfg = 31;
 
 	/**
 	 * 

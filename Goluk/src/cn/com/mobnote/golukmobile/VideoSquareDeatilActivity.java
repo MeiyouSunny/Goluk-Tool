@@ -187,6 +187,15 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			mFullVideoView.start();
 		}
 	}
+	
+	protected void onNewIntent(Intent intent) {
+	
+		super.onNewIntent(intent);
+		setIntent(intent);
+		
+		GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onNewIntent");
+		
+	}
 
 	// 初始化
 	public void initView() {
