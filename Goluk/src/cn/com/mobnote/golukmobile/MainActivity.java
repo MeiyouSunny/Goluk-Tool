@@ -221,6 +221,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
 			notifyLogicNetWorkState(true);
 		}
+		
+		GolukUtils.getMobileInfo(this);
 
 	}
 

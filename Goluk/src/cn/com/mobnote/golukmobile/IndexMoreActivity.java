@@ -79,6 +79,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	/** 个人中心的头像、性别、昵称 */
 	private ImageView mImageHead;
 	private TextView mTextName, mTextId;
+	private TextView mTextShareCount,mTextPraiseCount;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
@@ -130,6 +131,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
 		mTextName = (TextView) mRootLayout.findViewById(R.id.user_center_name_text);
 		mTextId = (TextView) mRootLayout.findViewById(R.id.user_center_id_text);
+		mTextShareCount = (TextView) mRootLayout.findViewById(R.id.user_share_count);
+		mTextPraiseCount = (TextView) mRootLayout.findViewById(R.id.user_praise_count);
 		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
 				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
 		if (!isFirstLogin || ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
@@ -287,11 +290,16 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			String head = json.getString("head");
 			String name = json.getString("nickname");
 			String id = json.getString("key");
+			String desc = json.getString("desc");
+			int shareCount = json.getInt("sharevideonumber");
+			int praiseCount = json.getInt("praisemenumber");
 
 			mTextName.setText(name);
 			GolukDebugUtils.i("lily", head);
 			UserUtils.focusHead(head, mImageHead);
-			mTextId.setText(id);
+			mTextId.setText(desc);
+			mTextShareCount.setText(shareCount+"");
+			mTextPraiseCount.setText(praiseCount+"");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

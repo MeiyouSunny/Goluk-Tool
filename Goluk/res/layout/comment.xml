@@ -32,6 +32,13 @@
             android:text="@string/str_comment_title"
             android:textColor="#e0e0e0"
             android:textSize="18sp" />
+        
+        <ImageView 
+            android:id="@+id/comment_title_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
     <!-- 底部布局，包括写评论　与　发送 -->
@@ -41,7 +48,9 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:background="#eaeaea" >
+        android:background="#eaeaea"
+         android:focusable="true"  
+        android:focusableInTouchMode="true" >
 
         <TextView
             android:id="@+id/comment_send"
@@ -86,14 +95,22 @@
 
     <!-- 无数据显示 -->
 
-    <ImageView
+    <!-- <ImageView
         android:id="@+id/comment_nodata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/videodetail_sofaicon"
         android:contentDescription="@string/imgdes"
-        android:visibility="gone" />
+        android:visibility="gone" /> -->
+        
+        <ImageView
+            android:id="@+id/video_detail_click_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/qitadifang"
+            android:visibility="gone" />
 
     <!-- 评论关闭 -->
 

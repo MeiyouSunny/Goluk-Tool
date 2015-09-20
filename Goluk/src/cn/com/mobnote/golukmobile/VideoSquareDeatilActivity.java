@@ -55,13 +55,13 @@ import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailParser;
+import cn.com.mobnote.golukmobile.videodetail.VideoJson;
+import cn.com.mobnote.golukmobile.videodetail.VideoListInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.videodetail.VideoDetailParser;
-import cn.com.mobnote.videodetail.VideoJson;
-import cn.com.mobnote.videodetail.VideoListInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -402,26 +402,6 @@ public class VideoSquareDeatilActivity extends BaseActivity implements OnClickLi
 			}
 			break;
 		case R.id.play_btn:
-			if (!UserUtils.isNetDeviceAvailable(mContext)) {
-				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
-				return;
-			}
-			if (isBuffering) {
-				return;
-			}
-			if (mFullVideoView.isPlaying()) {
-				mFullVideoView.pause();
-				isPause = true;
-				mPlayBtn.setVisibility(View.VISIBLE);
-				mPlayBtn.setImageResource(R.drawable.btn_player_play);
-			} else {
-				playVideo();
-				mFullVideoView.start();
-				showLoading();
-				GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onClick  showLoading");
-				mPlayBtn.setVisibility(View.GONE);
-			}
-			break;
 		case R.id.mPlayerLayout:
 			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
