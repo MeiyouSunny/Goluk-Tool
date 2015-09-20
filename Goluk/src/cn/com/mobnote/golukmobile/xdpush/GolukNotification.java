@@ -15,8 +15,7 @@ import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
-import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
-import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -250,8 +249,8 @@ public class GolukNotification {
 	 */
 	public void startDetail(String vid) {
 		Context context = GolukApplication.getInstance().getContext();
-		Intent intent = new Intent(context, VideoSquareDeatilActivity.class);
-		intent.putExtra("vid", vid);
+		Intent intent = new Intent(context, VideoDetailActivity.class);
+		intent.putExtra(VideoDetailActivity.VIDEO_ID, vid);
 		context.startActivity(intent);
 	}
 

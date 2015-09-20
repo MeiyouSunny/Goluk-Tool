@@ -41,6 +41,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 		mCanPariseBtn = (Button) findViewById(R.id.notify_setting_prise_btn);
 		mCanCommentBtn.setOnClickListener(this);
 		mCanPariseBtn.setOnClickListener(this);
+		findViewById(R.id.back_btn).setOnClickListener(this);
 		// 赋初始值
 		setCommentState(mIsCanComment);
 		setPariseState(isCanParise);
@@ -96,6 +97,9 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.back_btn:
+			exit();
+			break;
 		case R.id.notify_setting_comment_btn:
 			setCommentState(!mIsCanComment);
 			break;

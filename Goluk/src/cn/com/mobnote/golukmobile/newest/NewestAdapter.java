@@ -211,6 +211,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext,  mVideoSquareInfo,mNewestListView));
+		holder.headimg.setOnClickListener(new ClickHeadListener(mContext, mVideoSquareInfo));
 		// 点赞
 		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
 		tempPraiseListener.setCategoryListView(mCategoryListView);
