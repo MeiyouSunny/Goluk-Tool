@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.user.UserInterface;
@@ -79,7 +80,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	/** 个人中心的头像、性别、昵称 */
 	private ImageView mImageHead;
 	private TextView mTextName, mTextId;
-	private TextView mTextShareCount,mTextPraiseCount;
+	private LinearLayout mVideoLayout;
+	private TextView mTextShare,mTextPraise;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
@@ -131,8 +133,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
 		mTextName = (TextView) mRootLayout.findViewById(R.id.user_center_name_text);
 		mTextId = (TextView) mRootLayout.findViewById(R.id.user_center_id_text);
-		mTextShareCount = (TextView) mRootLayout.findViewById(R.id.user_share_count);
-		mTextPraiseCount = (TextView) mRootLayout.findViewById(R.id.user_praise_count);
+		mVideoLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_center_video_layout);
+		mTextShare = (TextView) mRootLayout.findViewById(R.id.user_share_count);
+		mTextPraise = (TextView) mRootLayout.findViewById(R.id.user_praise_count);
 		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
 				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
 		if (!isFirstLogin || ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
@@ -144,6 +147,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			// 未登录
 			isHasInfo = false;
 			mUserCenterId.setVisibility(View.GONE);
+			mVideoLayout.setVisibility(View.GONE);
 			mImageHead.setImageResource(R.drawable.editor_head_feault7);
 			mTextName.setText("点击登录");
 		}
@@ -158,6 +162,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		mInstallItem.setOnClickListener(this);
 		mQuestionItem.setOnClickListener(this);
 		mShoppingItem.setOnClickListener(this);
+		mVideoLayout.setOnClickListener(this);
 
 		// 更新UI handler
 		mUserCenterHandler = new Handler() {
@@ -191,6 +196,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			// 返回
 			break;
 		// 点击跳转到我的主页
+		case R.id.user_center_video_layout:
 		case R.id.user_center_item:
 			// 自动登录中，成功，失败，超时、密码错误
 			GolukDebugUtils.i("lily", "-----autoLoginStatus-----" + ma.mApp.autoLoginStatus
@@ -298,8 +304,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			GolukDebugUtils.i("lily", head);
 			UserUtils.focusHead(head, mImageHead);
 			mTextId.setText(desc);
-			mTextShareCount.setText(shareCount+"");
-			mTextPraiseCount.setText(praiseCount+"");
+			mTextShare.setText(shareCount+"");
+			mTextPraise.setText(praiseCount+"");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -320,9 +326,11 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			dismissDialog();
 			personalChanged();
 			mUserCenterId.setVisibility(View.GONE);
+			mVideoLayout.setVisibility(View.GONE);
 			mTextName.setText("点击登录");
 		} else if (ma.mApp.autoLoginStatus == 5) {
 			mUserCenterId.setVisibility(View.VISIBLE);
+			mVideoLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -333,11 +341,13 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
 		if (ma.mApp.loginStatus == 1 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录成功、自动登录中、自动登录成功
 			mUserCenterId.setVisibility(View.VISIBLE);
+			mVideoLayout.setVisibility(View.VISIBLE);
 			mImageHead.setImageResource(R.drawable.my_head_moren7);
 			initData();
 			isHasInfo = true;
 		} else {// 没有用户信息
 			mUserCenterId.setVisibility(View.GONE);
+			mVideoLayout.setVisibility(View.GONE);
 			mTextName.setText("点击登录");
 			mImageHead.setImageResource(R.drawable.my_head_moren7);
 			isHasInfo = false;
