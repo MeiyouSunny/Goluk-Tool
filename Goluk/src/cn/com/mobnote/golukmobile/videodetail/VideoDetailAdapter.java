@@ -265,7 +265,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			isStartPlay = false;
 		}
 
-		getHeadData(headHolder, mVideoJson.data, isStartPlay);
+		getHeadData(headHolder, mVideoJson.data, true);
 
 		headHolder.mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) headHolder.mLoading.getBackground();
