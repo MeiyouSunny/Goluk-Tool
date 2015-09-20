@@ -141,6 +141,22 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_Get_VideoDetail,
 				json);
 	}
+	
+	/**
+	 * 获取视频详情数据
+	 * 
+	 * @param ztid
+	 *            　专题id
+	 * @return
+	 * @author xuhw
+	 * @date 2015年8月6日
+	 */
+	public boolean getVideoDetailListData(String videoid) {
+		String json = JsonCreateUtils.getVideoDetailJson(videoid);
+		GolukDebugUtils.e("", "================getVideoDetailListData=="+json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_Get_VideoDetail_ComentList,
+				json);
+	}
 
 	/**
 	 * 获取视频分类

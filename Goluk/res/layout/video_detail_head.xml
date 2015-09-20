@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <!-- 用户信息 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+
+        <ImageView
+            android:id="@+id/user_head"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/my_head_moren7"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/user_head"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxEms="10"
+                android:singleLine="true"
+                android:text="极路客"
+                android:textColor="#1163a2"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/user_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="03-19  13:53"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp" >
+
+            <TextView
+                android:id="@+id/video_detail_count_look"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/live_time_desc"
+                android:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/live_time_desc"
+                android:text="围观" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 视频区域 -->
+    <RelativeLayout
+        android:id="@+id/mPlayerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="205dp" >
+
+        <cn.com.mobnote.golukmobile.player.FullScreenVideoView
+            android:id="@+id/video_detail_videoview"
+            android:layout_width="match_parent"
+            android:layout_height="205dp"
+            android:layout_centerInParent="true" />
+
+        <RelativeLayout
+            android:id="@+id/mImageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="205dp" >
+        </RelativeLayout>
+
+        <!-- 暂停按钮 -->
+
+        <ImageView
+            android:id="@+id/play_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/btn_player_play"
+            android:visibility="gone" />
+
+        <!-- 进度条 -->
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/progress_bg"
+            android:clickable="false"
+            android:longClickable="false"
+            android:max="100"
+            android:paddingLeft="-3dp"
+            android:paddingRight="-10dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/video_detail_seekbar_style"
+            android:thumb="@null" />
+
+        <!-- loading -->
+
+        <LinearLayout
+            android:id="@+id/mLoadingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/mLoading"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/mLoadingText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="视频加载中，请稍候..."
+                android:textColor="#ffffff"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 描述 -->
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        
+        <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/video_detail_describe"
+            android:textSize="12sp"
+            android:textColor="@color/live_time_desc"
+            android:text="跟朋友一起探寻古格王朝遗址"/>
+        
+        <RelativeLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+            <TextView 
+                android:id="@+id/video_detail_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textSize="12sp"
+            	android:textColor="@color/live_time_desc"
+            	android:text="感谢作者"/>
+            <TextView 
+                android:id="@+id/video_detail_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textSize="12sp"
+            	android:textColor="@color/name_color"
+            	android:text="goluk.com"/>
+        </RelativeLayout>
+    </LinearLayout>
+    
+    <!-- 操作 -->
+    <RelativeLayout
+        android:id="@+id/functionLayouyt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="16dp" >
+
+        <LinearLayout
+            android:id="@+id/praiseLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical" >
+
+            <ImageView
+                android:id="@+id/video_square_detail_like_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/def"
+                android:src="@drawable/videodetail_like" />
+
+            <TextView
+                android:id="@+id/zanName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:text="赞"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+            
+            <TextView
+                android:id="@+id/zanText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:text="0"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shareLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical" >
+
+            <ImageView
+                android:id="@+id/video_square_detail_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/videodetail_share"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:id="@+id/shareText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:text="分享"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/commentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/shareLayout"
+            android:gravity="center_vertical"
+            android:layout_marginRight="30dp" >
+
+            <ImageView
+                android:id="@+id/video_square_detail_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/videodetail_comment"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:text="评论"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+            
+            <TextView
+                android:id="@+id/commentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:text="0"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+    
+    <ImageView
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#e5e5e5" />
+
+</LinearLayout>

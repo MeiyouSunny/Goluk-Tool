@@ -32,6 +32,13 @@
             android:text="@string/str_comment_title"
             android:textColor="#e0e0e0"
             android:textSize="18sp" />
+        
+        <ImageView 
+            android:id="@+id/comment_title_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
     <!-- 底部布局，包括写评论　与　发送 -->
