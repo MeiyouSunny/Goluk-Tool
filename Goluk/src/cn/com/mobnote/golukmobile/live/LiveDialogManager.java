@@ -85,6 +85,8 @@ public class LiveDialogManager {
 	public static final int DIALOG_TYPE_LOGOUT = 21;
 	/** 获取推送配置 */
 	public static final int DIALOG_TYPE_GET_PUSH_CONFIGE = 22;
+	/** 删除我自己的视频 */
+	public static final int DIALOG_TYPE_DEL_VIDEO = 23;
 
 	private int mCurrentDialogType = 0;
 

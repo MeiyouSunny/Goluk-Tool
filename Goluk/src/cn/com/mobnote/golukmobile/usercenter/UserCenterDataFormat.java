@@ -70,9 +70,12 @@ public class UserCenterDataFormat {
 		JSONObject resData;
 		try {
 			resData = new JSONObject(response);
-			resource = resData.getJSONObject("ShareVideoList");
-			if (resource != null) {
-				clusters = JsonParserUtils.parserNewestItemDataByJsonObj(resource);
+			if (resData != null)
+			{
+				resource = resData.getJSONObject("ShareVideoList");
+				if (resource != null) {
+					clusters = JsonParserUtils.parserNewestItemDataByJsonObj(resource);
+				}
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -93,27 +96,32 @@ public class UserCenterDataFormat {
 			
 			JSONObject json = new JSONObject(str);
 			JSONObject PraiseList = json.getJSONObject("PraiseList");
-			Boolean success = PraiseList.getBoolean("success");
-			if(success){
-				JSONObject data = PraiseList.getJSONObject("data");
-				if("0".equals(data.getString("result"))){
-					JSONArray praiselist = data.getJSONArray("praiselist");
-					PraiseInfo praiseinfo = null;
-					for (int i = 0; i < praiselist.length(); i++) {
-						JSONObject map = praiselist.getJSONObject(i);
-						praiseinfo = new PraiseInfo();
-						praiseinfo.uid = map.getString("uid");
-						praiseinfo.nickname = map.getString("nickname");
-						praiseinfo.headportrait = map.getString("headportrait");
-						praiseinfo.introduce = map.getString("introduce");
-						praiseinfo.picture = map.getString("picture");
-						result.add(praiseinfo);
+			if (PraiseList != null)
+			{
+				Boolean success = PraiseList.getBoolean("success");
+				if(success){
+					JSONObject data = PraiseList.getJSONObject("data");
+					if("0".equals(data.getString("result"))){
+						JSONArray praiselist = data.getJSONArray("praiselist");
+						PraiseInfo praiseinfo = null;
+						for (int i = 0; i < praiselist.length(); i++) {
+							JSONObject map = praiselist.getJSONObject(i);
+							praiseinfo = new PraiseInfo();
+							praiseinfo.uid = map.getString("uid");
+							praiseinfo.nickname = map.getString("nickname");
+							praiseinfo.headportrait = map.getString("headportrait");
+							praiseinfo.introduce = map.getString("introduce");
+							praiseinfo.picture = map.getString("picture");
+							result.add(praiseinfo);
+						}
+						return result;
+					}else{
+						return null;
 					}
-					return result;
-				}else{
+				}
+				else{
 					return null;
 				}
-				
 			}else{
 				return null;
 			}
