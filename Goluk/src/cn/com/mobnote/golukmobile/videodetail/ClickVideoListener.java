@@ -38,7 +38,7 @@ public class ClickVideoListener implements OnClickListener {
 			mAdapter.headHolder.mVideoView.start();
 			mAdapter.showLoading();
 			mAdapter.headHolder.mVideoView.setVisibility(View.VISIBLE);
-			GolukDebugUtils.e("", "VideoSquareDetailActivity-------------------------onClick  showLoading");
+			GolukDebugUtils.e("", "VideoDetailActivity-------------------------onClick  showLoading");
 			mAdapter.headHolder.mPlayBtn.setVisibility(View.GONE);
 		}
 	}

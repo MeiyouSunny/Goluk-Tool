@@ -23,7 +23,7 @@ public class PlayErrorListener implements OnErrorListener {
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
 		// TODO onErrorListener
-		GolukDebugUtils.e("videostate", "VideoSquareDetailActivity-------------------------onError :  ");
+		GolukDebugUtils.e("videostate", "VideoDetailActivity-------------------------onError :  ");
 		if (mAdapter.error) {
 			return true;
 		}
@@ -45,7 +45,7 @@ public class PlayErrorListener implements OnErrorListener {
 		}
 		mAdapter.error = true;
 		mAdapter.hideLoading();
-		GolukDebugUtils.e("videoview", "VideoSquareDetailActivity-------------------------onError : hideLoading ");
+		GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------onError : hideLoading ");
 		mHolder.mImageLayout.setVisibility(View.VISIBLE);
 		mAdapter.dialog(msg,mHolder);
 		return true;

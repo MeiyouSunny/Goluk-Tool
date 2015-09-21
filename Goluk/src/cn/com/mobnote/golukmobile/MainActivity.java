@@ -756,8 +756,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		return false;
 	}
 
-	int testCount = 0;
-
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -776,11 +774,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.GONE);
 
 			indexMoreActivity.showView();
-
-			testCount++;
-			// GolukNotification.getInstance().showNotify(this, testCount,
-			// "Goluk", "掏粪男孩演唱会正在厕所举行");
-
 			break;
 		case R.id.index_square_btn:
 			// 视频广场

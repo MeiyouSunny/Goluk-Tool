@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -18,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
@@ -53,8 +53,8 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class WonderfulActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
-		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn,TextWatcher,OnItemLongClickListener, ILiveDialogManagerFn {
+public class WonderfulActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
+		VideoSuqareManagerFn, ICommentFn, TextWatcher, OnItemLongClickListener, ILiveDialogManagerFn {
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -66,7 +66,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private TextView mTextSend = null;
 	private EditText mEditInput = null;
 	private RTPullListView mRTPullListView = null;
-//	private ImageView mImageNoData = null;
+	// private ImageView mImageNoData = null;
 	private TextView mTextNoInput = null;
 	private ImageView mImageRefresh = null;
 	public RelativeLayout mCommentLayout = null;
@@ -78,7 +78,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 	/** 监听管理类 **/
 	private VideoSquareManager mVideoSquareManager = null;
-	/**视频id**/
+	/** 视频id **/
 	public static final String VIDEO_ID = "videoid";
 	private VideoDetailAdapter mAdapter = null;
 	/** 保存列表一个显示项索引 */
@@ -97,19 +97,20 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private SharePlatformUtil sharePlatform;
 	/** 保存将要删除的数据 */
 	private CommentBean mWillDelBean = null;
-	/**专题id**/
+	/** 专题id **/
 	private String ztId = "";
+	/** 状态栏的高度 */
+	public static int stateBraHeight = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		super.onCreate(savedInstanceState);
 		mApp = (GolukApplication) getApplication();
 		setContentView(R.layout.comment);
 
 		initView();
-		
+
 		sharePlatform = new SharePlatformUtil(this);
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 		historyDate = GolukUtils.getCurrentFormatTime();
@@ -117,8 +118,22 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		initListener();
 
 		getDetailData();
-		
+
 		CommentTimerManager.getInstance();
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		getStateHeight();
+	}
+
+	private void getStateHeight() {
+		Rect rectangle = new Rect();
+		Window window = getWindow();
+		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+		stateBraHeight = rectangle.top;
+		GolukDebugUtils.e("", "videoDetailActivity-----------------statusBarHeight:" + stateBraHeight);
 	}
 
 	@Override
@@ -135,16 +150,15 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mTextSend = (TextView) findViewById(R.id.comment_send);
 		mEditInput = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
-//		mImageNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mTextNoInput = (TextView) findViewById(R.id.comment_noinput);
 		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
-		
+
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
 		mAdapter = new VideoDetailAdapter(this);
 		mRTPullListView.setAdapter(mAdapter);
-		
+
 	}
 
 	private void initListener() {
@@ -179,7 +193,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		if (null != it.getStringExtra("ztid")) {
 			ztId = it.getStringExtra("ztid").toString();
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
-			if(!b){
+			if (!b) {
 				mImageRefresh.setVisibility(View.VISIBLE);
 			}
 		}
@@ -191,10 +205,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	public void getCommentList(int operation, String timestamp) {
 		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, "1", operation,
 				timestamp, PAGE_SIZE);
-		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr=="+requestStr);
+		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr==" + requestStr);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_List_Comment, requestStr);
-		GolukDebugUtils.e("", "================VideoDetailActivity：isSucess=="+isSucess);
+		GolukDebugUtils.e("", "================VideoDetailActivity：isSucess==" + isSucess);
 		if (!isSucess) {
 			// TODO 失败
 		}
@@ -219,18 +233,18 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			exit();
 			break;
 		case R.id.comment_title_right:
-			if(null == mVideoJson){
-				if(!UserUtils.isNetDeviceAvailable(this)){
+			if (null == mVideoJson) {
+				if (!UserUtils.isNetDeviceAvailable(this)) {
 					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
-					return ;
+					return;
 				}
 			}
 			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
 			break;
 		case R.id.comment_send:
-			if(!UserUtils.isNetDeviceAvailable(this)){
+			if (!UserUtils.isNetDeviceAvailable(this)) {
 				GolukUtils.showToast(this, "当前网络不可用，请检查网络");
-				return ;
+				return;
 			}
 			click_send();
 			break;
@@ -249,7 +263,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			int visibleCount = detailFirstVisible + detailVisibleCount;
 
 			GolukDebugUtils.e("", "----VideoDetailActivity-----onScrollStateChanged-----222: " + count + "  vicount:"
-					+ visibleCount+"  mIsHaveData==="+mIsHaveData);
+					+ visibleCount + "  mIsHaveData===" + mIsHaveData);
+			if (null != mAdapter) {
+				mAdapter.scrollDealPlayer();
+			}
 
 			if (count == visibleCount && mIsHaveData) {
 				startPush();
@@ -267,7 +284,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	 * 
 	 * 首次进入，数据回调处理 之调用视频详情的借口
 	 */
-	private void firstEnterCallBack(int count,VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+	private void firstEnterCallBack(int count, VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
 		// 首次进入
 		this.mAdapter.setData(videoJsonData, dataList);
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
@@ -281,7 +298,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	// 下拉刷新，数据回调处理
-	private void pullCallBack(int count,VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+	private void pullCallBack(int count, VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
 		this.mAdapter.setData(videoJsonData, dataList);
 		mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		if (count >= PAGE_SIZE) {
@@ -319,10 +336,12 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	// 开始上拉刷新
 	private void startPush() {
 		mCurrentOperator = OPERATOR_UP;
-		GolukDebugUtils.e("", "================VideoDetailActivity：mCurrentOperator=="+mCurrentOperator+"  down=="+OPERATOR_DOWN);
+		GolukDebugUtils.e("", "================VideoDetailActivity：mCurrentOperator==" + mCurrentOperator + "  down=="
+				+ OPERATOR_DOWN);
 		getCommentList(OPERATOR_DOWN, mAdapter.getLastDataTime());
 	}
-	//发表评论
+
+	// 发表评论
 	private void click_send() {
 		// 发评论前需要先判断用户是否登录
 		if (!mApp.isUserLoginSucess) {
@@ -359,12 +378,12 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
 				LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", "正在删除", true);
 	}
-	
+
 	// 添加评论
 	private void httpPost_requestAdd(String txt) {
-		if(null == mVideoJson.data.avideo.video.videoid){
+		if (null == mVideoJson.data.avideo.video.videoid) {
 			GolukUtils.showToast(this, "数据加载中，请稍候再试");
-			return ;
+			return;
 		}
 		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
@@ -385,9 +404,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			callBack_videoDetail(msg, param1, param2);
 		} else if (event == VSquare_Req_List_Comment) {
 			callBack_commentList(msg, param1, param2);
-		} else if (event == VSquare_Req_VOP_GetShareURL_Video){
+		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
 			callBack_share(msg, param1, param2);
-		} else if (event == VSquare_Req_VOP_Praise){
+		} else if (event == VSquare_Req_VOP_Praise) {
 			callBack_praise(msg, param1, param2);
 		} else if (VSquare_Req_Add_Comment == event) {
 			callBack_commentAdd(msg, param1, param2);
@@ -395,7 +414,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			callBack_commentDel(msg, param1, param2);
 		}
 	}
-	//视频详情回调
+
+	// 视频详情回调
 	private void callBack_videoDetail(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == msg) {
 			mRTPullListView.setVisibility(View.VISIBLE);
@@ -404,28 +424,29 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：jsonStr==" + jsonStr);
 			try {
 				mVideoJson = VideoDetailParser.parseDataFromJson(jsonStr);
-				
+
 				updateRefreshTime();
 				GolukDebugUtils.e("newadapter", "========VideoDetailActivity：commentDataList==" + commentDataList);
 				if (OPERATOR_FIRST == mCurrentOperator) {
 					// 首次进入
-					firstEnterCallBack(0,mVideoJson, commentDataList);
+					firstEnterCallBack(0, mVideoJson, commentDataList);
 					getCommentList(OPERATOR_FIRST, "");
 				} else if (OPERATOR_DOWN == mCurrentOperator) {
 					// 下拉刷新
-					pullCallBack(0,mVideoJson, commentDataList);
+					pullCallBack(0, mVideoJson, commentDataList);
 				}
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-		}else{
+
+		} else {
 			mRTPullListView.setVisibility(View.GONE);
 			mImageRefresh.setVisibility(View.VISIBLE);
 			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
-	//评论回调
+
+	// 评论回调
 	private void callBack_commentList(int msg, int param1, Object param2) {
 		if (1 != msg) {
 			// 请求失败
@@ -464,10 +485,11 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 			if (OPERATOR_FIRST == mCurrentOperator) {
 				// 首次进入
-				firstEnterCallBack(count,mVideoJson, commentDataList);
+				firstEnterCallBack(count, mVideoJson, commentDataList);
 			} else if (OPERATOR_UP == mCurrentOperator) {
 				// 上拉刷新
-				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentDataList=="+commentDataList.size());
+				GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentDataList=="
+						+ commentDataList.size());
 				pushCallBack(count, mVideoJson, commentDataList);
 			}
 
@@ -475,7 +497,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			callBackFailed();
 		}
 	}
-	//分享回调
+
+	// 分享回调
 	private void callBack_share(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == msg) {
 			try {
@@ -490,9 +513,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 					String allDescribe = "";
 					if (TextUtils.isEmpty(describe)) {
-						allDescribe = mVideoJson.data.avideo.user.nickname+"："+mVideoJson.data.avideo.video.describe;
-					}else{
-						allDescribe = mVideoJson.data.avideo.user.nickname+"："+describe;
+						allDescribe = mVideoJson.data.avideo.user.nickname + "："
+								+ mVideoJson.data.avideo.video.describe;
+					} else {
+						allDescribe = mVideoJson.data.avideo.user.nickname + "：" + describe;
 					}
 					String ttl = "极路客精彩视频";
 					// 缩略图
@@ -514,9 +538,11 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
-	//点赞回调
+
+	// 点赞回调
 	private void callBack_praise(int msg, int param1, Object param2) {
-		GolukDebugUtils.e("lily", "222VideoSuqare_CallBack=@@@@Get_VideoDetail=="+ "=msg=" + msg+ "=param1=" + param1 + "=param2=" + param2);
+		GolukDebugUtils.e("lily", "222VideoSuqare_CallBack=@@@@Get_VideoDetail==" + "=msg=" + msg + "=param1=" + param1
+				+ "=param2=" + param2);
 		if (msg == RESULE_SUCESS) {
 			// {"data":{"result":"3"},"msg":"视频不存在","success":false}
 			try {
@@ -537,7 +563,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukUtils.showToast(this, "网络连接超时，请检查网络");
 		}
 	}
-	//添加评论回调
+
+	// 添加评论回调
 	private void callBack_commentAdd(int msg, int param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != msg) {
@@ -559,6 +586,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				this.mAdapter.addFirstData(bean);
 				mEditInput.setText("");
 				switchSendState(false);
+				UserUtils.hideSoftMethod(this);
 				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
 			} else {
 				GolukUtils.showToast(this, "评论失败");
@@ -568,7 +596,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 
 	}
-	//删除评论回调
+
+	// 删除评论回调
 	private void callBack_commentDel(int msg, int param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != msg) {
@@ -592,7 +621,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		mWillDelBean = null;
 	}
-	
+
 	private void switchSendState(boolean isSend) {
 		if (isSend) {
 			mTextSend.setTextColor(this.getResources().getColor(R.color.color_comment_can_send));
@@ -600,7 +629,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			mTextSend.setTextColor(this.getResources().getColor(R.color.color_comment_not_send));
 		}
 	}
-	
+
 	public Bitmap getThumbBitmap(String netUrl) {
 		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
 		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
@@ -647,11 +676,11 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			mVideoSquareManager.removeVideoSquareManagerListener("detailcomment");
 		}
 		mAdapter.cancleTimer();
-		if(!UserUtils.isNetDeviceAvailable(this)){
+		if (!UserUtils.isNetDeviceAvailable(this)) {
 			this.finish();
-			return ;
+			return;
 		}
-		if(null != mAdapter.headHolder.mVideoView){
+		if (null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
 			mAdapter.headHolder.mVideoView = null;
 		}
@@ -668,7 +697,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 		noData(mAdapter.getCount() <= 0);
 	}
-	
+
 	private void noDataDeal() {
 		mIsHaveData = false;
 		if (mCurrentOperator == OPERATOR_UP) {// 上拉刷新
@@ -679,16 +708,17 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 		noData(mAdapter.getCount() <= 0);
 	}
+
 	// 是否显示无数据提示
 	private void noData(boolean isno) {
-//		if (isno) {
-//			mRTPullListView.setVisibility(View.GONE);
-////			mImageNoData.setVisibility(View.VISIBLE);
-//		} else {
-//			mRTPullListView.setVisibility(View.VISIBLE);
-////			mImageNoData.setVisibility(View.GONE);
-//		}
-		if(isno){
+		// if (isno) {
+		// mRTPullListView.setVisibility(View.GONE);
+		// // mImageNoData.setVisibility(View.VISIBLE);
+		// } else {
+		// mRTPullListView.setVisibility(View.VISIBLE);
+		// // mImageNoData.setVisibility(View.GONE);
+		// }
+		if (isno) {
 			mAdapter.commentNoData();
 		}
 	}
@@ -696,9 +726,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(null == mVideoJson){
-			if(!UserUtils.isNetDeviceAvailable(this)){
-				return ;
+		if (null == mVideoJson) {
+			if (!UserUtils.isNetDeviceAvailable(this)) {
+				return;
 			}
 		}
 		mAdapter.setOnPause();
@@ -707,11 +737,11 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	public void afterTextChanged(Editable arg0) {
 	}
-	
+
 	@Override
 	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 	}
-	
+
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 		final String txt = mEditInput.getText().toString().trim();
@@ -720,7 +750,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		} else {
 			switchSendState(false);
 		}
-		
+
 	}
 
 	@Override

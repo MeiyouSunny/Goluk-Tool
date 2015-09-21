@@ -91,9 +91,6 @@
             android:name="cn.com.mobnote.golukmobile.UserOpenUrlActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.VideoSquareDeatilActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity"
             android:screenOrientation="portrait" />
         <activity

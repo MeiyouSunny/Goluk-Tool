@@ -63,7 +63,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginRight="5dp">
+                    android:layout_marginRight="15dp">
 
                     <TextView
                         android:id="@+id/user_center_name_text"
@@ -94,7 +94,7 @@
                             android:layout_toRightOf="@id/user_center_id_title_text"
                             android:textColor="@color/user_login_text"
                             android:textSize="14sp"
-                            android:maxLines="2"
+                            android:maxLines="1"
                             android:ellipsize="end" />
                     </RelativeLayout>
                 </LinearLayout>
