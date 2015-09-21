@@ -470,8 +470,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 					user.introduce = "";
 					user.sex = "";
 					user.customavatar = "";
-					user.praisemenumber = "";
-					user.sharevideonumber = "";
+					user.praisemenumber = "0";
+					user.sharevideonumber = "0";
 
 					GolukDebugUtils.e("", "-------user.nickname-----" + bean.mUserName);
 

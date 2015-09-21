@@ -261,8 +261,17 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.headImg.setBackgroundResource(ILive.mBigHeadImg[Integer.valueOf(userinfo.headportrait)]);
 				holder.username.setText(userinfo.nickname);
 				holder.description.setText(userinfo.introduce);
-				holder.fxsp_num.setText(GolukUtils.getFormatNumber(userinfo.sharevideonumber));
-				holder.dz_num.setText(GolukUtils.getFormatNumber(userinfo.praisemenumber));
+				if(userinfo.sharevideonumber != null && !"".equals(userinfo.sharevideonumber)){
+					holder.fxsp_num.setText(GolukUtils.getFormatNumber(userinfo.sharevideonumber));
+				}else{
+					holder.fxsp_num.setText("0");
+				}
+				
+				if(userinfo.praisemenumber!= null && !"".equals(userinfo.praisemenumber)){
+					holder.dz_num.setText(GolukUtils.getFormatNumber(userinfo.praisemenumber));
+				}else{
+					holder.dz_num.setText("0");
+				}
 
 				if (currentViewType == ViewType_ShareVideoList) {
 					holder.praise_select.setVisibility(View.INVISIBLE);

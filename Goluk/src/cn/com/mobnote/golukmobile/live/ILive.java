@@ -59,8 +59,8 @@ public interface ILive {
 			R.drawable.editor_girl_three, R.drawable.head_unknown };
 	
 	
-	public static final int[] mBigHeadImg = { 0, R.drawable.editor_head_boy1, R.drawable.editor_head_boy2,
-		R.drawable.editor_head_boy3, R.drawable.editor_head_girl4, R.drawable.editor_head_girl5,
+	public static final int[] mBigHeadImg = { 0, R.drawable.editor_head_boy1, R.drawable.editor_head_boy3,
+		R.drawable.editor_head_boy2, R.drawable.editor_head_girl4, R.drawable.editor_head_girl5,
 		R.drawable.editor_head_girl6, R.drawable.editor_head_feault7 };
 
 	/** 开始说话 */
