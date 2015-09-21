@@ -4,6 +4,8 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.user.UserUtils;
 import android.os.Handler;
@@ -93,6 +95,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	private Editor mEditor = null;
 	RelativeLayout mRootLayout = null;
 	private MainActivity ma;
+	
+	/**用户信息**/
+	private String userHead,userName,userId,userDesc,userUId,userSex;
+	private int shareCount,praiseCount;
 
 	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
@@ -221,8 +227,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 					dialog.show();
 				} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
 					GolukDebugUtils.i("lily", "--------更多页面------");
-					intent = new Intent(mContext, UserPersonalInfoActivity.class);
-					mContext.startActivity(intent);
+					
+					intentToUserCenter();
+//					intent = new Intent(mContext, UserPersonalInfoActivity.class);
+//					mContext.startActivity(intent);
 				}
 			} else {
 				GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------" + ma.mApp.autoLoginStatus);
@@ -281,6 +289,25 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			break;
 		}
 	}
+	
+	/**
+	 * 点击个人中心跳转到个人主页
+	 */
+	private void intentToUserCenter() {
+		UCUserInfo user = new UCUserInfo();
+		user.uid = userUId;
+		user.nickname = userName;
+		user.headportrait = userHead;
+		user.introduce = userDesc;
+		user.sex = userSex;
+		user.customavatar = "";
+		user.praisemenumber = praiseCount + "";
+		user.sharevideonumber = shareCount + "";
+		
+		Intent intent = new Intent(mContext, UserCenterActivity.class);
+		intent.putExtra("userinfo", user);
+		mContext.startActivity(intent);
+	}
 
 	private void dismissDialog() {
 		if (null != dialog) {
@@ -297,20 +324,22 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		GolukDebugUtils.i("lily", "---IndexMore--------" + info);
 		try {
 			JSONObject json = new JSONObject(info);
-			String head = json.getString("head");
-			String name = json.getString("nickname");
-			String id = json.getString("key");
-			String desc = json.getString("desc");
-			int shareCount = json.getInt("sharevideonumber");
-			int praiseCount = json.getInt("praisemenumber");
+			userHead = json.getString("head");
+			userName = json.getString("nickname");
+			userId = json.getString("key");
+			userDesc = json.getString("desc");
+			shareCount = json.getInt("sharevideonumber");
+			praiseCount = json.getInt("praisemenumber");
+			userUId = json.getString("uid");
+			userSex = json.getString("sex");
 
-			mTextName.setText(name);
-			GolukDebugUtils.i("lily", head);
-			UserUtils.focusHead(head, mImageHead);
-			if("".equals(desc) || null == desc){
+			mTextName.setText(userName);
+			GolukDebugUtils.i("lily", userHead);
+			UserUtils.focusHead(userHead, mImageHead);
+			if("".equals(userDesc) || null == userDesc){
 				mTextId.setText("大家一起来分享视频吧");
 			}else{
-				mTextId.setText(desc);
+				mTextId.setText(userDesc);
 			}
 			mTextId.setTextColor(Color.rgb(0, 0, 0));
 			mTextShare.setText(GolukUtils.getFormatNumber(shareCount+""));
