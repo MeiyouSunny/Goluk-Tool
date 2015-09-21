@@ -110,6 +110,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public static int stateBraHeight = 0;
 	
 	private CustomLoadingDialog mLoadingDialog = null;
+	private boolean clickRefresh = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -207,10 +208,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailListData(videoId);
 			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
 			if (!b) {
-				closeLoadingDialog();
 				mImageRefresh.setVisibility(View.VISIBLE);
-			}else{
-				showLoadingDialog();
+			} else {
+				if (clickRefresh)
+					showLoadingDialog();
 			}
 		}
 	}
@@ -265,6 +266,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			click_send();
 			break;
 		case R.id.video_detail_click_refresh:
+			clickRefresh = true;
 			getDetailData();
 			break;
 		default:

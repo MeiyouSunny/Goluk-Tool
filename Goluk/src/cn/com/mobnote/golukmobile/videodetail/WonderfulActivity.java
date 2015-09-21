@@ -107,6 +107,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	public static int stateBraHeight = 0;
 	
 	private CustomLoadingDialog mLoadingDialog = null;
+	private boolean clickRefresh = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -208,9 +209,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
 			if (!b) {
 				mImageRefresh.setVisibility(View.VISIBLE);
-				closeLoadingDialog();
-			}else{
-				showLoadingDialog();
+			} else {
+				if (clickRefresh)
+					showLoadingDialog();
 			}
 		}
 	}
@@ -265,6 +266,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			click_send();
 			break;
 		case R.id.video_detail_click_refresh:
+			clickRefresh = true;
 			getDetailData();
 			break;
 		default:
