@@ -312,6 +312,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mTextZan.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.praisenumber));
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
 			headHolder.mTextDescribe.setText(mVideoAllData.avideo.video.describe);
+			headHolder.mTextAuthor.setText("感谢作者  "+mVideoAllData.avideo.user.nickname);
 
 			// 下载视频第一帧截图
 			headHolder.mImageLayout.removeAllViews();
