@@ -7,6 +7,7 @@ import java.util.Timer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
@@ -17,6 +18,7 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -32,6 +34,8 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListe
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -410,8 +414,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 		commentHolder.mForbidComment = (TextView) convertView.findViewById(R.id.comment_forbid);
 		
-		commentHolder.mCommentHead.setOnClickListener(new ClickHeadListener(mContext));
-
 		convertView.setTag(commentHolder);
 		return convertView;
 	}
@@ -432,7 +434,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	}
 
 	// 设置评论数据
-	private void getCommentData(int index) {
+	private void getCommentData(final int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
 		if(0 == mDataList.size()){
 			commentHolder.mListLayout.setVisibility(View.GONE);
@@ -452,6 +454,31 @@ public class VideoDetailAdapter extends BaseAdapter {
 			commentHolder.mCommentName.setText(temp.mUserName);
 			commentHolder.mCommentConennt.setText(temp.mCommentTxt);
 			commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
+			
+			commentHolder.mCommentHead.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					Intent it = new Intent(mContext, UserCenterActivity.class);
+					
+					CommentBean bean = mDataList.get(index);
+					UCUserInfo user = new UCUserInfo();
+					user.uid = bean.mUserId;
+					user.nickname = bean.mUserName;
+					user.headportrait = bean.mUserHead;
+					user.introduce = "";
+					user.sex = "";
+					user.customavatar = "";
+					user.praisemenumber = "";
+					user.sharevideonumber = "";
+					
+					GolukDebugUtils.e("", "-------user.nickname-----"+bean.mUserName);
+					
+		    		it.putExtra("userinfo",user);
+		    		mContext.startActivity(it);
+				}
+			});
+			
 		}
 	}
 	//没有评论
