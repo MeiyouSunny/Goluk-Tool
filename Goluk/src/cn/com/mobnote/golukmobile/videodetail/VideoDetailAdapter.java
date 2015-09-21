@@ -305,12 +305,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoAllData.avideo.video.sharingtime));
 			// 点赞数、评论数、观看数
 			headHolder.mTextLook.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.clicknumber));
-			if("0".equals(mVideoAllData.avideo.video.praisenumber) || "".equals(mVideoAllData.avideo.video.praisenumber)){
-				headHolder.mTextZanName.setVisibility(View.GONE);
-			}else{
-				headHolder.mTextZanName.setVisibility(View.VISIBLE);
-				headHolder.mTextZan.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.praisenumber));
-			}
+			headHolder.mTextZan.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.praisenumber));
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
 			headHolder.mTextDescribe.setText(mVideoAllData.avideo.video.describe);
 
