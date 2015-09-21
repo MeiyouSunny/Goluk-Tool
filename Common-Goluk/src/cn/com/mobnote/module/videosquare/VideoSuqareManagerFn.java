@@ -57,6 +57,16 @@ public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int VSquare_Req_MainPage_List_EssenceVideo = 1026;
 	/**获取个人中心数据集合*/
 	public static final int VSquare_Req_MainPage_Infor = 1028;
+	
+	/**
+	 * 分享个人主页
+	 */
+	public static final int VSquare_Req_MainPage_Share = 1029;
+	
+	/**
+	 * 删除个人分享
+	 */
+	public static final int VSquare_Req_MainPage_DeleteVideo = 1030;
 
 	/**
 	 * 获取本地数据

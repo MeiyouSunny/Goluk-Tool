@@ -252,8 +252,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	public void shareUp() {
 
 		GolukDebugUtils.e("", "jyf----thirdshare--------share up: " + "   mVideoId:" + mVideoId);
-
-		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(mCurrentShareType, this.mVideoId);
+		if(this.mVideoId != null && !"".equals(this.mVideoId)){
+			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(mCurrentShareType, this.mVideoId);
+		}
 
 		// if (mActivity instanceof VideoEditActivity) {
 		// ((VideoEditActivity) mActivity).shareSucessDeal(true,
