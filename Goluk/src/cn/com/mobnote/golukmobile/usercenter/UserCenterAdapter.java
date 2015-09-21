@@ -261,8 +261,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.valueOf(userinfo.headportrait)]);
 				holder.username.setText(userinfo.nickname);
 				holder.description.setText(userinfo.introduce);
-				holder.fxsp_num.setText(userinfo.sharevideonumber);
-				holder.dz_num.setText(userinfo.praisemenumber);
+				holder.fxsp_num.setText(GolukUtils.getFormatNumber(userinfo.sharevideonumber));
+				holder.dz_num.setText(GolukUtils.getFormatNumber(userinfo.praisemenumber));
 
 				if (currentViewType == ViewType_ShareVideoList) {
 					holder.praise_select.setVisibility(View.INVISIBLE);
@@ -395,7 +395,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 			holder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
 					.valueOf(clusterInfo.mUserEntity.headportrait)]);
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
-			holder.time.setText(clusterInfo.mVideoEntity.sharingtime);
+			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan
 					.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
