@@ -23,24 +23,28 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
             android:layout_toRightOf="@+id/userhead"
+            android:layout_toLeftOf="@+id/videopic"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="用户信息"
                 android:textColor="#1163a2"
-                android:textSize="14sp" />
+                android:textSize="14sp" 
+                android:text="用户信息"/>
 
             <TextView
                 android:id="@+id/desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="各种签名签名签名签"
+                android:singleLine="true"
+                android:ellipsize="end" 
                 android:textColor="#333333"
-                android:textSize="14sp" />
+                android:textSize="14sp" 
+                android:text="各种签名签名签名签"/>
         </LinearLayout>
 
         <ImageView
