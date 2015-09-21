@@ -75,12 +75,14 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 	/** 滚动中锁标识 */
 	private boolean lock = false;
+	
+	UserCenterActivity uca = null;
 
 	public UserCenterAdapter(Context context, SharePlatformUtil spf) {
 		mContext = context;
 		videogroupdata = null;
 		praisgroupData = null;
-
+		uca = (UserCenterActivity) mContext;
 		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		GolukApplication.getInstance().getVideoSquareManager()
@@ -186,7 +188,24 @@ public class UserCenterAdapter extends BaseAdapter implements
 							.findViewById(R.id.sharelayout);
 					holder.praiselayout = (LinearLayout) convertView
 							.findViewById(R.id.praiselayout);
-
+					holder.userinfolayout = (RelativeLayout) convertView.findViewById(R.id.userinfolayout);
+					
+					holder.userinfoarrow = (ImageView) convertView.findViewById(R.id.userinfo_arrow);
+					
+					
+					if(uca.testUser()){
+						holder.userinfoarrow.setVisibility(View.VISIBLE);
+						holder.userinfolayout.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View arg0) {
+								// TODO Auto-generated method stub
+								//跳到个人中心编辑页面
+							}
+						});
+					}else{
+						holder.userinfoarrow.setVisibility(View.INVISIBLE);
+					}
 					convertView.setTag(holder);
 				} else {
 					holder = (UserViewHolder) convertView.getTag();
@@ -253,7 +272,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 				holder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.newest_list_item, null);
+						R.layout.user_center_sharevideo, null);
 				holder.imageLayout = (RelativeLayout) convertView
 						.findViewById(R.id.imageLayout);
 				holder.headimg = (ImageView) convertView
@@ -304,18 +323,27 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.findViewById(R.id.comment2);
 				holder.comment3 = (TextView) convertView
 						.findViewById(R.id.comment3);
-
+				holder.isopen = (ImageView) convertView.findViewById(R.id.isopen);
+				
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(
 						width, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW,
 						R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
-
+				
 				convertView.setTag(holder);
 
 			} else {
 				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			if(uca.testUser()){
+				if("0".equals(clusterInfo.mVideoEntity.isopen)){
+					holder.isopen.setVisibility(View.GONE);
+				}else{
+					holder.isopen.setVisibility(View.VISIBLE);
+				}
 			}
 			holder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
 					.valueOf(clusterInfo.mUserEntity.headportrait)]);
@@ -616,6 +644,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 		LinearLayout sharelayout;
 		LinearLayout praiselayout;
+		
+		RelativeLayout userinfolayout;
+		
+		ImageView userinfoarrow;
 	}
 
 	public static class PraiseViewHolder {
@@ -655,6 +687,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
+		
+		ImageView isopen;
 	}
 
 	public Bitmap getThumbBitmap(String netUrl) {
