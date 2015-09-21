@@ -120,13 +120,6 @@ public class NewestAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
-		String ss = "";
-		if (null == convertView) {
-			ss = "convertView == NULL";
-		} else {
-			ss = "convertView NOT null";
-		}
-		GolukDebugUtils.e("", "NewestAdapter--------positon: " + arg0 + "    :" + ss);
 		int type = getItemViewType(arg0);
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView();
