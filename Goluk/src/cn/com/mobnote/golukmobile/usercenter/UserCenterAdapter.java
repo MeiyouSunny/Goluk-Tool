@@ -35,6 +35,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -52,11 +54,11 @@ import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
-
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.lidroid.xutils.util.LogUtils;
 
 @SuppressLint("InflateParams")
 public class UserCenterAdapter extends BaseAdapter implements
@@ -91,13 +93,15 @@ public class UserCenterAdapter extends BaseAdapter implements
 	
 	/** 滚动中锁标识 */
 	private boolean lock = false;
+	
+	UserCenterActivity uca = null;
 
 	public UserCenterAdapter(Context context, SharePlatformUtil spf, IUserCenterInterface iUser) {
 		mContext = context;
 		videogroupdata = null;
 		praisgroupData = null;
 		mUserCenterInterface = iUser;
-
+		uca = (UserCenterActivity) mContext;
 		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		GolukApplication.getInstance().getVideoSquareManager()
@@ -206,7 +210,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 					convertView = LayoutInflater.from(mContext).inflate(
 							R.layout.user_center_userinfo, null);
 					holder = new UserViewHolder();
-
+					
 					holder.headImg = (ImageView) convertView
 							.findViewById(R.id.user_head);
 					holder.username = (TextView) convertView
@@ -229,7 +233,26 @@ public class UserCenterAdapter extends BaseAdapter implements
 							.findViewById(R.id.sharelayout);
 					holder.praiselayout = (LinearLayout) convertView
 							.findViewById(R.id.praiselayout);
-
+					holder.userinfolayout = (RelativeLayout) convertView.findViewById(R.id.user_info_layout);
+					
+					holder.userinfoarrow = (ImageView) convertView.findViewById(R.id.userinfo_arrow);
+					
+					
+					if(uca.testUser()){
+						holder.userinfoarrow.setVisibility(View.VISIBLE);
+						holder.userinfolayout.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View arg0) {
+								// TODO Auto-generated method stub
+								//跳到个人中心编辑页面
+								Intent it = new Intent(mContext,UserPersonalInfoActivity.class);
+								mContext.startActivity(it);
+							}
+						});
+					}else{
+						holder.userinfoarrow.setVisibility(View.INVISIBLE);
+					}
 					convertView.setTag(holder);
 				} else {
 					holder = (UserViewHolder) convertView.getTag();
@@ -284,7 +307,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 						}
 					}
 				});
-
+				
 			}
 			break;
 		case ItemType_VideoInfo:
@@ -296,7 +319,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 				holder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.newest_list_item, null);
+						R.layout.user_center_sharevideo, null);
 				holder.imageLayout = (RelativeLayout) convertView
 						.findViewById(R.id.imageLayout);
 				holder.headimg = (ImageView) convertView
@@ -347,18 +370,27 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.findViewById(R.id.comment2);
 				holder.comment3 = (TextView) convertView
 						.findViewById(R.id.comment3);
-
+				holder.isopen = (ImageView) convertView.findViewById(R.id.isopen);
+				
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(
 						width, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW,
 						R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
-
+				
 				convertView.setTag(holder);
 
 			} else {
 				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			if(uca.testUser()){
+				if("0".equals(clusterInfo.mVideoEntity.isopen)){
+					holder.isopen.setVisibility(View.GONE);
+				}else{
+					holder.isopen.setVisibility(View.VISIBLE);
+				}
 			}
 			holder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
 					.valueOf(clusterInfo.mUserEntity.headportrait)]);
@@ -448,6 +480,15 @@ public class UserCenterAdapter extends BaseAdapter implements
 			praiseholder.username.setText(prais.nickname);
 //			praiseholder.desc.setText(prais.introduce);
 			praiseholder.desc.setText("赞了您的视频");
+			praiseholder.userinfo.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(mContext, VideoDetailActivity.class);
+					LogUtils.d("fucking = " + prais.videoid);
+					i.putExtra("videoid", prais.videoid);
+					mContext.startActivity(i);
+				}
+			});
 			praiseholder.headimg.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -471,6 +512,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 			praiseholder.videoPicLayout.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					LogUtils.d("fucking = " + prais.videoid);
 					Intent i = new Intent(mContext, VideoDetailActivity.class);
 					i.putExtra("videoid", prais.videoid);
 					mContext.startActivity(i);
@@ -726,6 +768,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 		LinearLayout sharelayout;
 		LinearLayout praiselayout;
+		
+		RelativeLayout userinfolayout;
+		
+		ImageView userinfoarrow;
 	}
 
 	public static class PraiseViewHolder {
@@ -771,6 +817,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
+		
+		ImageView isopen;
 	}
 
 	public Bitmap getThumbBitmap(String netUrl) {

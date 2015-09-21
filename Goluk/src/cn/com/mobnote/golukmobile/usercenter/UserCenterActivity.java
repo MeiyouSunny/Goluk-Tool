@@ -8,6 +8,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.lidroid.xutils.util.LogUtils;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -63,11 +65,6 @@ public class UserCenterActivity extends BaseActivity implements
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
-	
-	/**
-	 * 当前登录的用户id
-	 */
-	private String loginuserid = "";
 
 	/**
 	 * 返回按钮
@@ -135,7 +132,6 @@ public class UserCenterActivity extends BaseActivity implements
 		sharebtn = (Button) findViewById(R.id.title_share);
 		sharebtn.setOnClickListener(this);
 		backbtn.setOnClickListener(this);
-		initData();//初始化当前登录的用户数据
 		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this)
 				.inflate(R.layout.video_square_below_loading, null);
 	}
@@ -234,6 +230,28 @@ public class UserCenterActivity extends BaseActivity implements
 	private void httpGetNextVideo(String sharingtime) {
 		boolean result = GolukApplication.getInstance().getVideoSquareManager()
 				.getUserCenterShareVideo(curUser.uid, "2", sharingtime);
+	}
+	
+	/**
+	 * 验证当前看的是自己的个人中心 还是别人的个人中心
+	 * @return
+	 */
+	public boolean testUser(){
+		String info = mBaseApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		GolukDebugUtils.i("lily", "---IndexMore--------" + info);
+		try {
+			JSONObject json = new JSONObject(info);
+			String id = json.getString("uid");
+			LogUtils.d("fucking=" + "id="+ curUser.uid + " key=" +id);
+			if(id.equals(curUser.uid)){
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
@@ -365,9 +383,11 @@ public class UserCenterActivity extends BaseActivity implements
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 		}else if (event == VSquare_Req_MainPage_Share){
+			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				try {
-					JSONObject data = new JSONObject((String) param2);
+					JSONObject json = new JSONObject((String) param2);
+					JSONObject data = json.getJSONObject("data");
 					String result = data.getString("result");
 					//如果返回成功
 					if("0".equals(result)){
@@ -453,26 +473,6 @@ public class UserCenterActivity extends BaseActivity implements
 		this.uca.notifyDataSetChanged();
 	}
 	
-	/**
-	 * 个人资料信息
-	 */
-	public void initData() {
-		String info = mBaseApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
-		GolukDebugUtils.i("lily", "---IndexMore--------" + info);
-		try {
-			JSONObject json = new JSONObject(info);
-			String head = json.getString("head");
-			String name = json.getString("nickname");
-			String id = json.getString("key");
-			String desc = json.getString("desc");
-			int shareCount = json.getInt("sharevideonumber");
-			int praiseCount = json.getInt("praisemenumber");
-
-			loginuserid = id;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Override
 	public void onClick(View view) {
@@ -481,7 +481,8 @@ public class UserCenterActivity extends BaseActivity implements
 		case R.id.back_btn:
 			this.finish();
 			break;
-		case R.id.share_btn:
+		case R.id.title_share:
+			showProgressDialog();
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getUserCenterShareUrl(curUser.uid);
 			if(result == false){
 				GolukUtils.showToast(UserCenterActivity.this, "请求异常，请检查网络是否正常");

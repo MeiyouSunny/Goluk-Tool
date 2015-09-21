@@ -29,7 +29,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
-import cn.com.mobnote.golukmobile.comment.ClickHeadListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
