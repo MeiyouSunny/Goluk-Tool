@@ -54,6 +54,7 @@ import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.lidroid.xutils.util.LogUtils;
 
 @SuppressLint("InflateParams")
 public class UserCenterAdapter extends BaseAdapter implements
@@ -169,8 +170,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 							R.layout.user_center_userinfo, null);
 					holder = new UserViewHolder();
 					
-					holder.infoLayout = (RelativeLayout) convertView
-							.findViewById(R.id.user_info_layout);
 					holder.headImg = (ImageView) convertView
 							.findViewById(R.id.user_head);
 					holder.username = (TextView) convertView
@@ -206,6 +205,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 							public void onClick(View arg0) {
 								// TODO Auto-generated method stub
 								//跳到个人中心编辑页面
+								Intent it = new Intent(mContext,UserPersonalInfoActivity.class);
+								mContext.startActivity(it);
 							}
 						});
 					}else{
@@ -263,15 +264,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 							currentViewType = ViewType_PraiseUserList;
 							notifyDataSetChanged();
 						}
-					}
-				});
-				
-				holder.infoLayout.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View arg0) {
-						Intent it = new Intent(mContext,UserPersonalInfoActivity.class);
-						mContext.startActivity(it);
 					}
 				});
 				
@@ -439,6 +431,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(mContext, VideoDetailActivity.class);
+					LogUtils.d("fucking = " + prais.videoid);
 					i.putExtra("videoid", prais.videoid);
 					mContext.startActivity(i);
 				}
@@ -466,6 +459,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 			praiseholder.videoPic.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					LogUtils.d("fucking = " + prais.videoid);
 					Intent i = new Intent(mContext, VideoDetailActivity.class);
 					i.putExtra("videoid", prais.videoid);
 					mContext.startActivity(i);
@@ -644,7 +638,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 	}
 
 	public static class UserViewHolder {
-		RelativeLayout infoLayout;
 		ImageView headImg;
 		TextView username;
 		TextView description;
