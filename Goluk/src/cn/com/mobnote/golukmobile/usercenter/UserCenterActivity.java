@@ -75,12 +75,16 @@ public class UserCenterActivity extends BaseActivity implements
 		/** 是否还有分页 */
 		public boolean isHaveData = false;
 		public boolean addFooter = false;
+		public boolean loadfailed;	//首次加载失败
+		public boolean firstSucc = false;//首次是否加载成功
 	}
 	
 	class PraiseInfoGroup{
 		public List<PraiseInfo> praiselist = null;
 		/** 是否还有分页 */
-		public boolean isHaveData = true;
+		public boolean isHaveData = false;
+		public boolean loadfailed = false;	//首次加载失败
+		public boolean firstSucc = false;	//首次是否加载成功
 	}
 
 	private GolukApplication mApp = null;
@@ -237,32 +241,49 @@ public class UserCenterActivity extends BaseActivity implements
 			Object param2) {
 		if (event == VSquare_Req_MainPage_Infor) {
 			if (RESULE_SUCESS == msg) {
-				List<VideoSquareInfo> videos = ucdf.getClusterList((String) param2);
-				List<PraiseInfo> praise = ucdf.getPraises((String) param2);
 				UCUserInfo user = ucdf.getUserInfo((String) param2);
-				if (user != null)
-				{
+				if (user != null) {
+					List<VideoSquareInfo> videos = ucdf.getClusterList((String) param2);
+					List<PraiseInfo> praise = ucdf.getPraises((String) param2);
 					// 说明有数据
-					if (videos != null && videos.size() > 0) {
+					if (videos != null) {
 						if (videos.size() >= 20) {
 							videogroupdata.isHaveData = true;
 						} else {
 							videogroupdata.isHaveData = false;
 						}
 						videogroupdata.videolist = videos;
+						videogroupdata.firstSucc = true;
+						videogroupdata.loadfailed = false;
+					}
+					else{//数据异常
+						if (videogroupdata.firstSucc == false){
+							videogroupdata.loadfailed = true;							
+						}
 					}
 					// 说明有数据
-					if ( praise != null && praise.size() > 0 ) {
+					if ( praise != null) {
 						this.praisgroupdata.praiselist = praise;
+						this.praisgroupdata.firstSucc = true;
+						this.praisgroupdata.loadfailed = false;
+					}
+					else {//数据异常
+						if (praisgroupdata.firstSucc == false) {
+							this.praisgroupdata.loadfailed = true;
+						}
 					}
 					// 说明有数据
 					curUser = user;
 					uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
 					updateViewData(true, 0);
 				}
-				else
-				{
-					videogroupdata.isHaveData = false;
+				else {
+					if (videogroupdata.firstSucc == false) {
+						videogroupdata.loadfailed = true;
+					}
+					if (praisgroupdata.firstSucc == false) {
+						this.praisgroupdata.loadfailed = true;
+					}
 					GolukUtils.showToast(UserCenterActivity.this, "数据异常，请检查服务器");
 					updateViewData(false, 0);
 				}
@@ -276,15 +297,13 @@ public class UserCenterActivity extends BaseActivity implements
 		{//个人主页视频列表结果
 			if (RESULE_SUCESS == msg) {
 				List<VideoSquareInfo> videos = JsonParserUtils.parserNewestItemData((String) param2);
-				if (videos != null && videos.size() > 0)
-				{
+				if (videos != null && videos.size() > 0) {
 					int count = videogroupdata.videolist.size();
 					videogroupdata.videolist.addAll(videos);
 					updateViewData(true, count);
 				}
 			}
-			else
-			{
+			else {
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 			}
 			videogroupdata.addFooter = false;

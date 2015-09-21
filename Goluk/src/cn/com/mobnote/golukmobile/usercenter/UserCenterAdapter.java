@@ -19,12 +19,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -94,6 +96,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 	final int ItemType_UserInfo = 0;
 	final int ItemType_VideoInfo = 1;
 	final int ItemType_PraiseInfo = 2;
+	final int ItemType_noVideoInfo = 3;
+	final int ItemType_noPraiseInfo = 4;
+	
+	private Rect firstItemRect = null;
 	
 	/** 滚动中锁标识 */
 	private boolean lock = false;
@@ -139,18 +145,36 @@ public class UserCenterAdapter extends BaseAdapter implements
 		{
 			if (this.currentViewType == ViewType_ShareVideoList)
 			{//视频分享列表类别
-				return ItemType_VideoInfo;
+				if (videogroupdata.loadfailed == true)
+				{//首次加载数据失败
+					return ItemType_noVideoInfo;
+				}
+				else if (videogroupdata.videolist.size() <= 0)
+				{//没有数据
+					return ItemType_noVideoInfo;
+				}
+				else
+					return ItemType_VideoInfo;
 			}
 			else
 			{//点赞列表类别
-				return ItemType_PraiseInfo;
+				if (praisgroupData.loadfailed == true)
+				{//首次加载数据失败
+					return ItemType_noPraiseInfo;
+				}
+				else if (praisgroupData.praiselist.size() <= 0)
+				{
+					return ItemType_noPraiseInfo;
+				}
+				else
+					return ItemType_PraiseInfo;
 			}
 		}
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		return 3;
+		return 5;
 	}
 
 	@Override
@@ -165,6 +189,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 		else
 		{
 			datacount = this.praisgroupData.praiselist.size() + 1;
+		}
+		if (datacount <= 1)
+		{//如果没有数据，则添加没有数据提示项
+			datacount++;
 		}
 		return datacount;
 	}
@@ -417,7 +445,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 			
 			praiseholder.headimg.setBackgroundResource(ILive.mHeadImg[Integer.valueOf(prais.headportrait)]);
 			praiseholder.username.setText(prais.nickname);
-			praiseholder.desc.setText(prais.introduce);
+//			praiseholder.desc.setText(prais.introduce);
+			praiseholder.desc.setText("赞了您的视频");
 			praiseholder.praiseLayout.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
@@ -438,12 +467,71 @@ public class UserCenterAdapter extends BaseAdapter implements
 				}
 				
 			});
-			
+			break;
+		case ItemType_noVideoInfo:
+			{
+				NoVideoDataViewHolder noVideoDataViewHolder = null;
+				if (convertView == null) {
+					convertView = LayoutInflater.from(mContext).inflate(
+							R.layout.user_center_novideodata, null);
+					noVideoDataViewHolder = new NoVideoDataViewHolder();
+//					noVideoDataViewHolder.tips = (TextView) convertView
+//							.findViewById(R.id.novideoinfo);
+					noVideoDataViewHolder.tipsimage = (ImageView) convertView
+							.findViewById(R.id.tipsimage);
+					
+					convertView.setTag(noVideoDataViewHolder);
+				}
+				else
+					noVideoDataViewHolder = (NoVideoDataViewHolder)convertView.getTag();
+				if (this.videogroupdata.loadfailed == true) {
+					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.qitadifang);
+				}
+				else {
+					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.videodetail_sofaicon);
+				}
+				
+			}
+			break;
+		case ItemType_noPraiseInfo:
+			{
+				NoVideoDataViewHolder noVideoDataViewHolder = null;
+				if (convertView == null) {
+					convertView = LayoutInflater.from(mContext).inflate(
+							R.layout.user_center_novideodata, null);
+					noVideoDataViewHolder = new NoVideoDataViewHolder();
+//					noVideoDataViewHolder.tips = (TextView) convertView
+//							.findViewById(R.id.novideoinfo);
+					noVideoDataViewHolder.tipsimage = (ImageView) convertView
+							.findViewById(R.id.tipsimage);
+					
+					convertView.setTag(noVideoDataViewHolder);
+				}
+				else
+					noVideoDataViewHolder = (NoVideoDataViewHolder)convertView.getTag();
+				if (this.praisgroupData.loadfailed == true) {
+					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.qitadifang);
+				}
+				else {
+					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.videodetail_sofaicon);
+				}
+			}
 			break;
 		default:
 			break;
 		}
 
+		if (position == 0)
+		{
+//			Rect rc = new Rect();
+//			rc.left = convertView.getLeft();
+//			rc.top = convertView.
+//			rc.right = convertView.getWidth();
+//			rc.bottom = convertView.getHeight();
+//			this.firstItemRect = rc;
+//			Log.e("", "=================RECT========" + rc.left + ","+ rc.top + ","+ rc.right + ","+ rc.bottom);
+			
+		}
 		return convertView;
 	}
 
@@ -621,6 +709,11 @@ public class UserCenterAdapter extends BaseAdapter implements
 		TextView username;
 		TextView desc;
 		ImageView videoPic;
+	}
+	
+	public static class NoVideoDataViewHolder {
+		TextView tips;
+		ImageView tipsimage;
 	}
 	
 	public static class ViewHolder {
