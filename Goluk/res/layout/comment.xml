@@ -112,16 +112,4 @@
             android:src="@drawable/qitadifang"
             android:visibility="gone" />
 
-    <!-- 评论关闭 -->
-
-    <TextView
-        android:id="@+id/comment_noinput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/str_comment_no_input"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:visibility="gone" />
-
 </RelativeLayout>

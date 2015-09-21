@@ -31,6 +31,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -47,6 +49,7 @@ import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity.ShareVideoGroup;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -165,7 +168,9 @@ public class UserCenterAdapter extends BaseAdapter implements
 					convertView = LayoutInflater.from(mContext).inflate(
 							R.layout.user_center_userinfo, null);
 					holder = new UserViewHolder();
-
+					
+					holder.infoLayout = (RelativeLayout) convertView
+							.findViewById(R.id.user_info_layout);
 					holder.headImg = (ImageView) convertView
 							.findViewById(R.id.user_head);
 					holder.username = (TextView) convertView
@@ -188,7 +193,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 							.findViewById(R.id.sharelayout);
 					holder.praiselayout = (LinearLayout) convertView
 							.findViewById(R.id.praiselayout);
-					holder.userinfolayout = (RelativeLayout) convertView.findViewById(R.id.userinfolayout);
+					holder.userinfolayout = (RelativeLayout) convertView.findViewById(R.id.user_info_layout);
 					
 					holder.userinfoarrow = (ImageView) convertView.findViewById(R.id.userinfo_arrow);
 					
@@ -260,7 +265,16 @@ public class UserCenterAdapter extends BaseAdapter implements
 						}
 					}
 				});
-
+				
+				holder.infoLayout.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
+						Intent it = new Intent(mContext,UserPersonalInfoActivity.class);
+						mContext.startActivity(it);
+					}
+				});
+				
 			}
 			break;
 		case ItemType_VideoInfo:
@@ -630,6 +644,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 	}
 
 	public static class UserViewHolder {
+		RelativeLayout infoLayout;
 		ImageView headImg;
 		TextView username;
 		TextView description;
