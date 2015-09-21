@@ -1,13 +1,14 @@
 package cn.com.mobnote.golukmobile.newest;
 
-import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-import cn.com.mobnote.util.GolukUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.util.GolukUtils;
 
 /**
  * 点击用户头像 ，跳转“个人中心”
@@ -35,16 +36,23 @@ public class ClickHeadListener implements OnClickListener {
 
 		GolukUtils.showToast(mContext, "点击头像 ");
 
-		// Intent intent = new Intent(mContext, VideoDetailActivity.class);
-		// intent.putExtra(VideoDetailActivity.VIDEO_ID,
-		// mVideoSquareInfo.mVideoEntity.videoid);
-		// boolean iscomment = false;
-		// if ("1".equals(mVideoSquareInfo.mVideoEntity.iscomment)) {
-		// iscomment = true;
-		// }
-		// intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, iscomment);
-		//
-		// mContext.startActivity(intent);
+		Intent intent = new Intent(mContext, UserCenterActivity.class);
+		intent.putExtra("userinfo", getUserInfo());
+		mContext.startActivity(intent);
+	}
+
+	public UCUserInfo getUserInfo() {
+		if (null == mVideoSquareInfo) {
+			return null;
+		}
+		UCUserInfo userInfo = new UCUserInfo();
+		userInfo.uid = mVideoSquareInfo.mUserEntity.uid;
+		userInfo.nickname = mVideoSquareInfo.mUserEntity.nickname;
+		userInfo.headportrait = mVideoSquareInfo.mUserEntity.headportrait;
+		userInfo.introduce = "";
+		userInfo.sex = mVideoSquareInfo.mUserEntity.sex;
+
+		return userInfo;
 	}
 
 }
