@@ -164,6 +164,11 @@ public class JsonParserUtils {
 										mVideoEntity.ispraise = video.optString("ispraise");
 										mVideoEntity.livevideodata = lvd;
 										mVideoEntity.reason = video.optString("reason");
+										if(video.isNull("isopen")){
+											mVideoEntity.isopen = "0";
+										}else{
+											mVideoEntity.isopen = video.optString("isopen");
+										}
 										
 										JSONObject comment = video.optJSONObject("comment");
 										if(null != comment) {

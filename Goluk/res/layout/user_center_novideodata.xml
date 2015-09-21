@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@color/user_login_bg">
+    
+   <!-- <TextView
+     android:id="@+id/novideoinfo"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:text="没有数据"
+     android:layout_centerInParent="true"
+     android:textColor="#1163a2"
+     android:textSize="14sp" /> -->
+     <ImageView
+        android:id="@+id/tipsimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/videodetail_sofaicon"
+        android:contentDescription="@string/imgdes" />
+
+</RelativeLayout>

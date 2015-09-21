@@ -136,7 +136,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 //		mNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mCommentInputLayout = (RelativeLayout) findViewById(R.id.comment_layout);
-		mNoInputTv = (TextView) findViewById(R.id.comment_noinput);
+//		mNoInputTv = (TextView) findViewById(R.id.comment_noinput);
 
 		mBackBtn.setOnClickListener(this);
 		mSendBtn.setOnClickListener(this);

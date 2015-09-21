@@ -47,14 +47,23 @@
                 android:text="各种签名签名签名签"/>
         </LinearLayout>
 
-        <ImageView
+        <!-- <ImageView
             android:id="@+id/videopic"
             android:layout_width="95dp"
             android:layout_height="52dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
-            android:background="@drawable/screenshot" />
+            android:background="@drawable/screenshot" /> -->
+            
+        <!-- 视频缩略图片 -->
+        <RelativeLayout
+            android:id="@+id/videopic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+        </RelativeLayout>
     </RelativeLayout>
 
     <View

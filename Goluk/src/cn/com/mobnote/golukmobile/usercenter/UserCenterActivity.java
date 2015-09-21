@@ -26,6 +26,9 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+
+import com.lidroid.xutils.util.LogUtils;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -39,6 +42,7 @@ import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.IUserCenterInterface;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
@@ -49,13 +53,15 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+
 /**
  * 
  * @author 曾浩
  * 
  */
+
 public class UserCenterActivity extends BaseActivity implements VideoSuqareManagerFn, IClickShareView,
-		IClickPraiseView, OnClickListener,IDialogDealFn,ILiveDialogManagerFn {
+		IClickPraiseView, OnClickListener,IDialogDealFn,ILiveDialogManagerFn ,IUserCenterInterface{
 	
 	private static final String TAG = "UserCenterActivity";
 
@@ -63,18 +69,12 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	private UserCenterAdapter uca = null;
 	private SharePlatformUtil sharePlatform = null;
 
-	private String uchistoryDate;
-
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
 
-	/**
-	 * 当前登录的用户id
-	 */
-	private String loginuserid = "";
 
 	/**
 	 * 返回按钮
@@ -91,12 +91,16 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		/** 是否还有分页 */
 		public boolean isHaveData = false;
 		public boolean addFooter = false;
+		public boolean loadfailed;	//首次加载失败
+		public boolean firstSucc = false;//首次是否加载成功
 	}
 
 	class PraiseInfoGroup {
 		public List<PraiseInfo> praiselist = null;
 		/** 是否还有分页 */
-		public boolean isHaveData = true;
+		public boolean isHaveData = false;
+		public boolean loadfailed = false;	//首次加载失败
+		public boolean firstSucc = false;	//首次是否加载成功
 	}
 
 	// 当前访问的用户信息
@@ -138,11 +142,12 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		sharebtn = (Button) findViewById(R.id.title_share);
 		sharebtn.setOnClickListener(this);
 		backbtn.setOnClickListener(this);
-		initData();// 初始化当前登录的用户数据
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,
-				null);
+
 		
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
+
+		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this)
+				.inflate(R.layout.video_square_below_loading, null);
 	}
 
 	@Override
@@ -160,7 +165,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	private void init() {
 		if (sharePlatform == null) {
 			sharePlatform = new SharePlatformUtil(this);
-			uca = new UserCenterAdapter(this, sharePlatform);
+			uca = new UserCenterAdapter(this, sharePlatform, this);
 			mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 			mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 			mRTPullListView.setAdapter(uca);
@@ -168,8 +173,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 			mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 				@Override
 				public void onRefresh() {
-					uchistoryDate = SettingUtils.getInstance().getString("gcHistoryDate", sdf.format(new Date()));
-					SettingUtils.getInstance().putString("ucHistoryDate", sdf.format(new Date()));
 					// 下拉刷新个人中心所有数据
 					httpPost("");// 请求数据
 				}
@@ -216,7 +219,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		} else {
 
 		}
-		mRTPullListView.onRefreshComplete("获取数据成功");
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
 	}
 
 	/**
@@ -239,35 +242,80 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		boolean result = GolukApplication.getInstance().getVideoSquareManager()
 				.getUserCenterShareVideo(curUser.uid, "2", sharingtime);
 	}
+	
+	/**
+	 * 验证当前看的是自己的个人中心 还是别人的个人中心
+	 * @return
+	 */
+	public boolean testUser(){
+		String info = mBaseApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		GolukDebugUtils.i("lily", "---IndexMore--------" + info);
+		try {
+			JSONObject json = new JSONObject(info);
+			String id = json.getString("uid");
+			LogUtils.d("fucking=" + "id="+ curUser.uid + " key=" +id);
+			if(id.equals(curUser.uid)){
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == VSquare_Req_MainPage_Infor) {
 			if (RESULE_SUCESS == msg) {
-				List<VideoSquareInfo> videos = ucdf.getClusterList((String) param2);
-				List<PraiseInfo> praise = ucdf.getPraises((String) param2);
+
 				UCUserInfo user = ucdf.getUserInfo((String) param2);
 				if (user != null) {
+					List<VideoSquareInfo> videos = ucdf.getClusterList((String) param2);
+					List<PraiseInfo> praise = ucdf.getPraises((String) param2);
 					// 说明有数据
-					if (videos != null && videos.size() > 0) {
+					if (videos != null) {
 						if (videos.size() >= 20) {
 							videogroupdata.isHaveData = true;
 						} else {
 							videogroupdata.isHaveData = false;
 						}
 						videogroupdata.videolist = videos;
+						videogroupdata.firstSucc = true;
+						videogroupdata.loadfailed = false;
+					}
+					else{//数据异常
+						if (videogroupdata.firstSucc == false){
+							videogroupdata.loadfailed = true;							
+						}
 					}
 					// 说明有数据
-					if (praise != null && praise.size() > 0) {
+					if ( praise != null) {
 						this.praisgroupdata.praiselist = praise;
+						this.praisgroupdata.firstSucc = true;
+						this.praisgroupdata.loadfailed = false;
+					}
+					else {//数据异常
+						if (praisgroupdata.firstSucc == false) {
+							this.praisgroupdata.loadfailed = true;
+						}
 					}
 					// 说明有数据
 					curUser = user;
 					uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
 					updateViewData(true, 0);
-				} else {
-					videogroupdata.isHaveData = false;
-					GolukUtils.showToast(UserCenterActivity.this, "数据异常，请检查服务器");
+
+				}
+				else {
+					if (videogroupdata.firstSucc == false) {
+						videogroupdata.loadfailed = true;
+					}
+					if (praisgroupdata.firstSucc == false) {
+						this.praisgroupdata.loadfailed = true;
+					}
+					GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
+
 					updateViewData(false, 0);
 				}
 			} else {
@@ -284,7 +332,8 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					videogroupdata.videolist.addAll(videos);
 					updateViewData(true, count);
 				}
-			} else {
+			}
+			else {
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 			}
 			videogroupdata.addFooter = false;
@@ -344,10 +393,14 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 			} else {
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
-		} else if (event == VSquare_Req_MainPage_Share) {
+
+		}else if (event == VSquare_Req_MainPage_Share){
+			closeProgressDialog();
+
 			if (RESULE_SUCESS == msg) {
 				try {
-					JSONObject data = new JSONObject((String) param2);
+					JSONObject json = new JSONObject((String) param2);
+					JSONObject data = json.getJSONObject("data");
 					String result = data.getString("result");
 					// 如果返回成功
 					if ("0".equals(result)) {
@@ -445,26 +498,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		this.uca.notifyDataSetChanged();
 	}
 
-	/**
-	 * 个人资料信息
-	 */
-	public void initData() {
-		String info = mBaseApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
-		GolukDebugUtils.i("lily", "---IndexMore--------" + info);
-		try {
-			JSONObject json = new JSONObject(info);
-			String head = json.getString("head");
-			String name = json.getString("nickname");
-			String id = json.getString("key");
-			String desc = json.getString("desc");
-			int shareCount = json.getInt("sharevideonumber");
-			int praiseCount = json.getInt("praisemenumber");
-
-			loginuserid = id;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Override
 	public void onClick(View view) {
@@ -472,7 +505,8 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		case R.id.back_btn:
 			this.finish();
 			break;
-		case R.id.share_btn:
+		case R.id.title_share:
+			showProgressDialog();
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getUserCenterShareUrl(curUser.uid);
 			if (result == false) {
 				GolukUtils.showToast(UserCenterActivity.this, "请求异常，请检查网络是否正常");
@@ -532,6 +566,14 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					JsonUtil.getCancelJson());
 		}
 
+	}
+
+	//猛戳我刷新
+	@Override
+	public void OnRefrushMainPageData() {
+		// 下拉刷新个人中心所有数据
+		httpPost("");// 请求数据
+		mRTPullListView.firstFreshState();
 	}
 
 }
