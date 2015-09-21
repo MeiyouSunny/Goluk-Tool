@@ -42,6 +42,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
@@ -69,6 +70,7 @@ import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity.ShareVideoGroup;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -194,6 +196,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 							R.layout.user_center_userinfo, null);
 					holder = new UserViewHolder();
 					
+					holder.infoLayout = (RelativeLayout) convertView
+							.findViewById(R.id.user_info_layout);
 					holder.headImg = (ImageView) convertView
 							.findViewById(R.id.user_head);
 					holder.username = (TextView) convertView
@@ -272,6 +276,15 @@ public class UserCenterAdapter extends BaseAdapter implements
 							currentViewType = ViewType_PraiseUserList;
 							notifyDataSetChanged();
 						}
+					}
+				});
+				
+				holder.infoLayout.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
+						Intent it = new Intent(mContext,UserPersonalInfoActivity.class);
+						mContext.startActivity(it);
 					}
 				});
 				
@@ -599,6 +612,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 	}
 
 	public static class UserViewHolder {
+		RelativeLayout infoLayout;
 		ImageView headImg;
 		TextView username;
 		TextView description;

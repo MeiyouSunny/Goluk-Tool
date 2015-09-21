@@ -35,6 +35,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
@@ -54,6 +55,11 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+/**
+ * 最新
+ * @author mobnote
+ *
+ */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
 		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn, TextWatcher, OnItemLongClickListener,
 		ILiveDialogManagerFn {
@@ -68,7 +74,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private TextView mTextSend = null;
 	private EditText mEditInput = null;
 	private RTPullListView mRTPullListView = null;
-	private TextView mTextNoInput = null;
 	private ImageView mImageRefresh = null;
 	private RelativeLayout mCommentLayout = null;
 
@@ -103,6 +108,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private CommentBean mWillDelBean = null;
 	/** 状态栏的高度 */
 	public static int stateBraHeight = 0;
+	
+	private CustomLoadingDialog mLoadingDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +160,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mTextSend = (TextView) findViewById(R.id.comment_send);
 		mEditInput = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
-		mTextNoInput = (TextView) findViewById(R.id.comment_noinput);
 		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
 
@@ -191,10 +197,20 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			String videoId = it.getStringExtra(VIDEO_ID).toString();
 			isCanInput = it.getBooleanExtra(VIDEO_ISCAN_COMMENT, true);
 			GolukDebugUtils.e("", "================videoid==" + videoId);
+			if(!UserUtils.isNetDeviceAvailable(this)){
+				mRTPullListView.setVisibility(View.GONE);
+				mCommentLayout.setVisibility(View.GONE);
+				mImageRefresh.setVisibility(View.VISIBLE);
+				GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+				return ;
+			}
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailListData(videoId);
 			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
 			if (!b) {
+				closeLoadingDialog();
 				mImageRefresh.setVisibility(View.VISIBLE);
+			}else{
+				showLoadingDialog();
 			}
 		}
 	}
@@ -242,7 +258,14 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
 			break;
 		case R.id.comment_send:
+			if (!UserUtils.isNetDeviceAvailable(this)) {
+				GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+				return;
+			}
 			click_send();
+			break;
+		case R.id.video_detail_click_refresh:
+			getDetailData();
 			break;
 		default:
 			break;
@@ -414,7 +437,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	// 视频详情回调
 	private void callBack_videoDetail(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == msg) {
+			closeLoadingDialog();
 			mRTPullListView.setVisibility(View.VISIBLE);
+			mCommentLayout.setVisibility(View.VISIBLE);
 			mImageRefresh.setVisibility(View.GONE);
 			String jsonStr = (String) param2;
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：jsonStr==" + jsonStr);
@@ -431,6 +456,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				JSONArray commentArray = root.optJSONArray("comments");
 				int count = Integer.parseInt(root.getString("count"));
 				GolukDebugUtils.e("newadapter", "==========VideoDetailActivity：commentArray==" + commentArray);
+				GolukDebugUtils.e("newadapter", "==========VideoDetailActivity：isCanInput==" + isCanInput);
+				if (!isCanInput) {
+					mCommentLayout.setVisibility(View.GONE);
+					mAdapter.closeComment();
+				} else {
+					mCommentLayout.setVisibility(View.VISIBLE);
+				}
 
 				commentDataList = JsonUtil.parseCommentData(commentArray);
 
@@ -447,6 +479,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 
 		} else {
+			closeLoadingDialog();
 			mRTPullListView.setVisibility(View.GONE);
 			mImageRefresh.setVisibility(View.VISIBLE);
 			GolukUtils.showToast(this, "网络连接超时，请检查网络");
@@ -462,12 +495,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			return;
 		}
 		try {
-			if (!isCanInput) {
-				mCommentLayout.setVisibility(View.GONE);
-				mAdapter.closeComment();
-			} else {
-				mCommentLayout.setVisibility(View.VISIBLE);
-			}
 			JSONObject rootObj = new JSONObject((String) param2);
 			boolean isSucess = rootObj.getBoolean("success");
 			if (!isSucess) {
@@ -687,6 +714,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (null != mVideoSquareManager) {
 			mVideoSquareManager.removeVideoSquareManagerListener("detailcomment");
 		}
+		if (!UserUtils.isNetDeviceAvailable(this)) {
+			this.finish();
+			return;
+		}
 		mAdapter.cancleTimer();
 		if (null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
@@ -786,6 +817,20 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE == dialogType) {
 			// 取消删除
+		}
+	}
+	
+	private void showLoadingDialog() {
+		if (mLoadingDialog == null) {
+			mLoadingDialog = new CustomLoadingDialog(this, null);
+			mLoadingDialog.show();
+		}
+	}
+
+	private void closeLoadingDialog() {
+		if (null != mLoadingDialog) {
+			mLoadingDialog.close();
+			mLoadingDialog = null;
 		}
 	}
 
