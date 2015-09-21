@@ -18,6 +18,8 @@ public class XGInit implements XGIOperateCallback {
 	private Context mContext = null;
 
 	private boolean isValidTokenId = false;
+	/** 保存TokenId,在服务端注册成功后，保存在本地 */
+	private String mTokenId = "";
 
 	public XGInit(Context context) {
 		mContext = context;
@@ -31,9 +33,8 @@ public class XGInit implements XGIOperateCallback {
 
 	@Override
 	public void onFail(Object arg0, int arg1, String arg2) {
-		// 册失败
+		// 注册失败
 		GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit----token: failed");
-
 	}
 
 	/**
@@ -44,23 +45,31 @@ public class XGInit implements XGIOperateCallback {
 	public void golukServerRegisterCallBack(int success, Object param1, Object param2) {
 		if (0 == success) {
 			// 注册失败
+			GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit---golukServerRegisterCallBack-----failed:");
 			return;
 		}
+		GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit---golukServerRegisterCallBack-----sucess:");
+
+		// 保存TokenId到本地
+		GolukApplication.getInstance().mSharedPreUtil.setTokenId(mTokenId);
 	}
 
 	@Override
 	public void onSuccess(Object arg0, int arg1) {
-		// 注册成功, 获取Token
+		// 信鸽服务器注册成功回调, 可以获取Token
 		String token = XGPushConfig.getToken(mContext);
+		String localToken = GolukApplication.getInstance().mSharedPreUtil.getTolenId();
+		if (token.equals(localToken)) {
+			// 本地有Token,说明上传成功过，不需要上传
+			GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit---local have-token, Not Upload:");
+			return;
+		}
+		mTokenId = token;
 		String json = JsonUtil.getPushRegisterJsonStr(token, "1", "");
 		GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_PushReg, json);
-
 		isValidTokenId = true;
-
 		GolukUtils.showToast(mContext, "token:" + token);
-
 		GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit----token:" + token);
-
 	}
 }

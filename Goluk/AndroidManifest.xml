@@ -234,6 +234,12 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        
+        <activity
+            android:name="cn.com.mobnote.golukmobile.usercenter.UserCenterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
 
         <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
         <activity
@@ -262,6 +268,14 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="cn.com.mobnote.golukmobile.newest.RecomVideoActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        
+         <activity
+            android:name="cn.com.mobnote.golukmobile.PushSettingActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent"

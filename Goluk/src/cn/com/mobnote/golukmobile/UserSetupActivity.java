@@ -101,20 +101,17 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		} else {
 			mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
 		}
-
+		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 	}
 
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		mApp.setContext(mContext, "UserSetup");
-
+		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 		mApp.mUser.setUserInterface(this);
-
 		judgeLogin();
-
 		// 缓存
 		try {
 			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
@@ -268,6 +265,10 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	 * @author jyf
 	 */
 	private void startMsgSettingActivity() {
+		if (!mApp.isUserLoginSucess) {
+			GolukUtils.showToast(this, "请先登录");
+			return;
+		}
 		Intent intent = new Intent(this, PushSettingActivity.class);
 		startActivity(intent);
 	}

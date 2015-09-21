@@ -70,11 +70,11 @@ public class GuideActivity extends BaseActivity {
 	private void getIntentData() {
 		Intent intent = getIntent();
 		mPushFrom = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
-		GolukDebugUtils.e("", "jyf----GuideActivity-----from: " + mPushFrom);
-
 		if (null != mPushFrom && !"".equals(mPushFrom) && mPushFrom.equals("notication")) {
 			mPushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
 		}
+
+		GolukDebugUtils.e("", "jyf----GuideActivity-----from: " + mPushFrom + "  json:" + mPushJson);
 	}
 
 	private boolean isFirstStart() {
@@ -95,8 +95,9 @@ public class GuideActivity extends BaseActivity {
 		if (null == mPushFrom) {
 			return;
 		}
+		GolukDebugUtils.e("", "jyf----GuideActivity--addPushData---from: " + mPushFrom + "  json:" + mPushJson);
 		intent.putExtra(GolukNotification.NOTIFICATION_KEY_FROM, mPushFrom);
-		intent.putExtra(GolukNotification.NOTIFICATION_KEY_ACTION, mPushJson);
+		intent.putExtra(GolukNotification.NOTIFICATION_KEY_JSON, mPushJson);
 	}
 
 	/**

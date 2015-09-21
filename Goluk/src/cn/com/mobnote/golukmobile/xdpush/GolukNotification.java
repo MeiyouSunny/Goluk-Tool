@@ -14,8 +14,8 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
-import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -213,7 +213,7 @@ public class GolukNotification {
 	 *            消息体
 	 * @author jyf
 	 */
-	private void dealAppinnerClick(Context cnt, XingGeMsgBean msgBean) {
+	public void dealAppinnerClick(Context cnt, XingGeMsgBean msgBean) {
 		if (null == msgBean) {
 			return;
 		}
@@ -233,7 +233,9 @@ public class GolukNotification {
 		} else if ("3".equals(msgBean.target)) {
 			// 打开Web页
 			if (null != msgBean.weburl && !"".equals(msgBean.weburl)) {
-				GolukUtils.openUrl(msgBean.weburl, GolukApplication.getInstance().getContext());
+				Intent intent = new Intent(GolukApplication.getInstance().getContext(), UserOpenUrlActivity.class);
+				intent.putExtra("url", msgBean.weburl);
+				GolukApplication.getInstance().getContext().startActivity(intent);
 			}
 		}
 	}
@@ -247,7 +249,8 @@ public class GolukNotification {
 	 */
 	public void startDetail(String vid) {
 		Context context = GolukApplication.getInstance().getContext();
-		Intent intent = new Intent(context, VideoSquareDeatilActivity.class);
+		Intent intent = new Intent(context, VideoDetailActivity.class);
+		intent.putExtra(VideoDetailActivity.VIDEO_ID, vid);
 		context.startActivity(intent);
 	}
 

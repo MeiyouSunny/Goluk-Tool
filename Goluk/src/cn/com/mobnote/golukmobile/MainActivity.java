@@ -42,6 +42,8 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
@@ -261,13 +263,15 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == intent) {
 			return;
 		}
-		String from = intent.getStringExtra("from");
+		final String from = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
 		GolukDebugUtils.e("", "jyf----MainActivity-----from: " + from);
 		if (null != from && !"".equals(from) && from.equals("notication")) {
-			String pushJson = intent.getStringExtra("json");
+			String pushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
+
+			GolukDebugUtils.e("", "jyf----MainActivity-----pushJson: " + pushJson);
 			XingGeMsgBean bean = JsonUtil.parseXingGePushMsg(pushJson);
 			if (null != bean) {
-				click_push(bean);
+				GolukNotification.getInstance().dealAppinnerClick(this, bean);
 			}
 			GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
 		}
@@ -596,7 +600,25 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	public void checkWiFiStatus() {
 		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mApp.mWiFiStatus);
-		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
+		String info = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+        GolukDebugUtils.i("lily", "---IndexMore--------" + info);
+        UCUserInfo user = new UCUserInfo();
+        try {
+            JSONObject json = new JSONObject(info);
+            user.uid = json.getString("uid");
+            user.nickname = json.getString("nickname");
+            user.headportrait = json.getString("head");
+            user.introduce = json.getString("desc");
+            user.sex = json.getString("sex");
+            user.customavatar = "";
+            user.praisemenumber = "0";
+            user.sharevideonumber = "0";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+		Intent i = new Intent(MainActivity.this, UserCenterActivity.class);
+		i.putExtra("userinfo",user);
 		startActivity(i);
 	}
 
@@ -734,8 +756,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		return false;
 	}
 
-	int testCount = 0;
-
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -754,11 +774,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			videoSquareLayout.setVisibility(View.GONE);
 
 			indexMoreActivity.showView();
-
-			testCount++;
-			// GolukNotification.getInstance().showNotify(this, testCount,
-			// "Goluk", "掏粪男孩演唱会正在厕所举行");
-
 			break;
 		case R.id.index_square_btn:
 			// 视频广场

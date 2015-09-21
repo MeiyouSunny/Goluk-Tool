@@ -14,6 +14,7 @@ import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
+import cn.com.mobnote.golukmobile.xdpush.SettingBean;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.user.APPInfo;
@@ -1121,8 +1122,40 @@ public class JsonUtil {
 		} catch (Exception e) {
 
 		}
-
 		return "";
 	}
 
+	public static SettingBean parsePushSettingJson(String json) {
+		try {
+			SettingBean bean = new SettingBean();
+
+			JSONObject rootObj = new JSONObject(json);
+			bean.isSucess = rootObj.getBoolean("success");
+			JSONObject dataObj = rootObj.getJSONObject("data");
+			bean.result = getJsonStringValue(dataObj, "result", "1");
+			bean.isComment = getJsonStringValue(dataObj, "iscomment", "1");
+			bean.isPraise = getJsonStringValue(dataObj, "ispraise", "1");
+			bean.uid = getJsonStringValue(dataObj, "uid", "");
+
+			return bean;
+
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static String getPushSetJson(boolean iscomment, boolean ispraise) {
+		try {
+			String isC = iscomment ? "1" : "0";
+			String isP = ispraise ? "1" : "0";
+			JSONObject obj = new JSONObject();
+			obj.put("iscomment", isC);
+			obj.put("ispraise", isP);
+
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
 }

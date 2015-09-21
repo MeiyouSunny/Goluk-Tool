@@ -15,6 +15,8 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
+import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
@@ -42,7 +44,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
-public class NewestListView implements VideoSuqareManagerFn {
+public class NewestListView implements VideoSuqareManagerFn ,IClickShareView, IClickPraiseView{
 	private RelativeLayout mRootLayout = null;
 	private Context mContext = null;
 	private RTPullListView mRTPullListView = null;
@@ -177,6 +179,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 		}
 	}
 
+	@Override
 	public void showProgressDialog() {
 		if (null == mCustomProgressDialog) {
 			mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
@@ -188,6 +191,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 
 	}
 
+	@Override
 	public void closeProgressDialog() {
 		if (null != mCustomProgressDialog) {
 			mCustomProgressDialog.close();
@@ -309,6 +313,7 @@ public class NewestListView implements VideoSuqareManagerFn {
 	
 	private VideoSquareInfo mWillShareVideoSquareInfo;
 	
+	@Override
 	public void setWillShareInfo(VideoSquareInfo info) {
 		mWillShareVideoSquareInfo = info;
 	}
