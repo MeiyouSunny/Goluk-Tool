@@ -1,22 +1,15 @@
 package cn.com.mobnote.golukmobile.usercenter;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -24,8 +17,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
-import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,13 +25,11 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
@@ -48,29 +37,19 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.ILive;
-import cn.com.mobnote.golukmobile.newest.ClickCategoryListener;
 import cn.com.mobnote.golukmobile.newest.ClickCommentListener;
 import cn.com.mobnote.golukmobile.newest.ClickFunctionListener;
 import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener;
 import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
-import cn.com.mobnote.golukmobile.newest.NewestAdapter.ViewHolder;
-import cn.com.mobnote.golukmobile.special.ClusterCommentListener;
-import cn.com.mobnote.golukmobile.special.ClusterInfo;
-import cn.com.mobnote.golukmobile.special.ClusterPressListener;
-import cn.com.mobnote.golukmobile.special.SpecialCommentListener;
-import cn.com.mobnote.golukmobile.special.ClusterPressListener;
-import cn.com.mobnote.golukmobile.special.SpecialCommentListener;
-import cn.com.mobnote.golukmobile.special.SpecialInfo;
-import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity.PraiseInfoGroup;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity.ShareVideoGroup;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
-
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -80,54 +59,54 @@ import com.facebook.drawee.view.SimpleDraweeView;
 public class UserCenterAdapter extends BaseAdapter implements
 		VideoSuqareManagerFn, OnTouchListener {
 	private Context mContext = null;
-	private ShareVideoGroup videogroupdata = null;		//分享视频数据
-	private PraiseInfoGroup praisgroupData = null;		//被点赞信息数据
-	private UCUserInfo userinfo;						//个人用户信息
+	private ShareVideoGroup videogroupdata = null; // 分享视频数据
+	private PraiseInfoGroup praisgroupData = null; // 被点赞信息数据
+	private UCUserInfo userinfo; // 个人用户信息
 
 	private SharePlatformUtil sharePlatform;
 
 	private int width = 0;
-	
-	static final int ViewType_ShareVideoList = 0;	//分享视频列表
-	static final int ViewType_PraiseUserList = 1;	//点赞用户列表
-	
-	private int currentViewType = 0;	//当前视图类型（分享视频列表，点赞列表）
-	
+
+	static final int ViewType_ShareVideoList = 0; // 分享视频列表
+	static final int ViewType_PraiseUserList = 1; // 点赞用户列表
+
+	private int currentViewType = 0; // 当前视图类型（分享视频列表，点赞列表）
+
 	final int ItemType_UserInfo = 0;
 	final int ItemType_VideoInfo = 1;
 	final int ItemType_PraiseInfo = 2;
-	
+
 	/** 滚动中锁标识 */
 	private boolean lock = false;
+
 	public UserCenterAdapter(Context context, SharePlatformUtil spf) {
 		mContext = context;
 		videogroupdata = null;
 		praisgroupData = null;
-		
+
 		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		GolukApplication.getInstance().getVideoSquareManager()
 				.addVideoSquareManagerListener("videosharehotlist", this);
-		
-		//默认进入分享视频列表类别
+
+		// 默认进入分享视频列表类别
 		currentViewType = ViewType_ShareVideoList;
 	}
 
 	/**
 	 * 更新数据链路
 	 */
-	public void setDataInfo(UCUserInfo user, ShareVideoGroup vdata, PraiseInfoGroup pdata)
-	{
+	public void setDataInfo(UCUserInfo user, ShareVideoGroup vdata,
+			PraiseInfoGroup pdata) {
 		this.userinfo = user;
 		this.videogroupdata = vdata;
 		this.praisgroupData = pdata;
 	}
-	
+
 	/**
 	 * 获取当前分类列表类型
 	 */
-	public int getCurrentViewType()
-	{
+	public int getCurrentViewType() {
 		return currentViewType;
 	}
 
@@ -137,14 +116,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 		int p = position;
 		if (p == 0)
 			return ItemType_UserInfo;
-		else
-		{
-			if (this.currentViewType == ViewType_ShareVideoList)
-			{//视频分享列表类别
+		else {
+			if (this.currentViewType == ViewType_ShareVideoList) {// 视频分享列表类别
 				return ItemType_VideoInfo;
-			}
-			else
-			{//点赞列表类别
+			} else {// 点赞列表类别
 				return ItemType_PraiseInfo;
 			}
 		}
@@ -160,12 +135,9 @@ public class UserCenterAdapter extends BaseAdapter implements
 		if (this.userinfo == null)
 			return 0;
 		int datacount = 0;
-		if (this.currentViewType == ViewType_ShareVideoList)
-		{
+		if (this.currentViewType == ViewType_ShareVideoList) {
 			datacount = this.videogroupdata.videolist.size() + 1;
-		}
-		else
-		{
+		} else {
 			datacount = this.praisgroupData.praiselist.size() + 1;
 		}
 		return datacount;
@@ -185,13 +157,12 @@ public class UserCenterAdapter extends BaseAdapter implements
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		int type = getItemViewType(position);
-		
+
 		switch (type) {
 		case ItemType_UserInfo:
 			if (userinfo != null) {
 				UserViewHolder holder = null;
-				if (convertView == null)
-				{
+				if (convertView == null) {
 					convertView = LayoutInflater.from(mContext).inflate(
 							R.layout.user_center_userinfo, null);
 					holder = new UserViewHolder();
@@ -212,27 +183,26 @@ public class UserCenterAdapter extends BaseAdapter implements
 							.findViewById(R.id.dz_num);
 					holder.dz_txt = (TextView) convertView
 							.findViewById(R.id.dz_txt);
-					holder.praise_select = (ImageView)convertView
+					holder.praise_select = (ImageView) convertView
 							.findViewById(R.id.praise_select);
-					holder.video_select = (ImageView)convertView
+					holder.video_select = (ImageView) convertView
 							.findViewById(R.id.video_select);
-					holder.sharelayout = (LinearLayout)convertView
+					holder.sharelayout = (LinearLayout) convertView
 							.findViewById(R.id.sharelayout);
-					holder.praiselayout = (LinearLayout)convertView
+					holder.praiselayout = (LinearLayout) convertView
 							.findViewById(R.id.praiselayout);
-					
+
 					convertView.setTag(holder);
+				} else {
+					holder = (UserViewHolder) convertView.getTag();
 				}
-				else
-				{
-					holder = (UserViewHolder)convertView.getTag();
-				}
-				holder.headImg.setBackgroundResource(ILive.mBigHeadImg[Integer.valueOf(userinfo.headportrait)]); 
+				holder.headImg.setBackgroundResource(ILive.mBigHeadImg[Integer
+						.valueOf(userinfo.headportrait)]);
 				holder.username.setText(userinfo.nickname);
 				holder.description.setText(userinfo.introduce);
 				holder.fxsp_num.setText(userinfo.sharevideonumber);
 				holder.dz_num.setText(userinfo.praisemenumber);
-				
+
 				if (currentViewType == ViewType_ShareVideoList) {
 					holder.praise_select.setVisibility(View.INVISIBLE);
 					holder.video_select.setVisibility(View.VISIBLE);
@@ -258,8 +228,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
 
-						if (ViewType_ShareVideoList != currentViewType)
-						{
+						if (ViewType_ShareVideoList != currentViewType) {
 							currentViewType = ViewType_ShareVideoList;
 							notifyDataSetChanged();
 						}
@@ -271,8 +240,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						if (ViewType_PraiseUserList != currentViewType)
-						{
+						if (ViewType_PraiseUserList != currentViewType) {
 							currentViewType = ViewType_PraiseUserList;
 							notifyDataSetChanged();
 						}
@@ -292,7 +260,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 			break;
 		case ItemType_VideoInfo:
 			int index_v = position - 1;
-			VideoSquareInfo clusterInfo = this.videogroupdata.videolist.get(index_v);
+			VideoSquareInfo clusterInfo = this.videogroupdata.videolist
+					.get(index_v);
 			ViewHolder holder = null;
 			if (convertView == null) {
 
@@ -340,8 +309,9 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 				holder.detail = (TextView) convertView
 						.findViewById(R.id.detail);
-				
-				holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
+
+				holder.totlaCommentLayout = (LinearLayout) convertView
+						.findViewById(R.id.totlaCommentLayout);
 				holder.comment1 = (TextView) convertView
 						.findViewById(R.id.comment1);
 				holder.comment2 = (TextView) convertView
@@ -361,17 +331,20 @@ public class UserCenterAdapter extends BaseAdapter implements
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			holder.headimg.setBackgroundResource(ILive.mHeadImg[Integer.valueOf(clusterInfo.mUserEntity.headportrait)]);
+			holder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
+					.valueOf(clusterInfo.mUserEntity.headportrait)]);
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
 			holder.time.setText(clusterInfo.mVideoEntity.sharingtime);
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
-			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
+			holder.weiguan
+					.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
 			holder.detail.setText(clusterInfo.mUserEntity.nickname + "  "
 					+ clusterInfo.mVideoEntity.describe);
-			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
+			holder.totalcomments.setText("查看所有"
+					+ clusterInfo.mVideoEntity.comcount + "条评论");
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
 			loadImage(holder.imageLayout, clusterInfo.mVideoEntity.picture);
-			initListener( holder, index_v);
+			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
 				holder.zanIcon
@@ -381,32 +354,33 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.setBackgroundResource(R.drawable.videodetail_like_press);
 			}
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
-				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
-				holder.comment1.setText(comment.name + "  "
-						+ comment.text);
+				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList
+						.get(0);
+				holder.comment1.setText(comment.name + "  " + comment.text);
 			} else {
 				holder.comment1.setVisibility(View.GONE);
 			}
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 2) {
-				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
-				holder.comment2.setText(comment.name + "  "
-						+ comment.text);
+				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList
+						.get(1);
+				holder.comment2.setText(comment.name + "  " + comment.text);
 			} else {
 				holder.comment2.setVisibility(View.GONE);
 			}
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 3) {
-				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
-				holder.comment3.setText(comment.name + "  "
-						+ comment.text);
+				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList
+						.get(2);
+				holder.comment3.setText(comment.name + "  " + comment.text);
 			} else {
 				holder.comment3.setVisibility(View.GONE);
 			}
 			break;
 		case ItemType_PraiseInfo:
 			int index_p = position - 1;
-			final PraiseInfo prais = this.praisgroupData.praiselist.get(index_p);
+			final PraiseInfo prais = this.praisgroupData.praiselist
+					.get(index_p);
 			PraiseViewHolder praiseholder = null;
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
@@ -422,36 +396,55 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.findViewById(R.id.desc);
 				praiseholder.videoPic = (ImageView) convertView
 						.findViewById(R.id.videopic);
-				
+				praiseholder.userinfo = (LinearLayout) convertView
+						.findViewById(R.id.userinfo);
 				convertView.setTag(praiseholder);
+			} else {
+				praiseholder = (PraiseViewHolder) convertView.getTag();
 			}
-			else
-				praiseholder = (PraiseViewHolder)convertView.getTag();
-			
-			praiseholder.headimg.setBackgroundResource(ILive.mHeadImg[Integer.valueOf(prais.headportrait)]);
+
+			praiseholder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
+					.valueOf(prais.headportrait)]);
 			praiseholder.username.setText(prais.nickname);
 			praiseholder.desc.setText(prais.introduce);
-			praiseholder.praiseLayout.setOnClickListener(new OnClickListener(){
+			praiseholder.userinfo.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					//跳转当前点赞人的个人中心
-					UCUserInfo user = new UCUserInfo();
-			        user.uid = prais.uid;
-		            user.nickname = prais.nickname;
-		            user.headportrait = prais.headportrait;
-		            user.introduce = prais.introduce;
-		            user.sex = prais.sex;
-		            user.customavatar = prais.customavatar;
-		            user.praisemenumber = "0";
-		            user.sharevideonumber = "0";
-			        Intent i = new Intent(mContext, UserCenterActivity.class);
-					i.putExtra("userinfo",user);
+					Intent i = new Intent(mContext, VideoDetailActivity.class);
+					i.putExtra("videoid", prais.videoid);
 					mContext.startActivity(i);
-					
 				}
-				
 			});
-			
+			praiseholder.headimg.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// 跳转当前点赞人的个人中心
+					UCUserInfo user = new UCUserInfo();
+					user.uid = prais.uid;
+					user.nickname = prais.nickname;
+					user.headportrait = prais.headportrait;
+					user.introduce = prais.introduce;
+					user.sex = prais.sex;
+					user.customavatar = prais.customavatar;
+					user.praisemenumber = "0";
+					user.sharevideonumber = "0";
+					Intent i = new Intent(mContext, UserCenterActivity.class);
+					i.putExtra("userinfo", user);
+					mContext.startActivity(i);
+
+				}
+
+			});
+			praiseholder.videoPic.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(mContext, VideoDetailActivity.class);
+					i.putExtra("videoid", prais.videoid);
+					mContext.startActivity(i);
+				}
+
+			});
+
 			break;
 		default:
 			break;
@@ -471,36 +464,47 @@ public class UserCenterAdapter extends BaseAdapter implements
 	}
 
 	private void initListener(ViewHolder holder, int index) {
-		VideoSquareInfo mVideoSquareInfo = this.videogroupdata.videolist.get(index);
+		VideoSquareInfo mVideoSquareInfo = this.videogroupdata.videolist
+				.get(index);
 
 		// 分享监听
-		ClickShareListener tempShareListener = new ClickShareListener(mContext, mVideoSquareInfo, (UserCenterActivity)mContext);
+		ClickShareListener tempShareListener = new ClickShareListener(mContext,
+				mVideoSquareInfo, (UserCenterActivity) mContext);
 		holder.shareLayout.setOnClickListener(tempShareListener);
 		// 举报监听
-		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo));
+		holder.function.setOnClickListener(new ClickFunctionListener(mContext,
+				mVideoSquareInfo));
 		// 评论监听
-		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
+		holder.commentLayout.setOnClickListener(new ClickCommentListener(
+				mContext, mVideoSquareInfo, true));
 		// 播放区域监听
-		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext,  mVideoSquareInfo, null));
+		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext,
+				mVideoSquareInfo, null));
 		// 点赞
-		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, (UserCenterActivity)mContext);
+		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(
+				mContext, mVideoSquareInfo, (UserCenterActivity) mContext);
 		holder.praiseLayout.setOnClickListener(tempPraiseListener);
 		// 评论总数监听
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
-			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
-			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+			holder.totalcomments.setOnClickListener(new ClickCommentListener(
+					mContext, mVideoSquareInfo, false));
+			holder.totlaCommentLayout
+					.setOnClickListener(new ClickCommentListener(mContext,
+							mVideoSquareInfo, false));
 		}
 	}
-	
+
 	/**
 	 * 检查是否有可用网络
+	 * 
 	 * @return
 	 * @author xuhw
 	 * @date 2015年6月5日
 	 */
 	public boolean isNetworkConnected() {
-		ConnectivityManager mConnectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) mContext
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 		if (mNetworkInfo != null) {
 			return mNetworkInfo.isAvailable();
@@ -521,28 +525,28 @@ public class UserCenterAdapter extends BaseAdapter implements
 				.addVideoSquareManagerListener("videosharehotlist", this);
 	}
 
-//	/**
-//	 * 点赞
-//	 * 
-//	 * @Title: setLikePress
-//	 * @Description: TODO
-//	 * @param clusterInfo
-//	 *            void
-//	 * @author 曾浩
-//	 * @throws
-//	 */
-//	public void setLikePress(ClusterInfo clusterInfo) {
-//		for (int i = 0; i < this.videogroupdata.videolist.size(); i++) {
-//			ClusterInfo cl = this.videogroupdata.videolist.get(i);
-//			if (cl.videoid.equals(clusterInfo.videoid)) {
-//				this.videogroupdata.videolist.set(i, clusterInfo);
-//				break;
-//			}
-//		}
-//		
-//		this.notifyDataSetChanged();
-//
-//	}
+	// /**
+	// * 点赞
+	// *
+	// * @Title: setLikePress
+	// * @Description: TODO
+	// * @param clusterInfo
+	// * void
+	// * @author 曾浩
+	// * @throws
+	// */
+	// public void setLikePress(ClusterInfo clusterInfo) {
+	// for (int i = 0; i < this.videogroupdata.videolist.size(); i++) {
+	// ClusterInfo cl = this.videogroupdata.videolist.get(i);
+	// if (cl.videoid.equals(clusterInfo.videoid)) {
+	// this.videogroupdata.videolist.set(i, clusterInfo);
+	// break;
+	// }
+	// }
+	//
+	// this.notifyDataSetChanged();
+	//
+	// }
 
 	@SuppressLint("SimpleDateFormat")
 	public String formatTime(String date) {
@@ -616,27 +620,28 @@ public class UserCenterAdapter extends BaseAdapter implements
 		ImageView headImg;
 		TextView username;
 		TextView description;
-		
+
 		TextView fxsp_num;
 		TextView fxsp_txt;
 		TextView dz_num;
 		TextView dz_txt;
-		
+
 		ImageView praise_select;
 		ImageView video_select;
-		
+
 		LinearLayout sharelayout;
 		LinearLayout praiselayout;
 	}
-	
+
 	public static class PraiseViewHolder {
 		LinearLayout praiseLayout;
 		ImageView headimg;
 		TextView username;
 		TextView desc;
 		ImageView videoPic;
+		LinearLayout userinfo;
 	}
-	
+
 	public static class ViewHolder {
 		RelativeLayout imageLayout;
 		ImageView headimg;

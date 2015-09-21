@@ -435,6 +435,22 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 				VSquare_Req_List_Video_Catlog_LocalCache, json.toString());
 	}
 	
+	/**
+	 * 获取个人或者他人的分享地址
+	 * @param uid
+	 * @return
+	 */
+	public boolean getUserCenterShareUrl(String uid){
+		JSONObject json = new JSONObject();
+		try {
+			json.put("otheruid", uid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VSquare_Req_MainPage_Share, json.toString());
+	}
+	
 	
 	/**
 	 * 
