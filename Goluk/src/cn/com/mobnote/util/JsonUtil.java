@@ -1158,4 +1158,40 @@ public class JsonUtil {
 		}
 		return "";
 	}
+
+	/**
+	 * 返回0是成功，其余的全是失败
+	 * 
+	 * @param json
+	 * @return
+	 * @author jyf
+	 */
+	public static String parseDelVideo(Object json) {
+		try {
+			JSONObject roobObj = new JSONObject((String)json);
+			boolean sucess = roobObj.getBoolean("success");
+			if (!sucess) {
+				return "1";
+			}
+			JSONObject dataObj = roobObj.getJSONObject("data");
+			String result = dataObj.getString("result");
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "1";
+	}
+	
+	public static String getDelRequestJson(String vid) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("videoid", vid);
+			return obj.toString();
+		} catch (Exception e) {
+			
+		}
+		return "";
+	}
+
 }

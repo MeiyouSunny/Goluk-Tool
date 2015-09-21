@@ -202,7 +202,7 @@ public class NewestAdapter extends BaseAdapter {
 		tempShareListener.setCategoryListView(mCategoryListView);
 		holder.shareLayout.setOnClickListener(tempShareListener);
 		// 举报监听
-		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo));
+		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo, false, null));
 		// 评论监听
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
