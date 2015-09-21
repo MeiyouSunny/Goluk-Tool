@@ -538,16 +538,16 @@ public class UserCenterAdapter extends BaseAdapter implements
 				if (this.currentViewType == ViewType_ShareVideoList) {
 					//分享视频列表
 					if (this.videogroupdata.loadfailed == true) {
-						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.qitadifang);
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_novideo);
 						bNeedRefrush = true;
 					}
 					else {
-						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.videodetail_sofaicon);
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_qitadifang);
 					}
 				} else {
 					//被点赞人信息列表
 					if (this.praisgroupData.loadfailed == true) {
-						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.qitadifang);
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_nolike);
 						bNeedRefrush = true;
 					}
 					else {
