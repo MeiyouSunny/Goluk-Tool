@@ -10,34 +10,25 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
-import cn.com.mobnote.golukmobile.live.LiveDialogManager;
-import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
-import cn.com.mobnote.golukmobile.special.ClusterInfo;
-import cn.com.mobnote.golukmobile.special.ClusterListActivity;
-import cn.com.mobnote.golukmobile.special.SpecialDataManage;
-import cn.com.mobnote.golukmobile.special.SpecialInfo;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.IUserCenterInterface;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -61,13 +52,11 @@ import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
  */
 public class UserCenterActivity extends BaseActivity implements
 		VideoSuqareManagerFn, IClickShareView, IClickPraiseView,
-		OnClickListener {
+		OnClickListener, IUserCenterInterface {
 
 	private RTPullListView mRTPullListView = null;
 	private UserCenterAdapter uca = null;
 	private SharePlatformUtil sharePlatform = null;
-
-	private String uchistoryDate;
 
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	/** 保存列表一个显示项索引 */
@@ -95,12 +84,16 @@ public class UserCenterActivity extends BaseActivity implements
 		/** 是否还有分页 */
 		public boolean isHaveData = false;
 		public boolean addFooter = false;
+		public boolean loadfailed;	//首次加载失败
+		public boolean firstSucc = false;//首次是否加载成功
 	}
 
 	class PraiseInfoGroup {
 		public List<PraiseInfo> praiselist = null;
 		/** 是否还有分页 */
-		public boolean isHaveData = true;
+		public boolean isHaveData = false;
+		public boolean loadfailed = false;	//首次加载失败
+		public boolean firstSucc = false;	//首次是否加载成功
 	}
 
 	// 当前访问的用户信息
@@ -159,7 +152,7 @@ public class UserCenterActivity extends BaseActivity implements
 	private void init() {
 		if (sharePlatform == null) {
 			sharePlatform = new SharePlatformUtil(this);
-			uca = new UserCenterAdapter(this, sharePlatform);
+			uca = new UserCenterAdapter(this, sharePlatform, this);
 			mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 			mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 			mRTPullListView.setAdapter(uca);
@@ -167,10 +160,6 @@ public class UserCenterActivity extends BaseActivity implements
 			mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 				@Override
 				public void onRefresh() {
-					uchistoryDate = SettingUtils.getInstance().getString(
-							"gcHistoryDate", sdf.format(new Date()));
-					SettingUtils.getInstance().putString("ucHistoryDate",
-							sdf.format(new Date()));
 					// 下拉刷新个人中心所有数据
 					httpPost("");// 请求数据
 				}
@@ -222,7 +211,7 @@ public class UserCenterActivity extends BaseActivity implements
 		} else {
 
 		}
-		mRTPullListView.onRefreshComplete("获取数据成功");
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
 	}
 
 	/**
@@ -252,32 +241,50 @@ public class UserCenterActivity extends BaseActivity implements
 			Object param2) {
 		if (event == VSquare_Req_MainPage_Infor) {
 			if (RESULE_SUCESS == msg) {
-				List<VideoSquareInfo> videos = ucdf
-						.getClusterList((String) param2);
-				List<PraiseInfo> praise = ucdf.getPraises((String) param2);
 				UCUserInfo user = ucdf.getUserInfo((String) param2);
 				if (user != null) {
+					List<VideoSquareInfo> videos = ucdf.getClusterList((String) param2);
+					List<PraiseInfo> praise = ucdf.getPraises((String) param2);
 					// 说明有数据
-					if (videos != null && videos.size() > 0) {
+					if (videos != null) {
 						if (videos.size() >= 20) {
 							videogroupdata.isHaveData = true;
 						} else {
 							videogroupdata.isHaveData = false;
 						}
 						videogroupdata.videolist = videos;
+						videogroupdata.firstSucc = true;
+						videogroupdata.loadfailed = false;
+					}
+					else{//数据异常
+						if (videogroupdata.firstSucc == false){
+							videogroupdata.loadfailed = true;							
+						}
 					}
 					// 说明有数据
-					if (praise != null && praise.size() > 0) {
+					if ( praise != null) {
 						this.praisgroupdata.praiselist = praise;
+						this.praisgroupdata.firstSucc = true;
+						this.praisgroupdata.loadfailed = false;
+					}
+					else {//数据异常
+						if (praisgroupdata.firstSucc == false) {
+							this.praisgroupdata.loadfailed = true;
+						}
 					}
 					// 说明有数据
 					curUser = user;
 					uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
 					updateViewData(true, 0);
-				} else {
-					videogroupdata.isHaveData = false;
-					GolukUtils
-							.showToast(UserCenterActivity.this, "数据异常，请检查服务器");
+				}
+				else {
+					if (videogroupdata.firstSucc == false) {
+						videogroupdata.loadfailed = true;
+					}
+					if (praisgroupdata.firstSucc == false) {
+						this.praisgroupdata.loadfailed = true;
+					}
+					GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 					updateViewData(false, 0);
 				}
 			} else {
@@ -288,14 +295,14 @@ public class UserCenterActivity extends BaseActivity implements
 
 		} else if (event == VSquare_Req_MainPage_List_ShareVideo) {// 个人主页视频列表结果
 			if (RESULE_SUCESS == msg) {
-				List<VideoSquareInfo> videos = JsonParserUtils
-						.parserNewestItemData((String) param2);
+				List<VideoSquareInfo> videos = JsonParserUtils.parserNewestItemData((String) param2);
 				if (videos != null && videos.size() > 0) {
 					int count = videogroupdata.videolist.size();
 					videogroupdata.videolist.addAll(videos);
 					updateViewData(true, count);
 				}
-			} else {
+			}
+			else {
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 			}
 			videogroupdata.addFooter = false;
@@ -483,6 +490,14 @@ public class UserCenterActivity extends BaseActivity implements
 		default:
 			break;
 		}
+	}
+
+	//猛戳我刷新
+	@Override
+	public void OnRefrushMainPageData() {
+		// 下拉刷新个人中心所有数据
+		httpPost("");// 请求数据
+		mRTPullListView.firstFreshState();
 	}
 
 }

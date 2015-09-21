@@ -12,11 +12,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,6 +51,8 @@ import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity.ShareVideoGroup;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GolukUtils;
+
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -55,6 +61,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 @SuppressLint("InflateParams")
 public class UserCenterAdapter extends BaseAdapter implements
 		VideoSuqareManagerFn, OnTouchListener {
+	
+	public interface IUserCenterInterface{
+		//刷新页面数据
+		public void OnRefrushMainPageData();
+	}
+	
+	private IUserCenterInterface mUserCenterInterface = null;
 	private Context mContext = null;
 	private ShareVideoGroup videogroupdata = null; // 分享视频数据
 	private PraiseInfoGroup praisgroupData = null; // 被点赞信息数据
@@ -72,14 +85,18 @@ public class UserCenterAdapter extends BaseAdapter implements
 	final int ItemType_UserInfo = 0;
 	final int ItemType_VideoInfo = 1;
 	final int ItemType_PraiseInfo = 2;
-
+	final int ItemType_noDataInfo = 3;
+	
+	private Rect firstItemRect = null;
+	
 	/** 滚动中锁标识 */
 	private boolean lock = false;
 
-	public UserCenterAdapter(Context context, SharePlatformUtil spf) {
+	public UserCenterAdapter(Context context, SharePlatformUtil spf, IUserCenterInterface iUser) {
 		mContext = context;
 		videogroupdata = null;
 		praisgroupData = null;
+		mUserCenterInterface = iUser;
 
 		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
@@ -113,18 +130,40 @@ public class UserCenterAdapter extends BaseAdapter implements
 		int p = position;
 		if (p == 0)
 			return ItemType_UserInfo;
-		else {
-			if (this.currentViewType == ViewType_ShareVideoList) {// 视频分享列表类别
-				return ItemType_VideoInfo;
-			} else {// 点赞列表类别
-				return ItemType_PraiseInfo;
+		else
+		{
+			if (this.currentViewType == ViewType_ShareVideoList)
+			{//视频分享列表类别
+				if (videogroupdata.loadfailed == true)
+				{//首次加载数据失败
+					return ItemType_noDataInfo;
+				}
+				else if (videogroupdata.videolist.size() <= 0)
+				{//没有数据
+					return ItemType_noDataInfo;
+				}
+				else
+					return ItemType_VideoInfo;
+			}
+			else
+			{//点赞列表类别
+				if (praisgroupData.loadfailed == true)
+				{//首次加载数据失败
+					return ItemType_noDataInfo;
+				}
+				else if (praisgroupData.praiselist.size() <= 0)
+				{
+					return ItemType_noDataInfo;
+				}
+				else
+					return ItemType_PraiseInfo;
 			}
 		}
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		return 3;
+		return 4;
 	}
 
 	@Override
@@ -136,6 +175,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 			datacount = this.videogroupdata.videolist.size() + 1;
 		} else {
 			datacount = this.praisgroupData.praiselist.size() + 1;
+		}
+		if (datacount <= 1)
+		{//如果没有数据，则添加没有数据提示项
+			datacount++;
 		}
 		return datacount;
 	}
@@ -329,7 +372,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 			holder.totalcomments.setText("查看所有"
 					+ clusterInfo.mVideoEntity.comcount + "条评论");
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
-			loadImage(holder.imageLayout, clusterInfo.mVideoEntity.picture);
+			loadImage(holder.imageLayout, clusterInfo.mVideoEntity.picture, width);
 			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
@@ -368,6 +411,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 			final PraiseInfo prais = this.praisgroupData.praiselist
 					.get(index_p);
 			PraiseViewHolder praiseholder = null;
+			int nwidth = (int) (GolukUtils.mDensity * 95);
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
 						R.layout.user_center_praise, null);
@@ -380,27 +424,30 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.findViewById(R.id.username);
 				praiseholder.desc = (TextView) convertView
 						.findViewById(R.id.desc);
-				praiseholder.videoPic = (ImageView) convertView
+				praiseholder.videoPicLayout = (RelativeLayout) convertView
 						.findViewById(R.id.videopic);
 				praiseholder.userinfo = (LinearLayout) convertView
 						.findViewById(R.id.userinfo);
+				
+				int nheight = (int) ((float) width / 1.77f);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(
+						nwidth, nheight);
+				mPlayerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,
+						RelativeLayout.TRUE);
+				mPlayerLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL,
+						RelativeLayout.TRUE);
+				mPlayerLayoutParams.rightMargin = (int) (GolukUtils.mDensity * 5);;
+				praiseholder.videoPicLayout.setLayoutParams(mPlayerLayoutParams);
 				convertView.setTag(praiseholder);
 			} else {
 				praiseholder = (PraiseViewHolder) convertView.getTag();
 			}
-
+			loadImage(praiseholder.videoPicLayout, prais.picture, nwidth);
 			praiseholder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
 					.valueOf(prais.headportrait)]);
 			praiseholder.username.setText(prais.nickname);
-			praiseholder.desc.setText(prais.introduce);
-			praiseholder.userinfo.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent i = new Intent(mContext, VideoDetailActivity.class);
-					i.putExtra("videoid", prais.videoid);
-					mContext.startActivity(i);
-				}
-			});
+//			praiseholder.desc.setText(prais.introduce);
+			praiseholder.desc.setText("赞了您的视频");
 			praiseholder.headimg.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -421,7 +468,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 				}
 
 			});
-			praiseholder.videoPic.setOnClickListener(new OnClickListener() {
+			praiseholder.videoPicLayout.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(mContext, VideoDetailActivity.class);
@@ -430,12 +477,73 @@ public class UserCenterAdapter extends BaseAdapter implements
 				}
 
 			});
+			break;
+		case ItemType_noDataInfo:
+			{
+				NoVideoDataViewHolder noVideoDataViewHolder = null;
+				if (convertView == null) {
+					convertView = LayoutInflater.from(mContext).inflate(
+							R.layout.user_center_novideodata, null);
+					noVideoDataViewHolder = new NoVideoDataViewHolder();
+					noVideoDataViewHolder.tipsimage = (ImageView) convertView
+							.findViewById(R.id.tipsimage);
+					
+					convertView.setTag(noVideoDataViewHolder);
+				}
+				else
+					noVideoDataViewHolder = (NoVideoDataViewHolder)convertView.getTag();
+				boolean bNeedRefrush = false;
+				if (this.currentViewType == ViewType_ShareVideoList) {
+					//分享视频列表
+					if (this.videogroupdata.loadfailed == true) {
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.qitadifang);
+						bNeedRefrush = true;
+					}
+					else {
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.videodetail_sofaicon);
+					}
+				} else {
+					//被点赞人信息列表
+					if (this.praisgroupData.loadfailed == true) {
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.qitadifang);
+						bNeedRefrush = true;
+					}
+					else {
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.videodetail_sofaicon);
+					}
+				}
+				if (bNeedRefrush == true)
+				{
+					noVideoDataViewHolder.tipsimage.setOnClickListener(new OnClickListener(){
 
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							if (mUserCenterInterface != null) {
+								mUserCenterInterface.OnRefrushMainPageData();
+							}
+						}
+						
+					});
+				}
+				
+			}
 			break;
 		default:
 			break;
 		}
 
+		if (position == 0)
+		{
+//			Rect rc = new Rect();
+//			rc.left = convertView.getLeft();
+//			rc.top = convertView.
+//			rc.right = convertView.getWidth();
+//			rc.bottom = convertView.getHeight();
+//			this.firstItemRect = rc;
+//			Log.e("", "=================RECT========" + rc.left + ","+ rc.top + ","+ rc.right + ","+ rc.bottom);
+			
+		}
 		return convertView;
 	}
 
@@ -556,7 +664,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 		return time;
 	}
 
-	private void loadImage(RelativeLayout layout, String url) {
+	private void loadImage(RelativeLayout layout, String url, int nWidth) {
 		layout.removeAllViews();
 		SimpleDraweeView view = new SimpleDraweeView(mContext);
 		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(
@@ -573,9 +681,11 @@ public class UserCenterAdapter extends BaseAdapter implements
 			view.setImageURI(Uri.parse(url));
 		}
 
-		int height = (int) ((float) width / 1.77f);
+		int height = (int) ((float) nWidth / 1.77f);
 		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
-				width, height);
+				nWidth, height);
+		mPreLoadingParams.addRule(RelativeLayout.CENTER_VERTICAL,
+				RelativeLayout.TRUE);
 		layout.addView(view, mPreLoadingParams);
 		//
 	}
@@ -623,10 +733,16 @@ public class UserCenterAdapter extends BaseAdapter implements
 		ImageView headimg;
 		TextView username;
 		TextView desc;
-		ImageView videoPic;
+//		ImageView videoPic;
 		LinearLayout userinfo;
+		RelativeLayout videoPicLayout;
 	}
-
+	
+	public static class NoVideoDataViewHolder {
+		TextView tips;
+		ImageView tipsimage;
+	}
+	
 	public static class ViewHolder {
 		RelativeLayout imageLayout;
 		ImageView headimg;
