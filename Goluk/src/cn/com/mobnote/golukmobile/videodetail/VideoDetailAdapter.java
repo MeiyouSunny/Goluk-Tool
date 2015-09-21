@@ -76,9 +76,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public NetworkInfo netInfo = null;
 	private CustomDialog mCustomDialog;
 	public Handler mHandler;
-	/**头部视频详情holder**/
+	/** 头部视频详情holder **/
 	public ViewHolder headHolder = null;
-	/**评论holder**/
+	/** 评论holder **/
 	private ViewHolder commentHolder = null;
 
 	public View mHeadView = null;
@@ -97,29 +97,30 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void setData(VideoJson videoJsonData, List<CommentBean> commentData) {
 		mVideoJson = videoJsonData;
 		mDataList.clear();
-//		List<VideoListInfo> list = videoJsonData.data.avideo.video.comment.comlist;
-//		for (int i = 0; i < list.size(); i++) {
-//			CommentBean bean = new CommentBean();
-//			bean.mCommentId = list.get(i).commentid;
-//			bean.mCommentTime = list.get(i).time;
-//			bean.mCommentTxt = list.get(i).text;
-//			bean.mUserHead = list.get(i).avatar;
-//			bean.mUserId = list.get(i).authorid;
-//			bean.mUserName = list.get(i).name;
-//			mDataList.add(bean);
-//		}
+		// List<VideoListInfo> list =
+		// videoJsonData.data.avideo.video.comment.comlist;
+		// for (int i = 0; i < list.size(); i++) {
+		// CommentBean bean = new CommentBean();
+		// bean.mCommentId = list.get(i).commentid;
+		// bean.mCommentTime = list.get(i).time;
+		// bean.mCommentTxt = list.get(i).text;
+		// bean.mUserHead = list.get(i).avatar;
+		// bean.mUserId = list.get(i).authorid;
+		// bean.mUserName = list.get(i).name;
+		// mDataList.add(bean);
+		// }
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：commentData==" + commentData);
-		if(null != commentData){
+		if (null != commentData) {
 			mDataList.addAll(commentData);
 		}
-		if("0".equals(mVideoJson.data.avideo.video.comment.iscomment)){
+		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			count = 2;
-		}else{
+		} else {
 			count = mDataList.size();
 			GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：count==" + count);
-			if(0 == count){
+			if (0 == count) {
 				count += 2;
-			}else{
+			} else {
 				count++;
 			}
 		}
@@ -277,10 +278,10 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mPlayerLayout.setOnClickListener(new ClickVideoListener(mContext, this));
 		headHolder.mPraiseLayout.setOnClickListener(new ClickPraiseListener(mContext, this));
 		headHolder.mShareLayout.setOnClickListener(new ClickShareListener(mContext, mVideoJson, this));
-		if(null != mVideoJson.data.link){
+		if (null != mVideoJson.data.link) {
 			headHolder.mTextLink.setOnClickListener(new ClickLinkListener(mContext, mVideoJson, this));
 		}
-		
+
 		headHolder.mVideoView.setOnPreparedListener(new PlayPreparedListener(headHolder, this));
 		headHolder.mVideoView.setOnCompletionListener(new PlayCompletionListener(this, headHolder));
 		headHolder.mVideoView.setOnErrorListener(new PlayErrorListener(mContext, headHolder, this));
@@ -327,7 +328,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			view.setImageURI(Uri.parse(mVideoAllData.avideo.video.picture));
 			headHolder.mImageLayout.addView(view, mPreLoadingParams);
 			// 外链接
-			if(null != mVideoAllData.link){
+			if (null != mVideoAllData.link) {
 				if ("0".equals(mVideoAllData.link.showurl)) {
 					headHolder.mTextLink.setVisibility(View.GONE);
 				} else {
@@ -335,7 +336,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					headHolder.mTextLink.setText(mVideoAllData.link.outurlname);
 				}
 			}
-			
+
 			// 视频
 			if ((netInfo != null) && (netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
 				if (!headHolder.mVideoView.isPlaying() && isStartPlay) {
@@ -413,13 +414,13 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 		commentHolder.mForbidComment = (TextView) convertView.findViewById(R.id.comment_forbid);
-		
+
 		convertView.setTag(commentHolder);
 		return convertView;
 	}
 
 	private View loadLayout(View convertView, int arg0) {
-//		ViewHolder holder = null;
+		// ViewHolder holder = null;
 		if (null == convertView) {
 			convertView = getCommentView(convertView);
 			commentHolder = (ViewHolder) convertView.getTag();
@@ -436,31 +437,31 @@ public class VideoDetailAdapter extends BaseAdapter {
 	// 设置评论数据
 	private void getCommentData(final int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
-		if(0 == mDataList.size()){
+		if (0 == mDataList.size()) {
 			commentHolder.mListLayout.setVisibility(View.GONE);
 			commentHolder.mNoData.setVisibility(View.VISIBLE);
-			return ;
+			return;
 		}
 		commentHolder.mListLayout.setVisibility(View.VISIBLE);
 		commentHolder.mNoData.setVisibility(View.GONE);
-		if("0".equals(mVideoJson.data.avideo.video.comment.iscomment)){
+		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			closeComment();
-			if(mContext instanceof WonderfulActivity){
+			if (mContext instanceof WonderfulActivity) {
 				((WonderfulActivity) mContext).mCommentLayout.setVisibility(View.GONE);
 			}
-		}else{
+		} else {
 			CommentBean temp = mDataList.get(index);
 			commentHolder.mCommentHead.setBackgroundResource(UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 			commentHolder.mCommentName.setText(temp.mUserName);
 			commentHolder.mCommentConennt.setText(temp.mCommentTxt);
 			commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
-			
+
 			commentHolder.mCommentHead.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View arg0) {
 					Intent it = new Intent(mContext, UserCenterActivity.class);
-					
+
 					CommentBean bean = mDataList.get(index);
 					UCUserInfo user = new UCUserInfo();
 					user.uid = bean.mUserId;
@@ -471,25 +472,27 @@ public class VideoDetailAdapter extends BaseAdapter {
 					user.customavatar = "";
 					user.praisemenumber = "";
 					user.sharevideonumber = "";
-					
-					GolukDebugUtils.e("", "-------user.nickname-----"+bean.mUserName);
-					
-		    		it.putExtra("userinfo",user);
-		    		mContext.startActivity(it);
+
+					GolukDebugUtils.e("", "-------user.nickname-----" + bean.mUserName);
+
+					it.putExtra("userinfo", user);
+					mContext.startActivity(it);
 				}
 			});
-			
+
 		}
 	}
-	//没有评论
-	public void commentNoData(){
-		if(0 == mDataList.size()){
+
+	// 没有评论
+	public void commentNoData() {
+		if (0 == mDataList.size()) {
 			commentHolder.mListLayout.setVisibility(View.GONE);
 			commentHolder.mNoData.setVisibility(View.VISIBLE);
-			return ;
+			return;
 		}
 	}
-	//评论被关闭
+
+	// 评论被关闭
 	public void closeComment() {
 		commentHolder.mListLayout.setVisibility(View.GONE);
 		commentHolder.mNoData.setVisibility(View.GONE);
@@ -560,7 +563,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		ImageView mNoData = null;
 		RelativeLayout mListLayout = null;
 		TextView mForbidComment = null;
-		
+
 	}
 
 	private boolean isCallVideo = false;
@@ -660,12 +663,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 					headHolder.mSeekBar.setProgress(0);
 				}
 			});
-			if(mContext instanceof VideoDetailActivity){
-				if (!((VideoDetailActivity)mContext).isFinishing()) {
+			if (mContext instanceof VideoDetailActivity) {
+				if (!((VideoDetailActivity) mContext).isFinishing()) {
 					mCustomDialog.show();
 				}
-			}else{
-				if (!((WonderfulActivity)mContext).isFinishing()) {
+			} else {
+				if (!((WonderfulActivity) mContext).isFinishing()) {
 					mCustomDialog.show();
 				}
 			}
