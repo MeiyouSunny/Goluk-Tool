@@ -68,7 +68,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private TextView mTextSend = null;
 	private EditText mEditInput = null;
 	private RTPullListView mRTPullListView = null;
-//	private ImageView mImageNoData = null;
 	private TextView mTextNoInput = null;
 	private ImageView mImageRefresh = null;
 	private RelativeLayout mCommentLayout = null;
@@ -82,7 +81,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private VideoSquareManager mVideoSquareManager = null;
 	/** 视频id **/
 	public static final String VIDEO_ID = "videoid";
-	/**是否允许评论**/
+	/** 是否允许评论 **/
 	public static final String VIDEO_ISCAN_COMMENT = "iscan_input";
 	private boolean isCanInput = true;
 	private VideoDetailAdapter mAdapter = null;
@@ -154,7 +153,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mTextSend = (TextView) findViewById(R.id.comment_send);
 		mEditInput = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
-//		mImageNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mTextNoInput = (TextView) findViewById(R.id.comment_noinput);
 		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
@@ -186,22 +184,16 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 		// 设置这个参数第一次进来会由下拉状态变为松开刷新的状态
 		mRTPullListView.firstFreshState();
-
-		String title = getIntent().getStringExtra("title");
-		if (null == title || "".equals(title)) {
-			mTextTitle.setText("视频详情");
-		} else {
-			mTextTitle.setText(title);
-		}
+		mTextTitle.setText("视频详情");
 
 		Intent it = getIntent();
 		if (null != it) {
 			String videoId = it.getStringExtra(VIDEO_ID).toString();
 			isCanInput = it.getBooleanExtra(VIDEO_ISCAN_COMMENT, true);
-			GolukDebugUtils.e("", "================videoid=="+videoId);
+			GolukDebugUtils.e("", "================videoid==" + videoId);
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailListData(videoId);
 			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
-			if(!b){
+			if (!b) {
 				mImageRefresh.setVisibility(View.VISIBLE);
 			}
 		}
@@ -241,10 +233,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			exit();
 			break;
 		case R.id.comment_title_right:
-			if(null == mVideoJson){
-				if(!UserUtils.isNetDeviceAvailable(this)){
+			if (null == mVideoJson) {
+				if (!UserUtils.isNetDeviceAvailable(this)) {
 					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
-					return ;
+					return;
 				}
 			}
 			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
@@ -391,7 +383,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
-		GolukDebugUtils.e("null", "-----VideoDetailActivity------isSuccess："+isSucess);
+		GolukDebugUtils.e("null", "-----VideoDetailActivity------isSuccess：" + isSucess);
 		if (!isSucess) {
 			// 失败
 			GolukUtils.showToast(this, "评论失败!");
@@ -453,8 +445,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-		}else{
+
+		} else {
 			mRTPullListView.setVisibility(View.GONE);
 			mImageRefresh.setVisibility(View.VISIBLE);
 			GolukUtils.showToast(this, "网络连接超时，请检查网络");
@@ -473,7 +465,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			if (!isCanInput) {
 				mCommentLayout.setVisibility(View.GONE);
 				mAdapter.closeComment();
-			}else{
+			} else {
 				mCommentLayout.setVisibility(View.VISIBLE);
 			}
 			JSONObject rootObj = new JSONObject((String) param2);
@@ -606,6 +598,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				this.mAdapter.addFirstData(bean);
 				mEditInput.setText("");
 				switchSendState(false);
+				UserUtils.hideSoftMethod(this);
 				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
 			} else {
 				GolukUtils.showToast(this, "评论失败");
@@ -728,15 +721,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void noData(boolean isno) {
 		if (isno) {
 			mAdapter.commentNoData();
-		} 
+		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(null == mVideoJson){
-			if(!UserUtils.isNetDeviceAvailable(this)){
-				return ;
+		if (null == mVideoJson) {
+			if (!UserUtils.isNetDeviceAvailable(this)) {
+				return;
 			}
 		}
 		mAdapter.setOnPause();
