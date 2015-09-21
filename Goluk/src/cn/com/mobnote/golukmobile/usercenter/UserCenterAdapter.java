@@ -223,7 +223,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 				{
 					holder = (UserViewHolder)convertView.getTag();
 				}
-				holder.headImg.setBackgroundResource(ILive.mHeadImg[Integer.valueOf(userinfo.headportrait)]); 
+				holder.headImg.setBackgroundResource(ILive.mBigHeadImg[Integer.valueOf(userinfo.headportrait)]); 
 				holder.username.setText(userinfo.nickname);
 				holder.description.setText(userinfo.introduce);
 				holder.fxsp_num.setText(userinfo.sharevideonumber);

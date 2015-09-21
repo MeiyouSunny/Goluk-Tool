@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/user_head"
             android:layout_marginLeft="14dp"
+            android:layout_marginRight="40dp"
             android:layout_centerVertical="true"
             android:orientation="vertical" >
 
@@ -39,7 +40,9 @@
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="7dp"
+                android:ellipsize="end" 
+                android:singleLine="true"
                 android:text="在哪里跌倒 就在哪里躺下。"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
