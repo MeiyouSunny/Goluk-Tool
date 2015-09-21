@@ -1,10 +1,7 @@
 package cn.com.mobnote.golukmobile.newest;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -29,6 +26,8 @@ import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -52,7 +51,7 @@ public class NewestAdapter extends BaseAdapter {
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
 	private boolean clickLock = false;
-	
+
 	public NewestAdapter(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<VideoSquareInfo>();
@@ -72,7 +71,7 @@ public class NewestAdapter extends BaseAdapter {
 		}
 		this.notifyDataSetChanged();
 	}
-	
+
 	public void loadData(List<VideoSquareInfo> data) {
 		mDataList.clear();
 		mDataList.addAll(data);
@@ -98,14 +97,10 @@ public class NewestAdapter extends BaseAdapter {
 	public long getItemId(int arg0) {
 		return 0;
 	}
-	
+
 	@Override
 	public int getViewTypeCount() {
-		if (null == mHeadDataInfo) {
-			return 1;
-		} else {
-			return 2;
-		}
+		return 2;
 	};
 
 	@Override
@@ -122,6 +117,7 @@ public class NewestAdapter extends BaseAdapter {
 	};
 
 	ViewHolder holder;
+
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
 		int type = getItemViewType(arg0);
@@ -133,7 +129,7 @@ public class NewestAdapter extends BaseAdapter {
 
 		return convertView;
 	}
-	
+
 	private View loadLayout(View convertView, int arg0) {
 		if (null == convertView) {
 			convertView = initLayout();
@@ -143,14 +139,14 @@ public class NewestAdapter extends BaseAdapter {
 				convertView = initLayout();
 			}
 		}
-		
+
 		int index = arg0;
 		if (null != mHeadDataInfo) {
 			index = arg0 - 1;
 		}
 		initView(index);
 		initListener(index);
-		
+
 		return convertView;
 	}
 
@@ -196,10 +192,10 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	private void initListener(int index) {
-		if(index < 0 || index >= mDataList.size()) {
+		if (index < 0 || index >= mDataList.size()) {
 			return;
 		}
-		
+
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 		// 分享监听
 		ClickShareListener tempShareListener = new ClickShareListener(mContext, mVideoSquareInfo, mNewestListView);
@@ -210,7 +206,7 @@ public class NewestAdapter extends BaseAdapter {
 		// 评论监听
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
-		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext,  mVideoSquareInfo,mNewestListView));
+		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, mNewestListView));
 		holder.headimg.setOnClickListener(new ClickHeadListener(mContext, mVideoSquareInfo));
 		// 点赞
 		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
@@ -239,17 +235,17 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	private void initView(int index) {
-		if(index < 0 || index >= mDataList.size()) {
+		if (index < 0 || index >= mDataList.size()) {
 			return;
 		}
-		
+
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 		loadImage(holder.imageLayout, mVideoSquareInfo.mVideoEntity.picture);
 
 		showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
 
 		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
-		holder.time.setText(formatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
+		holder.time.setText(GolukUtils.formatTimeNew(mVideoSquareInfo.mVideoEntity.sharingtime));
 
 		if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 			holder.zanText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
@@ -299,12 +295,12 @@ public class NewestAdapter extends BaseAdapter {
 					int comcount = Integer.parseInt(mVideoSquareInfo.mVideoEntity.comcount);
 					if (comcount <= 3) {
 						holder.totalcomments.setVisibility(View.GONE);
-					}else {
+					} else {
 						holder.totalcomments.setVisibility(View.VISIBLE);
 						holder.totalcomments.setText("查看所有" + getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)
 								+ "条评论");
 					}
-					
+
 					holder.totlaCommentLayout.setVisibility(View.VISIBLE);
 					holder.totalcomments
 							.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
@@ -371,100 +367,98 @@ public class NewestAdapter extends BaseAdapter {
 		view.setText(style);
 	}
 
-	RelativeLayout mHeadView;
+	private RelativeLayout mHeadView;
 
 	private View getHeadView() {
 		int imagewidth = (int) ((width - 10 * density) / 2);
 		int imageheight = (int) (imagewidth * 0.56);
 		if (null == mHeadView) {
 			mHeadView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
-//		}
-		RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
-		RelativeLayout liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
-		liveLayout.setOnClickListener(new ClickLiveListener(mContext));
+			// }
+			RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
+			RelativeLayout liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
+			liveLayout.setOnClickListener(new ClickLiveListener(mContext));
 
-		LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
-		if (null != mLiveInfo) {
-			int number = Integer.parseInt(mLiveInfo.number);
-			if (number > 0) {
-				liveLayout.setVisibility(View.VISIBLE);
-			}else {
+			LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
+			if (null != mLiveInfo) {
+				int number = Integer.parseInt(mLiveInfo.number);
+				if (number > 0) {
+					liveLayout.setVisibility(View.VISIBLE);
+				} else {
+					liveLayout.setVisibility(View.GONE);
+				}
+
+				int height = (int) ((float) width / 1.77f);
+				RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
+				liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
+				liveLayout.setLayoutParams(liveLayoutParams);
+
+				ImageView mImageView = (ImageView) mHeadView.findViewById(R.id.mImageView);
+				RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(width, height);
+				mImageView.setLayoutParams(dvParams);
+				loadHeadImage(mImageView, mLiveInfo.pic, width, height);
+
+				LinearLayout mLookLayout = (LinearLayout) mHeadView.findViewById(R.id.mLookLayout);
+				TextView mLookNum = (TextView) mHeadView.findViewById(R.id.mLookNum);
+
+				if ("-1".equals(mLiveInfo.number)) {
+					mLookLayout.setVisibility(View.GONE);
+				} else {
+					mLookLayout.setVisibility(View.VISIBLE);
+					mLookNum.setText(mLiveInfo.number);
+				}
+
+			} else {
 				liveLayout.setVisibility(View.GONE);
 			}
-			
-			int height = (int) ((float) width / 1.77f);
-			RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
-			liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
-			liveLayout.setLayoutParams(liveLayoutParams);
 
-			ImageView mImageView =  (ImageView) mHeadView.findViewById(R.id.mImageView);
-			RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(width, height);
-			mImageView.setLayoutParams(dvParams);
-			loadHeadImage(mImageView, mLiveInfo.pic, width, height);
+			for (int i = 0; i < mHeadDataInfo.categoryList.size(); i++) {
+				CategoryDataInfo mCategoryDataInfo = mHeadDataInfo.categoryList.get(i);
+				RelativeLayout item = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_item,
+						null);
+				main.setPadding(0, (int) (10 * density), 0, 0);
+				int iid = i + 1111;
+				item.setId(iid);
 
-			LinearLayout mLookLayout = (LinearLayout) mHeadView.findViewById(R.id.mLookLayout);
-			TextView mLookNum = (TextView) mHeadView.findViewById(R.id.mLookNum);
+				item.setOnTouchListener(new ClickCategoryListener(mContext, mCategoryDataInfo, this));
+				TextView mTitleName = (TextView) item.findViewById(R.id.mTitleName);
+				TextView mUpdateTime = (TextView) item.findViewById(R.id.mUpdateTime);
 
-			if ("-1".equals(mLiveInfo.number)) {
-				mLookLayout.setVisibility(View.GONE);
-			} else {
-				mLookLayout.setVisibility(View.VISIBLE);
-				mLookNum.setText(mLiveInfo.number);
+				RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
+				mTitleName.setText(mCategoryDataInfo.name);
+				mUpdateTime.setText(GolukUtils.getNewCategoryShowTime(mCategoryDataInfo.time));
+
+				ImageView mImageView = (ImageView) item.findViewById(R.id.mImageView);
+				RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
+				mImageView.setLayoutParams(dvParams);
+				loadHeadImage(mImageView, mCategoryDataInfo.coverurl, imagewidth, imageheight);
+
+				int id = i + 1111 - 2;
+				if (i % 2 == 0) {
+					itemparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+					itemparams.setMargins(0, 0, (int) (10 * density), (int) (10 * density));
+					itemparams.addRule(RelativeLayout.BELOW, id);
+				} else {
+					itemparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+					itemparams.setMargins(0, 0, 0, (int) (10 * density));
+					itemparams.addRule(RelativeLayout.BELOW, id);
+				}
+				main.addView(item, itemparams);
 			}
-
-		} else {
-			liveLayout.setVisibility(View.GONE);
-		}
-
-		for (int i = 0; i < mHeadDataInfo.categoryList.size(); i++) {
-			CategoryDataInfo mCategoryDataInfo = mHeadDataInfo.categoryList.get(i);
-			RelativeLayout item = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_item, null);
-			main.setPadding(0, (int) (10 * density), 0, 0);
-			int iid = i + 1111;
-			item.setId(iid);
-
-			item.setOnTouchListener(new ClickCategoryListener(mContext, mCategoryDataInfo, this));
-			TextView mTitleName = (TextView) item.findViewById(R.id.mTitleName);
-			TextView mUpdateTime = (TextView) item.findViewById(R.id.mUpdateTime);
-
-			RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
-			mTitleName.setText(mCategoryDataInfo.name);
-			mUpdateTime.setText(getTime(mCategoryDataInfo.time));
-
-			ImageView mImageView = (ImageView)item.findViewById(R.id.mImageView);
-			RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
-			mImageView.setLayoutParams(dvParams);
-			loadHeadImage(mImageView, mCategoryDataInfo.coverurl, imagewidth, imageheight);
-			
-			int id = i + 1111 - 2;
-			if (i % 2 == 0) {
-				itemparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				itemparams.setMargins(0, 0, (int) (10 * density), (int) (10 * density));
-				itemparams.addRule(RelativeLayout.BELOW, id);
-			} else {
-				itemparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				itemparams.setMargins(0, 0, 0, (int) (10 * density));
-				itemparams.addRule(RelativeLayout.BELOW, id);
-			}
-
-			main.addView(item, itemparams);
-
-		}
 		}
 
 		return mHeadView;
-
 	}
-	
+
 	private void loadHeadImage(final ImageView image, String url, int width, int height) {
 		BitmapDisplayConfig config = new BitmapDisplayConfig();
 		config.setBitmapMaxSize(new BitmapSize(width, height));
 		Bitmap bitmap = BitmapManager.getInstance().mBitmapUtils.getBitmapFromMemCache(url, config);
 		if (null == bitmap) {
 			image.setImageResource(R.drawable.tacitly_pic);
-			
+
 			BitmapManager.getInstance().mBitmapUtils.display(image, url);
-		}else {
+		} else {
 			image.setImageBitmap(bitmap);
 		}
 	}
@@ -480,10 +474,10 @@ public class NewestAdapter extends BaseAdapter {
 			int height = (int) ((float) width / 1.77f);
 			RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 			layout.addView(view, mPreLoadingParams);
-		}else {
-			view = (SimpleDraweeView)layout.findViewById(id);
+		} else {
+			view = (SimpleDraweeView) layout.findViewById(id);
 		}
-		
+
 		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
 		GenericDraweeHierarchy mGenericDraweeHierarchy = builder.setFadeDuration(300)
 				.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
@@ -543,90 +537,7 @@ public class NewestAdapter extends BaseAdapter {
 	 */
 	public void unlock() {
 		lock = false;
-//		this.notifyDataSetChanged();
-	}
-
-	@SuppressLint("SimpleDateFormat")
-	private String formatTime(String date) {
-		String time = null;
-		try {
-			long curTime = System.currentTimeMillis();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-			Date strtodate = formatter.parse(date);
-			
-			Date curDate = new Date(curTime);
-			int curYear = curDate.getYear();
-			int history = strtodate.getYear();
-			int hisDay = strtodate.getDay();
-			int curDay = curDate.getDay();
-			
-			if (curYear == history) {
-				if(hisDay == curDay) {
-					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
-					String timestr =  jn.format(strtodate);
-					return "今天 " + timestr;
-				}else if((hisDay + 1) == curDay) {
-					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
-					String timestr =  jn.format(strtodate);
-					return "昨天 " + timestr;
-				}else {
-					SimpleDateFormat jn = new SimpleDateFormat("MM-dd HH:mm");
-					return jn.format(strtodate);// 今年内：月日更新
-				}
-			} else {
-				SimpleDateFormat jn = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				return jn.format(strtodate);// 非今年：年月日更新
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		return time;
-	}
-	
-	@SuppressLint("SimpleDateFormat")
-	private String getTime(String date) {
-		final long MINTUE = 60*1000;
-		final long HOUR = 60*MINTUE;
-		final long DAY = 24*HOUR;
-		final long WEEK = 7*DAY;
-		
-		String time = null;
-		try {
-			long curTime = System.currentTimeMillis();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-			Date strtodate = formatter.parse(date);
-			long historytime = strtodate.getTime();
-
-			Date curDate = new Date(curTime);
-			int curYear = curDate.getYear();
-			int history = strtodate.getYear();
-			
-			long diff = Math.abs(historytime - curTime);// 时间差
-			if (curYear == history) {
-				 if (diff <= WEEK && diff > DAY) {
-					 return time = diff / DAY + "天前更新";// 天前更新
-				 }else if (diff <= DAY && diff > HOUR) {
-					 return time = diff / HOUR + "小时前更新";// 小时前更新
-				 }else if (diff <= HOUR) {
-					 int min = (int)(diff / MINTUE);
-					 if(min < 1) {
-						 min = 1;
-					 }
-					 return time = min + "分钟前更新";// 分钟前更新
-				 }else {
-					 SimpleDateFormat jn = new SimpleDateFormat("MM.dd更新");
-					 return jn.format(strtodate);// 今年内：月日更新
-				 }
-			}else {
-				SimpleDateFormat jn = new SimpleDateFormat("yyyy.MM.dd更新");
-				return jn.format(strtodate);// 非今年：年月日更新
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		return time;
+		// this.notifyDataSetChanged();
 	}
 
 	public void setNewestLiseView(NewestListView view) {
@@ -649,15 +560,15 @@ public class NewestAdapter extends BaseAdapter {
 		}
 
 	}
-	
+
 	public synchronized boolean getClickLock() {
 		return clickLock;
 	}
-	
+
 	public synchronized void setClickLock(boolean lock) {
 		clickLock = lock;
 	}
-	
+
 	public void onResume() {
 		setClickLock(false);
 	}

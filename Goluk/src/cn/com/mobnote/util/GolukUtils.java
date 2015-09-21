@@ -37,7 +37,7 @@ public class GolukUtils {
 	public static final String URL_BIND_HELP = "http://surl.goluk.cn/faq/video.html";
 	/** Goluk绑定连接出现问题URL */
 	public static final String URL_BIND_CONN_PROBLEM = "http://surl.goluk.cn/faq/link.html";
-	
+
 	public static float mDensity = 1.0f;
 
 	public static void getMobileInfo(Activity activity) {
@@ -47,7 +47,7 @@ public class GolukUtils {
 		int height = metric.heightPixels; // 屏幕高度（像素）
 		mDensity = metric.density; // 屏幕密度（0.75 / 1.0 / 1.5）
 		int densityDpi = metric.densityDpi; // 屏幕密度DPI（120 / 160 / 240）
-		
+
 		GolukDebugUtils.e("", " mobile info:" + mDensity);
 	}
 
@@ -312,7 +312,7 @@ public class GolukUtils {
 		buffer.append(t.hour);
 		buffer.append(":");
 		int minute = t.minute;
-		String aa ="" +  minute;
+		String aa = "" + minute;
 		if (minute < 10) {
 			aa = "0" + minute;
 		}
@@ -503,6 +503,89 @@ public class GolukUtils {
 			number = "100,000+";
 		}
 		return number;
+	}
+
+	@SuppressLint("SimpleDateFormat")
+	public static String formatTimeNew(String date) {
+		String time = null;
+		try {
+			long curTime = System.currentTimeMillis();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+			Date strtodate = formatter.parse(date);
+
+			Date curDate = new Date(curTime);
+			int curYear = curDate.getYear();
+			int history = strtodate.getYear();
+			int hisDay = strtodate.getDay();
+			int curDay = curDate.getDay();
+
+			if (curYear == history) {
+				if (hisDay == curDay) {
+					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
+					String timestr = jn.format(strtodate);
+					return "今天 " + timestr;
+				} else if ((hisDay + 1) == curDay) {
+					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
+					String timestr = jn.format(strtodate);
+					return "昨天 " + timestr;
+				} else {
+					SimpleDateFormat jn = new SimpleDateFormat("MM-dd HH:mm");
+					return jn.format(strtodate);// 今年内：月日更新
+				}
+			} else {
+				SimpleDateFormat jn = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				return jn.format(strtodate);// 非今年：年月日更新
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return time;
+	}
+
+	@SuppressLint("SimpleDateFormat")
+	public static String getNewCategoryShowTime(String date) {
+		final long MINTUE = 60 * 1000;
+		final long HOUR = 60 * MINTUE;
+		final long DAY = 24 * HOUR;
+		final long WEEK = 7 * DAY;
+
+		String time = null;
+		try {
+			long curTime = System.currentTimeMillis();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+			Date strtodate = formatter.parse(date);
+			long historytime = strtodate.getTime();
+
+			Date curDate = new Date(curTime);
+			int curYear = curDate.getYear();
+			int history = strtodate.getYear();
+
+			long diff = Math.abs(historytime - curTime);// 时间差
+			if (curYear == history) {
+				if (diff <= WEEK && diff > DAY) {
+					return time = diff / DAY + "天前更新";// 天前更新
+				} else if (diff <= DAY && diff > HOUR) {
+					return time = diff / HOUR + "小时前更新";// 小时前更新
+				} else if (diff <= HOUR) {
+					int min = (int) (diff / MINTUE);
+					if (min < 1) {
+						min = 1;
+					}
+					return time = min + "分钟前更新";// 分钟前更新
+				} else {
+					SimpleDateFormat jn = new SimpleDateFormat("MM.dd更新");
+					return jn.format(strtodate);// 今年内：月日更新
+				}
+			} else {
+				SimpleDateFormat jn = new SimpleDateFormat("yyyy.MM.dd更新");
+				return jn.format(strtodate);// 非今年：年月日更新
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return time;
 	}
 
 }
