@@ -395,7 +395,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "=====VideoSuqare_CallBack===========VideoDetailActivity：event==" + event);
+		GolukDebugUtils.e("", "=====VideoSuqare_CallBack=======VideoDetailActivity：event==" + event);
 		if (event == VSquare_Req_Get_VideoDetail_ComentList) {
 			callBack_videoDetail(msg, param1, param2);
 		} else if (event == VSquare_Req_List_Comment) {
