@@ -9,18 +9,25 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 public class ClickShareListener implements OnClickListener {
+	public interface IClickShareView{
+		public void showProgressDialog();
+		public void closeProgressDialog();
+		public void setWillShareInfo(VideoSquareInfo info);
+	}
+	
+	
 	private VideoSquareInfo mVideoSquareInfo;
 	private Context mContext;
-	private NewestListView mNewestListView;
-	private CategoryListView mCategoryListView = null;
+	private IClickShareView mNewestListView;
+	private IClickShareView mCategoryListView = null;
 
-	public ClickShareListener(Context context, VideoSquareInfo info, NewestListView view) {
+	public ClickShareListener(Context context, VideoSquareInfo info, IClickShareView view) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 		this.mNewestListView = view;
 	}
 
-	public void setCategoryListView(CategoryListView view) {
+	public void setCategoryListView(IClickShareView view) {
 		mCategoryListView = view;
 	}
 

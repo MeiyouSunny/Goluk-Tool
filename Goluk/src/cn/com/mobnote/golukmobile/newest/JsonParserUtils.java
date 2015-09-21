@@ -114,104 +114,119 @@ public class JsonParserUtils {
 		return info;
 	}
 	
+	private static void parserNewestItemDataByJsonObj(JSONObject obj, List<VideoSquareInfo> dataList) throws JSONException
+	{
+		if(null != obj){
+			boolean success = obj.optBoolean("success");
+			if(success){
+				JSONObject data = obj.optJSONObject("data");
+				if(null != data){
+					String result = data.optString("result");
+					if("0".equals(result)){
+						JSONArray videolist = data.optJSONArray("videolist");
+						if(null != videolist){
+							long time = System.currentTimeMillis();
+							for(int i=0; i<videolist.length(); i++){
+								JSONObject videoinfo = videolist.optJSONObject(i);
+								if(null != videoinfo){
+									VideoEntity mVideoEntity = new VideoEntity();
+									JSONObject video = videoinfo.optJSONObject("video");
+									if(null != video){
+										LiveVideoData lvd = new LiveVideoData();
+										JSONObject live = video.optJSONObject("videodata");
+										if(null != live){
+											lvd.active = live.optString("active");
+											lvd.aid = live.optString("aid");
+											lvd.flux = live.optString("flux");
+											lvd.lat= live.optString("lat");
+											lvd.lon = live.optString("lon");
+											lvd.mid = live.optString("mid");
+											lvd.open = live.optString("open");
+											lvd.restime = live.optString("restime");
+											lvd.speed = live.optString("speed");
+											lvd.tag = live.optString("tag");
+											lvd.talk = live.optString("talk");
+											lvd.vtype = live.optString("vtype");
+										}
+										mVideoEntity.videoid = video.optString("videoid");
+										mVideoEntity.type = video.optString("type");
+										mVideoEntity.sharingtime = video.optString("sharingtime");
+										mVideoEntity.describe = video.optString("describe");
+										mVideoEntity.picture = video.optString("picture");
+										mVideoEntity.clicknumber = video.optString("clicknumber");
+										mVideoEntity.praisenumber = video.optString("praisenumber");
+										mVideoEntity.starttime = video.optString("starttime");
+										mVideoEntity.livetime = video.optString("livetime");
+										mVideoEntity.livewebaddress = video.optString("livewebaddress");
+										mVideoEntity.livesdkaddress = video.optString("livesdkaddress");
+										mVideoEntity.ondemandwebaddress = video.optString("ondemandwebaddress");
+										mVideoEntity.ondemandsdkaddress = video.optString("ondemandsdkaddress");
+										mVideoEntity.ispraise = video.optString("ispraise");
+										mVideoEntity.livevideodata = lvd;
+										mVideoEntity.reason = video.optString("reason");
+										
+										JSONObject comment = video.optJSONObject("comment");
+										if(null != comment) {
+											mVideoEntity.iscomment = comment.optString("iscomment");
+											mVideoEntity.comcount = comment.optString("comcount");
+
+											JSONArray comlist = comment.optJSONArray("comlist");
+											if(null != comlist){
+												for(int j=0; j<comlist.length(); j++){
+													JSONObject item = comlist.getJSONObject(j);
+													CommentDataInfo comminfo = new CommentDataInfo(item);
+													mVideoEntity.commentList.add(comminfo);
+												}
+											}
+										}
+										
+									}
+									
+									UserEntity mUserEntity = new UserEntity();
+									JSONObject user = videoinfo.getJSONObject("user");
+									if(null != user){
+										mUserEntity.uid = user.optString("uid");
+										mUserEntity.nickname = user.optString("nickname");
+										mUserEntity.headportrait = user.optString("headportrait");
+										mUserEntity.sex = user.optString("sex");
+									}
+									
+									long id = time + i;
+									VideoSquareInfo mVideoSquareInfo = new VideoSquareInfo();
+									mVideoSquareInfo.mVideoEntity=mVideoEntity;
+									mVideoSquareInfo.mUserEntity=mUserEntity;
+									mVideoSquareInfo.id = ""+id;
+									dataList.add(mVideoSquareInfo);
+								}
+							}
+						}
+						
+						
+					}
+				}
+			}
+		}
+	}
+	
 	public static List<VideoSquareInfo> parserNewestItemData(String jsonStr) {
 		List<VideoSquareInfo> mDataList = new ArrayList<VideoSquareInfo>();
 		try {
 			JSONObject obj = new JSONObject(jsonStr);
-			if(null != obj){
-				boolean success = obj.optBoolean("success");
-				if(success){
-					JSONObject data = obj.optJSONObject("data");
-					if(null != data){
-						String result = data.optString("result");
-						if("0".equals(result)){
-							JSONArray videolist = data.optJSONArray("videolist");
-							if(null != videolist){
-								long time = System.currentTimeMillis();
-								for(int i=0; i<videolist.length(); i++){
-									JSONObject videoinfo = videolist.optJSONObject(i);
-									if(null != videoinfo){
-										VideoEntity mVideoEntity = new VideoEntity();
-										JSONObject video = videoinfo.optJSONObject("video");
-										if(null != video){
-											LiveVideoData lvd = new LiveVideoData();
-											JSONObject live = video.optJSONObject("videodata");
-											if(null != live){
-												lvd.active = live.optString("active");
-												lvd.aid = live.optString("aid");
-												lvd.flux = live.optString("flux");
-												lvd.lat= live.optString("lat");
-												lvd.lon = live.optString("lon");
-												lvd.mid = live.optString("mid");
-												lvd.open = live.optString("open");
-												lvd.restime = live.optString("restime");
-												lvd.speed = live.optString("speed");
-												lvd.tag = live.optString("tag");
-												lvd.talk = live.optString("talk");
-												lvd.vtype = live.optString("vtype");
-											}
-											mVideoEntity.videoid = video.optString("videoid");
-											mVideoEntity.type = video.optString("type");
-											mVideoEntity.sharingtime = video.optString("sharingtime");
-											mVideoEntity.describe = video.optString("describe");
-											mVideoEntity.picture = video.optString("picture");
-											mVideoEntity.clicknumber = video.optString("clicknumber");
-											mVideoEntity.praisenumber = video.optString("praisenumber");
-											mVideoEntity.starttime = video.optString("starttime");
-											mVideoEntity.livetime = video.optString("livetime");
-											mVideoEntity.livewebaddress = video.optString("livewebaddress");
-											mVideoEntity.livesdkaddress = video.optString("livesdkaddress");
-											mVideoEntity.ondemandwebaddress = video.optString("ondemandwebaddress");
-											mVideoEntity.ondemandsdkaddress = video.optString("ondemandsdkaddress");
-											mVideoEntity.ispraise = video.optString("ispraise");
-											mVideoEntity.livevideodata = lvd;
-											mVideoEntity.reason = video.optString("reason");
-											
-											JSONObject comment = video.optJSONObject("comment");
-											if(null != comment) {
-												mVideoEntity.iscomment = comment.optString("iscomment");
-												mVideoEntity.comcount = comment.optString("comcount");
-
-												JSONArray comlist = comment.optJSONArray("comlist");
-												if(null != comlist){
-													for(int j=0; j<comlist.length(); j++){
-														JSONObject item = comlist.getJSONObject(j);
-														CommentDataInfo comminfo = new CommentDataInfo(item);
-														mVideoEntity.commentList.add(comminfo);
-													}
-												}
-											}
-											
-										}
-										
-										UserEntity mUserEntity = new UserEntity();
-										JSONObject user = videoinfo.getJSONObject("user");
-										if(null != user){
-											mUserEntity.uid = user.optString("uid");
-											mUserEntity.nickname = user.optString("nickname");
-											mUserEntity.headportrait = user.optString("headportrait");
-											mUserEntity.sex = user.optString("sex");
-										}
-										
-										long id = time + i;
-										VideoSquareInfo mVideoSquareInfo = new VideoSquareInfo();
-										mVideoSquareInfo.mVideoEntity=mVideoEntity;
-										mVideoSquareInfo.mUserEntity=mUserEntity;
-										mVideoSquareInfo.id = ""+id;
-										mDataList.add(mVideoSquareInfo);
-									}
-								}
-							}
-							
-							
-						}
-					}
-				}
-			}
+			parserNewestItemDataByJsonObj(obj, mDataList);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
+		return mDataList;
+	}
+	
+	public static List<VideoSquareInfo> parserNewestItemDataByJsonObj(JSONObject obj) {
+		List<VideoSquareInfo> mDataList = new ArrayList<VideoSquareInfo>();
+		try {
+			parserNewestItemDataByJsonObj(obj, mDataList);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return mDataList;
 	}
 	

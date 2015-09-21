@@ -422,5 +422,34 @@ public class JsonCreateUtils {
 
 		return json;
 	}
+	
+	public static String getUserCenterJson(String otheruid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("otheruid", otheruid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getUserCenterShareVideoJson(String otheruid, String operation, String timestamp){
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("otheruid", otheruid);
+			obj.put("operation", operation);
+			obj.put("timestamp", timestamp);
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
 
 }
