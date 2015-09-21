@@ -1,6 +1,8 @@
 package cn.com.mobnote.golukmobile.usercenter;
 
-public class UserInfo {
+import java.io.Serializable;
+
+public class UCUserInfo implements Serializable {
 	
 	/**
 	 * 自定义头像URL

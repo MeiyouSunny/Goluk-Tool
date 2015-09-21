@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/praiseLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
@@ -26,6 +27,7 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="用户信息"
@@ -33,6 +35,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="各种签名签名签名签"
@@ -41,6 +44,7 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/videopic"
             android:layout_width="95dp"
             android:layout_height="52dp"
             android:layout_alignParentRight="true"

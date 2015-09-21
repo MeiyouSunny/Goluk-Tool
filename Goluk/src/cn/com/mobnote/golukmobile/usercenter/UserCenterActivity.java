@@ -10,9 +10,15 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
+import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
+import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.special.ClusterInfo;
 import cn.com.mobnote.golukmobile.special.ClusterListActivity;
 import cn.com.mobnote.golukmobile.special.SpecialDataManage;
@@ -20,23 +26,29 @@ import cn.com.mobnote.golukmobile.special.SpecialInfo;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
+import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 import android.widget.AbsListView.OnScrollListener;
+import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 
 /**
  * 
@@ -44,7 +56,7 @@ import android.widget.AbsListView.OnScrollListener;
  * 
  */
 public class UserCenterActivity extends BaseActivity implements
-		VideoSuqareManagerFn {
+		VideoSuqareManagerFn, IClickShareView ,IClickPraiseView{
 
 	private RTPullListView mRTPullListView = null;
 	private UserCenterAdapter uca = null;
@@ -52,22 +64,35 @@ public class UserCenterActivity extends BaseActivity implements
 
 	private String uchistoryDate;
 
+	private CustomLoadingDialog mCustomProgressDialog = null;
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
+	
+	class ShareVideoGroup{
+		public List<VideoSquareInfo> videolist = null;
+		/** 是否还有分页 */
+		public boolean isHaveData = false;
+		public boolean addFooter = false;
+	}
+	
+	class PraiseInfoGroup{
+		public List<PraiseInfo> praiselist = null;
+		/** 是否还有分页 */
+		public boolean isHaveData = true;
+	}
 
-	private RelativeLayout loading = null;
-
-	/** 是否还有分页 */
-	private boolean isHaveData = true;
-
-	private ClusterInfo endtime = null;
-
-	private UserInfo userdata = null;
-	private List<ClusterInfo> videodata = null;
-	private List<PraiseInfo> praisedata;
-
+	private GolukApplication mApp = null;
+	//当前访问的用户信息
+	private UCUserInfo curUser = null;
+	//当前该用户的分享视频信息列表
+	private ShareVideoGroup videogroupdata = null;
+	//当前该用户的点赞人员信息列表
+	private PraiseInfoGroup praisgroupdata = null;
+	
+	private RelativeLayout mBottomLoadingView = null;
+	
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
@@ -79,67 +104,111 @@ public class UserCenterActivity extends BaseActivity implements
 		setContentView(R.layout.user_center);
 		GolukApplication.getInstance().getVideoSquareManager()
 				.addVideoSquareManagerListener("UserCenterActivity", this);
+		
+		mApp = (GolukApplication) getApplication();
+		mApp.setContext(this, "UserCenterActivity");
 
-		videodata = new ArrayList<ClusterInfo>();
-		praisedata = new ArrayList<PraiseInfo>();
+		videogroupdata = new ShareVideoGroup();
+		videogroupdata.videolist = new ArrayList<VideoSquareInfo>();
+		videogroupdata.isHaveData = false;
+		praisgroupdata = new PraiseInfoGroup();
+		praisgroupdata.praiselist = new ArrayList<PraiseInfo>();
+		praisgroupdata.isHaveData = false;
+		
+		Intent i = this.getIntent();
+		curUser = (UCUserInfo) i.getSerializableExtra("userinfo");		
+        this.init();
+        uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
+        uca.notifyDataSetChanged();
+        mRTPullListView.firstFreshState();
+		httpPost(curUser.uid);
+		
+		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(
+				R.layout.video_square_below_loading, null);
 	}
 
+	@Override
+	protected void onResume() {
+		mApp.setContext(this, "UserCenterActivity");
+		super.onResume();
+	}
+	
 	/**
 	 * 初始化数据
 	 */
 	private void init() {
-		sharePlatform = new SharePlatformUtil(this);
-		uca = new UserCenterAdapter(this, sharePlatform);
-		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
-		// mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		mRTPullListView.setAdapter(uca);
-
-		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				uchistoryDate = SettingUtils.getInstance().getString(
-						"gcHistoryDate", sdf.format(new Date()));
-				SettingUtils.getInstance().putString("ucHistoryDate",
-						sdf.format(new Date()));
-				httpPost("");// 请求数据
-			}
-		});
-
-		mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
-			@Override
-			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-
-					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
-						if (isHaveData) {
-							httpPost("");// 请求数据
+		if (sharePlatform == null)
+		{
+			sharePlatform = new SharePlatformUtil(this);
+			uca = new UserCenterAdapter(this, sharePlatform);
+			mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
+			mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+			mRTPullListView.setAdapter(uca);
+	
+			mRTPullListView.setonRefreshListener(new OnRefreshListener() {
+				@Override
+				public void onRefresh() {
+					uchistoryDate = SettingUtils.getInstance().getString(
+							"gcHistoryDate", sdf.format(new Date()));
+					SettingUtils.getInstance().putString("ucHistoryDate",
+							sdf.format(new Date()));
+					//下拉刷新个人中心所有数据
+					httpPost("");// 请求数据
+				}
+			});
+	
+			mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
+				@Override
+				public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+					if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+	
+						if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
+							if (uca.getCurrentViewType() == UserCenterAdapter.ViewType_ShareVideoList)
+							{//视频列表
+								if (videogroupdata.isHaveData)
+								{//加载更多视频数据
+									if (videogroupdata.videolist.size() > 0) {
+										if (!videogroupdata.addFooter) {
+											videogroupdata.addFooter = true;
+											mRTPullListView.addFooterView(mBottomLoadingView);
+										}
+										httpGetNextVideo(videogroupdata.videolist.get(videogroupdata.videolist.size() - 1).mVideoEntity.sharingtime);
+									}
+								}
+							}
+							else
+							{//点赞用户列表
+								
+							}
 						}
 					}
 				}
-			}
-
-			@Override
-			public void onScroll(AbsListView arg0, int firstVisibleItem,
-					int visibleItemCount, int arg3) {
-				wonderfulFirstVisible = firstVisibleItem;
-				wonderfulVisibleCount = visibleItemCount;
-			}
-		});
-
-		// 有下一页刷新
-		if (isHaveData) {
-			loading = (RelativeLayout) LayoutInflater.from(this).inflate(
-					R.layout.video_square_below_loading, null);
-			mRTPullListView.addFooterView(loading);
+	
+				@Override
+				public void onScroll(AbsListView arg0, int firstVisibleItem,
+						int visibleItemCount, int arg3) {
+					wonderfulFirstVisible = firstVisibleItem;
+					wonderfulVisibleCount = visibleItemCount;
+				}
+			});
 		}
-
-		SpecialInfo si = new SpecialInfo();
-		si.videoid = "zh";
-
-		uca.setUserData(userdata);
-		uca.setVideoData(videodata);
-		uca.setPraisData(praisedata);
-		uca.notifyDataSetChanged();
+	}
+	
+	public void updateViewData(boolean succ, int count)
+	{
+		if (succ)
+		{
+			uca.notifyDataSetChanged();
+			if (count > 0)
+			{
+				this.mRTPullListView.setSelection(count);
+			}
+		}
+		else
+		{
+			
+		}
+		mRTPullListView.onRefreshComplete("获取数据成功");
 	}
 
 	/**
@@ -151,7 +220,16 @@ public class UserCenterActivity extends BaseActivity implements
 	 * @date 2015年4月15日
 	 */
 	private void httpPost(String otheruid) {
-		boolean result = GolukApplication.getInstance().getVideoSquareManager().getUserCenter(otheruid);
+		boolean result = GolukApplication.getInstance().getVideoSquareManager().getUserCenter(curUser.uid);
+	}
+	
+	/**
+	 * 获取更多视频列表
+	 * 
+	 */
+	private void httpGetNextVideo(String sharingtime)
+	{
+		boolean result = GolukApplication.getInstance().getVideoSquareManager().getUserCenterShareVideo(curUser.uid, "2", sharingtime);
 	}
 
 	@Override
@@ -159,129 +237,186 @@ public class UserCenterActivity extends BaseActivity implements
 			Object param2) {
 		if (event == VSquare_Req_MainPage_Infor) {
 			if (RESULE_SUCESS == msg) {
-				List<ClusterInfo> videos = ucdf.getClusterList((String) param2);
+				List<VideoSquareInfo> videos = ucdf.getClusterList((String) param2);
 				List<PraiseInfo> praise = ucdf.getPraises((String) param2);
-				UserInfo user = ucdf.getUserInfo((String) param2);
-				
-				// 说明有数据
-				if (videos != null && videos.size() > 0) {
-					if (videos.size() >= 20) {
-						isHaveData = true;
-					} else {
-						isHaveData = false;
+				UCUserInfo user = ucdf.getUserInfo((String) param2);
+				if (user != null)
+				{
+					// 说明有数据
+					if (videos != null && videos.size() > 0) {
+						if (videos.size() >= 20) {
+							videogroupdata.isHaveData = true;
+						} else {
+							videogroupdata.isHaveData = false;
+						}
+						videogroupdata.videolist = videos;
 					}
-					videodata = videos;
+					// 说明有数据
+					if ( praise != null && praise.size() > 0 ) {
+						this.praisgroupdata.praiselist = praise;
+					}
+					// 说明有数据
+					curUser = user;
+					uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
+					updateViewData(true, 0);
 				}
-				// 说明有数据
-				if ( praise != null && praise.size() > 0 ) {
-					praisedata = praise;
+				else
+				{
+					videogroupdata.isHaveData = false;
+					GolukUtils.showToast(UserCenterActivity.this, "数据异常，请检查服务器");
+					updateViewData(false, 0);
 				}
-				// 说明有数据
-				if (user != null) {
-					userdata = user;
-				}
-				
-				init();
-
 			} else {
-				isHaveData = false;
+				videogroupdata.isHaveData = false;
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
+				updateViewData(false, 0);
 			}
 
-		} else if (event == VSquare_Req_VOP_GetShareURL_Video
-				|| event == VSquare_Req_VOP_GetShareURL_Topic_Tag) {
-//			if (RESULE_SUCESS == msg) {
-//				try {
-//					JSONObject result = new JSONObject((String) param2);
-//					if (result.getBoolean("success")) {
-//						JSONObject data = result.getJSONObject("data");
-//						GolukDebugUtils.i("detail",
-//								"------VideoSuqare_CallBack--------data-----"
-//										+ data);
-//						String shareurl = data.getString("shorturl");
-//						String coverurl = data.getString("coverurl");
-//						String describe = data.optString("describe");
-//						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
-//
-//						if (TextUtils.isEmpty(describe)) {
-//							describe = "#极路客精彩视频#";
-//						}
-//						String ttl = "极路客精彩视频分享";
-//
-//						// 缩略图
-//						Bitmap bitmap = getThumbBitmap(coverurl);
-//
-//						if (this != null && !this.isFinishing()) {
-//							mCustomProgressDialog.close();
-//							CustomShareBoard shareBoard = new CustomShareBoard(
-//									this, sharePlatform, shareurl, coverurl,
-//									describe, ttl, bitmap, realDesc,
-//									getShareVideoId());
-//							System.out.println("我日我日我日====bitmap=" + bitmap);
-//							shareBoard.showAtLocation(this.getWindow()
-//									.getDecorView(), Gravity.BOTTOM, 0, 0);
-//							System.out.println("我擦我擦我擦");
-//						}
-//					} else {
-//						GolukUtils.showToast(this, "网络异常，请检查网络");
-//					}
-//				} catch (JSONException e) {
-//					e.printStackTrace();
-//				}
-//			} else {
-//				mCustomProgressDialog.close();
-//				GolukUtils.showToast(this, "网络异常，请检查网络");
-//			}
+		} else if (event == VSquare_Req_MainPage_List_ShareVideo)
+		{//个人主页视频列表结果
+			if (RESULE_SUCESS == msg) {
+				List<VideoSquareInfo> videos = JsonParserUtils.parserNewestItemData((String) param2);
+				if (videos != null && videos.size() > 0)
+				{
+					int count = videogroupdata.videolist.size();
+					videogroupdata.videolist.addAll(videos);
+					updateViewData(true, count);
+				}
+			}
+			else
+			{
+				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
+			}
+			videogroupdata.addFooter = false;
+			//移除下拉
+			mRTPullListView.removeFooterView(this.mBottomLoadingView);
+		}
+		
+		else if (event == VSquare_Req_VOP_GetShareURL_Video) {
+			Context topContext = mApp.getContext();
+			if (topContext != this) {
+				return;
+			}
+			closeProgressDialog();
+			if (RESULE_SUCESS == msg) {
+				try {
+					JSONObject result = new JSONObject((String) param2);
+					if (result.getBoolean("success")) {
+						JSONObject data = result.getJSONObject("data");
+						String shareurl = data.getString("shorturl");
+						String coverurl = data.getString("coverurl");
+						String describe = data.optString("describe");
+
+						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+
+						if (TextUtils.isEmpty(describe)) {
+							// if
+							// ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type))
+							// {
+							// describe = "#极路客直播#";
+							// } else {
+							describe = "#极路客精彩视频#";
+							// }
+						}
+						String ttl = "极路客精彩视频";
+						
+						// if
+						// ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type))
+						// {// 直播
+						// ttl =
+						// mVideoSquareOnClickListener.mVideoSquareInfo.mUserEntity.nickname
+						// + "的直播视频分享";
+						// realDesc = ttl + "(使用#极路客Goluk#拍摄)";
+						// }
+
+							if (!this.isFinishing()) {
+								String videoId = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mVideoEntity.videoid : "";
+								String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname : "";
+								describe = username + "：" + describe;
+								CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl,
+										coverurl, describe, ttl, null, realDesc, videoId);
+								shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+							}
+
+
+					} else {
+						GolukUtils.showToast(this, "网络异常，请检查网络");
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} else {
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
+		} else if (event == VSquare_Req_VOP_Praise) {
+			if (RESULE_SUCESS == msg) {
+				if (null != mVideoSquareInfo) {
+					if("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+						mVideoSquareInfo.mVideoEntity.ispraise = "1";
+						updateClickPraiseNumber(true, mVideoSquareInfo);
+					}
+				}
+
+			}else {
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
 		}
 
 	}
 
-	public void sj() {
-		// if (uptype == 1) {// 上拉刷新
-		// if (list.size() >= 20) {// 数据超过20条
-		// isHaveData = true;
-		// } else {// 数据没有20条
-		// isHaveData = false;
-		// if (loading != null) {
-		// if (mRTPullListView != null) {
-		// mRTPullListView.removeFooterView(loading);
-		// loading = null;
-		// }
-		// }
-		// }
-		// mDataList.addAll(list);
-		// flush();
-		// } else if (uptype == 2) {// 下拉刷新
-		// mDataList.clear();
-		//
-		// if (list.size() >= 20) {// 数据超过20条
-		// isHaveData = true;
-		// } else {// 数据没有20条
-		// isHaveData = false;
-		// }
-		//
-		// if ("1".equals(type)) {// 直播
-		// mDataList = list;
-		// } else {
-		// list.addAll(mDataList);
-		// mDataList = list;
-		// }
-		//
-		// mRTPullListView.onRefreshComplete(historyDate);
-		// flush();
-		// }
+	@Override
+	public void showProgressDialog() {
+		if (null == mCustomProgressDialog) {
+			mCustomProgressDialog = new CustomLoadingDialog(this, null);
+		}
+
+		if (!mCustomProgressDialog.isShowing()) {
+			mCustomProgressDialog.show();
+		}
+
 	}
 
-	private List<ClusterInfo> getData() {
-		List<ClusterInfo> list = new ArrayList<ClusterInfo>();
-
-		ClusterInfo ci = null;
-		for (int i = 0; i < 15; i++) {
-			ci = new ClusterInfo();
-			ci.videoid = i + "";
-			list.add(ci);
+	@Override
+	public void closeProgressDialog() {
+		// TODO Auto-generated method stub
+		if (null != mCustomProgressDialog) {
+			mCustomProgressDialog.close();
 		}
-		return list;
+	}
+
+	private VideoSquareInfo mWillShareVideoSquareInfo;
+	@Override
+	public void setWillShareInfo(VideoSquareInfo info) {
+		mWillShareVideoSquareInfo = info;
+	}
+
+	VideoSquareInfo mVideoSquareInfo;
+	@Override
+	public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info) {
+		// TODO Auto-generated method stub
+		mVideoSquareInfo = info;
+		if (!flag) {
+			return;
+		}
+
+		for (int i = 0; i < this.videogroupdata.videolist.size(); i++) {
+			VideoSquareInfo vs = this.videogroupdata.videolist.get(i);
+			if (vs.id.equals(mVideoSquareInfo.id)) {
+				int number = Integer.parseInt(mVideoSquareInfo.mVideoEntity.praisenumber);
+				if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+					number++;
+				}else {
+					number--;
+				}
+				
+				this.videogroupdata.videolist.get(i).mVideoEntity.praisenumber = "" + number;
+				this.videogroupdata.videolist.get(i).mVideoEntity.ispraise = mVideoSquareInfo.mVideoEntity.ispraise;
+				mVideoSquareInfo.mVideoEntity.praisenumber = "" + number;
+				break;
+			}
+		}
+
+		this.uca.notifyDataSetChanged();
 	}
 
 }

@@ -49,6 +49,10 @@ public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int VSquare_Req_VOP_GetShareURL_Video = 773;
 	/** 获取分享地址(专题和聚合) */
 	public static final int VSquare_Req_VOP_GetShareURL_Topic_Tag = 774;
+	/** 获取用户分享的视频列表 */
+	public static final int VSquare_Req_MainPage_List_ShareVideo = 1025;
+	/** 删除用户分享的视频列表 */
+	public static final int VSquare_Req_MainPage_List_EssenceVideo = 1026;
 	/**获取个人中心数据集合*/
 	public static final int VSquare_Req_MainPage_Infor = 1028;
 
