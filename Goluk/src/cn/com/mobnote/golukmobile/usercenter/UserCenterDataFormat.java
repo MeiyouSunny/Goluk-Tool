@@ -112,6 +112,7 @@ public class UserCenterDataFormat {
 							praiseinfo.headportrait = map.getString("headportrait");
 							praiseinfo.introduce = map.getString("introduce");
 							praiseinfo.picture = map.getString("picture");
+							praiseinfo.videoid = map.getString("videoid");
 							result.add(praiseinfo);
 						}
 						return result;
