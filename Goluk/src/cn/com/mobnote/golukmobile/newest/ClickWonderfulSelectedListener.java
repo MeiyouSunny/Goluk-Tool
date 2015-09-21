@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile.newest;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
-import cn.com.mobnote.golukmobile.VideoSquareDeatilActivity;
 import cn.com.mobnote.golukmobile.special.ClusterListActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;

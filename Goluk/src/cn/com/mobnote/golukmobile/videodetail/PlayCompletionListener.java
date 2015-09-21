@@ -20,7 +20,7 @@ public class PlayCompletionListener implements OnCompletionListener {
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
 		// TODO OnCompletionListener视频播放完后进度条回到初始位置
-		GolukDebugUtils.e("videostate", "VideoSquareDetailActivity-------------------------onCompletion :  ");
+		GolukDebugUtils.e("videostate", "VideoDetailActivity-------------------------onCompletion :  ");
 		if (mAdapter.error || null == mHolder.mVideoView) {
 			return;
 		}
