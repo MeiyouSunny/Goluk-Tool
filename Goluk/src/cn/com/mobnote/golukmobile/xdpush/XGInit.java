@@ -4,7 +4,6 @@ import android.content.Context;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -69,7 +68,7 @@ public class XGInit implements XGIOperateCallback {
 		GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_PushReg, json);
 		isValidTokenId = true;
-		GolukUtils.showToast(mContext, "token:" + token);
+		// GolukUtils.showToast(mContext, "token:" + token);
 		GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit----token:" + token);
 	}
 }

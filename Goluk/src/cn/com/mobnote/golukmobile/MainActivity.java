@@ -42,8 +42,6 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
-import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
@@ -274,31 +272,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukNotification.getInstance().dealAppinnerClick(this, bean);
 			}
 			GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
-		}
-	}
-
-	private void click_push(XingGeMsgBean msgBean) {
-		if (null == msgBean) {
-			return;
-		}
-		if ("0".equals(msgBean.target)) {
-			// 不处理
-		} else if ("1".equals(msgBean.target)) {
-			// 启动程序
-		} else if ("2".equals(msgBean.target)) {
-			// 启动程序功能界面
-			if ("1".equals(msgBean.tarkey)) {
-				// 启动视频详情界面
-				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-				if (null != vidArray && vidArray.length > 0) {
-					GolukNotification.getInstance().startDetail(vidArray[0]);
-				}
-			}
-		} else if ("3".equals(msgBean.target)) {
-			// 打开Web页
-			if (null != msgBean.weburl && !"".equals(msgBean.weburl)) {
-				GolukUtils.openUrl(msgBean.weburl, this);
-			}
 		}
 	}
 
@@ -717,6 +690,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			MobclickAgent.onKillProcess(this);
 			finish();
 			Fresco.shutDown();
+			GolukNotification.getInstance().destroy();
 			// int PID = android.os.Process.myPid();
 			// android.os.Process.killProcess(PID);
 			// System.exit(0);
