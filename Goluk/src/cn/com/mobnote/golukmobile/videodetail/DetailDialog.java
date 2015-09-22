@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.videodetail;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.newest.RecomVideoActivity;
 import cn.com.mobnote.util.GolukUtils;
@@ -56,11 +57,13 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 			break;
 		case R.id.back:
 			dismiss();
-			if(mContext instanceof VideoDetailActivity){
-				((VideoDetailActivity)mContext).finish();
-			}else if(mContext instanceof WonderfulActivity){
-				((WonderfulActivity)mContext).finish();
-			}
+			Intent it = new Intent(mContext,MainActivity.class);
+			mContext.startActivity(it);
+//			if(mContext instanceof VideoDetailActivity){
+//				((VideoDetailActivity)mContext).finish();
+//			}else if(mContext instanceof WonderfulActivity){
+//				((WonderfulActivity)mContext).finish();
+//			}
 			break;
 		case R.id.cancle:
 			dismiss();
