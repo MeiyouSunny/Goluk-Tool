@@ -355,5 +355,10 @@
     <string name="logout">注销</string>
     <string name="setting_notify_comment">有人给我评论</string>
     <string name="setting_notify_parise">有人给我点赞</string>
+    
+    <string name="dialog_str_confirm">举报不良内容</string>
+    <string name="dialog_str_del">删除这个视频</string>
+    <string name="dialog_str_tuijian">推荐这个视频</string>
+    <string name="dialog_str_cancel">取消</string>
 
 </resources>
