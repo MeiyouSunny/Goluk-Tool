@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -292,6 +293,18 @@ public class VideoDetailAdapter extends BaseAdapter {
 				e.printStackTrace();
 			}
 		}
+		
+		headHolder.mCommentLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(mContext instanceof VideoDetailActivity){
+					((VideoDetailActivity)mContext).showSoft();
+				}else{
+					((WonderfulActivity)mContext).showSoft();
+				}
+			}
+		});
 
 		return mHeadView;
 	}
