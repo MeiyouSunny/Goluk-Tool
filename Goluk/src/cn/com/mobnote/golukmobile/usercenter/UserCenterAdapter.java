@@ -698,10 +698,10 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		SimpleDraweeView view = new SimpleDraweeView(mContext);
 		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
 		GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
-		// .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
-		// ScaleType.FIT_XY)
-		// .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
-		// ScaleType.FIT_XY)
+		 .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
+		 ScaleType.FIT_XY)
+		 .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
+		 ScaleType.FIT_XY)
 				.setActualImageScaleType(ScaleType.FIT_XY).build();
 		view.setHierarchy(hierarchy);
 
