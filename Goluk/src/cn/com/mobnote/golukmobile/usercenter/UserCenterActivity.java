@@ -143,7 +143,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		sharebtn.setOnClickListener(this);
 		backbtn.setOnClickListener(this);
 
-		
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
 		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this)
@@ -574,6 +573,21 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		// 下拉刷新个人中心所有数据
 		httpPost("");// 请求数据
 		mRTPullListView.firstFreshState();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
+	public int OnGetListViewWidth() {
+		return mRTPullListView.getWidth();
+	}
+
+	@Override
+	public int OnGetListViewHeight() {
+		return mRTPullListView.getHeight();
 	}
 
 }
