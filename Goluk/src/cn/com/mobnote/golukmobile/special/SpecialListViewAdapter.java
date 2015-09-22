@@ -24,7 +24,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 
 @SuppressLint("InflateParams")
 public class SpecialListViewAdapter extends BaseAdapter {

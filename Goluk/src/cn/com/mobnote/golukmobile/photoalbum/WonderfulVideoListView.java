@@ -20,13 +20,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
+import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -197,9 +197,9 @@ public class WonderfulVideoListView {
 			
 			Intent intent = null;
 			if(1 == type) {
-				intent = new Intent(mContext, VideoPlayerActivity.class);
+				intent = new Intent(mContext, VitamioPlayerActivity.class);
 			}else {
-				intent = new Intent(mContext, VideoPlayerView.class);
+				intent = new Intent(mContext, VideoPlayerActivity.class);
 			}
 			intent.putExtra("from", "local");
 			intent.putExtra("path", path);
