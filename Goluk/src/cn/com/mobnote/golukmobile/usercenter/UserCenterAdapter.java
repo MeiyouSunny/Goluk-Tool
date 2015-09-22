@@ -430,7 +430,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			if (clusterInfo.mVideoEntity.commentList.size() >= 2) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
 				holder.comment2.setText(comment.name + "  " + comment.text);
-				holder.comment1.setVisibility(View.VISIBLE);
+				holder.comment2.setVisibility(View.VISIBLE);
 			} else {
 				holder.comment2.setVisibility(View.GONE);
 			}
@@ -438,7 +438,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			if (clusterInfo.mVideoEntity.commentList.size() >= 3) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
 				holder.comment3.setText(comment.name + "  " + comment.text);
-				holder.comment1.setVisibility(View.VISIBLE);
+				holder.comment3.setVisibility(View.VISIBLE);
 			} else {
 				holder.comment3.setVisibility(View.GONE);
 			}
