@@ -19,7 +19,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -358,6 +357,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					playVideo();
 					headHolder.mVideoView.start();
 					showLoading();
+					GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------getHeadData:  showLoading");
 				}
 
 			} else {
@@ -644,6 +644,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mVideoView.start();
 			headHolder.mVideoView.setVisibility(View.VISIBLE);
 			showLoading();
+			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------startPlayer:  showLoading");
 		}
 		isOuterPause = false;
 	}
@@ -694,10 +695,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 	 */
 	public void showLoading() {
 		GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------showLoading()  isShow===" + isShow);
+		if(!UserUtils.isNetDeviceAvailable(mContext) && !headHolder.mVideoView.isPlaying()){
+			return ;
+		}
 		if (!isShow) {
 			isShow = true;
 			headHolder.mVideoLoading.setVisibility(View.VISIBLE);
 			headHolder.mLoading.setVisibility(View.VISIBLE);
+			headHolder.mPlayBtn.setVisibility(View.GONE);
 			headHolder.mLoading.postDelayed(new Runnable() {
 				@Override
 				public void run() {

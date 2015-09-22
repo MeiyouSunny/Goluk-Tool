@@ -59,11 +59,6 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 			dismiss();
 			Intent it = new Intent(mContext,MainActivity.class);
 			mContext.startActivity(it);
-//			if(mContext instanceof VideoDetailActivity){
-//				((VideoDetailActivity)mContext).finish();
-//			}else if(mContext instanceof WonderfulActivity){
-//				((WonderfulActivity)mContext).finish();
-//			}
 			break;
 		case R.id.cancle:
 			dismiss();
