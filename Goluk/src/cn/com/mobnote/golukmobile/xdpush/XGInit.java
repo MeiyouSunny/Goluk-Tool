@@ -15,8 +15,6 @@ public class XGInit implements XGIOperateCallback {
 	/** 开启logcat输出，方便debug，发布时请关闭 */
 	private static final boolean isDebug = true;
 	private Context mContext = null;
-
-	private boolean isValidTokenId = false;
 	/** 保存TokenId,在服务端注册成功后，保存在本地 */
 	private String mTokenId = "";
 
@@ -67,7 +65,6 @@ public class XGInit implements XGIOperateCallback {
 		String json = JsonUtil.getPushRegisterJsonStr(token, "1", "");
 		GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_PushReg, json);
-		isValidTokenId = true;
 		// GolukUtils.showToast(mContext, "token:" + token);
 		GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit----token:" + token);
 	}
