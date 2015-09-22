@@ -99,7 +99,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	
 	UserCenterActivity uca = null;
 
-	public UserCenterAdapter(Context context, SharePlatformUtil spf, IUserCenterInterface iUser) {
+	public UserCenterAdapter(Context context, SharePlatformUtil spf, IUserCenterInterface iUser,int tabtype) {
 		mContext = context;
 		videogroupdata = null;
 		praisgroupData = null;
@@ -108,9 +108,9 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
-
+		
 		// 默认进入分享视频列表类别
-		currentViewType = ViewType_ShareVideoList;
+		currentViewType = tabtype;
 	}
 
 	/**
@@ -240,6 +240,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					
 					
 					if(uca.testUser()){
+						holder.dz_txt.setText("赞我的人");
 						holder.userinfoarrow.setVisibility(View.VISIBLE);
 						holder.userinfolayout.setOnClickListener(new OnClickListener() {
 							
@@ -252,6 +253,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 							}
 						});
 					}else{
+						holder.dz_txt.setText("赞他的人");
 						holder.userinfoarrow.setVisibility(View.INVISIBLE);
 					}
 					convertView.setTag(holder);
@@ -400,7 +402,14 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
 			holder.detail.setText(clusterInfo.mUserEntity.nickname + "  " + clusterInfo.mVideoEntity.describe);
+			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
 			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
+			if(count > 3){
+				holder.totalcomments.setVisibility(View.VISIBLE);
+			}else{
+				holder.totalcomments.setVisibility(View.GONE);
+			}
+			
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
 			loadImage(holder.imageLayout, clusterInfo.mVideoEntity.picture, width);
 			initListener(holder, index_v);
@@ -413,6 +422,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
 				holder.comment1.setText(comment.name + "  " + comment.text);
+				holder.comment1.setVisibility(View.VISIBLE);
 			} else {
 				holder.comment1.setVisibility(View.GONE);
 			}
@@ -420,6 +430,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			if (clusterInfo.mVideoEntity.commentList.size() >= 2) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
 				holder.comment2.setText(comment.name + "  " + comment.text);
+				holder.comment1.setVisibility(View.VISIBLE);
 			} else {
 				holder.comment2.setVisibility(View.GONE);
 			}
@@ -427,6 +438,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			if (clusterInfo.mVideoEntity.commentList.size() >= 3) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
 				holder.comment3.setText(comment.name + "  " + comment.text);
+				holder.comment1.setVisibility(View.VISIBLE);
 			} else {
 				holder.comment3.setVisibility(View.GONE);
 			}
@@ -498,6 +510,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					user.sharevideonumber = "0";
 					Intent i = new Intent(mContext, UserCenterActivity.class);
 					i.putExtra("userinfo", user);
+					i.putExtra("type", 0);
 					mContext.startActivity(i);
 
 				}

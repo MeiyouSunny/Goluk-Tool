@@ -26,6 +26,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.lidroid.xutils.util.LogUtils;
 
@@ -111,11 +112,17 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	private PraiseInfoGroup praisgroupdata = null;
 
 	private RelativeLayout mBottomLoadingView = null;
+	
+	private RelativeLayout mVideoTheEndView = null;
+	
+	private TextView title = null;
 
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 
 	private UserCenterDataFormat ucdf = new UserCenterDataFormat();
+	
+	private int tabtype = 0 ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,21 +140,28 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		praisgroupdata.isHaveData = false;
 		Intent i = this.getIntent();
 		curUser = (UCUserInfo) i.getSerializableExtra("userinfo");
+		tabtype = i.getIntExtra("type", 0);
 		this.init();
 		uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
 		uca.notifyDataSetChanged();
 		mRTPullListView.firstFreshState();
 		httpPost(curUser.uid);
 		backbtn = (ImageButton) findViewById(R.id.back_btn);
+		title = (TextView) findViewById(R.id.title);
 		sharebtn = (Button) findViewById(R.id.title_share);
 		sharebtn.setOnClickListener(this);
 		backbtn.setOnClickListener(this);
-
+		if(testUser()){
+			title.setText("我的主页");
+		}
 		
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
 		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this)
 				.inflate(R.layout.video_square_below_loading, null);
+		
+		mVideoTheEndView = (RelativeLayout) LayoutInflater.from(this)
+				.inflate(R.layout.usercenter_videos_below_loading, null);
 	}
 
 	@Override
@@ -165,7 +179,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	private void init() {
 		if (sharePlatform == null) {
 			sharePlatform = new SharePlatformUtil(this);
-			uca = new UserCenterAdapter(this, sharePlatform, this);
+			uca = new UserCenterAdapter(this, sharePlatform, this,tabtype);
 			mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 			mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 			mRTPullListView.setAdapter(uca);
@@ -215,6 +229,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 			uca.notifyDataSetChanged();
 			if (count > 0) {
 				this.mRTPullListView.setSelection(count);
+				LogUtils.d("fucking ss = " + videogroupdata.isHaveData);
 			}
 		} else {
 
@@ -276,6 +291,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					List<PraiseInfo> praise = ucdf.getPraises((String) param2);
 					// 说明有数据
 					if (videos != null) {
+						mRTPullListView.removeFooterView(mVideoTheEndView);
 						if (videos.size() >= 20) {
 							videogroupdata.isHaveData = true;
 						} else {
@@ -284,8 +300,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 						videogroupdata.videolist = videos;
 						videogroupdata.firstSucc = true;
 						videogroupdata.loadfailed = false;
-					}
-					else{//数据异常
+					}else{//数据异常
 						if (videogroupdata.firstSucc == false){
 							videogroupdata.loadfailed = true;							
 						}
@@ -306,8 +321,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
 					updateViewData(true, 0);
 
-				}
-				else {
+				} else {
 					if (videogroupdata.firstSucc == false) {
 						videogroupdata.loadfailed = true;
 					}
@@ -319,7 +333,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					updateViewData(false, 0);
 				}
 			} else {
-				videogroupdata.isHaveData = false;
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 				updateViewData(false, 0);
 			}
@@ -332,13 +345,22 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					videogroupdata.videolist.addAll(videos);
 					updateViewData(true, count);
 				}
-			}
-			else {
+				
+				videogroupdata.addFooter = false;
+				// 移除下拉
+				mRTPullListView.removeFooterView(this.mBottomLoadingView);
+				
+				if(videos.size() < 20){
+					videogroupdata.isHaveData = false;
+					mRTPullListView.addFooterView(mVideoTheEndView);
+				}else{
+					mRTPullListView.removeFooterView(mVideoTheEndView);
+					videogroupdata.isHaveData = true;
+				}
+			}else {
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 			}
-			videogroupdata.addFooter = false;
-			// 移除下拉
-			mRTPullListView.removeFooterView(this.mBottomLoadingView);
+			
 		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
 			Context topContext = mBaseApp.getContext();
 			if (topContext != this) {

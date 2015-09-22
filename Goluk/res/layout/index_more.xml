@@ -115,6 +115,7 @@
                 android:background="#f4f4f4"
                 android:gravity="center_vertical" >
                 <LinearLayout 
+                    android:id="@+id/user_share"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -135,6 +136,7 @@
                         android:textColor="@color/live_time_desc"/>
                 </LinearLayout>
                 <LinearLayout 
+                    android:id="@+id/user_praise"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
