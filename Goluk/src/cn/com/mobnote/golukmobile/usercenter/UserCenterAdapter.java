@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -68,6 +69,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	public interface IUserCenterInterface {
 		// 刷新页面数据
 		public void OnRefrushMainPageData();
+		public int OnGetListViewWidth();
+		public int OnGetListViewHeight();
 	}
 
 	private IUserCenterInterface mUserCenterInterface = null;
@@ -90,9 +93,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	final int ItemType_VideoInfo = 1;
 	final int ItemType_PraiseInfo = 2;
 	final int ItemType_noDataInfo = 3;
-
-	private Rect firstItemRect = null;
-
+	private int firstItemHeight = 0;
 	/** 滚动中锁标识 */
 	private boolean lock = false;
 
@@ -183,7 +184,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	public long getItemId(int arg0) {
 		return 0;
 	}
-
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -232,6 +233,22 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					convertView.setTag(holder);
 				} else {
 					holder = (UserViewHolder) convertView.getTag();
+				}
+				if(uca.testUser()){
+					holder.userinfoarrow.setVisibility(View.VISIBLE);
+					final UserViewHolder h1 = holder;
+					holder.userinfolayout.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							//跳到个人中心编辑页面
+							Intent it = new Intent(mContext,UserPersonalInfoActivity.class);
+							mContext.startActivity(it);
+						};
+					});
+				}else{
+					holder.userinfoarrow.setVisibility(View.INVISIBLE);
 				}
 				holder.headImg.setBackgroundResource(ILive.mBigHeadImg[Integer.valueOf(userinfo.headportrait)]);
 				holder.username.setText(userinfo.nickname);
@@ -291,7 +308,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 						}
 					}
 				});
-
+				//计算第一项的高度
+				this.firstItemHeight = convertView.getBottom();
 			}
 			break;
 		case ItemType_VideoInfo:
@@ -477,36 +495,56 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			});
 			break;
-		case ItemType_noDataInfo: {
+		case ItemType_noDataInfo:
+		{
 			NoVideoDataViewHolder noVideoDataViewHolder = null;
 			if (convertView == null) {
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
+				convertView = LayoutInflater.from(mContext).inflate(
+						R.layout.user_center_novideodata, null);
 				noVideoDataViewHolder = new NoVideoDataViewHolder();
-				noVideoDataViewHolder.tipsimage = (ImageView) convertView.findViewById(R.id.tipsimage);
-
+				noVideoDataViewHolder.tipsimage = (ImageView) convertView
+						.findViewById(R.id.tipsimage);
+				noVideoDataViewHolder.bMeasureHeight = false;
 				convertView.setTag(noVideoDataViewHolder);
-			} else
-				noVideoDataViewHolder = (NoVideoDataViewHolder) convertView.getTag();
+			}
+			else
+				noVideoDataViewHolder = (NoVideoDataViewHolder)convertView.getTag();
+			
+			if (noVideoDataViewHolder.bMeasureHeight == false)
+			{
+				if (this.firstItemHeight > 0)
+				{
+					noVideoDataViewHolder.bMeasureHeight = true;
+					RelativeLayout rl = (RelativeLayout)convertView.findViewById(R.id.subject_ll);
+					LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)rl.getLayoutParams();
+					lp.height =  mUserCenterInterface.OnGetListViewHeight() - this.firstItemHeight;
+					rl.setLayoutParams(lp);
+				}
+			}
+			
 			boolean bNeedRefrush = false;
 			if (this.currentViewType == ViewType_ShareVideoList) {
-				// 分享视频列表
+				//分享视频列表
 				if (this.videogroupdata.loadfailed == true) {
 					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_novideo);
 					bNeedRefrush = true;
-				} else {
+				}
+				else {
 					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_qitadifang);
 				}
 			} else {
-				// 被点赞人信息列表
+				//被点赞人信息列表
 				if (this.praisgroupData.loadfailed == true) {
 					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_nolike);
 					bNeedRefrush = true;
-				} else {
+				}
+				else {
 					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.videodetail_sofaicon);
 				}
 			}
-			if (bNeedRefrush == true) {
-				noVideoDataViewHolder.tipsimage.setOnClickListener(new OnClickListener() {
+			if (bNeedRefrush == true)
+			{
+				noVideoDataViewHolder.tipsimage.setOnClickListener(new OnClickListener(){
 
 					@Override
 					public void onClick(View v) {
@@ -515,26 +553,15 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 							mUserCenterInterface.OnRefrushMainPageData();
 						}
 					}
-
+					
 				});
 			}
-
+			
 		}
-			break;
+		break;
+
 		default:
 			break;
-		}
-
-		if (position == 0) {
-			// Rect rc = new Rect();
-			// rc.left = convertView.getLeft();
-			// rc.top = convertView.
-			// rc.right = convertView.getWidth();
-			// rc.bottom = convertView.getHeight();
-			// this.firstItemRect = rc;
-			// Log.e("", "=================RECT========" + rc.left + ","+ rc.top
-			// + ","+ rc.right + ","+ rc.bottom);
-
 		}
 		return convertView;
 	}
@@ -726,6 +753,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	public static class NoVideoDataViewHolder {
 		TextView tips;
 		ImageView tipsimage;
+		boolean bMeasureHeight;
 	}
 
 	public static class ViewHolder {
