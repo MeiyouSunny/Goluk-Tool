@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -18,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -74,6 +76,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private RTPullListView mRTPullListView = null;
 	private ImageView mImageRefresh = null;
 	public RelativeLayout mCommentLayout = null;
+	/**父布局**/
+	private RelativeLayout mAllLayout = null;
 
 	/** 评论 **/
 	private ArrayList<CommentBean> commentDataList = null;
@@ -160,6 +164,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
+		mAllLayout = (RelativeLayout) findViewById(R.id.all_layout);
 
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
@@ -175,6 +180,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mImageRight.setOnClickListener(this);
 		mEditInput.addTextChangedListener(this);
 		mImageRefresh.setOnClickListener(this);
+		mAllLayout.setOnClickListener(this);
 
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
@@ -268,6 +274,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		case R.id.video_detail_click_refresh:
 			clickRefresh = true;
 			getDetailData();
+			break;
+		case R.id.all_layout:
+			UserUtils.hideSoftMethod(this);
 			break;
 		default:
 			break;
@@ -819,6 +828,19 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		if (null != mLoadingDialog) {
 			mLoadingDialog.close();
 			mLoadingDialog = null;
+		}
+	}
+	
+	/**
+	 * 点击评论弹出键盘
+	 */
+	public void showSoft(){
+		if("1".equals(mVideoJson.data.avideo.video.comment.iscomment)){
+			mEditInput.requestFocus();
+			InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager.showSoftInput(mEditInput,0);
+		}else{
+			mEditInput.clearFocus();
 		}
 	}
 

@@ -198,14 +198,13 @@
         android:paddingBottom="12dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="16dp" >
+        android:paddingTop="12dp" >
 
         <LinearLayout
             android:id="@+id/praiseLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:gravity="center_vertical" >
+            android:layout_alignParentLeft="true" >
 
             <ImageView
                 android:id="@+id/video_square_detail_like_image"
@@ -238,8 +237,7 @@
             android:id="@+id/shareLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical" >
+            android:layout_alignParentRight="true" >
 
             <ImageView
                 android:id="@+id/video_square_detail_share"
@@ -263,9 +261,7 @@
             android:id="@+id/commentLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/shareLayout"
-            android:gravity="center_vertical"
-            android:layout_marginRight="30dp" >
+            android:layout_centerInParent="true" >
 
             <ImageView
                 android:id="@+id/video_square_detail_comment"

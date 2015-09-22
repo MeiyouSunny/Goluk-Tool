@@ -292,6 +292,18 @@ public class VideoDetailAdapter extends BaseAdapter {
 				e.printStackTrace();
 			}
 		}
+		
+		headHolder.mCommentLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(mContext instanceof VideoDetailActivity){
+					((VideoDetailActivity)mContext).showSoft();
+				}else{
+					((WonderfulActivity)mContext).showSoft();
+				}
+			}
+		});
 
 		return mHeadView;
 	}
@@ -345,6 +357,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					playVideo();
 					headHolder.mVideoView.start();
 					showLoading();
+					GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------getHeadData:  showLoading");
 				}
 
 			} else {
@@ -631,6 +644,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mVideoView.start();
 			headHolder.mVideoView.setVisibility(View.VISIBLE);
 			showLoading();
+			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------startPlayer:  showLoading");
 		}
 		isOuterPause = false;
 	}
@@ -681,10 +695,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 	 */
 	public void showLoading() {
 		GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------showLoading()  isShow===" + isShow);
+		if(!UserUtils.isNetDeviceAvailable(mContext) && !headHolder.mVideoView.isPlaying()){
+			return ;
+		}
 		if (!isShow) {
 			isShow = true;
 			headHolder.mVideoLoading.setVisibility(View.VISIBLE);
 			headHolder.mLoading.setVisibility(View.VISIBLE);
+			headHolder.mPlayBtn.setVisibility(View.GONE);
 			headHolder.mLoading.postDelayed(new Runnable() {
 				@Override
 				public void run() {

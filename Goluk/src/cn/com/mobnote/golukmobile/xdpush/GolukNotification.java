@@ -23,9 +23,11 @@ import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.JsonUtil;
 
 public class GolukNotification {
-
+	/** 推送标识，主要是主界面接受，用于区分是否是推送数据 */
 	public static final String NOTIFICATION_KEY_FROM = "from";
+	/** 用户点击状态栏时发出的广播 */
 	public static final String NOTIFICATION_BROADCAST = "cn.com.goluk.broadcast.clicknotification";
+	/** 用户点击状态栏，带的数据传输给主页 */
 	public static final String NOTIFICATION_KEY_JSON = "json";
 
 	/** 这个属性决定 ，用户点击通知以后，是启动Activity 还是发广播 , true为发广播 ，false为启动Activity */
@@ -59,9 +61,10 @@ public class GolukNotification {
 	/**
 	 * 显示程序外通知
 	 * 
-	 * @param context
 	 * @param msgBean
+	 *            推送解析后的数据
 	 * @param json
+	 *            推送原始数据
 	 * @author jyf
 	 */
 	public void showNotify(Context context, XingGeMsgBean msgBean, String json) {
@@ -72,7 +75,6 @@ public class GolukNotification {
 	/**
 	 * 创建一个通知显示体
 	 * 
-	 * @return
 	 * @author jyf
 	 */
 	private Notification createNotification(Context startActivity, String json, String title, String content) {
@@ -97,7 +99,6 @@ public class GolukNotification {
 	/**
 	 * 设置显示状态栏通知时，配置的基本参数，比如声音等
 	 * 
-	 * @param noti
 	 * @author jyf
 	 */
 	private void setNoticationParam(Notification noti) {
