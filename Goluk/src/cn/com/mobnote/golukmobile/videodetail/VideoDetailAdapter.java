@@ -490,6 +490,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					GolukDebugUtils.e("", "-------user.nickname-----" + bean.mUserName);
 
 					it.putExtra("userinfo", user);
+					it.putExtra("type", 0);
 					mContext.startActivity(it);
 				}
 			});
