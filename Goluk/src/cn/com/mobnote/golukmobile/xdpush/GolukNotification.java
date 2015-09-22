@@ -1,6 +1,8 @@
 package cn.com.mobnote.golukmobile.xdpush;
 
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,23 +17,33 @@ import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.JsonUtil;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukNotification {
-
+	/** 推送标识，主要是主界面接受，用于区分是否是推送数据 */
 	public static final String NOTIFICATION_KEY_FROM = "from";
-	public static final String NOTIFICATION_KEY_ACTION = "action";
+	/** 用户点击状态栏时发出的广播 */
 	public static final String NOTIFICATION_BROADCAST = "cn.com.goluk.broadcast.clicknotification";
+	/** 用户点击状态栏，带的数据传输给主页 */
 	public static final String NOTIFICATION_KEY_JSON = "json";
 
 	/** 这个属性决定 ，用户点击通知以后，是启动Activity 还是发广播 , true为发广播 ，false为启动Activity */
 	private static final boolean isBroadCast = true;
 
 	private static GolukNotification mInstance = new GolukNotification();
-
+	/** 主要封装对信鸽的操作 */
 	private XGInit xgInit = null;
+	/** 是否可以弹框(在一分钟只弹一次框) */
+	private boolean isCanShowDialog = true;
+	/** 显示程序内推送对话框 */
+	private AlertDialog mPushShowDialog = null;
+	/** timer用于计时一分钟 */
+	private Timer mTimer = null;
+	/** Timer计时时长 */
+	private final int TIMER_OUT = 60 * 1000;
 
 	public void createXG(Activity activity) {
 		xgInit = new XGInit(activity);
@@ -49,9 +61,10 @@ public class GolukNotification {
 	/**
 	 * 显示程序外通知
 	 * 
-	 * @param context
 	 * @param msgBean
+	 *            推送解析后的数据
 	 * @param json
+	 *            推送原始数据
 	 * @author jyf
 	 */
 	public void showNotify(Context context, XingGeMsgBean msgBean, String json) {
@@ -62,17 +75,11 @@ public class GolukNotification {
 	/**
 	 * 创建一个通知显示体
 	 * 
-	 * @param startActivity
-	 * @param json
-	 * @param title
-	 * @param content
-	 * @return
 	 * @author jyf
 	 */
 	private Notification createNotification(Context startActivity, String json, String title, String content) {
 		Notification noti = new Notification();
 		setNoticationParam(noti);
-
 		PendingIntent contentIntent = null;
 		if (isBroadCast) {
 			Intent intent = getBroadCastIntent(json);
@@ -85,16 +92,13 @@ public class GolukNotification {
 			Intent intent = getWillStartIntent(startActivity);
 			contentIntent = PendingIntent.getActivity(startActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		}
-
 		noti.setLatestEventInfo(startActivity, title, content, contentIntent);
-
 		return noti;
 	}
 
 	/**
 	 * 设置显示状态栏通知时，配置的基本参数，比如声音等
 	 * 
-	 * @param noti
 	 * @author jyf
 	 */
 	private void setNoticationParam(Notification noti) {
@@ -127,7 +131,6 @@ public class GolukNotification {
 	private boolean isNight() {
 		Calendar calendar = Calendar.getInstance();
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		GolukDebugUtils.e("", "jyf----XD----hour:" + hour);
 		if (hour >= 8 && hour < 22) {
 			// 白天
 			return false;
@@ -164,46 +167,105 @@ public class GolukNotification {
 		// 添加以下action，也可以使被启动的Activity接受到消息，不知道为什么
 		// intent.setAction(String.valueOf(System.currentTimeMillis()));
 		intent.putExtra(NOTIFICATION_KEY_FROM, "notication");
-		intent.putExtra(NOTIFICATION_KEY_ACTION, "1");
 
 		return intent;
 	}
 
 	/**
+	 * 程序退出时调用
+	 * 
+	 * @author jyf
+	 */
+	public void destroy() {
+		if (null != mTimer) {
+			mTimer.cancel();
+			mTimer = null;
+		}
+	}
+
+	/**
+	 * 启动1分钟不弹框的计时
+	 * 
+	 * @author jyf
+	 */
+	private void startTimer() {
+		mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				isCanShowDialog = true;
+			}
+		}, TIMER_OUT);
+	}
+
+	/**
+	 * 销毁推送对话框
+	 * 
+	 * @author jyf
+	 */
+	public void dimissPushDialog() {
+		if (null != mPushShowDialog) {
+			mPushShowDialog.dismiss();
+			mPushShowDialog = null;
+		}
+	}
+
+	/**
+	 * 判断接收到的推送消息是否可以显示
+	 * 
+	 * @return true/false 可以显示/不显示
+	 * @author jyf
+	 */
+	private boolean isCanShowPushDialog() {
+		if (!isCanShowDialog) {
+			return false;
+		}
+		Context context = GolukApplication.getInstance().getContext();
+		if (context instanceof LiveActivity || context instanceof CarRecorderActivity) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * 程序内推送,显示对话框
 	 * 
-	 * @param intent
 	 * @author jyf
 	 */
 	public void showAppInnerPush(final Context cnt, final XingGeMsgBean msgBean) {
-		if (null == msgBean) {
+		if (null == msgBean || !isCanShowPushDialog()) {
 			return;
 		}
+		isCanShowDialog = false;
+		startTimer();
+		dimissPushDialog();
 		Context context = GolukApplication.getInstance().getContext();
-		final AlertDialog mTwoButtonDialog = new AlertDialog.Builder(context).create();
-		mTwoButtonDialog.setTitle(msgBean.title);
-		mTwoButtonDialog.setMessage(msgBean.msg);
-		mTwoButtonDialog.setCancelable(false);
-		mTwoButtonDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+		mPushShowDialog = new AlertDialog.Builder(context).create();
+		mPushShowDialog.setTitle(msgBean.title);
+		mPushShowDialog.setMessage(msgBean.msg);
+		mPushShowDialog.setCancelable(true);
+		mPushShowDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
-				if (null != mTwoButtonDialog) {
-					mTwoButtonDialog.dismiss();
+				if (null != mPushShowDialog) {
+					mPushShowDialog.dismiss();
 				}
 
 			}
 		});
 
-		mTwoButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+		mPushShowDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialoginterface, int i) {
 				dealAppinnerClick(cnt, msgBean);
-				if (null != mTwoButtonDialog) {
-					mTwoButtonDialog.dismiss();
+				if (null != mPushShowDialog) {
+					mPushShowDialog.dismiss();
 				}
 			}
 		});
-		mTwoButtonDialog.show();
+		mPushShowDialog.show();
 	}
 
 	/**

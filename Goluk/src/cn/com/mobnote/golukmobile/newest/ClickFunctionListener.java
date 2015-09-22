@@ -10,6 +10,8 @@ public class ClickFunctionListener implements OnClickListener {
 	private Context mContext;
 	private boolean mIsDel = false;
 	private IDialogDealFn mListener = null;
+	/** 是否可以举报 */
+	private boolean isCanConfirm = true;
 
 	public ClickFunctionListener(Context context, VideoSquareInfo info, boolean isDel, IDialogDealFn fn) {
 		this.mVideoSquareInfo = info;
@@ -18,9 +20,20 @@ public class ClickFunctionListener implements OnClickListener {
 		mIsDel = isDel;
 	}
 
+	/**
+	 * 设置是否可以举报
+	 * 
+	 * @author jyf
+	 */
+	public ClickFunctionListener setConfirm(boolean isConfirm) {
+		isCanConfirm = isConfirm;
+		return this;
+	}
+
 	@Override
 	public void onClick(View v) {
-		new FunctionDialog(mContext, mVideoSquareInfo.mVideoEntity.videoid, mIsDel, mListener).show();
+		new FunctionDialog(mContext, mVideoSquareInfo.mVideoEntity.videoid, mIsDel, mListener).setConfirm(isCanConfirm)
+				.show();
 	}
 
 }

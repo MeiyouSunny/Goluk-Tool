@@ -21,10 +21,10 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
-import cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
+import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
@@ -240,12 +240,12 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 	private void gotoVideoPlayPage(int from, String path) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
-			if (null == VideoPlayerActivity.mHandler) {
+			if (null == VitamioPlayerActivity.mHandler) {
 				Intent intent = null;
 				if (1 == from) {
-					intent = new Intent(mContext, VideoPlayerActivity.class);
+					intent = new Intent(mContext, VitamioPlayerActivity.class);
 				} else {
-					intent = new Intent(mContext, VideoPlayerView.class);
+					intent = new Intent(mContext, VideoPlayerActivity.class);
 				}
 				intent.putExtra("from", "ipc");
 				intent.putExtra("type", mCurrentType);

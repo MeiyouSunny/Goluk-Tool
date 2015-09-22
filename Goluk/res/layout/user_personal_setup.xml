@@ -56,6 +56,15 @@
             android:text="@string/setting_msg_notify"
             android:textColor="#3f3f3f"
             android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/editor_arrow"
+            android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
     <View

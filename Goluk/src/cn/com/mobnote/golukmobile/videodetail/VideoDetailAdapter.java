@@ -48,7 +48,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 public class VideoDetailAdapter extends BaseAdapter {
 
 	private Context mContext = null;
-	private int count = 0;
 	private VideoJson mVideoJson = null;
 	private List<CommentBean> mDataList = null;
 	/** head **/
@@ -86,7 +85,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public CustomLoadingDialog mCustomLoadingDialog;
 	private String isPraise = "0";
 	private int likeNumber = 0;
-
+	
 	public VideoDetailAdapter(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<CommentBean>();
@@ -113,17 +112,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		if (null != commentData) {
 			mDataList.addAll(commentData);
 		}
-		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
-			count = 2;
-		} else {
-			count = mDataList.size();
-			GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：count==" + count);
-			if (0 == count) {
-				count += 2;
-			} else {
-				count++;
-			}
-		}
 		this.notifyDataSetChanged();
 	}
 
@@ -135,6 +123,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	public void addFirstData(CommentBean data) {
 		mDataList.add(0, data);
+		mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount)+1);
 		this.notifyDataSetChanged();
 	}
 
@@ -148,11 +137,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 			if (mDataList.get(i).mCommentId.equals(delBean.mCommentId)) {
 				mDataList.remove(i);
 				isDelSuces = true;
-				count--;
 				break;
 			}
 		}
 		if (isDelSuces) {
+			mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer.parseInt(mVideoJson.data.avideo.video.comment.comcount)-1);
 			this.notifyDataSetChanged();
 		}
 	}
@@ -167,7 +156,16 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return count;
+		if(null == mVideoJson){
+			return mDataList.size();
+		}
+		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
+			return 2;
+		}
+		if(0 == mDataList.size()){
+			return 2;
+		}
+		return mDataList.size()+1;
 	}
 
 	@Override
@@ -292,6 +290,18 @@ public class VideoDetailAdapter extends BaseAdapter {
 				e.printStackTrace();
 			}
 		}
+		
+		headHolder.mCommentLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(mContext instanceof VideoDetailActivity){
+					((VideoDetailActivity)mContext).showSoft();
+				}else{
+					((WonderfulActivity)mContext).showSoft();
+				}
+			}
+		});
 
 		return mHeadView;
 	}
@@ -345,6 +355,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					playVideo();
 					headHolder.mVideoView.start();
 					showLoading();
+					GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------getHeadData:  showLoading");
 				}
 
 			} else {
@@ -477,6 +488,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					GolukDebugUtils.e("", "-------user.nickname-----" + bean.mUserName);
 
 					it.putExtra("userinfo", user);
+					it.putExtra("type", 0);
 					mContext.startActivity(it);
 				}
 			});
@@ -631,6 +643,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mVideoView.start();
 			headHolder.mVideoView.setVisibility(View.VISIBLE);
 			showLoading();
+			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------startPlayer:  showLoading");
 		}
 		isOuterPause = false;
 	}
@@ -681,10 +694,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 	 */
 	public void showLoading() {
 		GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------showLoading()  isShow===" + isShow);
+		if(!UserUtils.isNetDeviceAvailable(mContext) && !headHolder.mVideoView.isPlaying()){
+			return ;
+		}
 		if (!isShow) {
 			isShow = true;
 			headHolder.mVideoLoading.setVisibility(View.VISIBLE);
 			headHolder.mLoading.setVisibility(View.VISIBLE);
+			headHolder.mPlayBtn.setVisibility(View.GONE);
 			headHolder.mLoading.postDelayed(new Runnable() {
 				@Override
 				public void run() {

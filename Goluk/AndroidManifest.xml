@@ -164,7 +164,7 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.carrecorder.VideoPlayerActivity"
+            android:name="cn.com.mobnote.golukmobile.player.VitamioPlayerActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:process=":vitamio"
             android:screenOrientation="landscape"
@@ -216,7 +216,7 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="cn.com.mobnote.golukmobile.player.VideoPlayerView"
+            android:name="cn.com.mobnote.golukmobile.player.VideoPlayerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >

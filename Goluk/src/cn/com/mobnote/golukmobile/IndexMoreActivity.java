@@ -86,6 +86,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	private TextView mTextName, mTextId;
 	private LinearLayout mVideoLayout;
 	private TextView mTextShare,mTextPraise;
+	/**分享视频   赞我的人**/
+	private LinearLayout mShareLayout,mPraiseLayout;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
@@ -144,6 +146,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		mVideoLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_center_video_layout);
 		mTextShare = (TextView) mRootLayout.findViewById(R.id.user_share_count);
 		mTextPraise = (TextView) mRootLayout.findViewById(R.id.user_praise_count);
+		mShareLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_share);
+		mPraiseLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_praise);
 		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
 				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
 		if (!isFirstLogin || ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
@@ -172,7 +176,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		mInstallItem.setOnClickListener(this);
 		mQuestionItem.setOnClickListener(this);
 		mShoppingItem.setOnClickListener(this);
-		mVideoLayout.setOnClickListener(this);
+		mShareLayout.setOnClickListener(this);
+		mPraiseLayout.setOnClickListener(this);
 
 		// 更新UI handler
 		mUserCenterHandler = new Handler() {
@@ -205,8 +210,13 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			ma.mApp.mUser.setUserInterface(null);
 			// 返回
 			break;
+		case R.id.user_share:
+			intentToUserCenter(0);
+			break;
+		case R.id.user_praise:
+			intentToUserCenter(1);
+			break;
 		// 点击跳转到我的主页
-		case R.id.user_center_video_layout:
 		case R.id.user_center_item:
 			// 自动登录中，成功，失败，超时、密码错误
 			GolukDebugUtils.i("lily", "-----autoLoginStatus-----" + ma.mApp.autoLoginStatus
@@ -228,9 +238,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 				} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
 					GolukDebugUtils.i("lily", "--------更多页面------");
 					
-					intentToUserCenter();
-//					intent = new Intent(mContext, UserPersonalInfoActivity.class);
-//					mContext.startActivity(intent);
+					intentToUserCenter(0);
 				}
 			} else {
 				GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------" + ma.mApp.autoLoginStatus);
@@ -293,7 +301,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 	/**
 	 * 点击个人中心跳转到个人主页
 	 */
-	private void intentToUserCenter() {
+	private void intentToUserCenter(int type) {
 		UCUserInfo user = new UCUserInfo();
 		user.uid = userUId;
 		user.nickname = userName;
@@ -306,6 +314,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		
 		Intent intent = new Intent(mContext, UserCenterActivity.class);
 		intent.putExtra("userinfo", user);
+		intent.putExtra("type", type);
 		mContext.startActivity(intent);
 	}
 

@@ -11,7 +11,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.player.VideoPlayerView;
+import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
@@ -45,7 +45,7 @@ public class ClickNewestListener implements OnClickListener {
 			}
 
 		} else {
-			Intent intent = new Intent(mContext, VideoPlayerView.class);
+			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
 			intent.putExtra("from", "suqare");
 			intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
 			intent.putExtra("playUrl", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
