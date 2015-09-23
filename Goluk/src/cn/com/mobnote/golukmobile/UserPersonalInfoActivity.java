@@ -417,7 +417,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	
 	private void exit() {
 		clickBtn = false;
-		UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
+		if(null != UserCenterActivity.handler){
+			UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
+		}
 		this.finish();
 	}
 }
