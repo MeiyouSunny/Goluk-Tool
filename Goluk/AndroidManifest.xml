@@ -92,10 +92,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
         <activity
             android:name="cn.com.mobnote.golukmobile.videodetail.WonderfulActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >
@@ -231,7 +233,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        
         <activity
             android:name="cn.com.mobnote.golukmobile.usercenter.UserCenterActivity"
             android:screenOrientation="portrait"
@@ -270,8 +271,7 @@
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="adjustResize" >
         </activity>
-        
-         <activity
+        <activity
             android:name="cn.com.mobnote.golukmobile.PushSettingActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
