@@ -334,6 +334,20 @@ public class JsonCreateUtils {
 
 		return json;
 	}
+	//获取用户信息
+	public static String getUserInfoJson(String otheruid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("otheruid", otheruid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
 	
 	public static String getJHJson(String ztid, String operation, String timestamp, String pagesize) {
 		String json = "";
