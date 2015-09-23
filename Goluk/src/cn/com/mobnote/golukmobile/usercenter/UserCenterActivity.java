@@ -26,17 +26,13 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.lidroid.xutils.util.LogUtils;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
@@ -53,7 +49,6 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -178,6 +173,13 @@ public class UserCenterActivity extends BaseActivity implements
 		Intent i = this.getIntent();
 		curUser = (UCUserInfo) i.getSerializableExtra("userinfo");
 		tabtype = i.getIntExtra("type", 0);
+		
+		/**
+		 * 如果是自己的主页  先请求个人主页的缓存数据
+		 */
+		if(testUser()){
+			//请求同步数据接口
+		}
 		this.init();
 		mRTPullListView.firstFreshState();
 		httpPost(curUser.uid);// 请求数据
