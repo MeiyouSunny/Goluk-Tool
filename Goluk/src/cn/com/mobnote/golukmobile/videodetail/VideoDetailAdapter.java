@@ -308,7 +308,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	// 设置详情数据
 	@SuppressLint("HandlerLeak")
-	private void getHeadData(final ViewHolder headHolder, VideoAllData mVideoAllData, boolean isStartPlay) {
+	private void getHeadData(final ViewHolder headHolder, final VideoAllData mVideoAllData, boolean isStartPlay) {
 		if (!mVideoJson.success) {
 			// TODO 后台数据异常
 			GolukDebugUtils.e("lily", "---------后台服务器数据异常-------" + mVideoAllData);
@@ -362,6 +362,31 @@ public class VideoDetailAdapter extends BaseAdapter {
 				headHolder.mImageLayout.setVisibility(View.VISIBLE);
 				headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 			}
+			
+			headHolder.mImageHead.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					Intent it = new Intent(mContext, UserCenterActivity.class);
+
+					VideoUserInfo videoUser = mVideoAllData.avideo.user;
+					UCUserInfo user = new UCUserInfo();
+					user.uid = videoUser.uid;
+					user.nickname = videoUser.nickname;
+					user.headportrait = videoUser.headportrait;
+					user.introduce = "";
+					user.sex = "";
+					user.customavatar = "";
+					user.praisemenumber = "0";
+					user.sharevideonumber = "0";
+
+					GolukDebugUtils.e("", "-------user.nickname-----" + videoUser.nickname);
+
+					it.putExtra("userinfo", user);
+					it.putExtra("type", 0);
+					mContext.startActivity(it);
+				}
+			});
 
 			mHandler = new Handler() {
 				@Override
