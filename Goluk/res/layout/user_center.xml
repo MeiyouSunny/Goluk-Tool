@@ -26,7 +26,7 @@
             android:textColor="@color/white"
             android:ellipsize="end" 
             android:singleLine="true"
-            android:text="个人主页"
+            android:text="Ta的主页"
             android:textSize="18sp" />
 
         <Button
