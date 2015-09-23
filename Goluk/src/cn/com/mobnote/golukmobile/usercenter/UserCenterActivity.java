@@ -124,7 +124,7 @@ public class UserCenterActivity extends BaseActivity implements
 
 	private TextView title = null;
 	
-	private static int refristUserInfo = 100;
+	public static int refristUserInfo = 100;
 
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
