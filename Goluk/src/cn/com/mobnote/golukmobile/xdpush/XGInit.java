@@ -13,7 +13,7 @@ import com.tencent.android.tpush.XGPushManager;
 
 public class XGInit implements XGIOperateCallback {
 	/** 开启logcat输出，方便debug，发布时请关闭 */
-	private static final boolean isDebug = true;
+	private static final boolean isDebug = false;
 	private Context mContext = null;
 	/** 保存TokenId,在服务端注册成功后，保存在本地 */
 	private String mTokenId = "";
