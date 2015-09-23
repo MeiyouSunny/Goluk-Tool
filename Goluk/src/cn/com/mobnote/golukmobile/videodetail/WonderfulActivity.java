@@ -112,6 +112,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	
 	private CustomLoadingDialog mLoadingDialog = null;
 	private boolean clickRefresh = false;
+	/**回调数据没有回来**/
+	private boolean isClick = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +215,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				return ;
 			}
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getVideoDetailData(ztId);
+			GolukDebugUtils.e("", "----WonderfulActivity-----b====: " + b);
 			if (!b) {
 				mImageRefresh.setVisibility(View.VISIBLE);
 			} else {
@@ -256,6 +259,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			exit();
 			break;
 		case R.id.comment_title_right:
+			if (!isClick) {
+				return;
+			}
 			if (null == mVideoJson) {
 				if (!UserUtils.isNetDeviceAvailable(this)) {
 					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
@@ -267,6 +273,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		case R.id.comment_send:
 			if (!UserUtils.isNetDeviceAvailable(this)) {
 				GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+				return;
+			}
+			if (!isClick) {
 				return;
 			}
 			click_send();
@@ -444,6 +453,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 	// 视频详情回调
 	private void callBack_videoDetail(int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "----callBack_videoDetail-----msg====: " + msg);
 		if (RESULE_SUCESS == msg) {
 			closeLoadingDialog();
 			mRTPullListView.setVisibility(View.VISIBLE);
@@ -454,6 +464,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			try {
 				mVideoJson = VideoDetailParser.parseDataFromJson(jsonStr);
 
+				isClick = true;
+				mEditInput.setFocusable(true);
+				
 				updateRefreshTime();
 				GolukDebugUtils.e("newadapter", "========VideoDetailActivity：commentDataList==" + commentDataList);
 				if (OPERATOR_FIRST == mCurrentOperator) {
@@ -465,10 +478,19 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 					pullCallBack(0, mVideoJson, commentDataList);
 				}
 			} catch (Exception e) {
+				isClick = false;
+				mEditInput.clearFocus();
+				mEditInput.setFocusable(false);
+				mRTPullListView.setVisibility(View.GONE);
+				mImageRefresh.setVisibility(View.VISIBLE);
+				GolukUtils.showToast(this, "网络连接超时，请检查网络");
 				e.printStackTrace();
 			}
 
 		} else {
+			isClick = false;
+			mEditInput.clearFocus();
+			mEditInput.setFocusable(false);
 			closeLoadingDialog();
 			mRTPullListView.setVisibility(View.GONE);
 			mImageRefresh.setVisibility(View.VISIBLE);
@@ -713,6 +735,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		mAdapter.cancleTimer();
 		if (!UserUtils.isNetDeviceAvailable(this)) {
+			this.finish();
+			return;
+		}
+		if (!isClick) {
 			this.finish();
 			return;
 		}
