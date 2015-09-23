@@ -722,7 +722,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 				public void onClickListener() {
 					cancleTimer();
 					headHolder.mImageLayout.setVisibility(View.VISIBLE);
-					headHolder.mPlayerLayout.setEnabled(false);
+					headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 					headHolder.mSeekBar.setProgress(0);
 				}
 			});
