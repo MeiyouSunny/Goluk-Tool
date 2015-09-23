@@ -142,10 +142,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 		case R.id.back_btn:
-			clickBtn = false;
-			Intent it = new Intent(this,UserCenterActivity.class);
-			startActivityForResult(it, 100);
-			this.finish();
+			exit();
 			break;
 		// 编辑
 		case R.id.user_title_right:
@@ -229,9 +226,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Intent it = new Intent(this, UserCenterActivity.class);
-			startActivityForResult(it, 100);
-			this.finish();
+			exit();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -418,5 +413,11 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			mNameLayout.setEnabled(true);
 			mSignLayout.setEnabled(true);
 		}
+	}
+	
+	private void exit() {
+		clickBtn = false;
+		UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
+		this.finish();
 	}
 }
