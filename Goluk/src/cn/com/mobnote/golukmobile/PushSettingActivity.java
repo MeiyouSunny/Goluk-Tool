@@ -127,12 +127,12 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 	private void deal_getPush_CallBack(int success, Object param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != success) {
-			GolukUtils.showToast(this, "获取配置失败");
+			GolukUtils.showToast(this, "网络异常");
 			return;
 		}
 		SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
 		if (null == bean || !bean.isSucess || !"0".equals(bean.result)) {
-			GolukUtils.showToast(this, "获取配置失败");
+			GolukUtils.showToast(this, "网络异常");
 			return;
 		}
 		setCommentState(bean.isComment.equals("1") ? true : false);
