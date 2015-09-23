@@ -613,7 +613,8 @@ public class UserCenterActivity extends BaseActivity implements
 	private void showDelDialog(final String vid) {
 		mDelVid = vid;
 		final AlertDialog delDialog = new AlertDialog.Builder(this).create();
-		delDialog.setMessage("确定要删除吗？");
+		delDialog.setTitle("删除视频");
+		delDialog.setMessage("删除后相关的获赞、评论数据将被清除是否还要删除？");
 		delDialog.setCancelable(false);
 		delDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
 				new DialogInterface.OnClickListener() {
@@ -624,7 +625,7 @@ public class UserCenterActivity extends BaseActivity implements
 					}
 				});
 
-		delDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认",
+		delDialog.setButton(DialogInterface.BUTTON_POSITIVE, "删除 ",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialoginterface, int i) {
 						delDialog.dismiss();

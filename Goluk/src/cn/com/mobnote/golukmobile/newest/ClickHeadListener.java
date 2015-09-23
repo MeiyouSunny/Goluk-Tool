@@ -34,8 +34,6 @@ public class ClickHeadListener implements OnClickListener {
 			((BaseActivity) mContext).setJumpToNext();
 		}
 
-		GolukUtils.showToast(mContext, "点击头像 ");
-
 		Intent intent = new Intent(mContext, UserCenterActivity.class);
 		intent.putExtra("userinfo", getUserInfo());
 		mContext.startActivity(intent);
