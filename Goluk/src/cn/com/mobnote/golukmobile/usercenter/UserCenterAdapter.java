@@ -448,9 +448,9 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 			if (uca.testUser()) {
 				if ("0".equals(clusterInfo.mVideoEntity.isopen)) {
-					holder.isopen.setVisibility(View.GONE);
-				} else {
 					holder.isopen.setVisibility(View.VISIBLE);
+				} else {
+					holder.isopen.setVisibility(View.GONE);
 				}
 			}
 			holder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
