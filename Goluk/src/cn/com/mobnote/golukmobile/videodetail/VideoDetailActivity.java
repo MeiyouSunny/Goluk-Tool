@@ -173,7 +173,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
-		mAdapter = new VideoDetailAdapter(this);
+		mAdapter = new VideoDetailAdapter(this,1);
 		mRTPullListView.setAdapter(mAdapter);
 
 	}

@@ -392,8 +392,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 					String praisemenumber = data.optString("praisemenumber");
 					String sharevideonumber = data.optString("sharevideonumber");
 					GolukDebugUtils.e("", "=======VideoSuqare_CallBack====praisemenumber："+praisemenumber);
-					mTextPraise.setText(praisemenumber);
-					mTextShare.setText(sharevideonumber);
+					mTextPraise.setText(GolukUtils.getFormatNumber(praisemenumber));
+					mTextShare.setText(GolukUtils.getFormatNumber(sharevideonumber));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
