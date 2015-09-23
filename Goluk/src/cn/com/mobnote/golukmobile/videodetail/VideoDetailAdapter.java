@@ -551,39 +551,47 @@ public class VideoDetailAdapter extends BaseAdapter {
 	 * 点赞
 	 */
 	public void clickPraise() {
-		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
-			likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) + 1;
-			DecimalFormat df = new DecimalFormat("#,###");
-			if (likeNumber < 100000) {
-				headHolder.mTextZan.setText(df.format(likeNumber));
+		try{
+			if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
+				if(headHolder.mTextZan.getText().toString().replace(",", "").equals("")){
+					likeNumber = 1;
+				}else{
+					likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) + 1;
+				}
+				DecimalFormat df = new DecimalFormat("#,###");
+				if (likeNumber < 100000) {
+					headHolder.mTextZan.setText(df.format(likeNumber));
+				} else {
+					headHolder.mTextZan.setText("100,000+");
+				}
+				headHolder.mZanImage.setImageResource(R.drawable.videodetail_like_press);
+				headHolder.mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+				headHolder.mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+				isPraise = "1";
+				boolean b = GolukApplication.getInstance().getVideoSquareManager()
+						.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
+				if (b) {
+				}
 			} else {
-				headHolder.mTextZan.setText("100,000+");
-			}
-			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like_press);
-			headHolder.mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-			headHolder.mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-			isPraise = "1";
-			boolean b = GolukApplication.getInstance().getVideoSquareManager()
-					.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
-			if (b) {
-			}
-		} else {
-			likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) - 1;
+				likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) - 1;
 
-			DecimalFormat df = new DecimalFormat("#,###");
-			if (likeNumber < 100000) {
-				headHolder.mTextZan.setText(df.format(likeNumber));
-			} else {
-				headHolder.mTextZan.setText("100,000+");
-			}
+				DecimalFormat df = new DecimalFormat("#,###");
+				if (likeNumber < 100000) {
+					headHolder.mTextZan.setText(df.format(likeNumber));
+				} else {
+					headHolder.mTextZan.setText("100,000+");
+				}
 
-			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
-			headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
-			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
-			isPraise = "0";
+				headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
+				headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
+				headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
+				isPraise = "0";
+			}
+			mVideoJson.data.avideo.video.praisenumber = likeNumber + "";
+			mVideoJson.data.avideo.video.ispraise = isPraise;
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		mVideoJson.data.avideo.video.praisenumber = likeNumber + "";
-		mVideoJson.data.avideo.video.ispraise = isPraise;
 	}
 
 	public static class ViewHolder {
