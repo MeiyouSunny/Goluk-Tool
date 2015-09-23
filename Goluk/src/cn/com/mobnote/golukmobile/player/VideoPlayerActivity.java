@@ -62,8 +62,8 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("NewApi")
-public class VideoPlayerView extends Activity implements OnClickListener , OnInfoListener, OnErrorListener, 
-													OnCompletionListener, OnPreparedListener{
+public class VideoPlayerActivity extends Activity implements OnClickListener, OnInfoListener, OnErrorListener,
+		OnCompletionListener, OnPreparedListener {
 	/** 自定义VideoView */
 	private FullScreenVideoView mVideo;
 	/** 头部View */
@@ -75,8 +75,6 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	private ImageView mPlay;
 	private TextView mPlayTime;
 	private TextView mDurationTime;
-	/** 音频管理器 */
-	private AudioManager mAudioManager;
 	/** 屏幕宽高 */
 	private float width;
 	private float height;
@@ -86,7 +84,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	private String videoUrl = "";
 	/** 自动隐藏顶部和底部View的时间 */
 	private static final int HIDE_TIME = 3000;
-	/** 声音调节*/
+	/** 声音调节 */
 	private VolumnController volumnController;
 	/** 原始屏幕亮度 */
 	private int orginalLight;
@@ -95,7 +93,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	/** 视频第一帧图片地址 */
 	private String image = "";
 	/** 文件名字 */
-	private String filename="";
+	private String filename = "";
 	/** 加载中布局 */
 	private LinearLayout mLoadingLayout = null;
 	/** 加载中动画显示控件 */
@@ -114,12 +112,12 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	/** 缓冲标识 */
 	private boolean isBuffering = false;
 	private int duration = 0;
-	
+
 	private RelativeLayout mImageLayout = null;
 	private Bitmap mBitmap = null;
 	private ImageView mImageView = null;
 	private boolean isStop = false;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,9 +125,10 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		getPlayAddr();
 		initView();
 	}
-	
+
 	/**
 	 * 初始化控件
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月24日
 	 */
@@ -143,55 +142,53 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		mTopView = findViewById(R.id.top_layout);
 		mBottomView = findViewById(R.id.bottom_layout);
 
-		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
 		width = DensityUtil.getWidthInPx(this);
 		height = DensityUtil.getHeightInPx(this);
 		threshold = DensityUtil.dip2px(this, 18);
 
 		orginalLight = LightnessController.getLightness(this);
-		
+
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
 		mLoading = (ImageView) findViewById(R.id.mLoading);
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
-		
-		TextView title = (TextView)findViewById(R.id.title);
+
+		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(filename);
-		
-		mImageLayout = (RelativeLayout)findViewById(R.id.mImageLayout);
+
+		mImageLayout = (RelativeLayout) findViewById(R.id.mImageLayout);
 		mImageLayout.removeAllViews();
-		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		
+		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
+
 		if (from.equals("suqare")) {
 			SimpleDraweeView view = new SimpleDraweeView(this);
 			GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
-			GenericDraweeHierarchy hierarchy = builder
-					.setFadeDuration(300)
-				    .setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				    .setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				    .setActualImageScaleType(ScaleType.FIT_XY)
-				    .build();
-				view.setHierarchy(hierarchy);
+			GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
+					.setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+					.setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+					.setActualImageScaleType(ScaleType.FIT_XY).build();
+			view.setHierarchy(hierarchy);
 			view.setImageURI(Uri.parse(image));
 			mImageLayout.addView(view, mPreLoadingParams);
-		}else {
+		} else {
 			mImageView = new ImageView(this);
 			mImageView.setImageResource(R.drawable.tacitly_pic);
 			mBitmap = ImageManager.getBitmapFromCache(image, 400, 400);
-			if(null != mBitmap) {
+			if (null != mBitmap) {
 				mImageView.setImageBitmap(mBitmap);
 			}
 			mImageLayout.addView(mImageView, mPreLoadingParams);
 		}
-		
+
 		showLoading();
 		setListener();
 		playVideo();
 	}
-	
+
 	/**
 	 * 监听设置
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月24日
 	 */
@@ -209,11 +206,11 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 				e.printStackTrace();
 			}
 		}
-		
+
 		mVideo.setOnCompletionListener(this);
 		mVideo.setOnTouchListener(mTouchListener);
 	}
-	
+
 	/**
 	 * 显示加载中布局
 	 * 
@@ -237,7 +234,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			}, 100);
 		}
 	}
-	
+
 	/**
 	 * 隐藏加载中显示画面
 	 * 
@@ -247,7 +244,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	private void hideLoading() {
 		if (isShow) {
 			isShow = false;
-			
+
 			mImageLayout.setVisibility(View.GONE);
 			if (mAnimationDrawable != null) {
 				if (mAnimationDrawable.isRunning()) {
@@ -257,9 +254,10 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			mLoadingLayout.setVisibility(View.GONE);
 		}
 	}
-	
+
 	/**
 	 * 获取播放地址
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月5日
 	 */
@@ -267,40 +265,41 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		from = getIntent().getStringExtra("from");
 		image = getIntent().getStringExtra("image");
 		filename = getIntent().getStringExtra("filename");
-		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==2222===filename="+filename+"===from="+from);
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==2222===filename=" + filename + "===from=" + from);
 		String ip = SettingUtils.getInstance().getString("IPC_IP");
-		
+
 		if (TextUtils.isEmpty(from)) {
 			return;
 		}
-		
-		String path = Environment.getExternalStorageDirectory()+ File.separator + "goluk" + File.separator + "goluk_carrecorder";
+
+		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk" + File.separator
+				+ "goluk_carrecorder";
 		GFileUtils.makedir(path);
 		String filePath = path + File.separator + "image";
-		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==filePath="+filePath);
-		if(from.equals("local")) {
-			videoUrl=getIntent().getStringExtra("path");
-			String fileName = videoUrl.substring(videoUrl.lastIndexOf("/")+1);
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==filePath=" + filePath);
+		if (from.equals("local")) {
+			videoUrl = getIntent().getStringExtra("path");
+			String fileName = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
 			fileName = fileName.replace(".mp4", ".jpg");
 			image = filePath + File.separator + fileName;
-			GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==image="+image);
-		}else if(from.equals("suqare")) {
-			videoUrl=getIntent().getStringExtra("playUrl");
-		}else if(from.equals("ipc")) {
+			GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==image=" + image);
+		} else if (from.equals("suqare")) {
+			videoUrl = getIntent().getStringExtra("playUrl");
+		} else if (from.equals("ipc")) {
 			String fileName = filename;
 			fileName = fileName.replace(".mp4", ".jpg");
 			image = filePath + File.separator + fileName;
 			int type = getIntent().getIntExtra("type", -1);
-			if(4 == type) {
-				videoUrl="http://"+ ip + ":5080/rec/wonderful/"+filename;
-			}else if(2 == type) {
-				videoUrl="http://" + ip + ":5080/rec/urgent/"+filename;
-			}else {
-				videoUrl="http://" + ip + ":5080/rec/normal/"+filename;
+			if (4 == type) {
+				videoUrl = "http://" + ip + ":5080/rec/wonderful/" + filename;
+			} else if (2 == type) {
+				videoUrl = "http://" + ip + ":5080/rec/urgent/" + filename;
+			} else {
+				videoUrl = "http://" + ip + ":5080/rec/normal/" + filename;
 			}
 		}
-		
-		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl="+videoUrl);
+
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl=" + videoUrl);
 	}
 
 	@Override
@@ -328,8 +327,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		}
 
 		@Override
-		public void onProgressChanged(SeekBar seekBar, int progress,
-				boolean fromUser) {
+		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 			if (fromUser) {
 				int time = progress * mVideo.getDuration() / 100;
 				mVideo.seekTo(time);
@@ -356,56 +354,60 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 	}
 
 	private void volumeDown(float delatY) {
-//		int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-//		int current = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//		int down = (int) (delatY / height * max * 3);
-//		int volume = Math.max(current - down, 0);
-//		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
-//		int transformatVolume = volume * 100 / max;
-//		volumnController.show(transformatVolume);
+		// int max =
+		// mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		// int current =
+		// mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		// int down = (int) (delatY / height * max * 3);
+		// int volume = Math.max(current - down, 0);
+		// mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+		// int transformatVolume = volume * 100 / max;
+		// volumnController.show(transformatVolume);
 	}
 
 	private void volumeUp(float delatY) {
-//		int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-//		int current = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//		int up = (int) ((delatY / height) * max * 3);
-//		int volume = Math.min(current + up, max);
-//		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
-//		int transformatVolume = volume * 100 / max;
-//		volumnController.show(transformatVolume);
+		// int max =
+		// mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		// int current =
+		// mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		// int up = (int) ((delatY / height) * max * 3);
+		// int volume = Math.min(current + up, max);
+		// mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+		// int transformatVolume = volume * 100 / max;
+		// volumnController.show(transformatVolume);
 	}
 
 	private void lightDown(float delatY) {
-//		int down = (int) (delatY / height * 255 * 3);
-//		int transformatLight = LightnessController.getLightness(this) - down;
-//		LightnessController.setLightness(this, transformatLight);
+		// int down = (int) (delatY / height * 255 * 3);
+		// int transformatLight = LightnessController.getLightness(this) - down;
+		// LightnessController.setLightness(this, transformatLight);
 	}
 
 	private void lightUp(float delatY) {
-//		int up = (int) (delatY / height * 255 * 3);
-//		int transformatLight = LightnessController.getLightness(this) + up;
-//		LightnessController.setLightness(this, transformatLight);
+		// int up = (int) (delatY / height * 255 * 3);
+		// int transformatLight = LightnessController.getLightness(this) + up;
+		// LightnessController.setLightness(this, transformatLight);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-//		mHandler.removeMessages(0);
-//		mHandler.removeCallbacksAndMessages(null);
-//		if (null != mBitmap) {
-//			if (!mBitmap.isRecycled()) {
-//				mBitmap.recycle();
-//				mBitmap = null;
-//			}
-//		}
-//		
-//		if (null != mVideo) {
-//			mVideo.stopPlayback();
-//			mVideo = null;
-//		}
+		// mHandler.removeMessages(0);
+		// mHandler.removeCallbacksAndMessages(null);
+		// if (null != mBitmap) {
+		// if (!mBitmap.isRecycled()) {
+		// mBitmap.recycle();
+		// mBitmap = null;
+		// }
+		// }
+		//
+		// if (null != mVideo) {
+		// mVideo.stopPlayback();
+		// mVideo = null;
+		// }
 	}
 
-	private int oldPosition=0;
+	private int oldPosition = 0;
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 
@@ -417,48 +419,48 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 				if (error) {
 					return;
 				}
-				
+
 				if (null == mVideo) {
 					return;
 				}
-				
+
 				netWorkTimeoutCheck();
-				
+
 				if (mVideo.getCurrentPosition() > 0) {
-					if ( !mVideo.isPlaying() ) {
+					if (!mVideo.isPlaying()) {
 						return;
 					}
-					
-					if(!isBuffering) {
+
+					if (!isBuffering) {
 						hideLoading();
 					}
-					
+
 					playTime = 0;
 					duration = mVideo.getDuration();
 					mPlayTime.setText(formatTime(mVideo.getCurrentPosition()));
 					int progress = mVideo.getCurrentPosition() * 100 / mVideo.getDuration();
-					GolukDebugUtils.e("", "TTTT============progress=="+progress);
+					GolukDebugUtils.e("", "TTTT============progress==" + progress);
 					mSeekBar.setProgress(progress);
 					if (mVideo.getCurrentPosition() > mVideo.getDuration() - 100) {
 						mPlayTime.setText("00:00");
 						mSeekBar.setProgress(0);
 						GolukDebugUtils.e("", "TTTT======00000======progress==");
 					}
-//					mSeekBar.setSecondaryProgress(mVideo.getBufferPercentage());
+					// mSeekBar.setSecondaryProgress(mVideo.getBufferPercentage());
 					mPlay.setImageResource(R.drawable.player_pause_btn);
 				} else {
-//					mPreLoading.setVisibility(View.VISIBLE);
+					// mPreLoading.setVisibility(View.VISIBLE);
 					mPlay.setImageResource(R.drawable.player_play_btn);
 					mPlayTime.setText(formatTime(playTime));
-					if(0 != duration) {
-						mSeekBar.setProgress(playTime*100/duration);
-					}else {
+					if (0 != duration) {
+						mSeekBar.setProgress(playTime * 100 / duration);
+					} else {
 						mSeekBar.setProgress(0);
 					}
-					
-					GolukDebugUtils.e("", "TTTT=====111 000=======playTime=="+playTime+"==duration="+duration);
+
+					GolukDebugUtils.e("", "TTTT=====111 000=======playTime==" + playTime + "==duration=" + duration);
 				}
-				
+
 				break;
 			case 2:
 				showOrHide();
@@ -556,8 +558,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 				mLastMotionY = y;
 				break;
 			case MotionEvent.ACTION_UP:
-				if (Math.abs(x - startX) > threshold
-						|| Math.abs(y - startY) > threshold) {
+				if (Math.abs(x - startX) > threshold || Math.abs(y - startY) > threshold) {
 					isClick = false;
 				}
 				mLastMotionX = 0;
@@ -588,7 +589,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			if (isBuffering) {
 				return;
 			}
-			
+
 			if (mVideo.isPlaying()) {
 				mVideo.pause();
 				mPlay.setImageResource(R.drawable.player_play_btn);
@@ -601,8 +602,8 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			break;
 		}
 	}
-	
-	private void exit(){
+
+	private void exit() {
 		this.cancelTimer();
 		mHandler.removeMessages(1);
 		if (null != mBitmap) {
@@ -611,36 +612,35 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 				mBitmap = null;
 			}
 		}
-		
+
 		if (null != mVideo) {
 			mVideo.stopPlayback();
 			mVideo = null;
 		}
-		
-		
+
 		mHandler.removeMessages(0);
 		mHandler.removeCallbacksAndMessages(null);
 		mHandler.removeCallbacks(mRunnable);
 		mHandler.postDelayed(mRunnable, 200);
 	}
-	
+
 	Runnable mRunnable = new Runnable() {
 		@Override
 		public void run() {
-			VideoPlayerView.this.finish();
+			VideoPlayerActivity.this.finish();
 		}
 	};
 
 	/**
 	 * 显示隐藏顶部底部布局
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月24日
 	 */
 	private void showOrHide() {
 		if (mTopView.getVisibility() == View.VISIBLE) {
 			mTopView.clearAnimation();
-			Animation animation = AnimationUtils.loadAnimation(this,
-					R.anim.option_leave_from_top);
+			Animation animation = AnimationUtils.loadAnimation(this, R.anim.option_leave_from_top);
 			animation.setAnimationListener(new AnimationImp() {
 				@Override
 				public void onAnimationEnd(Animation animation) {
@@ -651,8 +651,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			mTopView.startAnimation(animation);
 
 			mBottomView.clearAnimation();
-			Animation animation1 = AnimationUtils.loadAnimation(this,
-					R.anim.option_leave_from_bottom);
+			Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.option_leave_from_bottom);
 			animation1.setAnimationListener(new AnimationImp() {
 				@Override
 				public void onAnimationEnd(Animation animation) {
@@ -664,14 +663,12 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		} else {
 			mTopView.setVisibility(View.VISIBLE);
 			mTopView.clearAnimation();
-			Animation animation = AnimationUtils.loadAnimation(this,
-					R.anim.option_entry_from_top);
+			Animation animation = AnimationUtils.loadAnimation(this, R.anim.option_entry_from_top);
 			mTopView.startAnimation(animation);
 
 			mBottomView.setVisibility(View.VISIBLE);
 			mBottomView.clearAnimation();
-			Animation animation1 = AnimationUtils.loadAnimation(this,
-					R.anim.option_entry_from_bottom);
+			Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.option_entry_from_bottom);
 			mBottomView.startAnimation(animation1);
 			mHandler.removeCallbacks(hideRunnable);
 			mHandler.postDelayed(hideRunnable, HIDE_TIME);
@@ -694,70 +691,70 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		}
 
 	}
-	
+
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
 		switch (arg1) {
-			case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-				isBuffering = true;
-				if (0 == mVideo.getCurrentPosition()) {
-					mImageLayout.setVisibility(View.VISIBLE);
-				}
-				showLoading();
-				break;
-			case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-				isBuffering = false;
-				hideLoading();
-				break;
-	
-			default:
-				break;
+		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+			isBuffering = true;
+			if (0 == mVideo.getCurrentPosition()) {
+				mImageLayout.setVisibility(View.VISIBLE);
+			}
+			showLoading();
+			break;
+		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+			isBuffering = false;
+			hideLoading();
+			break;
+
+		default:
+			break;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
-		if(error){
+		if (error) {
 			return false;
 		}
-		
+
 		String msg = "播放错误";
 		switch (arg1) {
-			case 1:
-			case -1010:
-				msg = "视频出错，请重试！";
-				break;
-			case -110:
-				msg = "网络访问异常，请重试！";
-				break;
-				
-			default:
-				break;
+		case 1:
+		case -1010:
+			msg = "视频出错，请重试！";
+			break;
+		case -110:
+			msg = "网络访问异常，请重试！";
+			break;
+
+		default:
+			break;
 		}
-		
+
 		if (!from.equals("local")) {
 			if (!isNetworkConnected()) {
 				msg = "网络访问异常，请重试！";
 			}
 		}
-		
-		error=true;
-		GolukDebugUtils.e("xuhw", "BBBBBB=====onError==arg1="+arg1+"==arg2="+arg2);
+
+		error = true;
+		GolukDebugUtils.e("xuhw", "BBBBBB=====onError==arg1=" + arg1 + "==arg2=" + arg2);
 		hideLoading();
 		mPlayTime.setText("00:00");
 		mImageLayout.setVisibility(View.VISIBLE);
 		dialog(msg);
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
-		if(error){
+		if (error) {
 			return;
 		}
-		
+
 		mVideo.seekTo(0);
 		mPlay.setImageResource(R.drawable.player_play_btn);
 		mPlayTime.setText("00:00");
@@ -778,13 +775,15 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		mHandler.removeCallbacks(hideRunnable);
 		mHandler.postDelayed(hideRunnable, HIDE_TIME);
 		mDurationTime.setText(formatTime(mVideo.getDuration()));
-		
+
 		startTimer();
 	}
-	
+
 	/**
 	 * 提示对话框
-	 * @param msg 提示信息
+	 * 
+	 * @param msg
+	 *            提示信息
 	 * @author xuhw
 	 * @date 2015年6月5日
 	 */
@@ -800,24 +799,26 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		});
 		mCustomDialog.show();
 	}
-	
+
 	/**
 	 * 检查是否有可用网络
+	 * 
 	 * @return
 	 * @author xuhw
 	 * @date 2015年6月5日
 	 */
 	public boolean isNetworkConnected() {
-		ConnectivityManager mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 		if (mNetworkInfo != null) {
 			return mNetworkInfo.isAvailable();
 		}
 		return false;
-	} 
-	
+	}
+
 	/**
 	 * 无网络超时检查
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月5日
 	 */
@@ -825,7 +826,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		if (!from.equals("suqare")) {
 			return;
 		}
-		
+
 		if (!isNetworkConnected()) {
 			networkConnectTimeOut++;
 			if (networkConnectTimeOut > 15) {
@@ -833,35 +834,34 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 					hideLoading();
 					mImageLayout.setVisibility(View.VISIBLE);
 					dialog("网络访问异常，请重试！");
-					if(null != mVideo) {
+					if (null != mVideo) {
 						mVideo.stopPlayback();
 						mVideo = null;
 					}
 					return;
 				}
 			}
-		}else{
+		} else {
 			networkConnectTimeOut = 0;
 		}
-		
+
 	}
-	
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		LightnessController.setLightness(this, orginalLight);
-		
+
 		if (null == mVideo) {
 			return;
 		}
-		
+
 		if (mVideo.isPlaying()) {
 			isPause = true;
 			playTime = mVideo.getCurrentPosition();
 			mVideo.pause();
 		}
-		
+
 	}
 
 	@Override
@@ -872,22 +872,22 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			showLoading();
 			mImageLayout.setVisibility(View.VISIBLE);
 		}
-		
+
 		if (isPause) {
 			isPause = false;
 			if (playTime != 0) {
-				GolukDebugUtils.e("", "TTTT============playTime=="+playTime+"==duration="+duration);
-				if(0 != duration) {
+				GolukDebugUtils.e("", "TTTT============playTime==" + playTime + "==duration=" + duration);
+				if (0 != duration) {
 					mSeekBar.setProgress(playTime * 100 / duration);
 				}
 				mVideo.seekTo(playTime);
-				
+
 			}
 			mVideo.start();
 		}
-		
+
 	}
-	
+
 	private Timer mTimer = null;
 
 	private void cancelTimer() {
@@ -916,7 +916,7 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 			isStop = true;
 		}
 	}
-	
+
 	public boolean isBackground(final Context context) {
 		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
@@ -928,13 +928,13 @@ public class VideoPlayerView extends Activity implements OnClickListener , OnInf
 		}
 		return false;
 	}
-	
+
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-    	if(keyCode==KeyEvent.KEYCODE_BACK){
-    		exit(); 
-        	return true;
-        }else
-        	return super.onKeyDown(keyCode, event); 
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			exit();
+			return true;
+		} else
+			return super.onKeyDown(keyCode, event);
 	}
-	
+
 }

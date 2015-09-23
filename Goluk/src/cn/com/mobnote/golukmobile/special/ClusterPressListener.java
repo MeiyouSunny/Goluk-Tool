@@ -33,7 +33,7 @@ public class ClusterPressListener implements OnClickListener {
 
 			break;
 		case R.id.function:
-			new FunctionDialog(mContext,clusterInfo.videoid).show();
+			new FunctionDialog(mContext,clusterInfo.videoid, false, null).show();
 			break;
 		default:
 			break;

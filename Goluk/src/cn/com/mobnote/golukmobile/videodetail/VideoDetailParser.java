@@ -1,4 +1,4 @@
-package cn.com.mobnote.videodetail;
+package cn.com.mobnote.golukmobile.videodetail;
 
 import java.util.ArrayList;
 import java.util.List;

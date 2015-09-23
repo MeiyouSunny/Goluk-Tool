@@ -342,7 +342,7 @@
     <string name="str_comment_input_hit">写评论</string>
     <string name="str_comment_no_input">该评论已关闭</string>
     <string name="str_category_map">地图</string>
-    
+
     <!-- 意见反馈 -->
     <string name="user_opinion_type_yingjiang">硬件相关</string>
     <string name="user_opinion_type_anzhuang">安装相关</string>
@@ -351,5 +351,14 @@
     <string name="user_opinion_type_qita">其他</string>
     <string name="user_opinion_type_cancle">取消</string>
     <string name="user_opinion_type_select">选择意见类型</string>
+    <string name="setting_msg_notify">消息通知</string>
+    <string name="logout">注销</string>
+    <string name="setting_notify_comment">有人给我评论</string>
+    <string name="setting_notify_parise">有人给我点赞</string>
+    
+    <string name="dialog_str_confirm">举报不良内容</string>
+    <string name="dialog_str_del">删除这个视频</string>
+    <string name="dialog_str_tuijian">推荐这个视频</string>
+    <string name="dialog_str_cancel">取消</string>
 
 </resources>

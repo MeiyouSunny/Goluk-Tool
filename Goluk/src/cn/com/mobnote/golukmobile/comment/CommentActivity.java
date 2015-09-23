@@ -99,7 +99,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		mApp = (GolukApplication) getApplication();
-		getWindow().setContentView(R.layout.comment);
+		getWindow().setContentView(R.layout.comment_layout);
 		getIntentData();
 		historyDate = GolukUtils.getCurrentFormatTime();
 		initView();

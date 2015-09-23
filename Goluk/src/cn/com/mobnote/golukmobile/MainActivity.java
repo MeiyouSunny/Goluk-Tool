@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +14,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,6 +43,8 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
+import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
+import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -215,10 +215,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				}
 			}
 		}
-		
+
+		dealPush(itStart_have);
+
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
 			notifyLogicNetWorkState(true);
 		}
+
+		GolukUtils.getMobileInfo(this);
 
 	}
 
@@ -244,6 +248,31 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 		}
 
+		dealPush(intent);
+	}
+
+	/**
+	 * 处理推送消息
+	 * 
+	 * @param intent
+	 * @author jyf
+	 */
+	private void dealPush(Intent intent) {
+		if (null == intent) {
+			return;
+		}
+		final String from = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
+		GolukDebugUtils.e("", "jyf----MainActivity-----from: " + from);
+		if (null != from && !"".equals(from) && from.equals("notication")) {
+			String pushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
+
+			GolukDebugUtils.e("", "jyf----MainActivity-----pushJson: " + pushJson);
+			XingGeMsgBean bean = JsonUtil.parseXingGePushMsg(pushJson);
+			if (null != bean) {
+				GolukNotification.getInstance().dealAppinnerClick(this, bean);
+			}
+			GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
+		}
 	}
 
 	/**
@@ -426,8 +455,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
 				time = time > oldtime ? time : oldtime;
 				SettingUtils.getInstance().putLong("downloadfiletime", time);
-				
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList"+ time);
+
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList" + time);
 				updateHotPointState(true);
 
 				if (null != PhotoAlbumActivity.mHandler) {
@@ -494,9 +523,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.index_video_icon);
 			} else if (state == WIFI_STATE_FAILED) {
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-			}else{
+			} else {
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-				
+
 			}
 
 		}
@@ -543,9 +572,35 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 检测wifi链接状态
 	 */
 	public void checkWiFiStatus() {
+		// GolukDebugUtils.e("",
+		// "wifiCallBack-------------checkWiFiStatus   type:" +
+		// mApp.mWiFiStatus);
+		// String info =
+		// GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
+		// 0, "");
+		// GolukDebugUtils.i("lily", "---IndexMore--------" + info);
+		// UCUserInfo user = new UCUserInfo();
+		// try {
+		// JSONObject json = new JSONObject(info);
+		// user.uid = json.getString("uid");
+		// user.nickname = json.getString("nickname");
+		// user.headportrait = json.getString("head");
+		// user.introduce = json.getString("desc");
+		// user.sex = json.getString("sex");
+		// user.customavatar = "";
+		// user.praisemenumber = "0";
+		// user.sharevideonumber = "0";
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		//
+		// Intent i = new Intent(MainActivity.this, UserCenterActivity.class);
+		// i.putExtra("userinfo",user);
+		// startActivity(i);
 		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mApp.mWiFiStatus);
 		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 		startActivity(i);
+
 	}
 
 	@Override
@@ -599,7 +654,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (mApp.getIpcIsLogin()) {
 			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
 					"提示", "是否继续直播");
-		} 
+		}
 	}
 
 	@Override
@@ -635,9 +690,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			MobclickAgent.onKillProcess(this);
 			finish();
 			Fresco.shutDown();
-			int PID = android.os.Process.myPid();
-			android.os.Process.killProcess(PID);
-			System.exit(0);
+			GolukNotification.getInstance().destroy();
+			// int PID = android.os.Process.myPid();
+			// android.os.Process.killProcess(PID);
+			// System.exit(0);
+
+			mApp.setExit(true);
 		}
 
 	}
@@ -774,7 +832,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void dismissAutoDialog() {
-	
+
 	}
 
 	@Override
@@ -862,7 +920,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 设置IPC信息成功回调
 	 */
 	public void setIpcLinkWiFiCallBack(int state) {
-		
+
 	}
 
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {

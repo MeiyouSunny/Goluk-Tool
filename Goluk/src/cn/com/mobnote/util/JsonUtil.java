@@ -14,6 +14,8 @@ import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
+import cn.com.mobnote.golukmobile.xdpush.SettingBean;
+import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.user.APPInfo;
 import cn.com.mobnote.user.IPCInfo;
@@ -785,7 +787,7 @@ public class JsonUtil {
 	// issquare 是否分享到视频广场 0/1 (否/是)
 	// thumbImgJavaPath: 缩略图路径
 	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
-			String thumbImgJavaPath,String createTime) {
+			String thumbImgJavaPath, String createTime) {
 
 		String json = null;
 		try {
@@ -846,7 +848,7 @@ public class JsonUtil {
 	 * @return
 	 */
 	public static String putOpinion(String tag, String sys_version, String app_version, String ipc_version,
-			String phone_models, String opinion, String contact,String selectType) {
+			String phone_models, String opinion, String contact, String selectType) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("tag", tag);
@@ -1042,6 +1044,152 @@ public class JsonUtil {
 			return obj.toString();
 		} catch (Exception e) {
 
+		}
+		return "";
+	}
+
+	/**
+	 * 获取显示notify
+	 * 
+	 * @return
+	 * @author jyf
+	 */
+	public static int getValidNotifyId() {
+		int notifyId = 0;
+		try {
+			String current = String.valueOf(System.currentTimeMillis());
+			if (current != null) {
+				if (current.length() <= 9) {
+					notifyId = Integer.valueOf(current);
+				} else {
+					int start = current.length() - 9;
+					notifyId = Integer.valueOf(current.substring(start));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return notifyId;
+	}
+
+	public static XingGeMsgBean parseXingGePushMsg(String json) {
+		if (null == json) {
+			return null;
+		}
+		try {
+			JSONObject root = new JSONObject(json);
+			XingGeMsgBean bean = new XingGeMsgBean();
+			bean.notifyId = getValidNotifyId();
+			bean.title = getJsonStringValue(root, "t", "");
+			bean.msg = getJsonStringValue(root, "d", "");
+			bean.target = getJsonStringValue(root, "g", "0");
+			bean.tarkey = getJsonStringValue(root, "k", "1");
+			bean.weburl = getJsonStringValue(root, "w", "");
+			bean.params = root.getString("p");
+			bean.disturb = getJsonStringValue(root, "b", "1");
+
+			return bean;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static String[] parseVideoDetailId(String jsonArray) {
+		try {
+			JSONArray array = new JSONArray(jsonArray);
+			int size = array.length();
+			String[] strArray = new String[size];
+			for (int i = 0; i < size; i++) {
+				JSONObject obj = array.getJSONObject(i);
+				strArray[i] = getJsonStringValue(obj, "vid", "");
+			}
+
+			return strArray;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static String getPushRegisterJsonStr(String tid, String source, String ipcversion) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("tid", tid);
+			obj.put("source", source);
+			obj.put("ipcversion", ipcversion);
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
+
+	public static SettingBean parsePushSettingJson(String json) {
+		try {
+			SettingBean bean = new SettingBean();
+
+			JSONObject rootObj = new JSONObject(json);
+			bean.isSucess = rootObj.getBoolean("success");
+			JSONObject dataObj = rootObj.getJSONObject("data");
+			bean.result = getJsonStringValue(dataObj, "result", "1");
+			bean.isComment = getJsonStringValue(dataObj, "iscomment", "1");
+			bean.isPraise = getJsonStringValue(dataObj, "ispraise", "1");
+			bean.uid = getJsonStringValue(dataObj, "uid", "");
+
+			return bean;
+
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static String getPushSetJson(boolean iscomment, boolean ispraise) {
+		try {
+			String isC = iscomment ? "1" : "0";
+			String isP = ispraise ? "1" : "0";
+			JSONObject obj = new JSONObject();
+			obj.put("iscomment", isC);
+			obj.put("ispraise", isP);
+
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
+
+	/**
+	 * 返回0是成功，其余的全是失败
+	 * 
+	 * @param json
+	 * @return
+	 * @author jyf
+	 */
+	public static String parseDelVideo(Object json) {
+		try {
+			JSONObject roobObj = new JSONObject((String)json);
+			boolean sucess = roobObj.getBoolean("success");
+			if (!sucess) {
+				return "1";
+			}
+			JSONObject dataObj = roobObj.getJSONObject("data");
+			String result = dataObj.getString("result");
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "1";
+	}
+	
+	public static String getDelRequestJson(String vid) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("videoid", vid);
+			return obj.toString();
+		} catch (Exception e) {
+			
 		}
 		return "";
 	}
