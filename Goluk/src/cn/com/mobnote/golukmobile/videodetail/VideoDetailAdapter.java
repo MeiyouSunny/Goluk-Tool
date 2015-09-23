@@ -553,6 +553,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void clickPraise() {
 		try{
 			if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
+				headHolder.mTextZan.setVisibility(View.VISIBLE);
 				if(headHolder.mTextZan.getText().toString().replace(",", "").equals("")){
 					likeNumber = 1;
 				}else{
@@ -574,6 +575,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 				}
 			} else {
 				likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) - 1;
+				if(likeNumber == 0){
+					headHolder.mTextZan.setVisibility(View.GONE);
+				}else{
+					headHolder.mTextZan.setVisibility(View.VISIBLE);
+				}
 
 				DecimalFormat df = new DecimalFormat("#,###");
 				if (likeNumber < 100000) {
