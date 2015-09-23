@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -227,11 +228,14 @@ public class UserCenterAdapter extends BaseAdapter implements
 							.findViewById(R.id.sharelayout);
 					holder.praiselayout = (LinearLayout) convertView
 							.findViewById(R.id.praiselayout);
-					holder.userinfolayout = (RelativeLayout) convertView
-							.findViewById(R.id.user_info_layout);
+					holder.usercenterlyout = (LinearLayout) convertView
+							.findViewById(R.id.user_center_lyout);
+					
+					holder.sharebtn = (ImageView) convertView.findViewById(R.id.title_share);
+					
 
-					holder.userinfoarrow = (ImageView) convertView
-							.findViewById(R.id.userinfo_arrow);
+//					holder.userinfoarrow = (ImageView) convertView
+//							.findViewById(R.id.userinfo_arrow);
 					
 					convertView.setTag(holder);
 				} else {
@@ -240,8 +244,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 				
 				if (uca.testUser()) {
 					holder.dz_txt.setText("赞我的人");
-					holder.userinfoarrow.setVisibility(View.VISIBLE);
-					holder.userinfolayout.setOnClickListener(new OnClickListener() {
+					//holder.userinfoarrow.setVisibility(View.VISIBLE);
+					holder.headImg.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View arg0) {
 									// TODO Auto-generated method stub
@@ -251,9 +255,18 @@ public class UserCenterAdapter extends BaseAdapter implements
 									mContext.startActivity(it);
 								}
 							});
+					holder.usercenterlyout.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							Intent it = new Intent(mContext,
+									UserPersonalInfoActivity.class);
+							mContext.startActivity(it);
+						}
+					});
 				} else {
 					holder.dz_txt.setText("赞Ta的人");
-					holder.userinfoarrow.setVisibility(View.INVISIBLE);
+					//holder.userinfoarrow.setVisibility(View.INVISIBLE);
 				}
 				holder.headImg.setBackgroundResource(ILive.mBigHeadImg[Integer
 						.valueOf(userinfo.headportrait)]);
@@ -293,6 +306,20 @@ public class UserCenterAdapter extends BaseAdapter implements
 					holder.fxsp_txt.setTextColor(Color.rgb(255, 255, 255));
 					holder.fxsp_num.setTextColor(Color.rgb(255, 255, 255));
 				}
+				
+				holder.sharebtn.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						uca.showProgressDialog();
+						boolean result = GolukApplication.getInstance()
+								.getVideoSquareManager().getUserCenterShareUrl(userinfo.uid);
+						if (result == false) {
+							GolukUtils.showToast(mContext, "请求异常，请检查网络是否正常");
+						}
+					}
+				});
 
 				holder.sharelayout.setOnClickListener(new OnClickListener() {
 
@@ -830,9 +857,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 		LinearLayout sharelayout;
 		LinearLayout praiselayout;
 
-		RelativeLayout userinfolayout;
-
-		ImageView userinfoarrow;
+		LinearLayout usercenterlyout;
+		
+		ImageView sharebtn;
+		//ImageView userinfoarrow;
 	}
 
 	public static class PraiseViewHolder {
