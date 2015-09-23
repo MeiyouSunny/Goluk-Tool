@@ -253,7 +253,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 							}
 						});
 					}else{
-						holder.dz_txt.setText("赞他的人");
+						holder.dz_txt.setText("赞Ta的人");
 						holder.userinfoarrow.setVisibility(View.INVISIBLE);
 					}
 					convertView.setTag(holder);
@@ -549,7 +549,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 						bNeedRefrush = true;
 					}
 					else {
-						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_qitadifang);
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_novideo);
 					}
 				} else {
 					//被点赞人信息列表
@@ -558,7 +558,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 						bNeedRefrush = true;
 					}
 					else {
-						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.videodetail_sofaicon);
+						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_nolike);
 					}
 				}
 				if (bNeedRefrush == true)
