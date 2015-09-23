@@ -8,21 +8,17 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -60,6 +56,11 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 @SuppressLint("NewApi")
 public class VideoPlayerActivity extends Activity implements OnClickListener, OnInfoListener, OnErrorListener,
@@ -789,11 +790,18 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 	 */
 	private void dialog(String msg) {
 		CustomDialog mCustomDialog = new CustomDialog(this);
-		mCustomDialog.setCancelable(false);
+		mCustomDialog.setCancelable(true);
 		mCustomDialog.setMessage(msg, Gravity.CENTER);
 		mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
+				exit();
+			}
+		});
+		mCustomDialog.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface arg0) {
 				exit();
 			}
 		});
