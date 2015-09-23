@@ -152,7 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="8dp"
+        android:paddingTop="8dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
         
@@ -167,16 +167,14 @@
         <RelativeLayout 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="5dp">
             <TextView 
                 android:id="@+id/video_detail_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:textSize="12sp"
-            	android:textColor="@color/live_time_desc"
-            	android:text="感谢作者"/>
+            	android:textColor="@color/live_time_desc"/>
             <TextView 
                 android:id="@+id/video_detail_link"
                 android:layout_width="wrap_content"
@@ -195,10 +193,10 @@
         android:id="@+id/functionLayouyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="12dp"
+        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="12dp" >
+        android:paddingTop="10dp" >
 
         <LinearLayout
             android:id="@+id/praiseLayout"

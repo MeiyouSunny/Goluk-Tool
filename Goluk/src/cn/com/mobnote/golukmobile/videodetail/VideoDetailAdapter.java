@@ -85,9 +85,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public CustomLoadingDialog mCustomLoadingDialog;
 	private String isPraise = "0";
 	private int likeNumber = 0;
+	/**判断是精选(0)还是最新(1)**/
+	private int mType = 0;
 	
-	public VideoDetailAdapter(Context context) {
+	public VideoDetailAdapter(Context context,int type) {
 		mContext = context;
+		this.mType = type;
 		mDataList = new ArrayList<CommentBean>();
 		connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		netInfo = connectivityManager.getActiveNetworkInfo();
@@ -319,10 +322,17 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoAllData.avideo.video.sharingtime));
 			// 点赞数、评论数、观看数
 			headHolder.mTextLook.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.clicknumber));
-			headHolder.mTextZan.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.praisenumber));
+			if(!"0".equals(mVideoAllData.avideo.video.praisenumber)){
+				headHolder.mTextZan.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.praisenumber));
+			}
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
 			headHolder.mTextDescribe.setText(mVideoAllData.avideo.video.describe);
-			headHolder.mTextAuthor.setText("感谢作者  "+mVideoAllData.avideo.user.nickname);
+			if(0 == mType){
+				headHolder.mTextAuthor.setVisibility(View.VISIBLE);
+				headHolder.mTextAuthor.setText("感谢作者  "+mVideoAllData.avideo.user.nickname);
+			}else{
+				headHolder.mTextAuthor.setVisibility(View.GONE);
+			}
 
 			// 下载视频第一帧截图
 			headHolder.mImageLayout.removeAllViews();

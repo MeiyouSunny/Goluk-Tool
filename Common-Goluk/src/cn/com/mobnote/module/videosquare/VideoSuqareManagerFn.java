@@ -73,6 +73,8 @@ public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int VSquare_Req_List_Catlog_LocalCache = 256;
 	/** 获取视频列表本地缓存 */
 	public static final int VSquare_Req_List_Video_Catlog_LocalCache = 257;
+	/**获取用户信息**/
+	public static final int VSquare_Req_MainPage_UserInfor = 1024;
 
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2);
 

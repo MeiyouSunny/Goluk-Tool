@@ -170,7 +170,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
-		mAdapter = new VideoDetailAdapter(this);
+		mAdapter = new VideoDetailAdapter(this,0);
 		mRTPullListView.setAdapter(mAdapter);
 
 	}

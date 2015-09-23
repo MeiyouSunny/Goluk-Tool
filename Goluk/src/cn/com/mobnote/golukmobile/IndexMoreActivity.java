@@ -2,11 +2,15 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
+import u.aly.da;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
 import android.os.Handler;
 import android.os.Message;
@@ -53,7 +57,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  */
 
 @SuppressLint({ "HandlerLeak", "Instantiatable" })
-public class IndexMoreActivity implements OnClickListener, UserInterface {
+public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSuqareManagerFn {
 	/** application */
 	// private GolukApplication mApp = null;
 	/** 上下文 */
@@ -106,6 +110,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 		mRootLayout = rootlayout;
 		mContext = context;
 		ma = (MainActivity) mContext;
+		setListener();
 
 		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
@@ -324,6 +329,18 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			dialog = null;
 		}
 	}
+	
+	// 注册监听
+		private void setListener() {
+			// 注册监听
+			VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
+			if (null != mVideoSquareManager) {
+				if (mVideoSquareManager.checkVideoSquareManagerListener("indexmore")) {
+					mVideoSquareManager.removeVideoSquareManagerListener("indexmore");
+				}
+				mVideoSquareManager.addVideoSquareManagerListener("indexmore", this);
+			}
+		}
 
 	/**
 	 * 个人资料信息
@@ -353,9 +370,36 @@ public class IndexMoreActivity implements OnClickListener, UserInterface {
 			mTextId.setTextColor(Color.rgb(0, 0, 0));
 			mTextShare.setText(GolukUtils.getFormatNumber(shareCount+""));
 			mTextPraise.setText(GolukUtils.getFormatNumber(praiseCount+""));
+			
+			//获取用户信息
+			boolean b = GolukApplication.getInstance().getVideoSquareManager().getUserInfo(userUId);
+			GolukDebugUtils.e("", "=======IndexMoreActivity====b："+b);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+		if(event == VSquare_Req_MainPage_UserInfor){
+			if(RESULE_SUCESS == msg){
+				try{
+					String jsonStr = (String) param2;
+					GolukDebugUtils.e("", "=======VideoSuqare_CallBack====jsonStr："+jsonStr);
+					JSONObject dataObj = new JSONObject(jsonStr);
+					JSONObject data= dataObj.optJSONObject("data");
+					String praisemenumber = data.optString("praisemenumber");
+					String sharevideonumber = data.optString("sharevideonumber");
+					GolukDebugUtils.e("", "=======VideoSuqare_CallBack====praisemenumber："+praisemenumber);
+					mTextPraise.setText(GolukUtils.getFormatNumber(praisemenumber));
+					mTextShare.setText(GolukUtils.getFormatNumber(sharevideonumber));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
 	}
 
 	/**
