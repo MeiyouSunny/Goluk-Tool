@@ -115,6 +115,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	
 	private CustomLoadingDialog mLoadingDialog = null;
 	private boolean clickRefresh = false;
+	/**回调数据没有回来**/
+	private boolean isClick = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -256,6 +258,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			exit();
 			break;
 		case R.id.comment_title_right:
+			if(!isClick){
+				return ;
+			}
 			if (null == mVideoJson) {
 				if (!UserUtils.isNetDeviceAvailable(this)) {
 					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
@@ -267,6 +272,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		case R.id.comment_send:
 			if (!UserUtils.isNetDeviceAvailable(this)) {
 				GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+				return;
+			}
+			if (!isClick) {
 				return;
 			}
 			click_send();
@@ -476,6 +484,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				}
 
 				commentDataList = JsonUtil.parseCommentData(commentArray);
+				isClick = true;
+				mEditInput.setFocusable(true);
 
 				updateRefreshTime();
 				if (OPERATOR_FIRST == mCurrentOperator) {
@@ -486,10 +496,17 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					pullCallBack(count, mVideoJson, commentDataList);
 				}
 			} catch (Exception e) {
+				isClick = false;
+				mEditInput.setFocusable(false);
+				mRTPullListView.setVisibility(View.GONE);
+				mImageRefresh.setVisibility(View.VISIBLE);
+				GolukUtils.showToast(this, "网络连接超时，请检查网络");
 				e.printStackTrace();
 			}
 
 		} else {
+			isClick = false;
+			mEditInput.setFocusable(false);
 			closeLoadingDialog();
 			mRTPullListView.setVisibility(View.GONE);
 			mImageRefresh.setVisibility(View.VISIBLE);
@@ -730,6 +747,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			return;
 		}
 		mAdapter.cancleTimer();
+		if (!isClick) {
+			this.finish();
+			return;
+		}
 		if (null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
 			mAdapter.headHolder.mVideoView = null;
