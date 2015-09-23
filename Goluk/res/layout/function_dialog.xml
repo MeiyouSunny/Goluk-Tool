@@ -5,6 +5,8 @@
     android:background="@drawable/custom_dialog_bg"
     android:orientation="vertical" >
 
+    <!-- 删除视频 -->
+
     <LinearLayout
         android:id="@+id/fun_dialog_del_layout"
         android:layout_width="match_parent"
@@ -16,7 +18,7 @@
             android:layout_width="fill_parent"
             android:layout_height="43.3dp"
             android:gravity="center"
-            android:text="删除这个视频"
+            android:text="@string/dialog_str_del"
             android:textColor="#1163a2"
             android:textSize="15sp" />
 
@@ -31,7 +33,7 @@
         android:layout_width="fill_parent"
         android:layout_height="43.3dp"
         android:gravity="center"
-        android:text="推荐这个视频"
+        android:text="@string/dialog_str_tuijian"
         android:textColor="#1163a2"
         android:textSize="15sp" />
 
@@ -40,26 +42,35 @@
         android:layout_height="1dp"
         android:background="#cccccc" />
 
-    <TextView
-        android:id="@+id/jubao"
-        android:layout_width="fill_parent"
-        android:layout_height="43.3dp"
-        android:gravity="center"
-        android:text="举报不良内容"
-        android:textColor="#ff0000"
-        android:textSize="15sp" />
+    <!-- 举报 -->
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#cccccc" />
+    <LinearLayout
+        android:id="@+id/fun_dialog_confirm_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/jubao"
+            android:layout_width="fill_parent"
+            android:layout_height="43.3dp"
+            android:gravity="center"
+            android:text="@string/dialog_str_confirm"
+            android:textColor="#ff0000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/cancle"
         android:layout_width="fill_parent"
         android:layout_height="43.3dp"
         android:gravity="center"
-        android:text="取消"
+        android:text="@string/dialog_str_cancel"
         android:textColor="#1163a2"
         android:textSize="15sp" />
 

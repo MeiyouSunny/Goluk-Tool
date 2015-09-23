@@ -20,8 +20,11 @@ public class FunctionDialog extends Dialog implements android.view.View.OnClickL
 	private AlertDialog ad;
 	private AlertDialog confirmation;
 	private LinearLayout mDelLayout = null;
+	private LinearLayout mConfirmLayout = null;
 	private boolean mIsDel = false;
 	private IDialogDealFn mListener = null;
+	/** 是否可以举报 */
+	private boolean isCanConfirm = true;
 
 	public FunctionDialog(Context context, String vid, boolean isDel, IDialogDealFn fn) {
 		super(context, R.style.CustomDialog);
@@ -33,11 +36,31 @@ public class FunctionDialog extends Dialog implements android.view.View.OnClickL
 		initLayout();
 	}
 
+	/**
+	 * 设置是否允许举报
+	 * 
+	 * @param isConfirm
+	 * @author jyf
+	 */
+	public FunctionDialog setConfirm(boolean isConfirm) {
+		isCanConfirm = isConfirm;
+		if (null != mConfirmLayout) {
+			if (isCanConfirm) {
+				mConfirmLayout.setVisibility(View.VISIBLE);
+			} else {
+				mConfirmLayout.setVisibility(View.GONE);
+			}
+
+		}
+		return this;
+	}
+
 	private void initLayout() {
 		this.tuijian = (TextView) findViewById(R.id.tuijian);
 		this.jubao = (TextView) findViewById(R.id.jubao);
 		this.cancle = (TextView) findViewById(R.id.cancle);
 		mDelLayout = (LinearLayout) findViewById(R.id.fun_dialog_del_layout);
+		mConfirmLayout = (LinearLayout) findViewById(R.id.fun_dialog_confirm_layout);
 		tuijian.setOnClickListener(this);
 		jubao.setOnClickListener(this);
 		cancle.setOnClickListener(this);
