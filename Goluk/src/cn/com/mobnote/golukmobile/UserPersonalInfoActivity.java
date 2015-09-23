@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
@@ -16,6 +17,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
@@ -141,7 +143,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		switch (arg0.getId()) {
 		case R.id.back_btn:
 			clickBtn = false;
-			finish();
+			Intent it = new Intent(this,UserCenterActivity.class);
+			startActivityForResult(it, 100);
+			this.finish();
 			break;
 		// 编辑
 		case R.id.user_title_right:
@@ -220,6 +224,17 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Intent it = new Intent(this, UserCenterActivity.class);
+			startActivityForResult(it, 100);
+			this.finish();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	/**
