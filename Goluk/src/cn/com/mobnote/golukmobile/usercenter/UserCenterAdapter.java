@@ -320,7 +320,25 @@ public class UserCenterAdapter extends BaseAdapter implements
 						}
 					}
 				});
-
+				
+				
+				if(currentViewType == ViewType_ShareVideoList){
+					if(videogroupdata.isHaveData){
+						uca.updateTheEnd(false);
+					}
+						
+				}else if(currentViewType == ViewType_PraiseUserList){
+					uca.updateTheEnd(false);
+					if(praisgroupData.praiselist != null && praisgroupData.praiselist.size()>0){
+						uca.updateTheEnd(true);
+					}else{
+						uca.updateTheEnd(false);
+					}
+				}
+				
+				
+				
+				
 				holder.sharelayout.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -626,7 +644,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.setBackgroundResource(R.drawable.mine_novideo);
 					}else{
 						noVideoDataViewHolder.tipsimage
-						.setBackgroundResource(R.drawable.mine_novideo);
+						.setBackgroundResource(R.drawable.mine_tavideo);
 					}
 					
 				}
@@ -643,7 +661,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.setBackgroundResource(R.drawable.mine_nolike);
 					}else{
 						noVideoDataViewHolder.tipsimage
-						.setBackgroundResource(R.drawable.mine_nolike);
+						.setBackgroundResource(R.drawable.mine_talike);
 					}
 					
 				}

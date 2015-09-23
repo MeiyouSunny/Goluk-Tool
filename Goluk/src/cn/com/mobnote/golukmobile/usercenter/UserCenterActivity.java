@@ -516,6 +516,18 @@ public class UserCenterActivity extends BaseActivity implements
 			callBack_DelVideo(msg, param1, param2);
 		}
 	}
+	
+	/**
+	 * 控制theEnd 的显示和 去掉
+	 * @param flog
+	 */
+	public void updateTheEnd(boolean flog){
+		if(flog){
+			mRTPullListView.addFooterView(mVideoTheEndView);
+		}else{
+			mRTPullListView.removeFooterView(mVideoTheEndView);
+		}
+	}
 
 	/**
 	 * 删除视频回调
