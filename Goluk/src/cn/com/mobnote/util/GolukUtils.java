@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -31,6 +30,7 @@ import android.util.DisplayMetrics;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
 	/** Goluk綁定视频连接地址 */
@@ -586,6 +586,29 @@ public class GolukUtils {
 		}
 
 		return time;
+	}
+
+	public static boolean isCanClick = true;
+	private static Timer mTimer = null;
+
+	public static void startTimer() {
+		isCanClick = false;
+		cancelTimer();
+		mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				isCanClick = true;
+			}
+		}, 2 * 1000);
+	}
+
+	public static void cancelTimer() {
+		if (null != mTimer) {
+			mTimer.cancel();
+			mTimer = null;
+		}
 	}
 
 }
