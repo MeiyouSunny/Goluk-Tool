@@ -545,7 +545,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 				mPlayerLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL,
 						RelativeLayout.TRUE);
 				mPlayerLayoutParams.rightMargin = (int) (GolukUtils.mDensity * 5);
-				;
 				praiseholder.videoPicLayout
 						.setLayoutParams(mPlayerLayoutParams);
 
@@ -559,7 +558,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 					.valueOf(prais.headportrait)]);
 			praiseholder.username.setText(prais.nickname);
 			// praiseholder.desc.setText(prais.introduce);
-			praiseholder.desc.setText("赞了您的视频");
+			praiseholder.desc.setText(prais.introduce);
 			praiseholder.userinfo.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
