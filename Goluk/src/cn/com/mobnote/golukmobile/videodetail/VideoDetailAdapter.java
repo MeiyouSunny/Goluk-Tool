@@ -83,8 +83,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public View mHeadView = null;
 
 	public CustomLoadingDialog mCustomLoadingDialog;
-	private String isPraise = "0";
-	private int likeNumber = 0;
 	/**判断是精选(0)还是最新(1)**/
 	private int mType = 0;
 	
@@ -94,23 +92,56 @@ public class VideoDetailAdapter extends BaseAdapter {
 		mDataList = new ArrayList<CommentBean>();
 		connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		netInfo = connectivityManager.getActiveNetworkInfo();
+		
+		mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				switch (msg.what) {
+				case 1:
+					if (error) {
+						return;
+					}
+					netWorkTimeoutCheck();
+					if (null == headHolder.mVideoView) {
+						return;
+					}
+					if (headHolder.mVideoView.getCurrentPosition() > 0) {
+						if (!headHolder.mVideoView.isPlaying()) {
+							return;
+						}
+						if (!isBuffering) {
+							hideLoading();
+							GolukDebugUtils.e("videoview",
+									"VideoDetailActivity-------------------mHandler : hideLoading ");
+						}
+						playTime = 0;
+						duration = headHolder.mVideoView.getDuration();
+						int progress = headHolder.mVideoView.getCurrentPosition() * 100
+								/ headHolder.mVideoView.getDuration();
+						headHolder.mSeekBar.setProgress(progress);
+						if (headHolder.mVideoView.getCurrentPosition() > headHolder.mVideoView.getDuration() - 100) {
+							headHolder.mSeekBar.setProgress(0);
+						}
+					} else {
+						if (0 != duration) {
+							headHolder.mSeekBar.setProgress(playTime * 100 / duration);
+						} else {
+							headHolder.mSeekBar.setProgress(0);
+						}
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		};
 	}
-
+	
 	public void setData(VideoJson videoJsonData, List<CommentBean> commentData) {
 		mVideoJson = videoJsonData;
 		mDataList.clear();
-		// List<VideoListInfo> list =
-		// videoJsonData.data.avideo.video.comment.comlist;
-		// for (int i = 0; i < list.size(); i++) {
-		// CommentBean bean = new CommentBean();
-		// bean.mCommentId = list.get(i).commentid;
-		// bean.mCommentTime = list.get(i).time;
-		// bean.mCommentTxt = list.get(i).text;
-		// bean.mUserHead = list.get(i).avatar;
-		// bean.mUserId = list.get(i).authorid;
-		// bean.mUserName = list.get(i).name;
-		// mDataList.add(bean);
-		// }
+		
 		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：commentData==" + commentData);
 		if (null != commentData) {
 			mDataList.addAll(commentData);
@@ -249,6 +280,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mTextComment = (TextView) convertView.findViewById(R.id.commentText);
 		headHolder.mZanImage = (ImageView) convertView.findViewById(R.id.video_square_detail_like_image);
 		headHolder.mTextZanName = (TextView) convertView.findViewById(R.id.zanName);
+		
+		loadFirstPic();
+		
 		return convertView;
 	}
 
@@ -269,8 +303,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder = (ViewHolder) mHeadView.getTag();
 			isStartPlay = false;
 		}
-
-		getHeadData(headHolder, mVideoJson.data, true);
+		
+		getHeadData(mVideoJson.data, true);
 
 		headHolder.mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) headHolder.mLoading.getBackground();
@@ -311,7 +345,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	// 设置详情数据
 	@SuppressLint("HandlerLeak")
-	private void getHeadData(final ViewHolder headHolder, final VideoAllData mVideoAllData, boolean isStartPlay) {
+	private void getHeadData(final VideoAllData mVideoAllData, boolean isStartPlay) {
 		if (!mVideoJson.success) {
 			// TODO 后台数据异常
 			GolukDebugUtils.e("lily", "---------后台服务器数据异常-------" + mVideoAllData);
@@ -333,21 +367,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			}else{
 				headHolder.mTextAuthor.setVisibility(View.GONE);
 			}
-
-			// 下载视频第一帧截图
-			headHolder.mImageLayout.removeAllViews();
-			RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-					LayoutParams.MATCH_PARENT);
-
-			SimpleDraweeView view = new SimpleDraweeView(mContext);
-			GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-			GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
-					.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-					.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-					.setActualImageScaleType(ScaleType.FIT_XY).build();
-			view.setHierarchy(hierarchy);
-			view.setImageURI(Uri.parse(mVideoAllData.avideo.video.picture));
-			headHolder.mImageLayout.addView(view, mPreLoadingParams);
+			
 			// 外链接
 			if (null != mVideoAllData.link) {
 				if ("0".equals(mVideoAllData.link.showurl)) {
@@ -398,49 +418,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 				}
 			});
 
-			mHandler = new Handler() {
-				@Override
-				public void handleMessage(Message msg) {
-					super.handleMessage(msg);
-					switch (msg.what) {
-					case 1:
-						if (error) {
-							return;
-						}
-						netWorkTimeoutCheck();
-						if (null == headHolder.mVideoView) {
-							return;
-						}
-						if (headHolder.mVideoView.getCurrentPosition() > 0) {
-							if (!headHolder.mVideoView.isPlaying()) {
-								return;
-							}
-							if (!isBuffering) {
-								hideLoading();
-								GolukDebugUtils.e("videoview",
-										"VideoDetailActivity-------------------mHandler : hideLoading ");
-							}
-							playTime = 0;
-							duration = headHolder.mVideoView.getDuration();
-							int progress = headHolder.mVideoView.getCurrentPosition() * 100
-									/ headHolder.mVideoView.getDuration();
-							headHolder.mSeekBar.setProgress(progress);
-							if (headHolder.mVideoView.getCurrentPosition() > headHolder.mVideoView.getDuration() - 100) {
-								headHolder.mSeekBar.setProgress(0);
-							}
-						} else {
-							if (0 != duration) {
-								headHolder.mSeekBar.setProgress(playTime * 100 / duration);
-							} else {
-								headHolder.mSeekBar.setProgress(0);
-							}
-						}
-						break;
-					default:
-						break;
-					}
-				}
-			};
 		}
 	}
 
@@ -546,58 +523,62 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mNoData.setVisibility(View.GONE);
 		commentHolder.mForbidComment.setVisibility(View.VISIBLE);
 	}
-
+	
 	/**
 	 * 点赞
 	 */
 	public void clickPraise() {
-		try{
-			if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
-				headHolder.mTextZan.setVisibility(View.VISIBLE);
-				if(headHolder.mTextZan.getText().toString().replace(",", "").equals("")){
-					likeNumber = 1;
-				}else{
-					likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) + 1;
-				}
-				DecimalFormat df = new DecimalFormat("#,###");
-				if (likeNumber < 100000) {
-					headHolder.mTextZan.setText(df.format(likeNumber));
-				} else {
-					headHolder.mTextZan.setText("100,000+");
-				}
-				headHolder.mZanImage.setImageResource(R.drawable.videodetail_like_press);
-				headHolder.mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-				headHolder.mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-				isPraise = "1";
-				boolean b = GolukApplication.getInstance().getVideoSquareManager()
-						.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
-				if (b) {
-				}
+		String isPraise = "0";
+		int likeNumber = 0;
+		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
+			headHolder.mTextZan.setVisibility(View.VISIBLE);
+			if (headHolder.mTextZan.getText().toString().replace(",", "").equals("")) {
+				likeNumber = 1;
 			} else {
-				likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) - 1;
-				if(likeNumber == 0){
-					headHolder.mTextZan.setVisibility(View.GONE);
-				}else{
-					headHolder.mTextZan.setVisibility(View.VISIBLE);
+				try {
+					likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) + 1;
+					DecimalFormat df = new DecimalFormat("#,###");
+					if (likeNumber < 100000) {
+						headHolder.mTextZan.setText(df.format(likeNumber));
+					} else {
+						headHolder.mTextZan.setText("100,000+");
+					}
+				} catch (Exception e) {
+					likeNumber = 1;
+					e.printStackTrace();
 				}
-
-				DecimalFormat df = new DecimalFormat("#,###");
-				if (likeNumber < 100000) {
-					headHolder.mTextZan.setText(df.format(likeNumber));
-				} else {
-					headHolder.mTextZan.setText("100,000+");
-				}
-
-				headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
-				headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
-				headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
-				isPraise = "0";
 			}
-			mVideoJson.data.avideo.video.praisenumber = likeNumber + "";
-			mVideoJson.data.avideo.video.ispraise = isPraise;
-		}catch(Exception e){
-			e.printStackTrace();
+			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like_press);
+			headHolder.mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+			headHolder.mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+			isPraise = "1";
+			boolean b = GolukApplication.getInstance().getVideoSquareManager()
+					.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
+		} else {
+			try {
+				likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) - 1;
+			} catch (Exception e) {
+				likeNumber = 0;
+				e.printStackTrace();
+			}
+			if (likeNumber == 0) {
+				headHolder.mTextZan.setVisibility(View.GONE);
+			} else {
+				headHolder.mTextZan.setVisibility(View.VISIBLE);
+			}
+			DecimalFormat df = new DecimalFormat("#,###");
+			if (likeNumber < 100000) {
+				headHolder.mTextZan.setText(df.format(likeNumber));
+			} else {
+				headHolder.mTextZan.setText("100,000+");
+			}
+			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
+			headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
+			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
+			isPraise = "0";
 		}
+		mVideoJson.data.avideo.video.praisenumber = likeNumber + "";
+		mVideoJson.data.avideo.video.ispraise = isPraise;
 	}
 
 	public static class ViewHolder {
@@ -842,6 +823,23 @@ public class VideoDetailAdapter extends BaseAdapter {
 		if (null != mCustomLoadingDialog) {
 			mCustomLoadingDialog.close();
 		}
+	}
+	
+	private void loadFirstPic() {
+		// 下载视频第一帧截图
+		headHolder.mImageLayout.removeAllViews();
+		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
+
+		SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext);
+		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+		GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
+				.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
+				.setActualImageScaleType(ScaleType.FIT_XY).build();
+		simpleDraweeView.setHierarchy(hierarchy);
+		simpleDraweeView.setImageURI(Uri.parse(mVideoJson.data.avideo.video.picture));
+		headHolder.mImageLayout.addView(simpleDraweeView, mPreLoadingParams);
 	}
 
 }

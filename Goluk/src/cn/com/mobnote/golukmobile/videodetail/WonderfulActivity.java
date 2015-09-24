@@ -468,7 +468,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				mEditInput.setFocusable(true);
 				
 				updateRefreshTime();
-				GolukDebugUtils.e("newadapter", "========VideoDetailActivity：commentDataList==" + commentDataList);
 				if (OPERATOR_FIRST == mCurrentOperator) {
 					// 首次进入
 					firstEnterCallBack(0, mVideoJson, commentDataList);
