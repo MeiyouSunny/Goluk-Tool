@@ -88,6 +88,8 @@ public class UserCenterActivity extends BaseActivity implements
 	private ImageButton backbtn;
 	
 	public  static Handler handler = null;
+	
+	public Long requestFlog = null;
 
 	class ShareVideoGroup {
 		public List<VideoSquareInfo> videolist = null;
@@ -312,8 +314,9 @@ public class UserCenterActivity extends BaseActivity implements
 	 * @date 2015年4月15日
 	 */
 	private void httpPost(String otheruid) {
-		boolean result = GolukApplication.getInstance().getVideoSquareManager()
+		requestFlog = GolukApplication.getInstance().getVideoSquareManager()
 				.getUserCenter(curUser.uid);
+		LogUtils.d("requestFlog req= " + requestFlog);
 	}
 
 	/**
@@ -406,7 +409,8 @@ public class UserCenterActivity extends BaseActivity implements
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
 			Object param2) {
-		if (event == VSquare_Req_MainPage_Infor) {
+		LogUtils.d("requestFlog res= " + param1);
+		if (event == VSquare_Req_MainPage_Infor  &&  param1 == requestFlog) {
 			if (RESULE_SUCESS == msg) {
 				this.formatAllData(param2.toString());
 			} else {
@@ -439,7 +443,7 @@ public class UserCenterActivity extends BaseActivity implements
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 			}
 
-		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
+		} else if (event == VSquare_Req_VOP_GetShareURL_Video  &&  param1 == requestFlog) {
 			Context topContext = mBaseApp.getContext();
 			if (topContext != this) {
 				return;
