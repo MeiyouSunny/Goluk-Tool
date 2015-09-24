@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile.videodetail;
 
-import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailAdapter.ViewHolder;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.media.MediaPlayer;
@@ -25,7 +24,6 @@ public class PlayCompletionListener implements OnCompletionListener {
 			return;
 		}
 		mHolder.mPlayBtn.setVisibility(View.VISIBLE);
-		mHolder.mPlayBtn.setImageResource(R.drawable.btn_player_play);
 		mHolder.mImageLayout.setVisibility(View.VISIBLE);
 		mHolder.mVideoView.seekTo(0);
 		mHolder.mSeekBar.setProgress(0);
