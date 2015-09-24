@@ -452,14 +452,14 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @param uid
 	 * @return
 	 */
-	public Long getUserCenterShareUrl(String uid){
+	public Boolean getUserCenterShareUrl(String uid){
 		JSONObject json = new JSONObject();
 		try {
 			json.put("otheruid", uid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VSquare_Req_MainPage_Share, json.toString());
 	}
 	
