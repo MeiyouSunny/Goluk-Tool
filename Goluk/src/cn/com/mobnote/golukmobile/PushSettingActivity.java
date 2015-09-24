@@ -124,15 +124,17 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 		return super.onKeyDown(keyCode, event);
 	}
 
+	private final String NET_ERROR_STR = "网络异常，请检查网络";
+
 	private void deal_getPush_CallBack(int success, Object param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != success) {
-			GolukUtils.showToast(this, "网络异常");
+			GolukUtils.showToast(this, NET_ERROR_STR);
 			return;
 		}
 		SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
 		if (null == bean || !bean.isSucess || !"0".equals(bean.result)) {
-			GolukUtils.showToast(this, "网络异常");
+			GolukUtils.showToast(this, NET_ERROR_STR);
 			return;
 		}
 		setCommentState(bean.isComment.equals("1") ? true : false);

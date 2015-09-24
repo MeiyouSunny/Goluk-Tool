@@ -452,7 +452,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @param uid
 	 * @return
 	 */
-	public boolean getUserCenterShareUrl(String uid){
+	public Boolean getUserCenterShareUrl(String uid){
 		JSONObject json = new JSONObject();
 		try {
 			json.put("otheruid", uid);
@@ -470,9 +470,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @param ztid
 	 * @return
 	 */
-	public boolean getUserCenter(String otheruid) {
+	public Long getUserCenter(String otheruid) {
 		String json = JsonCreateUtils.getUserCenterJson(otheruid);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
 				VSquare_Req_MainPage_Infor, json);
 	}
 	
@@ -488,9 +488,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	}
 	
 	
-	public boolean getUserCenterShareVideo(String otheruid, String operation, String timestamp){
+	public long getUserCenterShareVideo(String otheruid, String operation, String timestamp){
 		String json = JsonCreateUtils.getUserCenterShareVideoJson(otheruid, operation, timestamp);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
 				VSquare_Req_MainPage_List_ShareVideo, json);
 	}
 

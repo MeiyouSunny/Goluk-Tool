@@ -102,6 +102,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 	private boolean lock = false;
 
 	UserCenterActivity uca = null;
+	
 
 	public UserCenterAdapter(Context context, SharePlatformUtil spf,
 			IUserCenterInterface iUser, int tabtype) {
@@ -313,9 +314,9 @@ public class UserCenterAdapter extends BaseAdapter implements
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
 						uca.showProgressDialog();
-						boolean result = GolukApplication.getInstance()
+						boolean flog = GolukApplication.getInstance()
 								.getVideoSquareManager().getUserCenterShareUrl(userinfo.uid);
-						if (result == false) {
+						if (flog == false) {
 							GolukUtils.showToast(mContext, "请求异常，请检查网络是否正常");
 						}
 					}
