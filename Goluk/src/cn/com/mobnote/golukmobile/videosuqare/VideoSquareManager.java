@@ -476,6 +476,17 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 				VSquare_Req_MainPage_Infor, json);
 	}
 	
+	/**
+	 * 
+	 * @param ztype
+	 * @param ztid
+	 * @return
+	 */
+	public String getUserCenter() {
+		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square,
+				VSquare_Req_MainPage_Infor, null);
+	}
+	
 	
 	public boolean getUserCenterShareVideo(String otheruid, String operation, String timestamp){
 		String json = JsonCreateUtils.getUserCenterShareVideoJson(otheruid, operation, timestamp);

@@ -174,13 +174,19 @@ public class UserCenterActivity extends BaseActivity implements
 		curUser = (UCUserInfo) i.getSerializableExtra("userinfo");
 		tabtype = i.getIntExtra("type", 0);
 		
+		this.init();
+		
 		/**
 		 * 如果是自己的主页  先请求个人主页的缓存数据
 		 */
 		if(testUser()){
 			//请求同步数据接口
+			String historydata = GolukApplication.getInstance().getVideoSquareManager().getUserCenter();
+			//说明本地有缓存数据
+			if(historydata != null && !"".equals(historydata)){
+				this.formatAllData(historydata);
+			}
 		}
-		this.init();
 		mRTPullListView.firstFreshState();
 		httpPost(curUser.uid);// 请求数据
 		uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
@@ -342,6 +348,59 @@ public class UserCenterActivity extends BaseActivity implements
 			return false;
 		}
 	}
+	
+	/**
+	 * 封装三个请求同时回来的数据
+	 */
+	private void formatAllData(String data){
+		UCUserInfo user = ucdf.getUserInfo(data);
+		if (user != null) {
+			List<VideoSquareInfo> videos = ucdf
+					.getClusterList(data);
+			List<PraiseInfo> praise = ucdf.getPraises(data);
+			// 说明有数据
+			if (videos != null) {
+				mRTPullListView.removeFooterView(mVideoTheEndView);
+				if (videos.size() >= 20) {
+					videogroupdata.isHaveData = true;
+				} else {
+					videogroupdata.isHaveData = false;
+				}
+				videogroupdata.videolist = videos;
+				videogroupdata.firstSucc = true;
+				videogroupdata.loadfailed = false;
+			} else {// 数据异常
+				if (videogroupdata.firstSucc == false) {
+					videogroupdata.loadfailed = true;
+				}
+			}
+			// 说明有数据
+			if (praise != null) {
+				this.praisgroupdata.praiselist = praise;
+				this.praisgroupdata.firstSucc = true;
+				this.praisgroupdata.loadfailed = false;
+			} else {// 数据异常
+				if (praisgroupdata.firstSucc == false) {
+					this.praisgroupdata.loadfailed = true;
+				}
+			}
+			// 说明有数据
+			curUser = user;
+			uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
+			updateViewData(true, 0);
+
+		} else {
+			if (videogroupdata.firstSucc == false) {
+				videogroupdata.loadfailed = true;
+			}
+			if (praisgroupdata.firstSucc == false) {
+				this.praisgroupdata.loadfailed = true;
+			}
+			GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
+
+			updateViewData(false, 0);
+		}
+	}
 
 
 	@Override
@@ -349,54 +408,7 @@ public class UserCenterActivity extends BaseActivity implements
 			Object param2) {
 		if (event == VSquare_Req_MainPage_Infor) {
 			if (RESULE_SUCESS == msg) {
-
-				UCUserInfo user = ucdf.getUserInfo((String) param2);
-				if (user != null) {
-					List<VideoSquareInfo> videos = ucdf
-							.getClusterList((String) param2);
-					List<PraiseInfo> praise = ucdf.getPraises((String) param2);
-					// 说明有数据
-					if (videos != null) {
-						mRTPullListView.removeFooterView(mVideoTheEndView);
-						if (videos.size() >= 20) {
-							videogroupdata.isHaveData = true;
-						} else {
-							videogroupdata.isHaveData = false;
-						}
-						videogroupdata.videolist = videos;
-						videogroupdata.firstSucc = true;
-						videogroupdata.loadfailed = false;
-					} else {// 数据异常
-						if (videogroupdata.firstSucc == false) {
-							videogroupdata.loadfailed = true;
-						}
-					}
-					// 说明有数据
-					if (praise != null) {
-						this.praisgroupdata.praiselist = praise;
-						this.praisgroupdata.firstSucc = true;
-						this.praisgroupdata.loadfailed = false;
-					} else {// 数据异常
-						if (praisgroupdata.firstSucc == false) {
-							this.praisgroupdata.loadfailed = true;
-						}
-					}
-					// 说明有数据
-					curUser = user;
-					uca.setDataInfo(curUser, videogroupdata, praisgroupdata);
-					updateViewData(true, 0);
-
-				} else {
-					if (videogroupdata.firstSucc == false) {
-						videogroupdata.loadfailed = true;
-					}
-					if (praisgroupdata.firstSucc == false) {
-						this.praisgroupdata.loadfailed = true;
-					}
-					GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
-
-					updateViewData(false, 0);
-				}
+				this.formatAllData(param2.toString());
 			} else {
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 				updateViewData(false, 0);
