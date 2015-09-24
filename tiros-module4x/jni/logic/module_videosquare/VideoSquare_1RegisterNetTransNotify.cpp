@@ -23,7 +23,7 @@ void CallBack_videosquare(void* pvUser, int event, int msg, unsigned long param1
 			data = charToJstringUTF(g_env, (char *)param2); // (g_env)->NewStringUTF((char *)param2);
 			dbgprintf("xuhw-----JNI------CallBack_videosquare----333333");
 		}
-		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,(jint)param1,data);
+		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,(jlong)param1,data);
 		dbgprintf("xuhw-----JNI------CallBack_videosquare----44444");
 	}
 	dbgprintf("xuhw-----JNI------CallBack_videosquare----55555");
