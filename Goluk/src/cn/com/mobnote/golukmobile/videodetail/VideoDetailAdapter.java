@@ -203,7 +203,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		if(null == mVideoJson){
-			return mDataList.size();
+			return 1;
 		}
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			return 2;
@@ -254,17 +254,20 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup arg2) {
-		GolukDebugUtils.e("", "-----------videodetailadapter------null-----getView33---");
 		int type = getItemViewType(arg0);
 		boolean isNULL = null == convertView ? true : false;
 		String s = (null == convertView) ? "convertView == NULL" : "converView Not null";
 		GolukDebugUtils.e("newadapter", "VideoDetailActivity===getView=  positon:" + arg0 + "  " + s);
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView(convertView);
-			GolukDebugUtils.e("", "-----------videodetailadapter------null-----getView44---");
 		} else {
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：arg0==" + arg0);
 			convertView = loadLayout(convertView, arg0 - 1);
+		}
+		if(null == mVideoJson){
+			convertView.setVisibility(View.GONE);
+		}else{
+			convertView.setVisibility(View.VISIBLE);
 		}
 		return convertView;
 	}
@@ -313,18 +316,21 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder = new ViewHolder();
 			mHeadView = createHeadView();
 			mHeadView.setTag(headHolder);
-			GolukDebugUtils.e("", "-----------videodetailadapter------null-----getHeadView11---"+headHolder.mVideoView);
 		} else {
 			headHolder = (ViewHolder) mHeadView.getTag();
 			isStartPlay = false;
-			GolukDebugUtils.e("", "-----------videodetailadapter------null-----getHeadView22---"+headHolder.mVideoView);
 		}
 		
 		if(null == headHolder.mVideoView){
-			GolukDebugUtils.e("", "-----------videodetailadapter------null-----getHeadView55---"+mHeadView);
 			return mHeadView;
 		}
-		getHeadData(mVideoJson.data, true);
+		if(null != mVideoJson){
+			getHeadData(mVideoJson.data, true);
+			headHolder.mShareLayout.setOnClickListener(new ClickShareListener(mContext, mVideoJson, this));
+			if (null != mVideoJson.data.link) {
+				headHolder.mTextLink.setOnClickListener(new ClickLinkListener(mContext, mVideoJson, this));
+			}
+		}
 
 		headHolder.mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) headHolder.mLoading.getBackground();
@@ -332,10 +338,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mPlayBtn.setOnClickListener(new ClickVideoListener(mContext, this));
 		headHolder.mPlayerLayout.setOnClickListener(new ClickVideoListener(mContext, this));
 		headHolder.mPraiseLayout.setOnClickListener(new ClickPraiseListener(mContext, this));
-		headHolder.mShareLayout.setOnClickListener(new ClickShareListener(mContext, mVideoJson, this));
-		if (null != mVideoJson.data.link) {
-			headHolder.mTextLink.setOnClickListener(new ClickLinkListener(mContext, mVideoJson, this));
-		}
+		
 
 		headHolder.mVideoView.setOnPreparedListener(new PlayPreparedListener(headHolder, this));
 		headHolder.mVideoView.setOnCompletionListener(new PlayCompletionListener(this, headHolder));
@@ -387,6 +390,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			}else{
 				headHolder.mTextAuthor.setVisibility(View.GONE);
 			}
+			headHolder.simpleDraweeView.setImageURI(Uri.parse(mVideoAllData.avideo.video.picture));
 			
 			// 外链接
 			if (null != mVideoAllData.link) {
@@ -612,6 +616,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 		TextView mTextLook = null;
 		FullScreenVideoView mVideoView = null;
 		RelativeLayout mImageLayout = null;
+		SimpleDraweeView simpleDraweeView = null;
+		
 		ImageView mPlayBtn = null;
 		SeekBar mSeekBar = null;
 		LinearLayout mVideoLoading = null;
@@ -861,8 +867,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 				.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
 				.setActualImageScaleType(ScaleType.FIT_XY).build();
 		simpleDraweeView.setHierarchy(hierarchy);
-		simpleDraweeView.setImageURI(Uri.parse(mVideoJson.data.avideo.video.picture));
 		headHolder.mImageLayout.addView(simpleDraweeView, mPreLoadingParams);
+		headHolder.simpleDraweeView = simpleDraweeView;
 	}
 
 }
