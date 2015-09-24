@@ -74,7 +74,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 	private ConnectivityManager connectivityManager = null;
 	public NetworkInfo netInfo = null;
 	private CustomDialog mCustomDialog;
-	public Handler mHandler;
 	/** 头部视频详情holder **/
 	public ViewHolder headHolder = null;
 	/** 评论holder **/
@@ -92,51 +91,51 @@ public class VideoDetailAdapter extends BaseAdapter {
 		mDataList = new ArrayList<CommentBean>();
 		connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		netInfo = connectivityManager.getActiveNetworkInfo();
-		
-		mHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				switch (msg.what) {
-				case 1:
-					if (error) {
-						return;
-					}
-					netWorkTimeoutCheck();
-					if (null == headHolder.mVideoView) {
-						return;
-					}
-					if (headHolder.mVideoView.getCurrentPosition() > 0) {
-						if (!headHolder.mVideoView.isPlaying()) {
-							return;
-						}
-						if (!isBuffering) {
-							hideLoading();
-							GolukDebugUtils.e("videoview",
-									"VideoDetailActivity-------------------mHandler : hideLoading ");
-						}
-						playTime = 0;
-						duration = headHolder.mVideoView.getDuration();
-						int progress = headHolder.mVideoView.getCurrentPosition() * 100
-								/ headHolder.mVideoView.getDuration();
-						headHolder.mSeekBar.setProgress(progress);
-						if (headHolder.mVideoView.getCurrentPosition() > headHolder.mVideoView.getDuration() - 100) {
-							headHolder.mSeekBar.setProgress(0);
-						}
-					} else {
-						if (0 != duration) {
-							headHolder.mSeekBar.setProgress(playTime * 100 / duration);
-						} else {
-							headHolder.mSeekBar.setProgress(0);
-						}
-					}
-					break;
-				default:
-					break;
-				}
-			}
-		};
 	}
+	
+	public Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+			case 1:
+				if (error) {
+					return;
+				}
+				netWorkTimeoutCheck();
+				if (null == headHolder.mVideoView) {
+					return;
+				}
+				if (headHolder.mVideoView.getCurrentPosition() > 0) {
+					if (!headHolder.mVideoView.isPlaying()) {
+						return;
+					}
+					if (!isBuffering) {
+						hideLoading();
+						GolukDebugUtils.e("videoview",
+								"VideoDetailActivity-------------------mHandler : hideLoading ");
+					}
+					playTime = 0;
+					duration = headHolder.mVideoView.getDuration();
+					int progress = headHolder.mVideoView.getCurrentPosition() * 100
+							/ headHolder.mVideoView.getDuration();
+					headHolder.mSeekBar.setProgress(progress);
+					if (headHolder.mVideoView.getCurrentPosition() > headHolder.mVideoView.getDuration() - 100) {
+						headHolder.mSeekBar.setProgress(0);
+					}
+				} else {
+					if (0 != duration) {
+						headHolder.mSeekBar.setProgress(playTime * 100 / duration);
+					} else {
+						headHolder.mSeekBar.setProgress(0);
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	};
 	
 	public void setData(VideoJson videoJsonData, List<CommentBean> commentData) {
 		mVideoJson = videoJsonData;
@@ -389,8 +388,10 @@ public class VideoDetailAdapter extends BaseAdapter {
 				}
 
 			} else {
-				headHolder.mImageLayout.setVisibility(View.VISIBLE);
-				headHolder.mPlayBtn.setVisibility(View.VISIBLE);
+				if(!headHolder.mVideoView.isPlaying()){
+					headHolder.mImageLayout.setVisibility(View.VISIBLE);
+					headHolder.mPlayBtn.setVisibility(View.VISIBLE);
+				}
 			}
 			
 			headHolder.mImageHead.setOnClickListener(new OnClickListener() {
