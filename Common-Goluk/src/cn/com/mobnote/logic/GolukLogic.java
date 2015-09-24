@@ -111,4 +111,20 @@ public class GolukLogic {
 		return GolukLogicJni.GolukLogicCommGet(pLogic, mId, cmd, param);
 	}
 
+	/**
+	 * 通用请求函数(支持并发)
+	 * 
+	 * @param mId
+	 *            模块ID (参见GolukModule类)
+	 * @param cmd
+	 *            模块命令
+	 * @param param
+	 *            调用参数
+	 * @return 下标id
+	 * @author jiayf
+	 */
+	public long CommRequestEx(int mID, int cmd, String param) {
+		return GolukLogicJni.CommRequestEx(pLogic, mID, cmd, param);
+	}
+
 }

@@ -12,4 +12,7 @@ public class GolukLogicJni {
 
 	public static native String GolukLogicCommGet(long pLogic, int mID, int cmd, String param);
 
+	// 通用请求函数(支持并发)
+	public static native long CommRequestEx(long pLogic, int mID, int cmd, String param);
+
 }

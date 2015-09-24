@@ -47,6 +47,14 @@ JNIEXPORT jboolean JNICALL Java_cn_com_mobnote_logic_GolukLogicJni_GolukLogicCom
 JNIEXPORT jstring JNICALL Java_cn_com_mobnote_logic_GolukLogicJni_GolukLogicCommGet
   (JNIEnv *, jclass, jlong, jint, jint, jstring);
 
+/*
+ * Class:     cn_com_mobnote_logic_GolukLogicJni
+ * Method:    CommRequestEx
+ * Signature: (JIILjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_cn_com_mobnote_logic_GolukLogicJni_CommRequestEx
+  (JNIEnv *, jclass, jlong, jint, jint, jstring);
+
 #ifdef __cplusplus
 }
 #endif
