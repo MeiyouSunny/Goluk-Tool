@@ -597,6 +597,7 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 			} else {
 				mVideo.start();
 				mPlay.setImageResource(R.drawable.player_pause_btn);
+				hideOperator();
 			}
 			break;
 		default:
@@ -633,6 +634,52 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 	};
 
 	/**
+	 * 显示上下操作栏
+	 * 
+	 * @author jyf
+	 */
+	private void showOperator() {
+		mTopView.setVisibility(View.VISIBLE);
+		mTopView.clearAnimation();
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.option_entry_from_top);
+		mTopView.startAnimation(animation);
+
+		mBottomView.setVisibility(View.VISIBLE);
+		mBottomView.clearAnimation();
+		Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.option_entry_from_bottom);
+		mBottomView.startAnimation(animation1);
+	}
+
+	/**
+	 * 隐藏上下操作栏
+	 * 
+	 * @author jyf
+	 */
+	private void hideOperator() {
+		mTopView.clearAnimation();
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.option_leave_from_top);
+		animation.setAnimationListener(new AnimationImp() {
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				super.onAnimationEnd(animation);
+				mTopView.setVisibility(View.GONE);
+			}
+		});
+		mTopView.startAnimation(animation);
+
+		mBottomView.clearAnimation();
+		Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.option_leave_from_bottom);
+		animation1.setAnimationListener(new AnimationImp() {
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				super.onAnimationEnd(animation);
+				mBottomView.setVisibility(View.GONE);
+			}
+		});
+		mBottomView.startAnimation(animation1);
+	}
+
+	/**
 	 * 显示隐藏顶部底部布局
 	 * 
 	 * @author xuhw
@@ -640,37 +687,9 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 	 */
 	private void showOrHide() {
 		if (mTopView.getVisibility() == View.VISIBLE) {
-			mTopView.clearAnimation();
-			Animation animation = AnimationUtils.loadAnimation(this, R.anim.option_leave_from_top);
-			animation.setAnimationListener(new AnimationImp() {
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					super.onAnimationEnd(animation);
-					mTopView.setVisibility(View.GONE);
-				}
-			});
-			mTopView.startAnimation(animation);
-
-			mBottomView.clearAnimation();
-			Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.option_leave_from_bottom);
-			animation1.setAnimationListener(new AnimationImp() {
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					super.onAnimationEnd(animation);
-					mBottomView.setVisibility(View.GONE);
-				}
-			});
-			mBottomView.startAnimation(animation1);
+			hideOperator();
 		} else {
-			mTopView.setVisibility(View.VISIBLE);
-			mTopView.clearAnimation();
-			Animation animation = AnimationUtils.loadAnimation(this, R.anim.option_entry_from_top);
-			mTopView.startAnimation(animation);
-
-			mBottomView.setVisibility(View.VISIBLE);
-			mBottomView.clearAnimation();
-			Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.option_entry_from_bottom);
-			mBottomView.startAnimation(animation1);
+			showOperator();
 			mHandler.removeCallbacks(hideRunnable);
 			mHandler.postDelayed(hideRunnable, HIDE_TIME);
 		}
@@ -695,6 +714,7 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
+		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onInfo----arg1:" + arg1 + "   arg2:" + arg2);
 		switch (arg1) {
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			isBuffering = true;
@@ -716,6 +736,7 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onError----");
 		if (error) {
 			return false;
 		}
@@ -752,10 +773,11 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
+		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onCompletion----");
 		if (error) {
 			return;
 		}
-
+		showOperator();
 		mVideo.seekTo(0);
 		mPlay.setImageResource(R.drawable.player_play_btn);
 		mPlayTime.setText("00:00");
@@ -765,6 +787,7 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
+		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onPrepared----=");
 		mVideo.setVideoWidth(mp.getVideoWidth());
 		mVideo.setVideoHeight(mp.getVideoHeight());
 
@@ -773,8 +796,8 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 			mVideo.seekTo(playTime);
 		}
 
-		mHandler.removeCallbacks(hideRunnable);
-		mHandler.postDelayed(hideRunnable, HIDE_TIME);
+		// mHandler.removeCallbacks(hideRunnable);
+		// mHandler.postDelayed(hideRunnable, HIDE_TIME);
 		mDurationTime.setText(formatTime(mVideo.getDuration()));
 
 		startTimer();
@@ -857,6 +880,7 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 
 	@Override
 	protected void onPause() {
+		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onPause----");
 		super.onPause();
 		LightnessController.setLightness(this, orginalLight);
 
@@ -875,6 +899,7 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 	@Override
 	protected void onResume() {
 		super.onResume();
+		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onResume----");
 		if (isStop) {
 			isStop = false;
 			showLoading();
@@ -919,6 +944,7 @@ public class VideoPlayerActivity extends Activity implements OnClickListener, On
 
 	@Override
 	protected void onStop() {
+		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onStop----");
 		super.onStop();
 		if (isBackground(this)) {
 			isStop = true;
