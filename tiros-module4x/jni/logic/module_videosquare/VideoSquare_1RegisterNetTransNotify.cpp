@@ -15,12 +15,12 @@ void CallBack_videosquare(void* pvUser, int event, int msg, unsigned long param1
 	jmethodID mId_CallBack = g_env->GetStaticMethodID(cls,"VideoSquare_CallBack","(IIJLjava/lang/Object;)V");
 	
 	if (0 == msg) {
-		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,0,0);
+		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg, (jlong)0, 0);
 	} else {
 		jstring data = 0;
 		if(0 != param2){
 			dbgprintf("xuhw-----JNI------CallBack_videosquare----22222222");
-			data = charToJstringUTF(g_env, (char *)param2); // (g_env)->NewStringUTF((char *)param2);
+			data = charToJstringUTF(g_env, (char *)param2);
 			dbgprintf("xuhw-----JNI------CallBack_videosquare----333333");
 		}
 		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,(jlong)param1,data);
