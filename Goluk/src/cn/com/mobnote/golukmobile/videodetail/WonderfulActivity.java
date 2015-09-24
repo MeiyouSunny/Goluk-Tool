@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,7 +67,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 	/** application */
 	public GolukApplication mApp = null;
-
+	public static final String LISTENER_TAG = "wonderfulactivity";
 	/** 布局 **/
 	private ImageButton mImageBack = null;
 	private TextView mTextTitle = null;
@@ -245,10 +246,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		// 注册监听
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
-			if (mVideoSquareManager.checkVideoSquareManagerListener("detailcomment")) {
-				mVideoSquareManager.removeVideoSquareManagerListener("detailcomment");
+			if (mVideoSquareManager.checkVideoSquareManagerListener(LISTENER_TAG)) {
+				mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
 			}
-			mVideoSquareManager.addVideoSquareManagerListener("detailcomment", this);
+			mVideoSquareManager.addVideoSquareManagerListener(LISTENER_TAG, this);
 		}
 	}
 
@@ -730,18 +731,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 	private void exit() {
 		if (null != mVideoSquareManager) {
-			mVideoSquareManager.removeVideoSquareManagerListener("detailcomment");
+			mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
 		}
 		mAdapter.cancleTimer();
-		if (!UserUtils.isNetDeviceAvailable(this)) {
-			this.finish();
-			return;
-		}
-		if (!isClick) {
-			this.finish();
-			return;
-		}
-		if (null != mAdapter.headHolder.mVideoView) {
+		if (null != mAdapter.headHolder && null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
 			mAdapter.headHolder.mVideoView = null;
 		}
@@ -867,6 +860,15 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}else{
 			mEditInput.clearFocus();
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			exit();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

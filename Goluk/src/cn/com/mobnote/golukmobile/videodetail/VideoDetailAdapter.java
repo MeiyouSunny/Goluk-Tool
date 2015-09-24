@@ -254,12 +254,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup arg2) {
+		GolukDebugUtils.e("", "-----------videodetailadapter------null-----getView33---");
 		int type = getItemViewType(arg0);
 		boolean isNULL = null == convertView ? true : false;
 		String s = (null == convertView) ? "convertView == NULL" : "converView Not null";
 		GolukDebugUtils.e("newadapter", "VideoDetailActivity===getView=  positon:" + arg0 + "  " + s);
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView(convertView);
+			GolukDebugUtils.e("", "-----------videodetailadapter------null-----getView44---");
 		} else {
 			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：arg0==" + arg0);
 			convertView = loadLayout(convertView, arg0 - 1);
@@ -311,11 +313,17 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder = new ViewHolder();
 			mHeadView = createHeadView();
 			mHeadView.setTag(headHolder);
+			GolukDebugUtils.e("", "-----------videodetailadapter------null-----getHeadView11---"+headHolder.mVideoView);
 		} else {
 			headHolder = (ViewHolder) mHeadView.getTag();
 			isStartPlay = false;
+			GolukDebugUtils.e("", "-----------videodetailadapter------null-----getHeadView22---"+headHolder.mVideoView);
 		}
 		
+		if(null == headHolder.mVideoView){
+			GolukDebugUtils.e("", "-----------videodetailadapter------null-----getHeadView55---"+mHeadView);
+			return mHeadView;
+		}
 		getHeadData(mVideoJson.data, true);
 
 		headHolder.mLoading.setBackgroundResource(R.anim.video_loading);
@@ -397,7 +405,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 					playVideo();
 					headHolder.mVideoView.start();
 					showLoading();
-					GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------getHeadData:  showLoading");
+					GolukDebugUtils.e("videoview",
+							"VideoDetailActivity-------------------------getHeadData:  showLoading");
 				}
 
 			} else {
@@ -551,16 +560,16 @@ public class VideoDetailAdapter extends BaseAdapter {
 			} else {
 				try {
 					likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) + 1;
-					DecimalFormat df = new DecimalFormat("#,###");
-					if (likeNumber < 100000) {
-						headHolder.mTextZan.setText(df.format(likeNumber));
-					} else {
-						headHolder.mTextZan.setText("100,000+");
-					}
 				} catch (Exception e) {
 					likeNumber = 1;
 					e.printStackTrace();
 				}
+			}
+			DecimalFormat df = new DecimalFormat("#,###");
+			if (likeNumber < 100000) {
+				headHolder.mTextZan.setText(df.format(likeNumber));
+			} else {
+				headHolder.mTextZan.setText("100,000+");
 			}
 			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like_press);
 			headHolder.mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
