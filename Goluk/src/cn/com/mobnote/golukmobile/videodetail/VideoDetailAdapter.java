@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile.videodetail;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -8,7 +7,6 @@ import java.util.Timer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -330,6 +328,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			if (null != mVideoJson.data.link) {
 				headHolder.mTextLink.setOnClickListener(new ClickLinkListener(mContext, mVideoJson, this));
 			}
+			headHolder.mPraiseLayout.setOnClickListener(new ClickPraiseListener(mContext, this,mVideoJson));
 		}
 
 		headHolder.mLoading.setBackgroundResource(R.anim.video_loading);
@@ -337,8 +336,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 		headHolder.mPlayBtn.setOnClickListener(new ClickVideoListener(mContext, this));
 		headHolder.mPlayerLayout.setOnClickListener(new ClickVideoListener(mContext, this));
-		headHolder.mPraiseLayout.setOnClickListener(new ClickPraiseListener(mContext, this));
-		
 
 		headHolder.mVideoView.setOnPreparedListener(new PlayPreparedListener(headHolder, this));
 		headHolder.mVideoView.setOnCompletionListener(new PlayCompletionListener(this, headHolder));
@@ -551,61 +548,33 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mForbidComment.setVisibility(View.VISIBLE);
 	}
 	
-	/**
-	 * 点赞
-	 */
-	public void clickPraise() {
-		String isPraise = "0";
+	public String setClickPraise(){
 		int likeNumber = 0;
-		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {// 没有点过赞
-			headHolder.mTextZan.setVisibility(View.VISIBLE);
-			if (headHolder.mTextZan.getText().toString().replace(",", "").equals("")) {
+		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
+			if (mVideoJson.data.avideo.video.praisenumber.replace(",", "").equals("")) {
 				likeNumber = 1;
-			} else {
-				try {
-					likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) + 1;
-				} catch (Exception e) {
+			}else{
+				try{
+					likeNumber = Integer.parseInt(mVideoJson.data.avideo.video.praisenumber.replace(",", "")) + 1;
+				}catch(Exception e){
 					likeNumber = 1;
 					e.printStackTrace();
 				}
 			}
-			DecimalFormat df = new DecimalFormat("#,###");
-			if (likeNumber < 100000) {
-				headHolder.mTextZan.setText(df.format(likeNumber));
-			} else {
-				headHolder.mTextZan.setText("100,000+");
-			}
-			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like_press);
-			headHolder.mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-			headHolder.mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-			isPraise = "1";
+			mVideoJson.data.avideo.video.ispraise = "1";
 			boolean b = GolukApplication.getInstance().getVideoSquareManager()
 					.clickPraise("1", mVideoJson.data.avideo.video.videoid, "1");
-		} else {
+		}else{
 			try {
-				likeNumber = Integer.parseInt(headHolder.mTextZan.getText().toString().replace(",", "")) - 1;
+				likeNumber = Integer.parseInt(mVideoJson.data.avideo.video.praisenumber.replace(",", "")) - 1;
 			} catch (Exception e) {
 				likeNumber = 0;
 				e.printStackTrace();
 			}
-			if (likeNumber == 0) {
-				headHolder.mTextZan.setVisibility(View.GONE);
-			} else {
-				headHolder.mTextZan.setVisibility(View.VISIBLE);
-			}
-			DecimalFormat df = new DecimalFormat("#,###");
-			if (likeNumber < 100000) {
-				headHolder.mTextZan.setText(df.format(likeNumber));
-			} else {
-				headHolder.mTextZan.setText("100,000+");
-			}
-			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
-			headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
-			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
-			isPraise = "0";
+			mVideoJson.data.avideo.video.ispraise = "0";
 		}
 		mVideoJson.data.avideo.video.praisenumber = likeNumber + "";
-		mVideoJson.data.avideo.video.ispraise = isPraise;
+		return GolukUtils.getFormatNumber(likeNumber+"");
 	}
 
 	public static class ViewHolder {
