@@ -89,7 +89,11 @@ public class UserCenterActivity extends BaseActivity implements
 	
 	public  static Handler handler = null;
 	
-	public Long requestFlog = null;
+	/** 所有的数据请求 id*/
+	public long mAllDataSequenceId = 0;
+	/** 我的分享视频请求 */
+	private long mMyShareVideoSequenceId = 0;
+	
 
 	class ShareVideoGroup {
 		public List<VideoSquareInfo> videolist = null;
@@ -314,9 +318,9 @@ public class UserCenterActivity extends BaseActivity implements
 	 * @date 2015年4月15日
 	 */
 	private void httpPost(String otheruid) {
-		requestFlog = GolukApplication.getInstance().getVideoSquareManager()
+		mAllDataSequenceId = GolukApplication.getInstance().getVideoSquareManager()
 				.getUserCenter(curUser.uid);
-		LogUtils.d("requestFlog req= " + requestFlog);
+		LogUtils.d("requestFlog req= " + mAllDataSequenceId);
 	}
 
 	/**
@@ -324,7 +328,7 @@ public class UserCenterActivity extends BaseActivity implements
 	 * 
 	 */
 	private void httpGetNextVideo(String sharingtime) {
-		boolean result = GolukApplication.getInstance().getVideoSquareManager()
+		mMyShareVideoSequenceId = GolukApplication.getInstance().getVideoSquareManager()
 				.getUserCenterShareVideo(curUser.uid, "2", sharingtime);
 	}
 
@@ -410,7 +414,7 @@ public class UserCenterActivity extends BaseActivity implements
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
 			Object param2) {
 		LogUtils.d("requestFlog res= " + param1);
-		if (event == VSquare_Req_MainPage_Infor  &&  param1 == requestFlog) {
+		if (event == VSquare_Req_MainPage_Infor  &&  param1 == mAllDataSequenceId) {
 			if (RESULE_SUCESS == msg) {
 				this.formatAllData(param2.toString());
 			} else {
@@ -418,7 +422,7 @@ public class UserCenterActivity extends BaseActivity implements
 				updateViewData(false, 0);
 			}
 
-		} else if (event == VSquare_Req_MainPage_List_ShareVideo) {// 个人主页视频列表结果
+		} else if (event == VSquare_Req_MainPage_List_ShareVideo && param1 == mMyShareVideoSequenceId) {// 个人主页视频列表结果
 			if (RESULE_SUCESS == msg) {
 				List<VideoSquareInfo> videos = JsonParserUtils
 						.parserNewestItemData((String) param2);
@@ -443,7 +447,7 @@ public class UserCenterActivity extends BaseActivity implements
 				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
 			}
 
-		} else if (event == VSquare_Req_VOP_GetShareURL_Video  &&  param1 == requestFlog) {
+		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
 			Context topContext = mBaseApp.getContext();
 			if (topContext != this) {
 				return;
