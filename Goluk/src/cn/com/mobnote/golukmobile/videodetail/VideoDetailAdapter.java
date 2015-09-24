@@ -47,7 +47,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 public class VideoDetailAdapter extends BaseAdapter {
 
-	private Context mContext = null;
+	public Context mContext = null;
 	private VideoJson mVideoJson = null;
 	private List<CommentBean> mDataList = null;
 	/** head **/
@@ -71,7 +71,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	private int duration = 0;
 	/** 暂停标识 */
 	public boolean isPause = false;
-	private ConnectivityManager connectivityManager = null;
+	public ConnectivityManager connectivityManager = null;
 	public NetworkInfo netInfo = null;
 	private CustomDialog mCustomDialog;
 	/** 头部视频详情holder **/
@@ -119,6 +119,19 @@ public class VideoDetailAdapter extends BaseAdapter {
 					duration = headHolder.mVideoView.getDuration();
 					int progress = headHolder.mVideoView.getCurrentPosition() * 100
 							/ headHolder.mVideoView.getDuration();
+					GolukDebugUtils.e("videoloop","VideoDetailActivity-----------mHandler :  progress"+progress);
+					if(progress >= 94){
+						connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+						netInfo = connectivityManager.getActiveNetworkInfo();
+						if ((null != netInfo) && (netInfo.getType() == ConnectivityManager.TYPE_MOBILE)) {
+							headHolder.mVideoView.pause();
+							headHolder.mPlayBtn.setVisibility(View.VISIBLE);
+							headHolder.mImageLayout.setVisibility(View.VISIBLE);
+							headHolder.mVideoView.seekTo(0);
+							headHolder.mSeekBar.setProgress(0);
+						}
+					}
+					
 					headHolder.mSeekBar.setProgress(progress);
 					if (headHolder.mVideoView.getCurrentPosition() > headHolder.mVideoView.getDuration() - 100) {
 						headHolder.mSeekBar.setProgress(0);
