@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -28,7 +29,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.lidroid.xutils.util.LogUtils;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -136,6 +139,7 @@ public class UserCenterActivity extends BaseActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_center);
 		GolukApplication.getInstance().getVideoSquareManager()
@@ -646,42 +650,26 @@ public class UserCenterActivity extends BaseActivity implements
 
 	private void showDelDialog(final String vid) {
 		mDelVid = vid;
-		final AlertDialog delDialog = new AlertDialog.Builder(this).create();
-		delDialog.setTitle("删除视频");
-		delDialog.setMessage("删除后相关的获赞、评论数据将被清除是否还要删除？");
-		delDialog.setCancelable(false);
-		delDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
-				new DialogInterface.OnClickListener() {
+
+		new AlertDialog.Builder(this).setTitle("删除视频").setMessage("删除后相关的获赞、评论数据将被清除是否还要删除？")
+				.setPositiveButton("删除", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						delDialog.dismiss();
+						delVideo(vid);
 					}
-				});
-
-		delDialog.setButton(DialogInterface.BUTTON_POSITIVE, "删除 ",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialoginterface, int i) {
-						delDialog.dismiss();
-						boolean isSucess = mBaseApp.mGoluk
-								.GolukLogicCommRequest(
-										GolukModule.Goluk_Module_Square,
-										VSquare_Req_MainPage_DeleteVideo,
-										JsonUtil.getDelRequestJson(vid));
-						if (isSucess) {
-							LiveDialogManager
-									.getManagerInstance()
-									.showCommProgressDialog(
-											UserCenterActivity.this,
-											LiveDialogManager.DIALOG_TYPE_DEL_VIDEO,
-											"", "正在删除...", true);
-						} else {
-							GolukUtils.showToast(UserCenterActivity.this,
-									"删除视频失败");
-						}
-					}
-				});
-		delDialog.show();
+				}).setNegativeButton("取消", null).create().show();
+	}
+	
+	private void delVideo(String vid) {
+		boolean isSucess = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VSquare_Req_MainPage_DeleteVideo, JsonUtil.getDelRequestJson(vid));
+		if (isSucess) {
+			LiveDialogManager.getManagerInstance().showCommProgressDialog(UserCenterActivity.this,
+					LiveDialogManager.DIALOG_TYPE_DEL_VIDEO, "", "正在删除...", true);
+		} else {
+			GolukUtils.showToast(UserCenterActivity.this, "删除视频失败");
+		}
 	}
 
 	@Override
