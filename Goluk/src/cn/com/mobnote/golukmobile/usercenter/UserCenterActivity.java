@@ -623,11 +623,11 @@ public class UserCenterActivity extends BaseActivity implements
 						+ number;
 				this.videogroupdata.videolist.get(i).mVideoEntity.ispraise = mVideoSquareInfo.mVideoEntity.ispraise;
 				mVideoSquareInfo.mVideoEntity.praisenumber = "" + number;
+				this.uca.notifyDataSetChanged();
 				break;
 			}
 		}
-
-		this.uca.notifyDataSetChanged();
+		
 	}
 
 	@Override

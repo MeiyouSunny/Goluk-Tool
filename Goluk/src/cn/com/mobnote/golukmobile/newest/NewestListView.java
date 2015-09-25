@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.lidroid.xutils.util.LogUtils;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
