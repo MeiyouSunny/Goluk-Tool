@@ -353,6 +353,8 @@ public class CarRecorderActivity extends BaseActivity implements
 					wonderfulVideoDownloadShow();
 					break;
 				case WIFI_STATE_SUCCESS:
+					isShowPlayer = false;
+					isConnecting = false;
 					GolukDebugUtils.e("zh：连接成功 ", "");
 					WifiRsBean wrb = ReadWifiConfig.readConfig();
 					if (wrb != null) {
