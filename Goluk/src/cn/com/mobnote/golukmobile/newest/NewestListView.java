@@ -278,7 +278,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
-
+				try {
 				if (null == mDataList && mDataList.size() <= 0) {
 					return;
 				}
@@ -299,6 +299,12 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 						Uri uri = Uri.parse(url);
 						Fresco.getImagePipeline().evictFromMemoryCache(uri);
 					}
+				}
+				
+				
+					
+				} catch (Exception e) {
+					
 				}
 
 			}

@@ -46,9 +46,17 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.ILocationFn;
+import cn.com.mobnote.module.location.LocationNotifyAdapter;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.page.PageNotifyAdapter;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.module.talk.TalkNotifyAdapter;
+import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.receiver.NetworkStateReceiver;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
@@ -680,6 +688,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 			exitTime = System.currentTimeMillis();
 		} else {
+			unregisterListener();
 			mApp.mIPCControlManager.setIPCWifiState(false, "");
 			closeWifiHot();
 			SysApplication.getInstance().exit();
@@ -698,6 +707,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mApp.setExit(true);
 		}
 
+	}
+
+	private void unregisterListener() {
+		PageNotifyAdapter.setNotify(null);
+		TalkNotifyAdapter.setNotify(null);
+		IPCManagerAdapter.setIPcManageListener(null);
+		VideoSquareManagerAdapter.setVideoSuqareListener(null);
+		LocationNotifyAdapter.setLocationNotifyListener(null);
 	}
 
 	/**
