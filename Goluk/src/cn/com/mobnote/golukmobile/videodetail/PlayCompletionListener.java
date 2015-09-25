@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile.videodetail;
 
-import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailAdapter.ViewHolder;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
