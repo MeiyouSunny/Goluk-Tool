@@ -102,7 +102,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		mRootLayout.addView(mRTPullListView);
 
 		setListAdapter();
-
+		setViewListBg(false);
 		loadHistoryData();
 		httpPost(true, "0", "");
 

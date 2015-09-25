@@ -91,6 +91,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
 
 		initHistoryData();
+		setViewListBg(false);
 		httpPost(true, "0", "");
 
 		shareBg.setOnClickListener(new OnClickListener() {
