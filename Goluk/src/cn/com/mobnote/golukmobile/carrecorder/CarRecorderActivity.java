@@ -353,53 +353,14 @@ public class CarRecorderActivity extends BaseActivity implements
 					wonderfulVideoDownloadShow();
 					break;
 				case WIFI_STATE_SUCCESS:
-					isShowPlayer = false;
-					isConnecting = false;
-					GolukDebugUtils.e("zh：连接成功 ", "");
-					WifiRsBean wrb = ReadWifiConfig.readConfig();
-					if (wrb != null) {
-						mConnectTip.setText(wrb.getIpc_ssid());
-					}
-
-					mPalyerLayout.setVisibility(View.VISIBLE);
-					mNotconnected.setVisibility(View.GONE);
-					mConncetLayout.setVisibility(View.GONE);
-
-					mSettingBtn.setBackgroundResource(R.drawable.carrecorder_setting);
-					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
-					liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+					GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onclick======connect  Sucess");
+					ipcConnSucess();
 					break;
 				case WIFI_STATE_FAILED:
-					
-					mConnectTip.setText(wifiname);
-					mPalyerLayout.setVisibility(View.GONE);
-					mNotconnected.setVisibility(View.VISIBLE);
-					mConncetLayout.setVisibility(View.GONE);
-
-					mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
-					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-					liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+					ipcConnFailed();
 					break;
 				case WIFI_STATE_CONNING:
-					mConnectTip.setText(wifiname);
-					if (isBindSucess()) {
-						mPalyerLayout.setVisibility(View.GONE);
-						mNotconnected.setVisibility(View.GONE);
-						mConncetLayout.setVisibility(View.VISIBLE);
-
-						mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
-						m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-						liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
-					} else {
-						mPalyerLayout.setVisibility(View.GONE);
-						mNotconnected.setVisibility(View.VISIBLE);
-						mConncetLayout.setVisibility(View.GONE);
-
-						mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
-						m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-						liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
-					}
-
+					ipcConnecting();
 					break;
 				}
 			};
@@ -435,46 +396,27 @@ public class CarRecorderActivity extends BaseActivity implements
 	/**
 	 * 验证ipc连接情况
 	 * 
-	 * @Title: setInitIpc
-	 * @Description: TODO
 	 * @param ipcS
-	 *            void
 	 * @author 曾浩
-	 * @throws
 	 */
-	@SuppressLint("NewApi")
 	private void initIpcState(int ipcS) {
 		switch (ipcS) {
 		case WIFI_STATE_FAILED:
-			mPalyerLayout.setVisibility(View.GONE);
-			mNotconnected.setVisibility(View.VISIBLE);
-			mConncetLayout.setVisibility(View.GONE);
-
-			mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
-			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
-			
-			mConnectTip.setText(wifiname);
+			ipcConnFailed();
 			break;
 		case WIFI_STATE_CONNING:
 			mConnectTip.setText(wifiname);
-			
-			if (isBindSucess()) {
-				mPalyerLayout.setVisibility(View.GONE);
+			mPalyerLayout.setVisibility(View.GONE);
+			if (isBindSucess()) {	
 				mNotconnected.setVisibility(View.GONE);
 				mConncetLayout.setVisibility(View.VISIBLE);
-				mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
-				m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 			} else {
-				mPalyerLayout.setVisibility(View.GONE);
 				mNotconnected.setVisibility(View.VISIBLE);
 				mConncetLayout.setVisibility(View.GONE);
-
-				mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
-				m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 			}
+			mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
+			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
+			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 
 			break;
 		case WIFI_STATE_SUCCESS:
@@ -672,6 +614,7 @@ public class CarRecorderActivity extends BaseActivity implements
 					@Override
 					public boolean onPlayerError(RtmpPlayerView rpv, int what,
 							int extra, String strErrorInfo) {
+						GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onPlayerError=======");
 						hidePlayer();
 						rtmpIsOk = false;
 						rpv.removeCallbacks(retryRunnable);
@@ -685,6 +628,7 @@ public class CarRecorderActivity extends BaseActivity implements
 
 					@Override
 					public void onPlayerCompletion(RtmpPlayerView rpv) {
+						GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onPlayerCompletion=======");
 						hidePlayer();
 						rtmpIsOk = false;
 						rpv.removeCallbacks(retryRunnable);
@@ -710,17 +654,19 @@ public class CarRecorderActivity extends BaseActivity implements
 					@Override
 					public void onGetCurrentPosition(RtmpPlayerView rpv,
 							int nPosition) {
-						// TODO Auto-generated method stub
-
 					}
 
 					@Override
 					public void onPlayerBegin(RtmpPlayerView arg0) {
+						GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onPlayerBegin=======");
 						hideLoading();
 						rtmpIsOk = true;
+						// 显示播放器
 						showPlayer();
+						// 隐藏
+						mPalyerLayout.setVisibility(View.GONE);
 						mFullScreen.setVisibility(View.VISIBLE);
-						isShowPlayer = true;
+						
 					}
 				});
 	}
@@ -753,6 +699,8 @@ public class CarRecorderActivity extends BaseActivity implements
 		lp.height = (int) (width / 1.777);
 		lp.leftMargin = 0;
 		mVLayout.setLayoutParams(lp);
+		
+		isShowPlayer = true;
 	}
 
 	/**
@@ -804,6 +752,7 @@ public class CarRecorderActivity extends BaseActivity implements
 	private Runnable retryRunnable = new Runnable() {
 		@Override
 		public void run() {
+			isConnecting = true;
 			start();
 		}
 	};
@@ -822,7 +771,7 @@ public class CarRecorderActivity extends BaseActivity implements
 					R.string.default_rtsp_back);
 			String url = preUrl + mApp.mIpcIp + backUrl;
 
-			GolukDebugUtils.e("xuhw", "YYYYYY======url==" + url);
+			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url);
 
 			mRtmpPlayerView.setDataSource(url);
 
@@ -850,8 +799,7 @@ public class CarRecorderActivity extends BaseActivity implements
 
 			GolukDebugUtils.e("xuhw",
 					"m8sBtn========================11111======");
-			GFileUtils
-					.writeIPCLog("=============================发起精彩视频命令===========m8sBtn=============");
+
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (!isRecording) {
 					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
@@ -859,8 +807,6 @@ public class CarRecorderActivity extends BaseActivity implements
 					mCurVideoType = VideoType.mounts;
 					GolukDebugUtils.e("xuhw",
 							"m8sBtn========================2222======");
-					GFileUtils
-							.writeIPCLog("=============================发起精彩视频命令================queryParam=");
 					boolean isSucess = GolukApplication.getInstance()
 							.getIPCControlManager().startWonderfulVideo();
 
@@ -869,13 +815,9 @@ public class CarRecorderActivity extends BaseActivity implements
 									+ isSucess);
 					if (!isSucess) {
 						videoTriggerFail();
-						GFileUtils
-								.writeIPCLog("=============================发起精彩视频命令============fail===============");
 					}
 				}
-			} else {
-				return;
-			}
+			} 
 			break;
 		case R.id.mSettingBtn:
 			if (m_bIsFullScreen) {
@@ -886,8 +828,6 @@ public class CarRecorderActivity extends BaseActivity implements
 				Intent setting = new Intent(CarRecorderActivity.this,
 						SettingsActivity.class);
 				startActivity(setting);
-			} else {
-				return;
 			}
 			break;
 		case R.id.mFullScreen:
@@ -948,6 +888,7 @@ public class CarRecorderActivity extends BaseActivity implements
 
 			break;
 		case R.id.mPlayBtn:
+			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onclick======isShowPlayer==" + isShowPlayer + "   " + isConnecting);
 			if (!isShowPlayer) {
 				if (!isConnecting) {
 					isConnecting = true;
@@ -990,10 +931,7 @@ public class CarRecorderActivity extends BaseActivity implements
 					startActivity(intent);
 				}
 
-			} else {
-				return;
 			}
-
 			break;
 		case R.id.image1:
 			new1.setVisibility(View.GONE);
@@ -1051,19 +989,6 @@ public class CarRecorderActivity extends BaseActivity implements
 	}
 
 	/**
-	 * 摄像头未连接提示
-	 * 
-	 * @author xuhw
-	 * @date 2015年4月8日
-	 */
-	private void dialog() {
-		CustomDialog d = new CustomDialog(this);
-		d.setMessage("请检查摄像头是否正常连接", Gravity.CENTER);
-		d.setLeftButton("确定", null);
-		d.show();
-	}
-
-	/**
 	 * 显示加载中布局
 	 * 
 	 * @author xuhw
@@ -1114,6 +1039,66 @@ public class CarRecorderActivity extends BaseActivity implements
 			e.printStackTrace();
 		}
 	}
+	
+	private void ipcConnecting() {
+		mConnectTip.setText(wifiname);
+		mFullScreen.setVisibility(View.GONE);
+		if (isBindSucess()) {
+			mPalyerLayout.setVisibility(View.GONE);
+			mNotconnected.setVisibility(View.GONE);
+			mConncetLayout.setVisibility(View.VISIBLE);
+
+			mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
+			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
+			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+		} else {
+			mPalyerLayout.setVisibility(View.GONE);
+			mNotconnected.setVisibility(View.VISIBLE);
+			mConncetLayout.setVisibility(View.GONE);
+
+			mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
+			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
+			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+		}
+	}
+	
+	private void ipcConnFailed() {
+		mFullScreen.setVisibility(View.GONE);
+		mConnectTip.setText(wifiname);
+		mPalyerLayout.setVisibility(View.GONE);
+		mNotconnected.setVisibility(View.VISIBLE);
+		mConncetLayout.setVisibility(View.GONE);
+
+		mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
+		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
+		liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+	}
+	
+	private void ipcConnSucess() {
+		if (isShowPlayer || isConnecting) {
+			showLoading();
+			hidePlayer();
+			mRtmpPlayerView.removeCallbacks(retryRunnable);
+			isConnecting = true;
+			start();
+		} else {
+			isShowPlayer = false;
+			isConnecting = false;
+			mPalyerLayout.setVisibility(View.VISIBLE);
+		}
+		
+		WifiRsBean wrb = ReadWifiConfig.readConfig();
+		if (wrb != null) {
+			mConnectTip.setText(wrb.getIpc_ssid());
+		}
+		
+		mNotconnected.setVisibility(View.GONE);
+		mConncetLayout.setVisibility(View.GONE);
+
+		mSettingBtn.setBackgroundResource(R.drawable.carrecorder_setting);
+		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
+		liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+	}
 
 	@Override
 	protected void onResume() {
@@ -1127,7 +1112,6 @@ public class CarRecorderActivity extends BaseActivity implements
 				isConnecting = true;
 				start();
 			}
-
 		}
 
 		GolukApplication.getInstance().setContext(this, "carrecorder");
@@ -1162,7 +1146,7 @@ public class CarRecorderActivity extends BaseActivity implements
 		mApp.addLocationListener(SelfContextTag, this);
 		GetBaiduAddress.getInstance().setCallBackListener(mBaiduGeoCoderFn);
 		initVideoImage();// 初始化相册列表
-	};
+	}
 
 	@Override
 	protected void onPause() {
@@ -2149,7 +2133,5 @@ public class CarRecorderActivity extends BaseActivity implements
 			GetBaiduAddress.getInstance().searchAddress(location.rawLat,
 					location.rawLon);
 		}
-
 	}
-
 }
