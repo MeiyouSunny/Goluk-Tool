@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,7 +32,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  *
  */
-public class UserOpenUrlActivity extends BaseActivity implements OnClickListener,ForbidBack {
+public class UserOpenUrlActivity extends BaseActivity implements OnClickListener, ForbidBack, DownloadListener {
 
 	private GolukApplication mApp = null;
 	public static final String FROM_TAG = "from_tag";
@@ -44,9 +45,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	private TextView mTextRight = null;
 	/** 加载webview发生错误状态 **/
 	private boolean mErrorState = false;
-	
+
 	private RelativeLayout mErrorLayout = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,10 +77,12 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		itIndexMore = getIntent();
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
+		mWebView.setDownloadListener(this);
 		mWebView.setWebViewClient(new WebViewClient() {
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				GolukDebugUtils.e("", "Error--------------------url:" + url);
 				String from_tag = itIndexMore.getStringExtra(FROM_TAG);
 				if (!TextUtils.isEmpty(from_tag)) {
 					if (from_tag.equals("skill")) {
@@ -89,6 +92,12 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						}
 					}
 				}
+				// 如果是intent://开头的，不处理
+				if (null != url && url.startsWith("intent://")) {
+					getIntentPackageName(url);
+					return true;
+				}
+
 				view.loadUrl(url);
 				return false;
 			}
@@ -116,34 +125,34 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			if (!TextUtils.isEmpty(from_tag)) {
 				if (from_tag.equals("skill")) {
 					mTextTitle.setText("极路客小技巧");
-					if(mErrorState){
-						return ;
+					if (mErrorState) {
+						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=2");
 				} else if (from_tag.equals("install")) {
 					mTextTitle.setText("安装指导");
-					if(mErrorState){
-						return ;
+					if (mErrorState) {
+						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=3");
 				} else if (from_tag.equals("shopping")) {
 					mTextTitle.setText("购买极路客");
-					if(mErrorState){
-						return ;
+					if (mErrorState) {
+						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=4");
 				} else if (from_tag.equals("buyline")) {
 					mTextTitle.setText("购买极路客专用降压线");
-					if(mErrorState){
-						return ;
+					if (mErrorState) {
+						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=1");
 				}
 			} else {
 				mTextTitle.setText("");
 				String url = itIndexMore.getStringExtra("url");
-				if(mErrorState){
-					return ;
+				if (mErrorState) {
+					return;
 				}
 				mWebView.loadUrl(url);
 			}
@@ -151,6 +160,23 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		}
 		mBackBtn.setOnClickListener(this);
 		mTextRight.setOnClickListener(this);
+	}
+
+	private String getIntentPackageName(String url) {
+		try {
+			int index = url.indexOf("package=");
+			if (index > -1) {
+				int start = index + 8;
+				int end = url.indexOf(";", index);
+				String packStr = url.substring(start, end);
+				GolukDebugUtils.e("", "Error--------------------package:" + packStr);
+				return packStr;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			GolukDebugUtils.e("", "Error--------------------message:" + e.toString());
+		}
+		return "";
 	}
 
 	@Override
@@ -241,9 +267,21 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void forbidBackKey(int backKey) {
-		if(backKey == 1){
+		if (backKey == 1) {
 			GolukDebugUtils.e("", "------------------customDialog------------back-----ok");
 			finish();
+		}
+	}
+
+	@Override
+	public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
+			long contentLength) {
+		try {
+			Uri uri = Uri.parse(url);
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			startActivity(intent);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
