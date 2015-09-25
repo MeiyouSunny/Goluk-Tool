@@ -9,8 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.lidroid.xutils.util.LogUtils;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -103,12 +101,15 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		mRootLayout.addView(shareBg, rlp);
 		mRootLayout.addView(mRTPullListView);
 
+		setListAdapter();
+
 		loadHistoryData();
 		httpPost(true, "0", "");
 
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				setViewListBg(false);
 				httpPost(true, "0", "");
 			}
 		});
@@ -144,16 +145,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	private void httpPost(boolean flag, String operation, String timestamp) {
 		curOperation = operation;
 		if (flag) {
-			// if (null == mCustomProgressDialog) {
-			// mCustomProgressDialog = new CustomLoadingDialog(mContext, null);
-			// }
-			//
-			// if (!mCustomProgressDialog.isShowing()) {
-			// mCustomProgressDialog.show();
-			// }
-
 			mRTPullListView.firstFreshState();
-
 		}
 
 		if (null != GolukApplication.getInstance().getVideoSquareManager()) {
@@ -202,6 +194,16 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		}
 	}
 
+	private void setListAdapter() {
+		if (null == mNewestAdapter) {
+			mNewestAdapter = new NewestAdapter(mContext);
+			mNewestAdapter.setNewestLiseView(this);
+		}
+
+		mRTPullListView.setAdapter(mNewestAdapter);
+
+	}
+
 	private void initLayout() {
 		if (headLoading || dataLoading) {
 			return;
@@ -226,18 +228,11 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		historyDate = sdf.format(new Date());
 		SettingUtils.getInstance().putString("hotHistoryDate", historyDate);
 		mRTPullListView.onRefreshComplete(historyDate);
-		if (null == mNewestAdapter) {
-			mNewestAdapter = new NewestAdapter(mContext);
-			mNewestAdapter.setNewestLiseView(this);
-		}
-
 		if ("0".equals(curOperation)) {
-			mRTPullListView.setAdapter(mNewestAdapter);
 			mNewestAdapter.setData(mHeadDataInfo, mDataList);
 		} else {
 			mNewestAdapter.loadData(mDataList);
 		}
-
 	}
 
 	private void initListener() {

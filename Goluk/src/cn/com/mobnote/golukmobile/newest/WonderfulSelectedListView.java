@@ -50,7 +50,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	/** 添加列表底部加载中布局 */
 	private RelativeLayout mBottomLoadingView = null;
 	private int pageCount = 4;
-	private String jxid = "0";
+	private String mJxid = "0";
 	private boolean isGetFileListDataing = false;
 	/** 保存列表一个显示项索引 */
 	private int firstVisible;
@@ -85,13 +85,20 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		mRootLayout.addView(shareBg, rlp);
 		mRootLayout.addView(mRTPullListView);
 
+		if (null == mWonderfulSelectedAdapter) {
+			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
+		}
+		mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
+
 		initHistoryData();
 		httpPost(true, "0", "");
 
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				setViewListBg(false);
 				httpPost(true, "0", "");
+
 			}
 		});
 	}
@@ -101,7 +108,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		if (!TextUtils.isEmpty(data)) {
 			initLayout(JsonParserUtils.parserJXData(data));
 		}
-
 	}
 
 	private void httpPost(boolean flag, String jxid, String pagesize) {
@@ -109,16 +115,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			return;
 		}
 
-		this.jxid = jxid;
+		this.mJxid = jxid;
 		if (flag) {
-			// if(null == mCustomProgressDialog){
-			// mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
-			// }
-			//
-			// if (!mCustomProgressDialog.isShowing()) {
-			// mCustomProgressDialog.show();
-			// }
-
 			mRTPullListView.firstFreshState();
 		}
 
@@ -156,16 +154,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				mRTPullListView.removeFooterView(mBottomLoadingView);
 			}
 		}
-
-		if (null == mWonderfulSelectedAdapter) {
-			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
-		}
-
-		if ("0".equals(jxid)) {
-			mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
-		}
 		mWonderfulSelectedAdapter.setData(mDataList);
-
 	}
 
 	private void initListener() {
@@ -278,13 +267,13 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			if (RESULE_SUCESS == msg) {
 				List<JXListItemDataInfo> list = JsonParserUtils.parserJXData((String) param2);
 				pageCount = JsonParserUtils.parserJXCount((String) param2);
-				if ("0".equals(jxid)) {
+				if ("0".equals(mJxid)) {
 					mDataList.clear();
 				}
 				initLayout(list);
 			} else {
 
-				if (!"0".equals(jxid)) {
+				if (!"0".equals(mJxid)) {
 					if (addFooter) {
 						addFooter = false;
 						mRTPullListView.removeFooterView(mBottomLoadingView);
