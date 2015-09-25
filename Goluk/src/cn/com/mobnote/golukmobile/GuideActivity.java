@@ -145,10 +145,9 @@ public class GuideActivity extends BaseActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			// 退出对话框
-			int PID = android.os.Process.myPid();
-			android.os.Process.killProcess(PID);
-			android.os.Process.sendSignal(PID, 9);
+			if (null != mBaseApp) {
+				mBaseApp.destroyLogic();
+			}
 			finish();
 		}
 		return false;

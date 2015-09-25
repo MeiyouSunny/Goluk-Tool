@@ -683,7 +683,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mApp.mIPCControlManager.setIPCWifiState(false, "");
 			closeWifiHot();
 			SysApplication.getInstance().exit();
-			mApp.mGoluk.GolukLogicDestroy();
+			mApp.destroyLogic();
 			if (null != UserStartActivity.mHandler) {
 				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
 			}
