@@ -385,7 +385,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.findViewById(R.id.headimg);
 				holder.nikename = (TextView) convertView
 						.findViewById(R.id.nikename);
-
+				
 				holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView
 						.findViewById(R.id.function);
@@ -434,12 +434,32 @@ public class UserCenterAdapter extends BaseAdapter implements
 				holder.isopen = (ImageView) convertView
 						.findViewById(R.id.isopen);
 
+				SimpleDraweeView view = new SimpleDraweeView(mContext);
+				GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(
+						mContext.getResources());
+				GenericDraweeHierarchy hierarchy = builder
+						.setFadeDuration(300)
+						.setPlaceholderImage(
+								mContext.getResources().getDrawable(
+										R.drawable.tacitly_pic), ScaleType.FIT_XY)
+						.setFailureImage(
+								mContext.getResources().getDrawable(
+										R.drawable.tacitly_pic), ScaleType.FIT_XY)
+						.setActualImageScaleType(ScaleType.FIT_XY).build();
+				view.setHierarchy(hierarchy);
+
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(
 						width, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW,
 						R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
+				RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
+						width, height);
+				mPreLoadingParams.addRule(RelativeLayout.CENTER_VERTICAL,
+						RelativeLayout.TRUE);
+				holder.imageLayout.addView(view, mPreLoadingParams);
+				holder.mSimpleDraweeView = view;
 
 				convertView.setTag(holder);
 
@@ -453,6 +473,11 @@ public class UserCenterAdapter extends BaseAdapter implements
 				} else {
 					holder.isopen.setVisibility(View.GONE);
 				}
+			}
+			if (holder.VideoID == null || !holder.VideoID.equals(clusterInfo.mVideoEntity.videoid))
+			{
+				holder.VideoID = new String(clusterInfo.mVideoEntity.videoid);
+				holder.mSimpleDraweeView.setImageURI(Uri.parse(clusterInfo.mVideoEntity.picture));
 			}
 			holder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
 					.valueOf(clusterInfo.mUserEntity.headportrait)]);
@@ -474,10 +499,10 @@ public class UserCenterAdapter extends BaseAdapter implements
 			} else {
 				holder.totalcomments.setVisibility(View.GONE);
 			}
-
+			
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
-			loadImage(holder.imageLayout, clusterInfo.mVideoEntity.picture,
-					width);
+//			loadImage(holder.imageLayout, clusterInfo.mVideoEntity.picture,
+//					width);
 			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
@@ -898,11 +923,13 @@ public class UserCenterAdapter extends BaseAdapter implements
 	}
 
 	public static class ViewHolder {
+		String VideoID;
 		RelativeLayout imageLayout;
 		ImageView headimg;
 		TextView nikename;
 		TextView time;
 		ImageView function;
+		SimpleDraweeView mSimpleDraweeView;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
