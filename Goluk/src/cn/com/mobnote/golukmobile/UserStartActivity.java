@@ -184,6 +184,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (null != mBaseApp) {
 				mBaseApp.destroyLogic();
+				mBaseApp.appFree();
 			}
 			finish();
 		}

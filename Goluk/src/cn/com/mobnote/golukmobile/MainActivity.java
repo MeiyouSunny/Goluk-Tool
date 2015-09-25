@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
@@ -690,23 +691,24 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		} else {
 			unregisterListener();
 			mApp.mIPCControlManager.setIPCWifiState(false, "");
+			mApp.setIpcLoginOut();
 			closeWifiHot();
+			GlobalWindow.getInstance().dimissGlobalWindow();
 			SysApplication.getInstance().exit();
 			mApp.destroyLogic();
 			if (null != UserStartActivity.mHandler) {
 				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
 			}
 			MobclickAgent.onKillProcess(this);
+			mApp.appFree();
+			mApp.setExit(true);
 			finish();
 			Fresco.shutDown();
 			GolukNotification.getInstance().destroy();
 			// int PID = android.os.Process.myPid();
 			// android.os.Process.killProcess(PID);
 			// System.exit(0);
-
-			mApp.setExit(true);
 		}
-
 	}
 
 	private void unregisterListener() {

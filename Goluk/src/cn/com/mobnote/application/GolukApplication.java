@@ -285,6 +285,56 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mGoluk = null;
 		}
 	}
+	
+	public void appFree() {
+		mIpcIp = null;
+		mContext = null;
+		mPageSource = "";
+		mMainActivity = null;
+		mIPCControlManager = null;
+		mVideoSquareManager = null;
+		isIpcLoginSuccess = false;
+		isUserLoginSucess = false;
+		mCCUrl = null;
+		mCurrentUId = null;
+		mCurrentAid = null;
+		carrecorderCachePath = "";
+		mVideoConfigState = null;
+		autoRecordFlag = false;
+		motioncfg = null;
+		mSharedPreUtil = null;
+		wifiAp = null;
+		mCurAddr = null;
+		mWindowManager = null;
+		mWMParams = null;
+		mVideoUploadLayout = null;
+		registStatus = 0;
+		autoLoginStatus = 0;
+		loginoutStatus = false;
+		identifyStatus = 0;
+		mUser = null;
+		mLoginManage = null;
+		mIpcUpdateManage = null;
+		mIdentifyManage = null;
+		mRegistAndRepwdManage = null;
+		mTimerManage = null;
+		mNoDownLoadFileList = null;
+		mDownLoadFileList = null;
+		isconnection = false;
+		isBackground = false;
+		startTime = 0;
+		autodownloadfile = false;
+		flag = false;
+		isSDCardFull = false;
+		isDownloading = false;
+		downloadCount = 0;
+		mLoadStatus = false;
+		mLoadProgress = 0;
+		updateSuccess = false;
+		mWiFiStatus = 0;
+		mGolukName = "";
+		fileList = null;
+	}
 
 	/**
 	 * 升级

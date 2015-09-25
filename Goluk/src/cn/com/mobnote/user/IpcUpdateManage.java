@@ -700,6 +700,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 
 						mApp.mIPCControlManager.setIPCWifiState(false, "");
 						mApp.destroyLogic();
+						mApp.appFree();
 						if (null != UserStartActivity.mHandler) {
 							UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
 						}

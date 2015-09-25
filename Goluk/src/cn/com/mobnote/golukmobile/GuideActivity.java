@@ -147,6 +147,7 @@ public class GuideActivity extends BaseActivity {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (null != mBaseApp) {
 				mBaseApp.destroyLogic();
+				mBaseApp.appFree();
 			}
 			finish();
 		}
