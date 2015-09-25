@@ -363,31 +363,29 @@ public class CarRecorderActivity extends BaseActivity implements
 					mNotconnected.setVisibility(View.GONE);
 					mConncetLayout.setVisibility(View.GONE);
 
-					mSettingBtn
-							.setBackgroundResource(R.drawable.carrecorder_setting);
+					mSettingBtn.setBackgroundResource(R.drawable.carrecorder_setting);
 					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 					liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
 					break;
 				case WIFI_STATE_FAILED:
-
+					
+					mConnectTip.setText(wifiname);
 					mPalyerLayout.setVisibility(View.GONE);
 					mNotconnected.setVisibility(View.VISIBLE);
 					mConncetLayout.setVisibility(View.GONE);
 
-					mSettingBtn
-							.setBackgroundResource(R.drawable.driving_car_setting_1);
+					mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
 					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 					liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 					break;
 				case WIFI_STATE_CONNING:
-
+					mConnectTip.setText(wifiname);
 					if (isBindSucess()) {
 						mPalyerLayout.setVisibility(View.GONE);
 						mNotconnected.setVisibility(View.GONE);
 						mConncetLayout.setVisibility(View.VISIBLE);
 
-						mSettingBtn
-								.setBackgroundResource(R.drawable.driving_car_setting_1);
+						mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
 						m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 						liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 					} else {
@@ -395,8 +393,7 @@ public class CarRecorderActivity extends BaseActivity implements
 						mNotconnected.setVisibility(View.VISIBLE);
 						mConncetLayout.setVisibility(View.GONE);
 
-						mSettingBtn
-								.setBackgroundResource(R.drawable.driving_car_setting_1);
+						mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
 						m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 						liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 					}
@@ -458,12 +455,13 @@ public class CarRecorderActivity extends BaseActivity implements
 			mConnectTip.setText(wifiname);
 			break;
 		case WIFI_STATE_CONNING:
+			mConnectTip.setText(wifiname);
+			
 			if (isBindSucess()) {
 				mPalyerLayout.setVisibility(View.GONE);
 				mNotconnected.setVisibility(View.GONE);
 				mConncetLayout.setVisibility(View.VISIBLE);
-				mSettingBtn
-						.setBackgroundResource(R.drawable.driving_car_setting_1);
+				mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
 				m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 			} else {
@@ -471,8 +469,7 @@ public class CarRecorderActivity extends BaseActivity implements
 				mNotconnected.setVisibility(View.VISIBLE);
 				mConncetLayout.setVisibility(View.GONE);
 
-				mSettingBtn
-						.setBackgroundResource(R.drawable.driving_car_setting_1);
+				mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
 				m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 			}
