@@ -11,6 +11,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.app.Activity;
@@ -101,9 +102,11 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 		case R.id.cancle:
+			UserUtils.hideSoftMethod(this);
 			finish();
 			break;
 		case R.id.tuijian:
+			UserUtils.hideSoftMethod(this);
 			if (!isNetworkConnected() ) {
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 				return;
