@@ -73,6 +73,9 @@ public class IPCControlManager implements IPCManagerFn {
 		SettingUtils.getInstance().putString("IPC_IP", ip);
 		int state = isConnect ? 1 : 0;
 		String json = JsonUtil.getWifiChangeJson(state, ip);
+		if (null == mApplication || null == mApplication.mGoluk ) {
+			return false;
+		}
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPC_CommCmd_WifiChanged, json);
 		return isSucess;
@@ -647,6 +650,10 @@ public class IPCControlManager implements IPCManagerFn {
 		// LogUtil.e("jyf",
 		// "YYYYYYY----IPCManage_CallBack-----222222222---------IPCManagerAdapter-22---event:"
 		// + event + " msg:" + msg+"==param1="+param1+"==data:"+(String)param2);
+		
+		if (null != mApplication && mApplication.isExit()) {
+			return ;
+		}
 
 		Iterator<String> iter = mIpcManagerListener.keySet().iterator();
 		while (iter.hasNext()) {

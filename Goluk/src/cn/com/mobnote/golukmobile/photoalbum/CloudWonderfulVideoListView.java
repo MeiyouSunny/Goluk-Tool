@@ -41,7 +41,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 
 @SuppressLint("InflateParams")
-public class CloudWonderfulVideoListView implements IPCManagerFn{
+public class CloudWonderfulVideoListView implements IPCManagerFn {
 	private View mRootLayout = null;
 	private Context mContext = null;
 	private PhotoAlbumActivity mActivity = null;
@@ -49,15 +49,15 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 	private CloudWonderfulVideoAdapter mCloudWonderfulVideoAdapter = null;
 	private List<VideoInfo> mDataList = null;
 	private List<DoubleVideoInfo> mDoubleDataList = null;
-	private List<String> mGroupListName=null;
+	private List<String> mGroupListName = null;
 	/** 保存屏幕点击横坐标点 */
 	private float screenX = 0;
 	private int screenWidth = 0;
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	/** 列表数据加载中标识 */
-	private boolean isGetFileListDataing=false;
+	private boolean isGetFileListDataing = false;
 	/** 数据分页个数 */
-	private int pageCount = 40;
+	private final int pageCount = 40;
 	/** 当前在那个界面，包括循环影像(1) 紧急录像(2) 一键抢拍(4) 三个界面 */
 	private int mCurrentType = IPCManagerFn.TYPE_SHORTCUT;
 	/** 保存列表一个显示项索引 */
@@ -65,7 +65,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 	/** 保存列表显示item个数 */
 	private int visibleCount;
 	/** 列表添加页脚标识 */
-	private boolean addFooter=false;
+	private boolean addFooter = false;
 	/** 列表最后的时间戳 */
 	private int lastTime = 0;
 	/** 添加列表底部加载中布局 */
@@ -74,14 +74,16 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 	private boolean isShowPlayer = false;
 	private TextView empty = null;
 	private float density = 1;
-	
+	/** 判断服务端是否还有数据 */
+	private boolean isHasData = true;
+
 	public CloudWonderfulVideoListView(Context context, int type) {
-		if(null != GolukApplication.getInstance().getIPCControlManager()){
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager"+type,this);
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + type, this);
 		}
 		this.mContext = context;
 		this.mCurrentType = type;
-		this.mActivity = (PhotoAlbumActivity)context;
+		this.mActivity = (PhotoAlbumActivity) context;
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 		this.mGroupListName = new ArrayList<String>();
@@ -90,36 +92,38 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
 		initView();
 	}
-	
+
 	public void loadData(boolean flag) {
 		if (isGetFileListDataing || (mDataList.size() != 0)) {
 			return;
 		}
-		
+
 		if (flag) {
 			if (!mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
 			}
 		}
-		
+
 		isGetFileListDataing = true;
-		boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(mCurrentType, pageCount, 0, timeend);
-		GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess="+isSucess);
-		if(!isSucess){
+		boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
+				.queryFileListInfo(mCurrentType, pageCount, 0, timeend);
+		GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
+		if (!isSucess) {
 			isGetFileListDataing = false;
 		}
-		
+
 	}
-	
+
 	private void initView() {
-		empty = (TextView)mRootLayout.findViewById(R.id.empty);
+		empty = (TextView) mRootLayout.findViewById(R.id.empty);
 		this.mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
-		mStickyListHeadersListView = (StickyListHeadersListView)mRootLayout.findViewById(R.id.mStickyListHeadersListView);
+		mStickyListHeadersListView = (StickyListHeadersListView) mRootLayout
+				.findViewById(R.id.mStickyListHeadersListView);
 		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(mContext, mStickyListHeadersListView);
-		
+
 		setListener();
 	}
-	
+
 	private void setListener() {
 		mStickyListHeadersListView.setOnTouchListener(new OnTouchListener() {
 			@Override
@@ -128,7 +132,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 				return false;
 			}
 		});
-		
+
 		mStickyListHeadersListView.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
@@ -141,77 +145,83 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 					GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
 					if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====22222222=");
-						if (mDataList.size() > 0 && (mDataList.size()%pageCount) == 0) {
-							GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====33333=isGetFileListDataing="+isGetFileListDataing+"====mDataList.size()="+mDataList.size());
+						final int size = mDataList.size();
+						if (size > 0 && isHasData) {
+							GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====33333=isGetFileListDataing="
+									+ isGetFileListDataing + "====mDataList.size()=" + mDataList.size());
 							if (isGetFileListDataing) {
 								return;
 							}
 							GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====44444=");
 							isGetFileListDataing = true;
-							boolean isSucess = GolukApplication.getInstance().getIPCControlManager().queryFileListInfo(mCurrentType, pageCount, 0, lastTime);
-							GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess="+isSucess);
-							if(!isSucess){
+							boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
+									.queryFileListInfo(mCurrentType, pageCount, 0, lastTime);
+							GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
+							if (!isSucess) {
 								isGetFileListDataing = false;
+							} else {
+								addFooterView();
 							}
-							
+
 						}
 					}
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 					mCloudWonderfulVideoAdapter.lock();
 					break;
-					
+
 				default:
 					break;
 				}
-				
+
 			}
+
 			@Override
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
 			}
 		});
-		
+
 		mStickyListHeadersListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				if(screenX < (30*density)) {
+				if (screenX < (30 * density)) {
 					return;
 				}
-				
+
 				if (arg2 < mDoubleDataList.size()) {
-					RelativeLayout mTMLayout1 = (RelativeLayout)arg1.findViewById(R.id.mTMLayout1);
-					RelativeLayout mTMLayout2 = (RelativeLayout)arg1.findViewById(R.id.mTMLayout2);
-					String tag1 = (String)mTMLayout1.getTag();
-					String tag2 = (String)mTMLayout2.getTag();
+					RelativeLayout mTMLayout1 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout1);
+					RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
+					String tag1 = (String) mTMLayout1.getTag();
+					String tag2 = (String) mTMLayout2.getTag();
 					if (mActivity.getEditState()) {
-						if ((screenX > 0) && (screenX < (screenWidth/2))) {
-							selectedVideoItem(tag1,mTMLayout1);
-						}else{
-							selectedVideoItem(tag2,mTMLayout2);
+						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
+							selectedVideoItem(tag1, mTMLayout1);
+						} else {
+							selectedVideoItem(tag2, mTMLayout2);
 						}
-					}else {
+					} else {
 						DoubleVideoInfo d = mDoubleDataList.get(arg2);
-						//点击播放
-						if((screenX > 0) && (screenX < (screenWidth/2))) {
-							//点击列表左边项,跳转到视频播放页面
+						// 点击播放
+						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
+							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
 							gotoVideoPlayPage(mCurrentType, info1.videoPath);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
-							
+
 							mDoubleDataList.get(arg2).getVideoInfo1().isNew = false;
 							mCloudWonderfulVideoAdapter.notifyDataSetChanged();
-						}else {
-							//点击列表右边项,跳转到视频播放页面
+						} else {
+							// 点击列表右边项,跳转到视频播放页面
 							VideoInfo info2 = d.getVideoInfo2();
-							if(null == info2)
+							if (null == info2)
 								return;
 							gotoVideoPlayPage(mCurrentType, info2.videoPath);
 							String filename = info2.filename;
 							updateNewState(filename);
-							
+
 							mDoubleDataList.get(arg2).getVideoInfo2().isNew = false;
 							mCloudWonderfulVideoAdapter.notifyDataSetChanged();
 						}
@@ -219,12 +229,12 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 				}
 			}
 		});
-		
+
 	}
-	
-	private void updateNewState(String filename){
-		SettingUtils.getInstance().putBoolean("Cloud_"+filename, false);
-		for (int i=0; i < mDataList.size(); i++) {
+
+	private void updateNewState(String filename) {
+		SettingUtils.getInstance().putBoolean("Cloud_" + filename, false);
+		for (int i = 0; i < mDataList.size(); i++) {
 			VideoInfo info = mDataList.get(i);
 			if (info.filename.equals(filename)) {
 				mDataList.get(i).isNew = false;
@@ -232,9 +242,10 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 			}
 		}
 	}
-	
+
 	/**
 	 * 跳转到本地视频播放页面
+	 * 
 	 * @param path
 	 */
 	private void gotoVideoPlayPage(int from, String path) {
@@ -254,184 +265,197 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 			}
 		}
 	}
-	
+
 	/**
 	 * 选择视频item
+	 * 
 	 * @param tag1
 	 * @param mTMLayout1
 	 */
-	private void selectedVideoItem(String tag1,RelativeLayout mTMLayout1){
+	private void selectedVideoItem(String tag1, RelativeLayout mTMLayout1) {
 		List<String> selectedListData = mActivity.getSelectedList();
-		if(!TextUtils.isEmpty(tag1)){
-			if(selectedListData.contains(tag1)){
+		if (!TextUtils.isEmpty(tag1)) {
+			if (selectedListData.contains(tag1)) {
 				selectedListData.remove(tag1);
 				mTMLayout1.setVisibility(View.GONE);
-			}else {
+			} else {
 				selectedListData.add(tag1);
 				mTMLayout1.setVisibility(View.VISIBLE);
 			}
-			
-			if(selectedListData.size() == 0) {
+
+			if (selectedListData.size() == 0) {
 				mActivity.updateTitleName("选择视频");
 				mActivity.updateEditBtnState(false);
-			}else {
+			} else {
 				mActivity.updateEditBtnState(true);
-				mActivity.updateTitleName("已选择"+selectedListData.size()+"个视频");
+				mActivity.updateTitleName("已选择" + selectedListData.size() + "个视频");
 			}
 		}
 	}
-	
+
 	public void deleteListData(List<String> deleteData) {
 		for (String path : deleteData) {
 			for (VideoInfo info : mDataList) {
 				if (info.filename.equals(path)) {
 					GolukApplication.getInstance().getIPCControlManager().deleteFile(path);
 					mDataList.remove(info);
-					
 					String filename = path.replace(".mp4", ".jpg");
-//					String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-//					File imgfile = new File(filePath+ File.separator +filename);
-//					if (imgfile.exists()) {
-//						imgfile.delete();
-//					}
-					
-					SettingUtils.getInstance().putBoolean("Cloud_"+filename, true);
+					SettingUtils.getInstance().putBoolean("Cloud_" + filename, true);
 					break;
 				}
 			}
 		}
-		
+
 		List<String> mGroupListName = new ArrayList<String>();
-		for(VideoInfo info : mDataList) {
+		for (VideoInfo info : mDataList) {
 			String time = info.videoCreateDate;
-			String tabTime = time.substring(0,10);
-			if(!mGroupListName.contains(tabTime)){
+			String tabTime = time.substring(0, 10);
+			if (!mGroupListName.contains(tabTime)) {
 				mGroupListName.add(tabTime);
 			}
 		}
-		
+
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
 		checkListState();
 	}
-	
+
 	List<Boolean> exist = new ArrayList<Boolean>();
+
 	public void downloadVideoFlush(List<String> selectedListData) {
 		exist.clear();
-		for(String filename : selectedListData) {
-			String videoSavePath="fs1:/video/";
-			if(IPCManagerFn.TYPE_SHORTCUT == mCurrentType){
-				videoSavePath="fs1:/video/wonderful/";
-			}else if(IPCManagerFn.TYPE_URGENT == mCurrentType){
-				videoSavePath="fs1:/video/urgent/";
-			}else{
-				videoSavePath="fs1:/video/loop/";
+		for (String filename : selectedListData) {
+			String videoSavePath = "fs1:/video/";
+			if (IPCManagerFn.TYPE_SHORTCUT == mCurrentType) {
+				videoSavePath = "fs1:/video/wonderful/";
+			} else if (IPCManagerFn.TYPE_URGENT == mCurrentType) {
+				videoSavePath = "fs1:/video/urgent/";
+			} else {
+				videoSavePath = "fs1:/video/loop/";
 			}
-			
+
 			String fileName = filename.replace(".mp4", ".jpg");
 			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 			File imgfile = new File(filePath + File.separator + fileName);
 			if (!imgfile.exists()) {
-				GolukApplication.getInstance().getIPCControlManager().downloadFile(fileName, "download", FileUtils.javaToLibPath(filePath), findtime(filename));
+				GolukApplication.getInstance().getIPCControlManager()
+						.downloadFile(fileName, "download", FileUtils.javaToLibPath(filePath), findtime(filename));
 			}
-			
-			String mp4 = FileUtils.libToJavaPath(videoSavePath+filename);
+
+			String mp4 = FileUtils.libToJavaPath(videoSavePath + filename);
 			File file = new File(mp4);
-			if(!file.exists()){
+			if (!file.exists()) {
 				List<String> downloadlist = GolukApplication.getInstance().getDownLoadList();
 				if (!downloadlist.contains(filename)) {
 					exist.add(false);
 					boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
-					GolukDebugUtils.e("xuhw", "YYYYYY===a="+a+"==querySingleFile======filename="+filename);
+					GolukDebugUtils.e("xuhw", "YYYYYY===a=" + a + "==querySingleFile======filename=" + filename);
 				}
-			}else{
+			} else {
 				exist.add(true);
 			}
-			
+
 		}
-		
+
 		boolean isshow = false;
 		for (boolean flag : exist) {
-			if(!flag) {
+			if (!flag) {
 				isshow = false;
 				break;
-			}else {
+			} else {
 				isshow = true;
 			}
 		}
-		
+
 		if (isshow) {
 			GolukUtils.showToast(mContext, "视频已同步到本地");
 		}
-		
+
 	}
-	
+
 	/**
 	 * 查询文件录制起始时间
-	 * @param filename　文件名
+	 * 
+	 * @param filename
+	 *            　文件名
 	 * @return 文件录制起始时间
 	 * @author xuhw
 	 * @date 2015年5月5日
 	 */
 	private long findtime(String filename) {
-		long time=0;
+		long time = 0;
 		if (null != mDataList) {
-			for (int i=0; i<mDataList.size(); i++) {
+			for (int i = 0; i < mDataList.size(); i++) {
 				if (filename.equals(mDataList.get(i).filename)) {
 					return mDataList.get(i).time;
 				}
 			}
 		}
-		
+
 		return time;
 	}
 
 	public View getRootView() {
 		return mRootLayout;
 	}
-	
+
 	public void flushList() {
 		mCloudWonderfulVideoAdapter.notifyDataSetChanged();
 	}
-	
+
 	private void updateData(ArrayList<VideoInfo> fileList) {
-		if (!addFooter) {
-			addFooter=true;
-			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mActivity)
-					.inflate(R.layout.video_square_below_loading, null);
-			mStickyListHeadersListView.addFooterView(mBottomLoadingView);
-		}
-		
-		if(mDataList.size() == 0) {
+		addFooterView();
+		if (mDataList.size() == 0) {
 			mStickyListHeadersListView.setAdapter(mCloudWonderfulVideoAdapter);
 		}
-		
 		mDataList.addAll(fileList);
 		if (fileList.size() < pageCount) {
-			if (addFooter) {
-				addFooter = false;
-				mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
-			}
+			isHasData = false;
+			removeFooterView();
 		}
-		
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
 		mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
-		
 	}
-	
+
+	/**
+	 * 添加加载loading
+	 * 
+	 * @author jyf
+	 */
+	private void addFooterView() {
+		if (!addFooter) {
+			addFooter = true;
+			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mActivity).inflate(
+					R.layout.video_square_below_loading, null);
+			mStickyListHeadersListView.addFooterView(mBottomLoadingView);
+		}
+	}
+
+	/**
+	 * 移除loading
+	 * 
+	 * @author jyf
+	 */
+	private void removeFooterView() {
+		if (addFooter) {
+			addFooter = false;
+			mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
+		}
+	}
+
 	private void checkListState() {
-		if(mDataList.size() <= 0) {
+		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
-		}else {
+		} else {
 			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
 		}
 	}
-	
+
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		switch (event) {
@@ -441,12 +465,12 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 					mCustomProgressDialog.close();
 				}
 				isGetFileListDataing = false;
-				GolukDebugUtils.e("xuhw","YYYYYY=======获取文件列表===@@@======param1="+ param1 + "=====param2=" + param2);
+				GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
-					if (TextUtils.isEmpty((String)param2)) {
+					if (TextUtils.isEmpty((String) param2)) {
 						return;
 					}
-					
+
 					ArrayList<VideoInfo> fileList = IpcDataParser.parseVideoListData((String) param2);
 					if (null != fileList && fileList.size() > 0) {
 						int type = IpcDataParser.parseVideoFileType(fileList.get(0).filename);
@@ -454,18 +478,20 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 							checkListState();
 							return;
 						}
-						
-						VideoInfo vfi=null;
-						if(fileList.size() > 0){
+
+						VideoInfo vfi = null;
+						if (fileList.size() > 0) {
 							vfi = fileList.get(fileList.size() - 1);
-							lastTime =  (int) vfi.time - 1;
+							lastTime = (int) vfi.time - 1;
 						}
-						
+
 						updateData(fileList);
 					}
 				} else {
-					GolukDebugUtils.e("xuhw","YYYYYY=======获取文件列表====fail==@@@======param1="+ param1 );
+					GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表====fail==@@@======param1=" + param1);
 					// 命令发送失败
+					this.removeFooterView();
+					GolukUtils.showToast(mContext, "查询失败!");
 				}
 				checkListState();
 			}
@@ -476,7 +502,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 			if (IPC_VDTP_Msg_File == msg) {
 				// 文件下载成功
 				if (RESULE_SUCESS == param1) {
-					if(TextUtils.isEmpty((String)(param2))){
+					if (TextUtils.isEmpty((String) (param2))) {
 						return;
 					}
 					try {
@@ -484,21 +510,21 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 						if (null != json) {
 							String filename = json.optString("filename");
 							String tag = json.optString("tag");
-							
-							if(tag.contains("IPC_IMAGE")) {
+
+							if (tag.contains("IPC_IMAGE")) {
 								int type = IpcDataParser.parseVideoFileType(filename);
 								if (type != mCurrentType) {
 									return;
 								}
-								
+
 								if (null != mCloudWonderfulVideoAdapter) {
 									mCloudWonderfulVideoAdapter.updateImage(filename);
 								}
-								
-							}else{
-								GolukDebugUtils.e("xuhw", "TTT======no filelist  file======filename="+filename);
+
+							} else {
+								GolukDebugUtils.e("xuhw", "TTT======no filelist  file======filename=" + filename);
 							}
-							
+
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -511,19 +537,19 @@ public class CloudWonderfulVideoListView implements IPCManagerFn{
 				}
 			}
 			break;
-			
+
 		default:
 			break;
 		}
 
 	}
-	
+
 	public void onResume() {
 		isShowPlayer = false;
 	}
-	
+
 	public void onDestory() {
-		
+
 	}
 
 }

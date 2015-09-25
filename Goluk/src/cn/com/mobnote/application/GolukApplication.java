@@ -280,6 +280,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public void destroyLogic() {
 		if (null != mGoluk) {
+			GolukDebugUtils.e("","GolukApplication--------------------------destroy");
 			mGoluk.GolukLogicDestroy();
 			mGoluk = null;
 		}
@@ -813,6 +814,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
 		GolukDebugUtils.e("", "chxy send pageNotifyCallBack--" + "type:" + type + ",success:" + success + ",param1:"
 				+ param1 + ",param2:" + param2);
+		
+		if (this.isExit()) {
+			return;
+		}
 
 		switch (type) {
 		case PageType_UploadVideo:

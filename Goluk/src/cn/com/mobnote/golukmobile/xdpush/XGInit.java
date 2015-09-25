@@ -54,6 +54,11 @@ public class XGInit implements XGIOperateCallback {
 	@Override
 	public void onSuccess(Object arg0, int arg1) {
 		// 信鸽服务器注册成功回调, 可以获取Token
+		GolukApplication app = GolukApplication.getInstance();
+		if (null == app || app.isExit() || null == app.mGoluk) {
+			return;
+		}
+
 		String token = XGPushConfig.getToken(mContext);
 		String localToken = GolukApplication.getInstance().mSharedPreUtil.getTolenId();
 		if (token.equals(localToken)) {
