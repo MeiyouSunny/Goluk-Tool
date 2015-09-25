@@ -745,9 +745,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext,
 				mVideoSquareInfo, null));
 		// 点赞
-		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(
-				mContext, mVideoSquareInfo, (UserCenterActivity) mContext);
-		holder.praiseLayout.setOnClickListener(tempPraiseListener);
+		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(
+				mContext, mVideoSquareInfo, (UserCenterActivity) mContext));
 		// 评论总数监听
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
