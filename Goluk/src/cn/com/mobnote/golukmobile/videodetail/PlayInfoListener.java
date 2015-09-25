@@ -44,6 +44,7 @@ public class PlayInfoListener implements OnInfoListener {
 	}
 
 	private void callBack_realStart() {
+		mAdapter.error = false;
 		mHolder.mPlayBtn.setVisibility(View.GONE);
 		mHolder.mImageLayout.setVisibility(View.GONE);
 		mAdapter.hideLoading();

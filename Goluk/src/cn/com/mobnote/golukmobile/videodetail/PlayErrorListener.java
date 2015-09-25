@@ -44,6 +44,7 @@ public class PlayErrorListener implements OnErrorListener {
 			msg = "网络访问异常，请重试！";
 		}
 		mAdapter.error = true;
+		mAdapter.cancleTimer();
 		mAdapter.hideLoading();
 		GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------onError : hideLoading ");
 		mAdapter.dialog(msg,mHolder);

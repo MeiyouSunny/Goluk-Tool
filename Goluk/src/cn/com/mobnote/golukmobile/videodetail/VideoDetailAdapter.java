@@ -98,6 +98,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			switch (msg.what) {
 			case 1:
 				if (error) {
+					cancleTimer();
 					return;
 				}
 				netWorkTimeoutCheck();
@@ -115,8 +116,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					}
 					playTime = 0;
 					duration = headHolder.mVideoView.getDuration();
-					int progress = headHolder.mVideoView.getCurrentPosition() * 100
-							/ headHolder.mVideoView.getDuration();
+					int progress = headHolder.mVideoView.getCurrentPosition() * 100 / duration;
 					GolukDebugUtils.e("videoloop","VideoDetailActivity-----------mHandler :  progress"+progress);
 					if(progress >= 94){
 						connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -699,7 +699,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
 				@Override
 				public void onClickListener() {
-					cancleTimer();
 					headHolder.mImageLayout.setVisibility(View.VISIBLE);
 					headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 					headHolder.mSeekBar.setProgress(0);
