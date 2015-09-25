@@ -9,7 +9,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.ComponentName;
@@ -48,6 +47,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
@@ -63,7 +63,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 @SuppressLint("NewApi")
-public class VideoPlayerActivity extends Activity implements OnClickListener, OnInfoListener, OnErrorListener,
+public class VideoPlayerActivity extends BaseActivity implements OnClickListener, OnInfoListener, OnErrorListener,
 		OnCompletionListener, OnPreparedListener {
 	/** 自定义VideoView */
 	private FullScreenVideoView mVideo;
