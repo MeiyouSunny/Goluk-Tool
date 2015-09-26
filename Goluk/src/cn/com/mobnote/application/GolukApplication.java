@@ -1201,8 +1201,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// 拍摄8秒视频成功之后,接口会自动调用查询这个文件,收到这个回调之后可以根据文件名去下载视频
 				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@==IPC_VDCP_Msg_SingleQuery==param1=" + param1 + "==param2="
 						+ param2);
-				GFileUtils.writeIPCLog("YYYYYY====IPC_VDCP_Msg_SingleQuery==param1=" + param1 + "==param2=" + param2);
-
 				ipcVideoSingleQueryCallBack(param1, (String) param2);
 				break;
 			case IPC_VDCP_Msg_Erase:
@@ -1255,8 +1253,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				GolukDebugUtils.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1=" + param1 + "===param2="
 						+ param2);
-				GFileUtils.writeIPCLog("YYYYYY======IPC_VDCP_Msg_IPCKit=====param1=" + param1 + "===param2=" + param2);
-
 				if (param1 == RESULE_SUCESS) {
 					List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String) param2);
 					if (kit.size() > 0) {
@@ -1344,9 +1340,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// param1 = 0,下载完成
 				// param1 = 1,下载中
 				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1=" + param1);
-				if (((String) param2).equals(".mp4"))
-					GFileUtils.writeIPCLog("===IPC_VDTP_Msg_File===param1=" + param1 + "=param2=" + param2);
-
 				ipcVideoDownLoadCallBack(param1, (String) param2);
 				break;
 			}

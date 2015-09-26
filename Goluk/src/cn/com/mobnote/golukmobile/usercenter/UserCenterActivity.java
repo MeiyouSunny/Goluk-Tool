@@ -342,6 +342,9 @@ public class UserCenterActivity extends BaseActivity implements
 	 * @return
 	 */
 	public boolean testUser() {
+		if (!isLoginSucess()) {
+			return false;
+		}
 		String info = mBaseApp.mGoluk.GolukLogicCommGet(
 				GolukModule.Goluk_Module_HttpPage, 0, "");
 		GolukDebugUtils.i("lily", "---IndexMore--------" + info);
@@ -358,6 +361,22 @@ public class UserCenterActivity extends BaseActivity implements
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	private boolean isLoginSucess() {
+		if (mBaseApp.isUserLoginSucess) {
+			// 登录成功
+			return true;
+		}
+		if (mBaseApp.loginoutStatus) {
+			// 用户注销, 表示登录失败
+			return false;
+		}
+		if (mBaseApp.loginStatus == 1 || (mBaseApp.autoLoginStatus == 1 || mBaseApp.autoLoginStatus == 2)) {
+			return true;
+		}
+
+		return false;
 	}
 	
 	/**
