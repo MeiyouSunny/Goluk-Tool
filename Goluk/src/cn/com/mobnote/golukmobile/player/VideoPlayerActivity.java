@@ -408,7 +408,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		// }
 	}
 
-	private int oldPosition = 0;
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 
@@ -420,13 +419,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 				if (error) {
 					return;
 				}
-
+				netWorkTimeoutCheck();
 				if (null == mVideo) {
 					return;
 				}
-
-				netWorkTimeoutCheck();
-
 				if (mVideo.getCurrentPosition() > 0) {
 					if (!mVideo.isPlaying()) {
 						return;
@@ -466,7 +462,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			case 2:
 				showOrHide();
 				break;
-
 			default:
 				break;
 			}
@@ -802,6 +797,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
 		startTimer();
 	}
+	
+	/** 保证错误提示框只显示一次 */
+	private boolean isShowDialog = false;
 
 	/**
 	 * 提示对话框
@@ -812,6 +810,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年6月5日
 	 */
 	private void dialog(String msg) {
+		if (isShowDialog) {
+			return;
+		}
+		isShowDialog = true;
 		CustomDialog mCustomDialog = new CustomDialog(this);
 		mCustomDialog.setCancelable(true);
 		mCustomDialog.setMessage(msg, Gravity.CENTER);
