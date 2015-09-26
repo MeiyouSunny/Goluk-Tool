@@ -689,6 +689,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
 			exitTime = System.currentTimeMillis();
 		} else {
+			mApp.setExit(true);
 			unregisterListener();
 			mApp.mIPCControlManager.setIPCWifiState(false, "");
 			mApp.setIpcLoginOut();
@@ -701,7 +702,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 			MobclickAgent.onKillProcess(this);
 			mApp.appFree();
-			mApp.setExit(true);
 			finish();
 			Fresco.shutDown();
 			GolukNotification.getInstance().destroy();

@@ -121,11 +121,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private WifiApAdmin wifiAp;
 	/** 当前地址 */
 	public String mCurAddr = null;
-	/** 全局提示框 */
-	public WindowManager mWindowManager = null;
-	public WindowManager.LayoutParams mWMParams = null;
-	public RelativeLayout mVideoUploadLayout = null;
-
 	/** 登录的五个状态 0登录中 1 登录成功 2登录失败 3手机号未注册，跳转注册页面 4超时 5密码错误达上限去重置密码 **/
 	public int loginStatus;
 	/**
@@ -215,6 +210,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			if (isExit()) {
+				return;
+			}
 			switch (msg.what) {
 			case 1001:
 				tips();
@@ -291,35 +289,26 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mContext = null;
 		mPageSource = "";
 		mMainActivity = null;
-		mIPCControlManager = null;
-		mVideoSquareManager = null;
 		isIpcLoginSuccess = false;
 		isUserLoginSucess = false;
 		mCCUrl = null;
 		mCurrentUId = null;
 		mCurrentAid = null;
 		carrecorderCachePath = "";
-		mVideoConfigState = null;
 		autoRecordFlag = false;
 		motioncfg = null;
-		mSharedPreUtil = null;
 		wifiAp = null;
 		mCurAddr = null;
-		mWindowManager = null;
-		mWMParams = null;
-		mVideoUploadLayout = null;
 		registStatus = 0;
 		autoLoginStatus = 0;
 		loginoutStatus = false;
 		identifyStatus = 0;
-		mUser = null;
-		mLoginManage = null;
-		mIpcUpdateManage = null;
-		mIdentifyManage = null;
-		mRegistAndRepwdManage = null;
-		mTimerManage = null;
-		mNoDownLoadFileList = null;
-		mDownLoadFileList = null;
+//		mUser = null;
+//		mLoginManage = null;
+//		mIpcUpdateManage = null;
+//		mIdentifyManage = null;
+//		mRegistAndRepwdManage = null;
+		mTimerManage.timerCancel();
 		isconnection = false;
 		isBackground = false;
 		startTime = 0;
@@ -333,7 +322,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		updateSuccess = false;
 		mWiFiStatus = 0;
 		mGolukName = "";
-		fileList = null;
+		if (null != fileList) {
+			fileList.clear();
+		}
+		if (null != mNoDownLoadFileList) {
+			mNoDownLoadFileList.clear();
+		}
+		if (null != mDownLoadFileList) {
+			mDownLoadFileList.clear();
+		}
+		
 	}
 
 	/**
@@ -1167,6 +1165,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		// System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+		if (this.isExit()) {
+			return;
+		}
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
 			IPC_VDCP_Connect_CallBack(msg, param1, param2);
 		}
@@ -1499,10 +1500,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if ("carrecorder".equals(mPageSource)) {
 			return;
 		}
+		if (null == fileList || fileList.size() <= 0) {
+			return;
+		}
 
 		GolukDebugUtils.e("xuhw",
 				"BBBB=====stopDownloadList==fuck===stopDownloadList==fileList.size()=" + fileList.size());
-		if (mContext instanceof Activity && fileList.size() > 0) {
+		if (mContext instanceof Activity) {
 			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck");
 			Activity a = (Activity) mContext;
 			if (!a.isFinishing()) {
@@ -1568,9 +1572,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					GolukDebugUtils.e("xuhw", "YYYYYY=====querySingleFile=====name=" + name + "==flag=" + flag);
 				}
 			}
-
 		}
-
 	}
 
 	public void connectionDialog() {
