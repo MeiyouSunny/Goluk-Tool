@@ -618,12 +618,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				JSONObject jsonObject = new JSONObject(jsonStr);
 				JSONObject dataObject = jsonObject.optJSONObject("data");
 				String result = dataObject.optString("result");
-				if ("0".equals(result)) {
-					// 成功
-				} else {
-					// 错误
-					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
-				}
+//				if ("0".equals(result)) {
+//					// 成功
+//				} else {
+//					// 错误
+//					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+//				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
