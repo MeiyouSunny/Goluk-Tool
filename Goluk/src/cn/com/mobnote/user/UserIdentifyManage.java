@@ -15,8 +15,8 @@ public class UserIdentifyManage {
 	private UserIdentifyInterface mIdentifyInterface = null;
 	/** 获取验证码json串 **/
 	private String isIdentify = "";
-	/** 6次获取验证码 **/
-	public static final int IDENTIFY_COUNT = 6;
+	/** 4次获取验证码 **/
+	public static final int IDENTIFY_COUNT = 4;
 	/** 保存获取验证码的次数 **/
 	public int useridentifymanage_count = 0;
 
@@ -73,8 +73,9 @@ public class UserIdentifyManage {
 					int count = IDENTIFY_COUNT - freq;
 					GolukDebugUtils.i("lily", freq + "====freqInt====" + count);
 					if (count < 0) {
-						UserUtils.showDialog(mApp,
-								mApp.getContext().getResources().getString(R.string.count_identify_six));
+						identifyStatusChange(10);
+						UserUtils.showDialog(mApp.getContext(),
+								mApp.getContext().getResources().getString(R.string.count_identify_count));
 					} else {
 						identifyStatusChange(1);
 					}

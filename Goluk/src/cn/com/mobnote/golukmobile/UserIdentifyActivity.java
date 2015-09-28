@@ -358,6 +358,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			closeDialogIdentify();
 			UserUtils.showDialog(mContext, this.getResources().getString(R.string.count_background_identify_count));
 			break;
+		case 10:
+			closeDialogIdentify();
+			break;
 		default:
 			break;
 		}
