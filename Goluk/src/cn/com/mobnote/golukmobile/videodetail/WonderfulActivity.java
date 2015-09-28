@@ -641,6 +641,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			if (null != bean) {
 				noData(false);
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
+				commentDataList.add(0, bean);
 				this.mAdapter.addFirstData(bean);
 				mEditInput.setText("");
 				switchSendState(false);
@@ -668,6 +669,13 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			JSONObject obj = new JSONObject((String) param2);
 			boolean isSucess = obj.getBoolean("success");
 			if (isSucess) {
+				int size = commentDataList.size();
+				for (int i = 0; i < size; i++) {
+					if (commentDataList.get(i).mCommentId.equals(mWillDelBean.mCommentId)) {
+						commentDataList.remove(i);
+						break;
+					}
+				}
 				mAdapter.deleteData(mWillDelBean);
 				GolukUtils.showToast(this, "删除成功");
 

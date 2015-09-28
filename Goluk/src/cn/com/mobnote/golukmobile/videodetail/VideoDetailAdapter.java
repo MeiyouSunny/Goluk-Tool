@@ -411,7 +411,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 				}
 
 			} else {
-				if(!headHolder.mVideoView.isPlaying()){
+				if(!headHolder.mVideoView.isPlaying() && !isShow){
 					headHolder.mImageLayout.setVisibility(View.VISIBLE);
 					headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 				}
