@@ -13,7 +13,7 @@ public class GolukHttpClientHelper extends AsyncHttpClientHelper {
 	private GolukApplication mApp = null;
 	private Context mContext = null;
 	
-	public GolukHttpClientHelper() {}
+	public GolukHttpClientHelper() { }
 	public GolukHttpClientHelper(Context context, GolukApplication application) {
 		mApp = application;
 		mContext = context;

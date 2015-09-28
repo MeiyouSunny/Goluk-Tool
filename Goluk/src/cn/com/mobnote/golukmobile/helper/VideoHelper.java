@@ -9,6 +9,7 @@ public class VideoHelper extends GolukHttpClientHelper {
 	private String uri = "navidog4MeetTrans/video.htm";
 	
 	public VideoHelper(Context context, GolukApplication application) {
+		super(context, application);
 		super.setUri(uri);
 	}
 	

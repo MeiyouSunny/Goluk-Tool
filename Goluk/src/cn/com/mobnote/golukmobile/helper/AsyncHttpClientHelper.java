@@ -71,7 +71,8 @@ public class AsyncHttpClientHelper {
 	 * @param responseHandler
 	 */
 	 public void post(RequestParams params, AsyncHttpResponseHandler responseHandler) {
-		 httpClient.post(getUrl(), params, responseHandler);
+		 String url = getUrl();
+		 httpClient.post(url, params, responseHandler);
 	  }
 	 
 	/**
@@ -90,7 +91,8 @@ public class AsyncHttpClientHelper {
 	 * @param responseHandler
 	 */
 	 public void delete(RequestParams params, AsyncHttpResponseHandler responseHandler) {
-		 httpClient.delete(getUrl(), params, responseHandler);
+		 String url = getUrl();
+		 httpClient.delete(url, params, responseHandler);
 	  }
 	 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
