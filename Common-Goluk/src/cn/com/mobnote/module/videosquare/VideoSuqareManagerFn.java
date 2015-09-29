@@ -22,6 +22,8 @@ public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int VSquare_Req_List_Tag_Content = 2;
 	/** 获取视频详情 */
 	public static final int VSquare_Req_Get_VideoDetail = 3;
+	/** 获取视频详情 */
+	public static final int VSquare_Req_Get_VideoDetail_ComentList = 4;
 
 	/** 获取视频分类 */
 	public static final int VSquare_Req_List_Catlog = 256;
@@ -49,6 +51,16 @@ public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int VSquare_Req_VOP_GetShareURL_Video = 773;
 	/** 获取分享地址(专题和聚合) */
 	public static final int VSquare_Req_VOP_GetShareURL_Topic_Tag = 774;
+	/** 获取用户分享的视频列表 */
+	public static final int VSquare_Req_MainPage_List_ShareVideo = 1025;
+	/** 精华视频列表 */
+	public static final int VSquare_Req_MainPage_List_EssenceVideo = 1026;
+	/** 获取个人中心数据集合 */
+	public static final int VSquare_Req_MainPage_Infor = 1028;
+	/** 分享个人主页 */
+	public static final int VSquare_Req_MainPage_Share = 1029;
+	/** 删除个人分享 */
+	public static final int VSquare_Req_MainPage_DeleteVideo = 1030;
 
 	/**
 	 * 获取本地数据
@@ -61,6 +73,8 @@ public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int VSquare_Req_List_Catlog_LocalCache = 256;
 	/** 获取视频列表本地缓存 */
 	public static final int VSquare_Req_List_Video_Catlog_LocalCache = 257;
+	/**获取用户信息**/
+	public static final int VSquare_Req_MainPage_UserInfor = 1024;
 
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2);
 

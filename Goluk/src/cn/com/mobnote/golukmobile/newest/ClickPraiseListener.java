@@ -11,12 +11,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 public class ClickPraiseListener implements OnClickListener{
+	
+	public interface IClickPraiseView{
+		public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info);
+	}
 	private VideoSquareInfo mVideoSquareInfo;
 	private Context mContext;
-	private NewestListView mNewestListView;
+	private IClickPraiseView mNewestListView;
 	private CategoryListView mCategoryListView = null;
 	
-	public ClickPraiseListener(Context context, VideoSquareInfo info, NewestListView view) {
+	public ClickPraiseListener(Context context, VideoSquareInfo info, IClickPraiseView view) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 		this.mNewestListView = view;

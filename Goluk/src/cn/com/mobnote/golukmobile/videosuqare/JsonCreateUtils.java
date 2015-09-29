@@ -320,6 +320,34 @@ public class JsonCreateUtils {
 
 		return json;
 	}
+	//最新进入单视频
+	public static String getVideoDetailJson(String videoid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("videoid", videoid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	//获取用户信息
+	public static String getUserInfoJson(String otheruid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("otheruid", otheruid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
 	
 	public static String getJHJson(String ztid, String operation, String timestamp, String pagesize) {
 		String json = "";
@@ -401,6 +429,35 @@ public class JsonCreateUtils {
 			obj.put("ztype", ztype);
 			obj.put("ztid", ztid);
 
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getUserCenterJson(String otheruid) {
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("otheruid", otheruid);
+
+			json = obj.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
+	public static String getUserCenterShareVideoJson(String otheruid, String operation, String timestamp){
+		String json = "";
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("otheruid", otheruid);
+			obj.put("operation", operation);
+			obj.put("timestamp", timestamp);
 			json = obj.toString();
 		} catch (JSONException e) {
 			e.printStackTrace();

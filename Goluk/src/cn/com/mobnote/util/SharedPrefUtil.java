@@ -49,34 +49,44 @@ public class SharedPrefUtil {
 
 	/** 保存ipc更新信息 **/
 	public static final String PROPERTY_SAVE_IPC_CONTENT = "property_save_ipc_content";
-	
+
 	/** 保存ipc更新信息 **/
 	public static final String PROPERTY_SAVE_IPC_URL = "property_save_ipc_url";
-	
+
 	/** 保存ipc更新信息 **/
 	public static final String PROPERTY_SAVE_IPC_PATH = "property_save_ipc_path";
 
 	/** 保存下载本地的IPC升级BIN文件信息 */
 	public static final String PROPERTY_IPC_UPGRADE_LOCALFILE_INFO = "property_ipc_upgrade_localfileInfo";
-	
-	/**下载ipc升级文件时保存version**/
+
+	/** 下载ipc升级文件时保存version **/
 	public static final String PROPERTY_SAVE_IPC_DOWN_VERSION = "property_ipc_down_version";
-	
-	/**ipc密码**/
+
+	/** ipc密码 **/
 	public static final String PROPERTY_SAVE_IPC_PASSWORD = "property_ipc_password";
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Android config, by Micle
 	public static final String PROPERTY_Config_Server_Flag = "property_config_serverflag";
 	public static final String PROPERTY_Config_Storage = "property_config_storage";
-	
-	
+
+	/** 信鸽的tokenid */
+	public static final String PROPERTY_SAVE_XG_TOKEN_ID = "property_xg_tokenid";
+
 	private SharedPreferences preference = null;
-	
+
 	private Editor mEditor = null;
 
 	public SharedPrefUtil(Activity activity) {
 		preference = activity.getPreferences(Activity.MODE_PRIVATE);
+	}
+
+	public void setTokenId(String tokenid) {
+		preference.edit().putString(PROPERTY_SAVE_XG_TOKEN_ID, tokenid).commit();
+	}
+
+	public String getTolenId() {
+		return preference.getString(PROPERTY_SAVE_XG_TOKEN_ID, "");
 	}
 
 	public void setIsLiveNormalExit(boolean isExit) {
@@ -391,9 +401,9 @@ public class SharedPrefUtil {
 	public String getIPCContent() {
 		return preference.getString(PROPERTY_SAVE_IPC_CONTENT, "");
 	}
-	
+
 	/**
-	 * 保存ipc  url
+	 * 保存ipc url
 	 * 
 	 * @param ipcVersion
 	 */
@@ -404,24 +414,25 @@ public class SharedPrefUtil {
 	public String getIPCURL() {
 		return preference.getString(PROPERTY_SAVE_IPC_URL, "");
 	}
+
 	/**
-	 * 保存ipc  的Path
+	 * 保存ipc 的Path
 	 * 
 	 * @param ipcVersion
 	 */
 	public void saveIPCPath(String ipcPath) {
-		preference.edit().putString(PROPERTY_SAVE_IPC_PATH ,ipcPath).commit();
+		preference.edit().putString(PROPERTY_SAVE_IPC_PATH, ipcPath).commit();
 	}
 
 	public String getIPCPath() {
 		return preference.getString(PROPERTY_SAVE_IPC_PATH, "");
 	}
-	
+
 	/**
 	 * 下载时保存ipcVersion
 	 */
 	public void saveIPCDownVersion(String ipcVersion) {
-		preference.edit().putString(PROPERTY_SAVE_IPC_DOWN_VERSION ,ipcVersion).commit();
+		preference.edit().putString(PROPERTY_SAVE_IPC_DOWN_VERSION, ipcVersion).commit();
 	}
 
 	public String getIPCDownVersion() {
@@ -449,7 +460,7 @@ public class SharedPrefUtil {
 	/**
 	 * 清除数据
 	 */
-	public void removeIPC(){
+	public void removeIPC() {
 		mEditor = preference.edit();
 		mEditor.remove(PROPERTY_SAVE_IPCVERSION);
 		mEditor.remove(PROPERTY_SAVE_IPC_FILESIZE);
@@ -458,13 +469,13 @@ public class SharedPrefUtil {
 		mEditor.remove(PROPERTY_SAVE_IPC_PATH);
 		mEditor.commit();
 	}
-	
-	public void saveIpcPwd(String ipcPwd){
-		preference.edit().putString(PROPERTY_SAVE_IPC_PASSWORD ,ipcPwd).commit();
+
+	public void saveIpcPwd(String ipcPwd) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_PASSWORD, ipcPwd).commit();
 	}
-	
-	public String getIpcPwd(){
+
+	public String getIpcPwd() {
 		return preference.getString(PROPERTY_SAVE_IPC_PASSWORD, "");
 	}
-	
+
 }

@@ -189,7 +189,7 @@ public class UploadVideo {
 		thumbFile = filePath + File.separator + mVideoName;
 		mShortBitmap = ImageManager.getBitmapFromCache(thumbFile, THUMB_WIDTH, THUMB_HEIGHT);
 		File image = new File(thumbFile);
-		if (image.exists() && null != image) {
+		if (image.exists() && null != image && null != mShortBitmap) {
 			return;
 		}
 		thumbFile = fileFolder + "/thumb11.jpg";

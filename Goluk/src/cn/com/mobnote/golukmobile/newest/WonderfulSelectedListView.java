@@ -34,30 +34,30 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 @SuppressLint("InflateParams")
-public class WonderfulSelectedListView implements VideoSuqareManagerFn{
+public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private RelativeLayout mRootLayout = null;
 	private Context mContext = null;
 	private RTPullListView mRTPullListView = null;
 	public List<JXListItemDataInfo> mDataList = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	public  static Handler mHandler = null;
+	public static Handler mHandler = null;
 	private WonderfulSelectedAdapter mWonderfulSelectedAdapter = null;
 	private String historyDate;
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
 	/** 列表添加页脚标识 */
-	private boolean addFooter=false;
+	private boolean addFooter = false;
 	/** 添加列表底部加载中布局 */
 	private RelativeLayout mBottomLoadingView = null;
 	private int pageCount = 4;
-	private String jxid = "0";
+	private String mJxid = "0";
 	private boolean isGetFileListDataing = false;
 	/** 保存列表一个显示项索引 */
 	private int firstVisible;
 	/** 保存列表显示item个数 */
 	private int visibleCount;
 	private ImageView shareBg = null;
-	
+
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<JXListItemDataInfo>();
@@ -66,105 +66,98 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 		mRTPullListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
 		mRootLayout = new RelativeLayout(mContext);
 		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
-		
+
 		initListener();
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
-		if("".equals(historyDate)){
+		if ("".equals(historyDate)) {
 			historyDate = sdf.format(new Date());
 		}
 		SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
-		
+
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if(null != mVideoSquareManager){
+		if (null != mVideoSquareManager) {
 			mVideoSquareManager.addVideoSquareManagerListener("wonderfulSelectedList", this);
 		}
-		
-		RelativeLayout.LayoutParams rlp =new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+
+		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
 		rlp.addRule(RelativeLayout.CENTER_IN_PARENT);
-		mRootLayout.addView(shareBg,rlp);
+		mRootLayout.addView(shareBg, rlp);
 		mRootLayout.addView(mRTPullListView);
-	
+
+		if (null == mWonderfulSelectedAdapter) {
+			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
+		}
+		mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
+
 		initHistoryData();
+		setViewListBg(false);
 		httpPost(true, "0", "");
-		
+
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				setViewListBg(false);
 				httpPost(true, "0", "");
+
 			}
 		});
 	}
-	
+
 	private void initHistoryData() {
 		String data = GolukApplication.getInstance().getVideoSquareManager().getJXList();
 		if (!TextUtils.isEmpty(data)) {
 			initLayout(JsonParserUtils.parserJXData(data));
 		}
-		
 	}
-	
-	private void httpPost(boolean flag, String jxid, String pagesize){
+
+	private void httpPost(boolean flag, String jxid, String pagesize) {
 		if (isGetFileListDataing) {
 			return;
 		}
-		
-		this.jxid = jxid;
-		if(flag){
-			if(null == mCustomProgressDialog){
-				mCustomProgressDialog = new CustomLoadingDialog(mContext,null);
-			}
-			
-			if (!mCustomProgressDialog.isShowing()) {
-				mCustomProgressDialog.show();
-			}
+
+		this.mJxid = jxid;
+		if (flag) {
+			mRTPullListView.firstFreshState();
 		}
-		
-		if(null != GolukApplication.getInstance().getVideoSquareManager()){
+
+		if (null != GolukApplication.getInstance().getVideoSquareManager()) {
 			isGetFileListDataing = true;
-			GolukDebugUtils.e("", "TTTTTT=====11111=====jxid="+jxid);
+			GolukDebugUtils.e("", "TTTTTT=====11111=====jxid=" + jxid);
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
-			if(!result){
+			if (!result) {
 				closeProgressDialog();
 			}
-		}else{
+		} else {
 			closeProgressDialog();
 		}
 	}
-	
-	private void closeProgressDialog(){
-		if(null != mCustomProgressDialog){
+
+	private void closeProgressDialog() {
+		if (null != mCustomProgressDialog) {
 			mCustomProgressDialog.close();
 		}
 	}
-	
-	private void initLayout(List<JXListItemDataInfo> list){
+
+	private void initLayout(List<JXListItemDataInfo> list) {
 		mDataList.addAll(list);
-		
+
 		if (!addFooter) {
 			addFooter = true;
-			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext)
-					.inflate(R.layout.video_square_below_loading, null);
+			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext).inflate(
+					R.layout.video_square_below_loading, null);
 			mRTPullListView.addFooterView(mBottomLoadingView);
 		}
-		
+
 		if (pageCount < 4) {
 			if (addFooter) {
 				addFooter = false;
 				mRTPullListView.removeFooterView(mBottomLoadingView);
 			}
 		}
-		
-		if(null == mWonderfulSelectedAdapter){
-			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
-		}
-		
-		if ("0".equals(jxid)) {
-			mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
-		}
 		mWonderfulSelectedAdapter.setData(mDataList);
-		
 	}
-	
+
 	private void initListener() {
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
@@ -174,7 +167,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 				httpPost(false, "0", "");
 			}
 		});
-		
+
 		mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
@@ -189,14 +182,14 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 							if (isGetFileListDataing) {
 								return;
 							}
-														
+
 							if (!addFooter) {
 								addFooter = true;
-								mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext)
-										.inflate(R.layout.video_square_below_loading, null);
+								mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext).inflate(
+										R.layout.video_square_below_loading, null);
 								mRTPullListView.addFooterView(mBottomLoadingView);
 							}
-							
+
 							httpPost(false, mDataList.get(mDataList.size() - 1).jxid, "");
 						}
 					}
@@ -204,113 +197,112 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn{
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 					mWonderfulSelectedAdapter.lock();
 					break;
-					
+
 				default:
 					break;
 				}
 			}
 
 			@Override
-			public void onScroll(AbsListView arg0, int firstVisibleItem,
-					int visibleItemCount, int arg3) {
+			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
-				
-				if(null == mDataList && mDataList.size() <= 0) {
+
+				if (null == mDataList && mDataList.size() <= 0) {
 					return;
 				}
-				
+
 				int first = firstVisibleItem - 1;
 				if (first < mDataList.size()) {
-					for(int i=0; i<first; i++) {
+					for (int i = 0; i < first; i++) {
 						String url = mDataList.get(i).jximg;
 						if (!TextUtils.isEmpty(url)) {
 							Uri uri = Uri.parse(url);
 							Fresco.getImagePipeline().evictFromMemoryCache(uri);
 						}
-						
+
 						String url2 = mDataList.get(i).jtypeimg;
 						if (!TextUtils.isEmpty(url2)) {
 							Uri uri = Uri.parse(url2);
 							Fresco.getImagePipeline().evictFromMemoryCache(uri);
 						}
-						
+
 					}
 				}
-				
+
 				int last = firstVisibleItem + visibleItemCount + 1;
 				if (last < mDataList.size()) {
-					for(int i=last; i<mDataList.size(); i++) {
+					for (int i = last; i < mDataList.size(); i++) {
 						String url = mDataList.get(i).jximg;
 						if (!TextUtils.isEmpty(url)) {
 							Uri uri = Uri.parse(url);
 							Fresco.getImagePipeline().evictFromMemoryCache(uri);
 						}
-						
+
 						String url2 = mDataList.get(i).jtypeimg;
 						if (!TextUtils.isEmpty(url2)) {
 							Uri uri = Uri.parse(url2);
 							Fresco.getImagePipeline().evictFromMemoryCache(uri);
 						}
-						
+
 					}
 				}
-				
+
 			}
-			
+
 		});
 	}
 
-	public View getView(){
+	public View getView() {
 		return mRootLayout;
 	}
-	
+
 	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1,Object param2) {
-		if(event == VSquare_Req_List_HandPick){
-			GolukDebugUtils.e("", "TTTTTT=====2222=====param2="+param2);
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+		if (event == VSquare_Req_List_HandPick) {
+			GolukDebugUtils.e("", "TTTTTT=====2222=====param2=" + param2);
 			isGetFileListDataing = false;
 			closeProgressDialog();
 			mRTPullListView.onRefreshComplete(historyDate);
-			
-			if(RESULE_SUCESS == msg){
-				List<JXListItemDataInfo> list = JsonParserUtils.parserJXData((String)param2);
-				pageCount = JsonParserUtils.parserJXCount((String)param2);
-				if ("0".equals(jxid)) {
+
+			if (RESULE_SUCESS == msg) {
+				List<JXListItemDataInfo> list = JsonParserUtils.parserJXData((String) param2);
+				pageCount = JsonParserUtils.parserJXCount((String) param2);
+				if ("0".equals(mJxid)) {
 					mDataList.clear();
 				}
 				initLayout(list);
-			}else{
-				
-				if (!"0".equals(jxid)) {
+			} else {
+
+				if (!"0".equals(mJxid)) {
 					if (addFooter) {
 						addFooter = false;
 						mRTPullListView.removeFooterView(mBottomLoadingView);
 					}
 				}
-				
+
 				GolukUtils.showToast(mContext, "网络异常，请检查网络");
 			}
-			
+
 			if (mDataList.size() > 0) {
 				setViewListBg(false);
-			}else {
+			} else {
 				setViewListBg(true);
 			}
 		}
-		
+
 	}
-	
-	public void setViewListBg(boolean flog){
-		if(flog){
+
+	public void setViewListBg(boolean flog) {
+		if (flog) {
 			shareBg.setVisibility(View.VISIBLE);
-		}else{
+		} else {
 			shareBg.setVisibility(View.GONE);
 		}
 	}
-	
-	public void onDestroy(){
-		
+
+	public void onDestroy() {
+
 	}
-	
+
 }

@@ -56,6 +56,11 @@ public class VideoEntity {
 	/** 是否点过赞：0.否1.是 */
 	public String ispraise;
 	
+	/**
+	 * 是否公开到广场 0：否  1：是
+	 */
+	public String isopen;
+	
 	public LiveVideoData livevideodata;
 	public String reason;
 	public String iscomment;

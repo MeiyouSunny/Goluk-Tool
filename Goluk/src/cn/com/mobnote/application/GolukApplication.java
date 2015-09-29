@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.golukmobile.MainActivity;
+import cn.com.mobnote.golukmobile.PushSettingActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserOpinionActivity;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
@@ -50,6 +51,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
+import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.LngLat;
@@ -126,11 +128,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private WifiApAdmin wifiAp;
 	/** 当前地址 */
 	public String mCurAddr = null;
-	/** 全局提示框 */
-	public WindowManager mWindowManager = null;
-	public WindowManager.LayoutParams mWMParams = null;
-	public RelativeLayout mVideoUploadLayout = null;
-
 	/** 登录的五个状态 0登录中 1 登录成功 2登录失败 3手机号未注册，跳转注册页面 4超时 5密码错误达上限去重置密码 **/
 	public int loginStatus;
 	/**
@@ -196,8 +193,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	private ArrayList<VideoFileInfo> fileList;
 
+	private boolean mIsExit = true;
+
 	static {
 		System.loadLibrary("golukmobile");
+	}
+
+	public void setExit(boolean isExit) {
+		mIsExit = isExit;
+	}
+
+	public boolean isExit() {
+		return mIsExit;
 	}
 
 	@Override
@@ -210,11 +217,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		startCloudService();
 		
 		// TODO 此处不要做初始化相关的工作
-		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
 	}
 
 	public Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			if (isExit()) {
+				return;
+			}
 			switch (msg.what) {
 			case 1001:
 				tips();
@@ -243,6 +252,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (null != mGoluk) {
 			return;
 		}
+		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
 		initRdCardSDK();
 		initCachePath();
 		// 实例化JIN接口,请求网络数据
@@ -273,6 +283,66 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		motioncfg = new int[2];
 		mDownLoadFileList = new ArrayList<String>();
 		mNoDownLoadFileList = new ArrayList<String>();
+
+		setExit(false);
+	}
+
+	public void destroyLogic() {
+		if (null != mGoluk) {
+			GolukDebugUtils.e("","GolukApplication--------------------------destroy");
+			mGoluk.GolukLogicDestroy();
+			mGoluk = null;
+		}
+	}
+	
+	public void appFree() {
+		mIpcIp = null;
+		mContext = null;
+		mPageSource = "";
+		mMainActivity = null;
+		isIpcLoginSuccess = false;
+		isUserLoginSucess = false;
+		mCCUrl = null;
+		mCurrentUId = null;
+		mCurrentAid = null;
+		carrecorderCachePath = "";
+		autoRecordFlag = false;
+		motioncfg = null;
+		wifiAp = null;
+		mCurAddr = null;
+		registStatus = 0;
+		autoLoginStatus = 0;
+		loginoutStatus = false;
+		identifyStatus = 0;
+//		mUser = null;
+//		mLoginManage = null;
+//		mIpcUpdateManage = null;
+//		mIdentifyManage = null;
+//		mRegistAndRepwdManage = null;
+		mTimerManage.timerCancel();
+		isconnection = false;
+		isBackground = false;
+		startTime = 0;
+		autodownloadfile = false;
+		flag = false;
+		isSDCardFull = false;
+		isDownloading = false;
+		downloadCount = 0;
+		mLoadStatus = false;
+		mLoadProgress = 0;
+		updateSuccess = false;
+		mWiFiStatus = 0;
+		mGolukName = "";
+		if (null != fileList) {
+			fileList.clear();
+		}
+		if (null != mNoDownLoadFileList) {
+			mNoDownLoadFileList.clear();
+		}
+		if (null != mDownLoadFileList) {
+			mDownLoadFileList.clear();
+		}
+		
 	}
 
 	/**
@@ -803,6 +873,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
 		GolukDebugUtils.e("", "chxy send pageNotifyCallBack--" + "type:" + type + ",success:" + success + ",param1:"
 				+ param1 + ",param2:" + param2);
+		
+		if (this.isExit()) {
+			return;
+		}
 
 		switch (type) {
 		case PageType_UploadVideo:
@@ -897,6 +971,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_FeedBack:
 			if (mPageSource == "UserOpinion") {
 				((UserOpinionActivity) mContext).requestOpinionCallback(success, param1, param2);
+			}
+			break;
+		case PageType_PushReg:
+			// token上传回调
+			GolukNotification.getInstance().getXg().golukServerRegisterCallBack(success, param1, param2);
+			break;
+		case PageType_GetPushCfg:
+		case PageType_SetPushCfg:
+			if (null != mContext && mContext instanceof PushSettingActivity) {
+				((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
 			}
 			break;
 		}
@@ -1092,6 +1176,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		// System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
+		if (this.isExit()) {
+			return;
+		}
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
 			IPC_VDCP_Connect_CallBack(msg, param1, param2);
 		}
@@ -1125,8 +1212,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// 拍摄8秒视频成功之后,接口会自动调用查询这个文件,收到这个回调之后可以根据文件名去下载视频
 				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@==IPC_VDCP_Msg_SingleQuery==param1=" + param1 + "==param2="
 						+ param2);
-				GFileUtils.writeIPCLog("YYYYYY====IPC_VDCP_Msg_SingleQuery==param1=" + param1 + "==param2=" + param2);
-
 				ipcVideoSingleQueryCallBack(param1, (String) param2);
 				break;
 			case IPC_VDCP_Msg_Erase:
@@ -1179,8 +1264,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				GolukDebugUtils.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1=" + param1 + "===param2="
 						+ param2);
-				GFileUtils.writeIPCLog("YYYYYY======IPC_VDCP_Msg_IPCKit=====param1=" + param1 + "===param2=" + param2);
-
 				if (param1 == RESULE_SUCESS) {
 					List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String) param2);
 					if (kit.size() > 0) {
@@ -1268,9 +1351,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// param1 = 0,下载完成
 				// param1 = 1,下载中
 				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1=" + param1);
-				if (((String) param2).equals(".mp4"))
-					GFileUtils.writeIPCLog("===IPC_VDTP_Msg_File===param1=" + param1 + "=param2=" + param2);
-
 				ipcVideoDownLoadCallBack(param1, (String) param2);
 				break;
 			}
@@ -1424,10 +1504,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if ("carrecorder".equals(mPageSource)) {
 			return;
 		}
+		if (null == fileList || fileList.size() <= 0) {
+			return;
+		}
 
 		GolukDebugUtils.e("xuhw",
 				"BBBB=====stopDownloadList==fuck===stopDownloadList==fileList.size()=" + fileList.size());
-		if (mContext instanceof Activity && fileList.size() > 0) {
+		if (mContext instanceof Activity) {
 			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck");
 			Activity a = (Activity) mContext;
 			if (!a.isFinishing()) {
@@ -1493,9 +1576,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					GolukDebugUtils.e("xuhw", "YYYYYY=====querySingleFile=====name=" + name + "==flag=" + flag);
 				}
 			}
-
 		}
-
 	}
 
 	public void connectionDialog() {
@@ -1681,4 +1762,5 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
             wns.startWnsService();
         }
 	}
+	
 }

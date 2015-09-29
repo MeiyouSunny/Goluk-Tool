@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -36,7 +37,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  * 
  */
-public class UserStartActivity extends BaseActivity implements OnClickListener,OnErrorListener {
+public class UserStartActivity extends BaseActivity implements OnClickListener, OnErrorListener {
 
 	private ImageView mImageViewHave, mImageViewLook;
 	//
@@ -54,7 +55,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener,O
 	private int screenHeight = SoundUtils.getInstance().getDisplayMetrics().heightPixels;
 	/** 我有Goluk和随便看看两个按钮 **/
 	private LinearLayout mClickLayout = null;
-	/**欢迎页右上角关闭按钮**/
+	/** 欢迎页右上角关闭按钮 **/
 	private ImageView mImageClose = null;
 
 	@SuppressLint("HandlerLeak")
@@ -146,7 +147,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener,O
 		switch (arg0.getId()) {
 		case R.id.user_start_have:
 			// 我有Goluk
-			Intent itHave = new Intent(UserStartActivity.this,MainActivity.class);
+			Intent itHave = new Intent(UserStartActivity.this, MainActivity.class);
 			itHave.putExtra("userstart", "start_have");
 			startActivity(itHave);
 			this.finish();
@@ -159,7 +160,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener,O
 			startActivity(itLook);
 			this.finish();
 			break;
-		//关闭
+		// 关闭
 		case R.id.click_close_btn:
 			finish();
 			break;
@@ -176,6 +177,19 @@ public class UserStartActivity extends BaseActivity implements OnClickListener,O
 				mBGBitmap = null;
 			}
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (null != mBaseApp) {
+				mBaseApp.setExit(true);
+				mBaseApp.destroyLogic();
+				mBaseApp.appFree();
+			}
+			finish();
+		}
+		return false;
 	}
 
 	@Override

@@ -376,6 +376,9 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			closeProgressDialogIdentify();
 			GolukUtils.showToast(this, this.getResources().getString(R.string.user_netword_outtime));
 			break;
+		case 10:
+			closeProgressDialogIdentify();
+			break;
 		default:
 			break;
 		}

@@ -35,7 +35,7 @@
                 android:id="@+id/user_personal_solid_1"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/solid" />
 		<!-- 个人中心 -->
             <RelativeLayout
@@ -51,13 +51,19 @@
                     android:id="@+id/user_center_head"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/editor_head_feault7"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:orientation="vertical" >
+                    android:orientation="vertical"
+                    android:layout_toRightOf="@id/user_center_head" 
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="15dp">
 
                     <TextView
                         android:id="@+id/user_center_name_text"
@@ -70,8 +76,7 @@
                         android:id="@+id/user_center_id_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:visibility="gone" >
+                        android:layout_marginTop="10dp" >
 
                         <TextView
                             android:id="@+id/user_center_id_title_text"
@@ -79,15 +84,18 @@
                             android:layout_height="wrap_content"
                             android:text="极路客："
                             android:textColor="#585858"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/user_center_id_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/user_center_id_title_text"
-                            android:textColor="#585858"
-                            android:textSize="14sp" />
+                            android:textColor="@color/user_login_text"
+                            android:textSize="14sp"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -98,6 +106,57 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/editor_arrow" />
             </RelativeLayout>
+            
+            <LinearLayout 
+                android:id="@+id/user_center_video_layout"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:orientation="horizontal"
+                android:background="#f4f4f4"
+                android:gravity="center_vertical" >
+                <LinearLayout 
+                    android:id="@+id/user_share"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <TextView 
+                        android:id="@+id/user_share_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="14sp"
+                        android:textColor="@color/user_login_text"/>
+                    <TextView 
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="分享视频"
+                        android:textSize="12sp"
+                        android:textColor="@color/live_time_desc"/>
+                </LinearLayout>
+                <LinearLayout 
+                    android:id="@+id/user_praise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <TextView 
+                        android:id="@+id/user_praise_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="14sp"
+                        android:textColor="@color/user_login_text"/>
+                    <TextView 
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="赞我的人"
+                        android:textSize="12sp"
+                        android:textColor="@color/live_time_desc" />
+                </LinearLayout>
+            </LinearLayout>
 
             <View
                 android:id="@+id/user_personal_solid_2"

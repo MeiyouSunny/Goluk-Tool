@@ -79,7 +79,7 @@ public class GlobalWindow {
 	public void setApplication(GolukApplication app) {
 		mApplication = app;
 	}
-	
+
 	public GolukApplication getApplication() {
 		return mApplication;
 	}
@@ -94,13 +94,13 @@ public class GlobalWindow {
 		if (null == mApplication) {
 			return;
 		}
-		
+
 		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------2222: ");
 
 		if (isShowGlobalwindow) {
 			dimissGlobalWindow();
 		}
-		
+
 		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------333333: ");
 
 		cancelTimer();
@@ -150,10 +150,11 @@ public class GlobalWindow {
 
 		mPrompTv.setText(promptText);
 		// 开启传输中的菊花
-		Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.upload_loading);
-		LinearInterpolator lin = new LinearInterpolator();
-		rotateAnimation.setInterpolator(lin);
-		mStateImg.startAnimation(rotateAnimation);
+		// Animation rotateAnimation = AnimationUtils.loadAnimation(mContext,
+		// R.anim.upload_loading);
+		// LinearInterpolator lin = new LinearInterpolator();
+		// rotateAnimation.setInterpolator(lin);
+		// mStateImg.startAnimation(rotateAnimation);
 
 	}
 
@@ -197,9 +198,11 @@ public class GlobalWindow {
 		if (null != mProgressBar) {
 			mProgressBar.setProgress(percent);
 		}
-		GolukDebugUtils.e("","upload service--VideoShareActivity-handleCancel----Application---refreshPercent: " + percent);
+		GolukDebugUtils.e("", "upload service--VideoShareActivity-handleCancel----Application---refreshPercent: "
+				+ percent);
 		if (null != mPrecentTv) {
-			GolukDebugUtils.e("","upload service--VideoShareActivity-handleCancel----Application---refreshPercent3333: ");
+			GolukDebugUtils.e("",
+					"upload service--VideoShareActivity-handleCancel----Application---refreshPercent3333: ");
 			mPrecentTv.setText("" + percent + "%");
 		}
 	}
@@ -218,14 +221,14 @@ public class GlobalWindow {
 			return;
 		}
 		if (null != mStateImg) {
-			mStateImg.clearAnimation();
+			// mStateImg.clearAnimation();
 			mStateImg.setBackgroundResource(R.drawable.tips_close);
 		}
 
 		if (null != mPrompTv) {
 			mPrompTv.setText(msg);
 		}
-		
+
 		if (null != mPrecentTv) {
 			mPrecentTv.setVisibility(View.GONE);
 		}
@@ -261,7 +264,7 @@ public class GlobalWindow {
 		}
 
 		if (null != mStateImg) {
-			mStateImg.clearAnimation();
+			// mStateImg.clearAnimation();
 			mStateImg.setBackgroundResource(R.drawable.tips_success);
 		}
 

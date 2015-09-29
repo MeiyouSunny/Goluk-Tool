@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
@@ -16,6 +17,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
@@ -140,8 +142,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
 		case R.id.back_btn:
-			clickBtn = false;
-			finish();
+			exit();
 			break;
 		// 编辑
 		case R.id.user_title_right:
@@ -220,6 +221,15 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			exit();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	/**
@@ -403,5 +413,13 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			mNameLayout.setEnabled(true);
 			mSignLayout.setEnabled(true);
 		}
+	}
+	
+	private void exit() {
+		clickBtn = false;
+		if(null != UserCenterActivity.handler){
+			UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
+		}
+		this.finish();
 	}
 }

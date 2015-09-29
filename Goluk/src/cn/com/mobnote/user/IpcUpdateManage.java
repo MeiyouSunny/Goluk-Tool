@@ -697,9 +697,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 							GolukApplication.mMainActivity = null;
 						}
 						SysApplication.getInstance().exit();
-
+						mApp.setExit(true);
 						mApp.mIPCControlManager.setIPCWifiState(false, "");
-						mApp.mGoluk.GolukLogicDestroy();
+						mApp.destroyLogic();
+						mApp.appFree();
 						if (null != UserStartActivity.mHandler) {
 							UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
 						}
