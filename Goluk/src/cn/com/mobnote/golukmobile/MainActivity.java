@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			if (null != bean) {
 				GolukNotification.getInstance().dealAppinnerClick(this, bean);
 			}
-			GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
+//			GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
 		}
 	}
 
