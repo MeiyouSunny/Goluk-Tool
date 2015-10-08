@@ -57,6 +57,8 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	private LinearLayout mClickLayout = null;
 	/** 欢迎页右上角关闭按钮 **/
 	private ImageView mImageClose = null;
+	/**true欢迎页   false开屏页**/
+	private boolean judge = false;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -78,9 +80,9 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 		initView();
 		// true ----欢迎页 false开屏页
 		Intent it = getIntent();
-		boolean b = it.getBooleanExtra("judgeVideo", false);
-		GolukDebugUtils.e("lily", b + "--------judgeVideo-----");
-		if (b) {
+		judge = it.getBooleanExtra("judgeVideo", false);
+		GolukDebugUtils.e("lily", judge + "--------judgeVideo-----");
+		if (judge) {
 			mClickLayout.setVisibility(View.GONE);
 			mImageClose.setVisibility(View.VISIBLE);
 		} else {
@@ -182,10 +184,12 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (null != mBaseApp) {
-				mBaseApp.setExit(true);
-				mBaseApp.destroyLogic();
-				mBaseApp.appFree();
+			if(!judge){
+				if (null != mBaseApp) {
+					mBaseApp.setExit(true);
+					mBaseApp.destroyLogic();
+					mBaseApp.appFree();
+				}
 			}
 			finish();
 		}
