@@ -644,6 +644,25 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetSpeakerSwitch, status);
 	}
+	
+	/**
+	 * 获取isp模式
+	 * 
+	 * @return
+	 */
+	public boolean getISPMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+	}
+
+	/**
+	 * 设置isp模式
+	 * @return
+	 */
+	public boolean setISPMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
+	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
