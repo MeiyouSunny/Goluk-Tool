@@ -613,6 +613,11 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		}
 
 		if (null != mVideo) {
+			
+			//判断下video是否在播放中  如果在播放 先暂停播放器
+			if(mVideo.isPlaying()){
+				mVideo.pause();
+			}
 			mVideo.stopPlayback();
 			mVideo = null;
 		}
