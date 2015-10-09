@@ -819,6 +819,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void closeLoadingDialog() {
 		if (null != mCustomLoadingDialog) {
 			mCustomLoadingDialog.close();
+			mCustomLoadingDialog = null;
 		}
 	}
 	

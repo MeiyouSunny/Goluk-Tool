@@ -10,17 +10,17 @@ import org.json.JSONObject;
 public class VideoDetailParser {
 	
 	public static VideoJson parseDataFromJson(String json){
-		VideoJson object = new VideoJson();
-		VideoSquareDetailInfo videoDetailInfo = new VideoSquareDetailInfo();
-		List<VideoListInfo> com_list = new ArrayList<VideoListInfo>();
 		try {
+			VideoJson object = null;
 			JSONObject obj = new JSONObject(json);
 			if(true == obj.getBoolean("success")){
+				object = new VideoJson();
 				object.msg = obj.optString("msg");
 				object.success = obj.optBoolean("success");
-				JSONObject json_data = obj.optJSONObject("data");
+				JSONObject json_data = obj.getJSONObject("data");
 				VideoAllData data = new VideoAllData();
-				if(null != json_data){
+//				if(null != json_data){
+					VideoSquareDetailInfo videoDetailInfo = new VideoSquareDetailInfo();
 					data.result = json_data.optString("result");
 					JSONObject json_avideo = json_data.optJSONObject("avideo");
 					if(null != json_avideo){
@@ -53,6 +53,7 @@ public class VideoDetailParser {
 							video.reason = json_video.optString("reason");
 							JSONObject json_comment = json_video.optJSONObject("comment");
 							if(null != json_comment){
+								List<VideoListInfo> com_list = new ArrayList<VideoListInfo>();
 								VideoCommentInfo comment = new VideoCommentInfo();
 								comment.comcount = json_comment.optString("comcount");
 								comment.iscomment = json_comment.optString("iscomment");
@@ -67,8 +68,8 @@ public class VideoDetailParser {
 									list.authorid = json_comlist.optString("authorid");
 									list.commentid = json_comlist.optString("commentid");
 									com_list.add(list);
-									comment.comlist  = com_list;
 								}
+								comment.comlist  = com_list;
 								video.comment = comment;
 							}
 							JSONObject json_videodata = json_video.optJSONObject("videodata");
@@ -103,11 +104,12 @@ public class VideoDetailParser {
 						data.link = videoLink;
 					}
 					object.data = data;
-				}
+//				}
 			}
+			return object;
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return object;
+		return null;
 	}
 }
