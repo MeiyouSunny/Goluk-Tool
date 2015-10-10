@@ -57,7 +57,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  */
 
 @SuppressLint({ "HandlerLeak", "Instantiatable" })
-public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSuqareManagerFn {
+public class IndexMoreActivity implements OnClickListener, UserInterface, VideoSuqareManagerFn {
 	/** application */
 	// private GolukApplication mApp = null;
 	/** 上下文 */
@@ -82,16 +82,13 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 	/** 购买极路客 **/
 	private RelativeLayout mShoppingItem = null;
 
-	/** 个人中心页面handler用来接收消息,更新UI */
-	public static Handler mUserCenterHandler = null;
-
 	/** 个人中心的头像、性别、昵称 */
 	private ImageView mImageHead;
 	private TextView mTextName, mTextId;
 	private LinearLayout mVideoLayout;
-	private TextView mTextShare,mTextPraise;
-	/**分享视频   赞我的人**/
-	private LinearLayout mShareLayout,mPraiseLayout;
+	private TextView mTextShare, mTextPraise;
+	/** 分享视频 赞我的人 **/
+	private LinearLayout mShareLayout, mPraiseLayout;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
@@ -101,10 +98,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 	private Editor mEditor = null;
 	RelativeLayout mRootLayout = null;
 	private MainActivity ma;
-	
-	/**用户信息**/
-	private String userHead,userName,userId,userDesc,userUId,userSex;
-	private int shareCount,praiseCount;
+
+	/** 用户信息 **/
+	private String userHead, userName, userId, userDesc, userUId, userSex;
+	private int shareCount, praiseCount;
 
 	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
@@ -124,7 +121,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		ma.mApp.mUser.setUserInterface(this);
-		init();
+		getDataState();
 	}
 
 	/**
@@ -153,23 +150,6 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 		mTextPraise = (TextView) mRootLayout.findViewById(R.id.user_praise_count);
 		mShareLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_share);
 		mPraiseLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_praise);
-		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
-				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
-		if (!isFirstLogin || ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
-			GolukDebugUtils.i("lily", "---------------" + ma.mApp.autoLoginStatus + "------loginStatus------"
-					+ ma.mApp.loginStatus);
-			// 更多页面
-			personalChanged();
-		} else {
-			// 未登录
-			isHasInfo = false;
-//			mUserCenterId.setVisibility(View.GONE);
-			mVideoLayout.setVisibility(View.GONE);
-			mImageHead.setImageResource(R.drawable.editor_head_feault7);
-			mTextName.setText("点击登录");
-			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText("登录查看个人主页");
-		}
 
 		// 注册事件
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
@@ -184,12 +164,26 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 		mShareLayout.setOnClickListener(this);
 		mPraiseLayout.setOnClickListener(this);
 
-		// 更新UI handler
-		mUserCenterHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-			}
-		};
+	}
+
+	// 获取登录状态及用户信息
+	private void getDataState() {
+		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
+				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
+		if (!isFirstLogin || ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
+			GolukDebugUtils.i("lily", "---------------" + ma.mApp.autoLoginStatus + "------loginStatus------"
+					+ ma.mApp.loginStatus);
+			// 更多页面
+			personalChanged();
+		} else {
+			// 未登录
+			isHasInfo = false;
+			mVideoLayout.setVisibility(View.GONE);
+			mImageHead.setImageResource(R.drawable.editor_head_feault7);
+			mTextName.setText("点击登录");
+			mTextId.setTextColor(Color.rgb(128, 138, 135));
+			mTextId.setText("登录查看个人主页");
+		}
 	}
 
 	protected void onResume() {
@@ -242,7 +236,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 					dialog.show();
 				} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
 					GolukDebugUtils.i("lily", "--------更多页面------");
-					
+
 					intentToUserCenter(0);
 				}
 			} else {
@@ -279,13 +273,13 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 			break;
 		// 极路客小技巧
 		case R.id.skill_item:
-			Intent itSkill = new Intent(mContext,UserOpenUrlActivity.class);
+			Intent itSkill = new Intent(mContext, UserOpenUrlActivity.class);
 			itSkill.putExtra(UserOpenUrlActivity.FROM_TAG, "skill");
 			mContext.startActivity(itSkill);
 			break;
 		// 安装指导
 		case R.id.install_item:
-			Intent itInstall = new Intent(mContext,UserOpenUrlActivity.class);
+			Intent itInstall = new Intent(mContext, UserOpenUrlActivity.class);
 			itInstall.putExtra(UserOpenUrlActivity.FROM_TAG, "install");
 			mContext.startActivity(itInstall);
 			break;
@@ -296,13 +290,13 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 			break;
 		// 购买极路客
 		case R.id.shopping_item:
-			Intent itShopping = new Intent(mContext,UserOpenUrlActivity.class);
+			Intent itShopping = new Intent(mContext, UserOpenUrlActivity.class);
 			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
 			mContext.startActivity(itShopping);
 			break;
 		}
 	}
-	
+
 	/**
 	 * 点击个人中心跳转到个人主页
 	 */
@@ -316,7 +310,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 		user.customavatar = "";
 		user.praisemenumber = praiseCount + "";
 		user.sharevideonumber = shareCount + "";
-		
+
 		Intent intent = new Intent(mContext, UserCenterActivity.class);
 		intent.putExtra("userinfo", user);
 		intent.putExtra("type", type);
@@ -329,18 +323,18 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 			dialog = null;
 		}
 	}
-	
+
 	// 注册监听
-		private void setListener() {
-			// 注册监听
-			VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-			if (null != mVideoSquareManager) {
-				if (mVideoSquareManager.checkVideoSquareManagerListener("indexmore")) {
-					mVideoSquareManager.removeVideoSquareManagerListener("indexmore");
-				}
-				mVideoSquareManager.addVideoSquareManagerListener("indexmore", this);
+	private void setListener() {
+		// 注册监听
+		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
+		if (null != mVideoSquareManager) {
+			if (mVideoSquareManager.checkVideoSquareManagerListener("indexmore")) {
+				mVideoSquareManager.removeVideoSquareManagerListener("indexmore");
 			}
+			mVideoSquareManager.addVideoSquareManagerListener("indexmore", this);
 		}
+	}
 
 	/**
 	 * 个人资料信息
@@ -362,44 +356,44 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 			mTextName.setText(userName);
 			GolukDebugUtils.i("lily", userHead);
 			UserUtils.focusHead(userHead, mImageHead);
-			if("".equals(userDesc) || null == userDesc){
+			if ("".equals(userDesc) || null == userDesc) {
 				mTextId.setText("大家一起来分享视频吧");
-			}else{
+			} else {
 				mTextId.setText(userDesc);
 			}
 			mTextId.setTextColor(Color.rgb(0, 0, 0));
-			mTextShare.setText(GolukUtils.getFormatNumber(shareCount+""));
-			mTextPraise.setText(GolukUtils.getFormatNumber(praiseCount+""));
-			
-			//获取用户信息
+			mTextShare.setText(GolukUtils.getFormatNumber(shareCount + ""));
+			mTextPraise.setText(GolukUtils.getFormatNumber(praiseCount + ""));
+
+			// 获取用户信息
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getUserInfo(userUId);
-			GolukDebugUtils.e("", "=======IndexMoreActivity====b："+b);
-			
+			GolukDebugUtils.e("", "=======IndexMoreActivity====b：" + b);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		if(event == VSquare_Req_MainPage_UserInfor){
-			if(RESULE_SUCESS == msg){
-				try{
+		if (event == VSquare_Req_MainPage_UserInfor) {
+			if (RESULE_SUCESS == msg) {
+				try {
 					String jsonStr = (String) param2;
-					GolukDebugUtils.e("", "=======VideoSuqare_CallBack====jsonStr："+jsonStr);
+					GolukDebugUtils.e("", "=======VideoSuqare_CallBack====jsonStr：" + jsonStr);
 					JSONObject dataObj = new JSONObject(jsonStr);
-					JSONObject data= dataObj.optJSONObject("data");
+					JSONObject data = dataObj.optJSONObject("data");
 					String praisemenumber = data.optString("praisemenumber");
 					String sharevideonumber = data.optString("sharevideonumber");
-					GolukDebugUtils.e("", "=======VideoSuqare_CallBack====praisemenumber："+praisemenumber);
+					GolukDebugUtils.e("", "=======VideoSuqare_CallBack====praisemenumber：" + praisemenumber);
 					mTextPraise.setText(GolukUtils.getFormatNumber(praisemenumber));
 					mTextShare.setText(GolukUtils.getFormatNumber(sharevideonumber));
-				}catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 	}
 
 	/**
@@ -416,13 +410,11 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 		} else if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4 || ma.mApp.isUserLoginSucess == false) {
 			dismissDialog();
 			personalChanged();
-//			mUserCenterId.setVisibility(View.GONE);
 			mVideoLayout.setVisibility(View.GONE);
 			mTextName.setText("点击登录");
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
 			mTextId.setText("登录查看个人主页");
 		} else if (ma.mApp.autoLoginStatus == 5) {
-//			mUserCenterId.setVisibility(View.VISIBLE);
 			mVideoLayout.setVisibility(View.VISIBLE);
 		}
 	}
@@ -433,13 +425,11 @@ public class IndexMoreActivity implements OnClickListener, UserInterface,VideoSu
 	public void personalChanged() {
 		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
 		if (ma.mApp.loginStatus == 1 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录成功、自动登录中、自动登录成功
-//			mUserCenterId.setVisibility(View.VISIBLE);
 			mVideoLayout.setVisibility(View.VISIBLE);
 			mImageHead.setImageResource(R.drawable.my_head_moren7);
 			initData();
 			isHasInfo = true;
 		} else {// 没有用户信息
-//			mUserCenterId.setVisibility(View.GONE);
 			mVideoLayout.setVisibility(View.GONE);
 			mTextName.setText("点击登录");
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
