@@ -723,6 +723,7 @@ public class UserCenterActivity extends BaseActivity implements
 	public void onDestroy() {
 		if(GolukApplication.getInstance().getVideoSquareManager()!=null){
 			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
+			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("videosharehotlist");
 		}
 		
 		super.onDestroy();
