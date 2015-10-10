@@ -152,6 +152,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 			Intent itHave = new Intent(UserStartActivity.this, MainActivity.class);
 			itHave.putExtra("userstart", "start_have");
 			startActivity(itHave);
+			this.stopVideo();
 			this.finish();
 			break;
 
@@ -160,12 +161,26 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 			Intent itLook = new Intent(UserStartActivity.this, MainActivity.class);
 			GolukDebugUtils.i("lily", "======MainActivity==UserStartActivity====");
 			startActivity(itLook);
+			this.stopVideo();
 			this.finish();
 			break;
 		// 关闭
 		case R.id.click_close_btn:
+			this.stopVideo();
 			finish();
 			break;
+		}
+	}
+	
+	/**
+	 * 停止video的播放
+	 */
+	private void stopVideo(){
+		if(videoStart != null ){
+			if(videoStart.isPlaying()){
+				videoStart.stopPlayback();
+				videoStart = null;
+			}
 		}
 	}
 

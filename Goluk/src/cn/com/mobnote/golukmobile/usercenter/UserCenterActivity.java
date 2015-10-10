@@ -721,6 +721,10 @@ public class UserCenterActivity extends BaseActivity implements
 
 	@Override
 	public void onDestroy() {
+		if(GolukApplication.getInstance().getVideoSquareManager()!=null){
+			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
+		}
+		
 		super.onDestroy();
 	}
 
