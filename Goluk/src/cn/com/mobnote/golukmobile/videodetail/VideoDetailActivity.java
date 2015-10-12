@@ -306,7 +306,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 
 			if (count == visibleCount && mIsHaveData) {
-				startPush();
+				if (null != mVideoJson && null != mVideoJson.data
+						&& null != mVideoJson.data.avideo
+						&& null != mVideoJson.data.avideo.video
+						&& null != mVideoJson.data.avideo.video.videoid) {
+					startPush();
+				}
 			}
 		}
 	}
