@@ -29,6 +29,7 @@ public class PlayPreparedListener implements OnPreparedListener {
 		holder.mVideoView.setVideoWidth(mp.getVideoWidth());
 		holder.mVideoView.setVideoHeight(mp.getVideoHeight());
 		if ((null != mAdapter.netInfo) && (mAdapter.netInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
+			mp.start();
 			mp.setLooping(true);
 		}
 		if (mAdapter.playTime != 0) {
