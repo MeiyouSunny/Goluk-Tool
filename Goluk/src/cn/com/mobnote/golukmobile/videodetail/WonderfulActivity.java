@@ -245,7 +245,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	// 注册监听
 	private void setListener() {
 		// 注册监听
-		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
+		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
 			if (mVideoSquareManager.checkVideoSquareManagerListener(LISTENER_TAG)) {
 				mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
