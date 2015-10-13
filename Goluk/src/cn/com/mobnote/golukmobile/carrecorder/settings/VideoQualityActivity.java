@@ -56,9 +56,12 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 	/** 音视频配置信息 */
 	private VideoConfigState mVideoConfigState=null;
 	
+	private String[] mArrayText = null;
 	private TextView[] mText = null;
 	private ImageButton[] mImageIcon = null;
 	private String selectType = "";
+	String[] resolutionArray = null;
+	String[] bitrateArray = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		mMiddleIcon = (ImageButton)findViewById(R.id.zRight);
 		mHighIcon = (ImageButton)findViewById(R.id.gRight);
 		
+		mArrayText = getResources().getStringArray(R.array.list_quality_ui);
 		mText = new TextView[]{ mCloseText, mLowText, mMiddleText, mHighText };
 		mImageIcon = new ImageButton[]{ mCloseIcon, mLowIcon, mMiddleIcon, mHighIcon };
 		
@@ -149,23 +153,19 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 				break;
 			case R.id.close:
 //				updateSensitivity(SensitivityType._1080h);
-				selectType = getResources().getStringArray(R.array.list_quality_ui)[0];
-				setArrayUI(selectType);
+				setArrayUI(getResources().getStringArray(R.array.list_quality_ui)[0]);
 				break;
 			case R.id.low:
 //				updateSensitivity(SensitivityType._1080l);
-				selectType = getResources().getStringArray(R.array.list_quality_ui)[1];
-				setArrayUI(selectType);
+				setArrayUI(getResources().getStringArray(R.array.list_quality_ui)[1]);
 				break;
 			case R.id.middle:
 //				updateSensitivity(SensitivityType._720h);
-				selectType = getResources().getStringArray(R.array.list_quality_ui)[2];
-				setArrayUI(selectType);
+				setArrayUI(getResources().getStringArray(R.array.list_quality_ui)[2]);
 				break;
 			case R.id.high:
 //				updateSensitivity(SensitivityType._720l);
-				selectType = getResources().getStringArray(R.array.list_quality_ui)[3];
-				setArrayUI(selectType);
+				setArrayUI(getResources().getStringArray(R.array.list_quality_ui)[3]);
 				break;
 	
 			default:
@@ -179,6 +179,8 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		GolukApplication.getInstance().setContext(this, "videoquality");
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();	
 		if(null != mVideoConfigState){
+			
+//			setData2UI("G1", mVideoConfigState);
 			if("1080P".equals(mVideoConfigState.resolution)){
 				if(8192 == mVideoConfigState.bitrate){
 					updateSensitivity(SensitivityType._1080h);
@@ -208,6 +210,8 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 				if(param1 == RESULE_SUCESS){
 					GolukDebugUtils.e("xuhw", "YYY================1111==================param2="+param2);
 					VideoConfigState mVideoConfigState = IpcDataParser.parseVideoConfigState((String)param2);
+					
+//					setData2UI("G1", mVideoConfigState);
 					if(null != mVideoConfigState){
 						GolukDebugUtils.e("xuhw", "YYY================22222==============resolution====="+mVideoConfigState.resolution);
 						if("1080P".equals(mVideoConfigState.resolution)){
@@ -248,7 +252,6 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 			public void run() {
 				if(GolukApplication.getInstance().getIpcIsLogin()){
 					
-					GolukDebugUtils.e("", "--------VideoQualityActivity-----selectType："+selectType);
 					setArrayData("G1", selectType);
 					
 //					if(SensitivityType._1080h == curType){
@@ -264,6 +267,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 //						mVideoConfigState.resolution="720P";
 //						mVideoConfigState.bitrate=3072;
 //					}
+					GolukDebugUtils.e("", "======VIdeoQualityActivity=========mVideoConfigState="+mVideoConfigState.bitrate);
 					boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);
 					GolukDebugUtils.e("xuhw", "YYY==========curType=========flag="+flag);
 				}
@@ -285,52 +289,92 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
         	return super.onKeyDown(keyCode, event); 
 	}
 	
+	//为UI赋值
 	private void getArrays() {
-		String[] arrayText = getResources().getStringArray(R.array.list_quality_ui);
-		if (null != arrayText) {
-			int length = arrayText.length;
+		if (null != mArrayText) {
+			int length = mArrayText.length;
 			for (int i = 0; i < length; i++) {
 				for (int j = i; j < mText.length; j++) {
-					mText[j].setText(arrayText[i]);
+					mText[j].setText(mArrayText[i]);
 				}
 			}
 		}
 	}
-	
+	//点击选择视频质量
 	private void setArrayUI(String type) {
-		String[] arrayText = getResources().getStringArray(R.array.list_quality_ui);
-		if (null != arrayText) {
-			int length = arrayText.length;
+		if (null != mArrayText) {
+			int length = mArrayText.length;
 			for (int i = 0; i < length; i++) {
 				for (int j = i; j < mText.length; j++) {
 					mImageIcon[j].setVisibility(View.GONE);
 					mText[j].setTextColor(getResources().getColor(R.color.setting_text_color_nor));
-					if(type.equals(arrayText[i])){
+					if(type.equals(mArrayText[i])){
 						mImageIcon[j].setVisibility(View.VISIBLE);
 						mText[j].setTextColor(getResources().getColor(R.color.setting_text_color_sel));
+						selectType = mArrayText[i];
 					}
 				}
 			}
 		}
 	}
-	
+	//保存选择的视频质量类型
 	private void setArrayData(String ipcId, String type) {
-		String[] arrayText = getResources().getStringArray(R.array.list_quality_ui);
-		if (null != arrayText) {
-			int length = arrayText.length;
+		if (null != mArrayText) {
+			int length = mArrayText.length;
 			for (int i = 0; i < length; i++) {
-				if (type.equals(arrayText[i])) {
-					if ("G1".equals(ipcId)) {
-						mVideoConfigState.resolution = getResources().getStringArray(R.array.list_quality_resolution1)[i];
-						mVideoConfigState.bitrate = getResources().getIntArray(R.array.list_quality_bitrate1)[i];
-					} else {
-						mVideoConfigState.resolution = getResources().getStringArray(R.array.list_quality_resolution2)[i];
-						mVideoConfigState.bitrate = getResources().getIntArray(R.array.list_quality_bitrate2)[i];
-					}
+				if (type.equals(mArrayText[i])) {
+					mVideoConfigState.resolution = returnResolution(ipcId)[i];
+					mVideoConfigState.bitrate = Integer.parseInt(returnBitrate(ipcId)[i]);
 				}
 			}
 		}
 	}
+	//遍历分辨率，区分码率，改变UI
+	private void setData2UI(String type,VideoConfigState videoConfigState){
+		String[] resolutionArray = null;
+		String[] bitrateArray = null;
+		if(null != videoConfigState){
+			
+			resolutionArray = returnResolution(type);
+			bitrateArray = returnBitrate(type);
+			
+			if(null != resolutionArray){
+				for(int i = 0;i<resolutionArray.length;i++){
+					if(videoConfigState.resolution.equals(resolutionArray[i])){
+						if(null != bitrateArray){
+							for(int j = i;j<bitrateArray.length;j++){
+								if(String.valueOf(videoConfigState.bitrate).equals(bitrateArray[j])){
+									
+								}
+							}
+						}
+					}
+				}
+				
+			}
+		}
+	}
 	
+	// 视频分辨率
+	private String[] returnResolution(String type) {
+		String[] resolutionArray = null;
+		if("G1".equals(type)){
+			resolutionArray = getResources().getStringArray(R.array.list_quality_resolution1);
+		}else{
+			resolutionArray = getResources().getStringArray(R.array.list_quality_resolution2);
+		}
+		return resolutionArray;
+	}
+
+	// 视频质量码率
+	private String[] returnBitrate(String type) {
+		String[] bitrateArray = null;
+		if("G1".equals(type)){
+			bitrateArray = getResources().getStringArray(R.array.list_quality_bitrate1);
+		}else{
+			bitrateArray = getResources().getStringArray(R.array.list_quality_bitrate2);
+		}
+		return bitrateArray;
+	}
 	
 }
