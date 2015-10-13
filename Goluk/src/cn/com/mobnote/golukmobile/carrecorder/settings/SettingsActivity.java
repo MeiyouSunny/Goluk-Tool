@@ -82,6 +82,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private int speakerSwitch = 0;
 	/** 固件版本号 **/
 	private String ipcVersion = "";
+	/** ipc设备型号 **/
+	private String mIPCName = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		GolukDebugUtils.e("", "=========ipcVersion：" + ipcVersion);
 
 		initView();
+		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		setListener();
 
 		mCustomProgressDialog = new CustomLoadingDialog(this, null);
@@ -348,7 +351,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-			updateVideoQualityText();
+//			updateVideoQualityText();
+			setData2UI(mVideoConfigState);
 		} else {
 			mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
@@ -356,20 +360,65 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void updateVideoQualityText() {
-		if ("1080P".equals(mVideoConfigState.resolution)) {
-			if (8192 == mVideoConfigState.bitrate) {
-				mVideoText.setText("1080P高质量");
-			} else {
-				mVideoText.setText("1080P中等质量");
-			}
-		} else {
-			if (4096 == mVideoConfigState.bitrate) {
-				mVideoText.setText("720P高质量");
-			} else {
-				mVideoText.setText("720P中等质量");
+//		if ("1080P".equals(mVideoConfigState.resolution)) {
+//			if (8192 == mVideoConfigState.bitrate) {
+//				mVideoText.setText("1080P高质量");
+//			} else {
+//				mVideoText.setText("1080P中等质量");
+//			}
+//		} else {
+//			if (4096 == mVideoConfigState.bitrate) {
+//				mVideoText.setText("720P高质量");
+//			} else {
+//				mVideoText.setText("720P中等质量");
+//			}
+//		}
+	}
+	// 遍历分辨率，区分码率，改变UI
+		private void setData2UI(VideoConfigState videoConfigState) {
+			GolukDebugUtils.e("", "--------SettingsActivity------setData2UI----resolution："+videoConfigState.resolution);
+			GolukDebugUtils.e("", "--------SettingsActivity------setData2UI----bitrate："+videoConfigState.bitrate);
+			String[] mArrayText = getResources().getStringArray(R.array.list_quality_ui);
+			if (null != videoConfigState) {
+				String[] resolutionArray = returnResolution(mIPCName);
+				String[] bitrateArray = returnBitrate(mIPCName);
+				if (null != resolutionArray) {
+					for (int i = 0; i < resolutionArray.length; i++) {
+						if (videoConfigState.resolution.equals(resolutionArray[i])) {
+							if (null != bitrateArray) {
+								if (String.valueOf(videoConfigState.bitrate).equals(bitrateArray[i])) {
+									GolukDebugUtils.e("", "---------SettingsActivity-------mArrayText："+mArrayText[i]);
+									mVideoText.setText(mArrayText[i]);
+									break;
+								}
+							}
+						}
+					}
+
+				}
 			}
 		}
-	}
+		// 视频分辨率
+		private String[] returnResolution(String type) {
+			String[] resolution = null;
+			if ("G1".equals(type)) {
+				resolution = getResources().getStringArray(R.array.list_quality_resolution1);
+			} else {
+				resolution = getResources().getStringArray(R.array.list_quality_resolution2);
+			}
+			return resolution;
+		}
+
+		// 视频质量码率
+		private String[] returnBitrate(String type) {
+			String[] bitrate = null;
+			if ("G1".equals(type)) {
+				bitrate = getResources().getStringArray(R.array.list_quality_bitrate1);
+			} else {
+				bitrate = getResources().getStringArray(R.array.list_quality_bitrate2);
+			}
+			return bitrate;
+		}
 
 	@Override
 	protected void onDestroy() {

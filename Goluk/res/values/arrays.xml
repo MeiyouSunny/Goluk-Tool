@@ -125,4 +125,41 @@
         <item>8</item>
         <item>9</item>
     </string-array>
+    
+    <!-- 视频质量 -->
+    <string-array name="list_quality_ui">
+        <item>1080P高质量</item>
+        <item>1080P中等质量</item>
+        <item>720P高质量</item>
+        <item>720P中等质量</item>
+    </string-array>
+    <!-- G1分辨率 -->
+    <string-array name="list_quality_resolution1">
+        <item>1080P</item>
+        <item>1080P</item>
+        <item>720P</item>
+        <item>720P</item>
+    </string-array>
+    <!-- G2分辨率 -->
+    <string-array name="list_quality_resolution2">
+        <item>1080P</item>
+        <item>1080P</item>
+        <item>1080P</item>
+        <item>1080P</item>
+    </string-array>
+    <!-- G1码率 -->
+    <string-array name="list_quality_bitrate1">
+        <item>8192</item>
+        <item>6144</item>
+        <item>4096</item>
+        <item>3072</item>
+    </string-array>
+    <!-- G2码率 -->
+    <string-array name="list_quality_bitrate2">
+        <item>10240</item>
+        <item>8192</item>
+        <item>5120</item>
+        <item>4096</item>
+    </string-array>
+    
 </resources>
