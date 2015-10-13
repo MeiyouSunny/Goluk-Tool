@@ -94,8 +94,7 @@
         <item>1500</item>
         <item>2000</item>
     </integer-array>
-    
-    
+
     <string-array name="list_hw_live_value">
         <item>0</item>
         <item>1</item>
@@ -104,7 +103,6 @@
         <item>不启用</item>
         <item>启用</item>
     </string-array>
-
     <string-array name="list_maxsize_value_local">
         <item>0</item>
         <item>1</item>
@@ -125,7 +123,7 @@
         <item>8</item>
         <item>9</item>
     </string-array>
-    
+
     <!-- 视频质量 -->
     <string-array name="list_quality_ui">
         <item>1080P高质量</item>
@@ -144,8 +142,8 @@
     <string-array name="list_quality_resolution2">
         <item>1080P</item>
         <item>1080P</item>
-        <item>1080P</item>
-        <item>1080P</item>
+        <item>720P</item>
+        <item>720P</item>
     </string-array>
     <!-- G1码率 -->
     <string-array name="list_quality_bitrate1">
@@ -161,5 +159,5 @@
         <item>5120</item>
         <item>4096</item>
     </string-array>
-    
+
 </resources>
