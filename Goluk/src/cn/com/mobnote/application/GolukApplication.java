@@ -1119,6 +1119,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		// msg = 0 初始化消息
 		// param1 = 0 成功 | 失败
 		if (0 == param1) {
+			//保存ipc设备型号
+			try {
+				JSONObject json = new JSONObject((String)param2);
+				mIPCControlManager.mProduceName = json.getString("productname");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			// 如果在wifi连接页面,通知连接成功
 			if (mPageSource == "WiFiLinkList") {
 				((WiFiLinkListActivity) mContext).ipcLinkedCallBack();

@@ -1193,5 +1193,22 @@ public class JsonUtil {
 		}
 		return "";
 	}
+	/**
+	 * 开关机提示音、精彩视频拍摄提示音
+	 * @param speakerSwitch  开关机提示音
+	 * @param wonderfulSwitch  精彩视频拍摄提示音
+	 * @return
+	 */
+	public static String getSpeakerSwitchJson(int speakerSwitch, int wonderfulSwitch) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("SpeakerSwitch", speakerSwitch);
+			obj.put("WonderfulSwitch", wonderfulSwitch);
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
 
 }
