@@ -28,20 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
- * 1.编辑器必须显示空白处
- *
- * 2.所有代码必须使用TAB键缩进
- *
- * 3.类首字母大写,函数、变量使用驼峰式命名,常量所有字母大写
- *
- * 4.注释必须在行首写.(枚举除外)
- *
- * 5.函数使用块注释,代码逻辑使用行注释
- *
- * 6.文件头部必须写功能说明
- *
- * 7.所有代码文件头部必须包含规则说明
- *
+ * 
  * IPC设置界面
  *
  * 2015年4月6日
@@ -72,7 +59,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mSensitivityText = null;
 	/** HDR模式 **/
 	private Button mISPBtn = null;
-	/**HDR模式line**/
+	/** HDR模式line **/
 	private RelativeLayout mISPLayout = null;
 	/** HDR模式 0关闭 1打开 **/
 	private int mISPSwitch = 0;
@@ -84,6 +71,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String ipcVersion = "";
 	/** ipc设备型号 **/
 	private String mIPCName = "";
+	private String[] mResolutionArray = null;
+	private String[] mBitrateArray = null;
+	private String[] mArrayText = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +84,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		ipcVersion = GolukApplication.getInstance().mSharedPreUtil.getIPCVersion();
 		GolukDebugUtils.e("", "=========ipcVersion：" + ipcVersion);
 
-		initView();
 		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
+		initView();
 		setListener();
+
+		mArrayText = getResources().getStringArray(R.array.list_quality_ui);
+		mResolutionArray = SettingsUtil.returnResolution(this, mIPCName);
+		mBitrateArray = SettingsUtil.returnBitrate(this, mIPCName);
 
 		mCustomProgressDialog = new CustomLoadingDialog(this, null);
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
@@ -153,12 +147,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mSwitchBtn = (Button) findViewById(R.id.kgjtsy);
 		mISPLayout = (RelativeLayout) findViewById(R.id.hdr_line);
 		mISPBtn = (Button) findViewById(R.id.hdr);
-		//ipc设备型号
-		String produceName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
-		if (produceName.equals("G2")) {
-			mISPLayout.setVisibility(View.VISIBLE);
-		} else {
+		// ipc设备型号
+		if (mIPCName.equals("G1")) {
 			mISPLayout.setVisibility(View.GONE);
+		} else {
+			mISPLayout.setVisibility(View.VISIBLE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -351,74 +344,28 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-//			updateVideoQualityText();
-			setData2UI(mVideoConfigState);
+			setData2UI();
 		} else {
 			mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
 
 	}
 
-	private void updateVideoQualityText() {
-//		if ("1080P".equals(mVideoConfigState.resolution)) {
-//			if (8192 == mVideoConfigState.bitrate) {
-//				mVideoText.setText("1080P高质量");
-//			} else {
-//				mVideoText.setText("1080P中等质量");
-//			}
-//		} else {
-//			if (4096 == mVideoConfigState.bitrate) {
-//				mVideoText.setText("720P高质量");
-//			} else {
-//				mVideoText.setText("720P中等质量");
-//			}
-//		}
-	}
 	// 遍历分辨率，区分码率，改变UI
-		private void setData2UI(VideoConfigState videoConfigState) {
-			GolukDebugUtils.e("", "--------SettingsActivity------setData2UI----resolution："+videoConfigState.resolution);
-			GolukDebugUtils.e("", "--------SettingsActivity------setData2UI----bitrate："+videoConfigState.bitrate);
-			String[] mArrayText = getResources().getStringArray(R.array.list_quality_ui);
-			if (null != videoConfigState) {
-				String[] resolutionArray = returnResolution(mIPCName);
-				String[] bitrateArray = returnBitrate(mIPCName);
-				if (null != resolutionArray) {
-					for (int i = 0; i < resolutionArray.length; i++) {
-						if (videoConfigState.resolution.equals(resolutionArray[i])) {
-							if (null != bitrateArray) {
-								if (String.valueOf(videoConfigState.bitrate).equals(bitrateArray[i])) {
-									GolukDebugUtils.e("", "---------SettingsActivity-------mArrayText："+mArrayText[i]);
-									mVideoText.setText(mArrayText[i]);
-									break;
-								}
-							}
-						}
+	private void setData2UI() {
+		if (null != mVideoConfigState && null != mResolutionArray && null != mBitrateArray) {
+			for (int i = 0; i < mResolutionArray.length; i++) {
+				if (mVideoConfigState.resolution.equals(mResolutionArray[i])) {
+					if (String.valueOf(mVideoConfigState.bitrate).equals(mBitrateArray[i])) {
+						GolukDebugUtils.e("", "---------SettingsActivity-------mArrayText：" + mArrayText[i]);
+						mVideoText.setText(mArrayText[i]);
+						break;
 					}
-
 				}
 			}
-		}
-		// 视频分辨率
-		private String[] returnResolution(String type) {
-			String[] resolution = null;
-			if ("G1".equals(type)) {
-				resolution = getResources().getStringArray(R.array.list_quality_resolution1);
-			} else {
-				resolution = getResources().getStringArray(R.array.list_quality_resolution2);
-			}
-			return resolution;
-		}
 
-		// 视频质量码率
-		private String[] returnBitrate(String type) {
-			String[] bitrate = null;
-			if ("G1".equals(type)) {
-				bitrate = getResources().getStringArray(R.array.list_quality_bitrate1);
-			} else {
-				bitrate = getResources().getStringArray(R.array.list_quality_bitrate2);
-			}
-			return bitrate;
 		}
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -460,7 +407,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			} else if (msg == IPC_VDCP_Msg_GetVedioEncodeCfg) {// 获取IPC系统音视频编码配置
 				if (RESULE_SUCESS == param1) {
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String) param2);
-					updateVideoQualityText();
+					// updateVideoQualityText();
+					setData2UI();
 					if (null != mVideoConfigState) {
 						if (1 == mVideoConfigState.AudioEnabled) {
 							mAudioBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -600,7 +548,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 							speakerSwitch = 0;
 							mSwitchBtn.setBackgroundResource(R.drawable.set_close_btn);
 						}
-					} 
+					}
 					GolukUtils.showToast(this, "设置成功");
 				} else {
 					GolukUtils.showToast(this, "当前固件不支持此项设置，请升级固件后再试");
