@@ -20,8 +20,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.PushSettingActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
@@ -33,6 +31,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.entity.ExternalEventsDataInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
@@ -278,12 +277,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public void destroyLogic() {
 		if (null != mGoluk) {
-			GolukDebugUtils.e("","GolukApplication--------------------------destroy");
+			GolukDebugUtils.e("", "GolukApplication--------------------------destroy");
 			mGoluk.GolukLogicDestroy();
 			mGoluk = null;
 		}
 	}
-	
+
 	public void appFree() {
 		mIpcIp = null;
 		mContext = null;
@@ -303,11 +302,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		autoLoginStatus = 0;
 		loginoutStatus = false;
 		identifyStatus = 0;
-//		mUser = null;
-//		mLoginManage = null;
-//		mIpcUpdateManage = null;
-//		mIdentifyManage = null;
-//		mRegistAndRepwdManage = null;
+		// mUser = null;
+		// mLoginManage = null;
+		// mIpcUpdateManage = null;
+		// mIdentifyManage = null;
+		// mRegistAndRepwdManage = null;
 		mTimerManage.timerCancel();
 		isconnection = false;
 		isBackground = false;
@@ -331,7 +330,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (null != mDownLoadFileList) {
 			mDownLoadFileList.clear();
 		}
-		
+
 	}
 
 	/**
@@ -862,7 +861,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
 		GolukDebugUtils.e("", "chxy send pageNotifyCallBack--" + "type:" + type + ",success:" + success + ",param1:"
 				+ param1 + ",param2:" + param2);
-		
+
 		if (this.isExit()) {
 			return;
 		}
@@ -1313,7 +1312,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					}
 				}
 				break;
-
+			case IPC_VDCP_Msg_GetIdentity:
+				IPC_CallBack_GetIdentity(msg, param1, param2);
+				break;
 			}
 		}
 
@@ -1342,6 +1343,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1=" + param1);
 				ipcVideoDownLoadCallBack(param1, (String) param2);
 				break;
+			}
+		}
+	}
+
+	private void IPC_CallBack_GetIdentity(int msg, int param1, Object param2) {
+		if (param1 == RESULE_SUCESS) {
+			final IPCIdentityState mVersionState = IpcDataParser.parseVersionState((String) param2);
+			if (null != mVersionState && null != mIPCControlManager) {
+				mIPCControlManager.mDeviceSn = mVersionState.name;
+				mIPCControlManager.reportBindMsg();
 			}
 		}
 	}

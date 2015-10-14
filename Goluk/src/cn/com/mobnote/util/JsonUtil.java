@@ -1010,6 +1010,19 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static JSONObject getActivationTimeJson(String sn) {
+		try {
+			JSONObject rootObj = new JSONObject();
+			rootObj.put("sn", sn);
+			rootObj.put("time", CSLog.getCurrentTime());
+
+			return rootObj;
+		} catch (Exception e) {
+
+		}
+		return null;
+	}
+
 	public static String getReportJson(String key, JSONObject dataObj) {
 		try {
 			JSONObject obj = new JSONObject();
@@ -1168,7 +1181,7 @@ public class JsonUtil {
 	 */
 	public static String parseDelVideo(Object json) {
 		try {
-			JSONObject roobObj = new JSONObject((String)json);
+			JSONObject roobObj = new JSONObject((String) json);
 			boolean sucess = roobObj.getBoolean("success");
 			if (!sucess) {
 				return "1";
@@ -1182,14 +1195,14 @@ public class JsonUtil {
 
 		return "1";
 	}
-	
+
 	public static String getDelRequestJson(String vid) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("videoid", vid);
 			return obj.toString();
 		} catch (Exception e) {
-			
+
 		}
 		return "";
 	}

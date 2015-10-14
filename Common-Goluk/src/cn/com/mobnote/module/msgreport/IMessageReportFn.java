@@ -8,7 +8,8 @@ public interface IMessageReportFn {
 	public static final int REPORT_CMD_LOG_REPORT_HTTP = 1;
 	/** 实时上传，使用UDP，非可靠上传 */
 	public static final int REPORT_CMD_LOG_REPORT_REAL = 2;
-	
-	
-	public static final String KEY_WIFI_BIND="key_wifi_bind";
+
+	public static final String KEY_WIFI_BIND = "key_wifi_bind";
+	/** 绑定成功后上报设备号 */
+	public static final String KEY_ACTIVATION_TIME = "activation_time";
 }

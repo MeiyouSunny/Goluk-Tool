@@ -281,14 +281,18 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	 * ipc连接成功回调
 	 */
 	public void ipcLinkWiFiCallBack() {
-		GFileUtils
-				.writeLiveLog("WifiLinkCompleteActivity-----------ipcLinkWiFiCallBack    Bind Sucess ! Bind Sucess ! Bind Sucess! ");
-
 		collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
 
 		// 设置绑定成功
 		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_SUCESS);
 		reportLog();
+		mApp.mIPCControlManager.isNeedReportSn = true;
+		if (mApp.mIPCControlManager.mDeviceSn != null) {
+			mApp.mIPCControlManager.reportBindMsg();
+		} else {
+			// 异步获取 SN
+			mApp.mIPCControlManager.getIPCIdentity();
+		}
 
 		this.toSucessView();
 		// 保存连接数据
@@ -456,10 +460,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		}
 	}
 
-	private void wifiCallBack_sameHot() {
-
-	}
-
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
 		if (state == 0) {
 			switch (process) {
@@ -503,7 +503,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 				break;
 			case 2:
 				// 用户已经创建与配置文件相同的热点，
-				wifiCallBack_sameHot();
 				break;
 			case 3:
 				// 用户已经连接到其它wifi，按连接失败处理
