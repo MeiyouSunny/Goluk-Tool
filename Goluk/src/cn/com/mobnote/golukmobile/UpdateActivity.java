@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -122,6 +123,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private String ipc_path = "";
 
 	private boolean isExit = false;
+	/**IPC升级文件下载成功后文件路径**/
+	private String filePath = "";
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -181,7 +184,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mBtnDownload.setEnabled(false);
 				}
 			} else {
-				boolean b = mApp.mIpcUpdateManage.download(ipc_url, mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+				boolean b = mApp.mIpcUpdateManage.download(ipc_url, ipc_version);
 				if (b) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
@@ -372,8 +375,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				if (IpcUpdateManage.DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
-					boolean b = mApp.mIpcUpdateManage.download(ipc_url, IpcUpdateManage.BIN_PATH_PRE + "/"
-							+ ipc_version + ".bin");
+					boolean b = mApp.mIpcUpdateManage.download(ipc_url, ipc_version);
 					GolukDebugUtils.i("qqq", "----path------" + IpcUpdateManage.BIN_PATH_PRE + "/" + ipc_version
 							+ ".bin");
 					if (b) {
@@ -396,7 +398,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					if (version.equals(ipc_version)) {
 						GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
 					} else {
-						boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+						boolean b = mApp.mIpcUpdateManage.ipcInstall(filePath);
 					}
 				}
 			}
@@ -436,8 +438,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 			mSign = 1;
+			try {
+				JSONObject json = new JSONObject((String)param2);
+				filePath = json.getString("filepath");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			// 下载成功删除文件
-			mApp.mIpcUpdateManage.downIpcSucess();
+//			mApp.mIpcUpdateManage.downIpcSucess();
 		} else if (state == IpcUpdateManage.DOWNLOAD_STATUS_FAIL) {
 			// 下载失败
 			mApp.mLoadStatus = false;

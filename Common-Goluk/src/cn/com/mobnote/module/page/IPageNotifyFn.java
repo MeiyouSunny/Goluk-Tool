@@ -60,6 +60,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_GetPushCfg = 30;
 	
 	public static final int PageType_SetPushCfg = 31;
+	/**下载IPC文件**/
+	public static final int PageType_DownloadIPCFile = 32;
 
 	/**
 	 * 
@@ -69,6 +71,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 同步获取登录用户信息命令 */
 	public static final int PageType_GetUserInfo_Get = 0;
 	public static final int PageType_GetVersion = 1;
+	/**查询IPC升级文件的存放位置**/
+	public static final int PageType_GetIPCFile = 2;
 
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2);
 
