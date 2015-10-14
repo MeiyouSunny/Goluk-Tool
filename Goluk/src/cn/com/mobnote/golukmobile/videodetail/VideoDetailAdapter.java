@@ -604,11 +604,13 @@ public class VideoDetailAdapter extends BaseAdapter {
 		ImageView mNoData = null;
 		RelativeLayout mListLayout = null;
 		TextView mForbidComment = null;
-
+		Uri url = null;
 	}
 
 	private boolean isCallVideo = false;
-
+	
+	
+	
 	public void playVideo() {
 		if (isCallVideo) {
 			return;
@@ -622,6 +624,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		}
 		headHolder.mVideoView.setVideoURI(uri);
 		headHolder.mVideoView.requestFocus();
+		headHolder.url = uri;
 	}
 
 	/** DP */
@@ -819,6 +822,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void closeLoadingDialog() {
 		if (null != mCustomLoadingDialog) {
 			mCustomLoadingDialog.close();
+			mCustomLoadingDialog = null;
 		}
 	}
 	

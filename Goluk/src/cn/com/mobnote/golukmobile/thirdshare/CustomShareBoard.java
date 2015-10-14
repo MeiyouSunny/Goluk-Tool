@@ -304,7 +304,10 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 					notifyShareState(true);
 				} else {
 					notifyShareState(false);
-					GolukUtils.showToast(mActivity, "分享失败");
+					if(eCode != 40000){
+						GolukUtils.showToast(mActivity, "分享失败");
+					}
+					
 				}
 
 				GolukDebugUtils.e("", "jyf----thirdshare--------onComplete eCode: " + eCode + "   mCurrentShareType:"

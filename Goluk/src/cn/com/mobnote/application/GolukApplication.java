@@ -1130,6 +1130,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 			boolean isbind = preferences.getBoolean("isbind", false);
 			if (isbind) {
+				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
+				//保存ipc设备型号
+				try {
+					JSONObject json = new JSONObject((String)param2);
+					mIPCControlManager.mProduceName = json.getString("productname");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				// ipc控制初始化成功,可以看画面和拍摄8s视频
 				setIpcLoginState(true);
 				// 获取音视频配置信息

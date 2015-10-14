@@ -576,6 +576,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(mApp.mIpcUpdateManage != null){
+			mApp.mIpcUpdateManage.dimissLoadingDialog();
+		}
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
 		}

@@ -42,10 +42,13 @@ public class IPCControlManager implements IPCManagerFn {
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
 	/** Application实例,用于调用JNI的对象 */
 	private GolukApplication mApplication = null;
+	/**IPC设备型号**/
+	public String mProduceName = "";
 
 	public IPCControlManager(GolukApplication application) {
 		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
+		mProduceName = "";
 		// 注册IPC回调
 		int result = mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
 

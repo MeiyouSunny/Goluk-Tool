@@ -28,20 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
- * 1.编辑器必须显示空白处
- *
- * 2.所有代码必须使用TAB键缩进
- *
- * 3.类首字母大写,函数、变量使用驼峰式命名,常量所有字母大写
- *
- * 4.注释必须在行首写.(枚举除外)
- *
- * 5.函数使用块注释,代码逻辑使用行注释
- *
- * 6.文件头部必须写功能说明
- *
- * 7.所有代码文件头部必须包含规则说明
- *
+ * 
  * IPC设置界面
  *
  * 2015年4月6日
@@ -73,7 +60,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/** HDR模式 **/
 	private Button mISPBtn = null;
 	/**HDR模式line**/
-	private RelativeLayout mISPLayout = null;
+	private RelativeLayout mISPLayout ,mWonderfulLayout;
 	/** HDR模式 0关闭 1打开 **/
 	private int mISPSwitch = 0;
 	/** 精彩视频拍摄提示音 **/
@@ -86,6 +73,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private int speakerSwitch = 0;
 	/** 固件版本号 **/
 	private String ipcVersion = "";
+	/** ipc设备型号 **/
+	private String mIPCName = "";
+	private String[] mResolutionArray = null;
+	private String[] mBitrateArray = null;
+	private String[] mArrayText = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +88,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		ipcVersion = GolukApplication.getInstance().mSharedPreUtil.getIPCVersion();
 		GolukDebugUtils.e("", "=========ipcVersion：" + ipcVersion);
 
+		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
+		GolukDebugUtils.e("", "=========mIPCName：" + mIPCName);
 		initView();
 		setListener();
+
+		mArrayText = getResources().getStringArray(R.array.list_quality_ui);
+		mResolutionArray = SettingsUtil.returnResolution(this, mIPCName);
+		mBitrateArray = SettingsUtil.returnBitrate(this, mIPCName);
 
 		mCustomProgressDialog = new CustomLoadingDialog(this, null);
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
@@ -154,13 +152,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mSwitchBtn = (Button) findViewById(R.id.kgjtsy);
 		mISPLayout = (RelativeLayout) findViewById(R.id.hdr_line);
 		mISPBtn = (Button) findViewById(R.id.hdr);
+		mWonderfulLayout = (RelativeLayout) findViewById(R.id.jcsp_line);
 		mWonderVideoBtn = (Button) findViewById(R.id.jcsp);
-		String strArray = ipcVersion.split("_")[0];
-		GolukDebugUtils.e("", "--------strArray：" + strArray);
-		if (strArray.equals("G2")) {
-			mISPLayout.setVisibility(View.VISIBLE);
-		} else {
+		// ipc设备型号
+		if (mIPCName.equals("G1")) {
 			mISPLayout.setVisibility(View.GONE);
+			mWonderfulLayout.setVisibility(View.GONE);
+		} else {
+			mISPLayout.setVisibility(View.VISIBLE);
+			mWonderfulLayout.setVisibility(View.VISIBLE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -373,26 +373,26 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-			updateVideoQualityText();
+			setData2UI();
 		} else {
 			mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
 
 	}
 
-	private void updateVideoQualityText() {
-		if ("1080P".equals(mVideoConfigState.resolution)) {
-			if (8192 == mVideoConfigState.bitrate) {
-				mVideoText.setText("1080P高质量");
-			} else {
-				mVideoText.setText("1080P中等质量");
+	// 遍历分辨率，区分码率，改变UI
+	private void setData2UI() {
+		if (null != mVideoConfigState && null != mResolutionArray && null != mBitrateArray) {
+			for (int i = 0; i < mResolutionArray.length; i++) {
+				if (mVideoConfigState.resolution.equals(mResolutionArray[i])) {
+					if (String.valueOf(mVideoConfigState.bitrate).equals(mBitrateArray[i])) {
+						GolukDebugUtils.e("", "---------SettingsActivity-------mArrayText：" + mArrayText[i]);
+						mVideoText.setText(mArrayText[i]);
+						break;
+					}
+				}
 			}
-		} else {
-			if (4096 == mVideoConfigState.bitrate) {
-				mVideoText.setText("720P高质量");
-			} else {
-				mVideoText.setText("720P中等质量");
-			}
+
 		}
 	}
 
@@ -436,7 +436,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			} else if (msg == IPC_VDCP_Msg_GetVedioEncodeCfg) {// 获取IPC系统音视频编码配置
 				if (RESULE_SUCESS == param1) {
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String) param2);
-					updateVideoQualityText();
+					// updateVideoQualityText();
+					setData2UI();
 					if (null != mVideoConfigState) {
 						if (1 == mVideoConfigState.AudioEnabled) {
 							mAudioBtn.setBackgroundResource(R.drawable.set_open_btn);
