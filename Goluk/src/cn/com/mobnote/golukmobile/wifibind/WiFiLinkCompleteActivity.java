@@ -80,7 +80,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 	private int mState = STATE_SET_IPC_INFO;
 
-	WifiManager mWifiManager = null;
+	private WifiManager mWifiManager = null;
 
 	private int mStep = 0;
 
@@ -89,7 +89,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_link_complete2);
-		GFileUtils.writeLiveLog("WiFiLinkCompleteActivity------------onCreate-------:");
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, TAG);
@@ -393,14 +392,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 					mWac.unbind();
 				}
 				mWac = null;
-				GolukApplication.getInstance().stopDownloadList();//停止视频同步
+				GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 				Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
 				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				startActivity(it);
-				GFileUtils.writeLiveLog("WifiLinkCompleteActivity---------- Jump CarRecorderActivity----- ");
-
-				// collectLog("onClick", " Jump CarRecorderActivity----- ");
 			}
 			break;
 		}
@@ -546,12 +542,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		final String log = " type---" + type + "---state---" + state + "---process---" + process + "---message---"
 				+ message;
-
 		collectLog("wifiCallBack", log);
-
 		GolukDebugUtils.e("", log);
-
-		GFileUtils.writeLiveLog(log);
 
 		switch (type) {
 		case 3:
@@ -569,11 +561,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC == dialogType) {
 			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
-				GFileUtils
-						.writeLiveLog("WifiLinkCompleteActivity-----------dialogManagerCallBack DIALOG_TYPE_WIFIBIND_RESTART_IPC");
-
 				collectLog("dialogManagerCallBack", "DIALOG_TYPE_WIFIBIND_RESTART_IPC---clickOK");
-
 				mWac = new WifiConnectManager(mWifiManager, this);
 				mWac.autoWifiManage(WiFiInfo.IPC_SSID, WiFiInfo.IPC_PWD, WiFiInfo.MOBILE_SSID, WiFiInfo.MOBILE_PWD);
 				mStep++;
