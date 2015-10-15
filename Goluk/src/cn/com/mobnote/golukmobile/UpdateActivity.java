@@ -395,10 +395,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				} else {
 					String version = mApp.mSharedPreUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
-					if (version.equals(ipc_version)) {
-						GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
-					} else {
-						boolean b = mApp.mIpcUpdateManage.ipcInstall(filePath);
+					if(mApp.mIPCControlManager.mProduceName.equals(mApp.mIpcUpdateManage.mDownloadIPCModel)){
+						if (version.equals(ipc_version)) {
+							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
+						} else {
+							boolean b = mApp.mIpcUpdateManage.ipcInstall(filePath);
+						}
+					}else{
+						//TODO
 					}
 				}
 			}

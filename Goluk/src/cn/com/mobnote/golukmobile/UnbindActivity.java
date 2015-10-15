@@ -184,15 +184,25 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
 								if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == 100) {
-									String localFile = mApplication.mIpcUpdateManage.getLocalFile(vIpc);
-									if (null == localFile || "".equals(localFile)) {
-										boolean b = mApplication.mIpcUpdateManage.requestInfo(
-												IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-									} else {
+									//查询ipc升级文件是否存在
+									String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
+									if("".equals(ipcFile)){
 										Intent itent = new Intent(UnbindActivity.this, UpdateActivity.class);
 										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
 										startActivity(itent);
+									}else{
+										boolean b = mApplication.mIpcUpdateManage.requestInfo(
+												IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 									}
+//									String localFile = mApplication.mIpcUpdateManage.getLocalFile(vIpc);
+//									if (null == localFile || "".equals(localFile)) {
+//										boolean b = mApplication.mIpcUpdateManage.requestInfo(
+//												IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+//									} else {
+//										Intent itent = new Intent(UnbindActivity.this, UpdateActivity.class);
+//										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
+//										startActivity(itent);
+//									}
 								} else {
 									Intent it = new Intent(UnbindActivity.this, UpdateActivity.class);
 									it.putExtra(UpdateActivity.UPDATE_PROGRESS,
@@ -205,15 +215,24 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 				if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == -1) {// 下载失败/程序刚进来
 					boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 				} else {// 下载成功
-					String localFile = mApplication.mIpcUpdateManage.getLocalFile(vIpc);
-					if (null == localFile || "".equals(localFile)) {
+					String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
+					if("".equals(ipcFile)){
 						boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC,
 								vIpc);
-					} else {
+					}else{
 						Intent itUpdate = new Intent(UnbindActivity.this, UpdateActivity.class);
 						itUpdate.putExtra(UpdateActivity.UPDATE_SIGN, 1);
 						startActivity(itUpdate);
 					}
+//					String localFile = mApplication.mIpcUpdateManage.getLocalFile(vIpc);
+//					if (null == localFile || "".equals(localFile)) {
+//						boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC,
+//								vIpc);
+//					} else {
+//						Intent itUpdate = new Intent(UnbindActivity.this, UpdateActivity.class);
+//						itUpdate.putExtra(UpdateActivity.UPDATE_SIGN, 1);
+//						startActivity(itUpdate);
+//					}
 				}
 			}
 			break;

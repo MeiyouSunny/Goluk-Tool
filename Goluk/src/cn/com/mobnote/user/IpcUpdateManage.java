@@ -78,6 +78,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	private JSONArray jsonArray = null;
 	/** int state, Object param1, Object param2 **/
 	public int mState = -1;
+	/**保存下载进度**/
 	public Object mParam1 = -1;
 	private Object mParam2 = null;
 
@@ -87,6 +88,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public static final int DOWNLOAD_STATUS_SUCCESS = 1;
 	/** 下载中 **/
 	public static final int DOWNLOAD_STATUS = 2;
+	/**下载前保存一个IPC型号**/
+	public String mDownloadIPCModel = "";
 
 	public IpcUpdateManage(GolukApplication mApp) {
 		super();
@@ -305,14 +308,15 @@ public class IpcUpdateManage implements IPCManagerFn {
 						if (goluk.equals("{}")) {
 							// APP不需要升级
 							// 提示下载并升级ipc
-							final String localBinPath = this.getLocalFile(ipcInfo.version);
-							if (null == localBinPath) {
-								// 提示用户下载文件Dialog
-								ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
-							} else {
-								// 弹框提示用户安装本地的文件 (Dialog)
-								ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
-							}
+							ipcUpgradeNext(ipcInfo);
+//							final String localBinPath = this.getLocalFile(ipcInfo.version);
+//							if (null == localBinPath) {
+//								// 提示用户下载文件Dialog
+//								ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
+//							} else {
+//								// 弹框提示用户安装本地的文件 (Dialog)
+//								ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
+//							}
 						} else {
 							GolukDebugUtils.i(TAG, "--------ipcInfo.version-----" + ipcInfo.version);
 							new AlertDialog.Builder(mApp.getContext()).setTitle("升级提示")
@@ -359,7 +363,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @return
 	 */
 	public boolean download(String url, String ipcVersion) {
-		String str = JsonUtil.ipcDownLoad(url, ipcVersion, mApp.mIPCControlManager.mProduceName);
+		mDownloadIPCModel = mApp.mIPCControlManager.mProduceName;
+		String str = JsonUtil.ipcDownLoad(url, ipcVersion, mDownloadIPCModel);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_DownloadIPCFile, str);
 //		String str = JsonUtil.ipcDownLoad(url, path);
