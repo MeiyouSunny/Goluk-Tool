@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -37,8 +36,6 @@ import com.rd.car.editor.FilterVideoEditorException;
 @SuppressLint("HandlerLeak")
 public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
 	public static final int EVENT_COMM_EXIT = 0;
-	/** 视频编辑页面handler用来接收消息,更新UI */
-	public static Handler mVideoEditHandler = null;
 	/** 自定义播放器支持特效 */
 	public FilterPlaybackView mVVPlayVideo = null;
 	/** application */
@@ -218,7 +215,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			String[] strs = videopath.split("/");
 			videoName = strs[strs.length - 1];
 			videoName = videoName.replace("mp4", "jpg");
-			// TODO 分享时间
+			// 分享时间
 			GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName：" + videoName);
 			if (videoName.contains("_")) {
 				String[] videoTimeArray = videoName.split("_");
@@ -242,26 +239,19 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mPlayLayout = (RelativeLayout) findViewById(R.id.play_layout);
 		mPlayStatusImage = (ImageView) findViewById(R.id.play_image);
 		mVideoProgressBar = (ProgressBar) findViewById(R.id.video_progress_bar);
-
 		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		mPlayLayout.setOnClickListener(this);
-
 		mMiddleLayout = (FrameLayout) findViewById(R.id.shortshare_operateroot);
-
 		mShareTypeLayout = (LinearLayout) findViewById(R.id.share_type_layout);
 		mShareTypeImg = (ImageView) findViewById(R.id.share_type_img);
 		mShareSwitchTypeTv = (TextView) findViewById(R.id.share_switch_type);
-
 		mShareFilterLayout = (LinearLayout) findViewById(R.id.share_filter_layout);
 		mShareFilterImg = (ImageView) findViewById(R.id.share_filter_img);
 		mShareSwitchFilterTv = (TextView) findViewById(R.id.share_switch_filter);
-
 		mPlayImgLayout = (RelativeLayout) findViewById(R.id.edit_play_img);
-
 		mShareTypeLayout.setOnClickListener(this);
 		mShareFilterLayout.setOnClickListener(this);
-
 	}
 
 	/**
@@ -413,13 +403,20 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 		isBack = true;
 		isExit = true;
+		
 		stopProgressThread();
 		mTypeLayout.setExit();
+		mTypeLayout = null;
 		mInputLayout.setExit();
+		mInputLayout = null;
 		mCreateNewVideo.setExit();
+		mCreateNewVideo = null;
 		mUploadVideo.setExit();
+		mUploadVideo = null;
 		mShareDealTool.setExit();
+		mShareDealTool = null;
 		mFilterLayout.setExit();
+		mFilterLayout = null;
 		if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
 			// 判断是否正在上传
 			// 为了修复上传的是时返回几率崩溃控制针问题.
@@ -439,6 +436,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 					JsonUtil.getCancelJson());
 		}
+		mShareLoading = null;
+		mYouMengLayout = null;
 		finish();
 	}
 
@@ -744,5 +743,4 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareLoading.hide();
 		mShareLoading.switchState(ShareLoading.STATE_NONE);
 	}
-
 }

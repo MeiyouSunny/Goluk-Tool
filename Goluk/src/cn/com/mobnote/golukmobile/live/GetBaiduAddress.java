@@ -15,6 +15,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
 
 public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 
@@ -120,10 +121,7 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 			// 抱歉，未能找到结果
 			return;
 		}
-		final String address = result.getAddress();
-		sendCallBackData(FUN_GET_ADDRESS, address);
-
-		GolukDebugUtils.e("", "jyf----20150406----GetBaiduAddress----onGetReverseGeoCodeResult----  : " + address);
+		sendCallBackData(FUN_GET_ADDRESS, result);
 	}
 
 }
