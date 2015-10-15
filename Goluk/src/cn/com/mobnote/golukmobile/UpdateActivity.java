@@ -121,7 +121,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private String ipc_content = "";
 	private String ipc_url = "";
 	private String ipc_path = "";
-
+	/**true为已退出当前activity**/
 	private boolean isExit = false;
 	/**IPC升级文件下载成功后文件路径**/
 	private String filePath = "";
@@ -166,6 +166,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		int progressSetup = itClick.getIntExtra(UPDATE_PROGRESS, 0);
 
 		GolukDebugUtils.i("lily", "--------mSign-----" + mSign);
+		GolukDebugUtils.i("lily", "--------mApp.mLoadStatus-----" + mApp.mLoadStatus);
 		if (mSign == 0) {
 			if (mApp.mLoadStatus) {
 				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;

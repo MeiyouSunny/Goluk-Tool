@@ -198,6 +198,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 					setData2UI();
 
 				} else {
+					GolukDebugUtils.e("", "=========VideoQualityActivity=====mVideoConfigState=" + mVideoConfigState);
 					// 获取失败默认显示1080P
 					updateSensitivity(SensitivityType._1080h);
 				}

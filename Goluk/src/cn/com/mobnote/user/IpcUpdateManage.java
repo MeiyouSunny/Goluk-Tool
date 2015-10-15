@@ -303,7 +303,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 					} else {
 						/**
 						 * ipc需要升级，前提是判断app是否需要升级 app不需要升级，直接下载并升级ipc
-						 * app需要升级，设个年级app
+						 * app需要升级，先升级app
 						 */
 						if (goluk.equals("{}")) {
 							// APP不需要升级
