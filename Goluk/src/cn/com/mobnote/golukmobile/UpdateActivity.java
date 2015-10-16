@@ -123,8 +123,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private String ipc_path = "";
 	/**true为已退出当前activity**/
 	private boolean isExit = false;
-	/**IPC升级文件下载成功后文件路径**/
-	private String filePath = "";
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -398,11 +396,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				} else {
 					String version = mApp.mSharedPreUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
-					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mIpcUpdateManage.mDownloadIPCModel)){
+					GolukDebugUtils.i("lily", "-------currentdownloadmodel-----" + mApp.mIpcUpdateManage.mIpcModel + "------downloadipcmodel-----" + mApp.mSharedPreUtil.getDownloadIpcModel());
+					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mSharedPreUtil.getDownloadIpcModel())){
 						if (version.equals(ipc_version)) {
 							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
 						} else {
-							boolean b = mApp.mIpcUpdateManage.ipcInstall(filePath);
+							String file = mApp.mSharedPreUtil.getIpcFilePath();
+							boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
 						}
 					}else{
 						//TODO
@@ -447,7 +447,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mSign = 1;
 			try {
 				JSONObject json = new JSONObject((String)param2);
-				filePath = json.getString("filepath");
+				String filePath = json.getString("filepath");
+				mApp.mSharedPreUtil.saveIpcFilePath(filePath);
 				GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------filePath：" + filePath);
 			} catch (JSONException e) {
 				e.printStackTrace();

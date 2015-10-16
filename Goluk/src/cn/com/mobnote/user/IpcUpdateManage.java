@@ -368,13 +368,11 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @return
 	 */
 	public boolean download(String url, String ipcVersion) {
-		mDownloadIPCModel = mIpcModel;
-		String str = JsonUtil.ipcDownLoad(url, ipcVersion, mDownloadIPCModel);
+//		mDownloadIPCModel = mIpcModel;
+		mApp.mSharedPreUtil.saveDownloadIpcModel(mIpcModel);
+		String str = JsonUtil.ipcDownLoad(url, ipcVersion, mIpcModel);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_DownloadIPCFile, str);
-//		String str = JsonUtil.ipcDownLoad(url, path);
-//		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-//				IPageNotifyFn.PageType_CommDownloadFile, str);
 	}
 
 	/**
