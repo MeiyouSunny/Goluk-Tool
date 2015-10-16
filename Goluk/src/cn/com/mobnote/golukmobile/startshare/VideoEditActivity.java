@@ -668,8 +668,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String desc = mTypeLayout.getCurrentDesc();
 		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
 		final String t_thumbPath = mUploadVideo.getThumbPath();
+		final String t_location = mTypeLayout.getCurrentLocation();
 		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,
-				videoCreateTime);
+				videoCreateTime, t_location);
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);

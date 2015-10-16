@@ -246,6 +246,13 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			break;
 		}
 	}
+	
+	public String getCurrentLocation() {
+		if (LOCATION_STATE_SUCCESS == this.mLocationState) {
+			return this.mCurrentAddress;
+		}
+		return "";
+	}
 
 	private void showDealDialog() {
 		dissmissDialog();
@@ -326,8 +333,11 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			String city = addressDetail.city;
 			// 区，县
 			String district = addressDetail.district;
-			mCurrentAddress = city + "." + district;
+			mCurrentAddress = city + "·" + district;
 			mLocationState = LOCATION_STATE_SUCCESS;
+			refreshLocationUI();
+		} else {
+			mLocationState = LOCATION_STATE_FAILED;
 			refreshLocationUI();
 		}
 	}
