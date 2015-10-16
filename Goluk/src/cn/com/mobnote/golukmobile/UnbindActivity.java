@@ -56,7 +56,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		mApplication = (GolukApplication) getApplication();
 
 		setContentView(R.layout.unbind_layout);
-		initView();
+		initView();     
 
 	}
 
