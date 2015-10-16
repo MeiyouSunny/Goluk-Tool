@@ -953,7 +953,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
 		// ipc升级文件下载
-		case PageType_CommDownloadFile:
+//		case PageType_CommDownloadFile:
+//			mIpcUpdateManage.downloadCallback(success, param1, param2);
+//			break;
+		case PageType_DownloadIPCFile:
 			mIpcUpdateManage.downloadCallback(success, param1, param2);
 			break;
 		// 意见反馈
@@ -1135,6 +1138,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				try {
 					JSONObject json = new JSONObject((String)param2);
 					mIPCControlManager.mProduceName = json.getString("productname");
+					mSharedPreUtil.saveIpcModel(mIPCControlManager.mProduceName);
+					GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + mSharedPreUtil.getIpcModel());
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

@@ -165,8 +165,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		Intent itClick = getIntent();
 		int progressSetup = itClick.getIntExtra(UPDATE_PROGRESS, 0);
 
-		GolukDebugUtils.i("lily", "--------mSign-----" + mSign);
-		GolukDebugUtils.i("lily", "--------mApp.mLoadStatus-----" + mApp.mLoadStatus);
+		GolukDebugUtils.i("", "----UpdateActivity----mSign-----" + mSign);
+		GolukDebugUtils.i("", "----UpdateActivity----mApp.mLoadStatus-----" + mApp.mLoadStatus);
+		GolukDebugUtils.i("", "----UpdateActivity----progressSetup-----" + progressSetup);
 		if (mSign == 0) {
 			if (mApp.mLoadStatus) {
 				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
@@ -186,6 +187,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				}
 			} else {
 				boolean b = mApp.mIpcUpdateManage.download(ipc_url, ipc_version);
+				GolukDebugUtils.i("", "----UpdateActivity----download-----b：" + b);
 				if (b) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
@@ -396,7 +398,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				} else {
 					String version = mApp.mSharedPreUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
-					if(mApp.mIPCControlManager.mProduceName.equals(mApp.mIpcUpdateManage.mDownloadIPCModel)){
+					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mIpcUpdateManage.mDownloadIPCModel)){
 						if (version.equals(ipc_version)) {
 							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
 						} else {
@@ -422,7 +424,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 * @param param2
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
-		GolukDebugUtils.i("lily", "------------downloadCallback-----------" + state);
+		GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------state：" + state+"----param1："+param1);
 		mApp.mIpcUpdateManage.dimissLoadingDialog();
 		downloadStatus = state;
 		if (state == IpcUpdateManage.DOWNLOAD_STATUS) {
@@ -446,6 +448,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			try {
 				JSONObject json = new JSONObject((String)param2);
 				filePath = json.getString("filepath");
+				GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------filePath：" + filePath);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

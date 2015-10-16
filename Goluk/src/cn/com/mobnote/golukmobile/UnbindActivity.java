@@ -186,7 +186,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 								if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == 100) {
 									//查询ipc升级文件是否存在
 									String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
-									if("".equals(ipcFile)){
+									if(!"".equals(ipcFile) && null != ipcFile){
 										Intent itent = new Intent(UnbindActivity.this, UpdateActivity.class);
 										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
 										startActivity(itent);
@@ -216,7 +216,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 					boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 				} else {// 下载成功
 					String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
-					if("".equals(ipcFile)){
+					if(!"".equals(ipcFile) && null != ipcFile){
 						boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC,
 								vIpc);
 					}else{

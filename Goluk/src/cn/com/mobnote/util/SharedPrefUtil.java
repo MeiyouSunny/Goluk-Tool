@@ -66,6 +66,8 @@ public class SharedPrefUtil {
 	public static final String PROPERTY_SAVE_IPC_PASSWORD = "property_ipc_password";
 	/** 信鸽的tokenid */
 	public static final String PROPERTY_SAVE_XG_TOKEN_ID = "property_xg_tokenid";
+	/** ipc密码 **/
+	public static final String PROPERTY_SAVE_IPC_MODEL = "property_ipc_model";
 
 	private SharedPreferences preference = null;
 
@@ -452,6 +454,19 @@ public class SharedPrefUtil {
 
 	public String getIpcPwd() {
 		return preference.getString(PROPERTY_SAVE_IPC_PASSWORD, "");
+	}
+	/**
+	 * 保存ipcModel
+	 * @param ipcModel
+	 */
+	public void saveIpcModel(String ipcModel) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_MODEL, ipcModel).commit();
+	}
+	/**
+	 * 获取ipcModel
+	 */
+	public String getIpcModel() {
+		return preference.getString(PROPERTY_SAVE_IPC_MODEL, "");
 	}
 
 }
