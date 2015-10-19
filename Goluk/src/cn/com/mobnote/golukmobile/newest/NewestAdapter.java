@@ -27,7 +27,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -51,6 +50,7 @@ public class NewestAdapter extends BaseAdapter {
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
 	private boolean clickLock = false;
+	private RelativeLayout mHeadView;
 
 	public NewestAdapter(Context context) {
 		mContext = context;
@@ -159,6 +159,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 		holder.time = (TextView) convertView.findViewById(R.id.time);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
+		holder.locationTv = (TextView) convertView.findViewById(R.id.list_item_location);
 
 		holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 		holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
@@ -238,14 +239,17 @@ public class NewestAdapter extends BaseAdapter {
 		if (index < 0 || index >= mDataList.size()) {
 			return;
 		}
-
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 		loadImage(holder.imageLayout, mVideoSquareInfo.mVideoEntity.picture);
-
 		showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
-
 		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.time.setText(GolukUtils.formatTimeNew(mVideoSquareInfo.mVideoEntity.sharingtime));
+		final String location = mVideoSquareInfo.mVideoEntity.location;
+		if (null == location || "".equals(location)) {
+			holder.locationTv.setVisibility(View.GONE);
+		} else {
+			holder.locationTv.setText(location);
+		}
 
 		if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 			holder.zanText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
@@ -254,7 +258,6 @@ public class NewestAdapter extends BaseAdapter {
 			holder.zanText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
 		}
-
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.praisenumber)) {
 			holder.zText.setText("");
 		} else {
@@ -366,8 +369,6 @@ public class NewestAdapter extends BaseAdapter {
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-
-	private RelativeLayout mHeadView;
 
 	private View getHeadView() {
 		int imagewidth = (int) ((width - 10 * density) / 2);
@@ -494,6 +495,7 @@ public class NewestAdapter extends BaseAdapter {
 		TextView nikename;
 		TextView time;
 		ImageView function;
+		TextView locationTv;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;

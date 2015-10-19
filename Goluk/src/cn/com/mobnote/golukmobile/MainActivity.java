@@ -70,6 +70,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -898,7 +899,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			return;
 		}
 
-		final String address = (String) obj;
+		final String address = ((ReverseGeoCodeResult) obj).getAddress();
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		if (null != CarRecorderActivity.mHandler) {
