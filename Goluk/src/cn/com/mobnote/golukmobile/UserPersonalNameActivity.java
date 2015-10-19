@@ -1,5 +1,9 @@
 package cn.com.mobnote.golukmobile;
 
+import java.net.URLEncoder;
+
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,7 +19,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -26,13 +36,16 @@ import cn.com.tiros.debug.GolukDebugUtils;
  */
 public class UserPersonalNameActivity extends BaseActivity implements OnClickListener {
 
+	/** application **/
+	private GolukApplication mApplication = null;
 	/** title **/
 	private ImageButton btnBack;
 	private TextView mTextTitle, mTextOk;
 	/** body **/
 	private EditText mEditName;
 	private ImageView mImageNameRight;
-	private String nameText;
+	private String mNameText;
+	private String mNameNewText;
 	/** 文字字数提示 **/
 	private TextView mTextCount = null;
 	private TextView mTextCountAll = null;
@@ -41,24 +54,52 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 	/** 输入超出的字数 **/
 	private int number = 0;
 
+	// 保存数据的loading
+	private CustomLoadingDialog mCustomProgressDialog = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_personal_edit_name);
+		// 获得GolukApplication对象
+		mApplication = (GolukApplication) getApplication();
+		/**
+		 * 获取从编辑界面传来的姓名
+		 */
 
+		if (savedInstanceState == null) {
+			Intent it = getIntent();
+			mNameText = it.getStringExtra("intentNameText");
+			GolukDebugUtils.i("lily", "----------UserPersonalNameActivity---------name=====" + mNameText);
+		} else {
+			mNameText = savedInstanceState.getString("intentNameText");
+		}
 		initView();
 		// title
-		mTextTitle.setText("编辑昵称");
-		mTextOk.setText("确认  ");
+		mTextTitle.setText(R.string.user_personal_name_edit);
+		mTextOk.setText(R.string.user_personal_title_right);
 		//
 		int count = mEditName.getText().toString().length();
 		mTextCount.setText("" + (MAX_COUNT - count));
 		mTextCountAll.setText("/" + MAX_COUNT + "）");
 
 	}
-	
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mApplication.setContext(this, "UserPersonalName");
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		outState.putString("intentNameText", mNameText);
+		super.onSaveInstanceState(outState);
+	}
+
 	// 初始化控件
 	public void initView() {
 		btnBack = (ImageButton) findViewById(R.id.back_btn);
@@ -68,18 +109,10 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mImageNameRight = (ImageView) findViewById(R.id.user_personal_name_image);
 		mTextCount = (TextView) findViewById(R.id.number_count);
 		mTextCountAll = (TextView) findViewById(R.id.number_count_all);
+		mCustomProgressDialog = new CustomLoadingDialog(this, getString(R.string.user_personal_saving));
 
-		/**
-		 * 获取从编辑界面传来的姓名
-		 */
-		Intent it = getIntent();
-		if (null != it.getStringExtra("intentNameText")) {
-			Bundle bundle = it.getExtras();
-			nameText = bundle.getString("intentNameText");
-			GolukDebugUtils.i("lily", "----------UserPersonalNameActivity---------name=====" + nameText);
-		}
-		mEditName.setText(nameText);
-		mEditName.setSelection(nameText.length());
+		mEditName.setText(mNameText);
+		mEditName.setSelection(mNameText.length());
 
 		mEditName.setOnKeyListener(new OnKeyListener() {
 			
@@ -116,19 +149,21 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			if (number < 0) {
 				UserUtils.showDialog(this, "请输入10个字符以内的有效昵称");
 			} else {
-				String name = mEditName.getText().toString();
+				String name = mEditName.getText().toString().trim();
 				GolukDebugUtils.i("lily", "------UserPersonalNameActivity--修改昵称------" + name);
-				if (name.trim().isEmpty()) {
+				if (name.isEmpty()) {
 					UserUtils.showDialog(this, "数据修改失败，昵称不能为空");
 				} else {
-					UserPersonalInfoActivity.clickBtn = true;
 					UserUtils.hideSoftMethod(this);
-					Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString("itName", name);
-					it.putExtras(bundle);
-					this.setResult(1, it);
-					this.finish();
+					if (!name.equalsIgnoreCase(mNameText)) {
+						saveName(name);
+					} else {
+
+						Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
+						it.putExtra("itName", name);
+						this.setResult(1, it);
+						this.finish();
+					}
 				}
 			}
 			break;
@@ -171,4 +206,42 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		}
 	};
 
+	/**
+	 * 修改用户名称
+	 */
+	private void saveName(String name) {
+
+		if (!UserUtils.isNetDeviceAvailable(this)) {
+			GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+		} else {
+			// {NickName：“昵称”}
+			mNameNewText = name;
+			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+						IPageNotifyFn.PageType_ModifyNickName, JsonUtil.getUserNickNameJson(name));
+			if (b) {
+					// 保存中
+				mCustomProgressDialog.show();
+			}
+		}
+	}
+
+	/**
+	 * 修改用户名回调
+	 */
+
+	public void saveNameCallBack(int success, Object obj) {
+		GolukDebugUtils.e("", "修改用户名称回调---saveNameCallBack---" + success + "---" + obj);
+		if (mCustomProgressDialog.isShowing()) {
+			mCustomProgressDialog.close();
+		}
+		if (1 == success) {
+
+			Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
+			it.putExtra("itName", mNameNewText);
+			this.setResult(1, it);
+			this.finish();
+		} else {
+			GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+		}
+	}
 }

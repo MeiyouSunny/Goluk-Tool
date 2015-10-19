@@ -1048,6 +1048,32 @@ public class JsonUtil {
 		return "";
 	}
 
+	public static String getUserNickNameJson(String nickName) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("nickname", nickName);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static String getUserSignJson(String sign) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("desc", sign);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
 	public static String getNetStateJson(boolean isConn) {
 		try {
 			JSONObject obj = new JSONObject();

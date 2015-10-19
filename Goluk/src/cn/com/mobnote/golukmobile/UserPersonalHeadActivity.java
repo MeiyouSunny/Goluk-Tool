@@ -189,7 +189,6 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 				break;
 		// 右边保存
 		case R.id.user_title_right:
-			UserPersonalInfoActivity.clickBtn = true;
 			Intent itHead = new Intent(UserPersonalHeadActivity.this,UserPersonalInfoActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putString("intentSevenHead", imageIndex);
