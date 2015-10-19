@@ -361,5 +361,9 @@
     <string name="dialog_str_del">删除这个视频</string>
     <string name="dialog_str_tuijian">推荐这个视频</string>
     <string name="dialog_str_cancel">取消</string>
+    
+    <string name="str_usercenter_praise">赞</string>
+    <string name="str_usercenter_comment">评论</string>
+    <string name="str_usercenter_share">分享</string>
 
 </resources>

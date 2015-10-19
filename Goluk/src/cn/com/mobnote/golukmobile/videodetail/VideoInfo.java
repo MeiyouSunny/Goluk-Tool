@@ -20,4 +20,6 @@ public class VideoInfo {
 	public String reason;
 	public VideoCommentInfo comment;
 	public String picture_thmb;
+	/** 地理位置 */
+	public String mLocation;
 }

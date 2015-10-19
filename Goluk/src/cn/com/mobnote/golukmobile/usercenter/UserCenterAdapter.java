@@ -76,8 +76,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 	private PraiseInfoGroup praisgroupData = null; // 被点赞信息数据
 	private UCUserInfo userinfo; // 个人用户信息
 
-	private SharePlatformUtil sharePlatform;
-
 	private int width = 0;
 
 	static final int ViewType_ShareVideoList = 0; // 分享视频列表
@@ -103,7 +101,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 		praisgroupData = null;
 		mUserCenterInterface = iUser;
 		uca = (UserCenterActivity) mContext;
-		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		GolukApplication.getInstance().getVideoSquareManager()
 				.addVideoSquareManagerListener("videosharehotlist", this);
@@ -223,13 +220,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 							.findViewById(R.id.praiselayout);
 					holder.usercenterlyout = (LinearLayout) convertView
 							.findViewById(R.id.user_center_lyout);
-					
 					holder.sharebtn = (ImageView) convertView.findViewById(R.id.title_share);
-					
-
-//					holder.userinfoarrow = (ImageView) convertView
-//							.findViewById(R.id.userinfo_arrow);
-					
 					convertView.setTag(holder);
 				} else {
 					holder = (UserViewHolder) convertView.getTag();
@@ -241,7 +232,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 					holder.headImg.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View arg0) {
-									// TODO Auto-generated method stub
 									// 跳到个人中心编辑页面
 									Intent it = new Intent(mContext,
 											UserPersonalInfoActivity.class);
@@ -251,7 +241,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 					holder.usercenterlyout.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View arg0) {
-							// TODO Auto-generated method stub
 							Intent it = new Intent(mContext,
 									UserPersonalInfoActivity.class);
 							mContext.startActivity(it);
@@ -259,7 +248,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 					});
 				} else {
 					holder.dz_txt.setText("赞Ta的人");
-					//holder.userinfoarrow.setVisibility(View.INVISIBLE);
 				}
 				holder.headImg.setBackgroundResource(ILive.mBigHeadImg[Integer
 						.valueOf(userinfo.headportrait)]);
@@ -304,7 +292,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 					
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						uca.showProgressDialog();
 						boolean flog = GolukApplication.getInstance()
 								.getVideoSquareManager().getUserCenterShareUrl(userinfo.uid);
@@ -336,8 +323,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
-
 						if (ViewType_ShareVideoList != currentViewType) {
 							currentViewType = ViewType_ShareVideoList;
 							notifyDataSetChanged();
@@ -349,7 +334,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						if (ViewType_PraiseUserList != currentViewType) {
 							currentViewType = ViewType_PraiseUserList;
 							notifyDataSetChanged();
@@ -377,6 +361,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.findViewById(R.id.headimg);
 				holder.nikename = (TextView) convertView
 						.findViewById(R.id.nikename);
+				holder.location = (TextView) convertView.findViewById(R.id.uc_location);
 				
 				holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView
@@ -427,29 +412,21 @@ public class UserCenterAdapter extends BaseAdapter implements
 						.findViewById(R.id.isopen);
 
 				SimpleDraweeView view = new SimpleDraweeView(mContext);
-				GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(
-						mContext.getResources());
+				GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
 				GenericDraweeHierarchy hierarchy = builder
 						.setFadeDuration(300)
-						.setPlaceholderImage(
-								mContext.getResources().getDrawable(
-										R.drawable.tacitly_pic), ScaleType.FIT_XY)
-						.setFailureImage(
-								mContext.getResources().getDrawable(
-										R.drawable.tacitly_pic), ScaleType.FIT_XY)
+						.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
+								ScaleType.FIT_XY)
+						.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
 						.setActualImageScaleType(ScaleType.FIT_XY).build();
 				view.setHierarchy(hierarchy);
 
 				int height = (int) ((float) width / 1.77f);
-				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(
-						width, height);
-				mPlayerLayoutParams.addRule(RelativeLayout.BELOW,
-						R.id.headlayout);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
+				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
-				RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
-						width, height);
-				mPreLoadingParams.addRule(RelativeLayout.CENTER_VERTICAL,
-						RelativeLayout.TRUE);
+				RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
+				mPreLoadingParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
 				holder.imageLayout.addView(view, mPreLoadingParams);
 				holder.mSimpleDraweeView = view;
 
@@ -475,9 +452,15 @@ public class UserCenterAdapter extends BaseAdapter implements
 					.valueOf(clusterInfo.mUserEntity.headportrait)]);
 
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
-			holder.time
-					.setText(GolukUtils
-							.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
+			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
+			// 设置显示 视频位置信息
+			final String location = clusterInfo.mVideoEntity.location;
+			if (null == location || "".equals(location)) {
+				holder.location.setVisibility(View.GONE);
+			} else {
+				holder.location.setText(location);
+			}
+			
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan
 					.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
@@ -689,7 +672,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 							@Override
 							public void onClick(View v) {
-								// TODO Auto-generated method stub
 								if (mUserCenterInterface != null) {
 									mUserCenterInterface
 											.OnRefrushMainPageData();
@@ -780,29 +762,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 				.addVideoSquareManagerListener("videosharehotlist", this);
 	}
 
-	// /**
-	// * 点赞
-	// *
-	// * @Title: setLikePress
-	// * @Description: TODO
-	// * @param clusterInfo
-	// * void
-	// * @author 曾浩
-	// * @throws
-	// */
-	// public void setLikePress(ClusterInfo clusterInfo) {
-	// for (int i = 0; i < this.videogroupdata.videolist.size(); i++) {
-	// ClusterInfo cl = this.videogroupdata.videolist.get(i);
-	// if (cl.videoid.equals(clusterInfo.videoid)) {
-	// this.videogroupdata.videolist.set(i, clusterInfo);
-	// break;
-	// }
-	// }
-	//
-	// this.notifyDataSetChanged();
-	//
-	// }
-
 	@SuppressLint("SimpleDateFormat")
 	public String formatTime(String date) {
 		String time = "";
@@ -851,7 +810,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 		mPreLoadingParams.addRule(RelativeLayout.CENTER_VERTICAL,
 				RelativeLayout.TRUE);
 		layout.addView(view, mPreLoadingParams);
-		//
 	}
 
 	/**
@@ -894,7 +852,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 		LinearLayout usercenterlyout;
 		
 		ImageView sharebtn;
-		//ImageView userinfoarrow;
 	}
 
 	public static class PraiseViewHolder {
@@ -902,7 +859,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 		ImageView headimg;
 		TextView username;
 		TextView desc;
-		// ImageView videoPic;
 		LinearLayout userinfo;
 		RelativeLayout videoPicLayout;
 	}
@@ -918,6 +874,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 		RelativeLayout imageLayout;
 		ImageView headimg;
 		TextView nikename;
+		TextView location;
 		TextView time;
 		ImageView function;
 		SimpleDraweeView mSimpleDraweeView;

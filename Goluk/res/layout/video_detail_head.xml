@@ -6,9 +6,12 @@
     android:orientation="vertical" >
 
     <!-- 用户信息 -->
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp" >
+
+        <!-- 头像 -->
 
         <ImageView
             android:id="@+id/user_head"
@@ -17,13 +20,41 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:background="@drawable/my_head_moren7"
+            android:contentDescription="@string/imgdes"
             android:scaleType="fitXY" />
+
+        <!-- 围观 -->
+
+        <LinearLayout
+            android:id="@+id/videodetail_look"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp" >
+
+            <TextView
+                android:id="@+id/video_detail_count_look"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/live_time_desc"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="围观"
+                android:textColor="@color/live_time_desc"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/videodetail_look"
             android:layout_toRightOf="@+id/user_head"
             android:gravity="center_vertical"
             android:orientation="vertical" >
@@ -39,40 +70,34 @@
                 android:textColor="#1163a2"
                 android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/user_time"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="03-19  13:53"
-                android:textColor="#888888"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp" >
+                <TextView
+                    android:id="@+id/user_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="03-19  13:53"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/video_detail_count_look"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/live_time_desc"
-                android:text="0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/live_time_desc"
-                android:text="围观" />
+                <TextView
+                    android:id="@+id/videodetail_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 
     <!-- 视频区域 -->
+
     <RelativeLayout
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
@@ -97,6 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/imgdes"
             android:src="@drawable/btn_player_play"
             android:visibility="gone" />
 
@@ -133,7 +159,8 @@
                 android:id="@+id/mLoading"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:contentDescription="@string/imgdes" />
 
             <TextView
                 android:id="@+id/mLoadingText"
@@ -148,47 +175,51 @@
     </RelativeLayout>
 
     <!-- 描述 -->
-    <LinearLayout 
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="8dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-        
-        <TextView 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingTop="8dp" >
+
+        <TextView
             android:id="@+id/video_detail_describe"
-            android:textSize="12sp"
-            android:textColor="@color/live_time_desc"
-            android:text="跟朋友一起探寻古格王朝遗址"/>
-        
-        <RelativeLayout 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp">
-            <TextView 
+            android:text="跟朋友一起探寻古格王朝遗址"
+            android:textColor="@color/live_time_desc"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp" >
+
+            <TextView
                 android:id="@+id/video_detail_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:textSize="12sp"
-            	android:textColor="@color/live_time_desc"/>
-            <TextView 
+                android:textColor="@color/live_time_desc"
+                android:textSize="12sp" />
+
+            <TextView
                 android:id="@+id/video_detail_link"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="2dp"
+                android:layout_alignParentRight="true"
                 android:paddingBottom="2dp"
                 android:paddingLeft="5dp"
-                android:layout_alignParentRight="true"
-                android:textSize="12sp"
-            	android:textColor="@color/name_color" />
+                android:paddingTop="2dp"
+                android:textColor="@color/name_color"
+                android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>
-    
+
     <!-- 操作 -->
+
     <RelativeLayout
         android:id="@+id/functionLayouyt"
         android:layout_width="match_parent"
@@ -220,7 +251,7 @@
                 android:text="赞"
                 android:textColor="#888888"
                 android:textSize="12sp" />
-            
+
             <TextView
                 android:id="@+id/zanText"
                 android:layout_width="wrap_content"
@@ -254,7 +285,7 @@
                 android:textColor="#888888"
                 android:textSize="12sp" />
         </LinearLayout>
-        
+
         <LinearLayout
             android:id="@+id/commentLayout"
             android:layout_width="wrap_content"
@@ -276,7 +307,7 @@
                 android:text="评论"
                 android:textColor="#888888"
                 android:textSize="12sp" />
-            
+
             <TextView
                 android:id="@+id/commentText"
                 android:layout_width="wrap_content"
@@ -287,13 +318,14 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
-    
+
     <ImageView
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="#e5e5e5" />
+        android:background="#e5e5e5"
+        android:contentDescription="@string/imgdes" />
 
 </LinearLayout>
