@@ -396,17 +396,17 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				} else {
 					String version = mApp.mSharedPreUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
-					GolukDebugUtils.i("lily", "-------currentdownloadmodel-----" + mApp.mIpcUpdateManage.mIpcModel + "------downloadipcmodel-----" + mApp.mSharedPreUtil.getDownloadIpcModel());
-					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mSharedPreUtil.getDownloadIpcModel())){
+//					GolukDebugUtils.i("lily", "-------currentdownloadmodel-----" + mApp.mIpcUpdateManage.mIpcModel + "------downloadipcmodel-----" + mApp.mSharedPreUtil.getDownloadIpcModel());
+//					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mSharedPreUtil.getDownloadIpcModel())){
 						if (version.equals(ipc_version)) {
 							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
 						} else {
-							String file = mApp.mSharedPreUtil.getIpcFilePath();
+							String file = mApp.mIpcUpdateManage.isHasIPCFile(ipc_version);
 							boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
 						}
-					}else{
+//					}else{
 						//TODO
-					}
+//					}
 				}
 			}
 			break;
@@ -448,7 +448,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			try {
 				JSONObject json = new JSONObject((String)param2);
 				String filePath = json.getString("filepath");
-				mApp.mSharedPreUtil.saveIpcFilePath(filePath);
 				GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------filePath：" + filePath);
 			} catch (JSONException e) {
 				e.printStackTrace();

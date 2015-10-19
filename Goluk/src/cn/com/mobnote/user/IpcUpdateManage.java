@@ -115,7 +115,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 				return false;
 			}
 			this.cancelHttpRequest();
-			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc,mIpcModel);
+			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc,mApp.mSharedPreUtil.getIpcModel());
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_CheckUpgrade, ipcString);
 			GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");

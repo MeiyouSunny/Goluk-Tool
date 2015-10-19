@@ -485,18 +485,5 @@ public class SharedPrefUtil {
 	public String getDownloadIpcModel() {
 		return preference.getString(PROPERTY_SAVE_IPC_DOWNLOAD_MODEL, "");
 	}
-	/**
-	 * 保存ipc升级路径
-	 * @param ipcModel
-	 */
-	public void saveIpcFilePath(String ipcFilePath) {
-		preference.edit().putString(PROPERTY_SAVE_IPC_FILE_PATH, ipcFilePath).commit();
-	}
-	/**
-	 * 获取ipcModel
-	 */
-	public String getIpcFilePath() {
-		return preference.getString(PROPERTY_SAVE_IPC_FILE_PATH, "");
-	}
 
 }
