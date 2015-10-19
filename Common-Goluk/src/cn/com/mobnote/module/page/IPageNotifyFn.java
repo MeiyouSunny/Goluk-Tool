@@ -47,7 +47,6 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 停止观看别人直播 */
 	public static int PageType_PlayStop = 21;
 
-	public static int PageType_ModifyUserInfo = 24;
 	/** 上传视频第一帧图片 */
 	public static final int PageType_LiveUploadPic = 26;
 	/** 下载ipc文件 **/
@@ -64,6 +63,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 上传用户头像 **/
 	public static final int PageType_ModifyHeadPic = 35;
 
+	public static final int PageType_ModifyNickName = 33;
+	
+	public static final int PageType_ModifySignature = 34;
 	/**
 	 * 
 	 * 以下为同步获取信息标识

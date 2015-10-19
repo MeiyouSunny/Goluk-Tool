@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -35,7 +34,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
 import com.lidroid.xutils.bitmap.core.BitmapSize;
 
-@SuppressLint("InflateParams")
 public class NewestAdapter extends BaseAdapter {
 	private Context mContext = null;
 	private NewestListHeadDataInfo mHeadDataInfo = null;
@@ -375,7 +373,6 @@ public class NewestAdapter extends BaseAdapter {
 		int imageheight = (int) (imagewidth * 0.56);
 		if (null == mHeadView) {
 			mHeadView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
-			// }
 			RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
 			RelativeLayout liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
 			liveLayout.setOnClickListener(new ClickLiveListener(mContext));
@@ -408,7 +405,6 @@ public class NewestAdapter extends BaseAdapter {
 					mLookLayout.setVisibility(View.VISIBLE);
 					mLookNum.setText(mLiveInfo.number);
 				}
-
 			} else {
 				liveLayout.setVisibility(View.GONE);
 			}

@@ -29,7 +29,7 @@
             android:layout_below="@id/user_personal_solid_1"
             android:background="@color/white"
             android:gravity="top|left"
-            android:hint="介绍一下自己吧！"
+            android:hint="@string/user_personal_introduce_self"
             android:paddingLeft="20dp"
             android:paddingTop="8dp"
             android:textColor="@color/user_personal_black"
