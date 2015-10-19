@@ -344,6 +344,9 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+		
+		GolukDebugUtils.e("", "NewList----------------------------param2: " + (String)param2);
+		
 		if (event == VSquare_Req_List_Catlog) {
 			headLoading = false;
 			if (RESULE_SUCESS == msg) {
@@ -478,6 +481,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	}
 
 	public void onPause() {
+		GolukDebugUtils.e("", "NewList----------------------------onPause: ");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
 			mVideoSquareManager.removeVideoSquareManagerListener("NewestListView");
