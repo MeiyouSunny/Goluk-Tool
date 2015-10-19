@@ -21,6 +21,7 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.ClipImageView;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SettingImageView;
+import cn.com.tiros.api.FileUtils;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -49,6 +50,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 
 	private static final String headCachePatch = APP_FOLDER
 			+ "/goluk/head_cache/";
+	
+	private String cachePath = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +129,9 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 		System.out.println("imagename" + picname);
 
 		this.makeRootDirectory(headCachePatch);
-
-		File f = new File(headCachePatch + picname);
+		cachePath = headCachePatch + picname;
+		
+		File f = new File(cachePath);
 		if (f.exists()) {
 			f.delete();
 		}
@@ -140,7 +144,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 
 			requestStr = new JSONObject();
 			requestStr.put("PicMD5", md5key);
-			requestStr.put("PicPath", "fs1:/head_cache/" + picname);
+			requestStr.put("PicPath", FileUtils.javaToLibPath(cachePath));
 			requestStr.put("channel", "2");
 
 		} catch (FileNotFoundException e) {
@@ -219,13 +223,21 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 							String rst = data.getString("result");
 							//图片上传成功
 							if("0".equals(rst)){
+								if(cachePath != null && !"".equals(cachePath)){
+									File  file = new File(cachePath);
+									if(file.exists()){
+										file.delete();
+									}
+									cachePath = "";
+								}
+								
 								String path = data.getString("customavatar");
 								GolukUtils.showToast(ImageClipActivity.this, "图片上传成功");
 								
 								Intent it = new Intent(ImageClipActivity.this,
 										UserPersonalInfoActivity.class);
 								it.putExtra("imagepath", path);
-								this.setResult(7000, it);
+								this.setResult(RESULT_OK, it);
 								this.finish();
 							}
 							
