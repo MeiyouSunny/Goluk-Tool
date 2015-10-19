@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
@@ -11,12 +10,19 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.SettingImageView;
 import cn.com.tiros.debug.GolukDebugUtils;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,9 +37,10 @@ import android.widget.TextView;
  * 个人资料
  * 
  * @author mobnote
- *
+ * 
  */
-public class UserPersonalInfoActivity extends BaseActivity implements OnClickListener{
+public class UserPersonalInfoActivity extends BaseActivity implements
+		OnClickListener {
 
 	/** application **/
 	private GolukApplication mApplication = null;
@@ -78,6 +85,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	private String newSign = "";
 
 	private TextView mTextNone = null;
+	
+	
+	public SettingImageView siv = new SettingImageView(UserPersonalInfoActivity.this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +137,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		mTextNone = (TextView) findViewById(R.id.user_personal_none);
 
 		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext, "保存中，请稍候……");
+			mCustomProgressDialog = new CustomLoadingDialog(mContext,
+					"保存中，请稍候……");
 		}
 
 		// 监听
@@ -162,19 +173,14 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		// 头像
 		case R.id.user_personal_info_head_layout:
 			if (clickBtn) {
-				Intent itHead = new Intent(UserPersonalInfoActivity.this, UserPersonalHeadActivity.class);
-				Bundle bundle = new Bundle();
-				if (head2 == null)
-					head2 = head;
-				bundle.putString("intentHeadText", head2);
-				itHead.putExtras(bundle);
-				startActivityForResult(itHead, 3);
+				settingHeadOptions();
 			}
 			break;
 		// 昵称
 		case R.id.user_personal_info_name_layout:
 			if (clickBtn) {
-				Intent itName = new Intent(UserPersonalInfoActivity.this, UserPersonalNameActivity.class);
+				Intent itName = new Intent(UserPersonalInfoActivity.this,
+						UserPersonalNameActivity.class);
 				Bundle bundle = new Bundle();
 				if (name2 == null)
 					name2 = name;
@@ -186,13 +192,15 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		// 个性签名
 		case R.id.user_personal_info_sign_layout:
 			if (clickBtn) {
-				Intent itSign = new Intent(UserPersonalInfoActivity.this, UserPersonalSignActivity.class);
+				Intent itSign = new Intent(UserPersonalInfoActivity.this,
+						UserPersonalSignActivity.class);
 				Bundle bundle = new Bundle();
 				if (sign2 == null)
 					sign2 = sign;
 				bundle.putString("intentSignText", sign2);
 				itSign.putExtras(bundle);
 				startActivityForResult(itSign, 2);
+
 			}
 			break;
 		default:
@@ -201,10 +209,68 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	}
 
 	/**
+	 * 打开头像设置菜单选择
+	 */
+	public void settingHeadOptions() {
+
+		final AlertDialog ad = new AlertDialog.Builder(mContext,
+				R.style.CustomDialog).create();
+		Window window = ad.getWindow();
+		window.setGravity(Gravity.BOTTOM);
+		ad.show();
+		ad.getWindow().setContentView(R.layout.user_center_setting_head);
+
+		ad.getWindow().findViewById(R.id.camera)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+						siv.getCamera();
+					}
+				});
+
+		ad.getWindow().findViewById(R.id.photo)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+						siv.getPhoto();
+					}
+				});
+
+		ad.getWindow().findViewById(R.id.system)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+						Intent itHead = new Intent(
+								UserPersonalInfoActivity.this,
+								UserPersonalHeadActivity.class);
+						Bundle bundle = new Bundle();
+						if (head2 == null)
+							head2 = head;
+						bundle.putString("intentHeadText", head2);
+						itHead.putExtras(bundle);
+						startActivityForResult(itHead, 3);
+					}
+				});
+
+		ad.getWindow().findViewById(R.id.cancel)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+					}
+				});
+
+	}
+
+	/**
 	 * 初始化用户信息
 	 */
 	public void initData() {
-		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		String info = mApplication.mGoluk.GolukLogicCommGet(
+				GolukModule.Goluk_Module_HttpPage, 0, "");
 		try {
 			JSONObject json = new JSONObject(info);
 
@@ -222,7 +288,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -238,13 +304,46 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		
+		case 5000:
+			if (requestCode == siv.CANCELED_CODE) {
+				return;
+			}
+			Uri imageUri = data.getData();
+			Intent  intent = new Intent(this,ImageClipActivity.class);
+			intent.putExtra("imageuri", imageUri.toString());
+			this.startActivityForResult(intent,7000);
+			//iv_head.setImageURI(imageUri);
+			break;
+		case 6000:
+			if (requestCode == siv.CANCELED_CODE) {
+				siv.deleteUri();
+			}
+			Intent  it = new Intent(this,ImageClipActivity.class);
+			it.putExtra("imageuri", siv.mCameraUri.toString());
+			this.startActivityForResult(it,7000);
+			//iv_head.setImageURI(mCameraUri);
+			break;
+		case 7000:
+			byte[] bis = data.getByteArrayExtra("bitmap");
+			Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+			mImageHead.setImageBitmap((siv.toRoundBitmap(bitmap)));
+			System.out.println("xxxxxxxxxxxxxxxxxx");
+			break;
+
+		default:
+			break;
+		}
+		
 		switch (resultCode) {
 		// 修改昵称
 		case 1:
 			Bundle bundle = data.getExtras();
 			name2 = bundle.getString("itName");
 			mTextName.setText(name2);
-			GolukDebugUtils.i("lily", "--------onActivityResult-------name----" + mTextName.getText().toString());
+			GolukDebugUtils.i("lily", "--------onActivityResult-------name----"
+					+ mTextName.getText().toString());
 			break;
 		// 修改个性签名
 		case 2:
@@ -259,7 +358,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			UserUtils.focusHead(head2, mImageHead);
 			if (head2.equals("1") || head2.equals("2") || head2.equals("3")) {
 				sex2 = "1";
-			} else if (head2.equals("4") || head2.equals("5") || head2.equals("6")) {
+			} else if (head2.equals("4") || head2.equals("5")
+					|| head2.equals("6")) {
 				sex2 = "2";
 			} else if (head2.equals("7")) {
 				sex2 = "0";
@@ -306,14 +406,20 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			rightBtn.setText("编辑");
 		} else {
 			if (!UserUtils.isNetDeviceAvailable(this)) {
-				GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+				GolukUtils.showToast(
+						this,
+						this.getResources().getString(
+								R.string.user_net_unavailable));
 			} else {
 				// {NickName：“昵称”，UserHead:”1”，UserSex:”1”,Desc:""}
-				String isSave = "{\"NickName\":\"" + newName + "\",\"UserHead\":\"" + head2 + "\",\"UserSex\":\""
+				String isSave = "{\"NickName\":\"" + newName
+						+ "\",\"UserHead\":\"" + head2 + "\",\"UserSex\":\""
 						+ sex2 + "\",\"Desc\":\"" + newSign + "\"}";
-				GolukDebugUtils.i("lily", "-----name-----" + newName + "-----head2----" + head2 + "-----sex2-----"
-						+ sex2 + "-----newsign---" + newSign);
-				boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				GolukDebugUtils.i("lily", "-----name-----" + newName
+						+ "-----head2----" + head2 + "-----sex2-----" + sex2
+						+ "-----newsign---" + newSign);
+				boolean b = mApplication.mGoluk.GolukLogicCommRequest(
+						GolukModule.Goluk_Module_HttpPage,
 						IPageNotifyFn.PageType_ModifyUserInfo, isSave);
 				if (b) {
 					// 保存中
@@ -333,7 +439,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	 */
 
 	public void saveInfoCallBack(int success, Object obj) {
-		GolukDebugUtils.e("", "修改用户信息回调---saveInfoCallBack---" + success + "---" + obj);
+		GolukDebugUtils.e("", "修改用户信息回调---saveInfoCallBack---" + success
+				+ "---" + obj);
 		if (1 == success) {
 			try {
 				String data = (String) obj;
@@ -414,12 +521,14 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			mSignLayout.setEnabled(true);
 		}
 	}
-	
+
 	private void exit() {
 		clickBtn = false;
-		if(null != UserCenterActivity.handler){
-			UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
+		if (null != UserCenterActivity.handler) {
+			UserCenterActivity.handler
+					.sendEmptyMessage(UserCenterActivity.refristUserInfo);
 		}
 		this.finish();
 	}
+	
 }
