@@ -25,6 +25,8 @@ import cn.com.mobnote.golukmobile.PushSettingActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserOpinionActivity;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
+import cn.com.mobnote.golukmobile.UserPersonalNameActivity;
+import cn.com.mobnote.golukmobile.UserPersonalSignActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
@@ -930,10 +932,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_ModifyPwd:
 			mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
 			break;
-		case IPageNotifyFn.PageType_ModifyUserInfo:
-			if (mPageSource == "UserPersonalInfo") {
-				((UserPersonalInfoActivity) mContext).saveInfoCallBack(success, param2);
+
+		case PageType_ModifyNickName:
+			if (mPageSource == "UserPersonalName") {
+				((UserPersonalNameActivity) mContext).saveNameCallBack(success, param2);
 			}
+			break;
+		case  PageType_ModifySignature:
+			if (mPageSource == "UserPersonalSign") {
+				((UserPersonalSignActivity) mContext).saveSignCallBack(success, param2);
+			}
+			break;
 		case PageType_LiveStart:
 			// 获取直播信息成功
 			if (null != mContext && mContext instanceof LiveActivity) {

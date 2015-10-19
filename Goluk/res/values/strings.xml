@@ -301,7 +301,13 @@
     <string name="opinion_content_null">反馈内容不能为空</string>
     <string name="opinion_fail">反馈失败，请稍候再试</string>
     <string name="opinion_success">感谢您的反馈，我们正在积极处理中！</string>
-
+    <string name="user_personal_name_edit">编辑昵称</string>
+    <string name="user_personal_saving">正在保存</string>
+    <string name="user_personal_save_failed">保存失败，请重试</string>
+    <string name="user_personal_sign_edit">编辑签名</string>
+    <string name="user_personal_introduce_self">介绍一下自己吧</string>
+    <string name="user_personal_edit_info">编辑个人资料</string>
+    <string name="user_personal_modify_head">修改头像</string>
     <!-- 直播界面 -->
 
 
