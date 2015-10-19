@@ -887,13 +887,15 @@ public class JsonUtil {
 		}
 	}
 
-	public static String getAddCommentJson(String id, String type, String txt) {
+	public static String getAddCommentJson(String id, String type, String txt,String replyId,String replyName) {
 		try {
 			JSONObject json = new JSONObject();
 			json.put("topicid", id);
 			json.put("topictype", type);
 			txt = URLEncoder.encode(txt, "utf-8");
 			json.put("text", txt);
+			json.put("replyid", replyId);
+			json.put("replyname", replyName);
 
 			return json.toString();
 		} catch (Exception e) {

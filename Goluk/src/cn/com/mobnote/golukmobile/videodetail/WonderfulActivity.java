@@ -25,6 +25,7 @@ import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -64,7 +65,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  */
 public class WonderfulActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
-		VideoSuqareManagerFn, ICommentFn, TextWatcher, OnItemLongClickListener, ILiveDialogManagerFn {
+		VideoSuqareManagerFn, ICommentFn, TextWatcher, OnItemLongClickListener, ILiveDialogManagerFn,OnItemClickListener {
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -188,7 +189,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
-		mRTPullListView.setOnItemLongClickListener(this);
+//		mRTPullListView.setOnItemLongClickListener(this);
+		mRTPullListView.setOnItemClickListener(this);
 	}
 
 	/**
@@ -428,7 +430,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukUtils.showToast(this, "数据加载中，请稍候再试");
 			return;
 		}
-		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt);
+		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,"","");
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
 		if (!isSucess) {
@@ -857,6 +859,34 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * 点击删除或者回复评论
+	 * @param arg0
+	 * @param view
+	 * @param position
+	 * @param arg3
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+		GolukDebugUtils.e("", "----commentActivity--------position:" + position + "   arg3:" + arg3);
+		if(null != mAdapter){
+			if ( this.mApp.isUserLoginSucess) {
+				mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
+				final UserInfo loginUser = mApp.getMyInfo();
+				GolukDebugUtils.e("", "jyf-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
+				GolukDebugUtils.e("", "jyf-----commentActivity--------uid:" + loginUser.uid);
+				if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+					new ReplyDialog(this, mWillDelBean, mEditInput, false).show();
+				} else {
+					new ReplyDialog(this, mWillDelBean, mEditInput, true).show();
+				}
+			}else{
+				new ReplyDialog(this, mWillDelBean, mEditInput, true).show();
+			}
+		}
+		
 	}
 
 	@Override

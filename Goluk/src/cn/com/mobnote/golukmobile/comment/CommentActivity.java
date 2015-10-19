@@ -524,7 +524,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	// 添加评论
 	private void httpPost_requestAdd(String txt) {
-		final String requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt);
+		final String requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,"","");
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
 		if (!isSucess) {

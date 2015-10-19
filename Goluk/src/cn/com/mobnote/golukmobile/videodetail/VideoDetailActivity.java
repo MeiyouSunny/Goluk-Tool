@@ -429,7 +429,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			GolukUtils.showToast(this, "数据加载中，请稍候再试");
 			return;
 		}
-		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt);
+		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,"","");
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
 		GolukDebugUtils.e("null", "-----VideoDetailActivity------isSuccess：" + isSucess);
