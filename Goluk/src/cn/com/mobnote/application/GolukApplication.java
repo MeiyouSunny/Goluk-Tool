@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
+import cn.com.mobnote.golukmobile.ImageClipActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.PushSettingActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
@@ -978,6 +979,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_SetPushCfg:
 			if (null != mContext && mContext instanceof PushSettingActivity) {
 				((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
+			}
+			break;
+		case PageType_ModifyHeadPic:
+			if (mContext instanceof ImageClipActivity) {
+				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
 			}
 			break;
 		}
