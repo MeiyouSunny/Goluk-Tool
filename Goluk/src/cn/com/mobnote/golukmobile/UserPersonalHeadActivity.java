@@ -193,7 +193,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 			Bundle bundle = new Bundle();
 			bundle.putString("intentSevenHead", imageIndex);
 			itHead.putExtras(bundle);
-			this.setResult(3, itHead);
+			this.setResult(RESULT_OK, itHead);
 			this.finish();
 			break;
 			default:

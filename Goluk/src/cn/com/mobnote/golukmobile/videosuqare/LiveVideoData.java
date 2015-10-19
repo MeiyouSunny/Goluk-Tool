@@ -13,5 +13,7 @@ public class LiveVideoData {
 	public String vtype;
 	public String restime;
 	public String flux;
+	/** 此视频发布的地点 格式为 北京市. 朝阳区 */
+	public String location;
 
 }

@@ -787,7 +787,7 @@ public class JsonUtil {
 	// issquare 是否分享到视频广场 0/1 (否/是)
 	// thumbImgJavaPath: 缩略图路径
 	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
-			String thumbImgJavaPath, String createTime) {
+			String thumbImgJavaPath, String createTime, String location) {
 
 		String json = null;
 		try {
@@ -797,6 +797,7 @@ public class JsonUtil {
 			try {
 				videoDes = URLEncoder.encode(desc, "UTF-8");
 				attriDefault = URLEncoder.encode(attribute, "UTF-8");
+				location = URLEncoder.encode(location, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -811,8 +812,9 @@ public class JsonUtil {
 			// type: 1/2 精彩视频 / 紧急视频
 			obj.put("type", "1");
 			obj.put("creattime", createTime);
+			obj.put("location", location);
+			
 			json = obj.toString();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

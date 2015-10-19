@@ -238,7 +238,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 
 			Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
 			it.putExtra("itName", mNameNewText);
-			this.setResult(1, it);
+			this.setResult(RESULT_OK, it);
 			this.finish();
 		} else {
 			GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));

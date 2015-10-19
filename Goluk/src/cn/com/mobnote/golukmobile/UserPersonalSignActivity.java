@@ -200,7 +200,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 
 			Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
 			it.putExtra("itSign", mSignNewText);
-			this.setResult(2, it);
+			this.setResult(RESULT_OK, it);
 			this.finish();
 		} else {
 			GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));

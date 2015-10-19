@@ -29,7 +29,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,7 +59,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ReadWifiConfig;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -81,6 +79,7 @@ import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtmpPlayerView;
@@ -328,7 +327,7 @@ public class CarRecorderActivity extends BaseActivity implements
 			public void CallBack_BaiduGeoCoder(int function, Object obj) {
 				// TODO Auto-generated method stub
 				if (function == GetBaiduAddress.FUN_GET_ADDRESS && obj != null) {
-					mAddr.setText((String) obj);
+					mAddr.setText(((ReverseGeoCodeResult) obj).getAddress());
 				}
 			}
 

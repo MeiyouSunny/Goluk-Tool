@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
@@ -11,12 +10,19 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.SettingImageView;
 import cn.com.tiros.debug.GolukDebugUtils;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,9 +38,10 @@ import android.widget.TextView;
  * 个人资料
  * 
  * @author mobnote
- *
+ * 
  */
-public class UserPersonalInfoActivity extends BaseActivity implements OnClickListener{
+public class UserPersonalInfoActivity extends BaseActivity implements
+		OnClickListener {
 
 	/** application **/
 	private GolukApplication mApplication = null;
@@ -67,7 +74,11 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	private String newName = "";
 	private String newSign = "";
 
+	public SettingImageView siv = new SettingImageView(UserPersonalInfoActivity.this);
 
+	private static final int REQUEST_CODE_NIKCNAME = 1000;
+	private static final int REQUEST_CODE_SIGN = REQUEST_CODE_NIKCNAME + 1;
+	private static final int REQUEST_CODE_SYSTEMHEAD = REQUEST_CODE_NIKCNAME + 2;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -125,23 +136,22 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 
 		// 头像
 		case R.id.user_personal_info_head_layout:
-			Intent itHead = new Intent(UserPersonalInfoActivity.this, UserPersonalHeadActivity.class);
-			itHead.putExtra("intentHeadText", head);
-			startActivityForResult(itHead, 3);
+
+			settingHeadOptions();
 			break;
 
 		// 昵称
 		case R.id.user_personal_info_name_layout:
 			Intent itName = new Intent(UserPersonalInfoActivity.this, UserPersonalNameActivity.class);
 			itName.putExtra("intentNameText", name);
-			startActivityForResult(itName, 1);
+			startActivityForResult(itName, REQUEST_CODE_NIKCNAME);
 			break;
 
 		// 个性签名
 		case R.id.user_personal_info_sign_layout:
 			Intent itSign = new Intent(UserPersonalInfoActivity.this, UserPersonalSignActivity.class);
 			itSign.putExtra("intentSignText", sign);
-			startActivityForResult(itSign, 2);
+			startActivityForResult(itSign, REQUEST_CODE_SIGN);
 			break;
 		default:
 			break;
@@ -149,10 +159,67 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	}
 
 	/**
+	 * 打开头像设置菜单选择
+	 */
+	public void settingHeadOptions() {
+
+		final AlertDialog ad = new AlertDialog.Builder(mContext,
+				R.style.CustomDialog).create();
+		Window window = ad.getWindow();
+		window.setGravity(Gravity.BOTTOM);
+		ad.show();
+		ad.getWindow().setContentView(R.layout.user_center_setting_head);
+
+		ad.getWindow().findViewById(R.id.camera)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+						siv.getCamera();
+					}
+				});
+
+		ad.getWindow().findViewById(R.id.photo)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+						siv.getPhoto();
+					}
+				});
+
+		ad.getWindow().findViewById(R.id.system)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+						Intent itHead = new Intent(
+								UserPersonalInfoActivity.this,
+								UserPersonalHeadActivity.class);
+						Bundle bundle = new Bundle();
+
+						bundle.putString("intentHeadText", head);
+						itHead.putExtras(bundle);
+						startActivityForResult(itHead, REQUEST_CODE_SYSTEMHEAD);
+					}
+				});
+
+		ad.getWindow().findViewById(R.id.cancel)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ad.dismiss();
+					}
+				});
+
+	}
+
+	/**
 	 * 初始化用户信息
 	 */
 	public void initData() {
-		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		String info = mApplication.mGoluk.GolukLogicCommGet(
+				GolukModule.Goluk_Module_HttpPage, 0, "");
 		try {
 			JSONObject json = new JSONObject(info);
 
@@ -170,7 +237,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -186,22 +253,50 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch (resultCode) {
-		// 修改昵称
-		case 1:
+		if (resultCode != RESULT_OK) {
+			return;
+		}
+		switch (requestCode) {
+		
+		case 5000:
+			if (requestCode == siv.CANCELED_CODE) {
+				return;
+			}
+			Uri imageUri = data.getData();
+			Intent  intent = new Intent(this,ImageClipActivity.class);
+			intent.putExtra("imageuri", imageUri.toString());
+			this.startActivityForResult(intent,7000);
+			//iv_head.setImageURI(imageUri);
+			break;
+		case 6000:
+			if (requestCode == siv.CANCELED_CODE) {
+				siv.deleteUri();
+			}
+			Intent  it = new Intent(this,ImageClipActivity.class);
+			it.putExtra("imageuri", siv.mCameraUri.toString());
+			this.startActivityForResult(it,7000);
+			//iv_head.setImageURI(mCameraUri);
+			break;
+		case 7000:
+			byte[] bis = data.getByteArrayExtra("bitmap");
+			Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+			mImageHead.setImageBitmap((siv.toRoundBitmap(bitmap)));
+			System.out.println("xxxxxxxxxxxxxxxxxx");
+			break;
+		case REQUEST_CODE_NIKCNAME:
 			Bundle bundle = data.getExtras();
 			name = bundle.getString("itName");
 			mTextName.setText(name);
 			GolukDebugUtils.i("lily", "--------onActivityResult-------name----" + mTextName.getText().toString());
 			break;
 		// 修改个性签名
-		case 2:
+		case REQUEST_CODE_SIGN:
 			Bundle bundle2 = data.getExtras();
 			sign = bundle2.getString("itSign");
 			mTextSign.setText(sign);
 			break;
 		// 修改头像
-		case 3:
+		case REQUEST_CODE_SYSTEMHEAD:
 			Bundle bundle3 = data.getExtras();
 			head = bundle3.getString("intentSevenHead");
 			UserUtils.focusHead(head, mImageHead);
@@ -216,7 +311,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		default:
 			break;
 		}
+
 	}
+
 
 	private void exit() {
 		if(null != UserCenterActivity.handler){
@@ -224,4 +321,5 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		}
 		this.finish();
 	}
+	
 }
