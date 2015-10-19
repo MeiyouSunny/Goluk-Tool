@@ -20,15 +20,13 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 	private Context mContext;
 	private CommentBean mCommentBean = null;
 	private EditText mEditText = null;
-	private boolean mIsReplay = true;
 
-	public ReplyDialog(Context context, CommentBean commentBean,EditText editText,boolean isReplay) {
+	public ReplyDialog(Context context, CommentBean commentBean,EditText editText) {
 		super(context, R.style.CustomDialog);
 		setContentView(R.layout.video_reply_layout);
 		this.mContext = context;
 		this.mCommentBean = commentBean;
 		this.mEditText = editText;
-		this.mIsReplay = isReplay;
 		
 		initView();
 	}
@@ -36,7 +34,7 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 	private void initView() {
 		mReplayOrDelete = (TextView) findViewById(R.id.reply_or_delete);
 		mCancle = (TextView) findViewById(R.id.cancle);
-		if(mIsReplay){
+		if(isReply()){
 			mReplayOrDelete.setText("回复该评论");
 		}else{
 			mReplayOrDelete.setText("删除");
@@ -52,7 +50,7 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		switch (view.getId()) {
 		case R.id.reply_or_delete:
 			dismiss();
-			deal(mIsReplay);
+			deal(isReply());
 			break;
 			
 		case R.id.cancle:
@@ -63,24 +61,20 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		}
 	}
 	
+	private boolean isReply(){
+		if(mContext instanceof WonderfulActivity){
+			return WonderfulActivity.mIsReply;
+		}else{
+			
+		}
+		return false;
+	}
+	
 	private void deal(boolean flag) {
-		if(mIsReplay){
+		if(isReply()){
 			mEditText.requestFocus();
 			GolukUtils.showSoft(mEditText);
 			mEditText.setHint("回复＠"+mCommentBean.mUserName+"：");
-//			GolukUtils.showToast(mContext, "回复评论");
-//			final String requestStr = JsonUtil.getAddCommentJson(
-//					mVideoJson.data.avideo.video.videoid, "1", mContent,
-//					mCommentBean.mUserId, mCommentBean.mUserName);
-//			boolean isSucess = GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-//					VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
-//			if (!isSucess) {
-//				// 失败
-//				GolukUtils.showToast(mContext, "评论失败!");
-//				return;
-//			}
-//			LiveDialogManager.getManagerInstance().showCommProgressDialog(mContext,
-//					LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT, "", "正在提交评论", true);
 		}else{
 			String requestStr = JsonUtil.getDelCommentJson(mCommentBean.mCommentId);
 			boolean isSucess = GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,

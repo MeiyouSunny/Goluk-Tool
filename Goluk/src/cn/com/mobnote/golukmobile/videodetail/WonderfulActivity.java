@@ -117,6 +117,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private boolean clickRefresh = false;
 	/** 回调数据没有回来 **/
 	private boolean isClick = false;
+	/**false评论／false删除／true回复**/
+	public static boolean mIsReply = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -275,6 +277,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
 			break;
 		case R.id.comment_send:
+			GolukDebugUtils.e("", "=======wonderfulactivity====mIsReply："+mIsReply);
 			if (!UserUtils.isNetDeviceAvailable(this)) {
 				GolukUtils.showToast(this, "当前网络不可用，请检查网络");
 				return;
@@ -282,7 +285,11 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			if (!isClick) {
 				return;
 			}
-			click_send();
+			if(mIsReply){
+				click_reply();
+			}else{
+				click_send();
+			}
 			break;
 		case R.id.video_detail_click_refresh:
 			clickRefresh = true;
@@ -408,6 +415,28 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			return;
 		}
 		httpPost_requestAdd(content);
+	}
+	
+	//回复评论
+	private void click_reply(){
+		String content = mEditInput.getText().toString().trim();
+		if (null == content || "".equals(content)) {
+			GolukUtils.showToast(this, "请输入回复的评论内容");
+			return;
+		}
+		GolukDebugUtils.e("", "=========click_reply=====mWillDelBean："+mWillDelBean);
+		String requestStr = JsonUtil.getAddCommentJson(
+				mVideoJson.data.avideo.video.videoid, "1", content,
+				mWillDelBean.mUserId, mWillDelBean.mUserName);
+		boolean isSucess = GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
+		if (!isSucess) {
+			// 失败
+			GolukUtils.showToast(this, "回复评论失败!");
+			return;
+		}
+		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
+				LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT, "", "正在提交评论", true);
 	}
 
 	// 删除评论
@@ -679,6 +708,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				mEditInput.setText("");
 				switchSendState(false);
 				UserUtils.hideSoftMethod(this);
+				//回复完评论之后需要还原状态以判断下次是评论还是回复
+				mIsReply = false;
+				mEditInput.setHint("写评论");
 				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
 			} else {
 				GolukUtils.showToast(this, "评论失败");
@@ -878,12 +910,15 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				GolukDebugUtils.e("", "jyf-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
 				GolukDebugUtils.e("", "jyf-----commentActivity--------uid:" + loginUser.uid);
 				if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-					new ReplyDialog(this, mWillDelBean, mEditInput, false).show();
+					mIsReply = false;
+					new ReplyDialog(this, mWillDelBean, mEditInput).show();
 				} else {
-					new ReplyDialog(this, mWillDelBean, mEditInput, true).show();
+					mIsReply = true;
+					new ReplyDialog(this, mWillDelBean, mEditInput).show();
 				}
 			}else{
-				new ReplyDialog(this, mWillDelBean, mEditInput, true).show();
+				mIsReply = true;
+				new ReplyDialog(this, mWillDelBean, mEditInput).show();
 			}
 		}
 		
