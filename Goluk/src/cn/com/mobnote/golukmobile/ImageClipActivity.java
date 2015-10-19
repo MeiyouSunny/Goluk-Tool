@@ -5,7 +5,21 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.ClipImageView;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SettingImageView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,19 +31,24 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
-public class ImageClipActivity extends BaseActivity implements OnClickListener {
+public class ImageClipActivity extends BaseActivity implements OnClickListener,
+		IPageNotifyFn {
 
 	private ClipImageView imageView;
 	private Button saveHead;
 	
+	private CustomLoadingDialog mCustomProgressDialog = null;
+
 	private SettingImageView siv = null;
-	
+
 	/** 视频存放外卡文件路径 */
 	private static final String APP_FOLDER = android.os.Environment
 			.getExternalStorageDirectory().getPath();
 
-	private static final String headCachePatch = APP_FOLDER + "/goluk/head_cache/";
+	private static final String headCachePatch = APP_FOLDER
+			+ "/goluk/head_cache/";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +71,27 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
+		
+		if(mCustomProgressDialog == null){
+			mCustomProgressDialog = new CustomLoadingDialog(this, "图片生成中,请稍后!");
+			mCustomProgressDialog.show();
+		}else{
+			mCustomProgressDialog.show();
+		}
 		Bitmap bitmap = imageView.clip();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 		byte[] bitmapByte = baos.toByteArray();
 
 		try {
-			this.saveBitmap(siv.toRoundBitmap(bitmap));
+			String request = this.saveBitmap(siv.toRoundBitmap(bitmap));
+			if (request != null) {
+				boolean flog = this.uploadImageHead(request);
+			}
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -73,43 +105,87 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener {
 	}
 
 	/**
-	 * 保存方法
+	 * 调用图像上传功能
+	 * 
+	 * @return
+	 */
+	public boolean uploadImageHead(String requestStr) {
+		return mBaseApp.mGoluk.GolukLogicCommRequest(
+				GolukModule.Goluk_Module_HttpPage, PageType_ModifyHeadPic,
+				requestStr);
+	}
+
+	/**
+	 * 保存头像并上传
 	 * 
 	 * @throws IOException
+	 * @throws JSONException
 	 */
-	public String saveBitmap(Bitmap bm) throws IOException {
-		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
+	public String saveBitmap(Bitmap bm) throws IOException, JSONException {
 
-		}
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+		JSONObject requestStr = null;
+		byte[] bitmapByte = baos.toByteArray();
+		String md5key = this.compute32(bitmapByte);
 		String picname = System.currentTimeMillis() + ".png";
 		System.out.println("imagename" + picname);
-		
+
 		this.makeRootDirectory(headCachePatch);
-		
-		File f = new File(headCachePatch+picname);
+
+		File f = new File(headCachePatch + picname);
 		if (f.exists()) {
 			f.delete();
 		}
 		FileOutputStream out = null;
 		try {
-			
+
 			f.createNewFile();
 			out = new FileOutputStream(f);
 			bm.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+			requestStr = new JSONObject();
+			requestStr.put("PicMD5", md5key);
+			requestStr.put("PicPath", headCachePatch + picname);
+			requestStr.put("channel", "2");
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			if(out !=null){
+			if (out != null) {
 				out.flush();
 				out.close();
 			}
+			return requestStr.toString();
 		}
 
-		return headCachePatch + picname;
+	}
 
+	public static String compute32(byte[] content) {
+		StringBuffer buf = new StringBuffer("");
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			try {
+				md.update(content);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			byte b[] = md.digest();
+			int i;
+			for (int offset = 0; offset < b.length; offset++) {
+				i = b[offset];
+				if (i < 0)
+					i += 256;
+				if (i < 16)
+					buf.append("0");
+				buf.append(Integer.toHexString(i));
+			}
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return buf.toString();
 	}
 
 	public static void makeRootDirectory(String filePath) {
@@ -121,6 +197,39 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener {
 			}
 		} catch (Exception e) {
 
+		}
+	}
+
+	@Override
+	public void pageNotifyCallBack(int type, int success, Object param1,
+			Object param2) {
+		// TODO Auto-generated method stub
+		if(type == PageType_ModifyHeadPic){
+			if(mCustomProgressDialog.isShowing()){
+				mCustomProgressDialog.close();
+			}
+			if(success == 1){
+				try {
+					JSONObject result = new JSONObject(param1.toString());
+					if(result != null){
+						Boolean suc = result.getBoolean("success");
+						
+						if(suc){
+							JSONObject data = result.getJSONObject("data");
+							String rst = data.getString("result");
+							//图片上传成功
+							if("0".equals(rst)){
+								String patch = data.getString("customavatar");
+								GolukUtils.showToast(ImageClipActivity.this, "图片上传成功");
+							}
+							
+						}
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

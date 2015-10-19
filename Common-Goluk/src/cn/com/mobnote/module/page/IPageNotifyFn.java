@@ -60,6 +60,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_GetPushCfg = 30;
 	
 	public static final int PageType_SetPushCfg = 31;
+	
+	/** 上传用户头像 **/
+	public static final int PageType_ModifyHeadPic = 35;
 
 	/**
 	 * 
