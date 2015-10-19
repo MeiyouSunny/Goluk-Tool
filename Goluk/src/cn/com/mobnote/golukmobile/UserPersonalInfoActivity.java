@@ -278,9 +278,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			//iv_head.setImageURI(mCameraUri);
 			break;
 		case 7000:
-			byte[] bis = data.getByteArrayExtra("bitmap");
-			Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
-			mImageHead.setImageBitmap((siv.toRoundBitmap(bitmap)));
+			Bundle b = data.getExtras();
+			name = b.getString("imagepath");
 			System.out.println("xxxxxxxxxxxxxxxxxx");
 			break;
 		case REQUEST_CODE_NIKCNAME:
