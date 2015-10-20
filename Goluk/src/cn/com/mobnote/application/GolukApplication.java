@@ -963,7 +963,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
 		// ipc升级文件下载
-		case PageType_CommDownloadFile:
+//		case PageType_CommDownloadFile:
+//			mIpcUpdateManage.downloadCallback(success, param1, param2);
+//			break;
+		case PageType_DownloadIPCFile:
 			mIpcUpdateManage.downloadCallback(success, param1, param2);
 			break;
 		// 意见反馈
@@ -1149,6 +1152,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 			boolean isbind = preferences.getBoolean("isbind", false);
 			if (isbind) {
+				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
+				//保存ipc设备型号
+				try {
+					JSONObject json = new JSONObject((String)param2);
+					mIPCControlManager.mProduceName = json.getString("productname");
+					mSharedPreUtil.saveIpcModel(mIPCControlManager.mProduceName);
+					GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + mSharedPreUtil.getIpcModel());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				// ipc控制初始化成功,可以看画面和拍摄8s视频
 				setIpcLoginState(true);
 				// 获取音视频配置信息

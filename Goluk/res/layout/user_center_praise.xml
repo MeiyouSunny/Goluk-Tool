@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="70dp" >
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/userhead"
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
-            android:background="@drawable/editor_head_girl4" />
+            fresco:placeholderImage="@drawable/editor_head_girl4" />
 
         <LinearLayout
             android:id="@+id/userinfo"
