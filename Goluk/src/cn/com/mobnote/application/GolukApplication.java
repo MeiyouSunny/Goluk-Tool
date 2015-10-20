@@ -20,11 +20,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
+import cn.com.mobnote.golukmobile.ImageClipActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.PushSettingActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserOpinionActivity;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
+import cn.com.mobnote.golukmobile.UserPersonalNameActivity;
+import cn.com.mobnote.golukmobile.UserPersonalSignActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
@@ -930,10 +933,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_ModifyPwd:
 			mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
 			break;
-		case IPageNotifyFn.PageType_ModifyUserInfo:
-			if (mPageSource == "UserPersonalInfo") {
-				((UserPersonalInfoActivity) mContext).saveInfoCallBack(success, param2);
+
+		case PageType_ModifyNickName:
+			if (mPageSource == "UserPersonalName") {
+				((UserPersonalNameActivity) mContext).saveNameCallBack(success, param2);
 			}
+			break;
+		case  PageType_ModifySignature:
+			if (mPageSource == "UserPersonalSign") {
+				((UserPersonalSignActivity) mContext).saveSignCallBack(success, param2);
+			}
+			break;
 		case PageType_LiveStart:
 			// 获取直播信息成功
 			if (null != mContext && mContext instanceof LiveActivity) {
@@ -952,7 +962,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
 		// ipc升级文件下载
-		case PageType_CommDownloadFile:
+//		case PageType_CommDownloadFile:
+//			mIpcUpdateManage.downloadCallback(success, param1, param2);
+//			break;
+		case PageType_DownloadIPCFile:
 			mIpcUpdateManage.downloadCallback(success, param1, param2);
 			break;
 		// 意见反馈
@@ -969,6 +982,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_SetPushCfg:
 			if (null != mContext && mContext instanceof PushSettingActivity) {
 				((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
+			}
+			break;
+		case PageType_ModifyHeadPic:
+			if (mContext instanceof ImageClipActivity) {
+				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
 			}
 			break;
 		}
@@ -1129,6 +1147,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 			boolean isbind = preferences.getBoolean("isbind", false);
 			if (isbind) {
+				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
+				//保存ipc设备型号
+				try {
+					JSONObject json = new JSONObject((String)param2);
+					mIPCControlManager.mProduceName = json.getString("productname");
+					mSharedPreUtil.saveIpcModel(mIPCControlManager.mProduceName);
+					GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + mSharedPreUtil.getIpcModel());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				// ipc控制初始化成功,可以看画面和拍摄8s视频
 				setIpcLoginState(true);
 				// 获取音视频配置信息

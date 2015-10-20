@@ -33,6 +33,8 @@ public class IPCControlManager implements IPCManagerFn {
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
 	/** Application实例,用于调用JNI的对象 */
 	private GolukApplication mApplication = null;
+	/**IPC设备型号**/
+	public String mProduceName = "";
 	/** 当前设备的Sn号 */
 	public String mDeviceSn = null;
 	/** 是否需要上报绑定后的信息 */
@@ -41,6 +43,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public IPCControlManager(GolukApplication application) {
 		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
+		mProduceName = "";
 		isNeedReportSn = false;
 		// 注册IPC回调
 		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
@@ -656,6 +659,25 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean setIPCSwitchState(String status) {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetSpeakerSwitch, status);
+	}
+	
+	/**
+	 * 获取isp模式
+	 * 
+	 * @return
+	 */
+	public boolean getISPMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+	}
+
+	/**
+	 * 设置isp模式
+	 * @return
+	 */
+	public boolean setISPMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
 	}
 
 	@Override

@@ -8,27 +8,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
-import cn.com.mobnote.golukmobile.special.ClusterInfo;
-import cn.com.mobnote.golukmobile.special.CommentInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
 public class UserCenterDataFormat {
-	
+
 	/**
 	 * 获取用户信息
+	 * 
 	 * @param str
 	 * @return
 	 */
-	public UCUserInfo getUserInfo(String str){
+	public UCUserInfo getUserInfo(String str) {
 		try {
 			UCUserInfo user = new UCUserInfo();
-			
+
 			JSONObject json = new JSONObject(str);
 			JSONObject UserInfo = json.getJSONObject("UserInfo");
 			Boolean success = UserInfo.getBoolean("success");
-			if(success){
+			if (success) {
 				JSONObject data = UserInfo.getJSONObject("data");
-				if("0".equals(data.getString("result"))){
+				if ("0".equals(data.getString("result"))) {
 					user.praisemenumber = data.getString("praisemenumber");
 					user.sharevideonumber = data.getString("sharevideonumber");
 					JSONObject u = data.getJSONObject("user");
@@ -39,20 +38,19 @@ public class UserCenterDataFormat {
 					user.introduce = u.getString("introduce");
 					user.nickname = u.getString("nickname");
 					return user;
-				}else{
+				} else {
 					return null;
 				}
-				
-			}else{
+
+			} else {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 获取视频列表数据
 	 * 
@@ -65,43 +63,41 @@ public class UserCenterDataFormat {
 	 */
 	public List<VideoSquareInfo> getClusterList(String response) {
 		List<VideoSquareInfo> clusters = null;
-		
+
 		JSONObject resource;
 		JSONObject resData;
 		try {
 			resData = new JSONObject(response);
-			if (resData != null)
-			{
+			if (resData != null) {
 				resource = resData.getJSONObject("ShareVideoList");
 				if (resource != null) {
 					clusters = JsonParserUtils.parserNewestItemDataByJsonObj(resource);
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		return clusters;
 	}
-	
+
 	/**
 	 * 获取赞我的人数据
+	 * 
 	 * @param str
 	 * @return
 	 */
-	public List<PraiseInfo> getPraises(String str){
+	public List<PraiseInfo> getPraises(String str) {
 		try {
 			List<PraiseInfo> result = new ArrayList<PraiseInfo>();
-			
+
 			JSONObject json = new JSONObject(str);
 			JSONObject PraiseList = json.getJSONObject("PraiseList");
-			if (PraiseList != null)
-			{
+			if (PraiseList != null) {
 				Boolean success = PraiseList.getBoolean("success");
-				if(success){
+				if (success) {
 					JSONObject data = PraiseList.getJSONObject("data");
-					if("0".equals(data.getString("result"))){
+					if ("0".equals(data.getString("result"))) {
 						JSONArray praiselist = data.getJSONArray("praiselist");
 						PraiseInfo praiseinfo = null;
 						for (int i = 0; i < praiselist.length(); i++) {
@@ -110,24 +106,23 @@ public class UserCenterDataFormat {
 							praiseinfo.uid = map.getString("uid");
 							praiseinfo.nickname = map.getString("nickname");
 							praiseinfo.headportrait = map.getString("headportrait");
+							praiseinfo.customavatar = map.optString("customavatar");
 							praiseinfo.introduce = map.getString("introduce");
 							praiseinfo.picture = map.getString("picture");
 							praiseinfo.videoid = map.getString("videoid");
 							result.add(praiseinfo);
 						}
 						return result;
-					}else{
+					} else {
 						return null;
 					}
-				}
-				else{
+				} else {
 					return null;
 				}
-			}else{
+			} else {
 				return null;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

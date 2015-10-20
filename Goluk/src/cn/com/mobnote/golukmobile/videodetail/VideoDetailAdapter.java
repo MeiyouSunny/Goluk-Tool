@@ -253,7 +253,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup arg2) {
 		int type = getItemViewType(arg0);
-		boolean isNULL = null == convertView ? true : false;
 		String s = (null == convertView) ? "convertView == NULL" : "converView Not null";
 		GolukDebugUtils.e("newadapter", "VideoDetailActivity===getView=  positon:" + arg0 + "  " + s);
 		if (FIRST_TYPE == type) {
@@ -276,6 +275,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mTextName = (TextView) convertView.findViewById(R.id.user_name);
 		headHolder.mTextTime = (TextView) convertView.findViewById(R.id.user_time);
 		headHolder.mTextLook = (TextView) convertView.findViewById(R.id.video_detail_count_look);
+		headHolder.mLocationTv = (TextView) convertView.findViewById(R.id.videodetail_location);
 
 		headHolder.mVideoView = (FullScreenVideoView) convertView.findViewById(R.id.video_detail_videoview);
 		headHolder.mImageLayout = (RelativeLayout) convertView.findViewById(R.id.mImageLayout);
@@ -381,6 +381,13 @@ public class VideoDetailAdapter extends BaseAdapter {
 			}
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
 			headHolder.mTextDescribe.setText(mVideoAllData.avideo.video.describe);
+			final String location = mVideoAllData.avideo.video.mLocation;
+			if (null != location && !"".equals(location)) {
+				headHolder.mLocationTv.setText(location);
+			} else {
+				headHolder.mLocationTv.setText(location);
+			}
+			
 			if(0 == mType){
 				headHolder.mTextAuthor.setVisibility(View.VISIBLE);
 				headHolder.mTextAuthor.setText("感谢作者  "+mVideoAllData.avideo.user.nickname);
@@ -589,6 +596,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		TextView mTextName = null;
 		TextView mTextTime = null;
 		TextView mTextLook = null;
+		private TextView mLocationTv = null;
 		FullScreenVideoView mVideoView = null;
 		RelativeLayout mImageLayout = null;
 		SimpleDraweeView simpleDraweeView = null;

@@ -614,16 +614,18 @@ public class JsonUtil {
 
 	/**
 	 * 升级传服务器的参数
-	 * 
+	 * @param appVersion	appVersion存储路径
 	 * @param ipcVersion
+	 * @param ipcModel	ipc设备型号
 	 * @return
 	 */
-	public static String putIPC(String appVersion, String ipcVersion) {
+	public static String putIPC(String appVersion, String ipcVersion,String ipcModel) {
 		try {
 			// {“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
 			JSONObject obj = new JSONObject();
 			obj.put("AppVersionFilePath", appVersion);
 			obj.put("IpcVersion", ipcVersion);
+			obj.put("IpcModel", ipcModel);
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -638,13 +640,12 @@ public class JsonUtil {
 	 * @param savePath
 	 * @return
 	 */
-	public static String ipcDownLoad(String url, String savePath) {
-		// {“url”:”http://www.baidu.com”,
-		// “savePath”:”fs1:/update/ipc_upgrade_2015-04-30-15-58.bin”}
+	public static String ipcDownLoad(String url, String ipcVersion,String ipcModel) {
 		try {
 			JSONObject obj = new JSONObject();
-			obj.put("url", url);
-			obj.put("savePath", savePath);
+			obj.put("URL", url);
+			obj.put("IPCVersion", ipcVersion);
+			obj.put("IPCModel", ipcModel);
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1059,6 +1060,32 @@ public class JsonUtil {
 		return "";
 	}
 
+	public static String getUserNickNameJson(String nickName) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("nickname", nickName);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static String getUserSignJson(String sign) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("desc", sign);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
 	public static String getNetStateJson(boolean isConn) {
 		try {
 			JSONObject obj = new JSONObject();
@@ -1216,6 +1243,40 @@ public class JsonUtil {
 
 		}
 		return "";
+	}
+	/**
+	 * 开关机提示音、精彩视频拍摄提示音
+	 * @param speakerSwitch  开关机提示音
+	 * @param wonderfulSwitch  精彩视频拍摄提示音
+	 * @return
+	 */
+	public static String getSpeakerSwitchJson(int speakerSwitch, int wonderfulSwitch) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("SpeakerSwitch", speakerSwitch);
+			obj.put("WonderfulSwitch", wonderfulSwitch);
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
+	/**
+	 * 查询ipc升级文件
+	 * @param ipcVersion
+	 * @param ipcModel
+	 * @return
+	 */
+	public static String selectIPCFile(String ipcVersion, String ipcModel) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("IPCVersion", ipcVersion);
+			obj.put("IPCModel", ipcModel);
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

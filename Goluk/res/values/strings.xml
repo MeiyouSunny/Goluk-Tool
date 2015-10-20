@@ -221,10 +221,13 @@
     <string name="default_rtsp_back">/sub</string>
     <string name="def">默认</string>
     <string name="setting_title_text">设置</string>
+    <string name="setting_tcaf_title">停车安防</string>
     <string name="carrecorder_filemagager_title">文件浏览</string>
     <string name="spzl_title">视频质量</string>
     <string name="spzl_text">极路客提供四种视频质量，1080P高、1080P中、720P高、720P中。</string>
     <string name="zdxhlx_title">自动循环录像</string>
+    <string name="hdr_title">HDR模式</string>
+    <string name="jcsp_title">精彩视频拍摄提示音</string>
     <string name="zdxhlx_text">启动此项后，极路客将每隔3分钟自动保存一段行车影像。当存储空间不足时，将自动覆盖早期循环录制的文件。</string>
     <string name="sylz_title">声音录制</string>
     <string name="pzgy_title">碰撞感应灵敏度</string>
@@ -301,7 +304,13 @@
     <string name="opinion_content_null">反馈内容不能为空</string>
     <string name="opinion_fail">反馈失败，请稍候再试</string>
     <string name="opinion_success">感谢您的反馈，我们正在积极处理中！</string>
-
+    <string name="user_personal_name_edit">编辑昵称</string>
+    <string name="user_personal_saving">正在保存</string>
+    <string name="user_personal_save_failed">保存失败，请重试</string>
+    <string name="user_personal_sign_edit">编辑签名</string>
+    <string name="user_personal_introduce_self">介绍一下自己吧</string>
+    <string name="user_personal_edit_info">编辑个人资料</string>
+    <string name="user_personal_modify_head">修改头像</string>
     <!-- 直播界面 -->
 
 
@@ -362,5 +371,17 @@
     <string name="dialog_str_tuijian">推荐这个视频</string>
     <string name="dialog_str_cancel">取消</string>
     <string name="dialog_str_goback">返回首页</string>
+    
+    <string name="carrecorder_tcaf_all">移动和振动侦测</string>
+    <string name="carrecorder_tcaf_move">移动侦测</string>
+    <string name="carrecorder_tcaf_vibration">振动侦测</string>
+    <string name="carrecorder_tcaf_close">关闭</string>
+    <string name="carrecorder_hint_text1">
+        开启停车安防功能会自动判断车辆当前状态：当车辆处于停车状态极路客会触发1秒钟拍1张照片；</string>
+    <string name="carrecorder_hint_text2">
+        开启停车安防同时具备侦测功能，分为振动侦测（触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）两种。</string>
+    <string name="str_usercenter_praise">赞</string>
+    <string name="str_usercenter_comment">评论</string>
+    <string name="str_usercenter_share">分享</string>
 
 </resources>
