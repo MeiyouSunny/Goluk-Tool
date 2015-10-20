@@ -5,30 +5,21 @@ import java.util.Iterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.reportlog.ReportLog;
+import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
- * 1.编辑器必须显示空白处
- *
- * 2.所有代码必须使用TAB键缩进
- *
- * 3.类首字母大写,函数、变量使用驼峰式命名,常量所有字母大写
- *
- * 4.注释必须在行首写.(枚举除外)
- *
- * 5.函数使用块注释,代码逻辑使用行注释
- *
- * 6.文件头部必须写功能说明
- *
- * 7.所有代码文件头部必须包含规则说明
  *
  * IPC控制管理
  *
@@ -44,21 +35,42 @@ public class IPCControlManager implements IPCManagerFn {
 	private GolukApplication mApplication = null;
 	/**IPC设备型号**/
 	public String mProduceName = "";
+	/** 当前设备的Sn号 */
+	public String mDeviceSn = null;
+	/** 是否需要上报绑定后的信息 */
+	public boolean isNeedReportSn = false;
 
 	public IPCControlManager(GolukApplication application) {
 		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
 		mProduceName = "";
+		isNeedReportSn = false;
 		// 注册IPC回调
-		int result = mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
+		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
 
 		// 设置连接模式
 		String json = JsonUtil.getIPCConnModeJson(IPCMgrMode_IPCDirect);
-		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPC_CommCmd_SetMode, json);
+		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetMode, json);
+	}
 
-		// WIFI连接状态
-		// setIPCWifiState(true);
+	/**
+	 * 绑定成功后需要把设备号上报给服务端，统计设备首次激活的时间
+	 * 
+	 * @author jyf
+	 */
+	public void reportBindMsg() {
+		if (null == mDeviceSn || !isNeedReportSn) {
+			return;
+		}
+		final ReportLogManager loadManager = ReportLogManager.getInstance();
+		loadManager.getReport(IMessageReportFn.KEY_ACTIVATION_TIME).addLogData(
+				JsonUtil.getActivationTimeJson(mDeviceSn));
+		// 设置绑定成功
+		loadManager.getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_SUCESS);
+		final String jsonData = loadManager.getReport(IMessageReportFn.KEY_ACTIVATION_TIME).getReportData();
+		mApplication.uploadMsg(jsonData, false);
+		loadManager.removeKey(IMessageReportFn.KEY_ACTIVATION_TIME);
+		isNeedReportSn = false;
 	}
 
 	/**
@@ -76,7 +88,7 @@ public class IPCControlManager implements IPCManagerFn {
 		SettingUtils.getInstance().putString("IPC_IP", ip);
 		int state = isConnect ? 1 : 0;
 		String json = JsonUtil.getWifiChangeJson(state, ip);
-		if (null == mApplication || null == mApplication.mGoluk ) {
+		if (null == mApplication || null == mApplication.mGoluk) {
 			return false;
 		}
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
@@ -641,6 +653,7 @@ public class IPCControlManager implements IPCManagerFn {
 
 	/**
 	 * 设置ipc开关机声音状态
+	 * 
 	 * @return
 	 */
 	public boolean setIPCSwitchState(String status) {
@@ -672,9 +685,9 @@ public class IPCControlManager implements IPCManagerFn {
 		// LogUtil.e("jyf",
 		// "YYYYYYY----IPCManage_CallBack-----222222222---------IPCManagerAdapter-22---event:"
 		// + event + " msg:" + msg+"==param1="+param1+"==data:"+(String)param2);
-		
+
 		if (null != mApplication && mApplication.isExit()) {
-			return ;
+			return;
 		}
 
 		Iterator<String> iter = mIpcManagerListener.keySet().iterator();

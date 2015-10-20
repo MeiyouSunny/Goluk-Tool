@@ -788,7 +788,7 @@ public class JsonUtil {
 	// issquare 是否分享到视频广场 0/1 (否/是)
 	// thumbImgJavaPath: 缩略图路径
 	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
-			String thumbImgJavaPath, String createTime) {
+			String thumbImgJavaPath, String createTime, String location) {
 
 		String json = null;
 		try {
@@ -798,6 +798,7 @@ public class JsonUtil {
 			try {
 				videoDes = URLEncoder.encode(desc, "UTF-8");
 				attriDefault = URLEncoder.encode(attribute, "UTF-8");
+				location = URLEncoder.encode(location, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -812,8 +813,9 @@ public class JsonUtil {
 			// type: 1/2 精彩视频 / 紧急视频
 			obj.put("type", "1");
 			obj.put("creattime", createTime);
+			obj.put("location", location);
+			
 			json = obj.toString();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1011,6 +1013,19 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static JSONObject getActivationTimeJson(String sn) {
+		try {
+			JSONObject rootObj = new JSONObject();
+			rootObj.put("sn", sn);
+			rootObj.put("time", CSLog.getCurrentTime());
+
+			return rootObj;
+		} catch (Exception e) {
+
+		}
+		return null;
+	}
+
 	public static String getReportJson(String key, JSONObject dataObj) {
 		try {
 			JSONObject obj = new JSONObject();
@@ -1027,6 +1042,32 @@ public class JsonUtil {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("attribute", mAttribute);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static String getUserNickNameJson(String nickName) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("nickname", nickName);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static String getUserSignJson(String sign) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("desc", sign);
 
 			return obj.toString();
 		} catch (Exception e) {
@@ -1169,7 +1210,7 @@ public class JsonUtil {
 	 */
 	public static String parseDelVideo(Object json) {
 		try {
-			JSONObject roobObj = new JSONObject((String)json);
+			JSONObject roobObj = new JSONObject((String) json);
 			boolean sucess = roobObj.getBoolean("success");
 			if (!sucess) {
 				return "1";
@@ -1183,14 +1224,14 @@ public class JsonUtil {
 
 		return "1";
 	}
-	
+
 	public static String getDelRequestJson(String vid) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("videoid", vid);
 			return obj.toString();
 		} catch (Exception e) {
-			
+
 		}
 		return "";
 	}

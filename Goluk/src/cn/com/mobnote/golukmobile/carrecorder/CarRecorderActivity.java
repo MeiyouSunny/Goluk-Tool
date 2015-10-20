@@ -29,7 +29,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,7 +59,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ReadWifiConfig;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -81,6 +79,7 @@ import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtmpPlayerView;
@@ -160,6 +159,9 @@ public class CarRecorderActivity extends BaseActivity implements
 	private RingView downloadSize = null;
 
 	private String videoname = "";
+
+	/** 当前正在下载的视频名称 **/
+	private String mNowDownloadName = "";
 
 	private int videoType = 1;
 
@@ -292,6 +294,8 @@ public class CarRecorderActivity extends BaseActivity implements
 
 	private IBaiduGeoCoderFn mBaiduGeoCoderFn = null;
 
+	private String platform = "g1";
+
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -323,7 +327,7 @@ public class CarRecorderActivity extends BaseActivity implements
 			public void CallBack_BaiduGeoCoder(int function, Object obj) {
 				// TODO Auto-generated method stub
 				if (function == GetBaiduAddress.FUN_GET_ADDRESS && obj != null) {
-					mAddr.setText((String) obj);
+					mAddr.setText(((ReverseGeoCodeResult) obj).getAddress());
 				}
 			}
 
@@ -353,7 +357,9 @@ public class CarRecorderActivity extends BaseActivity implements
 					wonderfulVideoDownloadShow();
 					break;
 				case WIFI_STATE_SUCCESS:
-					GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onclick======connect  Sucess");
+					GolukDebugUtils
+							.e("xuhw",
+									"CarrecorderActivity-------onclick======connect  Sucess");
 					ipcConnSucess();
 					break;
 				case WIFI_STATE_FAILED:
@@ -366,7 +372,7 @@ public class CarRecorderActivity extends BaseActivity implements
 			};
 		};
 
-		GolukApplication.getInstance().stopDownloadList();// 停止视频同步
+		
 
 		initView();
 		setListener();
@@ -407,7 +413,7 @@ public class CarRecorderActivity extends BaseActivity implements
 		case WIFI_STATE_CONNING:
 			mConnectTip.setText(wifiname);
 			mPalyerLayout.setVisibility(View.GONE);
-			if (isBindSucess()) {	
+			if (isBindSucess()) {
 				mNotconnected.setVisibility(View.GONE);
 				mConncetLayout.setVisibility(View.VISIBLE);
 			} else {
@@ -420,8 +426,7 @@ public class CarRecorderActivity extends BaseActivity implements
 
 			break;
 		case WIFI_STATE_SUCCESS:
-			GolukApplication.getInstance().stopDownloadList();
-
+			//GolukApplication.getInstance().stopDownloadList();
 			WifiRsBean wrb = ReadWifiConfig.readConfig();
 			if (wrb != null) {
 				mConnectTip.setText(wrb.getIpc_ssid());
@@ -451,19 +456,19 @@ public class CarRecorderActivity extends BaseActivity implements
 		}
 	}
 
-	private void open_shareVideo(String videoname) {
+	private void open_shareVideo(String vname) {
 		// // 跳转到wifi连接首页
 		String path = Environment.getExternalStorageDirectory().getPath();
 		int type = 2;
-		if (videoname.indexOf("URG") >= 0) {
-			path = path + "/goluk/video/urgent/" + videoname;
+		if (vname.indexOf("URG") >= 0) {
+			path = path + "/goluk/video/urgent/" + vname;
 			type = 3;
 		} else {
-			path = path + "/goluk/video/wonderful/" + videoname;
+			path = path + "/goluk/video/wonderful/" + vname;
 		}
 		GolukDebugUtils.e("xuhw", "YYY====mShareBtn===path=" + path);
 
-		SettingUtils.getInstance().putBoolean("Local_" + videoname, false);
+		SettingUtils.getInstance().putBoolean("Local_" + vname, false);
 
 		Intent i = new Intent(CarRecorderActivity.this, VideoEditActivity.class);
 		i.putExtra("cn.com.mobnote.video.path", path);
@@ -539,12 +544,10 @@ public class CarRecorderActivity extends BaseActivity implements
 		live_gps = (ImageView) findViewById(R.id.live_gps_icon);
 		live_talk = (ImageView) findViewById(R.id.live_talk_icon);
 		live_release = (ImageView) findViewById(R.id.live_release_icon);
-		
-		
 
 		new1 = (ImageView) findViewById(R.id.new1);
 		new2 = (ImageView) findViewById(R.id.new2);
-		
+
 		liveVideo.setBackgroundResource(R.drawable.driving_voice_off_icon);
 		mRtmpPlayerView.setAudioMute(true);
 		mRtmpPlayerView.setZOrderMediaOverlay(true);
@@ -614,7 +617,9 @@ public class CarRecorderActivity extends BaseActivity implements
 					@Override
 					public boolean onPlayerError(RtmpPlayerView rpv, int what,
 							int extra, String strErrorInfo) {
-						GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onPlayerError=======");
+						GolukDebugUtils
+								.e("xuhw",
+										"CarrecorderActivity-------onPlayerError=======");
 						hidePlayer();
 						rtmpIsOk = false;
 						rpv.removeCallbacks(retryRunnable);
@@ -628,7 +633,9 @@ public class CarRecorderActivity extends BaseActivity implements
 
 					@Override
 					public void onPlayerCompletion(RtmpPlayerView rpv) {
-						GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onPlayerCompletion=======");
+						GolukDebugUtils
+								.e("xuhw",
+										"CarrecorderActivity-------onPlayerCompletion=======");
 						hidePlayer();
 						rtmpIsOk = false;
 						rpv.removeCallbacks(retryRunnable);
@@ -658,7 +665,9 @@ public class CarRecorderActivity extends BaseActivity implements
 
 					@Override
 					public void onPlayerBegin(RtmpPlayerView arg0) {
-						GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onPlayerBegin=======");
+						GolukDebugUtils
+								.e("xuhw",
+										"CarrecorderActivity-------onPlayerBegin=======");
 						hideLoading();
 						rtmpIsOk = true;
 						// 显示播放器
@@ -666,7 +675,7 @@ public class CarRecorderActivity extends BaseActivity implements
 						// 隐藏
 						mPalyerLayout.setVisibility(View.GONE);
 						mFullScreen.setVisibility(View.VISIBLE);
-						
+
 					}
 				});
 	}
@@ -699,7 +708,7 @@ public class CarRecorderActivity extends BaseActivity implements
 		lp.height = (int) (width / 1.777);
 		lp.leftMargin = 0;
 		mVLayout.setLayoutParams(lp);
-		
+
 		isShowPlayer = true;
 	}
 
@@ -771,7 +780,8 @@ public class CarRecorderActivity extends BaseActivity implements
 					R.string.default_rtsp_back);
 			String url = preUrl + mApp.mIpcIp + backUrl;
 
-			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url);
+			GolukDebugUtils.e("xuhw",
+					"CarrecorderActivity-------start--YYYYYY======url==" + url);
 
 			mRtmpPlayerView.setDataSource(url);
 
@@ -802,7 +812,7 @@ public class CarRecorderActivity extends BaseActivity implements
 
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (!isRecording) {
-					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon6);
+					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 					isRecording = true;
 					mCurVideoType = VideoType.mounts;
 					GolukDebugUtils.e("xuhw",
@@ -817,7 +827,7 @@ public class CarRecorderActivity extends BaseActivity implements
 						videoTriggerFail();
 					}
 				}
-			} 
+			}
 			break;
 		case R.id.mSettingBtn:
 			if (m_bIsFullScreen) {
@@ -888,7 +898,9 @@ public class CarRecorderActivity extends BaseActivity implements
 
 			break;
 		case R.id.mPlayBtn:
-			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onclick======isShowPlayer==" + isShowPlayer + "   " + isConnecting);
+			GolukDebugUtils.e("xuhw",
+					"CarrecorderActivity-------onclick======isShowPlayer=="
+							+ isShowPlayer + "   " + isConnecting);
 			if (!isShowPlayer) {
 				if (!isConnecting) {
 					isConnecting = true;
@@ -963,16 +975,13 @@ public class CarRecorderActivity extends BaseActivity implements
 		case R.id.mRtmpPlayerView: {// 停止预览
 			if (!GolukApplication.getInstance().getIpcIsLogin())
 				return;
-			if (m_bIsFullScreen)
-			{
+			if (m_bIsFullScreen) {
 				setFullScreen(false);
-			}
-			else
-			{
+			} else {
 				rtmpIsOk = false;
 				mRtmpPlayerView.removeCallbacks(retryRunnable);
-					GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
-					mRtmpPlayerView.stopPlayback();
+				GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback");
+				mRtmpPlayerView.stopPlayback();
 				hidePlayer();
 				isShowPlayer = false;
 				isConnecting = false;
@@ -1039,7 +1048,7 @@ public class CarRecorderActivity extends BaseActivity implements
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void ipcConnecting() {
 		mConnectTip.setText(wifiname);
 		mFullScreen.setVisibility(View.GONE);
@@ -1061,7 +1070,7 @@ public class CarRecorderActivity extends BaseActivity implements
 			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 		}
 	}
-	
+
 	private void ipcConnFailed() {
 		mFullScreen.setVisibility(View.GONE);
 		mConnectTip.setText(wifiname);
@@ -1073,7 +1082,7 @@ public class CarRecorderActivity extends BaseActivity implements
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 		liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 	}
-	
+
 	private void ipcConnSucess() {
 		if (isShowPlayer || isConnecting) {
 			showLoading();
@@ -1086,12 +1095,12 @@ public class CarRecorderActivity extends BaseActivity implements
 			isConnecting = false;
 			mPalyerLayout.setVisibility(View.VISIBLE);
 		}
-		
+
 		WifiRsBean wrb = ReadWifiConfig.readConfig();
 		if (wrb != null) {
 			mConnectTip.setText(wrb.getIpc_ssid());
 		}
-		
+
 		mNotconnected.setVisibility(View.GONE);
 		mConncetLayout.setVisibility(View.GONE);
 
@@ -1103,6 +1112,11 @@ public class CarRecorderActivity extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		if (platform.equals("g1")) {
+			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
+		}
+		
 		if (isShowPlayer) {
 			GolukDebugUtils.e("xuhw", "YYYYYY======isConnecting=="
 					+ isConnecting);
@@ -1301,6 +1315,13 @@ public class CarRecorderActivity extends BaseActivity implements
 			m8sTimer = null;
 		}
 
+		//this.canvasProcess();
+	}
+
+	/**
+	 * 绘画下载进度的view
+	 */
+	private void canvasProcess() {
 		if (images[0] != null) {
 			Boolean flog = SettingUtils.getInstance().getBoolean(
 					"Local_" + images[0].getName(), true);
@@ -1667,12 +1688,16 @@ public class CarRecorderActivity extends BaseActivity implements
 					JSONObject json = new JSONObject((String) param2);
 					String filename = json.optString("filename");
 					if (null != json) {
-
-						String imagename = videoname.replace("mp4", "jpg");
+						String imagename = "";
+						if("g1".equals(platform)){
+							imagename = videoname.replace("mp4", "jpg");
+						}else{
+							imagename = mNowDownloadName.replace("mp4", "jpg");
+						}
 
 						if (filename.equals(imagename)) {
 							VideoShareInfo vsi = new VideoShareInfo();
-							vsi.setName(videoname);
+							vsi.setName(filename.replace("jpg", "mp4"));
 							vsi.setBitmap(ImageManager.getBitmapFromCache(
 									mImagePath + filename, 114, 64));
 
@@ -1694,9 +1719,8 @@ public class CarRecorderActivity extends BaseActivity implements
 								new1.setVisibility(View.VISIBLE);
 							}
 
-						} else if (filename.equals(videoname)) {
-							downloadSize.setVisibility(View.GONE);
 						}
+						downloadSize.setVisibility(View.GONE);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -1707,13 +1731,29 @@ public class CarRecorderActivity extends BaseActivity implements
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
 						String filename = json.optString("filename");
-
-						if (videoname.equals(filename)) {// 是当前拍的文件
-							int filesize = json.getInt("filesize");
-							int filerecvsize = json.getInt("filerecvsize");
-							int process = (filerecvsize * 100) / filesize;
-							downloadSize.setProcess(process);
+						
+						if("g1".equals(platform)){
+							 if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
+								int filesize = json.getInt("filesize");
+								int filerecvsize = json.getInt("filerecvsize");
+								int process = (filerecvsize * 100) / filesize;
+								downloadSize.setProcess(process);
+							 }
+						}else{
+							/**
+							 * 如果下载的是当前文件就不打开新的下载进度
+							 */
+							if (!filename.equals(mNowDownloadName)) {
+								this.canvasProcess();
+								mNowDownloadName = filename;
+							}else{
+								int filesize = json.getInt("filesize");
+								int filerecvsize = json.getInt("filerecvsize");
+								int process = (filerecvsize * 100) / filesize;
+								downloadSize.setProcess(process);
+							}
 						}
+						
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -1839,7 +1879,8 @@ public class CarRecorderActivity extends BaseActivity implements
 			if (mSettingData.isCanVoice) {
 				liveVideo.setBackgroundResource(R.drawable.driving_voice_icon);
 			} else {
-				liveVideo.setBackgroundResource(R.drawable.driving_voice_off_icon);
+				liveVideo
+						.setBackgroundResource(R.drawable.driving_voice_off_icon);
 			}
 			liveTime.setText(GolukUtils.secondToString(mSettingData.duration));
 		}
@@ -2013,20 +2054,20 @@ public class CarRecorderActivity extends BaseActivity implements
 		}
 
 		int flog = 0;
-		String videoname = "";
+		String vn = "";
 
 		if (list != null && list.size() > 0) {
 			File vfile = null;
 			for (int i = list.size() - 1; i >= 0; i--) {
-				videoname = list.get(i);
-				vfile = new File(path + videoname);
+				vn = list.get(i);
+				vfile = new File(path + vn);
 
 				if (vfile.exists()) {
 					flog++;
 					if (flog <= 1) {
-						videoname1 = videoname;
+						videoname1 = vn;
 					} else if (flog == 2) {
-						videoname2 = videoname;
+						videoname2 = vn;
 					} else {
 						break;
 					}

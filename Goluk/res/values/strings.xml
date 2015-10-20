@@ -21,6 +21,7 @@
     <string name="share_type">类型</string>
     <string name="share_filter">滤镜</string>
     <string name="share_str_open">公开(发布到广场)</string>
+    <string name="share_str_no_location">定位中...</string>
     <string name="share_str_close">不公开</string>
     <string name="share_str_sayother">说点其它的!</string>
     <string name="share_str_type_bg">曝光台</string>
@@ -303,7 +304,13 @@
     <string name="opinion_content_null">反馈内容不能为空</string>
     <string name="opinion_fail">反馈失败，请稍候再试</string>
     <string name="opinion_success">感谢您的反馈，我们正在积极处理中！</string>
-
+    <string name="user_personal_name_edit">编辑昵称</string>
+    <string name="user_personal_saving">正在保存</string>
+    <string name="user_personal_save_failed">保存失败，请重试</string>
+    <string name="user_personal_sign_edit">编辑签名</string>
+    <string name="user_personal_introduce_self">介绍一下自己吧</string>
+    <string name="user_personal_edit_info">编辑个人资料</string>
+    <string name="user_personal_modify_head">修改头像</string>
     <!-- 直播界面 -->
 
 
@@ -372,5 +379,8 @@
         开启停车安防功能会自动判断车辆当前状态：当车辆处于停车状态极路客会触发1秒钟拍1张照片；</string>
     <string name="carrecorder_hint_text2">
         开启停车安防同时具备侦测功能，分为振动侦测（触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）两种。</string>
+    <string name="str_usercenter_praise">赞</string>
+    <string name="str_usercenter_comment">评论</string>
+    <string name="str_usercenter_share">分享</string>
 
 </resources>

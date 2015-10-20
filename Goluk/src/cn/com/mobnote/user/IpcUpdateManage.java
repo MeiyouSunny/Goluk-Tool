@@ -341,9 +341,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 			} catch (Exception e) {
 				if (FUNCTION_AUTO != mFunction) {
 					GolukDebugUtils.i(TAG, "ipc匹配列表为空");
-					// GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" +
-					// mApp.mSharedPreUtil.getIPCVersion()
-					// + "，当前已是最新版本");
+					 GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + mApp.mSharedPreUtil.getIPCVersion()
+							 + "，当前已是最新版本");
 				}
 				e.printStackTrace();
 			}

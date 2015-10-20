@@ -78,19 +78,11 @@ public class UserCenterActivity extends BaseActivity implements
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
-	
-	/**
-	 * 返回首页
-	 */
+	/** 返回首页 */
 	private Button titlehome;
-	
-
-	/**
-	 * 返回按钮
-	 */
+	/** 返回按钮 */
 	private ImageButton backbtn;
-	
-	public  static Handler handler = null;
+	public static Handler handler = null;
 	
 	/** 所有的数据请求 id*/
 	public long mAllDataSequenceId = 0;

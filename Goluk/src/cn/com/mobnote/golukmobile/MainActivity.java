@@ -70,6 +70,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.utils.CrashReportUtil;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -295,7 +296,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		MobclickAgent.setDebugMode(false);
 		MobclickAgent.setCatchUncaughtExceptions(false);
 		// 添加腾讯崩溃统计 初始化SDK
-		CrashReport.initCrashReport(this, CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
+		CrashReport.initCrashReport(getApplicationContext(), CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
 		final String mobileId = Tapi.getMobileId();
 		CrashReport.setUserId(mobileId);
 		GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
@@ -898,7 +899,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			return;
 		}
 
-		final String address = (String) obj;
+		final String address = ((ReverseGeoCodeResult) obj).getAddress();
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		if (null != CarRecorderActivity.mHandler) {

@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomVideoView;
@@ -75,7 +74,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, "UserStart");
 
-		SysApplication.getInstance().addActivity(this);
+//		SysApplication.getInstance().addActivity(this);
 
 		initView();
 		// true ----欢迎页 false开屏页
@@ -187,7 +186,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
+		mHandler = null;
 		if (null != mBGBitmap) {
 			if (!mBGBitmap.isRecycled()) {
 				mBGBitmap.recycle();
