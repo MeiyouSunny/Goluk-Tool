@@ -26,10 +26,6 @@ import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GolukUtils;
-
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
 import com.lidroid.xutils.bitmap.core.BitmapSize;
@@ -150,7 +146,7 @@ public class NewestAdapter extends BaseAdapter {
 	private View initLayout() {
 		holder = new ViewHolder();
 		View convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
-		holder.imageLayout = (RelativeLayout) convertView.findViewById(R.id.imageLayout);
+		holder.videoImg = (SimpleDraweeView) convertView.findViewById(R.id.imageLayout);
 		holder.liveImg = (ImageView) convertView.findViewById(R.id.newlist_item_liveicon);
 		holder.headimg = (SimpleDraweeView) convertView.findViewById(R.id.headimg);
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
@@ -183,7 +179,7 @@ public class NewestAdapter extends BaseAdapter {
 		int height = (int) ((float) width / 1.77f);
 		RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
 		mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
-		holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
+		holder.videoImg.setLayoutParams(mPlayerLayoutParams);
 		convertView.setTag(holder);
 
 		return convertView;
@@ -204,7 +200,7 @@ public class NewestAdapter extends BaseAdapter {
 		// 评论监听
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
-		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, mNewestListView));
+		holder.videoImg.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, mNewestListView));
 		holder.headimg.setOnClickListener(new ClickHeadListener(mContext, mVideoSquareInfo));
 		// 点赞
 		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
@@ -223,8 +219,7 @@ public class NewestAdapter extends BaseAdapter {
 			return;
 		}
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
-		loadImage(holder.imageLayout, mVideoSquareInfo.mVideoEntity.picture);
-
+		holder.videoImg.setImageURI(Uri.parse(mVideoSquareInfo.mVideoEntity.picture));
 		String headUrl = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		if (null != headUrl && !"".equals(headUrl)) {
 			// 使用服务器头像地址
@@ -441,32 +436,8 @@ public class NewestAdapter extends BaseAdapter {
 		}
 	}
 
-	private void loadImage(RelativeLayout layout, String url) {
-		final int id = 3123;
-		SimpleDraweeView view;
-		int count = layout.getChildCount();
-		if (0 == count) {
-			layout.removeAllViews();
-			view = new SimpleDraweeView(mContext);
-			view.setId(id);
-			int height = (int) ((float) width / 1.77f);
-			RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-			layout.addView(view, mPreLoadingParams);
-		} else {
-			view = (SimpleDraweeView) layout.findViewById(id);
-		}
-
-		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-		GenericDraweeHierarchy mGenericDraweeHierarchy = builder.setFadeDuration(300)
-				.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setActualImageScaleType(ScaleType.FIT_XY).build();
-		view.setHierarchy(mGenericDraweeHierarchy);
-		view.setImageURI(Uri.parse(url));
-	}
-
 	public static class ViewHolder {
-		RelativeLayout imageLayout;
+		SimpleDraweeView videoImg;
 		ImageView liveImg;
 		SimpleDraweeView headimg;
 		TextView nikename;
