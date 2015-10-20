@@ -21,6 +21,7 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.ClipImageView;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SettingImageView;
+import cn.com.tiros.api.FileUtils;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -49,6 +50,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 
 	private static final String headCachePatch = APP_FOLDER
 			+ "/goluk/head_cache/";
+	
+	private String cachePath = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,14 +82,12 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 			mCustomProgressDialog.show();
 		}
 		Bitmap bitmap = imageView.clip();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-		byte[] bitmapByte = baos.toByteArray();
 
 		try {
 			String request = this.saveBitmap(siv.toRoundBitmap(bitmap));
 			if (request != null) {
 				boolean flog = this.uploadImageHead(request);
+				System.out.println("flog =" + flog);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -95,13 +96,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Intent it = new Intent(ImageClipActivity.this,
-				UserPersonalInfoActivity.class);
-		it.putExtra("bitmap", bitmapByte);
 		bitmap.recycle();
-		bitmapByte = null;
-		this.setResult(7000, it);
-		this.finish();
 	}
 
 	/**
@@ -124,17 +119,19 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 	public String saveBitmap(Bitmap bm) throws IOException, JSONException {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
 
 		JSONObject requestStr = null;
-		byte[] bitmapByte = baos.toByteArray();
-		String md5key = this.compute32(bitmapByte);
+		byte[] bb = baos.toByteArray();
+		System.out.println("bitmap 长度:"+ bb.length);
+		String md5key = this.compute32(bb);
 		String picname = System.currentTimeMillis() + ".png";
 		System.out.println("imagename" + picname);
 
 		this.makeRootDirectory(headCachePatch);
-
-		File f = new File(headCachePatch + picname);
+		cachePath = headCachePatch + picname;
+		
+		File f = new File(cachePath);
 		if (f.exists()) {
 			f.delete();
 		}
@@ -147,7 +144,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 
 			requestStr = new JSONObject();
 			requestStr.put("PicMD5", md5key);
-			requestStr.put("PicPath", headCachePatch + picname);
+			requestStr.put("PicPath", FileUtils.javaToLibPath(cachePath));
 			requestStr.put("channel", "2");
 
 		} catch (FileNotFoundException e) {
@@ -199,6 +196,13 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 
 		}
 	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		mBaseApp.setContext(this, "imageClipActivity");
+		super.onResume();
+	}
 
 	@Override
 	public void pageNotifyCallBack(int type, int success, Object param1,
@@ -210,7 +214,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 			}
 			if(success == 1){
 				try {
-					JSONObject result = new JSONObject(param1.toString());
+					JSONObject result = new JSONObject(param2.toString());
 					if(result != null){
 						Boolean suc = result.getBoolean("success");
 						
@@ -219,8 +223,22 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,
 							String rst = data.getString("result");
 							//图片上传成功
 							if("0".equals(rst)){
-								String patch = data.getString("customavatar");
+								if(cachePath != null && !"".equals(cachePath)){
+									File  file = new File(cachePath);
+									if(file.exists()){
+										file.delete();
+									}
+									cachePath = "";
+								}
+								
+								String path = data.getString("customavatar");
 								GolukUtils.showToast(ImageClipActivity.this, "图片上传成功");
+								
+								Intent it = new Intent(ImageClipActivity.this,
+										UserPersonalInfoActivity.class);
+								it.putExtra("imagepath", path);
+								this.setResult(RESULT_OK, it);
+								this.finish();
 							}
 							
 						}
