@@ -12,12 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp" >
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/headimg"
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
-            android:background="@drawable/videodetail_portrait"
-            android:contentDescription="@string/imgdes" />
+            fresco:placeholderImage="@drawable/editor_head_feault7" />
 
         <ImageView
             android:id="@+id/function"
