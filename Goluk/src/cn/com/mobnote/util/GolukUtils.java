@@ -11,6 +11,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.facebook.common.util.UriUtil;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -609,6 +611,18 @@ public class GolukUtils {
 			mTimer.cancel();
 			mTimer = null;
 		}
+	}
+
+	/**
+	 * 把drawable中的资源图片转换成Uri格式
+	 * 
+	 * @param resId
+	 * @return
+	 * @author jyf
+	 */
+	public static Uri getResourceUri(int resId) {
+		Uri uri = new Uri.Builder().scheme(UriUtil.LOCAL_RESOURCE_SCHEME).path(String.valueOf(resId)).build();
+		return uri;
 	}
 
 }

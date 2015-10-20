@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile.newest;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GolukUtils;
@@ -49,6 +49,7 @@ public class NewestAdapter extends BaseAdapter {
 	private final int OTHERS_TYPE = 1;
 	private boolean clickLock = false;
 	private RelativeLayout mHeadView;
+	private ViewHolder holder;
 
 	public NewestAdapter(Context context) {
 		mContext = context;
@@ -99,7 +100,7 @@ public class NewestAdapter extends BaseAdapter {
 	@Override
 	public int getViewTypeCount() {
 		return 2;
-	};
+	}
 
 	@Override
 	public int getItemViewType(int position) {
@@ -112,9 +113,7 @@ public class NewestAdapter extends BaseAdapter {
 				return OTHERS_TYPE;
 			}
 		}
-	};
-
-	ViewHolder holder;
+	}
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
@@ -153,7 +152,7 @@ public class NewestAdapter extends BaseAdapter {
 		View convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
 		holder.imageLayout = (RelativeLayout) convertView.findViewById(R.id.imageLayout);
 		holder.liveImg = (ImageView) convertView.findViewById(R.id.newlist_item_liveicon);
-		holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
+		holder.headimg = (SimpleDraweeView) convertView.findViewById(R.id.headimg);
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 		holder.time = (TextView) convertView.findViewById(R.id.time);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
@@ -219,27 +218,21 @@ public class NewestAdapter extends BaseAdapter {
 		}
 	}
 
-	private String getFormatNumber(String fmtnumber) {
-		String number;
-
-		int wg = Integer.parseInt(fmtnumber);
-
-		if (wg < 100000) {
-			DecimalFormat df = new DecimalFormat("#,###");
-			number = df.format(wg);
-		} else {
-			number = "100,000+";
-		}
-		return number;
-	}
-
 	private void initView(int index) {
 		if (index < 0 || index >= mDataList.size()) {
 			return;
 		}
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 		loadImage(holder.imageLayout, mVideoSquareInfo.mVideoEntity.picture);
-		showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
+
+		String headUrl = mVideoSquareInfo.mUserEntity.mCustomAvatar;
+		if (null != headUrl && !"".equals(headUrl)) {
+			// 使用服务器头像地址
+			holder.headimg.setImageURI(Uri.parse(headUrl));
+		} else {
+			showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
+		}
+
 		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
 		holder.time.setText(GolukUtils.formatTimeNew(mVideoSquareInfo.mVideoEntity.sharingtime));
 		final String location = mVideoSquareInfo.mVideoEntity.location;
@@ -259,13 +252,13 @@ public class NewestAdapter extends BaseAdapter {
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.praisenumber)) {
 			holder.zText.setText("");
 		} else {
-			holder.zText.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.praisenumber) + "赞");
+			holder.zText.setText(GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.praisenumber) + "赞");
 		}
 
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.clicknumber)) {
 			holder.weiguan.setText("");
 		} else {
-			holder.weiguan.setText(getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + " 围观");
+			holder.weiguan.setText(GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + " 围观");
 		}
 
 		if (TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.describe)) {
@@ -298,8 +291,8 @@ public class NewestAdapter extends BaseAdapter {
 						holder.totalcomments.setVisibility(View.GONE);
 					} else {
 						holder.totalcomments.setVisibility(View.VISIBLE);
-						holder.totalcomments.setText("查看所有" + getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)
-								+ "条评论");
+						holder.totalcomments.setText("查看所有"
+								+ GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount) + "条评论");
 					}
 
 					holder.totlaCommentLayout.setVisibility(View.VISIBLE);
@@ -333,26 +326,14 @@ public class NewestAdapter extends BaseAdapter {
 			holder.totalcomments.setVisibility(View.GONE);
 			holder.totlaCommentLayout.setVisibility(View.GONE);
 		}
-
 	}
 
-	private void showHead(ImageView view, String headportrait) {
-		if ("1".equals(headportrait)) {
-			view.setBackgroundResource(R.drawable.editor_head_boy1);
-		} else if ("2".equals(headportrait)) {
-			view.setBackgroundResource(R.drawable.editor_head_boy2);
-		} else if ("3".equals(headportrait)) {
-			view.setBackgroundResource(R.drawable.editor_head_boy3);
-		} else if ("4".equals(headportrait)) {
-			view.setBackgroundResource(R.drawable.editor_head_girl4);
-		} else if ("5".equals(headportrait)) {
-			view.setBackgroundResource(R.drawable.editor_head_girl5);
-		} else if ("6".equals(headportrait)) {
-			view.setBackgroundResource(R.drawable.editor_head_girl6);
-		} else if ("7".equals(headportrait)) {
-			view.setBackgroundResource(R.drawable.editor_head_feault7);
-		} else {
-			view.setBackgroundResource(R.drawable.editor_head_feault7);
+	private void showHead(SimpleDraweeView view, String headportrait) {
+		try {
+			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+		} catch (Exception e) {
+			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
+			e.printStackTrace();
 		}
 	}
 
@@ -408,8 +389,8 @@ public class NewestAdapter extends BaseAdapter {
 			} else {
 				liveLayout.setVisibility(View.GONE);
 			}
-
-			for (int i = 0; i < mHeadDataInfo.categoryList.size(); i++) {
+			final int size = mHeadDataInfo.categoryList.size();
+			for (int i = 0; i < size; i++) {
 				CategoryDataInfo mCategoryDataInfo = mHeadDataInfo.categoryList.get(i);
 				RelativeLayout item = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_item,
 						null);
@@ -487,7 +468,7 @@ public class NewestAdapter extends BaseAdapter {
 	public static class ViewHolder {
 		RelativeLayout imageLayout;
 		ImageView liveImg;
-		ImageView headimg;
+		SimpleDraweeView headimg;
 		TextView nikename;
 		TextView time;
 		ImageView function;
@@ -535,7 +516,6 @@ public class NewestAdapter extends BaseAdapter {
 	 */
 	public void unlock() {
 		lock = false;
-		// this.notifyDataSetChanged();
 	}
 
 	public void setNewestLiseView(NewestListView view) {
@@ -547,7 +527,8 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	public void updateClickPraiseNumber(VideoSquareInfo info) {
-		for (int i = 0; i < mDataList.size(); i++) {
+		final int size = mDataList.size();
+		for (int i = 0; i < size; i++) {
 			VideoSquareInfo vs = mDataList.get(i);
 			if (vs.id.equals(info.id)) {
 				mDataList.get(i).mVideoEntity.praisenumber = info.mVideoEntity.praisenumber;
@@ -570,5 +551,4 @@ public class NewestAdapter extends BaseAdapter {
 	public void onResume() {
 		setClickLock(false);
 	}
-
 }
