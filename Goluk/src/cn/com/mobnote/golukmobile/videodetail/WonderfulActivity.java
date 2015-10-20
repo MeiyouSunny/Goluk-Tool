@@ -285,6 +285,13 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			if (!isClick) {
 				return;
 			}
+			// 发评论前需要先判断用户是否登录
+			if (!mApp.isUserLoginSucess) {
+				Intent intent = new Intent(this, UserLoginActivity.class);
+				intent.putExtra("isInfo", "back");
+				startActivity(intent);
+				return;
+			}
 			if(mIsReply){
 				click_reply();
 			}else{
@@ -395,14 +402,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 	// 发表评论
 	private void click_send() {
-		// 发评论前需要先判断用户是否登录
-		if (!mApp.isUserLoginSucess) {
-			Intent intent = new Intent(this, UserLoginActivity.class);
-			intent.putExtra("isInfo", "back");
-			startActivity(intent);
-			return;
-		}
-
 		if (CommentTimerManager.getInstance().getIsStarting()) {
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
 					LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", "您评论的速度太快了，请休息一下再评论。");
@@ -424,7 +423,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukUtils.showToast(this, "请输入回复的评论内容");
 			return;
 		}
-		GolukDebugUtils.e("", "=========click_reply=====mWillDelBean："+mWillDelBean);
 		String requestStr = JsonUtil.getAddCommentJson(
 				mVideoJson.data.avideo.video.videoid, "1", content,
 				mWillDelBean.mUserId, mWillDelBean.mUserName);
@@ -904,8 +902,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 		GolukDebugUtils.e("", "----commentActivity--------position:" + position + "   arg3:" + arg3);
 		if(null != mAdapter){
+			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
 			if ( this.mApp.isUserLoginSucess) {
-				mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
 				final UserInfo loginUser = mApp.getMyInfo();
 				GolukDebugUtils.e("", "jyf-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
 				GolukDebugUtils.e("", "jyf-----commentActivity--------uid:" + loginUser.uid);

@@ -24,6 +24,7 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 	public ReplyDialog(Context context, CommentBean commentBean,EditText editText) {
 		super(context, R.style.CustomDialog);
 		setContentView(R.layout.video_reply_layout);
+		setCanceledOnTouchOutside(true);
 		this.mContext = context;
 		this.mCommentBean = commentBean;
 		this.mEditText = editText;
