@@ -7,16 +7,12 @@ import java.util.Timer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -507,7 +503,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			commentHolder.mCommentName.setText(temp.mUserName);
 			if(!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName) && null != temp.mReplyName){
 				//评论回复
-				showText(commentHolder.mCommentConennt, temp.mReplyName, temp.mCommentTxt);
+				UserUtils.showText(commentHolder.mCommentConennt, temp.mReplyName, temp.mCommentTxt);
 			}else{
 				//普通评论
 				commentHolder.mCommentConennt.setText(temp.mCommentTxt);
@@ -853,19 +849,4 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.simpleDraweeView = simpleDraweeView;
 	}
 
-	/**
-	 * 回复评论颜色设置
-	 * @param view
-	 * @param nikename
-	 * @param text
-	 */
-	private void showText(TextView view, String nikename, String text) {
-		String replyName = "@" + nikename + "：";
-		String reply_str = "回复" + replyName + text;
-		SpannableStringBuilder style = new SpannableStringBuilder(reply_str);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2,
-				replyName.length() + 2, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-		view.setText(style);
-	}
-	
 }

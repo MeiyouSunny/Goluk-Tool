@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.videodetail;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.logic.GolukModule;
@@ -62,21 +63,22 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		}
 	}
 	
-	private boolean isReply(){
-		if(mContext instanceof WonderfulActivity){
+	private boolean isReply() {
+		if (mContext instanceof WonderfulActivity) {
 			return WonderfulActivity.mIsReply;
-		}else{
-			
+		} else if (mContext instanceof VideoDetailActivity) {
+			return VideoDetailActivity.mIsReply;
+		} else {
+			return CommentActivity.mIsReply;
 		}
-		return false;
 	}
 	
 	private void deal(boolean flag) {
-		if(isReply()){
+		if (isReply()) {
 			mEditText.requestFocus();
 			GolukUtils.showSoft(mEditText);
-			mEditText.setHint("回复＠"+mCommentBean.mUserName+"：");
-		}else{
+			mEditText.setHint("回复＠" + mCommentBean.mUserName + "：");
+		} else {
 			String requestStr = JsonUtil.getDelCommentJson(mCommentBean.mCommentId);
 			boolean isSucess = GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 					VideoSuqareManagerFn.VSquare_Req_Del_Comment, requestStr);

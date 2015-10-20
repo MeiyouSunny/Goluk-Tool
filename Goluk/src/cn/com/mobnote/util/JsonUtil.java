@@ -895,6 +895,7 @@ public class JsonUtil {
 			txt = URLEncoder.encode(txt, "utf-8");
 			json.put("text", txt);
 			json.put("replyid", replyId);
+			replyName = URLEncoder.encode(replyName, "utf-8");
 			json.put("replyname", replyName);
 
 			return json.toString();

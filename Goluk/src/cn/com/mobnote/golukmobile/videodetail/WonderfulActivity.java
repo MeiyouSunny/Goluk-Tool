@@ -126,6 +126,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mApp = (GolukApplication) getApplication();
 		setContentView(R.layout.comment);
 
+		commentDataList = new ArrayList<CommentBean>();
 		initView();
 
 		sharePlatform = new SharePlatformUtil(this);
@@ -433,8 +434,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		String requestStr = "";
 		if (mIsReply) {
-			requestStr = JsonUtil.getAddCommentJson(
-					mVideoJson.data.avideo.video.videoid, "1", txt,
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,
 					mWillDelBean.mUserId, mWillDelBean.mUserName);
 		}else{
 			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,"","");
@@ -867,20 +867,18 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		if(null != mAdapter){
 			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
 			if ( this.mApp.isUserLoginSucess) {
-				final UserInfo loginUser = mApp.getMyInfo();
+				UserInfo loginUser = mApp.getMyInfo();
 				GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
 				GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
 				if (loginUser.uid.equals(mWillDelBean.mUserId)) {
 					mIsReply = false;
-					new ReplyDialog(this, mWillDelBean, mEditInput).show();
 				} else {
 					mIsReply = true;
-					new ReplyDialog(this, mWillDelBean, mEditInput).show();
 				}
 			}else{
 				mIsReply = true;
-				new ReplyDialog(this, mWillDelBean, mEditInput).show();
 			}
+			new ReplyDialog(this, mWillDelBean, mEditInput).show();
 		}
 		
 	}

@@ -111,7 +111,12 @@ public class CommentListViewAdapter extends BaseAdapter {
 		// 设置名称
 		holder.mName.setText(getShowUserName(temp));
 		// 设置评论内容
-		holder.mContent.setText(temp.mCommentTxt);
+		if (!"".equals(temp.mReplyId) && null != temp.mReplyId
+				&& !"".equals(temp.mReplyName) && null != temp.mReplyName) {
+			UserUtils.showText(holder.mContent, temp.mReplyName, temp.mCommentTxt);
+		} else {
+			holder.mContent.setText(temp.mCommentTxt);
+		}
 		// 设置显示时间
 		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
 		return converView;
