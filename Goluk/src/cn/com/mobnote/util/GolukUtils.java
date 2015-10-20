@@ -1,5 +1,7 @@
 package cn.com.mobnote.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
@@ -11,6 +13,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.facebook.common.util.UriUtil;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +22,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
@@ -610,5 +615,18 @@ public class GolukUtils {
 			mTimer = null;
 		}
 	}
-
+	
+	
+	/**
+	 * 把drawable中的资源图片转换成Uri格式
+	 *
+	 * @param resId
+	 * @return
+	 * @author jyf
+	 */
+	public static Uri getResourceUri(int resId) {
+		Uri uri = new Uri.Builder().scheme(UriUtil.LOCAL_RESOURCE_SCHEME).path(String.valueOf(resId)).build();
+		return uri;
+	}
+	
 }

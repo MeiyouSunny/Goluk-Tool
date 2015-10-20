@@ -85,6 +85,10 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 	private static final int REQUEST_CODE_NIKCNAME = 1000;
 	private static final int REQUEST_CODE_SIGN = REQUEST_CODE_NIKCNAME + 1;
 	private static final int REQUEST_CODE_SYSTEMHEAD = REQUEST_CODE_NIKCNAME + 2;
+	private static final int REQUEST_CODE_PHOTO = 5000;
+	private static final int REQUEST_CODE_CAMERA = 6000;
+	private static final int REQUEST_CODE_CLIP = 7000;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -237,8 +241,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 
 			mTextName.setText(name);
 			
-			mImageHead.setBackgroundResource(R.drawable.my_head_moren7);
-			//UserUtils.focusHead(head, mImageHead);
+			this.setHead(head, mImageHead);
 			mTextSign.setText(sign);
 
 		} catch (Exception e) {
@@ -342,6 +345,25 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			break;
 		}
 
+	}
+	
+	
+	public void setHead(String head, RelativeLayout mImageHead){
+		if(head.equals("1")){
+			mImageHead.setBackgroundResource(R.drawable.my_head_boy1);
+		}else if(head.equals("2")){
+			mImageHead.setBackgroundResource(R.drawable.my_head_boy2);
+		}else if(head.equals("3")){
+			mImageHead.setBackgroundResource(R.drawable.my_head_boy3);
+		}else if(head.equals("4")){
+			mImageHead.setBackgroundResource(R.drawable.my_head_girl4);
+		}else if(head.equals("5")){
+			mImageHead.setBackgroundResource(R.drawable.my_head_girl5);
+		}else if(head.equals("6")){
+			mImageHead.setBackgroundResource(R.drawable.my_head_girl6);
+		}else{
+			mImageHead.setBackgroundResource(R.drawable.my_head_moren7);
+		}
 	}
 	
 	

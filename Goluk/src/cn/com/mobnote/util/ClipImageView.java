@@ -27,8 +27,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-public class ClipImageView extends ImageView implements View.OnTouchListener,
-		ViewTreeObserver.OnGlobalLayoutListener {
+public class ClipImageView extends ImageView implements View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
 
 	private static final int BORDERDISTANCE = ClipView.BORDERDISTANCE;
 
@@ -97,8 +96,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener,
 				baseMatrix.postScale(scale, scale);
 			}
 		}
-		baseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2,
-				(viewHeight - drawableHeight * scale) / 2);
+		baseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2, (viewHeight - drawableHeight * scale) / 2);
 
 		resetMatrix();
 		isJusted = true;
@@ -109,8 +107,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener,
 		return multiGestureDetector.onTouchEvent(event);
 	}
 
-	private class MultiGestureDetector extends
-			GestureDetector.SimpleOnGestureListener implements
+	private class MultiGestureDetector extends GestureDetector.SimpleOnGestureListener implements
 			OnScaleGestureListener {
 
 		private final ScaleGestureDetector scaleGestureDetector;
@@ -130,8 +127,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener,
 			gestureDetector = new GestureDetector(context, this);
 			gestureDetector.setOnDoubleTapListener(this);
 
-			final ViewConfiguration configuration = ViewConfiguration
-					.get(context);
+			final ViewConfiguration configuration = ViewConfiguration.get(context);
 			scaledTouchSlop = configuration.getScaledTouchSlop();
 		}
 
@@ -147,8 +143,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener,
 				if (scaleFactor * scale > maxScale) {
 					scaleFactor = maxScale / scale;
 				}
-				suppMatrix.postScale(scaleFactor, scaleFactor, getWidth() / 2,
-						getHeight() / 2);
+				suppMatrix.postScale(scaleFactor, scaleFactor, getWidth() / 2, getHeight() / 2);
 				checkAndDisplayMatrix();
 			}
 			return true;
@@ -277,8 +272,8 @@ public class ClipImageView extends ImageView implements View.OnTouchListener,
 		private final float targetZoom;
 		private final float deltaScale;
 
-		public AnimatedZoomRunnable(final float currentZoom,
-				final float targetZoom, final float focalX, final float focalY) {
+		public AnimatedZoomRunnable(final float currentZoom, final float targetZoom, final float focalX,
+				final float focalY) {
 			this.targetZoom = targetZoom;
 			this.focalX = focalX;
 			this.focalY = focalY;
@@ -396,8 +391,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener,
 	private RectF getDisplayRect(Matrix matrix) {
 		Drawable d = getDrawable();
 		if (null != d) {
-			displayRect
-					.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+			displayRect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
 			matrix.mapRect(displayRect);
 			return displayRect;
 		}
@@ -428,21 +422,18 @@ public class ClipImageView extends ImageView implements View.OnTouchListener,
 		int width = this.getWidth();
 		int height = this.getHeight();
 
-		Bitmap bitmap = Bitmap.createBitmap(width, height,
-				Bitmap.Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		draw(canvas);
-		
-		return Bitmap.createBitmap(bitmap,(getWidth() - borderlength) / 2,
-				(getHeight() - borderlength) / 2, borderlength, borderlength);
-		
+
+		return Bitmap.createBitmap(bitmap, (getWidth() - borderlength) / 2, (getHeight() - borderlength) / 2,
+				borderlength, borderlength);
+
 	}
-	
-	
+
 	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
 
-		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-				bitmap.getHeight(), Config.ARGB_8888);
+		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
 
 		Canvas canvas = new Canvas(output);
 
@@ -476,14 +467,13 @@ public class ClipImageView extends ImageView implements View.OnTouchListener,
 		paint.setAntiAlias(true);
 		paint.setFilterBitmap(true);
 		canvas.drawARGB(0, 0, 0, 0);
-		//canvas.drawColor(Color.WHITE);
+		// canvas.drawColor(Color.WHITE);
 
 		// 圆形，所有只用一个
 
 		int radius = (int) (Math.sqrt(w * w * 2.0d) / 2);
 
 		canvas.drawRoundRect(rectF, radius, radius, paint);
-		
 
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 
