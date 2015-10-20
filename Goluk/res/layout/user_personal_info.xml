@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/user_login_bg"
@@ -26,14 +28,16 @@
         android:layout_marginTop="10dp"
         android:orientation="vertical" >
 
-         <!-- 视频缩略图片 -->
-        <RelativeLayout
+        
+        <!-- 视频缩略图片 -->
+
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/user_personal_info_head"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/editor_head_feault7">
-        </RelativeLayout>
+            fresco:placeholderImage="@drawable/editor_head_feault7"
+            fresco:placeholderImageScaleType="fitXY" />
 
         <RelativeLayout
             android:layout_width="wrap_content"

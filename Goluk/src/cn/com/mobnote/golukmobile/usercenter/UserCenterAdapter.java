@@ -50,9 +50,6 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 
 import cn.com.mobnote.util.GolukUtils;
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.util.LogUtils;
 
@@ -228,7 +225,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 				
 				if (uca.testUser()) {
 					holder.dz_txt.setText("赞我的人");
-					//holder.userinfoarrow.setVisibility(View.VISIBLE);
 					holder.headImg.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View arg0) {
@@ -315,10 +311,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 						uca.updateTheEnd(false);
 					}
 				}
-				
-				
-				
-				
+	
 				holder.sharelayout.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -346,92 +339,49 @@ public class UserCenterAdapter extends BaseAdapter implements
 			break;
 		case ItemType_VideoInfo:
 			int index_v = position - 1;
-			VideoSquareInfo clusterInfo = this.videogroupdata.videolist
-					.get(index_v);
+			VideoSquareInfo clusterInfo = this.videogroupdata.videolist.get(index_v);
 			ViewHolder holder = null;
 			if (convertView == null) {
-
 				holder = new ViewHolder();
-
-				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.user_center_sharevideo, null);
-				holder.imageLayout = (RelativeLayout) convertView
-						.findViewById(R.id.imageLayout);
-				holder.headimg = (ImageView) convertView
-						.findViewById(R.id.headimg);
-				holder.nikename = (TextView) convertView
-						.findViewById(R.id.nikename);
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_sharevideo, null);
+				holder.imageLayout = (SimpleDraweeView) convertView.findViewById(R.id.imageLayout);
+				holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
+				holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 				holder.location = (TextView) convertView.findViewById(R.id.uc_location);
-				
+
 				holder.time = (TextView) convertView.findViewById(R.id.time);
-				holder.function = (ImageView) convertView
-						.findViewById(R.id.function);
+				holder.function = (ImageView) convertView.findViewById(R.id.function);
 
-				holder.praiseLayout = (LinearLayout) convertView
-						.findViewById(R.id.praiseLayout);
-				holder.zanIcon = (ImageView) convertView
-						.findViewById(R.id.zanIcon);
-				holder.zanText = (TextView) convertView
-						.findViewById(R.id.zanText);
+				holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
+				holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
+				holder.zanText = (TextView) convertView.findViewById(R.id.zanText);
 
-				holder.commentLayout = (LinearLayout) convertView
-						.findViewById(R.id.commentLayout);
-				holder.commentIcon = (ImageView) convertView
-						.findViewById(R.id.commentIcon);
-				holder.commentText = (TextView) convertView
-						.findViewById(R.id.commentText);
+				holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
+				holder.commentIcon = (ImageView) convertView.findViewById(R.id.commentIcon);
+				holder.commentText = (TextView) convertView.findViewById(R.id.commentText);
 
-				holder.shareLayout = (LinearLayout) convertView
-						.findViewById(R.id.shareLayout);
-				holder.shareIcon = (ImageView) convertView
-						.findViewById(R.id.shareIcon);
-				holder.shareText = (TextView) convertView
-						.findViewById(R.id.shareText);
+				holder.shareLayout = (LinearLayout) convertView.findViewById(R.id.shareLayout);
+				holder.shareIcon = (ImageView) convertView.findViewById(R.id.shareIcon);
+				holder.shareText = (TextView) convertView.findViewById(R.id.shareText);
 
 				holder.zText = (TextView) convertView.findViewById(R.id.zText);
 
-				holder.weiguan = (TextView) convertView
-						.findViewById(R.id.weiguan);
-				holder.weiguan = (TextView) convertView
-						.findViewById(R.id.weiguan);
-				holder.totalcomments = (TextView) convertView
-						.findViewById(R.id.totalcomments);
+				holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
+				holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
+				holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
 
-				holder.detail = (TextView) convertView
-						.findViewById(R.id.detail);
+				holder.detail = (TextView) convertView.findViewById(R.id.detail);
 
-				holder.totlaCommentLayout = (LinearLayout) convertView
-						.findViewById(R.id.totlaCommentLayout);
-				holder.comment1 = (TextView) convertView
-						.findViewById(R.id.comment1);
-				holder.comment2 = (TextView) convertView
-						.findViewById(R.id.comment2);
-				holder.comment3 = (TextView) convertView
-						.findViewById(R.id.comment3);
-				holder.isopen = (ImageView) convertView
-						.findViewById(R.id.isopen);
-
-				SimpleDraweeView view = new SimpleDraweeView(mContext);
-				GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-				GenericDraweeHierarchy hierarchy = builder
-						.setFadeDuration(300)
-						.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
-								ScaleType.FIT_XY)
-						.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-						.setActualImageScaleType(ScaleType.FIT_XY).build();
-				view.setHierarchy(hierarchy);
-
+				holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
+				holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
+				holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
+				holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
+				holder.isopen = (ImageView) convertView.findViewById(R.id.isopen);
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
-				RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-				mPreLoadingParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-				holder.imageLayout.addView(view, mPreLoadingParams);
-				holder.mSimpleDraweeView = view;
-
 				convertView.setTag(holder);
-
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
@@ -446,7 +396,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 			if (holder.VideoID == null || !holder.VideoID.equals(clusterInfo.mVideoEntity.videoid))
 			{
 				holder.VideoID = new String(clusterInfo.mVideoEntity.videoid);
-				holder.mSimpleDraweeView.setImageURI(Uri.parse(clusterInfo.mVideoEntity.picture));
+				holder.imageLayout.setImageURI(Uri.parse(clusterInfo.mVideoEntity.picture));
 			}
 			holder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
 					.valueOf(clusterInfo.mUserEntity.headportrait)]);
@@ -476,8 +426,6 @@ public class UserCenterAdapter extends BaseAdapter implements
 			}
 			
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
-//			loadImage(holder.imageLayout, clusterInfo.mVideoEntity.picture,
-//					width);
 			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
@@ -516,38 +464,28 @@ public class UserCenterAdapter extends BaseAdapter implements
 			break;
 		case ItemType_PraiseInfo:
 			int index_p = position - 1;
-			final PraiseInfo prais = this.praisgroupData.praiselist
-					.get(index_p);
+			final PraiseInfo prais = this.praisgroupData.praiselist.get(index_p);
 			PraiseViewHolder praiseholder = null;
 			int nwidth = (int) (GolukUtils.mDensity * 95);
 			if (convertView == null) {
-				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.user_center_praise, null);
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_praise, null);
 				praiseholder = new PraiseViewHolder();
 
-				praiseholder.praiseLayout = (LinearLayout) convertView
-						.findViewById(R.id.praiseLayout);
-				praiseholder.headimg = (ImageView) convertView
-						.findViewById(R.id.userhead);
-				praiseholder.username = (TextView) convertView
-						.findViewById(R.id.username);
-				praiseholder.desc = (TextView) convertView
-						.findViewById(R.id.desc);
-				praiseholder.videoPicLayout = (RelativeLayout) convertView
-						.findViewById(R.id.videopic);
-				praiseholder.userinfo = (LinearLayout) convertView
-						.findViewById(R.id.userinfo);
+				praiseholder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
+				praiseholder.headimg = (ImageView) convertView.findViewById(R.id.userhead);
+				praiseholder.username = (TextView) convertView.findViewById(R.id.username);
+				praiseholder.desc = (TextView) convertView.findViewById(R.id.desc);
+				praiseholder.videoPicLayout = (SimpleDraweeView) convertView.findViewById(R.id.videopic);
+				praiseholder.userinfo = (LinearLayout) convertView.findViewById(R.id.userinfo);
 
 				int nheight = (int) ((float) width / 1.77f);
-				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(
-						nwidth, nheight);
-				mPlayerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,
-						RelativeLayout.TRUE);
-				mPlayerLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL,
-						RelativeLayout.TRUE);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(nwidth, nheight);
+				mPlayerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+				mPlayerLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
 				mPlayerLayoutParams.rightMargin = (int) (GolukUtils.mDensity * 5);
-				praiseholder.videoPicLayout
-						.setLayoutParams(mPlayerLayoutParams);
+				mPlayerLayoutParams.topMargin = (int) (GolukUtils.mDensity * 5);
+				mPlayerLayoutParams.bottomMargin = (int) (GolukUtils.mDensity * 5);
+				praiseholder.videoPicLayout.setLayoutParams(mPlayerLayoutParams);
 
 				convertView.setTag(praiseholder);
 			} else {
@@ -555,10 +493,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 			}
 
 			loadImage(praiseholder.videoPicLayout, prais.picture, nwidth);
-			praiseholder.headimg.setBackgroundResource(ILive.mHeadImg[Integer
-					.valueOf(prais.headportrait)]);
+			praiseholder.headimg.setBackgroundResource(ILive.mHeadImg[Integer.valueOf(prais.headportrait)]);
 			praiseholder.username.setText(prais.nickname);
-			// praiseholder.desc.setText(prais.introduce);
 			praiseholder.desc.setText(prais.introduce);
 			praiseholder.userinfo.setOnClickListener(new OnClickListener() {
 				@Override
@@ -699,36 +635,29 @@ public class UserCenterAdapter extends BaseAdapter implements
 	}
 
 	private void initListener(ViewHolder holder, int index) {
-		VideoSquareInfo mVideoSquareInfo = this.videogroupdata.videolist
-				.get(index);
+		VideoSquareInfo mVideoSquareInfo = this.videogroupdata.videolist.get(index);
 
 		// 分享监听
-		ClickShareListener tempShareListener = new ClickShareListener(mContext,
-				mVideoSquareInfo, (UserCenterActivity) mContext);
+		ClickShareListener tempShareListener = new ClickShareListener(mContext, mVideoSquareInfo,
+				(UserCenterActivity) mContext);
 		holder.shareLayout.setOnClickListener(tempShareListener);
 		// 举报监听
 
-		holder.function.setOnClickListener(new ClickFunctionListener(mContext,
-				mVideoSquareInfo, isMy(mVideoSquareInfo.mUserEntity.uid),
-				(UserCenterActivity) mContext)
+		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo,
+				isMy(mVideoSquareInfo.mUserEntity.uid), (UserCenterActivity) mContext)
 				.setConfirm(!isMy(mVideoSquareInfo.mUserEntity.uid)));
 		// 评论监听
-		holder.commentLayout.setOnClickListener(new ClickCommentListener(
-				mContext, mVideoSquareInfo, true));
+		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
-		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext,
-				mVideoSquareInfo, null));
+		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, null));
 		// 点赞
-		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(
-				mContext, mVideoSquareInfo, (UserCenterActivity) mContext));
+		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mContext, mVideoSquareInfo,
+				(UserCenterActivity) mContext));
 		// 评论总数监听
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
-			holder.totalcomments.setOnClickListener(new ClickCommentListener(
-					mContext, mVideoSquareInfo, false));
-			holder.totlaCommentLayout
-					.setOnClickListener(new ClickCommentListener(mContext,
-							mVideoSquareInfo, false));
+			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 		}
 	}
 
@@ -766,8 +695,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 	public String formatTime(String date) {
 		String time = "";
 		if (null != date) {
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"yyyyMMddHHmmssSSS");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
 			try {
 				Date strtodate = formatter.parse(date);
@@ -784,32 +712,8 @@ public class UserCenterAdapter extends BaseAdapter implements
 		return time;
 	}
 
-	private void loadImage(RelativeLayout layout, String url, int nWidth) {
-		layout.removeAllViews();
-		SimpleDraweeView view = new SimpleDraweeView(mContext);
-		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(
-				mContext.getResources());
-		GenericDraweeHierarchy hierarchy = builder
-				.setFadeDuration(300)
-				.setPlaceholderImage(
-						mContext.getResources().getDrawable(
-								R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setFailureImage(
-						mContext.getResources().getDrawable(
-								R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setActualImageScaleType(ScaleType.FIT_XY).build();
-		view.setHierarchy(hierarchy);
-
-		if (!lock) {
-			view.setImageURI(Uri.parse(url));
-		}
-
-		int height = (int) ((float) nWidth / 1.77f);
-		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
-				nWidth, height);
-		mPreLoadingParams.addRule(RelativeLayout.CENTER_VERTICAL,
-				RelativeLayout.TRUE);
-		layout.addView(view, mPreLoadingParams);
+	private void loadImage(SimpleDraweeView layout, String url, int nWidth) {
+		layout.setImageURI(Uri.parse(url));
 	}
 
 	/**
@@ -860,7 +764,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 		TextView username;
 		TextView desc;
 		LinearLayout userinfo;
-		RelativeLayout videoPicLayout;
+		SimpleDraweeView videoPicLayout;
 	}
 
 	public static class NoVideoDataViewHolder {
@@ -871,13 +775,12 @@ public class UserCenterAdapter extends BaseAdapter implements
 
 	public static class ViewHolder {
 		String VideoID;
-		RelativeLayout imageLayout;
+		SimpleDraweeView imageLayout;
 		ImageView headimg;
 		TextView nikename;
 		TextView location;
 		TextView time;
 		ImageView function;
-		SimpleDraweeView mSimpleDraweeView;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
@@ -926,17 +829,13 @@ public class UserCenterAdapter extends BaseAdapter implements
 			Button sharebtn = (Button) v;
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
-				Drawable more_down = mContext.getResources().getDrawable(
-						R.drawable.share_btn_press);
-				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down,
-						null, null, null);
+				Drawable more_down = mContext.getResources().getDrawable(R.drawable.share_btn_press);
+				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null, null, null);
 				sharebtn.setTextColor(Color.rgb(59, 151, 245));
 				break;
 			case MotionEvent.ACTION_UP:
-				Drawable more_up = mContext.getResources().getDrawable(
-						R.drawable.share_btn);
-				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null,
-						null, null);
+				Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
+				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null, null, null);
 				sharebtn.setTextColor(Color.rgb(136, 136, 136));
 				break;
 			}
@@ -953,9 +852,7 @@ public class UserCenterAdapter extends BaseAdapter implements
 		if (null == userInfo || !userInfo.uid.equals(uid)) {
 			return false;
 		}
-
 		return true;
-
 	}
 
 	public void dealData(String vid) {

@@ -615,11 +615,10 @@ public class GolukUtils {
 			mTimer = null;
 		}
 	}
-	
-	
+
 	/**
 	 * 把drawable中的资源图片转换成Uri格式
-	 *
+	 * 
 	 * @param resId
 	 * @return
 	 * @author jyf
@@ -629,4 +628,5 @@ public class GolukUtils {
 		return uri;
 	}
 	
+
 }

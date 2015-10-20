@@ -11,6 +11,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -59,7 +60,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 	private Button rightBtn = null;
 	private TextView mTextCenter = null;
 	/** 头像 **/
-	private RelativeLayout mImageHead = null;
+	private SimpleDraweeView mImageHead = null;
 	private TextView mTextName = null;
 	/** 个性签名 **/
 	private TextView mTextSign = null;
@@ -119,7 +120,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 		rightBtn = (Button) findViewById(R.id.user_title_right);
 		mTextCenter = (TextView) findViewById(R.id.user_title_text);
 		// 头像
-		mImageHead = (RelativeLayout) findViewById(R.id.user_personal_info_head);
+		mImageHead = (SimpleDraweeView) findViewById(R.id.user_personal_info_head);
 		mTextName = (TextView) findViewById(R.id.user_personal_info_name);
 		// 个性签名
 		mTextSign = (TextView) findViewById(R.id.user_personal_info_sign);
@@ -241,7 +242,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 
 			mTextName.setText(name);
 			
-			this.setHead(head, mImageHead);
+			showHead(mImageHead,head);
+			
 			mTextSign.setText(sign);
 
 		} catch (Exception e) {
@@ -292,9 +294,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			Bundle b = data.getExtras();
 			name = b.getString("imagepath");
 			
-			int nwidth = (int) (GolukUtils.mDensity * 95);
-			loadImage(mImageHead, name, nwidth);
-			
+			mImageHead.setImageURI(Uri.parse(name));
 			
 			System.out.println("xxxxxxxxxxxxxxxxxx");
 			break;
@@ -315,22 +315,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			Bundle bundle3 = data.getExtras();
 			head = bundle3.getString("intentSevenHead");
 			
-			
-			if(head.equals("1")){
-				mImageHead.setBackgroundResource(R.drawable.my_head_boy1);
-			}else if(head.equals("2")){
-				mImageHead.setBackgroundResource(R.drawable.my_head_boy2);
-			}else if(head.equals("3")){
-				mImageHead.setBackgroundResource(R.drawable.my_head_boy3);
-			}else if(head.equals("4")){
-				mImageHead.setBackgroundResource(R.drawable.my_head_girl4);
-			}else if(head.equals("5")){
-				mImageHead.setBackgroundResource(R.drawable.my_head_girl5);
-			}else if(head.equals("6")){
-				mImageHead.setBackgroundResource(R.drawable.my_head_girl6);
-			}else{
-				mImageHead.setBackgroundResource(R.drawable.my_head_moren7);
-			}
+			showHead(mImageHead,head);
 			
 			//UserUtils.focusHead(head, mImageHead);
 			if (head.equals("1") || head.equals("2") || head.equals("3")) {
@@ -347,52 +332,15 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 
 	}
 	
-	
-	public void setHead(String head, RelativeLayout mImageHead){
-		if(head.equals("1")){
-			mImageHead.setBackgroundResource(R.drawable.my_head_boy1);
-		}else if(head.equals("2")){
-			mImageHead.setBackgroundResource(R.drawable.my_head_boy2);
-		}else if(head.equals("3")){
-			mImageHead.setBackgroundResource(R.drawable.my_head_boy3);
-		}else if(head.equals("4")){
-			mImageHead.setBackgroundResource(R.drawable.my_head_girl4);
-		}else if(head.equals("5")){
-			mImageHead.setBackgroundResource(R.drawable.my_head_girl5);
-		}else if(head.equals("6")){
-			mImageHead.setBackgroundResource(R.drawable.my_head_girl6);
-		}else{
-			mImageHead.setBackgroundResource(R.drawable.my_head_moren7);
+	private void showHead(SimpleDraweeView view, String headportrait) {
+		try {
+			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+		} catch (Exception e) {
+			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
+			e.printStackTrace();
 		}
 	}
 	
-	
-	private void loadImage(RelativeLayout layout, String url, int nWidth) {
-		layout.removeAllViews();
-		SimpleDraweeView view = new SimpleDraweeView(mContext);
-		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(
-				mContext.getResources());
-		GenericDraweeHierarchy hierarchy = builder
-				.setFadeDuration(300)
-				.setPlaceholderImage(
-						mContext.getResources().getDrawable(
-								R.drawable.my_head_moren7), ScaleType.FIT_XY)
-				.setFailureImage(
-						mContext.getResources().getDrawable(
-								R.drawable.my_head_moren7), ScaleType.FIT_XY)
-				.setActualImageScaleType(ScaleType.FIT_XY).build();
-		view.setHierarchy(hierarchy);
-
-		view.setImageURI(Uri.parse(url));
-
-		int height = (int) ((float) nWidth / 1.77f);
-		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
-				nWidth, height);
-		mPreLoadingParams.addRule(RelativeLayout.CENTER_VERTICAL,
-				RelativeLayout.TRUE);
-		layout.addView(view, mPreLoadingParams);
-	}
-
 
 	private void exit() {
 		if(null != UserCenterActivity.handler){

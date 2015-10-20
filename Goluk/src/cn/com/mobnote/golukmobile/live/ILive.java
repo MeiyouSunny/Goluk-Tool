@@ -57,11 +57,10 @@ public interface ILive {
 	public static final int[] mHeadImg = { 0, R.drawable.editor_boy_one, R.drawable.editor_boy_two,
 			R.drawable.editor_boy_three, R.drawable.editor_girl_one, R.drawable.editor_girl_two,
 			R.drawable.editor_girl_three, R.drawable.head_unknown };
-	
-	
-	public static final int[] mBigHeadImg = { 0, R.drawable.editor_head_boy1, R.drawable.editor_head_boy3,
-		R.drawable.editor_head_boy2, R.drawable.editor_head_girl4, R.drawable.editor_head_girl5,
-		R.drawable.editor_head_girl6, R.drawable.editor_head_feault7 };
+
+	public static final int[] mBigHeadImg = { R.drawable.editor_head_feault7, R.drawable.editor_head_boy1,
+			R.drawable.editor_head_boy2, R.drawable.editor_head_boy3, R.drawable.editor_head_girl4,
+			R.drawable.editor_head_girl5, R.drawable.editor_head_girl6, R.drawable.editor_head_feault7 };
 
 	/** 开始说话 */
 	public final int MSG_SPEAKING_START_SPEAK = 1;

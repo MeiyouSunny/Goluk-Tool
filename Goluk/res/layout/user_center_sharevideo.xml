@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -77,11 +79,16 @@
 
         <!-- 视频缩略图片 -->
 
-        <RelativeLayout
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/imageLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </RelativeLayout>
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            fresco:actualImageScaleType="fitXY"
+            fresco:fadeDuration="300"
+            fresco:failureImage="@drawable/tacitly_pic"
+            fresco:failureImageScaleType="fitXY"
+            fresco:placeholderImage="@drawable/tacitly_pic"
+            fresco:placeholderImageScaleType="fitXY" />
 
         <!-- 直播图标 -->
 

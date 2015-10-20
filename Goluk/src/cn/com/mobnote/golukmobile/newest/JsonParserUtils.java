@@ -13,7 +13,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
 public class JsonParserUtils {
-	
+
 	public static List<JXListItemDataInfo> parserJXData(String jsonStr) {
 		List<JXListItemDataInfo> jxlistdata = new ArrayList<JXListItemDataInfo>();
 		try {
@@ -22,20 +22,18 @@ public class JsonParserUtils {
 			if (success) {
 				JSONObject data = json.optJSONObject("data");
 				if (null != data) {
-					String result = data.optString("result");
-					String count = data.optString("count");
-					JSONArray list  = data.optJSONArray("list");
+					JSONArray list = data.optJSONArray("list");
 					if (null != list) {
-						for (int i=0; i<list.length(); i++) {
+						for (int i = 0; i < list.length(); i++) {
 							JSONObject object = (JSONObject) list.opt(i);
 							if (null != object) {
 								String jxid = object.optString("jxid");
 								String jxdate = object.optString("jxdate");
-								JSONArray jxlist  = object.optJSONArray("jxlist");
+								JSONArray jxlist = object.optJSONArray("jxlist");
 								if (null != jxlist) {
-									for (int j=0; j<jxlist.length(); j++) {
+									for (int j = 0; j < jxlist.length(); j++) {
 										String date = "";
-										if(j == 0) {
+										if (j == 0) {
 											date = jxdate;
 										}
 										JSONObject jxlistitem = (JSONObject) jxlist.opt(j);
@@ -47,9 +45,6 @@ public class JsonParserUtils {
 						}
 					}
 				}
-			}else {
-				String msg = json.optString("msg");
-				
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -57,7 +52,7 @@ public class JsonParserUtils {
 
 		return jxlistdata;
 	}
-	
+
 	public static int parserJXCount(String jsonStr) {
 		try {
 			JSONObject json = new JSONObject(jsonStr);
@@ -69,18 +64,16 @@ public class JsonParserUtils {
 					int number = Integer.parseInt(count);
 					return number;
 				}
-			}else {
-				String msg = json.optString("msg");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-		
+
 		return -1;
 	}
-	
+
 	public static NewestListHeadDataInfo parserNewestHeadData(String jsonStr) {
 		NewestListHeadDataInfo info = new NewestListHeadDataInfo();
 		try {
@@ -89,9 +82,9 @@ public class JsonParserUtils {
 			if (success) {
 				JSONObject data = json.optJSONObject("data");
 				if (null != data) {
-					JSONArray category  = data.optJSONArray("category");
+					JSONArray category = data.optJSONArray("category");
 					if (null != category) {
-						for (int i=0; i<category.length(); i++) {
+						for (int i = 0; i < category.length(); i++) {
 							JSONObject item = category.getJSONObject(i);
 							CategoryDataInfo cate = new CategoryDataInfo(item);
 							info.categoryList.add(cate);
@@ -102,10 +95,8 @@ public class JsonParserUtils {
 						LiveInfo liveinfo = new LiveInfo(live);
 						info.mLiveDataInfo = liveinfo;
 					}
-					
+
 				}
-			}else {
-				String msg = json.optString("msg");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -113,7 +104,7 @@ public class JsonParserUtils {
 
 		return info;
 	}
-	
+
 	private static void parserNewestItemDataByJsonObj(JSONObject obj, List<VideoSquareInfo> dataList)
 			throws JSONException {
 		if (null == obj) {
@@ -207,6 +198,7 @@ public class JsonParserUtils {
 					mUserEntity.nickname = user.optString("nickname");
 					mUserEntity.headportrait = user.optString("headportrait");
 					mUserEntity.sex = user.optString("sex");
+					mUserEntity.mCustomAvatar = user.optString("customavatar");
 				}
 
 				long id = time + i;
@@ -218,7 +210,7 @@ public class JsonParserUtils {
 			}
 		}
 	}
-	
+
 	public static List<VideoSquareInfo> parserNewestItemData(String jsonStr) {
 		List<VideoSquareInfo> mDataList = new ArrayList<VideoSquareInfo>();
 		try {
@@ -227,10 +219,10 @@ public class JsonParserUtils {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return mDataList;
 	}
-	
+
 	public static List<VideoSquareInfo> parserNewestItemDataByJsonObj(JSONObject obj) {
 		List<VideoSquareInfo> mDataList = new ArrayList<VideoSquareInfo>();
 		try {
@@ -240,5 +232,5 @@ public class JsonParserUtils {
 		}
 		return mDataList;
 	}
-	
+
 }
