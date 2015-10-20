@@ -15,4 +15,9 @@ public class CommentBean {
 	/** 评论人头像 */
 	public String mUserHead;
 
+	/** 回复人id **/
+	public String mReplyId;
+	/** 回复人name **/
+	public String mReplyName;
+
 }

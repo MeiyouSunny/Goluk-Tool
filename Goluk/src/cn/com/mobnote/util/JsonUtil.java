@@ -930,6 +930,10 @@ public class JsonUtil {
 				temp.mCommentId = getJsonStringValue(obj, "commentId", "");
 				temp.mCommentTime = getJsonStringValue(obj, "time", "");
 				temp.mCommentTxt = getJsonStringValue(obj, "text", "");
+				
+				JSONObject replyObj = obj.getJSONObject("reply");
+				temp.mReplyId = getJsonStringValue(replyObj, "id", "");
+				temp.mReplyName = getJsonStringValue(replyObj, "name", "");
 
 				JSONObject authorObj = obj.getJSONObject("author");
 				temp.mUserId = getJsonStringValue(authorObj, "id", "");
@@ -959,6 +963,8 @@ public class JsonUtil {
 			bean.mUserHead = getJsonStringValue(dataObj, "authoravatar", "");
 			bean.mUserId = getJsonStringValue(dataObj, "authorid", "");
 			bean.mUserName = getJsonStringValue(dataObj, "authorname", "");
+			bean.mReplyId = getJsonStringValue(dataObj, "replyid", "");
+			bean.mReplyName = getJsonStringValue(dataObj, "replyname", "");
 
 			return bean;
 		} catch (Exception e) {
