@@ -26,7 +26,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -65,7 +64,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  */
 public class WonderfulActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
-		VideoSuqareManagerFn, ICommentFn, TextWatcher, OnItemLongClickListener, ILiveDialogManagerFn,OnItemClickListener {
+		VideoSuqareManagerFn, ICommentFn, TextWatcher, ILiveDialogManagerFn,OnItemClickListener {
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -191,7 +190,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
-//		mRTPullListView.setOnItemLongClickListener(this);
 		mRTPullListView.setOnItemClickListener(this);
 	}
 
@@ -285,18 +283,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			if (!isClick) {
 				return;
 			}
-			// 发评论前需要先判断用户是否登录
-			if (!mApp.isUserLoginSucess) {
-				Intent intent = new Intent(this, UserLoginActivity.class);
-				intent.putExtra("isInfo", "back");
-				startActivity(intent);
-				return;
-			}
-			if(mIsReply){
-				click_reply();
-			}else{
-				click_send();
-			}
+			click_send();
 			break;
 		case R.id.video_detail_click_refresh:
 			clickRefresh = true;
@@ -402,6 +389,14 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 	// 发表评论
 	private void click_send() {
+		// 发评论／回复 前需要先判断用户是否登录
+		if (!mApp.isUserLoginSucess) {
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			intent.putExtra("isInfo", "back");
+			startActivity(intent);
+			return;
+		}
+		
 		if (CommentTimerManager.getInstance().getIsStarting()) {
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
 					LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", "您评论的速度太快了，请休息一下再评论。");
@@ -414,27 +409,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			return;
 		}
 		httpPost_requestAdd(content);
-	}
-	
-	//回复评论
-	private void click_reply(){
-		String content = mEditInput.getText().toString().trim();
-		if (null == content || "".equals(content)) {
-			GolukUtils.showToast(this, "请输入回复的评论内容");
-			return;
-		}
-		String requestStr = JsonUtil.getAddCommentJson(
-				mVideoJson.data.avideo.video.videoid, "1", content,
-				mWillDelBean.mUserId, mWillDelBean.mUserName);
-		boolean isSucess = GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
-		if (!isSucess) {
-			// 失败
-			GolukUtils.showToast(this, "回复评论失败!");
-			return;
-		}
-		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
-				LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT, "", "正在提交评论", true);
 	}
 
 	// 删除评论
@@ -457,7 +431,14 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukUtils.showToast(this, "数据加载中，请稍候再试");
 			return;
 		}
-		final String requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,"","");
+		String requestStr = "";
+		if (mIsReply) {
+			requestStr = JsonUtil.getAddCommentJson(
+					mVideoJson.data.avideo.video.videoid, "1", txt,
+					mWillDelBean.mUserId, mWillDelBean.mUserName);
+		}else{
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,"","");
+		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
 		if (!isSucess) {
@@ -873,24 +854,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 	}
 
-	@Override
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		GolukDebugUtils.e("", "jyf-----commentActivity--------position:" + position + "   arg3:" + arg3);
-		if (null != mAdapter && this.mApp.isUserLoginSucess) {
-			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
-			final UserInfo loginUser = mApp.getMyInfo();
-			GolukDebugUtils.e("", "jyf-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
-			GolukDebugUtils.e("", "jyf-----commentActivity--------uid:" + loginUser.uid);
-			if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-						LiveDialogManager.DIALOG_TYPE_COMMENT_DELETE, "提示", "确定要删除吗？");
-			} else {
-				// GolukUtils.showToast(this, "不是自己发表禁止删除");
-			}
-		}
-		return true;
-	}
-	
 	/**
 	 * 点击删除或者回复评论
 	 * @param arg0
@@ -905,8 +868,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
 			if ( this.mApp.isUserLoginSucess) {
 				final UserInfo loginUser = mApp.getMyInfo();
-				GolukDebugUtils.e("", "jyf-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
-				GolukDebugUtils.e("", "jyf-----commentActivity--------uid:" + loginUser.uid);
+				GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
+				GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
 				if (loginUser.uid.equals(mWillDelBean.mUserId)) {
 					mIsReply = false;
 					new ReplyDialog(this, mWillDelBean, mEditInput).show();
