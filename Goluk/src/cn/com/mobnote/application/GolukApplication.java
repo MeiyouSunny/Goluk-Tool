@@ -305,11 +305,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		autoLoginStatus = 0;
 		loginoutStatus = false;
 		identifyStatus = 0;
-		// mUser = null;
-		// mLoginManage = null;
-		// mIpcUpdateManage = null;
-		// mIdentifyManage = null;
-		// mRegistAndRepwdManage = null;
 		mTimerManage.timerCancel();
 		isconnection = false;
 		isBackground = false;
