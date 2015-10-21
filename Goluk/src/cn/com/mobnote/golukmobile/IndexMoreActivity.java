@@ -3,8 +3,6 @@ package cn.com.mobnote.golukmobile;
 import org.json.JSONObject;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-
-import u.aly.da;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
@@ -14,10 +12,7 @@ import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.user.UserUtils;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -31,7 +26,6 @@ import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,19 +34,6 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
- * <pre>
- * 1.类命名首字母大写
- * 2.公共函数驼峰式命名
- * 3.属性函数驼峰式命名
- * 4.变量/参数驼峰式命名
- * 5.操作符之间必须加空格
- * 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处
- * 8.所有代码必须使用TAB键缩进
- * 9.函数使用块注释,代码逻辑使用行注释
- * 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致
- * </pre>
  * 
  * @ 功能描述:Goluk首页更多页面
  * 
@@ -62,8 +43,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint({ "HandlerLeak", "Instantiatable" })
 public class IndexMoreActivity implements OnClickListener, UserInterface, VideoSuqareManagerFn {
-	/** application */
-	// private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
 
@@ -113,7 +92,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		ma = (MainActivity) mContext;
 		setListener();
 
-		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
+		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		ma.mApp.mUser.setUserInterface(this);
@@ -121,7 +100,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	}
 
 	public void showView() {
-		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
+		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		ma.mApp.mUser.setUserInterface(this);
@@ -366,7 +345,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			
 			mTextName.setText(userName);
 			GolukDebugUtils.i("lily", userHead);
-			//UserUtils.focusHead(userHead, mImageHead);
+
 			if ("".equals(userDesc) || null == userDesc) {
 				mTextId.setText("大家一起来分享视频吧");
 			} else {
