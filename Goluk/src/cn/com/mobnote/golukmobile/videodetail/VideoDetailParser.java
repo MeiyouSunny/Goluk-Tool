@@ -30,6 +30,7 @@ public class VideoDetailParser {
 						user.uid = json_user.optString("uid");
 						user.nickname = json_user.optString("nickname");
 						user.headportrait = json_user.optString("headportrait");
+						user.customavatar = json_user.optString("customavatar");
 						user.sex = json_user.optString("sex");
 						videoDetailInfo.user = user;
 					}

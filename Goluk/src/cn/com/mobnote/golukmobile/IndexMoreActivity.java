@@ -2,18 +2,17 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
-import u.aly.da;
+import com.facebook.drawee.view.SimpleDraweeView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.user.UserUtils;
-import android.os.Handler;
-import android.os.Message;
+import android.net.Uri;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -27,7 +26,6 @@ import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,19 +34,6 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
- * <pre>
- * 1.类命名首字母大写
- * 2.公共函数驼峰式命名
- * 3.属性函数驼峰式命名
- * 4.变量/参数驼峰式命名
- * 5.操作符之间必须加空格
- * 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处
- * 8.所有代码必须使用TAB键缩进
- * 9.函数使用块注释,代码逻辑使用行注释
- * 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致
- * </pre>
  * 
  * @ 功能描述:Goluk首页更多页面
  * 
@@ -58,8 +43,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint({ "HandlerLeak", "Instantiatable" })
 public class IndexMoreActivity implements OnClickListener, UserInterface, VideoSuqareManagerFn {
-	/** application */
-	// private GolukApplication mApp = null;
 	/** 上下文 */
 	private Context mContext = null;
 
@@ -83,7 +66,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private RelativeLayout mShoppingItem = null;
 
 	/** 个人中心的头像、性别、昵称 */
-	private ImageView mImageHead;
+	private SimpleDraweeView mImageHead;
 	private TextView mTextName, mTextId;
 	private LinearLayout mVideoLayout;
 	private TextView mTextShare, mTextPraise;
@@ -100,7 +83,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private MainActivity ma;
 
 	/** 用户信息 **/
-	private String userHead, userName, userId, userDesc, userUId, userSex;
+	private String userHead, userName, userId, userDesc, userUId, userSex,customavatar;
 	private int shareCount, praiseCount;
 
 	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
@@ -109,7 +92,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		ma = (MainActivity) mContext;
 		setListener();
 
-		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
+		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		ma.mApp.mUser.setUserInterface(this);
@@ -117,7 +100,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	}
 
 	public void showView() {
-		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
+		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		ma.mApp.mUser.setUserInterface(this);
@@ -142,7 +125,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mShoppingItem = (RelativeLayout) mRootLayout.findViewById(R.id.shopping_item);
 
 		// 头像、昵称、id
-		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
+		mImageHead = (SimpleDraweeView) mRootLayout.findViewById(R.id.user_center_head);
 		mTextName = (TextView) mRootLayout.findViewById(R.id.user_center_name_text);
 		mTextId = (TextView) mRootLayout.findViewById(R.id.user_center_id_text);
 		mVideoLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_center_video_layout);
@@ -179,7 +162,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			// 未登录
 			isHasInfo = false;
 			mVideoLayout.setVisibility(View.GONE);
-			mImageHead.setImageResource(R.drawable.editor_head_feault7);
+			this.showHead(mImageHead, "7");
 			mTextName.setText("点击登录");
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
 			mTextId.setText("登录查看个人主页");
@@ -352,10 +335,17 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			praiseCount = json.getInt("praisemenumber");
 			userUId = json.getString("uid");
 			userSex = json.getString("sex");
-
+			customavatar = json.getString("customavatar");
+			
+			if(customavatar != null && !"".equals(customavatar)){
+				mImageHead.setImageURI(Uri.parse(customavatar));
+			}else{
+				showHead(mImageHead,userHead);
+			}
+			
 			mTextName.setText(userName);
 			GolukDebugUtils.i("lily", userHead);
-			UserUtils.focusHead(userHead, mImageHead);
+
 			if ("".equals(userDesc) || null == userDesc) {
 				mTextId.setText("大家一起来分享视频吧");
 			} else {
@@ -370,6 +360,15 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			GolukDebugUtils.e("", "=======IndexMoreActivity====b：" + b);
 
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void showHead(SimpleDraweeView view, String headportrait) {
+		try {
+			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+		} catch (Exception e) {
+			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
 			e.printStackTrace();
 		}
 	}
@@ -425,8 +424,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	public void personalChanged() {
 		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
 		if (ma.mApp.loginStatus == 1 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录成功、自动登录中、自动登录成功
-			mVideoLayout.setVisibility(View.VISIBLE);
-			mImageHead.setImageResource(R.drawable.my_head_moren7);
+			mVideoLayout.setVisibility(View.VISIBLE);;
+			showHead(mImageHead, "7");
 			initData();
 			isHasInfo = true;
 		} else {// 没有用户信息
@@ -434,7 +433,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mTextName.setText("点击登录");
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
 			mTextId.setText("登录查看个人主页");
-			mImageHead.setImageResource(R.drawable.my_head_moren7);
+			showHead(mImageHead, "7");
 			isHasInfo = false;
 		}
 	}
