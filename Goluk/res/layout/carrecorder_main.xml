@@ -156,8 +156,6 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/mRtmpPlayerLayout"
             android:layout_alignRight="@+id/mRtmpPlayerLayout"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="76dp"
             android:background="@drawable/carrecorder_full_btn"
             android:contentDescription="@string/def" />
