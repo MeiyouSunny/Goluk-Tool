@@ -292,17 +292,17 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		switch (mLocationState) {
 		case LOCATION_STATE_ING:
 			// 改图标
-			mAddressImg.setBackgroundResource(R.drawable.tips_close);
+			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_failed);
 			mAddressTv.setText("定位中...");
 			break;
 		case LOCATION_STATE_SUCCESS:
 			// 改变图标
-			mAddressImg.setBackgroundResource(R.drawable.tips_success);
+			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_success);
 			mAddressTv.setText(mCurrentAddress);
 			break;
 		case LOCATION_STATE_FAILED:
 		case LOCATION_STATE_FORBID:
-			mAddressImg.setBackgroundResource(R.drawable.tips_close);
+			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_failed);
 			mAddressTv.setText("点击获取位置");
 			break;
 		default:

@@ -26,6 +26,14 @@ public class CommentInfo {
 	 * 评论内容
 	 */
 	public String text;
+	/**
+	 * 回复ｉｄ
+	 */
+	public String replyid;
+	/**
+	 * 回复name
+	 */
+	public String replyname;
 
 	
 	

@@ -48,6 +48,7 @@ import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity.ShareVideoGroup;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -394,7 +395,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
-			holder.detail.setText(clusterInfo.mUserEntity.nickname + "  " + clusterInfo.mVideoEntity.describe);
+			UserUtils.showCommentText(holder.detail, clusterInfo.mUserEntity.nickname, clusterInfo.mVideoEntity.describe);
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
 			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
 			if (count > 3) {
@@ -413,7 +414,11 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			}
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
-				holder.comment1.setText(comment.name + "  " + comment.text);
+				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+					UserUtils.showReplyText(holder.comment1, comment.name, comment.replyname, comment.text);
+				} else {
+					UserUtils.showCommentText(holder.comment1, comment.name, comment.text);
+				}
 				holder.comment1.setVisibility(View.VISIBLE);
 			} else {
 				holder.comment1.setVisibility(View.GONE);
@@ -421,7 +426,11 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 2) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
-				holder.comment2.setText(comment.name + "  " + comment.text);
+				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+					UserUtils.showReplyText(holder.comment2, comment.name, comment.replyname, comment.text);
+				} else {
+					UserUtils.showCommentText(holder.comment2, comment.name, comment.text);
+				}
 				holder.comment2.setVisibility(View.VISIBLE);
 			} else {
 				holder.comment2.setVisibility(View.GONE);
@@ -429,7 +438,11 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 3) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
-				holder.comment3.setText(comment.name + "  " + comment.text);
+				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+					UserUtils.showReplyText(holder.comment3, comment.name, comment.replyname, comment.text);
+				} else {
+					UserUtils.showCommentText(holder.comment3, comment.name, comment.text);
+				}
 				holder.comment3.setVisibility(View.VISIBLE);
 			} else {
 				holder.comment3.setVisibility(View.GONE);
