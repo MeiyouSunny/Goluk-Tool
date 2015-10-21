@@ -1006,7 +1006,7 @@ public class CarRecorderActivity extends BaseActivity implements
 	 * @date 2015年3月8日
 	 */
 	private void showLoading() {
-		mLoadingText.setText("视频加载中，请稍后...");
+		mLoadingText.setText("视频加载中，请稍候...");
 		mLoadingLayout.setVisibility(View.VISIBLE);
 		mLoading.setVisibility(View.VISIBLE);
 		mLoading.postDelayed(new Runnable() {
