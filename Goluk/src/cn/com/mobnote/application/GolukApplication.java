@@ -26,7 +26,6 @@ import cn.com.mobnote.golukmobile.PushSettingActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserOpinionActivity;
 import cn.com.mobnote.golukmobile.UserPersonalHeadActivity;
-import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.UserPersonalNameActivity;
 import cn.com.mobnote.golukmobile.UserPersonalSignActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
