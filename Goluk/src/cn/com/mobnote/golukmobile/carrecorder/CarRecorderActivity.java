@@ -294,7 +294,7 @@ public class CarRecorderActivity extends BaseActivity implements
 
 	private IBaiduGeoCoderFn mBaiduGeoCoderFn = null;
 
-	private String platform = "g1";
+	private String platform = "G1";
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -316,6 +316,8 @@ public class CarRecorderActivity extends BaseActivity implements
 
 		lsp = new LiveSettingPopWindow(this, mRootLayout);
 		lsp.setCallBackNotify(this);
+		
+		platform = mApp.mIPCControlManager.mProduceName;
 
 		mSettingData = lsp.getCurrentSetting();
 
@@ -1113,7 +1115,7 @@ public class CarRecorderActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 		
-		if (platform.equals("g1")) {
+		if (platform.equals("G1")) {
 			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 		}
 		
@@ -1689,7 +1691,7 @@ public class CarRecorderActivity extends BaseActivity implements
 					String filename = json.optString("filename");
 					if (null != json) {
 						String imagename = "";
-						if("g1".equals(platform)){
+						if("G1".equals(platform)){
 							imagename = videoname.replace("mp4", "jpg");
 						}else{
 							imagename = mNowDownloadName.replace("mp4", "jpg");
@@ -1732,7 +1734,7 @@ public class CarRecorderActivity extends BaseActivity implements
 					if (null != json) {
 						String filename = json.optString("filename");
 						
-						if("g1".equals(platform)){
+						if("G1".equals(platform)){
 							 if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
 								int filesize = json.getInt("filesize");
 								int filerecvsize = json.getInt("filerecvsize");

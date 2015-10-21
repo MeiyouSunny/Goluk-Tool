@@ -2,9 +2,12 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import u.aly.da;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
@@ -12,6 +15,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
@@ -83,7 +87,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private RelativeLayout mShoppingItem = null;
 
 	/** 个人中心的头像、性别、昵称 */
-	private ImageView mImageHead;
+	private SimpleDraweeView mImageHead;
 	private TextView mTextName, mTextId;
 	private LinearLayout mVideoLayout;
 	private TextView mTextShare, mTextPraise;
@@ -100,7 +104,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private MainActivity ma;
 
 	/** 用户信息 **/
-	private String userHead, userName, userId, userDesc, userUId, userSex;
+	private String userHead, userName, userId, userDesc, userUId, userSex,customavatar;
 	private int shareCount, praiseCount;
 
 	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
@@ -142,7 +146,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mShoppingItem = (RelativeLayout) mRootLayout.findViewById(R.id.shopping_item);
 
 		// 头像、昵称、id
-		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
+		mImageHead = (SimpleDraweeView) mRootLayout.findViewById(R.id.user_center_head);
 		mTextName = (TextView) mRootLayout.findViewById(R.id.user_center_name_text);
 		mTextId = (TextView) mRootLayout.findViewById(R.id.user_center_id_text);
 		mVideoLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_center_video_layout);
@@ -179,7 +183,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			// 未登录
 			isHasInfo = false;
 			mVideoLayout.setVisibility(View.GONE);
-			mImageHead.setImageResource(R.drawable.editor_head_feault7);
+			this.showHead(mImageHead, "7");
 			mTextName.setText("点击登录");
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
 			mTextId.setText("登录查看个人主页");
@@ -352,10 +356,17 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			praiseCount = json.getInt("praisemenumber");
 			userUId = json.getString("uid");
 			userSex = json.getString("sex");
-
+			customavatar = json.getString("customavatar");
+			
+			if(customavatar != null && !"".equals(customavatar)){
+				mImageHead.setImageURI(Uri.parse(customavatar));
+			}else{
+				showHead(mImageHead,userHead);
+			}
+			
 			mTextName.setText(userName);
 			GolukDebugUtils.i("lily", userHead);
-			UserUtils.focusHead(userHead, mImageHead);
+			//UserUtils.focusHead(userHead, mImageHead);
 			if ("".equals(userDesc) || null == userDesc) {
 				mTextId.setText("大家一起来分享视频吧");
 			} else {
@@ -370,6 +381,15 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			GolukDebugUtils.e("", "=======IndexMoreActivity====b：" + b);
 
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void showHead(SimpleDraweeView view, String headportrait) {
+		try {
+			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+		} catch (Exception e) {
+			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
 			e.printStackTrace();
 		}
 	}
@@ -425,8 +445,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	public void personalChanged() {
 		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
 		if (ma.mApp.loginStatus == 1 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录成功、自动登录中、自动登录成功
-			mVideoLayout.setVisibility(View.VISIBLE);
-			mImageHead.setImageResource(R.drawable.my_head_moren7);
+			mVideoLayout.setVisibility(View.VISIBLE);;
+			showHead(mImageHead, "7");
 			initData();
 			isHasInfo = true;
 		} else {// 没有用户信息
@@ -434,7 +454,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mTextName.setText("点击登录");
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
 			mTextId.setText("登录查看个人主页");
-			mImageHead.setImageResource(R.drawable.my_head_moren7);
+			showHead(mImageHead, "7");
 			isHasInfo = false;
 		}
 	}
