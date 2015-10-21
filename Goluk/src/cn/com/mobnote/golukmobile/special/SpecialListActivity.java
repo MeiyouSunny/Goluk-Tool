@@ -27,8 +27,8 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
@@ -410,23 +410,32 @@ public class SpecialListActivity extends BaseActivity implements
 								.get("comments");
 						if (comments != null && comments.size() > 0) {
 
-							String source = null;
 							for (int i = 0; i < comments.size(); i++) {
 								CommentInfo ci = comments.get(i);
-								source = "<font color='#0B3FA2'>" + ci.name
-										+ "</font>  " + ci.text;
 
 								if (i == 0) {
 									comment1.setVisibility(View.VISIBLE);
-									comment1.setText(Html.fromHtml(source));
+									if(null != ci.replyid && !"".equals(ci.replyid) && null != ci.replyname && !"".equals(ci.replyname)) {
+										UserUtils.showReplyText(comment1, ci.name, ci.replyname, ci.text);
+									} else {
+										UserUtils.showCommentText(comment1, ci.name, ci.text);
+									}
 
 								} else if (i == 1) {
 									comment2.setVisibility(View.VISIBLE);
-									comment2.setText(Html.fromHtml(source));
+									if(null != ci.replyid && !"".equals(ci.replyid) && null != ci.replyname && !"".equals(ci.replyname)) {
+										UserUtils.showReplyText(comment2, ci.name, ci.replyname, ci.text);
+									} else {
+										UserUtils.showCommentText(comment2, ci.name, ci.text);
+									}
 
 								} else if (i == 2) {
 									comment3.setVisibility(View.VISIBLE);
-									comment3.setText(Html.fromHtml(source));
+									if(null != ci.replyid && !"".equals(ci.replyid) && null != ci.replyname && !"".equals(ci.replyname)) {
+										UserUtils.showReplyText(comment3, ci.name, ci.replyname, ci.text);
+									} else {
+										UserUtils.showCommentText(comment3, ci.name, ci.text);
+									}
 
 								}
 							}

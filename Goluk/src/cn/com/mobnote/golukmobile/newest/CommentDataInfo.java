@@ -9,6 +9,8 @@ public class CommentDataInfo {
 	public String avatar;
 	public String time;
 	public String text;
+	public String replyid;
+	public String replyname;
 	
 	public CommentDataInfo() {
 		
@@ -21,6 +23,8 @@ public class CommentDataInfo {
 		this.avatar = json.optString("avatar");
 		this.time = json.optString("time");
 		this.text = json.optString("text");
+		this.replyid = json.optString("replyid");
+		this.replyname = json.optString("replyname");
 	}
 
 }
