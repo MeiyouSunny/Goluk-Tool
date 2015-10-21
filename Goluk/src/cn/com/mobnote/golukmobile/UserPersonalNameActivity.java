@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
@@ -32,7 +33,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * 编辑昵称
  * 
  * @author mobnote
- *
+ * 
  */
 public class UserPersonalNameActivity extends BaseActivity implements OnClickListener {
 
@@ -56,6 +57,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 
 	// 保存数据的loading
 	private CustomLoadingDialog mCustomProgressDialog = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -115,13 +117,13 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mEditName.setSelection(mNameText.length());
 
 		mEditName.setOnKeyListener(new OnKeyListener() {
-			
+
 			@Override
 			public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-				 if(keyCode == KeyEvent.KEYCODE_ENTER){
+				if (keyCode == KeyEvent.KEYCODE_ENTER) {
 					GolukDebugUtils.e("lily", "----------回车------KEYCODE_ENTER-------");
 					mImageNameRight.setVisibility(View.GONE);
-				}else{
+				} else {
 					mImageNameRight.setVisibility(View.VISIBLE);
 				}
 				return false;
@@ -176,22 +178,22 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			break;
 		}
 	}
-	
+
 	TextWatcher mTextWatcher = new TextWatcher() {
 
 		@Override
 		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 			String name = mEditName.getText().toString();
-			if("".equals(name) || null == name){
+			if ("".equals(name) || null == name) {
 				mImageNameRight.setVisibility(View.GONE);
-			}else{
+			} else {
 				mImageNameRight.setVisibility(View.VISIBLE);
 			}
 		}
 
 		@Override
 		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-			}
+		}
 
 		@Override
 		public void afterTextChanged(Editable arg0) {
@@ -199,10 +201,10 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			number = MAX_COUNT - num;
 			if (number < 0) {
 				mTextCount.setTextColor(Color.RED);
-			}else{
+			} else {
 				mTextCount.setTextColor(getResources().getInteger(R.color.setting_right_text_color));
 			}
-			mTextCount.setText(number+"");
+			mTextCount.setText(number + "");
 		}
 	};
 
@@ -216,12 +218,20 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		} else {
 			// {NickName：“昵称”}
 			mNameNewText = name;
-			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-						IPageNotifyFn.PageType_ModifyNickName, JsonUtil.getUserNickNameJson(name));
-			if (b) {
+			boolean b;
+			try {
+				b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+						IPageNotifyFn.PageType_ModifyNickName,
+						JsonUtil.getUserNickNameJson(URLEncoder.encode(name, "UTF-8")));
+				if (b) {
 					// 保存中
-				mCustomProgressDialog.show();
+					mCustomProgressDialog.show();
+				}
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+
 		}
 	}
 
