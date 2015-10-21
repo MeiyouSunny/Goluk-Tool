@@ -11,7 +11,9 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import android.app.Dialog;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,7 +27,11 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 	public ReplyDialog(Context context, CommentBean commentBean,EditText editText) {
 		super(context, R.style.CustomDialog);
 		setContentView(R.layout.video_reply_layout);
+		
 		setCanceledOnTouchOutside(true);
+		Window window = this.getWindow();
+		window.setGravity(Gravity.BOTTOM);
+		
 		this.mContext = context;
 		this.mCommentBean = commentBean;
 		this.mEditText = editText;
