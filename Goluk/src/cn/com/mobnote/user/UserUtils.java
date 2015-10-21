@@ -10,8 +10,12 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -311,5 +315,19 @@ public class UserUtils {
 		return ILive.mHeadImg[7];
 	}
 	
+	/**
+	 * 回复评论颜色设置
+	 * @param view
+	 * @param nikename
+	 * @param text
+	 */
+	public static void showText(TextView view, String nikename, String text) {
+		String replyName = "@" + nikename + "：";
+		String reply_str = "回复" + replyName + text;
+		SpannableStringBuilder style = new SpannableStringBuilder(reply_str);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2,
+				replyName.length() + 2, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		view.setText(style);
+	}
 	
 }

@@ -508,7 +508,13 @@ public class VideoDetailAdapter extends BaseAdapter {
 			CommentBean temp = mDataList.get(index);
 			commentHolder.mCommentHead.setBackgroundResource(UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 			commentHolder.mCommentName.setText(temp.mUserName);
-			commentHolder.mCommentConennt.setText(temp.mCommentTxt);
+			if(!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName) && null != temp.mReplyName){
+				//评论回复
+				UserUtils.showText(commentHolder.mCommentConennt, temp.mReplyName, temp.mCommentTxt);
+			}else{
+				//普通评论
+				commentHolder.mCommentConennt.setText(temp.mCommentTxt);
+			}
 			commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
 
 			commentHolder.mCommentHead.setOnClickListener(new OnClickListener() {
