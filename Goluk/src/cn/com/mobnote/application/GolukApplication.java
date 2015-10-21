@@ -25,6 +25,7 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.PushSettingActivity;
 import cn.com.mobnote.golukmobile.UserIdentifyActivity;
 import cn.com.mobnote.golukmobile.UserOpinionActivity;
+import cn.com.mobnote.golukmobile.UserPersonalHeadActivity;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.UserPersonalNameActivity;
 import cn.com.mobnote.golukmobile.UserPersonalSignActivity;
@@ -987,6 +988,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case PageType_ModifyHeadPic:
 			if (mContext instanceof ImageClipActivity) {
 				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
+			}
+			
+			if (mContext instanceof UserPersonalHeadActivity) {
+				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
 			}
 			break;
 		}
