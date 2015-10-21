@@ -314,9 +314,22 @@ public class UserUtils {
 		// 显示默认头像
 		return ILive.mHeadImg[7];
 	}
+	/**
+	 * 设置普通评论显示
+	 * @param view
+	 * @param nikename
+	 * @param text
+	 */
+	public static void showCommentText(TextView view, String nikename, String text) {
+		String t_str = nikename + " " + text;
+		SpannableStringBuilder style = new SpannableStringBuilder(t_str);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		view.setText(style);
+	}
 	
 	/**
-	 * 回复评论颜色设置
+	 * 评论列表中回复评论颜色设置
 	 * @param view
 	 * @param nikename
 	 * @param text
@@ -327,6 +340,24 @@ public class UserUtils {
 		SpannableStringBuilder style = new SpannableStringBuilder(reply_str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2,
 				replyName.length() + 2, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		view.setText(style);
+	}
+	
+	/**
+	 * 设置最新、个人主页回复评论内容显示
+	 * @param view
+	 * @param nikename
+	 * @param replyName
+	 * @param text
+	 */
+	public static void showReplyText(TextView view, String nikename, String replyName,String text) {
+		String replyText = "@"+replyName+"：";
+		String str = nikename+" 回复"+replyText+text;
+		SpannableStringBuilder style = new SpannableStringBuilder(str);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length()+3, nikename.length()+3+replyText.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
 	
