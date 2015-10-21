@@ -14,5 +14,7 @@ public class CommentBean {
 	public String mUserName;
 	/** 评论人头像 */
 	public String mUserHead;
+	/** 用户头像网络地址 */
+	public String customavatar;
 
 }

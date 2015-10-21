@@ -614,12 +614,15 @@ public class JsonUtil {
 
 	/**
 	 * 升级传服务器的参数
-	 * @param appVersion	appVersion存储路径
+	 * 
+	 * @param appVersion
+	 *            appVersion存储路径
 	 * @param ipcVersion
-	 * @param ipcModel	ipc设备型号
+	 * @param ipcModel
+	 *            ipc设备型号
 	 * @return
 	 */
-	public static String putIPC(String appVersion, String ipcVersion,String ipcModel) {
+	public static String putIPC(String appVersion, String ipcVersion, String ipcModel) {
 		try {
 			// {“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
 			JSONObject obj = new JSONObject();
@@ -640,7 +643,7 @@ public class JsonUtil {
 	 * @param savePath
 	 * @return
 	 */
-	public static String ipcDownLoad(String url, String ipcVersion,String ipcModel) {
+	public static String ipcDownLoad(String url, String ipcVersion, String ipcModel) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("URL", url);
@@ -814,7 +817,7 @@ public class JsonUtil {
 			obj.put("type", "1");
 			obj.put("creattime", createTime);
 			obj.put("location", location);
-			
+
 			json = obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -934,6 +937,7 @@ public class JsonUtil {
 				temp.mUserId = getJsonStringValue(authorObj, "id", "");
 				temp.mUserName = getJsonStringValue(authorObj, "name", "");
 				temp.mUserHead = getJsonStringValue(authorObj, "avatar", "");
+				temp.customavatar = getJsonStringValue(authorObj, "customavatar", "");
 
 				list.add(temp);
 			}
@@ -1235,10 +1239,14 @@ public class JsonUtil {
 		}
 		return "";
 	}
+
 	/**
 	 * 开关机提示音、精彩视频拍摄提示音
-	 * @param speakerSwitch  开关机提示音
-	 * @param wonderfulSwitch  精彩视频拍摄提示音
+	 * 
+	 * @param speakerSwitch
+	 *            开关机提示音
+	 * @param wonderfulSwitch
+	 *            精彩视频拍摄提示音
 	 * @return
 	 */
 	public static String getSpeakerSwitchJson(int speakerSwitch, int wonderfulSwitch) {
@@ -1252,8 +1260,10 @@ public class JsonUtil {
 		}
 		return "";
 	}
+
 	/**
 	 * 查询ipc升级文件
+	 * 
 	 * @param ipcVersion
 	 * @param ipcModel
 	 * @return

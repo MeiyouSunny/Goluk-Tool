@@ -25,174 +25,185 @@ import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
 public class UserUtils {
 
 	/**
 	 * AlertDialog
 	 */
-	public static void showDialog(Context context,String message){
+	public static void showDialog(Context context, String message) {
 		Builder builder = new AlertDialog.Builder(context);
-		AlertDialog dialog = builder.setTitle(context.getResources().getString(R.string.user_dialog_hint_title)).setMessage(message)
-		.setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null)
-		.create();
+		AlertDialog dialog = builder.setTitle(context.getResources().getString(R.string.user_dialog_hint_title))
+				.setMessage(message).setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null)
+				.create();
 		dialog.show();
 	}
+
 	/**
 	 * 隐藏软件盘
 	 */
-	public static void hideSoftMethod(Activity activity){
+	public static void hideSoftMethod(Activity activity) {
 		if (null == activity) {
 			return;
 		}
-		 InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-		 View focusView = activity.getCurrentFocus();
-		 if (null == imm || null == focusView) {
-			 return;
-		 }
-		  imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+		InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		View focusView = activity.getCurrentFocus();
+		if (null == imm || null == focusView) {
+			return;
+		}
+		imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
 	}
+
 	/**
 	 * 常用手机号的判断
 	 */
 	public static boolean isMobileNO(String mobiles) {
-        boolean flag = false;
-        try {
-            Pattern p = Pattern.compile("^[1][0-9]{10}$"); // 验证手机号
-            Matcher m = p.matcher(mobiles);
-            flag = m.matches();
-        } catch (Exception e) {
-            flag = false;
-        }
-        return flag;
-    }
-	 public static boolean isNetDeviceAvailable(Context context){
-	        boolean bisConnFlag=false;
-	        ConnectivityManager conManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	        NetworkInfo network = conManager.getActiveNetworkInfo();
-	        if(network!=null){
-	            bisConnFlag=conManager.getActiveNetworkInfo().isAvailable();
-	        }
-	        return bisConnFlag;
-	    }
-	 
-	 /**
-	  * 个人中心模块头像的变化
-	  */
-	 public static void userHeadChange(ImageView headImage,String headString,TextView textSex){
-		if(headString.equals("1")){
+		boolean flag = false;
+		try {
+			Pattern p = Pattern.compile("^[1][0-9]{10}$"); // 验证手机号
+			Matcher m = p.matcher(mobiles);
+			flag = m.matches();
+		} catch (Exception e) {
+			flag = false;
+		}
+		return flag;
+	}
+
+	public static boolean isNetDeviceAvailable(Context context) {
+		boolean bisConnFlag = false;
+		ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo network = conManager.getActiveNetworkInfo();
+		if (network != null) {
+			bisConnFlag = conManager.getActiveNetworkInfo().isAvailable();
+		}
+		return bisConnFlag;
+	}
+
+	/**
+	 * 个人中心模块头像的变化
+	 */
+	public static void userHeadChange(ImageView headImage, String headString, TextView textSex) {
+		if (headString.equals("1")) {
 			headImage.setImageResource(R.drawable.my_head_boy1);
 			textSex.setText("男");
-		}else if(headString.equals("2")){
+		} else if (headString.equals("2")) {
 			headImage.setImageResource(R.drawable.my_head_boy2);
 			textSex.setText("男");
-		}else if(headString.equals("3")){
+		} else if (headString.equals("3")) {
 			headImage.setImageResource(R.drawable.my_head_boy3);
 			textSex.setText("男");
-		}else if(headString.equals("4")){
+		} else if (headString.equals("4")) {
 			headImage.setImageResource(R.drawable.my_head_girl4);
 			textSex.setText("女");
-		}else if(headString.equals("5")){
+		} else if (headString.equals("5")) {
 			headImage.setImageResource(R.drawable.my_head_girl5);
 			textSex.setText("女");
-		}else if(headString.equals("6")){
+		} else if (headString.equals("6")) {
 			headImage.setImageResource(R.drawable.my_head_girl6);
 			textSex.setText("女");
-		}else{
+		} else {
 			headImage.setImageResource(R.drawable.my_head_moren7);
 			textSex.setText("未知");
 		}
-	 }
-	 
-	 public static void userHeadChanged(ImageView headImage,String headString,String textSex){
-			if(headString.equals("1")){
-				headImage.setImageResource(R.drawable.my_head_boy1);
-				textSex = "1";
-			}else if(headString.equals("2")){
-				headImage.setImageResource(R.drawable.my_head_boy2);
-				textSex = "1";
-			}else if(headString.equals("3")){
-				headImage.setImageResource(R.drawable.my_head_boy3);
-				textSex = "1";
-			}else if(headString.equals("4")){
-				headImage.setImageResource(R.drawable.my_head_girl4);
-				textSex = "2";
-			}else if(headString.equals("5")){
-				headImage.setImageResource(R.drawable.my_head_girl5);
-				textSex = "2";
-			}else if(headString.equals("6")){
-				headImage.setImageResource(R.drawable.my_head_girl6);
-				textSex = "2";
-			}else {
-				headImage.setImageResource(R.drawable.my_head_moren7);
-				textSex = "0";
+	}
+
+	public static void userHeadChanged(ImageView headImage, String headString, String textSex) {
+		if (headString.equals("1")) {
+			headImage.setImageResource(R.drawable.my_head_boy1);
+			textSex = "1";
+		} else if (headString.equals("2")) {
+			headImage.setImageResource(R.drawable.my_head_boy2);
+			textSex = "1";
+		} else if (headString.equals("3")) {
+			headImage.setImageResource(R.drawable.my_head_boy3);
+			textSex = "1";
+		} else if (headString.equals("4")) {
+			headImage.setImageResource(R.drawable.my_head_girl4);
+			textSex = "2";
+		} else if (headString.equals("5")) {
+			headImage.setImageResource(R.drawable.my_head_girl5);
+			textSex = "2";
+		} else if (headString.equals("6")) {
+			headImage.setImageResource(R.drawable.my_head_girl6);
+			textSex = "2";
+		} else {
+			headImage.setImageResource(R.drawable.my_head_moren7);
+			textSex = "0";
+		}
+	}
+
+	/**
+	 * UserPersonalHeadActivity默认选中的head
+	 */
+	public static void focusHead(String headString, SimpleDraweeView headImage) {
+		try {
+			if (null == headImage) {
+				return;
 			}
-		 }
-	 
-	 /**
-	  * UserPersonalHeadActivity默认选中的head
-	  */
-	 public static void focusHead(String headString,ImageView headImage){
-		 if(headString.equals("1")){
-				headImage.setImageResource(R.drawable.my_head_boy1);
-			}else if(headString.equals("2")){
-				headImage.setImageResource(R.drawable.my_head_boy2);
-			}else if(headString.equals("3")){
-				headImage.setImageResource(R.drawable.my_head_boy3);
-			}else if(headString.equals("4")){
-				headImage.setImageResource(R.drawable.my_head_girl4);
-			}else if(headString.equals("5")){
-				headImage.setImageResource(R.drawable.my_head_girl5);
-			}else if(headString.equals("6")){
-				headImage.setImageResource(R.drawable.my_head_girl6);
-			}else{
-				headImage.setImageResource(R.drawable.my_head_moren7);
+			if (headString.equals("1")) {
+				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy1));
+			} else if (headString.equals("2")) {
+				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy2));
+			} else if (headString.equals("3")) {
+				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy3));
+			} else if (headString.equals("4")) {
+				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl4));
+			} else if (headString.equals("5")) {
+				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl5));
+			} else if (headString.equals("6")) {
+				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl6));
+			} else {
+				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_moren7));
 			}
-	 }
-	 
-	 /**
-	  * 固件升级提示框
-	  */
-	public static AlertDialog showDialogUpdate(Context context,String message){
-		AlertDialog  showUpdateDialog = null;
-		showUpdateDialog = new AlertDialog.Builder(context)
-				.setMessage(message)
-				.setCancelable(false)
+		} catch (Exception e) {
+
+		}
+	}
+
+	/**
+	 * 固件升级提示框
+	 */
+	public static AlertDialog showDialogUpdate(Context context, String message) {
+		AlertDialog showUpdateDialog = null;
+		showUpdateDialog = new AlertDialog.Builder(context).setMessage(message).setCancelable(false)
 				.setOnKeyListener(new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if(keyCode == KeyEvent.KEYCODE_BACK){
+						if (keyCode == KeyEvent.KEYCODE_BACK) {
 							return true;
 						}
 						return false;
 					}
-		}).show();
+				}).show();
 		return showUpdateDialog;
-	 }
-	 /**
-	  * 固件升级取消对话框
-	  */
-	public static void dismissUpdateDialog(AlertDialog showUpdateDialog){
+	}
+
+	/**
+	 * 固件升级取消对话框
+	 */
+	public static void dismissUpdateDialog(AlertDialog showUpdateDialog) {
 		if (null != showUpdateDialog) {
 			showUpdateDialog.dismiss();
 			showUpdateDialog = null;
 		}
-	 }
+	}
+
 	/**
 	 * 升级成功
 	 */
-	public static void showUpdateSuccess(AlertDialog showUpdateDialog,Context context,String message){
-		if(showUpdateDialog == null){
-			showUpdateDialog = new AlertDialog.Builder(context).setTitle(context.getResources().getString(R.string.user_dialog_hint_title))
-				.setMessage(message)
-				.setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null)
-				.show();
+	public static void showUpdateSuccess(AlertDialog showUpdateDialog, Context context, String message) {
+		if (showUpdateDialog == null) {
+			showUpdateDialog = new AlertDialog.Builder(context)
+					.setTitle(context.getResources().getString(R.string.user_dialog_hint_title)).setMessage(message)
+					.setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null).show();
 		}
 	}
-	
+
 	/**
 	 * 判断文件是否存在
 	 */
-	public static boolean fileIsExists(String path){
+	public static boolean fileIsExists(String path) {
 		try {
 			String filePath = FileUtils.libToJavaPath(path);
 			File f = new File(filePath);
@@ -205,54 +216,53 @@ public class UserUtils {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 升级提示
+	 * 
 	 * @param mContext
 	 * @param message1
 	 * @param message2
 	 */
-	public static void showUpgradeGoluk(final Context mContext,String message, final String url){
+	public static void showUpgradeGoluk(final Context mContext, String message, final String url) {
 		Builder mBuilder = new AlertDialog.Builder(mContext);
-		AlertDialog dialog = mBuilder.setTitle("发现新版本")
-				.setMessage(message)
+		AlertDialog dialog = mBuilder.setTitle("发现新版本").setMessage(message)
 				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
-					
+
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						//浏览器打开url
+						// 浏览器打开url
 						GolukUtils.openUrl(url, mContext);
-						
-						if(GolukApplication.mMainActivity != null){
+
+						if (GolukApplication.mMainActivity != null) {
 							GolukApplication.mMainActivity.finish();
 							GolukApplication.mMainActivity = null;
 						}
 						SysApplication.getInstance().exit();
 					}
-				})
-				.setCancelable(false)
-				.setOnKeyListener(new OnKeyListener() {
+				}).setCancelable(false).setOnKeyListener(new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if(keyCode == KeyEvent.KEYCODE_BACK){
+						if (keyCode == KeyEvent.KEYCODE_BACK) {
 							return true;
 						}
 						return false;
 					}
-				})
-				.create();
+				}).create();
 		dialog.show();
 	}
-    /**
-     * 手机号格式化显示  3-4-4
-     * @param s
-     * @param cursorPosition
-     * @param before
-     * @param count
-     * @param mEditPhone
-     * @param mTextWatcher
-     */
-	public static void formatPhone(CharSequence s,EditText mEditPhone){
+
+	/**
+	 * 手机号格式化显示 3-4-4
+	 * 
+	 * @param s
+	 * @param cursorPosition
+	 * @param before
+	 * @param count
+	 * @param mEditPhone
+	 * @param mTextWatcher
+	 */
+	public static void formatPhone(CharSequence s, EditText mEditPhone) {
 		String contents = s.toString();
 		int length = contents.length();
 		if (length == 4) {
@@ -277,17 +287,19 @@ public class UserUtils {
 			}
 		}
 	}
+
 	/**
 	 * 手机号格式化后保存
+	 * 
 	 * @param phone
 	 */
-	public static String formatSavePhone(String phone){
+	public static String formatSavePhone(String phone) {
 		String a = phone.substring(0, 3);
-		String b = phone.substring(3,7);
-		String c = phone.substring(7,phone.length());
-		return a+"-"+b+"-"+c;
+		String b = phone.substring(3, 7);
+		String c = phone.substring(7, phone.length());
+		return a + "-" + b + "-" + c;
 	}
-	
+
 	/**
 	 * 通过头像标识，得到头像图片
 	 * 
@@ -310,6 +322,5 @@ public class UserUtils {
 		// 显示默认头像
 		return ILive.mHeadImg[7];
 	}
-	
-	
+
 }

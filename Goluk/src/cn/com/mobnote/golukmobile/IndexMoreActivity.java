@@ -355,7 +355,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 
 			mTextName.setText(userName);
 			GolukDebugUtils.i("lily", userHead);
-			UserUtils.focusHead(userHead, mImageHead);
+//			UserUtils.focusHead(userHead, mImageHead);
 			if ("".equals(userDesc) || null == userDesc) {
 				mTextId.setText("大家一起来分享视频吧");
 			} else {
