@@ -4,12 +4,16 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.net.Uri;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -123,9 +127,36 @@ public class CommentListViewAdapter extends BaseAdapter {
 		// 设置名称
 		holder.mName.setText(getShowUserName(temp));
 		// 设置评论内容
-		holder.mContent.setText(temp.mCommentTxt);
+		if (!"".equals(temp.mReplyId) && null != temp.mReplyId
+				&& !"".equals(temp.mReplyName) && null != temp.mReplyName) {
+			UserUtils.showText(holder.mContent, temp.mReplyName, temp.mCommentTxt);
+		} else {
+			holder.mContent.setText(temp.mCommentTxt);
+		}
 		// 设置显示时间
 		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
+		// 点击头像跳转到个人主页
+		holder.mHead.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent it = new Intent(mContext, UserCenterActivity.class);
+
+				UCUserInfo user = new UCUserInfo();
+				user.uid = temp.mUserId;
+				user.nickname = temp.mUserName;
+				user.headportrait = temp.mUserHead;
+				user.introduce = "";
+				user.sex = "";
+				user.customavatar = "";
+				user.praisemenumber = "0";
+				user.sharevideonumber = "0";
+
+				it.putExtra("userinfo", user);
+				it.putExtra("type", 0);
+				mContext.startActivity(it);
+			}
+		});
 		return converView;
 	}
 

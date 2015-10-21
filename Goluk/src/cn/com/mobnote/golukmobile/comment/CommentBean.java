@@ -17,4 +17,9 @@ public class CommentBean {
 	/** 用户头像网络地址 */
 	public String customavatar;
 
+	/** 回复人id **/
+	public String mReplyId;
+	/** 回复人name **/
+	public String mReplyName;
+
 }

@@ -69,6 +69,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 	private String name = null;
 	private String sign = null;
 	private String sex = null;
+	private String customavatar = null;
 
 	/** 头像 **/
 	private RelativeLayout mHeadLayout = null;
@@ -239,10 +240,14 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			name = json.getString("nickname");
 			sign = json.getString("desc");
 			sex = json.getString("sex");
+			customavatar = json.getString("customavatar");
+			if(customavatar != null && !"".equals(customavatar)){
+				mImageHead.setImageURI(Uri.parse(customavatar));
+			}else{
+				showHead(mImageHead,head);
+			}
 
 			mTextName.setText(name);
-			
-			showHead(mImageHead,head);
 			
 			mTextSign.setText(sign);
 

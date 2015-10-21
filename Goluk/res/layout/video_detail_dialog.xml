@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="43.3dp"
         android:gravity="center"
-        android:text="推荐这个视频"
+        android:text="@string/dialog_str_tuijian"
         android:textColor="#1163a2"
         android:textSize="15sp" />
 
@@ -24,7 +24,7 @@
         android:layout_width="fill_parent"
         android:layout_height="43.3dp"
         android:gravity="center"
-        android:text="举报不良内容"
+        android:text="@string/dialog_str_confirm"
         android:textColor="#ff0000"
         android:textSize="15sp" />
 
@@ -38,7 +38,7 @@
         android:layout_width="fill_parent"
         android:layout_height="43.3dp"
         android:gravity="center"
-        android:text="返回首页"
+        android:text="@string/dialog_str_goback"
         android:textColor="#1163a2"
         android:textSize="15sp" />
 
@@ -52,7 +52,7 @@
         android:layout_width="fill_parent"
         android:layout_height="43.3dp"
         android:gravity="center"
-        android:text="取消"
+        android:text="@string/dialog_str_cancel"
         android:textColor="#1163a2"
         android:textSize="15sp" />
 
