@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
@@ -25,7 +28,7 @@ import android.widget.TextView;
  * 编辑签名
  * 
  * @author mobnote
- *
+ * 
  */
 public class UserPersonalSignActivity extends BaseActivity implements OnClickListener {
 
@@ -127,16 +130,16 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			if (number < 0) {
 				UserUtils.showDialog(this, "请输入50个字符以内的有效个性签名");
 			} else {
-					String body = mEditBody.getText().toString();
-					if (body.equalsIgnoreCase(mSignText)) {
+				String body = mEditBody.getText().toString();
+				if (body.equalsIgnoreCase(mSignText)) {
 
-						Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
-						it.putExtra("itSign", mSignNewText);
-						this.setResult(2, it);
-						this.finish();
-					} else {
-						saveSign(body);
-					}
+					Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
+					it.putExtra("itSign", mSignNewText);
+					this.setResult(2, it);
+					this.finish();
+				} else {
+					saveSign(body);
+				}
 			}
 			break;
 
@@ -178,12 +181,20 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		} else {
 			// {desc：“个性签名”}
 			mSignNewText = sign;
-			boolean b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-						IPageNotifyFn.PageType_ModifySignature, JsonUtil.getUserSignJson(sign));
-			if (b) {
+			boolean b;
+			try {
+				b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+						IPageNotifyFn.PageType_ModifySignature,
+						JsonUtil.getUserSignJson(URLEncoder.encode(sign, "UTF-8")));
+				if (b) {
 					// 保存中
-				mCustomProgressDialog.show();
+					mCustomProgressDialog.show();
+				}
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+
 		}
 	}
 
