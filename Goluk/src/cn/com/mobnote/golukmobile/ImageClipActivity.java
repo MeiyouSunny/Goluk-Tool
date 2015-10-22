@@ -1,6 +1,4 @@
 package cn.com.mobnote.golukmobile;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,7 +23,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -59,7 +56,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 		setContentView(R.layout.roadbook_crop_pic);
 		Uri uri = Uri.parse(getIntent().getStringExtra("imageuri"));
-		mCustomProgressDialog = new CustomLoadingDialog(ImageClipActivity.this, "图片生成中,请稍后!");
+		mCustomProgressDialog = new CustomLoadingDialog(ImageClipActivity.this, "正在保存头像,请稍候!");
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
@@ -314,7 +311,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 							}
 
 							String path = data.getString("customavatar");
-							GolukUtils.showToast(ImageClipActivity.this, "图片上传成功");
+							GolukUtils.showToast(ImageClipActivity.this, "图片保存成功");
 
 							Intent it = new Intent(ImageClipActivity.this, UserPersonalInfoActivity.class);
 							it.putExtra("imagepath", path);
