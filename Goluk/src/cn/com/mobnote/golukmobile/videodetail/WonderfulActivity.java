@@ -18,8 +18,10 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
 import android.widget.AbsListView;
@@ -187,11 +189,12 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mImageRight.setOnClickListener(this);
 		mEditInput.addTextChangedListener(this);
 		mImageRefresh.setOnClickListener(this);
-		mAllLayout.setOnClickListener(this);
 
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
 		mRTPullListView.setOnItemClickListener(this);
+		
+		mAllLayout.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
 	}
 
 	/**
@@ -289,9 +292,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		case R.id.video_detail_click_refresh:
 			clickRefresh = true;
 			getDetailData();
-			break;
-		case R.id.all_layout:
-			UserUtils.hideSoftMethod(this);
 			break;
 		default:
 			break;
@@ -882,7 +882,19 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		
 	}
-
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+			// 获得当前得到焦点的View
+			View v = getCurrentFocus();
+			if (UserUtils.isShouldHideInput(v, ev)) {
+				UserUtils.hideSoftMethod(this);
+			}
+		}
+		return super.dispatchTouchEvent(ev);
+	}
+	
 	@Override
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT == dialogType) {
@@ -935,5 +947,20 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	OnGlobalLayoutListener onGlobalLayoutListener = new OnGlobalLayoutListener() {
+		
+		@Override
+		public void onGlobalLayout() {
+			int off = mAllLayout.getRootView().getHeight() - mAllLayout.getHeight();
+			if(off < 300) {
+				//键盘隐藏
+				if("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
+					mEditInput.setHint("写评论");
+					mIsReply = false;
+				}
+			}
+		}
+	};
 
 }
