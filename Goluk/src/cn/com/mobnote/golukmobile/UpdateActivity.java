@@ -500,9 +500,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 								timerCancel();
 								// 传输文件成功
 								mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
-								timerTask();
+								timerTaskOne();
 							} else {
-								timerTask();
+								timerTaskOne();
 							}
 						}
 						if (stage.equals("2")) {
@@ -511,7 +511,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							GolukDebugUtils.i("lily", "------------percent-------111111");
 							if (!percent.equals("95") && !percent.equals("100")) {
 								GolukDebugUtils.i("lily", "------------percent-------2222");
-								timerTask();
+								timerTaskTwo();
 							} else {
 								GolukDebugUtils.i("lily", "------------percent-------33333");
 								timerCancel();
@@ -543,9 +543,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	}
 
 	/**
-	 * 固件升级过程中超时 1000x60=6000
+	 * 升级一阶段  超时时间１分钟
+	 * 固件升级过程中超时 1000x60=60000
 	 */
-	public void timerTask() {
+	private void timerTaskOne() {
 		timerCancel();
 		mTimer = new Timer();
 		mTimer.schedule(new TimerTask() {
@@ -557,13 +558,30 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
 						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
 					}
-				} else if (stage.equals("2") && !percent.equals("100")) {
+				}
+			}
+		}, 60000);
+	}
+	
+	/**
+	 * 升级一阶段  超时时间３分钟
+	 * 固件升级过程中超时 1000x60x3=180000
+	 */
+	private void timerTaskTwo() {
+		timerCancel();
+		mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				// ipc断开
+				if (stage.equals("2") && !percent.equals("100")) {
 					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
 						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
 					}
 				}
 			}
-		}, 6000);
+		}, 180000);
 	}
 
 	/**
