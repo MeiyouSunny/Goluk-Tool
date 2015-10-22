@@ -42,6 +42,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 	private CustomLoadingDialog mCustomProgressDialog = null;
 
 	private SettingImageView siv = null;
+	
+	private boolean isSave = true;
 
 	/** 视频存放外卡文件路径 */
 	private static final String APP_FOLDER = android.os.Environment.getExternalStorageDirectory().getPath();
@@ -57,10 +59,11 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 		setContentView(R.layout.roadbook_crop_pic);
 		Uri uri = Uri.parse(getIntent().getStringExtra("imageuri"));
-
+		mCustomProgressDialog = new CustomLoadingDialog(ImageClipActivity.this, "图片生成中,请稍后!");
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
+		
 		
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inSampleSize = 4;// 图片宽高都为原来的二分之一，即图片为原来的四分之一
@@ -88,28 +91,29 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.saveBtn:
-			if (mCustomProgressDialog == null) {
-				mCustomProgressDialog = new CustomLoadingDialog(this, "图片生成中,请稍后!");
-				mCustomProgressDialog.show();
-			} else {
-				mCustomProgressDialog.show();
-			}
-			Bitmap bitmap = imageView.clip();
-
-			try {
-				String request = this.saveBitmap(siv.toRoundBitmap(bitmap));
-				if (request != null) {
-					boolean flog = this.uploadImageHead(request);
-					System.out.println("flog =" + flog);
+			if(isSave){
+				isSave = false;
+				if (mCustomProgressDialog != null) {
+					mCustomProgressDialog.show();
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Bitmap bitmap = imageView.clip();
+
+				try {
+					String request = this.saveBitmap(siv.toRoundBitmap(bitmap));
+					if (request != null) {
+						boolean flog = this.uploadImageHead(request);
+						System.out.println("flog =" + flog);
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				bitmap.recycle();
 			}
-			bitmap.recycle();
+			
 			break;
 		case R.id.cancelBtn: {
 			this.finish();
@@ -287,6 +291,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
 		// TODO Auto-generated method stub
 		if (type == PageType_ModifyHeadPic) {
+			isSave = true;
 			if (mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.close();
 			}
