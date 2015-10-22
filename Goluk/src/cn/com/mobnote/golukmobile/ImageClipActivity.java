@@ -293,37 +293,43 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			if (success == 1) {
 				try {
 					JSONObject result = new JSONObject(param2.toString());
-					if (result != null) {
-						Boolean suc = result.getBoolean("success");
+					Boolean suc = result.getBoolean("success");
 
-						if (suc) {
-							JSONObject data = result.getJSONObject("data");
-							String rst = data.getString("result");
-							// 图片上传成功
-							if ("0".equals(rst)) {
-								if (cachePath != null && !"".equals(cachePath)) {
-									File file = new File(cachePath);
-									if (file.exists()) {
-										file.delete();
-									}
-									cachePath = "";
+					if (suc) {
+						JSONObject data = result.getJSONObject("data");
+						String rst = data.getString("result");
+						// 图片上传成功
+						if ("0".equals(rst)) {
+							if (cachePath != null && !"".equals(cachePath)) {
+								File file = new File(cachePath);
+								if (file.exists()) {
+									file.delete();
 								}
-
-								String path = data.getString("customavatar");
-								GolukUtils.showToast(ImageClipActivity.this, "图片上传成功");
-
-								Intent it = new Intent(ImageClipActivity.this, UserPersonalInfoActivity.class);
-								it.putExtra("imagepath", path);
-								this.setResult(RESULT_OK, it);
-								this.finish();
+								cachePath = "";
 							}
 
+							String path = data.getString("customavatar");
+							GolukUtils.showToast(ImageClipActivity.this, "图片上传成功");
+
+							Intent it = new Intent(ImageClipActivity.this, UserPersonalInfoActivity.class);
+							it.putExtra("imagepath", path);
+							this.setResult(RESULT_OK, it);
+							this.finish();
+						}else{
+							GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
 						}
+
+					}else{
+						GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
+					GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
 					e.printStackTrace();
 				}
+			}else{
+				
+				GolukUtils.showToast(ImageClipActivity.this, "网络不给力");
 			}
 		}
 	}
