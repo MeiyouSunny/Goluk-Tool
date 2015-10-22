@@ -866,19 +866,21 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		GolukDebugUtils.e("", "----commentActivity--------position:" + position + "   arg3:" + arg3);
 		if(null != mAdapter){
 			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
-			if ( this.mApp.isUserLoginSucess) {
-				UserInfo loginUser = mApp.getMyInfo();
-				GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
-				GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
-				if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-					mIsReply = false;
-				} else {
+			if(null != mWillDelBean) {
+				if (this.mApp.isUserLoginSucess) {
+					UserInfo loginUser = mApp.getMyInfo();
+					GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
+					GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
+					if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+						mIsReply = false;
+					} else {
+						mIsReply = true;
+					}
+				}else{
 					mIsReply = true;
 				}
-			}else{
-				mIsReply = true;
+				new ReplyDialog(this, mWillDelBean, mEditInput).show();
 			}
-			new ReplyDialog(this, mWillDelBean, mEditInput).show();
 		}
 		
 	}
