@@ -39,8 +39,6 @@ public class NewestAdapter extends BaseAdapter {
 	private int count = 0;
 	private int width = 0;
 	private float density = 0;
-	/** 滚动中锁标识 */
-	private boolean lock = false;
 	private NewestListView mNewestListView = null;
 	private CategoryListView mCategoryListView = null;
 	private final int FIRST_TYPE = 0;
@@ -388,9 +386,9 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	private View getHeadView() {
-		int imagewidth = (int) ((width - 10 * density) / 2);
-		int imageheight = (int) (imagewidth * 0.56);
 		if (null == mHeadView) {
+			int imagewidth = (int) ((width - 10 * density) / 2);
+			int imageheight = (int) (imagewidth * 0.56);
 			mHeadView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
 			RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
 			RelativeLayout liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
@@ -510,26 +508,6 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment2;
 		TextView comment3;
 
-	}
-
-	/**
-	 * 锁住后滚动时禁止下载图片
-	 * 
-	 * @author xuhw
-	 * @date 2015年6月8日
-	 */
-	public void lock() {
-		lock = true;
-	}
-
-	/**
-	 * 解锁后恢复下载图片功能
-	 * 
-	 * @author xuhw
-	 * @date 2015年6月8日
-	 */
-	public void unlock() {
-		lock = false;
 	}
 
 	public void setNewestLiseView(NewestListView view) {
