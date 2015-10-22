@@ -2,7 +2,7 @@ package cn.com.mobnote.golukmobile.videosuqare;
 
 import cn.com.mobnote.golukmobile.newest.NewestListView;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
-import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
@@ -14,12 +14,13 @@ public class VideoSquareAdapter extends PagerAdapter {
 	private WonderfulSelectedListView mWonderfulSelectedListView = null;
 	private NewestListView mNewestListView = null;
 
-	public VideoSquareAdapter(Context c, SharePlatformUtil spf) {
+	public VideoSquareAdapter(Context c) {
 		this.mContext = c;
 	}
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
+		GolukDebugUtils.e("", "jyf----Goluk----OOM----VideoSquareAdapter  positon:" + position);
 		if (0 == position) {
 			mWonderfulSelectedListView = new WonderfulSelectedListView(mContext);
 			container.addView(mWonderfulSelectedListView.getView());

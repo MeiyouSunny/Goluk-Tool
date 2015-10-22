@@ -48,6 +48,7 @@ public class NewestAdapter extends BaseAdapter {
 	private boolean clickLock = false;
 	private RelativeLayout mHeadView;
 	private ViewHolder holder;
+	private final float widthHeight = 1.78f;
 
 	public NewestAdapter(Context context) {
 		mContext = context;
@@ -178,7 +179,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 		holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
 
-		int height = (int) ((float) width / 1.77f);
+		int height = (int) ((float) width / widthHeight);
 		RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
 		mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 		holder.videoImg.setLayoutParams(mPlayerLayoutParams);
@@ -262,7 +263,8 @@ public class NewestAdapter extends BaseAdapter {
 			holder.detail.setVisibility(View.GONE);
 		} else {
 			holder.detail.setVisibility(View.VISIBLE);
-			UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname, mVideoSquareInfo.mVideoEntity.describe);
+			UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+					mVideoSquareInfo.mVideoEntity.describe);
 		}
 
 		if (isLive(mVideoSquareInfo)) {
@@ -301,44 +303,50 @@ public class NewestAdapter extends BaseAdapter {
 					holder.comment2.setVisibility(View.VISIBLE);
 					holder.comment3.setVisibility(View.VISIBLE);
 					if (1 == comments.size()) {
-						if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid) 
+						if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid)
 								&& null != comments.get(0).replyname && !"".equals(comments.get(0).replyname)) {
-							showReplyText(holder.comment1, comments.get(0).name, comments.get(0).replyname, comments.get(0).text);
+							showReplyText(holder.comment1, comments.get(0).name, comments.get(0).replyname,
+									comments.get(0).text);
 						} else {
 							UserUtils.showCommentText(holder.comment1, comments.get(0).name, comments.get(0).text);
 						}
 						holder.comment2.setVisibility(View.GONE);
 						holder.comment3.setVisibility(View.GONE);
 					} else if (2 == comments.size()) {
-						if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid) 
+						if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid)
 								&& null != comments.get(0).replyname && !"".equals(comments.get(0).replyname)) {
-							showReplyText(holder.comment1, comments.get(0).name, comments.get(0).replyname, comments.get(0).text);
+							showReplyText(holder.comment1, comments.get(0).name, comments.get(0).replyname,
+									comments.get(0).text);
 						} else {
 							UserUtils.showCommentText(holder.comment1, comments.get(0).name, comments.get(0).text);
 						}
-						if (null != comments.get(1).replyid && !"".equals(comments.get(1).replyid) 
+						if (null != comments.get(1).replyid && !"".equals(comments.get(1).replyid)
 								&& null != comments.get(1).replyname && !"".equals(comments.get(1).replyname)) {
-							showReplyText(holder.comment2, comments.get(1).name, comments.get(1).replyname, comments.get(1).text);
+							showReplyText(holder.comment2, comments.get(1).name, comments.get(1).replyname,
+									comments.get(1).text);
 						} else {
 							UserUtils.showCommentText(holder.comment2, comments.get(1).name, comments.get(1).text);
 						}
 						holder.comment3.setVisibility(View.GONE);
 					} else if (3 == comments.size()) {
-						if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid) 
+						if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid)
 								&& null != comments.get(0).replyname && !"".equals(comments.get(0).replyname)) {
-							showReplyText(holder.comment1, comments.get(0).name, comments.get(0).replyname, comments.get(0).text);
+							showReplyText(holder.comment1, comments.get(0).name, comments.get(0).replyname,
+									comments.get(0).text);
 						} else {
 							UserUtils.showCommentText(holder.comment1, comments.get(0).name, comments.get(0).text);
 						}
-						if (null != comments.get(1).replyid && !"".equals(comments.get(1).replyid) 
+						if (null != comments.get(1).replyid && !"".equals(comments.get(1).replyid)
 								&& null != comments.get(1).replyname && !"".equals(comments.get(1).replyname)) {
-							showReplyText(holder.comment2, comments.get(1).name, comments.get(1).replyname, comments.get(1).text);
+							showReplyText(holder.comment2, comments.get(1).name, comments.get(1).replyname,
+									comments.get(1).text);
 						} else {
 							UserUtils.showCommentText(holder.comment2, comments.get(1).name, comments.get(1).text);
 						}
-						if (null != comments.get(2).replyid && !"".equals(comments.get(2).replyid) 
+						if (null != comments.get(2).replyid && !"".equals(comments.get(2).replyid)
 								&& null != comments.get(2).replyname && !"".equals(comments.get(2).replyname)) {
-							showReplyText(holder.comment3, comments.get(2).name, comments.get(2).replyname, comments.get(2).text);
+							showReplyText(holder.comment3, comments.get(2).name, comments.get(2).replyname,
+									comments.get(2).text);
 						} else {
 							UserUtils.showCommentText(holder.comment3, comments.get(2).name, comments.get(2).text);
 						}
@@ -368,25 +376,17 @@ public class NewestAdapter extends BaseAdapter {
 		return "1".equals(mVideoSquareInfo.mVideoEntity.type);
 	}
 
-//	private void showText(TextView view, String nikename, String text) {
-//		String t_str = nikename + " " + text;
-//		SpannableStringBuilder style = new SpannableStringBuilder(t_str);
-//		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
-//				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-//		view.setText(style);
-//	}
-	
-	private void showReplyText(TextView view, String nikename, String replyName,String text) {
-		String replyText = "@"+replyName+"：";
-		String str = nikename+" 回复"+replyText+text;
+	private void showReplyText(TextView view, String nikename, String replyName, String text) {
+		String replyText = "@" + replyName + "：";
+		String str = nikename + " 回复" + replyText + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length()+3, nikename.length()+3+replyText.length(),
-				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 3, nikename.length()
+				+ 3 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
 	private View getHeadView() {
 		int imagewidth = (int) ((width - 10 * density) / 2);
 		int imageheight = (int) (imagewidth * 0.56);
@@ -405,7 +405,7 @@ public class NewestAdapter extends BaseAdapter {
 					liveLayout.setVisibility(View.GONE);
 				}
 
-				int height = (int) ((float) width / 1.77f);
+				int height = (int) ((float) width / widthHeight);
 				RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
 				liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
 				liveLayout.setLayoutParams(liveLayoutParams);

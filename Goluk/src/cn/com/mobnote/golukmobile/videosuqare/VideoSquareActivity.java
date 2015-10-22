@@ -1,10 +1,8 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -23,13 +21,11 @@ public class VideoSquareActivity implements OnClickListener {
 	private ImageView hot = null;
 	private TextView hotTitle = null;
 	private TextView squareTitle = null;
-	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
 
 	RelativeLayout mRootLayout = null;
 	Context mContext = null;
-	MainActivity ma = null;
-	
+
 	private float density;
 
 	public VideoSquareActivity(RelativeLayout rootlayout, Context context) {
@@ -40,10 +36,9 @@ public class VideoSquareActivity implements OnClickListener {
 	}
 
 	public void init() {
-		ma = (MainActivity) mContext;
 		mViewPager = (ViewPager) mRootLayout.findViewById(R.id.mViewpager);
 		mViewPager.setOffscreenPageLimit(3);
-		mVideoSquareAdapter = new VideoSquareAdapter(mContext, null);
+		mVideoSquareAdapter = new VideoSquareAdapter(mContext);
 		mViewPager.setAdapter(mVideoSquareAdapter);
 		mViewPager.setOnPageChangeListener(opcl);
 		hot = (ImageView) mRootLayout.findViewById(R.id.line_hot);
@@ -53,7 +48,7 @@ public class VideoSquareActivity implements OnClickListener {
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		mVideoSquareAdapter.onActivityResult( requestCode,  resultCode,  data);
+		mVideoSquareAdapter.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private void setListener() {
@@ -66,7 +61,6 @@ public class VideoSquareActivity implements OnClickListener {
 		if (!isSucess) {
 			return;
 		}
-
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
 	}
 
@@ -82,28 +76,29 @@ public class VideoSquareActivity implements OnClickListener {
 			if (0 == arg2) {
 				return;
 			}
-			
+
 			float process = arg1 * 100;
 			if (process < 0) {
 				process = 0;
 			}
-			
+
 			if (process > 99) {
 				process = 100;
 			}
-			
-			updateLine((int)process);
+
+			updateLine((int) process);
 		}
 
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
 		}
 	};
-	
+
 	private void updateLine(int process) {
-		RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int)(50*density), (int)(2*density));
+		RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int) (50 * density),
+				(int) (2 * density));
 		lineParams.addRule(RelativeLayout.BELOW, R.id.hot_title);
-		lineParams.setMargins((int)(process*density), (int)(5*density), 0, 0);
+		lineParams.setMargins((int) (process * density), (int) (5 * density), 0, 0);
 		hot.setLayoutParams(lineParams);
 	}
 
@@ -115,7 +110,7 @@ public class VideoSquareActivity implements OnClickListener {
 			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
 			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
 
-		} 
+		}
 	}
 
 	@Override
@@ -139,16 +134,12 @@ public class VideoSquareActivity implements OnClickListener {
 		}
 	}
 
-	public void onBackPressed() {
-		
-	}
-
 	public void onResume() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onResume();
 		}
 	}
-	
+
 	public void onPause() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onPause();

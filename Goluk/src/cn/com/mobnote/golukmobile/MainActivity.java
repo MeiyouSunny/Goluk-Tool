@@ -48,8 +48,6 @@ import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.location.LocationNotifyAdapter;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -57,7 +55,6 @@ import cn.com.mobnote.module.page.PageNotifyAdapter;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.talk.TalkNotifyAdapter;
 import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.receiver.NetworkStateReceiver;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
@@ -180,9 +177,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 初始化个人中心
 		initUserInfo();
 		// 初始化连接与綁定状态
-		boolean b = this.isBindSucess();
-		GolukDebugUtils.i("lily", "======bind====status===" + b);
-		if (b) {
+		if (isBindSucess()) {
 			startWifi();
 			// 启动创建热点
 			createWiFiHot();
@@ -231,9 +226,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
 			notifyLogicNetWorkState(true);
 		}
-
 		GolukUtils.getMobileInfo(this);
-
 	}
 
 	@Override
@@ -281,7 +274,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			if (null != bean) {
 				GolukNotification.getInstance().dealAppinnerClick(this, bean);
 			}
-//			GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
+			// GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
 		}
 	}
 
@@ -296,7 +289,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		MobclickAgent.setDebugMode(false);
 		MobclickAgent.setCatchUncaughtExceptions(false);
 		// 添加腾讯崩溃统计 初始化SDK
-		CrashReport.initCrashReport(getApplicationContext(), CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
+		CrashReport
+				.initCrashReport(getApplicationContext(), CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
 		final String mobileId = Tapi.getMobileId();
 		CrashReport.setUserId(mobileId);
 		GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);

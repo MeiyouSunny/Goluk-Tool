@@ -627,6 +627,31 @@ public class GolukUtils {
 		Uri uri = new Uri.Builder().scheme(UriUtil.LOCAL_RESOURCE_SCHEME).path(String.valueOf(resId)).build();
 		return uri;
 	}
-	
+
+	@SuppressLint("SimpleDateFormat")
+	public static String getTime(String date) {
+		String time = null;
+		try {
+			long curTime = System.currentTimeMillis();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date strtodate = formatter.parse(date);
+
+			Date curDate = new Date(curTime);
+			int curYear = curDate.getYear();
+			int history = strtodate.getYear();
+
+			if (curYear == history) {
+				SimpleDateFormat jn = new SimpleDateFormat("-MM.dd-");
+				return jn.format(strtodate);// 今年内：月日更新
+			} else {
+				SimpleDateFormat jn = new SimpleDateFormat("-yyyy.MM.dd-");
+				return jn.format(strtodate);// 非今年：年月日更新
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return time;
+	}
 
 }
