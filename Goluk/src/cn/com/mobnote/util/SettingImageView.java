@@ -55,13 +55,13 @@ public class SettingImageView {
 		cv.put(MediaStore.Images.Media.TITLE, name);
 		cv.put(MediaStore.Images.Media.DISPLAY_NAME, name + ".jpeg");
 		cv.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-
 		mCameraUri = mContext.getContentResolver().insert(
 				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
 
 		Intent it = new Intent();
 		it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 		it.putExtra(MediaStore.EXTRA_OUTPUT, mCameraUri);
+		it.putExtra("camerasensortype", 2);
 		((UserPersonalInfoActivity)mContext).startActivityForResult(it, CAMERA_QUQUEST_CODE);
 	}
 	

@@ -248,10 +248,8 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				switch (scrollState) {
 				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-					mNewestAdapter.lock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-					mNewestAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						if (mDataList.size() > 0) {
 							if (!addFooter) {
@@ -266,9 +264,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					mNewestAdapter.lock();
 					break;
-
 				default:
 					break;
 				}

@@ -121,6 +121,10 @@ public class UserCenterActivity extends BaseActivity implements
 	private TextView title = null;
 	
 	public static int refristUserInfo = 100;
+	
+	/** 是否刷新头像数据 **/
+	
+	private boolean isRefresh = false;
 
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
@@ -158,6 +162,7 @@ public class UserCenterActivity extends BaseActivity implements
 									curUser.introduce = u.getString("desc");
 									curUser.headportrait = u.getString("head");
 									curUser.nickname  = u.getString("nickname");
+									curUser.customavatar = u.getString("customavatar");
 									updateViewData(true, 0);
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block

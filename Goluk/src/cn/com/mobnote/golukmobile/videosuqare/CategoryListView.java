@@ -39,7 +39,8 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener, OnClickListener, IClickShareView ,IClickPraiseView{
+public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener, OnClickListener,
+		IClickShareView, IClickPraiseView {
 
 	public static final String TAG = "CategoryListView";
 
@@ -511,10 +512,8 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 		switch (scrollState) {
 		case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-			mCategoryAdapter.lock();
 			break;
 		case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-			mCategoryAdapter.unlock();
 			if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
 				if (isHaveData) {
 					// 上拉刷新
@@ -526,9 +525,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			}
 			break;
 		case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-			mCategoryAdapter.lock();
 			break;
-
 		default:
 			break;
 		}
@@ -539,29 +536,29 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 		wonderfulFirstVisible = firstVisibleItem;
 		wonderfulVisibleCount = visibleItemCount;
-		
-		if(null == mDataList && mDataList.size() <= 0) {
+
+		if (null == mDataList && mDataList.size() <= 0) {
 			return;
 		}
-		
+
 		int first = firstVisibleItem - 1;
 		if (first < mDataList.size()) {
-			for(int i=0; i<first; i++) {
+			for (int i = 0; i < first; i++) {
 				String url = mDataList.get(i).mVideoEntity.picture;
 				Uri uri = Uri.parse(url);
 				Fresco.getImagePipeline().evictFromMemoryCache(uri);
 			}
 		}
-		
+
 		int last = firstVisibleItem + visibleItemCount + 1;
 		if (last < mDataList.size()) {
-			for(int i=last; i<mDataList.size(); i++) {
+			for (int i = last; i < mDataList.size(); i++) {
 				String url = mDataList.get(i).mVideoEntity.picture;
 				Uri uri = Uri.parse(url);
 				Fresco.getImagePipeline().evictFromMemoryCache(uri);
 			}
 		}
-		
+
 	}
 
 	public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info) {
