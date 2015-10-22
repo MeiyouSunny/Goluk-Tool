@@ -79,28 +79,32 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 			Intent it = getIntent();
 			if(null!= it.getStringExtra("intentHeadText")){
 				String headText = it.getStringExtra("intentHeadText");
-				if(headText.equals("1")){
-					mImageHint1.setVisibility(View.VISIBLE);
-					imageIndex = "1";
-				}else if(headText.equals("2")){
-					mImageHint2.setVisibility(View.VISIBLE);
-					imageIndex = "2";
-				}else if(headText.equals("3")){
-					mImageHint3.setVisibility(View.VISIBLE);
-					imageIndex = "3";
-				}else if(headText.equals("4")){
-					mImageHint4.setVisibility(View.VISIBLE);
-					imageIndex = "4";
-				}else if(headText.equals("5")){
-					mImageHint5.setVisibility(View.VISIBLE);
-					imageIndex = "5";
-				}else if(headText.equals("6")){
-					mImageHint6.setVisibility(View.VISIBLE);
-					imageIndex = "6";
-				}else if(headText.equals("7")){
-					mImageHint7.setVisibility(View.VISIBLE);
-					imageIndex = "7";
+				String customavatar = it.getStringExtra("customavatar");
+				if(customavatar == null || "".equals(customavatar)){
+					if(headText.equals("1")){
+						mImageHint1.setVisibility(View.VISIBLE);
+						imageIndex = "1";
+					}else if(headText.equals("2")){
+						mImageHint2.setVisibility(View.VISIBLE);
+						imageIndex = "2";
+					}else if(headText.equals("3")){
+						mImageHint3.setVisibility(View.VISIBLE);
+						imageIndex = "3";
+					}else if(headText.equals("4")){
+						mImageHint4.setVisibility(View.VISIBLE);
+						imageIndex = "4";
+					}else if(headText.equals("5")){
+						mImageHint5.setVisibility(View.VISIBLE);
+						imageIndex = "5";
+					}else if(headText.equals("6")){
+						mImageHint6.setVisibility(View.VISIBLE);
+						imageIndex = "6";
+					}else if(headText.equals("7")){
+						mImageHint7.setVisibility(View.VISIBLE);
+						imageIndex = "7";
+					}
 				}
+				
 			}
 			/**
 			 * 监听
@@ -202,7 +206,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		// 右边保存
 		case R.id.user_title_right:
 			if (mCustomProgressDialog == null) {
-				mCustomProgressDialog = new CustomLoadingDialog(this, "保存数据中,请稍后!");
+				mCustomProgressDialog = new CustomLoadingDialog(this, "正在保存头像,请稍候!");
 				mCustomProgressDialog.show();
 			} else {
 				mCustomProgressDialog.show();

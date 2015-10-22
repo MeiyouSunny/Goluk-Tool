@@ -211,6 +211,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 						Bundle bundle = new Bundle();
 
 						bundle.putString("intentHeadText", head);
+						bundle.putString("customavatar", customavatar);
 						itHead.putExtras(bundle);
 						startActivityForResult(itHead, REQUEST_CODE_SYSTEMHEAD);
 					}
@@ -322,7 +323,6 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			
 			showHead(mImageHead,head);
 			
-			//UserUtils.focusHead(head, mImageHead);
 			if (head.equals("1") || head.equals("2") || head.equals("3")) {
 				sex = "1";
 			} else if (head.equals("4") || head.equals("5") || head.equals("6")) {
