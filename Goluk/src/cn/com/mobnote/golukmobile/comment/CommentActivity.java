@@ -10,8 +10,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -36,6 +38,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -96,6 +99,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private CommentBean mWillDelBean = null;
 	/**false评论／false删除／true回复**/
 	public static boolean mIsReply = false;
+	/****/
+	private RelativeLayout mAllLayout ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +145,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mCommentInputLayout = (RelativeLayout) findViewById(R.id.comment_layout);
 		mNoInputTv = (TextView) findViewById(R.id.comment_noinput);
+		mAllLayout = (RelativeLayout) findViewById(R.id.all_layout);
 
 		mBackBtn.setOnClickListener(this);
 		mSendBtn.setOnClickListener(this);
@@ -153,6 +159,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mRTPullListView.setOnRTScrollListener(this);
 		}
 		mRTPullListView.setOnItemClickListener(this);
+		
+		mAllLayout.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
 	}
 
 	/**
@@ -605,6 +613,18 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			new ReplyDialog(this, mWillDelBean, mEditText).show();
 		}
 	}
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+			// 获得当前得到焦点的View
+			View v = getCurrentFocus();
+			if (UserUtils.isShouldHideInput(v, ev)) {
+				UserUtils.hideSoftMethod(this);
+			}
+		}
+		return super.dispatchTouchEvent(ev);
+	}
 
 	@Override
 	public void afterTextChanged(Editable arg0) {
@@ -636,5 +656,20 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 
 	}
+	
+	OnGlobalLayoutListener onGlobalLayoutListener = new OnGlobalLayoutListener() {
+		
+		@Override
+		public void onGlobalLayout() {
+			int off = mAllLayout.getRootView().getHeight() - mAllLayout.getHeight();
+			if(off < 300) {
+				//键盘隐藏
+				if("".equals(mEditText.getText().toString().trim()) && mIsReply) {
+					mEditText.setHint("写评论");
+					mIsReply = false;
+				}
+			}
+		}
+	};
 
 }

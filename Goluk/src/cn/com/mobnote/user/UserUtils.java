@@ -17,6 +17,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -373,5 +374,32 @@ public class UserUtils {
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
+	
+	/**
+     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
+     * 
+     * @param v
+     * @param event
+     * @return
+     */
+    public static boolean isShouldHideInput(View view, MotionEvent event) {
+        if (view != null && (view instanceof EditText)) {
+            int[] l = { 0, 0 };
+            view.getLocationInWindow(l);
+            int left = l[0];
+            int top = l[1];
+            int bottom = top + view.getHeight();
+            int right = left+ view.getWidth();
+            if (event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom) {
+                // 点击EditText的事件，忽略它。
+                return false;
+            } else {
+                return true;
+            }
+        }
+        // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
+        return false;
+    }
 	
 }
