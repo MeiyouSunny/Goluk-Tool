@@ -36,7 +36,6 @@
             android:id="@+id/user_personal_info_head"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            fresco:placeholderImage="@drawable/editor_head_feault7"
             fresco:placeholderImageScaleType="fitXY" />
 
         <RelativeLayout
