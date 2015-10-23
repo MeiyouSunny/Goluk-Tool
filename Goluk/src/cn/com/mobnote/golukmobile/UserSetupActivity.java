@@ -77,7 +77,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private String vIpc = "";
 
 	/** 连接ipc后自动同步开关 **/
-	private Button mBtnSwitch = null;
+	private ImageButton mBtnSwitch = null;
 	public static final String AUTO_SWITCH = "autoswitch";
 
 	@SuppressLint("HandlerLeak")
@@ -97,9 +97,11 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		init();
 		boolean b = SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true);
 		if (b) {
-			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
+//			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
+			mBtnSwitch.setImageResource(R.drawable.set_open_btn);
 		} else {
-			mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
+//			mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
+			mBtnSwitch.setImageResource(R.drawable.set_close_btn);
 		}
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 	}
@@ -148,7 +150,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 清除缓存大小显示
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		// 自动同步开关
-		mBtnSwitch = (Button) findViewById(R.id.set_ipc_btn);
+		mBtnSwitch = (ImageButton) findViewById(R.id.set_ipc_btn);
 		// 消息通知添加监听
 		findViewById(R.id.notify_comm_item).setOnClickListener(this);
 
@@ -246,10 +248,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 自动同步开关
 		case R.id.set_ipc_btn:
 			if (SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true)) {
-				mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
+//				mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
+				mBtnSwitch.setImageResource(R.drawable.set_close_btn);
 				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, false);
 			} else {
-				mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
+//				mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
+				mBtnSwitch.setImageResource(R.drawable.set_open_btn);
 				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, true);
 			}
 			break;
