@@ -49,6 +49,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 	private static final String headCachePatch = APP_FOLDER + "/goluk/head_cache/";
 
 	private String cachePath = "";
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +77,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			}
 			
 			if (bitmap.getHeight() < bitmap.getWidth()) {
-//				int widht = options.outWidth * 200 / options.outHeight;
-//				int height = 200;
-//				options.outHeight = height;
-//				options.outWidth = widht;
-//				options.inJustDecodeBounds = false;
-//				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
-//				
-//				System.out.println("big 结束 height:" + options.outHeight  + " width :" + options.outWidth);
+				
 				Bitmap bp = bitmap;
 				bitmap = this.rotaingImageView(90, bp);
 				bp.recycle();
