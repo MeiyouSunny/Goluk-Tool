@@ -235,6 +235,7 @@ public class NewestAdapter extends BaseAdapter {
 		if (null == location || "".equals(location)) {
 			holder.locationTv.setVisibility(View.GONE);
 		} else {
+			holder.locationTv.setVisibility(View.VISIBLE);
 			holder.locationTv.setText(location);
 		}
 

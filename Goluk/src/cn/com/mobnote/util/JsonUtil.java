@@ -971,6 +971,7 @@ public class JsonUtil {
 			bean.mUserName = getJsonStringValue(dataObj, "authorname", "");
 			bean.mReplyId = getJsonStringValue(dataObj, "replyid", "");
 			bean.mReplyName = getJsonStringValue(dataObj, "replyname", "");
+			bean.customavatar = getJsonStringValue(dataObj, "customavatar", "");
 
 			return bean;
 		} catch (Exception e) {

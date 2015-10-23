@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
 import android.widget.AbsListView;
@@ -80,8 +79,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private RTPullListView mRTPullListView = null;
 	private ImageView mImageRefresh = null;
 	public RelativeLayout mCommentLayout = null;
-	/** 父布局 **/
-	private RelativeLayout mAllLayout = null;
 
 	/** 评论 **/
 	private ArrayList<CommentBean> commentDataList = null;
@@ -119,7 +116,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	/** 回调数据没有回来 **/
 	private boolean isClick = false;
 	/**false评论／false删除／true回复**/
-	public static boolean mIsReply = false;
+	private boolean mIsReply = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +170,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
-		mAllLayout = (RelativeLayout) findViewById(R.id.all_layout);
 
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
@@ -194,7 +190,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mRTPullListView.setOnRTScrollListener(this);
 		mRTPullListView.setOnItemClickListener(this);
 		
-		mAllLayout.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
 	}
 
 	/**
@@ -788,6 +783,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mAdapter.cancleTimer();
 		GolukUtils.isCanClick = true;
 		GolukUtils.cancelTimer();
+		mIsReply = false;
 		if (null != mAdapter.headHolder && null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
 			mAdapter.headHolder.mVideoView = null;
@@ -866,19 +862,21 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		GolukDebugUtils.e("", "----commentActivity--------position:" + position + "   arg3:" + arg3);
 		if(null != mAdapter){
 			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
-			if ( this.mApp.isUserLoginSucess) {
-				UserInfo loginUser = mApp.getMyInfo();
-				GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
-				GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
-				if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-					mIsReply = false;
-				} else {
+			if(null != mWillDelBean) {
+				if (this.mApp.isUserLoginSucess) {
+					UserInfo loginUser = mApp.getMyInfo();
+					GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
+					GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
+					if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+						mIsReply = false;
+					} else {
+						mIsReply = true;
+					}
+				}else{
 					mIsReply = true;
 				}
-			}else{
-				mIsReply = true;
+				new ReplyDialog(this, mWillDelBean, mEditInput,mIsReply).show();
 			}
-			new ReplyDialog(this, mWillDelBean, mEditInput).show();
 		}
 		
 	}
@@ -890,6 +888,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			View v = getCurrentFocus();
 			if (UserUtils.isShouldHideInput(v, ev)) {
 				UserUtils.hideSoftMethod(this);
+				if("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
+					mEditInput.setHint("写评论");
+					mIsReply = false;
+				}
 			}
 		}
 		return super.dispatchTouchEvent(ev);
@@ -948,19 +950,4 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	OnGlobalLayoutListener onGlobalLayoutListener = new OnGlobalLayoutListener() {
-		
-		@Override
-		public void onGlobalLayout() {
-			int off = mAllLayout.getRootView().getHeight() - mAllLayout.getHeight();
-			if(off < 300) {
-				//键盘隐藏
-				if("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
-					mEditInput.setHint("写评论");
-					mIsReply = false;
-				}
-			}
-		}
-	};
-
 }

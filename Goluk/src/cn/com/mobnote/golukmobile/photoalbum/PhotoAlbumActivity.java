@@ -159,7 +159,11 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		switch (id) {
 		case R.id.mLocalVideoBtn:
 			mLocalIcon.setBackgroundResource(R.drawable.my_video_press);
-			mCloudIcon.setBackgroundResource(R.drawable.my_cloud);
+			if (GolukApplication.getInstance().getIpcIsLogin()) {
+				mCloudIcon.setBackgroundResource(R.drawable.my_cloud);
+			} else {
+				mCloudIcon.setBackgroundResource(R.drawable.my_cloud_no_link);
+			}
 			mLocalText.setTextColor(getResources().getColor(R.color.photoalbum_text_color));
 			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 
