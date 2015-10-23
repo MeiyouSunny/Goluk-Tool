@@ -1,9 +1,9 @@
 package cn.com.mobnote.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -614,6 +614,36 @@ public class GolukUtils {
 		}
 
 		return time;
+	}
+
+	public static String getAssestFileContent(Context context, String fileName) {
+		if (null == context || null == fileName || "".equals(fileName)) {
+			return "";
+		}
+		String result = "";
+		InputStream is = null;
+		try {
+			is = context.getAssets().open(fileName);
+			int size = is.available();
+			byte[] buffer = new byte[size];
+			is.read(buffer);
+			is.close();
+			result = new String(buffer, "GB2312");
+		} catch (Exception e) {
+
+		} finally {
+			if (null != is) {
+				try {
+					is.close();
+					is = null;
+				} catch (IOException e) {
+				}
+
+			}
+		}
+
+		return result;
+
 	}
 
 }
