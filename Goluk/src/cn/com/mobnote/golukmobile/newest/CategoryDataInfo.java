@@ -9,14 +9,14 @@ public class CategoryDataInfo {
 	public String time;
 
 	public CategoryDataInfo() {
-		
+
 	}
-	
+
 	public CategoryDataInfo(JSONObject json) {
 		this.id = json.optString("id");
 		this.name = json.optString("name");
 		this.coverurl = json.optString("coverurl");
 		this.time = json.optString("time");
 	}
-	
+
 }

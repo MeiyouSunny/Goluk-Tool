@@ -373,6 +373,7 @@ public class JsonUtil {
 			userInfo.liveDuration = Integer.valueOf(getJsonStringValue(rootObj, "restime", "60"));
 			userInfo.desc = getJsonStringValue(rootObj, "desc", "");
 			userInfo.head = getJsonStringValue(rootObj, "head", "7");
+			userInfo.customavatar = getJsonStringValue(rootObj, "customavatar", "");
 
 			return userInfo;
 		} catch (Exception e) {
@@ -615,15 +616,20 @@ public class JsonUtil {
 	/**
 	 * 升级传服务器的参数
 	 * 
+	 * @param appVersion
+	 *            appVersion存储路径
 	 * @param ipcVersion
+	 * @param ipcModel
+	 *            ipc设备型号
 	 * @return
 	 */
-	public static String putIPC(String appVersion, String ipcVersion) {
+	public static String putIPC(String appVersion, String ipcVersion, String ipcModel) {
 		try {
 			// {“AppVersionFilePath”:”fs6:/version”, “IpcVersion”:”1.2.3.4”}
 			JSONObject obj = new JSONObject();
 			obj.put("AppVersionFilePath", appVersion);
 			obj.put("IpcVersion", ipcVersion);
+			obj.put("IpcModel", ipcModel);
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -638,13 +644,12 @@ public class JsonUtil {
 	 * @param savePath
 	 * @return
 	 */
-	public static String ipcDownLoad(String url, String savePath) {
-		// {“url”:”http://www.baidu.com”,
-		// “savePath”:”fs1:/update/ipc_upgrade_2015-04-30-15-58.bin”}
+	public static String ipcDownLoad(String url, String ipcVersion, String ipcModel) {
 		try {
 			JSONObject obj = new JSONObject();
-			obj.put("url", url);
-			obj.put("savePath", savePath);
+			obj.put("URL", url);
+			obj.put("IPCVersion", ipcVersion);
+			obj.put("IPCModel", ipcModel);
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -787,7 +792,7 @@ public class JsonUtil {
 	// issquare 是否分享到视频广场 0/1 (否/是)
 	// thumbImgJavaPath: 缩略图路径
 	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
-			String thumbImgJavaPath, String createTime) {
+			String thumbImgJavaPath, String createTime, String location) {
 
 		String json = null;
 		try {
@@ -797,6 +802,7 @@ public class JsonUtil {
 			try {
 				videoDes = URLEncoder.encode(desc, "UTF-8");
 				attriDefault = URLEncoder.encode(attribute, "UTF-8");
+				location = URLEncoder.encode(location, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -811,8 +817,9 @@ public class JsonUtil {
 			// type: 1/2 精彩视频 / 紧急视频
 			obj.put("type", "1");
 			obj.put("creattime", createTime);
-			json = obj.toString();
+			obj.put("location", location);
 
+			json = obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -885,13 +892,16 @@ public class JsonUtil {
 		}
 	}
 
-	public static String getAddCommentJson(String id, String type, String txt) {
+	public static String getAddCommentJson(String id, String type, String txt,String replyId,String replyName) {
 		try {
 			JSONObject json = new JSONObject();
 			json.put("topicid", id);
 			json.put("topictype", type);
 			txt = URLEncoder.encode(txt, "utf-8");
 			json.put("text", txt);
+			json.put("replyid", replyId);
+			replyName = URLEncoder.encode(replyName, "utf-8");
+			json.put("replyname", replyName);
 
 			return json.toString();
 		} catch (Exception e) {
@@ -926,11 +936,16 @@ public class JsonUtil {
 				temp.mCommentId = getJsonStringValue(obj, "commentId", "");
 				temp.mCommentTime = getJsonStringValue(obj, "time", "");
 				temp.mCommentTxt = getJsonStringValue(obj, "text", "");
+				
+				JSONObject replyObj = obj.getJSONObject("reply");
+				temp.mReplyId = getJsonStringValue(replyObj, "id", "");
+				temp.mReplyName = getJsonStringValue(replyObj, "name", "");
 
 				JSONObject authorObj = obj.getJSONObject("author");
 				temp.mUserId = getJsonStringValue(authorObj, "id", "");
 				temp.mUserName = getJsonStringValue(authorObj, "name", "");
 				temp.mUserHead = getJsonStringValue(authorObj, "avatar", "");
+				temp.customavatar = getJsonStringValue(authorObj, "customavatar", "");
 
 				list.add(temp);
 			}
@@ -955,6 +970,9 @@ public class JsonUtil {
 			bean.mUserHead = getJsonStringValue(dataObj, "authoravatar", "");
 			bean.mUserId = getJsonStringValue(dataObj, "authorid", "");
 			bean.mUserName = getJsonStringValue(dataObj, "authorname", "");
+			bean.mReplyId = getJsonStringValue(dataObj, "replyid", "");
+			bean.mReplyName = getJsonStringValue(dataObj, "replyname", "");
+			bean.customavatar = getJsonStringValue(dataObj, "customavatar", "");
 
 			return bean;
 		} catch (Exception e) {
@@ -1010,6 +1028,19 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static JSONObject getActivationTimeJson(String sn) {
+		try {
+			JSONObject rootObj = new JSONObject();
+			rootObj.put("sn", sn);
+			rootObj.put("time", CSLog.getCurrentTime());
+
+			return rootObj;
+		} catch (Exception e) {
+
+		}
+		return null;
+	}
+
 	public static String getReportJson(String key, JSONObject dataObj) {
 		try {
 			JSONObject obj = new JSONObject();
@@ -1026,6 +1057,32 @@ public class JsonUtil {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("attribute", mAttribute);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static String getUserNickNameJson(String nickName) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("nickname", nickName);
+
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static String getUserSignJson(String sign) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("desc", sign);
 
 			return obj.toString();
 		} catch (Exception e) {
@@ -1168,7 +1225,7 @@ public class JsonUtil {
 	 */
 	public static String parseDelVideo(Object json) {
 		try {
-			JSONObject roobObj = new JSONObject((String)json);
+			JSONObject roobObj = new JSONObject((String) json);
 			boolean sucess = roobObj.getBoolean("success");
 			if (!sucess) {
 				return "1";
@@ -1182,21 +1239,25 @@ public class JsonUtil {
 
 		return "1";
 	}
-	
+
 	public static String getDelRequestJson(String vid) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("videoid", vid);
 			return obj.toString();
 		} catch (Exception e) {
-			
+
 		}
 		return "";
 	}
+
 	/**
 	 * 开关机提示音、精彩视频拍摄提示音
-	 * @param speakerSwitch  开关机提示音
-	 * @param wonderfulSwitch  精彩视频拍摄提示音
+	 * 
+	 * @param speakerSwitch
+	 *            开关机提示音
+	 * @param wonderfulSwitch
+	 *            精彩视频拍摄提示音
 	 * @return
 	 */
 	public static String getSpeakerSwitchJson(int speakerSwitch, int wonderfulSwitch) {
@@ -1209,6 +1270,25 @@ public class JsonUtil {
 
 		}
 		return "";
+	}
+
+	/**
+	 * 查询ipc升级文件
+	 * 
+	 * @param ipcVersion
+	 * @param ipcModel
+	 * @return
+	 */
+	public static String selectIPCFile(String ipcVersion, String ipcModel) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("IPCVersion", ipcVersion);
+			obj.put("IPCModel", ipcModel);
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

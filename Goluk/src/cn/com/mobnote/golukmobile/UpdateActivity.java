@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -120,7 +121,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private String ipc_content = "";
 	private String ipc_url = "";
 	private String ipc_path = "";
-
+	/**true为已退出当前activity**/
 	private boolean isExit = false;
 
 	@SuppressLint("HandlerLeak")
@@ -162,7 +163,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		Intent itClick = getIntent();
 		int progressSetup = itClick.getIntExtra(UPDATE_PROGRESS, 0);
 
-		GolukDebugUtils.i("lily", "--------mSign-----" + mSign);
+		GolukDebugUtils.i("", "----UpdateActivity----mSign-----" + mSign);
+		GolukDebugUtils.i("", "----UpdateActivity----mApp.mLoadStatus-----" + mApp.mLoadStatus);
+		GolukDebugUtils.i("", "----UpdateActivity----progressSetup-----" + progressSetup);
 		if (mSign == 0) {
 			if (mApp.mLoadStatus) {
 				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
@@ -181,7 +184,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mBtnDownload.setEnabled(false);
 				}
 			} else {
-				boolean b = mApp.mIpcUpdateManage.download(ipc_url, mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+				boolean b = mApp.mIpcUpdateManage.download(ipc_url, ipc_version);
+				GolukDebugUtils.i("", "----UpdateActivity----download-----b：" + b);
 				if (b) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
@@ -372,8 +376,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				if (IpcUpdateManage.DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
-					boolean b = mApp.mIpcUpdateManage.download(ipc_url, IpcUpdateManage.BIN_PATH_PRE + "/"
-							+ ipc_version + ".bin");
+					boolean b = mApp.mIpcUpdateManage.download(ipc_url, ipc_version);
 					GolukDebugUtils.i("qqq", "----path------" + IpcUpdateManage.BIN_PATH_PRE + "/" + ipc_version
 							+ ".bin");
 					if (b) {
@@ -393,11 +396,17 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				} else {
 					String version = mApp.mSharedPreUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
-					if (version.equals(ipc_version)) {
-						GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
-					} else {
-						boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
-					}
+//					GolukDebugUtils.i("lily", "-------currentdownloadmodel-----" + mApp.mIpcUpdateManage.mIpcModel + "------downloadipcmodel-----" + mApp.mSharedPreUtil.getDownloadIpcModel());
+//					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mSharedPreUtil.getDownloadIpcModel())){
+						if (version.equals(ipc_version)) {
+							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
+						} else {
+							String file = mApp.mIpcUpdateManage.isHasIPCFile(ipc_version);
+							boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
+						}
+//					}else{
+						//TODO
+//					}
 				}
 			}
 			break;
@@ -415,7 +424,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 * @param param2
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
-		GolukDebugUtils.i("lily", "------------downloadCallback-----------" + state);
+		GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------state：" + state+"----param1："+param1);
 		mApp.mIpcUpdateManage.dimissLoadingDialog();
 		downloadStatus = state;
 		if (state == IpcUpdateManage.DOWNLOAD_STATUS) {
@@ -436,8 +445,15 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 			mSign = 1;
+			try {
+				JSONObject json = new JSONObject((String)param2);
+				String filePath = json.getString("filepath");
+				GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------filePath：" + filePath);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			// 下载成功删除文件
-			mApp.mIpcUpdateManage.downIpcSucess();
+//			mApp.mIpcUpdateManage.downIpcSucess();
 		} else if (state == IpcUpdateManage.DOWNLOAD_STATUS_FAIL) {
 			// 下载失败
 			mApp.mLoadStatus = false;
@@ -484,9 +500,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 								timerCancel();
 								// 传输文件成功
 								mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
-								timerTask();
+								timerTaskOne();
 							} else {
-								timerTask();
+								timerTaskOne();
 							}
 						}
 						if (stage.equals("2")) {
@@ -495,7 +511,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							GolukDebugUtils.i("lily", "------------percent-------111111");
 							if (!percent.equals("95") && !percent.equals("100")) {
 								GolukDebugUtils.i("lily", "------------percent-------2222");
-								timerTask();
+								timerTaskTwo();
 							} else {
 								GolukDebugUtils.i("lily", "------------percent-------33333");
 								timerCancel();
@@ -527,9 +543,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	}
 
 	/**
-	 * 固件升级过程中超时 1000x60=6000
+	 * 升级一阶段  超时时间１分钟
+	 * 固件升级过程中超时 1000x60=60000
 	 */
-	public void timerTask() {
+	private void timerTaskOne() {
 		timerCancel();
 		mTimer = new Timer();
 		mTimer.schedule(new TimerTask() {
@@ -541,13 +558,30 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
 						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
 					}
-				} else if (stage.equals("2") && !percent.equals("100")) {
+				}
+			}
+		}, 60000);
+	}
+	
+	/**
+	 * 升级一阶段  超时时间３分钟
+	 * 固件升级过程中超时 1000x60x3=180000
+	 */
+	private void timerTaskTwo() {
+		timerCancel();
+		mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				// ipc断开
+				if (stage.equals("2") && !percent.equals("100")) {
 					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
 						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
 					}
 				}
 			}
-		}, 6000);
+		}, 180000);
 	}
 
 	/**

@@ -1,5 +1,15 @@
 package cn.com.mobnote.golukmobile;
 
+import java.io.File;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.api.FileUtils;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,7 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener,OnTouchListener{
+public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener,OnTouchListener,IPageNotifyFn{
 
 	//title
 	private ImageButton btnBack;
@@ -24,6 +34,8 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 	private ImageView mImageBoyOne, mImageBoyTwo, mImageBoyThree;
 	private ImageView mImageGirlOne, mImageGirlTwo, mImageGirlThree;
 	private ImageView mImageDefault;
+	
+	private CustomLoadingDialog mCustomProgressDialog = null;
 	//判断点击的是哪个头像
 	private String imageIndex = "";
 	//头像的提示
@@ -67,28 +79,32 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 			Intent it = getIntent();
 			if(null!= it.getStringExtra("intentHeadText")){
 				String headText = it.getStringExtra("intentHeadText");
-				if(headText.equals("1")){
-					mImageHint1.setVisibility(View.VISIBLE);
-					imageIndex = "1";
-				}else if(headText.equals("2")){
-					mImageHint2.setVisibility(View.VISIBLE);
-					imageIndex = "2";
-				}else if(headText.equals("3")){
-					mImageHint3.setVisibility(View.VISIBLE);
-					imageIndex = "3";
-				}else if(headText.equals("4")){
-					mImageHint4.setVisibility(View.VISIBLE);
-					imageIndex = "4";
-				}else if(headText.equals("5")){
-					mImageHint5.setVisibility(View.VISIBLE);
-					imageIndex = "5";
-				}else if(headText.equals("6")){
-					mImageHint6.setVisibility(View.VISIBLE);
-					imageIndex = "6";
-				}else if(headText.equals("7")){
-					mImageHint7.setVisibility(View.VISIBLE);
-					imageIndex = "7";
+				String customavatar = it.getStringExtra("customavatar");
+				if(customavatar == null || "".equals(customavatar)){
+					if(headText.equals("1")){
+						mImageHint1.setVisibility(View.VISIBLE);
+						imageIndex = "1";
+					}else if(headText.equals("2")){
+						mImageHint2.setVisibility(View.VISIBLE);
+						imageIndex = "2";
+					}else if(headText.equals("3")){
+						mImageHint3.setVisibility(View.VISIBLE);
+						imageIndex = "3";
+					}else if(headText.equals("4")){
+						mImageHint4.setVisibility(View.VISIBLE);
+						imageIndex = "4";
+					}else if(headText.equals("5")){
+						mImageHint5.setVisibility(View.VISIBLE);
+						imageIndex = "5";
+					}else if(headText.equals("6")){
+						mImageHint6.setVisibility(View.VISIBLE);
+						imageIndex = "6";
+					}else if(headText.equals("7")){
+						mImageHint7.setVisibility(View.VISIBLE);
+						imageIndex = "7";
+					}
 				}
+				
 			}
 			/**
 			 * 监听
@@ -189,13 +205,29 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 				break;
 		// 右边保存
 		case R.id.user_title_right:
-			UserPersonalInfoActivity.clickBtn = true;
-			Intent itHead = new Intent(UserPersonalHeadActivity.this,UserPersonalInfoActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putString("intentSevenHead", imageIndex);
-			itHead.putExtras(bundle);
-			this.setResult(3, itHead);
-			this.finish();
+			if (mCustomProgressDialog == null) {
+				mCustomProgressDialog = new CustomLoadingDialog(this, "正在保存头像,请稍候!");
+				mCustomProgressDialog.show();
+			} else {
+				mCustomProgressDialog.show();
+			}
+			
+			JSONObject requestStr = new JSONObject();
+				try {
+					requestStr.put("PicPath","");
+					requestStr.put("channel", "1");
+					requestStr.put("head",imageIndex);
+					requestStr.put("PicMD5", "");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+			
+			boolean flog = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, PageType_ModifyHeadPic,
+						requestStr.toString());
+			System.out.println("flog =" + flog);
+			
 			break;
 			default:
 				break;
@@ -222,5 +254,59 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 				break;
 			}
 			return false;
+		}
+		
+		@Override
+		protected void onResume() {
+			// TODO Auto-generated method stub
+			mBaseApp.setContext(this, "UserPersonalHeadActivity");
+			super.onResume();
+		}
+
+		@Override
+		public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
+			// TODO Auto-generated method stub
+			if (type == PageType_ModifyHeadPic) {
+				if (mCustomProgressDialog.isShowing()) {
+					mCustomProgressDialog.close();
+				}
+				if (success == 1) {
+					try {
+						JSONObject result = new JSONObject(param2.toString());
+						Boolean suc = result.getBoolean("success");
+
+						if (suc) {
+							JSONObject data = result.getJSONObject("data");
+							String rst = data.getString("result");
+							// 图片上传成功
+							if ("0".equals(rst)) {
+								
+
+								String head = data.getString("head");
+								GolukUtils.showToast(UserPersonalHeadActivity.this, "保存成功");
+
+								
+								Intent itHead = new Intent(UserPersonalHeadActivity.this,UserPersonalInfoActivity.class);
+								Bundle bundle = new Bundle();
+								bundle.putString("intentSevenHead", head);
+								itHead.putExtras(bundle);
+								this.setResult(RESULT_OK, itHead);
+								this.finish();
+							}else{
+								GolukUtils.showToast(UserPersonalHeadActivity.this, "网络异常,保存失败");
+							}
+
+						}else{
+							GolukUtils.showToast(UserPersonalHeadActivity.this, "网络异常,保存失败");
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						GolukUtils.showToast(UserPersonalHeadActivity.this, "网络异常,保存失败");
+						e.printStackTrace();
+					}
+				}else{
+					GolukUtils.showToast(UserPersonalHeadActivity.this, "网络异常,保存失败");
+				}
+			}
 		}
 }

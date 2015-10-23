@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed" >
+    android:background="#ededed"
+    android:orientation="vertical" >
 
     <!-- title -->
 
@@ -34,7 +35,6 @@
         android:id="@+id/solid_1"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_below="@id/title_layout"
         android:layout_marginTop="32dp"
         android:background="@drawable/solid" />
 
@@ -44,7 +44,6 @@
         android:id="@+id/notify_comm_item"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/solid_1"
         android:background="#f4f4f4" >
 
         <TextView
@@ -71,7 +70,6 @@
         android:id="@+id/solid_10"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_below="@id/notify_comm_item"
         android:layout_marginTop="32dp"
         android:background="@drawable/solid" />
 
@@ -81,7 +79,6 @@
         android:id="@+id/remove_cache_item"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/solid_10"
         android:background="#f4f4f4" >
 
         <TextView
@@ -110,7 +107,6 @@
         android:id="@+id/solid_2"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_below="@id/remove_cache_item"
         android:background="@drawable/solid" />
     <!-- 同步开关 -->
 
@@ -118,15 +114,13 @@
         android:id="@+id/solid_3"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_below="@id/solid_2"
         android:layout_marginTop="10dp"
         android:background="@drawable/solid" />
 
-    <RelativeLayout
+  <RelativeLayout
         android:id="@+id/set_ipc_item"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/solid_3"
         android:background="#f4f4f4" >
 
         <TextView
@@ -139,7 +133,7 @@
             android:textColor="#3f3f3f"
             android:textSize="16sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/set_ipc_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -153,14 +147,12 @@
         android:id="@+id/solid_4"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_below="@id/set_ipc_item"
         android:background="@drawable/solid" />
 
     <TextView
         android:id="@+id/set_ipc_item_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/solid_4"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
@@ -173,7 +165,6 @@
         android:id="@+id/solid_5"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_below="@id/set_ipc_item_hint"
         android:layout_marginTop="10dp"
         android:background="@drawable/solid" />
     <!-- 注销/登录 -->
@@ -182,7 +173,6 @@
         android:id="@+id/loginout_item"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/solid_5"
         android:background="#f4f4f4" >
 
         <Button
@@ -198,7 +188,6 @@
         android:id="@+id/solid_6"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_below="@id/loginout_item"
         android:background="@drawable/solid" />
 
-</RelativeLayout>
+</LinearLayout>

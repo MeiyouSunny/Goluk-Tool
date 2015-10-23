@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- 头部信息,包括用户头像 ，昵称，时间 ，更多按钮 -->
 
     <RelativeLayout
         android:id="@+id/headlayout"
@@ -10,40 +14,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp" >
 
-        <ImageView
+        <!-- 头像 -->
+
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/headimg"
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
-            android:background="@drawable/videodetail_portrait" />
+            fresco:placeholderImage="@drawable/editor_head_feault7" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/headimg"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/nikename"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:textColor="#1163a2"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="3dp"
-                android:gravity="center"
-                android:textColor="#888888"
-                android:textSize="12sp" />
-        </LinearLayout>
+        <!-- "更多" 按钮 -->
 
         <ImageView
             android:id="@+id/function"
@@ -51,22 +30,76 @@
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/new_more_icon" />
+            android:background="@drawable/new_more_icon"
+            android:contentDescription="@string/imgdes" />
+
+        <LinearLayout
+            android:id="@+id/nicklayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/function"
+            android:layout_toRightOf="@+id/headimg"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <!-- 昵称 -->
+
+            <TextView
+                android:id="@+id/nikename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#1163a2"
+                android:textSize="14sp" />
+
+            <!-- 时间 与地址 -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/list_item_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/imageoutlayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/headlayout" >
+        android:layout_height="wrap_content" >
 
         <!-- 视频缩略图片 -->
 
-        <RelativeLayout
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/imageLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </RelativeLayout>
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            fresco:actualImageScaleType="fitXY"
+            fresco:fadeDuration="300"
+            fresco:failureImage="@drawable/tacitly_pic"
+            fresco:failureImageScaleType="fitXY"
+            fresco:placeholderImage="@drawable/tacitly_pic"
+            fresco:placeholderImageScaleType="fitXY" />
 
         <!-- 直播图标 -->
 
@@ -81,21 +114,20 @@
             android:background="@drawable/new_live_icon"
             android:contentDescription="@string/imgdes"
             android:visibility="gone" />
-        
+
         <ImageView
-        android:id="@+id/mPlayBigBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-		android:background="@drawable/btn_player_play"/>
-        
+            android:id="@+id/mPlayBigBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btn_player_play"
+            android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/functionLayouyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageoutlayout"
         android:paddingBottom="16dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -237,7 +269,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/zLayouyt"
-        android:layout_centerVertical="true"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -249,7 +280,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/detail"
-        android:layout_centerVertical="true"
         android:gravity="center_vertical|left"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"

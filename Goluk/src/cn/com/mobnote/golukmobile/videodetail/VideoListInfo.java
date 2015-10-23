@@ -8,4 +8,5 @@ public class VideoListInfo {
 	public String time;
 	public String authorid;
 	public String commentid;
+
 }

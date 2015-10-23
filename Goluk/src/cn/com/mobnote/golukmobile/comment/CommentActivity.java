@@ -10,13 +10,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,18 +30,20 @@ import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.videodetail.ReplyDialog;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
-		VideoSuqareManagerFn, ILiveDialogManagerFn, OnItemLongClickListener, ICommentFn, TextWatcher {
+		VideoSuqareManagerFn, ILiveDialogManagerFn, ICommentFn, TextWatcher,OnItemClickListener {
 
 	public static final String TAG = "Comment";
 
@@ -93,6 +96,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	/** 保存将要删除的数据 */
 	private CommentBean mWillDelBean = null;
+	/**false评论／false删除／true回复**/
+	private boolean mIsReply = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +154,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mRTPullListView.setonRefreshListener(this);
 			mRTPullListView.setOnRTScrollListener(this);
 		}
-		mRTPullListView.setOnItemLongClickListener(this);
+		mRTPullListView.setOnItemClickListener(this);
+		
 	}
 
 	/**
@@ -178,6 +184,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
 		if (isCanInput) {
+			mRTPullListView.setEnabled(true);
 			if (mIsShowSoft) {
 				mEditText.requestFocus();
 				GolukUtils.showSoft(mEditText);
@@ -188,6 +195,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mRTPullListView.firstFreshState();
 			firstEnter();
 		} else {
+			mRTPullListView.setEnabled(false);
 			mCommentInputLayout.setVisibility(View.GONE);
 			mNoInputTv.setVisibility(View.VISIBLE);
 		}
@@ -214,6 +222,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void back() {
 		isExit = true;
 		mVideoSquareManager.removeVideoSquareManagerListener(TAG);
+		mIsReply = false;
 		finish();
 	}
 
@@ -423,6 +432,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				this.mAdapter.addFirstData(bean);
 				mEditText.setText("");
 				switchSendState(false);
+				mIsReply = false;
+				mEditText.setHint("写评论");
 				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
 			} else {
 				GolukUtils.showToast(this, "评论失败");
@@ -524,7 +535,13 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	// 添加评论
 	private void httpPost_requestAdd(String txt) {
-		final String requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt);
+		String requestStr = "";
+		if (mIsReply) {
+			requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,
+					mWillDelBean.mUserId, mWillDelBean.mUserName);
+		} else {
+			requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,"","");
+		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
 		if (!isSucess) {
@@ -575,21 +592,42 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		GolukDebugUtils.e("", "jyf-----commentActivity--------position:" + position + "   arg3:" + arg3);
-		if (null != mAdapter && this.mApp.isUserLoginSucess) {
-			mWillDelBean = (CommentBean) mAdapter.getItem(position - 1);
-			final UserInfo loginUser = mApp.getMyInfo();
-			GolukDebugUtils.e("", "jyf-----commentActivity--------bean userId:" + mWillDelBean.mUserId
-					+ "  login user:" + loginUser.uid);
-			if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
-						LiveDialogManager.DIALOG_TYPE_COMMENT_DELETE, "提示", "确定要删除吗？");
-			} else {
-				// GolukUtils.showToast(this, "不是自己发表禁止删除");
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		GolukDebugUtils.e("", "-----commentActivity--------position:" + position + "   arg3:" + arg3);
+		if (null != mAdapter) {
+			if ( this.mApp.isUserLoginSucess) {
+				mWillDelBean = (CommentBean) mAdapter.getItem(position - 1);
+				if(null != mWillDelBean) {
+					final UserInfo loginUser = mApp.getMyInfo();
+					GolukDebugUtils.e("", "-----commentActivity--------bean userId:" + mWillDelBean.mUserId
+							+ "  login user:" + loginUser.uid);
+					if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+						mIsReply = false;
+					} else {
+						mIsReply = true;
+					}
+				} else {
+					mIsReply = true;
+				}
+				new ReplyDialog(this, mWillDelBean, mEditText,mIsReply).show();
+				}
+		}
+	}
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+			// 获得当前得到焦点的View
+			View v = getCurrentFocus();
+			if (UserUtils.isShouldHideInput(v, ev)) {
+				UserUtils.hideSoftMethod(this);
+				if("".equals(mEditText.getText().toString().trim()) && mIsReply) {
+					mEditText.setHint("写评论");
+					mIsReply = false;
+				}
 			}
 		}
-		return true;
+		return super.dispatchTouchEvent(ev);
 	}
 
 	@Override

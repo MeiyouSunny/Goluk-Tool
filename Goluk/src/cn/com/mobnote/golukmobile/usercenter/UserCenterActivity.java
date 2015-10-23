@@ -78,19 +78,11 @@ public class UserCenterActivity extends BaseActivity implements
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
-	
-	/**
-	 * 返回首页
-	 */
+	/** 返回首页 */
 	private Button titlehome;
-	
-
-	/**
-	 * 返回按钮
-	 */
+	/** 返回按钮 */
 	private ImageButton backbtn;
-	
-	public  static Handler handler = null;
+	public static Handler handler = null;
 	
 	/** 所有的数据请求 id*/
 	public long mAllDataSequenceId = 0;
@@ -129,6 +121,10 @@ public class UserCenterActivity extends BaseActivity implements
 	private TextView title = null;
 	
 	public static int refristUserInfo = 100;
+	
+	/** 是否刷新头像数据 **/
+	
+	private boolean isRefresh = false;
 
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
@@ -166,6 +162,7 @@ public class UserCenterActivity extends BaseActivity implements
 									curUser.introduce = u.getString("desc");
 									curUser.headportrait = u.getString("head");
 									curUser.nickname  = u.getString("nickname");
+									curUser.customavatar = u.getString("customavatar");
 									updateViewData(true, 0);
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block

@@ -59,10 +59,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mSensitivityText = null;
 	/** HDR模式 **/
 	private Button mISPBtn = null;
-	/** HDR模式line **/
-	private RelativeLayout mISPLayout = null;
+	/**HDR模式line**/
+	private RelativeLayout mISPLayout ,mWonderfulLayout;
 	/** HDR模式 0关闭 1打开 **/
 	private int mISPSwitch = 0;
+	/** 精彩视频拍摄提示音 **/
+	private Button mWonderVideoBtn = null;
+	/** 精彩视频拍摄提示音状态 0关闭 1打开 **/
+	private int mWonderfulSwitchStatus = 1;
 	/** 开关机提示音(true)和精彩视频拍摄提示音(false)区分 **/
 	private boolean judgeSwitch = true;
 	/** 开关机提示音 0关闭 1打开 **/
@@ -85,6 +89,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		GolukDebugUtils.e("", "=========ipcVersion：" + ipcVersion);
 
 		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
+		GolukDebugUtils.e("", "=========mIPCName：" + mIPCName);
 		initView();
 		setListener();
 
@@ -147,11 +152,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mSwitchBtn = (Button) findViewById(R.id.kgjtsy);
 		mISPLayout = (RelativeLayout) findViewById(R.id.hdr_line);
 		mISPBtn = (Button) findViewById(R.id.hdr);
+		mWonderfulLayout = (RelativeLayout) findViewById(R.id.jcsp_line);
+		mWonderVideoBtn = (Button) findViewById(R.id.jcsp);
 		// ipc设备型号
 		if (mIPCName.equals("G1")) {
 			mISPLayout.setVisibility(View.GONE);
+			mWonderfulLayout.setVisibility(View.GONE);
 		} else {
 			mISPLayout.setVisibility(View.VISIBLE);
+			mWonderfulLayout.setVisibility(View.VISIBLE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -178,6 +187,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.pzgylmd_line).setOnClickListener(this);// 碰撞感应灵敏度
 		findViewById(R.id.kgjtsy).setOnClickListener(this);// 开关机提示音
 		findViewById(R.id.hdr).setOnClickListener(this);// HDR模式
+		findViewById(R.id.jcsp).setOnClickListener(this);// 精彩视频拍摄提示音
 
 		findViewById(R.id.rlcx_line).setOnClickListener(this);// 存储容量查询
 		findViewById(R.id.sjsz_line).setOnClickListener(this);// 时间设置
@@ -316,10 +326,29 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				} else {
 					status = 0;
 				}
-				String condi = JsonUtil.getSpeakerSwitchJson(status, 1);
+				String condi = JsonUtil.getSpeakerSwitchJson(status, mWonderfulSwitchStatus);
 				boolean b = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(condi);
 				GolukDebugUtils.e("lily", "---------点击开关结果-----------" + b);
 				if (!b) {
+					closeLoading();
+					GolukUtils.showToast(this, "设置失败");
+				}
+				break;
+			// 精彩视频拍摄提示音
+			case R.id.jcsp:
+				showLoading();
+				judgeSwitch = false;
+				// 精彩视频
+				int wonderfulStatus = 1;
+				if (0 == mWonderfulSwitchStatus) {
+					wonderfulStatus = 1;
+				} else {
+					wonderfulStatus = 0;
+				}
+				String json = JsonUtil.getSpeakerSwitchJson(speakerSwitch, wonderfulStatus);
+				boolean setWonderful = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(json);
+				GolukDebugUtils.e("", "----------setWonderfulMode-----setWonderful：" + setWonderful);
+				if (!setWonderful) {
 					closeLoading();
 					GolukUtils.showToast(this, "设置失败");
 				}
@@ -522,17 +551,26 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						GolukDebugUtils.e("lily", "---------IPC_VDCPCmd_GetSpeakerSwitch--------" + json);
 						// {"SpeakerSwitch":0} 0关闭 1打开
 						speakerSwitch = json.optInt("SpeakerSwitch");
+						mWonderfulSwitchStatus = json.optInt("WonderfulSwitch");
 						if (0 == speakerSwitch) {
 							mSwitchBtn.setBackgroundResource(R.drawable.set_close_btn);
 						} else {
 							mSwitchBtn.setBackgroundResource(R.drawable.set_open_btn);
+						}
+						// 精彩视频开关机提示音
+						if (0 == mWonderfulSwitchStatus) {
+							mWonderVideoBtn.setBackgroundResource(R.drawable.set_close_btn);
+						} else {
+							mWonderVideoBtn.setBackgroundResource(R.drawable.set_open_btn);
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				} else {
 					mSwitchBtn.setBackgroundResource(R.drawable.set_open_btn);
+					mWonderVideoBtn.setBackgroundResource(R.drawable.set_open_btn);
 					speakerSwitch = 1;
+					mWonderfulSwitchStatus = 1;
 				}
 			} else if (msg == IPC_VDCP_Msg_SetSpeakerSwitch) {// 设置ipc开关机声音状态
 				closeLoading();
@@ -547,6 +585,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						} else {
 							speakerSwitch = 0;
 							mSwitchBtn.setBackgroundResource(R.drawable.set_close_btn);
+						}
+					} else {
+						// 精彩视频拍摄提示音
+						if (0 == mWonderfulSwitchStatus) {
+							mWonderfulSwitchStatus = 1;
+							mWonderVideoBtn.setBackgroundResource(R.drawable.set_open_btn);
+						} else {
+							mWonderfulSwitchStatus = 0;
+							mWonderVideoBtn.setBackgroundResource(R.drawable.set_close_btn);
 						}
 					}
 					GolukUtils.showToast(this, "设置成功");

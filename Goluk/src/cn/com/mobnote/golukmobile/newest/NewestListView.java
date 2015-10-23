@@ -248,10 +248,8 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				switch (scrollState) {
 				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-					mNewestAdapter.lock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-					mNewestAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						if (mDataList.size() > 0) {
 							if (!addFooter) {
@@ -266,9 +264,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					mNewestAdapter.lock();
 					break;
-
 				default:
 					break;
 				}
@@ -279,34 +275,29 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
 				try {
-				if (null == mDataList && mDataList.size() <= 0) {
-					return;
-				}
-
-				int first = firstVisibleItem - 1;
-				if (first < mDataList.size()) {
-					for (int i = 0; i < first; i++) {
-						String url = mDataList.get(i).mVideoEntity.picture;
-						Uri uri = Uri.parse(url);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					if (null == mDataList && mDataList.size() <= 0) {
+						return;
 					}
-				}
 
-				int last = firstVisibleItem + visibleItemCount + 1;
-				if (last < mDataList.size()) {
-					for (int i = last; i < mDataList.size(); i++) {
-						String url = mDataList.get(i).mVideoEntity.picture;
-						Uri uri = Uri.parse(url);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					int first = firstVisibleItem - 1;
+					if (first < mDataList.size()) {
+						for (int i = 0; i < first; i++) {
+							String url = mDataList.get(i).mVideoEntity.picture;
+							Uri uri = Uri.parse(url);
+							Fresco.getImagePipeline().evictFromMemoryCache(uri);
+						}
 					}
-				}
-				
-				
-					
+
+					int last = firstVisibleItem + visibleItemCount + 1;
+					if (last < mDataList.size()) {
+						for (int i = last; i < mDataList.size(); i++) {
+							String url = mDataList.get(i).mVideoEntity.picture;
+							Uri uri = Uri.parse(url);
+							Fresco.getImagePipeline().evictFromMemoryCache(uri);
+						}
+					}
 				} catch (Exception e) {
-					
 				}
-
 			}
 
 		});
@@ -344,6 +335,9 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+
+		GolukDebugUtils.e("", "NewList----------------------------param2: " + (String) param2);
+
 		if (event == VSquare_Req_List_Catlog) {
 			headLoading = false;
 			if (RESULE_SUCESS == msg) {
@@ -478,6 +472,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	}
 
 	public void onPause() {
+		GolukDebugUtils.e("", "NewList----------------------------onPause: ");
 		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
 		if (null != mVideoSquareManager) {
 			mVideoSquareManager.removeVideoSquareManagerListener("NewestListView");

@@ -15,20 +15,19 @@
         />
     
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/text_model"
         android:layout_below="@+id/icon"
         android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="极路客G1"
             android:textColor="#6d6d72"
             android:textSize="16sp" />
 
     <LinearLayout
         android:id="@+id/idlayout"
-        android:layout_below="@+id/text"
+        android:layout_below="@+id/text_model"
         android:gravity="center_vertical|left"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

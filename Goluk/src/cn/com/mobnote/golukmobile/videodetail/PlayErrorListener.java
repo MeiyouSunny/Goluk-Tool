@@ -6,7 +6,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;
-import android.view.View;
 
 public class PlayErrorListener implements OnErrorListener {
 

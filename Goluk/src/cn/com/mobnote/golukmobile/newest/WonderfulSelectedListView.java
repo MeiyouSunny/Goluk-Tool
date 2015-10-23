@@ -173,10 +173,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				switch (scrollState) {
 				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-					mWonderfulSelectedAdapter.lock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-					mWonderfulSelectedAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						if (mDataList.size() > 0) {
 							if (isGetFileListDataing) {
@@ -195,7 +193,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 					}
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					mWonderfulSelectedAdapter.lock();
 					break;
 
 				default:

@@ -3,11 +3,13 @@ package cn.com.mobnote.golukmobile.usercenter;
 import java.io.Serializable;
 
 public class UCUserInfo implements Serializable {
-	
+
+	/** */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 自定义头像URL
 	 */
-	public String customavatar; 
+	public String customavatar;
 	/**
 	 * 用户头像
 	 */
@@ -15,7 +17,7 @@ public class UCUserInfo implements Serializable {
 	/**
 	 * 性别
 	 */
-	public String sex; 
+	public String sex;
 	/**
 	 * 介绍
 	 */
@@ -32,7 +34,7 @@ public class UCUserInfo implements Serializable {
 	 * 分享视频总数
 	 */
 	public String sharevideonumber;
-	
+
 	/**
 	 * 赞你的人总数
 	 */
