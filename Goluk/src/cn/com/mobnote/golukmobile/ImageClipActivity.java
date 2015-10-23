@@ -22,10 +22,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -59,14 +57,10 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 		setContentView(R.layout.roadbook_crop_pic);
 		
-		
 		mCustomProgressDialog = new CustomLoadingDialog(ImageClipActivity.this, "正在保存头像,请稍候!");
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
-
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inSampleSize = 4;// 图片宽高都为原来的二分之一，即图片为原来的四分之一
 		
 		try {
 			String uriStr = getIntent().getStringExtra("imageuri");
@@ -74,16 +68,13 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			Bitmap bitmap = null;
 			if(uriStr != null  && !"".equals(uriStr)){
 				uri = Uri.parse(getIntent().getStringExtra("imageuri"));
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inSampleSize = 4;// 图片宽高都为原来的4分之一，即图片为原来的8分之一
 				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
 			}else{
 				bitmap =  getIntent().getParcelableExtra("imagebitmap");
-
 			}
 			
-			Long start = System.currentTimeMillis();
-			System.out.println("big 开始" + start);
-			
-			System.out.println("big 结束 height:" + options.outHeight  + " width :" + options.outWidth);
 			if (bitmap.getHeight() < bitmap.getWidth()) {
 //				int widht = options.outWidth * 200 / options.outHeight;
 //				int height = 200;
@@ -103,7 +94,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			System.out.println("big 设置图");
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -121,7 +111,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 	 * 
 	 * @return Bitmap
 	 */
-	public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+	public  Bitmap rotaingImageView(int angle, Bitmap bitmap) {
 		// 旋转图片 动作
 		Matrix matrix = new Matrix();
 		matrix.postRotate(angle);
@@ -138,7 +128,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.saveBtn:
 			if (isSave) {
@@ -155,10 +144,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 						System.out.println("flog =" + flog);
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				bitmap.recycle();
@@ -226,7 +213,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			requestStr.put("channel", "2");
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (out != null) {
@@ -332,14 +318,12 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		mBaseApp.setContext(this, "imageClipActivity");
 		super.onResume();
 	}
 
 	@Override
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
-		// TODO Auto-generated method stub
 		if (type == PageType_ModifyHeadPic) {
 			isSave = true;
 			if (mCustomProgressDialog.isShowing()) {
@@ -378,7 +362,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 						GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
 					e.printStackTrace();
 				}
