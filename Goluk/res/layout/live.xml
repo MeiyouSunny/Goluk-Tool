@@ -126,7 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <com.rd.car.player.RtspPlayerView
+            <com.rd.car.player.RtmpPlayerView
                 android:id="@+id/live_vRtmpPlayVideo"
                 android:layout_width="match_parent"
                 android:layout_height="206dp"
