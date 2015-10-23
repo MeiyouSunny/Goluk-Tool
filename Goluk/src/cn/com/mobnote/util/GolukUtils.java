@@ -511,44 +511,6 @@ public class GolukUtils {
 	}
 
 	@SuppressLint("SimpleDateFormat")
-	public static String formatTimeNew(String date) {
-		String time = null;
-		try {
-			long curTime = System.currentTimeMillis();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-			Date strtodate = formatter.parse(date);
-
-			Date curDate = new Date(curTime);
-			int curYear = curDate.getYear();
-			int history = strtodate.getYear();
-			int hisDay = strtodate.getDay();
-			int curDay = curDate.getDay();
-
-			if (curYear == history) {
-				if (hisDay == curDay) {
-					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
-					String timestr = jn.format(strtodate);
-					return "今天 " + timestr;
-				} else if ((hisDay + 1) == curDay) {
-					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
-					String timestr = jn.format(strtodate);
-					return "昨天 " + timestr;
-				} else {
-					SimpleDateFormat jn = new SimpleDateFormat("MM-dd HH:mm");
-					return jn.format(strtodate);// 今年内：月日更新
-				}
-			} else {
-				SimpleDateFormat jn = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				return jn.format(strtodate);// 非今年：年月日更新
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		return time;
-	}
-
-	@SuppressLint("SimpleDateFormat")
 	public static String getNewCategoryShowTime(String date) {
 		final long MINTUE = 60 * 1000;
 		final long HOUR = 60 * MINTUE;
