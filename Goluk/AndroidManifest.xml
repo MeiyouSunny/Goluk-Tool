@@ -50,7 +50,8 @@
         <!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
         <activity
             android:name="cn.com.mobnote.golukmobile.UserPersonalInfoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name="cn.com.mobnote.golukmobile.UserPersonalEditActivity"
             android:screenOrientation="portrait" />
@@ -101,7 +102,8 @@
         
         <activity
             android:name="cn.com.mobnote.golukmobile.ImageClipActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >

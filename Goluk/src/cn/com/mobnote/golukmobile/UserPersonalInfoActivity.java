@@ -47,8 +47,7 @@ import android.widget.TextView;
  * @author mobnote
  * 
  */
-public class UserPersonalInfoActivity extends BaseActivity implements
-		OnClickListener {
+public class UserPersonalInfoActivity extends BaseActivity implements OnClickListener {
 
 	/** application **/
 	private GolukApplication mApplication = null;
@@ -90,7 +89,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 	private static final int REQUEST_CODE_PHOTO = 5000;
 	private static final int REQUEST_CODE_CAMERA = 6000;
 	private static final int REQUEST_CODE_CLIP = 7000;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -129,7 +128,6 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 		mHeadLayout = (RelativeLayout) findViewById(R.id.user_personal_info_head_layout);
 		mNameLayout = (RelativeLayout) findViewById(R.id.user_personal_info_name_layout);
 		mSignLayout = (LinearLayout) findViewById(R.id.user_personal_info_sign_layout);
-
 
 		// 监听
 		backBtn.setOnClickListener(this);
@@ -175,55 +173,48 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 	 */
 	public void settingHeadOptions() {
 
-		final AlertDialog ad = new AlertDialog.Builder(mContext,
-				R.style.CustomDialog).create();
+		final AlertDialog ad = new AlertDialog.Builder(mContext, R.style.CustomDialog).create();
 		Window window = ad.getWindow();
 		window.setGravity(Gravity.BOTTOM);
 		ad.show();
 		ad.getWindow().setContentView(R.layout.user_center_setting_head);
 
-		ad.getWindow().findViewById(R.id.camera)
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						ad.dismiss();
-						siv.getCamera();
-					}
-				});
+		ad.getWindow().findViewById(R.id.camera).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ad.dismiss();
+				siv.getCamera();
+			}
+		});
 
-		ad.getWindow().findViewById(R.id.photo)
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						ad.dismiss();
-						siv.getPhoto();
-					}
-				});
+		ad.getWindow().findViewById(R.id.photo).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ad.dismiss();
+				siv.getPhoto();
+			}
+		});
 
-		ad.getWindow().findViewById(R.id.system)
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						ad.dismiss();
-						Intent itHead = new Intent(
-								UserPersonalInfoActivity.this,
-								UserPersonalHeadActivity.class);
-						Bundle bundle = new Bundle();
+		ad.getWindow().findViewById(R.id.system).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ad.dismiss();
+				Intent itHead = new Intent(UserPersonalInfoActivity.this, UserPersonalHeadActivity.class);
+				Bundle bundle = new Bundle();
 
-						bundle.putString("intentHeadText", head);
-						bundle.putString("customavatar", customavatar);
-						itHead.putExtras(bundle);
-						startActivityForResult(itHead, REQUEST_CODE_SYSTEMHEAD);
-					}
-				});
+				bundle.putString("intentHeadText", head);
+				bundle.putString("customavatar", customavatar);
+				itHead.putExtras(bundle);
+				startActivityForResult(itHead, REQUEST_CODE_SYSTEMHEAD);
+			}
+		});
 
-		ad.getWindow().findViewById(R.id.cancel)
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						ad.dismiss();
-					}
-				});
+		ad.getWindow().findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ad.dismiss();
+			}
+		});
 
 	}
 
@@ -231,8 +222,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 	 * 初始化用户信息
 	 */
 	public void initData() {
-		String info = mApplication.mGoluk.GolukLogicCommGet(
-				GolukModule.Goluk_Module_HttpPage, 0, "");
+		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
 		try {
 			JSONObject json = new JSONObject(info);
 
@@ -242,14 +232,14 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			sign = json.getString("desc");
 			sex = json.getString("sex");
 			customavatar = json.getString("customavatar");
-			if(customavatar != null && !"".equals(customavatar)){
+			if (customavatar != null && !"".equals(customavatar)) {
 				mImageHead.setImageURI(Uri.parse(customavatar));
-			}else{
-				showHead(mImageHead,head);
+			} else {
+				showHead(mImageHead, head);
 			}
 
 			mTextName.setText(name);
-			
+
 			mTextSign.setText(sign);
 
 		} catch (Exception e) {
@@ -276,32 +266,41 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			return;
 		}
 		switch (requestCode) {
-		
+
 		case 5000:
 			if (requestCode == siv.CANCELED_CODE) {
 				return;
 			}
 			Uri imageUri = data.getData();
-			Intent  intent = new Intent(this,ImageClipActivity.class);
+			Intent intent = new Intent(this, ImageClipActivity.class);
 			intent.putExtra("imageuri", imageUri.toString());
-			this.startActivityForResult(intent,7000);
-			//iv_head.setImageURI(imageUri);
+			this.startActivityForResult(intent, 7000);
+			// iv_head.setImageURI(imageUri);
 			break;
 		case 6000:
 			if (requestCode == siv.CANCELED_CODE) {
 				siv.deleteUri();
 			}
-			Intent  it = new Intent(this,ImageClipActivity.class);
-			it.putExtra("imageuri", siv.mCameraUri.toString());
-			this.startActivityForResult(it,7000);
-			//iv_head.setImageURI(mCameraUri);
+			Intent it = new Intent(this, ImageClipActivity.class);
+			if(siv.mCameraUri == null){
+				Bundle bundle = data.getExtras();
+				if (bundle != null) {
+					Bitmap photo = (Bitmap) bundle.get("data"); // get bitmap
+					it.putExtra("imagebitmap",photo);
+				}
+			}else{
+				it.putExtra("imageuri", siv.mCameraUri.toString());
+			}
+			
+			this.startActivityForResult(it, 7000);
+			// iv_head.setImageURI(mCameraUri);
 			break;
 		case 7000:
 			Bundle b = data.getExtras();
-			name = b.getString("imagepath");
-			
-			mImageHead.setImageURI(Uri.parse(name));
-			
+			String imagepach = b.getString("imagepath");
+
+			mImageHead.setImageURI(Uri.parse(imagepach));
+
 			System.out.println("xxxxxxxxxxxxxxxxxx");
 			break;
 		case REQUEST_CODE_NIKCNAME:
@@ -320,9 +319,9 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 		case REQUEST_CODE_SYSTEMHEAD:
 			Bundle bundle3 = data.getExtras();
 			head = bundle3.getString("intentSevenHead");
-			
-			showHead(mImageHead,head);
-			
+
+			showHead(mImageHead, head);
+
 			if (head.equals("1") || head.equals("2") || head.equals("3")) {
 				sex = "1";
 			} else if (head.equals("4") || head.equals("5") || head.equals("6")) {
@@ -336,7 +335,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 		}
 
 	}
-	
+
 	private void showHead(SimpleDraweeView view, String headportrait) {
 		try {
 			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
@@ -345,13 +344,12 @@ public class UserPersonalInfoActivity extends BaseActivity implements
 			e.printStackTrace();
 		}
 	}
-	
 
 	private void exit() {
-		if(null != UserCenterActivity.handler){
+		if (null != UserCenterActivity.handler) {
 			UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
 		}
 		this.finish();
 	}
-	
+
 }
