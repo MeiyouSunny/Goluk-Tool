@@ -61,7 +61,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
-		
+		imageView.mActivity = this;
 		try {
 			String uriStr = getIntent().getStringExtra("imageuri");
 			Uri  uri = null;
@@ -69,6 +69,9 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			if(uriStr != null  && !"".equals(uriStr)){
 				uri = Uri.parse(getIntent().getStringExtra("imageuri"));
 				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+				BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+				options.inJustDecodeBounds = false;
 				options.inSampleSize = 4;// 图片宽高都为原来的4分之一，即图片为原来的8分之一
 				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
 			}else{
@@ -76,20 +79,19 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			}
 			
 			if (bitmap.getHeight() < bitmap.getWidth()) {
-//				int widht = options.outWidth * 200 / options.outHeight;
-//				int height = 200;
-//				options.outHeight = height;
-//				options.outWidth = widht;
-//				options.inJustDecodeBounds = false;
-//				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
-//				
-//				System.out.println("big 结束 height:" + options.outHeight  + " width :" + options.outWidth);
+////				int widht = options.outWidth * 200 / options.outHeight;
+////				int height = 200;
+////				options.outHeight = height;
+////				options.outWidth = widht;
+////				options.inJustDecodeBounds = false;
+////				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+////				
+////				System.out.println("big 结束 height:" + options.outHeight  + " width :" + options.outWidth);
 				Bitmap bp = bitmap;
 				bitmap = this.rotaingImageView(90, bp);
 				bp.recycle();
 			}
 			imageView.setImageBitmap(bitmap);
-
 			
 			System.out.println("big 设置图");
 			
