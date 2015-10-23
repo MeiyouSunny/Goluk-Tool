@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile.videodetail;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.logic.GolukModule;
@@ -23,31 +22,33 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 	private Context mContext;
 	private CommentBean mCommentBean = null;
 	private EditText mEditText = null;
+	private boolean mFlagReply ;
 
-	public ReplyDialog(Context context, CommentBean commentBean,EditText editText) {
+	public ReplyDialog(Context context, CommentBean commentBean, EditText editText, boolean isReply) {
 		super(context, R.style.CustomDialog);
 		setContentView(R.layout.video_reply_layout);
-		
+
 		setCanceledOnTouchOutside(true);
 		Window window = this.getWindow();
 		window.setGravity(Gravity.BOTTOM);
-		
+
 		this.mContext = context;
 		this.mCommentBean = commentBean;
 		this.mEditText = editText;
-		
+		this.mFlagReply = isReply;
+
 		initView();
 	}
 
 	private void initView() {
 		mReplayOrDelete = (TextView) findViewById(R.id.reply_or_delete);
 		mCancle = (TextView) findViewById(R.id.cancle);
-		if(isReply()){
+		if (mFlagReply) {
 			mReplayOrDelete.setText("回复该评论");
-		}else{
+		} else {
 			mReplayOrDelete.setText("删除");
 		}
-		
+
 		mReplayOrDelete.setOnClickListener(this);
 		mCancle.setOnClickListener(this);
 
@@ -58,9 +59,9 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		switch (view.getId()) {
 		case R.id.reply_or_delete:
 			dismiss();
-			deal(isReply());
+			deal();
 			break;
-			
+
 		case R.id.cancle:
 			dismiss();
 			break;
@@ -69,18 +70,11 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		}
 	}
 	
-	private boolean isReply() {
-		if (mContext instanceof WonderfulActivity) {
-			return WonderfulActivity.mIsReply;
-		} else if (mContext instanceof VideoDetailActivity) {
-			return VideoDetailActivity.mIsReply;
-		} else {
-			return CommentActivity.mIsReply;
-		}
-	}
-	
-	private void deal(boolean flag) {
-		if (isReply()) {
+	/**
+	 * 点击回复或删除后处理操作
+	 */
+	private void deal() {
+		if (mFlagReply) {
 			mEditText.requestFocus();
 			GolukUtils.showSoft(mEditText);
 			mEditText.setHint("回复＠" + mCommentBean.mUserName + "：");

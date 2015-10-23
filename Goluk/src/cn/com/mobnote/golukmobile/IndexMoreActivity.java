@@ -335,7 +335,11 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			praiseCount = json.getInt("praisemenumber");
 			userUId = json.getString("uid");
 			userSex = json.getString("sex");
-			customavatar = json.getString("customavatar");
+			if(json.isNull("customavatar")) {
+				customavatar = "";
+			} else {
+				customavatar = json.getString("customavatar");
+			}
 			
 			if(customavatar != null && !"".equals(customavatar)){
 				mImageHead.setImageURI(Uri.parse(customavatar));
