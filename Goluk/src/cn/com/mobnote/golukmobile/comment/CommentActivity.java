@@ -184,6 +184,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
 		if (isCanInput) {
+			mRTPullListView.setEnabled(true);
 			if (mIsShowSoft) {
 				mEditText.requestFocus();
 				GolukUtils.showSoft(mEditText);
@@ -194,6 +195,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mRTPullListView.firstFreshState();
 			firstEnter();
 		} else {
+			mRTPullListView.setEnabled(false);
 			mCommentInputLayout.setVisibility(View.GONE);
 			mNoInputTv.setVisibility(View.VISIBLE);
 		}
@@ -595,18 +597,20 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		if (null != mAdapter) {
 			if ( this.mApp.isUserLoginSucess) {
 				mWillDelBean = (CommentBean) mAdapter.getItem(position - 1);
-				final UserInfo loginUser = mApp.getMyInfo();
-				GolukDebugUtils.e("", "-----commentActivity--------bean userId:" + mWillDelBean.mUserId
-						+ "  login user:" + loginUser.uid);
-				if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-					mIsReply = false;
+				if(null != mWillDelBean) {
+					final UserInfo loginUser = mApp.getMyInfo();
+					GolukDebugUtils.e("", "-----commentActivity--------bean userId:" + mWillDelBean.mUserId
+							+ "  login user:" + loginUser.uid);
+					if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+						mIsReply = false;
+					} else {
+						mIsReply = true;
+					}
 				} else {
 					mIsReply = true;
 				}
-			} else {
-				mIsReply = true;
-			}
-			new ReplyDialog(this, mWillDelBean, mEditText,mIsReply).show();
+				new ReplyDialog(this, mWillDelBean, mEditText,mIsReply).show();
+				}
 		}
 	}
 	
