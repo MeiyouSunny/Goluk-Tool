@@ -11,7 +11,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp" >
+        android:layout_height="50dp"
+        android:background="@color/white" >
 
         <!-- 头像 -->
 
@@ -182,7 +183,8 @@
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="8dp" >
+        android:paddingTop="8dp"
+        android:background="@color/white" >
 
         <TextView
             android:id="@+id/video_detail_describe"
@@ -227,7 +229,8 @@
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp" >
+        android:paddingTop="10dp"
+        android:background="@color/white" >
 
         <LinearLayout
             android:id="@+id/praiseLayout"
@@ -319,13 +322,19 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/line"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#e5e5e5"
-        android:contentDescription="@string/imgdes" />
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
+
+        <ImageView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#e5e5e5"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
 
 </LinearLayout>

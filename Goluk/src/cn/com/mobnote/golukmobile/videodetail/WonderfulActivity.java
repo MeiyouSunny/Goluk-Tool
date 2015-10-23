@@ -522,7 +522,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 				mCommentLayout.setVisibility(View.GONE);
 				mAdapter.closeComment();
+				mRTPullListView.setEnabled(false);
 			} else {
+				mRTPullListView.setEnabled(true);
 				mCommentLayout.setVisibility(View.VISIBLE);
 			}
 			JSONObject rootObj = new JSONObject((String) param2);

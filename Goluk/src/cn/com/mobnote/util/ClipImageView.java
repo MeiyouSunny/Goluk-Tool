@@ -1,6 +1,7 @@
 package cn.com.mobnote.util;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -17,6 +18,8 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -44,6 +47,8 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 	private int borderlength;
 
 	private boolean isJusted;
+	
+	public Activity mActivity = null;
 
 	private final Matrix baseMatrix = new Matrix();
 	private final Matrix drawMatrix = new Matrix();
@@ -76,12 +81,28 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		if (d == null) {
 			return;
 		}
-		final float viewWidth = getWidth();
-		final float viewHeight = getHeight();
+		
+		DisplayMetrics metric = new DisplayMetrics();
+		mActivity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+		int width = metric.widthPixels; // 屏幕宽度（像素）
+		int height = metric.heightPixels; // 屏幕高度（像素）
+		float mDensity = metric.density; // 屏幕密度（0.75 / 1.0 / 1.5）
+		int densityDpi = metric.densityDpi; // 屏幕密度DPI（120 / 160 / 240）
+		
+		if (width > height)
+		{
+			int d1 = height;
+			height = width;
+			width = d1;
+		}
+		
+		final float viewWidth = width;//getWidth();
+		final float viewHeight = height - (180* mDensity);//getHeight();
 		final int drawableWidth = d.getIntrinsicWidth();
 		final int drawableHeight = d.getIntrinsicHeight();
-
+		
 		borderlength = (int) (viewWidth - BORDERDISTANCE * 10);
+		
 		float scale = 1.0f;
 		if (drawableWidth <= drawableHeight) {
 			if (drawableWidth < borderlength) {
@@ -425,7 +446,6 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		draw(canvas);
-
 		return Bitmap.createBitmap(bitmap, (getWidth() - borderlength) / 2, (getHeight() - borderlength) / 2,
 				borderlength, borderlength);
 

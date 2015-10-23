@@ -230,7 +230,7 @@ public class NewestAdapter extends BaseAdapter {
 		}
 
 		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
-		holder.time.setText(GolukUtils.formatTimeNew(mVideoSquareInfo.mVideoEntity.sharingtime));
+		holder.time.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
 		final String location = mVideoSquareInfo.mVideoEntity.location;
 		if (null == location || "".equals(location)) {
 			holder.locationTv.setVisibility(View.GONE);
