@@ -373,6 +373,7 @@ public class JsonUtil {
 			userInfo.liveDuration = Integer.valueOf(getJsonStringValue(rootObj, "restime", "60"));
 			userInfo.desc = getJsonStringValue(rootObj, "desc", "");
 			userInfo.head = getJsonStringValue(rootObj, "head", "7");
+			userInfo.customavatar = getJsonStringValue(rootObj, "customavatar", "");
 
 			return userInfo;
 		} catch (Exception e) {
