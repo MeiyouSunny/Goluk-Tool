@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,8 +22,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -39,7 +42,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 	private CustomLoadingDialog mCustomProgressDialog = null;
 
 	private SettingImageView siv = null;
-	
+
 	private boolean isSave = true;
 
 	/** 视频存放外卡文件路径 */
@@ -55,27 +58,77 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.roadbook_crop_pic);
-		Uri uri = Uri.parse(getIntent().getStringExtra("imageuri"));
+		
+		
 		mCustomProgressDialog = new CustomLoadingDialog(ImageClipActivity.this, "正在保存头像,请稍候!");
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
-		
-		
+
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inSampleSize = 4;// 图片宽高都为原来的二分之一，即图片为原来的四分之一
-		Bitmap bitmap;
+		
 		try {
-			bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+			String uriStr = getIntent().getStringExtra("imageuri");
+			Uri  uri = null;
+			Bitmap bitmap = null;
+			if(uriStr != null  && !"".equals(uriStr)){
+				uri = Uri.parse(getIntent().getStringExtra("imageuri"));
+				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+			}else{
+				bitmap =  getIntent().getParcelableExtra("imagebitmap");
+
+			}
+			
+			Long start = System.currentTimeMillis();
+			System.out.println("big 开始" + start);
+			
+			System.out.println("big 结束 height:" + options.outHeight  + " width :" + options.outWidth);
+			if (bitmap.getHeight() < bitmap.getWidth()) {
+//				int widht = options.outWidth * 200 / options.outHeight;
+//				int height = 200;
+//				options.outHeight = height;
+//				options.outWidth = widht;
+//				options.inJustDecodeBounds = false;
+//				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+//				
+//				System.out.println("big 结束 height:" + options.outHeight  + " width :" + options.outWidth);
+				Bitmap bp = bitmap;
+				bitmap = this.rotaingImageView(90, bp);
+				bp.recycle();
+			}
 			imageView.setImageBitmap(bitmap);
-		} catch (FileNotFoundException e) {
+
+			
+			System.out.println("big 设置图");
+			
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		siv = new SettingImageView(this);
 		initListener();
 
+	}
+
+	/*
+	 * 旋转图片
+	 * 
+	 * @param angle
+	 * 
+	 * @param bitmap
+	 * 
+	 * @return Bitmap
+	 */
+	public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+		// 旋转图片 动作
+		Matrix matrix = new Matrix();
+		matrix.postRotate(angle);
+		System.out.println("angle2=" + angle);
+		// 创建新的图片
+		Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),bitmap.getHeight(), matrix, true);
+		return resizedBitmap;
 	}
 
 	private void initListener() {
@@ -88,7 +141,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.saveBtn:
-			if(isSave){
+			if (isSave) {
 				isSave = false;
 				if (mCustomProgressDialog != null) {
 					mCustomProgressDialog.show();
@@ -110,7 +163,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 				}
 				bitmap.recycle();
 			}
-			
+
 			break;
 		case R.id.cancelBtn: {
 			this.finish();
@@ -317,11 +370,11 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 							it.putExtra("imagepath", path);
 							this.setResult(RESULT_OK, it);
 							this.finish();
-						}else{
+						} else {
 							GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
 						}
 
-					}else{
+					} else {
 						GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
 					}
 				} catch (JSONException e) {
@@ -329,8 +382,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 					GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
 					e.printStackTrace();
 				}
-			}else{
-				
+			} else {
+
 				GolukUtils.showToast(ImageClipActivity.this, "网络不给力");
 			}
 		}
