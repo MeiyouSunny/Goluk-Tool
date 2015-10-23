@@ -89,7 +89,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="cn.com.mobnote.golukmobile.UserOpenUrlActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true" />
         <activity
             android:name="cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity"
             android:screenOrientation="portrait"
