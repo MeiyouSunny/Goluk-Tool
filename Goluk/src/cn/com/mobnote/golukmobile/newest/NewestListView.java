@@ -142,6 +142,9 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 	}
 
+	private long zXRequestId = 0;
+	private long typeVideoRequestId = 0;
+
 	private void httpPost(boolean flag, String operation, String timestamp) {
 		curOperation = operation;
 		if (flag) {
@@ -152,7 +155,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			if ("0".equals(operation)) {
 				if (!headLoading) {
 					headLoading = true;
-					GolukApplication.getInstance().getVideoSquareManager().getZXListData();
+					zXRequestId = GolukApplication.getInstance().getVideoSquareManager().getZXListData();
 				}
 			}
 
@@ -164,10 +167,10 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			List<String> attribute = new ArrayList<String>();
 			attribute.add("0");
 			dataLoading = true;
-			boolean tv = GolukApplication.getInstance().getVideoSquareManager()
+			typeVideoRequestId = GolukApplication.getInstance().getVideoSquareManager()
 					.getTypeVideoList("1", "2", attribute, operation, timestamp);
-			GolukDebugUtils.e("", "GGGGGG=====222222=======tv=" + tv);
-			if (!tv) {
+			GolukDebugUtils.e("", "GGGGGG=====222222=======tv=" + typeVideoRequestId);
+			if (typeVideoRequestId <= 0) {
 				closeProgressDialog();
 			}
 		} else {
@@ -333,44 +336,61 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		}
 	}
 
+	private void callBack_List_Catlog(int msg, int param1, Object param2) {
+		if (param1 != zXRequestId) {
+			return;
+		}
+		headLoading = false;
+		if (RESULE_SUCESS == msg) {
+			mHeadDataInfo = JsonParserUtils.parserNewestHeadData((String) param2);
+			initLayout();
+		} else {
+			showErrorTips();
+		}
+		checkData();
+	}
+
+	private void callBack_List_Video(int msg, int param1, Object param2) {
+		if (param1 != typeVideoRequestId) {
+			return;
+		}
+		dataLoading = false;
+		if (RESULE_SUCESS == msg) {
+			List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData((String) param2);
+			if ("0".equals(curOperation)) {
+				mDataList.clear();
+				pageCount = datalist.size();
+			}
+
+			mDataList.addAll(datalist);
+			curpageCount = datalist.size();
+			initLayout();
+		} else {
+			showErrorTips();
+
+			if ("2".equals(curOperation)) {
+				if (addFooter) {
+					addFooter = false;
+					mRTPullListView.removeFooterView(mBottomLoadingView);
+				}
+			}
+
+		}
+		checkData();
+	}
+
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 
 		GolukDebugUtils.e("", "NewList----------------------------param2: " + (String) param2);
 
 		if (event == VSquare_Req_List_Catlog) {
-			headLoading = false;
-			if (RESULE_SUCESS == msg) {
-				mHeadDataInfo = JsonParserUtils.parserNewestHeadData((String) param2);
-				initLayout();
-			} else {
-				showErrorTips();
-			}
-			checkData();
+			// 最新分类
+			callBack_List_Catlog(msg, param1, param2);
 		} else if (event == VSquare_Req_List_Video_Catlog) {
-			dataLoading = false;
-			if (RESULE_SUCESS == msg) {
-				List<VideoSquareInfo> datalist = JsonParserUtils.parserNewestItemData((String) param2);
-				if ("0".equals(curOperation)) {
-					mDataList.clear();
-					pageCount = datalist.size();
-				}
+			// 最新列表
+			callBack_List_Video(msg, param1, param2);
 
-				mDataList.addAll(datalist);
-				curpageCount = datalist.size();
-				initLayout();
-			} else {
-				showErrorTips();
-
-				if ("2".equals(curOperation)) {
-					if (addFooter) {
-						addFooter = false;
-						mRTPullListView.removeFooterView(mBottomLoadingView);
-					}
-				}
-
-			}
-			checkData();
 		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
 			if (mContext instanceof MainActivity) {
 				Context topContext = ((MainActivity) mContext).mApp.getContext();
@@ -473,10 +493,11 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 	public void onPause() {
 		GolukDebugUtils.e("", "NewList----------------------------onPause: ");
-		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if (null != mVideoSquareManager) {
-			mVideoSquareManager.removeVideoSquareManagerListener("NewestListView");
-		}
+		// VideoSquareManager mVideoSquareManager =
+		// GolukApplication.getInstance().getVideoSquareManager();
+		// if (null != mVideoSquareManager) {
+		// mVideoSquareManager.removeVideoSquareManagerListener("NewestListView");
+		// }
 	}
 
 	public void onDestroy() {
@@ -510,5 +531,4 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 		mNewestAdapter.updateClickPraiseNumber(info);
 	}
-
 }

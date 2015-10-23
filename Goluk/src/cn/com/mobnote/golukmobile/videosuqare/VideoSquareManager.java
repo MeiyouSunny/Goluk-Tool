@@ -72,9 +72,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年8月6日
 	 */
-	public boolean getJXListData(String jxid, String pagesize) {
+	public long getJXListData(String jxid, String pagesize) {
 		String json = JsonCreateUtils.getJXListJson(jxid, pagesize);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
 				json);
 	}
 
@@ -164,8 +164,8 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年8月6日
 	 */
-	public boolean getZXListData() {
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_Catlog, "");
+	public long getZXListData() {
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_Catlog, "");
 	}
 
 	/**
@@ -186,10 +186,10 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月17日
 	 */
-	public boolean getTypeVideoList(String channel, String type, List<String> attribute, String operation,
+	public long getTypeVideoList(String channel, String type, List<String> attribute, String operation,
 			String timestamp) {
 		String json = JsonCreateUtils.getSquareListRequestJson(channel, type, attribute, operation, timestamp);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
 				VSquare_Req_List_Video_Catlog, json);
 	}
 
@@ -348,6 +348,23 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 				json);
 	}
 
+	/**
+	 * 获取分享地址
+	 * 
+	 * @param videoid
+	 *            视频id
+	 * @param type
+	 *            视频类型：1.直播 2.点播
+	 * @return true:命令发送成功 false:失败
+	 * @author xuhw
+	 * @date 2015年4月17日
+	 */
+	public long getShareUrlEx(String videoid, String type) {
+		String json = JsonCreateUtils.getShareUrlRequestJson(videoid, type);
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
+				VSquare_Req_VOP_GetShareURL_Video, json);
+	}
+	
 	/**
 	 * 获取分享地址
 	 * 
