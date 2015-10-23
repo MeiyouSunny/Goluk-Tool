@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -98,9 +97,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	/** 保存将要删除的数据 */
 	private CommentBean mWillDelBean = null;
 	/**false评论／false删除／true回复**/
-	public static boolean mIsReply = false;
-	/****/
-	private RelativeLayout mAllLayout ;
+	private boolean mIsReply = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +142,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mNoData = (ImageView) findViewById(R.id.comment_nodata);
 		mCommentInputLayout = (RelativeLayout) findViewById(R.id.comment_layout);
 		mNoInputTv = (TextView) findViewById(R.id.comment_noinput);
-		mAllLayout = (RelativeLayout) findViewById(R.id.all_layout);
 
 		mBackBtn.setOnClickListener(this);
 		mSendBtn.setOnClickListener(this);
@@ -160,7 +156,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 		mRTPullListView.setOnItemClickListener(this);
 		
-		mAllLayout.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
 	}
 
 	/**
@@ -225,6 +220,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void back() {
 		isExit = true;
 		mVideoSquareManager.removeVideoSquareManagerListener(TAG);
+		mIsReply = false;
 		finish();
 	}
 
@@ -610,7 +606,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			} else {
 				mIsReply = true;
 			}
-			new ReplyDialog(this, mWillDelBean, mEditText).show();
+			new ReplyDialog(this, mWillDelBean, mEditText,mIsReply).show();
 		}
 	}
 	
@@ -621,6 +617,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			View v = getCurrentFocus();
 			if (UserUtils.isShouldHideInput(v, ev)) {
 				UserUtils.hideSoftMethod(this);
+				if("".equals(mEditText.getText().toString().trim()) && mIsReply) {
+					mEditText.setHint("写评论");
+					mIsReply = false;
+				}
 			}
 		}
 		return super.dispatchTouchEvent(ev);
@@ -656,20 +656,5 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 
 	}
-	
-	OnGlobalLayoutListener onGlobalLayoutListener = new OnGlobalLayoutListener() {
-		
-		@Override
-		public void onGlobalLayout() {
-			int off = mAllLayout.getRootView().getHeight() - mAllLayout.getHeight();
-			if(off < 300) {
-				//键盘隐藏
-				if("".equals(mEditText.getText().toString().trim()) && mIsReply) {
-					mEditText.setHint("写评论");
-					mIsReply = false;
-				}
-			}
-		}
-	};
 
 }
