@@ -4,6 +4,7 @@ import android.content.Context;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -18,14 +19,38 @@ public class XGInit implements XGIOperateCallback {
 	/** 保存TokenId,在服务端注册成功后，保存在本地 */
 	private String mTokenId = "";
 
+	private final String NVD_ACCESS_KEY = "A9MITK29U27G";
+	private final long NVD_ACCESS_ID = 2100148036;
+
+	private final String TEST_ACCESS_KEY = "AP4Y1I386HQQ";
+	private final long TEST_ACCESS_ID = 2100156386;
+
 	public XGInit(Context context) {
 		mContext = context;
 	}
 
 	public void init() {
+		if (isTestServer()) {
+			XGPushConfig.setAccessId(mContext, TEST_ACCESS_ID);
+			XGPushConfig.setAccessKey(mContext, TEST_ACCESS_KEY);
+		} else {
+			XGPushConfig.setAccessId(mContext, NVD_ACCESS_ID);
+			XGPushConfig.setAccessKey(mContext, NVD_ACCESS_KEY);
+		}
+
 		XGPushConfig.enableDebug(mContext, isDebug);
 		// 注册接口
 		XGPushManager.registerPush(mContext.getApplicationContext(), this);
+	}
+
+	public boolean isTestServer() {
+		String serverSign = GolukUtils.getAssestFileContent(mContext, "serverflag");
+		GolukDebugUtils.e("aaa", "serverSign: " + serverSign);
+		if (null != serverSign && (serverSign.trim().equals("test") || serverSign.trim().equals("dev"))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override

@@ -56,7 +56,6 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.talk.TalkNotifyAdapter;
 import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
 import cn.com.mobnote.receiver.NetworkStateReceiver;
-import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
@@ -75,7 +74,7 @@ import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint({ "HandlerLeak", "NewApi" })
 public class MainActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, OnTouchListener,
-		ILiveDialogManagerFn, IBaiduGeoCoderFn, UserInterface {
+		ILiveDialogManagerFn, IBaiduGeoCoderFn {
 
 	/** 程序启动需要20秒的时间用来等待IPC连接 */
 	private final int MSG_H_WIFICONN_TIME = 100;
@@ -823,38 +822,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		} else {
 
-		}
-	}
-
-	// 查看他人的直播
-	public void startLiveLook(UserInfo userInfo) {
-		GolukDebugUtils.e("", "jyf-----click------666666");
-		if (null == userInfo) {
-			return;
-		}
-
-		// 跳转看他人界面
-		Intent intent = new Intent(this, LiveActivity.class);
-		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
-		intent.putExtra(LiveActivity.KEY_GROUPID, "");
-		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
-
-		startActivity(intent);
-		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
-	}
-
-	public void dismissAutoDialog() {
-
-	}
-
-	@Override
-	public void statusChange() {
-		if (mApp.autoLoginStatus != 1) {
-			dismissAutoDialog();
-			if (mApp.autoLoginStatus == 2) {
-			}
 		}
 	}
 

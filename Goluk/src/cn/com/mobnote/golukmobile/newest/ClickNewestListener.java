@@ -98,6 +98,7 @@ public class ClickNewestListener implements OnClickListener {
 		user.uid = mVideoSquareInfo.mUserEntity.uid;
 		user.zanCount = mVideoSquareInfo.mVideoEntity.praisenumber;
 		user.head = mVideoSquareInfo.mUserEntity.headportrait;
+		user.customavatar = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		Intent intent = new Intent(mContext, LiveActivity.class);
 		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
 		intent.putExtra(LiveActivity.KEY_GROUPID, "");
