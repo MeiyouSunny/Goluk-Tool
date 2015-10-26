@@ -44,7 +44,7 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		mReplayOrDelete = (TextView) findViewById(R.id.reply_or_delete);
 		mCancle = (TextView) findViewById(R.id.cancle);
 		if (mFlagReply) {
-			mReplayOrDelete.setText("回复该评论");
+			mReplayOrDelete.setText("回复");
 		} else {
 			mReplayOrDelete.setText("删除");
 		}
