@@ -443,7 +443,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					user.headportrait = videoUser.headportrait;
 					user.introduce = "";
 					user.sex = "";
-					user.customavatar = "";
+					user.customavatar = videoUser.customavatar;
 					user.praisemenumber = "0";
 					user.sharevideonumber = "0";
 
@@ -544,7 +544,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					user.headportrait = bean.mUserHead;
 					user.introduce = "";
 					user.sex = "";
-					user.customavatar = "";
+					user.customavatar = bean.customavatar;
 					user.praisemenumber = "0";
 					user.sharevideonumber = "0";
 

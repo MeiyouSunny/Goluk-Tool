@@ -148,7 +148,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 				user.headportrait = temp.mUserHead;
 				user.introduce = "";
 				user.sex = "";
-				user.customavatar = "";
+				user.customavatar = temp.customavatar;
 				user.praisemenumber = "0";
 				user.sharevideonumber = "0";
 
