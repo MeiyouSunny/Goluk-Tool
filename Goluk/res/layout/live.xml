@@ -53,6 +53,7 @@
             android:id="@+id/live_userhead"
             android:layout_width="31dp"
             android:layout_height="31dp"
+             fresco:roundAsCircle="true"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"

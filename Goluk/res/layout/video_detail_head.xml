@@ -19,6 +19,7 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/user_head"
             android:layout_width="35dp"
+             fresco:roundAsCircle="true"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
