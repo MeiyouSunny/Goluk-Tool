@@ -290,7 +290,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		user.headportrait = userHead;
 		user.introduce = userDesc;
 		user.sex = userSex;
-		user.customavatar = "";
+		user.customavatar = customavatar;
 		user.praisemenumber = praiseCount + "";
 		user.sharevideonumber = shareCount + "";
 
