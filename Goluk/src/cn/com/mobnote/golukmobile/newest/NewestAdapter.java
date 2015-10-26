@@ -397,37 +397,36 @@ public class NewestAdapter extends BaseAdapter {
 			RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
 
 			final int size = mHeadDataInfo.categoryList.size();
+			final int commMargin = (int) (10 * density);
 			for (int i = 0; i < size; i++) {
+				main.setPadding(0, commMargin, 0, 0);
 				CategoryDataInfo mCategoryDataInfo = mHeadDataInfo.categoryList.get(i);
+
 				RelativeLayout item = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_item,
 						null);
-				main.setPadding(0, (int) (10 * density), 0, 0);
-				int iid = i + 1111;
-				item.setId(iid);
-
+				item.setId(i + 1111);
 				item.setOnTouchListener(new ClickCategoryListener(mContext, mCategoryDataInfo, this));
+
 				TextView mTitleName = (TextView) item.findViewById(R.id.mTitleName);
 				TextView mUpdateTime = (TextView) item.findViewById(R.id.mUpdateTime);
-
-				RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
+				ImageView mImageView = (ImageView) item.findViewById(R.id.mImageView);
 				mTitleName.setText(mCategoryDataInfo.name);
 				mUpdateTime.setText(GolukUtils.getNewCategoryShowTime(mCategoryDataInfo.time));
-
-				ImageView mImageView = (ImageView) item.findViewById(R.id.mImageView);
 				RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 				mImageView.setLayoutParams(dvParams);
 				loadHeadImage(mImageView, mCategoryDataInfo.coverurl, imagewidth, imageheight);
 
+				RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 				int id = i + 1111 - 2;
 				if (i % 2 == 0) {
 					itemparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-					itemparams.setMargins(0, 0, (int) (10 * density), (int) (10 * density));
-					itemparams.addRule(RelativeLayout.BELOW, id);
+					itemparams.setMargins(0, 0, commMargin, commMargin);
 				} else {
 					itemparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-					itemparams.setMargins(0, 0, 0, (int) (10 * density));
-					itemparams.addRule(RelativeLayout.BELOW, id);
+					itemparams.setMargins(0, 0, 0, commMargin);
 				}
+				itemparams.addRule(RelativeLayout.BELOW, id);
+
 				main.addView(item, itemparams);
 			}
 		}
