@@ -19,7 +19,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginLeft="14dp"
-            fresco:placeholderImage="@drawable/editor_head_girl4" />
+            fresco:placeholderImage="@drawable/editor_head_feault7" />
 
         <LinearLayout
             android:id="@+id/user_center_lyout"

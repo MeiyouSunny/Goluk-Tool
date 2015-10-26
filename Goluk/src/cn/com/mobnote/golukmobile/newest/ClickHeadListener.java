@@ -49,6 +49,7 @@ public class ClickHeadListener implements OnClickListener {
 		userInfo.headportrait = mVideoSquareInfo.mUserEntity.headportrait;
 		userInfo.introduce = "";
 		userInfo.sex = mVideoSquareInfo.mUserEntity.sex;
+		userInfo.customavatar = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 
 		return userInfo;
 	}
