@@ -478,7 +478,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("lily", "lily====IPC_VDCP_Msg_IPCUpgrade====msg=" + msg + "===param1=" + param1 + "==param2="
 				+ param2 + "--------event-----" + event);
-		GolukDebugUtils.i("lily", "------------install-------22222");
+		if(isExit) {
+			return ;
+		}
 		if (event == ENetTransEvent_IPC_UpGrade_Resp) {
 			if (IPC_VDCP_Msg_IPCUpgrade == msg) {
 				GolukDebugUtils.e("lily", "---------连接ipc-------");
@@ -678,5 +680,31 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public void exit() {
 		isExit = true;
 		finish();
+		timerCancel();
+		if(null != mUpdateDialogSuccess) {
+			UserUtils.dismissUpdateDialog(mUpdateDialogSuccess);
+		}
+		if(null != mPrepareDialog) {
+			UserUtils.dismissUpdateDialog(mPrepareDialog);
+		}
+		if(null != mSendDialog) {
+			UserUtils.dismissUpdateDialog(mSendDialog);
+		}
+		if(null != mSendOk) {
+			UserUtils.dismissUpdateDialog(mSendOk);
+		}
+		if(null != mUpdateDialog) {
+			UserUtils.dismissUpdateDialog(mUpdateDialog);
+		}
+		if(null != mUpdateDialogFail) {
+			UserUtils.dismissUpdateDialog(mUpdateDialogFail);
+		}
+		if(null != mFirstDialog) {
+			UserUtils.dismissUpdateDialog(mFirstDialog);
+		}
+		if(null != mSecondDialog) {
+			UserUtils.dismissUpdateDialog(mSendDialog);
+		}
+		
 	}
 }
