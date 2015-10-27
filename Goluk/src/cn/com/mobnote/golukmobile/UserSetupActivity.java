@@ -202,7 +202,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			if (btnLoginout.getText().toString().equals("登录")) {
 				if (mApp.autoLoginStatus == 1) {
 					mBuilder = new AlertDialog.Builder(mContext);
-					dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(true)
+					dialog = mBuilder.setMessage("正在为您登录，请稍候…").setCancelable(true)
 							.setOnKeyListener(new OnKeyListener() {
 								@Override
 								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
