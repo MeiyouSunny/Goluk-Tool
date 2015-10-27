@@ -209,50 +209,60 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
-
 				if (null == mDataList && mDataList.size() <= 0) {
 					return;
 				}
-
-				int first = firstVisibleItem - 1;
-				if (first < mDataList.size()) {
-					for (int i = 0; i < first; i++) {
-						String url = mDataList.get(i).jximg;
-						if (!TextUtils.isEmpty(url)) {
-							Uri uri = Uri.parse(url);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-
-						String url2 = mDataList.get(i).jtypeimg;
-						if (!TextUtils.isEmpty(url2)) {
-							Uri uri = Uri.parse(url2);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-
-					}
-				}
-
-				int last = firstVisibleItem + visibleItemCount + 1;
-				if (last < mDataList.size()) {
-					for (int i = last; i < mDataList.size(); i++) {
-						String url = mDataList.get(i).jximg;
-						if (!TextUtils.isEmpty(url)) {
-							Uri uri = Uri.parse(url);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-
-						String url2 = mDataList.get(i).jtypeimg;
-						if (!TextUtils.isEmpty(url2)) {
-							Uri uri = Uri.parse(url2);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-
-					}
-				}
-
+				selfFreeFresco(firstVisibleItem, visibleItemCount);
 			}
 
 		});
+	}
+
+	/**
+	 * 手动释放Fresco的资源
+	 * 
+	 * @param firstVisibleItem
+	 * @param visibleItemCount
+	 * @author jyf
+	 */
+	private void selfFreeFresco(int firstVisibleItem, int visibleItemCount) {
+		try {
+			int first = firstVisibleItem - 1;
+			if (first < mDataList.size()) {
+				for (int i = 0; i < first; i++) {
+					String url = mDataList.get(i).jximg;
+					if (!TextUtils.isEmpty(url)) {
+						Uri uri = Uri.parse(url);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+
+					String url2 = mDataList.get(i).jtypeimg;
+					if (!TextUtils.isEmpty(url2)) {
+						Uri uri = Uri.parse(url2);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+
+				}
+			}
+			int last = firstVisibleItem + visibleItemCount + 1;
+			if (last < mDataList.size()) {
+				for (int i = last; i < mDataList.size(); i++) {
+					String url = mDataList.get(i).jximg;
+					if (!TextUtils.isEmpty(url)) {
+						Uri uri = Uri.parse(url);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+
+					String url2 = mDataList.get(i).jtypeimg;
+					if (!TextUtils.isEmpty(url2)) {
+						Uri uri = Uri.parse(url2);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+				}
+			}
+		} catch (Exception e) {
+
+		}
 	}
 
 	public View getView() {

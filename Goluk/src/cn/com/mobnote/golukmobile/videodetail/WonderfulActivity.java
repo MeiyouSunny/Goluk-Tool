@@ -65,7 +65,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  */
 public class WonderfulActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
-		VideoSuqareManagerFn, ICommentFn, TextWatcher, ILiveDialogManagerFn,OnItemClickListener {
+		VideoSuqareManagerFn, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener {
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -115,7 +115,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private boolean clickRefresh = false;
 	/** 回调数据没有回来 **/
 	private boolean isClick = false;
-	/**false评论／false删除／true回复**/
+	/** false评论／false删除／true回复 **/
 	private boolean mIsReply = false;
 
 	@Override
@@ -189,7 +189,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
 		mRTPullListView.setOnItemClickListener(this);
-		
+
 	}
 
 	/**
@@ -274,7 +274,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
 			break;
 		case R.id.comment_send:
-			GolukDebugUtils.e("", "=======wonderfulactivity====mIsReply："+mIsReply);
+			GolukDebugUtils.e("", "=======wonderfulactivity====mIsReply：" + mIsReply);
 			if (!UserUtils.isNetDeviceAvailable(this)) {
 				GolukUtils.showToast(this, "当前网络不可用，请检查网络");
 				return;
@@ -306,10 +306,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			}
 
 			if (count == visibleCount && mIsHaveData) {
-				if (null != mVideoJson && null != mVideoJson.data
-						&& null != mVideoJson.data.avideo
-						&& null != mVideoJson.data.avideo.video
-						&& null != mVideoJson.data.avideo.video.videoid) {
+				if (null != mVideoJson && null != mVideoJson.data && null != mVideoJson.data.avideo
+						&& null != mVideoJson.data.avideo.video && null != mVideoJson.data.avideo.video.videoid) {
 					startPush();
 				}
 			}
@@ -392,7 +390,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			startActivity(intent);
 			return;
 		}
-		
+
 		if (CommentTimerManager.getInstance().getIsStarting()) {
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
 					LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", "您评论的速度太快了，请休息一下再评论。");
@@ -431,8 +429,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		if (mIsReply) {
 			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,
 					mWillDelBean.mUserId, mWillDelBean.mUserName);
-		}else{
-			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,"","");
+		} else {
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt, "", "");
 		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
@@ -684,7 +682,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				mEditInput.setText("");
 				switchSendState(false);
 				UserUtils.hideSoftMethod(this);
-				//回复完评论之后需要还原状态以判断下次是评论还是回复
+				// 回复完评论之后需要还原状态以判断下次是评论还是回复
 				mIsReply = false;
 				mEditInput.setHint("写评论");
 				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
@@ -854,6 +852,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 	/**
 	 * 点击删除或者回复评论
+	 * 
 	 * @param arg0
 	 * @param view
 	 * @param position
@@ -862,27 +861,31 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 		GolukDebugUtils.e("", "----commentActivity--------position:" + position + "   arg3:" + arg3);
-		if(null != mAdapter){
-			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
-			if(null != mWillDelBean) {
-				if (this.mApp.isUserLoginSucess) {
-					UserInfo loginUser = mApp.getMyInfo();
-					GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
-					GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
-					if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-						mIsReply = false;
+		try {
+			if (null != mAdapter) {
+				mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
+				if (null != mWillDelBean) {
+					if (this.mApp.isUserLoginSucess) {
+						UserInfo loginUser = mApp.getMyInfo();
+						GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
+						GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
+						if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+							mIsReply = false;
+						} else {
+							mIsReply = true;
+						}
 					} else {
 						mIsReply = true;
 					}
-				}else{
-					mIsReply = true;
+					new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply).show();
 				}
-				new ReplyDialog(this, mWillDelBean, mEditInput,mIsReply).show();
 			}
+		} catch (Exception e) {
+
 		}
-		
+
 	}
-	
+
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
@@ -890,7 +893,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			View v = getCurrentFocus();
 			if (UserUtils.isShouldHideInput(v, ev)) {
 				UserUtils.hideSoftMethod(this);
-				if("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
+				if ("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
 					mEditInput.setHint("写评论");
 					mIsReply = false;
 				}
@@ -898,7 +901,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		return super.dispatchTouchEvent(ev);
 	}
-	
+
 	@Override
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT == dialogType) {
@@ -951,5 +954,5 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 }

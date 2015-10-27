@@ -207,6 +207,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		super.onCreate();
 		instance = this;
 		Const.setAppContext(this);
+		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
 		// TODO 此处不要做初始化相关的工作
 	}
 
@@ -243,7 +244,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (null != mGoluk) {
 			return;
 		}
-		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
+
 		initRdCardSDK();
 		initCachePath();
 		// 实例化JIN接口,请求网络数据
@@ -934,7 +935,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((UserPersonalNameActivity) mContext).saveNameCallBack(success, param2);
 			}
 			break;
-		case  PageType_ModifySignature:
+		case PageType_ModifySignature:
 			if (mPageSource == "UserPersonalSign") {
 				((UserPersonalSignActivity) mContext).saveSignCallBack(success, param2);
 			}
@@ -957,9 +958,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
 		// ipc升级文件下载
-//		case PageType_CommDownloadFile:
-//			mIpcUpdateManage.downloadCallback(success, param1, param2);
-//			break;
+		// case PageType_CommDownloadFile:
+		// mIpcUpdateManage.downloadCallback(success, param1, param2);
+		// break;
 		case PageType_DownloadIPCFile:
 			mIpcUpdateManage.downloadCallback(success, param1, param2);
 			break;
@@ -983,7 +984,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (mContext instanceof ImageClipActivity) {
 				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
 			}
-			
+
 			if (mContext instanceof UserPersonalHeadActivity) {
 				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
 			}
@@ -1147,15 +1148,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			boolean isbind = preferences.getBoolean("isbind", false);
 			if (isbind) {
 				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
-				//保存ipc设备型号
+				// 保存ipc设备型号
 				try {
-					JSONObject json = new JSONObject((String)param2);
-					if(json.isNull("productname")){
+					JSONObject json = new JSONObject((String) param2);
+					if (json.isNull("productname")) {
 						mIPCControlManager.mProduceName = "G1";
-					}else{
+					} else {
 						mIPCControlManager.mProduceName = json.getString("productname");
 					}
-					
+
 					mSharedPreUtil.saveIpcModel(mIPCControlManager.mProduceName);
 					GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + mSharedPreUtil.getIpcModel());
 				} catch (JSONException e) {
