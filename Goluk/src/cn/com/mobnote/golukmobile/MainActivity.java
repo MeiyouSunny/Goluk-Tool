@@ -662,7 +662,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			unregisterListener();
 			mApp.mIPCControlManager.setIPCWifiState(false, "");
 			mApp.setIpcLoginOut();
-			mApp.mUser.timerCancel();
+			mApp.mUser.exitApp();
 			mApp.mTimerManage.timerCancel();
 			closeWifiHot();
 			GlobalWindow.getInstance().dimissGlobalWindow();
