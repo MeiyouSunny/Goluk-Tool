@@ -6,11 +6,9 @@ include $(CLEAR_VARS)
 
 LOCAL_LDFLAGS := $(LOCAL_PATH)/../lib/logic/lib/liblogic.a \
                  $(LOCAL_PATH)/../lib/ipcmanger/lib/liblogictachograph.a \
-                 $(LOCAL_PATH)/../lib/api/lua/lib/liblua.a \
                  $(LOCAL_PATH)/../lib/api/md5/lib/libmd5.a \
                  $(LOCAL_PATH)/../lib/api/jansson/lib/libjansson.a \
                  $(LOCAL_PATH)/../lib/api/zlib/lib/libzlib.a \
-                 $(LOCAL_PATH)/../../../jnibase/libgpsencryption.a \
                  $(LOCAL_PATH)/../lib/net-plugin/lib/libnet-plugin.a \
                  $(LOCAL_PATH)/../lib/api/system/lib/libsystem_api.a \
                  $(LOCAL_PATH)/../lib/api/universal/lib/libuniversal_api.a
