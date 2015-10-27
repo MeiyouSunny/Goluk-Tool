@@ -36,9 +36,12 @@ public class User {
 	private GolukApplication mApp = null;
 	private UserInterface mUserInterface = null;
 	
+	public boolean mForbidTimer = false;
+	
 	public User(GolukApplication mApp) {
 		this.mApp = mApp;
 		mContext = mApp.getApplicationContext();
+		mForbidTimer = false;
 		
 		//初始化Handler
 		mHandler = new Handler() {
@@ -103,6 +106,9 @@ public class User {
 	 */
 	public void initAutoLoginCallback(int success,Object outTime,Object obj){
 		GolukDebugUtils.e("","---------------自动登录回调---------------");
+		if(mForbidTimer) {
+			return ;
+		}
 		int codeOut = (Integer) outTime;
 		if(1 == success){
 			try{
@@ -189,4 +195,8 @@ public class User {
 		}
 	}
 	
+	public void exitApp(){
+		mForbidTimer = true;
+		timerCancel();
+	}
 }
