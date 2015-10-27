@@ -244,6 +244,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (null != mGoluk) {
 			return;
 		}
+		
+		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
 
 		initRdCardSDK();
 		initCachePath();
