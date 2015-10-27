@@ -28,7 +28,6 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.newest.NewestAdapter;
-import cn.com.mobnote.golukmobile.newest.ClickShareListener;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
@@ -247,7 +246,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		if (!result) {
 
 		}
-
 		return result;
 	}
 
@@ -590,7 +588,5 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		if (v.getId() == R.id.category_list_nodata) {
 			this.firstRequest(true);
 		}
-
 	}
-
 }

@@ -540,11 +540,11 @@ public class UserCenterActivity extends BaseActivity implements
 						String customavatar = data.getString("customavatar");
 						String headportrait = data.getString("headportrait");
 
-						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+						String realDesc = "极路客个人主页分享(使用#极路客Goluk#拍摄)";
 
 						CustomShareBoard shareBoard = new CustomShareBoard(
 								this, sharePlatform, shorturl, customavatar,
-								describe, title, null, "", "");
+								describe, title, null, realDesc, "");
 						shareBoard.showAtLocation(this.getWindow()
 								.getDecorView(), Gravity.BOTTOM, 0, 0);
 					}
@@ -644,6 +644,14 @@ public class UserCenterActivity extends BaseActivity implements
 			}
 		}
 		
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (null != sharePlatform) {
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	@Override

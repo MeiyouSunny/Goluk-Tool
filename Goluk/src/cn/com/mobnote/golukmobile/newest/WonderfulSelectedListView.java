@@ -58,6 +58,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private int visibleCount;
 	private ImageView shareBg = null;
 
+	private long requestId = 0;
+
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<JXListItemDataInfo>();
@@ -124,8 +126,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		if (null != GolukApplication.getInstance().getVideoSquareManager()) {
 			isGetFileListDataing = true;
 			GolukDebugUtils.e("", "TTTTTT=====11111=====jxid=" + jxid);
-			boolean result = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
-			if (!result) {
+			requestId = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
+			if (requestId <= 0) {
 				closeProgressDialog();
 			}
 		} else {
@@ -256,7 +258,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		if (event == VSquare_Req_List_HandPick) {
+		if (event == VSquare_Req_List_HandPick && requestId == param1) {
 			GolukDebugUtils.e("", "TTTTTT=====2222=====param2=" + param2);
 			isGetFileListDataing = false;
 			closeProgressDialog();

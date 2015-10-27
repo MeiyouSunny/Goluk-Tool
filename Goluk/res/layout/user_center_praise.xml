@@ -17,6 +17,7 @@
             android:layout_height="37.33dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
+             fresco:roundAsCircle="true"
             fresco:placeholderImage="@drawable/editor_head_girl4" />
 
         <LinearLayout

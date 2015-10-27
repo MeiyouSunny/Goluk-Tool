@@ -575,31 +575,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 检测wifi链接状态
 	 */
 	public void checkWiFiStatus() {
-		// GolukDebugUtils.e("",
-		// "wifiCallBack-------------checkWiFiStatus   type:" +
-		// mApp.mWiFiStatus);
-		// String info =
-		// GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-		// 0, "");
-		// GolukDebugUtils.i("lily", "---IndexMore--------" + info);
-		// UCUserInfo user = new UCUserInfo();
-		// try {
-		// JSONObject json = new JSONObject(info);
-		// user.uid = json.getString("uid");
-		// user.nickname = json.getString("nickname");
-		// user.headportrait = json.getString("head");
-		// user.introduce = json.getString("desc");
-		// user.sex = json.getString("sex");
-		// user.customavatar = "";
-		// user.praisemenumber = "0";
-		// user.sharevideonumber = "0";
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-		//
-		// Intent i = new Intent(MainActivity.this, UserCenterActivity.class);
-		// i.putExtra("userinfo",user);
-		// startActivity(i);
 		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mApp.mWiFiStatus);
 		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 		startActivity(i);

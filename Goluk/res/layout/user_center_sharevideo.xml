@@ -16,6 +16,7 @@
             android:id="@+id/headimg"
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
+             fresco:roundAsCircle="true"
             fresco:placeholderImage="@drawable/editor_head_feault7" />
 
         <ImageView

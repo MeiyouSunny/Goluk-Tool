@@ -391,78 +391,86 @@ public class NewestAdapter extends BaseAdapter {
 			int imagewidth = (int) ((width - 10 * density) / 2);
 			int imageheight = (int) (imagewidth * 0.56);
 			mHeadView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_layout, null);
+
+			addLiveLayout();
+
 			RelativeLayout main = (RelativeLayout) mHeadView.findViewById(R.id.main);
-			RelativeLayout liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
-			liveLayout.setOnClickListener(new ClickLiveListener(mContext));
 
-			LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
-			if (null != mLiveInfo) {
-				int number = Integer.parseInt(mLiveInfo.number);
-				if (number > 0) {
-					liveLayout.setVisibility(View.VISIBLE);
-				} else {
-					liveLayout.setVisibility(View.GONE);
-				}
-
-				int height = (int) ((float) width / widthHeight);
-				RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
-				liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
-				liveLayout.setLayoutParams(liveLayoutParams);
-
-				ImageView mImageView = (ImageView) mHeadView.findViewById(R.id.mImageView);
-				RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(width, height);
-				mImageView.setLayoutParams(dvParams);
-				loadHeadImage(mImageView, mLiveInfo.pic, width, height);
-
-				LinearLayout mLookLayout = (LinearLayout) mHeadView.findViewById(R.id.mLookLayout);
-				TextView mLookNum = (TextView) mHeadView.findViewById(R.id.mLookNum);
-
-				if ("-1".equals(mLiveInfo.number)) {
-					mLookLayout.setVisibility(View.GONE);
-				} else {
-					mLookLayout.setVisibility(View.VISIBLE);
-					mLookNum.setText(mLiveInfo.number);
-				}
-			} else {
-				liveLayout.setVisibility(View.GONE);
-			}
 			final int size = mHeadDataInfo.categoryList.size();
+			final int commMargin = (int) (10 * density);
 			for (int i = 0; i < size; i++) {
+				main.setPadding(0, commMargin, 0, 0);
 				CategoryDataInfo mCategoryDataInfo = mHeadDataInfo.categoryList.get(i);
+
 				RelativeLayout item = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.category_item,
 						null);
-				main.setPadding(0, (int) (10 * density), 0, 0);
-				int iid = i + 1111;
-				item.setId(iid);
-
+				item.setId(i + 1111);
 				item.setOnTouchListener(new ClickCategoryListener(mContext, mCategoryDataInfo, this));
+
 				TextView mTitleName = (TextView) item.findViewById(R.id.mTitleName);
 				TextView mUpdateTime = (TextView) item.findViewById(R.id.mUpdateTime);
-
-				RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
+				ImageView mImageView = (ImageView) item.findViewById(R.id.mImageView);
 				mTitleName.setText(mCategoryDataInfo.name);
 				mUpdateTime.setText(GolukUtils.getNewCategoryShowTime(mCategoryDataInfo.time));
-
-				ImageView mImageView = (ImageView) item.findViewById(R.id.mImageView);
 				RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 				mImageView.setLayoutParams(dvParams);
 				loadHeadImage(mImageView, mCategoryDataInfo.coverurl, imagewidth, imageheight);
 
+				RelativeLayout.LayoutParams itemparams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 				int id = i + 1111 - 2;
 				if (i % 2 == 0) {
 					itemparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-					itemparams.setMargins(0, 0, (int) (10 * density), (int) (10 * density));
-					itemparams.addRule(RelativeLayout.BELOW, id);
+					itemparams.setMargins(0, 0, commMargin, commMargin);
 				} else {
 					itemparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-					itemparams.setMargins(0, 0, 0, (int) (10 * density));
-					itemparams.addRule(RelativeLayout.BELOW, id);
+					itemparams.setMargins(0, 0, 0, commMargin);
 				}
+				itemparams.addRule(RelativeLayout.BELOW, id);
+
 				main.addView(item, itemparams);
 			}
 		}
 
 		return mHeadView;
+	}
+
+	private void addLiveLayout() {
+		RelativeLayout liveLayout = null;
+		try {
+			liveLayout = (RelativeLayout) mHeadView.findViewById(R.id.liveLayout);
+			LiveInfo mLiveInfo = mHeadDataInfo.mLiveDataInfo;
+			if (null == mLiveInfo || Integer.parseInt(mLiveInfo.number) <= 0) {
+				liveLayout.setVisibility(View.GONE);
+				return;
+			}
+			liveLayout.setVisibility(View.VISIBLE);
+			liveLayout.setOnClickListener(new ClickLiveListener(mContext));
+
+			int height = (int) ((float) width / widthHeight);
+			RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
+			liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
+			liveLayoutParams.topMargin = 10;
+			liveLayout.setLayoutParams(liveLayoutParams);
+
+			ImageView mImageView = (ImageView) mHeadView.findViewById(R.id.mImageView);
+			RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(width, height);
+			mImageView.setLayoutParams(dvParams);
+			loadHeadImage(mImageView, mLiveInfo.pic, width, height);
+
+			LinearLayout mLookLayout = (LinearLayout) mHeadView.findViewById(R.id.mLookLayout);
+			TextView mLookNum = (TextView) mHeadView.findViewById(R.id.mLookNum);
+
+			if ("-1".equals(mLiveInfo.number)) {
+				mLookLayout.setVisibility(View.GONE);
+			} else {
+				mLookLayout.setVisibility(View.VISIBLE);
+				mLookNum.setText(mLiveInfo.number);
+			}
+		} catch (Exception e) {
+			if (null != liveLayout) {
+				liveLayout.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	private void loadHeadImage(final ImageView image, String url, int width, int height) {
