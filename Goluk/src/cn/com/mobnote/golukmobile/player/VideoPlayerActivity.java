@@ -605,17 +605,21 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		mIsExit = true;
 		this.cancelTimer();
 		mHandler.removeMessages(1);
-		if (null != mBitmap) {
-			if (!mBitmap.isRecycled()) {
-				mBitmap.recycle();
-				mBitmap = null;
-			}
-		}
+		// if (null != mBitmap) {
+		// if (!mBitmap.isRecycled()) {
+		// mBitmap.recycle();
+		// mBitmap = null;
+		// }
+		// }
+
+		// if (null != mImageView) {
+		// mImageView.setImageBitmap(null);
+		// }
 
 		if (null != mVideo) {
-			
-			//判断下video是否在播放中  如果在播放 先暂停播放器
-			if(mVideo.isPlaying()){
+
+			// 判断下video是否在播放中 如果在播放 先暂停播放器
+			if (mVideo.isPlaying()) {
 				mVideo.pause();
 			}
 			mVideo.stopPlayback();
@@ -628,12 +632,28 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		mHandler.postDelayed(mRunnable, 200);
 	}
 
+	private void freeBitmap() {
+		if (null != mBitmap) {
+			if (!mBitmap.isRecycled()) {
+				mBitmap.recycle();
+				mBitmap = null;
+			}
+		}
+	}
+
 	Runnable mRunnable = new Runnable() {
 		@Override
 		public void run() {
+
 			VideoPlayerActivity.this.finish();
 		}
 	};
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		freeBitmap();
+	}
 
 	/**
 	 * 显示上下操作栏
