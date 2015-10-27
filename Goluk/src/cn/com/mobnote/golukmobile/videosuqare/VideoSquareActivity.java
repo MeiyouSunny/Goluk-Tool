@@ -1,8 +1,5 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +10,10 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("Instantiatable")
 public class VideoSquareActivity implements OnClickListener {
@@ -28,11 +29,21 @@ public class VideoSquareActivity implements OnClickListener {
 
 	private float density;
 
+	RelativeLayout.LayoutParams lineParams = null;
+	private int lineTop = 0;
+	private int textColorSelect = 0;
+	private int textcolorQx = 0;
+
 	public VideoSquareActivity(RelativeLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
+		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
+		lineTop = (int) (5 * density);
+		textColorSelect = mContext.getResources().getColor(R.color.textcolor_select);
+		textcolorQx = mContext.getResources().getColor(R.color.textcolor_qx);
 		init();
+
 	}
 
 	public void init() {
@@ -67,12 +78,20 @@ public class VideoSquareActivity implements OnClickListener {
 	private OnPageChangeListener opcl = new OnPageChangeListener() {
 
 		@Override
-		public void onPageSelected(int arg0) {
-			updateState(arg0);
+		public void onPageSelected(int page) {
+			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageSelected:" + page);
+			updateState(page);
 		}
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+			// arg0 :当前页面，及你点击滑动的页面
+			// arg1:当前页面偏移的百分比
+			// arg2:当前页面偏移的像素位置
+
+			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageScrolled: arg0: " + arg0 + "   arg1:"
+					+ arg1 + "  arg2:" + arg2);
 			if (0 == arg2) {
 				return;
 			}
@@ -90,26 +109,32 @@ public class VideoSquareActivity implements OnClickListener {
 		}
 
 		@Override
-		public void onPageScrollStateChanged(int arg0) {
+		public void onPageScrollStateChanged(int state) {
+			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageScrollStateChanged: arg0: " + state);
+
+			// 其中state这个参数有三种状态（0，1，2）
+			// state ==1的时辰默示正在滑动，
+			// state==2的时辰默示滑动完毕了
+			// state==0的时辰默示什么都没做。
+			// 当页面开始滑动的时候，三种状态的变化顺序为（1，2，0）
 		}
 	};
 
 	private void updateLine(int process) {
-		RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int) (50 * density),
-				(int) (2 * density));
+		final int leftMargin = (int) (process * density);
+		GolukDebugUtils.e("", "VideoSquareActivity------AA------------updateLine: : " + leftMargin);
 		lineParams.addRule(RelativeLayout.BELOW, R.id.hot_title);
-		lineParams.setMargins((int) (process * density), (int) (5 * density), 0, 0);
+		lineParams.setMargins(leftMargin, lineTop, 0, 0);
 		hot.setLayoutParams(lineParams);
 	}
 
 	private void updateState(int type) {
 		if (0 == type) {
-			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
-			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
+			hotTitle.setTextColor(textColorSelect);
+			squareTitle.setTextColor(textcolorQx);
 		} else if (1 == type) {
-			hotTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_qx));
-			squareTitle.setTextColor(mContext.getResources().getColor(R.color.textcolor_select));
-
+			hotTitle.setTextColor(textcolorQx);
+			squareTitle.setTextColor(textColorSelect);
 		}
 	}
 

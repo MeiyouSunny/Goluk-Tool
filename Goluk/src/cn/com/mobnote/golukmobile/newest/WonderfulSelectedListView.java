@@ -66,6 +66,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setDividerHeight(0);
 		mRTPullListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.MATCH_PARENT);
+		mRTPullListView.setLayoutParams(lp);
 		mRootLayout = new RelativeLayout(mContext);
 		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
 
