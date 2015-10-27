@@ -3,8 +3,6 @@ goluk/src/api/md5
 goluk/src/api/system
 goluk/src/api/universal
 goluk/src/api/zlib
-goluk/src/api/lua
-goluk/src/lua-script
 goluk/src/ipcmanger
 goluk/src/logic
 goluk/src/net-plugin

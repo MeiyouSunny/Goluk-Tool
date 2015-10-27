@@ -109,7 +109,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		// title
 		btnBack.setOnClickListener(this);
 		btnRight.setOnClickListener(this);
-		btnRight.setOnTouchListener(this);
+		//btnRight.setOnTouchListener(this);
 		// body
 		mImageBoyOne.setOnClickListener(this);
 		mImageBoyTwo.setOnClickListener(this);
@@ -213,7 +213,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 	private void click_save() {
 		if (null == imageIndex || "".equals(imageIndex)) {
 			// 用户没有选择头像
-			finish();
+			GolukUtils.showToast(this, "请选择一个头像");
 			return;
 		}
 		JSONObject requestStr = new JSONObject();
