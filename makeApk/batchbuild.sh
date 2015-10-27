@@ -21,12 +21,10 @@ then
 	if [ $1 = "dev" ];
 	then
 		echo "build dev"
-		#cp -f 	git_version/gitversion_dev $3/assets/gitversion
 		cp -f   version_test/version  $3/assets/version
 	elif [ $1 = "test" ];
 	then
 		echo "build test"
-		#cp -f 	git_version/gitversion_test $3/assets/gitversion
 		cp -f   version_test/version  $3/assets/version
 	elif [ $1 = "nvd" ];
 	then
@@ -38,17 +36,9 @@ then
 else
 	echo "build test"
 	echo "test" >> $3/assets/serverflag
-	#cp -f 	git_version/gitversion_test $3/assets/gitversion
 	cp -f   version_test/version  $3/assets/version
 fi
 
-	#echo "拷贝LUA资源"
-	#cp -f tiros-module4x/lib/lua-script/lua.lz $3/assets/lua.mp3
-
-	#echo "copy api "
-	#rm -rf $3/assets/api/res/
-	#cp -rf tiros-module4x/lib/api/res $3/assets/
-	
 	echo "拷贝so文件到工程目录下"
 	mkdir -p $3/libs/armeabi/
 	cp -f tiros-module4x/libs/armeabi/* $3/libs/armeabi/

@@ -2,13 +2,6 @@ echo "打Apk包"
 echo "传递一个参数$1：APK包名称"
 cd ../
 
-#echo "cp version to workspace"
-#cp tempversion/version TirosNaviDog/assets/
-
-#echo "拷贝so文件到工程目录下"
-#mkdir -p TirosNaviDog/libs/armeabi/
-#cp -f tiros-module4x/libs/armeabi/* TirosNaviDog/libs/armeabi/
-
 #echo "拷贝库中的最新资源"
 ./makeApk/copyResources.sh
 
