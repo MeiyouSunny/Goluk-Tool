@@ -193,10 +193,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			// 返回
 			break;
 		case R.id.user_share:
-			intentToUserCenter(0);
+			clickToUserCenter(0);
 			break;
 		case R.id.user_praise:
-			intentToUserCenter(1);
+			clickToUserCenter(1);
 			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
@@ -206,16 +206,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			if (isHasInfo && (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2)) {
 				if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
 					mBuilder = new AlertDialog.Builder(mContext);
-					dialog = mBuilder.setMessage("正在为您登录，请稍候……").setCancelable(false)
-							.setOnKeyListener(new OnKeyListener() {
-								@Override
-								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-									if (keyCode == KeyEvent.KEYCODE_BACK) {
-										return true;
-									}
-									return false;
-								}
-							}).create();
+					dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
 					dialog.show();
 				} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
 					GolukDebugUtils.i("lily", "--------更多页面------");
@@ -277,6 +268,23 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
 			mContext.startActivity(itShopping);
 			break;
+		}
+	}
+	/**
+	 * 点击分享视频和赞我的人
+	 * @param type
+	 */
+	private void clickToUserCenter(int type) {
+		if (isHasInfo && (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2)) {
+			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
+				mBuilder = new AlertDialog.Builder(mContext);
+				if(!dialog.isShowing()) {
+					dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
+					dialog.show();
+				}
+			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
+				intentToUserCenter(type);
+			}
 		}
 	}
 
