@@ -119,8 +119,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private boolean isClick = false;
 	/**false评论／false删除／true回复**/
 	private boolean mIsReply = false;
-	/**是否点击发送按钮　　防止点击发送后还执行dispatchTouchEvent评论会出现黑屏**/
-	private boolean mTouchClick = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -280,7 +278,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			if (!isClick) {
 				return;
 			}
-			mTouchClick = true;
+			UserUtils.hideSoftMethod(this);
 			click_send();
 			break;
 		case R.id.video_detail_click_refresh:
@@ -690,7 +688,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				this.mAdapter.addFirstData(bean);
 				mEditInput.setText("");
 				switchSendState(false);
-				UserUtils.hideSoftMethod(this);
+//				UserUtils.hideSoftMethod(this);
 				//回复完评论之后需要还原状态以判断下次是评论还是回复
 				mIsReply = false;
 				mEditInput.setHint("写评论");
@@ -784,7 +782,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 		mAdapter.cancleTimer();
 		GolukUtils.isCanClick = true;
-		mTouchClick = false;
 		GolukUtils.cancelTimer();
 		mIsReply = false;
 		if (null != mAdapter.headHolder && null != mAdapter.headHolder.mVideoView) {
@@ -878,10 +875,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
-		if(mTouchClick) {
-			mTouchClick = false;
-			return true;
-		}
 		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
 			// 获得当前得到焦点的View
 			View v = mCommentLayout;

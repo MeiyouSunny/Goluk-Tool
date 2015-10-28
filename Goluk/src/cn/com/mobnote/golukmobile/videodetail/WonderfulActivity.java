@@ -282,6 +282,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			if (!isClick) {
 				return;
 			}
+			UserUtils.hideSoftMethod(this);
 			click_send();
 			break;
 		case R.id.video_detail_click_refresh:
@@ -681,7 +682,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				this.mAdapter.addFirstData(bean);
 				mEditInput.setText("");
 				switchSendState(false);
-				UserUtils.hideSoftMethod(this);
+//				UserUtils.hideSoftMethod(this);
 				// 回复完评论之后需要还原状态以判断下次是评论还是回复
 				mIsReply = false;
 				mEditInput.setHint("写评论");

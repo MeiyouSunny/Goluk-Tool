@@ -449,7 +449,7 @@ public class NewestAdapter extends BaseAdapter {
 			int height = (int) ((float) width / widthHeight);
 			RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(width, height);
 			liveLayoutParams.addRule(RelativeLayout.BELOW, R.id.main);
-			liveLayoutParams.topMargin = 10;
+			liveLayoutParams.topMargin = 40;
 			liveLayout.setLayoutParams(liveLayoutParams);
 
 			ImageView mImageView = (ImageView) mHeadView.findViewById(R.id.mImageView);
