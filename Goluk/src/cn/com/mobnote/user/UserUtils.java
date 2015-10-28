@@ -383,7 +383,7 @@ public class UserUtils {
      * @return
      */
     public static boolean isShouldHideInput(View view, MotionEvent event) {
-        if (view != null && (view instanceof EditText)) {
+        if (view != null) {
             int[] l = { 0, 0 };
             view.getLocationInWindow(l);
             int left = l[0];

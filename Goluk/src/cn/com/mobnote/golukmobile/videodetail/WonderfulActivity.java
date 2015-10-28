@@ -890,7 +890,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
 			// 获得当前得到焦点的View
-			View v = getCurrentFocus();
+			View v = mCommentLayout;
 			if (UserUtils.isShouldHideInput(v, ev)) {
 				UserUtils.hideSoftMethod(this);
 				if ("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
