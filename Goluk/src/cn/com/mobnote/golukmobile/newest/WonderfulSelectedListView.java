@@ -130,6 +130,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			isGetFileListDataing = true;
 			GolukDebugUtils.e("", "TTTTTT=====11111=====jxid=" + jxid);
 			requestId = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
+			GolukDebugUtils.e("", "TTTTTT=====11111=====requestId=" + requestId);
 			if (requestId <= 0) {
 				closeProgressDialog();
 			}
@@ -285,7 +286,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				}
 				initLayout(list);
 			} else {
-
 				if (!"0".equals(mJxid)) {
 					if (addFooter) {
 						addFooter = false;
