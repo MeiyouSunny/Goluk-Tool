@@ -278,7 +278,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		if (isHasInfo && (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2)) {
 			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
 				mBuilder = new AlertDialog.Builder(mContext);
-				if(!dialog.isShowing()) {
+				if(dialog == null) {
 					dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
 					dialog.show();
 				}
