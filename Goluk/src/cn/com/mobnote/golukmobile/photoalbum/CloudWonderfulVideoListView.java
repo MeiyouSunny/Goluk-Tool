@@ -125,6 +125,8 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	}
 
 	private void setListener() {
+		//屏蔽某些机型的下拉悬停操作
+		mStickyListHeadersListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 		mStickyListHeadersListView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
