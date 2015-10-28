@@ -144,6 +144,7 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity"

@@ -298,10 +298,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		case 7000:
 			Bundle b = data.getExtras();
 			String imagepach = b.getString("imagepath");
-
+			customavatar = imagepach ;
 			mImageHead.setImageURI(Uri.parse(imagepach));
-
-			System.out.println("xxxxxxxxxxxxxxxxxx");
 			break;
 		case REQUEST_CODE_NIKCNAME:
 			Bundle bundle = data.getExtras();
