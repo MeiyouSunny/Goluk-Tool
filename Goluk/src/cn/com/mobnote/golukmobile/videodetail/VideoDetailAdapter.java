@@ -7,6 +7,7 @@ import java.util.Timer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -384,7 +385,10 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mTextLook.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.clicknumber));
 			if (!"0".equals(mVideoAllData.avideo.video.praisenumber)) {
 				headHolder.mTextZan.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.praisenumber));
+				headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
 			}
+			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
+			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
 			headHolder.mTextDescribe.setText(mVideoAllData.avideo.video.describe);
 			final String location = mVideoAllData.avideo.video.mLocation;
