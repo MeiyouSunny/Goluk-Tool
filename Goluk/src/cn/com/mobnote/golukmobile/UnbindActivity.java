@@ -216,7 +216,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 					boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 				} else {// 下载成功
 					String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
-					if(!"".equals(ipcFile) && null != ipcFile){
+					if("".equals(ipcFile) || null == ipcFile){
 						boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC,
 								vIpc);
 					}else{
