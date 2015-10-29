@@ -900,6 +900,15 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		return super.dispatchTouchEvent(ev);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (null != sharePlatform) {
+			sharePlatform.onActivityResult(requestCode,
+					resultCode, data);
+		}
+	}
 
 	@Override
 	public void dialogManagerCallBack(int dialogType, int function, String data) {

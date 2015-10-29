@@ -845,17 +845,15 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		// 注册读取短信内容
 		registerReceiver(smsReceiver, smsFilter);
 		click = 1;
-
 	}
-
-	/**
-	 * 销毁广播
-	 */
+	
 	@Override
-	protected void onPause() {
-		super.onPause();
-		if (click == 1 && smsReceiver.isInitialStickyBroadcast()) {
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (click == 1) {
 			unregisterReceiver(smsReceiver);
 		}
 	}
+
 }

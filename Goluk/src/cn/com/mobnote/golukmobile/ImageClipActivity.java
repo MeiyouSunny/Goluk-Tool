@@ -79,14 +79,18 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 				bitmap =  getIntent().getParcelableExtra("imagebitmap");
 			}
 			
-			if (bitmap.getHeight() < bitmap.getWidth()) {
-				Bitmap bp = bitmap;
-				bitmap = this.rotaingImageView(90, bp);
-				bp.recycle();
+			if(bitmap == null){
+				GolukUtils.showToast(ImageClipActivity.this, "文件格式不正确");
+				this.finish();
+			}else{
+				if (bitmap.getHeight() < bitmap.getWidth()) {
+					Bitmap bp = bitmap;
+					bitmap = this.rotaingImageView(90, bp);
+					bp.recycle();
+				}
+				imageView.setImageBitmap(bitmap);
 			}
-			imageView.setImageBitmap(bitmap);
 			
-			System.out.println("big 设置图");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
