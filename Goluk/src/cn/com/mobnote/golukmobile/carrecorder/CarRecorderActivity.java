@@ -277,8 +277,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private IBaiduGeoCoderFn mBaiduGeoCoderFn = null;
 
-	private String platform = "G1";
-
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -298,8 +296,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		lsp = new LiveSettingPopWindow(this, mRootLayout);
 		lsp.setCallBackNotify(this);
-
-		platform = mApp.mIPCControlManager.mProduceName;
 
 		mSettingData = lsp.getCurrentSetting();
 
@@ -1058,8 +1054,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onResume() {
 		super.onResume();
-		platform = mApp.mIPCControlManager.mProduceName;
-		if (platform.equals("G1")) {
+		if (mApp.mIPCControlManager.mProduceName.equals("G1")) {
 			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 		}
 
@@ -1569,7 +1564,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					String filename = json.optString("filename");
 					if (null != json) {
 						String imagename = "";
-						if ("G1".equals(platform)) {
+						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
 							imagename = videoname.replace("mp4", "jpg");
 						} else {
 							imagename = mNowDownloadName.replace("mp4", "jpg");
@@ -1611,7 +1606,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					if (null != json) {
 						String filename = json.optString("filename");
 
-						if ("G1".equals(platform)) {
+						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
 							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
 								int filesize = json.getInt("filesize");
 								int filerecvsize = json.getInt("filerecvsize");
