@@ -31,10 +31,9 @@ public class FullScreenVideoView extends VideoView {
 		if (videoWidth > 0 && videoHeight > 0) {
 			if (videoWidth * height > width * videoHeight) {
 				height = width * videoHeight / videoWidth;
-			} else if (videoWidth * height < width * videoHeight) {
-				width = height * videoWidth / videoHeight;
 			}
 		}
+		
 		setMeasuredDimension(width, height);
 	}
 
