@@ -90,13 +90,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public static final int DOWNLOAD_STATUS = 2;
 	/**下载前保存一个IPC型号**/
 	public String mDownloadIPCModel = "";
-	/**获取IPC型号**/
-	public String mIpcModel = "";
 
 	public IpcUpdateManage(GolukApplication mApp) {
 		super();
 		this.mApp = mApp;
-		mIpcModel = mApp.mSharedPreUtil.getIpcModel();
 	}
 
 	/**
@@ -115,7 +112,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 				return false;
 			}
 			this.cancelHttpRequest();
-			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc,mApp.mSharedPreUtil.getIpcModel());
+			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc,mApp.mIPCControlManager.mProduceName);
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_CheckUpgrade, ipcString);
 			GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");
@@ -202,7 +199,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @param ipcModel
 	 */
 	public String isHasIPCFile(String ipcVersion) {
-		String ipcStr = JsonUtil.selectIPCFile(ipcVersion, mIpcModel);
+		String ipcStr = JsonUtil.selectIPCFile(ipcVersion, mApp.mIPCControlManager.mProduceName);
 		String isExist = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_GetIPCFile, ipcStr);
 		GolukDebugUtils.e("", "---------------isHasIPCFile------isExist："+isExist);
@@ -368,8 +365,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean download(String url, String ipcVersion) {
 //		mDownloadIPCModel = mIpcModel;
-		mApp.mSharedPreUtil.saveDownloadIpcModel(mIpcModel);
-		String str = JsonUtil.ipcDownLoad(url, ipcVersion, mIpcModel);
+		mApp.mSharedPreUtil.saveDownloadIpcModel(mApp.mIPCControlManager.mProduceName);
+		String str = JsonUtil.ipcDownLoad(url, ipcVersion, mApp.mIPCControlManager.mProduceName);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_DownloadIPCFile, str);
 	}

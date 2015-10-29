@@ -1159,8 +1159,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						mIPCControlManager.mProduceName = json.getString("productname");
 					}
 
-					mSharedPreUtil.saveIpcModel(mIPCControlManager.mProduceName);
-					GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + mSharedPreUtil.getIpcModel());
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
