@@ -102,6 +102,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				GolukDebugUtils.e("", "request-----------------------no DAta");
 				setViewListBg(false);
 				httpPost(true, "0", "");
 
@@ -309,8 +310,10 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	public void setViewListBg(boolean flog) {
 		if (flog) {
 			shareBg.setVisibility(View.VISIBLE);
+			mRTPullListView.setVisibility(View.GONE);
 		} else {
 			shareBg.setVisibility(View.GONE);
+			mRTPullListView.setVisibility(View.VISIBLE);
 		}
 	}
 
