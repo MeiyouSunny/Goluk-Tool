@@ -459,19 +459,7 @@ public class SharedPrefUtil {
 	public String getIpcPwd() {
 		return preference.getString(PROPERTY_SAVE_IPC_PASSWORD, "");
 	}
-	/**
-	 * 保存ipcModel
-	 * @param ipcModel
-	 */
-	public void saveIpcModel(String ipcModel) {
-		preference.edit().putString(PROPERTY_SAVE_IPC_MODEL, ipcModel).commit();
-	}
-	/**
-	 * 获取ipcModel
-	 */
-	public String getIpcModel() {
-		return preference.getString(PROPERTY_SAVE_IPC_MODEL, "");
-	}
+	
 	/**
 	 * 保存ipcModel
 	 * @param ipcModel

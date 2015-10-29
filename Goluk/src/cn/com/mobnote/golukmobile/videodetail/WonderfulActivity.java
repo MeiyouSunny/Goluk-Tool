@@ -201,12 +201,15 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mRTPullListView.firstFreshState();
 
 		String title = getIntent().getStringExtra("title");
+		if(title.length()>12){
+			title = title.substring(0, 12) + "...";
+		}
 		if (null == title || "".equals(title)) {
 			mTextTitle.setText("视频详情");
 		} else {
 			mTextTitle.setText(title);
 		}
-
+		
 		Intent it = getIntent();
 		if (null != it.getStringExtra("ztid")) {
 			ztId = it.getStringExtra("ztid").toString();
