@@ -605,26 +605,16 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		mIsExit = true;
 		this.cancelTimer();
 		mHandler.removeMessages(1);
-		// if (null != mBitmap) {
-		// if (!mBitmap.isRecycled()) {
-		// mBitmap.recycle();
-		// mBitmap = null;
-		// }
-		// }
 
-		// if (null != mImageView) {
-		// mImageView.setImageBitmap(null);
+		// if (null != mVideo) {
+		//
+		// // 判断下video是否在播放中 如果在播放 先暂停播放器
+		// if (mVideo.isPlaying()) {
+		// mVideo.pause();
 		// }
-
-		if (null != mVideo) {
-
-			// 判断下video是否在播放中 如果在播放 先暂停播放器
-			if (mVideo.isPlaying()) {
-				mVideo.pause();
-			}
-			mVideo.stopPlayback();
-			mVideo = null;
-		}
+		// mVideo.stopPlayback();
+		// mVideo = null;
+		// }
 
 		mHandler.removeMessages(0);
 		mHandler.removeCallbacksAndMessages(null);
