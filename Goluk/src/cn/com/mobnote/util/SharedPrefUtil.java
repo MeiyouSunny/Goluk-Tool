@@ -473,5 +473,13 @@ public class SharedPrefUtil {
 	public String getDownloadIpcModel() {
 		return preference.getString(PROPERTY_SAVE_IPC_DOWNLOAD_MODEL, "");
 	}
+	
+	public void saveIpcModel(String ipcModel) {
+		preference.edit().putString(PROPERTY_SAVE_IPC_MODEL, ipcModel).commit();
+	}
+	
+	public String getIpcModel() {
+		return preference.getString(PROPERTY_SAVE_IPC_MODEL, "");
+	}
 
 }

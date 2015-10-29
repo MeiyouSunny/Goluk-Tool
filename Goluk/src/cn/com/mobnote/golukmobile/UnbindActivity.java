@@ -153,6 +153,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 								mTextCameraName.setText("");
 								mTextPasswordName.setText("");
 								mTextVersion.setText("");
+								mApplication.mSharedPreUtil.saveIpcModel("");
+								mApplication.mIPCControlManager.mProduceName = "";
 								mUnbindBtn.setText("绑定");
 							}
 						}).create().show();
