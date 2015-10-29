@@ -320,14 +320,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mSendDialog = null;
 					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					showUpdateFirstDisconnect("很抱歉，升级失败，请先不要关闭摄像头电源，等待摄像头重新启动后再试。");
-					timerFive();
 					break;
 				case UPDATE_IPC_SECOND_DISCONNECT:
 					timerCancel();
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
 					showUpdateSecondDisconnect("很抱歉，摄像头连接异常中断，但它可能仍在升级中。请先不要关闭摄像头电源，等待摄像头升级成功。");
-					timerFive();
 					break;
 				default:
 					break;
@@ -584,22 +582,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				}
 			}
 		}, 180000);
-	}
-
-	/**
-	 * ipc断开连接后，5秒自动关闭当前页面
-	 */
-	public void timerFive() {
-		timerCancel();
-		mTimer = new Timer();
-		mTimer.schedule(new TimerTask() {
-
-			@Override
-			public void run() {
-				mApp.mIpcUpdateManage.stopIpcUpgrade();
-				exit();
-			}
-		}, 5000);
 	}
 
 	public void timerCancel() {
