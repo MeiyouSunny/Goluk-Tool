@@ -602,7 +602,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				// 使用网络地址
 				mHead.setImageURI(Uri.parse(neturl));
 			} else {
-				if ( null != headStr && !"".equals(headStr)) {
+				if (null != headStr && !"".equals(headStr)) {
 					int utype = Integer.valueOf(headStr);
 					int head = mHeadImg[utype];
 					mHead.setImageURI(GolukUtils.getResourceUri(head));
@@ -995,7 +995,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	private void liveCallBackError(boolean isprompt) {
 		if (isprompt) {
-			GolukUtils.showToast(this, "查看直播服务器返回数据异常");
+			// GolukUtils.showToast(this, "查看直播服务器返回数据异常");
 		}
 	}
 
