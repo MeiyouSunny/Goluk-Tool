@@ -478,8 +478,10 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	public void setViewListBg(boolean flog) {
 		if (flog) {
 			shareBg.setVisibility(View.VISIBLE);
+			mRTPullListView.setVisibility(View.GONE);
 		} else {
 			shareBg.setVisibility(View.GONE);
+			mRTPullListView.setVisibility(View.VISIBLE);
 		}
 	}
 
