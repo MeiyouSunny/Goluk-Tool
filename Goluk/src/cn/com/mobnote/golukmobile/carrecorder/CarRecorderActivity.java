@@ -1058,7 +1058,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		platform = mApp.mIPCControlManager.mProduceName;
 		if (platform.equals("G1")) {
 			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 		}
