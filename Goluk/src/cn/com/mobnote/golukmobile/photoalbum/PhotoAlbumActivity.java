@@ -135,7 +135,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mCloudText.setText(getResources().getString(R.string.photoalbum_cloud_video_text));
 		} else {
 			mCloudIcon.setBackgroundResource(R.drawable.my_cloud_no_link);
-			mCloudText.setText("未连接极路客");
+			mCloudText.setText("未连接记录仪");
 			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 		}
 	}
