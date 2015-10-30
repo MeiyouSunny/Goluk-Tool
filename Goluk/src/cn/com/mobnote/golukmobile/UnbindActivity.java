@@ -149,10 +149,14 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 								SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 								preferences.edit().putString("ipc_bind_name", "").commit();
 								mApplication.mSharedPreUtil.saveIpcPwd("");
-								mApplication.mSharedPreUtil.saveIPCVersion(" ");
+								mApplication.mSharedPreUtil.saveIPCVersion("");
+								vIpc = "";
 								mTextCameraName.setText("");
 								mTextPasswordName.setText("");
 								mTextVersion.setText("");
+								mApplication.mSharedPreUtil.saveIpcModel("");
+								mApplication.mIPCControlManager.mProduceName = "";
+								isGetIPCSucess = false;
 								mUnbindBtn.setText("绑定");
 							}
 						}).create().show();

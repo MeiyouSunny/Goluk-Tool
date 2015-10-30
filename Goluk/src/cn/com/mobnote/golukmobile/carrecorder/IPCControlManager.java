@@ -43,7 +43,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public IPCControlManager(GolukApplication application) {
 		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
-		mProduceName = "G1";
+		mProduceName = mApplication.mSharedPreUtil.getIpcModel();
 		isNeedReportSn = false;
 		// 注册IPC回调
 		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
