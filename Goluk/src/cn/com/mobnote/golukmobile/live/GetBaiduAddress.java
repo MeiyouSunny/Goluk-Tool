@@ -15,7 +15,6 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
 
 public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 
@@ -25,13 +24,14 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 	private IBaiduGeoCoderFn mListener = null;
 
 	public static final int FUN_GET_ADDRESS = 0;
-
-	private boolean isRequesting = false;
+	private static final int UPDATE = 1;
 
 	private GetBaiduAddress() {
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
+
+		GolukDebugUtils.e("", "GetBaiduAddress------------------init");
 	}
 
 	public static GetBaiduAddress getInstance() {
@@ -48,28 +48,18 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 
 	public void searchAddress(double lat, double lon) {
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----searchAddress----1111111  : ");
-		// if (isRequesting) {
-		// return;
-		// }
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----searchAddress----22222  : ");
-		isRequesting = true;
 		mHandler.removeMessages(UPDATE);
 		Message msg = mHandler.obtainMessage(UPDATE);
 		msg.obj = new LatLng(lat, lon);
 		mHandler.sendMessageDelayed(msg, 1000);
-		// 反Geo搜索
-		// LatLng ptCenter = new LatLng(lat, lon);
-		// boolean isSucess = mSearch.reverseGeoCode(new
-		// ReverseGeoCodeOption().location(ptCenter));
-		// if (!isSucess) {
-		// isRequesting = false;
-		// }
-
 		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----searchAddress----33333  : ");
-
 	}
 
-	private static final int UPDATE = 1;
+	public void exit() {
+		mHandler.removeMessages(UPDATE);
+	}
+
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -92,6 +82,9 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 		if (context != null) {
 			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			if (null == mConnectivityManager) {
+				return false;
+			}
 			NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 			if (mNetworkInfo != null) {
 				return mNetworkInfo.isAvailable();
@@ -114,7 +107,6 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-		isRequesting = false;
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
 			sendCallBackData(FUN_GET_ADDRESS, null);
 			GolukDebugUtils.e("", "jyf----20150406----GetBaiduAddress----onGetReverseGeoCodeResult----NULL  : ");
