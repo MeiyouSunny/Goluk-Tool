@@ -403,7 +403,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 		isBack = true;
 		isExit = true;
-		
+
 		stopProgressThread();
 		mTypeLayout.setExit();
 		mTypeLayout = null;
@@ -636,6 +636,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	public void CallBack_UploadVideo(int event, Object obj) {
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------CallBack_UploadVideo--event-: "
 				+ event);
+		if (isExit) {
+			return;
+		}
 		switch (event) {
 		case EVENT_EXIT:
 			exit();
@@ -645,8 +648,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			requestShareInfo();
 			break;
 		case EVENT_PROCESS:
-			final int process = (Integer) obj;
-			mShareLoading.setProcess(process);
+			if (null != obj && null != mShareLoading) {
+				final int process = (Integer) obj;
+				mShareLoading.setProcess(process);
+			}
 			break;
 		}
 	}
