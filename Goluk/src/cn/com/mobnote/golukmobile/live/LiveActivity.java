@@ -972,9 +972,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		if (1 == liveData.active) {
 			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : ");
-			// 主动直播
-			if (!mRPVPalyVideo.isPlaying()) {
-				startVideoAndLive(liveData.playUrl);
+			if (null != mRPVPalyVideo) {
+				// 主动直播
+				if (!mRPVPalyVideo.isPlaying()) {
+					startVideoAndLive(liveData.playUrl);
+				}
 			}
 		} else {
 			// 被动直播

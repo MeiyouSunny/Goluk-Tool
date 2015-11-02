@@ -658,6 +658,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			exitTime = System.currentTimeMillis();
 		} else {
 			mApp.setExit(true);
+			GetBaiduAddress.getInstance().exit();
 			unregisterListener();
 			mApp.mIPCControlManager.setIPCWifiState(false, "");
 			mApp.setIpcLoginOut();

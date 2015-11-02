@@ -25,4 +25,7 @@ void CallBack_ipcManager(void* pvUser, Net_Trans_Event event ,int msg , unsigned
 	dbgprintf("IPCManager-----JNI------CallBack_ipcManager----33333");
 	// free
 	g_env->DeleteLocalRef(cls);
+	if (0 != data) {
+			g_env->DeleteLocalRef(data);
+	}
 }

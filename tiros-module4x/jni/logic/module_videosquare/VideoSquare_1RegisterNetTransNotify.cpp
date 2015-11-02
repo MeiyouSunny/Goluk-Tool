@@ -24,6 +24,9 @@ void CallBack_videosquare(void* pvUser, int event, int msg, unsigned long param1
 			dbgprintf("xuhw-----JNI------CallBack_videosquare----333333");
 		}
 		g_env->CallStaticVoidMethod(cls,mId_CallBack,event,msg,(jlong)param1,data);
+		if (0 != data) {
+			g_env->DeleteLocalRef(data);
+		}
 		dbgprintf("xuhw-----JNI------CallBack_videosquare----44444");
 	}
 	dbgprintf("xuhw-----JNI------CallBack_videosquare----55555");
