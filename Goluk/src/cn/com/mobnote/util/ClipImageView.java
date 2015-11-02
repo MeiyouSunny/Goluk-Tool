@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
@@ -19,7 +18,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -31,8 +29,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 public class ClipImageView extends ImageView implements View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
-
-	private static final int BORDERDISTANCE = ClipView.BORDERDISTANCE;
 
 	public static final float DEFAULT_MAX_SCALE = 4.0f;
 	public static final float DEFAULT_MID_SCALE = 2.0f;
@@ -101,8 +97,8 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		final int drawableWidth = d.getIntrinsicWidth();
 		final int drawableHeight = d.getIntrinsicHeight();
 		
-		borderlength = (int) (viewWidth - BORDERDISTANCE * 10);
-		
+//		borderlength = (int) (viewWidth - BORDERDISTANCE * 10);
+		borderlength = ClipView.dip2px(mActivity, 100) * 2;
 		float scale = 1.0f;
 		if (drawableWidth <= drawableHeight) {
 			if (drawableWidth < borderlength) {
