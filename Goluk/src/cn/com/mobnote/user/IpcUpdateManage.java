@@ -292,6 +292,11 @@ public class IpcUpdateManage implements IPCManagerFn {
 					SharedPreferences preferences = mApp.getContext().getSharedPreferences("ipc_wifi_bind",
 							mApp.getContext().MODE_PRIVATE);
 					boolean isbind = preferences.getBoolean("isbind", false);
+					
+					if (!mApp.isIpcLoginSuccess && !isbind) {
+						GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
+						return ;
+					}
 
 					IPCInfo ipcInfo = ipcUpdateUtils(ipc);
 					if (ipcInfo == null) {
