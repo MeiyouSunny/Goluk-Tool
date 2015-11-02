@@ -8,8 +8,6 @@ import android.util.AttributeSet;
 import android.view.View;
 public class ClipView extends View {
 
-	public static final int BORDERDISTANCE = 50;
-
 	private Paint mPaint;
 	private Context mContext;
 
