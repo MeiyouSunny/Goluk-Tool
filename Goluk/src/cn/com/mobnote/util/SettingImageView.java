@@ -1,19 +1,20 @@
 package cn.com.mobnote.util;
 
-import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Bitmap.Config;
-import android.graphics.PorterDuff.Mode;
 import android.net.Uri;
 import android.provider.MediaStore;
+import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 
 public class SettingImageView {
 	
@@ -49,19 +50,27 @@ public class SettingImageView {
 	 * 
 	 * @param activity
 	 */
-	public  void getCamera() {
-		String name = "headimage" + System.currentTimeMillis();
-		ContentValues cv = new ContentValues();
-		cv.put(MediaStore.Images.Media.TITLE, name);
-		cv.put(MediaStore.Images.Media.DISPLAY_NAME, name + ".jpeg");
-		cv.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-		mCameraUri = mContext.getContentResolver().insert(
-				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+	public boolean getCamera() {
+		PackageManager packageManager = mContext.getPackageManager();
+		if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+			return false;
+		}
+		try {
+			String name = "headimage" + System.currentTimeMillis();
+			ContentValues cv = new ContentValues();
+			cv.put(MediaStore.Images.Media.TITLE, name);
+			cv.put(MediaStore.Images.Media.DISPLAY_NAME, name + ".jpeg");
+			cv.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+			mCameraUri = mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
 
-		Intent it = new Intent();
-		it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-		it.putExtra(MediaStore.EXTRA_OUTPUT, mCameraUri);
-		((UserPersonalInfoActivity)mContext).startActivityForResult(it, CAMERA_QUQUEST_CODE);
+			Intent it = new Intent();
+			it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+			it.putExtra(MediaStore.EXTRA_OUTPUT, mCameraUri);
+			((UserPersonalInfoActivity) mContext).startActivityForResult(it, CAMERA_QUQUEST_CODE);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**

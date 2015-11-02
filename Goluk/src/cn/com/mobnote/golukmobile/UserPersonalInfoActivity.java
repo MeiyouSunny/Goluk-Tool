@@ -1,30 +1,18 @@
 package cn.com.mobnote.golukmobile;
 
-import java.net.URLEncoder;
-
 import org.json.JSONObject;
-
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SettingImageView;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -32,11 +20,8 @@ import android.view.View.OnClickListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -183,7 +168,10 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			@Override
 			public void onClick(View v) {
 				ad.dismiss();
-				siv.getCamera();
+				boolean isSucess = siv.getCamera();
+				if (!isSucess) {
+					GolukUtils.showToast(UserPersonalInfoActivity.this, "启动相机失败");
+				}
 			}
 		});
 
