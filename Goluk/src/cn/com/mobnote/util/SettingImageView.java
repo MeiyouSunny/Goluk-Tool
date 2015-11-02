@@ -37,11 +37,16 @@ public class SettingImageView {
 	 * 
 	 * @param activity
 	 */
-	public  void getPhoto() {
+	public boolean getPhoto() {
 		Intent it = new Intent();
 		it.setAction(Intent.ACTION_GET_CONTENT);
 		it.setType("image/*");
-		((UserPersonalInfoActivity)mContext).startActivityForResult(it, PHOTO_REQUEST_CODE);
+
+		if (mContext.getPackageManager().resolveActivity(it, PackageManager.GET_INTENT_FILTERS) != null) {
+			((UserPersonalInfoActivity) mContext).startActivityForResult(it, PHOTO_REQUEST_CODE);
+			return true;
+		}
+		return false;
 	}
 	
 	

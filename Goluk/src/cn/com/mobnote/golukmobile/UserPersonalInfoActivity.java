@@ -179,7 +179,10 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			@Override
 			public void onClick(View v) {
 				ad.dismiss();
-				siv.getPhoto();
+				boolean isS = siv.getPhoto();
+				if (!isS) {
+					GolukUtils.showToast(UserPersonalInfoActivity.this, "打开相册失败");
+				}
 			}
 		});
 
