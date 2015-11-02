@@ -481,6 +481,13 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				isClick = true;
 				mEditInput.setFocusable(true);
 				updateRefreshTime();
+				if (OPERATOR_FIRST == mCurrentOperator) {
+					// 首次进入
+					firstEnterCallBack(0, mVideoJson, commentDataList);
+				} else if(OPERATOR_DOWN == mCurrentOperator){
+					// 下拉刷新
+					pullCallBack(0, mVideoJson, commentDataList);
+				}
 				if (null != mVideoJson.data && null != mVideoJson.data.avideo
 						&& null != mVideoJson.data.avideo.video && null != mVideoJson.data.avideo.video.videoid) {
 					getCommentList(OPERATOR_FIRST, "");
@@ -559,7 +566,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				pushCallBack(count, mVideoJson, commentDataList);
 			} else {
 				// 下拉刷新
-				pullCallBack(0, mVideoJson, commentDataList);
+				pullCallBack(count, mVideoJson, commentDataList);
 			}
 
 		} catch (Exception e) {
