@@ -10,34 +10,35 @@ import android.view.View.OnClickListener;
 
 public class ClickVideoListener implements OnClickListener {
 
-	private Context mContext ;
+	private Context mContext;
 	private VideoDetailAdapter mAdapter;
-	
-	public ClickVideoListener(Context context,VideoDetailAdapter adapter) {
+
+	public ClickVideoListener(Context context, VideoDetailAdapter adapter) {
 		this.mContext = context;
 		this.mAdapter = adapter;
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		if (!UserUtils.isNetDeviceAvailable(mContext)) {
 			GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
 			return;
 		}
+		if (mAdapter == null || mAdapter.headHolder == null || mAdapter.headHolder.mVideoView == null) {
+			return;
+		}
 		if (mAdapter.isBuffering) {
 			return;
 		}
+
 		if (mAdapter.headHolder.mVideoView.isPlaying()) {
 			mAdapter.headHolder.mVideoView.pause();
-			mAdapter.headHolder.mImageLayout.setVisibility(View.VISIBLE);
-			mAdapter.headHolder.mVideoView.setVisibility(View.GONE);
 			mAdapter.isPause = true;
 			mAdapter.headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 		} else {
 			mAdapter.playVideo();
 			mAdapter.headHolder.mVideoView.start();
 			mAdapter.showLoading();
-			mAdapter.headHolder.mVideoView.setVisibility(View.VISIBLE);
 			GolukDebugUtils.e("", "VideoDetailActivity-------------------------onClick  showLoading");
 			mAdapter.headHolder.mPlayBtn.setVisibility(View.GONE);
 		}

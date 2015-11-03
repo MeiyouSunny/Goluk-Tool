@@ -105,7 +105,6 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
-				GolukDebugUtils.e("webview", "--------onPageFinished--------");
 				closeLoading();
 			}
 
@@ -147,6 +146,12 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=1");
+				} else if (from_tag.equals("wifihelp")) {
+					mTextTitle.setText("极路客视频安装帮助");
+					if (mErrorState) {
+						return;
+					}
+					mWebView.loadUrl(getRtmpAddress() + "?type=3");
 				}
 			} else {
 				mTextTitle.setText("");

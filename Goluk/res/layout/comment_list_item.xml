@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white" >
@@ -7,17 +9,20 @@
     <RelativeLayout
         android:id="@+id/comment_list_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
 
-        <ImageView
+        <!-- 头像 -->
+
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/comment_item_head"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="31dp"
+            android:layout_height="31dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/editor_boy_three"
-            android:contentDescription="@string/imgdes" />
+             fresco:roundAsCircle="true"
+            fresco:placeholderImage="@drawable/editor_boy_three" />
 
         <TextView
             android:id="@+id/comment_item_time"
@@ -73,21 +78,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="60dp"
         android:background="@drawable/videodetail_sofaicon"
         android:contentDescription="@string/imgdes"
         android:visibility="gone" />
-    
+
     <!-- 评论关闭 -->
 
     <TextView
         android:id="@+id/comment_forbid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:layout_centerHorizontal="true"
-       android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="60dp"
         android:text="@string/str_comment_no_input"
         android:textColor="@color/red"
         android:textSize="14sp"

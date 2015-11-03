@@ -137,6 +137,8 @@ public class SpecialDataManage {
 					ci.name = json.optString("name");
 					ci.text = json.optString("text");
 					ci.time = json.optString("time");
+					ci.replyid = json.optString("replyid");
+					ci.replyname = json.optString("replyname");
 
 					list.add(ci);
 				}

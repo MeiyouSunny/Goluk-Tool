@@ -13,19 +13,6 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
- * 1.编辑器必须显示空白处
- * 
- * 2.所有代码必须使用TAB键缩进
- * 
- * 3.类首字母大写,函数、变量使用驼峰式命名,常量所有字母大写
- * 
- * 4.注释必须在行首写.(枚举除外)
- * 
- * 5.函数使用块注释,代码逻辑使用行注释
- * 
- * 6.文件头部必须写功能说明
- * 
- * 7.所有代码文件头部必须包含规则说明
  * 
  * 视频广场接口管理类
  * 
@@ -85,9 +72,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年8月6日
 	 */
-	public boolean getJXListData(String jxid, String pagesize) {
+	public long getJXListData(String jxid, String pagesize) {
 		String json = JsonCreateUtils.getJXListJson(jxid, pagesize);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
 				json);
 	}
 
@@ -141,7 +128,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_Get_VideoDetail,
 				json);
 	}
-	
+
 	/**
 	 * 获取视频详情数据
 	 * 
@@ -151,11 +138,11 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public boolean getVideoDetailListData(String videoid) {
 		String json = JsonCreateUtils.getVideoDetailJson(videoid);
-		GolukDebugUtils.e("", "================getVideoDetailListData=="+json);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_Get_VideoDetail_ComentList,
-				json);
+		GolukDebugUtils.e("", "================getVideoDetailListData==" + json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VSquare_Req_Get_VideoDetail_ComentList, json);
 	}
-	
+
 	/**
 	 * 获取视频详情数据
 	 * 
@@ -165,9 +152,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public boolean getUserInfo(String otheruid) {
 		String json = JsonCreateUtils.getUserInfoJson(otheruid);
-		GolukDebugUtils.e("", "=======getUserInfo=="+json);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_MainPage_UserInfor,
-				json);
+		GolukDebugUtils.e("", "=======getUserInfo==" + json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+				VSquare_Req_MainPage_UserInfor, json);
 	}
 
 	/**
@@ -177,8 +164,8 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年8月6日
 	 */
-	public boolean getZXListData() {
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_Catlog, "");
+	public long getZXListData() {
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_Catlog, "");
 	}
 
 	/**
@@ -199,10 +186,10 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月17日
 	 */
-	public boolean getTypeVideoList(String channel, String type, List<String> attribute, String operation,
+	public long getTypeVideoList(String channel, String type, List<String> attribute, String operation,
 			String timestamp) {
 		String json = JsonCreateUtils.getSquareListRequestJson(channel, type, attribute, operation, timestamp);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
 				VSquare_Req_List_Video_Catlog, json);
 	}
 
@@ -372,6 +359,23 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月17日
 	 */
+	public long getShareUrlEx(String videoid, String type) {
+		String json = JsonCreateUtils.getShareUrlRequestJson(videoid, type);
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
+				VSquare_Req_VOP_GetShareURL_Video, json);
+	}
+	
+	/**
+	 * 获取分享地址
+	 * 
+	 * @param videoid
+	 *            视频id
+	 * @param type
+	 *            视频类型：1.直播 2.点播
+	 * @return true:命令发送成功 false:失败
+	 * @author xuhw
+	 * @date 2015年4月17日
+	 */
 	public boolean getShareUrl(String videoid, String type) {
 		String json = JsonCreateUtils.getShareUrlRequestJson(videoid, type);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
@@ -446,24 +450,24 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square,
 				VSquare_Req_List_Video_Catlog_LocalCache, json.toString());
 	}
-	
+
 	/**
 	 * 获取个人或者他人的分享地址
+	 * 
 	 * @param uid
 	 * @return
 	 */
-	public Boolean getUserCenterShareUrl(String uid){
+	public Boolean getUserCenterShareUrl(String uid) {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("otheruid", uid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-				VSquare_Req_MainPage_Share, json.toString());
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_MainPage_Share,
+				json.toString());
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param ztype
@@ -472,10 +476,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public Long getUserCenter(String otheruid) {
 		String json = JsonCreateUtils.getUserCenterJson(otheruid);
-		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
-				VSquare_Req_MainPage_Infor, json);
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_MainPage_Infor, json);
 	}
-	
+
 	/**
 	 * 
 	 * @param ztype
@@ -483,15 +486,13 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @return
 	 */
 	public String getUserCenter() {
-		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square,
-				VSquare_Req_MainPage_Infor, null);
+		return mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_Square, VSquare_Req_MainPage_Infor, null);
 	}
-	
-	
-	public long getUserCenterShareVideo(String otheruid, String operation, String timestamp){
+
+	public long getUserCenterShareVideo(String otheruid, String operation, String timestamp) {
 		String json = JsonCreateUtils.getUserCenterShareVideoJson(otheruid, operation, timestamp);
-		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
-				VSquare_Req_MainPage_List_ShareVideo, json);
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_MainPage_List_ShareVideo,
+				json);
 	}
 
 	/**

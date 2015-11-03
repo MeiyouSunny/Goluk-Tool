@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <RelativeLayout 
+        android:layout_above="@+id/controlLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <cn.com.mobnote.util.ClipImageView
+        android:id="@+id/src_pic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <cn.com.mobnote.util.ClipView
+        android:id="@+id/clipview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+        
+    </RelativeLayout>
+
+    
+    <RelativeLayout 
+        android:id="@+id/controlLayout"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="#161819"
+        android:layout_height="180dp">
+        <Button 
+            android:id="@+id/cancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="54dp"
+            android:textSize="16sp"
+            android:background="#161819"
+            android:layout_centerVertical="true"
+            android:text="取消"/>
+        
+        <Button 
+            android:id="@+id/saveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="54dp"
+            android:textSize="16sp"
+            android:background="#161819"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="保存头像"/>
+    </RelativeLayout>
+
+</RelativeLayout>

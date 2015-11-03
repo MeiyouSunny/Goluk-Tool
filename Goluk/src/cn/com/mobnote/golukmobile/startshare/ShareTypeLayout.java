@@ -11,8 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
+import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
+import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
+import cn.com.mobnote.map.LngLat;
 
-public class ShareTypeLayout implements OnClickListener {
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
+
+public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDialogDealFn {
 
 	private final int TYPE_BG = 0;
 	private final int TYPE_SG = 1;
@@ -46,9 +53,26 @@ public class ShareTypeLayout implements OnClickListener {
 	/** 曝光台,事故大爆炸,美丽风景, 随手拍　背景颜色 */
 	private int resTypeSelectColor = 0;
 	private int resTypeUnSelectColor = 0;
+	private LinearLayout mShareAddressLayout = null;
+	private TextView mAddressTv = null;
+	private ImageView mAddressImg = null;
 
 	private TextView[] typeViewArray = new TextView[4];
 	private SparseIntArray mTypeArray = new SparseIntArray();
+	/** 定位状态 0 表示定位中, 1 表示定位成功, 2表示点击定位, 3 表示用户删除了位置 */
+	private int mLocationState = 0;
+
+	/** 定位中 */
+	public static final int LOCATION_STATE_ING = 0;
+	/** 定位成功 */
+	public static final int LOCATION_STATE_SUCCESS = 1;
+	/** 定位失败 */
+	public static final int LOCATION_STATE_FAILED = 2;
+	/** 用户禁止使用位置 */
+	public static final int LOCATION_STATE_FORBID = 3;
+	/** 保存当前定位信息 */
+	private String mCurrentAddress = "";
+	private StartShareFunctionDialog mStartShareDialog = null;
 
 	public ShareTypeLayout(Context context) {
 		mContext = context;
@@ -59,6 +83,12 @@ public class ShareTypeLayout implements OnClickListener {
 		initData();
 
 		switchTypeUI(TYPE_BG);
+		mLocationState = LOCATION_STATE_ING;
+		refreshLocationUI();
+
+		// 请求位置信息
+		GetBaiduAddress.getInstance().setCallBackListener(this);
+		GetBaiduAddress.getInstance().searchAddress(LngLat.lat, LngLat.lng);
 	}
 
 	private void initData() {
@@ -98,11 +128,16 @@ public class ShareTypeLayout implements OnClickListener {
 		mShareOpenImg = (ImageView) mRootLayout.findViewById(R.id.share_open_img);
 		mShareOpenText = (TextView) mRootLayout.findViewById(R.id.share_open_txt);
 
+		mShareAddressLayout = (LinearLayout) mRootLayout.findViewById(R.id.share_address_layout);
+		mAddressTv = (TextView) mRootLayout.findViewById(R.id.share_address_txt);
+		mAddressImg = (ImageView) mRootLayout.findViewById(R.id.share_address_img);
+
 		mBgBtn.setOnClickListener(this);
 		mSgBtn.setOnClickListener(this);
 		mMlBtn.setOnClickListener(this);
 		mSspBtn.setOnClickListener(this);
 		mShareOpenLayout.setOnClickListener(this);
+		mShareAddressLayout.setOnClickListener(this);
 
 		switchOpenAndClose(mIsOpenShare);
 	}
@@ -162,6 +197,7 @@ public class ShareTypeLayout implements OnClickListener {
 
 	public void setExit() {
 		mIsExit = true;
+		GetBaiduAddress.getInstance().setCallBackListener(null);
 	}
 
 	@Override
@@ -203,6 +239,72 @@ public class ShareTypeLayout implements OnClickListener {
 			}
 			click_input();
 			break;
+		case R.id.share_address_layout:
+			click_location();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public String getCurrentLocation() {
+		if (LOCATION_STATE_SUCCESS == this.mLocationState) {
+			return this.mCurrentAddress;
+		}
+		return "";
+	}
+
+	private void showDealDialog() {
+		dissmissDialog();
+		mStartShareDialog = new StartShareFunctionDialog(mContext, this);
+		mStartShareDialog.show();
+	}
+
+	private void dissmissDialog() {
+		if (null != mStartShareDialog) {
+			mStartShareDialog.dismiss();
+			mStartShareDialog = null;
+		}
+	}
+
+	private void click_location() {
+		switch (mLocationState) {
+		case LOCATION_STATE_ING:
+			// 当前状态是定位中，用户点击，直接再次发起定位
+			GetBaiduAddress.getInstance().searchAddress(LngLat.lat, LngLat.lng);
+			break;
+		case LOCATION_STATE_SUCCESS:
+			// 定位成功
+			// 需要弹出框让用户确认
+			showDealDialog();
+			break;
+		case LOCATION_STATE_FAILED:
+		case LOCATION_STATE_FORBID:
+			// 未定位
+			mLocationState = LOCATION_STATE_ING;
+			refreshLocationUI();
+			GetBaiduAddress.getInstance().searchAddress(LngLat.lat, LngLat.lng);
+			break;
+		}
+	}
+
+	private void refreshLocationUI() {
+		switch (mLocationState) {
+		case LOCATION_STATE_ING:
+			// 改图标
+			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_failed);
+			mAddressTv.setText("定位中...");
+			break;
+		case LOCATION_STATE_SUCCESS:
+			// 改变图标
+			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_success);
+			mAddressTv.setText(mCurrentAddress);
+			break;
+		case LOCATION_STATE_FAILED:
+		case LOCATION_STATE_FORBID:
+			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_failed);
+			mAddressTv.setText("点击获取位置");
+			break;
 		default:
 			break;
 		}
@@ -213,5 +315,45 @@ public class ShareTypeLayout implements OnClickListener {
 		if (null != mContext && mContext instanceof VideoEditActivity) {
 			((VideoEditActivity) mContext).mInputLayout.show(mTextView.getText().toString().trim());
 		}
+	}
+
+	@Override
+	public void CallBack_BaiduGeoCoder(int function, Object obj) {
+		if (LOCATION_STATE_FORBID == mLocationState) {
+			// 当前是用户禁止定位状态,不显示位置
+			return;
+		}
+		if (function == GetBaiduAddress.FUN_GET_ADDRESS && obj != null) {
+			ReverseGeoCodeResult result = (ReverseGeoCodeResult) obj;
+			AddressComponent addressDetail = result.getAddressDetail();
+			if (null == addressDetail) {
+				return;
+			}
+			// 当前城市
+			String city = addressDetail.city;
+			// 区，县
+			String district = addressDetail.district;
+			mCurrentAddress = city + "·" + district;
+			mLocationState = LOCATION_STATE_SUCCESS;
+			refreshLocationUI();
+		} else {
+			mLocationState = LOCATION_STATE_FAILED;
+			refreshLocationUI();
+		}
+	}
+
+	@Override
+	public void CallBack_Del(int event, Object data) {
+		if (1 == event) {
+			// 重新定位
+			mLocationState = LOCATION_STATE_ING;
+			refreshLocationUI();
+			GetBaiduAddress.getInstance().searchAddress(LngLat.lat, LngLat.lng);
+		} else if (2 == event) {
+			// 删除定位
+			mLocationState = LOCATION_STATE_FORBID;
+			refreshLocationUI();
+		}
+
 	}
 }

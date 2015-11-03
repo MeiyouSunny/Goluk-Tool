@@ -13,9 +13,11 @@
 package cn.com.mobnote.golukmobile.fresco;
 
 import android.content.Context;
+import android.graphics.Bitmap.Config;
 import android.net.Uri;
 import android.os.Environment;
 import cn.com.mobnote.golukmobile.R;
+
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
@@ -116,6 +118,7 @@ public class ConfigConstants {
 	  ImagePipelineConfig.Builder configBuilder = ImagePipelineConfig.newBuilder(context)
 //    		  .setAnimatedImageFactory(AnimatedImageFactory animatedImageFactory)//图片加载动画
 			  .setBitmapMemoryCacheParamsSupplier(mSupplierMemoryCacheParams)//内存缓存配置（一级缓存，已解码的图片）
+			  .setBitmapsConfig(Config.RGB_565)
 //            .setCacheKeyFactory(cacheKeyFactory)//缓存Key工厂
 //        	  .setEncodedMemoryCacheParamsSupplier(encodedCacheParamsSupplier)//内存缓存和未解码的内存缓存的配置（二级缓存）
 //        	  .setExecutorSupplier(executorSupplier)//线程池配置

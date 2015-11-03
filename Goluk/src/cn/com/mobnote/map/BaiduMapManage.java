@@ -46,19 +46,6 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 
 /**
- * <pre>
- * 1.类命名首字母大写
- * 2.公共函数驼峰式命名
- * 3.属性函数驼峰式命名
- * 4.变量/参数驼峰式命名
- * 5.操作符之间必须加空格
- * 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处
- * 8.所有代码必须使用TAB键缩进
- * 9.函数使用块注释,代码逻辑使用行注释
- * 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致
- * </pre>
  * 
  * @ 功能描述:百度地图管理类
  * 
@@ -73,27 +60,16 @@ public class BaiduMapManage {
 	private BaiduMap mBaiduMap = null;
 	/** 地图大头针数据集合 */
 	private HashMap<Marker, Object> mMarkerData = new HashMap<Marker, Object>();
-	/** 当前点击的大头针数据 */
-	private String mCurrentAid = null;
 	/** 头像数据标识集合 */
 	private int[] mHeadImg = { 0, R.drawable.needle_boy_one_little, R.drawable.needle_boy_two_little,
 			R.drawable.needle_boy_three_little, R.drawable.needle_girl_one_little, R.drawable.needle_girl_two_little,
 			R.drawable.needle_girl_three_little, R.drawable.needle_index_little };
-	
+
 	private int[] mBigHeadImg = { 0, R.drawable.needle_boy_one_big, R.drawable.needle_boy_two_big,
 			R.drawable.needle_boy_three_big, R.drawable.needle_girl_one_big, R.drawable.needle_girl_two_big,
 			R.drawable.needle_girl_three_big, R.drawable.needle_index_big };
 	/** 显示的气泡 */
 	private View mBubbleView = null;
-	/** 气泡用户名称 */
-	// private TextView mNameView = null;
-	/** 气泡用户速度 */
-	// private TextView mSpeedView = null;
-	/** 气泡显示图片 */
-	// private ImageView mBubbleImage = null;
-
-	/** 气泡显示图片 */
-	private String mBubbleImageUrl = "";
 	/** 当前高亮的大头针 */
 	private Marker mCurrentMarker = null;
 	/** 当前正操作的用户信息 */
@@ -109,12 +85,6 @@ public class BaiduMapManage {
 		if (null == mLayoutInflater) {
 			mLayoutInflater = LayoutInflater.from(mContext);
 			mBaiduMap = map;
-
-			// mBubbleView = mLayoutInflater.inflate(R.layout.bubble,null);
-			// mNameView = (TextView) mBubbleView.findViewById(R.id.username);
-			// mSpeedView = (TextView) mBubbleView.findViewById(R.id.speed);
-			// mBubbleImage = (ImageView)
-			// mBubbleView.findViewById(R.id.bubble_img);
 		}
 	}
 
@@ -142,22 +112,7 @@ public class BaiduMapManage {
 	 * @return
 	 */
 	public LatLng ConvertLonLat(double lat, double lon) {
-		// 将google地图、soso地图、aliyun地图、mapabc地图和amap地图
-		// 所用坐标转换成百度坐标
-		// CoordinateConverter converter = new CoordinateConverter();
-		// converter.from(CoordType.COMMON);
-		// sourceLatLng待转换坐标
-		// converter.coord(sourceLatLng);
-		// LatLng desLatLng = converter.convert();
-
-		// 原始坐标点
 		LatLng sourceLatLng = new LatLng(lat, lon);
-		// 将GPS设备采集的原始GPS坐标转换成百度坐标
-		// CoordinateConverter converter = new CoordinateConverter();
-		// converter.from(CoordType.GPS);
-		// // sourceLatLng待转换坐标
-		// converter.coord(sourceLatLng);
-		// LatLng point = converter.convert();
 		return sourceLatLng;
 	}
 
@@ -190,7 +145,6 @@ public class BaiduMapManage {
 		mBaiduMap.clear();
 		mMarkerData.clear();
 		mCurrentMarker = null;
-
 		JSONObject data;
 		for (int i = 0, len = json.length(); i < len; i++) {
 			try {
@@ -202,10 +156,8 @@ public class BaiduMapManage {
 					// 用户头像类型
 					int utype = Integer.valueOf(data.getString("head"));
 					int head = mHeadImg[utype];
-
 					// 定义Maker坐标点
 					LatLng point = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
-
 					// 构建Marker图标
 					BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
 					// 构建MarkerOption，用于在地图上添加Marker
@@ -216,9 +168,7 @@ public class BaiduMapManage {
 					bundle.putSerializable("utype", utype);
 					mk.setExtraInfo(bundle);
 					mMarkerData.put(mk, data);
-
 					mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
-
 					GolukDebugUtils.e("", "jyf------AddMapPoint----array[2]: ");
 				}
 			} catch (JSONException e) {
@@ -226,7 +176,6 @@ public class BaiduMapManage {
 				GolukDebugUtils.e("", "jyf------AddMapPoint----array Exception: ");
 			}
 		}
-
 		GolukDebugUtils.e("", "jyf------AddMapPoint----array : 333333");
 	}
 
@@ -268,8 +217,8 @@ public class BaiduMapManage {
 		if (null == mMarkerData) {
 			return;
 		}
-		
-		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --111 : " );
+
+		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --111 : ");
 
 		Iterator<Entry<Marker, Object>> it = mMarkerData.entrySet().iterator();
 		while (it.hasNext()) {
@@ -281,9 +230,10 @@ public class BaiduMapManage {
 					Marker marker = obj.getKey();
 					LatLng point = ConvertLonLat(lat, lon);
 					marker.setPosition(point);
-					
-					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --222 : lat: " + lat + "  lon:" + lon );
-					
+
+					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --222 : lat: " + lat
+							+ "  lon:" + lon);
+
 					break;
 				}
 			} catch (Exception e) {
@@ -303,9 +253,6 @@ public class BaiduMapManage {
 		if (!"".equals(lon) && !"".equals(lat)) {
 			// 清楚历史marker
 			mBaiduMap.clear();
-
-			// 用户头像类型
-			// String utype = data.getString("utype");
 			// 定义Maker坐标点
 			LatLng point = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
 
@@ -323,23 +270,11 @@ public class BaiduMapManage {
 
 			// 在地图上添加Marker，并显示
 			mBaiduMap.addOverlay(option);
-			// Marker mk = (Marker) (mBaiduMap.addOverlay(option));
-			// mMarkerData.put(mk,data);
-
-			// mBaiduMap.setOnMarkerClickListener(new
-			// MyOnMarkerClickListener(i));
 		}
 	}
 
 	@SuppressLint("InflateParams")
 	public void createBubbleInfo(String nickName, String speed, String lon, String lat, String open) {
-		// OnInfoWindowClickListener listener = new OnInfoWindowClickListener()
-		// {
-		// public void onInfoWindowClick() {
-		//
-		// }
-		// };
-
 		// 创建InfoWindow展示的view
 		// 定义用于显示该InfoWindow的坐标点
 		LatLng pt = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
@@ -374,10 +309,6 @@ public class BaiduMapManage {
 		DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
 		float density = dm.density;
 		int offset = (int) (71 * density);
-
-		// InfoWindow mInfoWindow = new
-		// InfoWindow(BitmapDescriptorFactory.fromView(mBubbleView),pt,
-		// -90,listener);
 		InfoWindow mInfoWindow = new InfoWindow(mBubbleView, pt, -offset);
 		mBaiduMap.showInfoWindow(mInfoWindow);
 	}
@@ -426,8 +357,6 @@ public class BaiduMapManage {
 				drawable = new BitmapDrawable(mContext.getResources(), bitmap);
 				ImageView view = (ImageView) mBubbleView.findViewById(R.id.bubble_img);
 				view.setBackgroundDrawable(drawable);
-				// 保存图片给视频详情用
-				mBubbleImageUrl = localPath;
 			}
 
 		} catch (JSONException e) {
@@ -500,8 +429,6 @@ public class BaiduMapManage {
 				MapStatusUpdate statusUpdate = MapStatusUpdateFactory.newMapStatus(status);
 				// 改变地图中心点
 				mBaiduMap.setMapStatus(statusUpdate);
-				// 保存aid,跳转到
-				mCurrentAid = aid;
 				GolukDebugUtils.e("", "下载气泡图片---onMarkerClick---" + picUrl);
 				downloadBubbleImg(picUrl, aid);
 				createBubbleInfo(nikeName, persons, lon, lat, open);

@@ -18,6 +18,8 @@ public class UserInfo implements Serializable {
 	public String sex;
 	/** 头像 */
 	public String head;
+	/** 头像网络地址 */
+	public String customavatar;
 
 	public String lon;
 	public String lat;

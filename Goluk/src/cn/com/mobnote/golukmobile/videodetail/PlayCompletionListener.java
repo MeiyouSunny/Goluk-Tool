@@ -34,7 +34,8 @@ public class PlayCompletionListener implements OnCompletionListener {
 			mHolder.mVideoView.seekTo(0);
 			mHolder.mSeekBar.setProgress(0);
 		}else{
-			arg0.setLooping(true);
+			mHolder.mVideoView.setVideoURI(mHolder.url);
+			mHolder.mVideoView.start();
 		}
 	}
 

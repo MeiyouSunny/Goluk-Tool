@@ -85,8 +85,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	private String videoUrl = "";
 	/** 自动隐藏顶部和底部View的时间 */
 	private static final int HIDE_TIME = 3000;
-	/** 声音调节 */
-	private VolumnController volumnController;
 	/** 原始屏幕亮度 */
 	private int orginalLight;
 	/** 来源标志 */
@@ -118,11 +116,13 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	private Bitmap mBitmap = null;
 	private ImageView mImageView = null;
 	private boolean isStop = false;
+	private boolean mIsExit = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_videoplayer);
+		mIsExit = false;
 		getPlayAddr();
 		initView();
 	}
@@ -134,7 +134,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年6月24日
 	 */
 	private void initView() {
-		volumnController = new VolumnController(this);
 		mVideo = (FullScreenVideoView) findViewById(R.id.videoview);
 		mPlayTime = (TextView) findViewById(R.id.play_time);
 		mDurationTime = (TextView) findViewById(R.id.total_time);
@@ -219,6 +218,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void showLoading() {
+		if (mIsExit) {
+			return;
+		}
 		if (!isShow) {
 			isShow = true;
 			mLoadingLayout.setVisibility(View.VISIBLE);
@@ -319,6 +321,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
+			if (mIsExit) {
+				return;
+			}
 			mHandler.postDelayed(hideRunnable, HIDE_TIME);
 		}
 
@@ -329,7 +334,13 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			if (mIsExit) {
+				return;
+			}
 			if (fromUser) {
+				if (null == mVideo) {
+					return;
+				}
 				int time = progress * mVideo.getDuration() / 100;
 				mVideo.seekTo(time);
 			}
@@ -337,6 +348,12 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	};
 
 	private void backward(float delataX) {
+		if (mIsExit) {
+			return;
+		}
+		if (null == mVideo) {
+			return;
+		}
 		int current = mVideo.getCurrentPosition();
 		int backwardTime = (int) (delataX / width * mVideo.getDuration());
 		int currentTime = current - backwardTime;
@@ -346,6 +363,12 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void forward(float delataX) {
+		if (mIsExit) {
+			return;
+		}
+		if (null == mVideo) {
+			return;
+		}
 		int current = mVideo.getCurrentPosition();
 		int forwardTime = (int) (delataX / width * mVideo.getDuration());
 		int currentTime = current + forwardTime;
@@ -355,57 +378,19 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void volumeDown(float delatY) {
-		// int max =
-		// mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		// int current =
-		// mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		// int down = (int) (delatY / height * max * 3);
-		// int volume = Math.max(current - down, 0);
-		// mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
-		// int transformatVolume = volume * 100 / max;
-		// volumnController.show(transformatVolume);
+
 	}
 
 	private void volumeUp(float delatY) {
-		// int max =
-		// mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		// int current =
-		// mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		// int up = (int) ((delatY / height) * max * 3);
-		// int volume = Math.min(current + up, max);
-		// mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
-		// int transformatVolume = volume * 100 / max;
-		// volumnController.show(transformatVolume);
+
 	}
 
 	private void lightDown(float delatY) {
-		// int down = (int) (delatY / height * 255 * 3);
-		// int transformatLight = LightnessController.getLightness(this) - down;
-		// LightnessController.setLightness(this, transformatLight);
+
 	}
 
 	private void lightUp(float delatY) {
-		// int up = (int) (delatY / height * 255 * 3);
-		// int transformatLight = LightnessController.getLightness(this) + up;
-		// LightnessController.setLightness(this, transformatLight);
-	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		// mHandler.removeMessages(0);
-		// mHandler.removeCallbacksAndMessages(null);
-		// if (null != mBitmap) {
-		// if (!mBitmap.isRecycled()) {
-		// mBitmap.recycle();
-		// mBitmap = null;
-		// }
-		// }
-		//
-		// if (null != mVideo) {
-		// mVideo.stopPlayback();
-		// mVideo = null;
-		// }
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -417,6 +402,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			switch (msg.what) {
 			case 1:
 				if (error) {
+					return;
+				}
+				if (mIsExit) {
 					return;
 				}
 				netWorkTimeoutCheck();
@@ -469,6 +457,12 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	};
 
 	private void playVideo() {
+		if (mIsExit) {
+			return;
+		}
+		if (null == mVideo) {
+			return;
+		}
 		mVideo.setVideoPath(videoUrl);
 		mVideo.requestFocus();
 	}
@@ -586,6 +580,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 				return;
 			}
 
+			if (null == mVideo) {
+				return;
+			}
+
 			if (mVideo.isPlaying()) {
 				mVideo.pause();
 				mPlay.setImageResource(R.drawable.player_play_btn);
@@ -601,19 +599,22 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void exit() {
+		if (mIsExit) {
+			return;
+		}
+		mIsExit = true;
 		this.cancelTimer();
 		mHandler.removeMessages(1);
-		if (null != mBitmap) {
-			if (!mBitmap.isRecycled()) {
-				mBitmap.recycle();
-				mBitmap = null;
-			}
-		}
 
-		if (null != mVideo) {
-			mVideo.stopPlayback();
-			mVideo = null;
-		}
+		// if (null != mVideo) {
+		//
+		// // 判断下video是否在播放中 如果在播放 先暂停播放器
+		// if (mVideo.isPlaying()) {
+		// mVideo.pause();
+		// }
+		// mVideo.stopPlayback();
+		// mVideo = null;
+		// }
 
 		mHandler.removeMessages(0);
 		mHandler.removeCallbacksAndMessages(null);
@@ -621,12 +622,28 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		mHandler.postDelayed(mRunnable, 200);
 	}
 
+	private void freeBitmap() {
+		if (null != mBitmap) {
+			if (!mBitmap.isRecycled()) {
+				mBitmap.recycle();
+				mBitmap = null;
+			}
+		}
+	}
+
 	Runnable mRunnable = new Runnable() {
 		@Override
 		public void run() {
+
 			VideoPlayerActivity.this.finish();
 		}
 	};
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		freeBitmap();
+	}
 
 	/**
 	 * 显示上下操作栏
@@ -681,6 +698,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年6月24日
 	 */
 	private void showOrHide() {
+		if (mIsExit) {
+			return;
+		}
 		if (mTopView.getVisibility() == View.VISIBLE) {
 			hideOperator();
 		} else {
@@ -710,6 +730,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	@Override
 	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onInfo----arg1:" + arg1 + "   arg2:" + arg2);
+		if (mIsExit) {
+			return false;
+		}
 		switch (arg1) {
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			isBuffering = true;
@@ -732,6 +755,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	@Override
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onError----");
+		if (mIsExit) {
+			return true;
+		}
 		if (error) {
 			return false;
 		}
@@ -769,6 +795,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onCompletion----");
+		if (mIsExit) {
+			return;
+		}
 		if (error) {
 			return;
 		}
@@ -782,6 +811,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
+		if (mIsExit) {
+			return;
+		}
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onPrepared----=");
 		mVideo.setVideoWidth(mp.getVideoWidth());
 		mVideo.setVideoHeight(mp.getVideoHeight());
@@ -797,7 +829,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
 		startTimer();
 	}
-	
+
 	/** 保证错误提示框只显示一次 */
 	private boolean isShowDialog = false;
 
@@ -810,6 +842,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年6月5日
 	 */
 	private void dialog(String msg) {
+		if (mIsExit) {
+			return;
+		}
 		if (isShowDialog) {
 			return;
 		}

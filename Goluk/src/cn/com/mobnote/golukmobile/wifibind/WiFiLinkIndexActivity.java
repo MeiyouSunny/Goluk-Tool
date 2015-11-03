@@ -18,6 +18,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -175,7 +176,10 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 			startActivity(list);
 			break;
 		case R.id.wifi_link_index_help:
-			GolukUtils.openUrl(GolukUtils.URL_BIND_HELP, this);
+//			GolukUtils.openUrl(GolukUtils.URL_BIND_HELP, this);
+			Intent mHelpIntent = new Intent(this, UserOpenUrlActivity.class);
+			mHelpIntent.putExtra(UserOpenUrlActivity.FROM_TAG, "wifihelp");
+			startActivity(mHelpIntent);
 			break;
 		}
 	}

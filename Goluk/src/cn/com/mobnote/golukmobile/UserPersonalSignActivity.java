@@ -1,6 +1,16 @@
 package cn.com.mobnote.golukmobile;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.JsonUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,22 +28,28 @@ import android.widget.TextView;
  * 编辑签名
  * 
  * @author mobnote
- *
+ * 
  */
 public class UserPersonalSignActivity extends BaseActivity implements OnClickListener {
 
+	/** application **/
+	private GolukApplication mApplication = null;
 	/** itle **/
 	private ImageButton btnBack;
 	private TextView mTextTitle, mTextOk;
 	/** body **/
 	private EditText mEditBody;
-	private String signText;
+	private String mSignText;
+	private String mSignNewText;
 	/** 最大字数限制 **/
 	private TextView mTextCount = null;
 	private TextView mTextCountAll = null;
 	private static final int MAX_COUNT = 50;
 	/** 输入的个性签名剩余字数 **/
 	private int number = 0;
+
+	// 保存数据的loading
+	private CustomLoadingDialog mCustomProgressDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +58,24 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_personal_edit_sign);
 
+		// 获得GolukApplication对象
+		mApplication = (GolukApplication) getApplication();
+		/**
+		 * 获取从编辑界面传来的信息
+		 * 
+		 */
+
+		if (savedInstanceState == null) {
+			Intent it = getIntent();
+			mSignText = it.getStringExtra("intentSignText");
+		} else {
+			mSignText = savedInstanceState.getString("intentSignText");
+		}
+
 		initView();
 		// title
-		mTextTitle.setText("编辑签名");
-		mTextOk.setText("确认  ");
+		mTextTitle.setText(R.string.user_personal_sign_edit);
+		mTextOk.setText(R.string.user_personal_title_right);
 		//
 		int count = mEditBody.getText().toString().length();
 		mTextCount.setText("" + (MAX_COUNT - count));
@@ -60,19 +90,11 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		mEditBody = (EditText) findViewById(R.id.user_personal_edit_sign_body);
 		mTextCount = (TextView) findViewById(R.id.number_count);
 		mTextCountAll = (TextView) findViewById(R.id.number_count_all);
+		mCustomProgressDialog = new CustomLoadingDialog(this, getString(R.string.user_personal_saving));
 
-		/**
-		 * 获取从编辑界面传来的信息
-		 * 
-		 */
-		Intent it = this.getIntent();
-		if (null != it.getStringExtra("intentSignText")) {
-			Bundle bundle = it.getExtras();
-			signText = bundle.getString("intentSignText");
-		}
-		mEditBody.setText(signText);
-		if (null != signText || "".equals(signText))
-			mEditBody.setSelection(signText.length());
+		mEditBody.setText(mSignText);
+		if (null != mSignText || "".equals(mSignText))
+			mEditBody.setSelection(mSignText.length());
 
 		/**
 		 * 监听
@@ -80,6 +102,20 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		btnBack.setOnClickListener(this);
 		mTextOk.setOnClickListener(this);
 		mEditBody.addTextChangedListener(mTextWatcher);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mApplication.setContext(this, "UserPersonalSign");
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		outState.putString("intentSignText", mSignText);
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
@@ -91,17 +127,19 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			break;
 		// que认
 		case R.id.user_title_right:
-			UserPersonalInfoActivity.clickBtn = true;
 			if (number < 0) {
 				UserUtils.showDialog(this, "请输入50个字符以内的有效个性签名");
 			} else {
 				String body = mEditBody.getText().toString();
-				Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString("itSign", body);
-				it.putExtras(bundle);
-				this.setResult(2, it);
-				this.finish();
+				if (body.equalsIgnoreCase(mSignText)) {
+
+					Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
+					it.putExtra("itSign", mSignNewText);
+					this.setResult(2, it);
+					this.finish();
+				} else {
+					saveSign(body);
+				}
 			}
 			break;
 
@@ -132,4 +170,51 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			mTextCount.setText("" + number);
 		}
 	};
+
+	/**
+	 * 修改用户个性签名
+	 */
+	private void saveSign(String sign) {
+
+		if (!UserUtils.isNetDeviceAvailable(this)) {
+			GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+		} else {
+			// {desc：“个性签名”}
+			mSignNewText = sign;
+			boolean b;
+			try {
+				b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+						IPageNotifyFn.PageType_ModifySignature,
+						JsonUtil.getUserSignJson(URLEncoder.encode(sign, "UTF-8")));
+				if (b) {
+					// 保存中
+					mCustomProgressDialog.show();
+				}
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
+	 * 修改用户名回调
+	 */
+
+	public void saveSignCallBack(int success, Object obj) {
+		GolukDebugUtils.e("", "修改用户个性签名回调---saveSignCallBack---" + success + "---" + obj);
+		if (mCustomProgressDialog.isShowing()) {
+			mCustomProgressDialog.close();
+		}
+		if (1 == success) {
+
+			Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
+			it.putExtra("itSign", mSignNewText);
+			this.setResult(RESULT_OK, it);
+			this.finish();
+		} else {
+			GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+		}
+	}
 }

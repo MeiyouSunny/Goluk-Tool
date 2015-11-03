@@ -78,6 +78,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	private JSONArray jsonArray = null;
 	/** int state, Object param1, Object param2 **/
 	public int mState = -1;
+	/**保存下载进度**/
 	public Object mParam1 = -1;
 	private Object mParam2 = null;
 
@@ -87,6 +88,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public static final int DOWNLOAD_STATUS_SUCCESS = 1;
 	/** 下载中 **/
 	public static final int DOWNLOAD_STATUS = 2;
+	/**下载前保存一个IPC型号**/
+	public String mDownloadIPCModel = "";
 
 	public IpcUpdateManage(GolukApplication mApp) {
 		super();
@@ -109,7 +112,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 				return false;
 			}
 			this.cancelHttpRequest();
-			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc);
+			String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc,mApp.mIPCControlManager.mProduceName);
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_CheckUpgrade, ipcString);
 			GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");
@@ -188,6 +191,20 @@ public class IpcUpdateManage implements IPCManagerFn {
 		}
 		return null;
 	}
+	/**
+	 * 查询IPC升级文件的存放路径
+	 * 文件不存在，返回空串；
+	 * 文件存在，返回文件路径
+	 * @param ipcVersion
+	 * @param ipcModel
+	 */
+	public String isHasIPCFile(String ipcVersion) {
+		String ipcStr = JsonUtil.selectIPCFile(ipcVersion, mApp.mIPCControlManager.mProduceName);
+		String isExist = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_GetIPCFile, ipcStr);
+		GolukDebugUtils.e("", "---------------isHasIPCFile------isExist："+isExist);
+		return isExist;
+	}
 
 	/**
 	 * 获取下载的文件路径 (下载前获取一次，升级安装时获取一次)
@@ -209,7 +226,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @param obj
 	 */
 	public void requestInfoCallback(int success, Object outTime, Object obj) {
-		GolukDebugUtils.i(TAG, "=======requestInfoCallback=======" + success + "---success");
+		GolukDebugUtils.i(TAG, "=======requestInfoCallback=======" + success + "---success"+"==obj----"+obj);
+		GolukDebugUtils.i(TAG, "=======弹出Dialog=======mFunction：" + mFunction);
 		// 取消loading显示
 		int codeOut = (Integer) outTime;
 		dimissLoadingDialog();
@@ -287,19 +305,20 @@ public class IpcUpdateManage implements IPCManagerFn {
 					} else {
 						/**
 						 * ipc需要升级，前提是判断app是否需要升级 app不需要升级，直接下载并升级ipc
-						 * app需要升级，设个年级app
+						 * app需要升级，先升级app
 						 */
 						if (goluk.equals("{}")) {
 							// APP不需要升级
 							// 提示下载并升级ipc
-							final String localBinPath = this.getLocalFile(ipcInfo.version);
-							if (null == localBinPath) {
-								// 提示用户下载文件Dialog
-								ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
-							} else {
-								// 弹框提示用户安装本地的文件 (Dialog)
-								ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
-							}
+							ipcUpgradeNext(ipcInfo);
+//							final String localBinPath = this.getLocalFile(ipcInfo.version);
+//							if (null == localBinPath) {
+//								// 提示用户下载文件Dialog
+//								ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
+//							} else {
+//								// 弹框提示用户安装本地的文件 (Dialog)
+//								ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
+//							}
 						} else {
 							GolukDebugUtils.i(TAG, "--------ipcInfo.version-----" + ipcInfo.version);
 							new AlertDialog.Builder(mApp.getContext()).setTitle("升级提示")
@@ -319,9 +338,8 @@ public class IpcUpdateManage implements IPCManagerFn {
 			} catch (Exception e) {
 				if (FUNCTION_AUTO != mFunction) {
 					GolukDebugUtils.i(TAG, "ipc匹配列表为空");
-					// GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" +
-					// mApp.mSharedPreUtil.getIPCVersion()
-					// + "，当前已是最新版本");
+					 GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + mApp.mSharedPreUtil.getIPCVersion()
+							 + "，当前已是最新版本");
 				}
 				e.printStackTrace();
 			}
@@ -341,11 +359,16 @@ public class IpcUpdateManage implements IPCManagerFn {
 
 	/**
 	 * 下载ipc文件
+	 * @param url  IPC文件的url
+	 * @param ipcVersion   IPC版本号
+	 * @return
 	 */
-	public boolean download(String url, String path) {
-		String str = JsonUtil.ipcDownLoad(url, path);
+	public boolean download(String url, String ipcVersion) {
+//		mDownloadIPCModel = mIpcModel;
+		mApp.mSharedPreUtil.saveDownloadIpcModel(mApp.mIPCControlManager.mProduceName);
+		String str = JsonUtil.ipcDownLoad(url, ipcVersion, mApp.mIPCControlManager.mProduceName);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_CommDownloadFile, str);
+				IPageNotifyFn.PageType_DownloadIPCFile, str);
 	}
 
 	/**
@@ -369,7 +392,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 			// 下载成功
 			mApp.mLoadStatus = false;
 			// 下载成功删除文件
-			downIpcSucess();
+//			downIpcSucess();
 		} else if (state == DOWNLOAD_STATUS_FAIL) {
 			// 下载失败
 			mApp.mLoadStatus = false;
@@ -421,9 +444,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public void ipcUpgrade(final int type, final IPCInfo ipcInfo, String message) {
 		GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
-		final String msg = TYPE_DOWNLOAD == type ? message : message;
-		mDownloadDialog = new AlertDialog.Builder(mApp.getContext()).setTitle("固件升级提示").setMessage(msg)
-				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
+		GolukDebugUtils.i(TAG, "=======弹出Dialog=======type：" + type);
+		final String msg = TYPE_DOWNLOAD == type ? "立即下载" : "马上升级";
+		mDownloadDialog = new AlertDialog.Builder(mApp.getContext()).setTitle("固件升级提示").setMessage(message)
+				.setPositiveButton(msg, new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -479,17 +503,30 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public void ipcUpgradeNext(IPCInfo ipcInfo) {
 		if (null != ipcInfo) {
-			// IPC需要升级
-			final String localBinPath = this.getLocalFile(ipcInfo.version);
-			if (null == localBinPath) {
+			//查询ipc升级文件是否存在
+			String ipcFile = isHasIPCFile(ipcInfo.version);
+			GolukDebugUtils.i(TAG, "------------ipcUpgrade-----------" + ipcFile);
+			GolukDebugUtils.i(TAG, "=======弹出Dialog=======ipcFile：" + ipcFile);
+			if ("".equals(ipcFile) || null == ipcFile) {
 				// TODO 提示用户下载文件Dialog
 				ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
 			} else {
 				// TODO 弹框提示用户安装本地的文件 (Dialog)
 				ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
 			}
-
 		}
+//		if (null != ipcInfo) {
+//			// IPC需要升级
+//			final String localBinPath = this.getLocalFile(ipcInfo.version);
+//			if (null == localBinPath) {
+//				// TODO 提示用户下载文件Dialog
+//				ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
+//			} else {
+//				// TODO 弹框提示用户安装本地的文件 (Dialog)
+//				ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
+//			}
+//
+//		}
 	}
 
 	/**

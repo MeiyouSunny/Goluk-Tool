@@ -518,6 +518,18 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		boolean isCurrentRunningForeground = isRunningForeground();
 		flag = isCurrentRunningForeground;
 	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		if(mCustomProgressDialog != null){
+			if(mCustomProgressDialog.isShowing()){
+				mCustomProgressDialog.close();
+				mCustomProgressDialog = null;
+			}
+		}
+		super.onDestroy();
+	}
 
 	public boolean isRunningForeground() {
 		String packageName = getPackageName(this);

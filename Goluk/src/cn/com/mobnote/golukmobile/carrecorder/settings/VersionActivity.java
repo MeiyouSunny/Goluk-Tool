@@ -50,6 +50,10 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 	private TextView mDeviceId=null;
 	/** 固件版本号 */
 	private TextView mVersion=null;
+	/**ipc设备型号**/
+	private TextView mTextIpcModel = null;
+	/****/
+	private String mIpcModelName = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +64,14 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 		if(null != GolukApplication.getInstance().getIPCControlManager()){
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carversion", this);
 		}
+		mIpcModelName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		mDeviceId = (TextView)findViewById(R.id.mDeviceId);
 		mVersion = (TextView)findViewById(R.id.mVersion);
+		mTextIpcModel = (TextView) findViewById(R.id.text_model);
 		
 		mDeviceId.setText("");
 		mVersion.setText("");
+		mTextIpcModel.setText("极路客"+mIpcModelName);
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCIdentity();
 			GolukDebugUtils.e("xuhw","YYYYYY=======getIPCIdentity============a="+a);

@@ -35,7 +35,7 @@
                 android:layout_alignParentRight="true"
                 android:textColor="#0080ff"
                 android:textSize="16sp"
-                android:text="完成"
+                android:text="保存"
                 android:background="@null"
                 />
             
@@ -43,7 +43,7 @@
 	
 	<!-- body -->
 	<!-- 男 -->
-	<LinearLayout 
+	<RelativeLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="30dp"
@@ -52,9 +52,7 @@
 	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        >
+	        android:layout_alignParentLeft="true">
 	        <ImageView 
 	            android:id="@+id/user_personal_boy_one"
 	            android:layout_width="wrap_content"
@@ -70,14 +68,12 @@
 	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        >
+	        android:layout_centerInParent="true">
 	        <ImageView 
 	            android:id="@+id/user_personal_boy_two"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:src="@drawable/editor_head_boy3"/>
+	            android:src="@drawable/editor_head_boy2"/>
 	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
@@ -88,14 +84,12 @@
 	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        >
+	        android:layout_alignParentRight="true">
 	        <ImageView 
 	            android:id="@+id/user_personal_boy_three"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:src="@drawable/editor_head_boy2"/>
+	            android:src="@drawable/editor_head_boy3"/>
 	        <ImageView 
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
@@ -103,9 +97,9 @@
 	             android:src="@drawable/editor_head_select"
 	             android:visibility="gone"/>
 	    </RelativeLayout>
-	</LinearLayout>
+	</RelativeLayout>
 	<!-- 女 -->
-	<LinearLayout 
+	<RelativeLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="40dp"
@@ -114,9 +108,7 @@
 	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        >
+	        android:layout_alignParentLeft="true">
 	        <ImageView 
 	            android:id="@+id/user_personal_girl_one"
 	            android:layout_width="wrap_content"
@@ -132,9 +124,7 @@
 	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        >
+	        android:layout_centerInParent="true">
 	        <ImageView 
 	            android:id="@+id/user_personal_girl_two"
 	            android:layout_width="wrap_content"
@@ -150,9 +140,7 @@
 	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        >
+	        android:layout_alignParentRight="true">
 	        <ImageView 
 	            android:id="@+id/user_personal_girl_three"
 	            android:layout_width="wrap_content"
@@ -165,18 +153,18 @@
 	             android:src="@drawable/editor_head_select"
 	             android:visibility="gone"/>
 	    </RelativeLayout>
-	</LinearLayout>
+	</RelativeLayout>
 	<!-- 默认 -->
-	<LinearLayout 
+	<RelativeLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="40dp"
-	    android:paddingLeft="45dp"
+	    android:paddingLeft="40dp"
 	    android:paddingRight="40dp">
 	    <RelativeLayout 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        >
+	        android:layout_alignParentLeft="true">
 	        <ImageView 
 	            android:id="@+id/user_personal_default"
 	            android:layout_width="wrap_content"
@@ -189,5 +177,5 @@
 	             android:src="@drawable/editor_head_select"
 	             android:visibility="gone"/>
 	    </RelativeLayout>
-	</LinearLayout>
+	</RelativeLayout>
 </LinearLayout>

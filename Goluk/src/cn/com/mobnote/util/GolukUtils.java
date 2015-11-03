@@ -2,6 +2,8 @@ package cn.com.mobnote.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,6 +13,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.facebook.common.util.UriUtil;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +22,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
@@ -506,44 +511,6 @@ public class GolukUtils {
 	}
 
 	@SuppressLint("SimpleDateFormat")
-	public static String formatTimeNew(String date) {
-		String time = null;
-		try {
-			long curTime = System.currentTimeMillis();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-			Date strtodate = formatter.parse(date);
-
-			Date curDate = new Date(curTime);
-			int curYear = curDate.getYear();
-			int history = strtodate.getYear();
-			int hisDay = strtodate.getDay();
-			int curDay = curDate.getDay();
-
-			if (curYear == history) {
-				if (hisDay == curDay) {
-					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
-					String timestr = jn.format(strtodate);
-					return "今天 " + timestr;
-				} else if ((hisDay + 1) == curDay) {
-					SimpleDateFormat jn = new SimpleDateFormat("HH:mm");
-					String timestr = jn.format(strtodate);
-					return "昨天 " + timestr;
-				} else {
-					SimpleDateFormat jn = new SimpleDateFormat("MM-dd HH:mm");
-					return jn.format(strtodate);// 今年内：月日更新
-				}
-			} else {
-				SimpleDateFormat jn = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				return jn.format(strtodate);// 非今年：年月日更新
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		return time;
-	}
-
-	@SuppressLint("SimpleDateFormat")
 	public static String getNewCategoryShowTime(String date) {
 		final long MINTUE = 60 * 1000;
 		final long HOUR = 60 * MINTUE;
@@ -609,6 +576,74 @@ public class GolukUtils {
 			mTimer.cancel();
 			mTimer = null;
 		}
+	}
+
+	/**
+	 * 把drawable中的资源图片转换成Uri格式
+	 * 
+	 * @param resId
+	 * @return
+	 * @author jyf
+	 */
+	public static Uri getResourceUri(int resId) {
+		Uri uri = new Uri.Builder().scheme(UriUtil.LOCAL_RESOURCE_SCHEME).path(String.valueOf(resId)).build();
+		return uri;
+	}
+
+	@SuppressLint("SimpleDateFormat")
+	public static String getTime(String date) {
+		String time = null;
+		try {
+			long curTime = System.currentTimeMillis();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date strtodate = formatter.parse(date);
+
+			Date curDate = new Date(curTime);
+			int curYear = curDate.getYear();
+			int history = strtodate.getYear();
+
+			if (curYear == history) {
+				SimpleDateFormat jn = new SimpleDateFormat("-MM.dd-");
+				return jn.format(strtodate);// 今年内：月日更新
+			} else {
+				SimpleDateFormat jn = new SimpleDateFormat("-yyyy.MM.dd-");
+				return jn.format(strtodate);// 非今年：年月日更新
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return time;
+	}
+
+	public static String getAssestFileContent(Context context, String fileName) {
+		if (null == context || null == fileName || "".equals(fileName)) {
+			return "";
+		}
+		String result = "";
+		InputStream is = null;
+		try {
+			is = context.getAssets().open(fileName);
+			int size = is.available();
+			byte[] buffer = new byte[size];
+			is.read(buffer);
+			is.close();
+			result = new String(buffer, "GB2312");
+		} catch (Exception e) {
+
+		} finally {
+			if (null != is) {
+				try {
+					is.close();
+					is = null;
+				} catch (IOException e) {
+				}
+
+			}
+		}
+
+		return result;
+
 	}
 
 }

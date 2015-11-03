@@ -21,14 +21,30 @@ public class ClickShareListener implements OnClickListener {
 	
 	@Override
 	public void onClick(View arg0) {
+		if (!isCanClick()) {
+			return;
+		}
+		mAdapter.showLoadingDialog();
 		boolean result = GolukApplication.getInstance().getVideoSquareManager()
 				.getShareUrl(mVideoJson.data.avideo.video.videoid, mVideoJson.data.avideo.video.type);
 		GolukDebugUtils.i("detail", "--------result-----Onclick------" + result);
 		if (!result) {
+			GolukUtils.isCanClick = true;
+			GolukUtils.cancelTimer();
 			GolukUtils.showToast(mContext, "网络异常，请检查网络");
-		} else {
-			mAdapter.showLoadingDialog();
 		}
+	}
+	
+	/**
+	 * 防止重复点击
+	 * 
+	 */
+	public boolean isCanClick() {
+		if (GolukUtils.isCanClick) {
+			GolukUtils.startTimer();
+			return true;
+		}
+		return false;
 	}
 	
 }

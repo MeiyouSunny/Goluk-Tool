@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -69,6 +70,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
@@ -137,7 +139,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private int mCurrentOKCount = 0;
 	/** 是否支持声音 */
 	private boolean isCanVoice = true;
-	private ImageView mHead = null;
+	private SimpleDraweeView mHead = null;
 	/** */
 	private RelativeLayout mMapRootLayout = null;
 	/** 是否成功上传过视频 */
@@ -212,7 +214,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mTitleTv.setText("我的直播");
 			mMoreImg.setVisibility(View.GONE);
 			mNickName.setText(myInfo.nickName);
-			setUserHeadImage(myInfo.head);
+			setUserHeadImage(myInfo.head, myInfo.customavatar);
 
 		} else {
 			if (null != currentUserInfo && null != currentUserInfo.desc) {
@@ -225,7 +227,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			mTitleTv.setText(currentUserInfo.nickName + " 的直播");
 			mNickName.setText(currentUserInfo.nickName);
-			setUserHeadImage(currentUserInfo.head);
+			setUserHeadImage(currentUserInfo.head, currentUserInfo.customavatar);
 		}
 		drawPersonsHead();
 		mLiveManager = new TimerManager(10);
@@ -414,7 +416,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mLookCountTv = (TextView) findViewById(R.id.live_lookcount);
 		zanBtn = (Button) findViewById(R.id.like_btn);
 		mShareBtn = (Button) findViewById(R.id.share_btn);
-		mHead = (ImageView) findViewById(R.id.live_userhead);
+		mHead = (SimpleDraweeView) findViewById(R.id.live_userhead);
 		mLiveCountDownTv = (TextView) findViewById(R.id.live_countdown);
 		mDescTv = (TextView) findViewById(R.id.live_desc);
 		mPauseBtn = (Button) findViewById(R.id.live_pause);
@@ -591,17 +593,23 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 	};
 
-	private void setUserHeadImage(String headStr) {
+	private void setUserHeadImage(String headStr, String neturl) {
 		try {
-			if (null != mHead && null != headStr && !"".equals(headStr)) {
-				int utype = Integer.valueOf(headStr);
-				int head = mHeadImg[utype];
-				mHead.setBackgroundResource(head);
+			if (null == mHead) {
+				return;
+			}
+			if (null != neturl && !"".equals(neturl)) {
+				// 使用网络地址
+				mHead.setImageURI(Uri.parse(neturl));
+			} else {
+				if (null != headStr && !"".equals(headStr)) {
+					int utype = Integer.valueOf(headStr);
+					int head = mHeadImg[utype];
+					mHead.setImageURI(GolukUtils.getResourceUri(head));
+				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 	}
 
 	// 直播上传失败
@@ -987,7 +995,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 	private void liveCallBackError(boolean isprompt) {
 		if (isprompt) {
-			GolukUtils.showToast(this, "查看直播服务器返回数据异常");
+			// GolukUtils.showToast(this, "查看直播服务器返回数据异常");
 		}
 	}
 

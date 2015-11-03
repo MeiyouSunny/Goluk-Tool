@@ -78,19 +78,11 @@ public class UserCenterActivity extends BaseActivity implements
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
-	
-	/**
-	 * 返回首页
-	 */
+	/** 返回首页 */
 	private Button titlehome;
-	
-
-	/**
-	 * 返回按钮
-	 */
+	/** 返回按钮 */
 	private ImageButton backbtn;
-	
-	public  static Handler handler = null;
+	public static Handler handler = null;
 	
 	/** 所有的数据请求 id*/
 	public long mAllDataSequenceId = 0;
@@ -129,6 +121,10 @@ public class UserCenterActivity extends BaseActivity implements
 	private TextView title = null;
 	
 	public static int refristUserInfo = 100;
+	
+	/** 是否刷新头像数据 **/
+	
+	private boolean isRefresh = false;
 
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
@@ -166,6 +162,7 @@ public class UserCenterActivity extends BaseActivity implements
 									curUser.introduce = u.getString("desc");
 									curUser.headportrait = u.getString("head");
 									curUser.nickname  = u.getString("nickname");
+									curUser.customavatar = u.getString("customavatar");
 									updateViewData(true, 0);
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
@@ -543,11 +540,11 @@ public class UserCenterActivity extends BaseActivity implements
 						String customavatar = data.getString("customavatar");
 						String headportrait = data.getString("headportrait");
 
-						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+						String realDesc = "极路客个人主页分享(使用#极路客Goluk#拍摄)";
 
 						CustomShareBoard shareBoard = new CustomShareBoard(
 								this, sharePlatform, shorturl, customavatar,
-								describe, title, null, "", "");
+								describe, title, null, realDesc, "");
 						shareBoard.showAtLocation(this.getWindow()
 								.getDecorView(), Gravity.BOTTOM, 0, 0);
 					}
@@ -648,6 +645,14 @@ public class UserCenterActivity extends BaseActivity implements
 		}
 		
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (null != sharePlatform) {
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
+		}
+	}
 
 	@Override
 	public void onClick(View view) {
@@ -721,6 +726,11 @@ public class UserCenterActivity extends BaseActivity implements
 
 	@Override
 	public void onDestroy() {
+		if(GolukApplication.getInstance().getVideoSquareManager()!=null){
+			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
+			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("videosharehotlist");
+		}
+		
 		super.onDestroy();
 	}
 

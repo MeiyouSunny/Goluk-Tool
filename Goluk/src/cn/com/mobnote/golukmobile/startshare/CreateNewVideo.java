@@ -19,7 +19,7 @@ public class CreateNewVideo implements FilterPlaybackView.FilterVideoEditorListe
 	private ICreateNewVideoFn mFn = null;
 
 	public CreateNewVideo(Context context, FilterPlaybackView mFilterPlay, ICreateNewVideoFn fn) {
-		mContext = null;
+		mContext = context;
 		mVVPlayVideo = mFilterPlay;
 		mFn = fn;
 	}
@@ -42,8 +42,9 @@ public class CreateNewVideo implements FilterPlaybackView.FilterVideoEditorListe
 		editorParam.nVideoWidth = 854;
 		editorParam.nVideoHeight = 480;
 		// //分辨率 帧率 码率 480*270 30fps 1400kbps
-		editorParam.nVideoBitrate = 1500 * 1024;
-		editorParam.nFps = 15;
+		editorParam.nVideoBitrate = 2000 * 1024;
+		// 帧数
+		editorParam.nFps = 24;
 		return editorParam;
 	}
 

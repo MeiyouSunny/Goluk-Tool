@@ -95,6 +95,8 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		headView.invalidate();
 
 		addHeaderView(headView, null, false);
+		//屏蔽某些机型的下拉悬停操作
+		setOverScrollMode(View.OVER_SCROLL_NEVER);
 		setOnScrollListener(new PauseOnScrollListener(BitmapManager.getInstance().mBitmapUtils, false, true, this));
 
 		animation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f,

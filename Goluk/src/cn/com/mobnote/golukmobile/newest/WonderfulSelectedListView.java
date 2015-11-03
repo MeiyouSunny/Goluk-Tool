@@ -58,12 +58,17 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private int visibleCount;
 	private ImageView shareBg = null;
 
+	private long requestId = 0;
+
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
 		mDataList = new ArrayList<JXListItemDataInfo>();
 		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setDividerHeight(0);
 		mRTPullListView.setDivider(new ColorDrawable(Color.TRANSPARENT));
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.MATCH_PARENT);
+		mRTPullListView.setLayoutParams(lp);
 		mRootLayout = new RelativeLayout(mContext);
 		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
 
@@ -97,6 +102,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				GolukDebugUtils.e("", "request-----------------------no DAta");
 				setViewListBg(false);
 				httpPost(true, "0", "");
 
@@ -124,8 +130,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		if (null != GolukApplication.getInstance().getVideoSquareManager()) {
 			isGetFileListDataing = true;
 			GolukDebugUtils.e("", "TTTTTT=====11111=====jxid=" + jxid);
-			boolean result = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
-			if (!result) {
+			requestId = GolukApplication.getInstance().getVideoSquareManager().getJXListData(jxid, pagesize);
+			GolukDebugUtils.e("", "TTTTTT=====11111=====requestId=" + requestId);
+			if (requestId <= 0) {
 				closeProgressDialog();
 			}
 		} else {
@@ -173,10 +180,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				switch (scrollState) {
 				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-					mWonderfulSelectedAdapter.lock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-					mWonderfulSelectedAdapter.unlock();
 					if (mRTPullListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						if (mDataList.size() > 0) {
 							if (isGetFileListDataing) {
@@ -195,7 +200,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 					}
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					mWonderfulSelectedAdapter.lock();
 					break;
 
 				default:
@@ -207,50 +211,60 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
-
 				if (null == mDataList && mDataList.size() <= 0) {
 					return;
 				}
-
-				int first = firstVisibleItem - 1;
-				if (first < mDataList.size()) {
-					for (int i = 0; i < first; i++) {
-						String url = mDataList.get(i).jximg;
-						if (!TextUtils.isEmpty(url)) {
-							Uri uri = Uri.parse(url);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-
-						String url2 = mDataList.get(i).jtypeimg;
-						if (!TextUtils.isEmpty(url2)) {
-							Uri uri = Uri.parse(url2);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-
-					}
-				}
-
-				int last = firstVisibleItem + visibleItemCount + 1;
-				if (last < mDataList.size()) {
-					for (int i = last; i < mDataList.size(); i++) {
-						String url = mDataList.get(i).jximg;
-						if (!TextUtils.isEmpty(url)) {
-							Uri uri = Uri.parse(url);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-
-						String url2 = mDataList.get(i).jtypeimg;
-						if (!TextUtils.isEmpty(url2)) {
-							Uri uri = Uri.parse(url2);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-
-					}
-				}
-
+				selfFreeFresco(firstVisibleItem, visibleItemCount);
 			}
 
 		});
+	}
+
+	/**
+	 * 手动释放Fresco的资源
+	 * 
+	 * @param firstVisibleItem
+	 * @param visibleItemCount
+	 * @author jyf
+	 */
+	private void selfFreeFresco(int firstVisibleItem, int visibleItemCount) {
+		try {
+			int first = firstVisibleItem - 1;
+			if (first < mDataList.size()) {
+				for (int i = 0; i < first; i++) {
+					String url = mDataList.get(i).jximg;
+					if (!TextUtils.isEmpty(url)) {
+						Uri uri = Uri.parse(url);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+
+					String url2 = mDataList.get(i).jtypeimg;
+					if (!TextUtils.isEmpty(url2)) {
+						Uri uri = Uri.parse(url2);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+
+				}
+			}
+			int last = firstVisibleItem + visibleItemCount + 1;
+			if (last < mDataList.size()) {
+				for (int i = last; i < mDataList.size(); i++) {
+					String url = mDataList.get(i).jximg;
+					if (!TextUtils.isEmpty(url)) {
+						Uri uri = Uri.parse(url);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+
+					String url2 = mDataList.get(i).jtypeimg;
+					if (!TextUtils.isEmpty(url2)) {
+						Uri uri = Uri.parse(url2);
+						Fresco.getImagePipeline().evictFromMemoryCache(uri);
+					}
+				}
+			}
+		} catch (Exception e) {
+
+		}
 	}
 
 	public View getView() {
@@ -259,7 +273,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		if (event == VSquare_Req_List_HandPick) {
+		GolukDebugUtils.e("", "TTTTTT=====2222=====param1=" + param1);
+		if (event == VSquare_Req_List_HandPick && requestId == param1) {
 			GolukDebugUtils.e("", "TTTTTT=====2222=====param2=" + param2);
 			isGetFileListDataing = false;
 			closeProgressDialog();
@@ -273,7 +288,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				}
 				initLayout(list);
 			} else {
-
 				if (!"0".equals(mJxid)) {
 					if (addFooter) {
 						addFooter = false;
@@ -296,8 +310,10 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	public void setViewListBg(boolean flog) {
 		if (flog) {
 			shareBg.setVisibility(View.VISIBLE);
+			mRTPullListView.setVisibility(View.GONE);
 		} else {
 			shareBg.setVisibility(View.GONE);
+			mRTPullListView.setVisibility(View.VISIBLE);
 		}
 	}
 

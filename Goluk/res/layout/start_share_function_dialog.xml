@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="260dp"
+    android:layout_height="fill_parent"
+    android:background="@drawable/custom_dialog_bg"
+    android:orientation="vertical" >
+
+    <!-- 删除视频 -->
+
+    <LinearLayout
+        android:id="@+id/fun_dialog_start_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/start_location"
+            android:layout_width="fill_parent"
+            android:layout_height="43.3dp"
+            android:gravity="center"
+            android:text="重新定位"
+            android:textColor="#1163a2"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fun_dialog_del_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/del_location"
+            android:layout_width="fill_parent"
+            android:layout_height="43.3dp"
+            android:gravity="center"
+            android:text="删除定位"
+            android:textColor="#1163a2"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/cancle"
+        android:layout_width="fill_parent"
+        android:layout_height="43.3dp"
+        android:gravity="center"
+        android:text="@string/dialog_str_cancel"
+        android:textColor="#1163a2"
+        android:textSize="15sp" />
+
+</LinearLayout>

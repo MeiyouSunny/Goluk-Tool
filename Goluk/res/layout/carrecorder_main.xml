@@ -84,12 +84,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <RelativeLayout
+           <RelativeLayout
                 android:id="@+id/vLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-                <com.rd.car.player.RtmpPlayerView
+                <com.rd.car.player.RtspPlayerView
                     android:id="@+id/mRtmpPlayerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -156,8 +156,6 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/mRtmpPlayerLayout"
             android:layout_alignRight="@+id/mRtmpPlayerLayout"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="76dp"
             android:background="@drawable/carrecorder_full_btn"
             android:contentDescription="@string/def" />
@@ -318,6 +316,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:layout_centerVertical="true" >
 
             <RelativeLayout

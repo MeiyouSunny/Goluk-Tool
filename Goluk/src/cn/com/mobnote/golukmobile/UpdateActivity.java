@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -120,7 +121,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private String ipc_content = "";
 	private String ipc_url = "";
 	private String ipc_path = "";
-
+	/**true为已退出当前activity**/
 	private boolean isExit = false;
 
 	@SuppressLint("HandlerLeak")
@@ -162,7 +163,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		Intent itClick = getIntent();
 		int progressSetup = itClick.getIntExtra(UPDATE_PROGRESS, 0);
 
-		GolukDebugUtils.i("lily", "--------mSign-----" + mSign);
+		GolukDebugUtils.i("", "----UpdateActivity----mSign-----" + mSign);
+		GolukDebugUtils.i("", "----UpdateActivity----mApp.mLoadStatus-----" + mApp.mLoadStatus);
+		GolukDebugUtils.i("", "----UpdateActivity----progressSetup-----" + progressSetup);
 		if (mSign == 0) {
 			if (mApp.mLoadStatus) {
 				mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
@@ -181,7 +184,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mBtnDownload.setEnabled(false);
 				}
 			} else {
-				boolean b = mApp.mIpcUpdateManage.download(ipc_url, mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
+				boolean b = mApp.mIpcUpdateManage.download(ipc_url, ipc_version);
+				GolukDebugUtils.i("", "----UpdateActivity----download-----b：" + b);
 				if (b) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
@@ -316,14 +320,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mSendDialog = null;
 					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					showUpdateFirstDisconnect("很抱歉，升级失败，请先不要关闭摄像头电源，等待摄像头重新启动后再试。");
-					timerFive();
 					break;
 				case UPDATE_IPC_SECOND_DISCONNECT:
 					timerCancel();
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
 					showUpdateSecondDisconnect("很抱歉，摄像头连接异常中断，但它可能仍在升级中。请先不要关闭摄像头电源，等待摄像头升级成功。");
-					timerFive();
 					break;
 				default:
 					break;
@@ -372,8 +374,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				if (IpcUpdateManage.DOWNLOAD_STATUS_FAIL == downloadStatus) {
 					mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
 					mTextDowload.setText("下载中");
-					boolean b = mApp.mIpcUpdateManage.download(ipc_url, IpcUpdateManage.BIN_PATH_PRE + "/"
-							+ ipc_version + ".bin");
+					boolean b = mApp.mIpcUpdateManage.download(ipc_url, ipc_version);
 					GolukDebugUtils.i("qqq", "----path------" + IpcUpdateManage.BIN_PATH_PRE + "/" + ipc_version
 							+ ".bin");
 					if (b) {
@@ -393,11 +394,17 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				} else {
 					String version = mApp.mSharedPreUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
-					if (version.equals(ipc_version)) {
-						GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
-					} else {
-						boolean b = mApp.mIpcUpdateManage.ipcInstall(mApp.mIpcUpdateManage.getBinFilePath(ipc_version));
-					}
+//					GolukDebugUtils.i("lily", "-------currentdownloadmodel-----" + mApp.mIpcUpdateManage.mIpcModel + "------downloadipcmodel-----" + mApp.mSharedPreUtil.getDownloadIpcModel());
+//					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mSharedPreUtil.getDownloadIpcModel())){
+						if (version.equals(ipc_version)) {
+							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
+						} else {
+							String file = mApp.mIpcUpdateManage.isHasIPCFile(ipc_version);
+							boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
+						}
+//					}else{
+						//TODO
+//					}
 				}
 			}
 			break;
@@ -415,7 +422,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	 * @param param2
 	 */
 	public void downloadCallback(int state, Object param1, Object param2) {
-		GolukDebugUtils.i("lily", "------------downloadCallback-----------" + state);
+		GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------state：" + state+"----param1："+param1);
 		mApp.mIpcUpdateManage.dimissLoadingDialog();
 		downloadStatus = state;
 		if (state == IpcUpdateManage.DOWNLOAD_STATUS) {
@@ -436,8 +443,15 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 			mSign = 1;
+			try {
+				JSONObject json = new JSONObject((String)param2);
+				String filePath = json.getString("filepath");
+				GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------filePath：" + filePath);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			// 下载成功删除文件
-			mApp.mIpcUpdateManage.downIpcSucess();
+//			mApp.mIpcUpdateManage.downIpcSucess();
 		} else if (state == IpcUpdateManage.DOWNLOAD_STATUS_FAIL) {
 			// 下载失败
 			mApp.mLoadStatus = false;
@@ -462,7 +476,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("lily", "lily====IPC_VDCP_Msg_IPCUpgrade====msg=" + msg + "===param1=" + param1 + "==param2="
 				+ param2 + "--------event-----" + event);
-		GolukDebugUtils.i("lily", "------------install-------22222");
+		if(isExit) {
+			return ;
+		}
 		if (event == ENetTransEvent_IPC_UpGrade_Resp) {
 			if (IPC_VDCP_Msg_IPCUpgrade == msg) {
 				GolukDebugUtils.e("lily", "---------连接ipc-------");
@@ -484,9 +500,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 								timerCancel();
 								// 传输文件成功
 								mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
-								timerTask();
+								timerTaskOne();
 							} else {
-								timerTask();
+								timerTaskOne();
 							}
 						}
 						if (stage.equals("2")) {
@@ -495,7 +511,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							GolukDebugUtils.i("lily", "------------percent-------111111");
 							if (!percent.equals("95") && !percent.equals("100")) {
 								GolukDebugUtils.i("lily", "------------percent-------2222");
-								timerTask();
+								timerTaskTwo();
 							} else {
 								GolukDebugUtils.i("lily", "------------percent-------33333");
 								timerCancel();
@@ -527,9 +543,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	}
 
 	/**
-	 * 固件升级过程中超时 1000x60=6000
+	 * 升级一阶段  超时时间１分钟
+	 * 固件升级过程中超时 1000x60=60000
 	 */
-	public void timerTask() {
+	private void timerTaskOne() {
 		timerCancel();
 		mTimer = new Timer();
 		mTimer.schedule(new TimerTask() {
@@ -541,29 +558,30 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
 						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
 					}
-				} else if (stage.equals("2") && !percent.equals("100")) {
-					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
-						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
-					}
 				}
 			}
-		}, 6000);
+		}, 60000);
 	}
-
+	
 	/**
-	 * ipc断开连接后，5秒自动关闭当前页面
+	 * 升级一阶段  超时时间３分钟
+	 * 固件升级过程中超时 1000x60x3=180000
 	 */
-	public void timerFive() {
+	private void timerTaskTwo() {
 		timerCancel();
 		mTimer = new Timer();
 		mTimer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
-				mApp.mIpcUpdateManage.stopIpcUpgrade();
-				exit();
+				// ipc断开
+				if (stage.equals("2") && !percent.equals("100")) {
+					if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
+						mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
+					}
+				}
 			}
-		}, 5000);
+		}, 180000);
 	}
 
 	public void timerCancel() {
@@ -576,6 +594,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(mApp.mIpcUpdateManage != null){
+			mApp.mIpcUpdateManage.dimissLoadingDialog();
+		}
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
 		}
@@ -641,5 +662,31 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public void exit() {
 		isExit = true;
 		finish();
+		timerCancel();
+		if(null != mUpdateDialogSuccess) {
+			UserUtils.dismissUpdateDialog(mUpdateDialogSuccess);
+		}
+		if(null != mPrepareDialog) {
+			UserUtils.dismissUpdateDialog(mPrepareDialog);
+		}
+		if(null != mSendDialog) {
+			UserUtils.dismissUpdateDialog(mSendDialog);
+		}
+		if(null != mSendOk) {
+			UserUtils.dismissUpdateDialog(mSendOk);
+		}
+		if(null != mUpdateDialog) {
+			UserUtils.dismissUpdateDialog(mUpdateDialog);
+		}
+		if(null != mUpdateDialogFail) {
+			UserUtils.dismissUpdateDialog(mUpdateDialogFail);
+		}
+		if(null != mFirstDialog) {
+			UserUtils.dismissUpdateDialog(mFirstDialog);
+		}
+		if(null != mSecondDialog) {
+			UserUtils.dismissUpdateDialog(mSendDialog);
+		}
+		
 	}
 }
