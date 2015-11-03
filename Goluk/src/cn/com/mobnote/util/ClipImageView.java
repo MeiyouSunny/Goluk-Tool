@@ -44,7 +44,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 
 	private boolean isJusted;
 	
-	public Activity mActivity = null;
+	public Context mContext = null;
 
 	private final Matrix baseMatrix = new Matrix();
 	private final Matrix drawMatrix = new Matrix();
@@ -67,6 +67,8 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 
 		setOnTouchListener(this);
 
+		mContext = context;
+
 		multiGestureDetector = new MultiGestureDetector(context);
 
 	}
@@ -79,7 +81,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		}
 		
 		DisplayMetrics metric = new DisplayMetrics();
-		mActivity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+		((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(metric);
 		int width = metric.widthPixels; // 屏幕宽度（像素）
 		int height = metric.heightPixels; // 屏幕高度（像素）
 		float mDensity = metric.density; // 屏幕密度（0.75 / 1.0 / 1.5）
@@ -98,7 +100,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		final int drawableHeight = d.getIntrinsicHeight();
 		
 //		borderlength = (int) (viewWidth - BORDERDISTANCE * 10);
-		borderlength = ClipView.dip2px(mActivity, 100) * 2;
+		borderlength = ClipView.dip2px(mContext, 100) * 2;
 		float scale = 1.0f;
 		if (drawableWidth <= drawableHeight) {
 			if (drawableWidth < borderlength) {

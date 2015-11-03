@@ -84,6 +84,7 @@ public class SettingImageView {
 	 * @param context
 	 */
 	public  void deleteUri() {
+		if (mCameraUri != null)
 		mContext.getContentResolver().delete(mCameraUri, null, null);
 	}
 	
@@ -95,7 +96,7 @@ public class SettingImageView {
 	 *            传入Bitmap对象
 	 * @return
 	 */
-	public Bitmap toRoundBitmap(Bitmap bitmap) {
+	public static Bitmap toRoundBitmap(Bitmap bitmap) {
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
 		float roundPx;
