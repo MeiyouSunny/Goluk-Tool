@@ -25,8 +25,8 @@ public class XGInit implements XGIOperateCallback {
 	private final String TEST_ACCESS_KEY = "AP4Y1I386HQQ";
 	private final long TEST_ACCESS_ID = 2100156386;
 
-	public XGInit(Context context) {
-		mContext = context;
+	public XGInit() {
+		mContext = GolukApplication.getInstance();
 	}
 
 	public void init() {

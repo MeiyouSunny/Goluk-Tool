@@ -35,6 +35,7 @@ import android.util.DisplayMetrics;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -158,7 +159,7 @@ public class GolukUtils {
 	 */
 	public static void showToast(Context context, String text) {
 		if (mToast == null) {
-			mToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+			mToast = Toast.makeText(GolukApplication.getInstance(), text, Toast.LENGTH_SHORT);
 		} else {
 			mToast.setText(text);
 		}
@@ -182,7 +183,7 @@ public class GolukUtils {
 
 	public static void showToast(Context context, String text, int duration) {
 		if (mToast == null) {
-			mToast = Toast.makeText(context, text, duration);
+			mToast = Toast.makeText(GolukApplication.getInstance(), text, duration);
 		} else {
 			mToast.setText(text);
 			mToast.setDuration(duration);

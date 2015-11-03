@@ -39,7 +39,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 	private CustomLoadingDialog mCustomProgressDialog = null;
 
-	private SettingImageView siv = null;
+//	private SettingImageView siv = null;
 
 	private boolean isSave = true;
 
@@ -62,7 +62,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
-		imageView.mActivity = this;
+
 		try {
 			String uriStr = getIntent().getStringExtra("imageuri");
 			Uri  uri = null;
@@ -70,8 +70,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			if(uriStr != null  && !"".equals(uriStr)){
 				uri = Uri.parse(getIntent().getStringExtra("imageuri"));
 				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inJustDecodeBounds = true;
-				BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+//				options.inJustDecodeBounds = true;
+//				BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
 				options.inJustDecodeBounds = false;
 				options.inSampleSize = 4;// 图片宽高都为原来的4分之一，即图片为原来的8分之一
 				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
@@ -96,7 +96,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			e.printStackTrace();
 		}
 
-		siv = new SettingImageView(this);
+//		siv = new SettingImageView(this);
 		initListener();
 
 	}
@@ -137,7 +137,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 				Bitmap bitmap = imageView.clip();
 
 				try {
-					String request = this.saveBitmap(siv.toRoundBitmap(bitmap));
+					String request = this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
 					if (request != null) {
 						boolean flog = this.uploadImageHead(request);
 						System.out.println("flog =" + flog);
@@ -180,13 +180,11 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 	@SuppressWarnings("finally")
 	public String saveBitmap(Bitmap bm) throws IOException, JSONException {
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
 
 		JSONObject requestStr = null;
-		byte[] bb = baos.toByteArray();
 
-		String md5key = this.compute32(bb);
+		String md5key = "";
+
 		String picname = System.currentTimeMillis() + ".png";
 
 		this.makeRootDirectory(headCachePatch);
@@ -201,11 +199,14 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 			f.createNewFile();
 			out = new FileOutputStream(f);
-
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			Bitmap cacheBitmap = this.compress(bm);
 
-			cacheBitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
-
+			cacheBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+			byte[] bb = baos.toByteArray();
+			
+			md5key = this.compute32(bb);
+			baos.writeTo(out);
 			requestStr = new JSONObject();
 			requestStr.put("PicMD5", md5key);
 			requestStr.put("PicPath", FileUtils.javaToLibPath(cachePath));

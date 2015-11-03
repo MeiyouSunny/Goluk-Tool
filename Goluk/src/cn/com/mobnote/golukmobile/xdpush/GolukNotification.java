@@ -45,8 +45,8 @@ public class GolukNotification {
 	/** Timer计时时长 */
 	private final int TIMER_OUT = 60 * 1000;
 
-	public void createXG(Activity activity) {
-		xgInit = new XGInit(activity);
+	public void createXG() {
+		xgInit = new XGInit();
 		xgInit.init();
 	}
 
