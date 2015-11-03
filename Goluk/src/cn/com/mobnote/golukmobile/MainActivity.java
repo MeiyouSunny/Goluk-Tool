@@ -8,11 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -93,8 +93,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public static Handler mMainHandler = null;
 	/** 下载完成播放声音文件 */
 	public String mVideoDownloadSoundFile = "ec_alert5.wav";
-	/** 下载完成播放音频 */
-	public MediaPlayer mMediaPlayer = new MediaPlayer();
 
 	/** 记录登录状态 **/
 	public SharedPreferences mPreferencesAuto;
@@ -134,6 +132,22 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	private RelativeLayout indexCarrecoderBtnlayout;
 	private WifiManager mWifiManager = null;
+	// Play video sync from camera completion sound
+	private SoundPool mSoundPool;
+
+	private void playDownLoadedSound() {
+		if(null != mSoundPool) {
+			mSoundPool.load(this, R.raw.ec_alert5, 1);
+
+			mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener(){
+				@Override
+				public void onLoadComplete(SoundPool soundPool, int sampleId,
+						int status) {
+					soundPool.play(sampleId, 1, 1, 1, 0, 1);
+				}
+			});
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +160,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
-
+		mSoundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
 		initThirdSDK();
 
 		mContext = this;
@@ -409,26 +423,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	/**
-	 * 播放视频下载完成声音
-	 */
-	private void playDownLoadedSound() {
-		try {
-			// 重置mediaPlayer实例，reset之后处于空闲状态
-			mMediaPlayer.reset();
-			// 设置需要播放的音乐文件的路径，只有设置了文件路径之后才能调用prepare
-			AssetFileDescriptor fileDescriptor = this.getAssets().openFd(mVideoDownloadSoundFile);
-			mMediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(),
-					fileDescriptor.getLength());
-			// 准备播放，只有调用了prepare之后才能调用start
-			mMediaPlayer.prepare();
-			// 开始播放
-			mMediaPlayer.start();
-		} catch (Exception ex) {
-
-		}
-	}
-
-	/**
 	 * 视频同步完成
 	 */
 	public void videoAnalyzeComplete(String str) {
@@ -586,6 +580,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
+		}
+		if(null != mSoundPool) {
+			mSoundPool.release();
+			mSoundPool = null;
 		}
 
 		try {
