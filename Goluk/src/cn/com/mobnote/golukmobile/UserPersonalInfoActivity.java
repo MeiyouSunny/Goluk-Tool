@@ -274,10 +274,13 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			}
 			Intent it = new Intent(this, ImageClipActivity.class);
 			if(siv.mCameraUri == null){
-				Bundle bundle = data.getExtras();
-				if (bundle != null) {
-					Bitmap photo = (Bitmap) bundle.get("data"); // get bitmap
-					it.putExtra("imagebitmap",photo);
+				if (data != null)
+				{
+					Bundle bundle = data.getExtras();
+					if (bundle != null) {
+						Bitmap photo = (Bitmap) bundle.get("data"); // get bitmap
+						it.putExtra("imagebitmap",photo);
+					}
 				}
 			}else{
 				it.putExtra("imageuri", siv.mCameraUri.toString());
