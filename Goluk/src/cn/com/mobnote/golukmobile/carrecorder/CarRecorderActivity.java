@@ -45,6 +45,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindFinish;
+import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -84,6 +86,8 @@ import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
 import com.rd.car.player.RtspPlayerView.RtspPlayerLisener;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 
@@ -421,9 +425,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.VISIBLE);
 			mPalyerLayout.setVisibility(View.GONE);
-			if (null != MainActivity.mMainHandler) {
-				MainActivity.mMainHandler.sendEmptyMessage(400);
-			}
+			Log.d("CK1", "2222222222222222222222222222");
+//			if (null != MainActivity.mMainHandler) {
+//				MainActivity.mMainHandler.sendEmptyMessage(400);
+//			}
+			EventBus.getDefault().post(new EventBindFinish(EventConfig.CAR_RECORDER_BIND_SUCESS));
 		}
 	}
 

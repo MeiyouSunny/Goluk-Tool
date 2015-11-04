@@ -6,8 +6,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Message;
+import android.util.Log;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
 	// private static int lastType = -1;
@@ -19,17 +23,21 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 		Message msg = new Message();
 		msg.what = 3;
 		if (!isNetworkAvailable(context)) {
-			GolukDebugUtils.e("", "wifi---网络广播....网络不可用...." + action);
+//			GolukDebugUtils.e("", "wifi---网络广播....网络不可用...." + action);
+			Log.d("CK1", "wifi---网络广播....网络不可用...." + action);
 			msg.obj = false;
-			if (null != MainActivity.mMainHandler) {
-				MainActivity.mMainHandler.sendMessage(msg);
-			}
+//			if (null != MainActivity.mMainHandler) {
+//				MainActivity.mMainHandler.sendMessage(msg);
+//			}
+			EventBus.getDefault().post(new EventWifiState(EventConfig.WIFI_STATE, false));
 		} else {
 			GolukDebugUtils.e("", "wifi---网络广播....网络可用...." + action);
+			Log.d("CK1", "wifi---网络广播....网络不可用...." + action);
 			msg.obj = true;
-			if (null != MainActivity.mMainHandler) {
-				MainActivity.mMainHandler.sendMessage(msg);
-			}
+//			if (null != MainActivity.mMainHandler) {
+//				MainActivity.mMainHandler.sendMessage(msg);
+//			}
+			EventBus.getDefault().post(new EventWifiState(EventConfig.WIFI_STATE, true));
 		}
 	}
 
