@@ -64,6 +64,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private RelativeLayout mQuestionItem = null;
 	/** 购买极路客 **/
 	private RelativeLayout mShoppingItem = null;
+	/**我的收益**/
+	private RelativeLayout mProfitItem = null;
+	/**上次收益显示**/
+	private TextView mTextProfit = null;
 
 	/** 个人中心的头像、性别、昵称 */
 	private SimpleDraweeView mImageHead;
@@ -123,6 +127,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mInstallItem = (RelativeLayout) mRootLayout.findViewById(R.id.install_item);
 		mQuestionItem = (RelativeLayout) mRootLayout.findViewById(R.id.question_item);
 		mShoppingItem = (RelativeLayout) mRootLayout.findViewById(R.id.shopping_item);
+		mProfitItem = (RelativeLayout) mRootLayout.findViewById(R.id.profit_item);
+		mTextProfit = (TextView) mRootLayout.findViewById(R.id.profit_hint);
 
 		// 头像、昵称、id
 		mImageHead = (SimpleDraweeView) mRootLayout.findViewById(R.id.user_center_head);
@@ -146,6 +152,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mShoppingItem.setOnClickListener(this);
 		mShareLayout.setOnClickListener(this);
 		mPraiseLayout.setOnClickListener(this);
+		mProfitItem.setOnClickListener(this);
 
 	}
 
@@ -267,6 +274,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			Intent itShopping = new Intent(mContext, UserOpenUrlActivity.class);
 			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
 			mContext.startActivity(itShopping);
+			break;
+		//我的收益
+		case R.id.profit_item:
+			GolukUtils.showToast(mContext, "我的收益");
 			break;
 		}
 	}

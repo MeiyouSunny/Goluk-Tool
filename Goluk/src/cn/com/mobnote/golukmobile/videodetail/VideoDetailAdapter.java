@@ -14,6 +14,13 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -298,6 +305,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mTextComment = (TextView) convertView.findViewById(R.id.commentText);
 		headHolder.mZanImage = (ImageView) convertView.findViewById(R.id.video_square_detail_like_image);
 		headHolder.mTextZanName = (TextView) convertView.findViewById(R.id.zanName);
+		
+		headHolder.mRecommendLayout = (RelativeLayout) convertView.findViewById(R.id.recommend_layout);
+		headHolder.mRecommendImage = (ImageView) convertView.findViewById(R.id.recommend_image);
+		headHolder.mRecommendName = (TextView) convertView.findViewById(R.id.recommend_name);
+		headHolder.mRecommendDescribe = (TextView) convertView.findViewById(R.id.recommend_describe);
+		headHolder.mProfitLine = convertView.findViewById(R.id.profit_line);
 
 		loadFirstPic();
 
@@ -390,7 +403,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
 			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
-			headHolder.mTextDescribe.setText(mVideoAllData.avideo.video.describe);
+			//TODO 在视频描述之后添加活动标签
+			if(null == mVideoAllData.recom || "".equals(mVideoAllData.recom)
+					|| null == mVideoAllData.recom.chaname || "".equals(mVideoAllData.recom.chaname)) {
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "");
+			} else {
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.recom.chaname+"#");
+			}
+			
 			final String location = mVideoAllData.avideo.video.mLocation;
 			if (null != location && !"".equals(location)) {
 				headHolder.mLocationTv.setText(location);
@@ -431,6 +451,24 @@ public class VideoDetailAdapter extends BaseAdapter {
 				if (!headHolder.mVideoView.isPlaying() && !isShow) {
 					headHolder.mImageLayout.setVisibility(View.VISIBLE);
 					headHolder.mPlayBtn.setVisibility(View.VISIBLE);
+				}
+			}
+			
+			//TODO　没有活动奖励视频没有奖励信息这个模块
+			if(null == mVideoAllData.recom || null == mVideoAllData.recom.actid 
+					|| null == mVideoAllData.recom.actname || "".equals(mVideoAllData.recom.actid) 
+					|| "".equals(mVideoAllData.recom.actname)) {
+				headHolder.mRecommendLayout.setVisibility(View.GONE);
+				headHolder.mProfitLine.setVisibility(View.GONE);
+			} else {
+				headHolder.mProfitLine.setVisibility(View.VISIBLE);
+				headHolder.mRecommendLayout.setVisibility(View.VISIBLE);
+//				headHolder.mRecommendImage.setImageResource(0);
+				headHolder.mRecommendName.setText(mVideoAllData.recom.actname);
+				if(null == mVideoAllData.recom.reason || "".equals(mVideoAllData.recom.reason)) {
+					headHolder.mRecommendDescribe.setText("活动参与积极奖～");
+				} else {
+					headHolder.mRecommendDescribe.setText(mVideoAllData.recom.reason);
 				}
 			}
 
@@ -637,6 +675,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 		RelativeLayout mListLayout = null;
 		TextView mForbidComment = null;
 		Uri url = null;
+		//推荐
+		RelativeLayout mRecommendLayout = null;
+		ImageView mRecommendImage = null;
+		TextView mRecommendName,mRecommendDescribe;
+		View mProfitLine = null;
 	}
 
 	private boolean isCallVideo = false;
@@ -872,5 +915,21 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mImageLayout.addView(simpleDraweeView, mPreLoadingParams);
 		headHolder.simpleDraweeView = simpleDraweeView;
 	}
-
+	
+	/**
+	 * 显示视频描述和活动名称
+	 * @param view
+	 * @param describe
+	 * @param text
+	 */
+	private void showTopicText(TextView view, String describe, String text) {
+		String reply_str = describe + text;
+		SpannableString style = new SpannableString(reply_str);
+		ClickableSpan clickttt = new TopicClickableSpan(mContext, text);
+		style.setSpan(clickttt, describe.length(), reply_str.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		view.setText(style);
+		view.setMovementMethod(LinkMovementMethod.getInstance());
+		
+	}
+	
 }
