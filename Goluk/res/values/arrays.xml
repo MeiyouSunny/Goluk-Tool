@@ -66,6 +66,8 @@
         <item>15</item>
     </integer-array>
 
+    <item type="id" name="tag_slideshow_item"></item>
+
     <string-array name="list_ma_live_value">
         <item>0</item>
         <item>1</item>

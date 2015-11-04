@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,6 +32,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -75,6 +78,8 @@ import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
 import com.rd.car.player.RtmpPlayerView;
+
+import de.greenrobot.event.EventBus;
 
 public class LiveActivity extends BaseActivity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
 		ILiveDialogManagerFn, ITimerManagerFn, ILocationFn, IPCManagerFn, ILive, VideoSuqareManagerFn,
@@ -490,7 +495,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			toMyLocation();
 			break;
 		case MSG_H_TO_GETMAP_PERSONS:
-			MainActivity.mMainHandler.sendEmptyMessage(99);
+			Log.d("CK1", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+//			MainActivity.mMainHandler.sendEmptyMessage(99);
+			EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 			break;
 		}
 	}
@@ -1804,6 +1811,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	@Override
 	public void onMapLoaded() {
 		GolukDebugUtils.e("", "jyf-------live----LiveActivity--onMapLoaded:");
-		MainActivity.mMainHandler.sendEmptyMessage(99);
+		Log.d("CK1", "onMapLoaded");
+//		MainActivity.mMainHandler.sendEmptyMessage(99);
+		EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 	}
 }

@@ -34,6 +34,18 @@
             android:background="@drawable/new_more_icon"
             android:contentDescription="@string/imgdes" />
 
+        <ImageView
+            android:id="@+id/iv_exciting_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/function"
+            android:layout_marginRight="2dp"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:visibility="visible"
+            android:src="@drawable/together_coin_icon"
+            android:contentDescription="@string/imgdes" />
+
         <LinearLayout
             android:id="@+id/nicklayout"
             android:layout_width="wrap_content"
