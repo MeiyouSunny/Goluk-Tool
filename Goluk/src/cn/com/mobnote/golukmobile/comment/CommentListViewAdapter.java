@@ -3,23 +3,20 @@ package cn.com.mobnote.golukmobile.comment;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.net.Uri;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
-import cn.com.mobnote.golukmobile.videodetail.VideoUserInfo;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.facebook.drawee.view.SimpleDraweeView;
 
 public class CommentListViewAdapter extends BaseAdapter {
 	private LayoutInflater mLayoutFlater = null;
@@ -104,7 +101,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 		if (null == converView) {
 			converView = mLayoutFlater.inflate(R.layout.comment_list_item, null);
 			holder = new ViewHolder();
-			holder.mHead = (SimpleDraweeView) converView.findViewById(R.id.comment_item_head);
+			holder.mHead = (ImageView) converView.findViewById(R.id.comment_item_head);
 			holder.mName = (TextView) converView.findViewById(R.id.comment_item_name);
 			holder.mTime = (TextView) converView.findViewById(R.id.comment_item_time);
 			holder.mContent = (TextView) converView.findViewById(R.id.comment_item_content);
@@ -115,22 +112,20 @@ public class CommentListViewAdapter extends BaseAdapter {
 
 		final CommentBean temp = mData.get(position);
 		// 设置头像
-		// holder.mHead.setBackgroundResource(UserUtils.getUserHeadImageResourceId(temp.mUserHead));
-
 		String netHeadUrl = temp.customavatar;
 		if (null != netHeadUrl && !"".equals(netHeadUrl)) {
 			// 使用网络地址
-			holder.mHead.setImageURI(Uri.parse(netHeadUrl));
+			GlideUtils.loadNetHead(mContext, holder.mHead, netHeadUrl, R.drawable.head_unknown);
 		} else {
 			// 使用本地头像
-			holder.mHead.setImageURI(GolukUtils.getResourceUri(UserUtils.getUserHeadImageResourceId(temp.mUserHead)));
+			GlideUtils.loadLocalHead(mContext, holder.mHead, UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 		}
 
 		// 设置名称
 		holder.mName.setText(getShowUserName(temp));
 		// 设置评论内容
-		if (!"".equals(temp.mReplyId) && null != temp.mReplyId
-				&& !"".equals(temp.mReplyName) && null != temp.mReplyName) {
+		if (!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName)
+				&& null != temp.mReplyName) {
 			UserUtils.showText(holder.mContent, temp.mReplyName, temp.mCommentTxt);
 		} else {
 			holder.mContent.setText(temp.mCommentTxt);
@@ -163,7 +158,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 	}
 
 	class ViewHolder {
-		SimpleDraweeView mHead = null;
+		ImageView mHead = null;
 		TextView mName = null;
 		TextView mContent = null;
 		TextView mTime = null;

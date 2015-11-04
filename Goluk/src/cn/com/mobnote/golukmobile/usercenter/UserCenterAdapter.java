@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,10 +48,8 @@ import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.lidroid.xutils.util.LogUtils;
 
 @SuppressLint("InflateParams")
 public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManagerFn, OnTouchListener {
@@ -185,7 +182,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_userinfo, null);
 					holder = new UserViewHolder();
 
-					holder.headImg = (SimpleDraweeView) convertView.findViewById(R.id.user_head);
+					holder.headImg = (ImageView) convertView.findViewById(R.id.user_head);
 					holder.username = (TextView) convertView.findViewById(R.id.username);
 					holder.description = (TextView) convertView.findViewById(R.id.description);
 					holder.fxsp_num = (TextView) convertView.findViewById(R.id.fxsp_num);
@@ -223,10 +220,10 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				} else {
 					holder.dz_txt.setText("赞Ta的人");
 				}
-				
+
 				String headUrl = userinfo.customavatar;
 				if (null != headUrl && !"".equals(headUrl)) {
-					holder.headImg.setImageURI(Uri.parse(headUrl));
+					GlideUtils.loadNetHead(mContext, holder.headImg, headUrl, R.drawable.editor_head_feault7);
 				} else {
 					showUserInfoHead(holder.headImg, userinfo.headportrait);
 				}
@@ -322,8 +319,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			if (convertView == null) {
 				holder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_sharevideo, null);
-				holder.imageLayout = (SimpleDraweeView) convertView.findViewById(R.id.imageLayout);
-				holder.headimg = (SimpleDraweeView) convertView.findViewById(R.id.headimg);
+				holder.imageLayout = (ImageView) convertView.findViewById(R.id.imageLayout);
+				holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 				holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 				holder.location = (TextView) convertView.findViewById(R.id.uc_location);
 
@@ -373,13 +370,13 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			}
 			if (holder.VideoID == null || !holder.VideoID.equals(clusterInfo.mVideoEntity.videoid)) {
 				holder.VideoID = new String(clusterInfo.mVideoEntity.videoid);
-				holder.imageLayout.setImageURI(Uri.parse(clusterInfo.mVideoEntity.picture));
+				GlideUtils.loadImage(mContext, holder.imageLayout, clusterInfo.mVideoEntity.picture, R.drawable.tacitly_pic);
 			}
 
 			String headUrl = clusterInfo.mUserEntity.mCustomAvatar;
 			if (null != headUrl && !"".equals(headUrl)) {
 				// 使用服务器头像地址
-				holder.headimg.setImageURI(Uri.parse(headUrl));
+				GlideUtils.loadNetHead(mContext, holder.headimg, headUrl, R.drawable.editor_head_feault7);
 			} else {
 				showHead(holder.headimg, clusterInfo.mUserEntity.headportrait);
 			}
@@ -395,7 +392,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
-			UserUtils.showCommentText(holder.detail, clusterInfo.mUserEntity.nickname, clusterInfo.mVideoEntity.describe);
+			UserUtils.showCommentText(holder.detail, clusterInfo.mUserEntity.nickname,
+					clusterInfo.mVideoEntity.describe);
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
 			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
 			if (count > 3) {
@@ -414,7 +412,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			}
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
-				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+						&& !"".equals(comment.replyname)) {
 					UserUtils.showReplyText(holder.comment1, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment1, comment.name, comment.text);
@@ -426,7 +425,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 2) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
-				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+						&& !"".equals(comment.replyname)) {
 					UserUtils.showReplyText(holder.comment2, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment2, comment.name, comment.text);
@@ -438,7 +438,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 3) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
-				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+						&& !"".equals(comment.replyname)) {
 					UserUtils.showReplyText(holder.comment3, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment3, comment.name, comment.text);
@@ -458,10 +459,10 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				praiseholder = new PraiseViewHolder();
 
 				praiseholder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
-				praiseholder.headimg = (SimpleDraweeView) convertView.findViewById(R.id.userhead);
+				praiseholder.headimg = (ImageView) convertView.findViewById(R.id.userhead);
 				praiseholder.username = (TextView) convertView.findViewById(R.id.username);
 				praiseholder.desc = (TextView) convertView.findViewById(R.id.desc);
-				praiseholder.videoPicLayout = (SimpleDraweeView) convertView.findViewById(R.id.videopic);
+				praiseholder.videoPicLayout = (ImageView) convertView.findViewById(R.id.videopic);
 				praiseholder.userinfo = (LinearLayout) convertView.findViewById(R.id.userinfo);
 
 				int nheight = (int) ((float) width / 1.77f);
@@ -483,7 +484,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			String netHeadUrl = prais.customavatar;
 			if (null != netHeadUrl && !"".equals(netHeadUrl)) {
 				// 使用服务器头像地址
-				praiseholder.headimg.setImageURI(Uri.parse(netHeadUrl));
+				GlideUtils.loadNetHead(mContext, praiseholder.headimg, netHeadUrl, R.drawable.editor_head_feault7);
 			} else {
 				showHead(praiseholder.headimg, prais.headportrait);
 			}
@@ -494,7 +495,6 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(mContext, VideoDetailActivity.class);
-					LogUtils.d("fucking = " + prais.videoid);
 					i.putExtra("videoid", prais.videoid);
 					mContext.startActivity(i);
 				}
@@ -523,7 +523,6 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			praiseholder.videoPicLayout.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					LogUtils.d("fucking = " + prais.videoid);
 					Intent i = new Intent(mContext, VideoDetailActivity.class);
 					i.putExtra("videoid", prais.videoid);
 					mContext.startActivity(i);
@@ -602,21 +601,19 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		return convertView;
 	}
 
-	private void showHead(SimpleDraweeView view, String headportrait) {
+	private void showHead(ImageView view, String headportrait) {
 		try {
-			view.setImageURI(GolukUtils.getResourceUri(ILive.mHeadImg[Integer.parseInt(headportrait)]));
+			GlideUtils.loadLocalHead(mContext, view, ILive.mHeadImg[Integer.parseInt(headportrait)]);
 		} catch (Exception e) {
-			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-			e.printStackTrace();
+			GlideUtils.loadLocalHead(mContext, view,R.drawable.editor_head_feault7);
 		}
 	}
-	
-	private void showUserInfoHead(SimpleDraweeView view, String headportrait) {
+
+	private void showUserInfoHead(ImageView view, String headportrait) {
 		try {
-			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+			GlideUtils.loadLocalHead(mContext, view,ILive.mBigHeadImg[Integer.parseInt(headportrait)] );
 		} catch (Exception e) {
-			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-			e.printStackTrace();
+			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
 		}
 	}
 
@@ -707,8 +704,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		return time;
 	}
 
-	private void loadImage(SimpleDraweeView layout, String url, int nWidth) {
-		layout.setImageURI(Uri.parse(url));
+	private void loadImage(ImageView layout, String url, int nWidth) {
+		GlideUtils.loadImage(mContext, layout, url, R.drawable.tacitly_pic);
 	}
 
 	/**
@@ -731,7 +728,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	}
 
 	public static class UserViewHolder {
-		SimpleDraweeView headImg;
+		ImageView headImg;
 		TextView username;
 		TextView description;
 
@@ -753,11 +750,11 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 	public static class PraiseViewHolder {
 		LinearLayout praiseLayout;
-		SimpleDraweeView headimg;
+		ImageView headimg;
 		TextView username;
 		TextView desc;
 		LinearLayout userinfo;
-		SimpleDraweeView videoPicLayout;
+		ImageView videoPicLayout;
 	}
 
 	public static class NoVideoDataViewHolder {
@@ -768,8 +765,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 	public static class ViewHolder {
 		String VideoID;
-		SimpleDraweeView imageLayout;
-		SimpleDraweeView headimg;
+		ImageView imageLayout;
+		ImageView headimg;
 		TextView nikename;
 		TextView location;
 		TextView time;

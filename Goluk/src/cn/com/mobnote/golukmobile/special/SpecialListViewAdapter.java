@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -20,11 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
+import cn.com.mobnote.util.GlideUtils;
 
 @SuppressLint("InflateParams")
 public class SpecialListViewAdapter extends BaseAdapter {
@@ -85,7 +85,7 @@ public class SpecialListViewAdapter extends BaseAdapter {
 
 		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 		holder.mPreLoading.setLayoutParams(mPreLoadingParams);
-		BitmapManager.getInstance().mBitmapUtils.display(holder.mPreLoading, specialInfo.imagepath);
+		GlideUtils.loadNetHead(mContext, holder.mPreLoading, specialInfo.imagepath, R.drawable.tacitly_pic);
 
 		return convertView;
 	}

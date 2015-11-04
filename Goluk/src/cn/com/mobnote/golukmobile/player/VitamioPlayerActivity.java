@@ -13,11 +13,6 @@ import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 import java.io.File;
 import java.io.IOException;
 
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,7 +23,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -50,12 +44,11 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -124,8 +117,7 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 	private long playTime = 0;
 	private long duration = 0;
 	private RelativeLayout mImageLayout = null;
-	private Bitmap mBitmap = null;
-	private ImageView mImageView = null;
+	private ImageView mPlayImg = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -289,29 +281,38 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 		mSeekBar = (SeekBar) findViewById(R.id.mSeekBar);
 
 		mImageLayout = (RelativeLayout) findViewById(R.id.mImageLayout);
-		mImageLayout.removeAllViews();
+		mPlayImg = (ImageView) findViewById(R.id.vtplayImg);
 		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.MATCH_PARENT);
 
 		if (from.equals("suqare")) {
-			SimpleDraweeView view = new SimpleDraweeView(this);
-			GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
-			GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
-					.setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-					.setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-					.setActualImageScaleType(ScaleType.FIT_XY).build();
-			view.setHierarchy(hierarchy);
-			view.setImageURI(Uri.parse(image));
-			mImageLayout.addView(view, mPreLoadingParams);
+			// SimpleDraweeView view = new SimpleDraweeView(this);
+			// GenericDraweeHierarchyBuilder builder = new
+			// GenericDraweeHierarchyBuilder(getResources());
+			// GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
+			// .setPlaceholderImage(getResources().getDrawable(R.drawable.tacitly_pic),
+			// ScaleType.FIT_XY)
+			// .setFailureImage(getResources().getDrawable(R.drawable.tacitly_pic),
+			// ScaleType.FIT_XY)
+			// .setActualImageScaleType(ScaleType.FIT_XY).build();
+			// view.setHierarchy(hierarchy);
+			// view.setImageURI(Uri.parse(image));
+			// mImageLayout.addView(view, mPreLoadingParams);
+
+			GlideUtils.loadNetHead(this, mPlayImg, image, R.drawable.tacitly_pic);
+
 		} else {
-			mImageView = new ImageView(this);
-			mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-			mImageView.setImageResource(R.drawable.tacitly_pic);
-			mBitmap = ImageManager.getBitmapFromCache(image, 400, 400);
-			if (null != mBitmap) {
-				mImageView.setImageBitmap(mBitmap);
-			}
-			mImageLayout.addView(mImageView, mPreLoadingParams);
+			// mImageView = new ImageView(this);
+			// mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+			// mImageView.setImageResource(R.drawable.tacitly_pic);
+			// mBitmap = ImageManager.getBitmapFromCache(image, 400, 400);
+			// if (null != mBitmap) {
+			// mImageView.setImageBitmap(mBitmap);
+			// }
+			// mImageLayout.addView(mImageView, mPreLoadingParams);
+
+			GlideUtils.loadLocalHead(this, mPlayImg, R.drawable.tacitly_pic);
+
 		}
 
 		showLoading();
@@ -503,9 +504,6 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (!TextUtils.isEmpty(image)) {
-			BitmapManager.getInstance().mBitmapUtils.clearMemoryCache(image);
-		}
 		releaseMediaPlayer();
 		doCleanUp();
 	}

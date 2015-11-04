@@ -27,10 +27,9 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
-
-import com.facebook.drawee.view.SimpleDraweeView;
 
 public class UserUtils {
 
@@ -141,25 +140,25 @@ public class UserUtils {
 	/**
 	 * UserPersonalHeadActivity默认选中的head
 	 */
-	public static void focusHead(String headString, SimpleDraweeView headImage) {
+	public static void focusHead(Context context, String headString, ImageView headImage) {
 		try {
 			if (null == headImage) {
 				return;
 			}
 			if (headString.equals("1")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy1));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy1);
 			} else if (headString.equals("2")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy2));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy2);
 			} else if (headString.equals("3")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy3));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy3);
 			} else if (headString.equals("4")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl4));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl4);
 			} else if (headString.equals("5")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl5));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl5);
 			} else if (headString.equals("6")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl6));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl6);
 			} else {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_moren7));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_moren7);
 			}
 		} catch (Exception e) {
 
@@ -330,6 +329,7 @@ public class UserUtils {
 
 	/**
 	 * 设置普通评论显示
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param text
@@ -341,9 +341,10 @@ public class UserUtils {
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
 	/**
 	 * 评论列表中回复评论颜色设置
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param text
@@ -352,54 +353,54 @@ public class UserUtils {
 		String replyName = "@" + nikename + "：";
 		String reply_str = "回复" + replyName + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(reply_str);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2,
-				replyName.length() + 2, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2, replyName.length() + 2,
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
 	/**
 	 * 设置最新、个人主页回复评论内容显示
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param replyName
 	 * @param text
 	 */
-	public static void showReplyText(TextView view, String nikename, String replyName,String text) {
-		String replyText = "@"+replyName+"：";
-		String str = nikename+" 回复"+replyText+text;
+	public static void showReplyText(TextView view, String nikename, String replyName, String text) {
+		String replyText = "@" + replyName + "：";
+		String str = nikename + " 回复" + replyText + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length()+3, nikename.length()+3+replyText.length(),
-				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 3, nikename.length()
+				+ 3 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
 	/**
-     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
-     * 
-     * @param v
-     * @param event
-     * @return
-     */
-    public static boolean isShouldHideInput(View view, MotionEvent event) {
-        if (view != null) {
-            int[] l = { 0, 0 };
-            view.getLocationInWindow(l);
-            int left = l[0];
-            int top = l[1];
-            int bottom = top + view.getHeight();
-            int right = left+ view.getWidth();
-            if (event.getX() > left && event.getX() < right
-                    && event.getY() > top && event.getY() < bottom) {
-                // 点击EditText的事件，忽略它。
-                return false;
-            } else {
-                return true;
-            }
-        }
-        // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
-        return false;
-    }
-	
+	 * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
+	 * 
+	 * @param v
+	 * @param event
+	 * @return
+	 */
+	public static boolean isShouldHideInput(View view, MotionEvent event) {
+		if (view != null) {
+			int[] l = { 0, 0 };
+			view.getLocationInWindow(l);
+			int left = l[0];
+			int top = l[1];
+			int bottom = top + view.getHeight();
+			int right = left + view.getWidth();
+			if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
+				// 点击EditText的事件，忽略它。
+				return false;
+			} else {
+				return true;
+			}
+		}
+		// 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
+		return false;
+	}
+
 }

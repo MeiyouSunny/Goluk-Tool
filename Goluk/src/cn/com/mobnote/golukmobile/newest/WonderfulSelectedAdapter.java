@@ -2,21 +2,22 @@ package cn.com.mobnote.golukmobile.newest;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 public class WonderfulSelectedAdapter extends BaseAdapter {
 	private Context mContext = null;
@@ -63,15 +64,15 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.main = (RelativeLayout) convertView.findViewById(R.id.main);
 			holder.mDate = (TextView) convertView.findViewById(R.id.mDate);
-			holder.videoImg = (SimpleDraweeView) convertView.findViewById(R.id.simpledrawee);
-			holder.icon = (SimpleDraweeView) convertView.findViewById(R.id.wonderful_icon);
+			holder.videoImg = (ImageView) convertView.findViewById(R.id.simpledrawee);
+			holder.icon = (ImageView) convertView.findViewById(R.id.wonderful_icon);
 			holder.mTitleName = (TextView) convertView.findViewById(R.id.mTitleName);
 			holder.mTagName = (TextView) convertView.findViewById(R.id.mTagName);
 			holder.mVideoLayout = (LinearLayout) convertView.findViewById(R.id.mVideoLayout);
 			holder.mLookLayout = (LinearLayout) convertView.findViewById(R.id.mLookLayout);
 			holder.mVideoNum = (TextView) convertView.findViewById(R.id.mVideoNum);
 			holder.mLookNum = (TextView) convertView.findViewById(R.id.mLookNum);
-			
+
 			int height = (int) ((float) width / 1.78f);
 			RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 			holder.videoImg.setLayoutParams(mPreLoadingParams);
@@ -132,20 +133,20 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		return name;
 	}
 
-	private void loadImage(SimpleDraweeView mPlayerLayout, SimpleDraweeView iconView, String url, String iconUrl) {
-		mPlayerLayout.setImageURI(Uri.parse(url));
+	private void loadImage(ImageView mPlayerLayout, ImageView iconView, String url, String iconUrl) {
+		GlideUtils.loadNetHead(mContext, mPlayerLayout, url, R.drawable.tacitly_pic);
 		if (TextUtils.isEmpty(iconUrl)) {
 			iconView.setVisibility(View.GONE);
 		} else {
 			iconView.setVisibility(View.VISIBLE);
-			iconView.setImageURI(Uri.parse(iconUrl));
+			GlideUtils.loadNetHead(mContext, iconView, iconUrl, -1);
 		}
 	}
 
 	public static class ViewHolder {
 		RelativeLayout main;
-		SimpleDraweeView videoImg;
-		SimpleDraweeView icon;
+		ImageView videoImg;
+		ImageView icon;
 		TextView mTitleName;
 		TextView mTagName;
 		LinearLayout mVideoLayout;

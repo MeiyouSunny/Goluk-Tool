@@ -1,30 +1,32 @@
 package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
-import com.facebook.drawee.view.SimpleDraweeView;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.live.ILive;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.SettingImageView;
-import cn.com.tiros.debug.GolukDebugUtils;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.live.ILive;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.util.GlideUtils;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.SettingImageView;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 个人资料
@@ -44,7 +46,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	private Button rightBtn = null;
 	private TextView mTextCenter = null;
 	/** 头像 **/
-	private SimpleDraweeView mImageHead = null;
+	private ImageView mImageHead = null;
 	private TextView mTextName = null;
 	/** 个性签名 **/
 	private TextView mTextSign = null;
@@ -105,7 +107,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		rightBtn = (Button) findViewById(R.id.user_title_right);
 		mTextCenter = (TextView) findViewById(R.id.user_title_text);
 		// 头像
-		mImageHead = (SimpleDraweeView) findViewById(R.id.user_personal_info_head);
+		mImageHead = (ImageView) findViewById(R.id.user_personal_info_head);
 		mTextName = (TextView) findViewById(R.id.user_personal_info_name);
 		// 个性签名
 		mTextSign = (TextView) findViewById(R.id.user_personal_info_sign);
@@ -224,7 +226,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			sex = json.getString("sex");
 			customavatar = json.getString("customavatar");
 			if (customavatar != null && !"".equals(customavatar)) {
-				mImageHead.setImageURI(Uri.parse(customavatar));
+				GlideUtils.loadNetHead(this, mImageHead, customavatar, R.drawable.editor_head_feault7);
 			} else {
 				showHead(mImageHead, head);
 			}
@@ -273,23 +275,23 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				siv.deleteUri();
 			}
 			Intent it = new Intent(this, ImageClipActivity.class);
-			if(siv.mCameraUri == null){
+			if (siv.mCameraUri == null) {
 				Bundle bundle = data.getExtras();
 				if (bundle != null) {
 					Bitmap photo = (Bitmap) bundle.get("data"); // get bitmap
-					it.putExtra("imagebitmap",photo);
+					it.putExtra("imagebitmap", photo);
 				}
-			}else{
+			} else {
 				it.putExtra("imageuri", siv.mCameraUri.toString());
 			}
-			
+
 			this.startActivityForResult(it, 7000);
 			// iv_head.setImageURI(mCameraUri);
 			break;
 		case 7000:
 			Bundle b = data.getExtras();
 			String imagepach = b.getString("imagepath");
-			customavatar = imagepach ;
+			customavatar = imagepach;
 			mImageHead.setImageURI(Uri.parse(imagepach));
 			break;
 		case REQUEST_CODE_NIKCNAME:
@@ -325,12 +327,11 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 
 	}
 
-	private void showHead(SimpleDraweeView view, String headportrait) {
+	private void showHead(ImageView view, String headportrait) {
 		try {
-			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+			GlideUtils.loadLocalHead(this, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
 		} catch (Exception e) {
-			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-			e.printStackTrace();
+			GlideUtils.loadLocalHead(this, view, R.drawable.editor_head_feault7);
 		}
 	}
 

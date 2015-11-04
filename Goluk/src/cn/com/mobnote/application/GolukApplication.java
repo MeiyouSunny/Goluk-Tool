@@ -42,7 +42,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
-import cn.com.mobnote.golukmobile.fresco.ConfigConstants;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
@@ -77,7 +76,6 @@ import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -207,7 +205,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		super.onCreate();
 		instance = this;
 		Const.setAppContext(this);
-		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
 		// TODO 此处不要做初始化相关的工作
 	}
 
@@ -245,8 +242,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return;
 		}
 		
-		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
-
 		initRdCardSDK();
 		initCachePath();
 		// 实例化JIN接口,请求网络数据
