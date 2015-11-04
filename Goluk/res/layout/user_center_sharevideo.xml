@@ -12,12 +12,16 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp" >
 
+        <!-- 头像 -->
+
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/headimg"
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
-             fresco:roundAsCircle="true"
-            fresco:placeholderImage="@drawable/editor_head_feault7" />
+            fresco:placeholderImage="@drawable/editor_head_feault7"
+            fresco:roundAsCircle="true" />
+
+        <!-- 举报按钮 -->
 
         <ImageView
             android:id="@+id/function"
@@ -28,12 +32,22 @@
             android:background="@drawable/new_more_icon"
             android:contentDescription="@string/imgdes" />
 
+        <!-- 精选标识 -->
+
+        <ImageView
+            android:id="@+id/user_center_gold"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_toLeftOf="@id/function"
+            android:contentDescription="@string/imgdes"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@id/function"
+            android:layout_toLeftOf="@id/user_center_gold"
             android:layout_toRightOf="@+id/headimg"
             android:gravity="center_vertical"
             android:orientation="vertical" >
@@ -133,6 +147,8 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="16dp" >
+
+        <!-- 点赞 -->
 
         <LinearLayout
             android:id="@+id/praiseLayout"

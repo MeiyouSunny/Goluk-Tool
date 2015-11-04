@@ -10,7 +10,9 @@ import org.json.JSONObject;
 import cn.com.mobnote.golukmobile.videosuqare.LiveVideoData;
 import cn.com.mobnote.golukmobile.videosuqare.UserEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoExtra;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class JsonParserUtils {
 
@@ -168,6 +170,14 @@ public class JsonParserUtils {
 					mVideoEntity.livevideodata = lvd;
 					mVideoEntity.location = video.optString("location");
 					mVideoEntity.reason = video.optString("reason");
+					
+					JSONObject extraObj = video.optJSONObject("extraobj");
+					if (null != extraObj) {
+						mVideoEntity.videoExtra = new VideoExtra();
+						mVideoEntity.videoExtra.isGod = extraObj.optBoolean("isgod");
+						mVideoEntity.videoExtra.togetherStr = extraObj.optString("together");
+					}
+					
 					if (video.isNull("isopen")) {
 						mVideoEntity.isopen = "0";
 					} else {
