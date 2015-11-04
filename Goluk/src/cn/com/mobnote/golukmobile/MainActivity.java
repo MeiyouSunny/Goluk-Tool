@@ -17,6 +17,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,6 +33,10 @@ import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.eventbus.EventBindFinish;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventMapQuery;
+import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
@@ -71,6 +76,8 @@ import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
+import de.greenrobot.event.EventBus;
+
 @SuppressLint({ "HandlerLeak", "NewApi" })
 public class MainActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, OnTouchListener,
 		ILiveDialogManagerFn, IBaiduGeoCoderFn {
@@ -90,9 +97,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private WifiConnectManager mWac = null;
 
 	/** 首页handler用来接收消息,更新UI */
-	public static Handler mMainHandler = null;
+//	public static Handler mMainHandler = null;
 	/** 下载完成播放声音文件 */
-	public String mVideoDownloadSoundFile = "ec_alert5.wav";
+//	public String mVideoDownloadSoundFile = "ec_alert5.wav";
 
 	/** 记录登录状态 **/
 	public SharedPreferences mPreferencesAuto;
@@ -134,6 +141,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private WifiManager mWifiManager = null;
 	// Play video sync from camera completion sound
 	private SoundPool mSoundPool;
+	private final static String TAG = "MainActivity";
 
 	private void playDownLoadedSound() {
 		if(null != mSoundPool) {
@@ -161,6 +169,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 		mSoundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
+		// Register EventBus
+		EventBus.getDefault().register(this);
 		initThirdSDK();
 
 		mContext = this;
@@ -351,37 +361,37 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		boolean hotPointState = SettingUtils.getInstance().getBoolean("HotPointState", false);
 		updateHotPointState(hotPointState);
 
-		// 更新UI handler
-		mMainHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				int what = msg.what;
-				switch (what) {
-				case 1:
-					// 视频第一针截取成功,刷新页面UI
-					break;
-				case 3:
-					// 检测是否已连接小车本热点
-					// 网络状态改变
-					notifyLogicNetWorkState((Boolean) msg.obj);
-
-					break;
-				case 99:
-					// 请求在线视频轮播数据
-					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-							IPageNotifyFn.PageType_GetPinData, "");
-					break;
-				case 400:
-					// 已经绑定
-					mApp.mIPCControlManager.setIPCWifiState(false, "");
-					startWifi();
-					if (null != mWac) {
-						mWac.autoWifiManageReset();
-					}
-					break;
-				}
-			}
-		};
+//		// 更新UI handler
+//		mMainHandler = new Handler() {
+//			@Override
+//			public void handleMessage(Message msg) {
+//				int what = msg.what;
+//				switch (what) {
+//				case 1:
+//					// 视频第一针截取成功,刷新页面UI
+//					break;
+//				case 3:
+//					// 检测是否已连接小车本热点
+//					// 网络状态改变
+//					notifyLogicNetWorkState((Boolean) msg.obj);
+//
+//					break;
+//				case 99:
+//					// 请求在线视频轮播数据
+//					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//							IPageNotifyFn.PageType_GetPinData, "");
+//					break;
+//				case 400:
+//					// 已经绑定
+//					mApp.mIPCControlManager.setIPCWifiState(false, "");
+//					startWifi();
+//					if (null != mWac) {
+//						mWac.autoWifiManageReset();
+//					}
+//					break;
+//				}
+//			}
+//		};
 	}
 
 	@Override
@@ -564,6 +574,59 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		return preferences.getBoolean("isbind", false);
 	}
 
+	public void onEventMainThread(EventBindFinish event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.CAR_RECORDER_BIND_SUCESS:
+			// 已经绑定
+			Log.d(TAG, "Wifi bind success" + mApp.mWiFiStatus);
+			mApp.mIPCControlManager.setIPCWifiState(false, "");
+			startWifi();
+			if (null != mWac) {
+				mWac.autoWifiManageReset();
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void onEventMainThread(EventMapQuery event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.LIVE_MAP_QUERY:
+			// 请求在线视频轮播数据
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+					IPageNotifyFn.PageType_GetPinData, "");
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void onEventMainThread(EventWifiState event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.WIFI_STATE:
+			// 检测是否已连接小车本热点
+			// 网络状态改变
+			Log.d(TAG, "cccccccccccccccccccccccccccc");
+			notifyLogicNetWorkState(event.getMsg());
+			break;
+		default:
+			break;
+		}
+	}
+
 	/**
 	 * 检测wifi链接状态
 	 */
@@ -592,6 +655,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		// Unregister EventBus
+		EventBus.getDefault().unregister(this);
 	}
 
 	@Override
