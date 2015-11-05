@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile.cluster;
 import java.util.List;
 
 import com.android.volley.Request;
-import com.lidroid.xutils.util.LogUtils;
 
 import android.content.Intent;
 import android.graphics.Color;

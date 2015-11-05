@@ -49,6 +49,7 @@ import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.IUserCenterInterf
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 @SuppressLint("InflateParams")
@@ -411,21 +412,19 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 	}
 
 	private void showHead(ImageView view, String headportrait) {
-//		try {
-//			view.setImageURI(GolukUtils.getResourceUri(ILive.mHeadImg[Integer.parseInt(headportrait)]));
-//		} catch (Exception e) {
-//			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-//			e.printStackTrace();
-//		}
+		try {
+			GlideUtils.loadLocalHead(mContext, view, ILive.mHeadImg[Integer.parseInt(headportrait)]);
+		} catch (Exception e) {
+			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
+		}
 	}
 
 	private void showUserInfoHead(ImageView view, String headportrait) {
-//		try {
-//			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
-//		} catch (Exception e) {
-//			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-//			e.printStackTrace();
-//		}
+		try {
+			GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
+		} catch (Exception e) {
+			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
+		}
 	}
 
 	private String mVideoId = null;
