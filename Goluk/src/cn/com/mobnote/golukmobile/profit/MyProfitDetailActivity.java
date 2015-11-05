@@ -27,6 +27,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		mBtnBack = (ImageButton) findViewById(R.id.profit_detail_back);
 		mRTPullListView = (RTPullListView) findViewById(R.id.profit_detail_RTPullListView);
 		
+		mBtnBack.setOnClickListener(this);
 	}
 
 	@Override
