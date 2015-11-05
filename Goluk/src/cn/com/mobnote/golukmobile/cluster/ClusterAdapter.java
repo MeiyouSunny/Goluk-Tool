@@ -50,8 +50,6 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-
 @SuppressLint("InflateParams")
 public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn, OnTouchListener {
 
@@ -170,7 +168,7 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 					convertView = LayoutInflater.from(mContext).inflate(R.layout.cluster_head, null);
 					holder = new HeadViewHolder();
 
-					holder.headImg = (SimpleDraweeView) convertView.findViewById(R.id.mPreLoading);
+					holder.headImg = (ImageView) convertView.findViewById(R.id.mPreLoading);
 					holder.describe = (TextView) convertView.findViewById(R.id.video_title);
 					holder.partakes = (TextView) convertView.findViewById(R.id.partake_num);
 					holder.recommendBtn = (Button) convertView.findViewById(R.id.recommend_btn);
@@ -241,8 +239,8 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 			if (convertView == null) {
 				holder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_sharevideo, null);
-				holder.imageLayout = (SimpleDraweeView) convertView.findViewById(R.id.imageLayout);
-				holder.headimg = (SimpleDraweeView) convertView.findViewById(R.id.headimg);
+				holder.imageLayout = (ImageView) convertView.findViewById(R.id.imageLayout);
+				holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 				holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 				holder.location = (TextView) convertView.findViewById(R.id.uc_location);
 
@@ -411,22 +409,22 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 		return convertView;
 	}
 
-	private void showHead(SimpleDraweeView view, String headportrait) {
-		try {
-			view.setImageURI(GolukUtils.getResourceUri(ILive.mHeadImg[Integer.parseInt(headportrait)]));
-		} catch (Exception e) {
-			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-			e.printStackTrace();
-		}
+	private void showHead(ImageView view, String headportrait) {
+//		try {
+//			view.setImageURI(GolukUtils.getResourceUri(ILive.mHeadImg[Integer.parseInt(headportrait)]));
+//		} catch (Exception e) {
+//			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
+//			e.printStackTrace();
+//		}
 	}
 
-	private void showUserInfoHead(SimpleDraweeView view, String headportrait) {
-		try {
-			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
-		} catch (Exception e) {
-			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-			e.printStackTrace();
-		}
+	private void showUserInfoHead(ImageView view, String headportrait) {
+//		try {
+//			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+//		} catch (Exception e) {
+//			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
+//			e.printStackTrace();
+//		}
 	}
 
 	private String mVideoId = null;
@@ -548,7 +546,7 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 
 	public static class HeadViewHolder {
 		TextView title;
-		SimpleDraweeView headImg;
+		ImageView headImg;
 		TextView describe;
 		TextView partakes;
 		Button recommendBtn;
@@ -559,8 +557,8 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 
 	public static class ViewHolder {
 		String VideoID;
-		SimpleDraweeView imageLayout;
-		SimpleDraweeView headimg;
+		ImageView imageLayout;
+		ImageView headimg;
 		TextView nikename;
 		TextView location;
 		TextView time;

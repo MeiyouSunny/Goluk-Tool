@@ -33,10 +33,9 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.CopyOfShuoMClickableSpan;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
-
-import com.facebook.drawee.view.SimpleDraweeView;
 
 public class UserUtils {
 
@@ -147,25 +146,25 @@ public class UserUtils {
 	/**
 	 * UserPersonalHeadActivity默认选中的head
 	 */
-	public static void focusHead(String headString, SimpleDraweeView headImage) {
+	public static void focusHead(Context context, String headString, ImageView headImage) {
 		try {
 			if (null == headImage) {
 				return;
 			}
 			if (headString.equals("1")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy1));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy1);
 			} else if (headString.equals("2")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy2));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy2);
 			} else if (headString.equals("3")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy3));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy3);
 			} else if (headString.equals("4")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl4));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl4);
 			} else if (headString.equals("5")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl5));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl5);
 			} else if (headString.equals("6")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl6));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl6);
 			} else {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_moren7));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_moren7);
 			}
 		} catch (Exception e) {
 
@@ -377,7 +376,6 @@ public class UserUtils {
 		view.setText(spanttt);
 		view.setMovementMethod(LinkMovementMethod.getInstance());
 	}
-
 	/**
 	 * 评论列表中回复评论颜色设置
 	 * 
