@@ -34,6 +34,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity.NoVideoDataViewHolder;
+import cn.com.mobnote.golukmobile.cluster.bean.ActivityBean;
 import cn.com.mobnote.golukmobile.cluster.bean.ClusterHeadBean;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -75,7 +76,7 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 
 	ClusterActivity clusterActivity = null;
 
-	public ClusterHeadBean headData = null;
+	public ActivityBean headData = null;
 	public List<VideoSquareInfo> recommendlist = null;
 	public List<VideoSquareInfo> newslist = null;
 
@@ -97,7 +98,7 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 	/**
 	 * 填充数据
 	 */
-	public void setDataInfo(ClusterHeadBean head, List<VideoSquareInfo> recommend, List<VideoSquareInfo> news) {
+	public void setDataInfo(ActivityBean head, List<VideoSquareInfo> recommend, List<VideoSquareInfo> news) {
 		this.headData = head;
 		this.recommendlist = recommend;
 		this.newslist = news;
