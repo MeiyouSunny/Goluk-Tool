@@ -9,37 +9,9 @@ public class ClusterHeadBean {
 	@JSONField(name="result")
 	public String result;
 	
-	/**活动开始时间**/
-	@JSONField(name="starttime")
-	public String starttime;
-	
-	/**活动结束时间**/
-	@JSONField(name="endtime")
-	public String endtime;
-	
-	/**封面图片**/
-	@JSONField(name="picture")
-	public String picture;
-	
-	/**描述**/
-	@JSONField(name="activitycontent")
-	public String activitycontent;
-	
-	/**参与数量**/
-	@JSONField(name="participantcount")
-	public String participantcount;
-
-	/**活动规则**/
-	@JSONField(name="activityrule")
-	public String activityrule;
-
-	/**话题唯一id**/
-	@JSONField(name="activityid")
-	public String activityid;
-
-	/**活动（话题）名称**/
-	@JSONField(name="activityname")
-	public String activityname;
+	/**活动信息**/
+	@JSONField(name="activity")
+	public ActivityBean activity;
 	
 	/**推荐列表**/
 	@JSONField(name="recommendvideo")
