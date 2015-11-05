@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.profit;
 
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,11 +21,12 @@ import android.widget.TextView;
  * @author lily
  *
  */
-public class MyProfitActivity extends BaseActivity implements OnClickListener,OnTouchListener{
+public class MyProfitActivity extends BaseActivity implements OnClickListener,OnTouchListener,IRequestResultListener{
 
 	private ImageButton mBtnBack,mBtnDetail,mBtnCash;
 	private TextView mTextProblem;
 	private TextView mTextLastCount,mTextTotalCount,mTextLeaveCount;
+	private ProfitJsonRequest profitJsonRequest = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		setContentView(R.layout.my_profit);
 		
 		initView();
+		
+		profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
+		profitJsonRequest.get("9f1ae807-8466-4f3d-bd3f-c7f77292b60b", "100");
 		
 	}
 	
@@ -117,5 +123,12 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			break;
 		}
 		return false;
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if(requestType == IPageNotifyFn.PageType_MyProfit) {
+			ProfitInfo profitInfo = (ProfitInfo)result;
+		}
 	}
 }
