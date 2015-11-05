@@ -8,13 +8,12 @@
     <RelativeLayout
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
-        android:layout_height="140dp" >
+        android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/mPreLoading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/tacitly_pic"
             android:scaleType="fitXY" />
     </RelativeLayout>
 

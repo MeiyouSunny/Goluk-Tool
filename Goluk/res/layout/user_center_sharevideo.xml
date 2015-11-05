@@ -103,7 +103,8 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="-30dp"
                 android:background="@drawable/together_recommend_icon"
-                android:contentDescription="@string/imgdes" />
+                android:contentDescription="@string/imgdes"
+                android:visibility="gone" />
         </RelativeLayout>
     </RelativeLayout>
 
