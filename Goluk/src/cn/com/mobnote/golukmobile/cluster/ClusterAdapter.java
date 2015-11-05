@@ -180,8 +180,14 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 				} else {
 					holder = (HeadViewHolder) convertView.getTag();
 				}
-
-				showUserInfoHead(holder.headImg, headData.picture);
+				int height = (int) ((float) width / 1.77f);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
+				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
+				holder.headImg.setLayoutParams(mPlayerLayoutParams);
+				
+				GlideUtils.loadImage(mContext, holder.headImg, headData.picture,
+						R.drawable.tacitly_pic);
+				
 				holder.describe.setText(headData.activitycontent);
 				holder.partakes.setText(headData.participantcount);
 
@@ -217,10 +223,10 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 
 				if (currentViewType == ViewType_RecommendVideoList) {
 					holder.recommendBtn.setTextColor(Color.rgb(9, 132, 255));
-					holder.newsBtn.setTextColor(Color.rgb(255, 255, 255));
+					holder.newsBtn.setTextColor(Color.rgb(51, 51, 51));
 				} else {
 					holder.newsBtn.setTextColor(Color.rgb(9, 132, 255));
-					holder.recommendBtn.setTextColor(Color.rgb(255, 255, 255));
+					holder.recommendBtn.setTextColor(Color.rgb(51, 51, 51));
 				}
 
 				// 计算第一项的高度
@@ -287,13 +293,15 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 
 			if (holder.VideoID == null || !holder.VideoID.equals(clusterInfo.mVideoEntity.videoid)) {
 				holder.VideoID = new String(clusterInfo.mVideoEntity.videoid);
-				holder.imageLayout.setImageURI(Uri.parse(clusterInfo.mVideoEntity.picture));
+				
+				GlideUtils.loadImage(mContext, holder.imageLayout, clusterInfo.mVideoEntity.picture,
+						R.drawable.tacitly_pic);
 			}
 
 			String headUrl = clusterInfo.mUserEntity.mCustomAvatar;
 			if (null != headUrl && !"".equals(headUrl)) {
 				// 使用服务器头像地址
-				holder.headimg.setImageURI(Uri.parse(headUrl));
+				GlideUtils.loadNetHead(mContext, holder.headimg, headUrl, R.drawable.editor_head_feault7);
 			} else {
 				showHead(holder.headimg, clusterInfo.mUserEntity.headportrait);
 			}
