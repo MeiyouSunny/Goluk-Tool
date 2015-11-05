@@ -12,7 +12,6 @@ import cn.com.mobnote.golukmobile.videosuqare.UserEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoExtra;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class JsonParserUtils {
 
@@ -170,14 +169,17 @@ public class JsonParserUtils {
 					mVideoEntity.livevideodata = lvd;
 					mVideoEntity.location = video.optString("location");
 					mVideoEntity.reason = video.optString("reason");
-					
-					JSONObject extraObj = video.optJSONObject("extraobj");
+
+					JSONObject extraObj = video.optJSONObject("gen");
 					if (null != extraObj) {
 						mVideoEntity.videoExtra = new VideoExtra();
-						mVideoEntity.videoExtra.isGod = extraObj.optBoolean("isgod");
-						mVideoEntity.videoExtra.togetherStr = extraObj.optString("together");
+						mVideoEntity.videoExtra.channelid = extraObj.optString("channelid");
+						mVideoEntity.videoExtra.topicid = extraObj.optString("topicid");
+						mVideoEntity.videoExtra.topicname = extraObj.optString("topicname");
+						mVideoEntity.videoExtra.isrecommend = extraObj.optString("isrecommend");
+						mVideoEntity.videoExtra.isreward = extraObj.optString("isreward");
 					}
-					
+
 					if (video.isNull("isopen")) {
 						mVideoEntity.isopen = "0";
 					} else {

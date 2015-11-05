@@ -7,9 +7,15 @@ package cn.com.mobnote.golukmobile.videosuqare;
  */
 public class VideoExtra {
 
-	/** 是否是精选视频 */
-	public boolean isGod;
+	/** 活动Id */
+	public String topicid;
+	/** 频道 id */
+	public String channelid;
+	/** 是否是推荐视频 0: 否 1:是 */
+	public String isrecommend;
+	/** 是否获奖 0: 否 1:是 */
+	public String isreward;
 	/** 聚合活动字符串 */
-	public String togetherStr;
+	public String topicname;
 
 }

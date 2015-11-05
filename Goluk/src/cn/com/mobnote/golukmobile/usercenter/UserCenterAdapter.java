@@ -330,6 +330,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView.findViewById(R.id.function);
 				holder.videoGoldImg = (ImageView) convertView.findViewById(R.id.user_center_gold);
+				holder.recommentImg = (ImageView) convertView.findViewById(R.id.uc_recommend);
 
 				holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 				holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
@@ -386,36 +387,20 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			}
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
 			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
-			// 显示 获奖标签
-			if (null != clusterInfo.mVideoEntity.videoExtra) {
-				if (clusterInfo.mVideoEntity.videoExtra.isGod) {
-					holder.videoGoldImg.setVisibility(View.VISIBLE);
-					holder.videoGoldImg.setBackgroundResource(R.drawable.juhe_comm);
-				} else {
-					holder.videoGoldImg.setVisibility(View.GONE);
-				}
-			} else {
-				holder.videoGoldImg.setVisibility(View.GONE);
-			}
+
+			setVideoExtra(holder, clusterInfo);
 
 			// 设置显示 视频位置信息
 			final String location = clusterInfo.mVideoEntity.location;
 			if (null == location || "".equals(location)) {
 				holder.location.setVisibility(View.GONE);
 			} else {
+				holder.location.setVisibility(View.VISIBLE);
 				holder.location.setText(location);
 			}
 
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
-
-			// 显示用户名，视频描述，聚合活动
-			String got = "";
-			if (null != clusterInfo.mVideoEntity.videoExtra) {
-				got = clusterInfo.mVideoEntity.videoExtra.togetherStr;
-			}
-			UserUtils.showCommentText(mContext, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
-					clusterInfo.mVideoEntity.describe, got);
 
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
 			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
@@ -626,6 +611,44 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		return convertView;
 	}
 
+	/**
+	 * 设置，视频的，是否推荐，是否获奖，是否有参加活动
+	 * 
+	 * @param holder
+	 *            UI控件
+	 * @param clusterInfo
+	 *            数据载体
+	 * @author jyf
+	 */
+	private void setVideoExtra(ViewHolder holder, VideoSquareInfo clusterInfo) {
+		if (null == clusterInfo || null == holder) {
+			return;
+		}
+		String got = "";
+		if (null != clusterInfo.mVideoEntity.videoExtra) {
+			// 显示是否获奖
+			if (clusterInfo.mVideoEntity.videoExtra.isreward.equals("1")) {
+				holder.videoGoldImg.setVisibility(View.VISIBLE);
+			} else {
+				holder.videoGoldImg.setVisibility(View.GONE);
+			}
+			// 显示是否推荐
+			if (clusterInfo.mVideoEntity.videoExtra.isrecommend.equals("1")) {
+				holder.recommentImg.setVisibility(View.VISIBLE);
+			} else {
+				holder.recommentImg.setVisibility(View.GONE);
+			}
+			// 获得聚合字符串
+			got = clusterInfo.mVideoEntity.videoExtra.topicname;
+		} else {
+			holder.videoGoldImg.setVisibility(View.GONE);
+			holder.recommentImg.setVisibility(View.GONE);
+		}
+
+		UserUtils.showCommentText(mContext, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
+				clusterInfo.mVideoEntity.describe, got);
+	}
+
 	private void showHead(SimpleDraweeView view, String headportrait) {
 		try {
 			view.setImageURI(GolukUtils.getResourceUri(ILive.mHeadImg[Integer.parseInt(headportrait)]));
@@ -799,6 +822,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		TextView time;
 		ImageView function;
 		ImageView videoGoldImg;
+		ImageView recommentImg;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
