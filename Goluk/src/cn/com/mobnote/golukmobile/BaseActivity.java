@@ -101,6 +101,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		HttpManager.getInstance().cancelAll(this);
+		mBaseHandler.removeCallbacksAndMessages(null);
 		super.onDestroy();
 	}
 
