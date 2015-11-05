@@ -2,6 +2,9 @@ package cn.com.mobnote.golukmobile.cluster;
 
 import java.util.List;
 
+import com.android.volley.Request;
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,6 +24,8 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.cluster.ClusterAdapter.IClusterInterface;
 import cn.com.mobnote.golukmobile.cluster.bean.ClusterHeadBean;
+import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
+import cn.com.mobnote.golukmobile.cluster.bean.VolleyDataFormat;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
@@ -31,14 +36,18 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
 
-public class ClusterActivity extends BaseActivity implements OnClickListener,
-		IRequestResultListener, IClickShareView, IClickPraiseView,
-		IDialogDealFn,IClusterInterface{
+public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IClickShareView,
+		IClickPraiseView, IDialogDealFn, IClusterInterface {
 
 	private static final String TAG = "ClusterActivity";
 	private RTPullListView mRTPullListView = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
+	
+	private VolleyDataFormat vdf = new VolleyDataFormat();
+	
 
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
@@ -61,11 +70,13 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 	private SharePlatformUtil sharePlatform = null;
 
 	private RelativeLayout mBottomLoadingView = null;
-	
-	/**活动id **/
+
+	/** 活动id **/
 	private String activityid = null;
+
+	private String uid = null;
 	
-	private String uid  = null;
+	ClusterBeanRequest request = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +86,15 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 		this.initData();// 初始化view
 		this.initListener();// 初始化view的监听
 
+		Intent intent = this.getIntent();
+
+		activityid = intent.getStringExtra("activityid");
+		uid = intent.getStringExtra("uid");
+
 		mRTPullListView.firstFreshState();
 
 	}
-	
+
 	public static class NoVideoDataViewHolder {
 		TextView tips;
 		ImageView tipsimage;
@@ -94,20 +110,19 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 	 * @date 2015年4月15日
 	 */
 	private void httpPost(String otheruid) {
-		GolukApplication.getInstance().getVideoSquareManager()
-				.getUserCenter("");
+		request = new ClusterBeanRequest(IPageNotifyFn.PageType_ClusterMain, this);
+		request.get(activityid, uid);
 	}
 
 	private void initData() {
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		backbtn = (ImageButton) findViewById(R.id.back_btn);
 		shareBtn = (Button) findViewById(R.id.title_share);
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this)
-				.inflate(R.layout.video_square_below_loading, null);
+		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,null);
 
 		if (sharePlatform == null) {
 			sharePlatform = new SharePlatformUtil(this);
-			clusterAdapter = new ClusterAdapter(this, sharePlatform, 1,this);
+			clusterAdapter = new ClusterAdapter(this, sharePlatform, 1, this);
 			mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 			mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 			mRTPullListView.setAdapter(clusterAdapter);
@@ -119,8 +134,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 	 * 
 	 */
 	private void httpGetNextVideo(String sharingtime) {
-		GolukApplication.getInstance().getVideoSquareManager()
-				.getUserCenterShareVideo("", "2", sharingtime);
+		GolukApplication.getInstance().getVideoSquareManager().getUserCenterShareVideo("", "2", sharingtime);
 	}
 
 	private void initListener() {
@@ -133,31 +147,25 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 				httpPost("");// 请求数据
 			}
 		});
-		
+
 		mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
 			@Override
-			public void onScrollStateChanged(AbsListView arg0,
-					int scrollState) {
+			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {// 推荐
 						if (clusterAdapter.getCurrentViewType() == ClusterAdapter.ViewType_RecommendVideoList) {// 视频列表
-							if (recommendlist != null
-									&& recommendlist.size() > 0) {// 加载更多视频数据
+							if (recommendlist != null && recommendlist.size() > 0) {// 加载更多视频数据
 								if (recommendlist.size() > 0) {
-									mRTPullListView
-											.addFooterView(mBottomLoadingView);
-									httpGetNextVideo(recommendlist
-											.get(recommendlist.size() - 1).mVideoEntity.sharingtime);
+									mRTPullListView.addFooterView(mBottomLoadingView);
+									httpGetNextVideo(recommendlist.get(recommendlist.size() - 1).mVideoEntity.sharingtime);
 								}
 							}
 						} else {// 最新列表
 							if (newslist != null && newslist.size() > 0) {// 加载更多视频数据
 								if (newslist.size() > 0) {
-									mRTPullListView
-											.addFooterView(mBottomLoadingView);
-									httpGetNextVideo(newslist.get(newslist
-											.size() - 1).mVideoEntity.sharingtime);
+									mRTPullListView.addFooterView(mBottomLoadingView);
+									httpGetNextVideo(newslist.get(newslist.size() - 1).mVideoEntity.sharingtime);
 								}
 							}
 						}
@@ -166,8 +174,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 			}
 
 			@Override
-			public void onScroll(AbsListView arg0, int firstVisibleItem,
-					int visibleItemCount, int arg3) {
+			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				wonderfulFirstVisible = firstVisibleItem;
 				wonderfulVisibleCount = visibleItemCount;
 			}
@@ -195,11 +202,34 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 		}
 
 	}
+	
+	public void updateViewData(boolean succ, int count) {
+		if (succ) {
+			clusterAdapter.notifyDataSetChanged();
+			if (count > 0) {
+				this.mRTPullListView.setSelection(count);
+			}
+		}
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+	}
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
-
+		if(requestType == IPageNotifyFn.PageType_ClusterMain){
+			JsonData data = (JsonData) result;
+			if(data.success){
+				if(data.data != null){
+					ClusterHeadBean chb = data.data;
+					recommendlist = vdf.getClusterList(chb.recommendvideo);
+					newslist = vdf.getClusterList(chb.latestvideo);
+					clusterAdapter.setDataInfo(chb.activity,recommendlist, newslist);
+					updateViewData(true, 0);
+				}else{
+					updateViewData(false, 0);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -253,11 +283,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 
 	}
 
-	public boolean updatePraise(VideoSquareInfo vs,
-			List<VideoSquareInfo> videos, int index) {
+	public boolean updatePraise(VideoSquareInfo vs, List<VideoSquareInfo> videos, int index) {
 		if (vs.id.equals(mVideoSquareInfo.id)) {
-			int number = Integer
-					.parseInt(mVideoSquareInfo.mVideoEntity.praisenumber);
+			int number = Integer.parseInt(mVideoSquareInfo.mVideoEntity.praisenumber);
 			if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 				number++;
 			} else {
@@ -273,7 +301,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 			return false;
 		}
 	}
-	
+
 	@Override
 	public int OnGetListViewWidth() {
 		return mRTPullListView.getWidth();
@@ -292,7 +320,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 	@Override
 	public void OnRefrushMainPageData() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

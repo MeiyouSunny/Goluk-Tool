@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -31,23 +29,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <com.facebook.drawee.view.SimpleDraweeView
+                <ImageView
                     android:id="@+id/simpledrawee"
                     android:layout_width="100dp"
                     android:layout_height="37dp"
-                    fresco:actualImageScaleType="fitXY"
-                    fresco:fadeDuration="300"
-                    fresco:failureImage="@drawable/tacitly_pic"
-                    fresco:failureImageScaleType="fitXY"
-                    fresco:placeholderImage="@drawable/tacitly_pic"
-                    fresco:placeholderImageScaleType="fitXY" />
+                    android:contentDescription="@string/imgdes" />
 
-                <com.facebook.drawee.view.SimpleDraweeView
+                <ImageView
                     android:id="@+id/wonderful_icon"
                     android:layout_width="39dp"
                     android:layout_height="20dp"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true" />
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/imgdes" />
             </RelativeLayout>
 
             <ImageView
@@ -59,6 +53,7 @@
                 android:layout_alignRight="@+id/imageLayout"
                 android:layout_alignTop="@+id/imageLayout"
                 android:background="@drawable/wonderful_item_mb"
+                android:contentDescription="@string/imgdes"
                 android:duplicateParentState="true" />
         </RelativeLayout>
 

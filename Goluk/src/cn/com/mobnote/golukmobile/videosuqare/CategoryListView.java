@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -537,24 +536,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 		if (null == mDataList && mDataList.size() <= 0) {
 			return;
-		}
-
-		int first = firstVisibleItem - 1;
-		if (first < mDataList.size()) {
-			for (int i = 0; i < first; i++) {
-				String url = mDataList.get(i).mVideoEntity.picture;
-				Uri uri = Uri.parse(url);
-				Fresco.getImagePipeline().evictFromMemoryCache(uri);
-			}
-		}
-
-		int last = firstVisibleItem + visibleItemCount + 1;
-		if (last < mDataList.size()) {
-			for (int i = last; i < mDataList.size(); i++) {
-				String url = mDataList.get(i).mVideoEntity.picture;
-				Uri uri = Uri.parse(url);
-				Fresco.getImagePipeline().evictFromMemoryCache(uri);
-			}
 		}
 
 	}

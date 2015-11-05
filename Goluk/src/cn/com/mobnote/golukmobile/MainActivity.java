@@ -71,7 +71,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -737,11 +736,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			MobclickAgent.onKillProcess(this);
 			mApp.appFree();
 			finish();
-			Fresco.shutDown();
 			GolukNotification.getInstance().destroy();
-			// int PID = android.os.Process.myPid();
-			// android.os.Process.killProcess(PID);
-			// System.exit(0);
 		}
 	}
 

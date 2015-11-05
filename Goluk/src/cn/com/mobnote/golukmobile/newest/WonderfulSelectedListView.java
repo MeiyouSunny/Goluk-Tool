@@ -4,9 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.facebook.drawee.backends.pipeline.Fresco;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
@@ -214,58 +211,12 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				if (null == mDataList && mDataList.size() <= 0) {
 					return;
 				}
-				selfFreeFresco(firstVisibleItem, visibleItemCount);
 			}
 
 		});
 	}
 
-	/**
-	 * 手动释放Fresco的资源
-	 * 
-	 * @param firstVisibleItem
-	 * @param visibleItemCount
-	 * @author jyf
-	 */
-	private void selfFreeFresco(int firstVisibleItem, int visibleItemCount) {
-		try {
-			int first = firstVisibleItem - 1;
-			if (first < mDataList.size()) {
-				for (int i = 0; i < first; i++) {
-					String url = mDataList.get(i).jximg;
-					if (!TextUtils.isEmpty(url)) {
-						Uri uri = Uri.parse(url);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
-					}
-
-					String url2 = mDataList.get(i).jtypeimg;
-					if (!TextUtils.isEmpty(url2)) {
-						Uri uri = Uri.parse(url2);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
-					}
-
-				}
-			}
-			int last = firstVisibleItem + visibleItemCount + 1;
-			if (last < mDataList.size()) {
-				for (int i = last; i < mDataList.size(); i++) {
-					String url = mDataList.get(i).jximg;
-					if (!TextUtils.isEmpty(url)) {
-						Uri uri = Uri.parse(url);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
-					}
-
-					String url2 = mDataList.get(i).jtypeimg;
-					if (!TextUtils.isEmpty(url2)) {
-						Uri uri = Uri.parse(url2);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
-					}
-				}
-			}
-		} catch (Exception e) {
-
-		}
-	}
+	
 
 	public View getView() {
 		return mRootLayout;

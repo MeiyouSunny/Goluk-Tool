@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -16,12 +14,11 @@
 
         <!-- 头像 -->
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/headimg"
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
-            fresco:roundAsCircle="true"
-            fresco:placeholderImage="@drawable/editor_head_feault7" />
+            android:contentDescription="@string/imgdes" />
 
         <!-- "更多" 按钮 -->
 
@@ -103,16 +100,11 @@
 
         <!-- 视频缩略图片 -->
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/imageLayout"
             android:layout_width="100dp"
             android:layout_height="37dp"
-            fresco:actualImageScaleType="fitXY"
-            fresco:fadeDuration="300"
-            fresco:failureImage="@drawable/tacitly_pic"
-            fresco:failureImageScaleType="fitXY"
-            fresco:placeholderImage="@drawable/tacitly_pic"
-            fresco:placeholderImageScaleType="fitXY" />
+            android:contentDescription="@string/imgdes" />
 
         <!-- 直播图标 -->
 
@@ -167,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="4dp"
-                android:text="赞"
+                android:text="@string/str_usercenter_praise"
                 android:textColor="#888888"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -192,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="4dp"
-                android:text="评论"
+                android:text="@string/str_usercenter_comment"
                 android:textColor="#888888"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -218,7 +210,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="4dp"
-                android:text="分享"
+                android:text="@string/str_usercenter_share"
                 android:textColor="#888888"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -228,16 +220,15 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/functionLayouyt"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="#e5e5e5" />
+        android:background="#e5e5e5"
+        android:contentDescription="@string/imgdes" />
 
     <RelativeLayout
         android:id="@+id/zLayouyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/line"
         android:paddingBottom="6dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -281,7 +272,6 @@
         android:id="@+id/detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/zLayouyt"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -292,7 +282,6 @@
         android:id="@+id/totalcomments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/detail"
         android:gravity="center_vertical|left"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
@@ -304,7 +293,6 @@
         android:id="@+id/totlaCommentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/totalcomments"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" >

@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -20,17 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
-import com.lidroid.xutils.bitmap.core.BitmapSize;
 
 public class NewestAdapter extends BaseAdapter {
 	private Context mContext = null;
@@ -147,9 +141,9 @@ public class NewestAdapter extends BaseAdapter {
 	private View initLayout() {
 		holder = new ViewHolder();
 		View convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
-		holder.videoImg = (SimpleDraweeView) convertView.findViewById(R.id.imageLayout);
+		holder.videoImg = (ImageView) convertView.findViewById(R.id.imageLayout);
 		holder.liveImg = (ImageView) convertView.findViewById(R.id.newlist_item_liveicon);
-		holder.headimg = (SimpleDraweeView) convertView.findViewById(R.id.headimg);
+		holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 		holder.time = (TextView) convertView.findViewById(R.id.time);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
@@ -220,11 +214,13 @@ public class NewestAdapter extends BaseAdapter {
 			return;
 		}
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
-		holder.videoImg.setImageURI(Uri.parse(mVideoSquareInfo.mVideoEntity.picture));
+
+		GlideUtils.loadImage(mContext, holder.videoImg, mVideoSquareInfo.mVideoEntity.picture, R.drawable.tacitly_pic);
+
 		String headUrl = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		if (null != headUrl && !"".equals(headUrl)) {
 			// 使用服务器头像地址
-			holder.headimg.setImageURI(Uri.parse(headUrl));
+			GlideUtils.loadNetHead(mContext, holder.headimg, headUrl, R.drawable.editor_head_feault7);
 		} else {
 			showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
 		}
@@ -362,12 +358,11 @@ public class NewestAdapter extends BaseAdapter {
 		}
 	}
 
-	private void showHead(SimpleDraweeView view, String headportrait) {
+	private void showHead(ImageView view, String headportrait) {
 		try {
-			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+			GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
 		} catch (Exception e) {
-			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-			e.printStackTrace();
+			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
 		}
 	}
 
@@ -474,22 +469,13 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	private void loadHeadImage(final ImageView image, String url, int width, int height) {
-		BitmapDisplayConfig config = new BitmapDisplayConfig();
-		config.setBitmapMaxSize(new BitmapSize(width, height));
-		Bitmap bitmap = BitmapManager.getInstance().mBitmapUtils.getBitmapFromMemCache(url, config);
-		if (null == bitmap) {
-			image.setImageResource(R.drawable.tacitly_pic);
-
-			BitmapManager.getInstance().mBitmapUtils.display(image, url);
-		} else {
-			image.setImageBitmap(bitmap);
-		}
+		GlideUtils.loadImage(mContext, image, url, R.drawable.tacitly_pic);
 	}
 
 	public static class ViewHolder {
-		SimpleDraweeView videoImg;
+		ImageView videoImg;
 		ImageView liveImg;
-		SimpleDraweeView headimg;
+		ImageView headimg;
 		TextView nikename;
 		TextView time;
 		ImageView function;

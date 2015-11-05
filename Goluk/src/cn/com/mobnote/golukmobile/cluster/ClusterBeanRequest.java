@@ -1,8 +1,6 @@
 package cn.com.mobnote.golukmobile.cluster;
 
 import java.util.HashMap;
-
-import android.text.TextUtils;
 import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjasonRequest;
@@ -26,9 +24,10 @@ public class ClusterBeanRequest extends GolukFastjasonRequest<JsonData> {
 		return "activityInfo";
 	}
 
-	public void get(String activityId) {
+	public void get(String activityId,String uid) {
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
 		headers.put("activityid", activityId);
+		headers.put("uid", uid);
 		get();
 	}
 }

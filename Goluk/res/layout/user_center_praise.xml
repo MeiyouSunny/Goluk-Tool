@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/praiseLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -11,14 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="70dp" >
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/userhead"
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
-             fresco:roundAsCircle="true"
-            fresco:placeholderImage="@drawable/editor_head_girl4" />
+            android:contentDescription="@string/imgdes" />
 
         <LinearLayout
             android:id="@+id/userinfo"
@@ -52,17 +49,13 @@
 
         <!-- 视频缩略图片 -->
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/videopic"
             android:layout_width="100dp"
             android:layout_height="37dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            fresco:actualImageScaleType="fitXY"
-            fresco:failureImage="@drawable/tacitly_pic"
-            fresco:failureImageScaleType="fitXY"
-            fresco:placeholderImage="@drawable/tacitly_pic"
-            fresco:placeholderImageScaleType="fitXY" />
+            android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
     <View
