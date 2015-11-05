@@ -223,7 +223,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				} else {
 					holder.dz_txt.setText("赞Ta的人");
 				}
-				
+
 				String headUrl = userinfo.customavatar;
 				if (null != headUrl && !"".equals(headUrl)) {
 					holder.headImg.setImageURI(Uri.parse(headUrl));
@@ -329,6 +329,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 				holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView.findViewById(R.id.function);
+				holder.videoGoldImg = (ImageView) convertView.findViewById(R.id.user_center_gold);
+				holder.recommentImg = (ImageView) convertView.findViewById(R.id.uc_recommend);
 
 				holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 				holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
@@ -385,17 +387,21 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			}
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
 			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
+
+			setVideoExtra(holder, clusterInfo);
+
 			// 设置显示 视频位置信息
 			final String location = clusterInfo.mVideoEntity.location;
 			if (null == location || "".equals(location)) {
 				holder.location.setVisibility(View.GONE);
 			} else {
+				holder.location.setVisibility(View.VISIBLE);
 				holder.location.setText(location);
 			}
 
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
-			UserUtils.showCommentText(holder.detail, clusterInfo.mUserEntity.nickname, clusterInfo.mVideoEntity.describe);
+
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
 			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
 			if (count > 3) {
@@ -414,7 +420,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			}
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
-				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+						&& !"".equals(comment.replyname)) {
 					UserUtils.showReplyText(holder.comment1, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment1, comment.name, comment.text);
@@ -426,7 +433,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 2) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
-				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+						&& !"".equals(comment.replyname)) {
 					UserUtils.showReplyText(holder.comment2, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment2, comment.name, comment.text);
@@ -438,7 +446,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 3) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
-				if(null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname && !"".equals(comment.replyname)) {
+				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+						&& !"".equals(comment.replyname)) {
 					UserUtils.showReplyText(holder.comment3, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment3, comment.name, comment.text);
@@ -602,6 +611,44 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		return convertView;
 	}
 
+	/**
+	 * 设置，视频的，是否推荐，是否获奖，是否有参加活动
+	 * 
+	 * @param holder
+	 *            UI控件
+	 * @param clusterInfo
+	 *            数据载体
+	 * @author jyf
+	 */
+	private void setVideoExtra(ViewHolder holder, VideoSquareInfo clusterInfo) {
+		if (null == clusterInfo || null == holder) {
+			return;
+		}
+		String got = "";
+		if (null != clusterInfo.mVideoEntity.videoExtra) {
+			// 显示是否获奖
+			if (clusterInfo.mVideoEntity.videoExtra.isreward.equals("1")) {
+				holder.videoGoldImg.setVisibility(View.VISIBLE);
+			} else {
+				holder.videoGoldImg.setVisibility(View.GONE);
+			}
+			// 显示是否推荐
+			if (clusterInfo.mVideoEntity.videoExtra.isrecommend.equals("1")) {
+				holder.recommentImg.setVisibility(View.VISIBLE);
+			} else {
+				holder.recommentImg.setVisibility(View.GONE);
+			}
+			// 获得聚合字符串
+			got = clusterInfo.mVideoEntity.videoExtra.topicname;
+		} else {
+			holder.videoGoldImg.setVisibility(View.GONE);
+			holder.recommentImg.setVisibility(View.GONE);
+		}
+
+		UserUtils.showCommentText(mContext, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
+				clusterInfo.mVideoEntity.describe, got);
+	}
+
 	private void showHead(SimpleDraweeView view, String headportrait) {
 		try {
 			view.setImageURI(GolukUtils.getResourceUri(ILive.mHeadImg[Integer.parseInt(headportrait)]));
@@ -610,7 +657,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void showUserInfoHead(SimpleDraweeView view, String headportrait) {
 		try {
 			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
@@ -774,6 +821,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		TextView location;
 		TextView time;
 		ImageView function;
+		ImageView videoGoldImg;
+		ImageView recommentImg;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;

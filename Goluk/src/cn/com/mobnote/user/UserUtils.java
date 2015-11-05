@@ -14,7 +14,11 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -27,6 +31,8 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
+import cn.com.mobnote.golukmobile.usercenter.CopyOfShuoMClickableSpan;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 
@@ -330,6 +336,7 @@ public class UserUtils {
 
 	/**
 	 * 设置普通评论显示
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param text
@@ -341,9 +348,39 @@ public class UserUtils {
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
+	/**
+	 * 设置普通评论显示
+	 * 
+	 * @param view
+	 * @param nikename
+	 * @param text
+	 */
+	public static void showCommentText(Context context, VideoSquareInfo videInfo, TextView view, String nikename, String text, String got) {
+		boolean isHasGot = false;
+		String all = "";
+		if (null != got && got.length() > 0) {
+			isHasGot = true;
+		}
+		if (isHasGot) {
+			all = nikename + " " + text + " " + got;
+		} else {
+			all = nikename + " " + text;
+		}
+		SpannableString spanttt = new SpannableString(all);
+		spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
+				Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		if (isHasGot) {
+			ClickableSpan clicksss = new CopyOfShuoMClickableSpan(context, got , videInfo);
+			spanttt.setSpan(clicksss, nikename.length() + text.length(), all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		}
+		view.setText(spanttt);
+		view.setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
 	/**
 	 * 评论列表中回复评论颜色设置
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param text
@@ -352,54 +389,54 @@ public class UserUtils {
 		String replyName = "@" + nikename + "：";
 		String reply_str = "回复" + replyName + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(reply_str);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2,
-				replyName.length() + 2, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2, replyName.length() + 2,
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
 	/**
 	 * 设置最新、个人主页回复评论内容显示
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param replyName
 	 * @param text
 	 */
-	public static void showReplyText(TextView view, String nikename, String replyName,String text) {
-		String replyText = "@"+replyName+"：";
-		String str = nikename+" 回复"+replyText+text;
+	public static void showReplyText(TextView view, String nikename, String replyName, String text) {
+		String replyText = "@" + replyName + "：";
+		String str = nikename + " 回复" + replyText + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length()+3, nikename.length()+3+replyText.length(),
-				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 3, nikename.length()
+				+ 3 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
 	/**
-     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
-     * 
-     * @param v
-     * @param event
-     * @return
-     */
-    public static boolean isShouldHideInput(View view, MotionEvent event) {
-        if (view != null) {
-            int[] l = { 0, 0 };
-            view.getLocationInWindow(l);
-            int left = l[0];
-            int top = l[1];
-            int bottom = top + view.getHeight();
-            int right = left+ view.getWidth();
-            if (event.getX() > left && event.getX() < right
-                    && event.getY() > top && event.getY() < bottom) {
-                // 点击EditText的事件，忽略它。
-                return false;
-            } else {
-                return true;
-            }
-        }
-        // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
-        return false;
-    }
-	
+	 * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
+	 * 
+	 * @param v
+	 * @param event
+	 * @return
+	 */
+	public static boolean isShouldHideInput(View view, MotionEvent event) {
+		if (view != null) {
+			int[] l = { 0, 0 };
+			view.getLocationInWindow(l);
+			int left = l[0];
+			int top = l[1];
+			int bottom = top + view.getHeight();
+			int right = left + view.getWidth();
+			if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
+				// 点击EditText的事件，忽略它。
+				return false;
+			} else {
+				return true;
+			}
+		}
+		// 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
+		return false;
+	}
+
 }
