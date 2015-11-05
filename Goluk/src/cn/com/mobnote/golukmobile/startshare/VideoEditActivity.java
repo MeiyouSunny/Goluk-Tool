@@ -1,12 +1,15 @@
 package cn.com.mobnote.golukmobile.startshare;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -21,7 +24,11 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.promotion.PromotionModel;
+import cn.com.mobnote.golukmobile.promotion.PromotionStatusModel;
+import cn.com.mobnote.golukmobile.promotion.PromotionStatusRequest;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -34,7 +41,7 @@ import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
 
 @SuppressLint("HandlerLeak")
-public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
+public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn, IRequestResultListener {
 	public static final int EVENT_COMM_EXIT = 0;
 	/** 自定义播放器支持特效 */
 	public FilterPlaybackView mVVPlayVideo = null;
@@ -90,6 +97,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private boolean isBack = false;
 	private RelativeLayout mPlayImgLayout = null;
 
+	/** 活动 */
+	private boolean bNewPromotion = false;
+	public static final int PROMOTION_ACTIVITY_BACK = 110;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -129,6 +139,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		} else {
 			mPlayImgLayout.setVisibility(View.GONE);
 		}
+		loadData();
+	}
+
+	private void loadData() {
+		PromotionStatusRequest request = new PromotionStatusRequest(IPageNotifyFn.PageType_GetPromotionStatus, this);
+		request.get();
 	}
 
 	private void getIntentData() {
@@ -158,6 +174,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		switch (what) {
 		case 100:
 			switchMiddleLayout(true, true);
+			break;
+		case 101:
+			mTypeLayout.showPopUp();
 			break;
 		case 105:
 			mPlayImgLayout.setVisibility(View.GONE);
@@ -196,6 +215,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				FrameLayout.LayoutParams.MATCH_PARENT);
 		if (isType) {
 			mMiddleLayout.addView(mTypeLayout.getRootLayout(), lp);
+			if (mTypeLayout.getPopupFlag()) {
+				mBaseHandler.sendEmptyMessageDelayed(101, 100);
+			}
 		} else {
 			mMiddleLayout.addView(mFilterLayout.getRootLayout(), lp);
 		}
@@ -659,6 +681,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == PROMOTION_ACTIVITY_BACK) {
+			if (mTypeLayout != null) {
+				mTypeLayout.onActivityResult(resultCode, data);
+			}
+			return;
+		}
 		if (this.mShareDealTool != null) {
 			this.mShareDealTool.onActivityResult(requestCode, resultCode, data);
 		}
@@ -749,4 +777,21 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareLoading.hide();
 		mShareLoading.switchState(ShareLoading.STATE_NONE);
 	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		// TODO Auto-generated method stub
+		switch(requestType) {
+		case IPageNotifyFn.PageType_GetPromotionStatus:
+			PromotionStatusModel data = (PromotionStatusModel) result;
+			if (data != null && data.success) {
+				bNewPromotion = data.data.hasNew;
+				if (misCurrentType){
+					mTypeLayout.refreshPromotionUI(bNewPromotion, getString(R.string.share_str_join_promotion));
+				}
+			}
+			break;
+		}
+	}
+
 }

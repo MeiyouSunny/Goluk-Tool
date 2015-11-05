@@ -68,6 +68,10 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_ModifyNickName = 33;
 	
 	public static final int PageType_ModifySignature = 34;
+	
+	public static final int PageType_GetPromotion = 36;
+	
+	public static final int PageType_GetPromotionStatus = 37;
 	/**
 	 * 
 	 * 以下为同步获取信息标识
