@@ -129,6 +129,14 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	public void onLoadComplete(int requestType, Object result) {
 		if(requestType == IPageNotifyFn.PageType_MyProfit) {
 			ProfitInfo profitInfo = (ProfitInfo)result;
+			if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
+				mTextLastCount.setText(profitInfo.data.lgold+"个Ｇ币");
+				mTextTotalCount.setText(profitInfo.data.hgold+"个Ｇ币");
+				mTextLeaveCount.setText(profitInfo.data.agold+"个Ｇ币");
+			} else {
+				//TODO 异常处理
+			}
+			
 		}
 	}
 }

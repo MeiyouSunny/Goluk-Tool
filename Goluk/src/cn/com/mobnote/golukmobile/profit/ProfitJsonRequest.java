@@ -14,7 +14,7 @@ public class ProfitJsonRequest extends GolukFastjasonRequest<ProfitInfo> {
 	@Override
 	protected String getPath() {
 		
-		return "navidog4MeetTrans/myHomePage.htm";
+		return "/navidog4MeetTrans/myHomePage.htm";
 	}
 
 	@Override
