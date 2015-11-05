@@ -308,7 +308,11 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
+	<activity
+            android:name="cn.com.mobnote.golukmobile.cluster.ClusterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
         <!-- 信鸽 -->
 
 

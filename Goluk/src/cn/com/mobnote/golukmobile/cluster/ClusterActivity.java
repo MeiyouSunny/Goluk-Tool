@@ -72,9 +72,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private RelativeLayout mBottomLoadingView = null;
 
 	/** 活动id **/
-	private String activityid = null;
-
-	private String uid = null;
+	private String mActivityid = null;
 	
 	ClusterBeanRequest request = null;
 
@@ -88,9 +86,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 		Intent intent = this.getIntent();
 
-		activityid = intent.getStringExtra("activityid");
-		uid = intent.getStringExtra("uid");
-
+		mActivityid = intent.getStringExtra("activityid");
+		
+		httpPost(mActivityid);
 		mRTPullListView.firstFreshState();
 
 	}
@@ -109,9 +107,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
-	private void httpPost(String otheruid) {
+	private void httpPost(String activityid) {
 		request = new ClusterBeanRequest(IPageNotifyFn.PageType_ClusterMain, this);
-		request.get(activityid, uid);
+		request.get(activityid);
 	}
 
 	private void initData() {
@@ -144,7 +142,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			@Override
 			public void onRefresh() {
 				// 下拉刷新个人中心所有数据
-				httpPost("");// 请求数据
+				httpPost(mActivityid);// 请求数据
 			}
 		});
 
@@ -156,13 +154,13 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {// 推荐
 						if (clusterAdapter.getCurrentViewType() == ClusterAdapter.ViewType_RecommendVideoList) {// 视频列表
 							if (recommendlist != null && recommendlist.size() > 0) {// 加载更多视频数据
-								if (recommendlist.size() > 0) {
+								if (recommendlist.size() > 20) {
 									mRTPullListView.addFooterView(mBottomLoadingView);
 									httpGetNextVideo(recommendlist.get(recommendlist.size() - 1).mVideoEntity.sharingtime);
 								}
 							}
 						} else {// 最新列表
-							if (newslist != null && newslist.size() > 0) {// 加载更多视频数据
+							if (newslist != null && newslist.size() > 20) {// 加载更多视频数据
 								if (newslist.size() > 0) {
 									mRTPullListView.addFooterView(mBottomLoadingView);
 									httpGetNextVideo(newslist.get(newslist.size() - 1).mVideoEntity.sharingtime);
@@ -215,10 +213,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		// TODO Auto-generated method stub
 		if(requestType == IPageNotifyFn.PageType_ClusterMain){
 			JsonData data = (JsonData) result;
-			if(data.success){
+			if(data!=null && data.success ){
 				if(data.data != null){
 					ClusterHeadBean chb = data.data;
 					recommendlist = vdf.getClusterList(chb.recommendvideo);
