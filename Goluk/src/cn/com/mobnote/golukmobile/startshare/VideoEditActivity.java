@@ -1,12 +1,11 @@
 package cn.com.mobnote.golukmobile.startshare;
 
 import android.annotation.SuppressLint;
-
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
+
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 
@@ -26,7 +25,7 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-
+import cn.com.mobnote.golukmobile.promotion.PromotionModel;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.promotion.PromotionStatusModel;
 import cn.com.mobnote.golukmobile.promotion.PromotionStatusRequest;
@@ -295,7 +294,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			@Override
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
-				Log.e("dengting", "VideoEditActivity----onPrepared---video---加载完成");
+				GolukDebugUtils.e("", "VideoEditActivity----onPrepared---video---加载完成");
 				updateVideoProgress();
 				if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
 					mBaseHandler.sendEmptyMessageDelayed(105, 800);
