@@ -61,6 +61,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener,
 	private SharePlatformUtil sharePlatform = null;
 
 	private RelativeLayout mBottomLoadingView = null;
+	
+	/**活动id **/
+	private String activityid = null;
+	
+	private String uid  = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
