@@ -2,8 +2,6 @@ package cn.com.mobnote.golukmobile;
 
 import org.json.JSONObject;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
@@ -19,19 +17,27 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
-import android.view.KeyEvent;
+import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.live.ILive;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserInterface;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -72,7 +78,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private TextView mTextProfit = null;
 
 	/** 个人中心的头像、性别、昵称 */
-	private SimpleDraweeView mImageHead;
+	private ImageView mImageHead;
 	private TextView mTextName, mTextId;
 	private LinearLayout mVideoLayout;
 	private TextView mTextShare, mTextPraise;
@@ -133,7 +139,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mTextProfit = (TextView) mRootLayout.findViewById(R.id.profit_hint);
 
 		// 头像、昵称、id
-		mImageHead = (SimpleDraweeView) mRootLayout.findViewById(R.id.user_center_head);
+		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
 		mTextName = (TextView) mRootLayout.findViewById(R.id.user_center_name_text);
 		mTextId = (TextView) mRootLayout.findViewById(R.id.user_center_id_text);
 		mVideoLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_center_video_layout);
@@ -365,6 +371,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			
 			if(customavatar != null && !"".equals(customavatar)){
 				mImageHead.setImageURI(Uri.parse(customavatar));
+				GlideUtils.loadNetHead(mContext, mImageHead, customavatar, R.drawable.editor_head_feault7);
 			}else{
 				showHead(mImageHead,userHead);
 			}
@@ -390,12 +397,11 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		}
 	}
 	
-	private void showHead(SimpleDraweeView view, String headportrait) {
+	private void showHead(ImageView view, String headportrait) {
 		try {
-			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+			GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
 		} catch (Exception e) {
-			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-			e.printStackTrace();
+			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
 		}
 	}
 

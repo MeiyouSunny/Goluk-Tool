@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -16,14 +14,13 @@
 
         <!-- 头像 -->
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/user_head"
             android:layout_width="35dp"
-             fresco:roundAsCircle="true"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            fresco:placeholderImage="@drawable/my_head_moren7" />
+            android:contentDescription="@string/imgdes" />
 
         <!-- 围观 -->
 
@@ -189,11 +186,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="8dp"
-        android:background="@color/white" >
+        android:paddingTop="8dp" >
 
             <TextView
                 android:id="@+id/video_detail_describe"
@@ -394,11 +391,11 @@
         android:id="@+id/functionLayouyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:background="@color/white" >
+        android:paddingTop="10dp" >
 
         <LinearLayout
             android:id="@+id/praiseLayout"

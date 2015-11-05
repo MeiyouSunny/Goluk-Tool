@@ -24,6 +24,8 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.cluster.ClusterAdapter.IClusterInterface;
 import cn.com.mobnote.golukmobile.cluster.bean.ClusterHeadBean;
+import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
+import cn.com.mobnote.golukmobile.cluster.bean.VolleyDataFormat;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
@@ -35,6 +37,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
 
 public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IClickShareView,
 		IClickPraiseView, IDialogDealFn, IClusterInterface {
@@ -42,6 +45,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private static final String TAG = "ClusterActivity";
 	private RTPullListView mRTPullListView = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
+	
+	private VolleyDataFormat vdf = new VolleyDataFormat();
 	
 
 	/** 保存列表一个显示项索引 */
@@ -197,12 +202,33 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		}
 
 	}
+	
+	public void updateViewData(boolean succ, int count) {
+		if (succ) {
+			clusterAdapter.notifyDataSetChanged();
+			if (count > 0) {
+				this.mRTPullListView.setSelection(count);
+			}
+		}
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+	}
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
 		if(requestType == IPageNotifyFn.PageType_ClusterMain){
-			
+			JsonData data = (JsonData) result;
+			if(data.success){
+				if(data.data != null){
+					ClusterHeadBean chb = data.data;
+					recommendlist = vdf.getClusterList(chb.recommendvideo);
+					newslist = vdf.getClusterList(chb.latestvideo);
+					clusterAdapter.setDataInfo(chb.activity,recommendlist, newslist);
+					updateViewData(true, 0);
+				}else{
+					updateViewData(false, 0);
+				}
+			}
 		}
 	}
 

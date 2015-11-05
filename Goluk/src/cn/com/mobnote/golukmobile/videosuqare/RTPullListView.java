@@ -1,9 +1,7 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
 import java.text.SimpleDateFormat;
-import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -95,9 +93,12 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		headView.invalidate();
 
 		addHeaderView(headView, null, false);
-		//屏蔽某些机型的下拉悬停操作
+		// 屏蔽某些机型的下拉悬停操作
 		setOverScrollMode(View.OVER_SCROLL_NEVER);
-		setOnScrollListener(new PauseOnScrollListener(BitmapManager.getInstance().mBitmapUtils, false, true, this));
+		// setOnScrollListener(new
+		// PauseOnScrollListener(BitmapManager.getInstance().mBitmapUtils,
+		// false, true, this));
+		this.setOnScrollListener(this);
 
 		animation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
 				RotateAnimation.RELATIVE_TO_SELF, 0.5f);

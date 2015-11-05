@@ -29,9 +29,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.lidroid.xutils.util.LogUtils;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -302,7 +299,6 @@ public class UserCenterActivity extends BaseActivity implements
 			uca.notifyDataSetChanged();
 			if (count > 0) {
 				this.mRTPullListView.setSelection(count);
-				LogUtils.d("fucking ss = " + videogroupdata.isHaveData);
 			}
 		} else {
 
@@ -321,7 +317,6 @@ public class UserCenterActivity extends BaseActivity implements
 	private void httpPost(String otheruid) {
 		mAllDataSequenceId = GolukApplication.getInstance().getVideoSquareManager()
 				.getUserCenter(curUser.uid);
-		LogUtils.d("requestFlog req= " + mAllDataSequenceId);
 	}
 
 	/**
@@ -348,7 +343,7 @@ public class UserCenterActivity extends BaseActivity implements
 		try {
 			JSONObject json = new JSONObject(info);
 			String id = json.getString("uid");
-			LogUtils.d("fucking=" + "id=" + curUser.uid + " key=" + id);
+
 			if (id.equals(curUser.uid)) {
 				return true;
 			} else {
@@ -433,7 +428,6 @@ public class UserCenterActivity extends BaseActivity implements
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1,
 			Object param2) {
-		LogUtils.d("requestFlog res= " + param1);
 		if (event == VSquare_Req_MainPage_Infor  &&  param1 == mAllDataSequenceId) {
 			if (RESULE_SUCESS == msg) {
 				this.formatAllData(param2.toString());

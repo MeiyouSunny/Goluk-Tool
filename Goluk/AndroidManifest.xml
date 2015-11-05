@@ -253,6 +253,10 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity
+            android:name="cn.com.mobnote.golukmobile.promotion.PromotionActivity"
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.NoTitleBar" />
         <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"

@@ -12,9 +12,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import com.facebook.common.util.UriUtil;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -586,9 +583,8 @@ public class GolukUtils {
 	 * @return
 	 * @author jyf
 	 */
-	public static Uri getResourceUri(int resId) {
-		Uri uri = new Uri.Builder().scheme(UriUtil.LOCAL_RESOURCE_SCHEME).path(String.valueOf(resId)).build();
-		return uri;
+	public static Integer getResourceUri(int resId) {
+		return Integer.valueOf(resId);
 	}
 
 	@SuppressLint("SimpleDateFormat")

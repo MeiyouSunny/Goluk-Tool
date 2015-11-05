@@ -43,13 +43,9 @@ import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 public class VideoDetailAdapter extends BaseAdapter {
 
@@ -281,7 +277,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	public View createHeadView() {
 		View convertView = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.video_detail_head, null);
-		headHolder.mImageHead = (SimpleDraweeView) convertView.findViewById(R.id.user_head);
+		headHolder.mImageHead = (ImageView) convertView.findViewById(R.id.user_head);
 		headHolder.mTextName = (TextView) convertView.findViewById(R.id.user_name);
 		headHolder.mTextTime = (TextView) convertView.findViewById(R.id.user_time);
 		headHolder.mTextLook = (TextView) convertView.findViewById(R.id.video_detail_count_look);
@@ -397,9 +393,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 			String netUrlHead = mVideoAllData.avideo.user.customavatar;
 			if (null != netUrlHead && !"".equals(netUrlHead)) {
 				// 使用网络地址
-				headHolder.mImageHead.setImageURI(Uri.parse(netUrlHead));
+				GlideUtils.loadNetHead(mContext, headHolder.mImageHead, netUrlHead, R.drawable.my_head_moren7);
 			} else {
-				UserUtils.focusHead(mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
+				UserUtils.focusHead(mContext, mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
 			}
 
 			headHolder.mTextName.setText(mVideoAllData.avideo.user.nickname);
@@ -434,7 +430,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 			} else {
 				headHolder.mTextAuthor.setVisibility(View.GONE);
 			}
-			headHolder.simpleDraweeView.setImageURI(Uri.parse(mVideoAllData.avideo.video.picture));
+			GlideUtils.loadImage(mContext, headHolder.simpleDraweeView, mVideoAllData.avideo.video.picture,
+					R.drawable.tacitly_pic);
 
 			// 外链接
 			if (null != mVideoAllData.link) {
@@ -543,7 +540,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder = new ViewHolder();
 		convertView = LayoutInflater.from(mContext).inflate(R.layout.comment_list_item, null);
 
-		commentHolder.mCommentHead = (SimpleDraweeView) convertView.findViewById(R.id.comment_item_head);
+		commentHolder.mCommentHead = (ImageView) convertView.findViewById(R.id.comment_item_head);
 		commentHolder.mCommentTime = (TextView) convertView.findViewById(R.id.comment_item_time);
 		commentHolder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
 		commentHolder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
@@ -591,18 +588,19 @@ public class VideoDetailAdapter extends BaseAdapter {
 			String netHeadUrl = temp.customavatar;
 			if (null != netHeadUrl && !"".equals(netHeadUrl)) {
 				// 使用网络地址
-				commentHolder.mCommentHead.setImageURI(Uri.parse(netHeadUrl));
+				GlideUtils.loadNetHead(mContext, commentHolder.mCommentHead, netHeadUrl, -1);
 			} else {
 				// 使用本地头像
-				commentHolder.mCommentHead.setImageURI(GolukUtils.getResourceUri(UserUtils
-						.getUserHeadImageResourceId(temp.mUserHead)));
+				GlideUtils.loadLocalHead(mContext, commentHolder.mCommentHead,
+						UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 			}
 			commentHolder.mCommentName.setText(temp.mUserName);
-			if(!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName) && null != temp.mReplyName){
-				//评论回复
+			if (!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName)
+					&& null != temp.mReplyName) {
+				// 评论回复
 				UserUtils.showText(commentHolder.mCommentConennt, temp.mReplyName, temp.mCommentTxt);
-			}else{
-				//普通评论
+			} else {
+				// 普通评论
 				commentHolder.mCommentConennt.setText(temp.mCommentTxt);
 			}
 			commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
@@ -682,14 +680,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	public static class ViewHolder {
 		// 详情
-		SimpleDraweeView mImageHead = null;
+		ImageView mImageHead = null;
 		TextView mTextName = null;
 		TextView mTextTime = null;
 		TextView mTextLook = null;
 		private TextView mLocationTv = null;
 		FullScreenVideoView mVideoView = null;
 		RelativeLayout mImageLayout = null;
-		SimpleDraweeView simpleDraweeView = null;
+		ImageView simpleDraweeView = null;
 
 		ImageView mPlayBtn = null;
 		SeekBar mSeekBar = null;
@@ -703,7 +701,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		TextView mTextZan, mTextComment, mTextZanName;
 		ImageView mZanImage;
 		// 评论
-		SimpleDraweeView mCommentHead = null;
+		ImageView mCommentHead = null;
 		TextView mCommentTime, mCommentName, mCommentConennt;
 		ImageView mNoData = null;
 		RelativeLayout mListLayout = null;
@@ -940,13 +938,18 @@ public class VideoDetailAdapter extends BaseAdapter {
 		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.MATCH_PARENT);
 
-		SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext);
-		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-		GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
-				.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setActualImageScaleType(ScaleType.FIT_XY).build();
-		simpleDraweeView.setHierarchy(hierarchy);
+		ImageView simpleDraweeView = new ImageView(mContext);
+
+		// GenericDraweeHierarchyBuilder builder = new
+		// GenericDraweeHierarchyBuilder(mContext.getResources());
+		// GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
+		// .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
+		// ScaleType.FIT_XY)
+		// .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
+		// ScaleType.FIT_XY)
+		// .setActualImageScaleType(ScaleType.FIT_XY).build();
+		// simpleDraweeView.setHierarchy(hierarchy);
+
 		headHolder.mImageLayout.addView(simpleDraweeView, mPreLoadingParams);
 		headHolder.simpleDraweeView = simpleDraweeView;
 	}

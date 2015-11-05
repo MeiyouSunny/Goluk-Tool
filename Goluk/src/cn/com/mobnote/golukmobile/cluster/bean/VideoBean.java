@@ -16,6 +16,10 @@ public class VideoBean {
 	@JSONField(name="sharingtime")
 	public String sharingtime;
 	
+	/**视频描述**/
+	@JSONField(name="describe")
+	public String describe;
+	
 	/**视频图片**/
 	@JSONField(name="picture")
 	public String picture;
@@ -36,6 +40,11 @@ public class VideoBean {
 	/**直播起始时间**/
 	@JSONField(name="livetime")
 	public String livetime;
+	
+	/**直播起始时间**/
+	@JSONField(name="starttime")
+	public String starttime;
+	
 
 	/**直播web地址**/
 	@JSONField(name="livewebaddress")
@@ -59,7 +68,11 @@ public class VideoBean {
 
 	/**直播数据**/
 	@JSONField(name="videodata")
-	public VideoBean videodata;
+	public VideoDataBean videodata;
+	
+	/**用户当前位置**/
+	@JSONField(name="location")
+	public String location;
 	
 	/**推荐理由**/
 	@JSONField(name="reason")
@@ -67,6 +80,6 @@ public class VideoBean {
 	
 	/**视频评论**/
 	@JSONField(name="comment")
-	public Object comment;
+	public CommentBean comment;
 	
 }

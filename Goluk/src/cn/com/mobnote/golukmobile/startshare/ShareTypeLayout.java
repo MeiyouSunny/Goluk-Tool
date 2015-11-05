@@ -1,20 +1,31 @@
 package cn.com.mobnote.golukmobile.startshare;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.text.Html;
+import android.text.TextUtils;
+
 import android.util.SparseIntArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
+import cn.com.mobnote.golukmobile.promotion.PromotionActivity;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.map.LngLat;
+import cn.com.mobnote.util.SharedPrefUtil;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
@@ -44,7 +55,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 	private LinearLayout mShareOpenLayout = null;
 	private ImageView mShareOpenImg = null;
-	private TextView mShareOpenText = null;
 	private String resShareOpen = null;
 	private String resShareClose = null;
 	/** 是否分享到视频广场 */
@@ -74,10 +84,18 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	private String mCurrentAddress = "";
 	private StartShareFunctionDialog mStartShareDialog = null;
 
+	/**活动*/
+	private TextView mPromotionTextView;
+	private PopupWindow mPopupWindow;
+	private SharedPrefUtil mPrefUtil;
+	private boolean bPopup;
+	private PromotionSelectItem mPromotionSelectItem;
 	public ShareTypeLayout(Context context) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.shareselecttype, null);
+		mPrefUtil = new SharedPrefUtil((Activity) mContext);
+		bPopup = mPrefUtil.getPromotionFlag();
 		loadRes();
 		initView();
 		initData();
@@ -118,6 +136,12 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mSgBtn = (TextView) mRootLayout.findViewById(R.id.share_type_sg);
 		mMlBtn = (TextView) mRootLayout.findViewById(R.id.share_type_ml);
 		mSspBtn = (TextView) mRootLayout.findViewById(R.id.share_type_ssp);
+		mPromotionTextView = (TextView) mRootLayout.findViewById(R.id.share_promotion_txt);
+		mPromotionTextView.setOnClickListener(this);
+
+//		if (!bPopup) {
+//			mPromotionHint.setVisibility(View.GONE);
+//		}
 
 		typeViewArray[0] = mBgBtn;
 		typeViewArray[1] = mSgBtn;
@@ -126,7 +150,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 		mShareOpenLayout = (LinearLayout) mRootLayout.findViewById(R.id.share_open_layout);
 		mShareOpenImg = (ImageView) mRootLayout.findViewById(R.id.share_open_img);
-		mShareOpenText = (TextView) mRootLayout.findViewById(R.id.share_open_txt);
 
 		mShareAddressLayout = (LinearLayout) mRootLayout.findViewById(R.id.share_address_layout);
 		mAddressTv = (TextView) mRootLayout.findViewById(R.id.share_address_txt);
@@ -138,7 +161,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mSspBtn.setOnClickListener(this);
 		mShareOpenLayout.setOnClickListener(this);
 		mShareAddressLayout.setOnClickListener(this);
-
 		switchOpenAndClose(mIsOpenShare);
 	}
 
@@ -163,10 +185,8 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mIsOpenShare = isOpen;
 		if (mIsOpenShare) {
 			mShareOpenImg.setBackgroundResource(R.drawable.share_open_icon);
-			mShareOpenText.setText(resShareOpen);
 		} else {
 			mShareOpenImg.setBackgroundResource(R.drawable.share_close_icon);
-			mShareOpenText.setText(resShareClose);
 		}
 	}
 
@@ -242,6 +262,13 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		case R.id.share_address_layout:
 			click_location();
 			break;
+		case R.id.share_promotion_txt:
+			Intent intent = new Intent(mContext, PromotionActivity.class);
+			if (mPromotionSelectItem != null) {
+				intent.putExtra(PromotionActivity.PROMOTION_SELECTED_ITEM, mPromotionSelectItem.selectid);
+			}
+			((Activity)mContext).startActivityForResult(intent, VideoEditActivity.PROMOTION_ACTIVITY_BACK);
+			break;
 		default:
 			break;
 		}
@@ -293,7 +320,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		case LOCATION_STATE_ING:
 			// 改图标
 			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_failed);
-			mAddressTv.setText("定位中...");
+			mAddressTv.setText(R.string.share_str_no_location);
 			break;
 		case LOCATION_STATE_SUCCESS:
 			// 改变图标
@@ -355,5 +382,61 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			refreshLocationUI();
 		}
 
+	}
+
+	public boolean getPopupFlag() {
+		return bPopup;
+	}
+
+	@SuppressWarnings("deprecation")
+	public void showPopUp() {
+		View contentView = mLayoutFlater
+				.inflate(R.layout.promotion_popup_hint, null);
+
+		contentView.measure(View.MeasureSpec.UNSPECIFIED,
+				View.MeasureSpec.UNSPECIFIED);
+		int popWidth = contentView.getMeasuredWidth();
+		int popHeight = contentView.getMeasuredHeight();
+		mPopupWindow = new PopupWindow(contentView, popWidth, popHeight);
+
+		mPopupWindow.setOutsideTouchable(true);
+		mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+		int[] location = new int[2];
+		mPromotionTextView.getLocationOnScreen(location);
+		int offset = (popWidth - mPromotionTextView.getWidth()) / 2;
+
+		mPopupWindow.showAtLocation(mPromotionTextView, Gravity.NO_GRAVITY,
+				location[0] - offset, location[1] - popHeight);
+		bPopup = false;
+		mPrefUtil.savePromotionFlag(false);
+	}
+	
+	public void refreshPromotionUI(boolean isNew, String text) {
+		String formatText = "#" + text + "#";
+		if(isNew) {
+			String newtext = " " + mContext.getString(R.string.str_new);
+			String htmlText = "<font color=#ffccoo>"
+					+ formatText
+					+ "</font>" + "<font color=red>" + newtext + "</font>"; 
+			mPromotionTextView.setText(Html.fromHtml(htmlText));
+		} else {
+			mPromotionTextView.setText(formatText);
+		}
+	}
+
+	public void onActivityResult(int resultCode, Intent data) {
+		if (resultCode != Activity.RESULT_OK || data == null) {
+			return;
+		}
+
+		mPromotionSelectItem = (PromotionSelectItem) data.getSerializableExtra(PromotionActivity.PROMOTION_SELECTED_ITEM);
+		if (mPromotionSelectItem != null && !TextUtils.isEmpty(mPromotionSelectItem.activitytitle)) {
+			refreshPromotionUI(false, mPromotionSelectItem.activitytitle);
+		}
+	}
+	
+	public PromotionSelectItem getPromotionSelectItem() {
+		return mPromotionSelectItem;
 	}
 }
