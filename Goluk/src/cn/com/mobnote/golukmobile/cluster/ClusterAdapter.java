@@ -181,9 +181,9 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 					holder = (HeadViewHolder) convertView.getTag();
 				}
 
-				showUserInfoHead(holder.headImg, headData.image);
-				holder.describe.setText(headData.describe);
-				holder.partakes.setText(headData.partakes);
+				showUserInfoHead(holder.headImg, headData.picture);
+				holder.describe.setText(headData.activitycontent);
+				holder.partakes.setText(headData.participantcount);
 
 				holder.partakeBtn.setOnClickListener(new OnClickListener() {
 					@Override
