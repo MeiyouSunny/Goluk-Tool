@@ -21,10 +21,9 @@ public class ClusterBeanRequest extends GolukFastjasonRequest<JsonData> {
 		return "activityInfo";
 	}
 
-	public void get(String activityId, String uid) {
+	public void get(String activityId) {
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
 		headers.put("activityid", activityId);
-		headers.put("uid", uid);
 		get();
 	}
 }

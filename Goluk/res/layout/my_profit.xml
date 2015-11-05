@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white" >
+    
+	<!-- title -->
+    <RelativeLayout
+        android:id="@+id/profit_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#313131" >
+
+        <ImageButton
+            android:id="@+id/profit_back"
+            android:layout_width="36.66dp"
+            android:layout_height="36.66dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/cross_screen_arrow_icon1"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/profit_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/my_profit_title_text"
+            android:textColor="#e0e0e0"
+            android:textSize="18sp" />
+        
+        <TextView 
+            android:id="@+id/profit_problem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:text="@string/my_profit_problem"
+            android:textColor="#0080ff" />
+    </RelativeLayout>
+    
+    <!-- body -->
+    <!-- 上一次收入 -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:background="@drawable/profit_bg_blue">
+        
+        <TextView 
+            android:id="@+id/last_profit_hint_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="44dp"
+            android:layout_marginBottom="24dp"
+            android:text="@string/my_profit_last_profit"
+            android:textSize="16sp"
+            android:textColor="#ffffff"/>
+        
+        <RelativeLayout
+            android:id="@+id/profit_center_circle" 
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@id/last_profit_hint_text"
+            android:background="@drawable/profit_circle"
+            android:layout_centerInParent="true">
+            
+            <TextView
+                android:id="@+id/profti_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="40dp"
+                android:text="@string/my_profit_unit"
+                android:textColor="#ffffff"
+                android:textSize="24sp" />
+            
+            <TextView 
+                android:id="@+id/last_profit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/profti_unit"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:textSize="100sp"
+                android:textColor="#ffffff"
+                android:text="5"/>
+
+        </RelativeLayout>
+        
+        <TextView 
+            android:id="@+id/last_profit_no_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:layout_below="@id/profit_center_circle"
+            android:text="@string/my_profit_last_no_text"
+            android:textSize="16sp"
+            android:textColor="#ffffff"/>
+    </RelativeLayout>
+    
+    <!-- 累计获得／余额 -->
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+        <!-- 累计获得 -->
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="56dp" >
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_profit_total"
+                android:textSize="14sp"
+                android:textColor="@color/unbind_camera_wifi_hint_text_color"/>
+            <TextView 
+                android:id="@+id/my_profit_total_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="18sp"
+                android:textColor="@color/user_login_text"
+                android:text="3205个Ｇ币" />
+            <ImageButton 
+                android:id="@+id/my_profit_detail_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/profit_btn_detail"/>
+        </LinearLayout>
+        <!-- 中间分割线 -->
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <TextView 
+            	android:layout_width="1dp"
+            	android:layout_height="match_parent"
+            	android:background="#e5e5e5" />
+        </LinearLayout>
+        <!-- 余额 -->
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           	android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="56dp"  >
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_profit_leave"
+                android:textSize="14sp"
+                android:textColor="@color/unbind_camera_wifi_hint_text_color" />
+            <TextView 
+                android:id="@+id/my_profit_leave_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="18sp"
+                android:textColor="@color/user_login_text"
+                android:text="605个Ｇ币" />
+            <ImageButton 
+                android:id="@+id/my_profit_leave_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/profit_btn_cash"/>
+        </LinearLayout>
+    </LinearLayout>
+    
+</LinearLayout>
