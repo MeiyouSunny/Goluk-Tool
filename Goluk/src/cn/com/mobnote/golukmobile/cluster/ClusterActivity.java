@@ -2,8 +2,6 @@ package cn.com.mobnote.golukmobile.cluster;
 
 import java.util.List;
 
-import com.android.volley.Request;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -31,7 +29,6 @@ import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
@@ -43,6 +40,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		IClickPraiseView, IDialogDealFn, IClusterInterface {
 
 	private static final String TAG = "ClusterActivity";
+	public static final String CLUSTER_KEY_ACTIVITYID = "activityid";
+	public static final String CLUSTER_KEY_UID = "uid";
 	private RTPullListView mRTPullListView = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	
@@ -76,11 +75,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	private String uid = null;
 	
-	ClusterBeanRequest request = null;
+	private ClusterBeanRequest request = null;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cluster_main);
 		this.initData();// 初始化view
@@ -88,11 +88,10 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 		Intent intent = this.getIntent();
 
-		activityid = intent.getStringExtra("activityid");
-		uid = intent.getStringExtra("uid");
+		activityid = intent.getStringExtra(CLUSTER_KEY_ACTIVITYID);
+		uid = intent.getStringExtra(CLUSTER_KEY_UID);
 
 		mRTPullListView.firstFreshState();
-
 	}
 
 	public static class NoVideoDataViewHolder {
@@ -182,14 +181,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	}
 
 	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-	}
-
-	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
 		switch (view.getId()) {
 		case R.id.back_btn:
 			this.finish();
@@ -215,7 +207,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		// TODO Auto-generated method stub
 		if(requestType == IPageNotifyFn.PageType_ClusterMain){
 			JsonData data = (JsonData) result;
 			if(data.success){

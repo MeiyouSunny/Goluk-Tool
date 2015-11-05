@@ -1,22 +1,24 @@
 package cn.com.mobnote.golukmobile.usercenter;
 
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
+import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
 public class CopyOfShuoMClickableSpan extends ClickableSpan {
 
-	private String string;
-	private Context context;
+	private String mString;
+	private Context mContext;
 	private VideoSquareInfo mVideInfo;
 
 	public CopyOfShuoMClickableSpan(Context context, String str, VideoSquareInfo videoInfo) {
 		super();
-		this.string = str;
-		this.context = context;
+		this.mString = str;
+		this.mContext = context;
 		this.mVideInfo = videoInfo;
 	}
 
@@ -27,7 +29,11 @@ public class CopyOfShuoMClickableSpan extends ClickableSpan {
 
 	@Override
 	public void onClick(View widget) {
-		// TODO 启动活动聚合页
+		// 启动活动聚合页
+		Intent intent = new Intent(mContext, ClusterActivity.class);
+		intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, mVideInfo.mVideoEntity.videoExtra.topicid);
+		intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+		mContext.startActivity(intent);
 	}
 
 }
