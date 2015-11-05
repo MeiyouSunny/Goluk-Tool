@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -85,6 +86,7 @@ public class BaseActivity extends Activity {
 
 	}
 
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -98,6 +100,7 @@ public class BaseActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		HttpManager.getInstance().cancelAll(this);
 		super.onDestroy();
 	}
 

@@ -291,6 +291,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			String imagepach = b.getString("imagepath");
 			customavatar = imagepach ;
 			mImageHead.setImageURI(Uri.parse(imagepach));
+			siv.deleteUri();
 			break;
 		case REQUEST_CODE_NIKCNAME:
 			Bundle bundle = data.getExtras();

@@ -87,7 +87,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void initCache() {
-		int maxSize = (int) (Runtime.getRuntime().maxMemory() / 5);
+		int maxSize = (int) (Runtime.getRuntime().maxMemory() / 6);
 		mLruCache = new LruCache<String, Bitmap>(maxSize) {
 			@Override
 			protected int sizeOf(String key, Bitmap bitmap) {

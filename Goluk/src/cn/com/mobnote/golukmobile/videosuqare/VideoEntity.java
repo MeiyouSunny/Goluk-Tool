@@ -45,6 +45,8 @@ public class VideoEntity {
 	/** 此视频发布的地点 格式为 北京市. 朝阳区 */
 	public String location;
 
+	public VideoExtra videoExtra;
+
 	/**
 	 * 是否公开到广场 0：否 1：是
 	 */
