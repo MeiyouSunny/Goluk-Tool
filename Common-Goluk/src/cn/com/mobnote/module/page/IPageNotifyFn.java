@@ -68,6 +68,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_ModifyNickName = 33;
 	
 	public static final int PageType_ModifySignature = 34;
+	
+	public static final int PageType_ClusterMain =  36;
 	/**
 	 * 
 	 * 以下为同步获取信息标识
@@ -78,6 +80,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_GetVersion = 1;
 	/**查询IPC升级文件的存放位置**/
 	public static final int PageType_GetIPCFile = 2;
+	
+	
 
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2);
 
