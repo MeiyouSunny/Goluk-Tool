@@ -70,6 +70,12 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_ModifySignature = 34;
 	
 	public static final int PageType_ClusterMain =  36;
+	
+	/**我的收益**/
+	public static final int PageType_MyProfit = 37;
+	/**收益明细**/
+	public static final int PageType_ProfitDetail = 38;
+	
 	/**
 	 * 
 	 * 以下为同步获取信息标识
