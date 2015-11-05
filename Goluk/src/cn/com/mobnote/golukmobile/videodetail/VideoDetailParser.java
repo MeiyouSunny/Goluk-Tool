@@ -22,17 +22,6 @@ public class VideoDetailParser {
 				// if(null != json_data){
 				VideoSquareDetailInfo videoDetailInfo = new VideoSquareDetailInfo();
 				data.result = json_data.optString("result");
-				JSONObject json_recom = json_data.optJSONObject("recom");
-				if(null != json_recom) {
-					VideoRecommend recommend = new VideoRecommend();
-					recommend.gold = json_recom.optString("gold");
-					recommend.actid = json_recom.optString("atcid");
-					recommend.actname = json_recom.optString("atcname");
-					recommend.reason = json_recom.optString("reason");
-					recommend.chanid = json_recom.optString("chanid");
-					recommend.chaname = json_recom.optString("chaname");
-					data.recom = recommend;
-				}
 				JSONObject json_avideo = json_data.optJSONObject("avideo");
 				if (null != json_avideo) {
 					JSONObject json_user = json_avideo.optJSONObject("user");
@@ -104,6 +93,23 @@ public class VideoDetailParser {
 							video.videodata = vd;
 						}
 						videoDetailInfo.video = video;
+					}
+					JSONObject json_recom = json_avideo.optJSONObject("recomm");
+					if(null != json_recom) {
+						VideoRecommend recommend = new VideoRecommend();
+						recommend.actid = json_recom.optString("atcid");
+						recommend.actname = json_recom.optString("atcname");
+						recommend.chanid = json_recom.optString("chanid");
+						recommend.chaname = json_recom.optString("chaname");
+						recommend.recomflag = json_recom.optString("recomflag");
+						recommend.atflag = json_recom.optString("atflag");
+						recommend.atreason = json_recom.optString("atreason");
+						recommend.atgold = json_recom.optString("atgold");
+						recommend.sysflag = json_recom.optString("sysflag");
+						recommend.sysreason = json_recom.optString("sysreason");
+						recommend.sysgold = json_recom.optString("sysgold");
+						recommend.reason = json_recom.optString("reason");
+						videoDetailInfo.recom = recommend;
 					}
 					data.avideo = videoDetailInfo;
 				}

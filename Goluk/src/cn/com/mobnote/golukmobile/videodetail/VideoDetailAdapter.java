@@ -306,12 +306,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mZanImage = (ImageView) convertView.findViewById(R.id.video_square_detail_like_image);
 		headHolder.mTextZanName = (TextView) convertView.findViewById(R.id.zanName);
 		
-		headHolder.mRecommendLayout = (RelativeLayout) convertView.findViewById(R.id.recommend_layout);
-		headHolder.mRecommendImage = (ImageView) convertView.findViewById(R.id.recommend_image);
-		headHolder.mRecommendName = (TextView) convertView.findViewById(R.id.recommend_name);
-		headHolder.mRecommendDescribe = (TextView) convertView.findViewById(R.id.recommend_describe);
-		headHolder.mProfitLine = convertView.findViewById(R.id.profit_line);
-
 		loadFirstPic();
 
 		return convertView;
@@ -404,11 +398,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
 			//TODO 在视频描述之后添加活动标签
-			if(null == mVideoAllData.recom || "".equals(mVideoAllData.recom)
-					|| null == mVideoAllData.recom.chaname || "".equals(mVideoAllData.recom.chaname)) {
+			if(null == mVideoAllData.avideo.recom || "".equals(mVideoAllData.avideo.recom)
+					|| null == mVideoAllData.avideo.recom.chaname || "".equals(mVideoAllData.avideo.recom.chaname)) {
 				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "");
 			} else {
-				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.recom.chaname+"#");
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.avideo.recom.chaname+"#");
 			}
 			
 			final String location = mVideoAllData.avideo.video.mLocation;
@@ -455,22 +449,22 @@ public class VideoDetailAdapter extends BaseAdapter {
 			}
 			
 			//TODO　没有活动奖励视频没有奖励信息这个模块
-			if(null == mVideoAllData.recom || null == mVideoAllData.recom.actid 
-					|| null == mVideoAllData.recom.actname || "".equals(mVideoAllData.recom.actid) 
-					|| "".equals(mVideoAllData.recom.actname)) {
-				headHolder.mRecommendLayout.setVisibility(View.GONE);
-				headHolder.mProfitLine.setVisibility(View.GONE);
-			} else {
-				headHolder.mProfitLine.setVisibility(View.VISIBLE);
-				headHolder.mRecommendLayout.setVisibility(View.VISIBLE);
-//				headHolder.mRecommendImage.setImageResource(0);
-				headHolder.mRecommendName.setText(mVideoAllData.recom.actname);
-				if(null == mVideoAllData.recom.reason || "".equals(mVideoAllData.recom.reason)) {
-					headHolder.mRecommendDescribe.setText("活动参与积极奖～");
-				} else {
-					headHolder.mRecommendDescribe.setText(mVideoAllData.recom.reason);
-				}
-			}
+//			if(null == mVideoAllData.avideo.recom || null == mVideoAllData.avideo.recom.actid 
+//					|| null == mVideoAllData.avideo.recom.actname || "".equals(mVideoAllData.avideo.recom.actid) 
+//					|| "".equals(mVideoAllData.avideo.recom.actname)) {
+//				headHolder.mRecommendLayout.setVisibility(View.GONE);
+//				headHolder.mProfitLine.setVisibility(View.GONE);
+//			} else {
+//				headHolder.mProfitLine.setVisibility(View.VISIBLE);
+//				headHolder.mRecommendLayout.setVisibility(View.VISIBLE);
+////				headHolder.mRecommendImage.setImageResource(0);
+//				headHolder.mRecommendName.setText(mVideoAllData.avideo.recom.actname);
+//				if(null == mVideoAllData.avideo.recom.reason || "".equals(mVideoAllData.avideo.recom.reason)) {
+//					headHolder.mRecommendDescribe.setText("活动参与积极奖～");
+//				} else {
+//					headHolder.mRecommendDescribe.setText(mVideoAllData.avideo.recom.reason);
+//				}
+//			}
 
 			headHolder.mImageHead.setOnClickListener(new OnClickListener() {
 
@@ -675,11 +669,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		RelativeLayout mListLayout = null;
 		TextView mForbidComment = null;
 		Uri url = null;
-		//推荐
-		RelativeLayout mRecommendLayout = null;
-		ImageView mRecommendImage = null;
-		TextView mRecommendName,mRecommendDescribe;
-		View mProfitLine = null;
 	}
 
 	private boolean isCallVideo = false;

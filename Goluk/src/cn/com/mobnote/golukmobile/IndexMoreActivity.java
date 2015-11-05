@@ -3,10 +3,12 @@ package cn.com.mobnote.golukmobile;
 import org.json.JSONObject;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
@@ -277,7 +279,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			break;
 		//我的收益
 		case R.id.profit_item:
-			GolukUtils.showToast(mContext, "我的收益");
+			Intent itProfit = new Intent(mContext,MyProfitActivity.class);
+			mContext.startActivity(itProfit);
 			break;
 		}
 	}

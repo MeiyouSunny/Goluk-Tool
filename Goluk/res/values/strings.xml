@@ -192,6 +192,14 @@
     <string name="user_timer_count_hint">未够60秒，不能发起请求</string>
     <string name="unbind_hint_message">确定要解除设备绑定？（再次连接前将不再能配置设备信息）</string>
     <string name="update_no_connect_ipc_hint">固件升级需要您的手机先与摄像头连接。连接成功后进入 我的>摄像头管理>极路客固件升级页面，按照提示内容进行升级即可。</string>
+    <string name="my_profit_problem">常见问题</string>
+    <string name="my_profit_last_profit">上一次收入</string>
+    <string name="my_profit_last_no_text">快去参加活动赚Ｇ币吧</string>
+    <string name="my_profit_unit">Ｇ币（个）</string>
+    <string name="my_profit_total">累计获得</string>
+    <string name="my_profit_leave">余额</string>
+    <string name="my_profit_detail_title_text">收益明细</string>
+    <string name="my_profit_G_text">获得奖励Ｇ币</string>
 
     <string-array name="video_share_class">
         <item>曝光台</item>

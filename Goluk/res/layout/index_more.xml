@@ -189,7 +189,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/my_video_icon"
+                    android:background="@drawable/profit_icon_profit"
                     android:contentDescription="@string/imgdes" />
 
                 <TextView
