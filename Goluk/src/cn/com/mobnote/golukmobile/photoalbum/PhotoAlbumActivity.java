@@ -152,10 +152,10 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 
 	private void updateBtnState(int id) {
 		this.curId = id;
-		if (null == mLocalVideoListView) {
-			mLocalVideoListView = new LocalVideoListView(this, from);
-			mMainLayout.addView(mLocalVideoListView.getRootView());
-		}
+//		if (null == mLocalVideoListView) {
+//			mLocalVideoListView = new LocalVideoListView(this, from);
+//			mMainLayout.addView(mLocalVideoListView.getRootView());
+//		}
 		switch (id) {
 		case R.id.mLocalVideoBtn:
 			mLocalIcon.setBackgroundResource(R.drawable.my_video_press);
@@ -167,9 +167,16 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mLocalText.setTextColor(getResources().getColor(R.color.photoalbum_text_color));
 			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 
+			if (null == mLocalVideoListView) {
+				mLocalVideoListView = new LocalVideoListView(this, from);
+				mMainLayout.addView(mLocalVideoListView.getRootView());
+			}
 			mLocalVideoListView.show();
 			if (null != mCloudVideoListView) {
-				mCloudVideoListView.hide();
+				mMainLayout.removeView(mCloudVideoListView.getRootView());
+//				mCloudVideoListView.hide();
+				mCloudVideoListView = null;
+				System.gc();
 			}
 			break;
 		case R.id.mCloudVideoBtn:
@@ -182,8 +189,13 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 				mCloudVideoListView = new CloudVideoListView(this);
 				mMainLayout.addView(mCloudVideoListView.getRootView());
 			}
-			mLocalVideoListView.hide();
+//			mLocalVideoListView.hide();
 			mCloudVideoListView.show();
+			if(null != mLocalVideoListView) {
+				mMainLayout.removeView(mLocalVideoListView.getRootView());
+				mLocalVideoListView = null;
+				System.gc();
+			}
 			break;
 
 		default:
