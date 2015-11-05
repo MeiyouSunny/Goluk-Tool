@@ -1,7 +1,7 @@
 package cn.com.mobnote.golukmobile.startshare;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -26,7 +26,8 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.promotion.PromotionModel;
+
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.promotion.PromotionStatusModel;
 import cn.com.mobnote.golukmobile.promotion.PromotionStatusRequest;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
@@ -294,7 +295,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			@Override
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
-				GolukDebugUtils.e("", "VideoEditActivity----onPrepared---video---加载完成");
+				Log.e("dengting", "VideoEditActivity----onPrepared---video---加载完成");
 				updateVideoProgress();
 				if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
 					mBaseHandler.sendEmptyMessageDelayed(105, 800);
@@ -466,6 +467,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onPause() {
 		if (mVVPlayVideo != null) {
+
 			if (mVVPlayVideo.isPlaying()) {
 				mVVPlayVideo.stop();
 				// 显示图片
@@ -702,8 +704,18 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
 		final String t_thumbPath = mUploadVideo.getThumbPath();
 		final String t_location = mTypeLayout.getCurrentLocation();
+		PromotionSelectItem item = mTypeLayout.getPromotionSelectItem();
+		String channelid = "";
+		String activityid = "";
+		String activityname = "";
+
+		if (item != null) {
+			channelid = item.channelid;
+			activityid = item.activityid;
+			activityname = item.activitytitle;
+		}
 		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,
-				videoCreateTime, t_location);
+				videoCreateTime, t_location, channelid, activityid, activityname);
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
 		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
 				json);
