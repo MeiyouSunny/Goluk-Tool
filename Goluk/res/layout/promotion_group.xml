@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="5dp"
+    android:orientation="vertical">
+	<TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:id="@+id/title_text"
+         android:text="@string/share_select_promotion"
+         android:layout_marginTop="20dp"
+         android:textColor="#808080"
+         android:textSize="16sp" />
+</LinearLayout>

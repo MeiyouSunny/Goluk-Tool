@@ -73,6 +73,8 @@ public class SharedPrefUtil {
 	/**保存ipc升级文件路径 **/
 	public static final String PROPERTY_SAVE_IPC_FILE_PATH = "property_ipc_file_path";
 
+	/** 是否显示活动提示 */
+	public static final String SHOW_PROMOTION_POPUP_FLAG = "show_promotion_popup";
 	private SharedPreferences preference = null;
 
 	private Editor mEditor = null;
@@ -482,4 +484,11 @@ public class SharedPrefUtil {
 		return preference.getString(PROPERTY_SAVE_IPC_MODEL, "");
 	}
 
+	public boolean getPromotionFlag() {
+		return preference.getBoolean(SHOW_PROMOTION_POPUP_FLAG, true);
+	}
+	
+	public void savePromotionFlag(boolean flag) {
+		preference.edit().putBoolean(SHOW_PROMOTION_POPUP_FLAG, flag).commit();
+	}
 }

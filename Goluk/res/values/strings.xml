@@ -22,6 +22,9 @@
     <string name="share_filter">滤镜</string>
     <string name="share_str_open">公开(发布到广场)</string>
     <string name="share_str_no_location">定位中...</string>
+     <string name="share_str_join_promotion">参加活动</string>
+     <string name="share_select_promotion">选择活动</string>
+     <string name="share_str_join_int">加油，努力被小编发现成为精选吧，这样你就能收获到真金白银的奖励。详情查看“我的收益”</string>
     <string name="share_str_close">不公开</string>
     <string name="share_str_sayother">说点其它的!</string>
     <string name="share_str_type_bg">曝光台</string>
@@ -172,6 +175,7 @@
     <string name="user_password_error">密码错误，请重试</string>
 
     <!-- 我的 -->
+    <string name="my_profit_title_text">我的收益</string>
     <string name="my_video_title_text">我的相册</string>
     <string name="my_camera_title_text">摄像头管理</string>
     <string name="my_set_title_text">通用设置</string>
@@ -191,6 +195,17 @@
     <string name="user_timer_count_hint">未够60秒，不能发起请求</string>
     <string name="unbind_hint_message">确定要解除设备绑定？（再次连接前将不再能配置设备信息）</string>
     <string name="update_no_connect_ipc_hint">固件升级需要您的手机先与摄像头连接。连接成功后进入 我的>摄像头管理>极路客固件升级页面，按照提示内容进行升级即可。</string>
+    <string name="my_profit_problem">常见问题</string>
+    <string name="my_profit_last_profit">上一次收入</string>
+    <string name="my_profit_last_no_text">快去参加活动赚Ｇ币吧</string>
+    <string name="my_profit_unit">Ｇ币（个）</string>
+    <string name="my_profit_total">累计获得</string>
+    <string name="my_profit_leave">余额</string>
+    <string name="my_profit_detail_title_text">收益明细</string>
+    <string name="my_profit_G_text">获得奖励Ｇ币</string>
+    <string name="video_detail_head_active_title">此视频获得了活动奖励</string>
+    <string name="video_detail_head_sys_title">此视频获得了系统奖励</string>
+    <string name="video_detail_head_recom_title">此视频已入选推荐视频</string>
 
     <string-array name="video_share_class">
         <item>曝光台</item>
@@ -383,5 +398,5 @@
     <string name="str_usercenter_praise">赞</string>
     <string name="str_usercenter_comment">评论</string>
     <string name="str_usercenter_share">分享</string>
-
+    <string name="str_new">new</string>
 </resources>

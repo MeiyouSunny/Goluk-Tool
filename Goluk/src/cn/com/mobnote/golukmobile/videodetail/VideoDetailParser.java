@@ -94,6 +94,23 @@ public class VideoDetailParser {
 						}
 						videoDetailInfo.video = video;
 					}
+					JSONObject json_recom = json_avideo.optJSONObject("recomm");
+					if(null != json_recom) {
+						VideoRecommend recommend = new VideoRecommend();
+						recommend.actid = json_recom.optString("atcid");
+						recommend.actname = json_recom.optString("atcname");
+						recommend.chanid = json_recom.optString("chanid");
+						recommend.chaname = json_recom.optString("chaname");
+						recommend.recomflag = json_recom.optString("recomflag");
+						recommend.atflag = json_recom.optString("atflag");
+						recommend.atreason = json_recom.optString("atreason");
+						recommend.atgold = json_recom.optString("atgold");
+						recommend.sysflag = json_recom.optString("sysflag");
+						recommend.sysreason = json_recom.optString("sysreason");
+						recommend.sysgold = json_recom.optString("sysgold");
+						recommend.reason = json_recom.optString("reason");
+						videoDetailInfo.recom = recommend;
+					}
 					data.avideo = videoDetailInfo;
 				}
 				// link

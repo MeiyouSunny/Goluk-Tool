@@ -14,6 +14,13 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -294,7 +301,23 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mTextComment = (TextView) convertView.findViewById(R.id.commentText);
 		headHolder.mZanImage = (ImageView) convertView.findViewById(R.id.video_square_detail_like_image);
 		headHolder.mTextZanName = (TextView) convertView.findViewById(R.id.zanName);
-
+		
+		headHolder.mImageHeadAward = (ImageView) convertView.findViewById(R.id.video_detail_head_award_image);
+		headHolder.mActiveImage = (ImageView) convertView.findViewById(R.id.active_image);
+		headHolder.mSysImage = (ImageView) convertView.findViewById(R.id.sys_image);
+		headHolder.mRecomImage = (ImageView) convertView.findViewById(R.id.recom_image);
+		headHolder.mTextLine1 = (TextView) convertView.findViewById(R.id.video_detail_line1);
+		headHolder.mTextLine2 = (TextView) convertView.findViewById(R.id.video_detail_line2);
+		headHolder.mActiveCount = (TextView) convertView.findViewById(R.id.active_count);
+		headHolder.mSysCount = (TextView) convertView.findViewById(R.id.sys_count);
+		headHolder.mActiveReason = (TextView) convertView.findViewById(R.id.active_reason);
+		headHolder.mSysReason = (TextView) convertView.findViewById(R.id.sys_reason);
+		headHolder.mRecomReason = (TextView) convertView.findViewById(R.id.recom_reason);
+		headHolder.mReasonLayout = (LinearLayout) convertView.findViewById(R.id.video_detail_reason_layout);
+		headHolder.mActiveLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_activie_layout);
+		headHolder.mSysLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_sys_layout);
+		headHolder.mRecomLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_recom_layout);
+		
 		loadFirstPic();
 
 		return convertView;
@@ -386,7 +409,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
 			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
-			headHolder.mTextDescribe.setText(mVideoAllData.avideo.video.describe);
+			//TODO 在视频描述之后添加活动标签
+			if(null == mVideoAllData.avideo.recom || "".equals(mVideoAllData.avideo.recom)
+					|| null == mVideoAllData.avideo.recom.chaname || "".equals(mVideoAllData.avideo.recom.chaname)) {
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "");
+			} else {
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.avideo.recom.chaname+"#");
+			}
+			
 			final String location = mVideoAllData.avideo.video.mLocation;
 			if (null != location && !"".equals(location)) {
 				headHolder.mLocationTv.setText(location);
@@ -430,7 +460,49 @@ public class VideoDetailAdapter extends BaseAdapter {
 					headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 				}
 			}
-
+			
+			//TODO　没有活动奖励视频没有奖励信息这个模块
+			//头部获奖视频icon显示
+			if("1".equals(mVideoAllData.avideo.recom.recomflag)) {
+				headHolder.mImageHeadAward.setVisibility(View.VISIBLE);
+			} else {
+				headHolder.mImageHeadAward.setVisibility(View.GONE);
+			}
+			//获奖／推荐
+			if(null != mVideoAllData.avideo.recom) {
+				if(!"1".equals(mVideoAllData.avideo.recom.atflag) && !"1".equals(mVideoAllData.avideo.recom.sysflag)
+						&&("".equals(mVideoAllData.avideo.recom.reason) || null == mVideoAllData.avideo.recom.reason)) {
+					headHolder.mTextLine1.setVisibility(View.GONE);
+					headHolder.mTextLine2.setVisibility(View.GONE);
+				} else {
+					headHolder.mTextLine1.setVisibility(View.VISIBLE);
+					headHolder.mTextLine2.setVisibility(View.VISIBLE);
+				}
+				
+				if("1".equals(mVideoAllData.avideo.recom.atflag)) {
+					headHolder.mActiveLayout.setVisibility(View.VISIBLE);
+					headHolder.mActiveReason.setText("理由："+mVideoAllData.avideo.recom.atreason);
+					headHolder.mActiveCount.setText("+"+mVideoAllData.avideo.recom.atgold+"Ｇ币");
+				} else {
+					headHolder.mActiveLayout.setVisibility(View.GONE);
+				}
+				
+				if("1".equals(mVideoAllData.avideo.recom.sysflag)) {
+					headHolder.mSysLayout.setVisibility(View.VISIBLE);
+					headHolder.mSysReason.setText("理由："+mVideoAllData.avideo.recom.sysreason);
+					headHolder.mSysCount.setText("+"+mVideoAllData.avideo.recom.sysgold+"Ｇ币");
+				} else {
+					headHolder.mSysLayout.setVisibility(View.GONE);
+				}
+				
+				if(!"".equals(mVideoAllData.avideo.recom.reason) || null != mVideoAllData.avideo.recom.reason) {
+					headHolder.mRecomLayout.setVisibility(View.VISIBLE);
+					headHolder.mRecomReason.setText("理由："+mVideoAllData.avideo.recom.reason);
+				} else {
+					headHolder.mRecomLayout.setVisibility(View.GONE);
+				}
+			}
+			
 			headHolder.mImageHead.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -635,6 +707,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 		RelativeLayout mListLayout = null;
 		TextView mForbidComment = null;
 		Uri url = null;
+		//奖励视频／推荐视频
+		ImageView mImageHeadAward,mActiveImage,mSysImage,mRecomImage;
+		TextView mTextLine1,mTextLine2,mActiveCount,mSysCount,mActiveReason,mSysReason,mRecomReason;
+		LinearLayout mReasonLayout;
+		RelativeLayout mActiveLayout,mSysLayout,mRecomLayout;
+		
 	}
 
 	private boolean isCallVideo = false;
@@ -875,5 +953,21 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mImageLayout.addView(simpleDraweeView, mPreLoadingParams);
 		headHolder.simpleDraweeView = simpleDraweeView;
 	}
-
+	
+	/**
+	 * 显示视频描述和活动名称
+	 * @param view
+	 * @param describe
+	 * @param text
+	 */
+	private void showTopicText(TextView view, String describe, String text) {
+		String reply_str = describe + text;
+		SpannableString style = new SpannableString(reply_str);
+		ClickableSpan clickttt = new TopicClickableSpan(mContext, text);
+		style.setSpan(clickttt, describe.length(), reply_str.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		view.setText(style);
+		view.setMovementMethod(LinkMovementMethod.getInstance());
+		
+	}
+	
 }
