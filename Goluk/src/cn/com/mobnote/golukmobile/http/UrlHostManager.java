@@ -17,6 +17,7 @@ public  class UrlHostManager {
 	public static final String UPLOAD_IMAG_PATH = "/fileService/HeadUploadServlet";
 	public static final String ONLINE_HOST = "http://s.goluk.cn";
 	public static final String TEST_HOST = "http://server.goluk.cn";
+	public static final String DEV_HOST = "http://svr.goluk.cn";
 	private String mHost = "";
 	private Context mContext;
 	private final String SERVER_FLAG_NAME = "serverflag";
@@ -27,6 +28,8 @@ public  class UrlHostManager {
 			mHost = ONLINE_HOST;
 		} else if (flag.equalsIgnoreCase("test")) {
 			mHost = TEST_HOST;
+		} else {
+			mHost = DEV_HOST;
 		}
 	}
 	
