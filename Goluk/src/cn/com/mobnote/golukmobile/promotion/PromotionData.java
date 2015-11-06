@@ -1,10 +1,15 @@
 package cn.com.mobnote.golukmobile.promotion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class PromotionData {
+public class PromotionData implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@JSONField(name = "channelid")
 	public String channelid;
 	@JSONField(name = "channelname")

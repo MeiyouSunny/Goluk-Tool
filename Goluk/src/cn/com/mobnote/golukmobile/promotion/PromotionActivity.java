@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.promotion;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +15,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
 
 public class PromotionActivity extends BaseActivity implements OnClickListener, IRequestResultListener, OnItemClickListener{
 	// title
@@ -20,7 +23,9 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 	private ListView mListView;
 	private PromotionDataAdapter mPromotionDataAdapter;
 	public static final String PROMOTION_SELECTED_ITEM = "selected_item";
+	public static final String PROMOTION_DATA = "promotion_data";
 	private int selectId = -1;
+	private ArrayList<PromotionData> mPromotionList;
 	private CustomLoadingDialog mCustomProgressDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +34,34 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 		setContentView(R.layout.activity_sharepromotion);
 		if (savedInstanceState == null) {
 			selectId = getIntent().getIntExtra(PROMOTION_SELECTED_ITEM, -1);
+			mPromotionList = (ArrayList<PromotionData>) getIntent().getSerializableExtra(PROMOTION_DATA);
+		} else {
+			selectId = savedInstanceState.getInt(PROMOTION_SELECTED_ITEM);
+			mPromotionList = (ArrayList<PromotionData>) savedInstanceState.getSerializable(PROMOTION_DATA);
 		}
 		initView();
 		loadData();
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		if (mPromotionList != null) {
+			outState.putSerializable(PROMOTION_DATA, mPromotionList);
+			outState.putInt(PROMOTION_SELECTED_ITEM, selectId);
+		}
+		super.onSaveInstanceState(outState);
+	}
+
 	public void loadData() {
-		mCustomProgressDialog.show();
-		PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
-		request.get(null);
+		if (mPromotionList == null) {
+			mCustomProgressDialog.show();
+			PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
+			request.get(null);
+		} else {
+			mPromotionDataAdapter.setData(mPromotionList);
+			mPromotionDataAdapter.notifyDataSetChanged();
+		}
 	}
 
 	public void initView() {
@@ -84,6 +108,9 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 			if (data != null && data.success) {
 				mPromotionDataAdapter.setData(data.data.PromotionList);
 				mPromotionDataAdapter.notifyDataSetChanged();
+			} else {
+				GolukUtils.showToast(this, getString(R.string.user_net_unavailable));
+				finish();
 			}
 			break;
 		}
