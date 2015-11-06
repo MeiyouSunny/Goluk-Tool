@@ -38,7 +38,7 @@ public class NewestAdapter extends BaseAdapter {
 	private CategoryListView mCategoryListView = null;
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
-	private boolean clickLock = false;
+//	private boolean clickLock = false;
 	private RelativeLayout mHeadView;
 	private ViewHolder holder;
 	private final float widthHeight = 1.78f;
@@ -229,19 +229,25 @@ public class NewestAdapter extends BaseAdapter {
 
 		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime) + " " +
 									mVideoSquareInfo.mVideoEntity.location);
-		String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
-		if(null != recommend && "1".equals(recommend)) {
-			Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
-			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-			holder.timeLocation.setCompoundDrawables(null, null, drawable, null);
+
+		if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
+			String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
+			if(null != recommend && "1".equals(recommend)) {
+				Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				holder.timeLocation.setCompoundDrawables(null, null, drawable, null);
+			} else {
+				holder.timeLocation.setCompoundDrawables(null, null, null, null);
+			}
+
+			String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
+			if(null != reward && "1".equals(reward)) {
+				holder.ivReward.setVisibility(View.VISIBLE);
+			} else {
+				holder.ivReward.setVisibility(View.GONE);
+			}
 		} else {
 			holder.timeLocation.setCompoundDrawables(null, null, null, null);
-		}
-
-		String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
-		if(null != reward && "1".equals(reward)) {
-			holder.ivReward.setVisibility(View.VISIBLE);
-		} else {
 			holder.ivReward.setVisibility(View.GONE);
 		}
 
@@ -536,15 +542,15 @@ public class NewestAdapter extends BaseAdapter {
 
 	}
 
-	public synchronized boolean getClickLock() {
-		return clickLock;
-	}
-
-	public synchronized void setClickLock(boolean lock) {
-		clickLock = lock;
-	}
+//	public synchronized boolean getClickLock() {
+//		return clickLock;
+//	}
+//
+//	public synchronized void setClickLock(boolean lock) {
+//		clickLock = lock;
+//	}
 
 	public void onResume() {
-		setClickLock(false);
+//		setClickLock(false);
 	}
 }

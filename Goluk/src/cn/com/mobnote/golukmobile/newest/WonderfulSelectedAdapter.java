@@ -23,22 +23,44 @@ import cn.com.mobnote.view.SlideShowView;
 
 public class WonderfulSelectedAdapter extends BaseAdapter {
 	private Context mContext = null;
-	private List<JXListItemDataInfo> mDataList = null;
+//	private List<JXListItemDataInfo> mDataList = null;
+	private List<Object> mDataList = null;
 	private int count = 0;
 	private int width = 0;
 	private Typeface mTypeface = null;
 	private final static int BANNER_ITEM = 0;
 	private final static int VIDEO_ITEM = 1;
+	private BannerDataModel mBannerData = null;
+	private final static String FAKE_CONTENT = "fake";
 
 	public WonderfulSelectedAdapter(Context context) {
 		mContext = context;
-		mDataList = new ArrayList<JXListItemDataInfo>();
+		mDataList = new ArrayList<Object>();
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		mTypeface = Typeface.createFromAsset(context.getAssets(), "AdobeHebrew-Bold.otf");
 	}
 
+	public void setBannerData(BannerDataModel model) {
+		mBannerData = model;
+		if(mDataList.size() == 0) {
+			mDataList.add(model);
+		} else {
+			mDataList.set(0, model);
+		}
+		notifyDataSetChanged();
+	}
+
+	// add fake banner data
 	public void setData(List<JXListItemDataInfo> data) {
 		mDataList.clear();
+
+		if(null != mBannerData) {
+			mDataList.add(mBannerData);
+		} else {
+			BannerDataModel model = new BannerDataModel();
+			model.setResult(FAKE_CONTENT);
+			mDataList.add(new BannerDataModel());
+		}
 		mDataList.addAll(data);
 		count = mDataList.size();
 		this.notifyDataSetChanged();
@@ -127,7 +149,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		}
 
 		if(getItemViewType(position) == VIDEO_ITEM) {
-			JXListItemDataInfo info = mDataList.get(position);
+			JXListItemDataInfo info = (JXListItemDataInfo)mDataList.get(position);
 			holder.mTitleName.setText(getTitleString(info.ztitle));
 			holder.mTagName.setVisibility(View.GONE);
 			if ("-1".equals(info.clicknumber)) {
@@ -159,12 +181,22 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			loadImage(holder.videoImg, holder.icon, info.jximg, info.jtypeimg);
 		} else {
             List<String> urlList = new ArrayList<String>();
-            urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618035090.png");
-            urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618022042.png");
-            urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446617680543.png");
+            BannerDataModel model = (BannerDataModel)mDataList.get(position);
+            if(null == model || null == model.getSlides()) {
+                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618035090.png");
+                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618022042.png");
+                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446617680543.png");
+                bannerHolder.mBannerSlide.clearImages();
+                bannerHolder.mBannerSlide.setImageUrlList(urlList);
+            } else {
+                int count = model.getSlides().size();
+                for(int i = 0; i < count; i++) {
+                    urlList.add(model.getSlides().get(i).getPicture());
+                }
 
-            bannerHolder.mBannerSlide.clearImages();
-            bannerHolder.mBannerSlide.setImageUrlList(urlList);
+                bannerHolder.mBannerSlide.clearImages();
+                bannerHolder.mBannerSlide.setImageUrlList(urlList);
+            }
 		}
 		return convertView;
 	}
