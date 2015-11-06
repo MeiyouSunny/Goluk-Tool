@@ -556,7 +556,7 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 			holder.recommentImg.setVisibility(View.GONE);
 		}
 
-		UserUtils.showCommentText(mContext, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
+		UserUtils.showCommentText(mContext, false,clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
 				clusterInfo.mVideoEntity.describe, got);
 	}
 

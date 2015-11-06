@@ -20,4 +20,8 @@ public class ProfitDetailResult {
 	@JSONField(name="time")
 	public String time;
 	
+	/**时间戳**/
+	@JSONField(name="timestamp")
+	public String timestamp;
+	
 }

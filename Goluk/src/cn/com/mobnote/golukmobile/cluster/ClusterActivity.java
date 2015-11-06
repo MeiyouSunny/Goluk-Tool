@@ -44,7 +44,6 @@ import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
-import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
@@ -54,11 +53,10 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IClickShareView,
-		IClickPraiseView, IDialogDealFn, IClusterInterface,VideoSuqareManagerFn{
-	
+		IClickPraiseView, IDialogDealFn, IClusterInterface, VideoSuqareManagerFn {
+
 	public static final String TAG = "ClusterActivity";
 
 	public static final String CLUSTER_KEY_ACTIVITYID = "activityid";
@@ -75,7 +73,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private ImageButton backbtn;
 	/** 标题 **/
 	private TextView title;
-	
+
 	/** 分享按钮 **/
 	private Button shareBtn;
 	private EditText mEditText = null;
@@ -90,25 +88,30 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	/** 活动id **/
 	private String mActivityid = null;
 	private String mClusterTitle = null;
-	
+
 	private ClusterBeanRequest request = null;
 	private RecommendBeanRequest recommendRequest = null;
 	private NewsBeanRequest newsRequest = null;
 	private GetShareUrlRequest shareRequest = null;
-	
+	/** 聚合id */
+	private String custerVid = "";
+	/** 是否允许评论 */
+	private boolean isCanInput = true;
+	/** 是否允许点击评论，只有当数据回来时，才可以去评论 */
+	private boolean isRequestSucess = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cluster_main);
-		
+
 		Intent intent = this.getIntent();
 		mActivityid = intent.getStringExtra(CLUSTER_KEY_ACTIVITYID);
 		mClusterTitle = intent.getStringExtra(CLUSTER_KEY_TITLE);
-		
+
 		this.initData();// 初始化view
 		this.initListener();// 初始化view的监听
-		
+
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener(TAG, this);
 
 		httpPost(mActivityid);
@@ -142,7 +145,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		shareBtn = (Button) findViewById(R.id.title_share);
 		mEditText = (EditText) findViewById(R.id.custer_comment_input);
 		commenCountTv = (TextView) findViewById(R.id.custer_comment_send);
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,null);
+		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,
+				null);
 		sharePlatform = new SharePlatformUtil(this);
 		clusterAdapter = new ClusterAdapter(this, sharePlatform, 1, this);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -223,10 +227,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		}
 	}
 
-	private String custerVid = "";
-	private boolean isCanInput = true;
-	private boolean isRequestSucess = false;
-
 	private void toCommentActivity(boolean isShowSoft) {
 		if (!isRequestSucess) {
 			return;
@@ -247,13 +247,13 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		String show = GolukUtils.getFormatNumber(count) + "条";
 		commenCountTv.setText(show);
 	}
-	
+
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		mBaseApp.setContext(this, TAG);
 		super.onResume();
 	}
+
 	public void updateViewData(boolean succ, int count) {
 		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
 		if (succ) {
@@ -269,12 +269,21 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			return;
 		}
 		isCanInput = false;
+		custerVid = bean.activity.activityid;
 		if (null != bean.activity.iscomment && !"".equals(bean.activity.iscomment)) {
 			if ("1".equals(bean.activity.iscomment)) {
 				isCanInput = true;
 			}
 		}
 		setCommentCount(bean.activity.commentcount);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (null != sharePlatform) {
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	@Override
@@ -331,13 +340,13 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			} else {
 				GolukUtils.showToast(this, "数据异常，请稍后重试");
 			}
-		}else if (requestType == IPageNotifyFn.PageType_ClusterShareUrl) {
+		} else if (requestType == IPageNotifyFn.PageType_ClusterShareUrl) {
 			closeProgressDialog();
 			GetClusterShareUrlData data = (GetClusterShareUrlData) result;
 			if (data != null && data.success) {
 				if (data.data != null) {
-					
-					ShareUrlDataBean sdb= data.data;
+
+					ShareUrlDataBean sdb = data.data;
 					if ("0".equals(sdb.result)) {
 						String shareurl = sdb.shorturl;
 						String coverurl = sdb.coverurl;
@@ -360,15 +369,15 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						if (this != null && !this.isFinishing()) {
 							CustomShareBoard shareBoard = new CustomShareBoard(ClusterActivity.this, sharePlatform,
 									shareurl, coverurl, describe, ttl, bitmap, realDesc, mActivityid);
-							shareBoard.showAtLocation(ClusterActivity.this.getWindow().getDecorView(),
-									Gravity.BOTTOM, 0, 0);
-						}else{
+							shareBoard.showAtLocation(ClusterActivity.this.getWindow().getDecorView(), Gravity.BOTTOM,
+									0, 0);
+						} else {
 							GolukUtils.showToast(this, "网络异常，请检查网络");
 						}
-					}else{
+					} else {
 						GolukUtils.showToast(this, "网络异常，请检查网络");
 					}
-				}else{
+				} else {
 					GolukUtils.showToast(this, "网络异常，请检查网络");
 				}
 			} else {
@@ -376,15 +385,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			}
 		}
 	}
-	
+
 	public Bitmap getThumbBitmap(String netUrl) {
 		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
 		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
 		File file = new File(path + File.separator + name);
 		Bitmap t_bitmap = null;
-		if (null == file) {
-			return null;
-		}
 		if (file.exists()) {
 			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
 		}
@@ -460,14 +466,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			return false;
 		}
 	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (null != sharePlatform) {
-			sharePlatform.onActivityResult(requestCode, resultCode, data);
-		}
-	}
 
 	@Override
 	public int OnGetListViewWidth() {
@@ -481,19 +479,16 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	@Override
 	public void CallBack_Del(int event, Object data) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void OnRefrushMainPageData() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1,
-			Object param2) {
-		 if (event == VSquare_Req_VOP_GetShareURL_Video) {
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+		if (event == VSquare_Req_VOP_GetShareURL_Video) {
 			Context topContext = mBaseApp.getContext();
 			if (topContext != this) {
 				return;
@@ -521,11 +516,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname
 									: "";
 							describe = username + "：" + describe;
-							CustomShareBoard shareBoard = new CustomShareBoard(
-									this, sharePlatform, shareurl, coverurl,
+							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
 									describe, ttl, null, realDesc, videoId);
-							shareBoard.showAtLocation(this.getWindow()
-									.getDecorView(), Gravity.BOTTOM, 0, 0);
+							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 						}
 
 					} else {
@@ -537,7 +530,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			} else {
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
-		}else if (event == VSquare_Req_VOP_Praise) {
+		} else if (event == VSquare_Req_VOP_Praise) {
 			if (RESULE_SUCESS == msg) {
 				if (null != mVideoSquareInfo) {
 					if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {

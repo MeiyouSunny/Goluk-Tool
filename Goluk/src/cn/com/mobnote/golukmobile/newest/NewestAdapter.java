@@ -229,19 +229,25 @@ public class NewestAdapter extends BaseAdapter {
 
 		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime) + " " +
 									mVideoSquareInfo.mVideoEntity.location);
-		String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
-		if(null != recommend && "1".equals(recommend)) {
-			Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
-			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-			holder.timeLocation.setCompoundDrawables(null, null, drawable, null);
+
+		if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
+			String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
+			if(null != recommend && "1".equals(recommend)) {
+				Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				holder.timeLocation.setCompoundDrawables(null, null, drawable, null);
+			} else {
+				holder.timeLocation.setCompoundDrawables(null, null, null, null);
+			}
+
+			String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
+			if(null != reward && "1".equals(reward)) {
+				holder.ivReward.setVisibility(View.VISIBLE);
+			} else {
+				holder.ivReward.setVisibility(View.GONE);
+			}
 		} else {
 			holder.timeLocation.setCompoundDrawables(null, null, null, null);
-		}
-
-		String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
-		if(null != reward && "1".equals(reward)) {
-			holder.ivReward.setVisibility(View.VISIBLE);
-		} else {
 			holder.ivReward.setVisibility(View.GONE);
 		}
 
@@ -268,7 +274,7 @@ public class NewestAdapter extends BaseAdapter {
 			holder.detail.setVisibility(View.GONE);
 		} else {
 			holder.detail.setVisibility(View.VISIBLE);
-			UserUtils.showCommentText(mContext, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+			UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
 					mVideoSquareInfo.mVideoEntity.describe, "#" + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
 		}
 

@@ -641,7 +641,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			holder.recommentImg.setVisibility(View.GONE);
 		}
 
-		UserUtils.showCommentText(mContext, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
+		UserUtils.showCommentText(mContext, true, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
 				clusterInfo.mVideoEntity.describe, got);
 	}
 

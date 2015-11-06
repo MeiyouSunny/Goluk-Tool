@@ -355,7 +355,8 @@ public class UserUtils {
 	 * @param nikename
 	 * @param text
 	 */
-	public static void showCommentText(Context context, VideoSquareInfo videInfo, TextView view, String nikename, String text, String got) {
+	public static void showCommentText(Context context, boolean isCanClick, VideoSquareInfo videInfo, TextView view,
+			String nikename, String text, String got) {
 		boolean isHasGot = false;
 		String all = "";
 		if (null != got && got.length() > 0) {
@@ -370,12 +371,19 @@ public class UserUtils {
 		spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		if (isHasGot) {
-			ClickableSpan clicksss = new CopyOfShuoMClickableSpan(context, got , videInfo);
-			spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			if (isCanClick) {
+				ClickableSpan clicksss = new CopyOfShuoMClickableSpan(context, got, videInfo);
+				spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(),
+						Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			} else {
+				spanttt.setSpan(new ForegroundColorSpan(Color.rgb(255, 138, 0)), nikename.length() + text.length() + 1,
+						all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			}
 		}
 		view.setText(spanttt);
 		view.setMovementMethod(LinkMovementMethod.getInstance());
 	}
+
 	/**
 	 * 评论列表中回复评论颜色设置
 	 * 

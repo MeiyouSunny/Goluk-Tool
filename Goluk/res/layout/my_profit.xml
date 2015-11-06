@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white" >
     
 	<!-- title -->
@@ -48,6 +47,7 @@
         android:id="@+id/my_profit_bg_layout" 
         android:layout_width="match_parent"
         android:layout_height="360dp"
+        android:layout_below="@id/profit_title_layout"
         android:background="@drawable/profit_bg_blue">
         
         <TextView 
@@ -80,16 +80,16 @@
                 android:textColor="#ffffff"
                 android:textSize="24sp" />
             
-            <TextView 
+            <cn.com.mobnote.golukmobile.profit.CustomTextView 
                 android:id="@+id/last_profit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="160dp"
+                android:layout_height="100dp"
                 android:layout_above="@id/profti_unit"
+                android:singleLine="true"
+                android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                android:textSize="100sp"
                 android:textColor="#ffffff"
-                android:text="0"/>
+                android:textSize="80sp" />
 
         </RelativeLayout>
         
@@ -108,8 +108,10 @@
     
     <!-- 累计获得／余额 -->
     <LinearLayout 
+        android:id="@+id/my_profit_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/my_profit_bg_layout"
         android:orientation="horizontal" >
         <!-- 累计获得 -->
         <LinearLayout 
@@ -183,4 +185,12 @@
         </LinearLayout>
     </LinearLayout>
     
-</LinearLayout>
+    <ImageView
+        android:id="@+id/video_detail_click_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       	android:layout_centerInParent="true"
+        android:src="@drawable/qitadifang"
+        android:visibility="gone" />
+    
+</RelativeLayout>
