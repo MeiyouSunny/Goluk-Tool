@@ -145,9 +145,8 @@ public class NewestAdapter extends BaseAdapter {
 		holder.liveImg = (ImageView) convertView.findViewById(R.id.newlist_item_liveicon);
 		holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
-		holder.time = (TextView) convertView.findViewById(R.id.time);
+		holder.timeLocation = (TextView) convertView.findViewById(R.id.time_location);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
-		holder.locationTv = (TextView) convertView.findViewById(R.id.list_item_location);
 
 		holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 		holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
@@ -226,15 +225,9 @@ public class NewestAdapter extends BaseAdapter {
 		}
 
 		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
-		holder.time.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
-		final String location = mVideoSquareInfo.mVideoEntity.location;
-		if (null == location || "".equals(location)) {
-			holder.locationTv.setVisibility(View.GONE);
-		} else {
-			holder.locationTv.setVisibility(View.VISIBLE);
-			holder.locationTv.setText(location);
-		}
 
+		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime) + " " +
+									mVideoSquareInfo.mVideoEntity.location);
 		if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 			holder.zanText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
 			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
@@ -477,9 +470,8 @@ public class NewestAdapter extends BaseAdapter {
 		ImageView liveImg;
 		ImageView headimg;
 		TextView nikename;
-		TextView time;
+		TextView timeLocation;
 		ImageView function;
-		TextView locationTv;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
