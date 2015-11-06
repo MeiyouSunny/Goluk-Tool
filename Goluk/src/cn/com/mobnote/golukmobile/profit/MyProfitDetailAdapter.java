@@ -48,6 +48,14 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 		
 		return 0;
 	}
+	
+	// 获取最后一条数据的时间戳
+	public String getLastDataTime() {
+		if (null == mIncomeList || mIncomeList.size() <= 0) {
+			return "";
+		}
+		return mIncomeList.get(mIncomeList.size() - 1).timestamp;
+	}
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup arg2) {

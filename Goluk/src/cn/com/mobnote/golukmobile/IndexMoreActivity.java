@@ -291,6 +291,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				dialog.show();
 			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
 				Intent itProfit = new Intent(mContext,MyProfitActivity.class);
+				itProfit.putExtra("uid", userUId);
 				mContext.startActivity(itProfit);
 			}
 		} else {

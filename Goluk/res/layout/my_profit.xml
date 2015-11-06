@@ -80,7 +80,7 @@
                 android:textColor="#ffffff"
                 android:textSize="24sp" />
             
-            <TextView 
+            <cn.com.mobnote.golukmobile.profit.CustomTextView 
                 android:id="@+id/last_profit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,6 +108,7 @@
     
     <!-- 累计获得／余额 -->
     <LinearLayout 
+        android:id="@+id/my_profit_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal" >

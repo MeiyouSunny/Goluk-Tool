@@ -2,8 +2,9 @@ package cn.com.mobnote.golukmobile.profit;
 
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.UserSetupActivity;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
@@ -17,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,6 +36,11 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private ProfitJsonRequest profitJsonRequest = null;
 	private ProfitInfo profitInfo = null;
 	private AlertDialog mDialog = null;
+	private LinearLayout mBottomLayout;
+	/**用户id**/
+	private String uid;
+	/**进入页面的loading**/
+	private CustomLoadingDialog mLoadingDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +50,13 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		
 		initView();
 		
-		profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
-		profitJsonRequest.get("9f1ae807-8466-4f3d-bd3f-c7f77292b60b", "100");
+		Intent itUser = getIntent();
+		uid = itUser.getStringExtra("uid").toString();
+		if(null != uid || !"".equals(uid)) {
+			showLoadingDialog();
+			profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
+			profitJsonRequest.get(uid, "100");
+		}
 		
 	}
 	
@@ -58,6 +70,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		mTextLeaveCount = (TextView) findViewById(R.id.my_profit_leave_count);
 		mTextLastHint = (TextView) findViewById(R.id.last_profit_no_hint);
 		mProfitBgLayout = (RelativeLayout) findViewById(R.id.my_profit_bg_layout);
+		mBottomLayout = (LinearLayout) findViewById(R.id.my_profit_bottom_layout);
+		mProfitBgLayout.setVisibility(View.GONE);
+		mBottomLayout.setVisibility(View.GONE);
 		
 		mBtnBack.setOnClickListener(this);
 		mBtnDetail.setOnClickListener(this);
@@ -79,6 +94,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		//明细
 		case R.id.my_profit_detail_btn:
 			Intent itDetail = new Intent(this,MyProfitDetailActivity.class);
+			itDetail.putExtra("uid", uid);
 			startActivity(itDetail);
 			break;
 		//提现
@@ -89,9 +105,11 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		case R.id.profit_problem:
 			GolukUtils.showToast(this, "跳转web页面");
 			break;
-		//收益未０时，点击跳转带有分享的相册页面
+		//收益为０时，点击跳转带有分享的相册页面
 		case R.id.last_profit_no_hint:
-			GolukUtils.showToast(this, "跳转我的相册相册相册啊");
+			Intent photoalbum = new Intent(MyProfitActivity.this, PhotoAlbumActivity.class);
+			photoalbum.putExtra("from", "cloud");
+			startActivity(photoalbum);
 			break;
 		default:
 			break;
@@ -130,8 +148,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 							
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
-								Intent itPhoto = new Intent(MyProfitActivity.this,UserSetupActivity.class);
-								startActivity(itPhoto);
+								Intent photoalbum = new Intent(MyProfitActivity.this, PhotoAlbumActivity.class);
+								photoalbum.putExtra("from", "cloud");
+								startActivity(photoalbum);
 							}
 						}).create();
 				mDialog.show();
@@ -184,9 +203,12 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
+		closeLoadingDialog();
 		if(requestType == IPageNotifyFn.PageType_MyProfit) {
 			profitInfo = (ProfitInfo)result;
 			if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
+				mProfitBgLayout.setVisibility(View.VISIBLE);
+				mBottomLayout.setVisibility(View.VISIBLE);
 				if(null == profitInfo.data.lgold || "".equals(profitInfo.data.lgold) || "0".equals(profitInfo.data.lgold)) {
 					mProfitBgLayout.setBackgroundResource(R.drawable.profit_bg_orange);
 					mTextLastHint.setVisibility(View.VISIBLE);
@@ -201,6 +223,21 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 				//TODO 异常处理
 			}
 			
+		}
+	}
+	
+	//显示loading
+	private void showLoadingDialog() {
+		if(null == mLoadingDialog) {
+			mLoadingDialog = new CustomLoadingDialog(this, null);
+			mLoadingDialog.show();
+		}
+	}
+	//关闭loading
+	private void closeLoadingDialog() {
+		if(null != mLoadingDialog) {
+			mLoadingDialog.close();
+			mLoadingDialog = null;
 		}
 	}
 }

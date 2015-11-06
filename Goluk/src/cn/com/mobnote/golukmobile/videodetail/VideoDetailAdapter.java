@@ -14,13 +14,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -963,7 +960,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	private void showTopicText(TextView view, String describe, String text) {
 		String reply_str = describe + text;
 		SpannableString style = new SpannableString(reply_str);
-		ClickableSpan clickttt = new TopicClickableSpan(mContext, text);
+		ClickableSpan clickttt = new TopicClickableSpan(mContext, text, mVideoJson);
 		style.setSpan(clickttt, describe.length(), reply_str.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		view.setText(style);
 		view.setMovementMethod(LinkMovementMethod.getInstance());
