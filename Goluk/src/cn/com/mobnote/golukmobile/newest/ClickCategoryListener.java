@@ -61,12 +61,12 @@ public class ClickCategoryListener implements OnTouchListener {
 	}
 	
 	private void jump() {
-		if(mNewestAdapter.getClickLock()) {
-			return;
-		}
-		
-		// 跳转到点播
-		mNewestAdapter.setClickLock(true);
+//		if(mNewestAdapter.getClickLock()) {
+//			return;
+//		}
+//		
+//		// 跳转到点播
+//		mNewestAdapter.setClickLock(true);
 		Intent intent = new Intent(mContext, VideoCategoryActivity.class);
 		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_TYPE, VideoCategoryActivity.CATEGORY_TYPE_DB);
 		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_ATTRIBUTE, mCategoryDataInfo.id);

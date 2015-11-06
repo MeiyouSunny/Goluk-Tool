@@ -38,7 +38,7 @@ public class NewestAdapter extends BaseAdapter {
 	private CategoryListView mCategoryListView = null;
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
-	private boolean clickLock = false;
+//	private boolean clickLock = false;
 	private RelativeLayout mHeadView;
 	private ViewHolder holder;
 	private final float widthHeight = 1.78f;
@@ -536,15 +536,15 @@ public class NewestAdapter extends BaseAdapter {
 
 	}
 
-	public synchronized boolean getClickLock() {
-		return clickLock;
-	}
-
-	public synchronized void setClickLock(boolean lock) {
-		clickLock = lock;
-	}
+//	public synchronized boolean getClickLock() {
+//		return clickLock;
+//	}
+//
+//	public synchronized void setClickLock(boolean lock) {
+//		clickLock = lock;
+//	}
 
 	public void onResume() {
-		setClickLock(false);
+//		setClickLock(false);
 	}
 }
