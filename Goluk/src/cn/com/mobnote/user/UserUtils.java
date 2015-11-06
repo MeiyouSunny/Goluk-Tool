@@ -371,7 +371,7 @@ public class UserUtils {
 				Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		if (isHasGot) {
 			ClickableSpan clicksss = new CopyOfShuoMClickableSpan(context, got , videInfo);
-			spanttt.setSpan(clicksss, nikename.length() + text.length(), all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		}
 		view.setText(spanttt);
 		view.setMovementMethod(LinkMovementMethod.getInstance());

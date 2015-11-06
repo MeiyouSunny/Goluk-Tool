@@ -23,7 +23,7 @@
 
     <ImageView
         android:id="@+id/video_first_needle1"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/def" />
@@ -109,7 +109,7 @@
 
     <ImageView
         android:id="@+id/video_first_needle2"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/def"/>

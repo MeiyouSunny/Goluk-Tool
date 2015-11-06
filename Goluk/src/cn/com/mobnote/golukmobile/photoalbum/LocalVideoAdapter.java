@@ -36,7 +36,18 @@ public class LocalVideoAdapter extends PagerAdapter{
 			return mLoopVideoLiseView.getRootView();
 		}
 	}
-	
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        if(1 == position) {
+            container.removeView(mWonderfulVideoLiseView.getRootView());
+        } else if(0 == position) {
+            container.removeView(mEmergencyVideoLiseView.getRootView());
+        } else {
+            container.removeView(mLoopVideoLiseView.getRootView());
+        }
+    }
+
 	@Override
 	public int getCount() {
 		return 3;

@@ -9,25 +9,21 @@ public class ClusterBeanRequest extends GolukFastjasonRequest<JsonData> {
 
 	public ClusterBeanRequest(int requestType, IRequestResultListener listener) {
 		super(requestType, JsonData.class, listener);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected String getPath() {
-		// TODO Auto-generated method stub
 		return "/navidog4MeetTrans/activity.htm";
 	}
 
 	@Override
 	protected String getMethod() {
-		// TODO Auto-generated method stub
 		return "activityInfo";
 	}
 
-	public void get(String activityId,String uid) {
+	public void get(String activityId) {
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
 		headers.put("activityid", activityId);
-		headers.put("uid", uid);
 		get();
 	}
 }

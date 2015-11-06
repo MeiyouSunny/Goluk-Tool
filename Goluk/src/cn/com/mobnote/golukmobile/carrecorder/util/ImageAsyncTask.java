@@ -29,7 +29,7 @@ class DownloadAsyncTask extends AsyncTask<String, String, Bitmap>{
 	@Override
 	protected Bitmap doInBackground(String... arg0) {
 		path = arg0[0];
-		return ImageManager.getBitmapFromCache(path, 194, 109);
+		return ImageManager.getBitmapFromCacheEx(path, 194, 109);
 	}
 	
 	@Override

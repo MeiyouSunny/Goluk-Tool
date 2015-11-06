@@ -1,6 +1,9 @@
 package cn.com.mobnote.golukmobile.carrecorder.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import cn.com.mobnote.application.GolukApplication;
 import android.graphics.Bitmap;
@@ -44,8 +47,28 @@ public class ImageManager {
 		}
 		
 		return null;
-	} 
-	
+	}
+
+	public static Bitmap getBitmapFromCacheEx(String filename, int width, int height) {
+		BitmapFactory.Options opt = new BitmapFactory.Options();
+		opt.inPreferredConfig = Bitmap.Config.RGB_565;
+		opt.inPurgeable = true;
+		opt.inInputShareable = true;
+		opt.inJustDecodeBounds = false;
+		opt.inSampleSize = 10;
+		Bitmap bitmap = null;
+
+		InputStream stream = null;
+		try {
+			stream = new FileInputStream(new File(filename));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		bitmap = BitmapFactory.decodeStream(stream , null, opt);
+		return bitmap;
+	}
+
 	public static Bitmap getBitmapFromResource(int id){ 
 		try {
 			return BitmapFactory.decodeResource(GolukApplication.getInstance().getResources(), id);

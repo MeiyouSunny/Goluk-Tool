@@ -792,7 +792,7 @@ public class JsonUtil {
 	// issquare 是否分享到视频广场 0/1 (否/是)
 	// thumbImgJavaPath: 缩略图路径
 	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
-			String thumbImgJavaPath, String createTime, String location) {
+			String thumbImgJavaPath, String createTime, String location, String channelid, String activityid, String activityname) {
 
 		String json = null;
 		try {
@@ -818,7 +818,9 @@ public class JsonUtil {
 			obj.put("type", "1");
 			obj.put("creattime", createTime);
 			obj.put("location", location);
-
+			obj.put("channelid", channelid);
+			obj.put("activityid", activityid);
+			obj.put("activityname", activityname);
 			json = obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
