@@ -29,11 +29,17 @@ public class CopyOfShuoMClickableSpan extends ClickableSpan {
 
 	@Override
 	public void onClick(View widget) {
-		// 启动活动聚合页
-		Intent intent = new Intent(mContext, ClusterActivity.class);
-		intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, mVideInfo.mVideoEntity.videoExtra.topicid);
-		intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-		mContext.startActivity(intent);
+		try {
+			// 启动活动聚合页
+			Intent intent = new Intent(mContext, ClusterActivity.class);
+			intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, mVideInfo.mVideoEntity.videoExtra.topicid);
+			intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+			intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, mVideInfo.mVideoEntity.videoExtra.topicname);
+			mContext.startActivity(intent);
+		} catch (Exception e) {
+
+		}
+
 	}
 
 }

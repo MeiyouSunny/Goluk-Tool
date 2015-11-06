@@ -1,7 +1,5 @@
 package cn.com.mobnote.golukmobile.cluster.bean;
 
-import java.util.List;
-
 import com.alibaba.fastjson.annotation.JSONField;
 
 public class ActivityBean {
@@ -39,9 +37,11 @@ public class ActivityBean {
 	public String activityname;
 
 	/** 聚合评论条数 */
+	@JSONField(name = "commentcount")
 	public String commentcount;
 
 	/** 是否可以评论 */
-	public boolean isCanComment;
+	@JSONField(name = "iscomment")
+	public String iscomment;
 
 }

@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -44,6 +43,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	public static final String CLUSTER_KEY_ACTIVITYID = "activityid";
 	public static final String CLUSTER_KEY_UID = "uid";
+	public static final String CLUSTER_KEY_TITLE = "cluster_key_title";
 	private RTPullListView mRTPullListView = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	private VolleyDataFormat vdf = new VolleyDataFormat();
@@ -229,7 +229,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		if (bean == null) {
 			return;
 		}
-		isCanInput = bean.activity.isCanComment;
+		isCanInput = false;
+		if (null != bean.activity.iscomment && !"".equals(bean.activity.iscomment)) {
+			if ("1".equals(bean.activity.iscomment)) {
+				isCanInput = true;
+			}
+		}
 		setCommentCount(bean.activity.commentcount);
 	}
 
