@@ -12,6 +12,7 @@ import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.videosuqare.LiveVideoData;
 import cn.com.mobnote.golukmobile.videosuqare.UserEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoExtra;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
 public class VolleyDataFormat {
@@ -72,6 +73,18 @@ public class VolleyDataFormat {
 						mVideoEntity.location = video.location;
 						mVideoEntity.reason = video.reason;
 						mVideoEntity.isopen = "0";
+						
+						GenBean gb = video.gen;
+						if(gb != null){
+							VideoExtra ve = new VideoExtra();
+							ve.topicid = gb.topicid;
+							ve.channelid = gb.channelid;
+							ve.isrecommend = gb.isrecommend;
+							ve.isreward = gb.isreward;
+							ve.topicname = gb.topicname;
+							mVideoEntity.videoExtra = ve;
+						}
+						
 
 						CommentBean comment = video.comment;
 						if (null != comment) {
