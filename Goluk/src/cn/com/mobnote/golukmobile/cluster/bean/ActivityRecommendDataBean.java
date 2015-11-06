@@ -11,7 +11,7 @@ public class ActivityRecommendDataBean {
 	
 	/**操作**/
 	@JSONField(name="operation")
-	public ClusterHeadBean operation;
+	public String operation;
 	
 	/**视频总数**/
 	@JSONField(name="videocount")
