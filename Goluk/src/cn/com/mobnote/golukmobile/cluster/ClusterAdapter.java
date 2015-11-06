@@ -47,8 +47,11 @@ import cn.com.mobnote.golukmobile.newest.ClickShareListener;
 import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.IUserCenterInterface;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.ViewHolder;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
@@ -148,9 +151,20 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 			int datacount = 0;
 
 			if (this.currentViewType == ViewType_RecommendVideoList) {
-				datacount = this.recommendlist.size() + 1;
+				if(recommendlist != null && recommendlist.size() > 0){
+					datacount = this.recommendlist.size() + 1;
+				}else{
+					datacount++;
+				}
+				
 			} else {
-				datacount = this.newslist.size() + 1;
+				
+				if(newslist != null && newslist.size() > 0){
+					datacount = this.newslist.size() + 1;
+				}else{
+					datacount++;
+				}
+				
 			}
 			if (datacount <= 1) {// 如果没有数据，则添加没有数据提示项
 				datacount++;
@@ -241,7 +255,7 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 		case ViewType_NewsVideoList:
 		case ViewType_RecommendVideoList:
 			int index_v = position - 1;
-			VideoSquareInfo clusterInfo;
+			final VideoSquareInfo clusterInfo;
 			if (currentViewType == ViewType_RecommendVideoList) {
 				clusterInfo = this.recommendlist.get(index_v);
 			} else {
@@ -312,6 +326,26 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 			} else {
 				showHead(holder.headimg, clusterInfo.mUserEntity.headportrait);
 			}
+			
+			holder.headimg.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// 跳转当前点赞人的个人中心
+					UCUserInfo user = new UCUserInfo();
+					user.uid = clusterInfo.mUserEntity.uid;
+					user.nickname = clusterInfo.mUserEntity.nickname;
+					user.headportrait = clusterInfo.mUserEntity.headportrait;
+					user.introduce = "";
+					user.sex = clusterInfo.mUserEntity.sex;
+					user.customavatar = clusterInfo.mUserEntity.mCustomAvatar;
+					user.praisemenumber = "0";
+					user.sharevideonumber = "0";
+					Intent i = new Intent(mContext, UserCenterActivity.class);
+					i.putExtra("userinfo", user);
+					i.putExtra("type", 0);
+					mContext.startActivity(i);
+				}
+			});
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
 			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
 			
