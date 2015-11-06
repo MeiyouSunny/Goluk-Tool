@@ -37,7 +37,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
     private static final String TAG = SlideShowView.class.getSimpleName();
 
     //轮播图图片数量
-    private final static int IMAGE_COUNT = 5;
+    private final static int IMAGE_COUNT = 10;
     //自动轮播的时间间隔
     private final static int TIME_INTERVAL = 5;
     //自动轮播启用开关

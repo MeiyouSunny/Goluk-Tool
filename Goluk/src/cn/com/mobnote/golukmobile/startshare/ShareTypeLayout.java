@@ -1,5 +1,11 @@
 package cn.com.mobnote.golukmobile.startshare;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +29,11 @@ import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
 import cn.com.mobnote.golukmobile.promotion.PromotionActivity;
+import cn.com.mobnote.golukmobile.promotion.PromotionData;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.map.LngLat;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
@@ -39,8 +48,8 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 	private int mCurrentType = TYPE_BG;
 
-	private final String[] hintArray = { "视频描述裸奔中，快来给他披大衣...", "吓死宝宝了，前面啥情况？说说呗...", "任何伟大的创意都需要一个漂亮的描述...",
-			"导演，配个文字再加场吻戏吧！" };
+	private final int[] hintArray = {R.string.default_comment1, R.string.default_comment2, R.string.default_comment3,
+			R.string.default_comment4 };
 
 	private Context mContext = null;
 	private LayoutInflater mLayoutFlater = null;
@@ -90,6 +99,8 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	private SharedPrefUtil mPrefUtil;
 	private boolean bPopup;
 	private PromotionSelectItem mPromotionSelectItem;
+	private ArrayList<PromotionData> mPromotionList;
+
 	public ShareTypeLayout(Context context) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
@@ -139,9 +150,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mPromotionTextView = (TextView) mRootLayout.findViewById(R.id.share_promotion_txt);
 		mPromotionTextView.setOnClickListener(this);
 
-//		if (!bPopup) {
-//			mPromotionHint.setVisibility(View.GONE);
-//		}
+		refreshPromotionUI(false, mContext.getString(R.string.share_str_join_promotion));
 
 		typeViewArray[0] = mBgBtn;
 		typeViewArray[1] = mSgBtn;
@@ -178,7 +187,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		if (null != inputStr && !inputStr.equals("")) {
 			return inputStr;
 		}
-		return "啥也不想说，快看视频吧...";
+		return mContext.getString(R.string.default_comment);
 	}
 
 	private void switchOpenAndClose(boolean isOpen) {
@@ -263,10 +272,21 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			click_location();
 			break;
 		case R.id.share_promotion_txt:
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
+				GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+				return;
+			}
+			refreshPromotionUI(false, mContext.getString(R.string.share_str_join_promotion));
 			Intent intent = new Intent(mContext, PromotionActivity.class);
 			if (mPromotionSelectItem != null) {
 				intent.putExtra(PromotionActivity.PROMOTION_SELECTED_ITEM, mPromotionSelectItem.selectid);
 			}
+
+			if (mPromotionList != null) {
+
+				intent.putExtra(PromotionActivity.PROMOTION_DATA, mPromotionList);
+			}
+
 			((Activity)mContext).startActivityForResult(intent, VideoEditActivity.PROMOTION_ACTIVITY_BACK);
 			break;
 		default:
@@ -330,7 +350,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		case LOCATION_STATE_FAILED:
 		case LOCATION_STATE_FORBID:
 			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_failed);
-			mAddressTv.setText("点击获取位置");
+			mAddressTv.setText(R.string.get_current_location);
 			break;
 		default:
 			break;
@@ -413,6 +433,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	}
 	
 	public void refreshPromotionUI(boolean isNew, String text) {
+
 		String formatText = "#" + text + "#";
 		if(isNew) {
 			String newtext = " " + mContext.getString(R.string.str_new);
@@ -438,5 +459,42 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	
 	public PromotionSelectItem getPromotionSelectItem() {
 		return mPromotionSelectItem;
+	}
+	
+	public void setPromotionList(ArrayList<PromotionData> list) {
+		if (list == null) {
+			return;
+		}
+		mPromotionList = list;
+		showNewFlag();
+	}
+
+	private void showNewFlag() {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		String md5 = "";
+		try {
+		  out = new ObjectOutputStream(bos);   
+		  out.writeObject(mPromotionList);
+		  byte[] content = bos.toByteArray();
+		  md5 = GolukUtils.compute32(content);
+		} catch (IOException ex) {
+
+		} finally {
+		  try {
+		    if (out != null) {
+		      out.close();
+		    }
+		    bos.close();
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		}
+
+		String lastmd5 = mPrefUtil.getPromotionListString();
+		if (TextUtils.isEmpty(lastmd5) || !lastmd5.equalsIgnoreCase(md5)) {
+			refreshPromotionUI(true, mContext.getString(R.string.share_str_join_promotion));
+			mPrefUtil.savePromotionListString(md5);
+		}
 	}
 }

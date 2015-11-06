@@ -82,4 +82,8 @@ public class VideoBean {
 	@JSONField(name="comment")
 	public CommentBean comment;
 	
+	/**参加活动信息**/
+	@JSONField(name="gen")
+	public GenBean gen;
+	
 }

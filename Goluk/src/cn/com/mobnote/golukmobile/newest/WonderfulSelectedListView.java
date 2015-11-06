@@ -4,14 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -28,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 @SuppressLint("InflateParams")
@@ -54,6 +58,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	/** 保存列表显示item个数 */
 	private int visibleCount;
 	private ImageView shareBg = null;
+	private static final String TAG = "WonderfulSelectedListView";
 
 	private long requestId = 0;
 
@@ -95,6 +100,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		initHistoryData();
 		setViewListBg(false);
 		httpPost(true, "0", "");
+		loadBannerData();
 
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
@@ -106,6 +112,35 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			}
 		});
 	}
+
+	private void loadBannerData() {
+		BannerListRequest request = new BannerListRequest(IPageNotifyFn.PageType_BannerGet, mBannerRequestListener);
+		request.get("100");
+	}
+
+	private BannerDataModel mBannerData;
+	private IRequestResultListener mBannerRequestListener = new IRequestResultListener() {
+		@Override
+		public void onLoadComplete(int requestType, Object result) {
+			BannerModel model = (BannerModel)result;
+
+			do {
+				if(null == model) {
+					GolukDebugUtils.d(TAG, "Can't get banner");
+					break;
+				}
+
+				if(!model.isSuccess() || null == model.getData()) {
+					GolukDebugUtils.d(TAG, model.getMsg());
+					Toast.makeText(mContext, model.getMsg(), Toast.LENGTH_SHORT).show();
+					break;
+				}
+				mWonderfulSelectedAdapter.setBannerData(model.getData());
+			} while(false);
+
+			return;
+		}
+	};
 
 	private void initHistoryData() {
 		String data = GolukApplication.getInstance().getVideoSquareManager().getJXList();

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -37,7 +38,7 @@ public class NewestAdapter extends BaseAdapter {
 	private CategoryListView mCategoryListView = null;
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
-	private boolean clickLock = false;
+//	private boolean clickLock = false;
 	private RelativeLayout mHeadView;
 	private ViewHolder holder;
 	private final float widthHeight = 1.78f;
@@ -164,7 +165,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
 		holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
 		holder.detail = (TextView) convertView.findViewById(R.id.detail);
-
+		holder.ivReward = (ImageView)convertView.findViewById(R.id.iv_reward_tag);
 		holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
 		holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
 		holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
@@ -228,6 +229,28 @@ public class NewestAdapter extends BaseAdapter {
 
 		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime) + " " +
 									mVideoSquareInfo.mVideoEntity.location);
+
+		if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
+			String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
+			if(null != recommend && "1".equals(recommend)) {
+				Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				holder.timeLocation.setCompoundDrawables(null, null, drawable, null);
+			} else {
+				holder.timeLocation.setCompoundDrawables(null, null, null, null);
+			}
+
+			String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
+			if(null != reward && "1".equals(reward)) {
+				holder.ivReward.setVisibility(View.VISIBLE);
+			} else {
+				holder.ivReward.setVisibility(View.GONE);
+			}
+		} else {
+			holder.timeLocation.setCompoundDrawables(null, null, null, null);
+			holder.ivReward.setVisibility(View.GONE);
+		}
+
 		if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 			holder.zanText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
 			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
@@ -251,8 +274,8 @@ public class NewestAdapter extends BaseAdapter {
 			holder.detail.setVisibility(View.GONE);
 		} else {
 			holder.detail.setVisibility(View.VISIBLE);
-			UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
-					mVideoSquareInfo.mVideoEntity.describe);
+			UserUtils.showCommentText(mContext, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+					mVideoSquareInfo.mVideoEntity.describe, "#" + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
 		}
 
 		if (isLive(mVideoSquareInfo)) {
@@ -494,7 +517,7 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
-
+		ImageView ivReward;
 	}
 
 	public void setNewestLiseView(NewestListView view) {
@@ -519,15 +542,15 @@ public class NewestAdapter extends BaseAdapter {
 
 	}
 
-	public synchronized boolean getClickLock() {
-		return clickLock;
-	}
-
-	public synchronized void setClickLock(boolean lock) {
-		clickLock = lock;
-	}
+//	public synchronized boolean getClickLock() {
+//		return clickLock;
+//	}
+//
+//	public synchronized void setClickLock(boolean lock) {
+//		clickLock = lock;
+//	}
 
 	public void onResume() {
-		setClickLock(false);
+//		setClickLock(false);
 	}
 }

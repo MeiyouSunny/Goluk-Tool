@@ -136,6 +136,10 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 				}
 				Bitmap bitmap = imageView.clip();
 
+				if (bitmap == null) {
+					isSave = true;
+					return;
+				}
 				try {
 					String request = this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
 					if (request != null) {
@@ -143,8 +147,10 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 						System.out.println("flog =" + flog);
 					}
 				} catch (IOException e) {
+					isSave = true;
 					e.printStackTrace();
 				} catch (JSONException e) {
+					isSave = true;
 					e.printStackTrace();
 				}
 				bitmap.recycle();
@@ -205,7 +211,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			cacheBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
 			byte[] bb = baos.toByteArray();
 			
-			md5key = this.compute32(bb);
+			md5key = GolukUtils.compute32(bb);
 			baos.writeTo(out);
 			requestStr = new JSONObject();
 			requestStr.put("PicMD5", md5key);
@@ -277,31 +283,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		matrix.postScale(scaleWidth, scaleHeight);
 		Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width, (int) height, matrix, true);
 		return bitmap;
-	}
-
-	public String compute32(byte[] content) {
-		StringBuffer buf = new StringBuffer("");
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			try {
-				md.update(content);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			byte b[] = md.digest();
-			int i;
-			for (int offset = 0; offset < b.length; offset++) {
-				i = b[offset];
-				if (i < 0)
-					i += 256;
-				if (i < 16)
-					buf.append("0");
-				buf.append(Integer.toHexString(i));
-			}
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return buf.toString();
 	}
 
 	public void makeRootDirectory(String filePath) {

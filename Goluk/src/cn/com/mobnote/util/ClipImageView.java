@@ -441,6 +441,10 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		int width = this.getWidth();
 		int height = this.getHeight();
 
+		if (width <= 0 || height <= 0) {
+			return null;
+		}
+
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		draw(canvas);

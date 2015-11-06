@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -44,8 +45,10 @@ import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener;
 import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.IUserCenterInterface;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.ViewHolder;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
@@ -195,7 +198,9 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-
+						Intent photoalbum = new Intent(mContext,PhotoAlbumActivity.class);
+						photoalbum.putExtra("from", "cloud");
+						mContext.startActivity(photoalbum);
 					}
 				});
 
@@ -251,6 +256,8 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 				holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 				holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 				holder.location = (TextView) convertView.findViewById(R.id.uc_location);
+				holder.videoGoldImg = (ImageView) convertView.findViewById(R.id.user_center_gold);
+				holder.recommentImg = (ImageView) convertView.findViewById(R.id.uc_recommend);
 
 				holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView.findViewById(R.id.function);
@@ -307,6 +314,8 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 			}
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
 			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
+			
+			setVideoExtra(holder, clusterInfo);
 			// 设置显示 视频位置信息
 			final String location = clusterInfo.mVideoEntity.location;
 			if (null == location || "".equals(location)) {
@@ -478,6 +487,44 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 		}
 	}
+	
+	/**
+	 * 设置，视频的，是否推荐，是否获奖，是否有参加活动
+	 * 
+	 * @param holder
+	 *            UI控件
+	 * @param clusterInfo
+	 *            数据载体
+	 * @author jyf
+	 */
+	private void setVideoExtra(ViewHolder holder, VideoSquareInfo clusterInfo) {
+		if (null == clusterInfo || null == holder) {
+			return;
+		}
+		String got = "";
+		if (null != clusterInfo.mVideoEntity.videoExtra) {
+			// 显示是否获奖
+			if (clusterInfo.mVideoEntity.videoExtra.isreward.equals("1")) {
+				holder.videoGoldImg.setVisibility(View.VISIBLE);
+			} else {
+				holder.videoGoldImg.setVisibility(View.GONE);
+			}
+			// 显示是否推荐
+			if (clusterInfo.mVideoEntity.videoExtra.isrecommend.equals("1")) {
+				holder.recommentImg.setVisibility(View.VISIBLE);
+			} else {
+				holder.recommentImg.setVisibility(View.GONE);
+			}
+			// 获得聚合字符串
+			got = clusterInfo.mVideoEntity.videoExtra.topicname;
+		} else {
+			holder.videoGoldImg.setVisibility(View.GONE);
+			holder.recommentImg.setVisibility(View.GONE);
+		}
+
+		UserUtils.showCommentText(mContext, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
+				clusterInfo.mVideoEntity.describe, got);
+	}
 
 	/**
 	 * 检查是否有可用网络
@@ -529,9 +576,6 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 		return time;
 	}
 
-	// private void loadImage(SimpleDraweeView layout, String url, int nWidth) {
-	// layout.setImageURI(Uri.parse(url));
-	// }
 
 	/**
 	 * 锁住后滚动时禁止下载图片
@@ -571,6 +615,8 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 		TextView location;
 		TextView time;
 		ImageView function;
+		ImageView videoGoldImg;
+		ImageView recommentImg;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;

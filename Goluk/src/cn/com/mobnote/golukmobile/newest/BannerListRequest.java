@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.promotion;
+package cn.com.mobnote.golukmobile.newest;
 
 import java.util.HashMap;
 
@@ -6,23 +6,24 @@ import android.text.TextUtils;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjasonRequest;
 
-public class PromotionStatusRequest extends GolukFastjasonRequest<PromotionStatusModel> {
 
-	public PromotionStatusRequest(int requestType, IRequestResultListener listener) {
-		super(requestType, PromotionStatusModel.class, listener);
+public class BannerListRequest extends GolukFastjasonRequest<BannerModel> {
+
+	public BannerListRequest(int requestType, IRequestResultListener listener) {
+		super(requestType, BannerModel.class, listener);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected String getPath() {
 		// TODO Auto-generated method stub
-		return "/navidog4MeetTrans/activity.htm";
+		return "/navidog4MeetTrans/boutique.htm";
 	}
 
 	@Override
 	protected String getMethod() {
 		// TODO Auto-generated method stub
-		return "newstatus";
+		return "slideList";
 	}
 
 	public void get(String location) {

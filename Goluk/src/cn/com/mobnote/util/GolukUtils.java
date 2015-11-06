@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -19,7 +22,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
@@ -496,15 +498,19 @@ public class GolukUtils {
 
 	public static String getFormatNumber(String fmtnumber) {
 		String number;
+		try {
+			int wg = Integer.parseInt(fmtnumber);
 
-		int wg = Integer.parseInt(fmtnumber);
-
-		if (wg < 100000) {
-			DecimalFormat df = new DecimalFormat("#,###");
-			number = df.format(wg);
-		} else {
-			number = "100,000+";
+			if (wg < 100000) {
+				DecimalFormat df = new DecimalFormat("#,###");
+				number = df.format(wg);
+			} else {
+				number = "100,000+";
+			}
+		} catch (Exception e) {
+			return fmtnumber;
 		}
+
 		return number;
 	}
 
@@ -643,4 +649,28 @@ public class GolukUtils {
 
 	}
 
+	public static String compute32(byte[] content) {
+		StringBuffer buf = new StringBuffer("");
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			try {
+				md.update(content);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			byte b[] = md.digest();
+			int i;
+			for (int offset = 0; offset < b.length; offset++) {
+				i = b[offset];
+				if (i < 0)
+					i += 256;
+				if (i < 16)
+					buf.append("0");
+				buf.append(Integer.toHexString(i));
+			}
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return buf.toString();
+	}
 }

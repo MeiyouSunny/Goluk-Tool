@@ -296,7 +296,10 @@
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="adjustResize" >
         </activity>
-
+       <!-- ###################Glide使用volley传输###################### -->
+		<meta-data
+    		android:name="com.bumptech.glide.integration.volley.VolleyGlideModule"
+    		android:value="GlideModule" />
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"

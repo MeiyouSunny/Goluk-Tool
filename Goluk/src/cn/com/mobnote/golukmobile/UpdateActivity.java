@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -590,6 +591,15 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mTimer.cancel();
 			mTimer = null;
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			exit();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
