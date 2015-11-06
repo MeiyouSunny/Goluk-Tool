@@ -21,21 +21,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.live.ILive;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
-import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -285,9 +276,35 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			break;
 		//我的收益
 		case R.id.profit_item:
-			Intent itProfit = new Intent(mContext,MyProfitActivity.class);
-			mContext.startActivity(itProfit);
+			clickProfitItem();
 			break;
+		}
+	}
+	/**
+	 * 跳转我的收益页面
+	 */
+	private void clickProfitItem() {
+		if (isHasInfo && (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2)) {
+			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
+				mBuilder = new AlertDialog.Builder(mContext);
+				dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
+				dialog.show();
+			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
+				Intent itProfit = new Intent(mContext,MyProfitActivity.class);
+				mContext.startActivity(itProfit);
+			}
+		} else {
+			GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------" + ma.mApp.autoLoginStatus);
+			Intent itNo = new Intent(mContext, UserLoginActivity.class);
+			// 登录页回调判断
+			itNo.putExtra("isInfo", "indexmore");
+			mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+			mEditor = mPreferences.edit();
+			mEditor.putString("toRepwd", "more");
+			mEditor.commit();
+
+			mContext.startActivity(itNo);
+			isHasInfo = true;
 		}
 	}
 	/**
