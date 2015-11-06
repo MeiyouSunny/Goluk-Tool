@@ -410,11 +410,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
 			//TODO 在视频描述之后添加活动标签
-			if(null == mVideoAllData.avideo.recom || "".equals(mVideoAllData.avideo.recom)
-					|| null == mVideoAllData.avideo.recom.chaname || "".equals(mVideoAllData.avideo.recom.chaname)) {
+			if(null == mVideoAllData.avideo.video.recom || "".equals(mVideoAllData.avideo.video.recom)
+					|| null == mVideoAllData.avideo.video.recom.chaname || "".equals(mVideoAllData.avideo.video.recom.chaname)) {
 				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "");
 			} else {
-				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.avideo.recom.chaname+"#");
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.avideo.video.recom.chaname+"#");
 			}
 			
 			final String location = mVideoAllData.avideo.video.mLocation;
@@ -463,15 +463,15 @@ public class VideoDetailAdapter extends BaseAdapter {
 			
 			//TODO　没有活动奖励视频没有奖励信息这个模块
 			//头部获奖视频icon显示
-			if("1".equals(mVideoAllData.avideo.recom.recomflag)) {
+			if("1".equals(mVideoAllData.avideo.video.recom.isreward)) {
 				headHolder.mImageHeadAward.setVisibility(View.VISIBLE);
 			} else {
 				headHolder.mImageHeadAward.setVisibility(View.GONE);
 			}
 			//获奖／推荐
-			if(null != mVideoAllData.avideo.recom) {
-				if(!"1".equals(mVideoAllData.avideo.recom.atflag) && !"1".equals(mVideoAllData.avideo.recom.sysflag)
-						&&("".equals(mVideoAllData.avideo.recom.reason) || null == mVideoAllData.avideo.recom.reason)) {
+			if(null != mVideoAllData.avideo.video.recom) {
+				if(!"1".equals(mVideoAllData.avideo.video.recom.atflag) && !"1".equals(mVideoAllData.avideo.video.recom.sysflag)
+						&&("".equals(mVideoAllData.avideo.video.recom.reason) || null == mVideoAllData.avideo.video.recom.reason)) {
 					headHolder.mTextLine1.setVisibility(View.GONE);
 					headHolder.mTextLine2.setVisibility(View.GONE);
 				} else {
@@ -479,25 +479,25 @@ public class VideoDetailAdapter extends BaseAdapter {
 					headHolder.mTextLine2.setVisibility(View.VISIBLE);
 				}
 				
-				if("1".equals(mVideoAllData.avideo.recom.atflag)) {
+				if("1".equals(mVideoAllData.avideo.video.recom.atflag)) {
 					headHolder.mActiveLayout.setVisibility(View.VISIBLE);
-					headHolder.mActiveReason.setText("理由："+mVideoAllData.avideo.recom.atreason);
-					headHolder.mActiveCount.setText("+"+mVideoAllData.avideo.recom.atgold+"Ｇ币");
+					headHolder.mActiveReason.setText("理由："+mVideoAllData.avideo.video.recom.atreason);
+					headHolder.mActiveCount.setText("+"+mVideoAllData.avideo.video.recom.atgold+"Ｇ币");
 				} else {
 					headHolder.mActiveLayout.setVisibility(View.GONE);
 				}
 				
-				if("1".equals(mVideoAllData.avideo.recom.sysflag)) {
+				if("1".equals(mVideoAllData.avideo.video.recom.sysflag)) {
 					headHolder.mSysLayout.setVisibility(View.VISIBLE);
-					headHolder.mSysReason.setText("理由："+mVideoAllData.avideo.recom.sysreason);
-					headHolder.mSysCount.setText("+"+mVideoAllData.avideo.recom.sysgold+"Ｇ币");
+					headHolder.mSysReason.setText("理由："+mVideoAllData.avideo.video.recom.sysreason);
+					headHolder.mSysCount.setText("+"+mVideoAllData.avideo.video.recom.sysgold+"Ｇ币");
 				} else {
 					headHolder.mSysLayout.setVisibility(View.GONE);
 				}
 				
-				if(!"".equals(mVideoAllData.avideo.recom.reason) || null != mVideoAllData.avideo.recom.reason) {
+				if(!"".equals(mVideoAllData.avideo.video.recom.reason) || null != mVideoAllData.avideo.video.recom.reason) {
 					headHolder.mRecomLayout.setVisibility(View.VISIBLE);
-					headHolder.mRecomReason.setText("理由："+mVideoAllData.avideo.recom.reason);
+					headHolder.mRecomReason.setText("理由："+mVideoAllData.avideo.video.recom.reason);
 				} else {
 					headHolder.mRecomLayout.setVisibility(View.GONE);
 				}
