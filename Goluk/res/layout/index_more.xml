@@ -215,7 +215,7 @@
                     android:background="@drawable/editor_arrow"
                     android:contentDescription="@string/imgdes" />
                 
-                <TextView 
+                <!-- <TextView 
                     android:id="@+id/profit_hint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -223,7 +223,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_centerVertical="true"
                     android:text="上一次收入０G币"
-                    android:textColor="#cccccc"/>
+                    android:textColor="#cccccc"/> -->
             </RelativeLayout>
 
             <View

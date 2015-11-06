@@ -27,6 +27,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private TextView mTextProblem;
 	private TextView mTextLastCount,mTextTotalCount,mTextLeaveCount;
 	private ProfitJsonRequest profitJsonRequest = null;
+	private ProfitInfo profitInfo = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,6 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			break;
 		//明细
 		case R.id.my_profit_detail_btn:
-			GolukUtils.showToast(this, "明细明细明细");
 			Intent itDetail = new Intent(this,MyProfitDetailActivity.class);
 			startActivity(itDetail);
 			break;
@@ -128,11 +128,11 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		if(requestType == IPageNotifyFn.PageType_MyProfit) {
-			ProfitInfo profitInfo = (ProfitInfo)result;
+			profitInfo = (ProfitInfo)result;
 			if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
-				mTextLastCount.setText(profitInfo.data.lgold+"个Ｇ币");
-				mTextTotalCount.setText(profitInfo.data.hgold+"个Ｇ币");
-				mTextLeaveCount.setText(profitInfo.data.agold+"个Ｇ币");
+				mTextLastCount.setText(profitInfo.data.lgold);
+				mTextTotalCount.setText(GolukUtils.getFormatNumber(profitInfo.data.hgold)+"个Ｇ币");
+				mTextLeaveCount.setText(GolukUtils.getFormatNumber(profitInfo.data.agold)+"个Ｇ币");
 			} else {
 				//TODO 异常处理
 			}

@@ -136,7 +136,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mQuestionItem = (RelativeLayout) mRootLayout.findViewById(R.id.question_item);
 		mShoppingItem = (RelativeLayout) mRootLayout.findViewById(R.id.shopping_item);
 		mProfitItem = (RelativeLayout) mRootLayout.findViewById(R.id.profit_item);
-		mTextProfit = (TextView) mRootLayout.findViewById(R.id.profit_hint);
+//		mTextProfit = (TextView) mRootLayout.findViewById(R.id.profit_hint);
 
 		// 头像、昵称、id
 		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);

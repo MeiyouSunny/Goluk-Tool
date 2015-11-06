@@ -7,7 +7,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class ProfitDetailData {
 
 	/**数组列表**/
-	@JSONField(name="result")
-	public List<ProfitDetailResult> result;
+	@JSONField(name="incomelist")
+	public List<ProfitDetailResult> incomelist;
 	
 }
