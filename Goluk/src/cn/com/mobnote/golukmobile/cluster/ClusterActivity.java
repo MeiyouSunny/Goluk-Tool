@@ -10,12 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -24,15 +25,16 @@ import cn.com.mobnote.golukmobile.cluster.ClusterAdapter.IClusterInterface;
 import cn.com.mobnote.golukmobile.cluster.bean.ClusterHeadBean;
 import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
 import cn.com.mobnote.golukmobile.cluster.bean.VolleyDataFormat;
+import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -44,38 +46,27 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	public static final String CLUSTER_KEY_UID = "uid";
 	private RTPullListView mRTPullListView = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	
 	private VolleyDataFormat vdf = new VolleyDataFormat();
-	
-
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
 	private int wonderfulVisibleCount;
-
 	/** 返回按钮 */
 	private ImageButton backbtn;
 	/** 分享按钮 **/
 	private Button shareBtn;
-
+	private EditText mEditText = null;
+	private TextView commenCountTv = null;
 	public ClusterHeadBean headData = null;
 	public List<VideoSquareInfo> recommendlist = null;
 	public List<VideoSquareInfo> newslist = null;
-
 	private int currentViewType = 1; // 当前视图类型（推荐列表，最新列表）
-
 	public ClusterAdapter clusterAdapter;
-
 	private SharePlatformUtil sharePlatform = null;
-
 	private RelativeLayout mBottomLoadingView = null;
-
 	/** 活动id **/
 	private String mActivityid = null;
-	
 	private ClusterBeanRequest request = null;
-	
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +106,10 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		backbtn = (ImageButton) findViewById(R.id.back_btn);
 		shareBtn = (Button) findViewById(R.id.title_share);
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,null);
+		mEditText = (EditText) findViewById(R.id.custer_comment_input);
+		commenCountTv = (TextView) findViewById(R.id.custer_comment_send);
+		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,
+				null);
 
 		if (sharePlatform == null) {
 			sharePlatform = new SharePlatformUtil(this);
@@ -137,6 +131,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private void initListener() {
 		backbtn.setOnClickListener(this);
 		shareBtn.setOnClickListener(this);
+		mEditText.setOnClickListener(this);
+		commenCountTv.setOnClickListener(this);
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -187,12 +183,35 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		case R.id.title_share:
 
 			break;
+		case R.id.custer_comment_send:
+			toCommentActivity(false);
+			break;
+		case R.id.custer_comment_input:
+			toCommentActivity(true);
+			break;
 		default:
 			break;
 		}
+	}
 
+	private String custerVid = "";
+	private boolean isCanInput = false;
+
+	private void toCommentActivity(boolean isShowSoft) {
+		Intent intent = new Intent(this, CommentActivity.class);
+		intent.putExtra(CommentActivity.COMMENT_KEY_MID, custerVid);
+		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, "4");
+		intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, isShowSoft);
+		intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, isCanInput);
+		intent.putExtra(CommentActivity.COMMENT_KEY_USERID, "");
+		startActivity(intent);
 	}
 	
+	private void setCommentCount(String count) {
+		String show = GolukUtils.getFormatNumber(count) + "条";
+		commenCountTv.setText(show);
+	}
+
 	public void updateViewData(boolean succ, int count) {
 		if (succ) {
 			clusterAdapter.notifyDataSetChanged();
@@ -205,16 +224,16 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		if(requestType == IPageNotifyFn.PageType_ClusterMain){
+		if (requestType == IPageNotifyFn.PageType_ClusterMain) {
 			JsonData data = (JsonData) result;
-			if(data!=null && data.success ){
-				if(data.data != null){
+			if (data != null && data.success) {
+				if (data.data != null) {
 					ClusterHeadBean chb = data.data;
 					recommendlist = vdf.getClusterList(chb.recommendvideo);
 					newslist = vdf.getClusterList(chb.latestvideo);
-					clusterAdapter.setDataInfo(chb.activity,recommendlist, newslist);
+					clusterAdapter.setDataInfo(chb.activity, recommendlist, newslist);
 					updateViewData(true, 0);
-				}else{
+				} else {
 					updateViewData(false, 0);
 				}
 			}

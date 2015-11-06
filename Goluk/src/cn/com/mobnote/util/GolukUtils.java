@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
@@ -496,15 +495,19 @@ public class GolukUtils {
 
 	public static String getFormatNumber(String fmtnumber) {
 		String number;
+		try {
+			int wg = Integer.parseInt(fmtnumber);
 
-		int wg = Integer.parseInt(fmtnumber);
-
-		if (wg < 100000) {
-			DecimalFormat df = new DecimalFormat("#,###");
-			number = df.format(wg);
-		} else {
-			number = "100,000+";
+			if (wg < 100000) {
+				DecimalFormat df = new DecimalFormat("#,###");
+				number = df.format(wg);
+			} else {
+				number = "100,000+";
+			}
+		} catch (Exception e) {
+			return fmtnumber;
 		}
+
 		return number;
 	}
 
