@@ -136,6 +136,10 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 				}
 				Bitmap bitmap = imageView.clip();
 
+				if (bitmap == null) {
+					isSave = true;
+					return;
+				}
 				try {
 					String request = this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
 					if (request != null) {
@@ -143,8 +147,10 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 						System.out.println("flog =" + flog);
 					}
 				} catch (IOException e) {
+					isSave = true;
 					e.printStackTrace();
 				} catch (JSONException e) {
+					isSave = true;
 					e.printStackTrace();
 				}
 				bitmap.recycle();
