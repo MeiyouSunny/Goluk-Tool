@@ -33,12 +33,13 @@
             android:layout_marginRight="10dp"
             android:text="该死的碰瓷党，还好我有goluk的三十六计三闾大夫框架思路的福建省来对代理商家飞拉萨的解放路上快递费静安寺两地分居卡死了带飞机开发商两地分居卡洛斯咖啡机付"
             android:textColor="#333333"
-            android:textSize="10sp" />
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/partake_txt"
@@ -47,7 +48,7 @@
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:text="参与"
-            android:textSize="10dp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/partake_num"
@@ -57,18 +58,18 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/partake_txt"
             android:text="232222"
-            android:textSize="10dp" />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/partake_btn"
-            android:layout_width="45dp"
-            android:layout_height="18dp"
+            android:layout_width="66dp"
+            android:layout_height="24dp"
             android:layout_alignParentRight="true"
             android:text="我要参加"
             android:textColor="#ffffff"
             android:layout_marginRight="8dp"
             android:background="@drawable/together_join_icon"
-            android:textSize="8dp" />
+            android:textSize="12sp" />
     </RelativeLayout>
 
     <View
@@ -92,10 +93,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="推荐"
-                android:layout_marginRight="14dp"
+                android:layout_marginRight="21dp"
                 android:background="#00000000"
                 android:textColor="#0080ff"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -108,11 +109,11 @@
                 android:id="@+id/news_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
+                android:layout_marginLeft="21dp"
                 android:text="最新"
                  android:background="#00000000"
                 android:textColor="#333333"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>
 

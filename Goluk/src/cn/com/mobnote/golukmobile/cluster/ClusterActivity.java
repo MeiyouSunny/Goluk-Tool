@@ -2,10 +2,16 @@ package cn.com.mobnote.golukmobile.cluster;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,16 +35,18 @@ import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 
 public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IClickShareView,
-		IClickPraiseView, IDialogDealFn, IClusterInterface {
+		IClickPraiseView, IDialogDealFn, IClusterInterface,VideoSuqareManagerFn{
 
 	private static final String TAG = "ClusterActivity";
 	public static final String CLUSTER_KEY_ACTIVITYID = "activityid";
@@ -87,7 +95,10 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		setContentView(R.layout.cluster_main);
 		this.initData();// 初始化view
 		this.initListener();// 初始化view的监听
+		
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener(TAG, this);
 
+		
 		Intent intent = this.getIntent();
 
 		mActivityid = intent.getStringExtra(CLUSTER_KEY_ACTIVITYID);
@@ -192,14 +203,21 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	}
 	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		mBaseApp.setContext(this, TAG);
+		super.onResume();
+	}
+	
 	public void updateViewData(boolean succ, int count) {
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
 		if (succ) {
 			clusterAdapter.notifyDataSetChanged();
 			if (count > 0) {
 				this.mRTPullListView.setSelection(count);
 			}
 		}
-		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
 	}
 
 	@Override
@@ -326,6 +344,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			return false;
 		}
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (null != sharePlatform) {
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
+		}
+	}
 
 	@Override
 	public int OnGetListViewWidth() {
@@ -346,6 +372,69 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	public void OnRefrushMainPageData() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void VideoSuqare_CallBack(int event, int msg, int param1,
+			Object param2) {
+		 if (event == VSquare_Req_VOP_GetShareURL_Video) {
+			Context topContext = mBaseApp.getContext();
+			if (topContext != this) {
+				return;
+			}
+			closeProgressDialog();
+			if (RESULE_SUCESS == msg) {
+				try {
+					JSONObject result = new JSONObject((String) param2);
+					if (result.getBoolean("success")) {
+						JSONObject data = result.getJSONObject("data");
+						String shareurl = data.getString("shorturl");
+						String coverurl = data.getString("coverurl");
+						String describe = data.optString("describe");
+
+						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+
+						if (TextUtils.isEmpty(describe)) {
+							describe = "#极路客精彩视频#";
+						}
+						String ttl = "极路客精彩视频";
+
+						if (!this.isFinishing()) {
+							String videoId = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mVideoEntity.videoid
+									: "";
+							String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname
+									: "";
+							describe = username + "：" + describe;
+							CustomShareBoard shareBoard = new CustomShareBoard(
+									this, sharePlatform, shareurl, coverurl,
+									describe, ttl, null, realDesc, videoId);
+							shareBoard.showAtLocation(this.getWindow()
+									.getDecorView(), Gravity.BOTTOM, 0, 0);
+						}
+
+					} else {
+						GolukUtils.showToast(this, "网络异常，请检查网络");
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} else {
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
+		}else if (event == VSquare_Req_VOP_Praise) {
+			if (RESULE_SUCESS == msg) {
+				if (null != mVideoSquareInfo) {
+					if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+						mVideoSquareInfo.mVideoEntity.ispraise = "1";
+						updateClickPraiseNumber(true, mVideoSquareInfo);
+					}
+				}
+
+			} else {
+				GolukUtils.showToast(this, "网络异常，请检查网络");
+			}
+
+		}
 	}
 
 }
