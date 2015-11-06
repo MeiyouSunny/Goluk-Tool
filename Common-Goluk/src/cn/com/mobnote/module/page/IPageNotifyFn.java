@@ -78,6 +78,12 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/**收益明细**/
 	public static final int PageType_ProfitDetail = 39;
 
+	/**活动聚合 推荐 **/
+	public static final int PageType_ClusterRecommend = 40;
+	/**活动聚合 最新 **/
+	public static final int PageType_ClusterNews = 41;
+
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识

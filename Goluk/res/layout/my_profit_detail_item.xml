@@ -17,7 +17,7 @@
             android:layout_height="37dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp" />
+            android:contentDescription="@string/imgdes" />
 
         <!-- 金币数量 -->
         <TextView
@@ -57,13 +57,13 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/my_profit_detail_item_line"
+    
+     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:textColor="#e5e5e5" />
+        android:background="#e5e5e5" >
+    </View>
 
 </LinearLayout>

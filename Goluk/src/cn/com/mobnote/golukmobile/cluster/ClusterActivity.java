@@ -21,6 +21,7 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.cluster.ClusterAdapter.IClusterInterface;
+import cn.com.mobnote.golukmobile.cluster.bean.ActivityJsonData;
 import cn.com.mobnote.golukmobile.cluster.bean.ClusterHeadBean;
 import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
 import cn.com.mobnote.golukmobile.cluster.bean.VolleyDataFormat;
@@ -75,6 +76,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	
 	private ClusterBeanRequest request = null;
 	
+	private RecommendBeanRequest recommendRequest = null;
+	
+	private NewsBeanRequest newsRequest = null;
 	
 
 	@Override
@@ -126,13 +130,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		}
 	}
 
-	/**
-	 * 获取更多视频列表
-	 * 
-	 */
-	private void httpGetNextVideo(String sharingtime) {
-		GolukApplication.getInstance().getVideoSquareManager().getUserCenterShareVideo("", "2", sharingtime);
-	}
 
 	private void initListener() {
 		backbtn.setOnClickListener(this);
@@ -155,14 +152,16 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							if (recommendlist != null && recommendlist.size() > 0) {// 加载更多视频数据
 								if (recommendlist.size() > 20) {
 									mRTPullListView.addFooterView(mBottomLoadingView);
-									httpGetNextVideo(recommendlist.get(recommendlist.size() - 1).mVideoEntity.sharingtime);
+									recommendRequest = new RecommendBeanRequest(IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
+									recommendRequest.get(mActivityid, "2", recommendlist.get(recommendlist.size() -1).mVideoEntity.sharingtime, "20");
 								}
 							}
 						} else {// 最新列表
 							if (newslist != null && newslist.size() > 20) {// 加载更多视频数据
 								if (newslist.size() > 0) {
 									mRTPullListView.addFooterView(mBottomLoadingView);
-									httpGetNextVideo(newslist.get(newslist.size() - 1).mVideoEntity.sharingtime);
+									newsRequest = new NewsBeanRequest(IPageNotifyFn.PageType_ClusterNews, ClusterActivity.this);
+									newsRequest.get(mActivityid, "2", newslist.get(newslist.size() -1).mVideoEntity.sharingtime, "20");
 								}
 							}
 						}
@@ -217,6 +216,43 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 				}else{
 					updateViewData(false, 0);
 				}
+			}
+		}else if(requestType == IPageNotifyFn.PageType_ClusterRecommend){
+			ActivityJsonData data = (ActivityJsonData) result;
+			// 移除下拉
+			mRTPullListView.removeFooterView(this.mBottomLoadingView);
+			if(data != null && data.success){
+				if(data.data!=null){
+					if("0".equals(data.data.result)){
+						 List<VideoSquareInfo> list = vdf.getClusterList(data.data.videolist);
+						int count = recommendlist.size();
+						if(list != null && list.size() > 0){
+							 recommendlist.addAll(list);
+							 updateViewData(true, count);
+						 }
+					}
+				}
+			}else{
+				GolukUtils.showToast(this, "数据异常，请稍后重试");
+			}
+			
+		}else if(requestType == IPageNotifyFn.PageType_ClusterNews){
+			ActivityJsonData data = (ActivityJsonData) result;
+			if(data != null && data.success){
+				if(data.data!=null){
+					if("0".equals(data.data.result)){
+						 List<VideoSquareInfo> list = vdf.getClusterList(data.data.videolist);
+						// 移除下拉
+						mRTPullListView.removeFooterView(this.mBottomLoadingView);
+						int count = newslist.size();
+						if(list != null && list.size() > 0){
+							 newslist.addAll(list);
+							 updateViewData(true, count);
+						 }
+					}
+				}
+			}else{
+				GolukUtils.showToast(this, "数据异常，请稍后重试");
 			}
 		}
 	}

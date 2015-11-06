@@ -44,7 +44,8 @@
     
     <!-- body -->
     <!-- 上一次收入 -->
-    <RelativeLayout 
+    <RelativeLayout
+        android:id="@+id/my_profit_bg_layout" 
         android:layout_width="match_parent"
         android:layout_height="360dp"
         android:background="@drawable/profit_bg_blue">
@@ -88,7 +89,7 @@
                 android:layout_marginBottom="10dp"
                 android:textSize="100sp"
                 android:textColor="#ffffff"
-                android:text="5"/>
+                android:text="0"/>
 
         </RelativeLayout>
         
@@ -101,7 +102,8 @@
             android:layout_below="@id/profit_center_circle"
             android:text="@string/my_profit_last_no_text"
             android:textSize="16sp"
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff"
+            android:visibility="gone"/>
     </RelativeLayout>
     
     <!-- 累计获得／余额 -->
@@ -130,7 +132,7 @@
                 android:layout_marginTop="12dp"
                 android:textSize="18sp"
                 android:textColor="@color/user_login_text"
-                android:text="3205个Ｇ币" />
+                android:text="0个Ｇ币" />
             <ImageButton 
                 android:id="@+id/my_profit_detail_btn"
                 android:layout_width="wrap_content"
@@ -171,7 +173,7 @@
                 android:layout_marginTop="12dp"
                 android:textSize="18sp"
                 android:textColor="@color/user_login_text"
-                android:text="605个Ｇ币" />
+                android:text="0个Ｇ币" />
             <ImageButton 
                 android:id="@+id/my_profit_leave_btn"
                 android:layout_width="wrap_content"

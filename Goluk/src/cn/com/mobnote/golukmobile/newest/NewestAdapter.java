@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -145,9 +146,8 @@ public class NewestAdapter extends BaseAdapter {
 		holder.liveImg = (ImageView) convertView.findViewById(R.id.newlist_item_liveicon);
 		holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
-		holder.time = (TextView) convertView.findViewById(R.id.time);
+		holder.timeLocation = (TextView) convertView.findViewById(R.id.time_location);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
-		holder.locationTv = (TextView) convertView.findViewById(R.id.list_item_location);
 
 		holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 		holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
@@ -165,7 +165,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
 		holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
 		holder.detail = (TextView) convertView.findViewById(R.id.detail);
-
+		holder.ivReward = (ImageView)convertView.findViewById(R.id.iv_reward_tag);
 		holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
 		holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
 		holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
@@ -226,13 +226,23 @@ public class NewestAdapter extends BaseAdapter {
 		}
 
 		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
-		holder.time.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
-		final String location = mVideoSquareInfo.mVideoEntity.location;
-		if (null == location || "".equals(location)) {
-			holder.locationTv.setVisibility(View.GONE);
+
+		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime) + " " +
+									mVideoSquareInfo.mVideoEntity.location);
+		String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
+		if(null != recommend && "1".equals(recommend)) {
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			holder.timeLocation.setCompoundDrawables(null, null, drawable, null);
 		} else {
-			holder.locationTv.setVisibility(View.VISIBLE);
-			holder.locationTv.setText(location);
+			holder.timeLocation.setCompoundDrawables(null, null, null, null);
+		}
+
+		String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
+		if(null != reward && "1".equals(reward)) {
+			holder.ivReward.setVisibility(View.VISIBLE);
+		} else {
+			holder.ivReward.setVisibility(View.GONE);
 		}
 
 		if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
@@ -258,8 +268,8 @@ public class NewestAdapter extends BaseAdapter {
 			holder.detail.setVisibility(View.GONE);
 		} else {
 			holder.detail.setVisibility(View.VISIBLE);
-			UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
-					mVideoSquareInfo.mVideoEntity.describe);
+			UserUtils.showCommentText(mContext, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+					mVideoSquareInfo.mVideoEntity.describe, "#" + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
 		}
 
 		if (isLive(mVideoSquareInfo)) {
@@ -477,9 +487,8 @@ public class NewestAdapter extends BaseAdapter {
 		ImageView liveImg;
 		ImageView headimg;
 		TextView nikename;
-		TextView time;
+		TextView timeLocation;
 		ImageView function;
-		TextView locationTv;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
@@ -502,7 +511,7 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
-
+		ImageView ivReward;
 	}
 
 	public void setNewestLiseView(NewestListView view) {
