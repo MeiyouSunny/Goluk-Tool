@@ -38,6 +38,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="#00000000"
+            android:textColor="#0080ff"
             android:textSize="14sp"
             android:text="@string/share_text"/>
 

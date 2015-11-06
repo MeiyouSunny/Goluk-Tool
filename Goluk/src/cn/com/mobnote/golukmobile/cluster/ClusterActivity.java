@@ -209,9 +209,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			break;
 		case R.id.title_share:
 			showProgressDialog();
-			if(shareRequest == null){
-				shareRequest = new GetShareUrlRequest(IPageNotifyFn.PageType_ClusterShareUrl, this);
-			}
+			shareRequest = new GetShareUrlRequest(IPageNotifyFn.PageType_ClusterShareUrl, this);
 			shareRequest.get(mActivityid);
 			break;
 		case R.id.custer_comment_send:
