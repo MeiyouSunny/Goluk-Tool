@@ -94,6 +94,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/custer_comment_layout"
         android:layout_below="@id/title_layout"
+        android:cacheColorHint="#00000000" 
         android:divider="@null" />
 
 </RelativeLayout>
