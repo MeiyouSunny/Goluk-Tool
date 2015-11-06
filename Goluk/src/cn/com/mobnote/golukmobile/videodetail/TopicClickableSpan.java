@@ -27,7 +27,9 @@ public class TopicClickableSpan extends ClickableSpan {
 		Intent intent = new Intent(mContext, ClusterActivity.class);
 		intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, mVideoJson.data.avideo.video.recom.topicid);
 		intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+		intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, mVideoJson.data.avideo.video.recom.topicname);
 		mContext.startActivity(intent);
+		
 	}
 	
 	@Override
