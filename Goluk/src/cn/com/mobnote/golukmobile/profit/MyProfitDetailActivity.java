@@ -9,11 +9,13 @@ import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
@@ -22,6 +24,11 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 
+/**
+ * 收益明细
+ * @author lily
+ *
+ */
 public class MyProfitDetailActivity extends BaseActivity implements OnClickListener, IRequestResultListener, OnItemClickListener,
 		OnRefreshListener, OnRTScrollListener {
 
@@ -30,6 +37,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private ProfitDetailRequest profitDetailRequest = null;
 	private MyProfitDetailAdapter mAdapter = null;
 	private ProfitDetailInfo detailInfo = null;
+	private ImageView mImageRefresh = null;
 	/** 首次进入 */
 	private static final String OPERATOR_FIRST = "0";
 	/** 下拉 */
@@ -48,6 +56,8 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private String uid;
 	/**加载更多**/
 	private RelativeLayout mBottomLoadingView = null;
+	/**进入页面的loading**/
+	private CustomLoadingDialog mLoadingDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +71,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		Intent it = getIntent();
 		uid = it.getStringExtra("uid").toString();
 		
+		mRTPullListView.setVisibility(View.VISIBLE);
 		mRTPullListView.firstFreshState();
 		firstEnter();
 		
@@ -69,9 +80,11 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private void initView() {
 		mBtnBack = (ImageButton) findViewById(R.id.profit_detail_back);
 		mRTPullListView = (RTPullListView) findViewById(R.id.profit_detail_RTPullListView);
+		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,null);
 		
 		mBtnBack.setOnClickListener(this);
+		mImageRefresh.setOnClickListener(this);
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
 		mRTPullListView.setOnItemClickListener(this);
@@ -146,6 +159,14 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		case R.id.profit_detail_back:
 			exit();
 			break;
+		//点击刷新
+		case R.id.video_detail_click_refresh:
+			showLoadingDialog();
+			Intent it = getIntent();
+			uid = it.getStringExtra("uid").toString();
+			mRTPullListView.setVisibility(View.VISIBLE);
+			firstEnter();
+			break;
 		default:
 			break;
 		}
@@ -153,12 +174,16 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
+		closeLoadingDialog();
+		mImageRefresh.setVisibility(View.GONE);
 		if (requestType == IPageNotifyFn.PageType_ProfitDetail) {
 			detailInfo = (ProfitDetailInfo) result;
 			if (null != detailInfo && detailInfo.success && null != detailInfo.data) {
 				mAdapter = new MyProfitDetailAdapter(this, detailInfo.data.incomelist);
 				mRTPullListView.setAdapter(mAdapter);
 				mRTPullListView.onRefreshComplete(historyDate);
+			} else {
+				unusual();
 			}
 		}
 	}
@@ -177,6 +202,31 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	
 	private void exit() {
 		this.finish();
+	}
+	
+	// 显示loading
+	private void showLoadingDialog() {
+		if (null == mLoadingDialog) {
+			mLoadingDialog = new CustomLoadingDialog(this, null);
+			mLoadingDialog.show();
+		}
+	}
+
+	// 关闭loading
+	private void closeLoadingDialog() {
+		if (null != mLoadingDialog) {
+			mLoadingDialog.close();
+			mLoadingDialog = null;
+		}
+	}
+	
+	/**
+	 * 处理异常信息
+	 */
+	private void unusual() {
+		mRTPullListView.setVisibility(View.GONE);
+		mImageRefresh.setVisibility(View.VISIBLE);
+		GolukUtils.showToast(this, "网络数据异常");
 	}
 
 }

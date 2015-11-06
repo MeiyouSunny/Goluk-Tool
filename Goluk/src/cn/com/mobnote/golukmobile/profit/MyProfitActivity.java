@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,12 +32,14 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 
 	private ImageButton mBtnBack,mBtnDetail,mBtnCash;
 	private TextView mTextProblem;
-	private TextView mTextLastCount,mTextTotalCount,mTextLeaveCount,mTextLastHint;
+	private TextView mTextTotalCount,mTextLeaveCount,mTextLastHint;
+	private CustomTextView mTextLastCount;
 	private RelativeLayout mProfitBgLayout ;
 	private ProfitJsonRequest profitJsonRequest = null;
 	private ProfitInfo profitInfo = null;
 	private AlertDialog mDialog = null;
 	private LinearLayout mBottomLayout;
+	private ImageView mImageRefresh;
 	/**用户id**/
 	private String uid;
 	/**进入页面的loading**/
@@ -50,13 +53,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		
 		initView();
 		
-		Intent itUser = getIntent();
-		uid = itUser.getStringExtra("uid").toString();
-		if(null != uid || !"".equals(uid)) {
-			showLoadingDialog();
-			profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
-			profitJsonRequest.get(uid, "100");
-		}
+		initData();
 		
 	}
 	
@@ -65,12 +62,13 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		mBtnDetail = (ImageButton) findViewById(R.id.my_profit_detail_btn);
 		mBtnCash = (ImageButton) findViewById(R.id.my_profit_leave_btn);
 		mTextProblem = (TextView) findViewById(R.id.profit_problem);
-		mTextLastCount = (TextView) findViewById(R.id.last_profit);
+		mTextLastCount = (CustomTextView) findViewById(R.id.last_profit);
 		mTextTotalCount = (TextView) findViewById(R.id.my_profit_total_count);
 		mTextLeaveCount = (TextView) findViewById(R.id.my_profit_leave_count);
 		mTextLastHint = (TextView) findViewById(R.id.last_profit_no_hint);
 		mProfitBgLayout = (RelativeLayout) findViewById(R.id.my_profit_bg_layout);
 		mBottomLayout = (LinearLayout) findViewById(R.id.my_profit_bottom_layout);
+		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mProfitBgLayout.setVisibility(View.GONE);
 		mBottomLayout.setVisibility(View.GONE);
 		
@@ -78,12 +76,26 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		mBtnDetail.setOnClickListener(this);
 		mBtnCash.setOnClickListener(this);
 		mTextProblem.setOnClickListener(this);
+		mImageRefresh.setOnClickListener(this);
 		
 		mBtnDetail.setOnTouchListener(this);
 		mBtnCash.setOnTouchListener(this);
 		mTextLastHint.setOnClickListener(this);
 	}
-
+	
+	/**
+	 * 初始化数据
+	 */
+	private void initData() {
+		Intent itUser = getIntent();
+		uid = itUser.getStringExtra("uid").toString();
+		if(null != uid || !"".equals(uid)) {
+			showLoadingDialog();
+			profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
+			profitJsonRequest.get(uid, "100");
+		}
+	}
+	
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -110,6 +122,10 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			Intent photoalbum = new Intent(MyProfitActivity.this, PhotoAlbumActivity.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);
+			break;
+		//刷新
+		case R.id.video_detail_click_refresh:
+			initData();
 			break;
 		default:
 			break;
@@ -204,6 +220,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		closeLoadingDialog();
+		mImageRefresh.setVisibility(View.GONE);
 		if(requestType == IPageNotifyFn.PageType_MyProfit) {
 			profitInfo = (ProfitInfo)result;
 			if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
@@ -221,6 +238,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 				mTextLeaveCount.setText(GolukUtils.getFormatNumber(profitInfo.data.agold)+"个Ｇ币");
 			} else {
 				//TODO 异常处理
+				unusual();
 			}
 			
 		}
@@ -239,5 +257,13 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			mLoadingDialog.close();
 			mLoadingDialog = null;
 		}
+	}
+	
+	/**
+	 * 处理异常信息
+	 */
+	private void unusual() {
+		mImageRefresh.setVisibility(View.VISIBLE);
+		GolukUtils.showToast(this, "网络数据异常");
 	}
 }
