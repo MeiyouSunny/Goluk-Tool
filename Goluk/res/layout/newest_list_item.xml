@@ -218,28 +218,17 @@
         android:paddingRight="10dp"
         android:paddingTop="6dp" >
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/zText"
+            android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="10dp"
-                android:background="@drawable/videodetail_likeicon"
-                android:contentDescription="@string/def" />
-
-            <TextView
-                android:id="@+id/zText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="4dp"
-                android:textColor="#1163a2"
-                android:textSize="12sp" />
-        </LinearLayout>
+            android:gravity="center_vertical"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/videodetail_likeicon"
+            android:textColor="#1163a2"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/weiguan"
