@@ -70,21 +70,21 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_ModifySignature = 34;
 	
 	public static final int PageType_GetPromotion = 36;
-	
-	public static final int PageType_GetPromotionStatus = 37;
-	
-	/**活动聚合页 **/
-	public static final int PageType_ClusterMain =  38;
+
+	public static final int PageType_ClusterMain =  37;
 	
 	/**我的收益**/
-	public static final int PageType_MyProfit = 39;
+	public static final int PageType_MyProfit = 38;
 	/**收益明细**/
-	public static final int PageType_ProfitDetail = 40;
-	
+	public static final int PageType_ProfitDetail = 39;
+
 	/**活动聚合 推荐 **/
-	public static final int PageType_ClusterRecommend = 41;
+	public static final int PageType_ClusterRecommend = 40;
 	/**活动聚合 最新 **/
-	public static final int PageType_ClusterNews = 42;
+	public static final int PageType_ClusterNews = 41;
+	/**聚合分享地址**/
+	public static final int PageType_ClusterShareUrl = 42;
+
 
 	/**
 	 * 

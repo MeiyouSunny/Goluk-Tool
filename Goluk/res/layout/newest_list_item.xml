@@ -32,14 +32,14 @@
             android:contentDescription="@string/imgdes" />
 
         <ImageView
-            android:id="@+id/iv_exciting_tag"
+            android:id="@+id/iv_reward_tag"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/function"
             android:layout_marginRight="2dp"
             android:layout_centerVertical="true"
             android:scaleType="center"
-            android:visibility="visible"
+            android:visibility="gone"
             android:src="@drawable/together_coin_icon"
             android:contentDescription="@string/imgdes" />
 
@@ -50,13 +50,12 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/function"
+            android:layout_toLeftOf="@id/iv_reward_tag"
             android:layout_toRightOf="@+id/headimg"
             android:gravity="center_vertical"
             android:orientation="vertical" >
 
             <!-- 昵称 -->
-
             <TextView
                 android:id="@+id/nikename"
                 android:layout_width="wrap_content"
@@ -72,7 +71,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:gravity="center"
+                android:ellipsize="end"
+                android:singleLine="false"
                 android:textColor="#888888"
+                android:drawablePadding="4dp"
                 android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
@@ -294,5 +296,4 @@
             android:textColor="#333333"
             android:textSize="14sp" />
     </LinearLayout>
-
 </LinearLayout>

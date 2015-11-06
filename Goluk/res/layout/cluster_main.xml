@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/user_login_bg"
-    android:orientation="vertical" >
-    
+    android:background="@color/user_login_bg" >
+
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="46dp"
+        android:layout_alignParentTop="true"
         android:background="#404246" >
 
         <ImageButton
@@ -16,17 +16,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/back_btn" />
+            android:background="@drawable/back_btn"
+            android:contentDescription="@string/imgdes" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/white"
-            android:ellipsize="end" 
+            android:ellipsize="end"
             android:singleLine="true"
             android:text="#西藏阿里地区自驾游#"
+            android:textColor="@color/white"
             android:textSize="18sp" />
 
         <Button
@@ -36,18 +37,63 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:textColor="#0080ff"
             android:background="#00000000"
             android:textSize="14sp"
-            android:text="分享"/>
+            android:text="@string/share_text"/>
+
     </RelativeLayout>
-    
-   <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+
+    <!-- 底部布局，包括写评论　与　发送 -->
+
+    <RelativeLayout
+        android:id="@+id/custer_comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="#eaeaea"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+        <TextView
+            android:id="@+id/custer_comment_send"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/together_talk_btn"
+            android:drawableLeft="@drawable/together_talk_icon"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/custer_comment_input"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toLeftOf="@id/custer_comment_send"
+            android:background="@drawable/videodetail_inputbox"
+            android:focusable="false"
+            android:hint="@string/str_comment_input_hit"
+            android:maxLength="250"
+            android:paddingLeft="10dp"
+            android:textColor="#333333"
+            android:textColorHint="@color/user_hint_text_color"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
         android:id="@+id/mRTPullListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title_layout"
-        android:divider="@null" >
-    </cn.com.mobnote.golukmobile.videosuqare.RTPullListView>
+        android:layout_above="@id/custer_comment_layout"
+        android:layout_below="@id/title_layout"
+        android:divider="@null" />
 
-</LinearLayout>
+</RelativeLayout>

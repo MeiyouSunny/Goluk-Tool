@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Message;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -25,10 +23,11 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+
+import cn.com.mobnote.golukmobile.promotion.PromotionListRequest;
 import cn.com.mobnote.golukmobile.promotion.PromotionModel;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
-import cn.com.mobnote.golukmobile.promotion.PromotionStatusModel;
-import cn.com.mobnote.golukmobile.promotion.PromotionStatusRequest;
+
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -100,6 +99,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	/** 活动 */
 	private boolean bNewPromotion = false;
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -143,8 +143,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	private void loadData() {
-		PromotionStatusRequest request = new PromotionStatusRequest(IPageNotifyFn.PageType_GetPromotionStatus, this);
-		request.get();
+		PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
+		request.get(mTypeLayout.getCurrentLocation());
 	}
 
 	private void getIntentData() {
@@ -793,13 +793,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
 		switch(requestType) {
-		case IPageNotifyFn.PageType_GetPromotionStatus:
-			PromotionStatusModel data = (PromotionStatusModel) result;
+		case IPageNotifyFn.PageType_GetPromotion:
+			PromotionModel data = (PromotionModel) result;
 			if (data != null && data.success) {
-				bNewPromotion = data.data.hasNew;
-				if (misCurrentType){
-					mTypeLayout.refreshPromotionUI(bNewPromotion, getString(R.string.share_str_join_promotion));
-				}
+				mTypeLayout.setPromotionList(data.data.PromotionList);
 			}
 			break;
 		}

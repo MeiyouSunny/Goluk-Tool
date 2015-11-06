@@ -9,7 +9,7 @@ public class GetClusterShareUrlData {
 	
 	/**返回数据**/
 	@JSONField(name="data")
-	public ActivityRecommendDataBean data;
+	public ShareUrlDataBean data;
 	
 	/**返回调试信息**/
 	@JSONField(name="msg")

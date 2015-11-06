@@ -75,6 +75,9 @@ public class SharedPrefUtil {
 
 	/** 是否显示活动提示 */
 	public static final String SHOW_PROMOTION_POPUP_FLAG = "show_promotion_popup";
+	
+	/** 活动列表 */
+	public static final String PROMOTION_LIST_STRING = "promotion_list_string";
 	private SharedPreferences preference = null;
 
 	private Editor mEditor = null;
@@ -490,5 +493,13 @@ public class SharedPrefUtil {
 	
 	public void savePromotionFlag(boolean flag) {
 		preference.edit().putBoolean(SHOW_PROMOTION_POPUP_FLAG, flag).commit();
+	}
+	
+	public String getPromotionListString() {
+		return preference.getString(PROMOTION_LIST_STRING, "");
+	}
+	
+	public void savePromotionListString(String md5) {
+		preference.edit().putString(PROMOTION_LIST_STRING, md5).commit();
 	}
 }
