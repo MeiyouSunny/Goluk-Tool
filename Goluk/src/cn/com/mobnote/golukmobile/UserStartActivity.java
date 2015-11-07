@@ -45,7 +45,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	/** 如果是注销进来的，需要将手机号填进去 **/
 	private SharedPreferences mPreferences = null;
 	private String phone = null;
-	public static Handler mHandler = null;
+
 	public static final int EXIT = -1;
 	private Editor mEditor = null;
 	private Bitmap mBGBitmap = null;
@@ -111,22 +111,6 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 
 			}
 		});
-
-		mHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				switch (msg.what) {
-				case EXIT:
-					mHandler = null;
-					finish();
-					break;
-
-				default:
-					break;
-				}
-				super.handleMessage(msg);
-			}
-		};
 	}
 
 	public void initView() {
@@ -186,7 +170,6 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mHandler = null;
 		if (null != mBGBitmap) {
 			if (!mBGBitmap.isRecycled()) {
 				mBGBitmap.recycle();

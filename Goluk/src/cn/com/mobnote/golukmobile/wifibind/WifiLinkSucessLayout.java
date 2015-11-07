@@ -11,12 +11,14 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.application.SysApplication;
+
+import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UnbindActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 	private Context mContext = null;
@@ -71,7 +73,7 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.wifi_link_sucess_modify:
-			SysApplication.getInstance().exit();
+			EventBus.getDefault().post(new EventFinishWifiActivity());
 			Intent i = new Intent(mContext, UnbindActivity.class);
 			mContext.startActivity(i);
 			break;

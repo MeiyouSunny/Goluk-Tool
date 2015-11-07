@@ -1,7 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+
 import cn.com.mobnote.user.UserIdentifyInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -67,7 +67,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		setContentView(R.layout.user_repwd);
 
 		mContext = this;
-		SysApplication.getInstance().addActivity(this);
+
 		mApplication = (GolukApplication) getApplication();
 
 		if (null == mCustomProgressDialog) {

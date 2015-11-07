@@ -32,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMapQuery;
@@ -728,11 +728,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mApp.mTimerManage.timerCancel();
 			closeWifiHot();
 			GlobalWindow.getInstance().dimissGlobalWindow();
-			SysApplication.getInstance().exit();
 			mApp.destroyLogic();
-			if (null != UserStartActivity.mHandler) {
-				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-			}
 			MobclickAgent.onKillProcess(this);
 			mApp.appFree();
 			finish();

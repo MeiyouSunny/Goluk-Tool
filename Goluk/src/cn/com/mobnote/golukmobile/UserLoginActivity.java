@@ -28,7 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
@@ -82,8 +82,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		mContext = this;
 		// 获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
-
-		SysApplication.getInstance().addActivity(this);
 
 		initView();
 		if (null == mCustomProgressDialog) {
@@ -357,9 +355,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			break;
 		case 1:
 			// 登录成功后关闭个人中心启动模块页面
-			if (null != UserStartActivity.mHandler) {
-				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-			}
 
 			mApplication.isUserLoginSucess = true;
 			closeProgressDialog();

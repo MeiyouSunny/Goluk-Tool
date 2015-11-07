@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -15,13 +16,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.eventbus.EventBindFinish;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * <pre>
@@ -77,7 +81,6 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 
 		// collectLog("onCreate", "-----111111");
 
-		SysApplication.getInstance().addActivity(this);
 
 		// 断开连接
 		mApp.mIPCControlManager.setIPCWifiState(false, "");
@@ -86,6 +89,8 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		// 页面初始化
 		initBitmap();
 		init();
+		// Register EventBus
+		EventBus.getDefault().register(this);
 	}
 
 	private void initBitmap() {
@@ -153,8 +158,13 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 
 	}
 
+	public void onEventMainThread(EventFinishWifiActivity event) {
+		finish();
+	}
+
 	@Override
 	protected void onDestroy() {
+		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 		GolukDebugUtils.e("", "jyf-----WifiBind-----Index-----onDestroy----");
 		free();
