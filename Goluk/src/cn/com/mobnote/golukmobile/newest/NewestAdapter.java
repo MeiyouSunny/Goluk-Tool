@@ -274,8 +274,13 @@ public class NewestAdapter extends BaseAdapter {
 			holder.detail.setVisibility(View.GONE);
 		} else {
 			holder.detail.setVisibility(View.VISIBLE);
-			UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+			if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
+				UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
 					mVideoSquareInfo.mVideoEntity.describe, "#" + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
+			} else {
+				UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+						mVideoSquareInfo.mVideoEntity.describe);
+			}
 		}
 
 		if (isLive(mVideoSquareInfo)) {
