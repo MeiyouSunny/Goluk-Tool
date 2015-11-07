@@ -35,6 +35,7 @@ import cn.com.mobnote.application.GolukApplication;
 
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
@@ -46,8 +47,10 @@ import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.logic.GolukModule;
@@ -593,6 +596,30 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	public void onEventMainThread(EventLocationFinish event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.LOCATION_FINISH:
+			Log.d(TAG, "Location Finished: " + event.getMsg());
+			// Start Load Banner
+			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
+			if(null == videoSquareAdapter) {
+				return;
+			}
+			WonderfulSelectedListView listView = videoSquareAdapter.getWonderfulSelectedListView();
+			if(null == listView) {
+				return;
+			}
+			listView.loadBannerData(event.getMsg());
+			break;
+		default:
+			break;
+		}
+	}
+
 	public void onEventMainThread(EventMapQuery event) {
 		if(null == event) {
 			return;
@@ -618,7 +645,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case EventConfig.WIFI_STATE:
 			// 检测是否已连接小车本热点
 			// 网络状态改变
-			Log.d(TAG, "cccccccccccccccccccccccccccc");
 			notifyLogicNetWorkState(event.getMsg());
 			break;
 		default:

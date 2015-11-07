@@ -100,7 +100,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		initHistoryData();
 		setViewListBg(false);
 		httpPost(true, "0", "");
-		loadBannerData();
+//		loadBannerData();
 
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
@@ -113,9 +113,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		});
 	}
 
-	private void loadBannerData() {
+	public void loadBannerData(String cityCode) {
 		BannerListRequest request = new BannerListRequest(IPageNotifyFn.PageType_BannerGet, mBannerRequestListener);
-		request.get("100");
+		request.get(cityCode);
 	}
 
 //	private BannerDataModel mBannerData;
