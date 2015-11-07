@@ -225,7 +225,17 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
             params.leftMargin = 4;
             params.rightMargin = 4;
             dotLayout.addView(dotView, params);
+            if(i == 0) {
+                dotView.setBackgroundResource(R.drawable.dot_focus);
+            } else {
+                dotView.setBackgroundResource(R.drawable.dot_blur);
+            }
             dotViewsList.add(dotView);
+            if(mBannerDataList.size() == 1) {
+                dotLayout.setVisibility(View.GONE);
+            } else {
+                dotLayout.setVisibility(View.VISIBLE);
+            }
         }
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);

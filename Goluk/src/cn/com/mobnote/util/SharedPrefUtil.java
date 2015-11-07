@@ -78,6 +78,9 @@ public class SharedPrefUtil {
 	
 	/** 活动列表 */
 	public static final String PROMOTION_LIST_STRING = "promotion_list_string";
+
+	public static final String BANNER_LIST_STRING = "banner_list_string";
+	public static final String LOCATION_CITY_ID = "location_city_id";
 	private SharedPreferences preference = null;
 
 	private Editor mEditor = null;
@@ -501,5 +504,21 @@ public class SharedPrefUtil {
 	
 	public void savePromotionListString(String md5) {
 		preference.edit().putString(PROMOTION_LIST_STRING, md5).commit();
+	}
+
+	public String getBannerListString() {
+		return preference.getString(BANNER_LIST_STRING, "");
+	}
+	
+	public void saveBannerListString(String bannerString) {
+		preference.edit().putString(BANNER_LIST_STRING, bannerString).commit();
+	}
+
+	public String getCityIDString() {
+		return preference.getString(LOCATION_CITY_ID, "");
+	}
+	
+	public void setCityIDString(String cityCode) {
+		preference.edit().putString(LOCATION_CITY_ID, cityCode).commit();
 	}
 }

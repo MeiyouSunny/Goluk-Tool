@@ -17,6 +17,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -59,6 +60,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private int visibleCount;
 	private ImageView shareBg = null;
 	private static final String TAG = "WonderfulSelectedListView";
+	private SharedPrefUtil mSharedPrefUtil;
 
 	private long requestId = 0;
 
@@ -96,11 +98,12 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
 		}
 		mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
-
+		mSharedPrefUtil = new SharedPrefUtil((android.app.Activity)context);
 		initHistoryData();
 		setViewListBg(false);
 		httpPost(true, "0", "");
 //		loadBannerData();
+		loadHistoryBanner();
 
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
@@ -118,7 +121,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		request.get(cityCode);
 	}
 
-//	private BannerDataModel mBannerData;
 	private IRequestResultListener mBannerRequestListener = new IRequestResultListener() {
 		@Override
 		public void onLoadComplete(int requestType, Object result) {
@@ -136,11 +138,26 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 					break;
 				}
 				mWonderfulSelectedAdapter.setBannerData(model.getData());
+
+				// Save banner data
+				String bannerJson = com.alibaba.fastjson.JSON.toJSONString(model);
+				mSharedPrefUtil.saveBannerListString(bannerJson);
 			} while(false);
 
 			return;
 		}
 	};
+
+	private void loadHistoryBanner() {
+		String json = mSharedPrefUtil.getBannerListString();
+		GolukDebugUtils.d(TAG, "banner string=" + json);
+		if(null != json && !json.trim().equals("")) {
+			BannerModel model = (BannerModel)com.alibaba.fastjson.JSON.parseObject(json, BannerModel.class);
+			if(null != model) {
+				mWonderfulSelectedAdapter.setBannerData(model.getData());
+			}
+		}
+	}
 
 	private void initHistoryData() {
 		String data = GolukApplication.getInstance().getVideoSquareManager().getJXList();

@@ -182,29 +182,40 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		} else {
             BannerDataModel model = (BannerDataModel)mDataList.get(position);
             if(null == model || null == model.getSlides()) {
-                bannerHolder.mBannerSlide.clearImages();
-                BannerSlideBody body = new BannerSlideBody();
-                body.setPicture(FAKE_CONTENT);
-                List<BannerSlideBody> bodyList = new ArrayList<BannerSlideBody>();
-                bodyList.add(body);
-                bannerHolder.mBannerSlide.setImageDataList(bodyList);
+                showDefaultImage(bannerHolder.mBannerSlide);
             } else {
                 if(null != model && "0".equals(model.getResult())) {
-                    bannerHolder.mBannerSlide.clearImages();
-                    bannerHolder.mBannerSlide.setImageDataList(model.getSlides());
+                    List<BannerSlideBody> slidesList = model.getSlides();
+                    if(slidesList != null) {
+                        // No exceed 10 images
+                        if(model.getSlides().size() > 10) {
+                            int size = model.getSlides().size();
+                            for(int i = 10; i < size; i++) {
+                                slidesList.remove(i);
+                            }
+                        }
+                        bannerHolder.mBannerSlide.clearImages();
+                        bannerHolder.mBannerSlide.setImageDataList(slidesList);
+                    } else {
+                        showDefaultImage(bannerHolder.mBannerSlide);
+                    }
                 } else {
                     //default pic
-                    bannerHolder.mBannerSlide.clearImages();
-                    BannerSlideBody body = new BannerSlideBody();
-                    body.setPicture(FAKE_CONTENT);
-                    List<BannerSlideBody> bodyList = new ArrayList<BannerSlideBody>();
-                    bodyList.add(body);
-                    bannerHolder.mBannerSlide.setImageDataList(bodyList);
+                    showDefaultImage(bannerHolder.mBannerSlide);
                 }
             }
 		}
 		return convertView;
 	}
+
+    private void showDefaultImage(SlideShowView slideView) {
+        slideView.clearImages();
+        BannerSlideBody body = new BannerSlideBody();
+        body.setPicture(FAKE_CONTENT);
+        List<BannerSlideBody> bodyList = new ArrayList<BannerSlideBody>();
+        bodyList.add(body);
+        slideView.setImageDataList(bodyList);
+    }
 
 	private String getTitleString(String title) {
 		String name = "";

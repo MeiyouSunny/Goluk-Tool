@@ -32,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
-
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventLocationFinish;
@@ -66,6 +65,7 @@ import cn.com.mobnote.receiver.NetworkStateReceiver;
 import cn.com.mobnote.util.CrashReportUtil;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -144,6 +144,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	// Play video sync from camera completion sound
 	private SoundPool mSoundPool;
 	private final static String TAG = "MainActivity";
+	private String mCityCode;
+	private SharedPrefUtil mSharedPrefUtil;
 
 	private void playDownLoadedSound() {
 		if(null != mSoundPool) {
@@ -245,6 +247,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 		}
 
+		mSharedPrefUtil = new SharedPrefUtil(this);
+		mCityCode = mSharedPrefUtil.getCityIDString();
 		dealPush(itStart_have);
 
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
@@ -613,7 +617,24 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			if(null == listView) {
 				return;
 			}
-			listView.loadBannerData(event.getMsg());
+
+			if(null == mCityCode || mCityCode.trim().equals("")) {
+				Log.d(TAG, "First located, fill everything");
+				mCityCode = event.getMsg();
+				mSharedPrefUtil.setCityIDString(mCityCode);
+				listView.loadBannerData(mCityCode);
+			} else {
+				if(!mCityCode.equals(event.getMsg())) {
+					Log.d(TAG, "different city located, fill everything");
+					mCityCode = event.getMsg();
+					mSharedPrefUtil.setCityIDString(mCityCode);
+					listView.loadBannerData(mCityCode);
+				} else {
+					Log.d(TAG, "Still the same city, do nothing");
+					// do nothing
+				}
+			}
+
 			break;
 		default:
 			break;
