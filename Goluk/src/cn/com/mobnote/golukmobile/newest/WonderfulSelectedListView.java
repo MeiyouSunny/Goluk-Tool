@@ -26,6 +26,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -221,6 +222,14 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				historyDate = SettingUtils.getInstance().getString("hotHistoryDate", sdf.format(new Date()));
 				SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
 				httpPost(false, "0", "");
+				String cityCode = mSharedPrefUtil.getCityIDString();
+
+				if(null == cityCode || cityCode.trim().equals("")) {
+					mSharedPrefUtil.setCityIDString("-1");
+					loadBannerData("-1");
+				} else {
+					loadBannerData(cityCode);
+				}
 			}
 		});
 
