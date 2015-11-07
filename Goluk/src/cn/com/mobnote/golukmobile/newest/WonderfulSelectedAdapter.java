@@ -187,15 +187,20 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618022042.png");
                 urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446617680543.png");
                 bannerHolder.mBannerSlide.clearImages();
-                bannerHolder.mBannerSlide.setImageUrlList(urlList);
+//                bannerHolder.mBannerSlide.setImageDataList(urlList);
             } else {
-                int count = model.getSlides().size();
-                for(int i = 0; i < count; i++) {
-                    urlList.add(model.getSlides().get(i).getPicture());
-                }
+                if(null != model && "0".equals(model.getResult())) {
+//                    int count = model.getSlides().size();
+//                    for(int i = 0; i < count; i++) {
+//                        urlList.add(model.getSlides().get(i).getPicture());
+//                    }
 
-                bannerHolder.mBannerSlide.clearImages();
-                bannerHolder.mBannerSlide.setImageUrlList(urlList);
+                    bannerHolder.mBannerSlide.clearImages();
+//                    bannerHolder.mBannerSlide.setImageUrlList(urlList);
+                    bannerHolder.mBannerSlide.setImageDataList(model.getSlides());
+                } else {
+                    //default pic
+                }
             }
 		}
 		return convertView;

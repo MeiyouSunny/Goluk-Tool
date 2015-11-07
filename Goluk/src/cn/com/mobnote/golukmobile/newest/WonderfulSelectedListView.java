@@ -118,7 +118,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		request.get("100");
 	}
 
-	private BannerDataModel mBannerData;
+//	private BannerDataModel mBannerData;
 	private IRequestResultListener mBannerRequestListener = new IRequestResultListener() {
 		@Override
 		public void onLoadComplete(int requestType, Object result) {

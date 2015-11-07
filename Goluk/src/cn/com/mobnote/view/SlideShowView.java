@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import com.bumptech.glide.Glide;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,11 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
+import cn.com.mobnote.golukmobile.newest.BannerSlideBody;
+import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 
 /**
  * ViewPager实现的轮播图广告自定义视图，如京东首页的广告轮播图效果；
@@ -43,12 +50,11 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
     //自动轮播启用开关
     private final static boolean isAutoPlay = true;
 
-    //自定义轮播图的资源
-    private List<String> imageUrls = new ArrayList<String>();
     //放轮播图片的ImageView 的list
     private List<ImageView> imageViewsList;
     //放圆点的View的list
     private List<View> dotViewsList;
+    private List<BannerSlideBody> mBannerDataList = new ArrayList<BannerSlideBody>();
 
     private ViewPager viewPager;
     //当前轮播页
@@ -56,32 +62,74 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
     //定时任务
     private ScheduledExecutorService scheduledExecutorService;
 
-    private Context context;
+    private Context mContext;
 
     private boolean isInited = false;
 
     private OnImageClickedListener mListener;
 
     private class ImageViewTag {
-        public ImageViewTag(int position, String url) {
+        public ImageViewTag(int position, BannerSlideBody data) {
             this.position = position;
-            this.url = url;
+            this.data = data;
         }
 
         public int position;
-        public String url;
+        public BannerSlideBody data;
     }
 
     @Override
     public void onClick(View v) {
         final ImageViewTag tag = (ImageViewTag)v.getTag(R.id.tag_slideshow_item);
         if(null != mListener) {
-            this.mListener.onImageClicked(tag.position, tag.url);
+            this.mListener.onImageClicked(tag.position, tag.data);
+        }
+
+        if(null == tag.data) {
+            return;
+        }
+
+        String type = tag.data.getType();
+        Intent intent = null;
+
+        if(null != type) {
+            if("0".equals(type)) {
+                // do nothing
+                Log.d(TAG, "pure picture clicked");
+            } else if("1".equals(type)) {
+                // launch subject
+                intent = new Intent(mContext, SpecialListActivity.class);
+                intent.putExtra("ztid", tag.data.getAccess());
+                intent.putExtra("title", tag.data.getTitle());
+                mContext.startActivity(intent);
+            } else if("2".equals(type)) {
+                // launch video detail
+                intent = new Intent(mContext,VideoDetailActivity.class);
+                intent.putExtra(VideoDetailActivity.VIDEO_ID, tag.data.getAccess());
+                intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+                mContext.startActivity(intent);
+            } else if("3".equals(type)) {
+                // launch topic
+                intent = new Intent(mContext, ClusterActivity.class);
+                intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, tag.data.getAccess());
+                intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+                String topName = "#" + tag.data.getTitle() + "#";
+                intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
+                mContext.startActivity(intent);
+            } else if("4".equals(type)) {
+                // launch h5 page
+                String url = tag.data.getAccess();
+                intent = new Intent(mContext, UserOpenUrlActivity.class);
+                intent.putExtra("url", url);
+                mContext.startActivity(intent);
+            } else {
+                Log.d(TAG, "unknown image type clicked");
+            }
         }
     }
 
     public interface OnImageClickedListener {
-        public void onImageClicked(int position, String url);
+        public void onImageClicked(int position, BannerSlideBody data);
     }
 
     public void setOnImageClickedListener(OnImageClickedListener listener) {
@@ -108,7 +156,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
 
     public SlideShowView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.context = context;
+        this.mContext = context;
 
         initData();
         if(isAutoPlay) {
@@ -145,7 +193,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
      * 初始化Views等UI
      */
     private synchronized void initUI(Context context) {
-        if (imageUrls == null || imageUrls.size() == 0)
+        if (mBannerDataList == null || mBannerDataList.size() == 0)
             return;
 
         if(!isInited) {
@@ -158,9 +206,9 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
         imageViewsList.removeAll(imageViewsList);
 
         // 热点个数与图片特殊相等
-        for (int i = 0; i < imageUrls.size(); i++) {
+        for (int i = 0; i < mBannerDataList.size(); i++) {
             ImageView view = new ImageView(context);
-            view.setTag(R.id.tag_slideshow_item, new ImageViewTag(i, imageUrls.get(i)));
+            view.setTag(R.id.tag_slideshow_item, new ImageViewTag(i, /*imageUrls.get(i))*/mBannerDataList.get(i)));
             if (i == 0)//给一个默认图
                 view.setBackgroundResource(R.drawable.tacitly_pic);
             view.setScaleType(ScaleType.FIT_XY);
@@ -197,8 +245,8 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView imageView = imageViewsList.get(position);
 
-            Glide.with(context)
-            .load(((ImageViewTag)imageView.getTag(R.id.tag_slideshow_item)).url)
+            Glide.with(mContext)
+            .load(((ImageViewTag)imageView.getTag(R.id.tag_slideshow_item)).data.getPicture())
             .placeholder(R.drawable.tacitly_pic)
             .error(R.drawable.tacitly_pic)
             .fallback(R.drawable.tacitly_pic)
@@ -320,21 +368,23 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
         }
     }
 
-    public void setImageUrlList(List<String> urlList) {
-        imageUrls = urlList;
-        initUI(context);
+    public void setImageDataList(List<BannerSlideBody> dataList) {
+        mBannerDataList = dataList;
+        initUI(mContext);
     }
 
-    public void addImageUrl(String url) {
-        if(!imageUrls.contains(url)) {
-            imageUrls.add(url);
-            initUI(context);
-        }
-    }
+//    public void addImageUrl(String url) {
+//        if(!imageUrls.contains(url)) {
+//            imageUrls.add(url);
+//            initUI(context);
+//        }
+//    }
 
     public void clearImages() {
-        imageUrls.clear();
-        initUI(context);
+        if(null == mBannerDataList) {
+            mBannerDataList.clear();
+            initUI(mContext);
+        }
     }
 
     public void onDestroy() {
