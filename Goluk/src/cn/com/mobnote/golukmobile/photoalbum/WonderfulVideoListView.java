@@ -27,6 +27,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
@@ -50,8 +51,9 @@ public class WonderfulVideoListView {
 	private TextView empty = null;
 	private float density = 1;
 	private boolean clickLock = false;
+	private PromotionSelectItem mPromotionSelectItem;
 
-	public WonderfulVideoListView(Context context, int type, String from) {
+	public WonderfulVideoListView(Context context, int type, String from, PromotionSelectItem item) {
 		this.from = from;
 		this.mContext = context;
 		this.mActivity = (PhotoAlbumActivity) context;
@@ -59,6 +61,7 @@ public class WonderfulVideoListView {
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+		mPromotionSelectItem = item;
 		mRootLayout = LayoutInflater.from(context).inflate(R.layout.wonderful_listview, null, false);
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		initView();
@@ -192,6 +195,9 @@ public class WonderfulVideoListView {
 						tempType = 3;
 					}
 
+					if (mPromotionSelectItem != null) {
+						intent.putExtra(PhotoAlbumActivity.ACTIVITY_INFO, mPromotionSelectItem);
+					}
 					intent.putExtra("type", tempType);
 					intent.putExtra("cn.com.mobnote.video.path", path);
 					mActivity.startActivity(intent);

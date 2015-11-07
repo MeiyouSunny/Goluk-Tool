@@ -24,7 +24,7 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 	private PromotionDataAdapter mPromotionDataAdapter;
 	public static final String PROMOTION_SELECTED_ITEM = "selected_item";
 	public static final String PROMOTION_DATA = "promotion_data";
-	private int selectId = -1;
+	private String mSelectedId;
 	private ArrayList<PromotionData> mPromotionList;
 	private CustomLoadingDialog mCustomProgressDialog;
 	@Override
@@ -33,10 +33,10 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sharepromotion);
 		if (savedInstanceState == null) {
-			selectId = getIntent().getIntExtra(PROMOTION_SELECTED_ITEM, -1);
+			mSelectedId = getIntent().getStringExtra(PROMOTION_SELECTED_ITEM);
 			mPromotionList = (ArrayList<PromotionData>) getIntent().getSerializableExtra(PROMOTION_DATA);
 		} else {
-			selectId = savedInstanceState.getInt(PROMOTION_SELECTED_ITEM);
+			mSelectedId = savedInstanceState.getString(PROMOTION_SELECTED_ITEM);
 			mPromotionList = (ArrayList<PromotionData>) savedInstanceState.getSerializable(PROMOTION_DATA);
 		}
 		initView();
@@ -48,7 +48,7 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 		// TODO Auto-generated method stub
 		if (mPromotionList != null) {
 			outState.putSerializable(PROMOTION_DATA, mPromotionList);
-			outState.putInt(PROMOTION_SELECTED_ITEM, selectId);
+			outState.putString(PROMOTION_SELECTED_ITEM, mSelectedId);
 		}
 		super.onSaveInstanceState(outState);
 	}
@@ -71,7 +71,7 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 		mListView = (ListView) findViewById(R.id.promotion_list);
 		mPromotionDataAdapter = new PromotionDataAdapter(this);
 		mListView.setAdapter(mPromotionDataAdapter);
-		mPromotionDataAdapter.setSelectId(selectId);
+		mPromotionDataAdapter.setSelectId(mSelectedId);
 		mListView.setOnItemClickListener(this);
 		btnBack.setOnClickListener(this);
 	}

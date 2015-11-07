@@ -12,7 +12,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
 import android.text.TextUtils;
-
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -100,12 +100,13 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	private boolean bPopup;
 	private PromotionSelectItem mPromotionSelectItem;
 	private ArrayList<PromotionData> mPromotionList;
-
-	public ShareTypeLayout(Context context) {
+	private boolean bShowNew = false;
+	public ShareTypeLayout(Context context, PromotionSelectItem item) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.shareselecttype, null);
 		mPrefUtil = new SharedPrefUtil((Activity) mContext);
+		mPromotionSelectItem = item;
 		bPopup = mPrefUtil.getPromotionFlag();
 		loadRes();
 		initView();
@@ -150,7 +151,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mPromotionTextView = (TextView) mRootLayout.findViewById(R.id.share_promotion_txt);
 		mPromotionTextView.setOnClickListener(this);
 
-		refreshPromotionUI(false, mContext.getString(R.string.share_str_join_promotion));
+		refreshPromotionUI(mPromotionSelectItem);
 
 		typeViewArray[0] = mBgBtn;
 		typeViewArray[1] = mSgBtn;
@@ -276,10 +277,13 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 				GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
 				return;
 			}
-			refreshPromotionUI(false, mContext.getString(R.string.share_str_join_promotion));
+			if (bShowNew) {
+				bShowNew = false;
+				refreshPromotionUI(mPromotionSelectItem);
+			}
 			Intent intent = new Intent(mContext, PromotionActivity.class);
 			if (mPromotionSelectItem != null) {
-				intent.putExtra(PromotionActivity.PROMOTION_SELECTED_ITEM, mPromotionSelectItem.selectid);
+				intent.putExtra(PromotionActivity.PROMOTION_SELECTED_ITEM, mPromotionSelectItem.activityid);
 			}
 
 			if (mPromotionList != null) {
@@ -432,10 +436,15 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mPrefUtil.savePromotionFlag(false);
 	}
 	
-	public void refreshPromotionUI(boolean isNew, String text) {
+	public void refreshPromotionUI(PromotionSelectItem item) {
+		String formatText;
+		if (item == null) {
+			formatText = "#" + mContext.getString(R.string.share_str_join_promotion) + "#";
+		} else {
+			formatText = "#" + item.activitytitle + "#";
+		}
 
-		String formatText = "#" + text + "#";
-		if(isNew) {
+		if(bShowNew) {
 			String newtext = " " + mContext.getString(R.string.str_new);
 			String htmlText = "<font color=#ffccoo>"
 					+ formatText
@@ -453,7 +462,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 		mPromotionSelectItem = (PromotionSelectItem) data.getSerializableExtra(PromotionActivity.PROMOTION_SELECTED_ITEM);
 		if (mPromotionSelectItem != null && !TextUtils.isEmpty(mPromotionSelectItem.activitytitle)) {
-			refreshPromotionUI(false, mPromotionSelectItem.activitytitle);
+			refreshPromotionUI(mPromotionSelectItem);
 		}
 	}
 	
@@ -493,7 +502,8 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 		String lastmd5 = mPrefUtil.getPromotionListString();
 		if (TextUtils.isEmpty(lastmd5) || !lastmd5.equalsIgnoreCase(md5)) {
-			refreshPromotionUI(true, mContext.getString(R.string.share_str_join_promotion));
+			bShowNew = true;
+			refreshPromotionUI(mPromotionSelectItem);
 			mPrefUtil.savePromotionListString(md5);
 		}
 	}

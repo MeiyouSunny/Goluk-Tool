@@ -46,6 +46,7 @@ import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener;
 import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
@@ -59,7 +60,7 @@ import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 @SuppressLint("InflateParams")
-public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn, OnTouchListener {
+public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 	public interface IClusterInterface {
 		// 刷新页面数据
@@ -94,7 +95,7 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 	public ClusterAdapter(Context context, SharePlatformUtil spf, int tabtype, IClusterInterface ici) {
 		mContext = context;
 		clusterActivity = (ClusterActivity) mContext;
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
+
 		mIClusterInterface = ici;
 		// 默认进入分享视频列表类别
 		currentViewType = tabtype;
@@ -214,6 +215,12 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 						// TODO Auto-generated method stub
 						Intent photoalbum = new Intent(mContext,PhotoAlbumActivity.class);
 						photoalbum.putExtra("from", "cloud");
+						
+						PromotionSelectItem item = new PromotionSelectItem();
+						item.activityid = headData.activityid;
+						item.activitytitle = headData.activityname;
+						item.channelid = headData.channelid;
+						photoalbum.putExtra(PhotoAlbumActivity.ACTIVITY_INFO, item);
 						mContext.startActivity(photoalbum);
 					}
 				});
@@ -585,9 +592,9 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 
 	}
 
-	public void onResume() {
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
-	}
+//	public void onResume() {
+//		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
+//	}
 
 	@SuppressLint("SimpleDateFormat")
 	public String formatTime(String date) {
@@ -721,11 +728,6 @@ public class ClusterAdapter extends BaseAdapter implements VideoSuqareManagerFn,
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +24,10 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionListRequest;
 import cn.com.mobnote.golukmobile.promotion.PromotionModel;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
-
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -97,9 +97,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private RelativeLayout mPlayImgLayout = null;
 
 	/** 活动 */
-	private boolean bNewPromotion = false;
-	public static final int PROMOTION_ACTIVITY_BACK = 110;
+	private PromotionSelectItem mPromotionSelectItem;
 
+	public static final int PROMOTION_ACTIVITY_BACK = 110;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -109,7 +109,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mYouMengLayout = (RelativeLayout) mRootLayout.findViewById(R.id.shortshare_youmeng_layout);
 		setContentView(mRootLayout);
 
-		getIntentData();
+		if (savedInstanceState == null) {
+			getIntentData();
+		} else {
+			mFilePath = savedInstanceState.getString("cn.com.mobnote.video.path");
+			mCurrentVideoType = savedInstanceState.getInt("type", 2);
+		    mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(PhotoAlbumActivity.ACTIVITY_INFO);
+		}
 
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -118,9 +124,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareDealTool = new ShareDeal(this, mYouMengLayout);
 
 		mFilterLayout = new ShareFilterLayout(this);
-		mTypeLayout = new ShareTypeLayout(this);
+		mTypeLayout = new ShareTypeLayout(this, mPromotionSelectItem);
 		mInputLayout = new InputLayout(this, mRootLayout);
-
+		interceptVideoName(mFilePath);// 拿到视频名称
 		loadRes();
 		// 页面初始化
 		initView();
@@ -150,10 +156,20 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private void getIntentData() {
 		Intent intent = getIntent();
 		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
-		interceptVideoName(mFilePath);// 拿到视频名称
 		mCurrentVideoType = intent.getIntExtra("type", 2);
+	    mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(PhotoAlbumActivity.ACTIVITY_INFO);
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		if (mPromotionSelectItem != null) {
+			outState.putSerializable(PhotoAlbumActivity.ACTIVITY_INFO, mPromotionSelectItem);
+		}
+		outState.putString("cn.com.mobnote.video.path", mFilePath);
+		outState.putInt("type", mCurrentVideoType);
+		super.onSaveInstanceState(outState);
+	}
 	/**
 	 * 加载资源
 	 * 
@@ -685,6 +701,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (requestCode == PROMOTION_ACTIVITY_BACK) {
 			if (mTypeLayout != null) {
 				mTypeLayout.onActivityResult(resultCode, data);
+				mPromotionSelectItem = mTypeLayout.getPromotionSelectItem();
 			}
 			return;
 		}

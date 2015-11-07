@@ -33,7 +33,7 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GlideUtils;
 
 @SuppressLint("InflateParams")
-public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManagerFn, OnTouchListener {
+public class ClusterViewAdapter extends BaseAdapter implements OnTouchListener {
 	private Context mContext = null;
 	private List<ClusterInfo> clusterListData = null;
 	private int count = 0;
@@ -58,7 +58,6 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		clusterListData = new ArrayList<ClusterInfo>();
 		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
 	}
 
 	public void setData(List<ClusterInfo> data, SpecialInfo head) {
@@ -274,10 +273,6 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 	}
 
-	public void onResume() {
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
-	}
-
 	/**
 	 * 点赞
 	 * 
@@ -412,12 +407,6 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 			break;
 		}
 		return false;
-	}
-
-	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
