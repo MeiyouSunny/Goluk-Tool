@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.view.SlideShowView;
@@ -170,9 +172,16 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 				if (0 == position) {
 					holder.mDate.setVisibility(View.GONE);
 				} else {
-					holder.mDate.setTypeface(mTypeface);
-					holder.mDate.setText(GolukUtils.getTime(info.jxdate));
-					holder.mDate.setVisibility(View.VISIBLE);
+					String phoneDate = Utils.getDateStr(System.currentTimeMillis());
+					if(phoneDate.trim().equals(info.jxdate.trim())) {
+						holder.mDate.setTypeface(mTypeface);
+						holder.mDate.setText(mContext.getString(R.string.str_today));
+						holder.mDate.setVisibility(View.VISIBLE);
+					} else {
+						holder.mDate.setTypeface(mTypeface);
+						holder.mDate.setText(GolukUtils.getTime(info.jxdate));
+						holder.mDate.setVisibility(View.VISIBLE);
+					}
 				}
 			} else {
 				holder.mDate.setVisibility(View.GONE);
