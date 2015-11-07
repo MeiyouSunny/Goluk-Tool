@@ -180,22 +180,27 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder.main.setOnTouchListener(new ClickWonderfulSelectedListener(mContext, info, this));
 			loadImage(holder.videoImg, holder.icon, info.jximg, info.jtypeimg);
 		} else {
-            List<String> urlList = new ArrayList<String>();
             BannerDataModel model = (BannerDataModel)mDataList.get(position);
             if(null == model || null == model.getSlides()) {
-                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618035090.png");
-                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618022042.png");
-                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446617680543.png");
                 bannerHolder.mBannerSlide.clearImages();
-                bannerHolder.mBannerSlide.setImageUrlList(urlList);
+                BannerSlideBody body = new BannerSlideBody();
+                body.setPicture(FAKE_CONTENT);
+                List<BannerSlideBody> bodyList = new ArrayList<BannerSlideBody>();
+                bodyList.add(body);
+                bannerHolder.mBannerSlide.setImageDataList(bodyList);
             } else {
-                int count = model.getSlides().size();
-                for(int i = 0; i < count; i++) {
-                    urlList.add(model.getSlides().get(i).getPicture());
+                if(null != model && "0".equals(model.getResult())) {
+                    bannerHolder.mBannerSlide.clearImages();
+                    bannerHolder.mBannerSlide.setImageDataList(model.getSlides());
+                } else {
+                    //default pic
+                    bannerHolder.mBannerSlide.clearImages();
+                    BannerSlideBody body = new BannerSlideBody();
+                    body.setPicture(FAKE_CONTENT);
+                    List<BannerSlideBody> bodyList = new ArrayList<BannerSlideBody>();
+                    bodyList.add(body);
+                    bannerHolder.mBannerSlide.setImageDataList(bodyList);
                 }
-
-                bannerHolder.mBannerSlide.clearImages();
-                bannerHolder.mBannerSlide.setImageUrlList(urlList);
             }
 		}
 		return convertView;
