@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Volley adapter for JSON requests that will be parsed into Java objects by Fastjason.
  */
-public class FastjasonRequest<T> extends Request<T> {
+public class FastjsonRequest<T> extends Request<T> {
     private final Class<T> clazz;
     private final Map<String, String> headers;
     private final Map<String, String> params;
@@ -29,7 +29,7 @@ public class FastjasonRequest<T> extends Request<T> {
      * @param clazz Relevant class object, for Gson's reflection
      * @param headers Map of request headers
      */
-    public FastjasonRequest(String url, Class<T> clazz, Map<String, String> headers,
+    public FastjsonRequest(String url, Class<T> clazz, Map<String, String> headers,
             Listener<T> listener, ErrorListener errorListener) {
         super(Method.GET, url, errorListener);
         this.clazz = clazz;
@@ -45,7 +45,7 @@ public class FastjasonRequest<T> extends Request<T> {
      * @param clazz Relevant class object, for Gson's reflection
      * @param headers Map of request headers
      */
-    public FastjasonRequest(int type, String url, Class<T> clazz, Map<String, String> headers,
+    public FastjsonRequest(int type, String url, Class<T> clazz, Map<String, String> headers,
     		Map<String, String> params,
             Listener<T> listener, ErrorListener errorListener) {
         super(type, url, errorListener);

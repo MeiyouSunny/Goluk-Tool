@@ -3,9 +3,9 @@ package cn.com.mobnote.golukmobile.cluster;
 import java.util.HashMap;
 import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.http.request.GolukFastjasonRequest;
+import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
-public class ClusterBeanRequest extends GolukFastjasonRequest<JsonData> {
+public class ClusterBeanRequest extends GolukFastjsonRequest<JsonData> {
 
 	public ClusterBeanRequest(int requestType, IRequestResultListener listener) {
 		super(requestType, JsonData.class, listener);

@@ -5,9 +5,9 @@ import java.util.HashMap;
 import cn.com.mobnote.golukmobile.cluster.bean.ActivityJsonData;
 import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.http.request.GolukFastjasonRequest;
+import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
-public class RecommendBeanRequest extends GolukFastjasonRequest<ActivityJsonData> {
+public class RecommendBeanRequest extends GolukFastjsonRequest<ActivityJsonData> {
 
 	public RecommendBeanRequest(int requestType, IRequestResultListener listener) {
 		super(requestType, ActivityJsonData.class, listener);

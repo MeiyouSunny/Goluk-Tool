@@ -19,7 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 
-public abstract class GolukFastjasonRequest<T> {
+public abstract class GolukFastjsonRequest<T> {
     private  Class<T> mClazz;
     private  Map<String, String> mHeaders = new HashMap<String, String>();
     private  Map<String, String> mParams = new HashMap<String, String>();
@@ -27,7 +27,7 @@ public abstract class GolukFastjasonRequest<T> {
     private Object mTag;
     private boolean bCache;
     private int mRequestType;// requestType for call back
-	public GolukFastjasonRequest(int requestType, Class<T> clazz, IRequestResultListener listener) {
+	public GolukFastjsonRequest(int requestType, Class<T> clazz, IRequestResultListener listener) {
 		mClazz = clazz;
 		mListener = listener;
 		mRequestType = requestType;
@@ -98,7 +98,7 @@ public abstract class GolukFastjasonRequest<T> {
             mParams = null;
 		}
 
-		FastjasonRequest<T> request = new FastjasonRequest<T>(type, url, mClazz, mHeaders, mParams, new Response.Listener<T>(){
+		FastjsonRequest<T> request = new FastjsonRequest<T>(type, url, mClazz, mHeaders, mParams, new Response.Listener<T>(){
 
 			@Override
 			public void onResponse(T response) {
