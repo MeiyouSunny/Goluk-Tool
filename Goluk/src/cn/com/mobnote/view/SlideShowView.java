@@ -89,6 +89,11 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
             return;
         }
 
+        if(tag.data.getPicture().equals("fake")) {
+            Log.d(TAG, "This is default pic, do nothing");
+            return;
+        }
+
         String type = tag.data.getType();
         Intent intent = null;
 
@@ -210,7 +215,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
             ImageView view = new ImageView(context);
             view.setTag(R.id.tag_slideshow_item, new ImageViewTag(i, /*imageUrls.get(i))*/mBannerDataList.get(i)));
             if (i == 0)//给一个默认图
-                view.setBackgroundResource(R.drawable.tacitly_pic);
+                view.setBackgroundResource(R.drawable.album_default_img);
             view.setScaleType(ScaleType.FIT_XY);
             imageViewsList.add(view);
             view.setOnClickListener(this);
@@ -245,12 +250,16 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView imageView = imageViewsList.get(position);
 
-            Glide.with(mContext)
-            .load(((ImageViewTag)imageView.getTag(R.id.tag_slideshow_item)).data.getPicture())
-            .placeholder(R.drawable.tacitly_pic)
-            .error(R.drawable.tacitly_pic)
-            .fallback(R.drawable.tacitly_pic)
-            .into(imageView);
+            if("fake".equals(((ImageViewTag)imageView.getTag(R.id.tag_slideshow_item)).data.getPicture())) {
+                imageView.setImageResource(R.drawable.album_default_img);
+            } else {
+                Glide.with(mContext)
+                .load(((ImageViewTag)imageView.getTag(R.id.tag_slideshow_item)).data.getPicture())
+                .placeholder(R.drawable.tacitly_pic)
+                .error(R.drawable.tacitly_pic)
+                .fallback(R.drawable.tacitly_pic)
+                .into(imageView);
+            }
 
             container.addView(imageViewsList.get(position));
             return imageViewsList.get(position);
