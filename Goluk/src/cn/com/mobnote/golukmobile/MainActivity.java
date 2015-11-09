@@ -146,6 +146,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private final static String TAG = "MainActivity";
 	private String mCityCode;
 	private SharedPrefUtil mSharedPrefUtil;
+	private boolean mBannerLoaded;
 
 	private void playDownLoadedSound() {
 		if(null != mSoundPool) {
@@ -178,6 +179,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		initThirdSDK();
 
 		mContext = this;
+		mBannerLoaded = false;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "Main");
@@ -608,7 +610,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		switch(event.getOpCode()) {
 		case EventConfig.LOCATION_FINISH:
 			Log.d(TAG, "Location Finished: " + event.getMsg());
-			// Start Load Banner
+			// Start load banner
 			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
 			if(null == videoSquareAdapter) {
 				return;
@@ -618,20 +620,51 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				return;
 			}
 
+			if(!mBannerLoaded) {
+				Log.d(TAG, "Activity first start, fill everything anyway");
+				if(event.getMsg().equals("-1")) {
+					if(null == mCityCode || mCityCode.trim().equals("")) {
+						mCityCode = event.getMsg();
+						mSharedPrefUtil.setCityIDString(mCityCode);
+						listView.loadBannerData(mCityCode);
+					} else {
+						listView.loadBannerData(mCityCode);
+					}
+				} else {
+					mCityCode = event.getMsg();
+					mSharedPrefUtil.setCityIDString(mCityCode);
+					listView.loadBannerData(mCityCode);
+				}
+				mBannerLoaded = true;
+			}
+
 			if(null == mCityCode || mCityCode.trim().equals("")) {
-				Log.d(TAG, "First located, fill everything");
+				Log.d(TAG, "First located, fill everything anyway");
 				mCityCode = event.getMsg();
 				mSharedPrefUtil.setCityIDString(mCityCode);
 				listView.loadBannerData(mCityCode);
 			} else {
-				if(!mCityCode.equals(event.getMsg())) {
-					Log.d(TAG, "different city located, fill everything");
-					mCityCode = event.getMsg();
-					mSharedPrefUtil.setCityIDString(mCityCode);
-					listView.loadBannerData(mCityCode);
-				} else {
-					Log.d(TAG, "Still the same city, do nothing");
-					// do nothing
+				// In whole nation
+				if("-1".equals(mCityCode)) {
+					if(event.getMsg().equals("-1")) {
+						// do nothing
+					} else {
+						Log.d(TAG, "Switch from whole nation to city");
+						mCityCode = event.getMsg();
+						mSharedPrefUtil.setCityIDString(mCityCode);
+						listView.loadBannerData(mCityCode);
+					}
+				} else { // In city
+					if(event.getMsg().equals("-1")) {
+						// do nothing
+					} else {
+						if(!mCityCode.equals(event.getMsg())) {
+							Log.d(TAG, "Switch from one city to another");
+							mCityCode = event.getMsg();
+							mSharedPrefUtil.setCityIDString(mCityCode);
+							listView.loadBannerData(mCityCode);
+						}
+					}
 				}
 			}
 
@@ -703,6 +736,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		// Unregister EventBus
 		EventBus.getDefault().unregister(this);
+		mBannerLoaded = false;
 	}
 
 	@Override
