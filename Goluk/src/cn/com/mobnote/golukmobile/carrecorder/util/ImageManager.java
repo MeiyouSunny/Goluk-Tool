@@ -30,6 +30,7 @@ public class ImageManager {
 			
 			BitmapFactory.Options opts = new BitmapFactory.Options();
 	        opts.inJustDecodeBounds = true;
+	        opts.inPreferredConfig = Bitmap.Config.RGB_565;
 	        BitmapFactory .decodeFile(filename, opts); 
 	        int inSampleSize=1;
 	        if(opts.outWidth > width){   

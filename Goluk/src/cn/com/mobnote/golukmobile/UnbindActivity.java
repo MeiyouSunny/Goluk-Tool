@@ -56,8 +56,10 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		mApplication = (GolukApplication) getApplication();
 
 		setContentView(R.layout.unbind_layout);
-		initView();     
-
+		initView();
+		if (mApplication.getIPCControlManager() != null) {
+			mApplication.getIPCControlManager().addIPCManagerListener("Unbind", this);
+		}
 	}
 
 	@Override
@@ -86,7 +88,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		}
 		// 密码
 		if (null != mApplication) {
-			mApplication.getIPCControlManager().addIPCManagerListener("Unbind", this);
 			if (isBindSucess()) {
 				boolean isSucess = mApplication.getIPCControlManager().getIpcWifiConfig();
 				if (isSucess) {
@@ -126,6 +127,14 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		if (mApplication.getIPCControlManager() != null) {
+			mApplication.getIPCControlManager().removeIPCManagerListener("Unbind");
+		}
+		super.onDestroy();
+	}
 	@Override
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {

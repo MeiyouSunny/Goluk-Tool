@@ -18,7 +18,12 @@ public  class UrlHostManager {
 	public static final String ONLINE_HOST = "http://s.goluk.cn";
 	public static final String TEST_HOST = "http://server.goluk.cn";
 	public static final String DEV_HOST = "http://svr.goluk.cn";
+	public static final String ONLINE_WEBHOST = "http://surl.goluk.cn";
+	public static final String TEST_WEBHOST = "http://surl3.goluk.cn";
+	public static final String DEV_WEBHOST = "http://surl2.goluk.cn";
+
 	private String mHost = "";
+	private String mWebPageHost = "";
 	private Context mContext;
 	private final String SERVER_FLAG_NAME = "serverflag";
 	UrlHostManager(Context context) {
@@ -26,10 +31,13 @@ public  class UrlHostManager {
 		String flag = getFromAsset(SERVER_FLAG_NAME);
 		if (flag.equalsIgnoreCase("nvd")) {
 			mHost = ONLINE_HOST;
+			mWebPageHost = ONLINE_WEBHOST;
 		} else if (flag.equalsIgnoreCase("test")) {
 			mHost = TEST_HOST;
+			mWebPageHost = TEST_WEBHOST;
 		} else {
 			mHost = DEV_HOST;
+			mWebPageHost = DEV_WEBHOST;
 		}
 	}
 	
@@ -74,5 +82,9 @@ public  class UrlHostManager {
 
     public String getHost() {
     	return mHost;
+    }
+    
+    public String getWebPageHost() {
+    	return mWebPageHost;
     }
 }
