@@ -175,12 +175,18 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 					String phoneDate = Utils.getDateStr(System.currentTimeMillis());
 					if(phoneDate.trim().equals(info.jxdate.trim())) {
 						holder.mDate.setTypeface(mTypeface);
-						holder.mDate.setText(mContext.getString(R.string.str_today));
+						holder.mDate.setText(mContext.getString(R.string.str_jx_today));
 						holder.mDate.setVisibility(View.VISIBLE);
 					} else {
-						holder.mDate.setTypeface(mTypeface);
-						holder.mDate.setText(GolukUtils.getTime(info.jxdate));
-						holder.mDate.setVisibility(View.VISIBLE);
+						if(position != 1) {
+							holder.mDate.setTypeface(mTypeface);
+							holder.mDate.setText(GolukUtils.getTime(info.jxdate));
+							holder.mDate.setVisibility(View.VISIBLE);
+						} else {
+							holder.mDate.setTypeface(mTypeface);
+							holder.mDate.setText(mContext.getString(R.string.str_jx_other_day));
+							holder.mDate.setVisibility(View.VISIBLE);
+						}
 					}
 				}
 			} else {
