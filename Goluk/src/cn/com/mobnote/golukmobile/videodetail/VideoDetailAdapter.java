@@ -460,13 +460,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 			
 			//TODO　没有活动奖励视频没有奖励信息这个模块
 			//头部获奖视频icon显示
-			if("1".equals(mVideoAllData.avideo.video.recom.isreward)) {
-				headHolder.mImageHeadAward.setVisibility(View.VISIBLE);
-			} else {
-				headHolder.mImageHeadAward.setVisibility(View.GONE);
-			}
 			//获奖／推荐
 			if(null != mVideoAllData.avideo.video.recom) {
+				if("1".equals(mVideoAllData.avideo.video.recom.isreward)) {
+					headHolder.mImageHeadAward.setVisibility(View.VISIBLE);
+				} else {
+					headHolder.mImageHeadAward.setVisibility(View.GONE);
+				}
+				
 				if(!"1".equals(mVideoAllData.avideo.video.recom.atflag) && !"1".equals(mVideoAllData.avideo.video.recom.sysflag)
 						&&!"1".equals(mVideoAllData.avideo.video.recom.Isrecommend)) {
 					headHolder.mTextLine1.setVisibility(View.GONE);
@@ -510,6 +511,13 @@ public class VideoDetailAdapter extends BaseAdapter {
 				} else {
 					headHolder.mRecomLayout.setVisibility(View.GONE);
 				}
+			} else {
+				headHolder.mImageHeadAward.setVisibility(View.GONE);
+				headHolder.mTextLine1.setVisibility(View.GONE);
+				headHolder.mTextLine2.setVisibility(View.GONE);
+				headHolder.mActiveLayout.setVisibility(View.GONE);
+				headHolder.mSysLayout.setVisibility(View.GONE);
+				headHolder.mRecomLayout.setVisibility(View.GONE);
 			}
 			
 			headHolder.mImageHead.setOnClickListener(new OnClickListener() {

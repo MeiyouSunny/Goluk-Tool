@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 import cn.com.mobnote.golukmobile.BaseActivity;
@@ -38,6 +39,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private MyProfitDetailAdapter mAdapter = null;
 	private ProfitDetailInfo detailInfo = null;
 	private ImageView mImageRefresh = null;
+	private TextView mTextNoData = null;
 	/** 首次进入 */
 	private static final String OPERATOR_FIRST = "0";
 	/** 下拉 */
@@ -54,6 +56,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private String historyDate = "";
 	/**用户id**/
 	private String uid;
+	private boolean noData = false;
 	/**加载更多**/
 	private RelativeLayout mBottomLoadingView = null;
 	/**进入页面的loading**/
@@ -70,8 +73,8 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		
 		Intent it = getIntent();
 		uid = it.getStringExtra("uid").toString();
+		noData = it.getBooleanExtra("nodata", false);
 		
-		mRTPullListView.setVisibility(View.VISIBLE);
 		mRTPullListView.firstFreshState();
 		firstEnter();
 		
@@ -82,6 +85,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		mRTPullListView = (RTPullListView) findViewById(R.id.profit_detail_RTPullListView);
 		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
 		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,null);
+		mTextNoData = (TextView) findViewById(R.id.my_profit_detail_nodata);
 		
 		mBtnBack.setOnClickListener(this);
 		mImageRefresh.setOnClickListener(this);
@@ -164,6 +168,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 			showLoadingDialog();
 			Intent it = getIntent();
 			uid = it.getStringExtra("uid").toString();
+			noData = it.getBooleanExtra("nodata", false);
 			firstEnter();
 			break;
 		default:
@@ -174,16 +179,23 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		closeLoadingDialog();
-		mImageRefresh.setVisibility(View.GONE);
-		mRTPullListView.setVisibility(View.VISIBLE);
 		if (requestType == IPageNotifyFn.PageType_ProfitDetail) {
 			detailInfo = (ProfitDetailInfo) result;
-			if (null != detailInfo && detailInfo.success && null != detailInfo.data) {
-				mAdapter = new MyProfitDetailAdapter(this, detailInfo.data.incomelist);
-				mRTPullListView.setAdapter(mAdapter);
-				mRTPullListView.onRefreshComplete(historyDate);
+			if(noData) {
+				mImageRefresh.setVisibility(View.GONE);
+				mRTPullListView.setVisibility(View.GONE);
+				mTextNoData.setVisibility(View.VISIBLE);
 			} else {
-				unusual();
+				if (null != detailInfo && detailInfo.success && null != detailInfo.data) {
+					mImageRefresh.setVisibility(View.GONE);
+					mTextNoData.setVisibility(View.GONE);
+					mRTPullListView.setVisibility(View.VISIBLE);
+					mAdapter = new MyProfitDetailAdapter(this, detailInfo.data.incomelist);
+					mRTPullListView.setAdapter(mAdapter);
+					mRTPullListView.onRefreshComplete(historyDate);
+				} else {
+					unusual();
+				}
 			}
 		}
 	}
@@ -224,6 +236,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	 * 处理异常信息
 	 */
 	private void unusual() {
+		mTextNoData.setVisibility(View.GONE);
 		mRTPullListView.setVisibility(View.GONE);
 		mImageRefresh.setVisibility(View.VISIBLE);
 		GolukUtils.showToast(this, "网络数据异常");
