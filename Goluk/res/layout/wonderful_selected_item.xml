@@ -6,7 +6,7 @@
     <TextView
         android:id="@+id/mDate"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="55dp"
         android:background="#ffffff"
         android:gravity="center"
         android:textColor="#000000"
@@ -47,71 +47,65 @@
             <ImageView
                 android:id="@+id/mengban"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/imageLayout"
-                android:layout_alignLeft="@+id/imageLayout"
-                android:layout_alignRight="@+id/imageLayout"
-                android:layout_alignTop="@+id/imageLayout"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
                 android:background="@drawable/wonderful_item_mb"
                 android:contentDescription="@string/imgdes"
                 android:duplicateParentState="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|left"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/mTitleName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:duplicateParentState="true"
+                    android:gravity="center_vertical|left"
+                    android:textColor="@color/wonder_title_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/mTagName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/mVideoLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical"
+                android:paddingRight="10dp" >
+
+                <ImageView
+                    android:layout_width="21.33dp"
+                    android:layout_height="21.33dp"
+                    android:background="@drawable/icon_2"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:id="@+id/mVideoNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="4dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imlayout"
-            android:layout_alignTop="@+id/imlayout"
-            android:gravity="center"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/mTitleName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:duplicateParentState="true"
-                android:gravity="center"
-                android:textColor="@color/wonder_title_color"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/mTagName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/mVideoLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:duplicateParentState="true"
-            android:gravity="center_vertical"
-            android:paddingBottom="12dp"
-            android:paddingLeft="10dp" >
-
-            <ImageView
-                android:layout_width="21.33dp"
-                android:layout_height="21.33dp"
-                android:background="@drawable/icon_2"
-                android:contentDescription="@string/def" />
-
-            <TextView
-                android:id="@+id/mVideoNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="4dp"
-                android:textColor="@color/white"
-                android:textSize="13sp" />
-        </LinearLayout>
-
+<!--
         <LinearLayout
             android:id="@+id/mLookLayout"
             android:layout_width="wrap_content"
@@ -138,6 +132,7 @@
                 android:textColor="@color/white"
                 android:textSize="13sp" />
         </LinearLayout>
+  -->
     </RelativeLayout>
 
 </RelativeLayout>

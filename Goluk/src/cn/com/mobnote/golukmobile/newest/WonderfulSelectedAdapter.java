@@ -122,8 +122,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 						.findViewById(R.id.mTagName);
 				holder.mVideoLayout = (LinearLayout) convertView
 						.findViewById(R.id.mVideoLayout);
-				holder.mLookLayout = (LinearLayout) convertView
-						.findViewById(R.id.mLookLayout);
+//				holder.mLookLayout = (LinearLayout) convertView
+//						.findViewById(R.id.mLookLayout);
 				holder.mVideoNum = (TextView) convertView
 						.findViewById(R.id.mVideoNum);
 				holder.mLookNum = (TextView) convertView
@@ -161,12 +161,12 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 				holder.mVideoLayout.setVisibility(View.VISIBLE);
 			}
 
-			if ("-1".equals(info.videonumber)) {
-				holder.mLookLayout.setVisibility(View.GONE);
-			} else {
-				holder.mLookNum.setText(GolukUtils.getFormatNumber(info.videonumber));
-				holder.mLookLayout.setVisibility(View.VISIBLE);
-			}
+//			if ("-1".equals(info.videonumber)) {
+//				holder.mLookLayout.setVisibility(View.GONE);
+//			} else {
+//				holder.mLookNum.setText(GolukUtils.getFormatNumber(info.videonumber));
+//				holder.mLookLayout.setVisibility(View.VISIBLE);
+//			}
 
 			if (!TextUtils.isEmpty(info.jxdate)) {
 				if (0 == position) {
@@ -269,7 +269,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		TextView mTitleName;
 		TextView mTagName;
 		LinearLayout mVideoLayout;
-		LinearLayout mLookLayout;
+//		LinearLayout mLookLayout;
 		TextView mVideoNum;
 		TextView mLookNum;
 		TextView mDate;
