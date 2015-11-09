@@ -448,7 +448,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			}
 
 			boolean bNeedRefrush = false;
-			noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_qitadifang);
+			
+			if(currentViewType == ViewType_NewsVideoList){
+				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_noactivity_text);
+			}else{
+				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_norecommend_text);
+			}
+			
 			bNeedRefrush = true;
 			if (bNeedRefrush == true) {
 				noVideoDataViewHolder.tipsimage.setOnClickListener(new OnClickListener() {

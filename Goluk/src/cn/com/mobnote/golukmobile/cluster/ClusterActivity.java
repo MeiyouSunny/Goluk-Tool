@@ -295,8 +295,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					isRequestSucess = true;
 					ClusterHeadBean chb = data.data;
 					setCommentData(chb);
-					recommendlist = null;//vdf.getClusterList(chb.recommendvideo);
-					newslist = null;//vdf.getClusterList(chb.latestvideo);
+					recommendlist = vdf.getClusterList(chb.recommendvideo);
+					newslist = vdf.getClusterList(chb.latestvideo);
 					clusterAdapter.setDataInfo(chb.activity, recommendlist, newslist);
 					updateViewData(true, 0);
 				} else {
