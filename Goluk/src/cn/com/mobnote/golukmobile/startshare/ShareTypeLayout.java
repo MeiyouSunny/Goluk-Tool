@@ -101,6 +101,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	private PromotionSelectItem mPromotionSelectItem;
 	private ArrayList<PromotionData> mPromotionList;
 	private boolean bShowNew = false;
+	private String mMd5String;
 	public ShareTypeLayout(Context context, PromotionSelectItem item) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
@@ -279,6 +280,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			}
 			if (bShowNew) {
 				bShowNew = false;
+				mPrefUtil.savePromotionListString(mMd5String);
 				refreshPromotionUI(mPromotionSelectItem);
 			}
 			Intent intent = new Intent(mContext, PromotionActivity.class);
@@ -500,11 +502,11 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		  }
 		}
 
-		String lastmd5 = mPrefUtil.getPromotionListString();
-		if (TextUtils.isEmpty(lastmd5) || !lastmd5.equalsIgnoreCase(md5)) {
+		mMd5String = mPrefUtil.getPromotionListString();
+		if (TextUtils.isEmpty(mMd5String) || !mMd5String.equalsIgnoreCase(md5)) {
 			bShowNew = true;
 			refreshPromotionUI(mPromotionSelectItem);
-			mPrefUtil.savePromotionListString(md5);
+			mMd5String = md5;
 		}
 	}
 }
