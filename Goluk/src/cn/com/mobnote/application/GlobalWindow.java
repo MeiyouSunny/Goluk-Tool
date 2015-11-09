@@ -107,7 +107,7 @@ public class GlobalWindow {
 
 		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------444444: ");
 
-		mContext = mApplication.getContext();
+		mContext = mApplication;
 
 		// 获取LayoutParams对象
 		mWMParams = new WindowManager.LayoutParams();

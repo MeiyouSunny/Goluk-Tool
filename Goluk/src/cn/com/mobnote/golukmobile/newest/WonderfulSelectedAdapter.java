@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.view.SlideShowView;
@@ -170,9 +172,16 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 				if (0 == position) {
 					holder.mDate.setVisibility(View.GONE);
 				} else {
-					holder.mDate.setTypeface(mTypeface);
-					holder.mDate.setText(GolukUtils.getTime(info.jxdate));
-					holder.mDate.setVisibility(View.VISIBLE);
+					String phoneDate = Utils.getDateStr(System.currentTimeMillis());
+					if(phoneDate.trim().equals(info.jxdate.trim())) {
+						holder.mDate.setTypeface(mTypeface);
+						holder.mDate.setText(mContext.getString(R.string.str_today));
+						holder.mDate.setVisibility(View.VISIBLE);
+					} else {
+						holder.mDate.setTypeface(mTypeface);
+						holder.mDate.setText(GolukUtils.getTime(info.jxdate));
+						holder.mDate.setVisibility(View.VISIBLE);
+					}
 				}
 			} else {
 				holder.mDate.setVisibility(View.GONE);
@@ -180,26 +189,42 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			holder.main.setOnTouchListener(new ClickWonderfulSelectedListener(mContext, info, this));
 			loadImage(holder.videoImg, holder.icon, info.jximg, info.jtypeimg);
 		} else {
-            List<String> urlList = new ArrayList<String>();
             BannerDataModel model = (BannerDataModel)mDataList.get(position);
             if(null == model || null == model.getSlides()) {
-                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618035090.png");
-                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446618022042.png");
-                urlList.add("http://cdn.goluk.cn/files/cdccover/20151104/1446617680543.png");
-                bannerHolder.mBannerSlide.clearImages();
-                bannerHolder.mBannerSlide.setImageUrlList(urlList);
+                showDefaultImage(bannerHolder.mBannerSlide);
             } else {
-                int count = model.getSlides().size();
-                for(int i = 0; i < count; i++) {
-                    urlList.add(model.getSlides().get(i).getPicture());
+                if(null != model && "0".equals(model.getResult())) {
+                    List<BannerSlideBody> slidesList = model.getSlides();
+                    if(slidesList != null) {
+                        // No exceed 10 images
+                        if(model.getSlides().size() > 10) {
+                            int size = model.getSlides().size();
+                            for(int i = 10; i < size; i++) {
+                                slidesList.remove(i);
+                            }
+                        }
+                        bannerHolder.mBannerSlide.clearImages();
+                        bannerHolder.mBannerSlide.setImageDataList(slidesList);
+                    } else {
+                        showDefaultImage(bannerHolder.mBannerSlide);
+                    }
+                } else {
+                    //default pic
+                    showDefaultImage(bannerHolder.mBannerSlide);
                 }
-
-                bannerHolder.mBannerSlide.clearImages();
-                bannerHolder.mBannerSlide.setImageUrlList(urlList);
             }
 		}
 		return convertView;
 	}
+
+    private void showDefaultImage(SlideShowView slideView) {
+        slideView.clearImages();
+        BannerSlideBody body = new BannerSlideBody();
+        body.setPicture(FAKE_CONTENT);
+        List<BannerSlideBody> bodyList = new ArrayList<BannerSlideBody>();
+        bodyList.add(body);
+        slideView.setImageDataList(bodyList);
+    }
 
 	private String getTitleString(String title) {
 		String name = "";

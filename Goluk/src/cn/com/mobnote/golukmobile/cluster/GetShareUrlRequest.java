@@ -6,9 +6,9 @@ import cn.com.mobnote.golukmobile.cluster.bean.ActivityJsonData;
 import cn.com.mobnote.golukmobile.cluster.bean.GetClusterShareUrlData;
 import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.http.request.GolukFastjasonRequest;
+import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
-public class GetShareUrlRequest extends GolukFastjasonRequest<GetClusterShareUrlData> {
+public class GetShareUrlRequest extends GolukFastjsonRequest<GetClusterShareUrlData> {
 
 	public GetShareUrlRequest(int requestType, IRequestResultListener listener) {
 		super(requestType, GetClusterShareUrlData.class, listener);

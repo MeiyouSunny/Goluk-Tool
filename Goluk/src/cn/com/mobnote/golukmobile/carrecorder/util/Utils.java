@@ -87,6 +87,12 @@ public class Utils {
 		String result = sdf.format(new Long(time));
 		return result;
 	}
+
+	public static String getDateStr(long time) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String result = sdf.format(new Long(time));
+		return result;
+	}
 	
 	/**
 	 * 冒泡排序

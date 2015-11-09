@@ -46,6 +46,10 @@ public class VideoSquareActivity implements OnClickListener {
 
 	}
 
+	public VideoSquareAdapter getVideoSquareAdapter() {
+		return mVideoSquareAdapter;
+	}
+
 	public void init() {
 		mViewPager = (ViewPager) mRootLayout.findViewById(R.id.mViewpager);
 		mViewPager.setOffscreenPageLimit(3);

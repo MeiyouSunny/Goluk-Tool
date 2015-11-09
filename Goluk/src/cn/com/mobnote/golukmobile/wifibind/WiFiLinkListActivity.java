@@ -22,7 +22,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
@@ -38,6 +38,7 @@ import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * Wifi扫描列表
@@ -117,12 +118,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(mWifiManager, this);
 
-		SysApplication.getInstance().addActivity(this);
-
 		// 页面初始化
 		init();
 
 		dealAutoConn();
+		EventBus.getDefault().register(this);
 		// mLoading.setVisibility(View.VISIBLE);
 		// mBaseHandler.sendEmptyMessageDelayed(MSG_H_SCAN_WIFI, 1000);
 	}
@@ -531,8 +531,13 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		return super.onKeyDown(keyCode, event);
 	}
 
+	public void onEventMainThread(EventFinishWifiActivity event) {
+		finish();
+	}
+
 	@Override
 	protected void onDestroy() {
+		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 		GolukDebugUtils.e("", "jyf-----WifiBind-----List-----onDestroy----");
 		GFileUtils.writeLiveLog("WiFiLinkListActivity-------onDestroy---------------------1111");

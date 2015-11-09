@@ -5,9 +5,9 @@ import java.util.Map;
 
 import android.text.TextUtils;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.http.request.GolukFastjasonRequest;
+import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
-public class PromotionListRequest extends GolukFastjasonRequest<PromotionModel> {
+public class PromotionListRequest extends GolukFastjsonRequest<PromotionModel> {
 
 	public PromotionListRequest(int requestType,
 			IRequestResultListener listener) {

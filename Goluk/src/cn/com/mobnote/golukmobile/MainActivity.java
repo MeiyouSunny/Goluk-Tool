@@ -32,9 +32,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
@@ -46,8 +46,10 @@ import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.logic.GolukModule;
@@ -63,6 +65,7 @@ import cn.com.mobnote.receiver.NetworkStateReceiver;
 import cn.com.mobnote.util.CrashReportUtil;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -141,6 +144,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	// Play video sync from camera completion sound
 	private SoundPool mSoundPool;
 	private final static String TAG = "MainActivity";
+	private String mCityCode;
+	private SharedPrefUtil mSharedPrefUtil;
 
 	private void playDownLoadedSound() {
 		if(null != mSoundPool) {
@@ -242,6 +247,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 		}
 
+		mSharedPrefUtil = new SharedPrefUtil(this);
+		mCityCode = mSharedPrefUtil.getCityIDString();
 		dealPush(itStart_have);
 
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
@@ -593,6 +600,47 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	public void onEventMainThread(EventLocationFinish event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.LOCATION_FINISH:
+			Log.d(TAG, "Location Finished: " + event.getMsg());
+			// Start Load Banner
+			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
+			if(null == videoSquareAdapter) {
+				return;
+			}
+			WonderfulSelectedListView listView = videoSquareAdapter.getWonderfulSelectedListView();
+			if(null == listView) {
+				return;
+			}
+
+			if(null == mCityCode || mCityCode.trim().equals("")) {
+				Log.d(TAG, "First located, fill everything");
+				mCityCode = event.getMsg();
+				mSharedPrefUtil.setCityIDString(mCityCode);
+				listView.loadBannerData(mCityCode);
+			} else {
+				if(!mCityCode.equals(event.getMsg())) {
+					Log.d(TAG, "different city located, fill everything");
+					mCityCode = event.getMsg();
+					mSharedPrefUtil.setCityIDString(mCityCode);
+					listView.loadBannerData(mCityCode);
+				} else {
+					Log.d(TAG, "Still the same city, do nothing");
+					// do nothing
+				}
+			}
+
+			break;
+		default:
+			break;
+		}
+	}
+
 	public void onEventMainThread(EventMapQuery event) {
 		if(null == event) {
 			return;
@@ -618,7 +666,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case EventConfig.WIFI_STATE:
 			// 检测是否已连接小车本热点
 			// 网络状态改变
-			Log.d(TAG, "cccccccccccccccccccccccccccc");
 			notifyLogicNetWorkState(event.getMsg());
 			break;
 		default:
@@ -728,11 +775,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mApp.mTimerManage.timerCancel();
 			closeWifiHot();
 			GlobalWindow.getInstance().dimissGlobalWindow();
-			SysApplication.getInstance().exit();
 			mApp.destroyLogic();
-			if (null != UserStartActivity.mHandler) {
-				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-			}
 			MobclickAgent.onKillProcess(this);
 			mApp.appFree();
 			finish();

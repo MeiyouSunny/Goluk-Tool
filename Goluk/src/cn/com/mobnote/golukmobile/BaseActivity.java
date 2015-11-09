@@ -14,6 +14,7 @@ import android.os.Message;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.HttpManager;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -102,6 +103,7 @@ public class BaseActivity extends Activity {
 	protected void onDestroy() {
 		HttpManager.getInstance().cancelAll(this);
 		mBaseHandler.removeCallbacksAndMessages(null);
+		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
 		super.onDestroy();
 	}
 

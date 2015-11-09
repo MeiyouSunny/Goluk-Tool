@@ -36,6 +36,10 @@ public class ActivityBean {
 	@JSONField(name = "activityname")
 	public String activityname;
 
+	/** 活动channel id **/
+	@JSONField(name = "channelid")
+	public String channelid;
+
 	/** 聚合评论条数 */
 	@JSONField(name = "commentcount")
 	public String commentcount;

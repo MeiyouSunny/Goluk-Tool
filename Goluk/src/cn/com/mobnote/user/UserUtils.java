@@ -27,14 +27,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.CopyOfShuoMClickableSpan;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GlideUtils;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 
 public class UserUtils {
@@ -225,41 +223,6 @@ public class UserUtils {
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * 升级提示
-	 * 
-	 * @param mContext
-	 * @param message1
-	 * @param message2
-	 */
-	public static void showUpgradeGoluk(final Context mContext, String message, final String url) {
-		Builder mBuilder = new AlertDialog.Builder(mContext);
-		AlertDialog dialog = mBuilder.setTitle("发现新版本").setMessage(message)
-				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						// 浏览器打开url
-						GolukUtils.openUrl(url, mContext);
-
-						if (GolukApplication.mMainActivity != null) {
-							GolukApplication.mMainActivity.finish();
-							GolukApplication.mMainActivity = null;
-						}
-						SysApplication.getInstance().exit();
-					}
-				}).setCancelable(false).setOnKeyListener(new OnKeyListener() {
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							return true;
-						}
-						return false;
-					}
-				}).create();
-		dialog.show();
 	}
 
 	/**

@@ -20,7 +20,7 @@ public class PromotionDataAdapter extends BaseAdapter {
 	ArrayList<PromotionData> mListData;
 	private LayoutInflater mInflater;
 	private PromotionSelectItem mSelectItem;
-	private int mSelectId = -1;
+	private String mSelectedActivityID;
 	PromotionDataAdapter(Context context) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
@@ -65,7 +65,6 @@ public class PromotionDataAdapter extends BaseAdapter {
 			// item在当前分类内
 			if (categoryIndex < size) {
 				mSelectItem.channelid = category.channelid;
-				mSelectItem.selectid = position;
 				mSelectItem.channelname = category.channelname;
 				PromotionItem item = category.getItem(categoryIndex);
 				if (item != null) {
@@ -163,7 +162,7 @@ public class PromotionDataAdapter extends BaseAdapter {
 			// 绑定数据
 			itemValue = "#" + item.activitytitle + "#";
 			itemHolder.title.setText(itemValue);
-			if (position == mSelectId) {
+			if (mSelectedActivityID != null && item.activityid.equalsIgnoreCase(mSelectedActivityID)) {
 				convertView.requestFocus();
 				itemHolder.title.setTextColor(Color.parseColor("#0080ff"));
 				itemHolder.itemLayout.setBackgroundResource(R.drawable.share_promotion_frame_selected);
@@ -197,7 +196,7 @@ public class PromotionDataAdapter extends BaseAdapter {
 		TextView title;
 	}
 
-	public void setSelectId(int id) {
-		mSelectId = id;
+	public void setSelectId(String id) {
+		mSelectedActivityID = id;
 	}
 }

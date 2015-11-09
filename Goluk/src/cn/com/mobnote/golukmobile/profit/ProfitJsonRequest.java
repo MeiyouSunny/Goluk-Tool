@@ -3,9 +3,9 @@ package cn.com.mobnote.golukmobile.profit;
 import java.util.HashMap;
 
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.http.request.GolukFastjasonRequest;
+import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
-public class ProfitJsonRequest extends GolukFastjasonRequest<ProfitInfo> {
+public class ProfitJsonRequest extends GolukFastjsonRequest<ProfitInfo> {
 
 	public ProfitJsonRequest(int requestType, IRequestResultListener listener) {
 		super(requestType, ProfitInfo.class, listener);

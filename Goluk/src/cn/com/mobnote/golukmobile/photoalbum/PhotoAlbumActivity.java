@@ -27,6 +27,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -56,13 +57,23 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	public static final int UPDATELOGINSTATE = -1;
 	public static final int UPDATEDATE = -2;
 	public static Handler mHandler = null;
+	
+	/**活动分享*/
+	public static final String ACTIVITY_INFO = "activityinfo";
+	private PromotionSelectItem mPromotionSelectItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.photo_album);
 
-		from = getIntent().getStringExtra("from");
+		if (savedInstanceState == null) {
+			from = getIntent().getStringExtra("from");
+			mPromotionSelectItem = (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO);
+		} else {
+			from = savedInstanceState.getString("from");
+			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(ACTIVITY_INFO);
+		}
 		selectedListData = new ArrayList<String>();
 		initView();
 
@@ -84,6 +95,18 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 				super.handleMessage(msg);
 			}
 		};
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		if (mPromotionSelectItem != null) {
+			outState.putSerializable(ACTIVITY_INFO, mPromotionSelectItem);
+		}
+		if (from != null) {
+			outState.putSerializable("from", from);
+		}
+		super.onSaveInstanceState(outState);
 	}
 
 	private void initCache() {
@@ -168,7 +191,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 
 			if (null == mLocalVideoListView) {
-				mLocalVideoListView = new LocalVideoListView(this, from);
+				mLocalVideoListView = new LocalVideoListView(this, from, mPromotionSelectItem);
 				mMainLayout.addView(mLocalVideoListView.getRootView());
 			}
 			mLocalVideoListView.show();

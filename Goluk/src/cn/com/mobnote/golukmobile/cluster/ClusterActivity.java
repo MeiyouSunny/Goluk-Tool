@@ -558,4 +558,10 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		}
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
+		super.onDestroy();
+	}
 }

@@ -17,7 +17,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UpdateActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
@@ -738,14 +738,12 @@ public class IpcUpdateManage implements IPCManagerFn {
 							GolukApplication.mMainActivity.finish();
 							GolukApplication.mMainActivity = null;
 						}
-						SysApplication.getInstance().exit();
+
 						mApp.setExit(true);
 						mApp.mIPCControlManager.setIPCWifiState(false, "");
 						mApp.destroyLogic();
 						mApp.appFree();
-						if (null != UserStartActivity.mHandler) {
-							UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-						}
+
 						int PID = android.os.Process.myPid();
 						android.os.Process.killProcess(PID);
 						System.exit(0);

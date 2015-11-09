@@ -4,10 +4,10 @@ import java.util.HashMap;
 
 import android.text.TextUtils;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.http.request.GolukFastjasonRequest;
+import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
 
-public class BannerListRequest extends GolukFastjasonRequest<BannerModel> {
+public class BannerListRequest extends GolukFastjsonRequest<BannerModel> {
 
 	public BannerListRequest(int requestType, IRequestResultListener listener) {
 		super(requestType, BannerModel.class, listener);

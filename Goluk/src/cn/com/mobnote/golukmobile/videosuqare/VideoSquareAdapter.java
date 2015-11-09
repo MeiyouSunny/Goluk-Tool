@@ -18,6 +18,10 @@ public class VideoSquareAdapter extends PagerAdapter {
 		this.mContext = c;
 	}
 
+	public WonderfulSelectedListView getWonderfulSelectedListView() {
+		return mWonderfulSelectedListView;
+	}
+
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		GolukDebugUtils.e("", "jyf----Goluk----OOM----VideoSquareAdapter  positon:" + position);

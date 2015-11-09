@@ -8,5 +8,4 @@ public class PromotionSelectItem implements Serializable{
 	public String channelname;
 	public String activityid;
 	public String activitytitle;
-	public int selectid = -1;
 }

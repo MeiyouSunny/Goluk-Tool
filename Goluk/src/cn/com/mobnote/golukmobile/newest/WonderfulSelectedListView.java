@@ -17,6 +17,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,6 +26,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,6 +61,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private int visibleCount;
 	private ImageView shareBg = null;
 	private static final String TAG = "WonderfulSelectedListView";
+	private SharedPrefUtil mSharedPrefUtil;
 
 	private long requestId = 0;
 
@@ -96,11 +99,12 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
 		}
 		mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
-
+		mSharedPrefUtil = new SharedPrefUtil((android.app.Activity)context);
 		initHistoryData();
 		setViewListBg(false);
 		httpPost(true, "0", "");
-		loadBannerData();
+//		loadBannerData();
+		loadHistoryBanner();
 
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
@@ -113,12 +117,11 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		});
 	}
 
-	private void loadBannerData() {
+	public void loadBannerData(String cityCode) {
 		BannerListRequest request = new BannerListRequest(IPageNotifyFn.PageType_BannerGet, mBannerRequestListener);
-		request.get("100");
+		request.get(cityCode);
 	}
 
-	private BannerDataModel mBannerData;
 	private IRequestResultListener mBannerRequestListener = new IRequestResultListener() {
 		@Override
 		public void onLoadComplete(int requestType, Object result) {
@@ -136,11 +139,26 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 					break;
 				}
 				mWonderfulSelectedAdapter.setBannerData(model.getData());
+
+				// Save banner data
+				String bannerJson = com.alibaba.fastjson.JSON.toJSONString(model);
+				mSharedPrefUtil.saveBannerListString(bannerJson);
 			} while(false);
 
 			return;
 		}
 	};
+
+	private void loadHistoryBanner() {
+		String json = mSharedPrefUtil.getBannerListString();
+		GolukDebugUtils.d(TAG, "banner string=" + json);
+		if(null != json && !json.trim().equals("")) {
+			BannerModel model = (BannerModel)com.alibaba.fastjson.JSON.parseObject(json, BannerModel.class);
+			if(null != model) {
+				mWonderfulSelectedAdapter.setBannerData(model.getData());
+			}
+		}
+	}
 
 	private void initHistoryData() {
 		String data = GolukApplication.getInstance().getVideoSquareManager().getJXList();
@@ -204,6 +222,14 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				historyDate = SettingUtils.getInstance().getString("hotHistoryDate", sdf.format(new Date()));
 				SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
 				httpPost(false, "0", "");
+				String cityCode = mSharedPrefUtil.getCityIDString();
+
+				if(null == cityCode || cityCode.trim().equals("")) {
+					mSharedPrefUtil.setCityIDString("-1");
+					loadBannerData("-1");
+				} else {
+					loadBannerData(cityCode);
+				}
 			}
 		});
 
