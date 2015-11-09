@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,13 +29,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity.NoVideoDataViewHolder;
 import cn.com.mobnote.golukmobile.cluster.bean.ActivityBean;
-import cn.com.mobnote.golukmobile.cluster.bean.ClusterHeadBean;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.newest.ClickCommentListener;
@@ -50,11 +47,7 @@ import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.IUserCenterInterface;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.ViewHolder;
-import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -212,7 +205,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				holder.partakeBtn.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						Intent photoalbum = new Intent(mContext,PhotoAlbumActivity.class);
 						photoalbum.putExtra("from", "cloud");
 						
@@ -483,13 +475,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		}
 	}
 
-	private void showUserInfoHead(ImageView view, String headportrait) {
-		try {
-			GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
-		} catch (Exception e) {
-			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
-		}
-	}
+//	private void showUserInfoHead(ImageView view, String headportrait) {
+//		try {
+//			GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
+//		} catch (Exception e) {
+//			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
+//		}
+//	}
 
 	private String mVideoId = null;
 
@@ -738,13 +730,11 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 	@Override
 	public Object getItem(int arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public long getItemId(int arg0) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }
