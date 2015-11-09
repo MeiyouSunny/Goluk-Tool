@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.profit;
 
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
@@ -115,7 +116,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			break;
 		//常见问题
 		case R.id.profit_problem:
-			GolukUtils.showToast(this, "跳转web页面");
+			Intent itWeb = new Intent(MyProfitActivity.this,UserOpenUrlActivity.class);
+			itWeb.putExtra(UserOpenUrlActivity.FROM_TAG, "profitProblem");
+			startActivity(itWeb);
 			break;
 		//收益为０时，点击跳转带有分享的相册页面
 		case R.id.last_profit_no_hint:

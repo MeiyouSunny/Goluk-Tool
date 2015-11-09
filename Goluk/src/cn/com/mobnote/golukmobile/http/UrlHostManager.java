@@ -23,7 +23,7 @@ public  class UrlHostManager {
 	public static final String DEV_WEBHOST = "http://surl2.goluk.cn";
 
 	private String mHost = "";
-	private String mWebPageHost = "";
+	private static String mWebPageHost = "";
 	private Context mContext;
 	private final String SERVER_FLAG_NAME = "serverflag";
 	UrlHostManager(Context context) {
@@ -84,7 +84,7 @@ public  class UrlHostManager {
     	return mHost;
     }
     
-    public String getWebPageHost() {
+    public static String getWebPageHost() {
     	return mWebPageHost;
     }
 }
