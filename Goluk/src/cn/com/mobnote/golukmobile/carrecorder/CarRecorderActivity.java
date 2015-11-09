@@ -1568,6 +1568,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				try {
 					JSONObject json = new JSONObject((String) param2);
 					String filename = json.optString("filename");
+					//如果是循环视频，就不做UI上的操作
+					if(filename.indexOf("NRM") >= 0){
+						return ;
+					}
 					if (null != json) {
 						String imagename = "";
 						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
@@ -1611,6 +1615,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
 						String filename = json.optString("filename");
+						//如果是循环视频，就不做UI上的操作
+						if(filename.indexOf("NRM") >= 0){
+							return ;
+						}
 
 						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
 							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
@@ -1643,7 +1651,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				// 下载中
 			} else {
 				// 下载失败
-
+				downloadSize.setVisibility(View.GONE);
 			}
 			break;
 

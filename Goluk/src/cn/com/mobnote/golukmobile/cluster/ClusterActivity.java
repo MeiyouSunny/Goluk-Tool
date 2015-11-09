@@ -302,6 +302,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 				} else {
 					updateViewData(false, 0);
 				}
+			}else{
+				GolukUtils.showToast(this, "网络异常，请稍后重试");
+				updateViewData(false, 0);
 			}
 		} else if (requestType == IPageNotifyFn.PageType_ClusterRecommend) {
 			ActivityJsonData data = (ActivityJsonData) result;

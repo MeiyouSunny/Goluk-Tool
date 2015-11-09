@@ -247,7 +247,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	}
 
 	private void loadImage(ImageView mPlayerLayout, ImageView iconView, String url, String iconUrl) {
-		GlideUtils.loadNetHead(mContext, mPlayerLayout, url, R.drawable.tacitly_pic);
+		GlideUtils.loadImage(mContext, mPlayerLayout, url, R.drawable.tacitly_pic);
 		if (TextUtils.isEmpty(iconUrl)) {
 			iconView.setVisibility(View.GONE);
 		} else {
