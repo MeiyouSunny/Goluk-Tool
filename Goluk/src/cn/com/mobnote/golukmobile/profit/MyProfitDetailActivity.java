@@ -164,7 +164,6 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 			showLoadingDialog();
 			Intent it = getIntent();
 			uid = it.getStringExtra("uid").toString();
-			mRTPullListView.setVisibility(View.VISIBLE);
 			firstEnter();
 			break;
 		default:
@@ -176,6 +175,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	public void onLoadComplete(int requestType, Object result) {
 		closeLoadingDialog();
 		mImageRefresh.setVisibility(View.GONE);
+		mRTPullListView.setVisibility(View.VISIBLE);
 		if (requestType == IPageNotifyFn.PageType_ProfitDetail) {
 			detailInfo = (ProfitDetailInfo) result;
 			if (null != detailInfo && detailInfo.success && null != detailInfo.data) {

@@ -468,7 +468,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			//获奖／推荐
 			if(null != mVideoAllData.avideo.video.recom) {
 				if(!"1".equals(mVideoAllData.avideo.video.recom.atflag) && !"1".equals(mVideoAllData.avideo.video.recom.sysflag)
-						&&("".equals(mVideoAllData.avideo.video.recom.reason) || null == mVideoAllData.avideo.video.recom.reason)) {
+						&&!"1".equals(mVideoAllData.avideo.video.recom.Isrecommend)) {
 					headHolder.mTextLine1.setVisibility(View.GONE);
 					headHolder.mTextLine2.setVisibility(View.GONE);
 				} else {
@@ -478,7 +478,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 				
 				if("1".equals(mVideoAllData.avideo.video.recom.atflag)) {
 					headHolder.mActiveLayout.setVisibility(View.VISIBLE);
-					headHolder.mActiveReason.setText("理由："+mVideoAllData.avideo.video.recom.atreason);
+					if("".equals(mVideoAllData.avideo.video.recom.atreason)) {
+						headHolder.mActiveReason.setText("理由：活动参与积极奖～");
+					} else {
+						headHolder.mActiveReason.setText("理由："+mVideoAllData.avideo.video.recom.atreason);
+					}
 					headHolder.mActiveCount.setText("+"+mVideoAllData.avideo.video.recom.atgold+"Ｇ币");
 				} else {
 					headHolder.mActiveLayout.setVisibility(View.GONE);
@@ -486,15 +490,23 @@ public class VideoDetailAdapter extends BaseAdapter {
 				
 				if("1".equals(mVideoAllData.avideo.video.recom.sysflag)) {
 					headHolder.mSysLayout.setVisibility(View.VISIBLE);
-					headHolder.mSysReason.setText("理由："+mVideoAllData.avideo.video.recom.sysreason);
+					if("".equals(mVideoAllData.avideo.video.recom.sysreason)) {
+						headHolder.mSysReason.setText("理由：活动参与积极奖～");
+					} else {
+						headHolder.mSysReason.setText("理由："+mVideoAllData.avideo.video.recom.sysreason);
+					}
 					headHolder.mSysCount.setText("+"+mVideoAllData.avideo.video.recom.sysgold+"Ｇ币");
 				} else {
 					headHolder.mSysLayout.setVisibility(View.GONE);
 				}
 				
-				if(!"".equals(mVideoAllData.avideo.video.recom.reason) || null != mVideoAllData.avideo.video.recom.reason) {
+				if("1".equals(mVideoAllData.avideo.video.recom.Isrecommend)) {
 					headHolder.mRecomLayout.setVisibility(View.VISIBLE);
-					headHolder.mRecomReason.setText("理由："+mVideoAllData.avideo.video.recom.reason);
+					if("".equals(mVideoAllData.avideo.video.recom.reason)) {
+						headHolder.mRecomReason.setText("理由：活动参与积极奖～");
+					} else {
+						headHolder.mRecomReason.setText("理由："+mVideoAllData.avideo.video.recom.reason);
+					}
 				} else {
 					headHolder.mRecomLayout.setVisibility(View.GONE);
 				}
