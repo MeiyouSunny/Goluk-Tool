@@ -164,6 +164,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	 */
 	private void clickCashBtn() {
 		if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
+			if("".equals(profitInfo.data.agold) || null == profitInfo.data.agold) {
+				profitInfo.data.agold = "0";
+			}
 			int aGold = Integer.parseInt(profitInfo.data.agold);
 			if(aGold <1000) {
 				closeAlertDialog();
