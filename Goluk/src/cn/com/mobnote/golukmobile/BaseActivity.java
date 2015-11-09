@@ -70,6 +70,8 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mBaseApp = (GolukApplication) getApplication();
+		mBaseApp.initSharedPreUtil(this);
+		mBaseApp.initLogic();
 	}
 
 	@Override

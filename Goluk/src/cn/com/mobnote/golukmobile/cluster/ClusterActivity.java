@@ -315,8 +315,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						if (list != null && list.size() > 0) {
 							recommendlist.addAll(list);
 							updateViewData(true, count);
+						}else{
+							GolukUtils.showToast(this, "数据异常，请稍后重试");
 						}
+					}else{
+						GolukUtils.showToast(this, "数据异常，请稍后重试");
 					}
+				}else{
+					GolukUtils.showToast(this, "数据异常，请稍后重试");
 				}
 			} else {
 				GolukUtils.showToast(this, "数据异常，请稍后重试");
@@ -334,8 +340,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						if (list != null && list.size() > 0) {
 							newslist.addAll(list);
 							updateViewData(true, count);
+						}else{
+							GolukUtils.showToast(this, "数据异常，请稍后重试");
 						}
+					}else{
+						GolukUtils.showToast(this, "数据异常，请稍后重试");
 					}
+				}else{
+					GolukUtils.showToast(this, "数据异常，请稍后重试");
 				}
 			} else {
 				GolukUtils.showToast(this, "数据异常，请稍后重试");
@@ -548,7 +560,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
 		super.onDestroy();
 	}

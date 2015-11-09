@@ -105,7 +105,7 @@ public class GolukNotification {
 		if (null == noti) {
 			return;
 		}
-		final int icon = R.drawable.icon;
+		final int icon = R.drawable.ic_launcher;
 		// 立即通知
 		final long when = System.currentTimeMillis();
 		// 通知显示图标
