@@ -295,8 +295,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					isRequestSucess = true;
 					ClusterHeadBean chb = data.data;
 					setCommentData(chb);
-					recommendlist = vdf.getClusterList(chb.recommendvideo);
-					newslist = vdf.getClusterList(chb.latestvideo);
+					recommendlist = null;//vdf.getClusterList(chb.recommendvideo);
+					newslist = null;//vdf.getClusterList(chb.latestvideo);
 					clusterAdapter.setDataInfo(chb.activity, recommendlist, newslist);
 					updateViewData(true, 0);
 				} else {
@@ -315,8 +315,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						if (list != null && list.size() > 0) {
 							recommendlist.addAll(list);
 							updateViewData(true, count);
+						}else{
+							GolukUtils.showToast(this, "数据异常，请稍后重试");
 						}
+					}else{
+						GolukUtils.showToast(this, "数据异常，请稍后重试");
 					}
+				}else{
+					GolukUtils.showToast(this, "数据异常，请稍后重试");
 				}
 			} else {
 				GolukUtils.showToast(this, "数据异常，请稍后重试");
@@ -334,8 +340,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						if (list != null && list.size() > 0) {
 							newslist.addAll(list);
 							updateViewData(true, count);
+						}else{
+							GolukUtils.showToast(this, "数据异常，请稍后重试");
 						}
+					}else{
+						GolukUtils.showToast(this, "数据异常，请稍后重试");
 					}
+				}else{
+					GolukUtils.showToast(this, "数据异常，请稍后重试");
 				}
 			} else {
 				GolukUtils.showToast(this, "数据异常，请稍后重试");
