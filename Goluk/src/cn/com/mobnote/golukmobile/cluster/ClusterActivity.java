@@ -563,6 +563,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	@Override
 	protected void onDestroy() {
+		if (null != mCustomProgressDialog) {
+			if(mCustomProgressDialog.isShowing()){
+				mCustomProgressDialog.close();
+			}
+		}
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
 		super.onDestroy();
 	}
