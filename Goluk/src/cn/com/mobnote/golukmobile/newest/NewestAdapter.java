@@ -275,8 +275,14 @@ public class NewestAdapter extends BaseAdapter {
 		} else {
 			holder.detail.setVisibility(View.VISIBLE);
 			if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
-				UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
-					mVideoSquareInfo.mVideoEntity.describe, "#" + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
+				if(!TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicid) &&
+						!TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicname)) {
+					UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+							mVideoSquareInfo.mVideoEntity.describe, "#" + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
+				} else {
+					UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+							mVideoSquareInfo.mVideoEntity.describe);
+				}
 			} else {
 				UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
 						mVideoSquareInfo.mVideoEntity.describe);
