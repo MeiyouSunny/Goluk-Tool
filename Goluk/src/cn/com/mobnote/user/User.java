@@ -109,6 +109,7 @@ public class User {
 		if(mForbidTimer) {
 			return ;
 		}
+		timerCancel();
 		int codeOut = (Integer) outTime;
 		if(1 == success){
 			try{
