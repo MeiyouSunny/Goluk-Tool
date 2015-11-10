@@ -58,7 +58,7 @@ public class BaiduMapView implements ILocationFn {
 	private boolean isCurrent = true;
 
 	/** 首页handler用来接收消息,更新UI */
-	public static Handler mBaiduHandler = null;
+	public Handler mBaiduHandler = null;
 
 	private GolukApplication mApp = null;
 
