@@ -122,8 +122,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 						.findViewById(R.id.mTagName);
 				holder.mVideoLayout = (LinearLayout) convertView
 						.findViewById(R.id.mVideoLayout);
-				holder.mLookLayout = (LinearLayout) convertView
-						.findViewById(R.id.mLookLayout);
+//				holder.mLookLayout = (LinearLayout) convertView
+//						.findViewById(R.id.mLookLayout);
 				holder.mVideoNum = (TextView) convertView
 						.findViewById(R.id.mVideoNum);
 				holder.mLookNum = (TextView) convertView
@@ -161,12 +161,12 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 				holder.mVideoLayout.setVisibility(View.VISIBLE);
 			}
 
-			if ("-1".equals(info.videonumber)) {
-				holder.mLookLayout.setVisibility(View.GONE);
-			} else {
-				holder.mLookNum.setText(GolukUtils.getFormatNumber(info.videonumber));
-				holder.mLookLayout.setVisibility(View.VISIBLE);
-			}
+//			if ("-1".equals(info.videonumber)) {
+//				holder.mLookLayout.setVisibility(View.GONE);
+//			} else {
+//				holder.mLookNum.setText(GolukUtils.getFormatNumber(info.videonumber));
+//				holder.mLookLayout.setVisibility(View.VISIBLE);
+//			}
 
 			if (!TextUtils.isEmpty(info.jxdate)) {
 				if (0 == position) {
@@ -175,12 +175,18 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 					String phoneDate = Utils.getDateStr(System.currentTimeMillis());
 					if(phoneDate.trim().equals(info.jxdate.trim())) {
 						holder.mDate.setTypeface(mTypeface);
-						holder.mDate.setText(mContext.getString(R.string.str_today));
+						holder.mDate.setText(mContext.getString(R.string.str_jx_today));
 						holder.mDate.setVisibility(View.VISIBLE);
 					} else {
-						holder.mDate.setTypeface(mTypeface);
-						holder.mDate.setText(GolukUtils.getTime(info.jxdate));
-						holder.mDate.setVisibility(View.VISIBLE);
+						if(position != 1) {
+							holder.mDate.setTypeface(mTypeface);
+							holder.mDate.setText(GolukUtils.getTime(info.jxdate));
+							holder.mDate.setVisibility(View.VISIBLE);
+						} else {
+							holder.mDate.setTypeface(mTypeface);
+							holder.mDate.setText(mContext.getString(R.string.str_jx_other_day));
+							holder.mDate.setVisibility(View.VISIBLE);
+						}
 					}
 				}
 			} else {
@@ -252,7 +258,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			iconView.setVisibility(View.GONE);
 		} else {
 			iconView.setVisibility(View.VISIBLE);
-			GlideUtils.loadNetHead(mContext, iconView, iconUrl, -1);
+			GlideUtils.loadImage(mContext, iconView, iconUrl, -1);
 		}
 	}
 
@@ -263,7 +269,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		TextView mTitleName;
 		TextView mTagName;
 		LinearLayout mVideoLayout;
-		LinearLayout mLookLayout;
+//		LinearLayout mLookLayout;
 		TextView mVideoNum;
 		TextView mLookNum;
 		TextView mDate;

@@ -261,7 +261,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
             ImageView imageView = imageViewsList.get(position);
 
             if("fake".equals(((ImageViewTag)imageView.getTag(R.id.tag_slideshow_item)).data.getPicture())) {
-                imageView.setImageResource(R.drawable.album_default_img);
+                imageView.setImageResource(R.drawable.tacitly_pic);
             } else {
                 Glide.with(mContext)
                 .load(((ImageViewTag)imageView.getTag(R.id.tag_slideshow_item)).data.getPicture())
