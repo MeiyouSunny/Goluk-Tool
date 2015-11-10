@@ -824,6 +824,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	// 当分享成功，失败　或某一环节出现失败后，还原到原始状态，再进行分享
 	private void toInitState() {
 		isSharing = false;
+		if (isExit) {
+			return;
+		}
 		mShareLoading.hide();
 		mShareLoading.switchState(ShareLoading.STATE_NONE);
 	}
