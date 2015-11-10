@@ -463,6 +463,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareDealTool = null;
 		mFilterLayout.setExit();
 		mFilterLayout = null;
+
 		if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
 			// 判断是否正在上传
 			// 为了修复上传的是时返回几率崩溃控制针问题.
@@ -473,12 +474,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 		this.toInitState();
 		if (null != mVVPlayVideo) {
-			if (mVVPlayVideo.isPlaying()) {
-				mVVPlayVideo.stop();
-			}
 			mVVPlayVideo.cleanUp();
 			mVVPlayVideo = null;
 		}
+
 		// 正在获取连接
 		if (mShareLoading.getCurrentState() == ShareLoading.STATE_GET_SHARE) {
 			// 如果正在获取分享连接状态，則要取消

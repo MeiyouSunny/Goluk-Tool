@@ -122,7 +122,9 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 		if (mPromotionDataAdapter.isEnabled(position)) {
 			Intent intent = new Intent();
 			PromotionSelectItem item = (PromotionSelectItem) mPromotionDataAdapter.getItem(position);
-			intent.putExtra(PROMOTION_SELECTED_ITEM, item);
+			if (mSelectedId == null || !item.activityid.equalsIgnoreCase(mSelectedId)) {
+				intent.putExtra(PROMOTION_SELECTED_ITEM, item);
+			}
 			setResult(RESULT_OK, intent);
 			finish();
 		}

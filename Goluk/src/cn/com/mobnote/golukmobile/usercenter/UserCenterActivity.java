@@ -724,7 +724,8 @@ public class UserCenterActivity extends BaseActivity implements
 			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
 			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("videosharehotlist");
 		}
-		
+		handler.removeMessages(refristUserInfo);
+		handler = null;
 		super.onDestroy();
 	}
 

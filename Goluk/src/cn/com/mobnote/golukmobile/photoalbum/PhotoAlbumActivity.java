@@ -87,8 +87,10 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 					updateLinkState();
 					break;
 				case UPDATEDATE:
-					String filename = (String) msg.obj;
-					mLocalVideoListView.updateData(filename);
+					if (null != mLocalVideoListView) {
+						String filename = (String) msg.obj;
+						mLocalVideoListView.updateData(filename);
+					}
 					break;
 				}
 
@@ -99,7 +101,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
 		if (mPromotionSelectItem != null) {
 			outState.putSerializable(ACTIVITY_INFO, mPromotionSelectItem);
 		}
@@ -446,13 +447,13 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	@Override
 	protected void onDestroy() {
 		exit();
-		super.onDestroy();
 		mHandler.removeMessages(UPDATELOGINSTATE);
 		mHandler.removeMessages(UPDATEDATE);
 		mHandler = null;
 		if (null != mLruCache) {
 			mLruCache.evictAll();
 		}
+		super.onDestroy();
 	}
 
 }
