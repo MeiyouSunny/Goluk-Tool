@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.user.UserIdentifyInterface;
 import cn.com.mobnote.user.UserUtils;
@@ -82,6 +81,8 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		if (null == mCustomProgressDialogIdentify) {
 			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, "验证码获取中……");
 		}
+		
+		UserUtils.addActivity(UserRegistActivity.this);
 
 	}
 
