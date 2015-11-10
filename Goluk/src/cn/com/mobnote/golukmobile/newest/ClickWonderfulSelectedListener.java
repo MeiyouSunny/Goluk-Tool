@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 @SuppressLint("ClickableViewAccessibility")
@@ -89,10 +90,11 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 	}
 
 	private void showAnimation(final View view) {
-		final ImageView mengban = (ImageView) view.findViewById(R.id.mengban);
+		final RelativeLayout mengban = (RelativeLayout) view.findViewById(R.id.mengban);
 		final TextView mTitleName = (TextView) view.findViewById(R.id.mTitleName);
-		final LinearLayout mVideoLayout = (LinearLayout) view.findViewById(R.id.mVideoLayout);
+//		final LinearLayout mVideoLayout = (LinearLayout) view.findViewById(R.id.mVideoLayout);
 //		final LinearLayout mLookLayout = (LinearLayout) view.findViewById(R.id.mLookLayout);
+		final TextView mVideoLayout = (TextView) view.findViewById(R.id.mVideoNum);
 
 		AlphaAnimation show = new AlphaAnimation(0f, 1.0f);
 		show.setDuration(300);
@@ -137,10 +139,11 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 	}
 
 	private void hideAnimation(final View view) {
-		final ImageView mengban = (ImageView) view.findViewById(R.id.mengban);
+		final RelativeLayout mengban = (RelativeLayout) view.findViewById(R.id.mengban);
 		final TextView mTitleName = (TextView) view.findViewById(R.id.mTitleName);
-		final LinearLayout mVideoLayout = (LinearLayout) view.findViewById(R.id.mVideoLayout);
+//		final LinearLayout mVideoLayout = (LinearLayout) view.findViewById(R.id.mVideoLayout);
 //		final LinearLayout mLookLayout = (LinearLayout) view.findViewById(R.id.mLookLayout);
+		final TextView mVideoLayout = (TextView) view.findViewById(R.id.mVideoNum);
 
 		AlphaAnimation hide = new AlphaAnimation(1.0f, 0f);
 		hide.setDuration(300);
