@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -102,6 +103,8 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	private ArrayList<PromotionData> mPromotionList;
 	private boolean bShowNew = false;
 	private String mMd5String;
+	private Toast mToast;
+
 	public ShareTypeLayout(Context context, PromotionSelectItem item) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
@@ -197,6 +200,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		if (mIsOpenShare) {
 			mShareOpenImg.setBackgroundResource(R.drawable.share_open_icon);
 		} else {
+			showToast(R.string.str_video_close_hint);
 			mShareOpenImg.setBackgroundResource(R.drawable.share_close_icon);
 		}
 	}
@@ -260,6 +264,10 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			break;
 		case R.id.share_open_layout:
 			if (mIsExit) {
+				return;
+			}
+			if (mPromotionSelectItem != null) {
+				showToast(R.string.str_video_open_hint);
 				return;
 			}
 			switchOpenAndClose(!mIsOpenShare);
@@ -464,8 +472,9 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 		mPromotionSelectItem = (PromotionSelectItem) data.getSerializableExtra(PromotionActivity.PROMOTION_SELECTED_ITEM);
 		if (mPromotionSelectItem != null && !TextUtils.isEmpty(mPromotionSelectItem.activitytitle)) {
-			refreshPromotionUI(mPromotionSelectItem);
+			switchOpenAndClose(true);
 		}
+		refreshPromotionUI(mPromotionSelectItem);
 	}
 	
 	public PromotionSelectItem getPromotionSelectItem() {
@@ -508,5 +517,14 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			refreshPromotionUI(mPromotionSelectItem);
 			mMd5String = md5;
 		}
+	}
+	
+	private void showToast(int id) {
+		if (mToast == null) {
+			mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
+			mToast.setGravity(Gravity.CENTER, 0, 0);
+		}
+		mToast.setText(id);
+		mToast.show();
 	}
 }
