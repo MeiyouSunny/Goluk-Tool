@@ -56,7 +56,6 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private String historyDate = "";
 	/**用户id**/
 	private String uid;
-	private boolean noData = false;
 	/**加载更多**/
 	private RelativeLayout mBottomLoadingView = null;
 	/**进入页面的loading**/
@@ -73,7 +72,6 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		
 		Intent it = getIntent();
 		uid = it.getStringExtra("uid").toString();
-		noData = it.getBooleanExtra("nodata", false);
 		
 		mRTPullListView.firstFreshState();
 		firstEnter();
@@ -147,7 +145,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	 * 开始下拉刷新
 	 */
 	private void startPull() {
-		httpRequestData(OPERATOR_DOWN, "");
+		httpRequestData(OPERATOR_FIRST, "");
 	}
 	
 	/**
@@ -168,7 +166,6 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 			showLoadingDialog();
 			Intent it = getIntent();
 			uid = it.getStringExtra("uid").toString();
-			noData = it.getBooleanExtra("nodata", false);
 			firstEnter();
 			break;
 		default:
@@ -181,12 +178,9 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		closeLoadingDialog();
 		if (requestType == IPageNotifyFn.PageType_ProfitDetail) {
 			detailInfo = (ProfitDetailInfo) result;
-			if(noData) {
-				mImageRefresh.setVisibility(View.GONE);
-				mRTPullListView.setVisibility(View.GONE);
-				mTextNoData.setVisibility(View.VISIBLE);
-			} else {
-				if (null != detailInfo && detailInfo.success && null != detailInfo.data) {
+			if (null != detailInfo && detailInfo.success && null != detailInfo.data && null != detailInfo.data.incomelist) {
+				int size = detailInfo.data.incomelist.size();
+				if (size > 0) {
 					mImageRefresh.setVisibility(View.GONE);
 					mTextNoData.setVisibility(View.GONE);
 					mRTPullListView.setVisibility(View.VISIBLE);
@@ -194,8 +188,12 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 					mRTPullListView.setAdapter(mAdapter);
 					mRTPullListView.onRefreshComplete(historyDate);
 				} else {
-					unusual();
+					mImageRefresh.setVisibility(View.GONE);
+					mRTPullListView.setVisibility(View.GONE);
+					mTextNoData.setVisibility(View.VISIBLE);
 				}
+			} else {
+				unusual();
 			}
 		}
 	}
@@ -241,5 +239,5 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		mImageRefresh.setVisibility(View.VISIBLE);
 		GolukUtils.showToast(this, "网络数据异常");
 	}
-
+	
 }
