@@ -402,11 +402,7 @@
     <string name="str_usercenter_comment">评论</string>
     <string name="str_usercenter_share">分享</string>
     <string name="str_new">new</string>
-    <string name="default_comment">啥也不想说，快看视频吧&#8230;</string>
-    <string name="default_comment1">视频描述裸奔中，快来给他披大衣&#8230;</string>
-    <string name="default_comment2">吓死宝宝了，前面啥情况？说说呗&#8230;</string>
-    <string name="default_comment3">任何伟大的创意都需要一个漂亮的描述&#8230;</string>
-    <string name="default_comment4">导演，配个文字再加场吻戏吧！</string>
+    <string name="default_comment">没有文案，怎样收获无数点赞？</string>
     <string name="get_current_location">点击获取位置</string>
     <string name="str_today">-今天-</string>
 </resources>

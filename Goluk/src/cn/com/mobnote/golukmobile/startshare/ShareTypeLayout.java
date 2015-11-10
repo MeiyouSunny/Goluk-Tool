@@ -48,8 +48,8 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 	private int mCurrentType = TYPE_BG;
 
-	private final int[] hintArray = {R.string.default_comment1, R.string.default_comment2, R.string.default_comment3,
-			R.string.default_comment4 };
+//	private final int[] hintArray = {R.string.default_comment1, R.string.default_comment2, R.string.default_comment3,
+//			R.string.default_comment4 };
 
 	private Context mContext = null;
 	private LayoutInflater mLayoutFlater = null;
@@ -208,7 +208,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			if (select == i) {
 				typeViewArray[i].setBackgroundResource(R.drawable.share_type_bg);
 				typeViewArray[i].setTextColor(resTypeSelectColor);
-				mTextView.setHint(hintArray[i]);
+//				mTextView.setHint(hintArray[i]);
 			} else {
 				typeViewArray[i].setBackgroundDrawable(null);
 				typeViewArray[i].setTextColor(resTypeUnSelectColor);
