@@ -783,6 +783,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mAdapter.cancleTimer();
 		GolukUtils.isCanClick = true;
 		GolukUtils.cancelTimer();
+		CommentTimerManager.getInstance().cancelTimer();
 		mIsReply = false;
 		if (null != mAdapter.headHolder && null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
@@ -944,6 +945,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		exit();
 	}
 
 }
