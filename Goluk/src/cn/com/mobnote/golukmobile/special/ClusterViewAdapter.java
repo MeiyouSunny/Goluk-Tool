@@ -318,7 +318,7 @@ public class ClusterViewAdapter extends BaseAdapter implements OnTouchListener {
 	}
 
 	private void loadImage(ImageView layout, String url) {
-		GlideUtils.loadNetHead(mContext, layout, url, R.drawable.tacitly_pic);
+		GlideUtils.loadImage(mContext, layout, url, R.drawable.tacitly_pic);
 	}
 
 	/**

@@ -303,7 +303,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					updateViewData(false, 0);
 				}
 			}else{
-				GolukUtils.showToast(this, "网络异常，请稍后重试");
+				GolukUtils.showToast(this, "网络异常，请检查网络");
 				updateViewData(false, 0);
 			}
 		} else if (requestType == IPageNotifyFn.PageType_ClusterRecommend) {
@@ -319,16 +319,16 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							recommendlist.addAll(list);
 							updateViewData(true, count);
 						}else{
-							GolukUtils.showToast(this, "数据异常，请稍后重试");
+							GolukUtils.showToast(this, "数据异常，请稍候重试");
 						}
 					}else{
-						GolukUtils.showToast(this, "数据异常，请稍后重试");
+						GolukUtils.showToast(this, "数据异常，请稍候重试");
 					}
 				}else{
-					GolukUtils.showToast(this, "数据异常，请稍后重试");
+					GolukUtils.showToast(this, "数据异常，请稍候重试");
 				}
 			} else {
-				GolukUtils.showToast(this, "数据异常，请稍后重试");
+				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 
 		} else if (requestType == IPageNotifyFn.PageType_ClusterNews) {
@@ -344,16 +344,16 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							newslist.addAll(list);
 							updateViewData(true, count);
 						}else{
-							GolukUtils.showToast(this, "数据异常，请稍后重试");
+							GolukUtils.showToast(this, "数据异常，请稍候重试");
 						}
 					}else{
-						GolukUtils.showToast(this, "数据异常，请稍后重试");
+						GolukUtils.showToast(this, "数据异常，请稍候重试");
 					}
 				}else{
-					GolukUtils.showToast(this, "数据异常，请稍后重试");
+					GolukUtils.showToast(this, "数据异常，请稍候重试");
 				}
 			} else {
-				GolukUtils.showToast(this, "数据异常，请稍后重试");
+				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
 		} else if (requestType == IPageNotifyFn.PageType_ClusterShareUrl) {
 			closeProgressDialog();
