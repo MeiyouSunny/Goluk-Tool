@@ -36,6 +36,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
+import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
@@ -542,6 +543,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					it.putExtra("userinfo", user);
 					it.putExtra("type", 0);
 					mContext.startActivity(it);
+					CommentTimerManager.getInstance().cancelTimer();
 				}
 			});
 
@@ -644,6 +646,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					it.putExtra("userinfo", user);
 					it.putExtra("type", 0);
 					mContext.startActivity(it);
+					CommentTimerManager.getInstance().cancelTimer();
 				}
 			});
 

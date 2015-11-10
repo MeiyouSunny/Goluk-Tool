@@ -223,6 +223,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		isExit = true;
 		mVideoSquareManager.removeVideoSquareManagerListener(TAG);
 		mIsReply = false;
+		CommentTimerManager.getInstance().cancelTimer();
 		finish();
 	}
 
@@ -659,6 +660,12 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			switchSendState(false);
 		}
 
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		back();
 	}
 
 }

@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.videodetail;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import android.content.Context;
@@ -30,6 +31,7 @@ public class ClickLinkListener implements OnClickListener {
 				mLinkIntent.putExtra("url", mVideoJson.data.link.outurl);
 				mContext.startActivity(mLinkIntent);
 				mAdapter.cancleTimer();
+				CommentTimerManager.getInstance().cancelTimer();
 			}
 		}
 	}
