@@ -247,6 +247,9 @@ public class BaiduMapView implements ILocationFn {
 		// if (null != mMapView) {
 		// mMapView.onDestroy();
 		// }
+		mBaiduHandler.removeMessages(2);
+		mBaiduHandler.removeMessages(99);
+		mBaiduHandler = null;
 	}
 
 	protected void onPause() {

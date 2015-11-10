@@ -79,6 +79,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		initView();
 		// title
 		mTextViewTitle.setText("找回密码");
+		
+		UserUtils.addActivity(UserRepwdActivity.this);
 
 	}
 
@@ -324,6 +326,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 										intentRepwd.putExtra("fromRegist", "fromIndexMore");
 									} else if (just.equals("set")) {
 										intentRepwd.putExtra("fromRegist", "fromSetup");
+									} else if(just.equals("toProfit")) {
+										intentRepwd.putExtra("fromRegist", "fromProfit");
 									}
 									startActivity(intentRepwd);
 									finish();
