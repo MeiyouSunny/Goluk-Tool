@@ -31,7 +31,19 @@ public class GlideUtils {
 	}
 
 	public static void loadImage(Context context, ImageView view, String neturl, int placeholder) {
-		Glide.with(context).load(neturl).placeholder(placeholder).into(view);
+		if (placeholder <= 0) {
+			Glide.with(context).load(neturl).into(view);
+		} else {
+			Glide.with(context).load(neturl).placeholder(placeholder).into(view);
+		}
+	}
+
+	public static void loadLocalImage(Context context, ImageView view, int drawid) {
+		try {
+			Glide.with(context).load(drawid).into(view);
+		} catch (Exception e) {
+
+		}
 	}
 
 }

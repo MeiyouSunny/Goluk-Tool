@@ -284,9 +284,11 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 		mPlayImg = (ImageView) findViewById(R.id.vtplayImg);
 
 		if (from.equals("suqare")) {
-			GlideUtils.loadNetHead(this, mPlayImg, image, R.drawable.tacitly_pic);
-		} else {
-			GlideUtils.loadLocalHead(this, mPlayImg, R.drawable.tacitly_pic);
+			GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
+		} else {		
+//			GlideUtils.loadLocalImage(this, mPlayImg, R.drawable.tacitly_pic);
+			
+			GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
 		}
 
 		showLoading();

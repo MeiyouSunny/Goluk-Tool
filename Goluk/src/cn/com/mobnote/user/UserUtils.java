@@ -1,6 +1,8 @@
 package cn.com.mobnote.user;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +29,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.CopyOfShuoMClickableSpan;
@@ -36,6 +37,8 @@ import cn.com.mobnote.util.GlideUtils;
 import cn.com.tiros.api.FileUtils;
 
 public class UserUtils {
+	
+	public static List<Activity> mActivityList = new ArrayList<Activity>();
 
 	/**
 	 * AlertDialog
@@ -406,6 +409,38 @@ public class UserUtils {
 		}
 		// 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
 		return false;
+	}
+	
+	/**
+	 * 添加Activity
+	 * @param activity
+	 */
+	public static void addActivity(Activity activity) {
+		mActivityList.add(activity);
+	}
+	
+	/**
+	 * 移除Activity
+	 */
+	public static void removeActivity() {
+		if (mActivityList.size() > 0) {
+			mActivityList.remove(mActivityList.size() - 1);
+		}
+	}
+	
+	/**
+	 * 关闭list里面所有的Activity
+	 */
+	public static void exit() {
+		try {
+			for (Activity activity : mActivityList) {
+				if (activity != null) {
+					activity.finish();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

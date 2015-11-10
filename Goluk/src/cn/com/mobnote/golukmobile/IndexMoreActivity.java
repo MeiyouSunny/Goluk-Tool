@@ -298,10 +298,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------" + ma.mApp.autoLoginStatus);
 			Intent itNo = new Intent(mContext, UserLoginActivity.class);
 			// 登录页回调判断
-			itNo.putExtra("isInfo", "indexmore");
+			itNo.putExtra("isInfo", "profit");
 			mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 			mEditor = mPreferences.edit();
-			mEditor.putString("toRepwd", "more");
+			mEditor.putString("toRepwd", "toProfit");
 			mEditor.commit();
 
 			mContext.startActivity(itNo);

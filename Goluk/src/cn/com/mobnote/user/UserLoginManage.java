@@ -154,6 +154,7 @@ public class UserLoginManage {
 			String sex = json.getString("sex");
 			String sign = json.getString("desc");
 			phone = json.getString("phone");
+			String uid = json.getString("uid");
 			// 退出登录后，将信息存储
 			mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
 			mEditor = mSharedPreferences.edit();
@@ -161,6 +162,7 @@ public class UserLoginManage {
 			mEditor.putString("setupPhone", UserUtils.formatSavePhone(phone));
 			GolukDebugUtils.i("logintest", phone + "======1111====");
 			mEditor.putBoolean("noPwd", false);
+			mEditor.putString("uid", uid);
 			mEditor.commit();
 
 		} catch (Exception e) {
