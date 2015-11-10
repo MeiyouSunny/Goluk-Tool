@@ -41,6 +41,7 @@ import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
@@ -814,6 +815,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mApp.appFree();
 			finish();
 			GolukNotification.getInstance().destroy();
+			CommentTimerManager.getInstance().cancelTimer();
 		}
 	}
 

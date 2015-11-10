@@ -7,6 +7,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -106,16 +107,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			break;
 		//明细
 		case R.id.my_profit_detail_btn:
-			if (null != profitInfo && profitInfo.success && null != profitInfo.data &&  !"".equals(profitInfo.data.hgold)) {
-				Intent itDetail = new Intent(this,MyProfitDetailActivity.class);
-				if("0".equals(profitInfo.data.hgold)) {
-					itDetail.putExtra("nodata", true);
-				} else {
-					itDetail.putExtra("nodata", false);
-				}
-				itDetail.putExtra("uid", uid);
-				startActivity(itDetail);
-			}
+			Intent itDetail = new Intent(this, MyProfitDetailActivity.class);
+			itDetail.putExtra("uid", uid);
+			startActivity(itDetail);
 			break;
 		//提现
 		case R.id.my_profit_leave_btn:
@@ -240,15 +234,22 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 				mProfitBgLayout.setVisibility(View.VISIBLE);
 				mBottomLayout.setVisibility(View.VISIBLE);
 				if(null == profitInfo.data.lgold || "".equals(profitInfo.data.lgold) || "0".equals(profitInfo.data.lgold)) {
+					profitInfo.data.lgold = "0";
 					mProfitBgLayout.setBackgroundResource(R.drawable.profit_bg_orange);
 					mTextLastHint.setVisibility(View.VISIBLE);
 				} else {
 					mProfitBgLayout.setBackgroundResource(R.drawable.profit_bg_blue);
 					mTextLastHint.setVisibility(View.GONE);
 				}
-				mTextLastCount.setText(profitInfo.data.lgold);
-				mTextTotalCount.setText(GolukUtils.getFormatNumber(profitInfo.data.hgold)+"个Ｇ币");
-				mTextLeaveCount.setText(GolukUtils.getFormatNumber(profitInfo.data.agold)+"个Ｇ币");
+				if(null == profitInfo.data.hgold || "".equals(profitInfo.data.hgold)) {
+					profitInfo.data.hgold = "0";
+				}
+				if(null == profitInfo.data.agold || "".equals(profitInfo.data.agold)) {
+					profitInfo.data.agold = "0";
+				}
+				mTextLastCount.setText(UserUtils.formatNumber(profitInfo.data.lgold));
+				mTextTotalCount.setText(UserUtils.formatNumber(profitInfo.data.hgold)+"个Ｇ币");
+				mTextLeaveCount.setText(UserUtils.formatNumber(profitInfo.data.agold)+"个Ｇ币");
 			} else {
 				//TODO 异常处理
 				unusual();
@@ -279,4 +280,5 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		mImageRefresh.setVisibility(View.VISIBLE);
 		GolukUtils.showToast(this, "网络数据异常");
 	}
+	
 }

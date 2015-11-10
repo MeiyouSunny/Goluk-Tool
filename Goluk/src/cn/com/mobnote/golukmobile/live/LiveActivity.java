@@ -1017,6 +1017,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mRPVPalyVideo.cleanUp();
 			mRPVPalyVideo = null;
 		}
+		LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
+		dissmissAllDialog();
 		super.onDestroy();
 	}
 
