@@ -9,6 +9,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -18,6 +19,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
+import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
@@ -248,7 +250,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		it.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, true);
 		it.putExtra(CommentActivity.COMMENT_KEY_MID, ztid);
 		it.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, isShowSoft);
-		it.putExtra(CommentActivity.COMMENT_KEY_TYPE, "2");
+		it.putExtra(CommentActivity.COMMENT_KEY_TYPE, ICommentFn.COMMENT_TYPE_WONDERFUL_SPECIAL);
 		startActivity(it);
 	}
 

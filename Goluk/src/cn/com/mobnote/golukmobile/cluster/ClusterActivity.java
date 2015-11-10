@@ -40,6 +40,7 @@ import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
 import cn.com.mobnote.golukmobile.cluster.bean.ShareUrlDataBean;
 import cn.com.mobnote.golukmobile.cluster.bean.VolleyDataFormat;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
+import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
@@ -233,7 +234,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		}
 		Intent intent = new Intent(this, CommentActivity.class);
 		intent.putExtra(CommentActivity.COMMENT_KEY_MID, custerVid);
-		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, "4");
+		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, ICommentFn.COMMENT_TYPE_CLUSTER);
 		intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, isShowSoft);
 		intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, isCanInput);
 		intent.putExtra(CommentActivity.COMMENT_KEY_USERID, "");

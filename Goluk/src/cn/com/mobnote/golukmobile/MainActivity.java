@@ -15,7 +15,6 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -424,10 +423,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == mApp.mGoluk) {
 			return;
 		}
+		GolukDebugUtils.e("","net-----state-----11111");
 		final String connJson = JsonUtil.getNetStateJson(isConnected);
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_MessageReport,
 				IMessageReportFn.REPORT_CMD_NET_STATA_CHG, connJson);
 		if (isConnected) {
+			GolukDebugUtils.e("","net-----state-----2222");
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_RecoveryNetwork, "");
 		}
 	}

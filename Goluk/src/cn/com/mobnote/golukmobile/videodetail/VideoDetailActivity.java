@@ -66,7 +66,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
-		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn, TextWatcher,ILiveDialogManagerFn,OnItemClickListener {
+		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener {
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -117,7 +117,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private boolean clickRefresh = false;
 	/** 回调数据没有回来 **/
 	private boolean isClick = false;
-	/**false评论／false删除／true回复**/
+	/** false评论／false删除／true回复 **/
 	private boolean mIsReply = false;
 
 	@Override
@@ -190,7 +190,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
 		mRTPullListView.setOnItemClickListener(this);
-		
+
 	}
 
 	/**
@@ -303,10 +303,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 
 			if (count == visibleCount && mIsHaveData) {
-				if (null != mVideoJson && null != mVideoJson.data
-						&& null != mVideoJson.data.avideo
-						&& null != mVideoJson.data.avideo.video
-						&& null != mVideoJson.data.avideo.video.videoid) {
+				if (null != mVideoJson && null != mVideoJson.data && null != mVideoJson.data.avideo
+						&& null != mVideoJson.data.avideo.video && null != mVideoJson.data.avideo.video.videoid) {
 					startPush();
 				}
 			}
@@ -428,14 +426,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 		String requestStr = "";
 		if (mIsReply) {
-			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,
-					mWillDelBean.mUserId, mWillDelBean.mUserName);
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid,
+					ICommentFn.COMMENT_TYPE_VIDEO, txt, mWillDelBean.mUserId, mWillDelBean.mUserName);
 		} else {
-			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt, "", "");
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid,
+					ICommentFn.COMMENT_TYPE_VIDEO, txt, "", "");
 		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
-		GolukDebugUtils.e("null", "-----VideoDetailActivity------isSuccess：" + isSucess+",json_para:"+requestStr);
+		GolukDebugUtils.e("null", "-----VideoDetailActivity------isSuccess：" + isSucess + ",json_para:" + requestStr);
 		if (!isSucess) {
 			// 失败
 			GolukUtils.showToast(this, "评论失败!");
@@ -652,12 +651,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				JSONObject jsonObject = new JSONObject(jsonStr);
 				JSONObject dataObject = jsonObject.optJSONObject("data");
 				String result = dataObject.optString("result");
-				 if ("0".equals(result)) {
-					 // 成功
-				 } else {
-					 // 错误
-					 GolukUtils.showToast(this, "当前网络不可用，请检查网络");
-				 }
+				if ("0".equals(result)) {
+					// 成功
+				} else {
+					// 错误
+					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -688,8 +687,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				this.mAdapter.addFirstData(bean);
 				mEditInput.setText("");
 				switchSendState(false);
-//				UserUtils.hideSoftMethod(this);
-				//回复完评论之后需要还原状态以判断下次是评论还是回复
+				// UserUtils.hideSoftMethod(this);
+				// 回复完评论之后需要还原状态以判断下次是评论还是回复
 				mIsReply = false;
 				mEditInput.setHint("写评论");
 				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
@@ -819,7 +818,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			mAdapter.commentNoData();
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -861,9 +860,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		GolukDebugUtils.e("", "-----commentActivity--------position:" + position + "   arg3:" + arg3);
-		if(null != mAdapter){
+		if (null != mAdapter) {
 			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
-			if(null != mWillDelBean) {
+			if (null != mWillDelBean) {
 				if (this.mApp.isUserLoginSucess) {
 					UserInfo loginUser = mApp.getMyInfo();
 					GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
@@ -873,14 +872,14 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					} else {
 						mIsReply = true;
 					}
-				}else{
+				} else {
 					mIsReply = true;
 				}
-				new ReplyDialog(this, mWillDelBean, mEditInput,mIsReply).show();
+				new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply).show();
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
@@ -888,7 +887,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			View v = mCommentLayout;
 			if (UserUtils.isShouldHideInput(v, ev)) {
 				UserUtils.hideSoftMethod(this);
-				if("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
+				if ("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
 					mEditInput.setHint("写评论");
 					mIsReply = false;
 				}

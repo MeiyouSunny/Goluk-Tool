@@ -48,7 +48,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;

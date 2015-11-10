@@ -18,10 +18,12 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
+import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
-import cn.com.mobnote.golukmobile.special.ClusterListActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
 import cn.com.mobnote.util.JsonUtil;
 
 public class GolukNotification {
@@ -281,48 +283,74 @@ public class GolukNotification {
 		if (null == msgBean) {
 			return;
 		}
-		if ("0".equals(msgBean.target)) {
-			// 不处理
-		} else if ("1".equals(msgBean.target)) {
-			// 启动程序
-		} else if ("2".equals(msgBean.target)) {
-			// 启动程序功能界面
-			if ("1".equals(msgBean.tarkey)) {
+		try {
+			if ("0".equals(msgBean.target)) {
+				// 不处理
+			} else if ("1".equals(msgBean.target)) {
+				// 启动程序
+			} else if ("2".equals(msgBean.target)) {
+				// 启动程序功能界面
+				pushStartFuntion(msgBean);
+			} else if ("3".equals(msgBean.target)) {
+				// 打开Web页
+				if (null != msgBean.weburl && !"".equals(msgBean.weburl)) {
+					Intent intent = new Intent(GolukApplication.getInstance().getContext(), UserOpenUrlActivity.class);
+					intent.putExtra("url", msgBean.weburl);
+					GolukApplication.getInstance().getContext().startActivity(intent);
+				}
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	private void pushStartFuntion(XingGeMsgBean msgBean) {
+		try {
+			if (ICommentFn.COMMENT_TYPE_VIDEO.equals(msgBean.tarkey)) {
 				// 启动视频详情界面
 				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
 				if (null != vidArray && vidArray.length > 0) {
 					startDetail(vidArray[0]);
 				}
-			} else if ("2".equals(msgBean.tarkey)) {
-				// 专题
+			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_SPECIAL.equals(msgBean.tarkey)) {
+				// 精选专题
 				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
 				if (null != vidArray && vidArray.length > 0) {
-					startSpecial(vidArray[0], msgBean.title);
+					startSpecial(vidArray[0], msgBean.msg);
 				}
-			} else if ("3".equals(msgBean.tarkey)) {
-
-			} else if ("4".equals(msgBean.tarkey)) {
+			} else if (ICommentFn.COMMENT_TYPE_CLUSTER.equals(msgBean.tarkey)) {
 				// 活动聚合
 				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
 				if (null != vidArray && vidArray.length > 0) {
-					startCluster(vidArray[0], msgBean.title);
+					startCluster(vidArray[0], msgBean.msg);
 				}
 
-			} else if ("5".equals(msgBean.tarkey)) {
+			} else if (ICommentFn.COMMENT_TYPE_WINNING.equals(msgBean.tarkey)) {
 				// 发奖跳转页
 				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
 				if (null != vidArray && vidArray.length > 0) {
-					startCluster(vidArray[0], msgBean.title);
+					startCluster(vidArray[0], msgBean.msg);
 				}
+			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO.equals(msgBean.tarkey)) {
+				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+				if (null != vidArray && vidArray.length > 0) {
+					statrtWonderfulVideo(vidArray[0], msgBean.msg);
+				}
+
 			}
-		} else if ("3".equals(msgBean.target)) {
-			// 打开Web页
-			if (null != msgBean.weburl && !"".equals(msgBean.weburl)) {
-				Intent intent = new Intent(GolukApplication.getInstance().getContext(), UserOpenUrlActivity.class);
-				intent.putExtra("url", msgBean.weburl);
-				GolukApplication.getInstance().getContext().startActivity(intent);
-			}
+		} catch (Exception e) {
+
 		}
+	}
+
+	private void statrtWonderfulVideo(String ztid, String title) {
+		if (null == ztid || "".equals(ztid)) {
+			return;
+		}
+		Context context = GolukApplication.getInstance().getContext();
+		Intent intent = new Intent(context, WonderfulActivity.class);
+		intent.putExtra("ztid", ztid);
+		intent.putExtra("title", title);
+		context.startActivity(intent);
 	}
 
 	/**
@@ -335,8 +363,11 @@ public class GolukNotification {
 	 * @author jyf
 	 */
 	private void startCluster(String cid, String title) {
+		if (null == cid || "".equals(cid)) {
+			return;
+		}
 		Context context = GolukApplication.getInstance().getContext();
-		Intent intent = new Intent(context, ClusterListActivity.class);
+		Intent intent = new Intent(context, ClusterActivity.class);
 		intent.putExtra("ztid", cid);
 		intent.putExtra("title", title);
 		context.startActivity(intent);
@@ -352,6 +383,9 @@ public class GolukNotification {
 	 * @author jyf
 	 */
 	private void startSpecial(String sid, String title) {
+		if (null == sid || "".equals(sid)) {
+			return;
+		}
 		Context context = GolukApplication.getInstance().getContext();
 		Intent intent = new Intent(context, SpecialListActivity.class);
 		intent.putExtra("ztid", sid);

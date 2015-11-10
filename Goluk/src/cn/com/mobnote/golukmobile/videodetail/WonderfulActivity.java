@@ -431,10 +431,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		String requestStr = "";
 		if (mIsReply) {
-			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO, txt,
 					mWillDelBean.mUserId, mWillDelBean.mUserName);
 		} else {
-			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt, "", "");
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO, txt, "", "");
 		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
