@@ -4,7 +4,7 @@
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
          Version Control Systems. -->
-    <property file="local.properties" />
+    <property file="../makeApk/local.properties" />
 
     <!-- The ant.properties file can be created by you. It is only edited by the
          'android' tool to add properties to it.
@@ -26,7 +26,7 @@
          application and should be checked into Version Control Systems.
 
          -->
-    <property file="ant.properties" />
+    <property file="../makeApk/ant.properties" />
 
     <!-- if sdk.dir was not set from one of the property file, then
          get it from the ANDROID_HOME env var.
@@ -88,5 +88,38 @@
     -->
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
+    
+    <target name="-post-build" if="${build.is.packaging.debug}">
+    <!-- Remove the signature of the debug build, and sign it again with our own debug keystore -->
+    <delete dir="tmp" includeemptydirs="true" failonerror="false" />
+    <mkdir dir="tmp" />
+    <unzip src="${out.final.file}" dest="tmp" />
+    <delete dir="tmp/META-INF" includeemptydirs="true" verbose="true" failonerror="true" />
+    <delete file="${out.final.file}" failonerror="true" />
+    <zip destfile="${out.final.file}" basedir="tmp" />
+    <delete dir="tmp" includeemptydirs="true" failonerror="false" /> 
+
+    <echo level="info">Signing final DEBUG apk with a common signature...
+        signapk
+            input="${out.final.file}"
+            output="${out.packaged.file}"
+            keystore="${debug.key.store}"
+            storepass="${debug.key.store.password}"
+            alias="${debug.key.alias}"
+            keypass="${debug.key.alias.password}"
+    </echo>
+
+    <signapk
+        input="${out.final.file}"
+        output="${out.packaged.file}"
+        keystore="${debug.key.store}"
+        storepass="${debug.key.store.password}"
+        alias="${debug.key.alias}"
+        keypass="${debug.key.alias.password}"/>
+
+    <delete file="${out.final.file}" failonerror="true" />
+    <move file="${out.packaged.file}" tofile="${out.final.file}" failonerror="true" />
+
+</target>
 
 </project>
