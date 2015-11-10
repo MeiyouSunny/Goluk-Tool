@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.CountDownButtonHelper;
@@ -335,6 +336,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 											intentRepwd.putExtra("fromRegist", "fromIndexMore");
 										} else if (just.equals("set")) {
 											intentRepwd.putExtra("fromRegist", "fromSetup");
+										} else if(just.equals("toProfit")) {
+											intentRepwd.putExtra("fromRegist", "fromProfit");
 										}
 										startActivity(intentRepwd);
 										mCountDownhelper.timer.cancel();
@@ -748,7 +751,6 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 					mEditor = mSharedPreferences.edit();
 					mEditor.putBoolean("FirstLogin", false);
-					// 提交修改
 					mEditor.commit();
 					// 登录成功跳转
 					mApp.loginStatus = 1;// 登录成功
@@ -759,8 +761,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 							"------UserIdentifyActivity------registLoginCallBack-------intentRegistInter------"
 									+ intentRegistInter);
 					Intent it = null;
+					mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+					String uid = mSharedPreferences.getString("uid", "");
 					if ("fromStart".equals(intentRegistInter)) {
-						GolukDebugUtils.i("lily", "========用户未注册2222======");
 						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -768,7 +771,6 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					} else if ("fromIndexMore".equals(intentRegistInter)) {
 						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
 						it.putExtra("showMe", "showMe");
-						GolukDebugUtils.i("newintent", "-------------------");
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
@@ -777,6 +779,12 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 						startActivity(it);
+					} else if("fromProfit".equals(intentRegistInter)) {
+						it = new Intent(UserIdentifyActivity.this,MyProfitActivity.class);
+						it.putExtra("uid", uid);
+						it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(it);
+						UserUtils.exit();
 					}
 					finish();
 					break;
