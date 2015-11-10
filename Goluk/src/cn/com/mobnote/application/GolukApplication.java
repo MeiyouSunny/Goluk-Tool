@@ -901,6 +901,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 		// 登陆
 		case PageType_Login:
+			//取消自动登录
+			mUser.timerCancel();
 			// 登录
 			if (mPageSource != "UserIdentify") {
 				mLoginManage.loginCallBack(success, param1, param2);

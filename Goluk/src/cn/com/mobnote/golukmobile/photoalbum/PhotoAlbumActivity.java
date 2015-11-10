@@ -447,13 +447,13 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	@Override
 	protected void onDestroy() {
 		exit();
-		super.onDestroy();
 		mHandler.removeMessages(UPDATELOGINSTATE);
 		mHandler.removeMessages(UPDATEDATE);
 		mHandler = null;
 		if (null != mLruCache) {
 			mLruCache.evictAll();
 		}
+		super.onDestroy();
 	}
 
 }
