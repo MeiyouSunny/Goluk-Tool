@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 @SuppressLint("ClickableViewAccessibility")
@@ -89,10 +90,11 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 	}
 
 	private void showAnimation(final View view) {
-		final ImageView mengban = (ImageView) view.findViewById(R.id.mengban);
+		final RelativeLayout mengban = (RelativeLayout) view.findViewById(R.id.mengban);
 		final TextView mTitleName = (TextView) view.findViewById(R.id.mTitleName);
-		final LinearLayout mVideoLayout = (LinearLayout) view.findViewById(R.id.mVideoLayout);
-		final LinearLayout mLookLayout = (LinearLayout) view.findViewById(R.id.mLookLayout);
+//		final LinearLayout mVideoLayout = (LinearLayout) view.findViewById(R.id.mVideoLayout);
+//		final LinearLayout mLookLayout = (LinearLayout) view.findViewById(R.id.mLookLayout);
+		final TextView mVideoLayout = (TextView) view.findViewById(R.id.mVideoNum);
 
 		AlphaAnimation show = new AlphaAnimation(0f, 1.0f);
 		show.setDuration(300);
@@ -110,7 +112,7 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 				mengban.clearAnimation();
 				mTitleName.clearAnimation();
 				mVideoLayout.clearAnimation();
-				mLookLayout.clearAnimation();
+//				mLookLayout.clearAnimation();
 
 				mengban.setVisibility(View.VISIBLE);
 				mTitleName.setVisibility(View.VISIBLE);
@@ -122,25 +124,26 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 					mVideoLayout.setVisibility(View.VISIBLE);
 				}
 
-				if ("-1".equals(mJXListItemDataInfo.videonumber)) {
-					mLookLayout.setVisibility(View.GONE);
-				} else {
-					mLookLayout.setVisibility(View.VISIBLE);
-				}
+//				if ("-1".equals(mJXListItemDataInfo.videonumber)) {
+//					mLookLayout.setVisibility(View.GONE);
+//				} else {
+//					mLookLayout.setVisibility(View.VISIBLE);
+//				}
 			}
 		});
 
 		mengban.startAnimation(show);
 		mTitleName.startAnimation(show);
 		mVideoLayout.startAnimation(show);
-		mLookLayout.startAnimation(show);
+//		mLookLayout.startAnimation(show);
 	}
 
 	private void hideAnimation(final View view) {
-		final ImageView mengban = (ImageView) view.findViewById(R.id.mengban);
+		final RelativeLayout mengban = (RelativeLayout) view.findViewById(R.id.mengban);
 		final TextView mTitleName = (TextView) view.findViewById(R.id.mTitleName);
-		final LinearLayout mVideoLayout = (LinearLayout) view.findViewById(R.id.mVideoLayout);
-		final LinearLayout mLookLayout = (LinearLayout) view.findViewById(R.id.mLookLayout);
+//		final LinearLayout mVideoLayout = (LinearLayout) view.findViewById(R.id.mVideoLayout);
+//		final LinearLayout mLookLayout = (LinearLayout) view.findViewById(R.id.mLookLayout);
+		final TextView mVideoLayout = (TextView) view.findViewById(R.id.mVideoNum);
 
 		AlphaAnimation hide = new AlphaAnimation(1.0f, 0f);
 		hide.setDuration(300);
@@ -158,19 +161,19 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 				mengban.clearAnimation();
 				mTitleName.clearAnimation();
 				mVideoLayout.clearAnimation();
-				mLookLayout.clearAnimation();
+//				mLookLayout.clearAnimation();
 
 				mengban.setVisibility(View.GONE);
 				mTitleName.setVisibility(View.GONE);
 				mVideoLayout.setVisibility(View.GONE);
-				mLookLayout.setVisibility(View.GONE);
+//				mLookLayout.setVisibility(View.GONE);
 			}
 		});
 
 		mengban.startAnimation(hide);
 		mTitleName.startAnimation(hide);
 		mVideoLayout.startAnimation(hide);
-		mLookLayout.startAnimation(hide);
+//		mLookLayout.startAnimation(hide);
 	}
 
 }

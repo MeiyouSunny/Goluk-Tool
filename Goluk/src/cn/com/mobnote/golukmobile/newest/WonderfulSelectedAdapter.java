@@ -118,12 +118,12 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 						.findViewById(R.id.wonderful_icon);
 				holder.mTitleName = (TextView) convertView
 						.findViewById(R.id.mTitleName);
-				holder.mTagName = (TextView) convertView
-						.findViewById(R.id.mTagName);
-				holder.mVideoLayout = (LinearLayout) convertView
-						.findViewById(R.id.mVideoLayout);
-				holder.mLookLayout = (LinearLayout) convertView
-						.findViewById(R.id.mLookLayout);
+//				holder.mTagName = (TextView) convertView
+//						.findViewById(R.id.mTagName);
+//				holder.mVideoLayout = (LinearLayout) convertView
+//						.findViewById(R.id.mVideoLayout);
+//				holder.mLookLayout = (LinearLayout) convertView
+//						.findViewById(R.id.mLookLayout);
 				holder.mVideoNum = (TextView) convertView
 						.findViewById(R.id.mVideoNum);
 				holder.mLookNum = (TextView) convertView
@@ -153,20 +153,26 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		if(getItemViewType(position) == VIDEO_ITEM) {
 			JXListItemDataInfo info = (JXListItemDataInfo)mDataList.get(position);
 			holder.mTitleName.setText(getTitleString(info.ztitle));
-			holder.mTagName.setVisibility(View.GONE);
+//			holder.mTagName.setVisibility(View.GONE);
+//			if ("-1".equals(info.clicknumber)) {
+//				holder.mVideoLayout.setVisibility(View.GONE);
+//			} else {
+//				holder.mVideoNum.setText(GolukUtils.getFormatNumber(info.clicknumber));
+//				holder.mVideoLayout.setVisibility(View.VISIBLE);
+//			}
 			if ("-1".equals(info.clicknumber)) {
-				holder.mVideoLayout.setVisibility(View.GONE);
+				holder.mVideoNum.setVisibility(View.GONE);
 			} else {
+				holder.mVideoNum.setVisibility(View.VISIBLE);
 				holder.mVideoNum.setText(GolukUtils.getFormatNumber(info.clicknumber));
-				holder.mVideoLayout.setVisibility(View.VISIBLE);
 			}
 
-			if ("-1".equals(info.videonumber)) {
-				holder.mLookLayout.setVisibility(View.GONE);
-			} else {
-				holder.mLookNum.setText(GolukUtils.getFormatNumber(info.videonumber));
-				holder.mLookLayout.setVisibility(View.VISIBLE);
-			}
+//			if ("-1".equals(info.videonumber)) {
+//				holder.mLookLayout.setVisibility(View.GONE);
+//			} else {
+//				holder.mLookNum.setText(GolukUtils.getFormatNumber(info.videonumber));
+//				holder.mLookLayout.setVisibility(View.VISIBLE);
+//			}
 
 			if (!TextUtils.isEmpty(info.jxdate)) {
 				if (0 == position) {
@@ -175,12 +181,18 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 					String phoneDate = Utils.getDateStr(System.currentTimeMillis());
 					if(phoneDate.trim().equals(info.jxdate.trim())) {
 						holder.mDate.setTypeface(mTypeface);
-						holder.mDate.setText(mContext.getString(R.string.str_today));
+						holder.mDate.setText(mContext.getString(R.string.str_jx_today));
 						holder.mDate.setVisibility(View.VISIBLE);
 					} else {
-						holder.mDate.setTypeface(mTypeface);
-						holder.mDate.setText(GolukUtils.getTime(info.jxdate));
-						holder.mDate.setVisibility(View.VISIBLE);
+						if(position != 1) {
+							holder.mDate.setTypeface(mTypeface);
+							holder.mDate.setText(GolukUtils.getTime(info.jxdate));
+							holder.mDate.setVisibility(View.VISIBLE);
+						} else {
+							holder.mDate.setTypeface(mTypeface);
+							holder.mDate.setText(mContext.getString(R.string.str_jx_other_day));
+							holder.mDate.setVisibility(View.VISIBLE);
+						}
 					}
 				}
 			} else {
@@ -247,12 +259,12 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	}
 
 	private void loadImage(ImageView mPlayerLayout, ImageView iconView, String url, String iconUrl) {
-		GlideUtils.loadNetHead(mContext, mPlayerLayout, url, R.drawable.tacitly_pic);
+		GlideUtils.loadImage(mContext, mPlayerLayout, url, R.drawable.tacitly_pic);
 		if (TextUtils.isEmpty(iconUrl)) {
 			iconView.setVisibility(View.GONE);
 		} else {
 			iconView.setVisibility(View.VISIBLE);
-			GlideUtils.loadNetHead(mContext, iconView, iconUrl, -1);
+			GlideUtils.loadImage(mContext, iconView, iconUrl, -1);
 		}
 	}
 
@@ -261,9 +273,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		ImageView videoImg;
 		ImageView icon;
 		TextView mTitleName;
-		TextView mTagName;
-		LinearLayout mVideoLayout;
-		LinearLayout mLookLayout;
+//		TextView mTagName;
+//		LinearLayout mVideoLayout;
+//		LinearLayout mLookLayout;
 		TextView mVideoNum;
 		TextView mLookNum;
 		TextView mDate;

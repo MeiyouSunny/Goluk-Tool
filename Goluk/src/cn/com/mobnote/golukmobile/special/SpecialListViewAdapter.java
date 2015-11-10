@@ -85,7 +85,7 @@ public class SpecialListViewAdapter extends BaseAdapter {
 
 		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 		holder.mPreLoading.setLayoutParams(mPreLoadingParams);
-		GlideUtils.loadNetHead(mContext, holder.mPreLoading, specialInfo.imagepath, R.drawable.tacitly_pic);
+		GlideUtils.loadImage(mContext, holder.mPreLoading, specialInfo.imagepath, R.drawable.tacitly_pic);
 
 		return convertView;
 	}

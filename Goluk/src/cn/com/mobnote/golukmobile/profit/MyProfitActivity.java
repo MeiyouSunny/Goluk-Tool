@@ -106,9 +106,16 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			break;
 		//明细
 		case R.id.my_profit_detail_btn:
-			Intent itDetail = new Intent(this,MyProfitDetailActivity.class);
-			itDetail.putExtra("uid", uid);
-			startActivity(itDetail);
+			if (null != profitInfo && profitInfo.success && null != profitInfo.data &&  !"".equals(profitInfo.data.hgold)) {
+				Intent itDetail = new Intent(this,MyProfitDetailActivity.class);
+				if("0".equals(profitInfo.data.hgold)) {
+					itDetail.putExtra("nodata", true);
+				} else {
+					itDetail.putExtra("nodata", false);
+				}
+				itDetail.putExtra("uid", uid);
+				startActivity(itDetail);
+			}
 			break;
 		//提现
 		case R.id.my_profit_leave_btn:
@@ -157,6 +164,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	 */
 	private void clickCashBtn() {
 		if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
+			if("".equals(profitInfo.data.agold) || null == profitInfo.data.agold) {
+				profitInfo.data.agold = "0";
+			}
 			int aGold = Integer.parseInt(profitInfo.data.agold);
 			if(aGold <1000) {
 				closeAlertDialog();
