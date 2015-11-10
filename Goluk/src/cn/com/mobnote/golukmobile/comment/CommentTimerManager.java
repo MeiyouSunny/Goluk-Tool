@@ -55,7 +55,7 @@ public class CommentTimerManager {
 			}
 
 		};
-		mTimer.schedule(task, seconds * 1000);
+		mTimer.schedule(task, seconds * 1000 * 30);
 	}
 
 }
