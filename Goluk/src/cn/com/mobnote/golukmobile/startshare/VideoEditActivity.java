@@ -100,6 +100,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private PromotionSelectItem mPromotionSelectItem;
 
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
+	private boolean bPrepared = false;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -196,6 +197,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			break;
 		case 105:
 			mPlayImgLayout.setVisibility(View.GONE);
+			break;
+		case 106:
+			mVVPlayVideo.start();
 			break;
 		default:
 			break;
@@ -310,10 +314,15 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			@Override
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
-				GolukDebugUtils.e("", "VideoEditActivity----onPrepared---video---加载完成");
+				bPrepared = true;
 				updateVideoProgress();
 				if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
 					mBaseHandler.sendEmptyMessageDelayed(105, 800);
+				}
+				
+				if (bResume) {
+					mVVPlayVideo.start();
+					bPrepared = false;
 				}
 			}
 
@@ -337,8 +346,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			// 设置视频源
 			mVVPlayVideo.setVideoPath(mFilePath);
 			mVVPlayVideo.switchFilterId(0);
-			mVVPlayVideo.start();
-
+//			mVVPlayVideo.start();
 		} catch (FilterVideoEditorException e) {
 			e.printStackTrace();
 			GolukUtils.showToast(this, e.getMessage());
@@ -465,6 +473,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 		this.toInitState();
 		if (null != mVVPlayVideo) {
+			if (mVVPlayVideo.isPlaying()) {
+				mVVPlayVideo.stop();
+			}
 			mVVPlayVideo.cleanUp();
 			mVVPlayVideo = null;
 		}
@@ -478,16 +489,16 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mYouMengLayout = null;
 		finish();
 	}
-
+	boolean bResume =false;
 	@Override
 	protected void onPause() {
+		bResume = false;
 		if (mVVPlayVideo != null) {
 
-			if (mVVPlayVideo.isPlaying()) {
-				mVVPlayVideo.stop();
-				// 显示图片
-				mPlayStatusImage.setVisibility(View.VISIBLE);
+			if (mVVPlayVideo.canPause()) {
+				mVVPlayVideo.pause();
 			}
+			mPlayStatusImage.setVisibility(View.VISIBLE);
 			mVVPlayVideo.onPause();
 		}
 		// 停止进度条线程
@@ -495,9 +506,20 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		super.onPause();
 	}
 
+
 	@Override
 	protected void onResume() {
+		bResume = true;
 		if (mVVPlayVideo != null) {
+
+			if (mVVPlayVideo.isPausing()) {
+				mVVPlayVideo.start();
+			} else if (bPrepared) {
+				mBaseHandler.sendEmptyMessageDelayed(106, 500);
+			}
+			updateVideoProgress();
+			// 隐藏图片
+			mPlayStatusImage.setVisibility(View.GONE);
 			mVVPlayVideo.onResume();
 		}
 		mApp.setContext(this, "VideoEdit");
@@ -802,6 +824,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	// 当分享成功，失败　或某一环节出现失败后，还原到原始状态，再进行分享
 	private void toInitState() {
 		isSharing = false;
+		if (isExit) {
+			return;
+		}
 		mShareLoading.hide();
 		mShareLoading.switchState(ShareLoading.STATE_NONE);
 	}
