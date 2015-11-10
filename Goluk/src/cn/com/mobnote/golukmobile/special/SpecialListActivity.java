@@ -315,7 +315,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 						image.setLayoutParams(mPreLoadingParams);
 
-						GlideUtils.loadNetHead(this, image, headdata.imagepath, R.drawable.tacitly_pic);
+						GlideUtils.loadImage(this, image, headdata.imagepath, R.drawable.tacitly_pic);
 
 						lv.addHeaderView(view);
 

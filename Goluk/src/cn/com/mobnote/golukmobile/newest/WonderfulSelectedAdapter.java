@@ -258,7 +258,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			iconView.setVisibility(View.GONE);
 		} else {
 			iconView.setVisibility(View.VISIBLE);
-			GlideUtils.loadNetHead(mContext, iconView, iconUrl, -1);
+			GlideUtils.loadImage(mContext, iconView, iconUrl, -1);
 		}
 	}
 

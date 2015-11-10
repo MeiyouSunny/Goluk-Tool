@@ -151,9 +151,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		mPlayImg = (ImageView) findViewById(R.id.play_img);
 
 		if (from.equals("suqare")) {
-			GlideUtils.loadNetHead(this, mPlayImg, image, R.drawable.tacitly_pic);
+			GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
 		} else {
-			GlideUtils.loadLocalHead(this, mPlayImg, R.drawable.tacitly_pic);
+			GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
 		}
 
 		showLoading();
