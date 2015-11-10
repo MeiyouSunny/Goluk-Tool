@@ -118,10 +118,10 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 						.findViewById(R.id.wonderful_icon);
 				holder.mTitleName = (TextView) convertView
 						.findViewById(R.id.mTitleName);
-				holder.mTagName = (TextView) convertView
-						.findViewById(R.id.mTagName);
-				holder.mVideoLayout = (LinearLayout) convertView
-						.findViewById(R.id.mVideoLayout);
+//				holder.mTagName = (TextView) convertView
+//						.findViewById(R.id.mTagName);
+//				holder.mVideoLayout = (LinearLayout) convertView
+//						.findViewById(R.id.mVideoLayout);
 //				holder.mLookLayout = (LinearLayout) convertView
 //						.findViewById(R.id.mLookLayout);
 				holder.mVideoNum = (TextView) convertView
@@ -153,12 +153,18 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		if(getItemViewType(position) == VIDEO_ITEM) {
 			JXListItemDataInfo info = (JXListItemDataInfo)mDataList.get(position);
 			holder.mTitleName.setText(getTitleString(info.ztitle));
-			holder.mTagName.setVisibility(View.GONE);
+//			holder.mTagName.setVisibility(View.GONE);
+//			if ("-1".equals(info.clicknumber)) {
+//				holder.mVideoLayout.setVisibility(View.GONE);
+//			} else {
+//				holder.mVideoNum.setText(GolukUtils.getFormatNumber(info.clicknumber));
+//				holder.mVideoLayout.setVisibility(View.VISIBLE);
+//			}
 			if ("-1".equals(info.clicknumber)) {
-				holder.mVideoLayout.setVisibility(View.GONE);
+				holder.mVideoNum.setVisibility(View.GONE);
 			} else {
+				holder.mVideoNum.setVisibility(View.VISIBLE);
 				holder.mVideoNum.setText(GolukUtils.getFormatNumber(info.clicknumber));
-				holder.mVideoLayout.setVisibility(View.VISIBLE);
 			}
 
 //			if ("-1".equals(info.videonumber)) {
@@ -267,8 +273,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		ImageView videoImg;
 		ImageView icon;
 		TextView mTitleName;
-		TextView mTagName;
-		LinearLayout mVideoLayout;
+//		TextView mTagName;
+//		LinearLayout mVideoLayout;
 //		LinearLayout mLookLayout;
 		TextView mVideoNum;
 		TextView mLookNum;

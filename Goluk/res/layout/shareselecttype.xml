@@ -189,7 +189,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:gravity="top"
-            android:hint="视频描述裸奔中，快来给他披大衣..."
+            android:hint="@string/default_comment"
             android:paddingBottom="7dp"
             android:paddingLeft="5dp"
             android:paddingTop="7dp"
