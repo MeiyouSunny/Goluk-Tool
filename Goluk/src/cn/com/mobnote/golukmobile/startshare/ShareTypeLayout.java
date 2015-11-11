@@ -15,8 +15,10 @@ import android.text.TextUtils;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +37,6 @@ import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.FileUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.SharedPrefUtil;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
@@ -430,8 +431,16 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		int popWidth = contentView.getMeasuredWidth();
 		int popHeight = contentView.getMeasuredHeight();
 		mPopupWindow = new PopupWindow(contentView, popWidth, popHeight);
-
-		mPopupWindow.setFocusable(false);
+		contentView.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				mPopupWindow.dismiss();
+				return false;
+			}
+		});
+	
 		mPopupWindow.setOutsideTouchable(true);
 		mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 
