@@ -164,8 +164,10 @@ public class BaiduMapView implements ILocationFn {
 				switch (what) {
 				case 2:
 					// 5分钟更新一次大头针数据
-					ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+					if(null != ma && null != ma.mApp && null != ma.mApp.mGoluk) {
+						ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_GetPinData, "");
+					}
 					break;
 				case 99:
 					// 隐藏气泡,大头针

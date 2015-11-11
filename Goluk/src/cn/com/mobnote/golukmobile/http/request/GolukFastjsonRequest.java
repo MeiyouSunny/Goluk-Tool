@@ -7,15 +7,14 @@ import android.text.TextUtils;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.api.Tapi;
 
 import com.android.volley.Request.Method;
-
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 
 
@@ -27,10 +26,12 @@ public abstract class GolukFastjsonRequest<T> {
     private Object mTag;
     private boolean bCache;
     private int mRequestType;// requestType for call back
+    private GolukRetryPolicy mDefaultRetryPolicy;
 	public GolukFastjsonRequest(int requestType, Class<T> clazz, IRequestResultListener listener) {
 		mClazz = clazz;
 		mListener = listener;
 		mRequestType = requestType;
+		mDefaultRetryPolicy = new GolukRetryPolicy();
 		addDefaultHeader();
 		addDefaultParam();
 	}
@@ -83,6 +84,13 @@ public abstract class GolukFastjsonRequest<T> {
 		bCache = b;
 	}
 
+    protected void setCurrentTimeout(int timeout) {
+    	mDefaultRetryPolicy.setCurrentTimeout(timeout);
+    }
+    
+    protected void setCurrentRetryCount(int retryCount) {
+    	mDefaultRetryPolicy.setCurrentRetryCount(retryCount);
+    }
 
 	public void get() {
 		addRequest(Method.GET);
@@ -124,6 +132,7 @@ public abstract class GolukFastjsonRequest<T> {
 		}
 		request.setTag(mTag);
 		request.setShouldCache(bCache);
+		request.setRetryPolicy(mDefaultRetryPolicy);
 		HttpManager.getInstance().add(request);
 	}
 }

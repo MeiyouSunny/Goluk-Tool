@@ -16,6 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.format.DateFormat;
@@ -672,5 +674,24 @@ public class GolukUtils {
 			e.printStackTrace();
 		}
 		return buf.toString();
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	public static boolean isActivityAlive(Activity activity) {
+		if (activity == null) {
+			return false;
+		}
+
+		if (Build.VERSION.SDK_INT > 16) {
+			if (activity.isDestroyed() || activity.isFinishing()) {
+				return false;
+			}
+		} else {
+			if (activity.isFinishing()) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

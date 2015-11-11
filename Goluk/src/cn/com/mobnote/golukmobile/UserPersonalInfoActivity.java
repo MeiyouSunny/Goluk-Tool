@@ -295,7 +295,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			Bundle b = data.getExtras();
 			String imagepach = b.getString("imagepath");
 			customavatar = imagepach;
-			mImageHead.setImageURI(Uri.parse(imagepach));
+			GlideUtils.loadNetHead(this, mImageHead, customavatar, R.drawable.editor_head_feault7);
 			siv.deleteUri();
 			break;
 		case REQUEST_CODE_NIKCNAME:
