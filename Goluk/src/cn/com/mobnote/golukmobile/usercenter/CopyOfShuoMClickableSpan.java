@@ -34,7 +34,6 @@ public class CopyOfShuoMClickableSpan extends ClickableSpan {
 			if(null != mVideInfo.mVideoEntity && null != mVideInfo.mVideoEntity.videoExtra) {
 				Intent intent = new Intent(mContext, ClusterActivity.class);
 				intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, mVideInfo.mVideoEntity.videoExtra.topicid);
-				intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
 				intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, mVideInfo.mVideoEntity.videoExtra.topicname);
 				mContext.startActivity(intent);
 			}

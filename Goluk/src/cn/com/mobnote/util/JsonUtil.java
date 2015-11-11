@@ -874,6 +874,26 @@ public class JsonUtil {
 		}
 		return null;
 	}
+	
+	public static String getCommentRequestStr(String id, String type, int operation, String timestamp, int pagesize, String ztid) {
+		try {
+			JSONObject json = new JSONObject();
+			json.put("topicid", id);
+			json.put("topictype", "" + type);
+			json.put("operation", "" + operation);
+			if (!timestamp.equals("")) {
+				// timestamp = GolukUtils.formatTime(timestamp);
+				timestamp = timestamp.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+			}
+			json.put("timestamp", timestamp);
+			json.put("pagesize", "" + pagesize);
+			json.put("ztid", ztid);
+
+			return json.toString();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	public static String getCommentRequestStr(String id, String type, int operation, String timestamp, int pagesize) {
 		try {
@@ -894,7 +914,7 @@ public class JsonUtil {
 		}
 	}
 
-	public static String getAddCommentJson(String id, String type, String txt,String replyId,String replyName) {
+	public static String getAddCommentJson(String id, String type, String txt,String replyId,String replyName, String ztid) {
 		try {
 			JSONObject json = new JSONObject();
 			json.put("topicid", id);
@@ -904,6 +924,9 @@ public class JsonUtil {
 			json.put("replyid", replyId);
 			replyName = URLEncoder.encode(replyName, "utf-8");
 			json.put("replyname", replyName);
+			if (null != ztid) {
+				json.put("ztid", ztid);
+			}
 
 			return json.toString();
 		} catch (Exception e) {

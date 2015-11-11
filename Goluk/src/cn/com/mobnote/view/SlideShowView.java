@@ -117,7 +117,6 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                 // launch topic
                 intent = new Intent(mContext, ClusterActivity.class);
                 intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, tag.data.getAccess());
-                intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
                 String topName = "#" + tag.data.getTitle() + "#";
                 intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
                 mContext.startActivity(intent);

@@ -4,11 +4,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.com.mobnote.golukmobile.videodetail.ZTHead;
+
 public class SpecialDataManage {
+	
+	public ZTHead getSpecialHeadData(String response) {
+		try {
+			JSONObject rootObj = new JSONObject(response);
+
+			boolean success = rootObj.getBoolean("success");
+			if (success) {
+				JSONObject data = rootObj.getJSONObject("data");
+				String result = data.optString("result");
+				if ("0".equals(result)) {
+					JSONObject headObj = data.getJSONObject("head");
+					ZTHead ztHead = new ZTHead();
+					ztHead.ztitle = headObj.optString("ztitle");
+					
+					return ztHead;
+				} 
+			}
+
+		} catch (Exception e) {
+
+		}
+		
+		return null;
+	}
 
 	/**
 	 * @throws JSONException

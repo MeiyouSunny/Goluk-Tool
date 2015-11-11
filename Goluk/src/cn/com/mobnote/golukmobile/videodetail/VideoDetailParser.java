@@ -113,6 +113,15 @@ public class VideoDetailParser {
 						videoDetailInfo.video = video;
 					}
 					data.avideo = videoDetailInfo;
+					
+					JSONObject headObj = json_data.optJSONObject("head");
+					if (null != headObj) {
+						ZTHead head = new ZTHead();
+						final String ztitle = headObj.optString("ztitle");
+						head.ztitle = ztitle;
+						videoDetailInfo.head = head;
+					}
+					
 				}
 				// link
 				JSONObject json_link = json_data.optJSONObject("link");

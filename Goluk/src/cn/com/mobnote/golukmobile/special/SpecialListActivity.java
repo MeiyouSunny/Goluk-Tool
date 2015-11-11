@@ -10,23 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
-import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.comment.CommentActivity;
-import cn.com.mobnote.golukmobile.comment.ICommentFn;
-import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
-import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.GlideUtils;
-import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -44,6 +27,24 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.comment.CommentActivity;
+import cn.com.mobnote.golukmobile.comment.ICommentFn;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videodetail.ZTHead;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GlideUtils;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class SpecialListActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
 	private SpecialListViewAdapter specialListViewAdapter = null;
@@ -298,6 +299,15 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 				List<SpecialInfo> list;
 				try {
 					list = sdm.getListData(param2.toString());
+					
+					ZTHead headData = sdm.getSpecialHeadData(param2.toString());
+					if (null != headData && null != headData.ztitle && !"".equals(headData.ztitle)) {
+						if (headData.ztitle.length() > 12) {
+							textTitle.setText(headData.ztitle.substring(0, 12) + "...");
+						} else {
+							textTitle.setText(headData.ztitle);
+						}
+					}
 
 					headdata = sdm.getClusterHead(param2.toString());
 					// 装载头部

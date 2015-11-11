@@ -349,7 +349,7 @@ public class GolukNotification {
 		Context context = GolukApplication.getInstance().getContext();
 		Intent intent = new Intent(context, WonderfulActivity.class);
 		intent.putExtra("ztid", ztid);
-		intent.putExtra("title", title);
+		intent.putExtra("title", "");
 		context.startActivity(intent);
 	}
 
@@ -368,8 +368,8 @@ public class GolukNotification {
 		}
 		Context context = GolukApplication.getInstance().getContext();
 		Intent intent = new Intent(context, ClusterActivity.class);
-		intent.putExtra("ztid", cid);
-		intent.putExtra("title", title);
+		intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, cid);
+		intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, "");
 		context.startActivity(intent);
 	}
 
@@ -389,7 +389,7 @@ public class GolukNotification {
 		Context context = GolukApplication.getInstance().getContext();
 		Intent intent = new Intent(context, SpecialListActivity.class);
 		intent.putExtra("ztid", sid);
-		intent.putExtra("title", title);
+		intent.putExtra("title", "");
 		context.startActivity(intent);
 	}
 
