@@ -80,7 +80,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private Builder mBuilder = null;
 	private SharedPreferences mPreferences = null;
 	private boolean isFirstLogin;
-	private boolean isHasInfo = false;
+//	private boolean isHasInfo = false;
 	private Editor mEditor = null;
 	RelativeLayout mRootLayout = null;
 	private MainActivity ma;
@@ -166,7 +166,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			personalChanged();
 		} else {
 			// 未登录
-			isHasInfo = false;
+//			isHasInfo = false;
 			mVideoLayout.setVisibility(View.GONE);
 			this.showHead(mImageHead, "7");
 			mTextName.setText("点击登录");
@@ -207,9 +207,12 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
 			// 自动登录中，成功，失败，超时、密码错误
-			GolukDebugUtils.i("lily", "-----autoLoginStatus-----" + ma.mApp.autoLoginStatus
-					+ "------isUserLoginSuccess------" + ma.mApp.isUserLoginSucess);
-			if (isHasInfo && (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2)) {
+			int login = ma.mApp.loginStatus;
+			boolean out = ma.mApp.loginoutStatus;
+			int regist = ma.mApp.registStatus;
+			int auto = ma.mApp.autoLoginStatus;
+			
+			if (!isFirstLogin && (ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2)) {// 登录过
 				if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
 					mBuilder = new AlertDialog.Builder(mContext);
 					dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
@@ -220,7 +223,6 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 					intentToUserCenter(0);
 				}
 			} else {
-				GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------" + ma.mApp.autoLoginStatus);
 				Intent itNo = new Intent(mContext, UserLoginActivity.class);
 				// 登录页回调判断
 				itNo.putExtra("isInfo", "indexmore");
@@ -231,8 +233,31 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				mEditor.commit();
 
 				mContext.startActivity(itNo);
-				isHasInfo = true;
 			}
+			
+//			if (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2) {
+//				if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
+//					mBuilder = new AlertDialog.Builder(mContext);
+//					dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
+//					dialog.show();
+//				} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
+//					GolukDebugUtils.i("lily", "--------更多页面------");
+//
+//					intentToUserCenter(0);
+//				}
+//			} else {
+//				Intent itNo = new Intent(mContext, UserLoginActivity.class);
+//				// 登录页回调判断
+//				itNo.putExtra("isInfo", "indexmore");
+//
+//				mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+//				mEditor = mPreferences.edit();
+//				mEditor.putString("toRepwd", "more");
+//				mEditor.commit();
+//
+//				mContext.startActivity(itNo);
+////				isHasInfo = true;
+//			}
 			break;
 		// 我的相册
 		case R.id.video_item:
@@ -284,7 +309,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	 * 跳转我的收益页面
 	 */
 	private void clickProfitItem() {
-		if (isHasInfo && (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2)) {
+		if (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2) {
 			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
 				mBuilder = new AlertDialog.Builder(mContext);
 				dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
@@ -305,7 +330,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mEditor.commit();
 
 			mContext.startActivity(itNo);
-			isHasInfo = true;
+//			isHasInfo = true;
 		}
 	}
 	/**
@@ -313,7 +338,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	 * @param type
 	 */
 	private void clickToUserCenter(int type) {
-		if (isHasInfo && (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2)) {
+		if (ma.mApp.loginoutStatus == false || ma.mApp.registStatus == 2) {
 			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
 				mBuilder = new AlertDialog.Builder(mContext);
 				if(dialog == null) {
@@ -483,14 +508,14 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mVideoLayout.setVisibility(View.VISIBLE);;
 			showHead(mImageHead, "7");
 			initData();
-			isHasInfo = true;
+//			isHasInfo = true;
 		} else {// 没有用户信息
 			mVideoLayout.setVisibility(View.GONE);
 			mTextName.setText("点击登录");
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
 			mTextId.setText("登录查看个人主页");
 			showHead(mImageHead, "7");
-			isHasInfo = false;
+//			isHasInfo = false;
 		}
 	}
 
