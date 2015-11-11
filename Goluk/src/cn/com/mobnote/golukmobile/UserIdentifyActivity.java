@@ -824,6 +824,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				Object[] objs = (Object[]) intent.getExtras().get("pdus");
+				if (objs == null || objs.length <= 0)
+					return;
 				for (Object obj : objs) {
 					byte[] pdu = (byte[]) obj;
 					SmsMessage sms = SmsMessage.createFromPdu(pdu);

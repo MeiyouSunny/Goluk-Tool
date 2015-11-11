@@ -646,7 +646,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				return update(filePath);
 			} else {
-				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+				if (UpdateActivity.mUpdateHandler != null){
+					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+				}
 				return false;
 			}
 
@@ -685,12 +687,16 @@ public class IpcUpdateManage implements IPCManagerFn {
 						u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(filePath);
 						if (u) {
 							// 正在准备文件，请稍候……
-							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+							if (UpdateActivity.mUpdateHandler != null){
+								UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+							}
 						}
 						return u;
 					} else {
 						// 提示没有升级文件
-						UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+						if (UpdateActivity.mUpdateHandler != null){
+							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+						}
 						return false;
 					}
 				}
