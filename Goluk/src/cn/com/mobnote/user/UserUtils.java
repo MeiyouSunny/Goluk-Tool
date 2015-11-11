@@ -85,9 +85,11 @@ public class UserUtils {
 	public static boolean isNetDeviceAvailable(Context context) {
 		boolean bisConnFlag = false;
 		ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo network = conManager.getActiveNetworkInfo();
-		if (network != null) {
-			bisConnFlag = conManager.getActiveNetworkInfo().isAvailable();
+		if (conManager != null){
+			NetworkInfo network = conManager.getActiveNetworkInfo();
+			if (network != null) {
+				bisConnFlag = network.isAvailable();
+			}
 		}
 		return bisConnFlag;
 	}
