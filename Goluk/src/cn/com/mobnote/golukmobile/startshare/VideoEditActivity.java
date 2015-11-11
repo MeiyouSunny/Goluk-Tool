@@ -315,12 +315,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
 				bPrepared = true;
-				updateVideoProgress();
-				if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
-					mBaseHandler.sendEmptyMessageDelayed(105, 800);
-				}
-				
 				if (bResume && bFristPlay) {
+					updateVideoProgress();
+					if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
+						mBaseHandler.sendEmptyMessageDelayed(105, 800);
+					}
 					mVVPlayVideo.start();
 					bPrepared = false;
 					bFristPlay = false;
