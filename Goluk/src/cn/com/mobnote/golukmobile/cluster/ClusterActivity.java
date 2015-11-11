@@ -13,6 +13,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -66,6 +68,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private RTPullListView mRTPullListView = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	private VolleyDataFormat vdf = new VolleyDataFormat();
+	private  static final int ClOSE_ACTIVITY = 1000;
 	/** 保存列表一个显示项索引 */
 	private int wonderfulFirstVisible;
 	/** 保存列表显示item个数 */
@@ -94,6 +97,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private RecommendBeanRequest recommendRequest = null;
 	private NewsBeanRequest newsRequest = null;
 	private GetShareUrlRequest shareRequest = null;
+	private boolean isfrist = false;
 	/** 聚合id */
 	private String custerVid = "";
 	/** 是否允许评论 */
@@ -114,7 +118,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		this.initListener();// 初始化view的监听
 
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener(TAG, this);
-
+		isfrist = true;
 		httpPost(mActivityid);
 		mRTPullListView.firstFreshState();
 	}
@@ -303,10 +307,15 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 				} else {
 					updateViewData(false, 0);
 				}
-			}else{
+			} else {
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 				updateViewData(false, 0);
+				if(isfrist){
+					mBaseHandler.sendEmptyMessageDelayed(ClOSE_ACTIVITY, 2000);
+				}
+				
 			}
+			isfrist = false;
 		} else if (requestType == IPageNotifyFn.PageType_ClusterRecommend) {
 			ActivityJsonData data = (ActivityJsonData) result;
 			// 移除下拉
@@ -319,13 +328,13 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						if (list != null && list.size() > 0) {
 							recommendlist.addAll(list);
 							updateViewData(true, count);
-						}else{
+						} else {
 							GolukUtils.showToast(this, "数据异常，请稍候重试");
 						}
-					}else{
+					} else {
 						GolukUtils.showToast(this, "数据异常，请稍候重试");
 					}
-				}else{
+				} else {
 					GolukUtils.showToast(this, "数据异常，请稍候重试");
 				}
 			} else {
@@ -344,13 +353,13 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						if (list != null && list.size() > 0) {
 							newslist.addAll(list);
 							updateViewData(true, count);
-						}else{
+						} else {
 							GolukUtils.showToast(this, "数据异常，请稍候重试");
 						}
-					}else{
+					} else {
 						GolukUtils.showToast(this, "数据异常，请稍候重试");
 					}
-				}else{
+				} else {
 					GolukUtils.showToast(this, "数据异常，请稍候重试");
 				}
 			} else {
@@ -565,11 +574,26 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	@Override
 	protected void onDestroy() {
 		if (null != mCustomProgressDialog) {
-			if(mCustomProgressDialog.isShowing()){
+			if (mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.close();
 			}
 		}
+		mBaseHandler.removeMessages(ClOSE_ACTIVITY);
+		
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
 		super.onDestroy();
+	}
+	
+	@Override
+	protected void hMessage(Message msg) {
+		// TODO Auto-generated method stub
+		switch (msg.what) {
+		case ClOSE_ACTIVITY:
+			this.finish();
+			break;
+		default:
+			break;
+		}
+		super.hMessage(msg);
 	}
 }

@@ -511,13 +511,17 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
 			break;
 		case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-			if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
-				if (isHaveData) {
-					// 上拉刷新
-					uptype = 1;
-					String timeSign = endtime.mVideoEntity.sharingtime;
-					GolukDebugUtils.e("", "jyf----CategoryListView------------------onRefresh  上拉刷新: " + timeSign);
-					httpPost(mType, mAttribute, "2", timeSign);
+			if(null != mRTPullListView && null != mRTPullListView.getAdapter()) {
+				if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
+					if (isHaveData) {
+						// 上拉刷新
+						uptype = 1;
+						if(null != endtime && null != endtime.mVideoEntity) {
+							String timeSign = endtime.mVideoEntity.sharingtime;
+							GolukDebugUtils.e("", "jyf----CategoryListView------------------onRefresh  上拉刷新: " + timeSign);
+							httpPost(mType, mAttribute, "2", timeSign);
+						}
+					}
 				}
 			}
 			break;

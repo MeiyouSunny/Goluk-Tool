@@ -1,6 +1,7 @@
 package cn.com.mobnote.user;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -443,4 +444,21 @@ public class UserUtils {
 		}
 	}
 
+	/**
+	 * 数据显示1,000
+	 * @param fmtnumber
+	 * @return
+	 */
+	public static String formatNumber(String fmtnumber) {
+		String number;
+		try {
+			int wg = Integer.parseInt(fmtnumber);
+			DecimalFormat df = new DecimalFormat("#,###");
+			number = df.format(wg);
+		} catch (Exception e) {
+			return fmtnumber;
+		}
+		return number;
+	}
+	
 }

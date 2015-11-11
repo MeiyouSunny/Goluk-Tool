@@ -479,8 +479,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private void showSettingDialog() {
 		mFailedCount++;
 		if (mFailedCount > SHOW_SETTING_COUNT) {
-			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
+			if(GolukUtils.isActivityAlive(this)) {
+				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
 					LiveDialogManager.DIALOG_TYPE_WIFIBIND_SHOWSETTING, "提示", "请去系统WIFI连接设置");
+			}
 		}
 	}
 

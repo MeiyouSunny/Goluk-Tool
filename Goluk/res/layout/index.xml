@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:drawableTop="@drawable/index_user_btn"
-                android:text="我"
+                android:text="@string/str_main_page_mine"
                 android:textColor="#cccccc"
                 android:textSize="12sp" />
         </RelativeLayout>
