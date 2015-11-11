@@ -66,6 +66,12 @@ public class NetUtil {
 	public void setMultiCastListener(IMultiCastFn fn) {
 		mFn = fn;
 	}
+	
+	//移除指定监听
+	public void unRemoveMultiCastListener(IMultiCastFn fn){
+		if (mFn == fn)
+			mFn = null;
+	}
 
 	private void sendData(int sucess, Object obj) {
 		GolukDebugUtils.e("", "MultiCastUtil-----sendData------ip2222222:   " + sucess);
