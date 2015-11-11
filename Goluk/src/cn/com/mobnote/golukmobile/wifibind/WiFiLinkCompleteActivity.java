@@ -378,7 +378,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		if (null != layout3) {
 			layout3.free();
 		}
-
+		if (null != mWac){
+			mWac.unbind();
+			mWac = null;
+		}
 	}
 
 	@Override
