@@ -15,9 +15,12 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.text.TextUtils.TruncateAt;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -76,6 +79,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 	private int currentViewType = 1; // 当前视图类型（推荐列表，最新列表）
 
 	ClusterActivity clusterActivity = null;
+	
+	public boolean isMoreLine = false;
 
 	public ActivityBean headData = null;
 	public List<VideoSquareInfo> recommendlist = null;
@@ -198,8 +203,27 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				
 				GlideUtils.loadImage(mContext, holder.headImg, headData.picture,
 						R.drawable.tacitly_pic);
-				
 				holder.describe.setText(headData.activitycontent);
+				if(isMoreLine){
+					holder.describe.setMaxLines(100);
+					holder.describe.setEllipsize(null);
+				}else{
+					holder.describe.setMaxLines(2);
+					holder.describe.setEllipsize(TruncateAt.END);
+				}
+				
+				holder.describe.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View view) {
+						if(isMoreLine){
+							isMoreLine = false;
+						}else{
+							isMoreLine = true;
+						}
+						notifyDataSetChanged();
+					}
+				});
 				holder.partakes.setText(headData.participantcount);
 
 				holder.partakeBtn.setOnClickListener(new OnClickListener() {
@@ -359,8 +383,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
-			UserUtils.showCommentText(holder.detail, clusterInfo.mUserEntity.nickname,
-					clusterInfo.mVideoEntity.describe);
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
 			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
 			if (count > 3) {
@@ -555,13 +577,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				holder.recommentImg.setVisibility(View.GONE);
 			}
 			// 获得聚合字符串
-			got = clusterInfo.mVideoEntity.videoExtra.topicname;
+			got = "#" + clusterInfo.mVideoEntity.videoExtra.topicname + "#";
 		} else {
 			holder.videoGoldImg.setVisibility(View.GONE);
 			holder.recommentImg.setVisibility(View.GONE);
 		}
 
-		UserUtils.showCommentText(mContext, false,clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
+		UserUtils.showCommentText(mContext, false, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
 				clusterInfo.mVideoEntity.describe, got);
 	}
 
