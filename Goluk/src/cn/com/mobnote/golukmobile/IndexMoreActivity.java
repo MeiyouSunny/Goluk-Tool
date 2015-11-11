@@ -87,6 +87,13 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	/** 用户信息 **/
 	private String userHead, userName, userId, userDesc, userUId, userSex,customavatar;
 	private int shareCount, praiseCount;
+	
+	/**个人中心**/
+	private static final int TYPE_USER = 1;
+	/**分享视频／赞我的人**/
+	private static final int TYPE_SHARE_PRAISE = 2;
+	/**我的收益**/
+	private static final int TYPE_PROFIT = 3;
 
 	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
@@ -197,36 +204,14 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			// 返回
 			break;
 		case R.id.user_share:
-			clickToUserCenter(0);
+			clickAuto(TYPE_SHARE_PRAISE, 0);
 			break;
 		case R.id.user_praise:
-			clickToUserCenter(1);
+			clickAuto(TYPE_SHARE_PRAISE, 1);
 			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
-			if (!isFirstLogin && (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 
-					|| ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2)) {// 登录过
-				if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
-					mBuilder = new AlertDialog.Builder(mContext);
-					dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
-					dialog.show();
-				} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
-					GolukDebugUtils.i("lily", "--------更多页面------");
-
-					intentToUserCenter(0);
-				}
-			} else {
-				Intent itNo = new Intent(mContext, UserLoginActivity.class);
-				// 登录页回调判断
-				itNo.putExtra("isInfo", "indexmore");
-
-				mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-				mEditor = mPreferences.edit();
-				mEditor.putString("toRepwd", "more");
-				mEditor.commit();
-
-				mContext.startActivity(itNo);
-			}
+			clickAuto(TYPE_USER, 0);
 			break;
 		// 我的相册
 		case R.id.video_item:
@@ -270,14 +255,17 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			break;
 		//我的收益
 		case R.id.profit_item:
-			clickProfitItem();
+			clickAuto(TYPE_PROFIT, 0);
 			break;
 		}
 	}
+	
 	/**
-	 * 跳转我的收益页面
+	 * 
+	 * @param type	点击个人中心、分享视频赞我的人、我的收益
+	 * @param shareOrPraise	０分享视频　　１赞我的人
 	 */
-	private void clickProfitItem() {
+	private void clickAuto(int type,int shareOrPraise) {
 		if (!isFirstLogin && (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 
 				|| ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2)) {// 登录过
 			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
@@ -285,39 +273,31 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
 				dialog.show();
 			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
-				Intent itProfit = new Intent(mContext,MyProfitActivity.class);
-				itProfit.putExtra("uid", userUId);
-				mContext.startActivity(itProfit);
+				if(type == TYPE_USER) {
+					intentToUserCenter(shareOrPraise);
+				} else if(type == TYPE_SHARE_PRAISE) {
+					intentToUserCenter(shareOrPraise);
+				} else if(type == TYPE_PROFIT) {
+					Intent itProfit = new Intent(mContext,MyProfitActivity.class);
+					itProfit.putExtra("uid", userUId);
+					mContext.startActivity(itProfit);
+				}
 			}
 		} else {
-			GolukDebugUtils.i("lily", "-------用户登出成功,跳转登录页------" + ma.mApp.autoLoginStatus);
-			Intent itNo = new Intent(mContext, UserLoginActivity.class);
-			// 登录页回调判断
-			itNo.putExtra("isInfo", "profit");
 			mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 			mEditor = mPreferences.edit();
-			mEditor.putString("toRepwd", "toProfit");
+			Intent itNo = new Intent(mContext, UserLoginActivity.class);
+			if(type == TYPE_USER) {
+				itNo.putExtra("isInfo", "indexmore");
+				mEditor.putString("toRepwd", "more");
+			} else if(type == TYPE_PROFIT) {
+				// 登录页回调判断
+				itNo.putExtra("isInfo", "profit");
+				mEditor.putString("toRepwd", "toProfit");
+			}
 			mEditor.commit();
 
 			mContext.startActivity(itNo);
-		}
-	}
-	/**
-	 * 点击分享视频和赞我的人
-	 * @param type
-	 */
-	private void clickToUserCenter(int type) {
-		if (!isFirstLogin && (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 
-				|| ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2)) {// 登录过
-			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
-				mBuilder = new AlertDialog.Builder(mContext);
-				if(dialog == null) {
-					dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
-					dialog.show();
-				}
-			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
-				intentToUserCenter(type);
-			}
 		}
 	}
 	
