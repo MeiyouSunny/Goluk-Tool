@@ -685,14 +685,25 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			if (null != bean) {
 				noData(false);
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
-				this.mAdapter.addFirstData(bean);
-				mEditInput.setText("");
-				switchSendState(false);
-//				UserUtils.hideSoftMethod(this);
-				//回复完评论之后需要还原状态以判断下次是评论还是回复
-				mIsReply = false;
-				mEditInput.setHint("写评论");
-				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
+				if(!"".equals(bean.result)) {
+					if("0".equals(bean.result)) {//成功
+						this.mAdapter.addFirstData(bean);
+						mEditInput.setText("");
+						switchSendState(false);
+						//回复完评论之后需要还原状态以判断下次是评论还是回复
+						mIsReply = false;
+						mEditInput.setHint("写评论");
+						CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
+					} else if("1".equals(bean.result)) {
+						GolukDebugUtils.e("", "参数错误");
+					} else if("2".equals(bean.result)) {//重复评论
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", "您评论的速度太快了，请休息一下再评论。");
+					} else if("3".equals(bean.result)) {//频繁评论
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								LiveDialogManager.FUNCTION_DIALOG_OK, "", "请勿重复发送相同的评论内容。");
+					}
+				}
 			} else {
 				GolukUtils.showToast(this, "评论失败");
 			}
