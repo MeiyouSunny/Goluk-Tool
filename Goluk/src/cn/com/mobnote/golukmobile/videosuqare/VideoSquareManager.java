@@ -74,8 +74,11 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public long getJXListData(String jxid, String pagesize) {
 		String json = JsonCreateUtils.getJXListJson(jxid, pagesize);
-		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
+		if(null != mApplication && null != mApplication.mGoluk) {
+			return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
 				json);
+		}
+		return -1;
 	}
 
 	/**
@@ -193,30 +196,7 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 				VSquare_Req_List_Video_Catlog, json);
 	}
 
-	/**
-	 * 获取评论列表（可用于更新）
-	 * 
-	 * @param topicid
-	 *            视频、专题或直播的id
-	 * @param topictype
-	 *            1:单视频；2:专题；3:直播；4:其它
-	 * @param operation
-	 *            0:首次进入；1:下拉；2:上拉 首次进入：获取最新数据； - 下拉：获取更新数据，即比timestamp以后的数据； -
-	 *            上拉：获取历史数据，即比timestamp以前的数据。
-	 * @param timestamp
-	 *            首次进入为空。格式：2015-08-01 08:00:00
-	 * @param pagesize
-	 *            默认20个评论
-	 * @return
-	 * @author xuhw
-	 * @date 2015年8月6日
-	 */
-	public boolean getCommentListData(String topicid, String topictype, String operation, String timestamp,
-			String pagesize) {
-		String json = JsonCreateUtils.getCommentJson(topicid, topictype, operation, timestamp, pagesize);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_List_Comment,
-				json);
-	}
+	
 
 	/**
 	 * 添加评论

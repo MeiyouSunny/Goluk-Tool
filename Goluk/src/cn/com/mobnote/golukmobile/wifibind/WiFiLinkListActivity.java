@@ -549,6 +549,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			mWac.unbind();
 			mWac = null;
 		}
+		LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
 	}
 
 	@Override

@@ -967,5 +967,15 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		} else
 			return super.onKeyDown(keyCode, event);
 	}
-
+	
+	@Override
+	protected void onDestroy() {
+		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onDestroy----");
+		if (mHandler != null){
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
+		}
+		super.onDestroy();
+	}
+	
 }

@@ -482,6 +482,10 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 		super.onDestroy();
 		releaseMediaPlayer();
 		doCleanUp();
+		if (mHandler != null){
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
+		}
 	}
 
 	@Override

@@ -229,7 +229,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	 * 获取评论列表数据
 	 */
 	public void getCommentList(int operation, String timestamp) {
-		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, "1", operation,
+		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_VIDEO, operation,
 				timestamp, PAGE_SIZE);
 		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr==" + requestStr);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
