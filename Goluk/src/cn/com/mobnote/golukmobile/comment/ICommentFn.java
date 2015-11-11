@@ -22,5 +22,5 @@ public interface ICommentFn {
 	public static final int OPERATOR_DOWN = 2;
 
 	/** 评论超时为2 秒 */
-	public static final int COMMENT_CIMMIT_TIMEOUT = 2;
+	public static final int COMMENT_CIMMIT_TIMEOUT = 30;
 }

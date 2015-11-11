@@ -22,11 +22,14 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 	private List<ProfitDetailResult> mIncomeList;
 	private int width = 0;
 	
-	public MyProfitDetailAdapter(Context mContext, List<ProfitDetailResult> mIncomeList) {
+	public MyProfitDetailAdapter(Context mContext) {
 		super();
 		this.mContext = mContext;
-		this.mIncomeList = mIncomeList;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+	}
+	
+	public void setData(List<ProfitDetailResult> mIncomeList) {
+		this.mIncomeList = mIncomeList;
 	}
 
 	@Override

@@ -73,8 +73,8 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		Intent it = getIntent();
 		uid = it.getStringExtra("uid").toString();
 		
-		mRTPullListView.firstFreshState();
 		firstEnter();
+		mRTPullListView.firstFreshState();
 		
 	}
 	
@@ -85,11 +85,15 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,null);
 		mTextNoData = (TextView) findViewById(R.id.my_profit_detail_nodata);
 		
+		
+		
 		mBtnBack.setOnClickListener(this);
 		mImageRefresh.setOnClickListener(this);
 		mRTPullListView.setonRefreshListener(this);
 		mRTPullListView.setOnRTScrollListener(this);
 		mRTPullListView.setOnItemClickListener(this);
+		mAdapter = new MyProfitDetailAdapter(this);
+		mRTPullListView.setAdapter(mAdapter);
 	}
 	
 	/**
@@ -184,8 +188,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 					mImageRefresh.setVisibility(View.GONE);
 					mTextNoData.setVisibility(View.GONE);
 					mRTPullListView.setVisibility(View.VISIBLE);
-					mAdapter = new MyProfitDetailAdapter(this, detailInfo.data.incomelist);
-					mRTPullListView.setAdapter(mAdapter);
+					mAdapter.setData(detailInfo.data.incomelist);
 					mRTPullListView.onRefreshComplete(historyDate);
 				} else {
 					mImageRefresh.setVisibility(View.GONE);
