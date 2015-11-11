@@ -409,10 +409,10 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
 			//TODO 在视频描述之后添加活动标签
 			if(null == mVideoAllData.avideo.video.recom || "".equals(mVideoAllData.avideo.video.recom)
-					|| null == mVideoAllData.avideo.video.recom.chaname || "".equals(mVideoAllData.avideo.video.recom.chaname)) {
+					|| null == mVideoAllData.avideo.video.recom.topicname || "".equals(mVideoAllData.avideo.video.recom.topicname)) {
 				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "");
 			} else {
-				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.avideo.video.recom.chaname+"#");
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.avideo.video.recom.topicname+"#");
 			}
 			
 			final String location = mVideoAllData.avideo.video.mLocation;
