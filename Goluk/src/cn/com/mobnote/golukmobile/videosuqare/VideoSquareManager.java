@@ -74,8 +74,11 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public long getJXListData(String jxid, String pagesize) {
 		String json = JsonCreateUtils.getJXListJson(jxid, pagesize);
-		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
+		if(null != mApplication && null != mApplication.mGoluk) {
+			return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
 				json);
+		}
+		return -1;
 	}
 
 	/**
