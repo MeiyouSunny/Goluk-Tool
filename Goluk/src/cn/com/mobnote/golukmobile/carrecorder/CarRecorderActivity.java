@@ -1168,6 +1168,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mHandler.removeMessages(WIFI_STATE_CONNING);
 			mHandler = null;
 		}
+		if (m8sTimer != null) {
+			m8sTimer.cancel();
+			m8sTimer.purge();
+			m8sTimer = null;
+		}
 		super.onDestroy();
 	}
 
@@ -1624,8 +1629,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
 						String filename = json.optString("filename");
-						//如果是循环视频，就不做UI上的操作
-						if(filename.indexOf("NRM") >= 0){
+						//如果是循环视频或者下载的是图片，就不做UI上的操作
+						if(filename.indexOf("NRM") >= 0 || filename.indexOf(".jpg") >= 0) {
 							return ;
 						}
 

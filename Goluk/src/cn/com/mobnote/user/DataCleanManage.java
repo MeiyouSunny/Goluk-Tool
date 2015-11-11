@@ -84,7 +84,9 @@ public class DataCleanManage {
      */ 
     public static void deleteFile(File file) { 
         if (file.exists() == false) { 
-            UserSetupActivity.mHandler.sendEmptyMessage(0); 
+        	if (UserSetupActivity.mHandler != null){
+        		UserSetupActivity.mHandler.sendEmptyMessage(0);
+        	}
             return; 
         } else { 
             if (file.isFile()) { 

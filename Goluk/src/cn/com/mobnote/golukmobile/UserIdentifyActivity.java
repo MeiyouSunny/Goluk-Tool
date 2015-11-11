@@ -756,10 +756,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					mApp.loginStatus = 1;// 登录成功
 					mApp.isUserLoginSucess = true;
 					mApp.registStatus = 2;// 注册成功的状态
+					mApp.mUser.timerCancel();
+					mApp.autoLoginStatus = 2;
 
-					GolukDebugUtils.i("final",
-							"------UserIdentifyActivity------registLoginCallBack-------intentRegistInter------"
-									+ intentRegistInter);
 					Intent it = null;
 					mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 					String uid = mSharedPreferences.getString("uid", "");
@@ -824,6 +823,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				Object[] objs = (Object[]) intent.getExtras().get("pdus");
+				if (objs == null || objs.length <= 0)
+					return;
 				for (Object obj : objs) {
 					byte[] pdu = (byte[]) obj;
 					SmsMessage sms = SmsMessage.createFromPdu(pdu);

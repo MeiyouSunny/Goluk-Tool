@@ -75,6 +75,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	public void unbind() {
 		this.callback = null;
 		this.context = null;
+		netUtil.unRemoveMultiCastListener(this);
 	}
 
 	/**

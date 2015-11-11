@@ -249,9 +249,15 @@ public class BaiduMapView implements ILocationFn {
 		// if (null != mMapView) {
 		// mMapView.onDestroy();
 		// }
-		mBaiduHandler.removeMessages(2);
-		mBaiduHandler.removeMessages(99);
-		mBaiduHandler = null;
+		//释放资源
+		if (mBaiduMapManage != null){
+			mBaiduMapManage.release();
+			mBaiduMapManage = null;
+		}
+		if (mBaiduHandler != null){
+			mBaiduHandler.removeCallbacksAndMessages(null);
+			mBaiduHandler = null;
+		}
 	}
 
 	protected void onPause() {

@@ -441,4 +441,10 @@ public class BaiduMapManage {
 			return false;
 		}
 	}
+	
+	public void release(){
+		manageHandler.removeCallbacksAndMessages(null);
+		mContext = null;
+		mApp = null;
+	}
 }
