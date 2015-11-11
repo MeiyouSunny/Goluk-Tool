@@ -635,7 +635,12 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.recommentImg.setVisibility(View.GONE);
 			}
 			// 获得聚合字符串
-			got = "#" + clusterInfo.mVideoEntity.videoExtra.topicname + "#";
+			if(clusterInfo.mVideoEntity.videoExtra.topicname == null || "".equals(clusterInfo.mVideoEntity.videoExtra.topicname)){
+				got = "";
+			}else{
+				got = "#" + clusterInfo.mVideoEntity.videoExtra.topicname + "#";
+			}
+			
 		} else {
 			holder.videoGoldImg.setVisibility(View.GONE);
 			holder.recommentImg.setVisibility(View.GONE);

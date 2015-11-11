@@ -402,7 +402,8 @@
     <string name="str_usercenter_comment">评论</string>
     <string name="str_usercenter_share">分享</string>
     <string name="str_new">new</string>
-    <string name="default_comment">没有文案，怎样收获无数点赞？</string>
+    <string name="default_comment">啥也不想说，快看视频吧...</string>
+    <string name="default_comment_hint">没有文案，怎样收获无数点赞？</string>
     <string name="get_current_location">点击获取位置</string>
     <string name="str_jx_today">-今日视频-</string>
     <string name="str_jx_other_day">-精选视频-</string>
