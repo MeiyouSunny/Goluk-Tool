@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Message;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,6 +100,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
 	private boolean bPrepared = false;
+	private boolean bFristPlay = true;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -320,9 +320,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 					mBaseHandler.sendEmptyMessageDelayed(105, 800);
 				}
 				
-				if (bResume) {
+				if (bResume && bFristPlay) {
 					mVVPlayVideo.start();
 					bPrepared = false;
+					bFristPlay = false;
 				}
 			}
 
@@ -839,6 +840,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		case IPageNotifyFn.PageType_GetPromotion:
 			PromotionModel data = (PromotionModel) result;
 			if (data != null && data.success) {
+				if (mTypeLayout == null) {
+					return;
+				}
 				mTypeLayout.setPromotionList(data.data.PromotionList);
 			}
 			break;
