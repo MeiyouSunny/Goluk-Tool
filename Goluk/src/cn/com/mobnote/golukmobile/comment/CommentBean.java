@@ -21,5 +21,8 @@ public class CommentBean {
 	public String mReplyId;
 	/** 回复人name **/
 	public String mReplyName;
+	
+	/**正常评论、评论超时、评论重复**/
+	public String result;
 
 }

@@ -21,8 +21,8 @@ public interface ICommentFn {
 	/** 下拉 */
 	public static final int OPERATOR_DOWN = 2;
 
-	/** 评论超时为2 秒 */
-	public static final int COMMENT_CIMMIT_TIMEOUT = 2;
+	/** 评论超时为30 秒 */
+	public static final int COMMENT_CIMMIT_TIMEOUT = 30;
 
 	/** 单视频 */
 	public static final String COMMENT_TYPE_VIDEO = "1";
@@ -36,4 +36,5 @@ public interface ICommentFn {
 	public static final String COMMENT_TYPE_WINNING = "5";
 	/** 精选单视频 */
 	public static final String COMMENT_TYPE_WONDERFUL_VIDEO = "6";
+
 }
