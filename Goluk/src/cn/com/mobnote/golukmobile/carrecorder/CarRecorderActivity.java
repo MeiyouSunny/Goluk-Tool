@@ -1148,7 +1148,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
 		GolukDebugUtils.e("xuhw", "YYYYYY======onDestroy======");
 		if (null != mRtspPlayerView) {
 			mRtspPlayerView.removeCallbacks(retryRunnable);
@@ -1158,7 +1157,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("main");
 		}
-
+		if (mHandler!= null){
+			mHandler.removeMessages(QUERYFILEEXIT);
+			mHandler.removeMessages(MOUNTS);
+			mHandler.removeMessages(ADDR);
+			mHandler.removeMessages(STARTVIDEORECORD);
+			mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
+			mHandler.removeMessages(WIFI_STATE_SUCCESS);
+			mHandler.removeMessages(WIFI_STATE_FAILED);
+			mHandler.removeMessages(WIFI_STATE_CONNING);
+			mHandler = null;
+		}
+		super.onDestroy();
 	}
 
 	/**
