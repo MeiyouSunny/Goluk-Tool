@@ -31,6 +31,8 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:text="该死的碰瓷党，还好我有goluk的三十六计三闾大夫框架思路的福建省来对代理商家飞拉萨的解放路上快递费静安寺两地分居卡死了带飞机开发商两地分居卡洛斯咖啡机付"
             android:textColor="#333333"
             android:textSize="14sp" />
