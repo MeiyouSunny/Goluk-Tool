@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +33,7 @@ import cn.com.mobnote.golukmobile.promotion.PromotionData;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.FileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 
@@ -97,7 +97,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	/**活动*/
 	private TextView mPromotionTextView;
 	private PopupWindow mPopupWindow;
-	private SharedPrefUtil mPrefUtil;
 	private boolean bPopup;
 	private PromotionSelectItem mPromotionSelectItem;
 	private ArrayList<PromotionData> mPromotionList;
@@ -109,9 +108,8 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.shareselecttype, null);
-		mPrefUtil = new SharedPrefUtil((Activity) mContext);
 		mPromotionSelectItem = item;
-		bPopup = mPrefUtil.getPromotionFlag();
+		bPopup = FileUtils.loadBoolean(FileUtils.SHOW_PROMOTION_POPUP_FLAG, true);
 		loadRes();
 		initView();
 		initData();
@@ -288,7 +286,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			}
 			if (bShowNew) {
 				bShowNew = false;
-				mPrefUtil.savePromotionListString(mMd5String);
+				FileUtils.saveString(FileUtils.PROMOTION_LIST_STRING, mMd5String);
 				refreshPromotionUI(mPromotionSelectItem);
 			}
 			Intent intent = new Intent(mContext, PromotionActivity.class);
@@ -433,6 +431,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		int popHeight = contentView.getMeasuredHeight();
 		mPopupWindow = new PopupWindow(contentView, popWidth, popHeight);
 
+		mPopupWindow.setFocusable(false);
 		mPopupWindow.setOutsideTouchable(true);
 		mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 
@@ -443,7 +442,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mPopupWindow.showAtLocation(mPromotionTextView, Gravity.NO_GRAVITY,
 				location[0] - offset, location[1] - popHeight);
 		bPopup = false;
-		mPrefUtil.savePromotionFlag(false);
+		FileUtils.saveBoolean(FileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
 	}
 	
 	public void refreshPromotionUI(PromotionSelectItem item) {
@@ -511,7 +510,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		  }
 		}
 
-		mMd5String = mPrefUtil.getPromotionListString();
+		mMd5String = FileUtils.loadString(FileUtils.PROMOTION_LIST_STRING, "");
 		if (TextUtils.isEmpty(mMd5String) || !mMd5String.equalsIgnoreCase(md5)) {
 			bShowNew = true;
 			refreshPromotionUI(mPromotionSelectItem);
