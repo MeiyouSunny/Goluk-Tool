@@ -1168,11 +1168,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mHandler.removeMessages(WIFI_STATE_CONNING);
 			mHandler = null;
 		}
-	if (m8sTimer != null){
-		m8sTimer.cancel();
-		m8sTimer.purge();
-		m8sTimer = null;
-	}
+		if (m8sTimer != null) {
+			m8sTimer.cancel();
+			m8sTimer.purge();
+			m8sTimer = null;
+		}
 		super.onDestroy();
 	}
 
