@@ -43,7 +43,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private RTPullListView mRTPullListView = null;
 	public List<JXListItemDataInfo> mDataList = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	public static Handler mHandler = null;
 	private WonderfulSelectedAdapter mWonderfulSelectedAdapter = null;
 	private String historyDate;
 	@SuppressLint("SimpleDateFormat")

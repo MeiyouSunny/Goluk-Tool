@@ -59,8 +59,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private Button btnLoginout;
 	/** 缓存大小显示 **/
 	private TextView mTextCacheSize = null;
-	/** 更新版本号信息 **/
-	public static Handler mHandlerVersion = null;
 	/** 用户信息 **/
 	private String phone = null;
 	/** 登录的状态 **/
