@@ -328,6 +328,11 @@ public class UserUtils {
 		String all = "";
 		if (null != got && got.length() > 0) {
 			isHasGot = true;
+			got = got.trim();
+		}
+
+		if(null != text) {
+			text = text.trim();
 		}
 		if (isHasGot) {
 			all = nikename + " " + text + " " + got;
