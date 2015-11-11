@@ -757,6 +757,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					mApp.isUserLoginSucess = true;
 					mApp.registStatus = 2;// 注册成功的状态
 					mApp.mUser.timerCancel();
+					mApp.autoLoginStatus = 2;
 
 					Intent it = null;
 					mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);

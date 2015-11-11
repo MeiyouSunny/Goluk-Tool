@@ -371,6 +371,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			mBtnLogin.setEnabled(true);
 			mBackButton.setEnabled(true);
 			mApplication.mUser.timerCancel();
+			mApplication.autoLoginStatus = 2;
 			mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 			String uid = mSharedPreferences.getString("uid", "");
 			if("profit".equals(justLogin)) {
