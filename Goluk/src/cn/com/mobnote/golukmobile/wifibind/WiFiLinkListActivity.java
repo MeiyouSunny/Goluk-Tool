@@ -545,6 +545,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		GFileUtils.writeLiveLog("WiFiLinkListActivity-------onDestroy---------------------1111");
 		collectLog("onDestroy", "onDestroy--1");
 		free();
+		LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
 	}
 
 	@Override
