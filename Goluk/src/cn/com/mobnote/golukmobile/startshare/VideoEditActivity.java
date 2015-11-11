@@ -826,8 +826,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (isExit) {
 			return;
 		}
-		mShareLoading.hide();
-		mShareLoading.switchState(ShareLoading.STATE_NONE);
+		if(null != mShareLoading) {
+			mShareLoading.hide();
+			mShareLoading.switchState(ShareLoading.STATE_NONE);
+		}
 	}
 
 	@Override
