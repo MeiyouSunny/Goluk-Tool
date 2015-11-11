@@ -576,8 +576,14 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			} else {
 				holder.recommentImg.setVisibility(View.GONE);
 			}
-			// 获得聚合字符串
-			got = "#" + clusterInfo.mVideoEntity.videoExtra.topicname + "#";
+			
+			if(clusterInfo.mVideoEntity.videoExtra.topicname == null || "".equals(clusterInfo.mVideoEntity.videoExtra.topicname)){
+				got = "";
+			}else{
+				// 获得聚合字符串
+				got = "#" + clusterInfo.mVideoEntity.videoExtra.topicname + "#";
+			}
+			
 		} else {
 			holder.videoGoldImg.setVisibility(View.GONE);
 			holder.recommentImg.setVisibility(View.GONE);
