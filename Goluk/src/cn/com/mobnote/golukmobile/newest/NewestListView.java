@@ -53,7 +53,6 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	private NewestListHeadDataInfo mHeadDataInfo = null;
 	public List<VideoSquareInfo> mDataList = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	public static Handler mHandler = null;
 	private NewestAdapter mNewestAdapter = null;
 	private boolean headLoading = false;
 	private boolean dataLoading = false;
