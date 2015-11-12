@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
+            android:textColor="#333333"
             android:text="参与"
             android:textSize="14sp" />
 
@@ -59,7 +60,17 @@
             android:layout_marginLeft="6dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/partake_txt"
+            android:textColor="#216da8"
             android:text="232222"
+            android:textSize="14sp" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="#216da8"
+            android:layout_toRightOf="@+id/partake_num"
+            android:text="人次"
             android:textSize="14sp" />
 
         <Button
