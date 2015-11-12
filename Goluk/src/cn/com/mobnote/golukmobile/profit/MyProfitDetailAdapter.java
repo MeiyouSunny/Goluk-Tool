@@ -1,6 +1,10 @@
 package cn.com.mobnote.golukmobile.profit;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
@@ -95,9 +99,23 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 		GolukDebugUtils.e("", "==========imageUrl========="+result.url);
 		GlideUtils.loadImage(mContext, holder.mImagePic, result.url, R.drawable.tacitly_pic);
 		holder.mTextCount.setText("+"+UserUtils.formatNumber(result.gold)+"Ｇ币");
-		holder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(result.time));
+		holder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(this.formatDate(result.time)));
 		
 		return convertView;
+	}
+	
+	public String formatDate(String time){
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINESE);
+		Date oldDate;
+		try {
+			oldDate = formatter.parse(time);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.CHINESE);
+			return sdf.format(oldDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	
 	}
 	
 	class ViewHolder {
