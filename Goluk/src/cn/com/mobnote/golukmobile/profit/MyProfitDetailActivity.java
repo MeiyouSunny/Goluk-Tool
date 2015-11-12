@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.profit;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -60,6 +62,10 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private RelativeLayout mBottomLoadingView = null;
 	/**进入页面的loading**/
 	private CustomLoadingDialog mLoadingDialog = null;
+	/** 操作 (0:首次进入；1:下拉；2:上拉) */
+	private String mCurrentOperator = "0";
+	/** 是否还有分页 */
+	private boolean mIsHaveData = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,15 +124,8 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 			int count = mRTPullListView.getAdapter().getCount();
 			int visibleCount = wonderfulFirstVisible + wonderfulVisibleCount;
-			if (count == visibleCount) {
-				if(null != detailInfo.data.incomelist && detailInfo.data.incomelist.size() >0) {
-					if(detailInfo.data.incomelist.size() >20) {
-						mRTPullListView.addFooterView(mBottomLoadingView);
-						startPush();
-					} else {
-						mRTPullListView.removeFooterView(mBottomLoadingView);
-					}
-				}
+			if (count == visibleCount && mIsHaveData) {
+				startPush();
 			}
 			
 		}
@@ -139,9 +138,43 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	}
 	
 	/**
+	 * 首次进入／下拉刷新，数据回调处理
+	 * @param count
+	 * @param mIncomeList
+	 */
+	private void pullCallBack(int count, List<ProfitDetailResult> mIncomeList) {
+		this.mAdapter.setData(mIncomeList);
+		mRTPullListView.onRefreshComplete(historyDate);
+		if (count >= 20) {
+			mIsHaveData = true;
+			addFoot();
+		} else {
+			mIsHaveData = false;
+			this.removeFoot();
+		}
+
+	}
+
+	/**
+	 * 上拉加载，数据回调处理
+	 * @param count
+	 * @param mIncomeList
+	 */
+	private void pushCallBack(int count, List<ProfitDetailResult> incomeList) {
+		if (count >= 20) {
+			mIsHaveData = true;
+		} else {
+			mIsHaveData = false;
+			this.removeFoot();
+		}
+		this.mAdapter.appendData(incomeList);
+	}
+	
+	/**
 	 * 首次进入
 	 */
 	private void firstEnter() {
+		mCurrentOperator = OPERATOR_FIRST;
 		httpRequestData(OPERATOR_FIRST, "");
 	}
 
@@ -149,6 +182,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	 * 开始下拉刷新
 	 */
 	private void startPull() {
+		mCurrentOperator = OPERATOR_DOWN;
 		httpRequestData(OPERATOR_FIRST, "");
 	}
 	
@@ -156,6 +190,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	 * 开始上拉加载
 	 */
 	private void startPush() {
+		mCurrentOperator = OPERATOR_UP;
 		httpRequestData(OPERATOR_UP, mAdapter.getLastDataTime());
 	}
 
@@ -188,8 +223,11 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 					mImageRefresh.setVisibility(View.GONE);
 					mTextNoData.setVisibility(View.GONE);
 					mRTPullListView.setVisibility(View.VISIBLE);
-					mAdapter.setData(detailInfo.data.incomelist);
-					mRTPullListView.onRefreshComplete(historyDate);
+					if(mCurrentOperator.equals(OPERATOR_FIRST) || mCurrentOperator.equals(OPERATOR_DOWN)) {
+						pullCallBack(detailInfo.data.incomelist.size(), detailInfo.data.incomelist);
+					} else {
+						pushCallBack(detailInfo.data.incomelist.size(), detailInfo.data.incomelist);
+					}
 				} else {
 					mImageRefresh.setVisibility(View.GONE);
 					mRTPullListView.setVisibility(View.GONE);
@@ -241,6 +279,22 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		mRTPullListView.setVisibility(View.GONE);
 		mImageRefresh.setVisibility(View.VISIBLE);
 		GolukUtils.showToast(this, "网络数据异常");
+	}
+	
+	private void addFoot() {
+		if (mRTPullListView.getFooterViewsCount() > 0) {
+			return;
+		}
+		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
+		mRTPullListView.addFooterView(mBottomLoadingView);
+	}
+
+	private void removeFoot() {
+		if (mBottomLoadingView != null) {
+			if (mRTPullListView != null) {
+				mRTPullListView.removeFooterView(mBottomLoadingView);
+			}
+		}
 	}
 	
 }

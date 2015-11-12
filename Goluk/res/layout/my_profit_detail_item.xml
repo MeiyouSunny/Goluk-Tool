@@ -38,6 +38,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/my_profit_detail_item_videopic"
+            android:layout_toLeftOf="@id/my_profit_detail_item_count"
             android:orientation="vertical" >
 
             <TextView

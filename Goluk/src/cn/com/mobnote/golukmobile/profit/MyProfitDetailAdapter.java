@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -22,19 +23,24 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 	private List<ProfitDetailResult> mIncomeList;
 	private int width = 0;
 	
-	public MyProfitDetailAdapter(Context mContext) {
+	public MyProfitDetailAdapter(Context context) {
 		super();
-		this.mContext = mContext;
+		this.mContext = context;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	}
 	
-	public void setData(List<ProfitDetailResult> mIncomeList) {
-		this.mIncomeList = mIncomeList;
+	public void setData(List<ProfitDetailResult> incomeList) {
+		this.mIncomeList = incomeList;
 	}
+	
+	public void appendData(List<ProfitDetailResult> incomeList) {
+		mIncomeList.addAll(incomeList);
+		this.notifyDataSetChanged();
+	}
+
 
 	@Override
 	public int getCount() {
-		
 		return null == mIncomeList ? 0 : mIncomeList.size();
 	}
 
@@ -88,7 +94,7 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 		ProfitDetailResult result = mIncomeList.get(arg0);
 		GolukDebugUtils.e("", "==========imageUrl========="+result.url);
 		GlideUtils.loadImage(mContext, holder.mImagePic, result.url, R.drawable.tacitly_pic);
-		holder.mTextCount.setText("+"+result.gold+"Ｇ币");
+		holder.mTextCount.setText("+"+UserUtils.formatNumber(result.gold)+"Ｇ币");
 		holder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(result.time));
 		
 		return convertView;
