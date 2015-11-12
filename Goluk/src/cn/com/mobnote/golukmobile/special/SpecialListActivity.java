@@ -366,10 +366,15 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						outurl.setText(map.get("outurlname").toString());
 
 						if (map.containsKey("comcount")) {
-							int count = Integer.parseInt(map.get("comcount").toString());
-							if (count <= 3) {
+							try {
+								int count = Integer.parseInt(map.get("comcount").toString());
+								if (count <= 3) {
+									commentLink.setVisibility(View.GONE);
+								}
+							} catch (Exception e) {
 								commentLink.setVisibility(View.GONE);
 							}
+							
 						}
 
 						commentLink.setText("查看所有  " + map.get("comcount") + " 条评论");

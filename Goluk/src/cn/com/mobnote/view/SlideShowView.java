@@ -30,9 +30,11 @@ import android.widget.LinearLayout;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
+import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.newest.BannerSlideBody;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
 
 /**
  * ViewPager实现的轮播图广告自定义视图，如京东首页的广告轮播图效果；
@@ -67,6 +69,13 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
     private boolean isInited = false;
 
     private OnImageClickedListener mListener;
+    private final static String PURE_PIC = "0";
+    private final static String VIDEO_DETAIL = "1";
+    private final static String SPECIAL_LIST = "2";
+    private final static String LIVE_VIDEO = "3";
+    private final static String ACTIVITY_TOGETHER = "4";
+    private final static String H5_PAGE = "5";
+    private final static String SPECIAL_SOLO = "6";
 
     private class ImageViewTag {
         public ImageViewTag(int position, BannerSlideBody data) {
@@ -95,39 +104,82 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
         }
 
         String type = tag.data.getType();
+        if(null == type || type.trim().equals("")) {
+            return;
+        }
+
         Intent intent = null;
 
         if(null != type) {
-            if("0".equals(type)) {
+            if(PURE_PIC.equals(type)) {
                 // do nothing
                 Log.d(TAG, "pure picture clicked");
-            } else if("1".equals(type)) {
-                // launch subject
-                intent = new Intent(mContext, SpecialListActivity.class);
-                intent.putExtra("ztid", tag.data.getAccess());
-                intent.putExtra("title", tag.data.getTitle());
-                mContext.startActivity(intent);
-            } else if("2".equals(type)) {
+            } else if(VIDEO_DETAIL.equals(type)) {
                 // launch video detail
-                intent = new Intent(mContext,VideoDetailActivity.class);
-                intent.putExtra(VideoDetailActivity.VIDEO_ID, tag.data.getAccess());
-                intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
-                mContext.startActivity(intent);
-            } else if("3".equals(type)) {
+                String accessId = tag.data.getAccess();
+                if(null == accessId || accessId.trim().equals("")) {
+                    return;
+                } else {
+                    intent = new Intent(mContext,VideoDetailActivity.class);
+                    intent.putExtra(VideoDetailActivity.VIDEO_ID, tag.data.getAccess());
+                    intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+                    mContext.startActivity(intent);
+                }
+            } else if(SPECIAL_LIST.equals(type)) {
+                // launch special list
+                String accessId = tag.data.getAccess();
+                if(null == accessId || accessId.trim().equals("")) {
+                    return;
+                } else {
+                    intent = new Intent(mContext, SpecialListActivity.class);
+                    intent.putExtra("ztid", tag.data.getAccess());
+                    intent.putExtra("title", tag.data.getTitle());
+                    mContext.startActivity(intent);
+                }
+            } else if(LIVE_VIDEO.equals(type)) {
+                //TODO: This should proceed in future
+//                intent = new Intent(mContext, LiveActivity.class);
+//                intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+//                intent.putExtra(LiveActivity.KEY_GROUPID, "");
+//                intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+//                intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+//                intent.putExtra(LiveActivity.KEY_USERINFO, user);
+//                mContext.startActivity(intent);
+            } else if(ACTIVITY_TOGETHER.equals(type)) {
                 // launch topic
-                intent = new Intent(mContext, ClusterActivity.class);
-                intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, tag.data.getAccess());
-                String topName = "#" + tag.data.getTitle() + "#";
-                intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
-                mContext.startActivity(intent);
-            } else if("4".equals(type)) {
+                String accessId = tag.data.getAccess();
+                if(null == accessId || accessId.trim().equals("")) {
+                    return;
+                } else {
+                    intent = new Intent(mContext, ClusterActivity.class);
+                    intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, tag.data.getAccess());
+//                    intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+                    String topName = "#" + tag.data.getTitle() + "#";
+                    intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
+                    mContext.startActivity(intent);
+                }
+            } else if(H5_PAGE.equals(type)) {
                 // launch h5 page
-                String url = tag.data.getAccess();
-                intent = new Intent(mContext, UserOpenUrlActivity.class);
-                intent.putExtra("url", url);
-                mContext.startActivity(intent);
-            } else {
-                Log.d(TAG, "unknown image type clicked");
+                String accessId = tag.data.getAccess();
+                if(null == accessId || accessId.trim().equals("")) {
+                    return;
+                } else {
+                    String url = tag.data.getAccess();
+                    intent = new Intent(mContext, UserOpenUrlActivity.class);
+                    intent.putExtra("url", url);
+                    mContext.startActivity(intent);
+                }
+            } else if(SPECIAL_SOLO.equals(type)) {
+                String accessId = tag.data.getAccess();
+                if(null == accessId || accessId.trim().equals("")) {
+                    return;
+                } else {
+                    intent = new Intent(mContext, WonderfulActivity.class);
+                    intent.putExtra("imageurl", tag.data.getPicture());
+                    intent.putExtra("ztid", tag.data.getAccess());
+                    intent.putExtra("title", tag.data.getTitle());
+                    mContext.startActivity(intent);
+                }
             }
         }
     }
