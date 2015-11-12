@@ -157,6 +157,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	}
 	
 	private void setTitle(String titles) {
+		if (null != mClusterTitle && !"".equals(mClusterTitle)) {
+			return;
+		}
 		mClusterTitle = titles;
 		title.setText(mClusterTitle);
 	}
