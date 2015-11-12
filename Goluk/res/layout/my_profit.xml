@@ -46,7 +46,7 @@
     <RelativeLayout
         android:id="@+id/my_profit_bg_layout" 
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="350dp"
         android:layout_below="@id/profit_title_layout"
         android:background="@drawable/profit_bg_blue">
         

@@ -480,21 +480,23 @@ public class IpcUpdateManage implements IPCManagerFn {
 		 */
 		IPCInfo ipcInfo = null;
 		IPCInfo[] upgradeArray = JsonUtil.upgradeJson(ipc);
-		final int length = upgradeArray.length;
-		for (int i = 0; i < length; i++) {
-			String ipc_filesize = upgradeArray[i].filesize;
-			String ipc_content = upgradeArray[i].appcontent;
-			// 保存ipc文件大小
-			mApp.mSharedPreUtil.saveIpcFileSize(ipc_filesize);
-			// 保存ipc更新信息
-			mApp.mSharedPreUtil.saveIpcContent(ipc_content);
-
-			String ipc_isnew = upgradeArray[i].isnew;
-			if ("0".equals(ipc_isnew)) {
-				GolukDebugUtils.i(TAG, "ipc当前已是最新版本，不需要升级");
-			} else if ("1".equals(ipc_isnew)) {
-				GolukDebugUtils.i(TAG, "ipc需要升级");
-				ipcInfo = upgradeArray[i];
+		if (upgradeArray != null){
+			final int length = upgradeArray.length;
+			for (int i = 0; i < length; i++) {
+				String ipc_filesize = upgradeArray[i].filesize;
+				String ipc_content = upgradeArray[i].appcontent;
+				// 保存ipc文件大小
+				mApp.mSharedPreUtil.saveIpcFileSize(ipc_filesize);
+				// 保存ipc更新信息
+				mApp.mSharedPreUtil.saveIpcContent(ipc_content);
+	
+				String ipc_isnew = upgradeArray[i].isnew;
+				if ("0".equals(ipc_isnew)) {
+					GolukDebugUtils.i(TAG, "ipc当前已是最新版本，不需要升级");
+				} else if ("1".equals(ipc_isnew)) {
+					GolukDebugUtils.i(TAG, "ipc需要升级");
+					ipcInfo = upgradeArray[i];
+				}
 			}
 		}
 

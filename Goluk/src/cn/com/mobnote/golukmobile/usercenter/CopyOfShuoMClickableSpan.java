@@ -24,7 +24,7 @@ public class CopyOfShuoMClickableSpan extends ClickableSpan {
 
 	@Override
 	public void updateDrawState(TextPaint ds) {
-		ds.setColor(Color.rgb(255, 138, 0));
+		ds.setColor(Color.rgb(0, 128, 255));
 	}
 
 	@Override
