@@ -297,4 +297,9 @@
             android:textColor="#333333"
             android:textSize="14sp" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#ffffff"/>
 </LinearLayout>
