@@ -491,8 +491,10 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		if (null != mDataList) {
 			mDataList.clear();
 		}
-		mHandler.removeCallbacksAndMessages(null);
-		mHandler = null;
+		if (mHandler != null){
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
+		}
 	}
 
 	public void onBackPressed() {

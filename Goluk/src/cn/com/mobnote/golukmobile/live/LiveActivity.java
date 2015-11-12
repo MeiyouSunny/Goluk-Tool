@@ -1020,8 +1020,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
 		dissmissAllDialog();
 		//释放资源
-		mBaiduMapManage.release();
-		mBaiduMapManage = null;
+		if (mBaiduMapManage != null){
+			mBaiduMapManage.release();
+			mBaiduMapManage = null;
+		}
 		super.onDestroy();
 	}
 
