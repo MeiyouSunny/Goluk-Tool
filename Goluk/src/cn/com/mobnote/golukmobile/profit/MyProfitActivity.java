@@ -141,6 +141,8 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	 * 退出
 	 */
 	private void exit() {
+		closeAlertDialog();
+		closeLoadingDialog();
 		this.finish();
 	}
 	
