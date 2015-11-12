@@ -835,6 +835,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					Matcher m = p.matcher(message);
 					strBody = m.replaceAll("").trim();
 				}
+				if (strBody == null || strBody.length() < 6)
+					return;
 				String one = strBody.substring(0, 1);
 				String two = strBody.substring(1, 2);
 				String three = strBody.substring(2, 3);
