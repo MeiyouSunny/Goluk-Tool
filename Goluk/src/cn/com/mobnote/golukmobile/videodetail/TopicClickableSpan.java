@@ -34,7 +34,7 @@ public class TopicClickableSpan extends ClickableSpan {
 	@Override
 	public void updateDrawState(TextPaint ds) {
 		super.updateDrawState(ds);
-		ds.setColor(Color.rgb(255, 138, 0));
+		ds.setColor(Color.rgb(0, 128, 255));
 		ds.setUnderlineText(false);
 	}
 	

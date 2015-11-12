@@ -351,7 +351,7 @@ public class UserUtils {
 				spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(),
 						Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 			} else {
-				spanttt.setSpan(new ForegroundColorSpan(Color.rgb(255, 138, 0)), nikename.length() + text.length() + 1,
+				spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0, 128, 255)), nikename.length() + text.length() + 1,
 						all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 			}
 		}
