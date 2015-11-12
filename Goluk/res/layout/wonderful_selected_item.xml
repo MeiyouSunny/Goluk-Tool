@@ -35,7 +35,7 @@
                 android:layout_width="39dp"
                 android:layout_height="20dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:contentDescription="@string/imgdes" />
         </RelativeLayout>
 
@@ -43,7 +43,7 @@
             android:id="@+id/mengban"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:duplicateParentState="true"
             android:background="@drawable/wonderful_item_mb">
 
