@@ -104,6 +104,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private boolean isCanInput = true;
 	/** 是否允许点击评论，只有当数据回来时，才可以去评论 */
 	private boolean isRequestSucess = false;
+	
+	private boolean isRecommendLoad = false;
+	private boolean isNewsLoad = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +149,10 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		backbtn = (ImageButton) findViewById(R.id.back_btn);
 		title = (TextView) findViewById(R.id.title);
+		
+		if (mClusterTitle.length() > 12) {
+			mClusterTitle = mClusterTitle.substring(0, 12) + "...";
+		}
 		title.setText(mClusterTitle);
 		shareBtn = (Button) findViewById(R.id.title_share);
 		mEditText = (EditText) findViewById(R.id.custer_comment_input);
@@ -179,7 +186,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {// 推荐
 						if (clusterAdapter.getCurrentViewType() == ClusterAdapter.ViewType_RecommendVideoList) {// 视频列表
 							if (recommendlist != null && recommendlist.size() > 0) {// 加载更多视频数据
-								if (recommendlist.size() > 20) {
+								if (isRecommendLoad) {
 									mRTPullListView.addFooterView(mBottomLoadingView);
 									recommendRequest = new RecommendBeanRequest(
 											IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
@@ -188,8 +195,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 								}
 							}
 						} else {// 最新列表
-							if (newslist != null && newslist.size() > 20) {// 加载更多视频数据
-								if (newslist.size() > 0) {
+							if (newslist != null && newslist.size() >= 20) {// 加载更多视频数据
+								if (isNewsLoad) {
 									mRTPullListView.addFooterView(mBottomLoadingView);
 									newsRequest = new NewsBeanRequest(IPageNotifyFn.PageType_ClusterNews,
 											ClusterActivity.this);
@@ -301,7 +308,19 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					ClusterHeadBean chb = data.data;
 					setCommentData(chb);
 					recommendlist = vdf.getClusterList(chb.recommendvideo);
+					if(recommendlist.size() == 20){
+						isRecommendLoad = true;
+					}else{
+						isRecommendLoad = false;
+					}
+					
 					newslist = vdf.getClusterList(chb.latestvideo);
+					if(newslist.size() == 20){
+						isNewsLoad = true;
+					}else{
+						isNewsLoad = false;
+					}
+					
 					clusterAdapter.setDataInfo(chb.activity, recommendlist, newslist);
 					updateViewData(true, 0);
 				} else {
@@ -326,6 +345,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						List<VideoSquareInfo> list = vdf.getClusterList(data.data.videolist);
 						int count = recommendlist.size();
 						if (list != null && list.size() > 0) {
+							if(list.size() == 20){
+								isRecommendLoad = true;
+							}else{
+								isRecommendLoad = false;
+							}
 							recommendlist.addAll(list);
 							updateViewData(true, count);
 						} else {
@@ -351,6 +375,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						mRTPullListView.removeFooterView(this.mBottomLoadingView);
 						int count = newslist.size();
 						if (list != null && list.size() > 0) {
+							if(list.size() == 20){
+								isNewsLoad = true;
+							}else{
+								isNewsLoad = false;
+							}
 							newslist.addAll(list);
 							updateViewData(true, count);
 						} else {
