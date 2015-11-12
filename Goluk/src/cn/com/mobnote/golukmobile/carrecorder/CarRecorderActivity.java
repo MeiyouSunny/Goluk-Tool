@@ -1636,6 +1636,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
 							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
+								downloadSize.setVisibility(View.VISIBLE);
 								int filesize = json.getInt("filesize");
 								int filerecvsize = json.getInt("filerecvsize");
 								int process = (filerecvsize * 100) / filesize;
