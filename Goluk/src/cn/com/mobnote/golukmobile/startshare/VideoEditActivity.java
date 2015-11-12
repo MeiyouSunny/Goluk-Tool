@@ -100,7 +100,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
 	private boolean bPrepared = false;
-	private boolean bFristPlay = true;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -315,14 +314,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
 				bPrepared = true;
-				if (bResume && bFristPlay) {
+				if (bResume) {
 					updateVideoProgress();
 					if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
 						mBaseHandler.sendEmptyMessageDelayed(105, 800);
 					}
 					mVVPlayVideo.start();
 					bPrepared = false;
-					bFristPlay = false;
 				}
 			}
 
@@ -437,17 +435,29 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			exit();
+			if (isBack) {
+				return true;
+			}
+			isBack = true;
+			if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
+				// 判断是否正在上传
+				// 为了修复上传的是时返回几率崩溃控制针问题.
+				// 感觉可能崩溃到这里了,chenxy 5.11
+				if (null != mVVPlayVideo) {
+					mVVPlayVideo.cancelSave();
+				}
+			} else {
+				exit();
+			}
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
 	private void exit() {
-		if (isBack) {
+		if (isExit) {
 			return;
 		}
-		isBack = true;
 		isExit = true;
 
 		stopProgressThread();
@@ -464,20 +474,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mFilterLayout.setExit();
 		mFilterLayout = null;
 
-		if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
-			// 判断是否正在上传
-			// 为了修复上传的是时返回几率崩溃控制针问题.
-			// 感觉可能崩溃到这里了,chenxy 5.11
-			if (null != mVVPlayVideo) {
-				mVVPlayVideo.cancelSave();
-			}
-		}
+
 		this.toInitState();
 		if (null != mVVPlayVideo) {
 			mVVPlayVideo.cleanUp();
 			mVVPlayVideo = null;
 		}
-
 		// 正在获取连接
 		if (mShareLoading.getCurrentState() == ShareLoading.STATE_GET_SHARE) {
 			// 如果正在获取分享连接状态，則要取消
@@ -488,6 +490,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mYouMengLayout = null;
 		finish();
 	}
+
 	boolean bResume =false;
 	@Override
 	protected void onPause() {
@@ -602,7 +605,19 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		switch (id) {
 		case R.id.back_btn:
 			// 返回
-			exit();
+			if (isBack) {
+				return;
+			}
+			isBack = true;
+			if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
+				// 判断是否正在上传
+				// 为了修复上传的是时返回几率ANR
+				if (null != mVVPlayVideo) {
+					mVVPlayVideo.cancelSave();
+				}
+			} else {
+				exit();
+			}
 			break;
 		case R.id.play_layout:
 			if (!isExit) {
@@ -657,20 +672,21 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			boolean bCancel = (Boolean) obj2;
 			if (bCancel) {
 				// 已取消视频保存
-				toInitState();
+				mShareLoading.switchState(ShareLoading.STATE_NONE);
+				exit();
 			} else if (bSuccess) {
 				// 视频保存成功,跳转到分享页面
 				String newFilePath = (String) obj3;
 				createNewFileSucess(newFilePath);
 			}
 
-			if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
-				try {
-					mVVPlayVideo.reload();
-				} catch (FilterVideoEditorException e) {
-					GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
-				}
-			}
+//			if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
+//				try {
+//					mVVPlayVideo.reload();
+//				} catch (FilterVideoEditorException e) {
+//					GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
+//				}
+//			}
 			break;
 		case EVENT_ERROR:
 			String errorInfo = "";
