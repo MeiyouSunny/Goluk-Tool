@@ -897,6 +897,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	protected void onResume() {
 		super.onResume();
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onResume----");
+		if (null == mVideo) {
+			return;
+		}
 		if (isStop) {
 			isStop = false;
 			showLoading();
