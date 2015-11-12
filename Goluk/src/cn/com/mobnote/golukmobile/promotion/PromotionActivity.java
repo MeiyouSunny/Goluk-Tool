@@ -13,11 +13,13 @@ import android.widget.ListView;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
-public class PromotionActivity extends BaseActivity implements OnClickListener, IRequestResultListener, OnItemClickListener{
+public class PromotionActivity extends BaseActivity implements OnClickListener, IRequestResultListener, OnItemClickListener, ForbidBack{
 	// title
 	private ImageButton btnBack;
 	private ListView mListView;
@@ -67,6 +69,7 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 	public void initView() {
 		// title
 		mCustomProgressDialog = new CustomLoadingDialog(this, getString(R.string.goluk_pull_to_refresh_footer_refreshing_label));
+		mCustomProgressDialog.setListener(this);
 		btnBack = (ImageButton) findViewById(R.id.back_btn);
 		mListView = (ListView) findViewById(R.id.promotion_list);
 		mPromotionDataAdapter = new PromotionDataAdapter(this);
@@ -126,6 +129,14 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 				intent.putExtra(PROMOTION_SELECTED_ITEM, item);
 			}
 			setResult(RESULT_OK, intent);
+			finish();
+		}
+	}
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		// TODO Auto-generated method stub
+		if (backKey == 1) {
 			finish();
 		}
 	}
