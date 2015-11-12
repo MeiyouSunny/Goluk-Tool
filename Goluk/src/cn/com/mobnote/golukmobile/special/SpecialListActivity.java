@@ -108,8 +108,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				// mCustomProgressDialog = null;
 				closeProgressDialog();
 				httpPost(true, ztid);
 			}
@@ -147,10 +145,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	 */
 	private void httpPost(boolean flag, String ztid) {
 		if (flag) {
-			// if (null == mCustomProgressDialog) {
-			// mCustomProgressDialog = new CustomLoadingDialog(this, null);
-			// mCustomProgressDialog.show();
-			// }
 			showProgressDialog();
 		}
 
@@ -186,16 +180,11 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			GolukApplication.getInstance().getVideoSquareManager()
 					.removeVideoSquareManagerListener("SpecialListActivity");
 		}
 		return super.onKeyDown(keyCode, event);
-	}
-
-	{
-
 	}
 
 	@Override
@@ -223,14 +212,9 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			startActivity(mBugLayout);
 			break;
 		case R.id.title_share:
-			// if (null == mCustomProgressDialog) {
-			// mCustomProgressDialog = new CustomLoadingDialog(this, null);
-			// }
-			// mCustomProgressDialog.show();
 			showProgressDialog();
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getTagShareUrl("1", ztid);
 			if (result == false) {
-				// mCustomProgressDialog.close();
 				closeProgressDialog();
 				GolukUtils.showToast(this, "网络异常，请检查网络");
 			}
@@ -501,9 +485,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
 		File file = new File(path + File.separator + name);
 		Bitmap t_bitmap = null;
-		if (null == file) {
-			return null;
-		}
 		if (file.exists()) {
 			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
 		}
