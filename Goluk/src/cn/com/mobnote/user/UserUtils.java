@@ -30,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.CopyOfShuoMClickableSpan;
@@ -84,7 +85,7 @@ public class UserUtils {
 
 	public static boolean isNetDeviceAvailable(Context context) {
 		boolean bisConnFlag = false;
-		ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager conManager = (ConnectivityManager) GolukApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (conManager != null){
 			NetworkInfo network = conManager.getActiveNetworkInfo();
 			if (network != null) {
