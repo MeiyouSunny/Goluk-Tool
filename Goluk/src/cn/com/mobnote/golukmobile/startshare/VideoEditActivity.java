@@ -100,6 +100,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
 	private boolean bPrepared = false;
+	private boolean bFirstPlay = true;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -314,13 +315,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
 				bPrepared = true;
-				if (bResume) {
+				if (bResume && bFirstPlay) {
 					updateVideoProgress();
 					if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
 						mBaseHandler.sendEmptyMessageDelayed(105, 800);
 					}
 					mVVPlayVideo.start();
 					bPrepared = false;
+					bFirstPlay =false;
 				}
 			}
 
@@ -680,13 +682,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				createNewFileSucess(newFilePath);
 			}
 
-//			if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
-//				try {
-//					mVVPlayVideo.reload();
-//				} catch (FilterVideoEditorException e) {
-//					GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
-//				}
-//			}
+			if (null != mVVPlayVideo && mVVPlayVideo.needReload()) {
+				try {
+					mVVPlayVideo.reload();
+				} catch (FilterVideoEditorException e) {
+					GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
+				}
+			}
 			break;
 		case EVENT_ERROR:
 			String errorInfo = "";
