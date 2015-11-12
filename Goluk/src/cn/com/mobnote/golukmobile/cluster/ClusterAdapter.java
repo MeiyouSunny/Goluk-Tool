@@ -532,8 +532,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		// 举报监听
 
 		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo,
-				isMy(mVideoSquareInfo.mUserEntity.uid), (ClusterActivity) mContext)
-				.setConfirm(!isMy(mVideoSquareInfo.mUserEntity.uid)));
+				false, (ClusterActivity) mContext)
+				.setConfirm(true));
 		// 评论监听
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听

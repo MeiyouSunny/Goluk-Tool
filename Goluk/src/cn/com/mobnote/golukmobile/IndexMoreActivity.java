@@ -181,7 +181,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	}
 
 	protected void onResume() {
-		mPreferences = mContext.getSharedPreferences("firstLogin", mContext.MODE_PRIVATE);
+		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		// 获得GolukApplication对象
@@ -282,23 +282,33 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 					itProfit.putExtra("uid", userUId);
 					mContext.startActivity(itProfit);
 				}
+			} else {
+				clickToLogin(type);
 			}
 		} else {
-			mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-			mEditor = mPreferences.edit();
-			Intent itNo = new Intent(mContext, UserLoginActivity.class);
-			if(type == TYPE_USER) {
-				itNo.putExtra("isInfo", "indexmore");
-				mEditor.putString("toRepwd", "more");
-			} else if(type == TYPE_PROFIT) {
-				// 登录页回调判断
-				itNo.putExtra("isInfo", "profit");
-				mEditor.putString("toRepwd", "toProfit");
-			}
-			mEditor.commit();
-
-			mContext.startActivity(itNo);
+			clickToLogin(type);
 		}
+	}
+	
+	/**
+	 * 跳转登录页
+	 * @param intentType
+	 */
+	private void clickToLogin(int intentType) {
+		mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+		mEditor = mPreferences.edit();
+		Intent itNo = new Intent(mContext, UserLoginActivity.class);
+		if(intentType == TYPE_USER) {
+			itNo.putExtra("isInfo", "indexmore");
+			mEditor.putString("toRepwd", "more");
+		} else if(intentType == TYPE_PROFIT) {
+			// 登录页回调判断
+			itNo.putExtra("isInfo", "profit");
+			mEditor.putString("toRepwd", "toProfit");
+		}
+		mEditor.commit();
+
+		mContext.startActivity(itNo);
 	}
 	
 	/**
@@ -433,7 +443,6 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	public void statusChange() {
 		if (ma.mApp.autoLoginStatus == 2) {
 			dismissDialog();
-			GolukDebugUtils.i("lily", "-------IndexMoreActivity-----自动登录个人中心变化--------当autoLoginStatus==2时----");
 			personalChanged();
 		} else if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4 || ma.mApp.isUserLoginSucess == false) {
 			dismissDialog();
@@ -452,6 +461,14 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	 */
 	public void personalChanged() {
 		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
+		if(ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4) {
+			mVideoLayout.setVisibility(View.GONE);
+			mTextName.setText("点击登录");
+			mTextId.setTextColor(Color.rgb(128, 138, 135));
+			mTextId.setText("登录查看个人主页");
+			showHead(mImageHead, "7");
+			return ;
+		}
 		if (ma.mApp.loginStatus == 1 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录成功、自动登录中、自动登录成功
 			mVideoLayout.setVisibility(View.VISIBLE);;
 			showHead(mImageHead, "7");

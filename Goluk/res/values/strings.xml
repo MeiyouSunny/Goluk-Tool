@@ -411,4 +411,7 @@
     <string name="str_video_close_hint">您刚刚取消了公开视频</string>
     <string name="str_main_page_mine">我的</string>
     <string name="str_button_ok">确定</string>
+    
+    <!-- 聚合 -->
+    <string name="cluster_comment_txt">写评论，有机会赢大奖</string>
 </resources>
