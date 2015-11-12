@@ -23,18 +23,19 @@
 		    android:orientation="vertical"
 		    android:layout_alignParentBottom="true"
 		    android:layout_centerHorizontal="true"
-		    android:layout_marginBottom="94dp">
+		    android:layout_marginBottom="34dp">
 		    <ImageView 
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:id="@+id/user_start_have"
-		        android:background="@drawable/icon_log"
+		        android:background="@drawable/guide_goluk_btn"
 		        />
 		    <ImageView 
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
+		        android:layout_gravity="center_horizontal"
 		        android:id="@+id/user_start_look"
-		        android:background="@drawable/icon_look"
+		        android:background="@drawable/guide_look"
 		        android:layout_marginTop="20dp"
 		        />
 		</LinearLayout>
