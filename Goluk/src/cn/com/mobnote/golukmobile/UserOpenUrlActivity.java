@@ -160,8 +160,14 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					mWebView.loadUrl(UrlHostManager.getWebPageHost()+"/faq/gb.html");
 				}
 			} else {
-				mTextTitle.setText("");
+				String title = itIndexMore.getStringExtra("slide_h5_title");
+				if(null != title && !title.equals("")) {
+					mTextTitle.setText(title);
+				} else {
+					mTextTitle.setText("");
+				}
 				String url = itIndexMore.getStringExtra("url");
+
 				if (mErrorState) {
 					return;
 				}
