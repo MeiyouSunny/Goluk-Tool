@@ -272,8 +272,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	protected void onDestroy() {
 		super.onDestroy();
 		GolukDebugUtils.e("", "--------UserOpenUrlActivity-------onDestory：");
-		mWebView.destroy();
-		mWebView = null;
+		if (mWebView != null){
+			mWebView.destroy();
+			mWebView = null;
+		}
 	}
 
 	@Override

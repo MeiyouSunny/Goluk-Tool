@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -63,7 +62,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	public static final String TAG = "ClusterActivity";
 
 	public static final String CLUSTER_KEY_ACTIVITYID = "activityid";
-	public static final String CLUSTER_KEY_UID = "uid";
 	public static final String CLUSTER_KEY_TITLE = "cluster_key_title";
 	private RTPullListView mRTPullListView = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
@@ -163,6 +161,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		clusterAdapter = new ClusterAdapter(this, sharePlatform, 1, this);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		mRTPullListView.setAdapter(clusterAdapter);
+	}
+	
+	private void setTitle(String titles) {
+		if (null != mClusterTitle && !"".equals(mClusterTitle)) {
+			return;
+		}
+		mClusterTitle = titles;
+		title.setText(mClusterTitle);
 	}
 
 	private void initListener() {
@@ -322,6 +328,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					}
 					
 					clusterAdapter.setDataInfo(chb.activity, recommendlist, newslist);
+					
+					String activityname = chb.activity.activityname;
+					if (null != activityname && !"".equals(activityname)) {
+						setTitle(activityname);
+					}
+					
 					updateViewData(true, 0);
 				} else {
 					updateViewData(false, 0);

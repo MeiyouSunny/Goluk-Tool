@@ -35,7 +35,7 @@ public class User {
 	
 	private GolukApplication mApp = null;
 	private UserInterface mUserInterface = null;
-	
+	/**APP退出后不再进行自动登录**/
 	public boolean mForbidTimer = false;
 	
 	public User(GolukApplication mApp) {
@@ -128,6 +128,7 @@ public class User {
 					mApp.loginoutStatus = false;
 					mApp.isUserLoginSucess = true;
 					mApp.showContinuteLive();
+					timerCancel();
 					break;
 				//自动登录的一切异常都不进行提示
 				case 500:

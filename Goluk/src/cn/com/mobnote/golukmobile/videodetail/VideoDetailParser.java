@@ -106,13 +106,22 @@ public class VideoDetailParser {
 							recommend.sysflag = json_recom.optString("sysflag");
 							recommend.sysreason = json_recom.optString("sysreason");
 							recommend.sysgold = json_recom.optString("sysgold");
-							recommend.Isrecommend = json_recom.optString("Isrecommend");
+							recommend.isrecommend = json_recom.optString("isrecommend");
 							recommend.reason = json_recom.optString("reason");
 							video.recom = recommend;
 						}
 						videoDetailInfo.video = video;
 					}
 					data.avideo = videoDetailInfo;
+					
+					JSONObject headObj = json_data.optJSONObject("head");
+					if (null != headObj) {
+						ZTHead head = new ZTHead();
+						final String ztitle = headObj.optString("ztitle");
+						head.ztitle = ztitle;
+						videoDetailInfo.head = head;
+					}
+					
 				}
 				// link
 				JSONObject json_link = json_data.optJSONObject("link");

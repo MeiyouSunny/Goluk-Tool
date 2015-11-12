@@ -555,9 +555,9 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		String requestStr = "";
 		if (mIsReply) {
 			requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,
-					mWillDelBean.mUserId, mWillDelBean.mUserName);
+					mWillDelBean.mUserId, mWillDelBean.mUserName,null);
 		} else {
-			requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,"","");
+			requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,"","",null);
 		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);

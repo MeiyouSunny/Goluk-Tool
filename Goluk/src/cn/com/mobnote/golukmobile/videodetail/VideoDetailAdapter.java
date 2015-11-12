@@ -470,7 +470,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 				}
 				
 				if(!"1".equals(mVideoAllData.avideo.video.recom.atflag) && !"1".equals(mVideoAllData.avideo.video.recom.sysflag)
-						&&!"1".equals(mVideoAllData.avideo.video.recom.Isrecommend)) {
+						&&!"1".equals(mVideoAllData.avideo.video.recom.isrecommend)) {
 					headHolder.mTextLine1.setVisibility(View.GONE);
 					headHolder.mTextLine2.setVisibility(View.GONE);
 				} else {
@@ -502,7 +502,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					headHolder.mSysLayout.setVisibility(View.GONE);
 				}
 				
-				if("1".equals(mVideoAllData.avideo.video.recom.Isrecommend)) {
+				if("1".equals(mVideoAllData.avideo.video.recom.isrecommend)) {
 					headHolder.mRecomLayout.setVisibility(View.VISIBLE);
 					if("".equals(mVideoAllData.avideo.video.recom.reason)) {
 						headHolder.mRecomReason.setText("理由：活动参与积极奖～");

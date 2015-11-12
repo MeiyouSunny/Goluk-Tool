@@ -230,7 +230,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	 */
 	public void getCommentList(int operation, String timestamp) {
 		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_VIDEO, operation,
-				timestamp, PAGE_SIZE);
+				timestamp, PAGE_SIZE,null);
 		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr==" + requestStr);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_List_Comment, requestStr);
@@ -427,10 +427,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		String requestStr = "";
 		if (mIsReply) {
 			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid,
-					ICommentFn.COMMENT_TYPE_VIDEO, txt, mWillDelBean.mUserId, mWillDelBean.mUserName);
+					ICommentFn.COMMENT_TYPE_VIDEO, txt, mWillDelBean.mUserId, mWillDelBean.mUserName,null);
 		} else {
 			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid,
-					ICommentFn.COMMENT_TYPE_VIDEO, txt, "", "");
+					ICommentFn.COMMENT_TYPE_VIDEO, txt, "", "",null);
 		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);

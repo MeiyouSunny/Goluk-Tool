@@ -201,7 +201,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mRTPullListView.firstFreshState();
 
 		String title = getIntent().getStringExtra("title");
-		if(title.length()>12){
+		if (title.length() > 12) {
 			title = title.substring(0, 12) + "...";
 		}
 		if (null == title || "".equals(title)) {
@@ -209,7 +209,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		} else {
 			mTextTitle.setText(title);
 		}
-		
+
 		Intent it = getIntent();
 		if (null != it.getStringExtra("ztid")) {
 			ztId = it.getStringExtra("ztid").toString();
@@ -235,8 +235,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	 * 获取评论列表数据
 	 */
 	public void getCommentList(int operation, String timestamp) {
-		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, "1", operation,
-				timestamp, PAGE_SIZE);
+		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO,
+				operation, timestamp, PAGE_SIZE, ztId);
 		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr==" + requestStr);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_List_Comment, requestStr);
@@ -432,9 +432,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		String requestStr = "";
 		if (mIsReply) {
 			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO, txt,
-					mWillDelBean.mUserId, mWillDelBean.mUserName);
+					mWillDelBean.mUserId, mWillDelBean.mUserName,ztId);
 		} else {
-			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO, txt, "", "");
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO, txt, "", "",ztId);
 		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
@@ -484,12 +484,16 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				if (OPERATOR_FIRST == mCurrentOperator) {
 					// 首次进入
 					firstEnterCallBack(0, mVideoJson, commentDataList);
-				} else if(OPERATOR_DOWN == mCurrentOperator){
+					if (null != mVideoJson.data.avideo.head) {
+						this.mTextTitle.setText(mVideoJson.data.avideo.head.ztitle);
+					}
+
+				} else if (OPERATOR_DOWN == mCurrentOperator) {
 					// 下拉刷新
 					pullCallBack(0, mVideoJson, commentDataList);
 				}
-				if (null != mVideoJson.data && null != mVideoJson.data.avideo
-						&& null != mVideoJson.data.avideo.video && null != mVideoJson.data.avideo.video.videoid) {
+				if (null != mVideoJson.data && null != mVideoJson.data.avideo && null != mVideoJson.data.avideo.video
+						&& null != mVideoJson.data.avideo.video.videoid) {
 					getCommentList(OPERATOR_FIRST, "");
 				}
 			} else {
@@ -683,8 +687,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			if (null != bean) {
 				noData(false);
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
-				if(!"".equals(bean.result)) {
-					if("0".equals(bean.result)) {//成功
+				if (!"".equals(bean.result)) {
+					if ("0".equals(bean.result)) {// 成功
 						commentDataList.add(0, bean);
 						this.mAdapter.addFirstData(bean);
 						mEditInput.setText("");
@@ -693,9 +697,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 						mIsReply = false;
 						mEditInput.setHint("写评论");
 						CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
-					} else if("1".equals(bean.result)) {
+					} else if ("1".equals(bean.result)) {
 						GolukDebugUtils.e("", "参数错误");
-					} else if("2".equals(bean.result)) {//重复评论
+					} else if ("2".equals(bean.result)) {// 重复评论
 						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
 								LiveDialogManager.FUNCTION_DIALOG_OK, "", "请勿重复发送相同的评论内容。");
 					} else if("3".equals(bean.result)) {//频繁评论
@@ -922,13 +926,12 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		return super.dispatchTouchEvent(ev);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (null != sharePlatform) {
-			sharePlatform.onActivityResult(requestCode,
-					resultCode, data);
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -984,7 +987,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
