@@ -26,7 +26,6 @@
             android:layout_centerInParent="true"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="#西藏阿里地区自驾游#"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -80,7 +79,7 @@
             android:layout_toLeftOf="@id/custer_comment_send"
             android:background="@drawable/videodetail_inputbox"
             android:focusable="false"
-            android:hint="@string/str_comment_input_hit"
+            android:hint="@string/cluster_comment_txt"
             android:maxLength="250"
             android:paddingLeft="10dp"
             android:textColor="#333333"
