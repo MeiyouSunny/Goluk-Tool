@@ -98,7 +98,12 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
             return;
         }
 
-        if(tag.data.getPicture().equals("fake")) {
+        String picture = tag.data.getPicture();
+        if(null == picture || picture.trim().equals("")) {
+            return;
+        }
+
+        if(picture.equals("fake")) {
             Log.d(TAG, "This is default pic, do nothing");
             return;
         }
@@ -167,6 +172,9 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                     String url = tag.data.getAccess();
                     intent = new Intent(mContext, UserOpenUrlActivity.class);
                     intent.putExtra("url", url);
+                    if(null != tag.data && !tag.data.getTitle().equals("")) {
+                        intent.putExtra("slide_h5_title", tag.data.getTitle());
+                    }
                     mContext.startActivity(intent);
                 }
             } else if(SPECIAL_SOLO.equals(type)) {
