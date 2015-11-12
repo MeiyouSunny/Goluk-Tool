@@ -106,7 +106,7 @@ public class VideoDetailParser {
 							recommend.sysflag = json_recom.optString("sysflag");
 							recommend.sysreason = json_recom.optString("sysreason");
 							recommend.sysgold = json_recom.optString("sysgold");
-							recommend.Isrecommend = json_recom.optString("Isrecommend");
+							recommend.isrecommend = json_recom.optString("isrecommend");
 							recommend.reason = json_recom.optString("reason");
 							video.recom = recommend;
 						}

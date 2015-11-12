@@ -25,7 +25,7 @@ public class VideoRecommend {
 	/**系统奖励金额**/
 	public String sysgold;
 	/**是否推荐**/
-	public String Isrecommend;
+	public String isrecommend;
 	/**活动推荐理由**/
 	public String reason;
 	
