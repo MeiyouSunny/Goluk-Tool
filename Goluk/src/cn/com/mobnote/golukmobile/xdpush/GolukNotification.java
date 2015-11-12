@@ -21,6 +21,7 @@ import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
@@ -327,19 +328,33 @@ public class GolukNotification {
 			} else if (ICommentFn.COMMENT_TYPE_WINNING.equals(msgBean.tarkey)) {
 				// 发奖跳转页
 				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-				if (null != vidArray && vidArray.length > 0) {
-					startCluster(vidArray[0], msgBean.msg);
-				}
+				// if (null != vidArray && vidArray.length > 0) {
+				// startCluster(vidArray[0], msgBean.msg);
+				// }
+
+				startWinning(vidArray[0]);
+
 			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO.equals(msgBean.tarkey)) {
 				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
 				if (null != vidArray && vidArray.length > 0) {
-					statrtWonderfulVideo(vidArray[0], msgBean.msg);
+					startDetail(vidArray[0]);
 				}
 
 			}
 		} catch (Exception e) {
 
 		}
+	}
+
+	private void startWinning(String uid) {
+		if (null == uid || "".equals(uid)) {
+			return;
+		}
+
+		Context context = GolukApplication.getInstance().getContext();
+		Intent intent = new Intent(context, MyProfitActivity.class);
+		intent.putExtra("uid", uid);
+		context.startActivity(intent);
 	}
 
 	private void statrtWonderfulVideo(String ztid, String title) {
