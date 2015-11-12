@@ -314,14 +314,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					ClusterHeadBean chb = data.data;
 					setCommentData(chb);
 					recommendlist = vdf.getClusterList(chb.recommendvideo);
-					if(recommendlist.size() == 20){
+					if(recommendlist !=null && recommendlist.size() == 20){
 						isRecommendLoad = true;
 					}else{
 						isRecommendLoad = false;
 					}
 					
 					newslist = vdf.getClusterList(chb.latestvideo);
-					if(newslist.size() == 20){
+					if(newslist !=null && newslist.size() == 20){
 						isNewsLoad = true;
 					}else{
 						isNewsLoad = false;
