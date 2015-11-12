@@ -168,7 +168,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		super.onCreate(savedInstanceState);
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
-		SDKInitializer.initialize(getApplicationContext());
 		((GolukApplication) this.getApplication()).initSharedPreUtil(this);
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);

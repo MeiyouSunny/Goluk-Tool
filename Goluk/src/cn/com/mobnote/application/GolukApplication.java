@@ -77,6 +77,7 @@ import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -207,6 +208,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		instance = this;
 		Const.setAppContext(this);
 		HttpManager.getInstance();
+		SDKInitializer.initialize(this);
 		// TODO 此处不要做初始化相关的工作
 	}
 

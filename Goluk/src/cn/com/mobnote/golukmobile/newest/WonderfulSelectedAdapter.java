@@ -207,12 +207,12 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             } else {
                 if(null != model && "0".equals(model.getResult())) {
                     List<BannerSlideBody> slidesList = model.getSlides();
-                    if(slidesList != null) {
+                    if(slidesList != null && slidesList.size() > 0) {
                         // exceed 10 images
                         if(slidesList.size() > 10) {
-                        	while(slidesList.size() > 10) {
-                        		slidesList.remove(slidesList.size() -1);
-                        	}
+                            while(slidesList.size() > 10) {
+                                slidesList.remove(slidesList.size() - 1);
+                            }
                         }
                         bannerHolder.mBannerSlide.clearImages();
                         bannerHolder.mBannerSlide.setImageDataList(slidesList);
