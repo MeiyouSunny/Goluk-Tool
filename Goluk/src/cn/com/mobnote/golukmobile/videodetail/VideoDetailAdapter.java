@@ -412,7 +412,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					|| null == mVideoAllData.avideo.video.recom.topicname || "".equals(mVideoAllData.avideo.video.recom.topicname)) {
 				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "");
 			} else {
-				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "    #"+mVideoAllData.avideo.video.recom.topicname+"#");
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe+"    ", "#"+mVideoAllData.avideo.video.recom.topicname+"#");
 			}
 			
 			final String location = mVideoAllData.avideo.video.mLocation;
