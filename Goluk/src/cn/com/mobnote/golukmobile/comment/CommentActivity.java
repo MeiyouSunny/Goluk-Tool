@@ -610,24 +610,28 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		GolukDebugUtils.e("", "-----commentActivity--------position:" + position + "   arg3:" + arg3);
-		if (null != mAdapter) {
-			if ( this.mApp.isUserLoginSucess) {
+		GolukDebugUtils.e("", "----commentActivity--------position:" + position + "   arg3:" + arg3);
+		try {
+			if (null != mAdapter) {
 				mWillDelBean = (CommentBean) mAdapter.getItem(position - 1);
-				if(null != mWillDelBean) {
-					final UserInfo loginUser = mApp.getMyInfo();
-					GolukDebugUtils.e("", "-----commentActivity--------bean userId:" + mWillDelBean.mUserId
-							+ "  login user:" + loginUser.uid);
-					if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-						mIsReply = false;
+				if (null != mWillDelBean) {
+					if (this.mApp.isUserLoginSucess) {
+						UserInfo loginUser = mApp.getMyInfo();
+						GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
+						GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
+						if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+							mIsReply = false;
+						} else {
+							mIsReply = true;
+						}
 					} else {
 						mIsReply = true;
 					}
-				} else {
-					mIsReply = true;
+					new ReplyDialog(this, mWillDelBean, mEditText, mIsReply).show();
 				}
-				new ReplyDialog(this, mWillDelBean, mEditText,mIsReply).show();
-				}
+			}
+		} catch (Exception e) {
+
 		}
 	}
 	

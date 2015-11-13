@@ -485,7 +485,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					} else {
 						headHolder.mActiveReason.setText("理由："+mVideoAllData.avideo.video.recom.atreason);
 					}
-					headHolder.mActiveCount.setText("+"+mVideoAllData.avideo.video.recom.atgold+"Ｇ币");
+					headHolder.mActiveCount.setText("+"+UserUtils.formatNumber(mVideoAllData.avideo.video.recom.atgold)+"Ｇ币");
 				} else {
 					headHolder.mActiveLayout.setVisibility(View.GONE);
 				}
@@ -497,7 +497,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					} else {
 						headHolder.mSysReason.setText("理由："+mVideoAllData.avideo.video.recom.sysreason);
 					}
-					headHolder.mSysCount.setText("+"+mVideoAllData.avideo.video.recom.sysgold+"Ｇ币");
+					headHolder.mSysCount.setText("+"+UserUtils.formatNumber(mVideoAllData.avideo.video.recom.sysgold)+"Ｇ币");
 				} else {
 					headHolder.mSysLayout.setVisibility(View.GONE);
 				}
