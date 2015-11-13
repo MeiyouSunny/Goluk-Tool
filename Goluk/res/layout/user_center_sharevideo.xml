@@ -111,7 +111,7 @@
     <RelativeLayout
         android:id="@+id/imageoutlayout"
         android:layout_width="match_parent"
-        android:layout_height="200dp" >
+        android:layout_height="wrap_content" >
 
         <!-- 视频缩略图片 -->
 
