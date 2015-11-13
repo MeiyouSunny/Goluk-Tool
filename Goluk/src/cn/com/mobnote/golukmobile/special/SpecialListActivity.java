@@ -188,6 +188,13 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	}
 
 	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		closeProgressDialog();
+		super.onDestroy();
+	}
+
+	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.back_btn:
