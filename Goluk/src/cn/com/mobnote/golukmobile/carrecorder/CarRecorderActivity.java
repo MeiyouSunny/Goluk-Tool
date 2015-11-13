@@ -1636,6 +1636,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
 							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
+								VideoShareInfo vsi = images[0];
+								
+								image1.setImageBitmap(images[2].getBitmap());
+								image2.setImageBitmap(images[0].getBitmap());
+								images[1] = vsi;
 								downloadSize.setVisibility(View.VISIBLE);
 								int filesize = json.getInt("filesize");
 								int filerecvsize = json.getInt("filerecvsize");
@@ -1643,10 +1648,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 								downloadSize.setProcess(process);
 							}
 						} else {
+							
 							/**
 							 * 如果下载的是当前文件就不打开新的下载进度
 							 */
 							if (!filename.equals(mNowDownloadName)) {
+								VideoShareInfo vsi = images[0];
+								images[1] = vsi;
 								this.canvasProcess();
 								mNowDownloadName = filename;
 							} else {
