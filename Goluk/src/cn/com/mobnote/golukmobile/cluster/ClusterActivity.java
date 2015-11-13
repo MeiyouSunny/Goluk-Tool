@@ -83,7 +83,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	public ClusterHeadBean headData = null;
 	public List<VideoSquareInfo> recommendlist = null;
 	public List<VideoSquareInfo> newslist = null;
-	private int currentViewType = 1; // 当前视图类型（推荐列表，最新列表）
 	public ClusterAdapter clusterAdapter;
 	private SharePlatformUtil sharePlatform = null;
 	private RelativeLayout mBottomLoadingView = null;
@@ -496,7 +495,10 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		if (!flag) {
 			return;
 		}
-		if (currentViewType == ClusterAdapter.ViewType_RecommendVideoList) {
+		if (null == clusterAdapter) {
+			return;
+		}
+		if (clusterAdapter.getCurrentViewType() == ClusterAdapter.ViewType_RecommendVideoList) {
 			if (null != recommendlist) {
 				for (int i = 0; i < recommendlist.size(); i++) {
 					VideoSquareInfo vs = this.recommendlist.get(i);
