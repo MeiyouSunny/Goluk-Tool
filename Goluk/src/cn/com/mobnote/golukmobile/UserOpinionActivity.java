@@ -74,6 +74,8 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 	private OpinionDialog mOpinionDialog = null;
 
 	private String selectType = "5";
+	
+	private boolean mErrorType = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +175,11 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 				mEditSuggest.setEnabled(false);
 				mEditConnection.setEnabled(false);
 			} else {
-				GolukUtils.showToast(mContext, "反馈失败，请稍候重试");
+				if(mErrorType) {
+					UserUtils.showDialog(this, "提交失败，意见反馈内容不能为空");
+				} else {
+					GolukUtils.showToast(mContext, "反馈失败，请稍候重试");
+				}
 			}
 		}
 	}
@@ -198,6 +204,10 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		} else {
 			String newOpinion = "";
 			String newContact = "";
+			if(opinion.trim().equals("") && (opinion.replaceAll(" ", "")).equals("")) {
+				mErrorType = true;
+				return false;
+			}
 			try {
 				newOpinion = URLEncoder.encode(opinion, "utf-8");
 				newContact = URLEncoder.encode(contact, "utf-8");

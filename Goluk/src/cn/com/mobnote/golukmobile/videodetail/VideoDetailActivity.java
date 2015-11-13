@@ -204,6 +204,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		// 设置这个参数第一次进来会由下拉状态变为松开刷新的状态
 		mRTPullListView.firstFreshState();
 		mTextTitle.setText("视频详情");
+		removeFooterView();
 
 		Intent it = getIntent();
 		if (null != it) {
@@ -986,16 +987,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void addFooterView() {
 		if(null == mNoDataView) {
 			mNoDataView = LayoutInflater.from(this).inflate(R.layout.video_detail_footer, null);
-			mRTPullListView.addFooterView(mNoDataView);
-			mNoDataView.setVisibility(View.VISIBLE);
 		}
+		mRTPullListView.addFooterView(mNoDataView);
+		mNoDataView.setVisibility(View.VISIBLE);
 	}
 	
 	private void removeFooterView() {
-		if(null != mNoDataView) {
+		if(null != mRTPullListView && null != mNoDataView) {
 			mRTPullListView.removeFooterView(mNoDataView);
 			mNoDataView.setVisibility(View.GONE);
-			mNoDataView = null;
 		}
 	}
 
