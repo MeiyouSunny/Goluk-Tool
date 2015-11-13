@@ -364,18 +364,20 @@ public class VideoDetailAdapter extends BaseAdapter {
 				e.printStackTrace();
 			}
 		}
+		
+		if(mVideoJson != null && mVideoJson.data.avideo.video.comment !=null && "1".equals(mVideoJson.data.avideo.video.comment.iscomment)){
+			headHolder.mCommentLayout.setOnClickListener(new OnClickListener() {
 
-		headHolder.mCommentLayout.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				if (mContext instanceof VideoDetailActivity) {
-					((VideoDetailActivity) mContext).showSoft();
-				} else {
-					((WonderfulActivity) mContext).showSoft();
+				@Override
+				public void onClick(View arg0) {
+					if (mContext instanceof VideoDetailActivity) {
+						((VideoDetailActivity) mContext).showSoft();
+					} else {
+						((WonderfulActivity) mContext).showSoft();
+					}
 				}
-			}
-		});
+			});
+		}
 
 		return mHeadView;
 	}

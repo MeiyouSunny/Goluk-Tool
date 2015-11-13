@@ -483,7 +483,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 				if (null != mVideoJson && mVideoJson.success) {
 					mRTPullListView.setVisibility(View.VISIBLE);
-					mCommentLayout.setVisibility(View.VISIBLE);
+					//mCommentLayout.setVisibility(View.VISIBLE);
 					mImageRefresh.setVisibility(View.GONE);
 
 					isClick = true;
@@ -521,7 +521,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void permitInput() {
 		if (!isCanInput) {
 			mCommentLayout.setVisibility(View.GONE);
-			mAdapter.closeComment();
+			//mAdapter.closeComment();
 		} else {
 			mCommentLayout.setVisibility(View.VISIBLE);
 		}
@@ -876,21 +876,23 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		GolukDebugUtils.e("", "-----commentActivity--------position:" + position + "   arg3:" + arg3);
 		if (null != mAdapter) {
-			mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
-			if (null != mWillDelBean) {
-				if (this.mApp.isUserLoginSucess) {
-					UserInfo loginUser = mApp.getMyInfo();
-					GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
-					GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
-					if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-						mIsReply = false;
+			if(mVideoJson != null && mVideoJson.data.avideo.video.comment != null && "1".equals(mVideoJson.data.avideo.video.comment.iscomment)){
+				mWillDelBean = (CommentBean) mAdapter.getItem(position - 2);
+				if (null != mWillDelBean) {
+					if (this.mApp.isUserLoginSucess) {
+						UserInfo loginUser = mApp.getMyInfo();
+						GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
+						GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
+						if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+							mIsReply = false;
+						} else {
+							mIsReply = true;
+						}
 					} else {
 						mIsReply = true;
 					}
-				} else {
-					mIsReply = true;
+					new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply).show();
 				}
-				new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply).show();
 			}
 		}
 	}
