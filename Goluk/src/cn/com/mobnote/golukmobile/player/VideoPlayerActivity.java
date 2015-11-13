@@ -863,8 +863,13 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 					mImageLayout.setVisibility(View.VISIBLE);
 					dialog("网络访问异常，请重试！");
 					if (null != mVideo) {
-						mVideo.stopPlayback();
-						mVideo = null;
+						if(error) {
+							mVideo.suspend();
+							mVideo = null;
+						} else {
+							mVideo.stopPlayback();
+							mVideo = null;
+						}
 					}
 					return;
 				}
@@ -978,6 +983,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			mHandler.removeCallbacksAndMessages(null);
 			mHandler = null;
 		}
+		error = false;
 		super.onDestroy();
 	}
 	

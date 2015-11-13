@@ -53,7 +53,7 @@
             android:id="@+id/video_detail_head_award_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/videodetails_award_icon"
+            android:src="@drawable/together_coin_icon"
             android:layout_toLeftOf="@id/videodetail_look" />
 
         <LinearLayout
