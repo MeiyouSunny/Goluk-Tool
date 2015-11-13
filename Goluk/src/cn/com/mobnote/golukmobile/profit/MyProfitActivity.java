@@ -4,6 +4,7 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -31,7 +32,8 @@ import android.widget.TextView;
  * @author lily
  *
  */
-public class MyProfitActivity extends BaseActivity implements OnClickListener,OnTouchListener,IRequestResultListener{
+public class MyProfitActivity extends BaseActivity implements OnClickListener,OnTouchListener,IRequestResultListener, 
+		ForbidBack{
 
 	private ImageButton mBtnBack,mBtnDetail,mBtnCash;
 	private TextView mTextProblem;
@@ -266,6 +268,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		if(null == mLoadingDialog) {
 			mLoadingDialog = new CustomLoadingDialog(this, null);
 			mLoadingDialog.show();
+			mLoadingDialog.setListener(this);
 		}
 	}
 	//关闭loading
@@ -294,6 +297,13 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			break;
 		}
 		return false;
+	}
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		if (backKey == 1) {
+			exit();
+		}
 	}
 	
 }
