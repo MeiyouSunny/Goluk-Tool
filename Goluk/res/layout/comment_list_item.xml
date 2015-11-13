@@ -74,6 +74,7 @@
     android:id="@+id/show_nodata_layout"
     android:layout_width="match_parent"
     android:layout_height="200dp"
+    android:background="@color/white"
     android:layout_centerHorizontal="true" >
     <ImageView
         android:id="@+id/comment_item_nodata"

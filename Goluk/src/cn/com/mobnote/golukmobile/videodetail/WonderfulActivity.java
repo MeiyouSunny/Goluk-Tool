@@ -701,10 +701,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 						GolukDebugUtils.e("", "参数错误");
 					} else if ("2".equals(bean.result)) {// 重复评论
 						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-								LiveDialogManager.FUNCTION_DIALOG_OK, "", "请勿重复发送相同的评论内容。");
+								LiveDialogManager.FUNCTION_DIALOG_OK, "", this.getResources().getString(R.string.comment_repeat_text));
 					} else if("3".equals(bean.result)) {//频繁评论
 						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-								LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", "您评论的速度太快了，请休息一下再评论。");
+								LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", this.getResources().getString(R.string.comment_sofast_text));
 					} else {
 						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
 								LiveDialogManager.FUNCTION_DIALOG_OK, "", "评论保存失败。");

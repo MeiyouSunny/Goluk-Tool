@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
@@ -105,11 +106,13 @@ public class CommentListViewAdapter extends BaseAdapter {
 			holder.mName = (TextView) converView.findViewById(R.id.comment_item_name);
 			holder.mTime = (TextView) converView.findViewById(R.id.comment_item_time);
 			holder.mContent = (TextView) converView.findViewById(R.id.comment_item_content);
+			holder.mNodataLayout = (RelativeLayout) converView.findViewById(R.id.show_nodata_layout);
 			converView.setTag(holder);
 		} else {
 			holder = (ViewHolder) converView.getTag();
 		}
 
+		holder.mNodataLayout.setVisibility(View.GONE);
 		final CommentBean temp = mData.get(position);
 		// 设置头像
 		String netHeadUrl = temp.customavatar;
@@ -162,6 +165,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 		TextView mName = null;
 		TextView mContent = null;
 		TextView mTime = null;
+		RelativeLayout mNodataLayout = null;
 	}
 
 	private String getShowUserName(CommentBean temp) {

@@ -574,10 +574,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 	}
 
 	private View loadLayout(View convertView, int arg0) {
-		// ViewHolder holder = null;
 		if (null == convertView) {
 			convertView = getCommentView(convertView);
-			commentHolder = (ViewHolder) convertView.getTag();
 		} else {
 			commentHolder = (ViewHolder) convertView.getTag();
 			if (null == commentHolder) {
