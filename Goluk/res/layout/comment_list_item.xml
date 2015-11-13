@@ -70,29 +70,31 @@
 
     <!-- 无数据显示 -->
 
+<RelativeLayout 
+    android:id="@+id/show_nodata_layout"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_centerHorizontal="true" >
     <ImageView
         android:id="@+id/comment_item_nodata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="60dp"
+        android:layout_centerInParent="true"
         android:background="@drawable/videodetail_sofaicon"
         android:contentDescription="@string/imgdes"
         android:visibility="gone" />
-
+    
     <!-- 评论关闭 -->
 
     <TextView
         android:id="@+id/comment_forbid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="60dp"
+        android:layout_centerInParent="true"
         android:text="@string/str_comment_no_input"
         android:textColor="@color/red"
         android:textSize="14sp"
         android:visibility="gone" />
+</RelativeLayout>
 
 </RelativeLayout>

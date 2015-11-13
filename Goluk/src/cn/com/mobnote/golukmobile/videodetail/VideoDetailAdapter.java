@@ -567,6 +567,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 		commentHolder.mForbidComment = (TextView) convertView.findViewById(R.id.comment_forbid);
+		commentHolder.mNoDataLayout = (RelativeLayout) convertView.findViewById(R.id.show_nodata_layout);
 
 		convertView.setTag(commentHolder);
 		return convertView;
@@ -592,10 +593,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
 		if (0 == mDataList.size()) {
 			commentHolder.mListLayout.setVisibility(View.GONE);
+			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
 			commentHolder.mNoData.setVisibility(View.VISIBLE);
 			return;
 		}
 		commentHolder.mListLayout.setVisibility(View.VISIBLE);
+		commentHolder.mNoDataLayout.setVisibility(View.GONE);
 		commentHolder.mNoData.setVisibility(View.GONE);
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			closeComment();
@@ -657,6 +660,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void commentNoData() {
 		if (0 == mDataList.size()) {
 			commentHolder.mListLayout.setVisibility(View.GONE);
+			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
 			commentHolder.mNoData.setVisibility(View.VISIBLE);
 			return;
 		}
@@ -665,6 +669,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	// 评论被关闭
 	public void closeComment() {
 		commentHolder.mListLayout.setVisibility(View.GONE);
+		commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
 		commentHolder.mNoData.setVisibility(View.GONE);
 		commentHolder.mForbidComment.setVisibility(View.VISIBLE);
 	}
@@ -724,7 +729,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		ImageView mCommentHead = null;
 		TextView mCommentTime, mCommentName, mCommentConennt;
 		ImageView mNoData = null;
-		RelativeLayout mListLayout = null;
+		RelativeLayout mListLayout, mNoDataLayout;
 		TextView mForbidComment = null;
 		Uri url = null;
 		//奖励视频／推荐视频
