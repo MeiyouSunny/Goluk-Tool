@@ -497,21 +497,24 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			return;
 		}
 		if (currentViewType == ClusterAdapter.ViewType_RecommendVideoList) {
-			for (int i = 0; i < recommendlist.size(); i++) {
-				VideoSquareInfo vs = this.recommendlist.get(i);
-				if (this.updatePraise(vs, recommendlist, i)) {
-					break;
+			if (null != recommendlist) {
+				for (int i = 0; i < recommendlist.size(); i++) {
+					VideoSquareInfo vs = this.recommendlist.get(i);
+					if (this.updatePraise(vs, recommendlist, i)) {
+						break;
+					}
 				}
 			}
 		} else {
-			for (int i = 0; i < this.newslist.size(); i++) {
-				VideoSquareInfo vs = this.newslist.get(i);
-				if (this.updatePraise(vs, newslist, i)) {
-					break;
+			if (null != newslist) {
+				for (int i = 0; i < this.newslist.size(); i++) {
+					VideoSquareInfo vs = this.newslist.get(i);
+					if (this.updatePraise(vs, newslist, i)) {
+						break;
+					}
 				}
 			}
 		}
-
 	}
 
 	public boolean updatePraise(VideoSquareInfo vs, List<VideoSquareInfo> videos, int index) {
