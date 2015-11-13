@@ -80,6 +80,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+//		mRTPullListView.setDividerHeight(78);
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		mRTPullListView.setLayoutParams(lp);

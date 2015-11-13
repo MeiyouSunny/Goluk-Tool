@@ -26,6 +26,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -674,6 +676,15 @@ public class GolukUtils {
 			e.printStackTrace();
 		}
 		return buf.toString();
+	}
+
+	public static boolean isNetworkConnected(Context context) {
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		if (mNetworkInfo != null) {
+			return mNetworkInfo.isAvailable();
+		}
+		return false;
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

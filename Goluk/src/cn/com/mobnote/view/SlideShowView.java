@@ -312,7 +312,12 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             //((ViewPag.er)container).removeView((View)object);
-            container.removeView(imageViewsList.get(position));
+            //container.removeView(imageViewsList.get(position));
+            if(null != object && null != container) {
+                if(object instanceof View && container instanceof ViewPager) {
+                    ((ViewPager)container).removeView((View)object);
+                }
+            }
         }
 
         @Override
