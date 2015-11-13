@@ -306,4 +306,11 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		}
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		closeAlertDialog();
+		closeLoadingDialog();
+	}
+	
 }
