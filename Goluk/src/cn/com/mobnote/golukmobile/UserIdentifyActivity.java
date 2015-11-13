@@ -822,6 +822,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		smsReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
+				if (intent == null || intent.getExtras() == null)
+					return;
 				Object[] objs = (Object[]) intent.getExtras().get("pdus");
 				if (objs == null || objs.length <= 0)
 					return;
