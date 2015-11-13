@@ -21,10 +21,12 @@ import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 
 public class GolukNotification {
@@ -346,8 +348,24 @@ public class GolukNotification {
 		}
 	}
 
+	private boolean checkoutLoginState(String uid) {
+		if (GolukApplication.getInstance().isUserLoginSucess) {
+			UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
+			if (null == userInfo || null == userInfo.uid || !userInfo.uid.equals(uid)) {
+				return false;
+			}
+			return true;
+		}
+		GolukUtils.showToast(GolukApplication.getInstance().getContext(), "请登录后查看消息");
+		return false;
+	}
+
 	private void startWinning(String uid) {
 		if (null == uid || "".equals(uid)) {
+			return;
+		}
+
+		if (!checkoutLoginState(uid)) {
 			return;
 		}
 
