@@ -119,6 +119,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private boolean isClick = false;
 	/** false评论／false删除／true回复 **/
 	private boolean mIsReply = false;
+	/**底部无评论的footer**/
+	private View mNoDataView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +177,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
 		mAdapter = new VideoDetailAdapter(this, 1);
+		addFooterView();
 		mRTPullListView.setAdapter(mAdapter);
 
 	}
@@ -480,6 +483,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				int count = Integer.parseInt(root.getString("count"));
 				commentDataList = JsonUtil.parseCommentData(commentArray);
 				permitInput();
+				
+				if(count <= 0) {
+					addFooterView();
+				} else {
+					removeFooterView();
+				}
 
 				if (null != mVideoJson && mVideoJson.success) {
 					mRTPullListView.setVisibility(View.VISIBLE);
@@ -682,7 +691,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 			CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
 			if (null != bean) {
-				noData(false);
+//				noData(false);
+				removeFooterView();
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
 				if(!"".equals(bean.result)) {
 					if("0".equals(bean.result)) {//成功
@@ -731,7 +741,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				mAdapter.deleteData(mWillDelBean);
 				GolukUtils.showToast(this, "删除成功");
 
-				noData(mAdapter.getCount() <= 1);
+//				noData(mAdapter.getCount() <= 1);
+				if(mAdapter.getCount() <= 1) {
+					addFooterView();
+				} else {
+					removeFooterView();
+				}
 			} else {
 				GolukUtils.showToast(this, "删除失败");
 			}
@@ -966,6 +981,22 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	protected void onDestroy() {
 		super.onDestroy();
 		exit();
+	}
+	
+	private void addFooterView() {
+		if(null == mNoDataView) {
+			mNoDataView = LayoutInflater.from(this).inflate(R.layout.video_detail_footer, null);
+			mRTPullListView.addFooterView(mNoDataView);
+			mNoDataView.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private void removeFooterView() {
+		if(null != mNoDataView) {
+			mRTPullListView.removeFooterView(mNoDataView);
+			mNoDataView.setVisibility(View.GONE);
+			mNoDataView = null;
+		}
 	}
 
 }

@@ -117,6 +117,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private boolean isClick = false;
 	/** false评论／false删除／true回复 **/
 	private boolean mIsReply = false;
+	/**底部无评论的footer**/
+	private View mNoDataView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -481,6 +483,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				isClick = true;
 				mEditInput.setFocusable(true);
 				updateRefreshTime();
+				addFooterView();
 				if (OPERATOR_FIRST == mCurrentOperator) {
 					// 首次进入
 					firstEnterCallBack(0, mVideoJson, commentDataList);
@@ -545,9 +548,11 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			int count = Integer.parseInt(dataObj.getString("count"));
 			if (count <= 0) {
 				// 　没数据
-				noDataDeal();
+//				noDataDeal();
+				addFooterView();
 				return;
 			}
+			removeFooterView();
 			// 有数据
 			commentDataList = JsonUtil.parseCommentData(dataObj.getJSONArray("comments"));
 			if (null == commentDataList || commentDataList.size() <= 0) {
@@ -685,7 +690,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 			CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
 			if (null != bean) {
-				noData(false);
+//				noData(false);
+				removeFooterView();
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
 				if (!"".equals(bean.result)) {
 					if ("0".equals(bean.result)) {// 成功
@@ -742,7 +748,12 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				mAdapter.deleteData(mWillDelBean);
 				GolukUtils.showToast(this, "删除成功");
 
-				noData(mAdapter.getCount() <= 0);
+//				noData(mAdapter.getCount() <= 0);
+				if(mAdapter.getCount() <= 1) {
+					addFooterView();
+				} else {
+					removeFooterView();
+				}
 			} else {
 				GolukUtils.showToast(this, "删除失败");
 			}
@@ -992,6 +1003,22 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	protected void onDestroy() {
 		super.onDestroy();
 		exit();
+	}
+	
+	private void addFooterView() {
+		if(null == mNoDataView) {
+			mNoDataView = LayoutInflater.from(this).inflate(R.layout.video_detail_footer, null);
+			mRTPullListView.addFooterView(mNoDataView);
+			mNoDataView.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private void removeFooterView() {
+		if(null != mNoDataView) {
+			mRTPullListView.removeFooterView(mNoDataView);
+			mNoDataView.setVisibility(View.GONE);
+			mNoDataView = null;
+		}
 	}
 
 }

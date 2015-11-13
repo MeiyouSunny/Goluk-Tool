@@ -210,9 +210,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			return 2;
 		}
-		if (0 == mDataList.size()) {
-			return 2;
-		}
+//		if (0 == mDataList.size()) {
+//			return 2;
+//		}
 		return mDataList.size() + 1;
 	}
 
