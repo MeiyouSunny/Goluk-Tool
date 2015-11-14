@@ -96,8 +96,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private NewsBeanRequest newsRequest = null;
 	private GetShareUrlRequest shareRequest = null;
 	private boolean isfrist = false;
-	/** 聚合id */
-	private String custerVid = "";
 	/** 是否允许评论 */
 	private boolean isCanInput = true;
 	/** 是否允许点击评论，只有当数据回来时，才可以去评论 */
@@ -251,7 +249,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			return;
 		}
 		Intent intent = new Intent(this, CommentActivity.class);
-		intent.putExtra(CommentActivity.COMMENT_KEY_MID, custerVid);
+		intent.putExtra(CommentActivity.COMMENT_KEY_MID, mActivityid);
 		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, ICommentFn.COMMENT_TYPE_CLUSTER);
 		intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, isShowSoft);
 		intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, isCanInput);
@@ -302,7 +300,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		}
 		
 		isCanInput = false;
-		custerVid = bean.activity.activityid;
+		mActivityid = bean.activity.activityid;
 		if (null != bean.activity.iscomment && !"".equals(bean.activity.iscomment)) {
 			if ("1".equals(bean.activity.iscomment)) {
 				isCanInput = true;
