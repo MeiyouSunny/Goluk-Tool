@@ -1461,14 +1461,19 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (!isbind) {
 			return false;
 		}
-		if ("carrecorder".equals(mPageSource)) {
-			return false;
-		}
+		
 		if (!isIpcLoginSuccess) {
 			return false;
 		}
+		
 		if (mDownLoadFileList.size() > 0) {
 			return false;
+		}
+		
+		if ("carrecorder".equals(mPageSource)) {
+			if (mIPCControlManager.mProduceName.equals(IPCControlManager.G1_SIGN)) {
+				return false;
+			}
 		}
 		return true;
 	}
