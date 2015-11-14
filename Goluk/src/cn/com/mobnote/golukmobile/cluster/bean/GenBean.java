@@ -16,6 +16,10 @@ public class GenBean {
 	@JSONField(name="topicname")
 	public String topicname;
 	
+	/**推荐时间戳**/
+	@JSONField(name="tjtime")
+	public String tjtime;
+	
 	/**是否推荐L**/
 	@JSONField(name="isrecommend")
 	public String isrecommend;
