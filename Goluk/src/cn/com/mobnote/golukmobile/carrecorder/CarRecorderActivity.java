@@ -896,7 +896,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.image1:
 			new1.setVisibility(View.GONE);
 			if (images[0] != null){
-				open_shareVideo(images[0].getName());
+				//如果当前不处于占位图下载过程中，才允许点击
+				if (downloadSize.getVisibility() != View.VISIBLE){
+					open_shareVideo(images[0].getName());
+				}
 			}
 			break;
 		case R.id.image2:
