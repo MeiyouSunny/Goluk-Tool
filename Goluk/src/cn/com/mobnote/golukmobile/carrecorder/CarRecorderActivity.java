@@ -895,12 +895,14 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.image1:
 			new1.setVisibility(View.GONE);
-			open_shareVideo(images[0].getName());
+			if (images[0] != null){
+				open_shareVideo(images[0].getName());
+			}
 			break;
 		case R.id.image2:
 			new2.setVisibility(View.GONE);
 
-			if (images[1].getName().equals("")) {
+			if (images[1] == null || images[1].getName().equals("")) {
 				return;
 			} else {
 				open_shareVideo(images[1].getName());
@@ -1265,17 +1267,17 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * 绘画下载进度的view
 	 */
 	private void canvasProcess() {
-		if (images[0] != null) {
-			Boolean flog = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
-			if (flog) {
-				new2.setVisibility(View.VISIBLE);
-			} else {
-				new2.setVisibility(View.GONE);
-			}
-			image1.setImageBitmap(images[2].getBitmap());
-			image2.setImageBitmap(images[0].getBitmap());
-
-		}
+//		if (images[0] != null) {
+//			Boolean flog = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
+//			if (flog) {
+//				new1.setVisibility(View.VISIBLE);
+//			} else {
+//				new1.setVisibility(View.GONE);
+//			}
+//			image1.setImageBitmap(images[2].getBitmap());
+////			image2.setImageBitmap(images[0].getBitmap());
+//
+//		}
 		downloadSize.setProcess(0);
 		downloadSize.setVisibility(View.VISIBLE);
 	}
@@ -1588,22 +1590,24 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					}
 					if (null != json) {
 						String imagename = "";
-						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-							imagename = videoname.replace("mp4", "jpg");
-						} else {
+//						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
+//							imagename = videoname.replace("mp4", "jpg");
+//						} else {
 							imagename = mNowDownloadName.replace("mp4", "jpg");
-						}
-
+//						}
+						
 						if (filename.equals(imagename)) {
 							VideoShareInfo vsi = new VideoShareInfo();
 							vsi.setName(filename.replace("jpg", "mp4"));
 							vsi.setBitmap(ImageManager.getBitmapFromCache(mImagePath + filename, 114, 64));
-
+							new1.setVisibility(View.VISIBLE);
 							if (images[0] == null) {
-								if ("".equals(images[1].getName())) {
+								if (images[1] == null || "".equals(images[1].getName())) {
 									images[1] = vsi;
 									image2.setImageBitmap(vsi.getBitmap());
 									new2.setVisibility(View.VISIBLE);
+									image1.setVisibility(View.GONE);
+									new1.setVisibility(View.GONE);
 								} else {
 									images[0] = vsi;
 									image1.setVisibility(View.VISIBLE);
@@ -1612,11 +1616,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 								}
 
 							} else {
+								images[1] = images[0];
+								boolean flog2 = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
+								if (flog2) {
+									new2.setVisibility(View.VISIBLE);
+								} else {
+									new2.setVisibility(View.GONE);
+								}
 								images[0] = vsi;
 								image1.setImageBitmap(vsi.getBitmap());
 								new1.setVisibility(View.VISIBLE);
 							}
-
+							
 						}
 						downloadSize.setVisibility(View.GONE);
 					}
@@ -1634,36 +1645,36 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							return ;
 						}
 
-						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
-								VideoShareInfo vsi = images[0];
-								
-								image1.setImageBitmap(images[2].getBitmap());
-								image2.setImageBitmap(images[0].getBitmap());
-								images[1] = vsi;
-								downloadSize.setVisibility(View.VISIBLE);
-								int filesize = json.getInt("filesize");
-								int filerecvsize = json.getInt("filerecvsize");
-								int process = (filerecvsize * 100) / filesize;
-								downloadSize.setProcess(process);
-							}
-						} else {
-							
+//						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
+//							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
+//								image1.setVisibility(View.VISIBLE);
+//								image1.setImageBitmap(images[2].getBitmap());
+//								downloadSize.setVisibility(View.VISIBLE);
+//								int filesize = json.getInt("filesize");
+//								int filerecvsize = json.getInt("filerecvsize");
+//								int process = (filerecvsize * 100) / filesize;
+//								downloadSize.setProcess(process);
+//							}
+//						} else {
 							/**
 							 * 如果下载的是当前文件就不打开新的下载进度
 							 */
 							if (!filename.equals(mNowDownloadName)) {
-								VideoShareInfo vsi = images[0];
-								images[1] = vsi;
 								this.canvasProcess();
 								mNowDownloadName = filename;
+								image1.setVisibility(View.VISIBLE);
+								image1.setImageBitmap(images[2].getBitmap());
 							} else {
+								if (image1.getVisibility() != View.VISIBLE){
+									image1.setVisibility(View.VISIBLE);
+									image1.setImageBitmap(images[2].getBitmap());
+								}
 								int filesize = json.getInt("filesize");
 								int filerecvsize = json.getInt("filerecvsize");
 								int process = (filerecvsize * 100) / filesize;
 								downloadSize.setProcess(process);
 							}
-						}
+//						}
 
 					}
 				} catch (JSONException e) {
@@ -1675,6 +1686,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			} else {
 				// 下载失败
 				downloadSize.setVisibility(View.GONE);
+				if (images[0] == null){
+					image1.setVisibility(View.INVISIBLE);
+				}else{
+					image1.setImageBitmap(images[0].getBitmap());
+				}
 			}
 			break;
 
