@@ -121,6 +121,12 @@
             android:id="@+id/mImageLayout"
             android:layout_width="match_parent"
             android:layout_height="205dp" >
+            
+            <ImageView 
+                android:layout_width="match_parent"
+                android:layout_height="205dp"
+                android:id="@+id/video_detail_first_pic"
+                android:scaleType="fitXY" />
         </RelativeLayout>
 
         <!-- 暂停按钮 -->

@@ -27,7 +27,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -288,6 +287,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mVideoLoading = (LinearLayout) convertView.findViewById(R.id.mLoadingLayout);
 		headHolder.mLoading = (ImageView) convertView.findViewById(R.id.mLoading);
 		headHolder.mPlayerLayout = (RelativeLayout) convertView.findViewById(R.id.mPlayerLayout);
+		headHolder.simpleDraweeView = (ImageView) convertView.findViewById(R.id.video_detail_first_pic);
 
 		headHolder.mTextDescribe = (TextView) convertView.findViewById(R.id.video_detail_describe);
 		headHolder.mTextAuthor = (TextView) convertView.findViewById(R.id.video_detail_author);
@@ -316,8 +316,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mSysLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_sys_layout);
 		headHolder.mRecomLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_recom_layout);
 		
-		loadFirstPic();
-
 		return convertView;
 	}
 
@@ -957,28 +955,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		}
 	}
 
-	private void loadFirstPic() {
-		// 下载视频第一帧截图
-		headHolder.mImageLayout.removeAllViews();
-		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT);
-
-		ImageView simpleDraweeView = new ImageView(mContext);
-
-		// GenericDraweeHierarchyBuilder builder = new
-		// GenericDraweeHierarchyBuilder(mContext.getResources());
-		// GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
-		// .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
-		// ScaleType.FIT_XY)
-		// .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic),
-		// ScaleType.FIT_XY)
-		// .setActualImageScaleType(ScaleType.FIT_XY).build();
-		// simpleDraweeView.setHierarchy(hierarchy);
-
-		headHolder.mImageLayout.addView(simpleDraweeView, mPreLoadingParams);
-		headHolder.simpleDraweeView = simpleDraweeView;
-	}
-	
 	/**
 	 * 显示视频描述和活动名称
 	 * @param view
