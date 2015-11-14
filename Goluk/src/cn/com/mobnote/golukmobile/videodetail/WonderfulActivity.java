@@ -176,7 +176,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 
 		mAdapter = new VideoDetailAdapter(this, 0);
-		addFooterView();
 		mRTPullListView.setAdapter(mAdapter);
 
 	}
@@ -212,7 +211,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		} else {
 			mTextTitle.setText(title);
 		}
-		removeFooterView();
 
 		Intent it = getIntent();
 		if (null != it.getStringExtra("ztid")) {
@@ -530,6 +528,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		try {
 			if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
+				removeFooterView();
 				mCommentLayout.setVisibility(View.GONE);
 				mAdapter.closeComment();
 				mRTPullListView.setEnabled(false);
@@ -565,7 +564,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukDebugUtils.e("", "----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
 
 			updateRefreshTime();
-			noData(false);
+//			noData(false);
 
 			if (OPERATOR_FIRST == mCurrentOperator) {
 				// 首次进入
@@ -1010,15 +1009,16 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private void addFooterView() {
 		if(null == mNoDataView) {
 			mNoDataView = LayoutInflater.from(this).inflate(R.layout.video_detail_footer, null);
+			mRTPullListView.addFooterView(mNoDataView);
+			mNoDataView.setVisibility(View.VISIBLE);
 		}
-		mRTPullListView.addFooterView(mNoDataView);
-		mNoDataView.setVisibility(View.VISIBLE);
 	}
 	
 	private void removeFooterView() {
 		if(null != mRTPullListView && null != mNoDataView) {
 			mRTPullListView.removeFooterView(mNoDataView);
 			mNoDataView.setVisibility(View.GONE);
+			mNoDataView = null;
 		}
 	}
 
