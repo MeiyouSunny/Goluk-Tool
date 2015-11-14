@@ -39,6 +39,7 @@ import cn.com.mobnote.golukmobile.cluster.bean.ClusterHeadBean;
 import cn.com.mobnote.golukmobile.cluster.bean.GetClusterShareUrlData;
 import cn.com.mobnote.golukmobile.cluster.bean.JsonData;
 import cn.com.mobnote.golukmobile.cluster.bean.ShareUrlDataBean;
+import cn.com.mobnote.golukmobile.cluster.bean.VideoListBean;
 import cn.com.mobnote.golukmobile.cluster.bean.VolleyDataFormat;
 import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
@@ -95,8 +96,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	private NewsBeanRequest newsRequest = null;
 	private GetShareUrlRequest shareRequest = null;
 	private boolean isfrist = false;
-	/** 聚合id */
-	private String custerVid = "";
 	/** 是否允许评论 */
 	private boolean isCanInput = true;
 	/** 是否允许点击评论，只有当数据回来时，才可以去评论 */
@@ -104,6 +103,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	
 	private boolean isRecommendLoad = false;
 	private boolean isNewsLoad = false;
+	
+	private String tjtime = "00000000000000000";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -195,8 +196,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 									mRTPullListView.addFooterView(mBottomLoadingView);
 									recommendRequest = new RecommendBeanRequest(
 											IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
-									recommendRequest.get(mActivityid, "2",
-											recommendlist.get(recommendlist.size() - 1).mVideoEntity.sharingtime, "20");
+									recommendRequest.get(mActivityid, "2",tjtime, "20");
 								}
 							}
 						} else {// 最新列表
@@ -249,7 +249,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			return;
 		}
 		Intent intent = new Intent(this, CommentActivity.class);
-		intent.putExtra(CommentActivity.COMMENT_KEY_MID, custerVid);
+		intent.putExtra(CommentActivity.COMMENT_KEY_MID, mActivityid);
 		intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, ICommentFn.COMMENT_TYPE_CLUSTER);
 		intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, isShowSoft);
 		intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, isCanInput);
@@ -280,13 +280,27 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			}
 		}
 	}
+	
+	/**
+	 * 获取推荐的上拉刷新时间戳
+	 * @param list
+	 */
+	private void setTjTime(List<VideoListBean> list){
+		if(list != null && list.size() >0){
+			VideoListBean vlb = list.get(list.size()-1);
+			if(vlb != null && vlb.video !=null && vlb.video.gen !=null){
+				tjtime = vlb.video.gen.tjtime;
+			}
+		}
+	}
 
 	private void setCommentData(ClusterHeadBean bean) {
 		if (bean == null) {
 			return;
 		}
+		
 		isCanInput = false;
-		custerVid = bean.activity.activityid;
+		mActivityid = bean.activity.activityid;
 		if (null != bean.activity.iscomment && !"".equals(bean.activity.iscomment)) {
 			if ("1".equals(bean.activity.iscomment)) {
 				isCanInput = true;
@@ -311,6 +325,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 				if (data.data != null) {
 					isRequestSucess = true;
 					ClusterHeadBean chb = data.data;
+					setTjTime(chb.recommendvideo);
 					setCommentData(chb);
 					recommendlist = vdf.getClusterList(chb.recommendvideo);
 					if(recommendlist !=null && recommendlist.size() == 20){
@@ -353,6 +368,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			if (data != null && data.success) {
 				if (data.data != null) {
 					if ("0".equals(data.data.result)) {
+						setTjTime(data.data.videolist);
 						List<VideoSquareInfo> list = vdf.getClusterList(data.data.videolist);
 						int count = recommendlist.size();
 						if (list != null && list.size() > 0) {

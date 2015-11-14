@@ -28,6 +28,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author xuhw
  */
 public class IPCControlManager implements IPCManagerFn {
+	
+	public static final String G1_SIGN = "G1";
 
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
