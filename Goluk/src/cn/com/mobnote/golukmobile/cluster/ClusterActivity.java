@@ -114,7 +114,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		setContentView(R.layout.cluster_main);
 
 		Intent intent = this.getIntent();
-		mActivityid = "7a10ea7ad2cb4ccf88398c26e18a7365";//intent.getStringExtra(CLUSTER_KEY_ACTIVITYID);
+		mActivityid = intent.getStringExtra(CLUSTER_KEY_ACTIVITYID);
 		mClusterTitle = intent.getStringExtra(CLUSTER_KEY_TITLE);
 
 		this.initData();// 初始化view
