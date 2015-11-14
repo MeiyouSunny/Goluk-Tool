@@ -564,7 +564,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
 		commentHolder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
 
-		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
+//		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 		commentHolder.mForbidComment = (TextView) convertView.findViewById(R.id.comment_forbid);
 		commentHolder.mNoDataLayout = (RelativeLayout) convertView.findViewById(R.id.show_nodata_layout);
@@ -591,13 +591,13 @@ public class VideoDetailAdapter extends BaseAdapter {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
 		if (0 == mDataList.size()) {
 			commentHolder.mListLayout.setVisibility(View.GONE);
-			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
-			commentHolder.mNoData.setVisibility(View.VISIBLE);
+//			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
+//			commentHolder.mNoData.setVisibility(View.VISIBLE);
 			return;
 		}
 		commentHolder.mListLayout.setVisibility(View.VISIBLE);
 		commentHolder.mNoDataLayout.setVisibility(View.GONE);
-		commentHolder.mNoData.setVisibility(View.GONE);
+//		commentHolder.mNoData.setVisibility(View.GONE);
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			closeComment();
 			if (mContext instanceof WonderfulActivity) {
@@ -658,8 +658,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void commentNoData() {
 		if (0 == mDataList.size()) {
 			commentHolder.mListLayout.setVisibility(View.GONE);
-			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
-			commentHolder.mNoData.setVisibility(View.VISIBLE);
+//			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
+//			commentHolder.mNoData.setVisibility(View.VISIBLE);
 			return;
 		}
 	}
@@ -668,7 +668,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void closeComment() {
 		commentHolder.mListLayout.setVisibility(View.GONE);
 		commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
-		commentHolder.mNoData.setVisibility(View.GONE);
+//		commentHolder.mNoData.setVisibility(View.GONE);
 		commentHolder.mForbidComment.setVisibility(View.VISIBLE);
 	}
 

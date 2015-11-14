@@ -483,7 +483,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				commentDataList = JsonUtil.parseCommentData(commentArray);
 				permitInput();
 				
-				if(count <= 0) {
+				if(!"0".equals(mVideoJson.data.avideo.video.comment.iscomment) && count <= 0) {
 					addFooterView();
 				} else {
 					removeFooterView();
