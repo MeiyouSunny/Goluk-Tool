@@ -803,6 +803,7 @@ public class JsonUtil {
 				videoDes = URLEncoder.encode(desc, "UTF-8");
 				attriDefault = URLEncoder.encode(attribute, "UTF-8");
 				location = URLEncoder.encode(location, "UTF-8");
+				activityname = URLEncoder.encode(activityname, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
