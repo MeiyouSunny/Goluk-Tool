@@ -192,7 +192,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {// 推荐
 						if (clusterAdapter.getCurrentViewType() == ClusterAdapter.ViewType_RecommendVideoList) {// 视频列表
 							if (recommendlist != null && recommendlist.size() > 0) {// 加载更多视频数据
-								if (isRecommendLoad && !"00000000000000000".equals(tjtime)) {
+								if (isRecommendLoad) {
 									mRTPullListView.addFooterView(mBottomLoadingView);
 									recommendRequest = new RecommendBeanRequest(
 											IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
