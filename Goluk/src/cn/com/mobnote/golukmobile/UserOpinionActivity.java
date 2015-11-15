@@ -75,8 +75,6 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 
 	private String selectType = "5";
 	
-	private boolean mErrorType = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -163,7 +161,7 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		userOpinion = mEditSuggest.getText().toString();
 		userContact = mEditConnection.getText().toString();
 		UserUtils.hideSoftMethod(this);
-		if ("".equals(userOpinion)) {
+		if(userOpinion.trim().equals("") && (userOpinion.replaceAll(" ", "")).equals("")) {
 			UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_content_null));
 		} else {
 			boolean b = requestOpinion("android", sys_version, app_version, ipc_version, phone_models, userOpinion,
@@ -175,11 +173,8 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 				mEditSuggest.setEnabled(false);
 				mEditConnection.setEnabled(false);
 			} else {
-				if(mErrorType) {
-					UserUtils.showDialog(this, "提交失败，意见反馈内容不能为空");
-				} else {
-					GolukUtils.showToast(mContext, "反馈失败，请稍候重试");
-				}
+				UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_fail));
+//				GolukUtils.showToast(mContext, "反馈失败，请稍候重试");
 			}
 		}
 	}
@@ -199,15 +194,11 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 	public boolean requestOpinion(String tag, String sys_version, String app_version, String ipc_version,
 			String phone_models, String opinion, String contact, String type) {
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_fail));
+//			UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_fail));
 			return false;
 		} else {
 			String newOpinion = "";
 			String newContact = "";
-			if(opinion.trim().equals("") && (opinion.replaceAll(" ", "")).equals("")) {
-				mErrorType = true;
-				return false;
-			}
 			try {
 				newOpinion = URLEncoder.encode(opinion, "utf-8");
 				newContact = URLEncoder.encode(contact, "utf-8");
