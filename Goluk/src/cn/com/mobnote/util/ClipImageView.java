@@ -441,7 +441,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		int width = this.getWidth();
 		int height = this.getHeight();
 
-		if (width <= 0 || height <= 0) {
+		if (width <= 0 || height <= 0 || borderlength <= 0) {
 			return null;
 		}
 
