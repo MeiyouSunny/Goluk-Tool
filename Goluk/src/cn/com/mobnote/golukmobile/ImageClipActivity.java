@@ -224,9 +224,12 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			if (out != null) {
 				out.flush();
 				out.close();
-			} else {
 			}
-			return requestStr.toString();
+			if (requestStr != null) {
+				return requestStr.toString();
+			} else {
+				return null;
+			}
 		}
 
 	}
