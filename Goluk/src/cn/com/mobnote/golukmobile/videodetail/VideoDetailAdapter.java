@@ -589,12 +589,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 	// 设置评论数据
 	private void getCommentData(final int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
-		if (0 == mDataList.size()) {
-			commentHolder.mListLayout.setVisibility(View.GONE);
+//		if (0 == mDataList.size()) {
+//			commentHolder.mListLayout.setVisibility(View.GONE);
 //			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
 //			commentHolder.mNoData.setVisibility(View.VISIBLE);
-			return;
-		}
+//			return;
+//		}
 		commentHolder.mListLayout.setVisibility(View.VISIBLE);
 		commentHolder.mNoDataLayout.setVisibility(View.GONE);
 //		commentHolder.mNoData.setVisibility(View.GONE);
@@ -604,6 +604,10 @@ public class VideoDetailAdapter extends BaseAdapter {
 				((WonderfulActivity) mContext).mCommentLayout.setVisibility(View.GONE);
 			}
 		} else {
+			if (0 == mDataList.size()) {
+//				commentHolder.mListLayout.setVisibility(View.GONE);
+				return ;
+			}
 			CommentBean temp = mDataList.get(index);
 			String netHeadUrl = temp.customavatar;
 			if (null != netHeadUrl && !"".equals(netHeadUrl)) {
