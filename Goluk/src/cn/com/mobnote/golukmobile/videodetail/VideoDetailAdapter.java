@@ -90,6 +90,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		mDataList = new ArrayList<CommentBean>();
 		connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		netInfo = connectivityManager.getActiveNetworkInfo();
+		error = false;
 	}
 
 	public Handler mHandler = new Handler() {
@@ -910,7 +911,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 				headHolder.mImageLayout.setVisibility(View.VISIBLE);
 				dialog("网络访问异常，请重试！", headHolder);
 				if (null != headHolder.mVideoView) {
-					headHolder.mVideoView.stopPlayback();
+					if(error) {
+						headHolder.mVideoView.suspend();
+					} else {
+						headHolder.mVideoView.stopPlayback();
+					}
 				}
 				return;
 			}
