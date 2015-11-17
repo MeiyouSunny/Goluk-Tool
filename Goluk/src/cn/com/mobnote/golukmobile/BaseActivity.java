@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.Message;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.http.HttpManager;
+import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -68,6 +70,8 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mBaseApp = (GolukApplication) getApplication();
+		mBaseApp.initSharedPreUtil(this);
+		mBaseApp.initLogic();
 	}
 
 	@Override
@@ -85,6 +89,7 @@ public class BaseActivity extends Activity {
 
 	}
 
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -98,6 +103,9 @@ public class BaseActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		HttpManager.getInstance().cancelAll(this);
+		mBaseHandler.removeCallbacksAndMessages(null);
+		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
 		super.onDestroy();
 	}
 

@@ -15,11 +15,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -56,6 +58,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.FileUtils;
@@ -70,11 +73,12 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;
 import com.rd.car.player.RtmpPlayerView;
+
+import de.greenrobot.event.EventBus;
 
 public class LiveActivity extends BaseActivity implements OnClickListener, RtmpPlayerView.RtmpPlayerViewLisener,
 		ILiveDialogManagerFn, ITimerManagerFn, ILocationFn, IPCManagerFn, ILive, VideoSuqareManagerFn,
@@ -139,7 +143,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	private int mCurrentOKCount = 0;
 	/** 是否支持声音 */
 	private boolean isCanVoice = true;
-	private SimpleDraweeView mHead = null;
+	private ImageView mHead = null;
 	/** */
 	private RelativeLayout mMapRootLayout = null;
 	/** 是否成功上传过视频 */
@@ -416,7 +420,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mLookCountTv = (TextView) findViewById(R.id.live_lookcount);
 		zanBtn = (Button) findViewById(R.id.like_btn);
 		mShareBtn = (Button) findViewById(R.id.share_btn);
-		mHead = (SimpleDraweeView) findViewById(R.id.live_userhead);
+		mHead = (ImageView) findViewById(R.id.live_userhead);
 		mLiveCountDownTv = (TextView) findViewById(R.id.live_countdown);
 		mDescTv = (TextView) findViewById(R.id.live_desc);
 		mPauseBtn = (Button) findViewById(R.id.live_pause);
@@ -490,7 +494,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			toMyLocation();
 			break;
 		case MSG_H_TO_GETMAP_PERSONS:
-			MainActivity.mMainHandler.sendEmptyMessage(99);
+			Log.d("CK1", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+//			MainActivity.mMainHandler.sendEmptyMessage(99);
+			EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 			break;
 		}
 	}
@@ -600,12 +606,14 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			if (null != neturl && !"".equals(neturl)) {
 				// 使用网络地址
-				mHead.setImageURI(Uri.parse(neturl));
+				// mHead.setImageURI(Uri.parse(neturl));
+				GlideUtils.loadNetHead(this, mHead, neturl, R.drawable.live_icon_portrait);
 			} else {
 				if (null != headStr && !"".equals(headStr)) {
 					int utype = Integer.valueOf(headStr);
 					int head = mHeadImg[utype];
-					mHead.setImageURI(GolukUtils.getResourceUri(head));
+					// mHead.setImageURI(GolukUtils.getResourceUri(head));
+					GlideUtils.loadLocalHead(this, mHead, head);
 				}
 			}
 		} catch (Exception e) {
@@ -972,9 +980,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		if (1 == liveData.active) {
 			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : ");
-			// 主动直播
-			if (!mRPVPalyVideo.isPlaying()) {
-				startVideoAndLive(liveData.playUrl);
+			if (null != mRPVPalyVideo) {
+				// 主动直播
+				if (!mRPVPalyVideo.isPlaying()) {
+					startVideoAndLive(liveData.playUrl);
+				}
 			}
 		} else {
 			// 被动直播
@@ -1006,6 +1016,13 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mRPVPalyVideo.stopPlayback();
 			mRPVPalyVideo.cleanUp();
 			mRPVPalyVideo = null;
+		}
+		LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
+		dissmissAllDialog();
+		//释放资源
+		if (mBaiduMapManage != null){
+			mBaiduMapManage.release();
+			mBaiduMapManage = null;
 		}
 		super.onDestroy();
 	}
@@ -1802,6 +1819,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	@Override
 	public void onMapLoaded() {
 		GolukDebugUtils.e("", "jyf-------live----LiveActivity--onMapLoaded:");
-		MainActivity.mMainHandler.sendEmptyMessage(99);
+		Log.d("CK1", "onMapLoaded");
+//		MainActivity.mMainHandler.sendEmptyMessage(99);
+		EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 	}
 }

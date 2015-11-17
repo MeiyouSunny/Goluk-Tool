@@ -1,6 +1,9 @@
 package cn.com.mobnote.user;
 
 import java.io.File;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +17,11 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -24,15 +31,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
-import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.golukmobile.usercenter.CopyOfShuoMClickableSpan;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.tiros.api.FileUtils;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-
 public class UserUtils {
+	
+	public static List<Activity> mActivityList = new ArrayList<Activity>();
 
 	/**
 	 * AlertDialog
@@ -77,10 +85,12 @@ public class UserUtils {
 
 	public static boolean isNetDeviceAvailable(Context context) {
 		boolean bisConnFlag = false;
-		ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo network = conManager.getActiveNetworkInfo();
-		if (network != null) {
-			bisConnFlag = conManager.getActiveNetworkInfo().isAvailable();
+		ConnectivityManager conManager = (ConnectivityManager) GolukApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (conManager != null){
+			NetworkInfo network = conManager.getActiveNetworkInfo();
+			if (network != null) {
+				bisConnFlag = network.isAvailable();
+			}
 		}
 		return bisConnFlag;
 	}
@@ -141,25 +151,25 @@ public class UserUtils {
 	/**
 	 * UserPersonalHeadActivity默认选中的head
 	 */
-	public static void focusHead(String headString, SimpleDraweeView headImage) {
+	public static void focusHead(Context context, String headString, ImageView headImage) {
 		try {
 			if (null == headImage) {
 				return;
 			}
 			if (headString.equals("1")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy1));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy1);
 			} else if (headString.equals("2")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy2));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy2);
 			} else if (headString.equals("3")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_boy3));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_boy3);
 			} else if (headString.equals("4")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl4));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl4);
 			} else if (headString.equals("5")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl5));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl5);
 			} else if (headString.equals("6")) {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_girl6));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_girl6);
 			} else {
-				headImage.setImageURI(GolukUtils.getResourceUri(R.drawable.my_head_moren7));
+				GlideUtils.loadLocalHead(context, headImage, R.drawable.my_head_moren7);
 			}
 		} catch (Exception e) {
 
@@ -220,41 +230,6 @@ public class UserUtils {
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * 升级提示
-	 * 
-	 * @param mContext
-	 * @param message1
-	 * @param message2
-	 */
-	public static void showUpgradeGoluk(final Context mContext, String message, final String url) {
-		Builder mBuilder = new AlertDialog.Builder(mContext);
-		AlertDialog dialog = mBuilder.setTitle("发现新版本").setMessage(message)
-				.setPositiveButton("马上升级", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						// 浏览器打开url
-						GolukUtils.openUrl(url, mContext);
-
-						if (GolukApplication.mMainActivity != null) {
-							GolukApplication.mMainActivity.finish();
-							GolukApplication.mMainActivity = null;
-						}
-						SysApplication.getInstance().exit();
-					}
-				}).setCancelable(false).setOnKeyListener(new OnKeyListener() {
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							return true;
-						}
-						return false;
-					}
-				}).create();
-		dialog.show();
 	}
 
 	/**
@@ -330,6 +305,7 @@ public class UserUtils {
 
 	/**
 	 * 设置普通评论显示
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param text
@@ -341,9 +317,51 @@ public class UserUtils {
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
+	/**
+	 * 设置普通评论显示
+	 * 
+	 * @param view
+	 * @param nikename
+	 * @param text
+	 */
+	public static void showCommentText(Context context, boolean isCanClick, VideoSquareInfo videInfo, TextView view,
+			String nikename, String text, String got) {
+		boolean isHasGot = false;
+		String all = "";
+		if (null != got && got.length() > 0) {
+			isHasGot = true;
+			got = got.trim();
+		}
+
+		if(null != text) {
+			text = text.trim();
+		}
+		if (isHasGot) {
+			all = nikename + " " + text + " " + got;
+		} else {
+			all = nikename + " " + text;
+		}
+		SpannableString spanttt = new SpannableString(all);
+		spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
+				Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		if (isHasGot) {
+			if (isCanClick) {
+				ClickableSpan clicksss = new CopyOfShuoMClickableSpan(context, got, videInfo);
+				spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(),
+						Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			} else {
+				spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0, 128, 255)), nikename.length() + text.length() + 1,
+						all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			}
+		}
+		view.setText(spanttt);
+		view.setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
 	/**
 	 * 评论列表中回复评论颜色设置
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param text
@@ -352,54 +370,103 @@ public class UserUtils {
 		String replyName = "@" + nikename + "：";
 		String reply_str = "回复" + replyName + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(reply_str);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2,
-				replyName.length() + 2, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2, replyName.length() + 2,
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
-	
+
 	/**
 	 * 设置最新、个人主页回复评论内容显示
+	 * 
 	 * @param view
 	 * @param nikename
 	 * @param replyName
 	 * @param text
 	 */
-	public static void showReplyText(TextView view, String nikename, String replyName,String text) {
-		String replyText = "@"+replyName+"：";
-		String str = nikename+" 回复"+replyText+text;
+	public static void showReplyText(TextView view, String nikename, String replyName, String text) {
+		String replyText = "@" + replyName + "：";
+		String str = nikename + " 回复" + replyText + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length()+3, nikename.length()+3+replyText.length(),
-				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 3, nikename.length()
+				+ 3 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
+	}
+
+	/**
+	 * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
+	 * 
+	 * @param v
+	 * @param event
+	 * @return
+	 */
+	public static boolean isShouldHideInput(View view, MotionEvent event) {
+		if (view != null) {
+			int[] l = { 0, 0 };
+			view.getLocationInWindow(l);
+			int left = l[0];
+			int top = l[1];
+			int bottom = top + view.getHeight();
+			int right = left + view.getWidth();
+			if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
+				// 点击EditText的事件，忽略它。
+				return false;
+			} else {
+				return true;
+			}
+		}
+		// 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
+		return false;
 	}
 	
 	/**
-     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
-     * 
-     * @param v
-     * @param event
-     * @return
-     */
-    public static boolean isShouldHideInput(View view, MotionEvent event) {
-        if (view != null) {
-            int[] l = { 0, 0 };
-            view.getLocationInWindow(l);
-            int left = l[0];
-            int top = l[1];
-            int bottom = top + view.getHeight();
-            int right = left+ view.getWidth();
-            if (event.getX() > left && event.getX() < right
-                    && event.getY() > top && event.getY() < bottom) {
-                // 点击EditText的事件，忽略它。
-                return false;
-            } else {
-                return true;
-            }
-        }
-        // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
-        return false;
-    }
+	 * 添加Activity
+	 * @param activity
+	 */
+	public static void addActivity(Activity activity) {
+		mActivityList.add(activity);
+	}
+	
+	/**
+	 * 移除Activity
+	 */
+	public static void removeActivity() {
+		if (mActivityList.size() > 0) {
+			mActivityList.remove(mActivityList.size() - 1);
+		}
+	}
+	
+	/**
+	 * 关闭list里面所有的Activity
+	 */
+	public static void exit() {
+		try {
+			for (Activity activity : mActivityList) {
+				if (activity != null) {
+					activity.finish();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 数据显示1,000
+	 * @param fmtnumber
+	 * @return
+	 */
+	public static String formatNumber(String fmtnumber) {
+		String number;
+		try {
+			int wg = Integer.parseInt(fmtnumber);
+			DecimalFormat df = new DecimalFormat("#,###");
+			number = df.format(wg);
+		} catch (Exception e) {
+			return fmtnumber;
+		}
+		return number;
+	}
 	
 }

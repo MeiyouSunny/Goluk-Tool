@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -325,6 +326,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					timerCancel();
 					UserUtils.dismissUpdateDialog(mUpdateDialog);
 					mUpdateDialog = null;
+					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					showUpdateSecondDisconnect("很抱歉，摄像头连接异常中断，但它可能仍在升级中。请先不要关闭摄像头电源，等待摄像头升级成功。");
 					break;
 				default:
@@ -592,6 +594,15 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	}
 
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			exit();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		if(mApp.mIpcUpdateManage != null){
@@ -639,7 +650,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 
 						@Override
 						public void onClick(DialogInterface arg0, int arg1) {
-							mApp.mIpcUpdateManage.stopIpcUpgrade();
 							exit();
 						}
 					}).show();
@@ -655,7 +665,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		}
 		if (null == mSecondDialog) {
 			mSecondDialog = new AlertDialog.Builder(UpdateActivity.this).setTitle("提示").setMessage(message)
-					.setPositiveButton("确定", null).show();
+					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							exit();
+						}
+					}).show();
 		}
 	}
 

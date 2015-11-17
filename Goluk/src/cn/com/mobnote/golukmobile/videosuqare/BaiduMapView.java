@@ -58,7 +58,7 @@ public class BaiduMapView implements ILocationFn {
 	private boolean isCurrent = true;
 
 	/** 首页handler用来接收消息,更新UI */
-	public static Handler mBaiduHandler = null;
+	public Handler mBaiduHandler = null;
 
 	private GolukApplication mApp = null;
 
@@ -164,8 +164,10 @@ public class BaiduMapView implements ILocationFn {
 				switch (what) {
 				case 2:
 					// 5分钟更新一次大头针数据
-					ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+					if(null != ma && null != ma.mApp && null != ma.mApp.mGoluk) {
+						ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_GetPinData, "");
+					}
 					break;
 				case 99:
 					// 隐藏气泡,大头针
@@ -247,6 +249,15 @@ public class BaiduMapView implements ILocationFn {
 		// if (null != mMapView) {
 		// mMapView.onDestroy();
 		// }
+		//释放资源
+		if (mBaiduMapManage != null){
+			mBaiduMapManage.release();
+			mBaiduMapManage = null;
+		}
+		if (mBaiduHandler != null){
+			mBaiduHandler.removeCallbacksAndMessages(null);
+			mBaiduHandler = null;
+		}
 	}
 
 	protected void onPause() {

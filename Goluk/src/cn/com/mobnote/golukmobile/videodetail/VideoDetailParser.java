@@ -92,9 +92,36 @@ public class VideoDetailParser {
 							vd.flux = json_videodata.optString("flux");
 							video.videodata = vd;
 						}
+						JSONObject json_recom = json_video.optJSONObject("gen");
+						if(null != json_recom) {
+							VideoRecommend recommend = new VideoRecommend();
+							recommend.topicid = json_recom.optString("topicid");
+							recommend.topicname = json_recom.optString("topicname");
+							recommend.chanid = json_recom.optString("chanid");
+							recommend.chaname = json_recom.optString("chaname");
+							recommend.isreward = json_recom.optString("isreward");
+							recommend.atflag = json_recom.optString("atflag");
+							recommend.atreason = json_recom.optString("atreason");
+							recommend.atgold = json_recom.optString("atgold");
+							recommend.sysflag = json_recom.optString("sysflag");
+							recommend.sysreason = json_recom.optString("sysreason");
+							recommend.sysgold = json_recom.optString("sysgold");
+							recommend.isrecommend = json_recom.optString("isrecommend");
+							recommend.reason = json_recom.optString("reason");
+							video.recom = recommend;
+						}
 						videoDetailInfo.video = video;
 					}
 					data.avideo = videoDetailInfo;
+					
+					JSONObject headObj = json_data.optJSONObject("head");
+					if (null != headObj) {
+						ZTHead head = new ZTHead();
+						final String ztitle = headObj.optString("ztitle");
+						head.ztitle = ztitle;
+						videoDetailInfo.head = head;
+					}
+					
 				}
 				// link
 				JSONObject json_link = json_data.optJSONObject("link");

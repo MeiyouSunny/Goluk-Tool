@@ -22,7 +22,12 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.promotion.PromotionListRequest;
+import cn.com.mobnote.golukmobile.promotion.PromotionModel;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -47,7 +52,7 @@ import com.rd.car.editor.FilterVideoEditorException;
 import cn.com.mobnote.golukmobile.helper.VideoHelper;
 
 @SuppressLint("HandlerLeak")
-public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn {
+public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn, IRequestResultListener {
 	public static final int EVENT_COMM_EXIT = 0;
 	/** 自定义播放器支持特效 */
 	public FilterPlaybackView mVVPlayVideo = null;
@@ -103,6 +108,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private boolean isBack = false;
 	private RelativeLayout mPlayImgLayout = null;
 
+	/** 活动 */
+	private PromotionSelectItem mPromotionSelectItem;
+
+	public static final int PROMOTION_ACTIVITY_BACK = 110;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -112,7 +121,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mYouMengLayout = (RelativeLayout) mRootLayout.findViewById(R.id.shortshare_youmeng_layout);
 		setContentView(mRootLayout);
 
-		getIntentData();
+		if (savedInstanceState == null) {
+			getIntentData();
+		} else {
+			mFilePath = savedInstanceState.getString("cn.com.mobnote.video.path");
+			mCurrentVideoType = savedInstanceState.getInt("type", 2);
+		    mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(PhotoAlbumActivity.ACTIVITY_INFO);
+		}
 
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -121,9 +136,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareDealTool = new ShareDeal(this, mYouMengLayout);
 
 		mFilterLayout = new ShareFilterLayout(this);
-		mTypeLayout = new ShareTypeLayout(this);
+		mTypeLayout = new ShareTypeLayout(this, mPromotionSelectItem);
 		mInputLayout = new InputLayout(this, mRootLayout);
-
+		interceptVideoName(mFilePath);// 拿到视频名称
 		loadRes();
 		// 页面初始化
 		initView();
@@ -142,15 +157,31 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		} else {
 			mPlayImgLayout.setVisibility(View.GONE);
 		}
+		loadData();
+	}
+
+	private void loadData() {
+		PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
+		request.get(mTypeLayout.getCurrentLocation());
 	}
 
 	private void getIntentData() {
 		Intent intent = getIntent();
 		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
-		interceptVideoName(mFilePath);// 拿到视频名称
 		mCurrentVideoType = intent.getIntExtra("type", 2);
+	    mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(PhotoAlbumActivity.ACTIVITY_INFO);
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		if (mPromotionSelectItem != null) {
+			outState.putSerializable(PhotoAlbumActivity.ACTIVITY_INFO, mPromotionSelectItem);
+		}
+		outState.putString("cn.com.mobnote.video.path", mFilePath);
+		outState.putInt("type", mCurrentVideoType);
+		super.onSaveInstanceState(outState);
+	}
 	/**
 	 * 加载资源
 	 * 
@@ -171,6 +202,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		switch (what) {
 		case 100:
 			switchMiddleLayout(true, true);
+			break;
+		case 101:
+			mTypeLayout.showPopUp();
 			break;
 		case 105:
 			mPlayImgLayout.setVisibility(View.GONE);
@@ -209,6 +243,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				FrameLayout.LayoutParams.MATCH_PARENT);
 		if (isType) {
 			mMiddleLayout.addView(mTypeLayout.getRootLayout(), lp);
+			if (mTypeLayout.getPopupFlag()) {
+				mBaseHandler.sendEmptyMessageDelayed(101, 100);
+			}
 		} else {
 			mMiddleLayout.addView(mFilterLayout.getRootLayout(), lp);
 		}
@@ -404,19 +441,31 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			exit();
+			if (isBack) {
+				return true;
+			}
+			isBack = true;
+			if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
+				// 判断是否正在上传
+				// 为了修复上传的是时返回几率崩溃控制针问题.
+				// 感觉可能崩溃到这里了,chenxy 5.11
+				if (null != mVVPlayVideo) {
+					mVVPlayVideo.cancelSave();
+				}
+			} else {
+				exit();
+			}
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
 	private void exit() {
-		if (isBack) {
+		if (isExit) {
 			return;
 		}
-		isBack = true;
 		isExit = true;
-		
+
 		stopProgressThread();
 		mTypeLayout.setExit();
 		mTypeLayout = null;
@@ -430,14 +479,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mShareDealTool = null;
 		mFilterLayout.setExit();
 		mFilterLayout = null;
-		if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
-			// 判断是否正在上传
-			// 为了修复上传的是时返回几率崩溃控制针问题.
-			// 感觉可能崩溃到这里了,chenxy 5.11
-			if (null != mVVPlayVideo) {
-				mVVPlayVideo.cancelSave();
-			}
-		}
+
+
 		this.toInitState();
 		if (null != mVVPlayVideo) {
 			mVVPlayVideo.cleanUp();
@@ -468,6 +511,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		stopProgressThread();
 		super.onPause();
 	}
+
 
 	@Override
 	protected void onResume() {
@@ -555,7 +599,19 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		switch (id) {
 		case R.id.back_btn:
 			// 返回
-			exit();
+			if (isBack) {
+				return;
+			}
+			isBack = true;
+			if (ShareLoading.STATE_CREATE_VIDEO == mShareLoading.getCurrentState()) {
+				// 判断是否正在上传
+				// 为了修复上传的是时返回几率ANR
+				if (null != mVVPlayVideo) {
+					mVVPlayVideo.cancelSave();
+				}
+			} else {
+				exit();
+			}
 			break;
 		case R.id.play_layout:
 			if (!isExit) {
@@ -610,7 +666,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			boolean bCancel = (Boolean) obj2;
 			if (bCancel) {
 				// 已取消视频保存
-				toInitState();
+				mShareLoading.switchState(ShareLoading.STATE_NONE);
+				exit();
 			} else if (bSuccess) {
 				// 视频保存成功,跳转到分享页面
 				String newFilePath = (String) obj3;
@@ -649,6 +706,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	public void CallBack_UploadVideo(int event, Object obj) {
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------CallBack_UploadVideo--event-: "
 				+ event);
+		if (isExit) {
+			return;
+		}
 		switch (event) {
 		case EVENT_EXIT:
 			exit();
@@ -658,8 +718,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			requestShareInfo();
 			break;
 		case EVENT_PROCESS:
-			final int process = (Integer) obj;
-			mShareLoading.setProcess(process);
+			if (null != obj && null != mShareLoading) {
+				final int process = (Integer) obj;
+				mShareLoading.setProcess(process);
+			}
 			break;
 		}
 	}
@@ -667,6 +729,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == PROMOTION_ACTIVITY_BACK) {
+			if (mTypeLayout != null) {
+				mTypeLayout.onActivityResult(resultCode, data);
+				mPromotionSelectItem = mTypeLayout.getPromotionSelectItem();
+			}
+			return;
+		}
 		if (this.mShareDealTool != null) {
 			this.mShareDealTool.onActivityResult(requestCode, resultCode, data);
 		}
@@ -683,8 +752,18 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
 		final String t_thumbPath = mUploadVideo.getThumbPath();
 		final String t_location = mTypeLayout.getCurrentLocation();
+		PromotionSelectItem item = mTypeLayout.getPromotionSelectItem();
+		String channelid = "";
+		String activityid = "";
+		String activityname = "";
+
+		if (item != null) {
+			channelid = item.channelid;
+			activityid = item.activityid;
+			activityname = item.activitytitle;
+		}
 		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,
-				videoCreateTime, t_location);
+				videoCreateTime, t_location, channelid, activityid, activityname);
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
 		
 		// 根据存储方式选择不同的业务处理， Micle
@@ -806,7 +885,29 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	// 当分享成功，失败　或某一环节出现失败后，还原到原始状态，再进行分享
 	private void toInitState() {
 		isSharing = false;
-		mShareLoading.hide();
-		mShareLoading.switchState(ShareLoading.STATE_NONE);
+		if (isExit) {
+			return;
+		}
+		if(null != mShareLoading) {
+			mShareLoading.hide();
+			mShareLoading.switchState(ShareLoading.STATE_NONE);
+		}
 	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		// TODO Auto-generated method stub
+		switch(requestType) {
+		case IPageNotifyFn.PageType_GetPromotion:
+			PromotionModel data = (PromotionModel) result;
+			if (data != null && data.success) {
+				if (mTypeLayout == null) {
+					return;
+				}
+				mTypeLayout.setPromotionList(data.data.PromotionList);
+			}
+			break;
+		}
+	}
+
 }

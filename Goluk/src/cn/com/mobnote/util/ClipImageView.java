@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
@@ -19,7 +18,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -31,8 +29,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 public class ClipImageView extends ImageView implements View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
-
-	private static final int BORDERDISTANCE = ClipView.BORDERDISTANCE;
 
 	public static final float DEFAULT_MAX_SCALE = 4.0f;
 	public static final float DEFAULT_MID_SCALE = 2.0f;
@@ -48,7 +44,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 
 	private boolean isJusted;
 	
-	public Activity mActivity = null;
+	public Context mContext = null;
 
 	private final Matrix baseMatrix = new Matrix();
 	private final Matrix drawMatrix = new Matrix();
@@ -71,6 +67,8 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 
 		setOnTouchListener(this);
 
+		mContext = context;
+
 		multiGestureDetector = new MultiGestureDetector(context);
 
 	}
@@ -83,7 +81,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		}
 		
 		DisplayMetrics metric = new DisplayMetrics();
-		mActivity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+		((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(metric);
 		int width = metric.widthPixels; // 屏幕宽度（像素）
 		int height = metric.heightPixels; // 屏幕高度（像素）
 		float mDensity = metric.density; // 屏幕密度（0.75 / 1.0 / 1.5）
@@ -101,8 +99,8 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		final int drawableWidth = d.getIntrinsicWidth();
 		final int drawableHeight = d.getIntrinsicHeight();
 		
-		borderlength = (int) (viewWidth - BORDERDISTANCE * 10);
-		
+//		borderlength = (int) (viewWidth - BORDERDISTANCE * 10);
+		borderlength = ClipView.dip2px(mContext, 100) * 2;
 		float scale = 1.0f;
 		if (drawableWidth <= drawableHeight) {
 			if (drawableWidth < borderlength) {
@@ -442,6 +440,10 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 
 		int width = this.getWidth();
 		int height = this.getHeight();
+
+		if (width <= 0 || height <= 0 || borderlength <= 0) {
+			return null;
+		}
 
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);

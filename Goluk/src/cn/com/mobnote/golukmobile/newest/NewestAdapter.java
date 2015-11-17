@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -20,17 +19,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
-import com.lidroid.xutils.bitmap.core.BitmapSize;
 
 public class NewestAdapter extends BaseAdapter {
 	private Context mContext = null;
@@ -43,7 +38,7 @@ public class NewestAdapter extends BaseAdapter {
 	private CategoryListView mCategoryListView = null;
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
-	private boolean clickLock = false;
+//	private boolean clickLock = false;
 	private RelativeLayout mHeadView;
 	private ViewHolder holder;
 	private final float widthHeight = 1.78f;
@@ -147,13 +142,12 @@ public class NewestAdapter extends BaseAdapter {
 	private View initLayout() {
 		holder = new ViewHolder();
 		View convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
-		holder.videoImg = (SimpleDraweeView) convertView.findViewById(R.id.imageLayout);
+		holder.videoImg = (ImageView) convertView.findViewById(R.id.imageLayout);
 		holder.liveImg = (ImageView) convertView.findViewById(R.id.newlist_item_liveicon);
-		holder.headimg = (SimpleDraweeView) convertView.findViewById(R.id.headimg);
+		holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
-		holder.time = (TextView) convertView.findViewById(R.id.time);
+		holder.timeLocation = (TextView) convertView.findViewById(R.id.time_location);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
-		holder.locationTv = (TextView) convertView.findViewById(R.id.list_item_location);
 
 		holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 		holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
@@ -171,7 +165,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
 		holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
 		holder.detail = (TextView) convertView.findViewById(R.id.detail);
-
+		holder.ivReward = (ImageView)convertView.findViewById(R.id.iv_reward_tag);
 		holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
 		holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
 		holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
@@ -220,23 +214,41 @@ public class NewestAdapter extends BaseAdapter {
 			return;
 		}
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
-		holder.videoImg.setImageURI(Uri.parse(mVideoSquareInfo.mVideoEntity.picture));
+
+		GlideUtils.loadImage(mContext, holder.videoImg, mVideoSquareInfo.mVideoEntity.picture, R.drawable.tacitly_pic);
+
 		String headUrl = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		if (null != headUrl && !"".equals(headUrl)) {
 			// 使用服务器头像地址
-			holder.headimg.setImageURI(Uri.parse(headUrl));
+			GlideUtils.loadNetHead(mContext, holder.headimg, headUrl, R.drawable.editor_head_feault7);
 		} else {
 			showHead(holder.headimg, mVideoSquareInfo.mUserEntity.headportrait);
 		}
 
 		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
-		holder.time.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime));
-		final String location = mVideoSquareInfo.mVideoEntity.location;
-		if (null == location || "".equals(location)) {
-			holder.locationTv.setVisibility(View.GONE);
+
+		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime) + " " +
+									mVideoSquareInfo.mVideoEntity.location);
+
+		if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
+			String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
+			if(null != recommend && "1".equals(recommend)) {
+				Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				holder.timeLocation.setCompoundDrawables(null, null, drawable, null);
+			} else {
+				holder.timeLocation.setCompoundDrawables(null, null, null, null);
+			}
+
+			String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
+			if(null != reward && "1".equals(reward)) {
+				holder.ivReward.setVisibility(View.VISIBLE);
+			} else {
+				holder.ivReward.setVisibility(View.GONE);
+			}
 		} else {
-			holder.locationTv.setVisibility(View.VISIBLE);
-			holder.locationTv.setText(location);
+			holder.timeLocation.setCompoundDrawables(null, null, null, null);
+			holder.ivReward.setVisibility(View.GONE);
 		}
 
 		if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
@@ -262,8 +274,19 @@ public class NewestAdapter extends BaseAdapter {
 			holder.detail.setVisibility(View.GONE);
 		} else {
 			holder.detail.setVisibility(View.VISIBLE);
-			UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
-					mVideoSquareInfo.mVideoEntity.describe);
+			if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
+				if(!TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicid) &&
+						!TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicname)) {
+					UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+							mVideoSquareInfo.mVideoEntity.describe, "#" + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
+				} else {
+					UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+							mVideoSquareInfo.mVideoEntity.describe);
+				}
+			} else {
+				UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+						mVideoSquareInfo.mVideoEntity.describe);
+			}
 		}
 
 		if (isLive(mVideoSquareInfo)) {
@@ -362,12 +385,11 @@ public class NewestAdapter extends BaseAdapter {
 		}
 	}
 
-	private void showHead(SimpleDraweeView view, String headportrait) {
+	private void showHead(ImageView view, String headportrait) {
 		try {
-			view.setImageURI(GolukUtils.getResourceUri(ILive.mBigHeadImg[Integer.parseInt(headportrait)]));
+			GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
 		} catch (Exception e) {
-			view.setImageURI(GolukUtils.getResourceUri(R.drawable.editor_head_feault7));
-			e.printStackTrace();
+			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
 		}
 	}
 
@@ -474,26 +496,16 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	private void loadHeadImage(final ImageView image, String url, int width, int height) {
-		BitmapDisplayConfig config = new BitmapDisplayConfig();
-		config.setBitmapMaxSize(new BitmapSize(width, height));
-		Bitmap bitmap = BitmapManager.getInstance().mBitmapUtils.getBitmapFromMemCache(url, config);
-		if (null == bitmap) {
-			image.setImageResource(R.drawable.tacitly_pic);
-
-			BitmapManager.getInstance().mBitmapUtils.display(image, url);
-		} else {
-			image.setImageBitmap(bitmap);
-		}
+		GlideUtils.loadImage(mContext, image, url, R.drawable.tacitly_pic);
 	}
 
 	public static class ViewHolder {
-		SimpleDraweeView videoImg;
+		ImageView videoImg;
 		ImageView liveImg;
-		SimpleDraweeView headimg;
+		ImageView headimg;
 		TextView nikename;
-		TextView time;
+		TextView timeLocation;
 		ImageView function;
-		TextView locationTv;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
@@ -516,7 +528,7 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
-
+		ImageView ivReward;
 	}
 
 	public void setNewestLiseView(NewestListView view) {
@@ -541,15 +553,15 @@ public class NewestAdapter extends BaseAdapter {
 
 	}
 
-	public synchronized boolean getClickLock() {
-		return clickLock;
-	}
-
-	public synchronized void setClickLock(boolean lock) {
-		clickLock = lock;
-	}
+//	public synchronized boolean getClickLock() {
+//		return clickLock;
+//	}
+//
+//	public synchronized void setClickLock(boolean lock) {
+//		clickLock = lock;
+//	}
 
 	public void onResume() {
-		setClickLock(false);
+//		setClickLock(false);
 	}
 }

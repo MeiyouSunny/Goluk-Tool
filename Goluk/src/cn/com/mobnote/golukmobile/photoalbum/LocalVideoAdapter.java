@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.List;
 
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -14,29 +15,41 @@ public class LocalVideoAdapter extends PagerAdapter{
 	private WonderfulVideoListView mEmergencyVideoLiseView = null;
 	private WonderfulVideoListView mLoopVideoLiseView = null;
 	private String from = null;
-	
-	public LocalVideoAdapter(Context c, String from) {
+	private PromotionSelectItem mPromotionSelectItem;
+	public LocalVideoAdapter(Context c, String from, PromotionSelectItem item) {
 		this.mContext=c;
 		this.from = from;
+		mPromotionSelectItem = item;
 	}
 	
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		if(0 == position){
-			mWonderfulVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_SHORTCUT, from);
+			mWonderfulVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_SHORTCUT, from, mPromotionSelectItem);
 			container.addView(mWonderfulVideoLiseView.getRootView());
 			return mWonderfulVideoLiseView.getRootView();
 		}else if(1 == position){
-			mEmergencyVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_URGENT, from);
+			mEmergencyVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_URGENT, from, mPromotionSelectItem);
 			container.addView(mEmergencyVideoLiseView.getRootView());
 			return mEmergencyVideoLiseView.getRootView();
 		}else {		
-			mLoopVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_CIRCULATE, from);
+			mLoopVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_CIRCULATE, from, mPromotionSelectItem);
 			container.addView(mLoopVideoLiseView.getRootView());
 			return mLoopVideoLiseView.getRootView();
 		}
 	}
-	
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        if(1 == position) {
+            container.removeView(mWonderfulVideoLiseView.getRootView());
+        } else if(0 == position) {
+            container.removeView(mEmergencyVideoLiseView.getRootView());
+        } else {
+            container.removeView(mLoopVideoLiseView.getRootView());
+        }
+    }
+
 	@Override
 	public int getCount() {
 		return 3;

@@ -79,6 +79,8 @@ public class SharedPrefUtil {
 	/**保存ipc升级文件路径 **/
 	public static final String PROPERTY_SAVE_IPC_FILE_PATH = "property_ipc_file_path";
 
+	public static final String BANNER_LIST_STRING = "banner_list_string";
+	public static final String LOCATION_CITY_ID = "location_city_id";
 	private SharedPreferences preference = null;
 
 	private Editor mEditor = null;
@@ -506,4 +508,19 @@ public class SharedPrefUtil {
 		return preference.getString(PROPERTY_SAVE_IPC_MODEL, "");
 	}
 
+	public String getBannerListString() {
+		return preference.getString(BANNER_LIST_STRING, "");
+	}
+	
+	public void saveBannerListString(String bannerString) {
+		preference.edit().putString(BANNER_LIST_STRING, bannerString).commit();
+	}
+
+	public String getCityIDString() {
+		return preference.getString(LOCATION_CITY_ID, "");
+	}
+	
+	public void setCityIDString(String cityCode) {
+		preference.edit().putString(LOCATION_CITY_ID, cityCode).commit();
+	}
 }

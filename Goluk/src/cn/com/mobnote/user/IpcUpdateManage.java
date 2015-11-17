@@ -17,7 +17,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UpdateActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
@@ -292,6 +292,11 @@ public class IpcUpdateManage implements IPCManagerFn {
 					SharedPreferences preferences = mApp.getContext().getSharedPreferences("ipc_wifi_bind",
 							mApp.getContext().MODE_PRIVATE);
 					boolean isbind = preferences.getBoolean("isbind", false);
+					
+					if (!mApp.isIpcLoginSuccess && !isbind) {
+						GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
+						return ;
+					}
 
 					IPCInfo ipcInfo = ipcUpdateUtils(ipc);
 					if (ipcInfo == null) {
@@ -475,21 +480,23 @@ public class IpcUpdateManage implements IPCManagerFn {
 		 */
 		IPCInfo ipcInfo = null;
 		IPCInfo[] upgradeArray = JsonUtil.upgradeJson(ipc);
-		final int length = upgradeArray.length;
-		for (int i = 0; i < length; i++) {
-			String ipc_filesize = upgradeArray[i].filesize;
-			String ipc_content = upgradeArray[i].appcontent;
-			// 保存ipc文件大小
-			mApp.mSharedPreUtil.saveIpcFileSize(ipc_filesize);
-			// 保存ipc更新信息
-			mApp.mSharedPreUtil.saveIpcContent(ipc_content);
-
-			String ipc_isnew = upgradeArray[i].isnew;
-			if ("0".equals(ipc_isnew)) {
-				GolukDebugUtils.i(TAG, "ipc当前已是最新版本，不需要升级");
-			} else if ("1".equals(ipc_isnew)) {
-				GolukDebugUtils.i(TAG, "ipc需要升级");
-				ipcInfo = upgradeArray[i];
+		if (upgradeArray != null){
+			final int length = upgradeArray.length;
+			for (int i = 0; i < length; i++) {
+				String ipc_filesize = upgradeArray[i].filesize;
+				String ipc_content = upgradeArray[i].appcontent;
+				// 保存ipc文件大小
+				mApp.mSharedPreUtil.saveIpcFileSize(ipc_filesize);
+				// 保存ipc更新信息
+				mApp.mSharedPreUtil.saveIpcContent(ipc_content);
+	
+				String ipc_isnew = upgradeArray[i].isnew;
+				if ("0".equals(ipc_isnew)) {
+					GolukDebugUtils.i(TAG, "ipc当前已是最新版本，不需要升级");
+				} else if ("1".equals(ipc_isnew)) {
+					GolukDebugUtils.i(TAG, "ipc需要升级");
+					ipcInfo = upgradeArray[i];
+				}
 			}
 		}
 
@@ -641,7 +648,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				return update(filePath);
 			} else {
-				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+				if (UpdateActivity.mUpdateHandler != null){
+					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+				}
 				return false;
 			}
 
@@ -680,12 +689,16 @@ public class IpcUpdateManage implements IPCManagerFn {
 						u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(filePath);
 						if (u) {
 							// 正在准备文件，请稍候……
-							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+							if (UpdateActivity.mUpdateHandler != null){
+								UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+							}
 						}
 						return u;
 					} else {
 						// 提示没有升级文件
-						UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+						if (UpdateActivity.mUpdateHandler != null){
+							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+						}
 						return false;
 					}
 				}
@@ -733,14 +746,12 @@ public class IpcUpdateManage implements IPCManagerFn {
 							GolukApplication.mMainActivity.finish();
 							GolukApplication.mMainActivity = null;
 						}
-						SysApplication.getInstance().exit();
+
 						mApp.setExit(true);
 						mApp.mIPCControlManager.setIPCWifiState(false, "");
 						mApp.destroyLogic();
 						mApp.appFree();
-						if (null != UserStartActivity.mHandler) {
-							UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-						}
+
 						int PID = android.os.Process.myPid();
 						android.os.Process.killProcess(PID);
 						System.exit(0);

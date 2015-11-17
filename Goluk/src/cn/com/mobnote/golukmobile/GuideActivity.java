@@ -55,7 +55,7 @@ public class GuideActivity extends BaseActivity {
 		GolukApplication.getInstance().initSharedPreUtil(this);
 		((GolukApplication) this.getApplication()).initLogic();
 		// 注册信鸽的推送
-		GolukNotification.getInstance().createXG(this);
+		GolukNotification.getInstance().createXG();
 
 		((GolukApplication) this.getApplication()).startUpgrade();
 		

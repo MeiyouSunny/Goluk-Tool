@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,20 +15,21 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.facebook.common.util.UriUtil;
-
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.format.DateFormat;
@@ -35,6 +38,7 @@ import android.util.DisplayMetrics;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -158,7 +162,7 @@ public class GolukUtils {
 	 */
 	public static void showToast(Context context, String text) {
 		if (mToast == null) {
-			mToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+			mToast = Toast.makeText(GolukApplication.getInstance(), text, Toast.LENGTH_SHORT);
 		} else {
 			mToast.setText(text);
 		}
@@ -182,7 +186,7 @@ public class GolukUtils {
 
 	public static void showToast(Context context, String text, int duration) {
 		if (mToast == null) {
-			mToast = Toast.makeText(context, text, duration);
+			mToast = Toast.makeText(GolukApplication.getInstance(), text, duration);
 		} else {
 			mToast.setText(text);
 			mToast.setDuration(duration);
@@ -498,15 +502,19 @@ public class GolukUtils {
 
 	public static String getFormatNumber(String fmtnumber) {
 		String number;
+		try {
+			int wg = Integer.parseInt(fmtnumber);
 
-		int wg = Integer.parseInt(fmtnumber);
-
-		if (wg < 100000) {
-			DecimalFormat df = new DecimalFormat("#,###");
-			number = df.format(wg);
-		} else {
-			number = "100,000+";
+			if (wg < 100000) {
+				DecimalFormat df = new DecimalFormat("#,###");
+				number = df.format(wg);
+			} else {
+				number = "100,000+";
+			}
+		} catch (Exception e) {
+			return fmtnumber;
 		}
+
 		return number;
 	}
 
@@ -585,9 +593,8 @@ public class GolukUtils {
 	 * @return
 	 * @author jyf
 	 */
-	public static Uri getResourceUri(int resId) {
-		Uri uri = new Uri.Builder().scheme(UriUtil.LOCAL_RESOURCE_SCHEME).path(String.valueOf(resId)).build();
-		return uri;
+	public static Integer getResourceUri(int resId) {
+		return Integer.valueOf(resId);
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -646,4 +653,56 @@ public class GolukUtils {
 
 	}
 
+	public static String compute32(byte[] content) {
+		StringBuffer buf = new StringBuffer("");
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			try {
+				md.update(content);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			byte b[] = md.digest();
+			int i;
+			for (int offset = 0; offset < b.length; offset++) {
+				i = b[offset];
+				if (i < 0)
+					i += 256;
+				if (i < 16)
+					buf.append("0");
+				buf.append(Integer.toHexString(i));
+			}
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return buf.toString();
+	}
+
+	public static boolean isNetworkConnected(Context context) {
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		if (mNetworkInfo != null) {
+			return mNetworkInfo.isAvailable();
+		}
+		return false;
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	public static boolean isActivityAlive(Activity activity) {
+		if (activity == null) {
+			return false;
+		}
+
+		if (Build.VERSION.SDK_INT > 16) {
+			if (activity.isDestroyed() || activity.isFinishing()) {
+				return false;
+			}
+		} else {
+			if (activity.isFinishing()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

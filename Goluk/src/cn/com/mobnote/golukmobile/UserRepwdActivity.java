@@ -1,7 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+
 import cn.com.mobnote.user.UserIdentifyInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -67,7 +67,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		setContentView(R.layout.user_repwd);
 
 		mContext = this;
-		SysApplication.getInstance().addActivity(this);
+
 		mApplication = (GolukApplication) getApplication();
 
 		if (null == mCustomProgressDialog) {
@@ -79,6 +79,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		initView();
 		// title
 		mTextViewTitle.setText("找回密码");
+		
+		UserUtils.addActivity(UserRepwdActivity.this);
 
 	}
 
@@ -324,6 +326,8 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 										intentRepwd.putExtra("fromRegist", "fromIndexMore");
 									} else if (just.equals("set")) {
 										intentRepwd.putExtra("fromRegist", "fromSetup");
+									} else if(just.equals("toProfit")) {
+										intentRepwd.putExtra("fromRegist", "fromProfit");
 									}
 									startActivity(intentRepwd);
 									finish();

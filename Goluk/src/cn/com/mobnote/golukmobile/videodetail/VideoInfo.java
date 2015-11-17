@@ -22,4 +22,7 @@ public class VideoInfo {
 	public String picture_thmb;
 	/** 地理位置 */
 	public String mLocation;
+	/**推荐及金币相关**/
+	public VideoRecommend recom;
+	
 }

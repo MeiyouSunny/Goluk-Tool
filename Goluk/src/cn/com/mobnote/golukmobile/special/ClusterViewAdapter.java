@@ -1,28 +1,17 @@
 package cn.com.mobnote.golukmobile.special;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Environment;
-import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,41 +19,26 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.BitmapManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.newest.ClickCategoryListener;
-import cn.com.mobnote.golukmobile.newest.ClickCommentListener;
-import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
-import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
-import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
-import cn.com.mobnote.golukmobile.newest.NewestAdapter.ViewHolder;
-import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.mobnote.util.GolukUtils;
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
+import cn.com.mobnote.util.GlideUtils;
 
 @SuppressLint("InflateParams")
-public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManagerFn, OnTouchListener {
+public class ClusterViewAdapter extends BaseAdapter implements OnTouchListener {
 	private Context mContext = null;
 	private List<ClusterInfo> clusterListData = null;
 	private int count = 0;
 	private int form = 1;
-	
+
 	private SharePlatformUtil sharePlatform;
 
 	private int width = 0;
@@ -73,10 +47,10 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 	final int TYPE_1 = 0;
 	final int TYPE_2 = 1;
-	
+
 	/** 滚动中锁标识 */
 	private boolean lock = false;
-	
+
 	private SpecialInfo headdata;
 
 	public ClusterViewAdapter(Context context, int plform, SharePlatformUtil spf) {
@@ -84,19 +58,18 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		clusterListData = new ArrayList<ClusterInfo>();
 		sharePlatform = spf;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
 	}
 
 	public void setData(List<ClusterInfo> data, SpecialInfo head) {
 		clusterListData.clear();
 		clusterListData.addAll(data);
 		count = clusterListData.size();
-		
+
 		if (head != null && !"".equals(head)) {
 			count++;
-		} 
+		}
 		headdata = head;
-		
+
 		this.notifyDataSetChanged();
 	}
 
@@ -117,12 +90,12 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 	@Override
 	public int getViewTypeCount() {
-		if(headdata == null){
+		if (headdata == null) {
 			return 1;
-		}else{
-			if(clusterListData == null || clusterListData.size() == 0){
+		} else {
+			if (clusterListData == null || clusterListData.size() == 0) {
 				return 1;
-			}else{
+			} else {
 				return 2;
 			}
 		}
@@ -170,13 +143,14 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 				RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
 				image.setLayoutParams(mPreLoadingParams);
 
-				BitmapManager.getInstance().mBitmapUtils.display(image, headdata.imagepath);
-				
-				if("1".equals(headdata.videotype)){
+				GlideUtils.loadNetHead(mContext, image, headdata.imagepath, R.drawable.tacitly_pic);
+
+				if ("1".equals(headdata.videotype)) {
 					convertView.findViewById(R.id.mPlayBigBtn).setVisibility(View.GONE);
 				}
 
-				image.setOnClickListener(new SpecialCommentListener(mContext,this, headdata.imagepath,headdata.videopath,"suqare",headdata.videotype,headdata.videoid));
+				image.setOnClickListener(new SpecialCommentListener(mContext, this, headdata.imagepath,
+						headdata.videopath, "suqare", headdata.videotype, headdata.videoid));
 			}
 			break;
 		case TYPE_2:
@@ -186,10 +160,10 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 			}
 			ClusterInfo clusterInfo = clusterListData.get(index);
 			if (convertView == null) {
-				
+
 				holder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
-				holder.imageLayout = (RelativeLayout) convertView.findViewById(R.id.imageLayout);
+				holder.imageLayout = (ImageView) convertView.findViewById(R.id.imageLayout);
 				holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 				holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 				holder.time = (TextView) convertView.findViewById(R.id.time);
@@ -216,18 +190,18 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 				holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
 				holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 				holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
-				
+
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
-				
+
 				convertView.setTag(holder);
 
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			
+
 			holder.nikename.setText(clusterInfo.author);
 			holder.time.setText(clusterInfo.sharingtime);
 			holder.zText.setText(clusterInfo.praisenumber);
@@ -237,10 +211,10 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 			holder.zText.setText(clusterInfo.praisenumber + " 赞");
 			loadImage(holder.imageLayout, clusterInfo.imagepath);
 			initListener(index);
-			//没点过
-			if("0".equals(clusterInfo.ispraise)){
+			// 没点过
+			if ("0".equals(clusterInfo.ispraise)) {
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
-			}else{//点赞过
+			} else {// 点赞过
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
 			}
 			if (clusterInfo.ci1 != null) {
@@ -267,26 +241,28 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 		return convertView;
 	}
-	
+
 	private String mVideoId = null;
-	
+
 	public void setWillShareVideoId(String vid) {
 		mVideoId = vid;
 	}
-	
+
 	public String getWillShareVideoId() {
 		return mVideoId;
 	}
-	
+
 	private void initListener(int index) {
 		ClusterInfo clusterInfo = clusterListData.get(index);
-		
-		holder.commentLayout.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
-		holder.totalcomments.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo ,false));
+
+		holder.commentLayout.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo, false));
+		holder.totalcomments.setOnClickListener(new ClusterCommentListener(mContext, clusterInfo, false));
 		holder.praiseLayout.setOnClickListener(new ClusterPressListener(mContext, clusterInfo, this));
 		holder.function.setOnClickListener(new ClusterPressListener(mContext, clusterInfo, this));
-		holder.imageLayout.setOnClickListener(new SpecialCommentListener(mContext,this,clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
-		holder.shareLayout.setOnClickListener(new SpecialCommentListener(mContext,this, clusterInfo.imagepath,clusterInfo.videopath,"suqare",clusterInfo.videotype,clusterInfo.videoid));
+		holder.imageLayout.setOnClickListener(new SpecialCommentListener(mContext, this, clusterInfo.imagepath,
+				clusterInfo.videopath, "suqare", clusterInfo.videotype, clusterInfo.videoid));
+		holder.shareLayout.setOnClickListener(new SpecialCommentListener(mContext, this, clusterInfo.imagepath,
+				clusterInfo.videopath, "suqare", clusterInfo.videotype, clusterInfo.videoid));
 	}
 
 	public int getUserHead(String head) {
@@ -297,29 +273,27 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 
 	}
 
-	public void onResume() {
-		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
-	}
-	
 	/**
 	 * 点赞
-	  * @Title: setLikePress 
-	  * @Description: TODO
-	  * @param clusterInfo void 
-	  * @author 曾浩 
-	  * @throws
+	 * 
+	 * @Title: setLikePress
+	 * @Description: TODO
+	 * @param clusterInfo
+	 *            void
+	 * @author 曾浩
+	 * @throws
 	 */
-	public void setLikePress(ClusterInfo clusterInfo){
+	public void setLikePress(ClusterInfo clusterInfo) {
 		for (int i = 0; i < clusterListData.size(); i++) {
 			ClusterInfo cl = clusterListData.get(i);
-			if(cl.videoid.equals(clusterInfo.videoid)){
+			if (cl.videoid.equals(clusterInfo.videoid)) {
 				clusterListData.set(i, clusterInfo);
 				break;
 			}
 		}
-		
+
 		this.notifyDataSetChanged();
-		
+
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -342,40 +316,24 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 		}
 		return time;
 	}
-	
-	private void loadImage(RelativeLayout layout, String url) {
-		layout.removeAllViews();
-        SimpleDraweeView view = new SimpleDraweeView(mContext);
-        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-        GenericDraweeHierarchy hierarchy = builder
-                    .setFadeDuration(300)
-//                    .setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-//                    .setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-                    .setActualImageScaleType(ScaleType.FIT_XY)
-                    .build();
-        view.setHierarchy(hierarchy);
 
-        if (!lock) {
-        	view.setImageURI(Uri.parse(url));
-        }
-                
-        int height = (int) ((float) width / 1.77f);
-        RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(width, height);
-        layout.addView(view, mPreLoadingParams);
-//        
+	private void loadImage(ImageView layout, String url) {
+		GlideUtils.loadImage(mContext, layout, url, R.drawable.tacitly_pic);
 	}
-	
+
 	/**
 	 * 锁住后滚动时禁止下载图片
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月8日
 	 */
 	public void lock() {
 		lock = true;
 	}
-	
+
 	/**
 	 * 解锁后恢复下载图片功能
+	 * 
 	 * @author xuhw
 	 * @date 2015年6月8日
 	 */
@@ -385,7 +343,7 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 	}
 
 	public static class ViewHolder {
-		RelativeLayout imageLayout;
+		ImageView imageLayout;
 		ImageView headimg;
 		TextView nikename;
 		TextView time;
@@ -449,12 +407,6 @@ public class ClusterViewAdapter extends BaseAdapter implements VideoSuqareManage
 			break;
 		}
 		return false;
-	}
-
-	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

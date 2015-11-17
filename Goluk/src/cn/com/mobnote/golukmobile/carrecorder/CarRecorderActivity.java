@@ -45,8 +45,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindFinish;
+import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser.TriggerRecord;
@@ -84,6 +85,8 @@ import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
 import com.rd.car.player.RtspPlayerView.RtspPlayerLisener;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 
@@ -421,9 +424,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.VISIBLE);
 			mPalyerLayout.setVisibility(View.GONE);
-			if (null != MainActivity.mMainHandler) {
-				MainActivity.mMainHandler.sendEmptyMessage(400);
-			}
+			Log.d("CK1", "2222222222222222222222222222");
+//			if (null != MainActivity.mMainHandler) {
+//				MainActivity.mMainHandler.sendEmptyMessage(400);
+//			}
+			EventBus.getDefault().post(new EventBindFinish(EventConfig.CAR_RECORDER_BIND_SUCESS));
 		}
 	}
 
@@ -890,12 +895,17 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.image1:
 			new1.setVisibility(View.GONE);
-			open_shareVideo(images[0].getName());
+			if (images[0] != null){
+				//如果当前不处于占位图下载过程中，才允许点击
+				if (downloadSize.getVisibility() != View.VISIBLE){
+					open_shareVideo(images[0].getName());
+				}
+			}
 			break;
 		case R.id.image2:
 			new2.setVisibility(View.GONE);
 
-			if (images[1].getName().equals("")) {
+			if (images[1] == null || images[1].getName().equals("")) {
 				return;
 			} else {
 				open_shareVideo(images[1].getName());
@@ -1143,7 +1153,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
 		GolukDebugUtils.e("xuhw", "YYYYYY======onDestroy======");
 		if (null != mRtspPlayerView) {
 			mRtspPlayerView.removeCallbacks(retryRunnable);
@@ -1153,7 +1162,23 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("main");
 		}
-
+		if (mHandler!= null){
+			mHandler.removeMessages(QUERYFILEEXIT);
+			mHandler.removeMessages(MOUNTS);
+			mHandler.removeMessages(ADDR);
+			mHandler.removeMessages(STARTVIDEORECORD);
+			mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
+			mHandler.removeMessages(WIFI_STATE_SUCCESS);
+			mHandler.removeMessages(WIFI_STATE_FAILED);
+			mHandler.removeMessages(WIFI_STATE_CONNING);
+			mHandler = null;
+		}
+		if (m8sTimer != null) {
+			m8sTimer.cancel();
+			m8sTimer.purge();
+			m8sTimer = null;
+		}
+		super.onDestroy();
 	}
 
 	/**
@@ -1245,17 +1270,17 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * 绘画下载进度的view
 	 */
 	private void canvasProcess() {
-		if (images[0] != null) {
-			Boolean flog = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
-			if (flog) {
-				new2.setVisibility(View.VISIBLE);
-			} else {
-				new2.setVisibility(View.GONE);
-			}
-			image1.setImageBitmap(images[2].getBitmap());
-			image2.setImageBitmap(images[0].getBitmap());
-
-		}
+//		if (images[0] != null) {
+//			Boolean flog = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
+//			if (flog) {
+//				new1.setVisibility(View.VISIBLE);
+//			} else {
+//				new1.setVisibility(View.GONE);
+//			}
+//			image1.setImageBitmap(images[2].getBitmap());
+////			image2.setImageBitmap(images[0].getBitmap());
+//
+//		}
 		downloadSize.setProcess(0);
 		downloadSize.setVisibility(View.VISIBLE);
 	}
@@ -1562,24 +1587,30 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				try {
 					JSONObject json = new JSONObject((String) param2);
 					String filename = json.optString("filename");
+					//如果是循环视频，就不做UI上的操作
+					if(filename.indexOf("NRM") >= 0){
+						return ;
+					}
 					if (null != json) {
 						String imagename = "";
-						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-							imagename = videoname.replace("mp4", "jpg");
-						} else {
+//						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
+//							imagename = videoname.replace("mp4", "jpg");
+//						} else {
 							imagename = mNowDownloadName.replace("mp4", "jpg");
-						}
-
+//						}
+						
 						if (filename.equals(imagename)) {
 							VideoShareInfo vsi = new VideoShareInfo();
 							vsi.setName(filename.replace("jpg", "mp4"));
 							vsi.setBitmap(ImageManager.getBitmapFromCache(mImagePath + filename, 114, 64));
-
+							new1.setVisibility(View.VISIBLE);
 							if (images[0] == null) {
-								if ("".equals(images[1].getName())) {
+								if (images[1] == null || "".equals(images[1].getName())) {
 									images[1] = vsi;
 									image2.setImageBitmap(vsi.getBitmap());
 									new2.setVisibility(View.VISIBLE);
+									image1.setVisibility(View.GONE);
+									new1.setVisibility(View.GONE);
 								} else {
 									images[0] = vsi;
 									image1.setVisibility(View.VISIBLE);
@@ -1588,11 +1619,19 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 								}
 
 							} else {
+								images[1] = images[0];
+								image2.setImageBitmap(images[1].getBitmap());
+								boolean flog2 = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
+								if (flog2) {
+									new2.setVisibility(View.VISIBLE);
+								} else {
+									new2.setVisibility(View.GONE);
+								}
 								images[0] = vsi;
 								image1.setImageBitmap(vsi.getBitmap());
 								new1.setVisibility(View.VISIBLE);
 							}
-
+							
 						}
 						downloadSize.setVisibility(View.GONE);
 					}
@@ -1605,28 +1644,41 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
 						String filename = json.optString("filename");
+						//如果是循环视频或者下载的是图片，就不做UI上的操作
+						if(filename.indexOf("NRM") >= 0 || filename.indexOf(".jpg") >= 0) {
+							return ;
+						}
 
-						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
-								int filesize = json.getInt("filesize");
-								int filerecvsize = json.getInt("filerecvsize");
-								int process = (filerecvsize * 100) / filesize;
-								downloadSize.setProcess(process);
-							}
-						} else {
+//						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
+//							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
+//								image1.setVisibility(View.VISIBLE);
+//								image1.setImageBitmap(images[2].getBitmap());
+//								downloadSize.setVisibility(View.VISIBLE);
+//								int filesize = json.getInt("filesize");
+//								int filerecvsize = json.getInt("filerecvsize");
+//								int process = (filerecvsize * 100) / filesize;
+//								downloadSize.setProcess(process);
+//							}
+//						} else {
 							/**
 							 * 如果下载的是当前文件就不打开新的下载进度
 							 */
 							if (!filename.equals(mNowDownloadName)) {
 								this.canvasProcess();
 								mNowDownloadName = filename;
+								image1.setVisibility(View.VISIBLE);
+								image1.setImageBitmap(images[2].getBitmap());
 							} else {
+								if (image1.getVisibility() != View.VISIBLE){
+									image1.setVisibility(View.VISIBLE);
+									image1.setImageBitmap(images[2].getBitmap());
+								}
 								int filesize = json.getInt("filesize");
 								int filerecvsize = json.getInt("filerecvsize");
 								int process = (filerecvsize * 100) / filesize;
 								downloadSize.setProcess(process);
 							}
-						}
+//						}
 
 					}
 				} catch (JSONException e) {
@@ -1637,7 +1689,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				// 下载中
 			} else {
 				// 下载失败
-
+				downloadSize.setVisibility(View.GONE);
+				if (images[0] == null){
+					image1.setVisibility(View.INVISIBLE);
+				}else{
+					image1.setImageBitmap(images[0].getBitmap());
+				}
 			}
 			break;
 

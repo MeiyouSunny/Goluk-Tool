@@ -34,7 +34,18 @@ public class CloudVideoAdapter extends PagerAdapter{
 			return mCloudLoopVideoListView.getRootView();
 		}
 	}
-	
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        if(1 == position) {
+            container.removeView(mCloudEmergencyVideoListView.getRootView());
+        } else if(0 == position) {
+            container.removeView(mCloudWonderfulVideoListView.getRootView());
+        } else {
+            container.removeView(mCloudLoopVideoListView.getRootView());
+        }
+    }
+
 	@Override
 	public int getCount() {
 		return 3;

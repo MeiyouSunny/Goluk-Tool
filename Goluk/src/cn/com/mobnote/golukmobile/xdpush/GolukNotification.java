@@ -18,8 +18,15 @@ import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
+import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
+import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
+import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 
 public class GolukNotification {
@@ -45,8 +52,8 @@ public class GolukNotification {
 	/** Timer计时时长 */
 	private final int TIMER_OUT = 60 * 1000;
 
-	public void createXG(Activity activity) {
-		xgInit = new XGInit(activity);
+	public void createXG() {
+		xgInit = new XGInit();
 		xgInit.init();
 	}
 
@@ -105,7 +112,7 @@ public class GolukNotification {
 		if (null == noti) {
 			return;
 		}
-		final int icon = R.drawable.icon;
+		final int icon = R.drawable.ic_launcher;
 		// 立即通知
 		final long when = System.currentTimeMillis();
 		// 通知显示图标
@@ -279,27 +286,144 @@ public class GolukNotification {
 		if (null == msgBean) {
 			return;
 		}
-		if ("0".equals(msgBean.target)) {
-			// 不处理
-		} else if ("1".equals(msgBean.target)) {
-			// 启动程序
-		} else if ("2".equals(msgBean.target)) {
-			// 启动程序功能界面
-			if ("1".equals(msgBean.tarkey)) {
+		try {
+			if ("0".equals(msgBean.target)) {
+				// 不处理
+			} else if ("1".equals(msgBean.target)) {
+				// 启动程序
+			} else if ("2".equals(msgBean.target)) {
+				// 启动程序功能界面
+				pushStartFuntion(msgBean);
+			} else if ("3".equals(msgBean.target)) {
+				// 打开Web页
+				if (null != msgBean.weburl && !"".equals(msgBean.weburl)) {
+					Intent intent = new Intent(GolukApplication.getInstance().getContext(), UserOpenUrlActivity.class);
+					intent.putExtra("url", msgBean.weburl);
+					GolukApplication.getInstance().getContext().startActivity(intent);
+				}
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	private void pushStartFuntion(XingGeMsgBean msgBean) {
+		try {
+			if (ICommentFn.COMMENT_TYPE_VIDEO.equals(msgBean.tarkey)) {
 				// 启动视频详情界面
 				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
 				if (null != vidArray && vidArray.length > 0) {
 					startDetail(vidArray[0]);
 				}
+			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_SPECIAL.equals(msgBean.tarkey)) {
+				// 精选专题
+				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+				if (null != vidArray && vidArray.length > 0) {
+					startSpecial(vidArray[0], msgBean.msg);
+				}
+			} else if (ICommentFn.COMMENT_TYPE_CLUSTER.equals(msgBean.tarkey)) {
+				// 活动聚合
+				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+				if (null != vidArray && vidArray.length > 0) {
+					startCluster(vidArray[0], msgBean.msg);
+				}
+
+			} else if (ICommentFn.COMMENT_TYPE_WINNING.equals(msgBean.tarkey)) {
+				// 发奖跳转页
+				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+				// if (null != vidArray && vidArray.length > 0) {
+				// startCluster(vidArray[0], msgBean.msg);
+				// }
+
+				startWinning(vidArray[0]);
+
+			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO.equals(msgBean.tarkey)) {
+				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+				if (null != vidArray && vidArray.length > 0) {
+					startDetail(vidArray[0]);
+				}
+
 			}
-		} else if ("3".equals(msgBean.target)) {
-			// 打开Web页
-			if (null != msgBean.weburl && !"".equals(msgBean.weburl)) {
-				Intent intent = new Intent(GolukApplication.getInstance().getContext(), UserOpenUrlActivity.class);
-				intent.putExtra("url", msgBean.weburl);
-				GolukApplication.getInstance().getContext().startActivity(intent);
-			}
+		} catch (Exception e) {
+
 		}
+	}
+
+	private boolean checkoutLoginState(String uid) {
+		if (GolukApplication.getInstance().isUserLoginSucess) {
+			UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
+			if (null == userInfo || null == userInfo.uid || !userInfo.uid.equals(uid)) {
+				return false;
+			}
+			return true;
+		}
+		GolukUtils.showToast(GolukApplication.getInstance().getContext(), "请登录后查看消息");
+		return false;
+	}
+
+	private void startWinning(String uid) {
+		if (null == uid || "".equals(uid)) {
+			return;
+		}
+
+		if (!checkoutLoginState(uid)) {
+			return;
+		}
+
+		Context context = GolukApplication.getInstance().getContext();
+		Intent intent = new Intent(context, MyProfitActivity.class);
+		intent.putExtra("uid", uid);
+		context.startActivity(intent);
+	}
+
+	private void statrtWonderfulVideo(String ztid, String title) {
+		if (null == ztid || "".equals(ztid)) {
+			return;
+		}
+		Context context = GolukApplication.getInstance().getContext();
+		Intent intent = new Intent(context, WonderfulActivity.class);
+		intent.putExtra("ztid", ztid);
+		intent.putExtra("title", "");
+		context.startActivity(intent);
+	}
+
+	/**
+	 * 推送启动聚合活动
+	 * 
+	 * @param cid
+	 *            聚合id
+	 * @param title
+	 *            聚合title
+	 * @author jyf
+	 */
+	private void startCluster(String cid, String title) {
+		if (null == cid || "".equals(cid)) {
+			return;
+		}
+		Context context = GolukApplication.getInstance().getContext();
+		Intent intent = new Intent(context, ClusterActivity.class);
+		intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, cid);
+		intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, "");
+		context.startActivity(intent);
+	}
+
+	/**
+	 * 推送启动专题
+	 * 
+	 * @param sid
+	 *            专题id
+	 * @param title
+	 *            专题title
+	 * @author jyf
+	 */
+	private void startSpecial(String sid, String title) {
+		if (null == sid || "".equals(sid)) {
+			return;
+		}
+		Context context = GolukApplication.getInstance().getContext();
+		Intent intent = new Intent(context, SpecialListActivity.class);
+		intent.putExtra("ztid", sid);
+		intent.putExtra("title", "");
+		context.startActivity(intent);
 	}
 
 	/**

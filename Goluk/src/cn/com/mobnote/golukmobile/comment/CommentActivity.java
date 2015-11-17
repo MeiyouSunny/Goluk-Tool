@@ -223,6 +223,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		isExit = true;
 		mVideoSquareManager.removeVideoSquareManagerListener(TAG);
 		mIsReply = false;
+		CommentTimerManager.getInstance().cancelTimer();
 		finish();
 	}
 
@@ -429,12 +430,28 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (null != bean) {
 				noData(false);
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
-				this.mAdapter.addFirstData(bean);
-				mEditText.setText("");
-				switchSendState(false);
-				mIsReply = false;
-				mEditText.setHint("写评论");
-				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
+				if(!"".equals(bean.result)) {
+					if("0".equals(bean.result)) {//成功
+						this.mAdapter.addFirstData(bean);
+						mEditText.setText("");
+						switchSendState(false);
+						mIsReply = false;
+						mEditText.setHint("写评论");
+						CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
+					} else if("1".equals(bean.result)) {
+						GolukDebugUtils.e("", "参数错误");
+					} else if("2".equals(bean.result)) {//重复评论
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								LiveDialogManager.FUNCTION_DIALOG_OK, "", this.getResources().getString(R.string.comment_repeat_text));
+					} else if("3".equals(bean.result)) {//频繁评论
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", this.getResources().getString(R.string.comment_sofast_text));
+					} else {
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								LiveDialogManager.FUNCTION_DIALOG_OK, "", "评论保存失败。");
+					}
+				}
+				
 			} else {
 				GolukUtils.showToast(this, "评论失败");
 			}
@@ -538,9 +555,9 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		String requestStr = "";
 		if (mIsReply) {
 			requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,
-					mWillDelBean.mUserId, mWillDelBean.mUserName);
+					mWillDelBean.mUserId, mWillDelBean.mUserName,null);
 		} else {
-			requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,"","");
+			requestStr = JsonUtil.getAddCommentJson(mId, mTopicType, txt,"","",null);
 		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
@@ -593,24 +610,28 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		GolukDebugUtils.e("", "-----commentActivity--------position:" + position + "   arg3:" + arg3);
-		if (null != mAdapter) {
-			if ( this.mApp.isUserLoginSucess) {
+		GolukDebugUtils.e("", "----commentActivity--------position:" + position + "   arg3:" + arg3);
+		try {
+			if (null != mAdapter) {
 				mWillDelBean = (CommentBean) mAdapter.getItem(position - 1);
-				if(null != mWillDelBean) {
-					final UserInfo loginUser = mApp.getMyInfo();
-					GolukDebugUtils.e("", "-----commentActivity--------bean userId:" + mWillDelBean.mUserId
-							+ "  login user:" + loginUser.uid);
-					if (loginUser.uid.equals(mWillDelBean.mUserId)) {
-						mIsReply = false;
+				if (null != mWillDelBean) {
+					if (this.mApp.isUserLoginSucess) {
+						UserInfo loginUser = mApp.getMyInfo();
+						GolukDebugUtils.e("", "-----commentActivity--------mUserId:" + mWillDelBean.mUserId);
+						GolukDebugUtils.e("", "-----commentActivity--------uid:" + loginUser.uid);
+						if (loginUser.uid.equals(mWillDelBean.mUserId)) {
+							mIsReply = false;
+						} else {
+							mIsReply = true;
+						}
 					} else {
 						mIsReply = true;
 					}
-				} else {
-					mIsReply = true;
+					new ReplyDialog(this, mWillDelBean, mEditText, mIsReply).show();
 				}
-				new ReplyDialog(this, mWillDelBean, mEditText,mIsReply).show();
-				}
+			}
+		} catch (Exception e) {
+
 		}
 	}
 	
@@ -659,6 +680,12 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			switchSendState(false);
 		}
 
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		back();
 	}
 
 }

@@ -21,6 +21,20 @@ public interface ICommentFn {
 	/** 下拉 */
 	public static final int OPERATOR_DOWN = 2;
 
-	/** 评论超时为2 秒 */
-	public static final int COMMENT_CIMMIT_TIMEOUT = 2;
+	/** 评论超时为10 秒 */
+	public static final int COMMENT_CIMMIT_TIMEOUT = 10;
+
+	/** 单视频 */
+	public static final String COMMENT_TYPE_VIDEO = "1";
+	/** 精选专题 */
+	public static final String COMMENT_TYPE_WONDERFUL_SPECIAL = "2";
+	/** 直播 */
+	public static final String COMMENT_TYPE_LIVE = "3";
+	/** 活动聚合 */
+	public static final String COMMENT_TYPE_CLUSTER = "4";
+	/** 获奖 */
+	public static final String COMMENT_TYPE_WINNING = "5";
+	/** 精选单视频 */
+	public static final String COMMENT_TYPE_WONDERFUL_VIDEO = "6";
+
 }

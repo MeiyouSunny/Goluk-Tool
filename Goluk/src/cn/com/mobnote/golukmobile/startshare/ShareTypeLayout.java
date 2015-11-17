@@ -1,20 +1,42 @@
 package cn.com.mobnote.golukmobile.startshare;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.SparseIntArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
+import cn.com.mobnote.golukmobile.promotion.PromotionActivity;
+import cn.com.mobnote.golukmobile.promotion.PromotionData;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.map.LngLat;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.FileUtils;
+import cn.com.mobnote.util.GolukUtils;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
@@ -28,8 +50,8 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 	private int mCurrentType = TYPE_BG;
 
-	private final String[] hintArray = { "视频描述裸奔中，快来给他披大衣...", "吓死宝宝了，前面啥情况？说说呗...", "任何伟大的创意都需要一个漂亮的描述...",
-			"导演，配个文字再加场吻戏吧！" };
+//	private final int[] hintArray = {R.string.default_comment1, R.string.default_comment2, R.string.default_comment3,
+//			R.string.default_comment4 };
 
 	private Context mContext = null;
 	private LayoutInflater mLayoutFlater = null;
@@ -44,7 +66,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 	private LinearLayout mShareOpenLayout = null;
 	private ImageView mShareOpenImg = null;
-	private TextView mShareOpenText = null;
 	private String resShareOpen = null;
 	private String resShareClose = null;
 	/** 是否分享到视频广场 */
@@ -74,10 +95,22 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	private String mCurrentAddress = "";
 	private StartShareFunctionDialog mStartShareDialog = null;
 
-	public ShareTypeLayout(Context context) {
+	/**活动*/
+	private TextView mPromotionTextView;
+	private PopupWindow mPopupWindow;
+	private boolean bPopup;
+	private PromotionSelectItem mPromotionSelectItem;
+	private ArrayList<PromotionData> mPromotionList;
+	private boolean bShowNew = false;
+	private String mMd5String;
+	private Toast mToast;
+
+	public ShareTypeLayout(Context context, PromotionSelectItem item) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.shareselecttype, null);
+		mPromotionSelectItem = item;
+		bPopup = FileUtils.loadBoolean(FileUtils.SHOW_PROMOTION_POPUP_FLAG, true);
 		loadRes();
 		initView();
 		initData();
@@ -118,6 +151,10 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mSgBtn = (TextView) mRootLayout.findViewById(R.id.share_type_sg);
 		mMlBtn = (TextView) mRootLayout.findViewById(R.id.share_type_ml);
 		mSspBtn = (TextView) mRootLayout.findViewById(R.id.share_type_ssp);
+		mPromotionTextView = (TextView) mRootLayout.findViewById(R.id.share_promotion_txt);
+		mPromotionTextView.setOnClickListener(this);
+
+		refreshPromotionUI(mPromotionSelectItem);
 
 		typeViewArray[0] = mBgBtn;
 		typeViewArray[1] = mSgBtn;
@@ -126,7 +163,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 
 		mShareOpenLayout = (LinearLayout) mRootLayout.findViewById(R.id.share_open_layout);
 		mShareOpenImg = (ImageView) mRootLayout.findViewById(R.id.share_open_img);
-		mShareOpenText = (TextView) mRootLayout.findViewById(R.id.share_open_txt);
 
 		mShareAddressLayout = (LinearLayout) mRootLayout.findViewById(R.id.share_address_layout);
 		mAddressTv = (TextView) mRootLayout.findViewById(R.id.share_address_txt);
@@ -138,7 +174,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mSspBtn.setOnClickListener(this);
 		mShareOpenLayout.setOnClickListener(this);
 		mShareAddressLayout.setOnClickListener(this);
-
 		switchOpenAndClose(mIsOpenShare);
 	}
 
@@ -156,17 +191,16 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		if (null != inputStr && !inputStr.equals("")) {
 			return inputStr;
 		}
-		return "啥也不想说，快看视频吧...";
+		return mContext.getString(R.string.default_comment);
 	}
 
 	private void switchOpenAndClose(boolean isOpen) {
 		mIsOpenShare = isOpen;
 		if (mIsOpenShare) {
 			mShareOpenImg.setBackgroundResource(R.drawable.share_open_icon);
-			mShareOpenText.setText(resShareOpen);
 		} else {
+			showToast(R.string.str_video_close_hint);
 			mShareOpenImg.setBackgroundResource(R.drawable.share_close_icon);
-			mShareOpenText.setText(resShareClose);
 		}
 	}
 
@@ -177,7 +211,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			if (select == i) {
 				typeViewArray[i].setBackgroundResource(R.drawable.share_type_bg);
 				typeViewArray[i].setTextColor(resTypeSelectColor);
-				mTextView.setHint(hintArray[i]);
+//				mTextView.setHint(hintArray[i]);
 			} else {
 				typeViewArray[i].setBackgroundDrawable(null);
 				typeViewArray[i].setTextColor(resTypeUnSelectColor);
@@ -231,6 +265,10 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			if (mIsExit) {
 				return;
 			}
+			if (mPromotionSelectItem != null) {
+				showToast(R.string.str_video_open_hint);
+				return;
+			}
 			switchOpenAndClose(!mIsOpenShare);
 			break;
 		case R.id.share_sayother:
@@ -241,6 +279,28 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			break;
 		case R.id.share_address_layout:
 			click_location();
+			break;
+		case R.id.share_promotion_txt:
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
+				GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+				return;
+			}
+			if (bShowNew) {
+				bShowNew = false;
+				FileUtils.saveString(FileUtils.PROMOTION_LIST_STRING, mMd5String);
+				refreshPromotionUI(mPromotionSelectItem);
+			}
+			Intent intent = new Intent(mContext, PromotionActivity.class);
+			if (mPromotionSelectItem != null) {
+				intent.putExtra(PromotionActivity.PROMOTION_SELECTED_ITEM, mPromotionSelectItem.activityid);
+			}
+
+			if (mPromotionList != null) {
+
+				intent.putExtra(PromotionActivity.PROMOTION_DATA, mPromotionList);
+			}
+
+			((Activity)mContext).startActivityForResult(intent, VideoEditActivity.PROMOTION_ACTIVITY_BACK);
 			break;
 		default:
 			break;
@@ -293,7 +353,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		case LOCATION_STATE_ING:
 			// 改图标
 			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_failed);
-			mAddressTv.setText("定位中...");
+			mAddressTv.setText(R.string.share_str_no_location);
 			break;
 		case LOCATION_STATE_SUCCESS:
 			// 改变图标
@@ -303,7 +363,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		case LOCATION_STATE_FAILED:
 		case LOCATION_STATE_FORBID:
 			mAddressImg.setBackgroundResource(R.drawable.share_weizhi_failed);
-			mAddressTv.setText("点击获取位置");
+			mAddressTv.setText(R.string.get_current_location);
 			break;
 		default:
 			break;
@@ -355,5 +415,124 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			refreshLocationUI();
 		}
 
+	}
+
+	public boolean getPopupFlag() {
+		return bPopup;
+	}
+
+	@SuppressWarnings("deprecation")
+	public void showPopUp() {
+		View contentView = mLayoutFlater
+				.inflate(R.layout.promotion_popup_hint, null);
+
+		contentView.measure(View.MeasureSpec.UNSPECIFIED,
+				View.MeasureSpec.UNSPECIFIED);
+		int popWidth = contentView.getMeasuredWidth();
+		int popHeight = contentView.getMeasuredHeight();
+		mPopupWindow = new PopupWindow(contentView, popWidth, popHeight);
+		contentView.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				mPopupWindow.dismiss();
+				return false;
+			}
+		});
+	
+		mPopupWindow.setOutsideTouchable(true);
+		mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+		int[] location = new int[2];
+		mPromotionTextView.getLocationOnScreen(location);
+		int offset = (popWidth - mPromotionTextView.getWidth()) / 2;
+
+		mPopupWindow.showAtLocation(mPromotionTextView, Gravity.NO_GRAVITY,
+				location[0] - offset, location[1] - popHeight);
+		bPopup = false;
+		FileUtils.saveBoolean(FileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
+	}
+	
+	public void refreshPromotionUI(PromotionSelectItem item) {
+		String formatText;
+		if (item == null) {
+			formatText = "#" + mContext.getString(R.string.share_str_join_promotion) + "#";
+		} else {
+			formatText = "#" + item.activitytitle + "#";
+		}
+
+		if(bShowNew) {
+			String newtext = " " + mContext.getString(R.string.str_new);
+			String htmlText = "<font color=#ffccoo>"
+					+ formatText
+					+ "</font>" + "<font color=red>" + newtext + "</font>"; 
+			mPromotionTextView.setText(Html.fromHtml(htmlText));
+		} else {
+			mPromotionTextView.setText(formatText);
+		}
+	}
+
+	public void onActivityResult(int resultCode, Intent data) {
+		if (resultCode != Activity.RESULT_OK || data == null) {
+			return;
+		}
+
+		mPromotionSelectItem = (PromotionSelectItem) data.getSerializableExtra(PromotionActivity.PROMOTION_SELECTED_ITEM);
+		if (mPromotionSelectItem != null && !TextUtils.isEmpty(mPromotionSelectItem.activitytitle)) {
+			switchOpenAndClose(true);
+		}
+		refreshPromotionUI(mPromotionSelectItem);
+	}
+	
+	public PromotionSelectItem getPromotionSelectItem() {
+		return mPromotionSelectItem;
+	}
+	
+	public void setPromotionList(ArrayList<PromotionData> list) {
+		if (list == null) {
+			return;
+		}
+		mPromotionList = list;
+		showNewFlag();
+	}
+
+	private void showNewFlag() {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		String md5 = "";
+		try {
+		  out = new ObjectOutputStream(bos);   
+		  out.writeObject(mPromotionList);
+		  byte[] content = bos.toByteArray();
+		  md5 = GolukUtils.compute32(content);
+		} catch (IOException ex) {
+
+		} finally {
+		  try {
+		    if (out != null) {
+		      out.close();
+		    }
+		    bos.close();
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		}
+
+		mMd5String = FileUtils.loadString(FileUtils.PROMOTION_LIST_STRING, "");
+		if (TextUtils.isEmpty(mMd5String) || !mMd5String.equalsIgnoreCase(md5)) {
+			bShowNew = true;
+			refreshPromotionUI(mPromotionSelectItem);
+			mMd5String = md5;
+		}
+	}
+	
+	private void showToast(int id) {
+		if (mToast == null) {
+			mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
+			mToast.setGravity(Gravity.CENTER, 0, 0);
+		}
+		mToast.setText(id);
+		mToast.show();
 	}
 }

@@ -5,18 +5,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,12 +26,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 @SuppressLint("InflateParams")
@@ -40,7 +43,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private RTPullListView mRTPullListView = null;
 	public List<JXListItemDataInfo> mDataList = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	public static Handler mHandler = null;
 	private WonderfulSelectedAdapter mWonderfulSelectedAdapter = null;
 	private String historyDate;
 	@SuppressLint("SimpleDateFormat")
@@ -57,6 +59,8 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	/** 保存列表显示item个数 */
 	private int visibleCount;
 	private ImageView shareBg = null;
+	private static final String TAG = "WonderfulSelectedListView";
+	private SharedPrefUtil mSharedPrefUtil;
 
 	private long requestId = 0;
 
@@ -94,10 +98,12 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
 		}
 		mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
-
+		mSharedPrefUtil = new SharedPrefUtil((android.app.Activity)context);
 		initHistoryData();
 		setViewListBg(false);
 		httpPost(true, "0", "");
+//		loadBannerData();
+		loadHistoryBanner();
 
 		shareBg.setOnClickListener(new OnClickListener() {
 			@Override
@@ -108,6 +114,49 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 
 			}
 		});
+	}
+
+	public void loadBannerData(String cityCode) {
+		BannerListRequest request = new BannerListRequest(IPageNotifyFn.PageType_BannerGet, mBannerRequestListener);
+		request.get(cityCode);
+	}
+
+	private IRequestResultListener mBannerRequestListener = new IRequestResultListener() {
+		@Override
+		public void onLoadComplete(int requestType, Object result) {
+			BannerModel model = (BannerModel)result;
+
+			do {
+				if(null == model) {
+					GolukDebugUtils.d(TAG, "Can't get banner");
+					break;
+				}
+
+				if(!model.isSuccess() || null == model.getData()) {
+					GolukDebugUtils.d(TAG, model.getMsg());
+					Toast.makeText(mContext, model.getMsg(), Toast.LENGTH_SHORT).show();
+					break;
+				}
+				mWonderfulSelectedAdapter.setBannerData(model.getData());
+
+				// Save banner data
+				String bannerJson = com.alibaba.fastjson.JSON.toJSONString(model);
+				mSharedPrefUtil.saveBannerListString(bannerJson);
+			} while(false);
+
+			return;
+		}
+	};
+
+	private void loadHistoryBanner() {
+		String json = mSharedPrefUtil.getBannerListString();
+		GolukDebugUtils.d(TAG, "banner string=" + json);
+		if(null != json && !json.trim().equals("")) {
+			BannerModel model = (BannerModel)com.alibaba.fastjson.JSON.parseObject(json, BannerModel.class);
+			if(null != model) {
+				mWonderfulSelectedAdapter.setBannerData(model.getData());
+			}
+		}
 	}
 
 	private void initHistoryData() {
@@ -172,6 +221,14 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				historyDate = SettingUtils.getInstance().getString("hotHistoryDate", sdf.format(new Date()));
 				SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
 				httpPost(false, "0", "");
+				String cityCode = mSharedPrefUtil.getCityIDString();
+
+				if(null == cityCode || cityCode.trim().equals("")) {
+					mSharedPrefUtil.setCityIDString("-1");
+					loadBannerData("-1");
+				} else {
+					loadBannerData(cityCode);
+				}
 			}
 		});
 
@@ -214,58 +271,12 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				if (null == mDataList && mDataList.size() <= 0) {
 					return;
 				}
-				selfFreeFresco(firstVisibleItem, visibleItemCount);
 			}
 
 		});
 	}
 
-	/**
-	 * 手动释放Fresco的资源
-	 * 
-	 * @param firstVisibleItem
-	 * @param visibleItemCount
-	 * @author jyf
-	 */
-	private void selfFreeFresco(int firstVisibleItem, int visibleItemCount) {
-		try {
-			int first = firstVisibleItem - 1;
-			if (first < mDataList.size()) {
-				for (int i = 0; i < first; i++) {
-					String url = mDataList.get(i).jximg;
-					if (!TextUtils.isEmpty(url)) {
-						Uri uri = Uri.parse(url);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
-					}
-
-					String url2 = mDataList.get(i).jtypeimg;
-					if (!TextUtils.isEmpty(url2)) {
-						Uri uri = Uri.parse(url2);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
-					}
-
-				}
-			}
-			int last = firstVisibleItem + visibleItemCount + 1;
-			if (last < mDataList.size()) {
-				for (int i = last; i < mDataList.size(); i++) {
-					String url = mDataList.get(i).jximg;
-					if (!TextUtils.isEmpty(url)) {
-						Uri uri = Uri.parse(url);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
-					}
-
-					String url2 = mDataList.get(i).jtypeimg;
-					if (!TextUtils.isEmpty(url2)) {
-						Uri uri = Uri.parse(url2);
-						Fresco.getImagePipeline().evictFromMemoryCache(uri);
-					}
-				}
-			}
-		} catch (Exception e) {
-
-		}
-	}
+	
 
 	public View getView() {
 		return mRootLayout;

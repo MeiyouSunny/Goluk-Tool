@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <TextView
         android:id="@+id/mDate"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="55dp"
         android:background="#ffffff"
         android:gravity="center"
         android:textColor="#000000"
@@ -22,127 +20,63 @@
         android:layout_below="@+id/mDate" >
 
         <RelativeLayout
-            android:id="@+id/imlayout"
+            android:id="@+id/imageLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <RelativeLayout
-                android:id="@+id/imageLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/simpledrawee"
-                    android:layout_width="100dp"
-                    android:layout_height="37dp"
-                    fresco:actualImageScaleType="fitXY"
-                    fresco:fadeDuration="300"
-                    fresco:failureImage="@drawable/tacitly_pic"
-                    fresco:failureImageScaleType="fitXY"
-                    fresco:placeholderImage="@drawable/tacitly_pic"
-                    fresco:placeholderImageScaleType="fitXY" />
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/wonderful_icon"
-                    android:layout_width="39dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true" />
-            </RelativeLayout>
+            android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/mengban"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/imageLayout"
-                android:layout_alignLeft="@+id/imageLayout"
-                android:layout_alignRight="@+id/imageLayout"
-                android:layout_alignTop="@+id/imageLayout"
-                android:background="@drawable/wonderful_item_mb"
-                android:duplicateParentState="true" />
+                android:id="@+id/simpledrawee"
+                android:layout_width="100dp"
+                android:layout_height="37dp"
+                android:contentDescription="@string/imgdes" />
+
+            <ImageView
+                android:id="@+id/wonderful_icon"
+                android:layout_width="39dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:contentDescription="@string/imgdes" />
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/mengban"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imlayout"
-            android:layout_alignTop="@+id/imlayout"
-            android:gravity="center"
-            android:orientation="vertical" >
+            android:layout_alignParentBottom="true"
+            android:duplicateParentState="true"
+            android:background="@drawable/wonderful_item_mb">
 
             <TextView
                 android:id="@+id/mTitleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:duplicateParentState="true"
-                android:gravity="center"
+                android:gravity="center_vertical|left"
                 android:textColor="@color/wonder_title_color"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/mTagName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/mVideoLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:duplicateParentState="true"
-            android:gravity="center_vertical"
-            android:paddingBottom="12dp"
-            android:paddingLeft="10dp" >
-
-            <ImageView
-                android:layout_width="21.33dp"
-                android:layout_height="21.33dp"
-                android:background="@drawable/icon_2"
-                android:contentDescription="@string/def" />
-
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:ellipsize="end"
+                android:layout_toLeftOf="@+id/mVideoNum"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_marginLeft="6dp"
+                android:textSize="16sp" />
             <TextView
                 android:id="@+id/mVideoNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="4dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:drawablePadding="4dp"
+                android:drawableLeft="@drawable/icon_2"
                 android:textColor="@color/white"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/mLookLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:duplicateParentState="true"
-            android:gravity="center_vertical"
-            android:paddingBottom="12dp"
-            android:paddingRight="10dp" >
-
-            <ImageView
-                android:layout_width="21.33dp"
-                android:layout_height="21.33dp"
-                android:background="@drawable/icon_1"
-                android:contentDescription="@string/def" />
-
-            <TextView
-                android:id="@+id/mLookNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="4dp"
-                android:textColor="@color/white"
-                android:textSize="13sp" />
-        </LinearLayout>
+                android:duplicateParentState="true"
+                android:gravity="center_vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingRight="6dp"
+                android:textSize="16sp" />
+        </RelativeLayout>
     </RelativeLayout>
-
 </RelativeLayout>

@@ -1,7 +1,9 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.List;
+
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -28,10 +30,12 @@ public class LocalVideoListView implements OnClickListener{
 	private LinearLayout functionLayout = null;
 	private int curTableState = -1;
 	private String from = null;
-	
-	public LocalVideoListView(Context context, String from) {
+	private PromotionSelectItem mPromotionSelectItem;
+
+	public LocalVideoListView(Context context, String from, PromotionSelectItem item) {
 		this.mContext = context;
 		this.from = from;
+		mPromotionSelectItem = item;
 		mRootLayout = LayoutInflater.from(context).inflate(R.layout.local_video_layout, null, false);
 		initView();
 	}
@@ -47,7 +51,7 @@ public class LocalVideoListView implements OnClickListener{
 		
 		mViewPager = (CustomViewPager)mRootLayout.findViewById(R.id.mViewPager);
 		mViewPager.setOffscreenPageLimit(3);
-		mLocalVideoAdapter = new LocalVideoAdapter(mContext, from);
+		mLocalVideoAdapter = new LocalVideoAdapter(mContext, from, mPromotionSelectItem);
 		mViewPager.setAdapter(mLocalVideoAdapter);
 		
 		setListener();

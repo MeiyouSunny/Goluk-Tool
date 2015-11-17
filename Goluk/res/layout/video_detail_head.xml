@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -16,14 +14,13 @@
 
         <!-- 头像 -->
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/user_head"
             android:layout_width="35dp"
-             fresco:roundAsCircle="true"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            fresco:placeholderImage="@drawable/my_head_moren7" />
+            android:contentDescription="@string/imgdes" />
 
         <!-- 围观 -->
 
@@ -50,6 +47,14 @@
                 android:textColor="@color/live_time_desc"
                 android:textSize="12sp" />
         </LinearLayout>
+        
+        <!-- 获奖视频印章 -->
+        <ImageView 
+            android:id="@+id/video_detail_head_award_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/together_coin_icon"
+            android:layout_toLeftOf="@id/videodetail_look" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -97,7 +102,7 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-
+    
     <!-- 视频区域 -->
 
     <RelativeLayout
@@ -109,12 +114,19 @@
             android:id="@+id/video_detail_videoview"
             android:layout_width="match_parent"
             android:layout_height="205dp"
+            android:background="#0000"
             android:layout_centerInParent="true" />
 
         <RelativeLayout
             android:id="@+id/mImageLayout"
             android:layout_width="match_parent"
             android:layout_height="205dp" >
+            
+            <ImageView 
+                android:layout_width="match_parent"
+                android:layout_height="205dp"
+                android:id="@+id/video_detail_first_pic"
+                android:scaleType="fitXY" />
         </RelativeLayout>
 
         <!-- 暂停按钮 -->
@@ -181,19 +193,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="8dp"
-        android:background="@color/white" >
+        android:paddingTop="8dp" >
 
-        <TextView
-            android:id="@+id/video_detail_describe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="跟朋友一起探寻古格王朝遗址"
-            android:textColor="@color/live_time_desc"
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/video_detail_describe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="跟朋友一起探寻古格王朝遗址"
+                android:textColor="@color/live_time_desc"
+                android:textSize="12sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -220,18 +232,177 @@
                 android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>
-
+    
+    <!-- 获奖视频／推荐视频 -->
+    <TextView
+        android:id="@+id/video_detail_line1" 
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/user_login_bg" />
+    <LinearLayout 
+        android:id="@+id/video_detail_reason_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+        <!-- 第一个获奖视频 -->
+        <RelativeLayout 
+            android:id="@+id/video_detail_activie_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp">
+            <ImageView 
+                android:id="@+id/active_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/videodetails_award2_icon"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"/>
+            <TextView 
+                android:id="@+id/active_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="+5000Ｇ币"
+                android:textSize="14sp"
+                android:textColor="#e71f19"/>
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/active_image"
+                android:layout_marginLeft="6dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/active_count"
+                android:orientation="vertical">
+                <TextView 
+                    android:id="@+id/active_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_detail_head_active_title"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_comment_not_send"/>
+                <TextView 
+                    android:id="@+id/active_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="理由：理由啊理由啊理由啊理由"
+                    android:textSize="14sp"
+                    android:textColor="#808080"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <!-- 第二个获奖视频 -->
+        <RelativeLayout 
+            android:id="@+id/video_detail_sys_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp">
+            <ImageView 
+                android:id="@+id/sys_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/videodetails_award2_icon"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"/>
+            <TextView 
+                android:id="@+id/sys_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="+5000Ｇ币"
+                android:textSize="14sp"
+                android:textColor="#e71f19"/>
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/sys_image"
+                android:layout_marginLeft="6dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/sys_count"
+                android:orientation="vertical">
+                <TextView 
+                    android:id="@+id/sys_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_detail_head_sys_title"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_comment_not_send"/>
+                <TextView 
+                    android:id="@+id/sys_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="理由：理由啊理由啊理由啊理由"
+                    android:textSize="14sp"
+                    android:textColor="#808080"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <!-- 第三个推荐视频 -->
+        <RelativeLayout 
+            android:id="@+id/video_detail_recom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp">
+            <ImageView 
+                android:id="@+id/recom_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/videodetails_recommend_icon"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"/>
+            <LinearLayout 
+               	android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/recom_image"
+                android:orientation="vertical">
+                <TextView 
+                    android:id="@+id/recom_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_detail_head_recom_title"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_comment_not_send"/>
+                <TextView 
+                    android:id="@+id/recom_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="理由：理由啊理由啊理由啊理由"
+                    android:textSize="14sp"
+                    android:textColor="#808080"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/video_detail_line2" 
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/user_login_bg" />
+    
     <!-- 操作 -->
 
     <RelativeLayout
         android:id="@+id/functionLayouyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:background="@color/white" >
+        android:paddingTop="10dp" >
 
         <LinearLayout
             android:id="@+id/praiseLayout"

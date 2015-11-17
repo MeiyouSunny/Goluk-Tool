@@ -39,7 +39,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 	private CustomLoadingDialog mCustomProgressDialog = null;
 
-	private SettingImageView siv = null;
+//	private SettingImageView siv = null;
 
 	private boolean isSave = true;
 
@@ -62,23 +62,20 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
-		imageView.mActivity = this;
+
 		try {
 			String uriStr = getIntent().getStringExtra("imageuri");
 			Uri  uri = null;
 			Bitmap bitmap = null;
 			if(uriStr != null  && !"".equals(uriStr)){
-				uri = Uri.parse(getIntent().getStringExtra("imageuri"));
+				uri = Uri.parse(uriStr);
 				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inJustDecodeBounds = true;
-				BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
 				options.inJustDecodeBounds = false;
 				options.inSampleSize = 4;// 图片宽高都为原来的4分之一，即图片为原来的8分之一
 				bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
 			}else{
 				bitmap =  getIntent().getParcelableExtra("imagebitmap");
 			}
-			
 			if(bitmap == null){
 				GolukUtils.showToast(ImageClipActivity.this, "文件格式不正确");
 				this.finish();
@@ -96,7 +93,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			e.printStackTrace();
 		}
 
-		siv = new SettingImageView(this);
 		initListener();
 
 	}
@@ -114,7 +110,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		// 旋转图片 动作
 		Matrix matrix = new Matrix();
 		matrix.postRotate(angle);
-		System.out.println("angle2=" + angle);
 		// 创建新的图片
 		Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),bitmap.getHeight(), matrix, true);
 		return resizedBitmap;
@@ -131,20 +126,37 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		case R.id.saveBtn:
 			if (isSave) {
 				isSave = false;
-				if (mCustomProgressDialog != null) {
-					mCustomProgressDialog.show();
-				}
+				
 				Bitmap bitmap = imageView.clip();
 
+				if (bitmap == null) {
+					isSave = true;
+					GolukUtils.showToast(ImageClipActivity.this, "数据异常，请稍候重试");
+					return;
+				}
 				try {
-					String request = this.saveBitmap(siv.toRoundBitmap(bitmap));
+					
+					String request = this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
 					if (request != null) {
 						boolean flog = this.uploadImageHead(request);
-						System.out.println("flog =" + flog);
+						isSave = true;
+						if(flog){
+							if (mCustomProgressDialog != null) {
+								mCustomProgressDialog.show();
+							}
+							
+						}else{
+							GolukUtils.showToast(ImageClipActivity.this, "网络异常，请稍候重试");
+							return;
+						}
+						
+						
 					}
 				} catch (IOException e) {
+					isSave = true;
 					e.printStackTrace();
 				} catch (JSONException e) {
+					isSave = true;
 					e.printStackTrace();
 				}
 				bitmap.recycle();
@@ -180,13 +192,11 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 	@SuppressWarnings("finally")
 	public String saveBitmap(Bitmap bm) throws IOException, JSONException {
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
 
 		JSONObject requestStr = null;
-		byte[] bb = baos.toByteArray();
 
-		String md5key = this.compute32(bb);
+		String md5key = "";
+
 		String picname = System.currentTimeMillis() + ".png";
 
 		this.makeRootDirectory(headCachePatch);
@@ -201,11 +211,14 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 			f.createNewFile();
 			out = new FileOutputStream(f);
-
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			Bitmap cacheBitmap = this.compress(bm);
 
-			cacheBitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
-
+			cacheBitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+			byte[] bb = baos.toByteArray();
+			
+			md5key = GolukUtils.compute32(bb);
+			baos.writeTo(out);
 			requestStr = new JSONObject();
 			requestStr.put("PicMD5", md5key);
 			requestStr.put("PicPath", FileUtils.javaToLibPath(cachePath));
@@ -217,9 +230,12 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			if (out != null) {
 				out.flush();
 				out.close();
-			} else {
 			}
-			return requestStr.toString();
+			if (requestStr != null) {
+				return requestStr.toString();
+			} else {
+				return null;
+			}
 		}
 
 	}
@@ -276,31 +292,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		matrix.postScale(scaleWidth, scaleHeight);
 		Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width, (int) height, matrix, true);
 		return bitmap;
-	}
-
-	public String compute32(byte[] content) {
-		StringBuffer buf = new StringBuffer("");
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			try {
-				md.update(content);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			byte b[] = md.digest();
-			int i;
-			for (int offset = 0; offset < b.length; offset++) {
-				i = b[offset];
-				if (i < 0)
-					i += 256;
-				if (i < 16)
-					buf.append("0");
-				buf.append(Integer.toHexString(i));
-			}
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return buf.toString();
 	}
 
 	public void makeRootDirectory(String filePath) {

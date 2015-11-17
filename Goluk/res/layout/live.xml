@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 视频直播详情 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white" >
@@ -49,15 +47,15 @@
 
         <!-- 用户头像 -->
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/live_userhead"
             android:layout_width="31dp"
             android:layout_height="31dp"
-             fresco:roundAsCircle="true"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            fresco:placeholderImage="@drawable/head_unknown" />
+            android:background="@drawable/live_icon_portrait"
+            android:contentDescription="@string/imgdes" />
 
         <!-- XX次围观 -->
 

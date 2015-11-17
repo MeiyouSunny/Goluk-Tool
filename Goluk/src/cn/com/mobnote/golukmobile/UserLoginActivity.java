@@ -28,8 +28,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -83,8 +83,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
 
-		SysApplication.getInstance().addActivity(this);
-
 		initView();
 		if (null == mCustomProgressDialog) {
 			mCustomProgressDialog = new CustomLoadingDialog(mContext, "登录中，请稍候……");
@@ -96,6 +94,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		if (null != mApplication && null != mApplication.mLoginManage) {
 			mApplication.mLoginManage.initData();
 		}
+		
+		UserUtils.addActivity(UserLoginActivity.this);
 	}
 
 	@Override
@@ -279,6 +279,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				itRegist.putExtra("fromRegist", "fromIndexMore");
 			} else if (justLogin.equals("setup")) {// 从设置页注册
 				itRegist.putExtra("fromRegist", "fromSetup");
+			} else if(justLogin.equals("profit")) {
+				itRegist.putExtra("fromRegist", "fromProfit");
 			}
 			startActivity(itRegist);
 			break;
@@ -294,6 +296,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				itForget.putExtra("fromRegist", "fromIndexMore");
 			} else if (justLogin.equals("setup")) {// 从设置页注册
 				itForget.putExtra("fromRegist", "fromSetup");
+			} else if(justLogin.equals("profit")) {
+				itForget.putExtra("fromRegist", "fromProfit");
 			}
 			startActivity(itForget);
 			break;
@@ -357,9 +361,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			break;
 		case 1:
 			// 登录成功后关闭个人中心启动模块页面
-			if (null != UserStartActivity.mHandler) {
-				UserStartActivity.mHandler.sendEmptyMessage(UserStartActivity.EXIT);
-			}
 
 			mApplication.isUserLoginSucess = true;
 			closeProgressDialog();
@@ -369,6 +370,15 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
 			mBackButton.setEnabled(true);
+			mApplication.mUser.timerCancel();
+			mApplication.autoLoginStatus = 2;
+			mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+			String uid = mSharedPreferences.getString("uid", "");
+			if("profit".equals(justLogin)) {
+				Intent itProfit = new Intent(UserLoginActivity.this,MyProfitActivity.class);
+				itProfit.putExtra("uid", uid);
+				startActivity(itProfit);
+			}
 			this.finish();
 			break;
 		case 2:
@@ -410,6 +420,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 											it.putExtra("fromRegist", "fromIndexMore");
 										} else if (justLogin.equals("setup")) {// 从设置页注册
 											it.putExtra("fromRegist", "fromSetup");
+										} else if(justLogin.equals("profit")) {//从我的收益注册
+											it.putExtra("fromRegist", "fromProfit");
 										}
 
 										startActivity(it);
@@ -457,6 +469,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 										it.putExtra("fromRegist", "fromIndexMore");
 									} else if (justLogin.equals("setup")) {// 从设置页注册
 										it.putExtra("fromRegist", "fromSetup");
+									} else if(justLogin.equals("profit")) {//从我的收益注册
+										it.putExtra("fromRegist", "fromProfit");
 									}
 									startActivity(it);
 								}

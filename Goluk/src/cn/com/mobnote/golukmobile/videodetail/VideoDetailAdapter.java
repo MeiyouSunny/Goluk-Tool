@@ -14,6 +14,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +27,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -32,17 +35,14 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
+import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 public class VideoDetailAdapter extends BaseAdapter {
 
@@ -90,6 +90,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		mDataList = new ArrayList<CommentBean>();
 		connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		netInfo = connectivityManager.getActiveNetworkInfo();
+		error = false;
 	}
 
 	public Handler mHandler = new Handler() {
@@ -209,9 +210,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			return 2;
 		}
-		if (0 == mDataList.size()) {
-			return 2;
-		}
+//		if (0 == mDataList.size()) {
+//			return 2;
+//		}
 		return mDataList.size() + 1;
 	}
 
@@ -274,7 +275,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	public View createHeadView() {
 		View convertView = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.video_detail_head, null);
-		headHolder.mImageHead = (SimpleDraweeView) convertView.findViewById(R.id.user_head);
+		headHolder.mImageHead = (ImageView) convertView.findViewById(R.id.user_head);
 		headHolder.mTextName = (TextView) convertView.findViewById(R.id.user_name);
 		headHolder.mTextTime = (TextView) convertView.findViewById(R.id.user_time);
 		headHolder.mTextLook = (TextView) convertView.findViewById(R.id.video_detail_count_look);
@@ -287,6 +288,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mVideoLoading = (LinearLayout) convertView.findViewById(R.id.mLoadingLayout);
 		headHolder.mLoading = (ImageView) convertView.findViewById(R.id.mLoading);
 		headHolder.mPlayerLayout = (RelativeLayout) convertView.findViewById(R.id.mPlayerLayout);
+		headHolder.simpleDraweeView = (ImageView) convertView.findViewById(R.id.video_detail_first_pic);
 
 		headHolder.mTextDescribe = (TextView) convertView.findViewById(R.id.video_detail_describe);
 		headHolder.mTextAuthor = (TextView) convertView.findViewById(R.id.video_detail_author);
@@ -298,9 +300,23 @@ public class VideoDetailAdapter extends BaseAdapter {
 		headHolder.mTextComment = (TextView) convertView.findViewById(R.id.commentText);
 		headHolder.mZanImage = (ImageView) convertView.findViewById(R.id.video_square_detail_like_image);
 		headHolder.mTextZanName = (TextView) convertView.findViewById(R.id.zanName);
-
-		loadFirstPic();
-
+		
+		headHolder.mImageHeadAward = (ImageView) convertView.findViewById(R.id.video_detail_head_award_image);
+		headHolder.mActiveImage = (ImageView) convertView.findViewById(R.id.active_image);
+		headHolder.mSysImage = (ImageView) convertView.findViewById(R.id.sys_image);
+		headHolder.mRecomImage = (ImageView) convertView.findViewById(R.id.recom_image);
+		headHolder.mTextLine1 = (TextView) convertView.findViewById(R.id.video_detail_line1);
+		headHolder.mTextLine2 = (TextView) convertView.findViewById(R.id.video_detail_line2);
+		headHolder.mActiveCount = (TextView) convertView.findViewById(R.id.active_count);
+		headHolder.mSysCount = (TextView) convertView.findViewById(R.id.sys_count);
+		headHolder.mActiveReason = (TextView) convertView.findViewById(R.id.active_reason);
+		headHolder.mSysReason = (TextView) convertView.findViewById(R.id.sys_reason);
+		headHolder.mRecomReason = (TextView) convertView.findViewById(R.id.recom_reason);
+		headHolder.mReasonLayout = (LinearLayout) convertView.findViewById(R.id.video_detail_reason_layout);
+		headHolder.mActiveLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_activie_layout);
+		headHolder.mSysLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_sys_layout);
+		headHolder.mRecomLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_recom_layout);
+		
 		return convertView;
 	}
 
@@ -347,18 +363,20 @@ public class VideoDetailAdapter extends BaseAdapter {
 				e.printStackTrace();
 			}
 		}
+		
+		if(mVideoJson != null && mVideoJson.data.avideo.video.comment !=null && "1".equals(mVideoJson.data.avideo.video.comment.iscomment)){
+			headHolder.mCommentLayout.setOnClickListener(new OnClickListener() {
 
-		headHolder.mCommentLayout.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				if (mContext instanceof VideoDetailActivity) {
-					((VideoDetailActivity) mContext).showSoft();
-				} else {
-					((WonderfulActivity) mContext).showSoft();
+				@Override
+				public void onClick(View arg0) {
+					if (mContext instanceof VideoDetailActivity) {
+						((VideoDetailActivity) mContext).showSoft();
+					} else {
+						((WonderfulActivity) mContext).showSoft();
+					}
 				}
-			}
-		});
+			});
+		}
 
 		return mHeadView;
 	}
@@ -374,9 +392,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 			String netUrlHead = mVideoAllData.avideo.user.customavatar;
 			if (null != netUrlHead && !"".equals(netUrlHead)) {
 				// 使用网络地址
-				headHolder.mImageHead.setImageURI(Uri.parse(netUrlHead));
+				GlideUtils.loadNetHead(mContext, headHolder.mImageHead, netUrlHead, R.drawable.my_head_moren7);
 			} else {
-				UserUtils.focusHead(mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
+				UserUtils.focusHead(mContext, mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
 			}
 
 			headHolder.mTextName.setText(mVideoAllData.avideo.user.nickname);
@@ -390,7 +408,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
 			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
 			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
-			headHolder.mTextDescribe.setText(mVideoAllData.avideo.video.describe);
+			//TODO 在视频描述之后添加活动标签
+			if(null == mVideoAllData.avideo.video.recom || "".equals(mVideoAllData.avideo.video.recom)
+					|| null == mVideoAllData.avideo.video.recom.topicname || "".equals(mVideoAllData.avideo.video.recom.topicname)) {
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "");
+			} else {
+				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe+"    ", "#"+mVideoAllData.avideo.video.recom.topicname+"#");
+			}
+			
 			final String location = mVideoAllData.avideo.video.mLocation;
 			if (null != location && !"".equals(location)) {
 				headHolder.mLocationTv.setText(location);
@@ -404,7 +429,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 			} else {
 				headHolder.mTextAuthor.setVisibility(View.GONE);
 			}
-			headHolder.simpleDraweeView.setImageURI(Uri.parse(mVideoAllData.avideo.video.picture));
+			GlideUtils.loadImage(mContext, headHolder.simpleDraweeView, mVideoAllData.avideo.video.picture,
+					R.drawable.tacitly_pic);
 
 			// 外链接
 			if (null != mVideoAllData.link) {
@@ -433,7 +459,69 @@ public class VideoDetailAdapter extends BaseAdapter {
 					headHolder.mPlayBtn.setVisibility(View.VISIBLE);
 				}
 			}
-
+			
+			//TODO　没有活动奖励视频没有奖励信息这个模块
+			//头部获奖视频icon显示
+			//获奖／推荐
+			if(null != mVideoAllData.avideo.video.recom) {
+				if("1".equals(mVideoAllData.avideo.video.recom.isreward)) {
+					headHolder.mImageHeadAward.setVisibility(View.VISIBLE);
+				} else {
+					headHolder.mImageHeadAward.setVisibility(View.GONE);
+				}
+				
+				if(!"1".equals(mVideoAllData.avideo.video.recom.atflag) && !"1".equals(mVideoAllData.avideo.video.recom.sysflag)
+						&&!"1".equals(mVideoAllData.avideo.video.recom.isrecommend)) {
+					headHolder.mTextLine1.setVisibility(View.GONE);
+					headHolder.mTextLine2.setVisibility(View.GONE);
+				} else {
+					headHolder.mTextLine1.setVisibility(View.VISIBLE);
+					headHolder.mTextLine2.setVisibility(View.VISIBLE);
+				}
+				
+				if("1".equals(mVideoAllData.avideo.video.recom.atflag)) {
+					headHolder.mActiveLayout.setVisibility(View.VISIBLE);
+					if("".equals(mVideoAllData.avideo.video.recom.atreason)) {
+						headHolder.mActiveReason.setText("理由：活动参与积极奖～");
+					} else {
+						headHolder.mActiveReason.setText("理由："+mVideoAllData.avideo.video.recom.atreason);
+					}
+					headHolder.mActiveCount.setText("+"+UserUtils.formatNumber(mVideoAllData.avideo.video.recom.atgold)+"Ｇ币");
+				} else {
+					headHolder.mActiveLayout.setVisibility(View.GONE);
+				}
+				
+				if("1".equals(mVideoAllData.avideo.video.recom.sysflag)) {
+					headHolder.mSysLayout.setVisibility(View.VISIBLE);
+					if("".equals(mVideoAllData.avideo.video.recom.sysreason)) {
+						headHolder.mSysReason.setText("理由：活动参与积极奖～");
+					} else {
+						headHolder.mSysReason.setText("理由："+mVideoAllData.avideo.video.recom.sysreason);
+					}
+					headHolder.mSysCount.setText("+"+UserUtils.formatNumber(mVideoAllData.avideo.video.recom.sysgold)+"Ｇ币");
+				} else {
+					headHolder.mSysLayout.setVisibility(View.GONE);
+				}
+				
+				if("1".equals(mVideoAllData.avideo.video.recom.isrecommend)) {
+					headHolder.mRecomLayout.setVisibility(View.VISIBLE);
+					if("".equals(mVideoAllData.avideo.video.recom.reason)) {
+						headHolder.mRecomReason.setText("理由：活动参与积极奖～");
+					} else {
+						headHolder.mRecomReason.setText("理由："+mVideoAllData.avideo.video.recom.reason);
+					}
+				} else {
+					headHolder.mRecomLayout.setVisibility(View.GONE);
+				}
+			} else {
+				headHolder.mImageHeadAward.setVisibility(View.GONE);
+				headHolder.mTextLine1.setVisibility(View.GONE);
+				headHolder.mTextLine2.setVisibility(View.GONE);
+				headHolder.mActiveLayout.setVisibility(View.GONE);
+				headHolder.mSysLayout.setVisibility(View.GONE);
+				headHolder.mRecomLayout.setVisibility(View.GONE);
+			}
+			
 			headHolder.mImageHead.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -456,6 +544,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					it.putExtra("userinfo", user);
 					it.putExtra("type", 0);
 					mContext.startActivity(it);
+					CommentTimerManager.getInstance().cancelTimer();
 				}
 			});
 
@@ -471,24 +560,23 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder = new ViewHolder();
 		convertView = LayoutInflater.from(mContext).inflate(R.layout.comment_list_item, null);
 
-		commentHolder.mCommentHead = (SimpleDraweeView) convertView.findViewById(R.id.comment_item_head);
+		commentHolder.mCommentHead = (ImageView) convertView.findViewById(R.id.comment_item_head);
 		commentHolder.mCommentTime = (TextView) convertView.findViewById(R.id.comment_item_time);
 		commentHolder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
 		commentHolder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
 
-		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
+//		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 		commentHolder.mForbidComment = (TextView) convertView.findViewById(R.id.comment_forbid);
+		commentHolder.mNoDataLayout = (RelativeLayout) convertView.findViewById(R.id.show_nodata_layout);
 
 		convertView.setTag(commentHolder);
 		return convertView;
 	}
 
 	private View loadLayout(View convertView, int arg0) {
-		// ViewHolder holder = null;
 		if (null == convertView) {
 			convertView = getCommentView(convertView);
-			commentHolder = (ViewHolder) convertView.getTag();
 		} else {
 			commentHolder = (ViewHolder) convertView.getTag();
 			if (null == commentHolder) {
@@ -502,35 +590,42 @@ public class VideoDetailAdapter extends BaseAdapter {
 	// 设置评论数据
 	private void getCommentData(final int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
-		if (0 == mDataList.size()) {
-			commentHolder.mListLayout.setVisibility(View.GONE);
-			commentHolder.mNoData.setVisibility(View.VISIBLE);
-			return;
-		}
+//		if (0 == mDataList.size()) {
+//			commentHolder.mListLayout.setVisibility(View.GONE);
+//			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
+//			commentHolder.mNoData.setVisibility(View.VISIBLE);
+//			return;
+//		}
 		commentHolder.mListLayout.setVisibility(View.VISIBLE);
-		commentHolder.mNoData.setVisibility(View.GONE);
+		commentHolder.mNoDataLayout.setVisibility(View.GONE);
+//		commentHolder.mNoData.setVisibility(View.GONE);
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			closeComment();
 			if (mContext instanceof WonderfulActivity) {
 				((WonderfulActivity) mContext).mCommentLayout.setVisibility(View.GONE);
 			}
 		} else {
+			if (0 == mDataList.size()) {
+//				commentHolder.mListLayout.setVisibility(View.GONE);
+				return ;
+			}
 			CommentBean temp = mDataList.get(index);
 			String netHeadUrl = temp.customavatar;
 			if (null != netHeadUrl && !"".equals(netHeadUrl)) {
 				// 使用网络地址
-				commentHolder.mCommentHead.setImageURI(Uri.parse(netHeadUrl));
+				GlideUtils.loadNetHead(mContext, commentHolder.mCommentHead, netHeadUrl, -1);
 			} else {
 				// 使用本地头像
-				commentHolder.mCommentHead.setImageURI(GolukUtils.getResourceUri(UserUtils
-						.getUserHeadImageResourceId(temp.mUserHead)));
+				GlideUtils.loadLocalHead(mContext, commentHolder.mCommentHead,
+						UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 			}
 			commentHolder.mCommentName.setText(temp.mUserName);
-			if(!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName) && null != temp.mReplyName){
-				//评论回复
+			if (!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName)
+					&& null != temp.mReplyName) {
+				// 评论回复
 				UserUtils.showText(commentHolder.mCommentConennt, temp.mReplyName, temp.mCommentTxt);
-			}else{
-				//普通评论
+			} else {
+				// 普通评论
 				commentHolder.mCommentConennt.setText(temp.mCommentTxt);
 			}
 			commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
@@ -557,6 +652,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 					it.putExtra("userinfo", user);
 					it.putExtra("type", 0);
 					mContext.startActivity(it);
+					CommentTimerManager.getInstance().cancelTimer();
 				}
 			});
 
@@ -567,7 +663,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void commentNoData() {
 		if (0 == mDataList.size()) {
 			commentHolder.mListLayout.setVisibility(View.GONE);
-			commentHolder.mNoData.setVisibility(View.VISIBLE);
+//			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
+//			commentHolder.mNoData.setVisibility(View.VISIBLE);
 			return;
 		}
 	}
@@ -575,7 +672,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 	// 评论被关闭
 	public void closeComment() {
 		commentHolder.mListLayout.setVisibility(View.GONE);
-		commentHolder.mNoData.setVisibility(View.GONE);
+		commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
+//		commentHolder.mNoData.setVisibility(View.GONE);
 		commentHolder.mForbidComment.setVisibility(View.VISIBLE);
 	}
 
@@ -610,14 +708,14 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	public static class ViewHolder {
 		// 详情
-		SimpleDraweeView mImageHead = null;
+		ImageView mImageHead = null;
 		TextView mTextName = null;
 		TextView mTextTime = null;
 		TextView mTextLook = null;
 		private TextView mLocationTv = null;
 		FullScreenVideoView mVideoView = null;
 		RelativeLayout mImageLayout = null;
-		SimpleDraweeView simpleDraweeView = null;
+		ImageView simpleDraweeView = null;
 
 		ImageView mPlayBtn = null;
 		SeekBar mSeekBar = null;
@@ -631,12 +729,18 @@ public class VideoDetailAdapter extends BaseAdapter {
 		TextView mTextZan, mTextComment, mTextZanName;
 		ImageView mZanImage;
 		// 评论
-		SimpleDraweeView mCommentHead = null;
+		ImageView mCommentHead = null;
 		TextView mCommentTime, mCommentName, mCommentConennt;
 		ImageView mNoData = null;
-		RelativeLayout mListLayout = null;
+		RelativeLayout mListLayout, mNoDataLayout;
 		TextView mForbidComment = null;
 		Uri url = null;
+		//奖励视频／推荐视频
+		ImageView mImageHeadAward,mActiveImage,mSysImage,mRecomImage;
+		TextView mTextLine1,mTextLine2,mActiveCount,mSysCount,mActiveReason,mSysReason,mRecomReason;
+		LinearLayout mReasonLayout;
+		RelativeLayout mActiveLayout,mSysLayout,mRecomLayout;
+		
 	}
 
 	private boolean isCallVideo = false;
@@ -807,7 +911,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 				headHolder.mImageLayout.setVisibility(View.VISIBLE);
 				dialog("网络访问异常，请重试！", headHolder);
 				if (null != headHolder.mVideoView) {
-					headHolder.mVideoView.stopPlayback();
+					if(error) {
+						headHolder.mVideoView.suspend();
+					} else {
+						headHolder.mVideoView.stopPlayback();
+					}
 				}
 				return;
 			}
@@ -856,21 +964,20 @@ public class VideoDetailAdapter extends BaseAdapter {
 		}
 	}
 
-	private void loadFirstPic() {
-		// 下载视频第一帧截图
-		headHolder.mImageLayout.removeAllViews();
-		RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT);
-
-		SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext);
-		GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-		GenericDraweeHierarchy hierarchy = builder.setFadeDuration(300)
-				.setPlaceholderImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setFailureImage(mContext.getResources().getDrawable(R.drawable.tacitly_pic), ScaleType.FIT_XY)
-				.setActualImageScaleType(ScaleType.FIT_XY).build();
-		simpleDraweeView.setHierarchy(hierarchy);
-		headHolder.mImageLayout.addView(simpleDraweeView, mPreLoadingParams);
-		headHolder.simpleDraweeView = simpleDraweeView;
+	/**
+	 * 显示视频描述和活动名称
+	 * @param view
+	 * @param describe
+	 * @param text
+	 */
+	private void showTopicText(TextView view, String describe, String text) {
+		String reply_str = describe + text;
+		SpannableString style = new SpannableString(reply_str);
+		ClickableSpan clickttt = new TopicClickableSpan(mContext, text, mVideoJson);
+		style.setSpan(clickttt, describe.length(), reply_str.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		view.setText(style);
+		view.setMovementMethod(LinkMovementMethod.getInstance());
+		
 	}
-
+	
 }

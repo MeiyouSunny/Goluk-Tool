@@ -103,6 +103,12 @@
             android:name="cn.com.mobnote.golukmobile.ImageClipActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.profit.MyProfitActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cn.com.mobnote.golukmobile.profit.MyProfitDetailActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >
@@ -142,9 +148,9 @@
         <activity
             android:name="cn.com.mobnote.golukmobile.MainActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
+            android:hardwareAccelerated="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity"
@@ -216,11 +222,6 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.WatermarkSettingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.settings.TimeSettingActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -245,7 +246,10 @@
             android:name="cn.com.mobnote.golukmobile.usercenter.UserCenterActivity"
             android:screenOrientation="portrait" >
         </activity>
-
+        <activity
+            android:name="cn.com.mobnote.golukmobile.promotion.PromotionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -285,7 +289,10 @@
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="adjustResize" >
         </activity>
-
+        <!-- ###################Glide使用volley传输###################### -->
+        <meta-data
+            android:name="com.bumptech.glide.integration.volley.VolleyGlideModule"
+            android:value="GlideModule" />
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -307,7 +314,11 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
+        <activity
+            android:name="cn.com.mobnote.golukmobile.cluster.ClusterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
         <!-- 信鸽 -->
 
 
@@ -321,12 +332,16 @@
                 <action android:name="com.tencent.android.tpush.action.SDK" />
                 <action android:name="com.tencent.android.tpush.action.INTERNAL_PUSH_MESSAGE" />
                 <!-- 【必须】 系统广播：开屏和网络切换 -->
+                <!-- 屏幕解锁 -->
                 <action android:name="android.intent.action.USER_PRESENT" />
+                <!-- 网络切换 -->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
                 <!-- 【可选】 一些常用的系统广播，增强信鸽service的复活机会，请根据需要选择。当然，你也可以添加APP自定义的一些广播让启动service -->
+                <!-- 蓝牙模块被打开或者关闭 -->
                 <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+                <!-- 充电器连接 -->
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <!-- 充电器移除 -->
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>

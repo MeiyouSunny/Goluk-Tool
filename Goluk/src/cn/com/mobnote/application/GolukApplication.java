@@ -42,7 +42,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomFormatDialog;
-import cn.com.mobnote.golukmobile.fresco.ConfigConstants;
+import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
@@ -77,7 +77,7 @@ import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
+import com.baidu.mapapi.SDKInitializer;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -217,8 +217,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		
 		// Cloud service
 		startCloudService();
-		
-		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
+		HttpManager.getInstance();
+		SDKInitializer.initialize(this);
+		// TODO 此处不要做初始化相关的工作
 	}
 
 	public Handler mHandler = new Handler() {
@@ -255,8 +256,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return;
 		}
 		
-		Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
-
 		initRdCardSDK();
 		initCachePath();
 		// 实例化JIN接口,请求网络数据
@@ -914,6 +913,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 		// 登陆
 		case PageType_Login:
+			//取消自动登录
+			mUser.timerCancel();
 			// 登录
 			if (mPageSource != "UserIdentify") {
 				mLoginManage.loginCallBack(success, param1, param2);
@@ -1470,14 +1471,19 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (!isbind) {
 			return false;
 		}
-		if ("carrecorder".equals(mPageSource)) {
-			return false;
-		}
+		
 		if (!isIpcLoginSuccess) {
 			return false;
 		}
+		
 		if (mDownLoadFileList.size() > 0) {
 			return false;
+		}
+		
+		if ("carrecorder".equals(mPageSource)) {
+			if (mIPCControlManager.mProduceName.equals(IPCControlManager.G1_SIGN)) {
+				return false;
+			}
 		}
 		return true;
 	}

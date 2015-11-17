@@ -117,6 +117,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private boolean isClick = false;
 	/** false评论／false删除／true回复 **/
 	private boolean mIsReply = false;
+	/**底部无评论的footer**/
+	private View mNoDataView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +203,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mRTPullListView.firstFreshState();
 
 		String title = getIntent().getStringExtra("title");
-		if(title.length()>12){
+		if (title.length() > 12) {
 			title = title.substring(0, 12) + "...";
 		}
 		if (null == title || "".equals(title)) {
@@ -209,7 +211,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		} else {
 			mTextTitle.setText(title);
 		}
-		
+
 		Intent it = getIntent();
 		if (null != it.getStringExtra("ztid")) {
 			ztId = it.getStringExtra("ztid").toString();
@@ -235,8 +237,8 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	 * 获取评论列表数据
 	 */
 	public void getCommentList(int operation, String timestamp) {
-		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, "1", operation,
-				timestamp, PAGE_SIZE);
+		final String requestStr = JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO,
+				operation, timestamp, PAGE_SIZE, ztId);
 		GolukDebugUtils.e("", "================VideoDetailActivity：requestStr==" + requestStr);
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_List_Comment, requestStr);
@@ -431,10 +433,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		String requestStr = "";
 		if (mIsReply) {
-			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt,
-					mWillDelBean.mUserId, mWillDelBean.mUserName);
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO, txt,
+					mWillDelBean.mUserId, mWillDelBean.mUserName,ztId);
 		} else {
-			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, "1", txt, "", "");
+			requestStr = JsonUtil.getAddCommentJson(mVideoJson.data.avideo.video.videoid, ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO, txt, "", "",ztId);
 		}
 		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VideoSuqareManagerFn.VSquare_Req_Add_Comment, requestStr);
@@ -481,8 +483,20 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				isClick = true;
 				mEditInput.setFocusable(true);
 				updateRefreshTime();
-				if (null != mVideoJson.data && null != mVideoJson.data.avideo
-						&& null != mVideoJson.data.avideo.video && null != mVideoJson.data.avideo.video.videoid) {
+				addFooterView();
+				if (OPERATOR_FIRST == mCurrentOperator) {
+					// 首次进入
+					firstEnterCallBack(0, mVideoJson, commentDataList);
+					if (null != mVideoJson.data.avideo.head) {
+						this.mTextTitle.setText(mVideoJson.data.avideo.head.ztitle);
+					}
+
+				} else if (OPERATOR_DOWN == mCurrentOperator) {
+					// 下拉刷新
+					pullCallBack(0, mVideoJson, commentDataList);
+				}
+				if (null != mVideoJson.data && null != mVideoJson.data.avideo && null != mVideoJson.data.avideo.video
+						&& null != mVideoJson.data.avideo.video.videoid) {
 					getCommentList(OPERATOR_FIRST, "");
 				}
 			} else {
@@ -514,6 +528,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		try {
 			if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
+				removeFooterView();
 				mCommentLayout.setVisibility(View.GONE);
 				mAdapter.closeComment();
 				mRTPullListView.setEnabled(false);
@@ -534,9 +549,11 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			int count = Integer.parseInt(dataObj.getString("count"));
 			if (count <= 0) {
 				// 　没数据
-				noDataDeal();
+//				noDataDeal();
+				addFooterView();
 				return;
 			}
+			removeFooterView();
 			// 有数据
 			commentDataList = JsonUtil.parseCommentData(dataObj.getJSONArray("comments"));
 			if (null == commentDataList || commentDataList.size() <= 0) {
@@ -547,7 +564,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukDebugUtils.e("", "----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
 
 			updateRefreshTime();
-			noData(false);
+//			noData(false);
 
 			if (OPERATOR_FIRST == mCurrentOperator) {
 				// 首次进入
@@ -559,7 +576,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				pushCallBack(count, mVideoJson, commentDataList);
 			} else {
 				// 下拉刷新
-				pullCallBack(0, mVideoJson, commentDataList);
+				pullCallBack(count, mVideoJson, commentDataList);
 			}
 
 		} catch (Exception e) {
@@ -674,17 +691,32 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 			CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
 			if (null != bean) {
-				noData(false);
+//				noData(false);
+				removeFooterView();
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
-				commentDataList.add(0, bean);
-				this.mAdapter.addFirstData(bean);
-				mEditInput.setText("");
-				switchSendState(false);
-//				UserUtils.hideSoftMethod(this);
-				// 回复完评论之后需要还原状态以判断下次是评论还是回复
-				mIsReply = false;
-				mEditInput.setHint("写评论");
-				CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
+				if (!"".equals(bean.result)) {
+					if ("0".equals(bean.result)) {// 成功
+						commentDataList.add(0, bean);
+						this.mAdapter.addFirstData(bean);
+						mEditInput.setText("");
+						switchSendState(false);
+						// 回复完评论之后需要还原状态以判断下次是评论还是回复
+						mIsReply = false;
+						mEditInput.setHint("写评论");
+						CommentTimerManager.getInstance().start(COMMENT_CIMMIT_TIMEOUT);
+					} else if ("1".equals(bean.result)) {
+						GolukDebugUtils.e("", "参数错误");
+					} else if ("2".equals(bean.result)) {// 重复评论
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								LiveDialogManager.FUNCTION_DIALOG_OK, "", this.getResources().getString(R.string.comment_repeat_text));
+					} else if("3".equals(bean.result)) {//频繁评论
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", this.getResources().getString(R.string.comment_sofast_text));
+					} else {
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								LiveDialogManager.FUNCTION_DIALOG_OK, "", "评论保存失败。");
+					}
+				}
 			} else {
 				GolukUtils.showToast(this, "评论失败");
 			}
@@ -717,7 +749,12 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				mAdapter.deleteData(mWillDelBean);
 				GolukUtils.showToast(this, "删除成功");
 
-				noData(mAdapter.getCount() <= 0);
+//				noData(mAdapter.getCount() <= 0);
+				if(mAdapter.getCount() <= 1) {
+					addFooterView();
+				} else {
+					removeFooterView();
+				}
 			} else {
 				GolukUtils.showToast(this, "删除失败");
 			}
@@ -782,6 +819,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		mAdapter.cancleTimer();
 		GolukUtils.isCanClick = true;
 		GolukUtils.cancelTimer();
+		CommentTimerManager.getInstance().cancelTimer();
 		mIsReply = false;
 		if (null != mAdapter.headHolder && null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
@@ -900,13 +938,12 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		return super.dispatchTouchEvent(ev);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (null != sharePlatform) {
-			sharePlatform.onActivityResult(requestCode,
-					resultCode, data);
+			sharePlatform.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -961,6 +998,28 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		exit();
+	}
+	
+	private void addFooterView() {
+		if(null == mNoDataView) {
+			mNoDataView = LayoutInflater.from(this).inflate(R.layout.video_detail_footer, null);
+			mRTPullListView.addFooterView(mNoDataView);
+			mNoDataView.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private void removeFooterView() {
+		if(null != mRTPullListView && null != mNoDataView) {
+			mRTPullListView.removeFooterView(mNoDataView);
+			mNoDataView.setVisibility(View.GONE);
+			mNoDataView = null;
+		}
 	}
 
 }

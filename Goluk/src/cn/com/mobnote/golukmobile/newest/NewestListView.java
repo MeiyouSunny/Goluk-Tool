@@ -8,12 +8,12 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
@@ -23,6 +23,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -34,6 +35,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
 
 public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IClickPraiseView {
 	private RelativeLayout mRootLayout = null;
@@ -50,7 +53,6 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	private NewestListHeadDataInfo mHeadDataInfo = null;
 	public List<VideoSquareInfo> mDataList = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	public static Handler mHandler = null;
 	private NewestAdapter mNewestAdapter = null;
 	private boolean headLoading = false;
 	private boolean dataLoading = false;
@@ -70,6 +72,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	private int curpageCount = 0;
 	private SharePlatformUtil sharePlatform;
 	private ImageView shareBg = null;
+	private static final String TAG = "NewestListView";
 
 	public NewestListView(Context context) {
 		mContext = context;
@@ -77,6 +80,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+//		mRTPullListView.setDividerHeight(78);
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		mRTPullListView.setLayoutParams(lp);
@@ -280,30 +284,6 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
-				try {
-					if (null == mDataList && mDataList.size() <= 0) {
-						return;
-					}
-
-					int first = firstVisibleItem - 1;
-					if (first < mDataList.size()) {
-						for (int i = 0; i < first; i++) {
-							String url = mDataList.get(i).mVideoEntity.picture;
-							Uri uri = Uri.parse(url);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-					}
-
-					int last = firstVisibleItem + visibleItemCount + 1;
-					if (last < mDataList.size()) {
-						for (int i = last; i < mDataList.size(); i++) {
-							String url = mDataList.get(i).mVideoEntity.picture;
-							Uri uri = Uri.parse(url);
-							Fresco.getImagePipeline().evictFromMemoryCache(uri);
-						}
-					}
-				} catch (Exception e) {
-				}
 			}
 
 		});

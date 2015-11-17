@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white" >
+    
+	<!-- title -->
+    <RelativeLayout
+        android:id="@+id/profit_detail_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#313131" >
+
+        <ImageButton
+            android:id="@+id/profit_detail_back"
+            android:layout_width="36.66dp"
+            android:layout_height="36.66dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/cross_screen_arrow_icon1"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/profit_detail_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/my_profit_detail_title_text"
+            android:textColor="#e0e0e0"
+            android:textSize="18sp" />
+        
+    </RelativeLayout>
+    
+    <!-- body -->
+    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+        android:id="@+id/profit_detail_RTPullListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profit_detail_title_layout"
+        android:divider="@null" />
+    
+    <ImageView
+        android:id="@+id/video_detail_click_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       	android:layout_centerInParent="true"
+        android:src="@drawable/qitadifang"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/my_profit_detail_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="暂时无数据"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:visibility="gone"/>
+</RelativeLayout>

@@ -17,7 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.application.SysApplication;
+
+import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
@@ -33,6 +34,7 @@ import cn.com.mobnote.wifibind.WifiConnCallBack;
 import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickListener, WifiConnCallBack,
 		ILiveDialogManagerFn {
@@ -104,11 +106,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mProgressImg = (ImageView) findViewById(R.id.wifilink_progress);
 		init();
 		toSetIPCInfoView();
-		SysApplication.getInstance().addActivity(this);
+
 
 		setIpcLinkInfo();
 		// 6秒后，没有配置成功，直接跳转“等待连接”界面
 		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_WAITING_VIEW, TIMEOUT_SETIPC);
+		EventBus.getDefault().register(this);
 	}
 
 	private void initChildView() {
@@ -351,8 +354,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		return super.onKeyDown(keyCode, event);
 	};
 
+	public void onEventMainThread(EventFinishWifiActivity event) {
+		finish();
+	}
+
 	@Override
 	protected void onDestroy() {
+		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 		GolukDebugUtils.e("", "通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
 
@@ -370,7 +378,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		if (null != layout3) {
 			layout3.free();
 		}
-
+		if (null != mWac){
+			mWac.unbind();
+			mWac = null;
+		}
 	}
 
 	@Override
@@ -391,7 +402,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			if (this.STATE_SUCESS == mState) {
 				// 綁定成功后，可以进入行车记录仪
 				// 关闭wifi绑定全部页面
-				SysApplication.getInstance().exit();
+				EventBus.getDefault().post(new EventFinishWifiActivity());
 				if (null != mWac) {
 					mWac.unbind();
 				}
@@ -575,7 +586,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			reportLog();
 
 			LiveDialogManager.getManagerInstance().dismissSingleBtnDialog();
-			SysApplication.getInstance().exit();
+			EventBus.getDefault().post(new EventFinishWifiActivity());
 			if (null != mWac) {
 				mWac.unbind();
 			}

@@ -27,6 +27,7 @@ import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -43,8 +44,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private LocalVideoListView mLocalVideoListView = null;
 	private CloudVideoListView mCloudVideoListView = null;
 	private boolean editState = false;
-	/** 图片缓存cache */
-	private LruCache<String, Bitmap> mLruCache = null;
+
 	private int curId = -1;
 	private RelativeLayout bottomLayout = null;
 	private ImageButton mBackBtn = null;
@@ -56,13 +56,23 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	public static final int UPDATELOGINSTATE = -1;
 	public static final int UPDATEDATE = -2;
 	public static Handler mHandler = null;
+	
+	/**活动分享*/
+	public static final String ACTIVITY_INFO = "activityinfo";
+	private PromotionSelectItem mPromotionSelectItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.photo_album);
 
-		from = getIntent().getStringExtra("from");
+		if (savedInstanceState == null) {
+			from = getIntent().getStringExtra("from");
+			mPromotionSelectItem = (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO);
+		} else {
+			from = savedInstanceState.getString("from");
+			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(ACTIVITY_INFO);
+		}
 		selectedListData = new ArrayList<String>();
 		initView();
 
@@ -76,8 +86,10 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 					updateLinkState();
 					break;
 				case UPDATEDATE:
-					String filename = (String) msg.obj;
-					mLocalVideoListView.updateData(filename);
+					if (null != mLocalVideoListView) {
+						String filename = (String) msg.obj;
+						mLocalVideoListView.updateData(filename);
+					}
 					break;
 				}
 
@@ -86,29 +98,18 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		};
 	}
 
-	private void initCache() {
-		int maxSize = (int) (Runtime.getRuntime().maxMemory() / 5);
-		mLruCache = new LruCache<String, Bitmap>(maxSize) {
-			@Override
-			protected int sizeOf(String key, Bitmap bitmap) {
-				if (bitmap == null) {
-					return 0;
-				}
-				return bitmap.getRowBytes() * bitmap.getHeight();
-			}
-		};
-	}
-
-	public Bitmap getBitmap(String filename) {
-		return mLruCache.get(filename);
-	}
-
-	public void putBitmap(String filename, Bitmap mBitmap) {
-		mLruCache.put(filename, mBitmap);
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		if (mPromotionSelectItem != null) {
+			outState.putSerializable(ACTIVITY_INFO, mPromotionSelectItem);
+		}
+		if (from != null) {
+			outState.putSerializable("from", from);
+		}
+		super.onSaveInstanceState(outState);
 	}
 
 	private void initView() {
-		initCache();
 		bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
 		mEditLayout = (RelativeLayout) findViewById(R.id.mEditLayout);
 		mDownLoadBtn = (LinearLayout) findViewById(R.id.mDownLoadBtn);
@@ -152,10 +153,10 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 
 	private void updateBtnState(int id) {
 		this.curId = id;
-		if (null == mLocalVideoListView) {
-			mLocalVideoListView = new LocalVideoListView(this, from);
-			mMainLayout.addView(mLocalVideoListView.getRootView());
-		}
+//		if (null == mLocalVideoListView) {
+//			mLocalVideoListView = new LocalVideoListView(this, from);
+//			mMainLayout.addView(mLocalVideoListView.getRootView());
+//		}
 		switch (id) {
 		case R.id.mLocalVideoBtn:
 			mLocalIcon.setBackgroundResource(R.drawable.my_video_press);
@@ -167,9 +168,16 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mLocalText.setTextColor(getResources().getColor(R.color.photoalbum_text_color));
 			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 
+			if (null == mLocalVideoListView) {
+				mLocalVideoListView = new LocalVideoListView(this, from, mPromotionSelectItem);
+				mMainLayout.addView(mLocalVideoListView.getRootView());
+			}
 			mLocalVideoListView.show();
 			if (null != mCloudVideoListView) {
-				mCloudVideoListView.hide();
+				mMainLayout.removeView(mCloudVideoListView.getRootView());
+//				mCloudVideoListView.hide();
+				mCloudVideoListView = null;
+				System.gc();
 			}
 			break;
 		case R.id.mCloudVideoBtn:
@@ -182,8 +190,13 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 				mCloudVideoListView = new CloudVideoListView(this);
 				mMainLayout.addView(mCloudVideoListView.getRootView());
 			}
-			mLocalVideoListView.hide();
+//			mLocalVideoListView.hide();
 			mCloudVideoListView.show();
+			if(null != mLocalVideoListView) {
+				mMainLayout.removeView(mLocalVideoListView.getRootView());
+				mLocalVideoListView = null;
+				System.gc();
+			}
 			break;
 
 		default:
@@ -411,13 +424,13 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	@Override
 	protected void onDestroy() {
 		exit();
-		super.onDestroy();
-		mHandler.removeMessages(UPDATELOGINSTATE);
-		mHandler.removeMessages(UPDATEDATE);
-		mHandler = null;
-		if (null != mLruCache) {
-			mLruCache.evictAll();
+		if(null != mHandler) {
+			mHandler.removeMessages(UPDATELOGINSTATE);
+			mHandler.removeMessages(UPDATEDATE);
+			mHandler = null;
 		}
+
+		super.onDestroy();
 	}
 
 }

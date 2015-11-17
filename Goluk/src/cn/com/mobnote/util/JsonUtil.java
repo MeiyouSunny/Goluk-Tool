@@ -792,7 +792,7 @@ public class JsonUtil {
 	// issquare 是否分享到视频广场 0/1 (否/是)
 	// thumbImgJavaPath: 缩略图路径
 	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
-			String thumbImgJavaPath, String createTime, String location) {
+			String thumbImgJavaPath, String createTime, String location, String channelid, String activityid, String activityname) {
 
 		String json = null;
 		try {
@@ -803,6 +803,7 @@ public class JsonUtil {
 				videoDes = URLEncoder.encode(desc, "UTF-8");
 				attriDefault = URLEncoder.encode(attribute, "UTF-8");
 				location = URLEncoder.encode(location, "UTF-8");
+				activityname = URLEncoder.encode(activityname, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -818,7 +819,9 @@ public class JsonUtil {
 			obj.put("type", "1");
 			obj.put("creattime", createTime);
 			obj.put("location", location);
-
+			obj.put("channelid", channelid);
+			obj.put("activityid", activityid);
+			obj.put("activityname", activityname);
 			json = obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -872,6 +875,26 @@ public class JsonUtil {
 		}
 		return null;
 	}
+	
+	public static String getCommentRequestStr(String id, String type, int operation, String timestamp, int pagesize, String ztid) {
+		try {
+			JSONObject json = new JSONObject();
+			json.put("topicid", id);
+			json.put("topictype", "" + type);
+			json.put("operation", "" + operation);
+			if (!timestamp.equals("")) {
+				// timestamp = GolukUtils.formatTime(timestamp);
+				timestamp = timestamp.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+			}
+			json.put("timestamp", timestamp);
+			json.put("pagesize", "" + pagesize);
+			json.put("ztid", ztid);
+
+			return json.toString();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	public static String getCommentRequestStr(String id, String type, int operation, String timestamp, int pagesize) {
 		try {
@@ -892,7 +915,7 @@ public class JsonUtil {
 		}
 	}
 
-	public static String getAddCommentJson(String id, String type, String txt,String replyId,String replyName) {
+	public static String getAddCommentJson(String id, String type, String txt,String replyId,String replyName, String ztid) {
 		try {
 			JSONObject json = new JSONObject();
 			json.put("topicid", id);
@@ -902,6 +925,9 @@ public class JsonUtil {
 			json.put("replyid", replyId);
 			replyName = URLEncoder.encode(replyName, "utf-8");
 			json.put("replyname", replyName);
+			if (null != ztid) {
+				json.put("ztid", ztid);
+			}
 
 			return json.toString();
 		} catch (Exception e) {
@@ -973,6 +999,7 @@ public class JsonUtil {
 			bean.mReplyId = getJsonStringValue(dataObj, "replyid", "");
 			bean.mReplyName = getJsonStringValue(dataObj, "replyname", "");
 			bean.customavatar = getJsonStringValue(dataObj, "customavatar", "");
+			bean.result = getJsonStringValue(dataObj, "result", "");
 
 			return bean;
 		} catch (Exception e) {

@@ -59,8 +59,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private Button btnLoginout;
 	/** 缓存大小显示 **/
 	private TextView mTextCacheSize = null;
-	/** 更新版本号信息 **/
-	public static Handler mHandlerVersion = null;
 	/** 用户信息 **/
 	private String phone = null;
 	/** 登录的状态 **/
@@ -72,7 +70,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private AlertDialog dialog = null;
 	/** 清除缓存 **/
 	private RelativeLayout mClearCache = null;
-	public static Handler mHandler = null;
+//	public static Handler mHandler = null;
 
 	private String vIpc = "";
 
@@ -123,15 +121,15 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			e.printStackTrace();
 		}
 
-		mHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				if (msg.what == 0) {
-					GolukDebugUtils.i("lily", "已清除过缓存");
-				}
-			}
-		};
+//		mHandler = new Handler() {
+//			@Override
+//			public void handleMessage(Message msg) {
+//				super.handleMessage(msg);
+//				if (msg.what == 0) {
+//					GolukDebugUtils.i("lily", "已清除过缓存");
+//				}
+//			}
+//		};
 
 	}
 

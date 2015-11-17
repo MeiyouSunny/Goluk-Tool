@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -492,6 +491,10 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		if (null != mDataList) {
 			mDataList.clear();
 		}
+		if (mHandler != null){
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
+		}
 	}
 
 	public void onBackPressed() {
@@ -512,13 +515,17 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
 			break;
 		case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-			if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
-				if (isHaveData) {
-					// 上拉刷新
-					uptype = 1;
-					String timeSign = endtime.mVideoEntity.sharingtime;
-					GolukDebugUtils.e("", "jyf----CategoryListView------------------onRefresh  上拉刷新: " + timeSign);
-					httpPost(mType, mAttribute, "2", timeSign);
+			if(null != mRTPullListView && null != mRTPullListView.getAdapter()) {
+				if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
+					if (isHaveData) {
+						// 上拉刷新
+						uptype = 1;
+						if(null != endtime && null != endtime.mVideoEntity) {
+							String timeSign = endtime.mVideoEntity.sharingtime;
+							GolukDebugUtils.e("", "jyf----CategoryListView------------------onRefresh  上拉刷新: " + timeSign);
+							httpPost(mType, mAttribute, "2", timeSign);
+						}
+					}
 				}
 			}
 			break;
@@ -537,24 +544,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 		if (null == mDataList && mDataList.size() <= 0) {
 			return;
-		}
-
-		int first = firstVisibleItem - 1;
-		if (first < mDataList.size()) {
-			for (int i = 0; i < first; i++) {
-				String url = mDataList.get(i).mVideoEntity.picture;
-				Uri uri = Uri.parse(url);
-				Fresco.getImagePipeline().evictFromMemoryCache(uri);
-			}
-		}
-
-		int last = firstVisibleItem + visibleItemCount + 1;
-		if (last < mDataList.size()) {
-			for (int i = last; i < mDataList.size(); i++) {
-				String url = mDataList.get(i).mVideoEntity.picture;
-				Uri uri = Uri.parse(url);
-				Fresco.getImagePipeline().evictFromMemoryCache(uri);
-			}
 		}
 
 	}

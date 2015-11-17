@@ -21,6 +21,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import cn.com.mobnote.golukmobile.http.UrlHostManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.MyProgressWebView;
@@ -85,11 +86,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				GolukDebugUtils.e("", "Error--------------------url:" + url);
 				String from_tag = itIndexMore.getStringExtra(FROM_TAG);
 				if (!TextUtils.isEmpty(from_tag)) {
-					if (from_tag.equals("skill")) {
-						if (url.contains("tel:")) {
-							webviewCall(url);
-							return true;
-						}
+					if (url.contains("tel:")) {
+						webviewCall(url);
+						return true;
 					}
 				}
 				// 如果是intent://开头的，不处理
@@ -152,10 +151,23 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=3");
+				} else if(from_tag.equals("profitProblem")) {
+					mTextTitle.setText("常见问题");
+					if (mErrorState) {
+						return;
+					}
+					GolukDebugUtils.e("", "======profitproblem======url："+UrlHostManager.getWebPageHost());
+					mWebView.loadUrl(UrlHostManager.getWebPageHost()+"/faq/gb.html");
 				}
 			} else {
-				mTextTitle.setText("");
+				String title = itIndexMore.getStringExtra("slide_h5_title");
+				if(null != title && !title.equals("")) {
+					mTextTitle.setText(title);
+				} else {
+					mTextTitle.setText("");
+				}
 				String url = itIndexMore.getStringExtra("url");
+
 				if (mErrorState) {
 					return;
 				}
@@ -264,10 +276,13 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	protected void onDestroy() {
+		closeLoading();
 		super.onDestroy();
 		GolukDebugUtils.e("", "--------UserOpenUrlActivity-------onDestory：");
-		mWebView.destroy();
-		mWebView = null;
+		if (mWebView != null){
+			mWebView.destroy();
+			mWebView = null;
+		}
 	}
 
 	@Override
