@@ -407,7 +407,7 @@
     <string name="default_comment">啥也不想说，快看视频吧...</string>
     <string name="default_comment_hint">没有文案，怎样收获无数点赞？</string>
     <string name="get_current_location">点击获取位置</string>
-    <string name="str_jx_today">-今日视频-</string>
+    <string name="str_jx_today">-今日精选-</string>
     <string name="str_jx_other_day">-精选视频-</string>
     <string name="str_video_open_hint">参加活动后只能选择公开</string>
     <string name="str_video_close_hint">您刚刚取消了公开视频</string>
