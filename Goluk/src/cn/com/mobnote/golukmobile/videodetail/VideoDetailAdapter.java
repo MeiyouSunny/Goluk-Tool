@@ -90,6 +90,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		mDataList = new ArrayList<CommentBean>();
 		connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		netInfo = connectivityManager.getActiveNetworkInfo();
+		error = false;
 	}
 
 	public Handler mHandler = new Handler() {
@@ -589,12 +590,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 	// 设置评论数据
 	private void getCommentData(final int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
-		if (0 == mDataList.size()) {
-			commentHolder.mListLayout.setVisibility(View.GONE);
+//		if (0 == mDataList.size()) {
+//			commentHolder.mListLayout.setVisibility(View.GONE);
 //			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
 //			commentHolder.mNoData.setVisibility(View.VISIBLE);
-			return;
-		}
+//			return;
+//		}
 		commentHolder.mListLayout.setVisibility(View.VISIBLE);
 		commentHolder.mNoDataLayout.setVisibility(View.GONE);
 //		commentHolder.mNoData.setVisibility(View.GONE);
@@ -604,6 +605,10 @@ public class VideoDetailAdapter extends BaseAdapter {
 				((WonderfulActivity) mContext).mCommentLayout.setVisibility(View.GONE);
 			}
 		} else {
+			if (0 == mDataList.size()) {
+//				commentHolder.mListLayout.setVisibility(View.GONE);
+				return ;
+			}
 			CommentBean temp = mDataList.get(index);
 			String netHeadUrl = temp.customavatar;
 			if (null != netHeadUrl && !"".equals(netHeadUrl)) {
@@ -906,7 +911,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 				headHolder.mImageLayout.setVisibility(View.VISIBLE);
 				dialog("网络访问异常，请重试！", headHolder);
 				if (null != headHolder.mVideoView) {
-					headHolder.mVideoView.stopPlayback();
+					if(error) {
+						headHolder.mVideoView.suspend();
+					} else {
+						headHolder.mVideoView.stopPlayback();
+					}
 				}
 				return;
 			}

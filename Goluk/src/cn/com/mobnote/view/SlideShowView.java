@@ -88,6 +88,17 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        stopPlay();
+        super.onDetachedFromWindow();
+    }
+
+    @Override
     public void onClick(View v) {
         final ImageViewTag tag = (ImageViewTag)v.getTag(R.id.tag_slideshow_item);
         if(null != mListener) {
@@ -242,7 +253,9 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
      * 停止轮播图切换
      */
     private synchronized void stopPlay() {
-        scheduledExecutorService.shutdown();
+        if(null != scheduledExecutorService) {
+            scheduledExecutorService.shutdown();
+        }
     }
 
     /**

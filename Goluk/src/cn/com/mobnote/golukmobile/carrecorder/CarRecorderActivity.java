@@ -1620,6 +1620,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 							} else {
 								images[1] = images[0];
+								image2.setImageBitmap(images[1].getBitmap());
 								boolean flog2 = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
 								if (flog2) {
 									new2.setVisibility(View.VISIBLE);
