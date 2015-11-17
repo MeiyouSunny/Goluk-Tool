@@ -70,7 +70,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private AlertDialog dialog = null;
 	/** 清除缓存 **/
 	private RelativeLayout mClearCache = null;
-	public static Handler mHandler = null;
+//	public static Handler mHandler = null;
 
 	private String vIpc = "";
 
@@ -121,15 +121,15 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			e.printStackTrace();
 		}
 
-		mHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				if (msg.what == 0) {
-					GolukDebugUtils.i("lily", "已清除过缓存");
-				}
-			}
-		};
+//		mHandler = new Handler() {
+//			@Override
+//			public void handleMessage(Message msg) {
+//				super.handleMessage(msg);
+//				if (msg.what == 0) {
+//					GolukDebugUtils.i("lily", "已清除过缓存");
+//				}
+//			}
+//		};
 
 	}
 
