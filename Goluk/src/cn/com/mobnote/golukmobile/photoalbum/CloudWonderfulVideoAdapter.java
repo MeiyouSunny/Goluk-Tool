@@ -26,6 +26,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
@@ -140,7 +141,6 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
 		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
-		holder.image1.setTag("image:"+mVideoInfo1.filename);
 		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
 //		if(mVideoInfo1.isNew) {
@@ -155,7 +155,6 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate.substring(11));
 			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
-			holder.image2.setTag("image:"+mVideoInfo2.filename);
 			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 			
@@ -214,47 +213,11 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	 * @date 2015年6月8日
 	 */
 	private void loadImage(String filename, ImageView image) {
+		
 		filename = filename.replace(".mp4", ".jpg");
-		Bitmap mBitmap = mActivity.getBitmap(filename);
-		if (null != mBitmap) {
-			image.setImageBitmap(mBitmap);
-		}else {
-			image.setImageResource(R.drawable.album_default_img);
-//			if (lock) {
-//				return;
-//			}
 			
-			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-			
-			ImageAsyncTask.getBitmapForCache(filePath + File.separator + filename, new ICallBack(){
-				@Override
-				public void SuccessCallback(String url, Bitmap mBitmap) {
-					String filename = url.substring(url.lastIndexOf("/")+1);
-					if (null == mBitmap) {
-						return;
-					}
-					
-					Bitmap b = mActivity.getBitmap(filename);
-					if (null == b) {
-						b = mBitmap;
-						mActivity.putBitmap(filename, mBitmap);
-					}else{
-						if (null != mBitmap) {
-							if (!mBitmap.isRecycled()) {
-								mBitmap.recycle();
-								mBitmap = null;
-							}
-						}
-					}
-				
-					String imagefilename = filename.replace(".jpg", ".mp4");
-					ImageView image = (ImageView)mListView.findViewWithTag("image:"+imagefilename);
-					if (null != image) {
-						image.setImageBitmap(b);
-					}
-				}
-			});
-		}
+		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+		GlideUtils.loadImage(mActivity, image, filePath + File.separator + filename, R.drawable.album_default_img);
 	}
 	
 	/**

@@ -44,8 +44,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private LocalVideoListView mLocalVideoListView = null;
 	private CloudVideoListView mCloudVideoListView = null;
 	private boolean editState = false;
-	/** 图片缓存cache */
-	private LruCache<String, Bitmap> mLruCache = null;
+
 	private int curId = -1;
 	private RelativeLayout bottomLayout = null;
 	private ImageButton mBackBtn = null;
@@ -110,29 +109,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		super.onSaveInstanceState(outState);
 	}
 
-	private void initCache() {
-		int maxSize = (int) (Runtime.getRuntime().maxMemory() / 6);
-		mLruCache = new LruCache<String, Bitmap>(maxSize) {
-			@Override
-			protected int sizeOf(String key, Bitmap bitmap) {
-				if (bitmap == null) {
-					return 0;
-				}
-				return bitmap.getRowBytes() * bitmap.getHeight();
-			}
-		};
-	}
-
-	public Bitmap getBitmap(String filename) {
-		return mLruCache.get(filename);
-	}
-
-	public void putBitmap(String filename, Bitmap mBitmap) {
-		mLruCache.put(filename, mBitmap);
-	}
-
 	private void initView() {
-		initCache();
 		bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
 		mEditLayout = (RelativeLayout) findViewById(R.id.mEditLayout);
 		mDownLoadBtn = (LinearLayout) findViewById(R.id.mDownLoadBtn);
@@ -452,9 +429,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mHandler.removeMessages(UPDATEDATE);
 			mHandler = null;
 		}
-		if (null != mLruCache) {
-			mLruCache.evictAll();
-		}
+
 		super.onDestroy();
 	}
 
