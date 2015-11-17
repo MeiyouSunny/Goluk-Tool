@@ -8,4 +8,7 @@ public class EventConfig {
     public final static int LIVE_MAP_QUERY = 99;
     public final static int WIFI_STATE = 3;
     public final static int LOCATION_FINISH = 1000;
+
+    // Event opcode for refresh user info view
+    public final static int REFRESH_USER_INFO = 100;
 }
