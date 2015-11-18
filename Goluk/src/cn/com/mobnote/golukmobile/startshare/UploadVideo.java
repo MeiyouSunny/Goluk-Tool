@@ -192,6 +192,10 @@ public class UploadVideo {
 	 * @date 2015年8月14日
 	 */
 	private Bitmap getSelfBitmap() {
+		if(null == mVideoPath || mVideoPath.equals("")) {
+			return null;
+		}
+
 		Bitmap temp = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
 		if (temp == null) {
 			temp = GolukUtils.createVideoThumbnail(mVideoPath);
