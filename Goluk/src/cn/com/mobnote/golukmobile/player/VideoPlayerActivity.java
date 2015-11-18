@@ -779,6 +779,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			return;
 		}
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onPrepared----=");
+		if(null == mVideo || null == mp) {
+			return;
+		}
 		mVideo.setVideoWidth(mp.getVideoWidth());
 		mVideo.setVideoHeight(mp.getVideoHeight());
 
@@ -789,7 +792,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
 		// mHandler.removeCallbacks(hideRunnable);
 		// mHandler.postDelayed(hideRunnable, HIDE_TIME);
-		mDurationTime.setText(formatTime(mVideo.getDuration()));
+		if(null != mDurationTime) {
+			mDurationTime.setText(formatTime(mVideo.getDuration()));
+		}
 
 		startTimer();
 	}
