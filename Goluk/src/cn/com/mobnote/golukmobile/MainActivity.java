@@ -35,6 +35,8 @@ import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventMapQuery;
+import cn.com.mobnote.eventbus.EventUpdateAddr;
+import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
@@ -500,9 +502,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			this.updateRecoderBtn(1);
 			mApp.mWiFiStatus = WIFI_STATE_CONNING;
 
-			if (CarRecorderActivity.mHandler != null) {
-				CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_CONNING);
-			}
+//			if (CarRecorderActivity.mHandler != null) {
+//				CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_CONNING);
+//			}
+			EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_CONNING));
 			break;
 		case 2:
 			// 已连接
@@ -560,20 +563,22 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
 		GolukDebugUtils.e("zh：wifi连接成功 ", mApp.mWiFiStatus + "");
-		if (CarRecorderActivity.mHandler != null) {
-			GolukDebugUtils.e("zh：mhandler不为空 ", "");
-			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_SUCCESS);
-		}
+//		if (CarRecorderActivity.mHandler != null) {
+//			GolukDebugUtils.e("zh：mhandler不为空 ", "");
+//			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_SUCCESS);
+//		}
+		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_SUCCESS));
 	}
 
 	// 连接失败
 	private void wifiConnectFailed() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectFailed:");
 		mApp.mWiFiStatus = WIFI_STATE_FAILED;
-		if (CarRecorderActivity.mHandler != null) {
-			GolukDebugUtils.e("zh：mhandler不为空 ", "");
-			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_FAILED);
-		}
+//		if (CarRecorderActivity.mHandler != null) {
+//			GolukDebugUtils.e("zh：mhandler不为空 ", "");
+//			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_FAILED);
+//		}
+		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_FAILED));
 	}
 
 	// 是否綁定过 Goluk
@@ -980,11 +985,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		final String address = ((ReverseGeoCodeResult) obj).getAddress();
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
-		if (null != CarRecorderActivity.mHandler) {
-			Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
-			msg.obj = address;
-			CarRecorderActivity.mHandler.sendMessage(msg);
-		}
+//		if (null != CarRecorderActivity.mHandler) {
+//			Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
+//			msg.obj = address;
+//			CarRecorderActivity.mHandler.sendMessage(msg);
+//		}
+		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));
 	}
 
 	private void wifiCallBack_sameHot() {

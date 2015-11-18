@@ -19,4 +19,14 @@ public class EventConfig {
 	public static final int UPDATE_FILE_NOT_EXISTS = 10;
 	/* Event opcode for IPC update prepare file */
 	public static final int UPDATE_PREPARE_FILE = 11;
+
+	/** Wifi connect failed */
+	public final static int WIFI_STATE_FAILED = 0;
+	/** Wifi connecting */
+	public final static int WIFI_STATE_CONNING = 1;
+	/** Wifi connect successful */
+	public final static int WIFI_STATE_SUCCESS = 2;
+
+	/** Update address */
+	public final static int CAR_RECORDER_UPDATE_ADDR = 118;
 }

@@ -47,6 +47,9 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventUpdateAddr;
+import cn.com.mobnote.eventbus.EventWifiConnect;
+import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
@@ -99,7 +102,7 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
 		IPopwindowFn, ILocationFn {
-	public static Handler mHandler = null;
+	private Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
 	/** 保存录制的文件名字 */
@@ -326,27 +329,29 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				case MOUNTS:
 					startTrimVideo();
 					break;
-				case ADDR:
-					String addr = (String) msg.obj;
-					if (!TextUtils.isEmpty(addr)) {
-						mAddr.setText(addr);
-					}
-					break;
+//				case ADDR:
+//					String addr = (String) msg.obj;
+//					if (!TextUtils.isEmpty(addr)) {
+//						mAddr.setText(addr);
+//					}
+//					break;
 				case STARTVIDEORECORD:
 					updateVideoRecordTime();
 					break;
 				case DOWNLOADWONDERFULVIDEO:
 					wonderfulVideoDownloadShow();
 					break;
-				case WIFI_STATE_SUCCESS:
-					GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onclick======connect  Sucess");
-					ipcConnSucess();
-					break;
-				case WIFI_STATE_FAILED:
-					ipcConnFailed();
-					break;
-				case WIFI_STATE_CONNING:
-					ipcConnecting();
+//				case WIFI_STATE_SUCCESS:
+//					GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onclick======connect  Sucess");
+//					ipcConnSucess();
+//					break;
+//				case WIFI_STATE_FAILED:
+//					ipcConnFailed();
+//					break;
+//				case WIFI_STATE_CONNING:
+//					ipcConnecting();
+//					break;
+				default:
 					break;
 				}
 			};
@@ -365,6 +370,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("main", this);
 		}
 
+		EventBus.getDefault().register(this);
 	}
 
 	// 是否綁定过 Goluk
@@ -424,7 +430,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.VISIBLE);
 			mPalyerLayout.setVisibility(View.GONE);
-			Log.d("CK1", "2222222222222222222222222222");
 //			if (null != MainActivity.mMainHandler) {
 //				MainActivity.mMainHandler.sendEmptyMessage(400);
 //			}
@@ -747,6 +752,43 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mRtspPlayerView.setDataSource(url);
 
 			mRtspPlayerView.start();
+		}
+	}
+
+	public void onEventMainThread(EventWifiConnect event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.WIFI_STATE_FAILED:
+			ipcConnFailed();
+			break;
+		case EventConfig.WIFI_STATE_CONNING:
+			ipcConnecting();
+			break;
+		case EventConfig.WIFI_STATE_SUCCESS:
+			ipcConnSucess();
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void onEventMainThread(EventUpdateAddr event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.CAR_RECORDER_UPDATE_ADDR:
+			String addr = event.getMsg();
+			if (!TextUtils.isEmpty(addr)) {
+				mAddr.setText(addr);
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -1165,12 +1207,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (mHandler!= null){
 			mHandler.removeMessages(QUERYFILEEXIT);
 			mHandler.removeMessages(MOUNTS);
-			mHandler.removeMessages(ADDR);
+//			mHandler.removeMessages(ADDR);
 			mHandler.removeMessages(STARTVIDEORECORD);
 			mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
-			mHandler.removeMessages(WIFI_STATE_SUCCESS);
-			mHandler.removeMessages(WIFI_STATE_FAILED);
-			mHandler.removeMessages(WIFI_STATE_CONNING);
+//			mHandler.removeMessages(WIFI_STATE_SUCCESS);
+//			mHandler.removeMessages(WIFI_STATE_FAILED);
+//			mHandler.removeMessages(WIFI_STATE_CONNING);
 			mHandler = null;
 		}
 		if (m8sTimer != null) {
@@ -1178,6 +1220,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			m8sTimer.purge();
 			m8sTimer = null;
 		}
+		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 	}
 

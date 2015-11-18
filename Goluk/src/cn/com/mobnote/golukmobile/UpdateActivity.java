@@ -77,9 +77,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private Timer mTimer = null;
 
 	/** 文件不存在 **/
-	public static final int UPDATE_FILE_NOT_EXISTS = 10;
+//	public static final int UPDATE_FILE_NOT_EXISTS = 10;
 	/** 准备文件 **/
-	public static final int UPDATE_PREPARE_FILE = 11;
+//	public static final int UPDATE_PREPARE_FILE = 11;
 	/** 传输文件 **/
 	public static final int UPDATE_TRANSFER_FILE = 12;
 	/** 文件传输成功 **/
@@ -93,7 +93,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	/** 校验不通过 **/
 	public static final int UPDATE_UPGRADE_CHECK = 17;
 	/** ipc未连接 **/
-	public static final int UPDATE_IPC_UNUNITED = 18;
+//	public static final int UPDATE_IPC_UNUNITED = 18;
 	/** ipc连接断开 **/
 	public static final int UPDATE_IPC_DISCONNECT = 19;
 	/** 升级1阶段摄像头断开连接 **/
