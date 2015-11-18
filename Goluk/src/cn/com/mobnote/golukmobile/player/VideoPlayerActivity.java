@@ -348,11 +348,15 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		if (null == mVideo) {
 			return;
 		}
+		int duration = mVideo.getDuration();
+		if(0 >= duration || 0f >= width) {
+			return;
+		}
 		int current = mVideo.getCurrentPosition();
-		int forwardTime = (int) (delataX / width * mVideo.getDuration());
+		int forwardTime = (int) (delataX / width * duration);
 		int currentTime = current + forwardTime;
 		mVideo.seekTo(currentTime);
-		mSeekBar.setProgress(currentTime * 100 / mVideo.getDuration());
+		mSeekBar.setProgress(currentTime * 100 / duration);
 		mPlayTime.setText(formatTime(currentTime));
 	}
 
