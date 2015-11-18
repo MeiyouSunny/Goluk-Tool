@@ -253,7 +253,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	private void gotoVideoPlayPage(int from, String path) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
-			if (null == VitamioPlayerActivity.mHandler) {
+//			if (null == VitamioPlayerActivity.mHandler) {
 				Intent intent = null;
 				if (1 == from) {
 					intent = new Intent(mContext, VitamioPlayerActivity.class);
@@ -264,7 +264,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 				intent.putExtra("type", mCurrentType);
 				intent.putExtra("filename", path);
 				mContext.startActivity(intent);
-			}
+//			}
 		}
 	}
 

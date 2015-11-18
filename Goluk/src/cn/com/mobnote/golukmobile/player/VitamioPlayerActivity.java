@@ -97,7 +97,7 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 	private RelativeLayout mTitleLayout = null;
 	/** 底部布局 */
 	private RelativeLayout mBottomLayout = null;
-	public static Handler mHandler = null;
+	private Handler mHandler = null;
 	private final int GETPROGRESS = 1;
 	/** 来源标志 */
 	private String from;
