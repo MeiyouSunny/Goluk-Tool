@@ -35,6 +35,7 @@ import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventMapQuery;
+import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
 import cn.com.mobnote.eventbus.EventUpdateAddr;
 import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.eventbus.EventWifiState;
@@ -476,11 +477,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList" + time);
 				updateHotPointState(true);
 
-				if (null != PhotoAlbumActivity.mHandler) {
-					Message msg = PhotoAlbumActivity.mHandler.obtainMessage(PhotoAlbumActivity.UPDATEDATE);
-					msg.obj = filename;
-					PhotoAlbumActivity.mHandler.sendMessage(msg);
-				}
+//				if (null != PhotoAlbumActivity.mHandler) {
+//					Message msg = PhotoAlbumActivity.mHandler.obtainMessage(PhotoAlbumActivity.UPDATEDATE);
+//					msg.obj = filename;
+//					PhotoAlbumActivity.mHandler.sendMessage(msg);
+//				}
+				EventBus.getDefault().post(new EventPhotoUpdateDate(EventConfig.PHOTO_ALBUM_UPDATE_DATE, filename));
 
 				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime=" + time);
 			}

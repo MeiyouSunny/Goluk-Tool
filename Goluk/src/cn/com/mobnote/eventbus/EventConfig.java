@@ -1,5 +1,7 @@
 package cn.com.mobnote.eventbus;
 
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+
 /* public for event bus operation code */
 public class EventConfig {
 
@@ -29,4 +31,8 @@ public class EventConfig {
 
 	/** Update address */
 	public final static int CAR_RECORDER_UPDATE_ADDR = 118;
+
+	public final static int PHOTO_ALBUM_UPDATE_DATE = -2;
+
+	public final static int PHOTO_ALBUM_UPDATE_LOGIN_STATE = -1;
 }

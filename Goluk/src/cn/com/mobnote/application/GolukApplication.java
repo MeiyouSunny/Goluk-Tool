@@ -20,6 +20,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import cn.com.mobnote.golukmobile.ImageClipActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.PushSettingActivity;
@@ -80,6 +82,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.baidu.mapapi.SDKInitializer;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
+
+import de.greenrobot.event.EventBus;
 
 public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
 	/** JIN接口类 */
@@ -1173,9 +1177,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// 获取停车安防配置信息
 				// updateMotionCfg();
 				isconnection = true;// 连接成功
-				if (null != PhotoAlbumActivity.mHandler) {
-					PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
-				}
+//				if (null != PhotoAlbumActivity.mHandler) {
+//					PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
+//				}
+				EventBus.getDefault().post(new EventPhotoUpdateLoginState(EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE));
 				closeConnectionDialog();// 关闭连接的dialog
 				boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
 				GolukDebugUtils.e("xuhw", "YYYYYYY========getIPCSystemTime=======a=" + a);
@@ -1525,9 +1530,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年4月24日
 	 */
 	private void ipcDisconnect() {
-		if (null != PhotoAlbumActivity.mHandler) {
-			PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
-		}
+//		if (null != PhotoAlbumActivity.mHandler) {
+//			PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
+//		}
+		EventBus.getDefault().post(new EventPhotoUpdateLoginState(EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE));
 
 		if (mDownLoadFileList.size() > 0) {
 			mDownLoadFileList.clear();

@@ -21,6 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
+import cn.com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
@@ -30,6 +33,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickList
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import de.greenrobot.event.EventBus;
 
 @SuppressLint("HandlerLeak")
 public class PhotoAlbumActivity extends BaseActivity implements OnClickListener {
@@ -56,7 +60,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private ImageView mDeleteIcon = null;
 	public static final int UPDATELOGINSTATE = -1;
 	public static final int UPDATEDATE = -2;
-	public static Handler mHandler = null;
+//	private Handler mHandler = null;
 	
 	/**活动分享*/
 	public static final String ACTIVITY_INFO = "activityinfo";
@@ -79,24 +83,25 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 
 		mIsExit = false;
 
-		mHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				switch (msg.what) {
-				case UPDATELOGINSTATE:
-					updateLinkState();
-					break;
-				case UPDATEDATE:
-					if (null != mLocalVideoListView) {
-						String filename = (String) msg.obj;
-						mLocalVideoListView.updateData(filename);
-					}
-					break;
-				}
-
-				super.handleMessage(msg);
-			}
-		};
+//		mHandler = new Handler() {
+//			@Override
+//			public void handleMessage(Message msg) {
+//				switch (msg.what) {
+//				case UPDATELOGINSTATE:
+//					updateLinkState();
+//					break;
+//				case UPDATEDATE:
+//					if (null != mLocalVideoListView) {
+//						String filename = (String) msg.obj;
+//						mLocalVideoListView.updateData(filename);
+//					}
+//					break;
+//				}
+//
+//				super.handleMessage(msg);
+//			}
+//		};
+		EventBus.getDefault().register(this);
 	}
 
 	@Override
@@ -229,6 +234,39 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 
 	public void updateTitleName(String titlename) {
 		mTitleName.setText(titlename);
+	}
+
+	public void onEventMainThread(EventPhotoUpdateDate event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.PHOTO_ALBUM_UPDATE_DATE:
+			if (null != mLocalVideoListView) {
+				String filename = event.getMsg();
+				if(null != filename && !filename.equals("")) {
+					mLocalVideoListView.updateData(filename);
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void onEventMainThread(EventPhotoUpdateLoginState event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE:
+			updateLinkState();
+			break;
+		default:
+			break;
+		}
 	}
 
 	public void updateEditBtnState(boolean light) {
@@ -447,14 +485,15 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	@Override
 	protected void onDestroy() {
 		exit();
-		if(null != mHandler) {
-			mHandler.removeMessages(UPDATELOGINSTATE);
-			mHandler.removeMessages(UPDATEDATE);
-			mHandler = null;
-		}
+//		if(null != mHandler) {
+//			mHandler.removeMessages(UPDATELOGINSTATE);
+//			mHandler.removeMessages(UPDATEDATE);
+//			mHandler = null;
+//		}
 		if (null != mLruCache) {
 			mLruCache.evictAll();
 		}
+		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 	}
 
