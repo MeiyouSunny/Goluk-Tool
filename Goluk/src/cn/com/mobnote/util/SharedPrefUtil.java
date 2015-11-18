@@ -445,25 +445,7 @@ public class SharedPrefUtil {
 
 	public String getIPCDownVersion() {
 		return preference.getString(PROPERTY_SAVE_IPC_DOWN_VERSION, "");
-	}	
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Android config, by Micle
-	public void saveConfigServerFlag(String serverFlag) {
-		preference.edit().putString(PROPERTY_Config_Server_Flag, serverFlag).commit();
 	}
-
-	public String getConfigServerFlag() {
-		return preference.getString(PROPERTY_Config_Server_Flag, "nvd");
-	}	
-	
-	public void saveConfigStorage(String storage) {
-		preference.edit().putString(PROPERTY_Config_Storage, storage).commit();
-	}
-
-	public String getConfigStorage() {
-		return preference.getString(PROPERTY_Config_Storage, "cloud");
-	}	
 	
 	/**
 	 * 清除数据

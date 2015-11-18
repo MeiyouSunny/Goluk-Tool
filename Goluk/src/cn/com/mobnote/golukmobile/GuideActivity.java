@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import cn.com.mobnote.application.SysApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.guide.GolukGuideManage;
@@ -64,8 +63,7 @@ public class GuideActivity extends BaseActivity {
 		
 		// OneAPM
 		BlueWare.withApplicationToken("E18AA269D23C98A1521C6454D1836CE006").start(this.getApplication());
-		
-		SysApplication.getInstance().addActivity(this);
+
 	}
 
 	private void getIntentData() {
@@ -125,33 +123,6 @@ public class GuideActivity extends BaseActivity {
 		} else {// 没有启动过
 			initViewPager();
 		}
-		
-		// 初始化配置
-		initConfig();
-	}
-	
-	/**
-	 * 初始化配置
-	 * @作者 卜长清，buchangqing@goluk.com
-	 */
-	public void initConfig() {
-		// Serverflag
-		AssetManager assetManager = getAssets();
-		InputStream inputStream = null ;
-		try {
-		   inputStream = assetManager.open("serverflag");
-		   InputStreamReader ireader = new InputStreamReader(inputStream);		   
-		   BufferedReader breader = new BufferedReader(ireader);
-		   String serverFlag = "test";
-		   while ((serverFlag = breader.readLine().trim()) == "") {}
-		   ireader.close();
-		   breader.close();
-		   inputStream.close();
-		   
-		   ((GolukApplication) this.getApplication()).mSharedPreUtil.saveConfigServerFlag(serverFlag);
-		  } catch (IOException e) {
-			  GolukDebugUtils.e ("goluk", e.getMessage());
-		  } 
 	}
 
 	/**

@@ -1,8 +1,7 @@
 package cn.com.mobnote.golukmobile.helper;
 
 import com.tencent.upload.Const.FileType;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.CommandTask;
 import com.tencent.upload.task.UploadTask;
@@ -16,7 +15,7 @@ import cn.com.mobnote.application.GolukApplication;
  * @日期 2015-09-09
  * @版本 1.0
  */
-public class QCloudHelper extends GolukHttpClientHelper  {
+public class QCloudHelper  {
 	private static class DefaultConfig {
         private static final String APPID = "10002984";
         private static final String FILE_BUCKET = "file";
@@ -31,21 +30,13 @@ public class QCloudHelper extends GolukHttpClientHelper  {
     public static String PHOTO_BUCKET = DefaultConfig.PHOTO_BUCKET;
     
     /******************* 通用 **************************/
-	private GolukApplication mApp;
-	private Context mContext;
 	private static QCloudHelper instance = null;
     private UploadManager mFileUploadManager;
     private UploadManager mPhotoUploadManager;
     private UploadManager mVideoUploadManager;
 	
-	public QCloudHelper() { }
-	public QCloudHelper(Context context, GolukApplication application) { 
-		super(context, application);
+	public QCloudHelper() {init();}
 
-		mContext = context;
-		mApp = application;		
-		init();
-	}
 	
 	/**
 	 * 单例支持
@@ -53,11 +44,11 @@ public class QCloudHelper extends GolukHttpClientHelper  {
 	 * @param application
 	 * @return
 	 */
-	public static synchronized QCloudHelper getInstance(Context context, GolukApplication application) {
+	public static synchronized QCloudHelper getInstance() {
         if (instance == null) {
             synchronized (QCloudHelper.class) {
                 if (instance == null) {
-                	instance = new QCloudHelper(context, application);
+                	instance = new QCloudHelper();
                 }
             }
         }
@@ -65,8 +56,8 @@ public class QCloudHelper extends GolukHttpClientHelper  {
     }
 	
 	private void init() {
-		mVideoUploadManager = new UploadManager(mContext, QCloudHelper.APPID, FileType.Video, null);
-		mPhotoUploadManager = new UploadManager(mContext, QCloudHelper.APPID, FileType.Photo, null);
+		mVideoUploadManager = new UploadManager(GolukApplication.getInstance(), QCloudHelper.APPID, FileType.Video, null);
+		mPhotoUploadManager = new UploadManager(GolukApplication.getInstance(), QCloudHelper.APPID, FileType.Photo, null);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,6 +144,7 @@ public class QCloudHelper extends GolukHttpClientHelper  {
     }
 
     public boolean sendCommand(CommandTask task) {
+ 
         if (task == null) {
             return false;
         }
@@ -201,32 +193,4 @@ public class QCloudHelper extends GolukHttpClientHelper  {
 
         return false;
     }
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// 签名服务
-	/**
-	 * 获取视频签名
-	 */
-	public void fileSign(RequestParams params, AsyncHttpResponseHandler responseHandler) {
-		String uri = "navidog4MeetTrans/filesign.htm";
-		
-		// 添加appid参数
-		params.add("appid", APPID);  
-		
-		super.setUri(uri);		
-		super.get(params, responseHandler);
-	}
-	
-	/**
-	 * 获取视频签名
-	 */
-	public void videoSign(RequestParams params, AsyncHttpResponseHandler responseHandler) {
-		String uri = "navidog4MeetTrans/videosign.htm";
-		
-		// 添加appid参数
-		params.add("appid", APPID);  
-		
-		super.setUri(uri);
-		super.get(params, responseHandler);
-	}
 }

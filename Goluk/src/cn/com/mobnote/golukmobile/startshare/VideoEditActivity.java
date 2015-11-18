@@ -3,7 +3,6 @@ package cn.com.mobnote.golukmobile.startshare;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -28,7 +27,8 @@ import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionListRequest;
 import cn.com.mobnote.golukmobile.promotion.PromotionModel;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
-import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
+import cn.com.mobnote.golukmobile.startshare.bean.ShareDataBean;
+import cn.com.mobnote.golukmobile.startshare.bean.ShareDataFullBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -42,17 +42,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
 
-// Micle
-import cn.com.mobnote.golukmobile.helper.VideoHelper;
-
 @SuppressLint("HandlerLeak")
-public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn, IRequestResultListener {
+public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn,
+		IRequestResultListener {
 	public static final int EVENT_COMM_EXIT = 0;
 	/** 自定义播放器支持特效 */
 	public FilterPlaybackView mVVPlayVideo = null;
@@ -112,6 +108,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private PromotionSelectItem mPromotionSelectItem;
 
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -126,7 +123,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		} else {
 			mFilePath = savedInstanceState.getString("cn.com.mobnote.video.path");
 			mCurrentVideoType = savedInstanceState.getInt("type", 2);
-		    mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(PhotoAlbumActivity.ACTIVITY_INFO);
+			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState
+					.getSerializable(PhotoAlbumActivity.ACTIVITY_INFO);
 		}
 
 		// 获得GolukApplication对象
@@ -169,7 +167,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		Intent intent = getIntent();
 		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
 		mCurrentVideoType = intent.getIntExtra("type", 2);
-	    mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(PhotoAlbumActivity.ACTIVITY_INFO);
+		mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(PhotoAlbumActivity.ACTIVITY_INFO);
 	}
 
 	@Override
@@ -182,6 +180,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		outState.putInt("type", mCurrentVideoType);
 		super.onSaveInstanceState(outState);
 	}
+
 	/**
 	 * 加载资源
 	 * 
@@ -480,7 +479,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mFilterLayout.setExit();
 		mFilterLayout = null;
 
-
 		this.toInitState();
 		if (null != mVVPlayVideo) {
 			mVVPlayVideo.cleanUp();
@@ -511,7 +509,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		stopProgressThread();
 		super.onPause();
 	}
-
 
 	@Override
 	protected void onResume() {
@@ -750,7 +747,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String selectTypeJson = JsonUtil.createShareType("" + mTypeLayout.getCurrentSelectType());
 		final String desc = mTypeLayout.getCurrentDesc();
 		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
-		final String t_thumbPath = mUploadVideo.getThumbPath();
 		final String t_location = mTypeLayout.getCurrentLocation();
 		PromotionSelectItem item = mTypeLayout.getPromotionSelectItem();
 		String channelid = "";
@@ -762,68 +758,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			activityid = item.activityid;
 			activityname = item.activitytitle;
 		}
-		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,
-				videoCreateTime, t_location, channelid, activityid, activityname);
-		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
-		
-		// 根据存储方式选择不同的业务处理， Micle
-		boolean isSuccess = false;
-		String storage = mApp.mSharedPreUtil.getConfigStorage();		
-		
-		if (storage.equals("cloud")) {
-			VideoHelper helper = new VideoHelper(mApp.getContext(), mApp);
-			RequestParams params = new RequestParams();  
-			params.add("videoid", t_vid);  
-			params.add("uid", mApp.mCurrentUId);
-			params.add("lon", "0");
-			params.add("lat", "0");
-			params.add("type", t_type);
-			params.add("attribute", selectTypeJson);
-			params.add("describe", desc);
-			params.add("issquare", isSeque);
-			params.add("tagid", "goluk");
-			params.add("creattime", videoCreateTime);
-			params.add("signtime", t_signTime);
-			
-			helper.save(params, new AsyncHttpResponseHandler() {
-				@Override
-			    public void onStart() {
-			        // called before request is started
-			    }
-
-			    @Override
-			    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-			        // called when "200 OK"
-
-		    		String content = new String(response);	    		
-		    		int success = 1;
-		    		videoShareCallBack(success, content);
-			    }
-
-			    @Override
-			    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-			        // called when "4XX" (eg. 401, 403, 404)
-			    	exit();
-					GolukUtils.showToast(mApp.getContext(), "网络错误，分享失败！");
-			    }
-
-			    @Override
-			    public void onRetry(int retryNo) {
-			        // called when request is retried
-				}
-			});
-			isSuccess = true;			
-		} else {
-			isSuccess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
-				json);
-		}
-		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares---b :  " + isSuccess);
-		
-		if (!isSuccess) {
-			GolukUtils.showToast(this, "分享失败");
-			toInitState();
-			return;
-		}
+		GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
+		request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
+				activityname, t_location);
 	}
 
 	private void getShareFailed() {
@@ -837,15 +774,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	 * @param json
 	 *            ,分享数据
 	 */
-	public void videoShareCallBack(int success, String json) {
+	public void videoShareCallBack(ShareDataBean shareData) {
 		mShareLoading.switchState(ShareLoading.STATE_SHAREING);
-		if (1 != success) {
-			getShareFailed();
-			return;
-		}
-		GolukDebugUtils.i("", "分享地址回调:" + json.toString());
-		ShareDataBean dataBean = JsonUtil.parseShareCallBackData(json);
-		if (!dataBean.isSucess) {
+		if (shareData == null) {
 			getShareFailed();
 			return;
 		}
@@ -854,7 +785,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String describe = getShareDesc();
 		final String sinaTxt = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 
-		this.mShareDealTool.toShare(dataBean.shareurl, dataBean.coverurl, describe, title,
+		this.mShareDealTool.toShare(shareData.shorturl, shareData.coverurl, describe, title,
 				mUploadVideo.getThumbBitmap(), sinaTxt, this.mUploadVideo.getVideoId());
 	}
 
@@ -888,7 +819,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (isExit) {
 			return;
 		}
-		if(null != mShareLoading) {
+		if (null != mShareLoading) {
 			mShareLoading.hide();
 			mShareLoading.switchState(ShareLoading.STATE_NONE);
 		}
@@ -897,7 +828,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
-		switch(requestType) {
+		switch (requestType) {
 		case IPageNotifyFn.PageType_GetPromotion:
 			PromotionModel data = (PromotionModel) result;
 			if (data != null && data.success) {
@@ -905,6 +836,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 					return;
 				}
 				mTypeLayout.setPromotionList(data.data.PromotionList);
+			}
+			break;
+		case IPageNotifyFn.PageType_Share:
+			ShareDataFullBean shareDataFull = (ShareDataFullBean) result;
+			if (shareDataFull != null && shareDataFull.success) {
+				videoShareCallBack(shareDataFull.data);
+			} else {
+				getShareFailed();
 			}
 			break;
 		}

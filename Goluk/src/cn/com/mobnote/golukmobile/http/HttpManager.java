@@ -3,6 +3,8 @@ package cn.com.mobnote.golukmobile.http;
 import java.io.File;
 import java.util.Map;
 
+import org.apache.http.client.HttpClient;
+
 import cn.com.mobnote.application.GolukApplication;
 
 import com.android.volley.AuthFailureError;
@@ -13,6 +15,10 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HurlStack;
+import com.tencent.wns.client.inte.WnsClientFactory;
+import com.tencent.wns.client.inte.WnsService;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -85,7 +91,8 @@ public class HttpManager {
 
         Cache cache = new DiskBasedCache(cacheDir);
 
-        GolukHurlStack stack = new GolukHurlStack();
+//        GolukHurlStack stack = new GolukHurlStack();
+        HurlStack stack = new HurlStack();
         Network network = new BasicNetwork(stack);
 
         GolukRequestQueue queue = new GolukRequestQueue(cache, network);

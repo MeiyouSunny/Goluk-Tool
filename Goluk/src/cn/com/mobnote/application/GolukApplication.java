@@ -47,7 +47,6 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
-import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
@@ -70,6 +69,7 @@ import cn.com.mobnote.user.UserIdentifyManage;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistAndRepwdManage;
 import cn.com.mobnote.util.AssetsFileUtils;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
@@ -536,33 +536,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	/**
-	 * 本地视频上传回调
-	 * 
-	 * @param vid
-	 *            ,视频ID
-	 */
-	public void localVideoUpLoadCallBack(int success, Object param1, Object param2) {
-		if (mPageSource == "VideoEdit") {
-			((VideoEditActivity) mContext).videoUploadCallBack(success, param1, param2);
-		}
-	}
-
-	/**
-	 * 本地视频分享回调
-	 * 
-	 * @param data
-	 *            ,分享json数据, {"code":"200","vurl":
-	 *            "http://cdn3.lbs8.com/files/cdcvideo/3dfa8172-8fdc-4acd-b882-f191608f236720141124183820.mp4"
-	 *            ,"vid":"3dfa8172-8fdc-4acd-b882-f191608f236720141124183820"}
-	 */
-	public void localVideoShareCallBack(int success, String data) {
-		if (mPageSource == "VideoEdit") {
-			((VideoEditActivity) mContext).videoShareCallBack(success, data);
-		}
-
-	}
-
-	/**
 	 * ipc视频截取查询成功回调函数
 	 * 
 	 * @param success
@@ -877,14 +850,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 
 		switch (type) {
-		case PageType_UploadVideo:
-			// 本地视频编辑页面,点击下一步,在上传页面上传本地视频回调
-			localVideoUpLoadCallBack(success, param1, param2);
-			break;
-		case 2:
-			// 本地视频分享链接请求回调
-			localVideoShareCallBack(success, String.valueOf(param2));
-			break;
 		case 7:
 			// 地图大头针数据
 			if (null != mContext) {
@@ -1802,7 +1767,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
         if (isMain)
         {
             // 初始化app的身份信息，不必在Application中调用，但是必须在使用WnsService接口之前调用
-            int appid = 202066;
+            int appid = GolukConfig.QQWNS_APPID;
             String appversion = "1.0.0";					// TODO: 获取版本信息
             String channelid = "Android";
             boolean isQuickVerification = false; 		//	是否开启快速验证模式
