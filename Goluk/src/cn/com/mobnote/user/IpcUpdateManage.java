@@ -815,6 +815,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean stopIpcUpgrade() {
 		GolukDebugUtils.i("lily", "---------stopIpcUpgrade()------" + IPC_VDCPCmd_StopIPCUpgrade);
+		if(null == mApp || null == mApp.mGoluk) {
+			return false;
+		}
+
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_StopIPCUpgrade, "");
 	}
 
