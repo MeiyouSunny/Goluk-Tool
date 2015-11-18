@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventRefreshUserInfo;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.logic.GolukModule;
@@ -27,6 +29,7 @@ import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SettingImageView;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 个人资料
@@ -339,9 +342,10 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	}
 
 	private void exit() {
-		if (null != UserCenterActivity.handler) {
-			UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
-		}
+//		if (null != UserCenterActivity.handler) {
+//			UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
+//		}
+		EventBus.getDefault().post(new EventRefreshUserInfo(EventConfig.REFRESH_USER_INFO));
 		this.finish();
 	}
 

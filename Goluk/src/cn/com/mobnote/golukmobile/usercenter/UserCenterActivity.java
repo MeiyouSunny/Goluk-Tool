@@ -30,6 +30,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventRefreshUserInfo;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -52,6 +54,7 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 
@@ -79,7 +82,7 @@ public class UserCenterActivity extends BaseActivity implements
 	private Button titlehome;
 	/** 返回按钮 */
 	private ImageButton backbtn;
-	public static Handler handler = null;
+//	public static Handler handler = null;
 	
 	/** 所有的数据请求 id*/
 	public long mAllDataSequenceId = 0;
@@ -117,7 +120,7 @@ public class UserCenterActivity extends BaseActivity implements
 
 	private TextView title = null;
 	
-	public static int refristUserInfo = 100;
+//	public static int refristUserInfo = 100;
 	
 	/** 是否刷新头像数据 **/
 	
@@ -146,33 +149,33 @@ public class UserCenterActivity extends BaseActivity implements
 		praisgroupdata.praiselist = new ArrayList<PraiseInfo>();
 		praisgroupdata.isHaveData = false;
 		
-		handler = new Handler(){
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				if(msg.what == refristUserInfo){
-					if (curUser != null) {
-						if(testUser()){
-							JSONObject u = UserCenterActivity.this.getUserData();
-							if(u != null){
-								try {
-									curUser.introduce = u.getString("desc");
-									curUser.headportrait = u.getString("head");
-									curUser.nickname  = u.getString("nickname");
-									curUser.customavatar = u.getString("customavatar");
-									updateViewData(true, 0);
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-							
-						}
-					}
-				}
-				super.handleMessage(msg);
-			}
-		};
+//		handler = new Handler(){
+//			@Override
+//			public void handleMessage(Message msg) {
+//				// TODO Auto-generated method stub
+//				if(msg.what == refristUserInfo){
+//					if (curUser != null) {
+//						if(testUser()){
+//							JSONObject u = UserCenterActivity.this.getUserData();
+//							if(u != null){
+//								try {
+//									curUser.introduce = u.getString("desc");
+//									curUser.headportrait = u.getString("head");
+//									curUser.nickname  = u.getString("nickname");
+//									curUser.customavatar = u.getString("customavatar");
+//									updateViewData(true, 0);
+//								} catch (JSONException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//							}
+//							
+//						}
+//					}
+//				}
+//				super.handleMessage(msg);
+//			}
+//		};
 		
 		Intent i = this.getIntent();
 		curUser = (UCUserInfo) i.getSerializableExtra("userinfo");
@@ -211,6 +214,37 @@ public class UserCenterActivity extends BaseActivity implements
 
 		mVideoTheEndView = (RelativeLayout) LayoutInflater.from(this).inflate(
 				R.layout.usercenter_videos_below_loading, null);
+		EventBus.getDefault().register(this);
+	}
+
+	public void onEventMainThread(EventRefreshUserInfo event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+			case EventConfig.REFRESH_USER_INFO:
+			if (curUser != null) {
+				if(testUser()) {
+					JSONObject u = UserCenterActivity.this.getUserData();
+					if(u != null) {
+						try {
+							curUser.introduce = u.getString("desc");
+							curUser.headportrait = u.getString("head");
+							curUser.nickname  = u.getString("nickname");
+							curUser.customavatar = u.getString("customavatar");
+							updateViewData(true, 0);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -725,10 +759,11 @@ public class UserCenterActivity extends BaseActivity implements
 			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
 			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("videosharehotlist");
 		}
-		if (null != handler){
-			handler.removeCallbacksAndMessages(null);
-			handler = null;
-		}
+//		if (null != handler){
+//			handler.removeCallbacksAndMessages(null);
+//			handler = null;
+//		}
+		EventBus.getDefault().unregister(this);
 	}
 
 	@Override

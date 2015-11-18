@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventIPCUpdate;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IPCInfo;
@@ -14,6 +16,7 @@ import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -70,13 +73,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	/** ipc安装升级中更新UI显示 **/
 	private String stage = "";
 	private String percent = "";
-	public static Handler mUpdateHandler = null;
+	private Handler mUpdateHandler = null;
 	private Timer mTimer = null;
 
 	/** 文件不存在 **/
-	public static final int UPDATE_FILE_NOT_EXISTS = 10;
+//	public static final int UPDATE_FILE_NOT_EXISTS = 10;
 	/** 准备文件 **/
-	public static final int UPDATE_PREPARE_FILE = 11;
+//	public static final int UPDATE_PREPARE_FILE = 11;
 	/** 传输文件 **/
 	public static final int UPDATE_TRANSFER_FILE = 12;
 	/** 文件传输成功 **/
@@ -90,7 +93,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	/** 校验不通过 **/
 	public static final int UPDATE_UPGRADE_CHECK = 17;
 	/** ipc未连接 **/
-	public static final int UPDATE_IPC_UNUNITED = 18;
+//	public static final int UPDATE_IPC_UNUNITED = 18;
 	/** ipc连接断开 **/
 	public static final int UPDATE_IPC_DISCONNECT = 19;
 	/** 升级1阶段摄像头断开连接 **/
@@ -208,23 +211,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 		}
+		EventBus.getDefault().register(this);
 
 		mUpdateHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-				case UPDATE_FILE_NOT_EXISTS:
-					if (isExit) {
-						return;
-					}
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "没有找到升级文件。");
-					break;
-				case UPDATE_PREPARE_FILE:
-					if (isExit) {
-						return;
-					}
-					mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, "正在为您准备升级，请稍候……");
-					break;
 				case UPDATE_TRANSFER_FILE:
 					GolukDebugUtils.i("lily", "-------正在传输文件------");
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
@@ -296,12 +288,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "校验不通过");
 					break;
-				case UPDATE_IPC_UNUNITED:
-					if (isExit) {
-						return;
-					}
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "您好像没有连接摄像头哦。");
-					break;
 				case UPDATE_IPC_DISCONNECT:
 					timerCancel();
 					UserUtils.dismissUpdateDialog(mPrepareDialog);
@@ -335,7 +321,35 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				super.handleMessage(msg);
 			}
 		};
+	}
 
+	public void onEventMainThread(EventIPCUpdate event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.UPDATE_FILE_NOT_EXISTS:
+			if (isExit) {
+				return;
+			}
+			UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, getString(R.string.str_update_file_not_exist));
+			break;
+		case EventConfig.UPDATE_PREPARE_FILE:
+			if (isExit) {
+				return;
+			}
+			mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, getString(R.string.str_update_prepare_file));
+			break;
+		case EventConfig.UPDATE_IPC_UNUNITED:
+			if (isExit) {
+				return;
+			}
+			UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, getString(R.string.str_update_ipc_ununited));
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -611,6 +625,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
 		}
+		EventBus.getDefault().unregister(this);
 	}
 
 	@SuppressLint("ClickableViewAccessibility")

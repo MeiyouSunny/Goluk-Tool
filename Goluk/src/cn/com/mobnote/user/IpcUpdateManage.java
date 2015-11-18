@@ -17,7 +17,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
-
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventIPCUpdate;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UpdateActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
@@ -30,6 +31,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * app升级+ipc升级
@@ -648,9 +650,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				return update(filePath);
 			} else {
-				if (UpdateActivity.mUpdateHandler != null){
-					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
-				}
+//				if (UpdateActivity.mUpdateHandler != null){
+//					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+//				}
+				EventBus.getDefault().post(new EventIPCUpdate(EventConfig.UPDATE_IPC_UNUNITED));
 				return false;
 			}
 
@@ -689,16 +692,18 @@ public class IpcUpdateManage implements IPCManagerFn {
 						u = GolukApplication.getInstance().getIPCControlManager().ipcUpgrade(filePath);
 						if (u) {
 							// 正在准备文件，请稍候……
-							if (UpdateActivity.mUpdateHandler != null){
-								UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
-							}
+//							if (UpdateActivity.mUpdateHandler != null){
+//								UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
+//							}
+							EventBus.getDefault().post(new EventIPCUpdate(EventConfig.UPDATE_PREPARE_FILE));
 						}
 						return u;
 					} else {
 						// 提示没有升级文件
-						if (UpdateActivity.mUpdateHandler != null){
-							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
-						}
+//						if (UpdateActivity.mUpdateHandler != null){
+//							UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_FILE_NOT_EXISTS);
+//						}
+						EventBus.getDefault().post(new EventIPCUpdate(EventConfig.UPDATE_FILE_NOT_EXISTS));
 						return false;
 					}
 				}
@@ -810,6 +815,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean stopIpcUpgrade() {
 		GolukDebugUtils.i("lily", "---------stopIpcUpgrade()------" + IPC_VDCPCmd_StopIPCUpgrade);
+		if(null == mApp || null == mApp.mGoluk) {
+			return false;
+		}
+
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_StopIPCUpgrade, "");
 	}
 
