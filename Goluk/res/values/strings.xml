@@ -419,4 +419,5 @@
     <string name="str_update_file_not_exist">没有找到升级文件。</string>
     <string name="str_update_prepare_file">正在为您准备升级，请稍候……</string>
     <string name="str_update_ipc_ununited">您好像没有连接摄像头哦。</string>
+    <string name="str_no_browser_found">手机没有浏览器？</string>
 </resources>

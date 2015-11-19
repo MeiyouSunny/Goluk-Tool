@@ -18,6 +18,7 @@ import java.util.TimerTask;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -39,6 +40,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -121,11 +123,16 @@ public class GolukUtils {
 	 */
 	public static void openUrl(String url, Context mContext) {
 		// 版本升级---打开浏览器
-		Intent intent = new Intent();
-		intent.setAction("android.intent.action.VIEW");
-		Uri content_url = Uri.parse(url);
-		intent.setData(content_url);
-		mContext.startActivity(intent);
+		try {
+			Intent intent = new Intent();
+			intent.setAction("android.intent.action.VIEW");
+			Uri content_url = Uri.parse(url);
+			intent.setData(content_url);
+			mContext.startActivity(intent);
+		} catch(ActivityNotFoundException anfe) {
+			Toast.makeText(mContext, mContext.getString(R.string.str_no_browser_found), Toast.LENGTH_SHORT).show();
+			anfe.printStackTrace();
+		}
 	}
 
 	// 获取版本号
