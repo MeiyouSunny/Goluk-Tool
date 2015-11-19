@@ -89,10 +89,17 @@ public class BaseActivity extends Activity {
 
 	}
 
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		mBaseApp.activityStarted(this);
+	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
+		mBaseApp.activityStopped(this);
 		if (isBackground(this)) {
 			GolukApplication.getInstance().setIsBackgroundState(true);
 			if (GlobalWindow.getInstance().isShow()) {

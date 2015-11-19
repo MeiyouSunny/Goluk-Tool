@@ -10,12 +10,14 @@ import java.util.Map.Entry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -89,6 +91,7 @@ import com.tencent.base.Global;
 import com.tencent.wns.client.inte.WnsClientFactory;
 import com.tencent.wns.client.inte.WnsService;
 import com.tencent.wns.client.log.WnsClientLog;
+
 import de.greenrobot.event.EventBus;
 
 
@@ -1763,7 +1766,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
     private WnsService wns;
 	private void startWnsService() {
 		// 初始化WNS全局参数
-        Global.init(this);
+        Global.init(this, null);
         wns = WnsClientFactory.getThirdPartyWnsService();
         
         // 判断是否主进程
@@ -1784,4 +1787,50 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
         }
 	}
 	
+	private int mActivityVisibleCount = 0;
+	private boolean mIgnoreActivityVisibleCountChange = false;
+
+	private void updateActivityVisibleCount(boolean increase, boolean ignore) {
+		if (increase) {
+			final int prev = mActivityVisibleCount;
+			mActivityVisibleCount++;
+			if (prev == 0 && !ignore) {
+				dispatchApplicationEnterForeground();
+			}
+		} else {
+			mActivityVisibleCount--;
+			if (mActivityVisibleCount == 0 && !ignore) {
+				dispatchApplicationEnterBackground();
+			}
+		}
+	}
+
+	private void dispatchApplicationEnterForeground() {
+		wns.setBackgroundMode(false);
+
+	}
+
+	private void dispatchApplicationEnterBackground() {
+		wns.setBackgroundMode(true);
+	}
+
+	@SuppressLint("NewApi")
+	private boolean isActivityConfigChanging(Activity activity) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			return activity.isChangingConfigurations();
+		}
+		return activity.getChangingConfigurations() != 0;
+	}
+
+	public void activityStarted(Activity activity) {
+		updateActivityVisibleCount(true, mIgnoreActivityVisibleCountChange);
+		mIgnoreActivityVisibleCountChange = false;
+
+	}
+
+	public void activityStopped(Activity activity) {
+		mIgnoreActivityVisibleCountChange = isActivityConfigChanging(activity);
+		updateActivityVisibleCount(false, mIgnoreActivityVisibleCountChange);
+	}
+
 }

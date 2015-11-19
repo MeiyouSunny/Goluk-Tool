@@ -91,8 +91,8 @@ public class HttpManager {
 
         Cache cache = new DiskBasedCache(cacheDir);
 
-//        GolukHurlStack stack = new GolukHurlStack();
-        HurlStack stack = new HurlStack();
+        GolukHurlStack stack = new GolukHurlStack();
+//        HurlStack stack = new HurlStack();
         Network network = new BasicNetwork(stack);
 
         GolukRequestQueue queue = new GolukRequestQueue(cache, network);
