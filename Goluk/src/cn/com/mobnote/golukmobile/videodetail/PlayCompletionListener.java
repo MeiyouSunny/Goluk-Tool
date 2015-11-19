@@ -34,8 +34,12 @@ public class PlayCompletionListener implements OnCompletionListener {
 			mHolder.mVideoView.seekTo(0);
 			mHolder.mSeekBar.setProgress(0);
 		}else{
-			mHolder.mVideoView.setVideoURI(mHolder.url);
-			mHolder.mVideoView.start();
+			try {
+				mHolder.mVideoView.setVideoURI(mHolder.url);
+				mHolder.mVideoView.start();
+			} catch(IllegalStateException ise) {
+				ise.printStackTrace();
+			}
 		}
 	}
 
