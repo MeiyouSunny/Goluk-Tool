@@ -38,11 +38,7 @@ public class UploadVideo implements IUploadRequestListener {
 	private final int MSG_H_COUNT = 7;
 	/** 重新上传 */
 	private final int MSG_H_RETRY_UPLOAD = 8;
-	
-	/* 云服务相关 Micle */
-	private final int MSG_CLOUD_UPLOAD_SUCCESS = 10;
 
-	private GolukApplication mApp = null;
 	private Context mContext = null;
 	private final int UPLOAD_FAILED_UP = 3;
 	private int uploadCount = 0;
@@ -123,7 +119,6 @@ public class UploadVideo implements IUploadRequestListener {
 
 	public UploadVideo(Context context, GolukApplication application, final String videoName) {
 		mContext = context;
-		mApp = application;
 		mVideoName = videoName;
 		createThumb();
 	}
