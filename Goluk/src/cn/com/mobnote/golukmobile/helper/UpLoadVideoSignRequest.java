@@ -1,13 +1,12 @@
-package cn.com.mobnote.golukmobile.startshare;
+package cn.com.mobnote.golukmobile.helper;
 
 import java.util.HashMap;
 
 import android.text.TextUtils;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.helper.QCloudHelper;
+import cn.com.mobnote.golukmobile.helper.bean.SignBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
-import cn.com.mobnote.golukmobile.startshare.bean.SignBean;
 
 public class UpLoadVideoSignRequest extends GolukFastjsonRequest<SignBean> {
 
