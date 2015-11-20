@@ -51,7 +51,6 @@ public class GuideActivity extends BaseActivity {
 		getIntentData();
 
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
-		GolukApplication.getInstance().initSharedPreUtil(this);
 		((GolukApplication) this.getApplication()).initLogic();
 		// 注册信鸽的推送
 		GolukNotification.getInstance().createXG();

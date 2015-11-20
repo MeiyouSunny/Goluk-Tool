@@ -131,8 +131,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean autoRecordFlag = false;
 	/** 停车安防配置 */
 	private int[] motioncfg;
-	/** 保存数据 */
-	public SharedPrefUtil mSharedPreUtil = null;
 
 	private WifiApAdmin wifiAp;
 	/** 当前地址 */
@@ -252,12 +250,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		};
 	};
 
-	public void initSharedPreUtil(Activity activity) {
-		if (null == mSharedPreUtil) {
-			mSharedPreUtil = new SharedPrefUtil(activity);
-		}
-	}
-
 	public void initLogic() {
 		if (null != mGoluk) {
 			return;
@@ -355,7 +347,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public void startUpgrade() {
 		// app升级+ipc升级
-		String vIpc = mSharedPreUtil.getIPCVersion();
+		String vIpc = SharedPrefUtil.getIPCVersion();
 		GolukDebugUtils.i("lily", "=====获取当前的vIpc=====" + vIpc);
 		mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_AUTO, vIpc);
 	}
@@ -984,10 +976,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	// 显示
 	public void showContinuteLive() {
-		if (null == mSharedPreUtil) {
-			return;
-		}
-		if (mSharedPreUtil.getIsLiveNormalExit()) {
+
+		if (SharedPrefUtil.getIsLiveNormalExit()) {
 			isCheckContinuteLiveFinish = true;
 			// 不需要续直播
 			return;
@@ -1010,7 +1000,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		isCallContinue = true;
 		GolukDebugUtils
-				.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
+				.e(null, "jyf----20150406----showContinuteLive----mApp :" + SharedPrefUtil.getIsLiveNormalExit());
 
 		if (mContext instanceof MainActivity) {
 			GolukDebugUtils.e(null, "jyf----20150406----showContinuteLive----mApp2222 :");
@@ -1142,7 +1132,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						mIPCControlManager.mProduceName = json.getString("productname");
 					}
 					//保存设备型号
-					mSharedPreUtil.saveIpcModel(mIPCControlManager.mProduceName);
+					SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -1303,7 +1293,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 								String ipcVersion = json.optString("version");
 								GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
 								// 保存ipc版本号
-								mSharedPreUtil.saveIPCVersion(ipcVersion);
+								SharedPrefUtil.saveIPCVersion(ipcVersion);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

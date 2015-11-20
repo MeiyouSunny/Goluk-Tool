@@ -1,6 +1,5 @@
 package cn.com.mobnote.eventbus;
 
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 
 /* public for event bus operation code */
 public class EventConfig {

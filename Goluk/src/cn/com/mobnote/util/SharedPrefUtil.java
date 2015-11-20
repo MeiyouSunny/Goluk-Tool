@@ -1,5 +1,6 @@
 package cn.com.mobnote.util;
 
+import cn.com.mobnote.application.GolukApplication;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -81,27 +82,25 @@ public class SharedPrefUtil {
 
 	public static final String BANNER_LIST_STRING = "banner_list_string";
 	public static final String LOCATION_CITY_ID = "location_city_id";
-	private SharedPreferences preference = null;
 
-	private Editor mEditor = null;
 
-	public SharedPrefUtil(Activity activity) {
-		preference = activity.getPreferences(Activity.MODE_PRIVATE);
-	}
-
-	public void setTokenId(String tokenid) {
+	public static void setTokenId(String tokenid) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_XG_TOKEN_ID, tokenid).commit();
 	}
 
-	public String getTolenId() {
+	public static String getTolenId() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_XG_TOKEN_ID, "");
 	}
 
-	public void setIsLiveNormalExit(boolean isExit) {
+	public static void setIsLiveNormalExit(boolean isExit) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_LIVE_NORMAL_EXIT, isExit).commit();
 	}
 
-	public boolean getIsLiveNormalExit() {
+	public static boolean getIsLiveNormalExit() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_LIVE_NORMAL_EXIT, true);
 	}
 
@@ -112,7 +111,8 @@ public class SharedPrefUtil {
 	 * @author jyf
 	 * @date 2015年6月25日
 	 */
-	public void setIpcLocalFileInfo(String ipcInfo) {
+	public static void setIpcLocalFileInfo(String ipcInfo) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_IPC_UPGRADE_LOCALFILE_INFO, ipcInfo).commit();
 	}
 
@@ -123,7 +123,8 @@ public class SharedPrefUtil {
 	 * @author jyf
 	 * @date 2015年6月25日
 	 */
-	public String getIpcLocalFileInfo() {
+	public static String getIpcLocalFileInfo() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_IPC_UPGRADE_LOCALFILE_INFO, "");
 	}
 
@@ -133,7 +134,8 @@ public class SharedPrefUtil {
 	 * @author 钱伟
 	 * @date 2012/09/14
 	 */
-	public void setIsShowHelp(boolean isShow) {
+	public static void setIsShowHelp(boolean isShow) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_SHOW_HELP, isShow).commit();
 	}
 
@@ -143,7 +145,8 @@ public class SharedPrefUtil {
 	 * @author 钱伟
 	 * @date 2012/09/14
 	 */
-	public boolean getIsShowHelp() {
+	public static boolean getIsShowHelp() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_SHOW_HELP, false);
 	}
 
@@ -152,7 +155,8 @@ public class SharedPrefUtil {
 	 * 
 	 * @param isFirst
 	 */
-	public void setIsFirstStart(boolean isFirst) {
+	public static void setIsFirstStart(boolean isFirst) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_IS_FIRST_START, isFirst).commit();
 	}
 
@@ -161,7 +165,8 @@ public class SharedPrefUtil {
 	 * 
 	 * @return
 	 */
-	public boolean getIsFirstStart() {
+	public static boolean getIsFirstStart() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_IS_FIRST_START, true);
 	}
 
@@ -170,14 +175,16 @@ public class SharedPrefUtil {
 	 * 
 	 * @return
 	 */
-	public boolean getIsShowLogoAnim() {
+	public static boolean getIsShowLogoAnim() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_SHOW_LOGOANMI, false);
 	}
 
 	/**
 	 * 保存Logo显示完成后的数据
 	 */
-	public void setShowLogoAnimPreferencesEdit() {
+	public static void setShowLogoAnimPreferencesEdit() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		Editor editor = preference.edit();
 		editor.putBoolean(PROPERTY_SHOW_LOGOANMI, true);
 		editor.commit();
@@ -189,14 +196,16 @@ public class SharedPrefUtil {
 	 * 
 	 * @return
 	 */
-	public boolean getIsShowSetUserInfo() {
+	public static boolean getIsShowSetUserInfo() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_SHOW_NAVIMASK, true);
 	}
 
 	/**
 	 * 设置是否显示第一次显示的选择男女
 	 */
-	public void setIsShowSetUserInfo(boolean isShow) {
+	public static void setIsShowSetUserInfo(boolean isShow) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preference.edit();
 		editor.putBoolean(PROPERTY_SHOW_NAVIMASK, isShow);
 		editor.commit();
@@ -208,7 +217,8 @@ public class SharedPrefUtil {
 	 * 
 	 * @return
 	 */
-	public boolean getIsOpenContact() {
+	public static boolean getIsOpenContact() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_OPEN_CONTACT, false);
 	}
 
@@ -217,7 +227,8 @@ public class SharedPrefUtil {
 	 * 
 	 * @param flag
 	 */
-	public void setOpenContact(boolean flag) {
+	public static void setOpenContact(boolean flag) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_OPEN_CONTACT, flag).commit();
 	}
 
@@ -228,7 +239,8 @@ public class SharedPrefUtil {
 	 * @author qianwei
 	 * @date 2013/01/05
 	 */
-	public void setMeetShowAllUsersPointState(boolean state) {
+	public static void setMeetShowAllUsersPointState(boolean state) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_MEET_SHOW_ALL_USERS_POINT, state).commit();
 	}
 
@@ -239,7 +251,8 @@ public class SharedPrefUtil {
 	 * @author qianwei
 	 * @date 2013/01/05
 	 */
-	public boolean getMeetShowAllUsersPointState() {
+	public static boolean getMeetShowAllUsersPointState() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_MEET_SHOW_ALL_USERS_POINT, false);
 	}
 
@@ -250,7 +263,8 @@ public class SharedPrefUtil {
 	 * @author qianwei
 	 * @date 2013/01/05
 	 */
-	public void setMapMeetConsoleSound(boolean state) {
+	public static void setMapMeetConsoleSound(boolean state) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_MAP_MEET_CONSOLE_SOUND, state).commit();
 	}
 
@@ -261,7 +275,8 @@ public class SharedPrefUtil {
 	 * @author qianwei
 	 * @date 2013/01/05
 	 */
-	public boolean getMapMeetConsoleSound() {
+	public static boolean getMapMeetConsoleSound() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_MAP_MEET_CONSOLE_SOUND, false);
 	}
 
@@ -270,7 +285,8 @@ public class SharedPrefUtil {
 	 * 
 	 * @param load
 	 */
-	public void setPrepareLoadMain(boolean load) {
+	public static void setPrepareLoadMain(boolean load) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_PREPARE_LOADMAIN, load).commit();
 	}
 
@@ -279,7 +295,8 @@ public class SharedPrefUtil {
 	 * 
 	 * @return
 	 */
-	public boolean getPrepareLoadMain() {
+	public static boolean getPrepareLoadMain() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_PREPARE_LOADMAIN, true);
 	}
 
@@ -291,7 +308,8 @@ public class SharedPrefUtil {
 	 * @author qianwei
 	 * @date 2013/06/25
 	 */
-	public void setInputMethodState(int state) {
+	public static void setInputMethodState(int state) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putInt(PROPERTY_CHAT_INPUT_METHOD, state).commit();
 	}
 
@@ -303,7 +321,8 @@ public class SharedPrefUtil {
 	 * @author qianwei
 	 * @date 2013/06/25
 	 */
-	public int getInputMethodState() {
+	public static int getInputMethodState() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getInt(PROPERTY_CHAT_INPUT_METHOD, 1);
 	}
 
@@ -314,7 +333,8 @@ public class SharedPrefUtil {
 	 * @author caoyp
 	 * @date 2013/08/12
 	 */
-	public void setIsShowDownloadNaviRealSenseMapDialog(boolean state) {
+	public static void setIsShowDownloadNaviRealSenseMapDialog(boolean state) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_IS_SHOWDOWNLOADNAVIREALSENSEMAPDIALOG, state).commit();
 	}
 
@@ -326,7 +346,8 @@ public class SharedPrefUtil {
 	 * @author caoyp
 	 * @date 2013/08/12
 	 */
-	public boolean getIsShowDownloadNaviRealSenseMapDialog() {
+	public static boolean getIsShowDownloadNaviRealSenseMapDialog() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_IS_SHOWDOWNLOADNAVIREALSENSEMAPDIALOG, true);
 	}
 
@@ -337,7 +358,8 @@ public class SharedPrefUtil {
 	 * @author caoyp
 	 * @date 2013/08/12
 	 */
-	public void setIsShowNewUserGuide(boolean state) {
+	public static void setIsShowNewUserGuide(boolean state) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putBoolean(PROPERTY_IS_SHOWNEWUSERGUIDE, state).commit();
 	}
 
@@ -349,7 +371,8 @@ public class SharedPrefUtil {
 	 * @author caoyp
 	 * @date 2013/08/12
 	 */
-	public boolean getIsShowNewUserGuide() {
+	public static boolean getIsShowNewUserGuide() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getBoolean(PROPERTY_IS_SHOWNEWUSERGUIDE, true);
 	}
 
@@ -358,7 +381,8 @@ public class SharedPrefUtil {
 	 * 
 	 * @param ipcVersion
 	 */
-	public void saveIPCVersion(String ipcVersion) {
+	public static void saveIPCVersion(String ipcVersion) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPCVERSION, ipcVersion).commit();
 	}
 
@@ -367,7 +391,8 @@ public class SharedPrefUtil {
 	 * 
 	 * @return
 	 */
-	public String getIPCVersion() {
+	public static String getIPCVersion() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPCVERSION, "");
 	}
 
@@ -376,11 +401,13 @@ public class SharedPrefUtil {
 	 * 
 	 * @param jsonArray
 	 */
-	public void saveIPCMatchInfo(String jsonArray) {
+	public static void saveIPCMatchInfo(String jsonArray) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPCMATCH_INFO, jsonArray).commit();
 	}
 
-	public String getIPCMatchInfo() {
+	public static String getIPCMatchInfo() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPCMATCH_INFO, "");
 	}
 
@@ -389,11 +416,13 @@ public class SharedPrefUtil {
 	 * 
 	 * @param filesize
 	 */
-	public void saveIpcFileSize(String filesize) {
+	public static void saveIpcFileSize(String filesize) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPC_FILESIZE, filesize).commit();
 	}
 
-	public String getIPCFileSize() {
+	public static String getIPCFileSize() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_FILESIZE, "");
 	}
 
@@ -402,11 +431,13 @@ public class SharedPrefUtil {
 	 * 
 	 * @param appcontent
 	 */
-	public void saveIpcContent(String appcontent) {
+	public static void saveIpcContent(String appcontent) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPC_CONTENT, appcontent).commit();
 	}
 
-	public String getIPCContent() {
+	public static String getIPCContent() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_CONTENT, "");
 	}
 
@@ -415,11 +446,13 @@ public class SharedPrefUtil {
 	 * 
 	 * @param ipcVersion
 	 */
-	public void saveIPCURL(String ipcUrl) {
+	public static void saveIPCURL(String ipcUrl) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPC_URL, ipcUrl).commit();
 	}
 
-	public String getIPCURL() {
+	public static String getIPCURL() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_URL, "");
 	}
 
@@ -428,43 +461,50 @@ public class SharedPrefUtil {
 	 * 
 	 * @param ipcVersion
 	 */
-	public void saveIPCPath(String ipcPath) {
+	public static void saveIPCPath(String ipcPath) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPC_PATH, ipcPath).commit();
 	}
 
-	public String getIPCPath() {
+	public static String getIPCPath() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_PATH, "");
 	}
 
 	/**
 	 * 下载时保存ipcVersion
 	 */
-	public void saveIPCDownVersion(String ipcVersion) {
+	public static void saveIPCDownVersion(String ipcVersion) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPC_DOWN_VERSION, ipcVersion).commit();
 	}
 
-	public String getIPCDownVersion() {
+	public static String getIPCDownVersion() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_DOWN_VERSION, "");
 	}
 	
 	/**
 	 * 清除数据
 	 */
-	public void removeIPC() {
-		mEditor = preference.edit();
-		mEditor.remove(PROPERTY_SAVE_IPCVERSION);
-		mEditor.remove(PROPERTY_SAVE_IPC_FILESIZE);
-		mEditor.remove(PROPERTY_SAVE_IPC_CONTENT);
-		mEditor.remove(PROPERTY_SAVE_IPC_URL);
-		mEditor.remove(PROPERTY_SAVE_IPC_PATH);
-		mEditor.commit();
+	public static void removeIPC() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+		Editor editor = preference.edit();
+		editor.remove(PROPERTY_SAVE_IPCVERSION);
+		editor.remove(PROPERTY_SAVE_IPC_FILESIZE);
+		editor.remove(PROPERTY_SAVE_IPC_CONTENT);
+		editor.remove(PROPERTY_SAVE_IPC_URL);
+		editor.remove(PROPERTY_SAVE_IPC_PATH);
+		editor.commit();
 	}
 
-	public void saveIpcPwd(String ipcPwd) {
+	public static void saveIpcPwd(String ipcPwd) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPC_PASSWORD, ipcPwd).commit();
 	}
 
-	public String getIpcPwd() {
+	public static String getIpcPwd() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_PASSWORD, "");
 	}
 	
@@ -472,37 +512,45 @@ public class SharedPrefUtil {
 	 * 保存ipcModel
 	 * @param ipcModel
 	 */
-	public void saveDownloadIpcModel(String ipcModel) {
+	public static void saveDownloadIpcModel(String ipcModel) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPC_DOWNLOAD_MODEL, ipcModel).commit();
 	}
 	/**
 	 * 获取ipcModel
 	 */
-	public String getDownloadIpcModel() {
+	public static String getDownloadIpcModel() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_DOWNLOAD_MODEL, "");
 	}
 	
-	public void saveIpcModel(String ipcModel) {
+	public static void saveIpcModel(String ipcModel) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(PROPERTY_SAVE_IPC_MODEL, ipcModel).commit();
 	}
 	
-	public String getIpcModel() {
+	public static String getIpcModel() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_MODEL, "");
 	}
 
-	public String getBannerListString() {
+	public static String getBannerListString() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		return preference.getString(BANNER_LIST_STRING, "");
 	}
 	
-	public void saveBannerListString(String bannerString) {
+	public static void saveBannerListString(String bannerString) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(BANNER_LIST_STRING, bannerString).commit();
 	}
 
-	public String getCityIDString() {
+	public static String getCityIDString() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
 		return preference.getString(LOCATION_CITY_ID, "");
 	}
 	
-	public void setCityIDString(String cityCode) {
+	public static void setCityIDString(String cityCode) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(LOCATION_CITY_ID, cityCode).commit();
 	}
 }
